@@ -6,8 +6,8 @@
     
 * Does Script cost any money?
 
-    * No: Script is licensed under the Apached 2.0 License and welcomes closed-source commershial usage.
+    * No: Script is licensed under the Apache 2.0 License and welcomes closed-source commercial usage.
     
-* Where can I find a working Script Implmementation?
+* Where can I find a working Script Implementation?
 
-    * Kabuki Toolkit(KT) is the premere Script implmementation. KT can be found at  [https://github.com/kabuki-starship/kabuki-toolkit](https://github.com/kabuki-starship/kabuki-toolkit). KT is also licensed under the Apached 2.0 License and welcomes closed-source commershial usage.
+    * Kabuki Toolkit(KT) is the reference Script implementation. KT can be found at  [https://github.com/kabuki-starship/kabuki-toolkit](https://github.com/kabuki-starship/kabuki-toolkit). KT is also licensed under the Apache 2.0 License and welcomes closed-source commercial usage.
