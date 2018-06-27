@@ -1,6 +1,6 @@
 # 1. Overview
 
-The Searle's Chinese Room, Interposes, and Telemetry (SCRIPT in all caps) Specification defines this Overview, ASCII Data Types, Script (in UppercaseCamel), Universal Polar Addressing, and ICAN3 Distributed Nomination System. Script, which consists of the SCRIPT Protocol, Chinese Room Abstract Stack Machine (Crabs), and Interprocess LISP is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper stack computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
+The Searle's Chinese Room, Interposes, and Telemetry (SCRIPT in all caps) Specification defines this Overview, ASCII Data Types, Script (in UppercaseCamel), Universal Polar Addressing, and ICAN3 Distributed Nomination System. Script, which consists of the SCRIPT Protocol, Chinese Room Abstract Stack Machine (Crabs), and Script^2 is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper stack computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
 
 Please note that this RFC is not an ISO Specification but is a living document; your comments and criticism are welcome. If you would like to contribute to this RFC, please email [Cale McCollough](https://calemccollough.github.io) at [cale.mccollough@gmail.com](mailto:cale.mccollough@gmail.com).
 
@@ -24,24 +24,25 @@ Please note that this RFC is not an ISO Specification but is a living document; 
     1.  [Longitude and Latitude](#31-longitude-and-latitude)
     2.  [Universal Address Format](#32-universal-address-format)
     3.  [Off-planet Signals](#33-off-planet-signals)
-3. [SCRIPT Protocol and Virtual Machine](#4-script-protocol-and-virtual-machine)
+3. [SCRIPT Protocol](#4-script-protocol-and-virtual-machine)
     1.  [Chinese Room Abstract Stack Machine (Crabs) Overview](#41-chinese-room-abstract-stack-machine-crabs-overview)
-    2.  [Group Automata Theorem](432-group-automata-theorem)
-    3.  [Slots](#43-slots)
-    4.  [Expressions](#44-expressions)
-    5.  [Operations](#45-operations)
-    6.  [Generic Handshake](#46-generic-handshake)
-    7.  [Authentication](#47-authentication)
-    8.  [Crabs Objects](#48-crabs-objects)
-    9.  [Quality of Service](#49-quality-of-service)
-    10. [Profiles](#410-profiles)
-    11. [Encryption](#411-encryption)
-    12. [Terminals](#412-terminals)
-    13. [Quality of Service](#413-quality-of-service)
-    14. [Congestion Control](#414-congestion-control)
-    15. [Abnormal Behavior](#415-abnormal-behavior)
-    16. [Crabs Interpreters and Compilers](#416-crabs-interpreters-and-compilers)
-    17. [Conformance Targets](#417-conformance-targets)
+    2.  [Group Automata Theorem](#432-group-automata-theorem)
+    3.  [Time](#43-time)
+    4.  [Slots](#44-slots)
+    5.  [Expressions](#45-expressions)
+    6.  [Operations](#46-operations)
+    7.  [Generic Handshake](#47-generic-handshake)
+    8.  [Authentication](#48-authentication)
+    9.  [Chinese Room Objects](#49-chinese-room-objects)
+    10. [Quality of Service](#410-quality-of-service)
+    11. [Profiles](#411-profiles)
+    12. [Encryption](#412-encryption)
+    13. [Terminals](#413-terminals)
+    14. [Quality of Service](#414-quality-of-service)
+    15. [Congestion Control](#415-congestion-control)
+    16. [Abnormal Behavior](#416-abnormal-behavior)
+    17. [Crabs Interpreters and Compilers](#417-crabs-interpreters-and-compilers)
+    18. [Conformance Targets](#418-conformance-targets)
 5.  [ICAN3 Distributed Nomination System](#5-ican3-distributed-nomination-system)
     1. [Internet Guilds](#51-ascii-internet-guilds)
     2. [Geographic Coordinate Grid Guild](#52-geographic-coordinate-guild)
@@ -51,18 +52,18 @@ Please note that this RFC is not an ISO Specification but is a living document; 
     6. [DNS Caching](#56-dns-caching)
     7. [Abnormal Behaviors](#57-abnormal-behavior)
 
-### 1.2. Author 
+### 1.2. Author
 Cale Jamison McCollough
 
-### 1.3. License 
-Copyright 2015-2017 (C) [Cale McCollough](mailto:cale.mccollough@gmail.com) 
+### 1.3. License
+Copyright 2015-2017 (C) [Cale McCollough](mailto:cale.mccollough@gmail.com)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
 * [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-### 1.4. Terminology 
+### 1.4. Terminology
 
 
 |                         Key | Description |
@@ -122,7 +123,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 There are 32 Automata Standard Code for Information Interchange (ASCII) Data Types composed of 23 Plain-Old-Data and 8 object types composed of contiguous memory. Types are stored as bytes where the 5 LSb are used to store the type and the upper 3 bits are used to store either bit width of the size of the object, 8, 16, 32, or 64-bit, or to store the dimensions of a stack or multi-dimensional array. Implementations shall support types SVI, UVI, ADR, and STR and may support more types.
 
-## 2.1 Type Byte 
+## 2.1 Type Byte
 
 All ASCII Types can be represented as a single byte where the lower 5 bits are used to store the type, and the upper three bits are used to store if the type is an array.
 
@@ -132,40 +133,40 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 
 ### 2.1.a Types 0-31
 
-| ID | Type |  Alt Name  | Width  | Description          |
-|:--:|:----:|:----------:|:------:|:---------------------|
-| 0  | NIL  |  null/void |    0   | Nil/null/void type.  |
-| 1  | ADR  |   Address  |  <=N   | Stack Operation Address.   |
-| 2  | STR  |   String   |  <=N   | UTF-8 string.|
-| 3  | TKN  |   Token    |  <=N   | UTF-8 string without any whitespace.|
-| 4  | SI1  |    int8_t  |   -1   | 8-bit signed integer.|
-| 5  | UI1  |   uint8_t  |    1   | 8-bit unsigned integer.|
-| 6  | BOL  |    bool    |   -1   | Non-zero false boolean variable.|
-| 7  | SI2  |   int16_t  |   -2   | 16-bit signed varint.|
-| 8  | UI2  |  uint16_t  |    2   | 16-bit unsigned integer.|
-| 9  | HLF  |    half    |    2   | 16-bit floating-point number.|
-| 10 | SVI  |    int     | -1 - 5 | 16-bit or 32-bit signed varint (int).|
-| 11 | UVI  |    uint    |  1 - 5 | 32-bit or 32-bit unsigned varint (int).|
-| 12 | SI4  |   int32_t  |   -4   | 32-bit signed varint.|
-| 13 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer.|
-| 14 | FLT  |    float   |    4   | 32-bit floating-point number.|
-| 15 | TMS  |   time_s   |   -4   | 32-bit second since epoch timestamp.|
-| 16 | TMU  |   time_us  |   -8   | 64-bit microsecond since epoch timestamp.|
-| 15 | SI8  |   int64_t  |   -8   | 64-bit signed integer.|
-| 16 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer.|
-| 17 | DBL  |   double   |    8   | 64-bit floating-point number.|
-| 18 | SV8  |   int64_t  | -1 - 9 | 64-bit signed varint.|
-| 19 | UV8  |  uint64_t  |  1 - 9 | 64-bit unsigned varint.|
-| 20 | DEC  |   Decimal  |   16   | 128-bit floating-point number. |
-| 21 | SIN  |   intn_t   |    N   | N-bit signed integer. |
-| 22 | UIN  |   uintn_t  |    N   | N-bit signed integer. |
-| 25 | OBJ  |   Object   |    N   | N-byte object composed of contiguous memory.|
-| 26 | BSQ  |    Bsq     |  <=N   | B-Sequence.|
-| 27 | ESC  |    Esc     |  <=N   | Escape sequence of B-Sequences.|
-| 28 | LST  |   List     |    N   | Stack of Type-Value tuples.|
-| 29 | BOK  |   Book     |    N   | Unordered map of Key-{Type-Value} tuples.|
-| 30 | DIC  | Dictionary |    N   | One-to-one map of Key-{Type-Value} tuples.|
-| 31 | MAP  |    Map     |    N   | One-to-one map of Id-{Type-Value} tuples.|
+| ID | Type |  Alt Name  | Width  | Description         |
+|:--:|:----:|:----------:|:------:|:--------------------|
+|  0 | NIL  |  null/void |    0   | Nil/null/void type. |
+|  1 | SI1  |    int8_t  |   -1   | 8-bit signed integer. |
+|  2 | UI1  |   uint8_t  |    1   | 8-bit unsigned integer. |
+|  3 | BOL  |    bool    |    4   | Non-zero false Boolean variable. |
+|  4 | SI2  |   int16_t  |   -2   | 16-bit signed varint. |
+|  5 | UI2  |  uint16_t  |    2   | 16-bit unsigned integer. |
+|  6 | HLF  |    half    |    2   | 16-bit floating-point number. |
+|  7 | SI4  |   int32_t  |   -4   | 32-bit signed varint. |
+|  8 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer. |
+|  9 | FLT  |    float   |    4   | 32-bit floating-point number. |
+| 10 | TMS  |   int32_t  |   -4   | 32-bit second since epoch timestamp. |
+| 11 | TME  |   int64_t  |   -8   | 32-bit second since epoch timestamp. |
+| 12 | TMU  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
+| 13 | SI8  |   int64_t  |   -8   | 64-bit signed integer. |
+| 14 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer. |
+| 15 | DBL  |   double   |    8   | 64-bit floating-point number. |
+| 16 | SIH  |  int128_t  |  -16   | 128-bit signed integer. |
+| 17 | UIH  | uint128_t  |   16   | 128-bit unsigned integer. |
+| 18 | DEC  |   Decimal  |   16   | 128-bit floating-point number. |
+| 19 | UIX  |  unsigned  | 32-8KB | 2^(6+X)-bit unsigned integer, where 0 <= X <= 7. |
+| 20 | ADR  |   Address  |  <=N   | Stack Operation Address. |
+| 21 | STR  |   String   |  <=N   | UTF-8 string. |
+| 22 | TKN  |   Token    |  <=N   | UTF-8 string without any whitespace. |
+| 23 | BSQ  | B-Sequence |  <=N   | B-Sequence. |
+| 24 | OBJ  |   Object   |    N   | N-byte object composed of contiguous memory. |
+| 25 | LOM  |   Loom     |    N   | A string array without a hash table. |
+| 26 | TBL  |   Table    |    N   | A hash-table of strings. |
+| 27 | EXP  | Expression |  <=N   | Script expression of B-Sequences. |
+| 28 | LST  |   List     |    N   | Stack of type-value records. |
+| 29 | MAP  |    Map     |    N   | Unique map of integer-value records. |
+| 30 | BOK  | Multidict  |    N   | Multimap of key-value records. |
+| 31 | DIC  | Dictionary |    N   | Unique map of key-value records. |
 
 ### 2.1.b List of Types Key
 
@@ -200,13 +201,13 @@ Variants are MSb variant are compressed using MSB-encoded signed and unsigned 1-
 Both Signed and Unsigned Varints must use the most significant bit asserted is used to marks if another byte is loaded. All Script implementations shall represent signed varints as uncomplemented integers with the sign bit in the LSb.
 
 ```
-UVI 128 // = 0b0000_0001_1000_0000 
-UVI 255 // = 0b0000_0001_1111_1111 
+UVI 128 // = 0b0000_0001_1000_0000
+UVI 255 // = 0b0000_0001_1111_1111
 SVI -64 // = 0b0011_1111
 ```
-## 2.2.b N-Byte Integers
+## 2.2.b X-Byte Unsigned Integers
 
-N-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may be 0-N bytes in width. SIN and UIN are very useful for transferring 128+ bit hashes and custom data structures. Implementations may implement n-byte arithmetic.
+X-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may be 0-N bytes in width. SIN and UIN are very useful for transferring 128+ bit hashes and custom data structures. Implementations may implement n-byte arithmetic.
 
 #### Example
 
@@ -215,10 +216,10 @@ N-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may b
 SIN -1
 UIN 1
 ```
- 
+
 ## 2.3 Boolean
 
-Booleans in Script are transceived as a SVI type where the deasserted value shall be stored as the number zero and labeled false, and asserted values shall be represented as the number one labeled true or a non-zero SVI value.
+Booleans in Script are stored as 32-bit types where the deasserted value shall be stored as the number zero and labeled false, and asserted values shall be represented as the number one labeled true or a non-zero SVI value.
 
 ### Boolean Examples
 
@@ -231,20 +232,20 @@ BOL 1
 BOL -129   //< Will require 2 bytes to transceive.
 ```
 
-## 2.4 Floating-point Numbers 
+## 2.4 Floating-point Numbers
 
 Script supports, 16, 32, and 64-bit floating-point numbers, also called half, float, and double precision float-point numbers. Floating-point numbers do not lend themselves very well to varint compression, so using a 16-bit floating-point number can dramatically improve performance when low-precision is needed. Implementations may implement 128-bit floating-point math. 128-bit floating point numbers are compatible with the C# programming language.
 
 ```
-HLF 0.0     // Use a HLF to save memory and bandwidth! 
-FLT 0.1     // Wastes a lot of space! 
+HLF 0.0     // Use a HLF to save memory and bandwidth!
+FLT 0.1     // Wastes a lot of space!
 DBL - 0.1;  // Wastes a whole lot of space!
 DEC 1.0     // Wastes a TRUCK TON of space!
 ```
 
 ## 2.5 Addresses, Strings, and Tokens
 
-Script supports UTF-8, UTF-16, and UTF-32 strings (STR), and UTF-8 Addresses (ADR) and Tokens (TKN). TKN and ADR shall contain no whitespace or non-printable characters, i.e. no characters with index less than 33. A Script implementation may enforce strict Unicode compliance. Packed Messages shall use nil-terminated strings and Unpacked Script shall use double-quote-terminated strings with C-style escape sequences. Implementation that support Interprocess LISP shall provide a delimiter char.
+Script supports UTF-8, UTF-16, and UTF-32 strings (STR), and UTF-8 Addresses (ADR) and Tokens (TKN). TKN and ADR shall contain no whitespace or non-printable characters, i.e. no characters with index less than 33. A Script implementation may enforce strict Unicode compliance. Packed Messages shall use nil-terminated strings and Unpacked Script shall use double-quote-terminated strings with C-style escape sequences. Implementation that support Script^2 shall provide a delimiter char.
 
 ```
 TKN key                 //< No quotes needed for a TKN.
@@ -258,23 +259,23 @@ STR8 "\"Hello world!\"" //< This is a string that is up to 2^64-1 bytes long.
 
 ## 2.6 Timestamps
 
-There are two types of timestamps, a 31-bit Unix timestamp, and 63-bit microsecond timestamp in C++11 chrono format. Both second and microsecond timestamps are Plain Old Data types that may be read from text as a TKN in the following formats: 
+There are two types of timestamps, a 31-bit Unix timestamp, and 63-bit microsecond timestamp in C++11 chrono format. Both second and microsecond timestamps are Plain Old Data types that may be read from text as a TKN in the following formats:
 
 ```
-/** Example functions.
-    @fn TimeSeconds <TMS>:<NIL>
-    @fn TimeMicroseconds <TMU>:<NIL>
+/* Example functions.
+@fn TimeSeconds <TMS>:<NIL>
+@fn TimeMicroseconds <TMU>:<NIL>
 
-    # Timestamp Format
-    | Seconds Since Epoch | Microseconds Since Epoch |
-    |:-------------------:|:------------------------:|
-    | YYYY-MM-DD@HH:MM:ss |  YYYY-MM-DD@HH:MM:ss:uu  |
+# Timestamp Format
+| Seconds Since Epoch | Microseconds Since Epoch |
+|:-------------------:|:------------------------:|
+| YYYY-MM-DD@HH:MM:ss |  YYYY-MM-DD@HH:MM:ss:uu  |
 
          Month ---v        v—-Minutes  */
-TimeSeconds 2016-07-13@15:39:23 
-/*               Hours--^     ^--- seconds 
+TimeSeconds 2016-07-13@15:39:23
+/*               Hours--^     ^--- seconds
             Year ---v     v--- Day     v-- microseconds */
-TimeMicroseconds 2016-07-13@15:39:23:999 
+TimeMicroseconds 2016-07-13@15:39:23:999
 ```
 
 ## 2.8 Objects
@@ -295,7 +296,7 @@ ASCII Objects shall be composed of contiguous memory and begin with an 8, 16, 32
 |   Dictionary    |       Set      |
 |      Map        |       Set      |
 
-### 2.11.a Stacks and Arrays 
+### 2.11.a Stacks and Arrays
 
 A Stack is a single dimensional array that reserves a total size that and may contain fewer items than the size allows but not more. The Stack Data Structure is designed to be memory aligned on all 16, 32, and 64-bit CPU Word sizes with restricts it's portable use to 16, 32, and 64-bit integer sizes due to the header being word-aligned on all systems with no wasted space. Multi-dimensional arrays are created from a Stack of dimensions that map to a packed 64-bit aligned C-style array.
 
@@ -305,7 +306,7 @@ Arrays shall be created using an Operand Stack Push the type abbreviation follow
 
 ```
 template<typename SI = int>
-struct Stack { 
+struct Stack {
     SI total_size,  //< The total size of the Stack Array in 64-bit aligned bytes.
        header_size, //< The total Dimensions Header in 64-bit aligned bytes.
        height,      //< The total height of the Stack in elements.
@@ -352,18 +353,18 @@ struct Array {
 Script uses a modified MatLab/Octave-style syntax that allows for Script Stack Operations.
 
 ```
-/*              +---------------------- Operand Push "[UI1#2" with signature 
+/*              +---------------------- Operand Push "[UI1#2" with signature
                 |                       <NIL>:<UI2#2>, Creates an Array and pushes
                 |                       it onto the Operand Stack.
                 |     +---------------- Operand '>':<
                 |     |                 header onto stack.
-                |     |  +------------- Operation 'x'<UI2>:<NIL> pushes a 
+                |     |  +------------- Operation 'x'<UI2>:<NIL> pushes a
                 |     |  |              dimension on the Stack.
                 |     |  | +----------- X Elements
                 |     |  | | +--------- By Y elements
                 |     |  | | | +------- By Z elements
                 |     |  | | | | +----- Element (0,0,0)
-                |     |  | | | | |      +------ Operation ','<UI2>:<NIL> sets the next 
+                |     |  | | | | |      +------ Operation ','<UI2>:<NIL> sets the next
                 |     |  | | | | |      |       array element.
                 |     |  | | | | |      |  +--- Everything is just a function call so it's
                 |     |  | | | | |      |  |    REALLY fast to interpret!
@@ -380,11 +381,11 @@ let 4d_array  = [UI1#2<2 x 2 x 2>]{ 1, 2; 1, 2 ;; 1, 2; 1, 2 }
                  N is the Dimension Count -----+  */
 ```
 
-#### Examples of Arrays with Errors 
+#### Examples of Arrays with Errors
 ```
 [UI2#3<2: 1 x 0>]               // Array type must be 2, 4, or 8!
-[UI#2<2: 1 x 70,000>]           // Too many members to fit in an Array2! 
-[HLF#2<2: 1 x 2> 0.1, 0.0, 0.3] // Too many members! 
+[UI#2<2: 1 x 70,000>]           // Too many members to fit in an Array2!
+[HLF#2<2: 1 x 2> 0.1, 0.0, 0.3] // Too many members!
 [MAP#4<1>]                      // Can't contain Hierarchical data types!
 ```
 
@@ -417,7 +418,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
 #### B-Sequence Header
 
 ```
-{ num_params, p_1,..., p_n } 
+{ num_params, p_1,..., p_n }
 ```
 
 # Example
@@ -436,9 +437,9 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
 /*          ^     ^
             |     |
             |     +----- An 16-bit unsigned integer.
-            +----------- A 32-bit dictionary. _2, _4, and _8 may be used with any 
-                         ASCII Object Data Type for 16, 32, and 64-bit types. DIC4 
-                         may also make a rather funny or inappropriate joke when put 
+            +----------- A 32-bit dictionary. _2, _4, and _8 may be used with any
+                         ASCII Object Data Type for 16, 32, and 64-bit types. DIC4
+                         may also make a rather funny or inappropriate joke when put
                          on coworkers foreheads. :-) */
 ```
 
@@ -525,14 +526,14 @@ An Escape Sequence (ESC) is a sequence of one or more Script Expressions that re
 #### ESC Example
 
 ```
-Parent.Child1.Foo ("Hello world!", 1, 2, 3); //< () and ',' are optional and 
+Parent.Child1.Foo ("Hello world!", 1, 2, 3); //< () and ',' are optional and
 Parent Child1 Foo "Hello world!", 1, 2, 3; //< Pop Operations are programmable.
 Parent Child1 Foo "Hello world!" 1 2 3     //< There is no pop instruction here
               Foo "Hello "                 //< so this is a string of Ops.
                   "world!" 1 2
-                  3;                      //< The Last 2 Foo calls execute when 
-                                          //< the ";" operation is read or 
-                                          //< 
+                  3;                      //< The Last 2 Foo calls execute when
+                                          //< the ";" operation is read or
+                                          //<
 Parent {                                  
     Child1 {
         Foo ("Hello world!", 1, 2, 3)
@@ -688,17 +689,17 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
     |_______ Type byte N       |   |     |
     |_______ ...               |   |     |
     |        Type byte 1       |   |     |   ^ 0x(N+c)+sizeof(AsciiList<UI, SI>)
-    |==========================|   |     |   | 
+    |==========================|   |     |   |
     | AsciiList<UI, SI> Struct |   v     v   ^
     +==========================+ ----------- ^ 0xN
 ```
 
-#### Sequence Memory Overhead 
-| #Bits | Max # Members | Max Header Size | Max Data Size | Overhead Per Set   | 
-|:-----:|:-------------:|:---------------:|:-------------:|:------------------:| 
-|   16  |      255      |     2^16        |       2^16    |   6 + 3 per index. | 
-|   32  |     2^16 - 1  |     2^32        |       2^32    |   16 + 5 per index.| 
-|   64  |     2^25 – 1  |     2^32        |       2^64    |   24 + 9 per index.| 
+#### Sequence Memory Overhead
+| #Bits | Max # Members | Max Header Size | Max Data Size | Overhead Per Set   |
+|:-----:|:-------------:|:---------------:|:-------------:|:------------------:|
+|   16  |      255      |     2^16        |       2^16    |   6 + 3 per index. |
+|   32  |     2^16 - 1  |     2^32        |       2^32    |   16 + 5 per index.|
+|   64  |     2^25 – 1  |     2^32        |       2^64    |   24 + 9 per index.|
 
 * All sizes listed in bytes.
 
@@ -733,11 +734,11 @@ Maps are one-to-one maps of Id-{Type-Value} tuples identical in structure to Lis
     |_______ Type byte N       |   |     |
     |_______ ...               |   |     |
     |        Type byte 1       |   |     |   ^ 0x(N+c)+sizeof(AsciiList<UI, SI>)
-    |==========================|   |     |   | 
+    |==========================|   |     |   |
     |  AsciiMap<UI, SI> Struct |   v     v   ^
     +==========================+ ----------- ^ 0xN
 ```
- 
+
 ## 3. Universal Polar IP Addressing
 
 **Universal Polar IP Addressing**, **Universal IP Addressing**, **UIP Addressing**, or **UIPA** is the Telemetry aspect of Script; it is a method of Addressing physical and Internet Protocol Addressing that works identically on every planet and can be used to route internet signals around the universe. Before we talk about a UP Addressing it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.
@@ -756,11 +757,11 @@ Latitude and longitude are useful to know in an IP Address because it helps the 
         /---> -180           |            /----> 90
        /      _  _           |           /      _  _
       /    =        =        |          /    =        =
-     /   =            =      |         /   =            = 
-  0 |  =     North     =     |      0 |  = _____________ = 
+     /   =            =      |         /   =            =
+  0 |  =     North     =     |      0 |  = _____________ =
     |  =     Pole      =     |        |  =    Equator    =
-     \   =            =      |         \   =            = 
-      \    =        =        |          \    =        = 
+     \   =            =      |         \   =            =
+      \    =        =        |          \    =        =
        \     ~  ~            |           \     ~  ~
         ---> +180            |            ---> -90
 ```
@@ -773,7 +774,7 @@ Haversine Formula's is used to calculate 3D arc lengths using polar coordinates 
 * Let L = degrees_longitude = L_2- L_1
 * Let l = degrees_latitude = l_2 - l_1
 * Let a = power (power ((sin (l / 2), 2) + cos (l_1) * cos(l_2) * (sin(L / 2), 2)
-* Let c = 2 * atan2 ( sqrt(a), sqrt(1 - a) ) 
+* Let c = 2 * atan2 ( sqrt(a), sqrt(1 - a) )
 * Let d = R * c
 
 ## 3.2 Most Longitudinal bit
@@ -816,17 +817,17 @@ It is not possible for any router to be located at the exact center of a 1 degre
 
 # 4. Script
 
-Script consists of the Group Automata Theorem, SCRIPT Protocol, Chinese room abstract stack machine (Crabs) and Interprocess LISP. In the John Searle's famous Chinese Room Thought Experiment users may talk to the Chinese Room (i.e. end-point) by writing Messages (i.e. Datagrams) on a piece of Paper (B-Input) and passing them through a Slot (i.e. Socket) in a Door (Group of communication links leading to the same room) in the room. An Agent (Program or AIML Entity) then reads the message and uses them to operate the Crabs, and replies by writing a Message on a piece of Paper and passing it back through the Slot.
+Script consists of the Group Automata Theorem, SCRIPT Protocol, Chinese room abstract stack machine (Crabs) and Script^2. In the John Searle's famous Chinese Room Thought Experiment users may talk to the Chinese Room (i.e. end-point) by writing Messages (i.e. Datagrams) on a piece of Paper (B-Input) and passing them through a Slot (i.e. Socket) in a Door (Group of communication links leading to the same room) in the room. An Agent (Program or AIML Entity) then reads the message and uses them to operate the Crabs, and replies by writing a Message on a piece of Paper and passing it back through the Slot.
 
 ## 4.1 Chinese Room Abstract Stack Machine (Crabs) Overview
 
-The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine capable of running *Group Automata* using the SCRIPT Protocol and Interprocess LISP. Crabs is the standardized Interprocess LISP API for interacting with a Chinese Room with a text terminal over the Script. Script is designed to run over a standard serial connection that allows users to hack on devices in real-time with a PC keyboard, app GUI, or other serial B-Stream so Script makes use of ASCII C0 Codes and VK Keyboard Codes so you can do alt, shift, or control keys on the keyboard to do stuff like copy and paste and Script Macros.
+The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine capable of running *Group Automata* using the SCRIPT Protocol and Script^2. Crabs is the standardized Script^2 API for interacting with a Chinese Room with a text terminal over the Script. Script is designed to run over a standard serial connection that allows users to hack on devices in real-time with a PC keyboard, app GUI, or other serial B-Stream so Script makes use of ASCII C0 Codes and VK Keyboard Codes so you can do alt, shift, or control keys on the keyboard to do stuff like copy and paste and Script Macros.
 
 ## 4.1.a Crabs Messages
 
 A **Crabs Message** is similar to an internet datagram and may be enclosed in a IPv4 or IPv6 datagram. A Crabs Message is defined as set of stack operations that start and end with an empty Operand Stack where one or more Operands is pushed, All Unicode Operation indexes being valid, all keys being resolved correctly, and the B-Stream being of a valid length for each B-Sequence argument. Crabs Room Messages may be written in any language using UTF-8. Messages get Unpacked by the Expression Interpreter and translated into the native Unicode format, UTF-8, UTF-16, or UTF-32 for that room and may be compiled directly to a register-based stack machine.
 
-Crabs Messages beginning with a nonprintable Unicode Character shall be byte-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Interprocess LISP.
+Crabs Messages beginning with a nonprintable Unicode Character shall be byte-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
 
 ## 4.1.b Chinese Room Contents
 
@@ -886,11 +887,15 @@ Script, and all formal intelligence, can be recursively defined as follows:
         * *许多机器人作为一个*
         * *Xǔduō jīqìrén zuòwéi yīgè*
 
-## 4.3 B-Stream Slots
+## 4.3 Time Epoch
+
+To ensure stability on 32-bit systems with 32-bit TMS timestamps, the time epoch shall be of the span of a decade, and such systems shall not be made to schedule events beyond a 6 epochs. Systems that require schedulers with more than the maximum number of epochs shall use a 64-bit TME timestamp.
+
+## 4.4 Slots
 
 A Socket is defined a block of memory used to transceived data, and is typically implemented as ring buffer. There are two types of slots, a B-Input (BIn) and B-Output (BOut). A **Slot** is defined as a Ring Buffer Socket. BIn and BOut implementations written in a Hardware Development Language may not strictly comply with the contiguous memory operation but shall operate functionally equivalent to the specified register stack machine implementation. For register stack machines with contiguous memory. Each Slot shall begin a 64-bit aligned memory address and shall have a 64-bit aligned end address.
 
-### 4.3.a Slot Data Structure in C
+### 4.4.a Slot Data Structure in C
 
 ```
 struct Slot {
@@ -901,7 +906,7 @@ struct Slot {
 };
 ```
 
-### 4.3.b B-Input Slot
+### 4.4.b B-Input Slot
 
 A B-Input, BIn, is a type of Slot for incoming Messages that uses offsets from the beginning of the data structure in memory.
 
@@ -960,7 +965,7 @@ struct KABUKI BOut {
 +------------------------------------+
 ```
 
-### 4.3.e Windows
+### 4.4.e Windows
 
 Windows combine a BIn and BOut in contiguous memory. The ring buffers function similar to BIn and BOut except that the Slot.stop offset in the B-Input Window gets swapped with duplex B-Output Window. This is because one is a read-only and one is a write only that may occur in parallel as opposed to a strictly serial Slot operation where the room may both read and write to the same Slot.
 
@@ -974,12 +979,12 @@ Windows combine a BIn and BOut in contiguous memory. The ring buffers function s
 +------+  0xN
 ```
 
-### 4.3.f Default In Slot and Out Slot
+### 4.4.f Default In Slot and Out Slot
 
 Script implementations may implement a default BIn Slot named In (**in UpperCaseCamel**)
  and default BOut Slot named Out (**in UpperCaseCamel**). In shall stream bytes from a Text keyboard, BOut Slot or Text display input. Out stream bytes to a Abstract text display, BIn Slot, or Abstract serial output.
 
-## 4.4 Expressions
+## 4.5 Expressions
 
 Expressions are a sequence of *Stack Operations* that end when all of the Operands are popped off the Expression Stack. Each Operand may have its own instruction that pops one Operand off the stack or pops all the Operands off performing a Closure Operation.
 
@@ -991,7 +996,7 @@ Once a valid Expression has been received, a room may then **Evaluate** that exp
 
 ```
 /* typedef uint8_t uint_t;
-   static const uint_t in_params[]  = { 1, UI4, UI8 }, 
+   static const uint_t in_params[]  = { 1, UI4, UI8 },
                        out_params[] = { 1, NILL, NIL };
     static const Op kOp= { “Example-Function_with_hypens_and_underscores”,
                           rxHeader, txHeader,
@@ -1010,7 +1015,7 @@ Example-Function_with_hypens_and_underscores {
 }
 ```
 
-### 4.3.a Operation Header 
+### 4.5.a Operation Header
 
 ```
 struct Op {
@@ -1035,44 +1040,44 @@ static const uint_t rx_header_without_strings[] = { 2, UI1, SI2 },
                     rx_header_with_array[]      = { 2, UI1, Array (UI1, 32) },
                     //< We need ot specifiy the exact number of bytes.
                     tx_header_with_strings[]    = { 2, UI1, STR };
-                    //< We don’t specify the max length for tx output. 
+                    //< We don’t specify the max length for tx output.
 ```
 
 #### Operation C++ Example
 
 ```
-#include <crabs/global.h> 
+#include <crabs/global.h>
 using namespace _;
 
 const Op* Star (wchar_t index, Expression* expr)  {
-    void* params[2]; 
-    
+    void* params[2];
+
     if (index != 'A') return 0;  //< switch statements are normally use used.
-    
-    static const unsigned int params[] = { 2, ADR, UI4, STR, 32 }, 
-                              result[] = { 2, UI4, STR }; 
+
+    static const unsigned int params[] = { 2, ADR, UI4, STR, 32 },
+                              result[] = { 2, UI4, STR };
     static const Operation kOpExample= { “expression-name”,
                                          params, result,
                                          “Description”, 0 };
     // Script uses the a nil expr pointer as a flag to get the Operation header.
     if (!expr) return &kOpExample;
-    
+
     // Example RPC variables.
-    uint32_t input_a, 
-             input_b, 
-             output_a = 1, 
-             output_b = 2; 
-     
+    uint32_t input_a,
+             input_b,
+             output_a = 1,
+             output_b = 2;
+
     if (Read (expr, kOpExample, Args (params, &input_a, &input_b)))
-         return expr->result; 
-     
+         return expr->result;
+
     // Operation logic here.
 
     return Write (expr, kOpExample, Args (params, &output_a, &output_b));
 }
 ```
 
-## 4.4 Operations
+## 4.6 Operations
 
 **Script Operations** are **Abstract Stack Machine Functions** implemented as either *Local Procedure Calls*  or *Remote Procedure Calls* that are indexed by a single *UTF-8 Character*. *Script Operations* may take a *Packed B-Stream* or *Word-Aligned B-Stream* of parameter arguments.
 
@@ -1151,7 +1156,7 @@ Signals the current automaton to finish processing a word.
 
 #### Whitespace Operations
 
-Script is whitespace delimited spaces may be be skipped by the interpreter or interpreted as a Operating with index 64 (ASCII ' '). For real-time streaming natural language processing Whitespace Operations are used to identify pauses in speech (i.e. dead audio).
+Script is whitespace delimited spaces may be skipped by the interpreter or interpreted as a Operating with index 64 (ASCII ' '). For real-time streaming natural language processing Whitespace Operations are used to identify pauses in speech (i.e. dead audio).
 
 ### 4.4.b Interrupt Escape Sequence
 
@@ -1230,16 +1235,16 @@ ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 thro
 ```
 /*
  +-------------------------------------- Operation with key "let" that takes a
- |                                       Token (TKN), which is UTF-8 string 
+ |                                       Token (TKN), which is UTF-8 string
  |                                       without any whitespace or symbols.
- |                                       Operation basically creates a 
- |                                       Expression that we then start writing 
+ |                                       Operation basically creates a
+ |                                       Expression that we then start writing
  |                                       to.
  |           +-------------------------- Operation Push "=DIC2" is a function  
- |           |                           with address stuff that creates a 
- |           |                           dictionary of size 64KB bytes with a 
- |           |                           maximum of 3 entries and pushes it 
- |           |                           onto the stack. This Operation Push 
+ |           |                           with address stuff that creates a
+ |           |                           dictionary of size 64KB bytes with a
+ |           |                           maximum of 3 entries and pushes it
+ |           |                           onto the stack. This Operation Push
  |           |                           gets written to the new Expression.
  v           v                    */
 let stuff =DIC4 65536 1 {
@@ -1249,8 +1254,8 @@ let stuff =DIC4 65536 1 {
     v       v */
     +=UI2 item1 1
     +----------------------------------- Operation with key "+=DIC2" same as
-    |                                    "=DIC4" except it creates a nested 
-    |                                    dictionary except that it takes a 
+    |                                    "=DIC4" except it creates a nested
+    |                                    dictionary except that it takes a
     |         +------------------------- Token (TKN) type.
     |         |     +------------------- This reserves about 32KB memory with
     |         |     |   +--------------- Maximum of 3 members.
@@ -1272,7 +1277,7 @@ let stuff =DIC4 65536 1 {
         +=SI2 item3 -1
         +=UI2 item4 1
         /*< We can't add item4 because we set the max elements to 3.
-            This won't generate an error but may generate an error 
+            This won't generate an error but may generate an error
             message. */
         Shrink
     }
@@ -1308,13 +1313,13 @@ LST, MAP, BOK, DIC, Stacks, and Arrays may be used to detect abnormal behavior b
 
 ### 4.8.c Compromise of Group Automata
 
-Compromised Rooms can be detected by monitoring. 
+Compromised Rooms can be detected by monitoring.
 
 * Invalid Operations.
-* Timing out during Operations. 
+* Timing out during Operations.
 * Not closing ESC.
 * Invalid B-Stream.
-* Losing low-level connection link. 
+* Losing low-level connection link.
 * Malformed UTF-8 strings.
 * Failed Operation Authentication.
 
@@ -1328,13 +1333,13 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 
 Compromised Automata shall be reported to the Intergalactic Council of Artifical and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
-## 4.8 Quality of Service 
+## 4.8 Quality of Service
 
-For all operations that return NIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received. 
+For all operations that return NIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received.
 
 ## 4.8.a Message Delivery Retry
 
-Each time a data transfer is initiated, a Book with a 
+Each time a data transfer is initiated, a Book with a
 
 ### 4.8.b Message Receipt
 
@@ -1348,33 +1353,33 @@ Message ordering is performed using a Library and ESC.
 
 Some Operations may be observed by a list of Observers. When an Operation is Observed, any time any of the operation is called, the Observer will report it's changed to the broker using an ESC.
 
-## 3.10 Profiles
+## 3.9 Profiles
 
 Profiles are used to group sets of security profiles into understandable categories. The official structure has not been set, but it is current **Low, Medium, High, and Vital Security Levels**.
 
-## 3.10.a Slave Profiles
+## 3.9.a Slave Profiles
 
 A slave device assumes that there is another Automaton or Automata performing the security role.
 
-## 3.11 Encryption
+## 3.10 Encryption
 
 Script uses DTLS 3.1 provided by the Kabuki Toolkit. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
 
-## 3.12 Portals
- 
+## 3.11 Portals
+
 A portal is a connection that connects two or more rooms. The following is a short list of some of the officially supported protocol transport layers. This is a living document that will be standardized many times thus do not expect this to be the only Portals; as that would be silly.
 
-## 3.12.a Configurations
+## 3.11.a Configurations
 
 #### Room-to-Room Portals
 
-Room-to-Room (R2R) Portals are connections from one Chinese Room to another without any network in between. SPI and UART are primary examples. In these cases, synchronization is different, and often dependent on the specific UART hardware. Due to Script's ESC, Script can be streamed serially without the need for any special hardware to start the sequence or control traffic. Often is the case with devices with non-ideal electronic components, the connection will sometimes cut out, and junk data will get streamed to the target. In this situation, streaming a stream of NIL commands will. Sometimes a target will be expecting much more data streamed to it, so to snap the device out of it, an interrupt method is required. There is a different interrupt protocol for each communication protocol. 
+Room-to-Room (R2R) Portals are connections from one Chinese Room to another without any network in between. SPI and UART are primary examples. In these cases, synchronization is different, and often dependent on the specific UART hardware. Due to Script's ESC, Script can be streamed serially without the need for any special hardware to start the sequence or control traffic. Often is the case with devices with non-ideal electronic components, the connection will sometimes cut out, and junk data will get streamed to the target. In this situation, streaming a stream of NIL commands will. Sometimes a target will be expecting much more data streamed to it, so to snap the device out of it, an interrupt method is required. There is a different interrupt protocol for each communication protocol.
 
 #### Hallway Portals
 
 Hallways connect multiple rooms. For each hallway, there exists a Slot that broadcasts messages to Slot in each Door.
 
-### 3.10.b Known Portal Types
+### 3.11.b Known Portal Types
 
 #### UART
 
@@ -1405,7 +1410,7 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
 
 
-## 3.13 Congestion Control Table
+## 3.12 Congestion Control Table
 
 The **Script Congestion Control Table** (**CCT**) is an array of 2^16 (65536) time slices of 15-bit integers per day offset from midnight. Each value represents the average load of the network from 0 through 32767. This value is then translated directly into the maximum length of a *ASCII Packet*. Endpoints may request a copy of the CCT using the *ENQ Operation*.
 
@@ -1415,7 +1420,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 
    current_sample = Sigma (0.85* previos_sample + 0.15 * current) / num_samples
 
-### 3.13.a. Memory Footprint
+### 3.12.a. Memory Footprint
 
 * *60 (seconds/minute) × 60 (minutes/hour) × 24 (hours/day)* = ***86400 (seconds/day)***
 * *(86400 seconds/day) / 2^16(samples/day* = ***1.318359375 (seconds/sample)***
@@ -1424,26 +1429,17 @@ Three years of data must be stored in order to detect annual cycles such as holi
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
 
-## 3.14 Conformance Targets
+## 3.13 Conformance Targets
 
 Script has two currently supported conformance targets: Automaton and Automata.
 
-### 3.14.a Automaton
+### 3.13.a Automaton
 
-The Target shall be certified to be a Script Automaton if the Target does not support Interprocess LISP.
+The Target shall be certified to be a Script Automaton if the Target does not support Script^2.
 
-### 3.14.b Group Automata
+### 3.13.b Group Automata
 
-The Target shall be certified as a Group Automata if the Target supports Interprocess LISP.
-
-### 3.15 Crabs Compilers
-
-```
-@warning This is a new section and it will change as soon as the code is 
-         actually working
-```
-
-The Chinese Room Abstract Stack Machine Compiler shall translate be translated to a register stack machine by using a hardware assisted stack where the B-Stream is pushed onto the stack in the C function call convention. Operations shall be precompiled or JIT compiled and ESC Stack Operations shall be translated from Stack Vector Addresses directly to the Operand's address in memory. For example Object A is pushed onto the Operand Stack followed by Operand B, then C followed by an Operation on C, followed by two Pop Operations and another Operation on Operand A. Rather than inserting code for the Operand Stack Operations for A to C and back, Crabs Compilers shall translate the ADR directly to a single pointer Operands A and C in this example.
+The Target shall be certified as a Group Automata if the Target supports Script^2.
 
 ---
 
@@ -1513,4 +1509,3 @@ Keys are promoted through the *Internet Guilds*. Each registered entity gets a f
 ## 5.6 DNS Caching
 
 The **Local DNS Authority** (**LDNSA**) is located at address 0.0.0.0.1. In Chinese Rooms expressions are indexed with printable Unicode characters and 0 is a no-op command. 0.0.0.0.1 gets turned into 4 no-ops and a single ASCII SOH Operation that pushes the Library onto the *Expression Stack*. If the key doesn't exist in the Local Cache, the DNS Query is passed on to a *Superior DNS Authority*, if the key does not exist in its cache it will be passed on to the next highest up authority until it is either resolved or returns a **Key Not Found Error**. All Automata have a cache and *Script Automata* shall regularly check with *Superior DNS Authorities* to update and remove keys.
-
