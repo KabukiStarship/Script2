@@ -6,7 +6,7 @@ Searle's Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification define
 
 * [FAQ](https://github.com/kabuki-starship/script/blob/master/docs/faq.md) 
   - *Frequently asked questions.*
-* [Script Specification RFC](https://github.com/kabuki-starship/script/wiki/SCRIPT-Specification-RFC)
+* [Script Specification RFC](https://github.com/kabuki-starship/script/blob/master/script_specification_rfc.md)
   - *Release for Comment for Searle's Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
 * [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit)
   - *Primary repository of the Kabuki Toolkit, a compliant Script implementation.*

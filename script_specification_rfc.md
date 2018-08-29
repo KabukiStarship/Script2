@@ -53,9 +53,11 @@ Please note that this RFC is not an ISO Specification but is a living document; 
     7. [Abnormal Behaviors](#57-abnormal-behavior)
 
 ### 1.2. Author
+
 Cale Jamison McCollough
 
 ### 1.3. License
+
 Copyright 2015-2017 (C) [Cale McCollough](mailto:cale.mccollough@gmail.com)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
@@ -131,7 +133,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |:---------:|:--------:|:---------:|
 | bit_width | is_stack | type 0-31 |
 
-### 2.1.a Types 0-31
+### 2.1.a ASCII Data Types 0-31
 
 | ID | Type |  Alt Name  | Width  | Description         |
 |:--:|:----:|:----------:|:------:|:--------------------|
@@ -145,28 +147,36 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |  7 | SI4  |   int32_t  |   -4   | 32-bit signed varint. |
 |  8 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer. |
 |  9 | FLT  |    float   |    4   | 32-bit floating-point number. |
-| 10 | TMS  |   int32_t  |   -4   | 32-bit second since epoch timestamp. |
-| 11 | TME  |   int64_t  |   -8   | 32-bit second since epoch timestamp. |
-| 12 | TMU  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
+| 10 | TM4  |   int32_t  |   -4   | 32-bit signed integer second since epoch timestamp. |
+| 11 | TME  |   int64_t  |   -8   | 32-bit signed integer second since epoch timestamp with 32-bit signed integer sub-second ticker. |
+| 12 | TM8  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
 | 13 | SI8  |   int64_t  |   -8   | 64-bit signed integer. |
 | 14 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer. |
 | 15 | DBL  |   double   |    8   | 64-bit floating-point number. |
 | 16 | SIH  |  int128_t  |  -16   | 128-bit signed integer. |
 | 17 | UIH  | uint128_t  |   16   | 128-bit unsigned integer. |
 | 18 | DEC  |   Decimal  |   16   | 128-bit floating-point number. |
-| 19 | UIX  |  unsigned  | 32-8KB | 2^(6+X)-bit unsigned integer, where 0 <= X <= 7. |
+| 19 | UIX  |  Unsigned  | 32-4KB | Unsigned integer between 32 and 2^12 bits wide. |
 | 20 | ADR  |   Address  |  <=N   | Stack Operation Address. |
 | 21 | STR  |   String   |  <=N   | UTF-8 string. |
 | 22 | TKN  |   Token    |  <=N   | UTF-8 string without any whitespace. |
 | 23 | BSQ  | B-Sequence |  <=N   | B-Sequence. |
 | 24 | OBJ  |   Object   |    N   | N-byte object composed of contiguous memory. |
 | 25 | LOM  |   Loom     |    N   | A string array without a hash table. |
-| 26 | TBL  |   Table    |    N   | A hash-table of strings. |
+| 26 | TBL  |   Table    |    N   | A hash-table of strings with contiguous indexes. |
 | 27 | EXP  | Expression |  <=N   | Script expression of B-Sequences. |
-| 28 | LST  |   List     |    N   | Stack of type-value records. |
-| 29 | MAP  |    Map     |    N   | Unique map of integer-value records. |
-| 30 | BOK  | Multidict  |    N   | Multimap of key-value records. |
-| 31 | DIC  | Dictionary |    N   | Unique map of key-value records. |
+| 28 | LST  |   List     |    N   | Stack of type-Records with contiguous indexes starting at zero. |
+| 29 | MAP  |    Map     |    N   | Unique map of integer-Record records. |
+| 30 | BOK  | Multidict  |    N   | A Book, or Multidictionary, of Records without a hash table. |
+| 31 | DIC  | Dictionary |    N   | Unique map of key-value records with a hash table. |
+
+#### Extended ASCII Data types
+
+|   Bits   | Index | Type |  Alt Name  | Width   | Description |
+|:--------:|:-----:|:----:|:----------:|:-------:|:------------|
+| 01010101 |  123  | xyx  |  Example   | Example | The fox jumped over the fence. |
+
+Extended ASCII Data Types are types utilize illegal Primary ASCII Data Types as other data types.
 
 ### 2.1.b List of Types Key
 
@@ -178,6 +188,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 | <=N   | Has pre-specified buffer of size N bytes but can use less than that.|
 
 ## 2.2 Integers
+
 Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's complement integers and unsigned uncomplemented integers. For n-byte integers, implementations may implement n-byte integer math and may require n to be 8, 16, or 32 bytes.
 
 ### Valid Integers Examples
@@ -213,8 +224,8 @@ X-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may b
 
 ```
 // static const unsigned int sin_uin_bsq_example = { 2, SIN, 8, UIN 16 };
-SIN -1
-UIN 1
+SIX -1
+UIX 1
 ```
 
 ## 2.3 Boolean
@@ -259,24 +270,37 @@ STR8 "\"Hello world!\"" //< This is a string that is up to 2^64-1 bytes long.
 
 ## 2.6 Timestamps
 
-There are two types of timestamps, a 31-bit Unix timestamp, and 63-bit microsecond timestamp in C++11 chrono format. Both second and microsecond timestamps are Plain Old Data types that may be read from text as a TKN in the following formats:
+ASCII provides three types of timestamps, a 32-bit signed integer TMS seconds from epoch timestamp, a 64-bit signed integer TME seconds from epoch timestamp, and 64-bit TSS sub-second timestamp composed of a 32-bit TMS timestamp and a UI4 tick that gets incremented at a variable time period.
 
 ```
 /* Example functions.
-@fn TimeSeconds <TMS>:<NIL>
-@fn TimeMicroseconds <TMU>:<NIL>
+@fn Foo <TMS>:<NIL>
+@fn Foo <TME>:<NIL>
+@fn Foo <TSS>:<NIL>
 
 # Timestamp Format
 | Seconds Since Epoch | Microseconds Since Epoch |
 |:-------------------:|:------------------------:|
 | YYYY-MM-DD@HH:MM:ss |  YYYY-MM-DD@HH:MM:ss:uu  |
 
-         Month ---v        v—-Minutes  */
-TimeSeconds 2016-07-13@15:39:23
+ Month ---v        v—-Minutes  */
+Foo 2016-07-13@15:39:23
 /*               Hours--^     ^--- seconds
-            Year ---v     v--- Day     v-- microseconds */
-TimeMicroseconds 2016-07-13@15:39:23:999
+Year --v     v--- Day     v-- ticks */
+Foo 2016-07-13@15:39:23:999
 ```
+
+### 2.6.a Epoch and Invalid Timestamps
+
+The 32-bit time epoch shall be 16 years starting at the January 1st of the beginning of each decade beginning from 0 AD. System that use
+
+#### 32-bit Timestamp Range
+
+* `(+/-) ((2^30)-1)/(60*60*24*365) = (+/-) 36 years`
+
+#### 64-bit Timestamp Range
+
+* `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
 ## 2.8 Objects
 
@@ -339,13 +363,13 @@ struct Array {
 #### Array Memory Layout
 
 ```
-    |==================|
+    +------------------+
     |   Packed Array   |
-    |==================|
+    |------------------|
  +  | Dimensions Stack |
- ^  |==================|
+ ^  |------------------|
  |  |      Header      |
-0xN |==================|
+0xN +------------------+
 ````
 
 #### Array Examples
@@ -889,7 +913,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
 
 ## 4.3 Time Epoch
 
-To ensure stability on 32-bit systems with 32-bit TMS timestamps, the time epoch shall be of the span of a decade, and such systems shall not be made to schedule events beyond a 6 epochs. Systems that require schedulers with more than the maximum number of epochs shall use a 64-bit TME timestamp.
+The Unix timestamp cycles around in the year 3038, so to ensure stability on 32-bit systems with 32-bit TMS timestamps, the time epoch shall be of the span of a decade, and such systems shall not be made to schedule events beyond a 6 epochs. Systems that require schedulers with more than the maximum number of epochs shall use a 64-bit TME timestamp.
 
 ## 4.4 Slots
 
