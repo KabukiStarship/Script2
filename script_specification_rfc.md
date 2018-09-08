@@ -24,7 +24,7 @@ Please note that this RFC is not an ISO Specification but is a living document; 
     1.  [Longitude and Latitude](#31-longitude-and-latitude)
     2.  [Universal Address Format](#32-universal-address-format)
     3.  [Off-planet Signals](#33-off-planet-signals)
-3. [SCRIPT Protocol](#4-script-protocol-and-virtual-machine)
+3. [SCRIPT Software-defined Networking Protocol](#4-script-software-defined-networking-protocol)
     1.  [Chinese Room Abstract Stack Machine (Crabs) Overview](#41-chinese-room-abstract-stack-machine-crabs-overview)
     2.  [Group Automata Theorem](#432-group-automata-theorem)
     3.  [Time](#43-time)
@@ -191,7 +191,7 @@ Extended ASCII Data Types are types utilize illegal Primary ASCII Data Types as 
 
 Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's complement integers and unsigned uncomplemented integers. For n-byte integers, implementations may implement n-byte integer math and may require n to be 8, 16, or 32 bytes.
 
-### Valid Integers Examples
+### 2.2.a Valid Integers Examples
 ```
 SI1 0
 UI1 255
@@ -199,13 +199,38 @@ SI2 -32,000
 SI4 0xFFFF
 ```
 
-### Invalid Integer Examples
+### 2.2.b Invalid Integer Examples
 ```
 SI1 256       ; Too big for size
 SI2 0xFFFFF   ; Too big for size
 ```
 
-## 2.2.a Varints
+## 2.2.c Unsigned Not-a-Numbers
+
+Unsigned Not-a-Number (U-NaN) is the bit pattern with all ones as in the following example:
+
+```C++
+template<typename UI = uintptr_t>
+inline UI NaNUnsigned () {
+  UI nan = 0;
+  return ~nan;
+}
+```
+
+## 2.2.d Signed Not-a-Numbers
+
+Unsigned Not-a-Number (S-NaN) is the bit pattern with only the Most Significant bit asserted as in the following example:
+
+```C++
+template<typename SI = intptr_t, typename UI = uintptr_t>
+inline SI NaNSigned () {
+  UI nan = 1;
+  nan = nan << (sizeof (UI) * 8 - 1);
+  return (SI)nan;
+}
+```
+
+## 2.2.e Varints
 
 Variants are MSb variant are compressed using MSB-encoded signed and unsigned 1-to-9-byte variable-length integers. Varints use the MSb of each byte to determine if another byte is to be loaded. This allows values less than 128 to be sent using only one byte, 14-bit values in two bytes, 21-bit values in three bytes and so on.  
 
@@ -216,7 +241,7 @@ UVI 128 // = 0b0000_0001_1000_0000
 UVI 255 // = 0b0000_0001_1111_1111
 SVI -64 // = 0b0011_1111
 ```
-## 2.2.b X-Byte Unsigned Integers
+## 2.2.f X-Byte Unsigned Integers
 
 X-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may be 0-N bytes in width. SIN and UIN are very useful for transferring 128+ bit hashes and custom data structures. Implementations may implement n-byte arithmetic.
 
