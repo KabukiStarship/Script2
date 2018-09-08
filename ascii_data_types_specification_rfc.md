@@ -72,7 +72,8 @@ Extended ASCII Data Types are types utilize illegal Primary ASCII Data Types as 
 Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's complement integers and unsigned uncomplemented integers. For n-byte integers, implementations may implement n-byte integer math and may require n to be 8, 16, or 32 bytes.
 
 ### 2.2.a Valid Integers Examples
-```
+
+```C++
 SI1 0
 UI1 255
 SI2 -32,000
@@ -80,7 +81,7 @@ SI4 0xFFFF
 ```
 
 ### 2.2.b Invalid Integer Examples
-```
+```C++
 SI1 256       ; Too big for size
 SI2 0xFFFFF   ; Too big for size
 ```
@@ -102,11 +103,11 @@ inline UI NaNUnsigned () {
 Unsigned Not-a-Number (S-NaN) is the bit pattern with only the Most Significant bit asserted as in the following example:
 
 ```C++
-template<typename SI = intptr_t, typename UI = uintptr_t>
+template<typename SI, typename UI>
 inline SI NaNSigned () {
   UI nan = 1;
-  nan = nan << (sizeof (UI) * 8 - 1);
-  return (SI)nan;
+  nan = ;
+  return (SI)(((UI)1) << (sizeof (UI) * 8 - 1));
 }
 ```
 
@@ -116,7 +117,7 @@ Variants are MSb variant are compressed using MSB-encoded signed and unsigned 1-
 
 Both Signed and Unsigned Varints must use the most significant bit asserted is used to marks if another byte is loaded. All Script implementations shall represent signed varints as uncomplemented integers with the sign bit in the LSb.
 
-```
+```C++
 UVI 128 // = 0b0000_0001_1000_0000
 UVI 255 // = 0b0000_0001_1111_1111
 SVI -64 // = 0b0011_1111
@@ -127,7 +128,7 @@ X-Byte Signed Integers (SIN) and Unsigned Integers (UIN) are integers that may b
 
 #### Example
 
-```
+```C++
 // static const unsigned int sin_uin_bsq_example = { 2, SIN, 8, UIN 16 };
 SIX -1
 UIX 1
@@ -139,7 +140,7 @@ Booleans in Script are stored as 32-bit types where the deasserted value shall b
 
 ### Boolean Examples
 
-```
+```C++
 // All values less then 127 and greater than -127
 BOL true   //< Translates to the number 1
 BOL false  //< Translates to the number 0
@@ -152,7 +153,7 @@ BOL -129   //< Will require 2 bytes to transceive.
 
 Script supports, 16, 32, and 64-bit floating-point numbers, also called half, float, and double precision float-point numbers. Floating-point numbers do not lend themselves very well to varint compression, so using a 16-bit floating-point number can dramatically improve performance when low-precision is needed. Implementations may implement 128-bit floating-point math. 128-bit floating point numbers are compatible with the C# programming language.
 
-```
+```C++
 HLF 0.0     // Use a HLF to save memory and bandwidth!
 FLT 0.1     // Wastes a lot of space!
 DBL - 0.1;  // Wastes a whole lot of space!
@@ -163,7 +164,7 @@ DEC 1.0     // Wastes a TRUCK TON of space!
 
 Script supports UTF-8, UTF-16, and UTF-32 strings (STR), and UTF-8 Addresses (ADR) and Tokens (TKN). TKN and ADR shall contain no whitespace or non-printable characters, i.e. no characters with index less than 33. A Script implementation may enforce strict Unicode compliance. Packed Messages shall use nil-terminated strings and Unpacked Script shall use double-quote-terminated strings with C-style escape sequences. Implementation that support Script^2 shall provide a delimiter char.
 
-```
+```C++
 TKN key                 //< No quotes needed for a TKN.
 ADR 123                 //< A ADR is a TKN.
 STR  "\"Hello world!\"" //< String that reads "Hello world!" with double quotes.
@@ -175,9 +176,9 @@ STR8 "\"Hello world!\"" //< This is a string that is up to 2^64-1 bytes long.
 
 ## 2.6 Timestamps
 
-ASCII provides three types of timestamps, a 32-bit signed integer TMS seconds from epoch timestamp, a 64-bit signed integer TME seconds from epoch timestamp, and 64-bit TSS sub-second timestamp composed of a 32-bit TMS timestamp and a UI4 tick that gets incremented at a variable time period.
+ASCII provides three types of timestamps, a 32-bit signed integer TMS seconds from epoch timestamp, a 64-bit signed integer TME seconds from epoch timestamp, and 64-bit Time Sub-second (TSS) timestamp composed of a TMS timestamp and a UI4 tick that gets incremented at a variable time period. The Sub-second Tick Epoch (STE) shall be programmable but shall be set to the defaults of either 1000 or 64, depending on if a microsecond or OS update timer is used respectively. It is important to note that ASCII Timestamps do not contain the STE period by design.
 
-```
+```C++
 /* Example functions.
 @fn Foo <TMS>:<NIL>
 @fn Foo <TME>:<NIL>
@@ -197,13 +198,13 @@ Foo 2016-07-13@15:39:23:999
 
 ### 2.6.a Epoch and Invalid Timestamps
 
-The 32-bit time epoch shall be 16 years starting at the January 1st of the beginning of each decade beginning from 0 AD. System that use
+The 32-bit time epoch shall be 16 years starting at the January 1st of the beginning of each decade beginning from 0 AD but not starting until January 1st 2032. Before January 1st 2032 the epoch shall be the Unix Timestamp Epoch.
 
-#### 32-bit Timestamp Range
+#### Max 32-bit Timestamp Range
 
 * `(+/-) ((2^30)-1)/(60*60*24*365) = (+/-) 36 years`
 
-#### 64-bit Timestamp Range
+#### Max 64-bit Timestamp Range
 
 * `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
