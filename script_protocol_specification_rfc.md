@@ -419,21 +419,14 @@ ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 thro
 ### Dictionary Example
 
 ```
-/*
- +-------------------------------------- Operation with key "let" that takes a
- |                                       Token (TKN), which is UTF-8 string
- |                                       without any whitespace or symbols.
- |                                       Operation basically creates a
- |                                       Expression that we then start writing
- |                                       to.
- |           +-------------------------- Operation Push "=DIC2" is a function  
- |           |                           with address stuff that creates a
- |           |                           dictionary of size 64KB bytes with a
- |           |                           maximum of 3 entries and pushes it
- |           |                           onto the stack. This Operation Push
- |           |                           gets written to the new Expression.
+  +-------------------------- Operation Push "=DIC2" is a function  
+  |                           with address stuff that creates a
+  |                           dictionary of size 64KB bytes with a
+  |                           maximum of 3 entries and pushes it
+  |                           onto the stack. This Operation Push
+  v                           gets written to the new Expression.
  v           v                    */
-let stuff =DIC4 65536 1 {
+stuff =DIC4 65536 1 {
 /*  +--------------------------- This is a function with key "UI2".
     |       +------------------- This is a 16-bit unsigned int.
     |       |
@@ -517,7 +510,7 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 
 ### 3.7.e Reporting Compromised Automata
 
-Compromised Automata shall be reported to the Intergalactic Council of Artifical and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
+Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
 ## 3.8 Quality of Service
 
@@ -594,7 +587,6 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 #### Interprocess
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
-
 
 ## 3.12 Congestion Control Table
 

@@ -42,7 +42,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 | 22 | TKN  |   Token    |  <=N   | UTF-8 string without any whitespace. |
 | 23 | BSQ  | B-Sequence |  <=N   | B-Sequence. |
 | 24 | OBJ  |   Object   |    N   | N-byte object composed of contiguous memory. |
-| 25 | LOM  |   Loom     |    N   | A string array without a hash table. |
+| 25 | LOM  |   Loom     |    N   | An array of UTF-8, UTF-16, or UTF-32 strings without a hash table. |
 | 26 | TBL  |   Table    |    N   | A hash-table of strings with contiguous indexes. |
 | 27 | EXP  | Expression |  <=N   | Script expression of B-Sequences. |
 | 28 | LST  |   List     |    N   | Stack of type-Records with contiguous indexes starting at zero. |
@@ -106,8 +106,7 @@ Unsigned Not-a-Number (S-NaN) is the bit pattern with only the Most Significant 
 template<typename SI, typename UI>
 inline SI NaNSigned () {
   UI nan = 1;
-  nan = ;
-  return (SI)(((UI)1) << (sizeof (UI) * 8 - 1));
+  return (SI)(nan << (sizeof (UI) * 8 - 1));
 }
 ```
 
@@ -202,11 +201,11 @@ The 32-bit time epoch shall be 16 years starting at the January 1st of the begin
 
 #### Max 32-bit Timestamp Range
 
-* `(+/-) ((2^30)-1)/(60*60*24*365) = (+/-) 36 years`
+`(+/-) ((2^30)-1)/(60*60*24*365) = (+/-) 36 years`
 
 #### Max 64-bit Timestamp Range
 
-* `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
+`(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
 ## 2.8 Objects
 
@@ -646,6 +645,43 @@ Maps are one-to-one maps of Id-{Type-Value} tuples identical in structure to Lis
     |_______ Data N            |  Data   |
     |_______ ...               |   |     |
     |_______ Data 0            |   v     |
+    |==========================| -----   |
+    |_______ count_max         |   ^     |
+    |_______ ...               |   |     |
+    |_______ Sorted Mappings N |   |     |
+    |_______ ...               |   |     |
+    |        Sorted Mappings 1 |   |     |
+    |==========================|   |     |
+    |_______ count_max         |   |    Size
+    |_______ ...               |   |     |
+    |_______ Data Offset N     |   |     |
+    |_______ ...               | Header  |
+    |        Data Offset 1     |   |     |
+    |==========================|   |     |
+    |_______ count_max         |   |     |
+    |_______ ...               |   |     |
+    |_______ Type byte N       |   |     |
+    |_______ ...               |   |     |
+    |        Type byte 1       |   |     |   ^ 0x(N+c)+sizeof(AsciiList<UI, SI>)
+    |==========================|   |     |   |
+    |  AsciiMap<UI, SI> Struct |   v     v   ^
+    +==========================+ ----------- ^ 0xN
+```
+
+
+### d. Loom
+
+ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings.
+
+#### Sequence Memory Layout
+
+```
+    +==========================+ -----------
+    |_______ Strings 0            |  Strings   |
+    |_______ ...               |   |     |
+    |_______ Data N            |   v     |
+    |_______ ...               |   |     |
+    |_______ Buffer            |   ^     ^
     |==========================| -----   |
     |_______ count_max         |   ^     |
     |_______ ...               |   |     |
