@@ -51,6 +51,8 @@ Polar coordinates are used in 2D polar subnets in order to sort systems based on
 
 ### 3.3.a Universal Address Format Packet
 
+***Notice of change*** *This packet format is not set in stone or tested. The IPv6 protocol uses 128-bit headers, but that just isn't necessary with UPIP because routing MAY require fewer stages of translation or it may not depending on how the circuits pan out.*
+
 |  b95-b64  | b38-b32 |  b31  | b30-b24 |  b23  | b22-b12  |  b14  |  b13-b5   |  b_4  | b_3-b_0 |
 |:---------:|:-------:|:-----:|:-------:|:-----:|:--------:|:-----:|:---------:|:-----:|:-------:|
 |     0     | Radians |   0   |  Radius |   0   | Latitude |   0   | Longitude |   0   | Height  |

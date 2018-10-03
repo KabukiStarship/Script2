@@ -13,7 +13,7 @@ The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine c
 
 A **Crabs Message** is similar to an internet datagram and may be enclosed in a IPv4 or IPv6 datagram. A Crabs Message is defined as set of stack operations that start and end with an empty Operand Stack where one or more Operands is pushed, All Unicode Operation indexes being valid, all keys being resolved correctly, and the B-Stream being of a valid length for each B-Sequence argument. Crabs Room Messages may be written in any language using UTF-8. Messages get Unpacked by the Expression Interpreter and translated into the native Unicode format, UTF-8, UTF-16, or UTF-32 for that room and may be compiled directly to a register-based stack machine.
 
-Crabs Messages beginning with a nonprintable Unicode Character shall be byte-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
+Crabs Messages beginning with a non-printable Unicode Character shall be byte-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
 
 ## 3.1.b Chinese Room Contents
 
@@ -224,7 +224,7 @@ static const uint_t rx_header_without_strings[] = { 2, UI1, SI2 },
                     rx_header_with_strings[]    = { 2, UI1, STR, 32 },
                     //< We need to specify the max string length.
                     rx_header_with_array[]      = { 2, UI1, Array (UI1, 32) },
-                    //< We need ot specifiy the exact number of bytes.
+                    //< We need to specify the exact number of bytes.
                     tx_header_with_strings[]    = { 2, UI1, STR };
                     //< We don’t specify the max length for tx output.
 ```
@@ -334,7 +334,7 @@ Signals the current automaton to finish processing a word.
 
 #### Exponent Operation
 
-**Exponent Operations** (**Exp Op** or **Exp Ops**) work similarly to math exponents only with A*B operations. **Exp Ops** work by specifying the number of loops **Varint**. If the value of the Varint is **NaN** then it is a **Infinite Exponential Operations** (**IEO**). **IEOs** are functionally identical to while loops. **Loops** are exited prematurely using the **Clear Operation**.
+**Exponent Operations** (**Exp Op** or **Exp Ops**) work similarly to math exponents only with A*B operations. **Exp Ops** work by specifying the number of loops **Varint**. If the value of the varint is **NaN** then it is a **Infinite Exponential Operations** (**IEO**). **IEOs** are functionally identical to while loops. **Loops** are exited prematurely using the **Clear Operation**.
 
 #### Delete Operation
 
@@ -419,21 +419,13 @@ ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 thro
 ### Dictionary Example
 
 ```
-/*
- +-------------------------------------- Operation with key "let" that takes a
- |                                       Token (TKN), which is UTF-8 string
- |                                       without any whitespace or symbols.
- |                                       Operation basically creates a
- |                                       Expression that we then start writing
- |                                       to.
- |           +-------------------------- Operation Push "=DIC2" is a function  
- |           |                           with address stuff that creates a
- |           |                           dictionary of size 64KB bytes with a
- |           |                           maximum of 3 entries and pushes it
- |           |                           onto the stack. This Operation Push
- |           |                           gets written to the new Expression.
- v           v                    */
-let stuff =DIC4 65536 1 {
+  +-------------------------- Operation Push "=DIC2" is a function  
+  |                           with address stuff that creates a
+  |                           dictionary of size 64KB bytes with a
+  |                           maximum of 3 entries and pushes it
+  |                           onto the stack. This Operation Push
+  v                           gets written to the new Expression. */
+stuff =DIC4 65536 1 {
 /*  +--------------------------- This is a function with key "UI2".
     |       +------------------- This is a 16-bit unsigned int.
     |       |
@@ -517,7 +509,7 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 
 ### 3.7.e Reporting Compromised Automata
 
-Compromised Automata shall be reported to the Intergalactic Council of Artifical and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
+Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
 ## 3.8 Quality of Service
 
@@ -594,7 +586,6 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 #### Interprocess
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
-
 
 ## 3.12 Congestion Control Table
 
