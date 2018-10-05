@@ -424,7 +424,12 @@ ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 thro
   |                           dictionary of size 64KB bytes with a
   |                           maximum of 3 entries and pushes it
   |                           onto the stack. This Operation Push
+<<<<<<< HEAD
   v                           gets written to the new Expression. */
+=======
+  v                           gets written to the new Expression.
+ v           v                    */
+>>>>>>> 8aa74e7eb95d53324850b2fb8a195d79431287d2
 stuff =DIC4 65536 1 {
 /*  +--------------------------- This is a function with key "UI2".
     |       +------------------- This is a 16-bit unsigned int.
