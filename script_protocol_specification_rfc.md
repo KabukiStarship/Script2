@@ -457,8 +457,7 @@ stuff =DIC4 65536 1 {
         /*< We can't add item4 because we set the max elements to 3.
             This won't generate an error but may generate an error
             message. */
-        Shrink
-    }
+        Shrink  //< We just shrunk the DIC4. Sorry, but I had to. Have fun. :-)
 }
 /** Using macros to pass return values as arguments.
     Do you have a better abbreviation for a dictionary?
