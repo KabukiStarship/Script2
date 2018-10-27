@@ -17,7 +17,7 @@ Crabs Messages beginning with a non-printable Unicode Character shall be byte-en
 
 ## 3.1.b Chinese Room Contents
 
-A Chinese Room in Searle's famous thought experiment is just a plain old office with a person in it who is operating a *pen and paper abstract stack machine* that functions identically to computer, only there are no electronic parts. In this room are Doors that lead to other rooms that have people in them. Each Door has a Slot (i.e. a socket) that allows people in rooms to communicate with other rooms with handwritten messages that can be both synchronous and asynchronous. Consequentially, this is exactly how an optimized piece of internet software works. Rooms consist of Doors that lead to other Rooms, Walls that contain Doors, Slots in Doors, One-way Tables, Books, Dictionaries, Maps, Lists, Arrays, Stacks, and Files, and Boxes.
+A Chinese Room in John Searle's famous thought experiment is just a plain old office with a person in it who is operating a *pen and paper abstract stack machine* that functions identically to computer, only there are no electronic parts. In this room are Doors that lead to other rooms that have people in them. Each Door has a Slot (i.e. a socket) that allows people in rooms to communicate with other rooms with handwritten messages that can be both synchronous and asynchronous. Consequentially, this is exactly how an optimized piece of internet software works. Rooms consist of Doors that lead to other Rooms, Walls that contain Doors, Slots in Doors, One-way Tables, Books, Dictionaries, Maps, Lists, Arrays, Stacks, and Files, and Boxes.
 
 At the root scope of each system lies a *Interrupt Operations* DC1, DC2, DC3, and DC4 Script Operations defined.
 
