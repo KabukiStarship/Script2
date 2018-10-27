@@ -60,7 +60,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 |                         Key | Description |
 |----------------------------:|:------------|
-|                       ASCII | Automata Standard Code for Information Interchange. |
+|                       ASCII | Automaton Standard Code for Information Interchange. |
 |              Natural Number | An integer greater than or equal to zero. |
 |                         I2C | Inter-IC bus is a serial bus protocol like SPI and UART (@wiki I2C Bus). |
 |                         SPI | SPI is a serial port bus like I2C and UART (@wiki SPI Bus). |
