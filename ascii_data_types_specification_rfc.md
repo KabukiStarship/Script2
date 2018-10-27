@@ -3,7 +3,7 @@ SCRIPT Specification RFC
 
 # 2 ASCII Data Types Specification
 
-There are 32 Automata Standard Code for Information Interchange (ASCII) Data Types composed of 23 Plain-Old-Data and 8 object types composed of contiguous memory. Types are stored as bytes where the 5 LSb are used to store the type and the upper 3 bits are used to store either bit width of the size of the object, 8, 16, 32, or 64-bit, or to store the dimensions of a stack or multi-dimensional array. Implementations shall support types SVI, UVI, ADR, and STR and may support more types.
+There are 32 Automaton Standard Code for Information Interchange (ASCII) Data Types composed of 23 Plain-Old-Data and 8 object types composed of contiguous memory. Types are stored as bytes where the 5 LSb are used to store the type and the upper 3 bits are used to store either bit width of the size of the object, 8, 16, 32, or 64-bit, or to store the dimensions of a stack or multi-dimensional array. Implementations shall support types SVI, UVI, ADR, and STR and may support more types.
 
 ## 2.1 Type Byte
 
