@@ -1,9 +1,11 @@
-SCRIPT Specification RFC
-========================
+SCRIPT SDNP Specification RFC
+=============================
 
-# 3 SCRIPT Protocol Specification
+# 3 SCRIPT SDNP Specification
 
-Script consists of the Group Automata Theorem, SCRIPT Protocol, Chinese room abstract stack machine (Crabs) and Script^2. In the John Searle's famous Chinese Room Thought Experiment users may talk to the Chinese Room (i.e. end-point) by writing Messages (i.e. Datagrams) on a piece of Paper (B-Input) and passing them through a Slot (i.e. Socket) in a Door (Group of communication links leading to the same room) in the room. An Agent (Program or AIML Entity) then reads the message and uses them to operate the Crabs, and replies by writing a Message on a piece of Paper and passing it back through the Slot.
+The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Software-defined Networking Protocol (SDNP) consists of the Automaton Standard Code for Information Interchange Data Types defined in the ASCII Data Types Specification, and the Chinese Room Abstract Stack Machine (Crabs), and Crabs Calling Convention.
+
+In the John Searle's famous Chinese Room Thought Experiment users may talk to the Chinese Room (i.e. end-point) by writing Messages (i.e. Datagrams) on a piece of Paper (B-Input) and passing them through a Slot (i.e. Socket) in a Door (Group of communication links leading to the same room) in the room. An Agent (Program or AIML Entity) then reads the message and uses them to operate the Crabs, and replies by writing a Message on a piece of Paper and passing it back through the Slot.
 
 ## 3.1 Chinese Room Abstract Stack Machine (Crabs) Overview
 
@@ -545,7 +547,7 @@ A slave device assumes that there is another Automaton or Automata performing th
 
 ## 3.10 Encryption
 
-Script uses DTLS 3.1 provided by the Kabuki Toolkit. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
+Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
 
 ## 3.11 Portals
 

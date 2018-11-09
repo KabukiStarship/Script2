@@ -1,9 +1,9 @@
 SCRIPT Specification Experimental RFC
 =====================================
 
-# 4. Universal Polar Addressing Specification
+# 4. Universal Addressing Specification
 
-**Universal Polar Addressing**, or **UP Addressing**, or **UPA** is a method of conveying physical addresses and Internet Protocol Addressing that works identically on every planet or spherical object. Before we talk about a UP Addressing it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.
+**Universal Addressing** or UA is a method of conveying physical addresses and Internet Protocol Addressing that works identically on every planet or spherical object. Before we talk about a UA it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.
 
 ![Earth's Internet Superhighway in the year 2017](http://img.labnol.org/di/undersea_cable_map.png)
 

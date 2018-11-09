@@ -28,7 +28,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |  8 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer. |
 |  9 | FLT  |    float   |    4   | 32-bit floating-point number. |
 | 10 | TM4  |   int32_t  |   -4   | 32-bit signed integer second since epoch timestamp. |
-| 11 | TME  |   int64_t  |   -8   | 32-bit signed integer second since epoch timestamp with 32-bit signed integer sub-second ticker. |
+| 11 | TME  |   int64_t  |   -8   | 32-bit/32-bit signed integer second since epoch timestamp and sub-second ticker. |
 | 12 | TM8  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
 | 13 | SI8  |   int64_t  |   -8   | 64-bit signed integer. |
 | 14 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer. |
@@ -47,7 +47,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 | 27 | EXP  | Expression |  <=N   | Script expression of B-Sequences. |
 | 28 | LST  |   List     |    N   | Stack of type-Records with contiguous indexes starting at zero. |
 | 29 | MAP  |    Map     |    N   | Unique map of integer-Record records. |
-| 30 | BOK  | Multidict  |    N   | A Book, or Multidictionary, of Records without a hash table. |
+| 30 | BOK  |    Book    |    N   | A Book, or Multidictionary, of Records without a hash table. |
 | 31 | DIC  | Dictionary |    N   | Unique map of key-value records with a hash table. |
 
 #### Extended ASCII Data types
@@ -677,7 +677,7 @@ ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash 
 
 ```
     +==========================+ -----------
-    |_______ Strings 0          |  Strings   |
+    |_______ Strings 0         |  Strings   |
     |_______ ...               |   |     |
     |_______ Data N            |   v     |
     |_______ ...               |   |     |

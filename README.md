@@ -1,17 +1,17 @@
-# SCRIPT Specification
+# Script
 
-Searle's Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively refereed to as Script, that are built on the Chinese room abstract stack machine (Crabs). Script can be described as a mix of software-defined network protocol with Lua, JavaScript, Python, and LISP.
+Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively refereed to as Script, that are built on the Chinese Room Abstract Stack Machine (Crabs) and SCRIPT Software-defined Networking Protocol.
 
 ## Quick Links
 
-* [FAQ](https://github.com/kabuki-starship/script/blob/master/docs/faq.md) 
+* [FAQ](https://github.com/kabuki-starship/script/blob/master/docs/readme.md) 
   - *Frequently asked questions.*
-* [Script Specification RFC](https://github.com/kabuki-starship/script/blob/master/script_specification_rfc.md)
-  - *Release for Comment for Searle's Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit)
-  - *Primary repository of the Kabuki Toolkit, a compliant Script implementation.*
+* [Script Specification RFC](https://github.com/kabuki-starship/script/blob/master/docs/script_specification_rfc.md)
+  - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
+* [Script](https://github.com/kabuki-starship/kabuki-toolkit)
+  - *Primary repository of the Script, a Script^2 Toolkit.*
 * [Kabuki Starship Website](https://kabuki-starship.github.io/)
-  - *Official Kabuki Toolkit website. We are currently looking for someone to help us fix the CSS on the website. It only works right at < 1024 pixel width so the problem is in the @media section.*
+  - *Official Script website. We are currently looking for someone to help us fix the CSS on the website. It only works right at < 1024 pixel width so the problem is in the @media section.*
 
 ## Author
 
