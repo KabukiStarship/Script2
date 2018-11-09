@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/expr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -34,7 +34,7 @@ class Library : public Operand {
   virtual ~Library() {}
 
   /* Returns true if the current Book has a hash table. */
-  bool HasHashTable() { return collisions_size_ != 0; }
+  BOL HasHashTable() { return collisions_size_ != 0; }
 
   /* Gets the number of keys in the current scope. */
   uint_t GetBagType() { return 0; }
@@ -80,7 +80,7 @@ class Library : public Operand {
   TIndex Find(const char* key) { return 0; }
 
   /* Searches for the given query and returns a bag of query results.  */
-  bool Search(const char* query,
+  BOL Search(const char* query,
               Library<TIndex, TKey, TData, TData, MaxStackHeight>* results) {
     return false;
   }
@@ -114,7 +114,7 @@ class Library : public Operand {
     switch (array_type) {
       case 0:
 #if CRABS_MEMORY_PROFILE >= 16
-        /// Library format: { UI1, UI1, UI2, UI2 }
+        /// Library format: { kUI1, kUI1, kUI2, kUI2 }
         return size + sizeof(Library) + *(address + 1) * sizeof(byte) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
 #else
@@ -122,7 +122,7 @@ class Library : public Operand {
 #endif
       case 1:
 #if CRABS_MEMORY_PROFILE >= 32
-        /// Library format: { UI1, UI1, UI2, UI4 }
+        /// Library format: { kUI1, kUI1, kUI2, kUI4 }
         return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(byte) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
@@ -130,7 +130,7 @@ class Library : public Operand {
 #endif
       case 2:
 #if CRABS_MEMORY_PROFILE >= 64
-        /// Library format: { UI2, UI2, UI4, UI8 }
+        /// Library format: { kUI2, kUI2, kUI4, kUI8 }
         return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(byte) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else

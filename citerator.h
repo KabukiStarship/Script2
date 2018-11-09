@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/KabukiSDK/data/iterator.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -34,7 +34,7 @@ struct API Iterator {
 
   /* Flags when there are not more objects to iterate through.
       @return True when there are no more objects to iterate through. */
-  virtual bool IsDone() = 0;
+  virtual BOL IsDone() = 0;
 };
 
 }  //< namespace _

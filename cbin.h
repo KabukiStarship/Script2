@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_console.cc
+@file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -86,7 +86,7 @@ API char* BInEnd(BIn* bin);
 
 /* Returns true if the BIn buffer contains any data.
     @warning Function does not do any error checking for speed. */
-API bool BInIsReadable(BIn* bin);
+API BOL BInIsReadable(BIn* bin);
 
 /* Scans a message with the given params to the given BIn.
 The data in the BIn is word-aligned, unlike the Slot. It also
@@ -108,28 +108,28 @@ inline const Op* BOutRead(BOut* bout, const uint_t* params, void** args) {
 @param  bin The pin to print.
 @param  text The Text to print the bin to.
 @return The text. */
-API Utf8& Print(Utf8& printer, BIn* bin);
+API UTF8& Print(UTF8& printer, BIn* bin);
 #endif  //< #if USING_UTF8
 #if USING_UTF16
 /* Prints the BIn to the Text.
 @param  bin The pin to print.
 @param  text The Text to print the bin to.
 @return The text. */
-API Utf16& Print(Utf16& printer, BIn* bin);
+API UTF2& Print(UTF2& printer, BIn* bin);
 #endif  //< #if USING_UTF16
 #if USING_UTF32
 /* Prints the BIn to the Text.
 @param  bin The pin to print.
 @param  text The Text to print the bin to.
 @return The text. */
-API Utf32& Print(Utf32& printer, BIn* bin);
+API UTF4& Print(UTF4& printer, BIn* bin);
 #endif  //< #if USING_UTF32
 
 }  // namespace _
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::Utf8& operator<<(_::Utf8& print, _::BIn* bin) {
+inline _::UTF8& operator<<(_::UTF8& print, _::BIn* bin) {
   return Print(print, bin);
 }
 #endif

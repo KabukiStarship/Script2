@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /0_0_0__00_rng.h
 @author  Cale McCollough <calemccollough.github.io>

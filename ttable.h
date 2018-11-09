@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @file    /table.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -33,7 +33,7 @@ namespace _ {
     # Collision Table
 
     Collision table works by using the maximum key value (i.e. 255 for a byte,
-    2^15-1 for a int16_t, etc). The collisions list is a sequence of indexes
+    2^15-1 for a SI2, etc). The collisions list is a sequence of indexes
     terminated by an invalid index that is greater than kMaxNumOps.
     collissionsList[0] is an invalid index, so the collisionsList is searched
     from lower address up.
@@ -100,7 +100,7 @@ struct API Table {
 enum {
   kMinTableSize = 64,  //< Min size of a Table
   kOverheadPerIndex =
-      sizeof(uint16_t) + sizeof(uint16_t) + sizeof(byte) + sizeof(byte),
+      sizeof(UI2) + sizeof(UI2) + sizeof(byte) + sizeof(byte),
 };
 
 // void Print (Table* rt);
@@ -132,7 +132,7 @@ Table<UI, SI>* TableInit(uintptr_t* buffer, SI count_max, UI size_bytes) {
     op.
     @return Returns an index 64-255 */
 template <typename UI, typename SI>
-uint8_t TableAdd(Table<UI, SI>* table, const char* key) {
+UI1 TableAdd(Table<UI, SI>* table, const char* key) {
   ASSERT(table)
   ASSERT(keys)
 
@@ -140,22 +140,22 @@ uint8_t TableAdd(Table<UI, SI>* table, const char* key) {
 
   byte count = table->count, count_max = table->count_max, temp;
 
-  uint16_t size = table->size;
+  UI2 size = table->size;
 
   if (count >= count_max) return kInvalidIndex;
   //< We're out of buffered indexes.
 
-  uint16_t* hashes = reinterpret_cast<uint16_t*>(
+  UI2* hashes = reinterpret_cast<UI2*>(
       reinterpret_cast<char*>(table) + sizeof(Table<UI, SI>));
-  uint16_t* key_offsets = reinterpret_cast<uint16_t*>(hashes + count_max);
+  UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
        *collission_list = unsorted_indexes + count_max;
   char *keys = reinterpret_cast<char*>(table) + size - 1, *destination;
 
   // Calculate space left.
-  uint16_t value = size - count_max * kOverheadPerIndex, size_pile,
-           key_length = static_cast<uint16_t>(SlotLength(key));
+  UI2 value = size - count_max * kOverheadPerIndex, size_pile,
+           key_length = static_cast<UI2>(SlotLength(key));
 
   PRINTF(
       "\nAdding key \"%s\":%u\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x"
@@ -165,7 +165,7 @@ uint8_t TableAdd(Table<UI, SI>* table, const char* key) {
       "key_offsets", key_offsets, "keys", keys, "indexes", indexes, "value",
       value)
 
-  uint16_t hash = Hash16(key), current_hash;
+  UI2 hash = Hash16(key), current_hash;
 
   if (key_length > value) {
     PRINTF("\nBuffer overflow!")
@@ -177,7 +177,7 @@ uint8_t TableAdd(Table<UI, SI>* table, const char* key) {
   if (count == 0) {
     table->count = 1;
     *hashes = hash;
-    *key_offsets = static_cast<uint16_t>(key_length);
+    *key_offsets = static_cast<UI2>(key_length);
     *indexes = kInvalidIndex;
     *unsorted_indexes = 0;
     destination = keys - key_length;
@@ -358,12 +358,12 @@ uint8_t TableAdd(Table<UI, SI>* table, const char* key) {
   key_offsets[count] = value;
 
   // Second move up the hashes and insert at the insertion point.
-  uint16_t* hash_ptr = hashes + count;
+  UI2* hash_ptr = hashes + count;
   //*test = hashes;
   PRINTF("l_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u\n", count,
-         hashes - reinterpret_cast<uint16_t*>(table),
-         hash_ptr - reinterpret_cast<uint16_t*>(table),
-         hashes + mid - reinterpret_cast<uint16_t*>(table));
+         hashes - reinterpret_cast<UI2*>(table),
+         hash_ptr - reinterpret_cast<UI2*>(table),
+         hashes + mid - reinterpret_cast<UI2*>(table));
   hashes += mid;
   PRINT_TABLE
   while (hash_ptr > hashes) {
@@ -406,19 +406,19 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
 
   if (key == nullptr || count == 0) return kInvalidIndex;
 
-  uint16_t size = table->size;
+  UI2 size = table->size;
 
-  const uint16_t* hashes = reinterpret_cast<const uint16_t*>(
+  const UI2* hashes = reinterpret_cast<const UI2*>(
       reinterpret_cast<const char*>(table) + sizeof(Table<UI, SI>));
-  const uint16_t* key_offsets =
-      reinterpret_cast<const uint16_t*>(hashes + count_max);
+  const UI2* key_offsets =
+      reinterpret_cast<const UI2*>(hashes + count_max);
   const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
              *collission_list = unsorted_indexes + count_max;
   const char* keys = reinterpret_cast<const char*>(table) + size - 1;
   const char *collisions, *temp_ptr;
 
-  uint16_t hash = Hash16(key);
+  UI2 hash = Hash16(key);
 
   PRINTF("\nSearching for key \"%s\" with hash 0x%x\n", key, hash)
 
@@ -437,13 +437,13 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
 
   // Perform a binary search to find the first instance of the hash the
   // binary search yields. If the mid is odd, we need to subtract the
-  // sizeof (uint16_t*) in order to get the right pointer address.
+  // sizeof (UI2*) in order to get the right pointer address.
   int low = 0, mid, high = count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
 
-    uint16_t current_hash = hashes[mid];
+    UI2 current_hash = hashes[mid];
     PRINTF("low: %i mid: %i high %i hashes[mid]:%x\n", low, mid, high,
            hashes[mid])
 
@@ -461,7 +461,7 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
       // Check for collisions
 
       collisions = reinterpret_cast<const char*>(key_offsets) +
-                   count_max * sizeof(uint16_t);
+                   count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index != kInvalidIndex) {
@@ -521,10 +521,10 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
   return kInvalidIndex;
 }
 
-#if USING_F2_UTF
+#if USING_UTF
 /* Prints this object out to the console. */
 template <typename UI, typename SI>
-Utf8& TablePrint(Utf8& print, Table<UI, SI>* table) {
+UTF8& TablePrint(UTF8& print, Table<UI, SI>* table) {
   ASSERT(table)
   SI count = table->count, count_max = table->count_max, collision_index, temp;
   UI size = table->size, size_pile = table->size_pile;
@@ -535,9 +535,9 @@ Utf8& TablePrint(Utf8& print, Table<UI, SI>* table) {
   for (int i = 0; i < 79; ++i) print << '_';
   print << '\n';
 
-  uint16_t* hashes = reinterpret_cast<uint16_t*>(
+  UI2* hashes = reinterpret_cast<UI2*>(
       reinterpret_cast<char*>(table) + sizeof(Table<UI, SI>));
-  uint16_t* key_offsets = reinterpret_cast<uint16_t*>(hashes + count_max);
+  UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
        *collission_list = unsorted_indexes + count_max, *begin;

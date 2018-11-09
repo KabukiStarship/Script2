@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/slot.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -52,7 +52,7 @@ struct Slot {
   /* Sets the ring buffer to the given buffer begin and size.
       @param begin Pointer to the beginning of the ring buffer.
       @param size  The size of the ring buffer in bytes. */
-  inline bool Set(uintptr_t* buffer, uintptr_t size) {
+  inline BOL Set(uintptr_t* buffer, uintptr_t size) {
     if (!buffer) return true;
     char* l_begin = reinterpret_cast<char*>(buffer);
     begin = start = stop = l_begin;
@@ -73,11 +73,11 @@ struct Slot {
 
   /* Checks if there is space in the buffer.
   @return True if the buffer has space. */
-  bool IsWritable();
+  BOL IsWritable();
 
   /* Checks if there is data in the buffer.
       @return True if the buffer has data. */
-  bool IsReadable();
+  BOL IsReadable();
 
   /* Reads the given Operation input parameters from the slot to the args.
   @param  slot The slot to read from.
@@ -117,7 +117,7 @@ struct Slot {
 
 #if CRABS_TEXT
   /* Prints a string rep of this object to the printer. */
-  Utf8& Print(Utf8& printer);
+  UTF8& Print(UTF8& printer);
 #endif
 };
 
@@ -125,7 +125,7 @@ struct Slot {
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::Utf8& operator<<(_::Utf8& printer, _::Slot& slot) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Slot& slot) {
   return slot.Print(printer);
 }
 #endif

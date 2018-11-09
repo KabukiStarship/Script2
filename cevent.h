@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/event.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -39,7 +39,7 @@ struct API Event : public Operand {
   /* Triggers the event. */
   virtual void Trigger() = 0;
 
-  virtual double GetProbability() = 0;
+  virtual DBL GetProbability() = 0;
 
   /* Script operations. */
   virtual const Op* Star(wchar_t index, Expr* expr) = 0;

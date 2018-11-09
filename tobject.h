@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -40,25 +40,25 @@ inline SI ObjSizeMax() {
 
 /* Checks if the size is in the min max bounds of an ASCII Object. */
 template <typename SI = intptr_t>
-inline bool ObjSizeIsValid(SI size, SI size_min) {
+inline BOL ObjSizeIsValid(SI size, SI size_min) {
   return (size >= size_min) && (size <= ObjSizeMax<SI>());
 }
 
 /* Checks if the given object count is in the min max bounds of an ASCII
 Object. */
 template <typename SI>
-inline bool ObjCountIsValid(SI index, SI count_min) {
+inline BOL ObjCountIsValid(SI index, SI count_min) {
   return (index >= count_min) && (index < ObjSizeMax<SI>());
 }
 
-/* Gets the ASCII OBJ size. */
+/* Gets the ASCII kOBJ size. */
 template <typename Size>
 inline Size ObjSize(uintptr_t* object) {
   ASSERT(object);
   return *reinterpret_cast<Size*>(object);
 }
 
-/* Gets the ASCII OBJ size. */
+/* Gets the ASCII kOBJ size. */
 template <typename Size>
 inline Size ObjSize(CObject obj) {
   ASSERT(obj.begin);
@@ -90,9 +90,9 @@ uintptr_t* ObjNew(Size size, Size size_min) {
 
   if (!ObjSizeIsValid<Size>(size, size_min)) return nullptr;
 
-  size = AlignUp<uint16_t, int16_t>(size, 7);
+  size = AlignUp<UI2, SI2>(size, 7);
   uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
-  *reinterpret_cast<int16_t*>(buffer) = size;
+  *reinterpret_cast<SI2*>(buffer) = size;
   return buffer;
 }
 
@@ -131,8 +131,8 @@ inline SI ObjCountRound(SI count) {
   return AlignUpSigned<SI>(count);
 }
 
-/* Clones the other ASCII OBJ. */
-template <typename Size = int32_t>
+/* Clones the other ASCII kOBJ. */
+template <typename Size = SI4>
 uintptr_t* ObjClone(uintptr_t* buffer, Size size) {
   ASSERT(buffer);
 
@@ -142,7 +142,7 @@ uintptr_t* ObjClone(uintptr_t* buffer, Size size) {
   return clone;
 }
 
-/* A 64-bit word-aligned ASCII OBJ.
+/* A 64-bit word-aligned ASCII kOBJ.
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. The minimum and maximum bounds of size of ASCII objects are defined by the
 minimum size required to store the header with minimum item count, and the
@@ -150,9 +150,9 @@ highest positive integer multiple of 8. The fastest way to covert the upper
 bounds is to invert the bits and subtract 7 as follows:
 
 @code
-int16_t upper_bounds_si2 = (~(int16_t)0) - 7;
-int32_t upper_bounds_si4 = (~(int32_t)0) - 7;
-int64_t upper_bounds_si8 = (~(int64_t)0) - 7;
+SI2 upper_bounds_si2 = (~(SI2)0) - 7;
+SI4 upper_bounds_si4 = (~(SI4)0) - 7;
+SI8 upper_bounds_si8 = (~(SI8)0) - 7;
 @endcode
 */
 template <typename Size>
@@ -207,7 +207,7 @@ class TObject {
   inline CObject& OBJ() { return obj_.begin; }
 
  private:
-  CObject obj_;  //< ASCII OBJ harness.
+  CObject obj_;  //< ASCII kOBJ harness.
 };
 }  // namespace _
 #include "test_footer.inl"

@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_op.cc
+@file    /script2_op.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 #if CRABS_TEXT
-Utf8& Print(Utf8& print, const Op* op) {
+UTF8& Print(UTF8& print, const Op* op) {
   if (!op) {
     return print << "\nOp: nil";
   }
@@ -52,92 +52,92 @@ void Print (Op& log) {
     void   * args[1];
     byte     type = 0,
     ui1;
-    uint16_t ui2;
-    uint32_t ui4;
-    uint64_t ui8;
-    //int8_t   reserved,
-    int8_t   si1;
-    uint16_t si2;
-    uint32_t si4;
-    uint64_t si8;
-    float    flt;
-    double   dbl;
+    UI2 ui2;
+    UI4 ui4;
+    UI8 ui8;
+    //SI1   reserved,
+    SI1   si1;
+    UI2 si2;
+    UI4 si4;
+    UI8 si8;
+    FLT    flt;
+    DBL   dbl;
     char   index;
     //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
     //    return;
     char buffer[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
-            case STR: {
-                if (BinRead (bin, Params<2, ADR, STR> (), Args (args, &ui1,
+            case kSTR: {
+                if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &ui1,
                              buffer)))
                     return;
                 Write (buffer);
             }
-            case SI1: {
-                if (BinRead (bin, Params<2, ADR, SI1> (), Args (args, &si1)))
+            case kSI1: {
+                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case UI1: {
-                if (BinRead (bin, Params<2, ADR, UI1> (), Args (args, &ui1)))
+            case kUI1: {
+                if (BinRead (bin, Params<2, kADR, kUI1> (), Args (args, &ui1)))
                     return;
                 Write (si1);
             }
-            case BOL: {
-                if (BinRead (bin, Params<2, ADR, SI1> (), Args (args, &si1)))
+            case kBOL: {
+                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case SI2: {
-                if (BinRead (bin, Params<2, ADR, SI2> (), Args (args, &si2)))
+            case kSI2: {
+                if (BinRead (bin, Params<2, kADR, kSI2> (), Args (args, &si2)))
                     return;
                 Write (si1);
             }
-            case UI2: {
-                if (BinRead (bin, Params<2, ADR, UI2> (),
+            case kUI2: {
+                if (BinRead (bin, Params<2, kADR, kUI2> (),
                              Args (args, &ui2, buffer)))
                     return;
                 Write (si1);
             }
-            case SI4: {
-                if (BinRead (bin, Params<2, ADR, SI4> (),
+            case kSI4: {
+                if (BinRead (bin, Params<2, kADR, kSI4> (),
                              Args (args, &si4, buffer)))
                     return;
                 Write (si1;
             }
-            case UI4: {
-                if (BinRead (bin, Params<2, ADR, UI4> (), Args (args, &ui4)))
+            case kUI4: {
+                if (BinRead (bin, Params<2, kADR, kUI4> (), Args (args, &ui4)))
                     return;
                 Write (si1;
             }
-            case SI8: {
-                if (BinRead (bin, Params<2, ADR, SI8> (), Args (args, &si8)))
+            case kSI8: {
+                if (BinRead (bin, Params<2, kADR, kSI8> (), Args (args, &si8)))
                     return;
                 Write (si8;
             }
-            case UI8: {
-                if (BinRead (bin, Params<2, ADR, UI8> (), Args (args, &ui8)))
+            case kUI8: {
+                if (BinRead (bin, Params<2, kADR, kUI8> (), Args (args, &ui8)))
                  return;
                 Write (ui8;
             }
-            case TMS: {
-                if (BinRead (bin, Params<2, ADR, TMS> (), Args (args, &ui4)))
+            case kTMS: {
+                if (BinRead (bin, Params<2, kADR, kTMS> (), Args (args, &ui4)))
                     return;
                 ClockPrintTime (ui4);
             }
-            case TME: {
-                if (BinRead (bin, Params<2, ADR, TME> (), Args (args, &ui8)))
+            case kTME: {
+                if (BinRead (bin, Params<2, kADR, kTME> (), Args (args, &ui8)))
                     return;
                 ClockPrintTimestamp (ui8);
             }
-            case FLT: {
-                if (BinRead (bin, Params<2, ADR, FLT> (), Args (args, &flt)))
+            case kFLT: {
+                if (BinRead (bin, Params<2, kADR, kFLT> (), Args (args, &flt)))
                     return;
                 Write (si1;
             }
-            case DBL: {
-                if (BinRead (bin, Params<2, ADR, STR> (), Args (args, &dbl)))
+            case kDBL: {
+                if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;
             }

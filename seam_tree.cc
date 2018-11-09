@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /seam_tree.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>

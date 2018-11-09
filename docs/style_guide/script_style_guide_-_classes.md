@@ -21,7 +21,7 @@ It is possible to perform arbitrary initialization in the body of the constructo
 
 *   If the work calls virtual functions, these calls will not get dispatched to the subclass implementations. Future modification to your class can quietly introduce this problem even if your class is not currently subclassed, causing much confusion.
 *   There is no easy way for constructors to signal errors, short of crashing the program (not always appropriate) or using exceptions (which are [forbidden](#Exceptions)).
-*   If the work fails, we now have an object whose initialization code failed, so it may be an unusual state requiring a `bool IsValid()` state checking mechanism (or similar) which is easy to forget to call.
+*   If the work fails, we now have an object whose initialization code failed, so it may be an unusual state requiring a `BOL IsValid()` state checking mechanism (or similar) which is easy to forget to call.
 *   You cannot take the address of a constructor, so whatever work is done in the constructor cannot easily be handed off to, for example, another thread.
 
 #### decision
@@ -35,15 +35,15 @@ Do not define implicit conversions. Use the `explicit` keyword for conversion op
 
 #### definition
 
-Implicit conversions allow an object of one type (called the <dfn>source type</dfn>) to be used where a different type (called the <dfn>destination type</dfn>) is expected, such as when passing an `int` argument to a function that takes a `double` parameter.
+Implicit conversions allow an object of one type (called the <dfn>source type</dfn>) to be used where a different type (called the <dfn>destination type</dfn>) is expected, such as when passing an `int` argument to a function that takes a `DBL` parameter.
 
-In addition to the implicit conversions defined by the language, users can define their own, by adding appropriate members to the class definition of the source or destination type. An implicit conversion in the source type is defined by a type conversion operator named after the destination type (e.g. `operator bool()`). An implicit conversion in the destination type is defined by a constructor that can take the source type as its only argument (or only argument with no default value).
+In addition to the implicit conversions defined by the language, users can define their own, by adding appropriate members to the class definition of the source or destination type. An implicit conversion in the source type is defined by a type conversion operator named after the destination type (e.g. `operator BOL()`). An implicit conversion in the destination type is defined by a constructor that can take the source type as its only argument (or only argument with no default value).
 
 The `explicit` keyword can be applied to a constructor or (since C++11) a conversion operator, to ensure that it can only be used when the destination type is explicit at the point of use, e.g. with a cast. This applies not only to implicit conversions, but to C++11's list initialization syntax:
 
 ```C++
 class Foo {
-  explicit Foo(int x, double y);
+  explicit Foo(int x, DBL y);
   ...
 };
 void Func(Foo f);
@@ -197,7 +197,7 @@ Overload operators judiciously. Do not create user-defined literals.
 
 #### definition
 
-C++ permits user code to [declare overloaded versions of the built-in operators](http://en.cppreference.com/w/cpp/language/operators) using the `operator` keyword, so long as one of the parameters is a user-defined type. The `operator` keyword also permits user code to define new kinds of literals using `operator""`, and to define type-conversion functions such as `operator bool()`.
+C++ permits user code to [declare overloaded versions of the built-in operators](http://en.cppreference.com/w/cpp/language/operators) using the `operator` keyword, so long as one of the parameters is a user-defined type. The `operator` keyword also permits user code to define new kinds of literals using `operator""`, and to define type-conversion functions such as `operator BOL()`.
 
 #### pros
 

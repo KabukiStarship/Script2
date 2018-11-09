@@ -14,9 +14,9 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, STR:32, SI1, SI2, SI4>:<NIL>
-   Bar <1, STR:32>:<3, SI1, SI2, SI4>
-   FooBar <DIC2, UI1>:<NIL>
+   Foo <4, kSTR:32, kSI1, kSI2, kSI4>:<kNIL>
+   Bar <1, kSTR:32>:<3, kSI1, kSI2, kSI4>
+   FooBar <DIC2, kUI1>:<kNIL>
             ^     ^
             |     |
             |     +----- An 8-bit unsigned integer.
@@ -82,25 +82,25 @@ let root :=DIC_4 (2048, 3) {
     |          |       |
     v          v       v              */
     +=DIC_4 (nested, 1024, 3) {       /* This is a nested dictionary.
-         +------------------------------ This is a operation with key "STR"
+         +------------------------------ This is a operation with key "kSTR"
          |      +----------------------- Dictionary key.
          |      |    +------------------ Max length 12.
-         |      |    |   +-------------- STR value.
+         |      |    |   +-------------- kSTR value.
          |      |    |   |
          v      v    v   v         */
-        +=STR (item1 12 "ABC")
+        +=kSTR (item1 12 "ABC")
         -=Key item1               /*      Operation "-Key" removes "item1".
           
-          +----------------------------- This is a function with key "UI2".
+          +----------------------------- This is a function with key "kUI2".
           |       +--------------------- henThis is a 16-bit unsigned int.
           |       |
           v       v */
-        +=SI1 item1 1
-        +=SI2 (item2, 2)
-        +=SI4 item3 1
+        +=kSI1 item1 1
+        +=kSI2 (item2, 2)
+        +=kSI4 item3 1
         -=Index 2                    //< Removes index 2:"item3".
-        +=SI2 item3 -1
-        +=UI2 item4 1
+        +=kSI2 item3 -1
+        +=kUI2 item4 1
         /*< We can't add item4 because we set the max elements to 3.
             This won't generate an error but may generate an error 
             message. */
@@ -109,14 +109,14 @@ let root :=DIC_4 (2048, 3) {
     }
 }
 
-/** Return Address (ADR) Example.
+/** Return Address (kADR) Example.
 
     @fn =
-	@param <NIL>:<BSQ>
+	@param <kNIL>:<kBSQ>
 */
 
 abc123 := { 1 2 3 }    /*< Operand "=$" default takes a Unicode char.
-                           and returns a BSQ token 123.
+                           and returns a kBSQ token 123.
 				   +------ Then we pass the return address as a input parameter
 				   |       using the $ operator which is similar to static const.
 				   |       Had $ not been here we would evaluate 
@@ -132,6 +132,6 @@ FooBar (stuff, 1);
     
 */
 
-xyz =UI2(+ UI2(* 2 3) 3 4)
+xyz =kUI2(+ kUI2(* 2 3) 3 4)
 
 FooWeNeedNewNames (return_address $xyz);

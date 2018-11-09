@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/bout.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -29,7 +29,7 @@ namespace _ {
 typedef enum BOutStates {
   kBOutStateDisconnected = 0,  //< BOut State 0: BOut locked.
   kBOutStateWriting,           //< BOut State 1: Most common state.
-  kBOutStateWritingBsc,        //< BOut State 2: Writing BSQ.
+  kBOutStateWritingBsc,        //< BOut State 2: Writing kBSQ.
 } BOutState;
 
 /* B-Output ring buffer socket. */
@@ -90,14 +90,14 @@ API void BInKeyStrokes();
     @param  bout The bout to print.
     @param  text The Text to print to the bout.
     @return The slot. */
-API Utf8& PrintBOut(Utf8& printer, BOut* bout);
+API UTF8& PrintBOut(UTF8& printer, BOut* bout);
 #endif
 
 }  // namespace _
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::Utf8& operator<<(_::Utf8& print, _::BOut* bout) {
+inline _::UTF8& operator<<(_::UTF8& print, _::BOut* bout) {
   return _::PrintBOut(print, bout);
 }
 #endif

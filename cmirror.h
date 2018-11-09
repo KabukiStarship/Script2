@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /library/script/mirror.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -71,7 +71,7 @@ API const Op* MirrorRead(Mirror* mirror, const uint_t* params, void** args);
 // API const Op* MirrorWrite (Mirror* mirror, const uint_t* params,
 //                                   void** args);
 
-API bool MirrorIsReadable(Mirror* mirror);
+API BOL MirrorIsReadable(Mirror* mirror);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.

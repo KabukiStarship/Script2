@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_expression.cc
+@file    /script2_expression.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -131,7 +131,7 @@ Expr* ExprInit(uintptr_t* buffer, uint_t buffer_size, uint_t stack_size,
   expr->bout_state = kBOutStateDisconnected;
   expr->bin_state = kBInStateDisconnected;
   expr->stack_count = 1;
-  expr->type = NIL;
+  expr->type = kNIL;
   expr->stack_size = stack_size;
   expr->num_states = 0;
   expr->operand = nullptr;
@@ -159,7 +159,7 @@ Expr* ExprInit(uintptr_t* buffer, uint_t buffer_size, uint_t stack_size,
     return expr;
 }
 
-// bool ExprIsDynamic (Expr* expr) {
+// BOL ExprIsDynamic (Expr* expr) {
 //    return expr->type % 2 == 1;
 //}
 
@@ -269,12 +269,12 @@ const Op* ExprUnpack(Expr* expr) {
       bytes_left,    //< Num bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Num bytes left to scan.
-      bytes_shift;   //< Num of bytes to shift to scan OBJ.
+      bytes_shift;   //< Num of bytes to shift to scan kOBJ.
   byte bin_state,    //< Current bin FSM state.
       b;             //< Current byte being verified.
   hash16_t hash,     //< Expected hash of the B-Sequence.
       found_hash;    //< Found B-Sequence hash.
-  Tme timestamp,     //< Last time when the expression ran.
+  TME timestamp,     //< Last time when the expression ran.
       delta_t;       //< Time delta between the last timestamp.
   const Op* op;      //< Current Op.
   Operand* operand;  //< The operand.
@@ -434,8 +434,8 @@ const Op* ExprUnpack(Expr* expr) {
 #endif
 
                     // Switch to next state
-                    if (type <= ADR) {
-                      if (type < ADR) {  // Address type.
+                    if (type <= kADR) {
+                      if (type < kADR) {  // Address type.
 #if DEBUG_CRABS_EXPR
                         Write("\nScanning address.");
 #endif
@@ -448,15 +448,15 @@ const Op* ExprUnpack(Expr* expr) {
                       bin_state = kBInStateAddress;
                       break;
 
-                    } else if (type == STR) {  // UTF-8/ASCII string type.
+                    } else if (type == kSTR) {  // UTF-8/ASCII string type.
                       // Read the max number of chars off the header.
                       bytes_left = *(++expr->header);
-                      PRINTF("\nScanning STR with max length %u",
+                      PRINTF("\nScanning kSTR with max length %u",
                              (uint)bytes_left);
                       ExprEnterState(expr, kBInStatePackedUtf8);
                       bin_state = kBInStatePackedUtf8;
                       break;
-                    } else if (type < DBL) {  // Plain-old-data type.
+                    } else if (type < kDBL) {  // Plain-old-data type.
                       bytes_left = TypeFixedSize(type);
                       PRINTF("\nScanning POD with bytes_left:%u",
                              (uint)bytes_left);
@@ -518,7 +518,7 @@ const Op* ExprUnpack(Expr* expr) {
                       Write("\nScanning TObject.");
 #endif
                       // Multi-dimension arrays are parsed just like any other
-                      // OBJ.
+                      // kOBJ.
                       array_type &= 0x3;
                       bytes_left = b;
                       if (array_type == 0) {
@@ -564,7 +564,7 @@ const Op* ExprUnpack(Expr* expr) {
           // Check if there is another argument to scan.
           ExprExitState(expr);
           bin_state = kBInStatePackedArgs;
-          //< We can't go back from OBJ to POD for Text Types.
+          //< We can't go back from kOBJ to POD for Text Types.
           // Setup to read next type.
           type = *(++expr->header);
           if (expr->params_left == 0) {
@@ -771,7 +771,7 @@ const Op* ExprUnpack(Expr* expr) {
   return nullptr;
 }
 
-bool ExprContains(Expr* expr, void* address) {
+BOL ExprContains(Expr* expr, void* address) {
   if (address < reinterpret_cast<uintptr_t*>(expr)) return false;
   if (address > ExprEndAddress(expr)) return false;
   return true;
@@ -846,8 +846,8 @@ const Op* ExprQuery(Expr* expr, const Op& op) {
     void* args[2];
     uintptr_t num_ops = (uintptr_t)op.in, first_op = (uintptr_t)op.out;
     // @todo Write params to expr!
-    static const uint_t* header = Params<5, STR, kOpNameLengthMax, UVI, UVI,
-                                         STR, kOpDescriptionLengthMax>();
+    static const uint_t* header = Params<5, kSTR, kOpNameLengthMax, UVI, UVI,
+                                         kSTR, kOpDescriptionLengthMax>();
     return BOutWrite(ExprBOut(expr), header,
                      Args(args, op.name, &num_ops, &first_op, op.description));
   }
@@ -888,7 +888,7 @@ const Op* ExprQuery(Expr* expr, const Op* op) {
     }
     void* args[2];
     return BOutWrite(ExprBOut(expr),
-                     Params<5, STR, kOpNameLengthMax, UVI, UVI, STR,
+                     Params<5, kSTR, kOpNameLengthMax, UVI, UVI, kSTR,
                             kOpDescriptionLengthMax>(),
                      Args(args, op->name, op->in, op->out, op->description));
   }
@@ -896,7 +896,7 @@ const Op* ExprQuery(Expr* expr, const Op* op) {
 }
 
 #if CRABS_TEXT
-Utf8& PrintExprStack(Utf8& print, Expr* expr) {
+UTF8& PrintExprStack(UTF8& print, Expr* expr) {
   ASSERT(expr);
 
   uint_t i, stack_count;
@@ -920,7 +920,7 @@ Utf8& PrintExprStack(Utf8& print, Expr* expr) {
   return print << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
-Utf8& PrintExpr(Utf8& print, Expr* expr) {
+UTF8& PrintExpr(UTF8& print, Expr* expr) {
   ASSERT(expr);
 
   print << Line('~', 80) << "\nStack:    " << Hex<uintptr_t>(expr) << '\n'

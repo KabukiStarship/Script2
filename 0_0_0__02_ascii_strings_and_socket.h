@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    \kabuki\f2\0_0_0__02_ascii_strings_and_socket.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License. */
 
 #include "crng.h"
 #include "tsocket.h"
-#include "tutf.h"
 #include "ttest.h"
+#include "tutf.h"
 
 #include "cconsole.h"
 
@@ -79,7 +79,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
 
   *check_char = kCheckChar;
 
-  Utf8 utf(buffer, kSize);
+  UTF1 utf(buffer, kSize);
 
   for (int i = 0; i < kCompareStringsCount; ++i) {
     end = Print(buffer, buffer + kSize, test_strings[i][0]);
@@ -103,7 +103,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   }
 
   for (int i = 0; i < 256; ++i) {
-    uint16_t c = HexByteToLowerCase(i);
+    UI2 c = HexByteToLowerCase(i);
     PRINTF("\n    %i.) expecting: %x        HexByteToLowerCase:%c%c", i, i,
            (char)c, (char)(c >> 8));
     int value = HexToByte(c);

@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/op.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -50,13 +50,13 @@ struct BOut;
     @endcode */
 struct API Op {
   const char* name;          //< Op name.
-  const uint_t *in,          //< Input BSQ params or OpFirst.
-      *out;                  //< Output BSQ params or OpLast.
+  const uint_t *in,          //< Input kBSQ params or OpFirst.
+      *out;                  //< Output kBSQ params or OpLast.
   const char* description;   //< Op description.
   wchar_t pop,               //< Index of the Pop Operation.
       close,                 //< Index of the Close Operation.
       default_op;            //< Index of the Default Operation.
-  bool using_numbers;        //< Flag for if tokens may use numbers.
+  BOL using_numbers;        //< Flag for if tokens may use numbers.
   const char *ignore_chars,  //< String of chars to ignore.
       *allowed_chars;        //< String of allowed symbols.
   const BOut* evaluation;    //< Evaluated expression Slot.
@@ -88,12 +88,12 @@ inline wchar_t OpLast(const Op* op) {
 }
 
 #if CRABS_TEXT
-Utf8& Print(Utf8& print, const Op* op);
+UTF8& Print(UTF8& print, const Op* op);
 #endif
 
 }  //< namespace _
 
-inline _::Utf8& operator<<(_::Utf8& print, const _::Op* op) {
+inline _::UTF8& operator<<(_::UTF8& print, const _::Op* op) {
   return _::Print(print, op);
 }
 

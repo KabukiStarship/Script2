@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/door.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -70,7 +70,7 @@ class Door : public Operand {
   slot_t AddSlot(slot_t slot);
 
   /* Attempts to find a Slot or Door with the given address. */
-  bool Contains(void* address);
+  BOL Contains(void* address);
 
   /* Gets the Slot that contains the given address.
       @return Returns the doors_ stack count if the Door does not

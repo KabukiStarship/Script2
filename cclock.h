@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /cclock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -37,24 +37,24 @@ struct API CClock {
   CClock();
 
   /* Constructs a clock from the given 32-bit seconds timestamp. */
-  CClock(Tms time);
+  CClock(TMS time);
 
   /* Constructs a clock from the given 64-bit seconds timestamp. */
-  CClock(Tme time);
+  CClock(TME time);
 
-  /* Sets the time to the given 32-bit TMS timestamp. */
-  void SetTime(Tms t);
+  /* Sets the time to the given 32-bit kTMS timestamp. */
+  void SetTime(TMS t);
 
-  /* Sets the time to the given 32-bit TMS timestamp. */
-  void SetTime(Tme t);
+  /* Sets the time to the given 32-bit kTMS timestamp. */
+  void SetTime(TME t);
 };
 
-/* A sub-second timestamp composed of a TMS and a UI4 tick.
+/* A sub-second timestamp composed of a kTMS and a kUI4 tick.
 Operation of the Tss is intended for two scenarios:
 1. Processor has a real microsecond timer stored as a 24-bit value.
 2. Processor is an x86 and timer gets updated with a tread or OS.
 In the real microsecond timer scenario the processor will just
-take the unsigned in value and copy it to the UI4 member. In the
+take the unsigned in value and copy it to the kUI4 member. In the
 case of the OS having a variable update tick period, the ticker will
 work best if the value gets incremented using the ++operator and you will
 need to use modulo updates_per_second unless the timer is set to 64 updates
@@ -62,8 +62,8 @@ per second or some other power of 2 in which case bit masking is the
 tool of choice. For desktop operating systems other threads may hijack the
 OS scheduler. */
 struct Tss {
-  Tms seconds;     //< Seconds since epoch.
-  uint32_t ticks;  //< Ticks since epoch.
+  TMS seconds;  //< Seconds since epoch.
+  UI4 ticks;    //< Ticks since epoch.
 };
 
 enum ClockConstants {
@@ -87,44 +87,44 @@ enum ClockConstants {
   kDaysInDecember = 31,                      //< Number of days in December.
 };
 
-/* Gets the 32-bit TMS clock epoch. */
-API inline int16_t ClockEpoch();
+/* Gets the 32-bit kTMS clock epoch. */
+API inline SI2 ClockEpoch();
 
 /* Lookup table for converting from day-of-year to month. */
-API inline const int16_t* ClockLastDayOfMonth();
+API inline const SI2* ClockLastDayOfMonth();
 
 /* Lookup table for converting from day-of-year to month. */
-API inline const int16_t* ClockLastDayOfMonthLeapYear();
+API inline const SI2* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
 API inline int MonthByDay(int day, int year);
 
 /* Initializes the clock from the given timestamp. */
-API CClock* ClockInit(CClock& clock, Tms time);
+API CClock* ClockInit(CClock& clock, TMS time);
 
 /* Initializes the clock from the given timestamp. */
-API CClock* ClockInit(CClock& clock, Tme time);
+API CClock* ClockInit(CClock& clock, TME time);
 
 /* Initializes the clock from the given 64-bit microsecond timestamp. */
-API Tss& StopwatchInit(Tss& clock, Tms t, uint32_t ticks);
+API Tss& StopwatchInit(Tss& clock, TMS t, UI4 ticks);
 
 /* Initializes the clock from the given timestamp. */
 API CClock* ClockInit(CClock& clock);
 
 /* Gets the current microsecond timestamp. */
-API inline Tme ClockNow();
+API inline TME ClockNow();
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-API inline Tms ClockTMS(CClock& clock);
+API inline TMS ClockTMS(CClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-API inline Tme ClockTME(CClock& clock);
+API inline TME ClockTME(CClock& clock);
 
 /* Gets the number of days in a months.
     @todo Maybe get some open-source date utility? */
-API int ClockMonthDayCount(Tms t);
+API int ClockMonthDayCount(TMS t);
 
 /* Gets the number of days in a months.
 @param month The month index 0-11.
@@ -138,15 +138,15 @@ API const char* ClockWeekDay(int day_number);
 API char ClockDayOfWeekInitial(int day_number);
 
 /* Compares the two the time and prints the results. */
-API int ClockCompare(Tms a, Tms b);
+API int ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
-API int ClockCompare(Tms a, Tms b);
+API int ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
 API int ClockCompare(const CClock& clock, const CClock& other);
 
-/* Compares the given Tms to the time and prints the results. */
+/* Compares the given TMS to the time and prints the results. */
 API int ClockCompare(const CClock& clock, int year, int month, int day,
                      int hour, int minute, int second);
 
@@ -155,11 +155,11 @@ API int ClockCompare(const CClock& clock, int year, int month, int day,
 API void ClockZeroTime(CClock& seconds);
 
 /* Creates a 32-bit seconds timestamp.  */
-API Tms ClockTimeTMS(int year, int month, int day, int hour = 0, int minute = 0,
+API TMS ClockTimeTMS(int year, int month, int day, int hour = 0, int minute = 0,
                      int second = 0);
 
 /* Creates a 64-bit seconds timestamp.  */
-API Tme ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
+API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
                      int second = 0);
 
 #if USING_UTF8
@@ -185,7 +185,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char* PrintTime(char* begin, char* end, Tms time);
+API char* PrintTime(char* begin, char* end, TMS time);
 
 /* Writes the given time to the text buffer.
 @return Null upon failure or a pointer to the byte after the last
@@ -193,7 +193,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char* PrintTime(char* begin, char* end, Tme time);
+API char* PrintTime(char* begin, char* end, TME time);
 
 /* Prints the given timestamp to the stdout. */
 API void PrintTime(const CClock& clock);
@@ -202,10 +202,10 @@ API void PrintTime(const CClock& clock);
 API void PrintTime(Tss t);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(Tms t);
+API void PrintTime(TMS t);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(Tme t);
+API void PrintTime(TME t);
 
 /* Reads a time or time delta from a a char starting with an '@' sign.
 @brief
@@ -238,11 +238,11 @@ API const char* Scan(const char* string, CClock& clock);
 /* Converts a keyboard input to a Tss. */
 API const char* Scan(const char* string, Tss& result);
 
-/* Converts a keyboard input to a Tms. */
-API const char* StringScanTime(const char* string, Tms& result);
+/* Converts a keyboard input to a TMS. */
+API const char* StringScanTime(const char* string, TMS& result);
 
-/* Converts a keyboard input to a Tme. */
-API const char* StringScanTime(const char* string, Tme& result);
+/* Converts a keyboard input to a TME. */
+API const char* StringScanTime(const char* string, TME& result);
 
 #endif  //< #if USING_UTF8
 
@@ -270,7 +270,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char16_t* PrintTime(char16_t* begin, char16_t* end, Tms time);
+API char16_t* PrintTime(char16_t* begin, char16_t* end, TMS time);
 
 /* Writes the given time to the text buffer.
 @return Null upon failure or a pointer to the byte after the last
@@ -278,7 +278,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, Tme time);
+API char16_t* Print(char16_t* begin, char16_t* end, TME time);
 
 /* Reads a time or time delta from a a char16_t starting with an '@' sign.
 
@@ -313,11 +313,11 @@ API const char16_t* Scan(const char16_t* string, CClock& result);
 /* Converts a keyboard input to a Tss. */
 API const char16_t* Scan(const char16_t* string, Tss& result);
 
-/* Converts a keyboard input to a Tms. */
-API const char16_t* StringScanTime(const char16_t* string, Tms& result);
+/* Converts a keyboard input to a TMS. */
+API const char16_t* StringScanTime(const char16_t* string, TMS& result);
 
-/* Converts a keyboard input to a Tme. */
-API const char16_t* StringScanTime(const char16_t* string, Tme& result);
+/* Converts a keyboard input to a TME. */
+API const char16_t* StringScanTime(const char16_t* string, TME& result);
 
 #endif  //< #if USING_UTF16
 #if USING_UTF32
@@ -343,7 +343,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char32_t* PrintTime(char32_t* begin, char32_t* end, Tms time);
+API char32_t* PrintTime(char32_t* begin, char32_t* end, TMS time);
 
 /* Writes the given time to the text buffer.
 @return Null upon failure or a pointer to the byte after the last
@@ -351,7 +351,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char32_t* PrintTime(char32_t* begin, char32_t* end, Tme time);
+API char32_t* PrintTime(char32_t* begin, char32_t* end, TME time);
 
 /* Reads a time or time delta from a a char starting with an '@' sign..
 @param input  The char to parse.
@@ -380,14 +380,14 @@ API const char32_t* StringScanTime(const char32_t* input, int& hour,
  */
 API const char32_t* Scan(const char32_t* input, CClock& time);
 
-/* Converts a keyboard input to a Tms. */
+/* Converts a keyboard input to a TMS. */
 API const char32_t* Scan(const char32_t* input, Tss& result);
 
-/* Converts a keyboard input to a Tms. */
-API const char32_t* StringScanTime(const char32_t* input, Tms& result);
+/* Converts a keyboard input to a TMS. */
+API const char32_t* StringScanTime(const char32_t* input, TMS& result);
 
-/* Converts a keyboard input to a Tms. */
-API const char32_t* StringScanTime(const char32_t* input, Tme& result);
+/* Converts a keyboard input to a TMS. */
+API const char32_t* StringScanTime(const char32_t* input, TME& result);
 
 #endif  //< #if USING_UTF32
 }  // namespace _

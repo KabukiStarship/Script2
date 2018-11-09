@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    \kabuki\f2\ctest.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -38,171 +38,171 @@ const char* TestTree(char* seam_log, char* seam_end, const char* args,
                      TestCase* seams, int node_count);
 
 /* Prints a message when a TestCase completes without failure. */
-bool TestBegin(char* seam_log, char* seam_end, const char* args);
+BOL TestBegin(char* seam_log, char* seam_end, const char* args);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param condition The condition to check. */
-API bool Test(bool condition);
+API BOL Test(BOL condition);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(int8_t value);
+API BOL Test(SI1 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(uint8_t value);
+API BOL Test(UI1 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(int16_t value);
+API BOL Test(SI2 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(uint16_t value);
+API BOL Test(UI2 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(int32_t value);
+API BOL Test(SI4 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(uint32_t value);
+API BOL Test(UI4 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(int64_t value);
+API BOL Test(SI8 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(uint64_t value);
+API BOL Test(UI8 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(float value);
+API BOL Test(FLT value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API bool Test(double value);
+API BOL Test(DBL value);
 
 /* Tests if the pointer is nil.
 @return false if the condition is false.
 @param  value The value to test.  */
-API bool Test(const void* value);
+API BOL Test(const void* value);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(const char* a, const char* b);
+API BOL Test(const char* a, const char* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(const char16_t* a, const char16_t* b);
+API BOL Test(const char16_t* a, const char16_t* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(const char32_t* a, const char32_t* b);
+API BOL Test(const char32_t* a, const char32_t* b);
 
 /* Tests if the two pointers are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(const void* a, const void* b);
+API BOL Test(const void* a, const void* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(uint8_t a, uint8_t b);
+API BOL Test(UI1 a, UI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(int8_t a, int8_t b);
+API BOL Test(SI1 a, SI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(uint8_t a, uint8_t b);
+API BOL Test(UI1 a, UI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(int16_t a, int16_t b);
+API BOL Test(SI2 a, SI2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(uint16_t a, uint16_t b);
+API BOL Test(UI2 a, UI2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(int32_t a, int32_t b);
+API BOL Test(SI4 a, SI4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(uint32_t a, uint32_t b);
+API BOL Test(UI4 a, UI4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(int64_t a, int64_t b);
+API BOL Test(SI8 a, SI8 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(uint64_t a, uint64_t b);
+API BOL Test(UI8 a, UI8 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(float a, float b);
+API BOL Test(FLT a, FLT b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API bool Test(double a, double b);
+API BOL Test(DBL a, DBL b);
 
 /* Handles an assert.
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to print. */
-API bool TestWarn(const char* funciton, const char* file, int line);
+API BOL TestWarn(const char* funciton, const char* file, int line);
 
 /* Handles an assert.
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to print. */
-API bool ErrorFreeze(const char* funciton, const char* file, int line);
+API BOL ErrorFreeze(const char* funciton, const char* file, int line);
 }  // namespace _
 
 #endif  //< #ifndef INCLUDED_SCRIPT_COMPARE

@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_benchmark.cc
+@file    /script2_benchmark.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -41,7 +41,7 @@ BenchmarkCase::BenchmarkCase(const char* name, TestCase* cases, int count)
 
 const char* BenchmarkCase::Run(char* cursor, char* end, const char* args) {
   /*
-  double nil_reading;
+  DBL nil_reading;
   int i;
   int columns_max;
   ASSERT(Scan<>(args, columns_max));

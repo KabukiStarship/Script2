@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_console.cc
+@file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -114,7 +114,7 @@ void Print(const char* a, const char* b, const char* c) {
   Print(c);
 }
 
-void Print(uint64_t value) {
+void Print(UI8 value) {
 #if SEAM <= _0_0_0__01
   return Printf(FORMAT_UI8, value);
 #else
@@ -125,55 +125,55 @@ void Print(uint64_t value) {
 #endif
 }
 
-void Print(uint32_t value) {
+void Print(UI4 value) {
 #if SEAM <= _0_0_0__01
   return Printf("%u", value);
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintUnsigned<uint32_t, char>(buffer, kSize - 1, value);
+  PrintUnsigned<UI4, char>(buffer, kSize - 1, value);
 #endif
 }
 
-void Print(int64_t value) {
+void Print(SI8 value) {
 #if SEAM <= _0_0_0__01
   return Printf(FORMAT_SI8, value);
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintSigned<int64_t>(buffer, kSize - 1, value);
+  PrintSigned<SI8>(buffer, kSize - 1, value);
   Print(buffer);
 #endif
 }
 
-void Print(int32_t value) {
+void Print(SI4 value) {
 #if SEAM <= _0_0_0__01
   return Printf("%i", value);
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintSigned<int64_t>(buffer, kSize - 1, (int64_t)value);
+  PrintSigned<SI8>(buffer, kSize - 1, (SI8)value);
 #endif
 }
 
-void Print(float value) {
+void Print(FLT value) {
 #if SEAM <= _0_0_0__12
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
   char buffer[kSize];
-  PrintFloat<float, uint32_t, char>(buffer, kSize, value);
+  PrintFloat<FLT, UI4, char>(buffer, kSize, value);
   Print(buffer);
 #endif
 }
 
-void Print(double value) {
+void Print(DBL value) {
 #if SEAM <= _0_0_0__12
   return Printf("%f", value);
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintFloat<double, uint64_t, char>(buffer, kSize - 1, value);
+  PrintFloat<DBL, UI8, char>(buffer, kSize - 1, value);
   Print(buffer);
 #endif
 }
@@ -233,42 +233,42 @@ void PrintBinarySigned(SI value) {
   return PrintBinaryUnsigned<UI>((UI)value);
 }
 
-void PrintBinary(uint8_t value) { return PrintBinaryUnsigned<uint8_t>(value); }
+void PrintBinary(UI1 value) { return PrintBinaryUnsigned<UI1>(value); }
 
-void PrintBinary(int8_t value) {
-  return PrintBinarySigned<int8_t, uint8_t>(value);
+void PrintBinary(SI1 value) {
+  return PrintBinarySigned<SI1, UI1>(value);
 }
 
-void PrintBinary(uint16_t value) {
-  return PrintBinaryUnsigned<uint16_t>(value);
+void PrintBinary(UI2 value) {
+  return PrintBinaryUnsigned<UI2>(value);
 }
 
-void PrintBinary(int16_t value) {
-  return PrintBinarySigned<int16_t, uint16_t>(value);
+void PrintBinary(SI2 value) {
+  return PrintBinarySigned<SI2, UI2>(value);
 }
 
-void PrintBinary(uint32_t value) {
-  return PrintBinaryUnsigned<uint32_t>(value);
+void PrintBinary(UI4 value) {
+  return PrintBinaryUnsigned<UI4>(value);
 }
 
-void PrintBinary(int32_t value) {
-  return PrintBinarySigned<int32_t, uint32_t>(value);
+void PrintBinary(SI4 value) {
+  return PrintBinarySigned<SI4, UI4>(value);
 }
 
-void PrintBinary(uint64_t value) {
-  return PrintBinaryUnsigned<uint64_t>(value);
+void PrintBinary(UI8 value) {
+  return PrintBinaryUnsigned<UI8>(value);
 }
 
-void PrintBinary(int64_t value) {
-  return PrintBinarySigned<int64_t, uint64_t>(value);
+void PrintBinary(SI8 value) {
+  return PrintBinarySigned<SI8, UI8>(value);
 }
 
-void PrintBinary(float value) {
-  return PrintBinaryUnsigned<uint32_t>(*reinterpret_cast<uint32_t*>(&value));
+void PrintBinary(FLT value) {
+  return PrintBinaryUnsigned<UI4>(*reinterpret_cast<UI4*>(&value));
 }
 
-void PrintBinary(double value) {
-  return PrintBinaryUnsigned<uint64_t>(*reinterpret_cast<uint64_t*>(&value));
+void PrintBinary(DBL value) {
+  return PrintBinaryUnsigned<UI8>(*reinterpret_cast<UI8*>(&value));
 }
 
 void PrintBinary(const void* ptr) {
@@ -282,33 +282,33 @@ void PrintHexConsole(UI value) {
   Print('0', 'x');
   for (int num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4)
-    Print(HexNibbleToUpperCase((uint8_t)(value >> num_bits_shift)));
+    Print(HexNibbleToUpperCase((UI1)(value >> num_bits_shift)));
 }
 
-void PrintHex(uint8_t value) { PrintHexConsole<uint8_t>(value); }
+void PrintHex(UI1 value) { PrintHexConsole<UI1>(value); }
 
-void PrintHex(int8_t value) { PrintHexConsole<uint8_t>((uint8_t)value); }
+void PrintHex(SI1 value) { PrintHexConsole<UI1>((UI1)value); }
 
-void PrintHex(uint16_t value) { PrintHexConsole<uint16_t>(value); }
+void PrintHex(UI2 value) { PrintHexConsole<UI2>(value); }
 
-void PrintHex(int16_t value) { PrintHexConsole<uint16_t>((uint16_t)value); }
+void PrintHex(SI2 value) { PrintHexConsole<UI2>((UI2)value); }
 
-void PrintHex(uint32_t value) { PrintHexConsole<uint32_t>(value); }
+void PrintHex(UI4 value) { PrintHexConsole<UI4>(value); }
 
-void PrintHex(int32_t value) { PrintHexConsole<uint32_t>((uint32_t)value); }
+void PrintHex(SI4 value) { PrintHexConsole<UI4>((UI4)value); }
 
-void PrintHex(uint64_t value) { PrintHexConsole<uint64_t>(value); }
+void PrintHex(UI8 value) { PrintHexConsole<UI8>(value); }
 
-void PrintHex(int64_t value) { PrintHexConsole<uint64_t>((uint64_t)value); }
+void PrintHex(SI8 value) { PrintHexConsole<UI8>((UI8)value); }
 
-void PrintHex(float value) {
-  uint32_t f = *reinterpret_cast<uint32_t*>(&value);
-  PrintHexConsole<uint32_t>(f);
+void PrintHex(FLT value) {
+  UI4 f = *reinterpret_cast<UI4*>(&value);
+  PrintHexConsole<UI4>(f);
 }
 
-void PrintHex(double value) {
-  uint64_t f = *reinterpret_cast<uint64_t*>(&value);
-  PrintHexConsole<uint64_t>(f);
+void PrintHex(DBL value) {
+  UI8 f = *reinterpret_cast<UI8*>(&value);
+  PrintHexConsole<UI8>(f);
 }
 
 void PrintHex(const void* ptr) {
@@ -318,7 +318,7 @@ void PrintHex(const void* ptr) {
 
 int CInKey() { return _getch(); }
 
-bool CInState(int vk_code) {
+BOL CInState(int vk_code) {
 #if COMPILER == VISUAL_CPP
 
 #elif COMPILER == GCC

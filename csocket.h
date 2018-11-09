@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /csocket.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -50,28 +50,28 @@ API inline uintptr_t* AlignUp(uintptr_t* buffer,
 API char* AlignUp(char* pointer, uintptr_t mask = sizeof(void*));
 
 /* Aligns the given value up to an 8-byte boundary. */
-API inline uint8_t AlignUp(uint8_t value, uint8_t mask = kWordBitsMask);
+API inline UI1 AlignUp(UI1 value, UI1 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 8-byte boundary. */
-API inline int8_t AlignUp(int8_t value, int8_t mask = kWordBitsMask);
+API inline SI1 AlignUp(SI1 value, SI1 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 16-byte boundary. */
-API uint16_t AlignUp(uint16_t value, uint16_t mask = kWordBitsMask);
+API UI2 AlignUp(UI2 value, UI2 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 16-byte boundary. */
-API int16_t AlignUp(int16_t value, int16_t mask = kWordBitsMask);
+API SI2 AlignUp(SI2 value, SI2 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 32-byte boundary. */
-API inline uint32_t AlignUp(uint32_t value, uint32_t mask = kWordBitsMask);
+API inline UI4 AlignUp(UI4 value, UI4 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 32-byte boundary. */
-API inline int32_t AlignUp(int32_t value, int32_t mask = kWordBitsMask);
+API inline SI4 AlignUp(SI4 value, SI4 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 64-byte boundary. */
-API inline uint64_t AlignUp(uint64_t value, uint64_t mask = kWordBitsMask);
+API inline UI8 AlignUp(UI8 value, UI8 mask = kWordBitsMask);
 
 /* Aligns the given value up to an 64-byte boundary. */
-API inline int64_t AlignUp(int64_t value, int64_t mask = kWordBitsMask);
+API inline SI8 AlignUp(SI8 value, SI8 mask = kWordBitsMask);
 
 /* A managed general purpose (i.e. not just for networking) memory socket.
     A socket is just a hole in something for fitting something in, like a light
@@ -157,7 +157,7 @@ API inline char* SocketCopy(void* begin, void* end, const void* start,
     @param  begin_b The start of Socket B.
     @param  stop_b  The stop of Socket B.
     @return True if they are the same and false if they are not. */
-API bool SocketCompare(const void* begin, const void* end, const void* start,
+API BOL SocketCompare(const void* begin, const void* end, const void* start,
                        const void* stop);
 
 /* Compares the two memory sockets.
@@ -166,7 +166,7 @@ API bool SocketCompare(const void* begin, const void* end, const void* start,
 @param  begin_a The start of Socket B.
 @param  size_b  The size of Socket B.
 @return True if they are the same and false if they are not. */
-API inline bool SocketCompare(const void* begin_a, void* end_a,
+API inline BOL SocketCompare(const void* begin_a, void* end_a,
                               const void* begin_b, intptr_t read_size);
 
 /* Compares the two memory sockets.
@@ -175,7 +175,7 @@ API inline bool SocketCompare(const void* begin_a, void* end_a,
 @param  begin_a The start of buffer b.
 @param  size_b  The size of Socket B.
 @return True if they are the same and false if they are not. */
-API inline bool SocketCompare(const void* begin_a, intptr_t size_a,
+API inline BOL SocketCompare(const void* begin_a, intptr_t size_a,
                               const void* begin_b, intptr_t size_b);
 
 /* Shifts the memory up by the given count in bytes.

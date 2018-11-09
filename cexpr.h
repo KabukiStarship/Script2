@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/expr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -110,9 +110,9 @@ struct Expr {
       last_bin_state,    //< Last BIn state.
       last_byte;         //< Last byte read.
   wchar_t current_char;  //< Current Unicode char being scanned.
-  hash16_t hash;         //< Packed BSQ hash.
-  uint32_t timeout_us;   //< Timeout time in microseconds.
-  Tme last_time;         //< Last time the Stack was scanned.
+  hash16_t hash;         //< Packed kBSQ hash.
+  UI4 timeout_us;   //< Timeout time in microseconds.
+  TME last_time;         //< Last time the Stack was scanned.
   const Op* result;      //< Result of the Expr.
   const uint_t *header,  //< Pointer to the header being verified.
       *header_start;     //< Start of the header being verified.
@@ -151,7 +151,7 @@ inline Operand** ExprStack(Expr* expr) {
 }
 
 /* Returns true if the Stack uses dynamic memory. */
-// API bool ExprIsDynamic (Expr* expr);
+// API BOL ExprIsDynamic (Expr* expr);
 
 API char* ExprEndAddress(Expr* expr);
 
@@ -185,7 +185,7 @@ API byte ExprStreamBOut(Expr* expr);
 API const Op* ExprUnpack(Expr* expr);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
-API bool ExprContains(Expr* expr, void* address);
+API BOL ExprContains(Expr* expr, void* address);
 
 /* Pushes a header onto the scan stack.*/
 API const Op* ExprScanHeader(Expr* expr, const uint_t* header);
@@ -279,17 +279,17 @@ API const Op* ExprQuery(Expr* expr, const Op* op);
 
 #if CRABS_TEXT
 /* Prints the Expr stack to the Text buffer */
-API Utf8& PrintExpr(Utf8& printer, Expr* expr);
+API UTF8& PrintExpr(UTF8& printer, Expr* expr);
 
 /* Prints the Expr stack to the Text buffer */
-API Utf8& PrintExprStack(Utf8& printer, Expr* expr);
+API UTF8& PrintExprStack(UTF8& printer, Expr* expr);
 #endif
 
 }  //< namespace _
 
 #if CRABS_TEXT
 /* Prints the given Expr to the Text buffer. */
-inline _::Utf8& operator<<(_::Utf8& printer, _::Expr* expr) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Expr* expr) {
   return _::PrintExpr(printer, expr);
 }
 #endif
@@ -297,7 +297,7 @@ inline _::Utf8& operator<<(_::Utf8& printer, _::Expr* expr) {
 #endif  //< INCLUDED_CRABS_EXPR
 #endif  //< #if SEAM >= _0_0_0__13
 =======
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/expr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -460,9 +460,9 @@ struct Expr {
       last_bin_state,    //< Last BIn state.
       last_byte;         //< Last byte read.
   wchar_t current_char;  //< Current Unicode char being scanned.
-  hash16_t hash;         //< Packed BSQ hash.
-  uint32_t timeout_us;   //< Timeout time in microseconds.
-  Tme last_time;         //< Last time the Stack was scanned.
+  hash16_t hash;         //< Packed kBSQ hash.
+  UI4 timeout_us;   //< Timeout time in microseconds.
+  TME last_time;         //< Last time the Stack was scanned.
   const Op* result;      //< Result of the Expr.
   const uint_t *header,  //< Pointer to the header being verified.
       *header_start;     //< Start of the header being verified.
@@ -501,7 +501,7 @@ inline Operand** ExprStack(Expr* expr) {
 }
 
 /* Returns true if the Stack uses dynamic memory. */
-// API bool ExprIsDynamic (Expr* expr);
+// API BOL ExprIsDynamic (Expr* expr);
 
 API char* ExprEndAddress(Expr* expr);
 
@@ -535,7 +535,7 @@ API byte ExprStreamBOut(Expr* expr);
 API const Op* ExprUnpack(Expr* expr);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
-API bool ExprContains(Expr* expr, void* address);
+API BOL ExprContains(Expr* expr, void* address);
 
 /* Pushes a header onto the scan stack.*/
 API const Op* ExprScanHeader(Expr* expr, const uint_t* header);
@@ -642,17 +642,17 @@ API const Op* ExprQuery(Expr* expr, const Op* op);
 
 #if CRABS_TEXT
 /* Prints the Expr stack to the Text buffer */
-API Utf8& PrintExpr(Utf8& printer, Expr* expr);
+API UTF8& PrintExpr(UTF8& printer, Expr* expr);
 
 /* Prints the Expr stack to the Text buffer */
-API Utf8& PrintExprStack(Utf8& printer, Expr* expr);
+API UTF8& PrintExprStack(UTF8& printer, Expr* expr);
 #endif
 
 }  //< namespace _
 
 #if CRABS_TEXT
 /* Prints the given Expr to the Text buffer. */
-inline _::Utf8& operator<<(_::Utf8& printer, _::Expr* expr) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Expr* expr) {
   return _::PrintExpr(printer, expr);
 }
 #endif

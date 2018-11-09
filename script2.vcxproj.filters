@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -117,15 +113,6 @@
     <ClInclude Include="cutf.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="cutf8.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="cutf16.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="cutf32.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="cvarint.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -148,9 +135,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="public.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="seam.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="tarray.h">
@@ -228,9 +212,6 @@
     <ClInclude Include="0_0_0__06_ascii_array.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="0_0_0__07_ascii_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="0_0_0__07_ascii_loom.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -259,6 +240,15 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="cargs.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="cutf1.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="cutf2.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="cutf4.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -348,91 +338,91 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="script_asciidata.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_benchmark.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_bin.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_binary.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_bout.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_bsq.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_clock.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_console.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_door.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_error.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_expr.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_floor.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_hash.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_interrupts.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_lock.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_morsecode.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_obj.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_op.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_operand.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_rng.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_room.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_slot.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_socket.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_str.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_test.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_vk.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script_wall.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="seam_tree.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="pch.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_asciidata.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_benchmark.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_bin.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_binary.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_bout.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_bsq.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_clock.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_console.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_door.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_error.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_expr.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_floor.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_hash.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_interrupts.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_lock.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_morsecode.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_obj.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_op.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_operand.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_rng.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_room.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_slot.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_socket.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_test.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_vk.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_wall.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_utf.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>

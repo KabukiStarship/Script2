@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tutf.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -297,7 +297,7 @@ const Char* StringEquals(const Char* cursor, const Char* end,
 }
 
 template <typename Char = char>
-bool TextQualifies(const Char* cursor) {
+BOL TextQualifies(const Char* cursor) {
   if (cursor == nullptr) return false;
   Char c = *cursor;
   while (c) {
@@ -308,7 +308,7 @@ bool TextQualifies(const Char* cursor) {
 }
 
 template <typename Char = char>
-bool TextQualifies(const Char* cursor, const Char* end) {
+BOL TextQualifies(const Char* cursor, const Char* end) {
   if (!cursor) return false;
   if (cursor > end) return false;
   Char c = *cursor;
@@ -597,23 +597,23 @@ class TToken {
   TToken(const Char* string) { Print<Char>(string, string + kSize, string); }
 
   /* Prints the value to the text buffer. */
-  TToken(int32_t value) { Print<Char>(string, string + kSize, value); }
+  TToken(SI4 value) { Print<Char>(string, string + kSize, value); }
 
   /* Prints the value to the text buffer. */
-  TToken(uint32_t value) { Print<Char>(string, string + kSize, value); }
+  TToken(UI4 value) { Print<Char>(string, string + kSize, value); }
 
   /* Prints the value to the text buffer. */
-  TToken(int64_t value) { Print<Char>(string, string + kSize, value); }
+  TToken(SI8 value) { Print<Char>(string, string + kSize, value); }
 
   /* Prints the value to the text buffer. */
-  TToken(uint64_t value) { Print<Char>(string, string + kSize, value); }
+  TToken(UI8 value) { Print<Char>(string, string + kSize, value); }
 
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text buffer. */
-  TToken(float value) { Print<Char>(string, string + kSize, value); }
+  TToken(FLT value) { Print<Char>(string, string + kSize, value); }
 
   /* Prints the value to the text buffer. */
-  TToken(double value) { Print<Char>(string, string + kSize, value); }
+  TToken(DBL value) { Print<Char>(string, string + kSize, value); }
 #endif
   /* Gets the number string. */
   const Char* String() { return string; }
@@ -635,38 +635,38 @@ class TCenter {
   }
 
   /* Prints the value to the text buffer. */
-  TCenter(int32_t value, int column_count)
+  TCenter(SI4 value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TCenter(uint32_t value, int column_count)
+  TCenter(UI4 value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TCenter(int64_t value, int column_count)
+  TCenter(SI8 value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TCenter(uint64_t value, int column_count)
+  TCenter(UI8 value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
 
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text buffer. */
-  TCenter(float value, int column_count)
+  TCenter(FLT value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TCenter(double value, int column_count)
+  TCenter(DBL value, int column_count)
       : string(nullptr), number(value), column_count(column_count) {
     // Nothing to do here!
   }
@@ -695,38 +695,38 @@ class TRight {
   }
 
   /* Prints the value to the text buffer. */
-  TRight(int32_t value, int column_count)
+  TRight(SI4 value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TRight(uint32_t value, int column_count)
+  TRight(UI4 value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TRight(int64_t value, int column_count)
+  TRight(SI8 value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TRight(uint64_t value, int column_count)
+  TRight(UI8 value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text buffer. */
-  TRight(float value, int column_count)
+  TRight(FLT value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text buffer. */
-  TRight(double value, int column_count)
+  TRight(DBL value, int column_count)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
@@ -820,14 +820,14 @@ like to replace the begin with the beginning of buffer pointer when they
 are done printing.
 */
 template <typename Char = char>
-struct TUtf {
+struct TUTF {
   Char *begin,  //< Write begin pointer.
       *end;     //< End of buffer pointer.
 
   /* Initializes the Utf& from the given buffer pointers.
   @param begin The beginning of the buffer.
   @param end   The end of the buffer. */
-  TUtf(Char* begin, intptr_t size)
+  TUTF(Char* begin, intptr_t size)
       : begin(begin), end(Ptr<Char>(begin, size - 1)) {
     ASSERT(begin);
     ASSERT(ObjSizeIsValid<intptr_t>(size, 8));
@@ -836,130 +836,110 @@ struct TUtf {
   /* Initializes the Utf& from the given buffer pointers.
   @param begin The beginning of the buffer.
   @param end   The end of the buffer. */
-  TUtf(Char* begin, Char* end) {}
+  TUTF(Char* begin, Char* end) {}
 
   /* Clones the other print. */
-  TUtf(const TUtf& other)
+  TUTF(const TUTF& other)
       : begin(other.begin), end(other.end) {  // Nothing to do here!.
   }
 
   /* Sets the begin pointer to the new_pointer. */
-  inline TUtf& Set(Char* new_pointer) {
+  inline TUTF& Set(Char* new_pointer) {
     if (!new_pointer) return *this;
     begin = new_pointer;
     return *this;
   }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(int8_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(SI1 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(uint8_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(UI1 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(int16_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(SI2 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(uint16_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(UI2 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(int32_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(SI4 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(uint32_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(UI4 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(int64_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(SI8 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(uint64_t value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(UI8 value) { return Set(PrintHex<Char>(begin, end, value)); }
 
 #if SEAM >= _0_0_0__03
   /* Prints the given value as hex. */
-  inline TUtf& Hex(float value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(FLT value) { return Set(PrintHex<Char>(begin, end, value)); }
 
   /* Prints the given value as hex. */
-  inline TUtf& Hex(double value) {
-    return Set(PrintHex<Char>(begin, end, value));
-  }
+  inline TUTF& Hex(DBL value) { return Set(PrintHex<Char>(begin, end, value)); }
 #endif
 
   /* Prints the given pointer as hex. */
-  inline TUtf& Hex(const void* value) {
+  inline TUTF& Hex(const void* value) {
     return Set(PrintHex<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(int8_t value) {
+  inline TUTF& Binary(SI1 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(uint8_t value) {
+  inline TUTF& Binary(UI1 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(int16_t value) {
+  inline TUTF& Binary(SI2 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(uint16_t value) {
+  inline TUTF& Binary(UI2 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(int32_t value) {
+  inline TUTF& Binary(SI4 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(uint32_t value) {
+  inline TUTF& Binary(UI4 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(int64_t value) {
+  inline TUTF& Binary(SI8 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(uint64_t value) {
+  inline TUTF& Binary(UI8 value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
 #if SEAM >= _0_0_0__03
   /* Prints the given value as binary. */
-  inline TUtf& Binary(float value) {
+  inline TUTF& Binary(FLT value) {
     return Set(Binary<Char>(begin, end, value));
   }
 
   /* Prints the given value as binary. */
-  inline TUtf& Binary(double value) {
+  inline TUTF& Binary(DBL value) {
     return Set(Binary<Char>(begin, end, value));
   }
 #endif
   /* Prints the given pointer as binary. */
-  inline TUtf& Binary(const void* value) {
+  inline TUTF& Binary(const void* value) {
     return Set(Binary<Char>(begin, end, value));
   }
 };
@@ -985,14 +965,14 @@ Str<> (&Console) << "Hello world!";
 Strings that use dynamic memory use the DCOut destructor:
 
 @code
-Str<uint32_t> (&DCOut) << "Hello world!";
+Str<UI4> (&DCOut) << "Hello world!";
 @endcode
 */
 template <typename Char = char, typename Size = schar_t>
-class TStr : public TUtf<Char> {
+class TStr : public TUTF<Char> {
  public:
   /* Constructs the Utf& pointers to the buffer_. */
-  TStr() : TUtf<Char>(), obj_() { Terminate(); }
+  TStr() : TUTF<Char>(), obj_() { Terminate(); }
 
   /* Constructs the Utf& pointers to the buffer_. */
   TStr(HeapManager destructor) : obj_(destructor) { Terminate(); }
@@ -1010,19 +990,19 @@ class TStr : public TUtf<Char> {
   }
 
   /* Gets the UTF. */
-  TUtf<Char> Print() {
+  TUTF<Char> Print() {
     Size size = ObjSize<Size>(obj_);
     ASSERT(((size - sizeof(Size)) & 7) == 0);
     Char* start_ptr = reinterpret_cast<Char*>(
         reinterpret_cast<uintptr_t>(obj_.begin) + sizeof(Size));
-    return TUtf<Char>(start_ptr, start_ptr + (size >> BitShiftCount<Size>()));
+    return TUTF<Char>(start_ptr, start_ptr + (size >> BitShiftCount<Size>()));
   }
 
   /* Prints a char to the string.
   @param item The item to print.
   @return A UTF. */
   template <typename T>
-  TUtf<Char> Print(T item) {
+  TUTF<Char> Print(T item) {
     uintptr_t begin = reinterpret_cast<uintptr_t>(obj_.Begin());
     Size size = *reinterpret_cast<Size*>(begin);
     ASSERT((size & 7) == 0);
@@ -1030,45 +1010,45 @@ class TStr : public TUtf<Char> {
          *end = cursor + (size >> BitShiftCount<Size>()) - 1;
     cursor = Print<Char>(cursor, end, item);
     if (!cursor) {
-      return TUtf<Char>(reinterpret_cast<Char*>(begin), end);
+      return TUTF<Char>(reinterpret_cast<Char*>(begin), end);
     }
-    return TUtf<Char>(cursor, end);
+    return TUTF<Char>(cursor, end);
   }
 
   /* Prints a char to the string.
   @return A UTF. */
-  inline TUtf<Char> Print(Char c) { return Print<Char>(c); }
+  inline TUTF<Char> Print(Char c) { return Print<Char>(c); }
 
   /* Prints a char to the string.
   @return A UTF. */
-  inline TUtf<Char> Print(const Char* string) {
+  inline TUTF<Char> Print(const Char* string) {
     return Print<const Char*>(string);
   }
 
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(int32_t value) { return Print<int32_t>(value); }
+  inline TUTF<Char> Print(SI4 value) { return Print<SI4>(value); }
 
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(uint32_t value) { return Print<uint32_t>(value); }
+  inline TUTF<Char> Print(UI4 value) { return Print<UI4>(value); }
 
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(int64_t value) { return Print<int64_t>(value); }
+  inline TUTF<Char> Print(SI8 value) { return Print<SI8>(value); }
 
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(uint64_t value) { return Print<uint64_t>(value); }
+  inline TUTF<Char> Print(UI8 value) { return Print<UI8>(value); }
 
 #if SEAM >= _0_0_0__03
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(float value) { return Print<float>(value); }
+  inline TUTF<Char> Print(FLT value) { return Print<FLT>(value); }
 
   /* Prints the given value.
   @return A UTF. */
-  inline TUtf<Char> Print(double value) { return Print<double>(value); }
+  inline TUTF<Char> Print(DBL value) { return Print<DBL>(value); }
 #endif
 
   /* Returns the stop of the buffer. */
@@ -1084,11 +1064,11 @@ class TStr : public TUtf<Char> {
   inline TObject<Size>& OBJ() { return obj_; }
 
  private:
-  TObject<Size> obj_;  //< ASCII OBJ.
+  TObject<Size> obj_;  //< ASCII kOBJ.
 };
 
 template <typename Char = char>
-TUtf<Char> Print(HeapManager* hm) {
+TUTF<Char> Print(HeapManager* hm) {
   return TStr<Char>(hm);
 }
 
@@ -1150,14 +1130,14 @@ int StringQuery(const Char* cursor, const Char* end, const Char* query) {
 
 }  // namespace _
 
-#define COUT ::_::TStr<>(&Console).Print();
+#define COUT ::_::TUTF<>(&Console).Print();
 
 /* Writes a nil-terminated UTF-8 or ASCII string to the print.
 @param  utf The utf.
 @param  value   The value to print.
 @return The utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, const Char* string) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, string));
 }
 
@@ -1166,7 +1146,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, const Char* string) {
 @param  value   The value to print.
 @return The utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, Char c) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, c));
 }
 
@@ -1175,7 +1155,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, Char c) {
 @param  value The value to write to the print.
 @return The utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint8_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1184,7 +1164,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint8_t value) {
 @param  value The value to write to the print.
 @return The utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int16_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1193,7 +1173,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int16_t value) {
 @param  value The value to write to the print.
 @return The utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint16_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1202,7 +1182,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint16_t value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int32_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1211,7 +1191,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int32_t value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint32_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1220,7 +1200,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint32_t value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int64_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1230,7 +1210,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, int64_t value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint64_t value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1241,7 +1221,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, uint64_t value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, float value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 
@@ -1250,7 +1230,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, float value) {
 @param  utf The utf.
 @param  value The value to write to the print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, double value) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, value));
 }
 #endif
@@ -1260,7 +1240,7 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, double value) {
 @param  utf The utf.
 @param  item The item to write to print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, _::TCenter<Char> item) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, item));
 }
 
@@ -1269,19 +1249,19 @@ API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, _::TCenter<Char> item) {
 @param  utf The utf.
 @param  item The item to print. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, _::TRight<Char> item) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, item));
 }
 
 /* Prints a line of the given column_count to the utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, _::TLine<Char> line) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLine<Char> line) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, line));
 }
 
 /* Prints a line string of the given column_count to the utf. */
 template <typename Char = char>
-API _::TUtf<Char>& operator<<(_::TUtf<Char>& utf, _::TLineString<Char> line) {
+API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineString<Char> line) {
   return utf.Set(_::Print<Char>(utf.begin, utf.end, line));
 }
 

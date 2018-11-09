@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @file    /0_0_0__04_clock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -30,7 +30,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
 
   PRINT_HEADING("\n\n    Testing StringScanTime...");
 
-  Tms t, t_found;
+  TMS t, t_found;
   const char* result;
 
   // @note The following dates must be the current day to work right in order
@@ -59,7 +59,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
   for (int i = 0; i < 18; ++i) {
     PRINT_LINE('-');
     PRINTF("\n    %i", i);
-    Tms t = 0;
+    TMS t = 0;
     result = StringScanTime(strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }

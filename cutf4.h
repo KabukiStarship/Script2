@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /str4.h
+@file    /cutf4.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -28,12 +28,12 @@ namespace _ {
 
 /* Checks if the given character is whitespace.
  */
-API bool IsWhitespace(char32_t character);
+API BOL IsWhitespace(char32_t character);
 
 /* Converts the given value to a printable char32_t if it's non-printable. */
 API char32_t PrintableChar(char32_t value);
 
-/* Scrolls over to the next double quote mark.
+/* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 char32_t. */
 API const char32_t* StringEnd(const char32_t* begin);
@@ -107,7 +107,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, uint32_t value);
+API char32_t* Print(char32_t* begin, char32_t* end, UI4 value);
 
 /* Writes the give char32_t to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -115,7 +115,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, int32_t value);
+API char32_t* Print(char32_t* begin, char32_t* end, SI4 value);
 
 /* Writes the give char32_t to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -123,7 +123,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, uint64_t value);
+API char32_t* Print(char32_t* begin, char32_t* end, UI8 value);
 
 /* Writes the give char32_t to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -131,7 +131,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, int64_t value);
+API char32_t* Print(char32_t* begin, char32_t* end, SI8 value);
 
 /* Writes the give char32_t to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -139,7 +139,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, float value);
+API char32_t* Print(char32_t* begin, char32_t* end, FLT value);
 
 /* Writes the give char32_t to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -147,7 +147,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* Print(char32_t* begin, char32_t* end, double value);
+API char32_t* Print(char32_t* begin, char32_t* end, DBL value);
 
 /* Prints the given string to the print buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -173,7 +173,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, uint32_t valu,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, UI4 valu,
                           int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -182,7 +182,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, int32_t value,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, SI4 value,
                           int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -191,7 +191,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, uint64_t value,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, UI8 value,
                           int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -200,7 +200,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, int64_t value,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, SI8 value,
                           int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -209,7 +209,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, float value,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, FLT value,
                           int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -218,7 +218,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintCenter(char32_t* begin, char32_t* end, double value,
+API char32_t* PrintCenter(char32_t* begin, char32_t* end, DBL value,
                           int column_count);
 
 /* Prints the given string to the print buffer.
@@ -245,7 +245,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, uint32_t value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, UI4 value,
                          int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -254,7 +254,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, int32_t value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, SI4 value,
                          int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -263,7 +263,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, uint64_t value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, UI8 value,
                          int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -272,7 +272,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, int64_t value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, SI8 value,
                          int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -281,7 +281,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, float value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, FLT value,
                          int column_count);
 
 /* Writes the give char32_t to the given buffer center.
@@ -290,7 +290,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintRight(char32_t* begin, char32_t* end, double value,
+API char32_t* PrintRight(char32_t* begin, char32_t* end, DBL value,
                          int column_count);
 
 /* Prints the given string to the print buffer.
@@ -307,7 +307,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, uint8_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, UI1 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -315,7 +315,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, int8_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, SI1 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -323,7 +323,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, uint16_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, UI2 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -331,7 +331,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, int16_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, SI2 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -339,7 +339,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, uint32_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, UI4 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -347,7 +347,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, int32_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, SI4 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -355,7 +355,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, uint64_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, UI8 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -363,7 +363,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, int64_t value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, SI8 value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -371,7 +371,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, float value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, FLT value);
 
 /* Writes the give char32_t to the given buffer in hex form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -379,7 +379,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintHex(char32_t* begin, char32_t* end, double value);
+API char32_t* PrintHex(char32_t* begin, char32_t* end, DBL value);
 
 /* Prints the given string to the print buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -395,7 +395,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, uint8_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI1 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -403,7 +403,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, int8_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI1 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -411,7 +411,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, uint16_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI2 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -419,7 +419,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, int16_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI2 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -427,7 +427,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, uint32_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI4 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -435,7 +435,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, int32_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI4 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -443,7 +443,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, uint64_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI8 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -451,7 +451,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, int64_t value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI8 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -459,7 +459,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, float value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, FLT value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -467,7 +467,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, double value);
+API char32_t* PrintBinary(char32_t* begin, char32_t* end, DBL value);
 
 /* Prints the given memory socket to the text buffer. */
 API char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
@@ -507,7 +507,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char32_t* Print(char32_t* begin, char32_t* end, Tms t);
+API char32_t* Print(char32_t* begin, char32_t* end, TMS t);
 
 /* Writes the given time to the text buffer.
 @return Null upon failure or a pointer to the byte after the last
@@ -515,7 +515,7 @@ byte written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
-API char32_t* Print(char32_t* begin, char32_t* end, Tme t);
+API char32_t* Print(char32_t* begin, char32_t* end, TME t);
 
 /* Writes the given time to the text buffer.
 @return Null upon failure or a pointer to the byte after the last
@@ -565,139 +565,139 @@ void COutAutoUtf32(uintptr_t* buffer);
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, int8_t& result);
+API const char32_t* Scan(const char32_t* begin, SI1& result);
 
 /* Converts the given string to a 8-bit unsigned integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, uint8_t& result);
+API const char32_t* Scan(const char32_t* begin, UI1& result);
 
 /* Converts the given string to a 16-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, int16_t& result);
+API const char32_t* Scan(const char32_t* begin, SI2& result);
 
 /* Converts the given string to a 16-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, uint16_t& result);
+API const char32_t* Scan(const char32_t* begin, UI2& result);
 
 /* Converts the given string to a 32-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, int32_t& result);
+API const char32_t* Scan(const char32_t* begin, SI4& result);
 
 /* Converts the given string to a 32-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, uint32_t& result);
+API const char32_t* Scan(const char32_t* begin, UI4& result);
 
 /* Converts the given string to a 64-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, int64_t& result);
+API const char32_t* Scan(const char32_t* begin, SI8& result);
 
 /* Converts the given string to a 64-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, uint64_t& result);
+API const char32_t* Scan(const char32_t* begin, UI8& result);
 
 /* Converts the given string to a 32-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, float& result);
+API const char32_t* Scan(const char32_t* begin, FLT& result);
 
 /* Converts the given string to a 64-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, double& result);
+API const char32_t* Scan(const char32_t* begin, DBL& result);
 /* Converts the given string to a 8-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, int8_t& result);
+API const char32_t* Scan(const char32_t* text, SI1& result);
 
 /* Converts the given string to a 8-bit unsigned integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, uint8_t& result);
+API const char32_t* Scan(const char32_t* text, UI1& result);
 
 /* Converts the given string to a 16-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, int16_t& result);
+API const char32_t* Scan(const char32_t* text, SI2& result);
 
 /* Converts the given string to a 16-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, uint16_t& result);
+API const char32_t* Scan(const char32_t* text, UI2& result);
 
 /* Converts the given string to a 32-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, int32_t& result);
+API const char32_t* Scan(const char32_t* text, SI4& result);
 
 /* Converts the given string to a 32-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, uint32_t& result);
+API const char32_t* Scan(const char32_t* text, UI4& result);
 
 /* Converts the given string to a 64-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, int64_t& result);
+API const char32_t* Scan(const char32_t* text, SI8& result);
 
 /* Converts the given string to a 64-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, uint64_t& result);
+API const char32_t* Scan(const char32_t* text, UI8& result);
 
 /* Converts the given string to a 32-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, float& result);
+API const char32_t* Scan(const char32_t* text, FLT& result);
 
 /* Converts the given string to a 64-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char32_t after the end
 of the read number or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, double& result);
+API const char32_t* Scan(const char32_t* text, DBL& result);
 
 /* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
 strings.
@@ -706,91 +706,91 @@ write begin. It is up the user to store start of buffer pointer and if they
 would like to replace the begin with the beginning of buffer pointer when they
 are done printing.
 */
-struct API Utf32 {
+struct API UTF4 {
   char32_t *begin,  //< Write begin pointer.
       *end;         //< End of buffer pointer.
 
   /* Initializes the Utf& from the given buffer pointers.
   @param begin The beginning of the buffer.
   @param end   The end of the buffer. */
-  Utf32(char32_t* begin, size_t size);
+  UTF4(char32_t* begin, size_t size);
 
   /* Initializes the Utf& from the given buffer pointers.
   @param begin The beginning of the buffer.
   @param end   The end of the buffer. */
-  Utf32(char32_t* begin, char32_t* end);
+  UTF4(char32_t* begin, char32_t* end);
 
   /* Clones the other print. */
-  Utf32(const Utf32& other);
+  UTF4(const UTF4& other);
 
   /* Sets the begin pointer to the new_pointer. */
-  inline Utf32& Set(char32_t* new_pointer);
+  inline UTF4& Set(char32_t* new_pointer);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(int8_t value);
+  inline UTF4& Hex(SI1 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(uint8_t value);
+  inline UTF4& Hex(UI1 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(int16_t value);
+  inline UTF4& Hex(SI2 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(uint16_t value);
+  inline UTF4& Hex(UI2 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(int32_t value);
+  inline UTF4& Hex(SI4 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(uint32_t value);
+  inline UTF4& Hex(UI4 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(int64_t value);
+  inline UTF4& Hex(SI8 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(uint64_t value);
+  inline UTF4& Hex(UI8 value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(float value);
+  inline UTF4& Hex(FLT value);
 
   /* Prints the given value as hex. */
-  inline Utf32& Hex(double value);
+  inline UTF4& Hex(DBL value);
 
   /* Prints the given pointer as hex. */
-  inline Utf32& Hex(const void* pointer);
+  inline UTF4& Hex(const void* pointer);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(int8_t value);
+  inline UTF4& Binary(SI1 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(uint8_t value);
+  inline UTF4& Binary(UI1 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(int16_t value);
+  inline UTF4& Binary(SI2 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(uint16_t value);
+  inline UTF4& Binary(UI2 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(int32_t value);
+  inline UTF4& Binary(SI4 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(uint32_t value);
+  inline UTF4& Binary(UI4 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(int64_t value);
+  inline UTF4& Binary(SI8 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(uint64_t value);
+  inline UTF4& Binary(UI8 value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(float value);
+  inline UTF4& Binary(FLT value);
 
   /* Prints the given value as binary. */
-  inline Utf32& Binary(double value);
+  inline UTF4& Binary(DBL value);
 
   /* Prints the given pointer as binary. */
-  inline Utf32& Binary(const void* pointer);
+  inline UTF4& Binary(const void* pointer);
 };
 
 /* Utility class for printing numbers. */
@@ -803,22 +803,22 @@ class Text4 {
   Text4(char32_t character);
 
   /* Prints the value to the text buffer. */
-  Text4(int32_t value);
+  Text4(SI4 value);
 
   /* Prints the value to the text buffer. */
-  Text4(uint32_t value);
+  Text4(UI4 value);
 
   /* Prints the value to the text buffer. */
-  Text4(int64_t value);
+  Text4(SI8 value);
 
   /* Prints the value to the text buffer. */
-  Text4(uint64_t value);
+  Text4(UI8 value);
 
   /* Prints the value to the text buffer. */
-  Text4(float value);
+  Text4(FLT value);
 
   /* Prints the value to the text buffer. */
-  Text4(double value);
+  Text4(DBL value);
 
   /* Gets the number string. */
   const char32_t* GetString();
@@ -836,22 +836,22 @@ class Utf32Center {
   Utf32Center(const char32_t* string, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(int32_t value, int column_count);
+  Utf32Center(SI4 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(uint32_t value, int column_count);
+  Utf32Center(UI4 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(int64_t value, int column_count);
+  Utf32Center(SI8 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(uint64_t value, int column_count);
+  Utf32Center(UI8 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(float value, int column_count);
+  Utf32Center(FLT value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Center(double value, int column_count);
+  Utf32Center(DBL value, int column_count);
 
   /* Gets the number string. */
   const char32_t* GetString();
@@ -872,22 +872,22 @@ class Utf32Right {
   Utf32Right(const char32_t* string, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(int32_t value, int column_count);
+  Utf32Right(SI4 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(uint32_t value, int column_count);
+  Utf32Right(UI4 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(int64_t value, int column_count);
+  Utf32Right(SI8 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(uint64_t value, int column_count);
+  Utf32Right(UI8 value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(float value, int column_count);
+  Utf32Right(FLT value, int column_count);
 
   /* Prints the value to the text buffer. */
-  Utf32Right(double value, int column_count);
+  Utf32Right(DBL value, int column_count);
 
   /* Gets the number string. */
   const char32_t* GetString();
@@ -901,87 +901,87 @@ class Utf32Right {
   int column_count;        //< Number of columns to center.
 };
 
-}  //< namespace _
+}  // namespace _
 
 /* Writes a nil-terminated UTF-8 or ASCII string to the print.
 @param  printer The printer.
 @param  value   The value to print.
 @return The printer. */
-API _::Utf32& operator<<(_::Utf32& printer, const char32_t* string);
+API _::UTF4& operator<<(_::UTF4& printer, const char32_t* string);
 
 /* Writes the given value to the print.
 @param  printer The printer.
 @param  value   The value to print.
 @return The printer. */
-API _::Utf32& operator<<(_::Utf32& printer, char32_t value);
+API _::UTF4& operator<<(_::UTF4& printer, char32_t value);
 
 /* Writes the given value to the print.
 @param  printer The printer.
 @param  value The value to write to the print.
 @return The printer. */
-API _::Utf32& operator<<(_::Utf32& printer, uint8_t value);
+API _::UTF4& operator<<(_::UTF4& printer, UI1 value);
 
 /* Writes the given value to the print.
 @param  printer The printer.
 @param  value The value to write to the print.
 @return The printer. */
-API _::Utf32& operator<<(_::Utf32& printer, int16_t value);
+API _::UTF4& operator<<(_::UTF4& printer, SI2 value);
 
 /* Writes the given value to the print.
 @param  printer The printer.
 @param  value The value to write to the print.
 @return The printer. */
-API _::Utf32& operator<<(_::Utf32& printer, uint16_t value);
+API _::UTF4& operator<<(_::UTF4& printer, UI2 value);
 
 /* Writes the given value to the print.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, int32_t value);
+API _::UTF4& operator<<(_::UTF4& printer, SI4 value);
 
 /* Writes the given value to the print.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, uint32_t value);
+API _::UTF4& operator<<(_::UTF4& printer, UI4 value);
 
 /* Writes the given value to the print.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, int64_t value);
+API _::UTF4& operator<<(_::UTF4& printer, SI8 value);
 
 /* Writes the given value to the print.
 @return The printer.
 @desc
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, uint64_t value);
+API _::UTF4& operator<<(_::UTF4& printer, UI8 value);
 
 /* Writes the given value to the print.
 @return The printer.
 @desc
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, float value);
+API _::UTF4& operator<<(_::UTF4& printer, FLT value);
 
 /* Writes the given value to the print.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, double value);
+API _::UTF4& operator<<(_::UTF4& printer, DBL value);
 
 /* Writes the given value to the print.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print justified center. */
-API _::Utf32& operator<<(_::Utf32& printer, _::Utf32Center item);
+API _::UTF4& operator<<(_::UTF4& printer, _::Utf32Center item);
 
 /* Writes the given value to the print justified right.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the print. */
-API _::Utf32& operator<<(_::Utf32& printer, _::Utf32Right item);
+API _::UTF4& operator<<(_::UTF4& printer, _::Utf32Right item);
 
 #endif  //< #if USING_UTF32
 #endif  //< #if INCLUDED_SCRIPTPRINT_UTF32

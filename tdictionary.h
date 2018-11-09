@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /libraries/f2/dictionary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -153,9 +153,9 @@ struct API Dictionary {
       count;      //< Max number of items that can fit in the header.
 };
 
-using Dic2 = Dictionary<int8_t, uint16_t, uint16_t>;
-using Dic4 = Dictionary<int16_t, uint16_t, uint32_t>;
-using Dic8 = Dictionary<int32_t, uint32_t, uint64_t>;
+using Dic2 = Dictionary<SI1, UI2, UI2>;
+using Dic4 = Dictionary<SI2, UI2, UI4>;
+using Dic8 = Dictionary<SI4, UI4, UI8>;
 
 template <typename UI, typename SI, typename I>
 constexpr uint_t DicOverheadPerIndex() {
@@ -171,9 +171,9 @@ enum {
   kMaxNumMappingsDic2 = 255,                //< The number of pages in a Dic2.
   kMaxNumMappingsDic4 = 8 * 1024,           //< The number of pages in a Dic4.
   kMaxNumMappingsDic8 = 256 * 1024 * 1024,  //< The number of pages in a Dic8.
-  kOverheadPerDic2Index = DicOverheadPerIndex<byte, uint16_t, uint16_t>(),
-  kOverheadPerDic4Index = DicOverheadPerIndex<uint16_t, uint16_t, uint32_t>(),
-  kOverheadPerDic8Index = DicOverheadPerIndex<uint32_t, uint32_t, uint64_t>(),
+  kOverheadPerDic2Index = DicOverheadPerIndex<byte, UI2, UI2>(),
+  kOverheadPerDic4Index = DicOverheadPerIndex<UI2, UI2, UI4>(),
+  kOverheadPerDic8Index = DicOverheadPerIndex<UI4, UI4, UI8>(),
 };
 
 /* Initializes a Dictionary.
@@ -183,12 +183,12 @@ enum {
              will get rounded up to the next higher multiple of 4. */
 template <typename UI, typename SI, typename I>
 Dictionary<UI, SI, I>* DictionaryInit(uintptr_t* buffer, byte max_size,
-                                      uint16_t table_size, uint16_t size) {
+                                      UI2 table_size, UI2 size) {
   ASSERT(buffer);
   if (table_size >= (size - sizeof(Dictionary<UI, SI, I>))) return nullptr;
   if (table_size <
       sizeof(Dictionary<UI, SI, I>) +
-          max_size * (DicOverheadPerIndex<byte, uint16_t, uint16_t>() + 2))
+          max_size * (DicOverheadPerIndex<byte, UI2, UI2>() + 2))
     return nullptr;
 
   Dictionary<UI, SI, I>* dictionary =
@@ -201,11 +201,11 @@ Dictionary<UI, SI, I>* DictionaryInit(uintptr_t* buffer, byte max_size,
   return dictionary;
 }
 
-Dictionary<uint16_t, uint16_t, int8_t>* DictionaryInit(uintptr_t* buffer,
-                                                       uint8_t max_size,
-                                                       uint16_t table_size,
-                                                       uint16_t size) {
-  return DictionaryInit<uint16_t, uint16_t, int8_t>(buffer, max_size,
+Dictionary<UI2, UI2, SI1>* DictionaryInit(uintptr_t* buffer,
+                                                       UI1 max_size,
+                                                       UI2 table_size,
+                                                       UI2 size) {
+  return DictionaryInit<UI2, UI2, SI1>(buffer, max_size,
                                                     table_size, size);
 }
 
@@ -257,7 +257,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
 
   // Calculate space left.
   SI value = table_size - count * DicOverheadPerIndex<I, SI, UI>(),
-     key_length = static_cast<uint16_t>(SlotLength(key)), size_pile;
+     key_length = static_cast<UI2>(SlotLength(key)), size_pile;
 
   PrintLine();
   PRINTF(
@@ -278,7 +278,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
   if (item_count == 0) {
     dictionary->item_count = 1;
     *hashes = hash;
-    *key_offsets = static_cast<uint16_t>(key_length);
+    *key_offsets = static_cast<UI2>(key_length);
     *indexes = ~0;
     *unsorted_indexes = 0;
     destination = keys - key_length;
@@ -497,7 +497,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
 
 /* Adds a key-value pair to the end of the dictionary. */
 // byte Add2 (Dic2* dictionary, const char* key, byte data) {
-//    return DicAdd<byte, uint16_t, uint16_t, uint16_t> (dictionary, key, UI1,
+//    return DicAdd<byte, UI2, UI2, UI2> (dictionary, key, kUI1,
 //    &data);
 //}
 
@@ -515,7 +515,7 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
   const UI* hashes =
       reinterpret_cast<const UI*>(reinterpret_cast<const char*>(dictionary) +
                                   sizeof(Dictionary<UI, SI, I>));
-  const SI* key_offsets = reinterpret_cast<const uint16_t*>(hashes + count);
+  const SI* key_offsets = reinterpret_cast<const UI2*>(hashes + count);
   const I *indexes = reinterpret_cast<const I*>(key_offsets + count),
           *unsorted_indexes = indexes + count,
           *collission_list = unsorted_indexes + count;
@@ -620,7 +620,7 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
 
 /* Prints this object out to the console. */
 template <typename UI, typename SI, typename I>
-Utf8& DicPrint(Utf8& print, const Dictionary<UI, SI, I>* dictionary) {
+UTF8& DicPrint(UTF8& print, const Dictionary<UI, SI, I>* dictionary) {
   ASSERT(dictionary)
 
   I item_count = dictionary->item_count, count = dictionary->count,
@@ -723,7 +723,7 @@ void* DicContains(Dictionary<UI, SI, I>* dictionary, void* data) {
 
 /* Removes that object from the dictionary and copies it to the destination. */
 template <typename UI, typename SI, typename I>
-bool DicRemoveCopy(Dictionary<UI, SI, I>* dictionary, void* destination,
+BOL DicRemoveCopy(Dictionary<UI, SI, I>* dictionary, void* destination,
                    size_t buffer_size, void* data) {
   ASSERT(dictionary)
 
@@ -732,7 +732,7 @@ bool DicRemoveCopy(Dictionary<UI, SI, I>* dictionary, void* destination,
 
 /* Removes the item at the given address from the dictionary. */
 template <typename UI, typename SI, typename I>
-bool DicRemove(Dictionary<UI, SI, I>* dictionary, void* adress) {
+BOL DicRemove(Dictionary<UI, SI, I>* dictionary, void* adress) {
   ASSERT(dictionary)
 
   return false;
@@ -740,7 +740,7 @@ bool DicRemove(Dictionary<UI, SI, I>* dictionary, void* adress) {
 
 /* Prints the given Dictionary to the console. */
 template <typename UI, typename SI, typename I>
-Utf8& DicPrint(Utf8& print, Dictionary<UI, SI, I>* dictionary) {
+UTF8& DicPrint(UTF8& print, Dictionary<UI, SI, I>* dictionary) {
   return print;
 }
 

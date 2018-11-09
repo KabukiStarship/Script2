@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tascii_data.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -47,44 +47,44 @@ struct API TypeValue {
     Types are organized with types that are allowed in text B-Sequences first,
     followed by objects which get created in text using Script Operations. */
 typedef enum AsciiTypes {
-  NIL = 0,  //< 0.  NIL/nil/void type.
-  SI1,      //< 1.  8-bit signed integer.
-  UI1,      //< 2.  8-bit unsigned integer.
-  SI2,      //< 3.  16-bit signed integer.
-  UI2,      //< 4.  16-bit unsigned integer.
-  HLF,      //< 5.  16-bit floating-point number.
-  BOL,      //< 6.  32-bit non-zero true boolean as signed integer.
-  SI4,      //< 7.  32-bit signed integer.
-  UI4,      //< 8.  32-bit unsigned integer.
-  FLT,      //< 9.  32-bit floating-point number.
-  TMS,      //< 10. 32-bit second since epoch timestamp.
-  TSS,      //< 11. 64-bit sub-second timestamp with TMS and an UI4 tick.
-  TME,      //< 12. 64-bit second since epoch timestamp.
-  SI8,      //< 13. 64-bit signed integer.
-  UI8,      //< 14. 64-bit unsigned integer.
-  DBL,      //< 15. 64-bit floating-point number.
-  SIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
-  UIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
-  DEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
-  UIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
-  ADR,      //< 20. UTF-8 Operand stack address.
-  STR,      //< 21. A UTF-8 string.
-  TKN,      //< 22. A UTF-8 string token without whitespace.
-  BSQ,      //< 23. B-Sequence.
-  OBJ,      //< 24. N-byte object.
-  LOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
-  TBL,      //< 26. A hash table.
-  EXP,      //< 27. Script Expression.
-  LST,      //< 28. Set or multiset of Type-Value tuples.
-  MAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
-  BOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
-  DIC,      //< 31. One-to-one map of Key-{Type-Value} records.
+  kNIL = 0,  //< 0.  kNIL/nil/void type.
+  kSI1,      //< 1.  8-bit signed integer.
+  kUI1,      //< 2.  8-bit unsigned integer.
+  kSI2,      //< 3.  16-bit signed integer.
+  kUI2,      //< 4.  16-bit unsigned integer.
+  kHLF,      //< 5.  16-bit floating-point number.
+  kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
+  kSI4,      //< 7.  32-bit signed integer.
+  kUI4,      //< 8.  32-bit unsigned integer.
+  kFLT,      //< 9.  32-bit floating-point number.
+  kTMS,      //< 10. 32-bit second since epoch timestamp.
+  kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
+  kTME,      //< 12. 64-bit second since epoch timestamp.
+  kSI8,      //< 13. 64-bit signed integer.
+  kUI8,      //< 14. 64-bit unsigned integer.
+  kDBL,      //< 15. 64-bit floating-point number.
+  kSIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
+  kUIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
+  kDEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
+  kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
+  kADR,      //< 20. UTF-8 Operand stack address.
+  kSTR,      //< 21. A UTF-8 string.
+  kTKN,      //< 22. A UTF-8 string token without whitespace.
+  kBSQ,      //< 23. B-Sequence.
+  kOBJ,      //< 24. N-byte object.
+  kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
+  kTBL,      //< 26. A hash table.
+  kEXP,      //< 27. Script Expression.
+  kLST,      //< 28. Set or multiset of Type-Value tuples.
+  kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
+  kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
+  kDIC,      //< 31. One-to-one map of Key-{Type-Value} records.
 } AsciiType;
 
 /* Checks if the given type is valid.
-    @return False if the given type is an 8-bit LST, MAP, BOK, or DIC. */
-inline bool TypeIsValid(type_t type) {
-  if (type >= LST && type <= DIC || (type >= (ADR + 32) && type <= (TKN + 32)))
+    @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
+inline BOL TypeIsValid(type_t type) {
+  if (type >= kLST && type <= kDIC || (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
   return true;
 }
@@ -96,61 +96,61 @@ API void* TypeAlign(type_t type, void* value);
     C++11 variadic templates ensure there is only one copy in of the given
     string in ROM. */
 template <char kCharA_, char kCharB_, char kCharC_>
-inline uint32_t T() {
-  return ((uint32_t)kCharA_) & (((uint32_t)kCharB_) << 8) &
-         (((uint32_t)kCharC_) << 16);
+inline UI4 T() {
+  return ((UI4)kCharA_) & (((UI4)kCharB_) << 8) &
+         (((UI4)kCharC_) << 16);
 }
 
 template <typename Char = char>
 const Char** TypeStrings() {
   static const Char* kNames[] = {
-      "NIL",  //<  0
-      "SI1",  //<  1
-      "UI1",  //<  2
-      "SI2",  //<  3
-      "UI2",  //<  4
-      "HLF",  //<  5
-      "BOL",  //<  6
+      "kNIL",  //<  0
+      "kSI1",  //<  1
+      "kUI1",  //<  2
+      "kSI2",  //<  3
+      "kUI2",  //<  4
+      "kHLF",  //<  5
+      "kBOL",  //<  6
       "SVI",  //<  7
       "UVI",  //<  8
-      "SI4",  //<  9
-      "UI4",  //< 10
-      "FLT",  //< 11
-      "TMS",  //< 12
-      "TME",  //< 13
-      "SI8",  //< 14
-      "UI8",  //< 15
-      "DBL",  //< 16
+      "kSI4",  //<  9
+      "kUI4",  //< 10
+      "kFLT",  //< 11
+      "kTMS",  //< 12
+      "kTME",  //< 13
+      "kSI8",  //< 14
+      "kUI8",  //< 15
+      "kDBL",  //< 16
       "SV8",  //< 17
       "UV8",  //< 18
-      "DEC",  //< 19
-      "UIX",  //< 20
-      "ADR",  //< 23
-      "STR",  //< 24
-      "TKN",  //< 25
-      "OBJ",  //< 21
-      "LOM",  //< 25
-      "BSQ",  //< 26
+      "kDEC",  //< 19
+      "kUIX",  //< 20
+      "kADR",  //< 23
+      "kSTR",  //< 24
+      "kTKN",  //< 25
+      "kOBJ",  //< 21
+      "kLOM",  //< 25
+      "kBSQ",  //< 26
       "ESC",  //< 27
-      "LST",  //< 28
-      "BOK",  //< 29
-      "DIC",  //< 30
-      "MAP",  //< 31
+      "kLST",  //< 28
+      "kBOK",  //< 29
+      "kDIC",  //< 30
+      "kMAP",  //< 31
   };
   return kNames;
 }
 
 template <typename T = char>
 T* TypeAlignUpPointer(void* pointer, type_t type) {
-  if (type <= UI1)
+  if (type <= kUI1)
     return reinterpret_cast<T*>(pointer);
-  else if (type <= HLF)
+  else if (type <= kHLF)
     return AlignUpPointer2<T>(pointer);
-  else if (type <= TMS)
+  else if (type <= kTMS)
     return AlignUpPointer4<T>(pointer);
-  else if (type <= DEC)
+  else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
-  // else it's an ASCII OBJ.
+  // else it's an ASCII kOBJ.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |
@@ -168,47 +168,47 @@ template <typename Char = char>
 Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
-    case NIL:
+    case kNIL:
       return Print<Char>("Error");
-    case SI1:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int8_t*>(value));
-    case UI1:
-      return Print<Char>(cursor, end, *reinterpret_cast<const uint8_t*>(value));
-    case SI2:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int16_t*>(value));
-    case UI2:
+    case kSI1:
+      return Print<Char>(cursor, end, *reinterpret_cast<const SI1*>(value));
+    case kUI1:
+      return Print<Char>(cursor, end, *reinterpret_cast<const UI1*>(value));
+    case kSI2:
+      return Print<Char>(cursor, end, *reinterpret_cast<const SI2*>(value));
+    case kUI2:
       return Print<Char>(cursor, end,
-                         *reinterpret_cast<const uint16_t*>(value));
-    case HLF:
+                         *reinterpret_cast<const UI2*>(value));
+    case kHLF:
       return Print<Char>(cursor, end, "not_implemented");
-    case BOL:
-      return Print<Char>(cursor, end, *reinterpret_cast<const bool*>(value));
-    case SI4:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int32_t*>(value));
-    case UI4:
+    case kBOL:
+      return Print<Char>(cursor, end, *reinterpret_cast<const BOL*>(value));
+    case kSI4:
+      return Print<Char>(cursor, end, *reinterpret_cast<const SI4*>(value));
+    case kUI4:
       return Print<Char>(cursor, end,
-                         *reinterpret_cast<const uint32_t*>(value));
-    case FLT:
-      return Print<Char>(cursor, end, *reinterpret_cast<const float*>(value));
-    case TMS:
+                         *reinterpret_cast<const UI4*>(value));
+    case kFLT:
+      return Print<Char>(cursor, end, *reinterpret_cast<const FLT*>(value));
+    case kTMS:
       return Print<Char>(cursor, end, *reinterpret_cast<const int*>(value));
-    case TME:
-    case TME:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int64_t*>(value));
-    case SI8:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int64_t*>(value));
-    case UI8:
+    case kTME:
+    case kTME:
+      return Print<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+    case kSI8:
+      return Print<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+    case kUI8:
       return Print<Char>(cursor, end,
-                         *reinterpret_cast<const uint64_t*>(value));
-    case DBL:
-      return Print<Char>(cursor, end, *reinterpret_cast<const double*>(value));
+                         *reinterpret_cast<const UI8*>(value));
+    case kDBL:
+      return Print<Char>(cursor, end, *reinterpret_cast<const DBL*>(value));
       // case SV8:
       //  return Print<Char> (cursor, end, *reinterpret_cast<const
-      //  int64_t*>(value));
+      //  SI8*>(value));
       // case UV8:
       //  return Print<Char> (cursor, end, *reinterpret_cast<const
-      //  uint64_t*>(value));
-    case DEC:
+      //  UI8*>(value));
+    case kDEC:
       return Print<Char>(cursor, end, "not_implemented");
   }
   return nullptr;
@@ -219,7 +219,7 @@ Char* Print(Char* cursor, Char* end, type_t type, const void* value) {
   if (cursor == nullptr) return nullptr;
   ASSERT(cursor < end);
 
-  if (type <= DEC) {
+  if (type <= kDEC) {
     cursor = PrintTypePod<Char>(cursor, end, type, value);
     if (!cursor) return nullptr;
     cursor = Print<Char>(cursor, end, ':');
@@ -258,7 +258,7 @@ API char* Print(char* begin, char* end, type_t type, const void* value);
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf8& operator<<(_::Utf8& utf, const _::TypeValue& type_value);
+API _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF16
 namespace _ {
@@ -275,7 +275,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf16& operator<<(_::Utf16& utf, const _::TypeValue& type_value);
+API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF32
 
@@ -293,7 +293,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf32& operator<<(_::Utf32& utf, const _::TypeValue& type_value);
+API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 
 }  // namespace _

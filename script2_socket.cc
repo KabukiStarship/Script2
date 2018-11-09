@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_socket.cc
+@file    /script2_socket.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -53,37 +53,21 @@ const char* AlignUp(const char* pointer, uintptr_t mask) {
   return AlignUp<const char>(pointer, mask);
 }
 
-uint8_t AlignUp(uint8_t value, uint8_t mask) {
-  return AlignUpUnsigned<uint8_t>(value, mask);
-}
+UI1 AlignUp(UI1 value, UI1 mask) { return AlignUpUnsigned<UI1>(value, mask); }
 
-int8_t AlignUp(int8_t value, int8_t mask) {
-  return AlignUpSigned<int8_t>(value, mask);
-}
+SI1 AlignUp(SI1 value, SI1 mask) { return AlignUpSigned<SI1>(value, mask); }
 
-uint16_t AlignUp(uint16_t value, uint16_t mask) {
-  return AlignUpUnsigned<uint16_t>(value, mask);
-}
+UI2 AlignUp(UI2 value, UI2 mask) { return AlignUpUnsigned<UI2>(value, mask); }
 
-int16_t AlignUp(int16_t value, int16_t mask) {
-  return AlignUpSigned<int16_t>(value, mask);
-}
+SI2 AlignUp(SI2 value, SI2 mask) { return AlignUpSigned<SI2>(value, mask); }
 
-uint32_t AlignUp(uint32_t value, uint32_t mask) {
-  return AlignUpUnsigned<uint32_t>(value, mask);
-}
+UI4 AlignUp(UI4 value, UI4 mask) { return AlignUpUnsigned<UI4>(value, mask); }
 
-int32_t AlignUp(int32_t value, int32_t mask) {
-  return AlignUpSigned<int32_t>(value, mask);
-}
+SI4 AlignUp(SI4 value, SI4 mask) { return AlignUpSigned<SI4>(value, mask); }
 
-uint64_t AlignUp(uint64_t value, uint64_t mask) {
-  return AlignUpUnsigned<uint64_t>(value, mask);
-}
+UI8 AlignUp(UI8 value, UI8 mask) { return AlignUpUnsigned<UI8>(value, mask); }
 
-int64_t AlignUp(int64_t value, int64_t mask) {
-  return AlignUpSigned<int64_t>(value, mask);
-}
+SI8 AlignUp(SI8 value, SI8 mask) { return AlignUpSigned<SI8>(value, mask); }
 
 uintptr_t* New(intptr_t size) { return new uintptr_t[size]; }
 
@@ -168,7 +152,7 @@ char* SocketFill(void* cursor, intptr_t count, char fill_char) {
                     reinterpret_cast<char*>(cursor) + count, count, fill_char);
 }
 
-bool SocketWipe(void* cursor, void* end, intptr_t count) {
+BOL SocketWipe(void* cursor, void* end, intptr_t count) {
   return SocketFill(reinterpret_cast<char*>(cursor),
                     reinterpret_cast<char*>(end), count) != nullptr;
 }
@@ -233,8 +217,8 @@ char* SocketCopy(void* begin, void* end, const void* begin_read,
                     SizeOf(begin_read, read_end));
 }
 
-bool SocketCompare(const void* begin_a, intptr_t size_a, const void* begin_b,
-                   intptr_t size_b) {
+BOL SocketCompare(const void* begin_a, intptr_t size_a, const void* begin_b,
+                  intptr_t size_b) {
   if (size_a != size_b) return false;
   const char *cursor_a = reinterpret_cast<const char*>(begin_a),
              *end_a = cursor_a + size_a,
@@ -247,13 +231,13 @@ bool SocketCompare(const void* begin_a, intptr_t size_a, const void* begin_b,
   return true;
 }
 
-bool SocketCompare(const void* begin, const void* end, const void* start,
-                   const void* stop) {
+BOL SocketCompare(const void* begin, const void* end, const void* start,
+                  const void* stop) {
   return SocketCompare(begin, SizeOf(begin, end), start, SizeOf(start, stop));
 }
 
-bool SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
-                   intptr_t size_b) {
+BOL SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
+                  intptr_t size_b) {
   return SocketCompare(begin_a, end_a, begin_a,
                        reinterpret_cast<const char*>(begin_b) + size_b);
 }

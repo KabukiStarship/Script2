@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/floor.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -26,7 +26,7 @@ designed to store variables without having to include the classes the variable
 controls. For this reason only strings and POD types are in the Floor.
 */
 struct API Floor {
-  int16_t epoch;
+  SI2 epoch;
 };
 
 /* Returns the the global Floor. */

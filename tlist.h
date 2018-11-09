@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /list.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII OBJ Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII kOBJ Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -58,14 +58,14 @@ Like most ASCII OBJ Types, the size may only be 16-bit, 32-bit, or
 +==========================+ ----------- ^ 0xN
 @endcode
 */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 struct CList {
   UI size;
   SI count_max, count;
 };
 
 /* Returns the minimum count to align the data struct to a 64-bit boundary. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 SI ListCountMaxBoundsLower() {
   return 8 / sizeof(SI);
 }
@@ -74,7 +74,7 @@ SI ListCountMaxBoundsLower() {
 The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
-template <typename UI = uint32_t, typename SI = int16_t,
+template <typename UI = UI4, typename SI = SI2,
           size_t largest_expected_type = sizeof(intptr_t)>
 constexpr UI ListSizeMin(SI count_max) {
   return (UI)sizeof(CList<UI, SI>) +
@@ -83,7 +83,7 @@ constexpr UI ListSizeMin(SI count_max) {
 }
 
 /* Deletes the list contents by overwriting it with zeros. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 void ListWipe(CList<UI, SI>* list) {
   ASSERT(list)
   list->count = 0;
@@ -94,7 +94,7 @@ void ListWipe(CList<UI, SI>* list) {
 /* Initializes a AsciiList from preallocated memory.
 count_max must be in multiples of 4. Given there is a fixed size, both the
 count_max and size will be downsized to a multiple of 4 automatically. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 CList<UI, SI>* ListInit(uintptr_t* buffer, UI size, SI count_max) {
   if (!buffer)  // This may be nullptr if ListNew<UI,SI> (SI, UI) failed.
     return nullptr;
@@ -123,9 +123,9 @@ CList<UI, SI>* ListInit(uintptr_t* buffer, UI size, SI count_max) {
 }
 
 /* Creates a list from dynamic memory. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 uintptr_t* ListNew(SI count_max, UI size) {
-  count_max = AlignUpUnsigned<uint64_t, UI>(count_max);
+  count_max = AlignUpUnsigned<UI8, UI>(count_max);
   if (size < ListSizeMin<UI, SI>(count_max)) return nullptr;
   uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
 
@@ -139,7 +139,7 @@ uintptr_t* ListNew(SI count_max, UI size) {
 }
 
 /* Creates a list from dynamic memory. */
-template <typename UI = uint32_t, typename SI = int16_t,
+template <typename UI = UI4, typename SI = SI2,
           size_t largest_expected_type = sizeof(intptr_t)>
 inline uintptr_t* ListNew(SI count_max) {
   count_max = AlignUp<SI>(count_max);
@@ -156,21 +156,21 @@ inline uintptr_t* ListNew(SI count_max) {
 }
 
 /* Returns the type bytes array. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 type_t* ListTypes(CList<UI, SI>* list) {
   ASSERT(list)
   return reinterpret_cast<type_t*>(list) + sizeof(CList<UI, SI>);
 }
 
 /* Gets a pointer to the begging of the data buffer. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataBegin(CList<UI, SI>* list) {
   ASSERT(list)
   return reinterpret_cast<char*>(list) + list->count_max * (sizeof(SI) + 1);
 }
 
 /* Gets the base element 0 of the list's offset array. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline UI* ListOffsets(CList<UI, SI>* list) {
   uintptr_t ptr = reinterpret_cast<uintptr_t>(list) + sizeof(CList<UI, SI>) +
                   list->count_max;
@@ -178,14 +178,14 @@ inline UI* ListOffsets(CList<UI, SI>* list) {
 }
 
 /* Returns the last byte in the data array. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataEnd(CList<UI, SI>* list) {
   ASSERT(list)
   return reinterpret_cast<char*>(list) + list->size - 1;
 }
 
 /* Returns the last byte in the data array. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataEnd(CList<UI, SI>* list, SI index) {
   ASSERT(list)
   if (index < 0 || index >= index->count) return nullptr;
@@ -193,13 +193,13 @@ inline char* ListDataEnd(CList<UI, SI>* list, SI index) {
 }
 
 /* Returns a pointer to the begging of the data buffer. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 Socket ListDataVector(CList<UI, SI>* list) {
   return Socket(ListDataBegin<UI, SI>(list), ListDataEnd<UI, SI>(list));
 }
 
 /* Returns the last byte in the data array. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataStop(CList<UI, SI>* list, SI index = -1) {
   ASSERT(list)
   SI count = list->count;
@@ -214,7 +214,7 @@ inline char* ListDataStop(CList<UI, SI>* list, SI index = -1) {
   return ObjEnd<UI>(pointer, type);
 }
 
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 void ListDataSpaceBelow(CList<UI, SI>* list, SI index, Socket& free_space) {
   ASSERT(list)
   char* data_stop;
@@ -236,7 +236,7 @@ void ListDataSpaceBelow(CList<UI, SI>* list, SI index, Socket& free_space) {
 
 /* Insets the given type-value tuple.
     @return -1 upon failure or the index upon success. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 SI ListInsert(CList<UI, SI>* list, type_t type, const void* value, SI index) {
   ASSERT(list)
   ASSERT(value)
@@ -304,19 +304,19 @@ SI ListInsert(CList<UI, SI>* list, type_t type, const void* value, SI index) {
 }
 
 /* Adds a type-value to the end of the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline SI ListPush(CList<UI, SI>* list, type_t type, const void* value) {
   return ListInsert<UI, SI>(list, type, value, list->count);
 }
 
 /* Removes a type-value to the end of the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 inline SI ListPop(CList<UI, SI>* list) {
   return ListRemove<UI, SI>(list, list->count - 1);
 }
 
 /* Returns the max count an array can handle. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 SI ListCountMax() {
   enum {
     kMaxIndexes = sizeof(SI) == 1
@@ -329,7 +329,7 @@ SI ListCountMax() {
 }
 
 /* Deletes the list contents without wiping the contents. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 void ListClear(CList<UI, SI>* list) {
   ASSERT(list)
   list->count = 0;
@@ -341,8 +341,8 @@ void ListClear(CList<UI, SI>* list) {
 @warning This function assumes that the member you're checking for came
 from Script. If it's you're own code calling this, you are
 required to ensure the value came from a ASCII List. */
-template <typename UI = uint32_t, typename SI = int16_t>
-bool ListContains(CList<UI, SI>* list, void* address) {
+template <typename UI = UI4, typename SI = SI2>
+BOL ListContains(CList<UI, SI>* list, void* address) {
   ASSERT(list)
   if (reinterpret_cast<char*>(address) < reinterpret_cast<char*>(list))
     return false;
@@ -351,7 +351,7 @@ bool ListContains(CList<UI, SI>* list, void* address) {
 }
 
 /* Removes the item at the given address from the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 SI ListRemove(CList<UI, SI>* list, SI index) {
   SI count = list->count;
   StackRemove<UI, SI>(ListOffsets<UI, SI>(list), count, index);
@@ -359,7 +359,7 @@ SI ListRemove(CList<UI, SI>* list, SI index) {
 }
 
 /* Finds a tuple that contains the given pointer. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 SI ListFind(CList<UI, SI>* list, void* adress) {
   ASSERT(list)
   UI *offsets = ListOffsets<UI, SI>(list), *offset_end = offsets + list->count;
@@ -374,14 +374,14 @@ SI ListFind(CList<UI, SI>* list, void* adress) {
 }
 
 /* Removes the item at the given address from the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
-bool ListRemove(CList<UI, SI>* list, void* adress) {
+template <typename UI = UI4, typename SI = SI2>
+BOL ListRemove(CList<UI, SI>* list, void* adress) {
   return ListRemove<UI, SI>(list, ListFind(list, address));
 }
 
 /* Returns the value at the given index.
     @return Returns nil if the index is out of the count range. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 const void* ListValue(CList<UI, SI>* list, SI index) {
   ASSERT(list)
   if (index < 0 || index >= list->count) return nullptr;
@@ -389,8 +389,8 @@ const void* ListValue(CList<UI, SI>* list, SI index) {
 }
 
 /* Prints the given AsciiList to the console. */
-template <typename UI = uint32_t, typename SI = int16_t>
-Utf8& PrintList(Utf8& printer, CList<UI, SI>* list) {
+template <typename UI = UI4, typename SI = SI2>
+UTF8& PrintList(UTF8& printer, CList<UI, SI>* list) {
   ASSERT(list)
 
   SI count = list->count;
@@ -406,7 +406,7 @@ Utf8& PrintList(Utf8& printer, CList<UI, SI>* list) {
 }
 
 /* ASCII List that uses dynamic memory. */
-template <typename UI = uint32_t, typename SI = int16_t>
+template <typename UI = UI4, typename SI = SI2>
 class List {
  public:
   /* Constructs a list with a given count_max with estimated size_bytes. */
@@ -450,21 +450,21 @@ class List {
                from Script. If it's you're own code calling this, you
                are required to ensure the value came from a ASCII List.
       @return  True if the data lies in the list's memory socket. */
-  inline bool Contains(void* value) {
+  inline BOL Contains(void* value) {
     return ListContains<UI, SI>(OBJ(), value);
   }
 
   /* Removes the item at the given address from the list. */
-  inline bool Remove(void* adress) { return ListRemove<UI, SI>(OBJ(), adress); }
+  inline BOL Remove(void* adress) { return ListRemove<UI, SI>(OBJ(), adress); }
 
   /* Removes the item at the given address from the list. */
-  inline bool Remove(SI index) { return ListRemove<UI, SI>(OBJ(), index); }
+  inline BOL Remove(SI index) { return ListRemove<UI, SI>(OBJ(), index); }
 
   /* Removes the last item from the list. */
   inline SI Pop() { return ListPop<UI, SI>(OBJ()); }
 
   /* Prints the given AsciiList to the console. */
-  inline Utf8& Print(Utf8& printer) {
+  inline UTF8& Print(UTF8& printer) {
     return PrintList<UI, SI>(printer, OBJ());
   }
 
@@ -480,14 +480,14 @@ class List {
 }  // namespace _
 
 /* Overloaded operator<< prints the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
-inline _::Utf8& operator<<(_::Utf8& printer, _::List<UI, SI>& list) {
+template <typename UI = UI4, typename SI = SI2>
+inline _::UTF8& operator<<(_::UTF8& printer, _::List<UI, SI>& list) {
   return list.Print(printer);
 }
 
 /* Overloaded operator<< prints the list. */
-template <typename UI = uint32_t, typename SI = int16_t>
-inline _::Utf8& operator<<(_::Utf8& printer, _::CList<UI, SI>* list) {
+template <typename UI = UI4, typename SI = SI2>
+inline _::UTF8& operator<<(_::UTF8& printer, _::CList<UI, SI>* list) {
   return _::PrintList<UI, SI>(printer, list);
 }
 

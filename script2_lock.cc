@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/0/4_features/0_crabs/pch.h
+@file    /script2_lock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -11,9 +11,17 @@ under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
-#pragma once
+#include <pch.h>
 
-#include "global_config.inl"
+#if SEAM >= _0_0_0__02
 
-#define SEAM _0_0_0__13
-#define SEAM_TEST SEAM
+#include "clock.h"
+
+namespace _ {
+
+void RoomLock() {}
+
+void RoomUnlock() {}
+
+}  // namespace _
+#endif  //< #if SEAM >= _0_0_0__02

@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /utf.h
+@file    /cutf.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -23,30 +23,30 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #if USING_UTF8
-#include "cutf8.h"
+#include "cutf1.h"
 #endif
 #if USING_UTF16
-#include "cutf16.h"
+#include "cutf2.h"
 #endif
 #if USING_UTF32
-#include "cutf32.h"
+#include "cutf4.h"
 #endif
 
 namespace _ {
-#if USING_F2_UTF == UTF8
-using Utf = Utf8;
+#if USING_UTF == UTF8
+using Utf = UTF1;
 using Center = Utf8Center;
 using Right = Utf8Right;
 using Line = Utf8Line;
 using LineString = Utf8LineString;
-#elif USING_F2_UTF == UTF16
-using Utf = Utf16;
+#elif USING_UTF == UTF16
+using Utf = UTF2;
 using Center = Utf16Center;
 using Right = Utf16Right;
 using Line = Utf16Line;
 using LineString = Utf16LineString;
-#elif USING_F2_UTF == UTF32
-using Utf = Utf32;
+#elif USING_UTF == UTF32
+using Utf = UTF4;
 using Center = Utf32Center;
 using Right = Utf32Right;
 using Line = Utf32Line;

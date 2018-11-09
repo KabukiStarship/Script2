@@ -133,7 +133,7 @@ class Shape {
 
  public:
 
-  virtual void Rotate(double radians) = 0;
+  virtual void Rotate(DBL radians) = 0;
 
 };
 
@@ -141,11 +141,11 @@ class Circle : public Shape {
 
  public:
 
-  void Rotate(double radians) override;
+  void Rotate(DBL radians) override;
 
 };
 
-void Circle::Rotate(double /*radians*/) {}
+void Circle::Rotate(DBL /*radians*/) {}
 
 ```
 
@@ -155,7 +155,7 @@ void Circle::Rotate(double /*radians*/) {}
 // Bad - if someone wants to implement later, it's not clear what the
 // variable means.
 
-void Circle::Rotate(double) {}
+void Circle::Rotate(DBL) {}
 
 ```
 
@@ -163,7 +163,7 @@ Attributes, and macros that expand to attributes, appear at the very beginning o
 
 ```C++
 
-MUST_USE_RESULT bool IsOK();
+MUST_USE_RESULT BOL IsOK();
 
 ```
 
@@ -199,13 +199,13 @@ Either write the call all on a single line, wrap the arguments at the parenthesi
 Function calls have the following format:
 
 ```C++
-bool result = DoSomething(argument1, argument2, argument3);
+BOL result = DoSomething(argument1, argument2, argument3);
 ```
 
 If the arguments do not all fit on one line, they should be broken up onto multiple lines, with each subsequent line aligned with the first argument. Do not add spaces after the open paren or before the close paren:
 
 ```C++
-bool result = DoSomething(averyveryveryverylongargument1,
+BOL result = DoSomething(averyveryveryverylongargument1,
                           argument2, argument3);
 ```
 
@@ -216,7 +216,7 @@ if (...) {
   ...
   ...
   if (...) {
-    bool result = DoSomething(
+    BOL result = DoSomething(
         argument1, argument2,  // 4 space indent
         argument3, argument4);
     ...
@@ -229,13 +229,13 @@ If having multiple arguments in a single line decreases readability due to the c
 
 ```C++
 int my_heuristic = scores[x] * y + bases[x];
-bool result = DoSomething(my_heuristic, x, y, z);
+BOL result = DoSomething(my_heuristic, x, y, z);
 ```
 
 Or put the confusing argument on its own line with an explanatory comment:
 
 ```C++
-bool result = DoSomething(scores[x] * y + bases[x],  // Score heuristic.
+BOL result = DoSomething(scores[x] * y + bases[x],  // Score heuristic.
                           x, y, z);
 ```
 
@@ -642,7 +642,7 @@ class MyClass : public OtherClass {
   int some_var() const { return some_var_; }
 
  private:
-  bool SomeInternalFunction();
+  BOL SomeInternalFunction();
   int some_var_;
   int some_other_var_;
 };
@@ -729,7 +729,7 @@ Use of horizontal whitespace depends on location. Never put trailing whitespace 
 #### General
 
 ```C++
-void f(bool b) {  // Open braces should always have a space before them.
+void f(BOL b) {  // Open braces should always have a space before them.
   ...
 int i = 0;  // Semicolons usually have no space before them.
 // Spaces inside braces for braced-init-list are optional.  If you use them,

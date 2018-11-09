@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_bsq.cc
+@file    /script2_bsq.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -16,18 +16,18 @@ specific language governing permissions and limitations under the License. */
 #include "cbsq.h"
 
 #include "ctest.h"
-#include "cutf8.h"
+#include "cutf1.h"
 
 namespace _ {
 
 uint_t BsqParamNumber(const uint_t* params, int param_number) {
   if (!params) return 0;
   uint_t num_params = *params++;
-  if (param_number > num_params) return NIL;
+  if (param_number > num_params) return kNIL;
   int i;
   for (i = 0; i < param_number; ++i) {
     uint_t value = params[i];
-    if (value == STR)
+    if (value == kSTR)
       ++param_number;
     else if (value > 31) {  // It's an array!
       value = value >> 5;
@@ -36,7 +36,7 @@ uint_t BsqParamNumber(const uint_t* params, int param_number) {
         break;
       } else if (value > 7) {  // Gratuitous explanation points!
         // PRINTF ("\nError";
-        return NIL;
+        return kNIL;
       } else {
         param_number += params[i] + 1;
       }
@@ -45,7 +45,7 @@ uint_t BsqParamNumber(const uint_t* params, int param_number) {
   return params[i];
 }
 
-Utf8& PrintBsq(Utf8& print, const uint_t* params) {
+UTF8& PrintBsq(UTF8& print, const uint_t* params) {
   uint_t num_params = *params++, i, type, value = 0;
 
   print << "Param<";
@@ -59,7 +59,7 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
     print << TypeString((type_t)value) << ", ";
-    if (type >= STR) {
+    if (type >= kSTR) {
       if (value) {
         print << "\nError: arrays may only be created from POD "
                  "types.";
@@ -81,31 +81,31 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
         }
         case 1: {
           value = *params++;
-          print << "UI1:" << value << ", ";
+          print << "kUI1:" << value << ", ";
           break;
         }
         case 2: {
           value = *params++;
-          print << "UI2:" << value << ", ";
+          print << "kUI2:" << value << ", ";
           break;
         }
         case 3: {
           value = *params++;
-          print << "UI4:" << value << ", ";
+          print << "kUI4:" << value << ", ";
           break;
         }
         case 4: {
           value = *params++;
-          print << "UI8:" << value << ", ";
+          print << "kUI8:" << value << ", ";
           break;
         }
         case 5: {
           value = *params++;
           if (value == 0) {
-            print << "UI1:[0]";
+            print << "kUI1:[0]";
             break;
           }
-          print << "UI1:[" << value << ": ";
+          print << "kUI1:[" << value << ": ";
           for (uint_t i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
@@ -117,10 +117,10 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
         case 6: {
           value = *params++;
           if (value == 0) {
-            print << "UI2:[0]";
+            print << "kUI2:[0]";
             break;
           }
-          print << "UI2:[" << value << ": ";
+          print << "kUI2:[" << value << ": ";
           for (uint_t i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
@@ -132,10 +132,10 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
         case 7: {
           value = *params++;
           if (value == 0) {
-            print << "UI4:[0]";
+            print << "kUI4:[0]";
             break;
           }
-          print << "UI4:[" << value << ": ";
+          print << "kUI4:[" << value << ": ";
           for (uint_t i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
@@ -150,7 +150,7 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
   // Do the last set without a comma.
   value = *params++;
   print << TypeString(value) << ", ";
-  if (value == STR) {
+  if (value == kSTR) {
     ++i;
     value = *params++;
     print << value;
@@ -165,17 +165,17 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
       }
       case 1: {
         value = *params++;
-        print << "UI1:" << value << ", ";
+        print << "kUI1:" << value << ", ";
         break;
       }
       case 2: {
         value = *params++;
-        print << "UI2:" << value << ", ";
+        print << "kUI2:" << value << ", ";
         break;
       }
       case 3: {
         value = *params++;
-        print << "UI4:" << value << ", ";
+        print << "kUI4:" << value << ", ";
         break;
       }
       case 4: {
@@ -186,10 +186,10 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
       case 5: {
         value = *params++;
         if (value == 0) {
-          print << "UI1:[0]";
+          print << "kUI1:[0]";
           break;
         }
-        print << "UI1:[" << value << ": ";
+        print << "kUI1:[" << value << ": ";
         for (uint_t i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";
@@ -201,10 +201,10 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
       case 6: {
         value = *params++;
         if (value == 0) {
-          print << "UI2:[0]";
+          print << "kUI2:[0]";
           break;
         }
-        print << "UI2:[" << value << ": ";
+        print << "kUI2:[" << value << ": ";
         for (uint_t i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";
@@ -216,10 +216,10 @@ Utf8& PrintBsq(Utf8& print, const uint_t* params) {
       case 7: {
         value = *params++;
         if (value == 0) {
-          print << "UI4:[0]";
+          print << "kUI4:[0]";
           break;
         }
-        print << "UI4:[" << value << ": ";
+        print << "kUI4:[" << value << ": ";
         for (uint_t i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";

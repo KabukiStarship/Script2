@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /map.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -126,9 +126,9 @@ namespace _ {
     .
     @endcode
 */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 struct TMap {
-  UI size;        //< ASCII OBJ size.
+  UI size;        //< ASCII kOBJ size.
   SI table_size,  /*< Size of the key strings in bytes.
                       Set to 0 for ASCII Map. */
       size_pile;  /*< Size of the collisions pile in bytes.
@@ -137,12 +137,12 @@ struct TMap {
       count_max;  //< Max count of items that can fit in the socket.
 };
 
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 constexpr uint_t MapOverheadPerIndex() {
   return sizeof(2 * sizeof(SI) + sizeof(UI) + sizeof(UI) + 3);
 };
 
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 constexpr UI MapSizeRequired(SI count) {
   return count * sizeof(2(sizeof(SI) + sizeof(UI)) + 3);
 };
@@ -151,9 +151,9 @@ enum {
   kMaxNumPagesMap2 = 255,                //< The number of pages in a Map2.
   kMaxNumPagesMap4 = 8 * 1024,           //< The number of pages in a Map4.
   kMaxNumPagesMap8 = 256 * 1024 * 1024,  //< The number of pages in a Map8.
-  kOverheadPerMap2Index = MapOverheadPerIndex<uint16_t, int16_t, int8_t>(),
-  kOverheadPerMap4Index = MapOverheadPerIndex<uint32_t, int32_t, int16_t>(),
-  kOverheadPerMap8Index = MapOverheadPerIndex<uint64_t, int64_t, int32_t>(),
+  kOverheadPerMap2Index = MapOverheadPerIndex<UI2, SI2, SI1>(),
+  kOverheadPerMap4Index = MapOverheadPerIndex<UI4, SI4, SI2>(),
+  kOverheadPerMap8Index = MapOverheadPerIndex<UI8, SI8, SI4>(),
 };
 
 /* Initializes a TMap from a word-aligned buffer.
@@ -162,7 +162,7 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4.
 */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 TMap<UI, SI, I>* MapInit(uintptr_t* buffer, UI size, I count_max) {
   ASSERT(buffer)
 
@@ -179,27 +179,27 @@ TMap<UI, SI, I>* MapInit(uintptr_t* buffer, UI size, I count_max) {
   map->count = 0;
   return map;
 }
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 inline UI MapSizeBoundsLower() {
   return 64;
 }
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 inline UI MapSizeBoundsUpper() {
   UI bounds_upper = 0;
   bounds_upper = ~bounds_upper;
   return bounds_upper - 7;
 }
 
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 inline SI MapCountBoundsLower() {
   return 8 / sizeof(UI);
 }
 
 /* Creates a map from dynamic memory. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 uintptr_t* MapNew(UI size = 0, I count_max = 0) {
-  size = AlignDown<int64_t, UI>(size);
-  count_max = AlignDown<int64_t, SI>(count_max);
+  size = AlignDown<SI8, UI>(size);
+  count_max = AlignDown<SI8, SI>(count_max);
   UI size_min = MapSizeBoundsLower<UI, SI, I>();
   SI count_min = MapCountBoundsLower<UI, SI, I>();
   if (size < size_min || count_max < count_min) {
@@ -231,7 +231,7 @@ SI MapCountUpperBounds() {
 
 /* Insets the given key-type-value tuple.
  */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 SI MapInsert(TMap<UI, SI, I>* map, void* value, type_t type, SI index) {
   ASSERT(map)
   ASSERT(value)
@@ -257,7 +257,7 @@ SI MapInsert(TMap<UI, SI, I>* map, void* value, type_t type, SI index) {
 
   // Calculate space left.
   UI value = table_size - count * MapOverheadPerIndex<UI, SI, I>(),
-     key_length = static_cast<uint16_t>(strlen(id)), size_pile;
+     key_length = static_cast<UI2>(strlen(id)), size_pile;
 
   PRINT_LINE('-');
   PRINTF(
@@ -276,7 +276,7 @@ SI MapInsert(TMap<UI, SI, I>* map, void* value, type_t type, SI index) {
   if (count == 0) {
     map->count = 1;
     *hashes = temp_id;
-    *key_offsets = static_cast<uint16_t>(key_length);
+    *key_offsets = static_cast<UI2>(key_length);
     *indexes = ~0;
     *unsorted_indexes = 0;
     destination = keys - key_length;
@@ -497,7 +497,7 @@ SI MapInsert(TMap<UI, SI, I>* map, void* value, type_t type, SI index) {
 }
 
 /* Deletes the map contents without wiping the contents. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 void MapClear(TMap<UI, SI, I>* map) {
   ASSERT(map)
 
@@ -506,7 +506,7 @@ void MapClear(TMap<UI, SI, I>* map) {
 }
 
 /* Deletes the map contents by overwriting it with zeros. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 void MapWipe(TMap<UI, SI, I>* map) {
   ASSERT(map)
 
@@ -515,8 +515,8 @@ void MapWipe(TMap<UI, SI, I>* map) {
 }
 
 /* Returns true if this expr contains only the given address. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
-bool MapContains(TMap<UI, SI, I>* map, void* value) {
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
+BOL MapContains(TMap<UI, SI, I>* map, void* value) {
   ASSERT(map)
 
   if (value < map) return false;
@@ -525,16 +525,16 @@ bool MapContains(TMap<UI, SI, I>* map, void* value) {
 }
 
 /* Removes the item at the given address from the map. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
-bool MapRemove(TMap<UI, SI, I>* map, void* adress) {
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
+BOL MapRemove(TMap<UI, SI, I>* map, void* adress) {
   ASSERT(map)
 
   return false;
 }
 
 /* Prints this object out to the console. */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
-Utf8& MapPrint(Utf8& print, const TMap<UI, SI, I>* map) {
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
+UTF8& MapPrint(UTF8& print, const TMap<UI, SI, I>* map) {
   ASSERT(map)
 
   SI count = map->count, collision_index, temp;
@@ -608,7 +608,7 @@ Utf8& MapPrint(Utf8& print, const TMap<UI, SI, I>* map) {
     .
     @endcode
 */
-template <typename UI = uint32_t, typename SI = int32_t, typename I = int16_t>
+template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 class Map {
  public:
   /* Constructs a Map with the given count_max.
@@ -622,13 +622,13 @@ class Map {
   /* Destructs the dynamically allocated buffer. */
   ~Map() { delete buffer; }
 
-  inline bool Remove(void* adress) {
+  inline BOL Remove(void* adress) {
     return MapRemove<UI, SI, I>(OBJ(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
-  inline bool Contains(void* value) {
+  inline BOL Contains(void* value) {
     return MapContains<UI, SI, I>(OBJ(), value);
   }
 
@@ -647,7 +647,7 @@ class Map {
   inline void Clear() { MapClear<UI, SI, I>(OBJ()); }
 
   /* Prints this object to a printer. */
-  inline Utf8& Print(Utf8& printer) {
+  inline UTF8& Print(UTF8& printer) {
     return MapPrint<UI, SI, I>(print, OBJ());
   }
 

@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @file    /0_0_0__11_ascii_book.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -86,7 +86,7 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
   PrintLineBreak("\n  + Running MultimapTests\n", 10);
 
   PrintLineBreak("\n  - Running MultimapInit...\n", 5, ' ');
-  int8_t index;
+  SI1 index;
 
   enum {
     kBufferSize = 256,
@@ -94,8 +94,8 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
   };
 
   slot << 'a' << "b"
-       << "cd" << (int8_t)1 << (uint8_t)2 << (int16_t)3 << (uint16_t)4
-       << (int32_t)5 << (uint32_t)6 << (int64_t)7 << (uint64_t)8;
+       << "cd" << (SI1)1 << (UI1)2 << (SI2)3 << (UI2)4
+       << (SI4)5 << (UI4)6 << (SI8)7 << (UI8)8;
 
   Print(slot);
 
@@ -105,52 +105,52 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
 
   Assert(multimap != nullptr);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "D", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "D", (byte)0xFF);
 
   Compare(0, index) Multimap2Print(multimap);
   Compare(0, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) PAUSE("\n");
-  index = Multimap2Add<uint8_t, UI1>(multimap, "C", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "C", (byte)0xFF);
   Compare(1, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) index = Multimap2Find(multimap, "C");
   Compare(1, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "BIn", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "BIn", (byte)0xFF);
   Compare(2, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) index = Multimap2Find(multimap, "C");
   Compare(1, index) index = Multimap2Find(multimap, "BIn");
   Compare(2, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "A", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "A", (byte)0xFF);
   Compare(3, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) index = Multimap2Find(multimap, "C");
   Compare(1, index) index = Multimap2Find(multimap, "BIn");
   Compare(2, index) index = Multimap2Find(multimap, "A");
   Compare(3, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "abc", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "abc", (byte)0xFF);
   Compare(4, index) index = Multimap2Find(multimap, "abc");
   Compare(4, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "bac", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "bac", (byte)0xFF);
   Compare(5, index) index = Multimap2Find(multimap, "abc");
   Compare(4, index) index = Multimap2Find(multimap, "bac");
   Compare(5, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "cba", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "cba", (byte)0xFF);
   Compare(6, index) index = Multimap2Find(multimap, "abc");
   Compare(4, index) index = Multimap2Find(multimap, "bac");
   Compare(5, index) index = Multimap2Find(multimap, "cba");
   Compare(6, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "cab", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "cab", (byte)0xFF);
   Compare(7, index) index = Multimap2Find(multimap, "abc");
   Compare(4, index) index = Multimap2Find(multimap, "bac");
   Compare(5, index) index = Multimap2Find(multimap, "cba");
   Compare(6, index) index = Multimap2Find(multimap, "cab");
   Compare(7, index);
 
-  index = Multimap2Add<uint8_t, UI1>(multimap, "test", (byte)0xFF);
+  index = Multimap2Add<UI1, kUI1>(multimap, "test", (byte)0xFF);
   Compare(index, -1);
 #endif
   return nullptr;

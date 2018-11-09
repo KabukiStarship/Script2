@@ -29,7 +29,7 @@ At the root scope of each system lies a *Interrupt Operations* DC1, DC2, DC3, an
 
 #### Doors
 
-**Doors** in a *Chinese Rooms* are a MAP ASCII Data Type.
+**Doors** in a *Chinese Rooms* are a kMAP ASCII Data Type.
 
 #### Mirrors and Windows
 
@@ -77,7 +77,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
 
 ## 3.3 Time Epoch
 
-The Unix timestamp cycles around in the year 3038, so to ensure stability on 32-bit systems with 32-bit TMS timestamps, the time epoch shall be of the span of a decade, and such systems shall not be made to schedule events beyond a 6 epochs. Systems that require schedulers with more than the maximum number of epochs shall use a 64-bit TME timestamp.
+The Unix timestamp cycles around in the year 3038, so to ensure stability on 32-bit systems with 32-bit kTMS timestamps, the time epoch shall be of the span of a decade, and such systems shall not be made to schedule events beyond a 6 epochs. Systems that require schedulers with more than the maximum number of epochs shall use a 64-bit kTME timestamp.
 
 ## 3.4 Slots
 
@@ -176,16 +176,16 @@ Script implementations may implement a default BIn Slot named In (**in UpperCase
 
 Expressions are a sequence of *Stack Operations* that end when all of the Operands are popped off the Expression Stack. Each Operand may have its own instruction that pops one Operand off the stack or pops all the Operands off performing a Closure Operation.
 
-Everything in Script is a real-time **A** = **A** * **B** **Abstract Algebra Expression** where B is a B-Stream, or Byte Stream. Expression are a sequence of **Operations** performed on **Operand Objects** on a **Operand Stack**. *Operations* are *abstract function calls* that shall be able to take one or more input and output parameters in the form of **B-Sequences** (**BSQ** or *Byte Sequence*). A BSQ only the description of the data format packed that may be word aligned, thus a BSQ is describes the parameters not the arguments and a B-Stream describes the arguments. *Operations* shall be performed using a UTF-8 Index followed by the BSQ input arguments for that Op. When an *Operand* is pushed onto the stack, all Unicode indexes shall be mapped to that Operand until it is popped off the stack and is no longer the **Current Operand**.
+Everything in Script is a real-time **A** = **A** * **B** **Abstract Algebra Expression** where B is a B-Stream, or Byte Stream. Expression are a sequence of **Operations** performed on **Operand Objects** on a **Operand Stack**. *Operations* are *abstract function calls* that shall be able to take one or more input and output parameters in the form of **B-Sequences** (**kBSQ** or *Byte Sequence*). A kBSQ only the description of the data format packed that may be word aligned, thus a kBSQ is describes the parameters not the arguments and a B-Stream describes the arguments. *Operations* shall be performed using a UTF-8 Index followed by the kBSQ input arguments for that Op. When an *Operand* is pushed onto the stack, all Unicode indexes shall be mapped to that Operand until it is popped off the stack and is no longer the **Current Operand**.
 
 Once a valid Expression has been received, a room may then **Evaluate** that expression from one of potentially many asynchronous BIn in the program's main loop in any order.
 
 #### Hyphenated Script Expression Example
 
 ```
-/* typedef uint8_t uint_t;
-   static const uint_t in_params[]  = { 1, UI4, UI8 },
-                       out_params[] = { 1, NILL, NIL };
+/* typedef UI1 uint_t;
+   static const uint_t in_params[]  = { 1, kUI4, kUI8 },
+                       out_params[] = { 1, NILL, kNIL };
     static const Op kOp= { “Example-Function_with_hypens_and_underscores”,
                           rxHeader, txHeader,
                           “Description”, '(', ')', ' ', "-_", nullptr };
@@ -208,8 +208,8 @@ Example-Function_with_hypens_and_underscores {
 ```
 struct Op {
     const char   * name;          //< Op name.
-    const uint_t * in,            //< Input BSQ params or OpFirst.
-                 * out;           //< Output BSQ params or OpLast.
+    const uint_t * in,            //< Input kBSQ params or OpFirst.
+                 * out;           //< Output kBSQ params or OpLast.
     const char   * description;   //< Op description.
     wchar_t        pop,           //< Index of the Pop Operation.
                    close,         //< Index of the Close Operation.
@@ -222,12 +222,12 @@ struct Op {
 ### C++ Header Examples
 
 ```
-static const uint_t rx_header_without_strings[] = { 2, UI1, SI2 },   
-                    rx_header_with_strings[]    = { 2, UI1, STR, 32 },
+static const uint_t rx_header_without_strings[] = { 2, kUI1, kSI2 },   
+                    rx_header_with_strings[]    = { 2, kUI1, kSTR, 32 },
                     //< We need to specify the max string length.
-                    rx_header_with_array[]      = { 2, UI1, Array (UI1, 32) },
+                    rx_header_with_array[]      = { 2, kUI1, Array (kUI1, 32) },
                     //< We need to specify the exact number of bytes.
-                    tx_header_with_strings[]    = { 2, UI1, STR };
+                    tx_header_with_strings[]    = { 2, kUI1, kSTR };
                     //< We don’t specify the max length for tx output.
 ```
 
@@ -242,8 +242,8 @@ const Op* Star (wchar_t index, Expression* expr)  {
 
     if (index != 'A') return 0;  //< switch statements are normally use used.
 
-    static const unsigned int params[] = { 2, ADR, UI4, STR, 32 },
-                              result[] = { 2, UI4, STR };
+    static const unsigned int params[] = { 2, kADR, kUI4, kSTR, 32 },
+                              result[] = { 2, kUI4, kSTR };
     static const Operation kOpExample= { “expression-name”,
                                          params, result,
                                          “Description”, 0 };
@@ -251,7 +251,7 @@ const Op* Star (wchar_t index, Expression* expr)  {
     if (!expr) return &kOpExample;
 
     // Example RPC variables.
-    uint32_t input_a,
+    UI4 input_a,
              input_b,
              output_a = 1,
              output_b = 2;
@@ -363,21 +363,21 @@ Device Controls 1 through 4 are the ASCII DC1, DC2, DC3, and DC4 Operations. The
 
 #### DC1 - XON -VK_SHIFT
 
-DC4 must be an <NIL>:<NIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Shift Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
+DC4 must be an <kNIL>:<kNIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Shift Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
 
 #### DC2 - VK_CONTROL
 
-DC4 must be an <NIL>:<NIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Control Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
+DC4 must be an <kNIL>:<kNIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Control Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
 
 #### DC3 - XOFF - VK_ALT
 
-DC4 must be an <NIL>:<NIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Alt Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
+DC4 must be an <kNIL>:<kNIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used for Alt Keyboard Shortcuts the system and may be overridden by the user for application specific purposes.
 
 DC3 must be a device that does nothing by default and uses DC3 for a Closure Operation. XOFF may be overridden by the user for application specific purposes.
 
 #### DC4 - App - VK_PAUSE
 
-DC4 must be an <NIL>:<NIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used to pause the system and may be overridden by the user for application specific purposes.
+DC4 must be an <kNIL>:<kNIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used to pause the system and may be overridden by the user for application specific purposes.
 
 ### 3.4.d Reset Operations
 
@@ -385,7 +385,7 @@ Reset Operations are operations that required the slot in the Chinese Door to be
 
 ### 3.4.e Return Values
 
-Return values just need an address of an Operation to send the return value too. Return values shall be written to the BOut that leads to the initiating Operation's BIn in an automated process. In the case that a different Operation's return address is needed Rooms may pass the return address of the as an input parameter as a TKN type.
+Return values just need an address of an Operation to send the return value too. Return values shall be written to the BOut that leads to the initiating Operation's BIn in an automated process. In the case that a different Operation's return address is needed Rooms may pass the return address of the as an input parameter as a kTKN type.
 
 ## 3.5 Generic Handshake
 
@@ -416,7 +416,7 @@ Authentication in Script shall be done using a sequence of Script Operations.
 
 ## 3.7 Crabs Objects
 
-ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 through 22 shall be created using Crabs.
+ASCII Data Types kLST, kMAP, kDIC, kBOK, and Stacks and Arrays or ASCII Types 4 through 22 shall be created using Crabs.
 
 ### Dictionary Example
 
@@ -433,34 +433,34 @@ ASCII Data Types LST, MAP, DIC, BOK, and Stacks and Arrays or ASCII Types 4 thro
  v           v                    */
 >>>>>>> 8aa74e7eb95d53324850b2fb8a195d79431287d2
 stuff =DIC4 65536 1 {
-/*  +--------------------------- This is a function with key "UI2".
+/*  +--------------------------- This is a function with key "kUI2".
     |       +------------------- This is a 16-bit unsigned int.
     |       |
     v       v */
-    +=UI2 item1 1
+    +=kUI2 item1 1
     +----------------------------------- Operation with key "+=DIC2" same as
     |                                    "=DIC4" except it creates a nested
     |                                    dictionary except that it takes a
-    |         +------------------------- Token (TKN) type.
+    |         +------------------------- Token (kTKN) type.
     |         |     +------------------- This reserves about 32KB memory with
     |         |     |   +--------------- Maximum of 3 members.
     |         |     |   |               
     v         v     v   v             */
     +=DIC4 things 32768 3 {           /* This is a nested dictionary.
-         +------------------------------ This is a operation with key "STR"
+         +------------------------------ This is a operation with key "kSTR"
          |      +----------------------- Dictionary key.
          |      |    +------------------ Max length 12.
-         |      |    |    +------------- STR value.
+         |      |    |    +------------- kSTR value.
          |      |    |    |
          v      v    v    v         */
-        +=STR (item1 12 "ABC")
+        +=kSTR (item1 12 "ABC")
         -=Key item1                  //< Operation "-=Key" removes "item1"
-        +=UI2 item1 1
-        +=UI2 (item2, 2)
-        +=UI2 item3 1
+        +=kUI2 item1 1
+        +=kUI2 (item2, 2)
+        +=kUI2 item3 1
         -=Index 2                    //< Removes index 2:"item3".
-        +=SI2 item3 -1
-        +=UI2 item4 1
+        +=kSI2 item3 -1
+        +=kUI2 item4 1
         /*< We can't add item4 because we set the max elements to 3.
             This won't generate an error but may generate an error
             message. */
@@ -469,7 +469,7 @@ stuff =DIC4 65536 1 {
 /** Using macros to pass return values as arguments.
     Do you have a better abbreviation for a dictionary?
     Example Function:
-    FooBar <DIC4, UI1>:<NIL>
+    FooBar <DIC4, kUI1>:<kNIL>
              ^     ^
              |     |
              |     +----- An 8-bit unsigned integer.
@@ -493,7 +493,7 @@ ESC must be checked for integrity before calling the operation if using an insec
 
 ### 3.8.b Integrity of ASCII Objects
 
-LST, MAP, BOK, DIC, Stacks, and Arrays may be used to detect abnormal behavior by checking data structure members are in bounds and all offsets, keys, and hashes are within specification.
+kLST, kMAP, kBOK, kDIC, Stacks, and Arrays may be used to detect abnormal behavior by checking data structure members are in bounds and all offsets, keys, and hashes are within specification.
 
 ### 3.8.c Compromise of Group Automata
 
@@ -519,7 +519,7 @@ Compromised Automata shall be reported to the Intergalactic Council of Artificia
 
 ## 3.8 Quality of Service
 
-For all operations that return NIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received.
+For all operations that return kNIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received.
 
 ## 3.8.a Message Delivery Retry
 
@@ -557,7 +557,7 @@ A portal is a connection that connects two or more rooms. The following is a sho
 
 #### Room-to-Room Portals
 
-Room-to-Room (R2R) Portals are connections from one Chinese Room to another without any network in between. SPI and UART are primary examples. In these cases, synchronization is different, and often dependent on the specific UART hardware. Due to Script's ESC, Script can be streamed serially without the need for any special hardware to start the sequence or control traffic. Often is the case with devices with non-ideal electronic components, the connection will sometimes cut out, and junk data will get streamed to the target. In this situation, streaming a stream of NIL commands will. Sometimes a target will be expecting much more data streamed to it, so to snap the device out of it, an interrupt method is required. There is a different interrupt protocol for each communication protocol.
+Room-to-Room (R2R) Portals are connections from one Chinese Room to another without any network in between. SPI and UART are primary examples. In these cases, synchronization is different, and often dependent on the specific UART hardware. Due to Script's ESC, Script can be streamed serially without the need for any special hardware to start the sequence or control traffic. Often is the case with devices with non-ideal electronic components, the connection will sometimes cut out, and junk data will get streamed to the target. In this situation, streaming a stream of kNIL commands will. Sometimes a target will be expecting much more data streamed to it, so to snap the device out of it, an interrupt method is required. There is a different interrupt protocol for each communication protocol.
 
 #### Hallway Portals
 

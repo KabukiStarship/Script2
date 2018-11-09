@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @file    /0_0_0__09_ascii_list.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -36,16 +36,16 @@ static const char* _0_0_0__09_ASCII_List(char* seam_log, char* seam_end,
   const int list_test_count = 12;
   for (int i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(SI4, &test_ints[i++]);
+    list.Push(kSI4, &test_ints[i++]);
     COUT << '\n'
          << list << '\n'
          << "\n\n"
          << Socket(list.This(), list.This()->size);
   }
-  const float test_floats[] = {9.0, 10.0, 11.0, 12.0};
+  const FLT test_floats[] = {9.0, 10.0, 11.0, 12.0};
   for (int i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(FLT, &test_floats[i++]);
+    list.Push(kFLT, &test_floats[i++]);
     PRINT('\n');
     PRINT(list);
     PRINT ('\n'');
@@ -56,7 +56,7 @@ static const char* _0_0_0__09_ASCII_List(char* seam_log, char* seam_end,
   const char* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};
   for (int i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(STR, test_strings[i++]);
+    list.Push(kSTR, test_strings[i++]);
     PRINT('\n');
     PRINT(list);
     PRINT('\n');

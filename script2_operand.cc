@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_operand.cc
+@file    /script2_operand.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= _0_0_0__13
 #include "cop.h"
 #include "coperand.h"
-#include "cutf8.h"
+#include "cutf1.h"
 
 #if SEAM == _0_0_0__13
 #include "test_debug.inl"
@@ -67,7 +67,7 @@ Utf& Print (Utf& print, const Operand* op) {
     return print;
 }*/
 
-Utf8& PrintOperand(Utf8& print, Operand* operand) {
+UTF8& PrintOperand(UTF8& print, Operand* operand) {
   ASSERT(operand);
 
   const Op* op = operand->Star('?', nullptr);

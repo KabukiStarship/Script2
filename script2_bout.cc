@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_bout.cc
+@file    /script2_bout.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -138,7 +138,7 @@ int BOutStreamByte(BOut* bout) {
                                         : (end - start) + (open - begin) + 2;
 
   if (length < 1) {
-    BOutError(bout, kErrorBufferOverflow, Params<1, STR>(), 2, start);
+    BOutError(bout, kErrorBufferOverflow, Params<1, kSTR>(), 2, start);
     return -1;
   }
   // byte b = *cursor;
@@ -163,13 +163,13 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
   byte  // type,
       ui1;
 #if USING_CRABS_2_BYTE_TYPES
-  uint16_t ui2;
+  UI2 ui2;
 #endif
 #if USING_CRABS_4_BYTE_TYPES
-  uint32_t ui4;
+  UI4 ui4;
 #endif
 #if USING_CRABS_8_BYTE_TYPES
-  uint64_t ui8;
+  UI8 ui8;
 #endif
 
   uint_t num_params,  //< Num params in the b-sequence.
@@ -188,7 +188,7 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
   size = bout->size;
   const uint_t* param =
       params;  //< Pointer to the current param.
-               //* bsc_param;          //< Pointer to the current BSQ param.
+               //* bsc_param;          //< Pointer to the current kBSQ param.
   // Convert the socket offsets to pointers.
   char *begin = BOutBuffer(bout),          //< Beginning of the buffer.
       *end = begin + size,                 //< End of the buffer.
@@ -196,15 +196,15 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
               *stop = begin + bout->stop;  //< Stop of the data.
   const char* ui1_ptr;                     //< Pointer to a 1-byte type.
 #if USING_CRABS_2_BYTE_TYPES
-  const uint16_t* ui2_ptr;  //< Pointer to a 2-byte type.
+  const UI2* ui2_ptr;  //< Pointer to a 2-byte type.
 #endif
 #if USING_CRABS_4_BYTE_TYPES
-  const uint32_t* ui4_ptr;  //< Pointer to a 4-byte type.
+  const UI4* ui4_ptr;  //< Pointer to a 4-byte type.
 #endif
 #if USING_CRABS_8_BYTE_TYPES
-  const uint64_t* ui8_ptr;  //< Pointer to a 8-byte type.
+  const UI8* ui8_ptr;  //< Pointer to a 8-byte type.
 #endif
-  uint16_t hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
+  UI2 hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
 
   space = (uint_t)SlotSpace(start, stop, size);
 
@@ -221,15 +221,15 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
            TypeString(type), (int)Size(begin, start), (int)Size(begin, stop),
            space)
     switch (type) {
-      case NIL:
+      case kNIL:
         break;
 
-      case ADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
-      case STR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
+      case kADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
+      case kSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
         if (space == 0)
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
-        if (type != ADR) {
-          // We might not need to write anything if it's an ADR with
+        if (type != kADR) {
+          // We might not need to write anything if it's an kADR with
           // nil string.
           length = params[++index];  //< Load the max char length.
           ++num_params;
@@ -252,17 +252,17 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
           ++ui1_ptr;
           ui1 = *ui1_ptr;  // Read byte.
         }
-        if (type != ADR) {  //< 1 is faster to compare than 2
-                            // More likely to have ADR than STR
+        if (type != kADR) {  //< 1 is faster to compare than 2
+                            // More likely to have kADR than kSTR
           *stop = 0;        // Write nil-term char.
           if (++stop >= end) stop -= size;
           break;
         }
 
         break;
-      case SI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
-      case UI1:
-      case BOL:
+      case kSI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
+      case kUI1:
+      case kBOL:
 #if USING_CRABS_1_BYTE_TYPES
         // Check if the buffer has enough room.
         if (space-- == 0)
@@ -280,18 +280,18 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #else
         return BOutError(bout, kErrorInvalidType);
 #endif
-      case SI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
-      case UI2:
-      case HLF:
+      case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
+      case kUI2:
+      case kHLF:
 #if USING_CRABS_2_BYTE_TYPES
         // Align the buffer to a word boundary and check if the
         // buffer has enough room.
-        if (space < sizeof(uint16_t))
+        if (space < sizeof(UI2))
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
-        space -= sizeof(uint16_t);
+        space -= sizeof(UI2);
 
         // Load pointer and value to write.
-        ui2_ptr = reinterpret_cast<uint16_t*>(args[arg_index]);
+        ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         ui2 = *ui2_ptr;
 
         // Write data.
@@ -314,18 +314,18 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #if WORD_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number to write and increment args.
-        ui2_ptr = reinterpret_cast<const uint16_t*>(args[arg_index]);
+        ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         ui2 = *ui2_ptr;
         // We are using the same code to print both signed and unsigned
         // varints. In order to convert from a negative 2's complement
         // signed integer to a transmittable format, we need to invert
         // the bits and add 1. Then we just shift the bits left one and
         // put the sign bit in the LSB.
-        ui2 = TypePackVarint<uint16_t>(ui2);
+        ui2 = TypePackVarint<UI2>(ui2);
         goto WriteVarint2;
       case UVI:  //< _W_r_i_t_e__2_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load next pointer value to write.
-        ui2_ptr = reinterpret_cast<const uint16_t*>(args[arg_index]);
+        ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
           return BOutError(bout, kErrorImplementation, params, index, start);
         ui2 = *ui2_ptr;
@@ -375,13 +375,13 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #else
       case SVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number to write and increment args.
-        ui4_ptr = reinterpret_cast<const uint32_t*>(args[arg_index]);
+        ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
         ui4 = *ui4_ptr;
-        ui4 = TypePackVarint<uint32_t>(ui4);
+        ui4 = TypePackVarint<UI4>(ui4);
         goto WriteVarint4;
       case UVI:  //< _W_r_i_t_e__4_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load the 4-byte type to write to the buffer.
-        ui4_ptr = reinterpret_cast<const uint32_t*>(args[arg_index]);
+        ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
         ui4 = *ui4_ptr;
       WriteVarint4 : {  //< Optimized manual do while loop.
         ui2 = 5;
@@ -408,23 +408,23 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
         goto WriteVarint4;
       } break;
 #endif
-      case SI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
-      case UI4:
-      case FLT:
-      case TMS:
+      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case kUI4:
+      case kFLT:
+      case kTMS:
 #if USING_CRABS_4_BYTE_TYPES
         // Align the buffer to a word boundary and check if the buffer
         // has enough room.
 
-        if (space < sizeof(uint32_t))
+        if (space < sizeof(UI4))
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
-        space -= sizeof(uint64_t);
+        space -= sizeof(UI8);
 
         // Load pointer and value to write.
-        ui4_ptr = reinterpret_cast<uint32_t*>(args[arg_index]);
+        ui4_ptr = reinterpret_cast<UI4*>(args[arg_index]);
         ui4 = *ui4_ptr;
 
-        for (value = sizeof(int32_t); value > 0; --value) {
+        for (value = sizeof(SI4); value > 0; --value) {
           // Byte 1
           ui1 = (byte)ui4;
           *stop = ui1;
@@ -433,24 +433,24 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
         }
         break;
 #endif           //< USING_CRABS_4_BYTE_TYPES
-      case SI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
-      case UI8:
-      case DBL:
-      case TME:
+      case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
+      case kUI8:
+      case kDBL:
+      case kTME:
 #if USING_CRABS_8_BYTE_TYPES
         // Align the buffer to a word boundary and check if the buffer
         // has enough room.
-        if (space < sizeof(uint64_t))
+        if (space < sizeof(UI8))
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
-        space -= sizeof(uint64_t);
+        space -= sizeof(UI8);
 
         // Load pointer and value to write.
-        ui8_ptr = reinterpret_cast<uint64_t*>(args[arg_index]);
+        ui8_ptr = reinterpret_cast<UI8*>(args[arg_index]);
         ui8 = *ui8_ptr;
 
         // Write data.
 
-        for (value = sizeof(int64_t); value > 0; --value) {
+        for (value = sizeof(SI8); value > 0; --value) {
           // Byte 1
           ui1 = (byte)ui8;
           hash = Hash16(ui1, hash);
@@ -460,13 +460,13 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
         break;
       case SV8:  //< _W_r_i_t_e__8_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number to write and increment args.
-        ui8_ptr = reinterpret_cast<const uint64_t*>(args[arg_index]);
+        ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
         ui8 = *ui8_ptr;
-        ui8 = TypePackVarint<uint64_t>(ui8);
+        ui8 = TypePackVarint<UI8>(ui8);
         goto WriteVarint8;
       case UV8:  //< _W_r_i_t_e__8_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load the 4-byte type to write to the buffer.
-        ui8_ptr = reinterpret_cast<const uint64_t*>(args[arg_index]);
+        ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
         ui8 = *ui8_ptr;
       WriteVarint8 : {     //< Optimized manual do while loop.
         ui2 = 8;           //< The max number of varint bytes - 1.
@@ -503,10 +503,10 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #endif
       default: {
         value = type >> 5;
-        if ((type >> 5) && type > OBJ) {
+        if ((type >> 5) && type > kOBJ) {
           return BOutError(bout, kErrorImplementation, params, index);
         }
-        if ((type >> 7) && ((type & 0x1f) >= OBJ)) {
+        if ((type >> 7) && ((type & 0x1f) >= kOBJ)) {
           // Cannot have multi-dimensional arrays of objects!
           type &= 0x1f;
           return BOutError(bout, kErrorImplementation, params, index, start);
@@ -521,7 +521,7 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
           }
 #if USING_CRABS_2_BYTE_TYPES
           case 1: {
-            ui2_ptr = reinterpret_cast<const uint16_t*>(args[arg_index]);
+            ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
                                start);
@@ -532,7 +532,7 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #endif
 #if USING_CRABS_4_BYTE_TYPES
           case 2: {
-            ui4_ptr = reinterpret_cast<const uint32_t*>(args[arg_index]);
+            ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
                                start);
@@ -543,7 +543,7 @@ const Op* BOutWrite(BOut* bout, const uint_t* params, void** args) {
 #endif
 #if USING_CRABS_8_BYTE_TYPES
           case 3: {
-            ui8_ptr = reinterpret_cast<const uint64_t*>(args[arg_index]);
+            ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
                                start);
@@ -686,7 +686,7 @@ void BOutAckBack(BOut* bout, const char* address) {
 
 const Op* BOutConnect(BOut* bout, const char* address) {
   void* args[2];
-  return BOutWrite(bout, Params<2, ADR, ADR>(), Args(args, address, 0));
+  return BOutWrite(bout, Params<2, kADR, kADR>(), Args(args, address, 0));
 }
 
 void BInKeyStrokes() {
@@ -700,7 +700,7 @@ void BInKeyStrokes() {
 #if CRABS_TEXT
 /*
 char* Print (BOut* bout, char* buffer, char* buffer_end) {
-    bool print_now = !buffer;
+    BOL print_now = !buffer;
     if (!buffer) {
         return buffer;
     }
@@ -722,7 +722,7 @@ char* Print (BOut* bout, char* buffer, char* buffer_end) {
     return print.cursor;
 }*/
 
-Utf8& PrintBOut(Utf8& print, BOut* bout) {
+UTF8& PrintBOut(UTF8& print, BOut* bout) {
   ASSERT(bout);
   int size = bout->size;
   print << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size

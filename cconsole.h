@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /cconsole.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -53,37 +53,37 @@ API void Print(const char* a, const char* b);
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(int64_t value);
+API void Print(SI8 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(uint64_t value);
+API void Print(UI8 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(int32_t value);
+API void Print(SI4 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(uint32_t value);
+API void Print(UI4 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(float value);
+API void Print(FLT value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
 @param value The value to print. */
-API void Print(double value);
+API void Print(DBL value);
 
 /* Prints a new line followed by a single char to the console. */
 API inline void PrintLn(char c = '\n');
@@ -133,67 +133,67 @@ API void Pause(const char* message = "");
 API void Pausef(const char* message, ...);
 
 /* Prints a 8-bit binary value to the console. */
-API void PrintBinary(uint8_t value);
+API void PrintBinary(UI1 value);
 
 /* Prints a 8-bit binary value to the console. */
-API void PrintBinary(int8_t value);
+API void PrintBinary(SI1 value);
 
 /* Prints a 16-bit binary value to the console. */
-API void PrintBinary(uint16_t value);
+API void PrintBinary(UI2 value);
 
 /* Prints a 16-bit binary value to the console. */
-API void PrintBinary(int16_t value);
+API void PrintBinary(SI2 value);
 
 /* Prints a 32-bit binary value to the console. */
-API void PrintBinary(uint32_t value);
+API void PrintBinary(UI4 value);
 
 /* Prints a 32-bit binary value to the console. */
-API void PrintBinary(int32_t value);
+API void PrintBinary(SI4 value);
 
 /* Prints a 64-bit binary value to the console. */
-API void PrintBinary(uint64_t value);
+API void PrintBinary(UI8 value);
 
 /* Prints a 64-bit binary value to the console. */
-API void PrintBinary(int64_t value);
+API void PrintBinary(SI8 value);
 
 /* Prints a 32-bit floating-point number to the console in binary. */
-API void PrintBinary(float value);
+API void PrintBinary(FLT value);
 
 /* Prints a 64-bit floating-point number to the console in binary. */
-API void PrintBinary(double value);
+API void PrintBinary(DBL value);
 
 /* Prints a pointer to the console in binary. */
 API void PrintBinary(const void* value);
 
 /* Prints a 8-bit binary value to the console to hex. */
-API void PrintHex(uint8_t value);
+API void PrintHex(UI1 value);
 
 /* Prints a 8-bit binary value to the console to hex. */
-API void PrintHex(int8_t value);
+API void PrintHex(SI1 value);
 
 /* Prints a 16-bit binary value to the console to hex. */
-API void PrintHex(uint16_t value);
+API void PrintHex(UI2 value);
 
 /* Prints a 16-bit binary value to the console to hex. */
-API void PrintHex(int16_t value);
+API void PrintHex(SI2 value);
 
 /* Prints a 32-bit binary value to the console to hex. */
-API void PrintHex(uint32_t value);
+API void PrintHex(UI4 value);
 
 /* Prints a 32-bit binary value to the console to hex. */
-API void PrintHex(int32_t value);
+API void PrintHex(SI4 value);
 
 /* Prints a 64-bit binary value to the console to hex. */
-API void PrintHex(uint64_t value);
+API void PrintHex(UI8 value);
 
 /* Prints a 64-bit binary value to the console to hex. */
-API void PrintHex(int64_t value);
+API void PrintHex(SI8 value);
 
 /* Prints a 32-bit floating-point number to the console in hex. */
-API void PrintHex(float value);
+API void PrintHex(FLT value);
 
 /* Prints a 64-bit floating-point number to the console in hex. */
-API void PrintHex(double value);
+API void PrintHex(DBL value);
 
 /* Prints a pointer to the console in hex. */
 API void PrintHex(const void* value);

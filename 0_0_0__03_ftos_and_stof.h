@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    \kabuki\f2\0_0_0__03_ftos_and_stof.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -44,15 +44,15 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
   enum { kSize = 31 };
   char buffer[kSize + 1];
 
-  uint64_t value;
-  double dbl_expected, dbl_found;
+  UI8 value;
+  DBL dbl_expected, dbl_found;
 
   PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
   for (int i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<double>(value);
+      dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
     dbl_found = ceil(dbl_expected);
     dbl_expected = Ceiling(dbl_expected);
@@ -60,13 +60,13 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
   }
 
   PRINT(
-      "\n\nTesting const Char* Scan<Char> (const Char*, const Char*, float&) "
+      "\n\nTesting const Char* Scan<Char> (const Char*, const Char*, FLT&) "
       "functions...\n");
 
   for (int i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<double>(value);
+      dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
     sprintf_s(buffer, kSize, "%lf", dbl_expected);
     ASSERT(Scan(buffer, dbl_found));
@@ -78,7 +78,7 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
   for (int i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<double>(value);
+      dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
     Print(buffer, buffer + kSize, dbl_expected);
     int r = sscanf_s(buffer, "%lf", &dbl_found);

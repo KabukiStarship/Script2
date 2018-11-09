@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/bsq.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -32,49 +32,49 @@ struct Bsq {
 };
 
 #if WORD_SIZE == 16
-inline int16_t UnpackSVI(int16_t value) {
+inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
-    uint16_t result = 0x8000 return result | ~(value - 1);
+    UI2 result = 0x8000 return result | ~(value - 1);
   }
   return value;
 }
 
-inline int16_t PackSVI(int16_t value) {
+inline SI2 PackSVI(SI2 value) {
   if (value < 0) {
-    uint16_t result = 1 << 15;
+    UI2 result = 1 << 15;
     return result | ((~value + 1) << 1);
   }
   return value;
 }
 #else
-inline int32_t UnpackSVI(int32_t value) {
+inline SI4 UnpackSVI(SI4 value) {
   if (value < 0) {
-    uint32_t result = 0x80000000;
+    UI4 result = 0x80000000;
     return result | ~(value - 1);
   }
   return value;
 }
 
-inline int32_t PackSVI(int32_t value) {
+inline SI4 PackSVI(SI4 value) {
   if (value < 0) {
-    int32_t result = 0x80000000;
+    SI4 result = 0x80000000;
     return result | ((~value + 1) << 1);
   }
   return value;
 }
 #endif
 
-inline int64_t UnpackSV8(int64_t value) {
+inline SI8 UnpackSV8(SI8 value) {
   if (value < 0) {
-    int64_t result = 0x8000000000000000;
+    SI8 result = 0x8000000000000000;
     return result | ~(value - 1);
   }
   return value;
 }
 
-inline int64_t PackSV8(int64_t value) {
+inline SI8 PackSV8(SI8 value) {
   if (value < 0) {
-    int64_t result = 0x8000000000000000;
+    SI8 result = 0x8000000000000000;
     return result | ((~value + 1) << 1);
   }
   return value;
@@ -100,25 +100,25 @@ constexpr uint_t BsqSize(const uint_t* params) {
   for (; count > 0; --count) {
     uint_t param = *params++;
 
-    if (param == NIL) {  // This is illegal.
+    if (param == kNIL) {  // This is illegal.
       return 0;
     }
-    if (param <= TKN) {
+    if (param <= kTKN) {
       size_bytes += sizeof(uint_t);
       ++params;
     }
-    if (param == SIH) {
+    if (param == kSIH) {
       size_bytes += sizeof(uint_t);
       ++params;
     }
-    if (param == UIH) {
+    if (param == kUIH) {
       size_bytes += sizeof(uint_t);
       ++params;
     }
-    if (param >= LST && param <= MAP) {  // This is illegal.
+    if (param >= kLST && param <= kMAP) {  // This is illegal.
       return 0;
     }
-    if (param > MAP) {
+    if (param > kMAP) {
       if (param >> 8) {  // This is an error.
         return 0;
       }
@@ -142,8 +142,8 @@ inline const uint_t* Params() {
   return &kSize;
 }
 
-/* Prints out the BSQ parameters. */
-API Utf8& PrintBsq(Utf8& printer, const uint_t* params);
+/* Prints out the kBSQ parameters. */
+API UTF8& PrintBsq(UTF8& printer, const uint_t* params);
 
 /*  Prints out the parameters. */
 // API Utf& PrintBsq (const uint_t* bsq, Utf& print);
@@ -155,19 +155,19 @@ API uint_t BsqParamNumber(const uint_t* bsq, int param_number);
 
 #if USING_UTF8
 /*  Prints out the parameters. */
-inline _::Utf8& operator<<(_::Utf8& printer, _::Bsq bsq) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8
 #if USING_UTF16
 /*  Prints out the parameters. */
-inline _::Utf16& operator<<(_::Utf16& printer, _::Bsq bsq) {
+inline _::UTF2& operator<<(_::UTF2& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF16
 #if USING_UTF32
 /*  Prints out the parameters. */
-inline _::Utf32& operator<<(_::Utf32& printer, _::Bsq bsq) {
+inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8

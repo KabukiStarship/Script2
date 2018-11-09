@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /crng.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -26,73 +26,73 @@ API uint RandomSeed();
 API void RandomizeSeed();
 
 /* Gets a random 16-bit/2-byte unsigned integer. */
-API uint16_t RandomNumber(uint16_t min, uint16_t max);
+API UI2 RandomNumber(UI2 min, UI2 max);
 
 /* Gets a random 8-bit/1-byte unsigned integer. */
-API uint8_t RandomNumber(uint8_t min, uint8_t max);
+API UI1 RandomNumber(UI1 min, UI1 max);
 
 /* Gets a random 8-bit/1-byte signed integer. */
-API uint8_t RandomNumber(int8_t min, int8_t max);
+API UI1 RandomNumber(SI1 min, SI1 max);
 
 /* Gets a random 16-bit/2-byte signed integer. */
-API uint16_t RandomNumber(int16_t min, int16_t max);
+API UI2 RandomNumber(SI2 min, SI2 max);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-API uint32_t RandomNumber(uint32_t min, uint32_t max);
+API UI4 RandomNumber(UI4 min, UI4 max);
 
 /* Gets a random 64-bit/8-byte unsigned integer. */
-API uint64_t RandomNumber(uint64_t min, uint64_t max);
+API UI8 RandomNumber(UI8 min, UI8 max);
 
 /* Gets a random 64-bit/8-byte signed integer. */
-API uint64_t RandomNumber(int64_t min, int64_t max);
+API UI8 RandomNumber(SI8 min, SI8 max);
 
 /* Gets a random 8-bit/1-byte unsigned integer. */
-API uint8_t RandomUI1();
+API UI1 RandomUI1();
 
 /* Gets a random 8-bit/1-byte signed integer. */
-API int8_t RandomSI1();
+API SI1 RandomSI1();
 
 /* Gets a random 16-bit/2-byte unsigned integer. */
-API uint16_t RandomUI2();
+API UI2 RandomUI2();
 
 /* Gets a random 16-bit/2-byte signed integer. */
-API int16_t RandomSI2();
+API SI2 RandomSI2();
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-API uint32_t RandomUI4();
+API UI4 RandomUI4();
 
 /* Gets a random 32-bit/4-byte signed integer. */
-API int32_t RandomSI4();
+API SI4 RandomSI4();
 
 /* Gets a random 64-bit/8-byte unsigned integer. */
-API uint64_t RandomUI8();
+API UI8 RandomUI8();
 
 /* Gets a random 64-bit/8-byte signed integer. */
-API int64_t RandomSI8();
+API SI8 RandomSI8();
 
 /* Gets a random 8-bit/1-byte unsigned integer. */
-API void RandomNumber(uint8_t& result);
+API void RandomNumber(UI1& result);
 
 /* Gets a random 8-bit/1-byte signed integer. */
-API void RandomNumber(int8_t& result);
+API void RandomNumber(SI1& result);
 
 /* Gets a random 16-bit/2-byte unsigned integer. */
-API void RandomNumber(uint16_t& result);
+API void RandomNumber(UI2& result);
 
 /* Gets a random 16-bit/2-byte signed integer. */
-API void RandomNumber(int16_t& result);
+API void RandomNumber(SI2& result);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-API void RandomNumber(uint32_t& result);
+API void RandomNumber(UI4& result);
 
 /* Gets a random 32-bit/4-byte signed integer. */
-API void RandomNumber(int32_t& result);
+API void RandomNumber(SI4& result);
 
 /* Gets a random 64-bit/8-byte unsigned integer. */
-API void RandomNumber(uint64_t& result);
+API void RandomNumber(UI8& result);
 
 /* Gets a random 64-bit/8-byte signed integer. */
-API void RandomNumber(int64_t& result);
+API void RandomNumber(SI8& result);
 
 }  // namespace _
 #endif  //< INCLUDED_SCRIPTCRNG

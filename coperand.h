@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/operand.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -87,14 +87,14 @@ Slot& OperandQuery(Operand* root, const char* address, Slot& key);
     @param  text     The Text to print to.
     @param  operand The Operand to print.
     @return text. */
-API Utf8& PrintOperand(Utf8& slot, Operand* operand);
+API UTF8& PrintOperand(UTF8& slot, Operand* operand);
 #endif
 
 }  //< namespace _
 
 #if CRABS_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
-inline _::Utf8& operator<<(_::Utf8& printer, _::Operand* operand) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Operand* operand) {
   return _::PrintOperand(printer, operand);
 }
 

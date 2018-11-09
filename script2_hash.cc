@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_hash.cc
+@file    /script2_hash.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -20,7 +20,7 @@ namespace _ {
 hash16_t Hash16(char value, hash16_t hash) { return hash + hash * value; }
 
 hash16_t Hash16(const char* string, hash16_t hash) {
-  uint8_t c = *string;
+  UI1 c = *string;
   while (c) {
     hash = Hash16(c, hash);
     ++string;
@@ -32,7 +32,7 @@ hash16_t Hash16(const char* string, hash16_t hash) {
 hash32_t Hash32(char16_t value, hash32_t hash) { return hash + hash * value; }
 
 hash32_t Hash32(const char* string, hash32_t hash) {
-  uint8_t c = *string;
+  UI1 c = *string;
   while (c) {
     hash = Hash32(c, hash);
     ++string;
@@ -43,7 +43,7 @@ hash32_t Hash32(const char* string, hash32_t hash) {
 hash64_t Hash64(char32_t value, hash64_t hash) { return hash + hash * value; }
 
 hash64_t Hash64(const char* string, hash64_t hash) {
-  uint8_t c = *string;
+  UI1 c = *string;
   while (c) {
     hash = Hash64(c, hash);
     ++string;
@@ -52,15 +52,15 @@ hash64_t Hash64(const char* string, hash64_t hash) {
   return hash;
 }
 
-uint16_t Hash16UI2(uint16_t value, uint16_t hash) {
-  uint16_t prime = PrimeMaxUnigned<uint16_t>();
+UI2 Hash16UI2(UI2 value, UI2 hash) {
+  UI2 prime = PrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = ((value >> 8) * prime) + hash;
   return hash;
 }
 
-uint16_t Hash16UI4(uint32_t value, uint16_t hash) {
-  uint16_t prime = PrimeMaxUnigned<uint16_t>();
+UI2 Hash16UI4(UI4 value, UI2 hash) {
+  UI2 prime = PrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;
@@ -68,8 +68,8 @@ uint16_t Hash16UI4(uint32_t value, uint16_t hash) {
   return hash;
 }
 
-uint16_t Hash16UI8(uint64_t value, uint16_t hash) {
-  uint16_t prime = PrimeMaxUnigned<uint16_t>();
+UI2 Hash16UI8(UI8 value, UI2 hash) {
+  UI2 prime = PrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;

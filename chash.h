@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /hash.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTHASH
 #include "config.h"
 
-typedef uint16_t hash16_t;
-typedef uint32_t hash32_t;
-typedef uint64_t hash64_t;
+typedef UI2 hash16_t;
+typedef UI4 hash32_t;
+typedef UI8 hash64_t;
 
 namespace _ {
 

@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tsocket.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -34,12 +34,12 @@ tables bellow.
 
 @code
 // The convention KT uses is that the unsigned size always comes first
-// because it's the first byte of an ASCII OBJ.
-int32_t signed_example = 7;
-signed_example = AlignUp<int64_t, uint32_t, int32_t> (signed_example);
+// because it's the first byte of an ASCII kOBJ.
+SI4 signed_example = 7;
+signed_example = AlignUp<SI8, UI4, SI4> (signed_example);
 
-uint16_t unsigned_example = 3;
-unsgiend_example = AlignUp<int32_t, uint16_t, uint16_t> (unsigned_example);
+UI2 unsigned_example = 3;
+unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 
 // 64-bit alignment example:
 // ~000 = 111 => 000 + 111 + 1 = 0x1000
@@ -60,7 +60,7 @@ unsgiend_example = AlignUp<int32_t, uint16_t, uint16_t> (unsigned_example);
 // ~1 = 0 => 1 + 0 = 0
 // //
 // 8-bit example:
-// value + ((~value) + 1) & (sizeof (int8_t) - 1) = value
+// value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
 template <typename I = uintptr_t>
 inline I AlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
@@ -215,7 +215,7 @@ inline T* Ptr(const void* begin, intptr_t offset) {
 }
 
 /* Creates a new buffer of the given size or deletes it. */
-template <typename Size = int32_t>
+template <typename Size = SI4>
 uintptr_t* New(uintptr_t* buffer, intptr_t size) {
   size = AlignUp(size);
   return new uintptr_t[size >> kWordBitCount];

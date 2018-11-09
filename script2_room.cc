@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_room.h
+@file    /script2_room.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -62,7 +62,7 @@ int Room::GetState() { return state_; }
 
 int Room::GetStateCount() { return state_count_; }
 
-bool Room::SetState(int new_state) {
+BOL Room::SetState(int new_state) {
   if (new_state < 0) {
     return false;
   }
@@ -75,7 +75,7 @@ bool Room::SetState(int new_state) {
 
 const char* Room::GetRoomName() { return name_; }
 
-bool Room::SetRoomName(const char* name) {
+BOL Room::SetRoomName(const char* name) {
   if (!name) {
     return false;
   }
@@ -134,7 +134,7 @@ void Room::Crash() {
 
 const Op* Room::Loop() { return 0; }
 
-bool Room::IsOn() { return true; }
+BOL Room::IsOn() { return true; }
 
 int Room::Main(const char** args, int args_count) {
   const Op* result = nullptr;
@@ -189,7 +189,7 @@ Wall* Room::AddWall(Wall* new_wall) {
   return new_wall;
 }
 
-bool Room::RemoveWall(int_t wall_number) {
+BOL Room::RemoveWall(int_t wall_number) {
   return StackRemove<Wall*, uint_t, int_t>(walls_, wall_number);
 }
 
@@ -203,7 +203,7 @@ uintptr_t Room::GetSizeBytes() {
 }
 
 #if CRABS_TEXT
-Utf8& Room::Print(Utf8& print) { return print << "\nRoom: "; }
+UTF8& Room::Print(UTF8& print) { return print << "\nRoom: "; }
 #endif
 
 }  // namespace _

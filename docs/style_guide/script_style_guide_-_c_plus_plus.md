@@ -215,9 +215,9 @@ RTTI is useful when considering multiple abstract objects. Consider
 
 ```C++
 
-bool Base::Equal(Base* other) = 0;
+BOL Base::Equal(Base* other) = 0;
 
-bool Derived::Equal(Base* other) {
+BOL Derived::Equal(Base* other) {
 
   Derived* that = dynamic_cast<Derived*>(other);
 
@@ -237,7 +237,7 @@ RTTI has legitimate uses but is prone to abuse, so you must be careful when usin
 
 *   Virtual methods are the preferred way of executing different code paths depending on a specific subclass type. This puts the work within the object itself.
 
-*   If the work belongs outside the object and instead in some processing code, consider a double-dispatch solution, such as the Visitor design pattern. This allows a facility outside the object itself to determine the type of class using the built-in type system.
+*   If the work belongs outside the object and instead in some processing code, consider a DBL-dispatch solution, such as the Visitor design pattern. This allows a facility outside the object itself to determine the type of class using the built-in type system.
 
 When the logic of a program guarantees that a given instance of a base class is in fact an instance of a particular derived class, then a `dynamic_cast` may be used freely on the object. Usually one can use a `static_cast` as an alternative in such situations.
 
@@ -263,7 +263,7 @@ Do not hand-implement an RTTI-like workaround. The arguments against RTTI apply 
 
 ### Casting
 
-Use C++-style casts like `static_cast<float>(double_value)`, or brace initialization for conversion of arithmetic types like `int64 y = int64{1} << 42`. Do not use cast formats like `int y = (int)x` or `int y = int(x)` (but the latter is okay when invoking a constructor of a class type).
+Use C++-style casts like `static_cast<FLT>(double_value)`, or brace initialization for conversion of arithmetic types like `int64 y = int64{1} << 42`. Do not use cast formats like `int y = (int)x` or `int y = int(x)` (but the latter is okay when invoking a constructor of a class type).
 
 #### definition
 
@@ -405,7 +405,7 @@ Prematurely marking something as constexpr may cause migration problems if later
 
 ### Integer Types
 
-Of the built-in C++ integer types, the only one used is `int`. If a program needs a variable of a different size, use a precise-width integer type from `<cstdint>`, such as `int16_t`. If your variable represents a value that could ever be greater than or equal to 2^31 (2GiB), use a 64-bit type such as `int64_t`. Keep in mind that even if your value won't ever be too large for an `int`, it may be used in intermediate calculations which may require a larger type. When in doubt, choose a larger type.
+Of the built-in C++ integer types, the only one used is `int`. If a program needs a variable of a different size, use a precise-width integer type from `<cstdint>`, such as `SI2`. If your variable represents a value that could ever be greater than or equal to 2^31 (2GiB), use a 64-bit type such as `SI8`. Keep in mind that even if your value won't ever be too large for an `int`, it may be used in intermediate calculations which may require a larger type. When in doubt, choose a larger type.
 
 #### definition
 
@@ -421,13 +421,13 @@ The sizes of integral types in C++ can vary based on compiler and architecture.
 
 #### decision
 
-`<cstdint>` defines types like `int16_t`, `uint32_t`, `int64_t`, etc. You should always use those in preference to `short`, `unsigned long long` and the like, when you need a guarantee on the size of an integer. Of the C integer types, only `int` should be used. When appropriate, you are welcome to use standard types like `size_t` and `ptrdiff_t`.
+`<cstdint>` defines types like `SI2`, `UI4`, `SI8`, etc. You should always use those in preference to `short`, `unsigned long long` and the like, when you need a guarantee on the size of an integer. Of the C integer types, only `int` should be used. When appropriate, you are welcome to use standard types like `size_t` and `ptrdiff_t`.
 
-We use `int` very often, for integers we know are not going to be too big, e.g., loop counters. Use plain old `int` for such things. You should assume that an `int` is at least 32 bits, but don't assume that it has more than 32 bits. If you need a 64-bit integer type, use `int64_t` or `uint64_t`.
+We use `int` very often, for integers we know are not going to be too big, e.g., loop counters. Use plain old `int` for such things. You should assume that an `int` is at least 32 bits, but don't assume that it has more than 32 bits. If you need a 64-bit integer type, use `SI8` or `UI8`.
 
-For integers we know can be "big", use `int64_t`.
+For integers we know can be "big", use `SI8`.
 
-You should not use the unsigned integer types such as `uint32_t`, unless there is a valid reason such as representing a bit pattern rather than a number, or you need defined overflow modulo 2^N. In particular, do not use unsigned types to say a number will never be negative. Instead, use assertions for this.
+You should not use the unsigned integer types such as `UI4`, unless there is a valid reason such as representing a bit pattern rather than a number, or you need defined overflow modulo 2^N. In particular, do not use unsigned types to say a number will never be negative. Instead, use assertions for this.
 
 If your code is a container that returns a size, be sure to use a type that will accommodate any possible usage of your container. When in doubt, use a larger type rather than a smaller type.
 
@@ -447,19 +447,19 @@ Code should be 64-bit and 32-bit friendly. Bear in mind problems of printing, co
 
 *   Correct portable `printf()` conversion specifiers for some integral typedefs rely on macro expansions that we find unpleasant to use and impractical to require (the `PRI` macros from `<cinttypes>`). Unless there is no reasonable alternative for your particular case, try to avoid or even upgrade APIs that rely on the `printf` family. Instead use a library supporting typesafe numeric formatting, such as [`StrCat`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/str_cat.h) or [`Substitute`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/substitute.h) for fast simple conversions, or [`std::ostream`](#Streams).
 
-    Unfortunately, the `PRI` macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g. `int64_t`, `uint64_t`, `int32_t`, `uint32_t`, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to `printf`-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t` (`z`), `ptrdiff_t` (`t`), and `maxint_t` (`j`).
+    Unfortunately, the `PRI` macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g. `SI8`, `UI8`, `SI4`, `UI4`, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to `printf`-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t` (`z`), `ptrdiff_t` (`t`), and `maxint_t` (`j`).
 
 *   Remember that `sizeof(void *)` != `sizeof(int)`. Use `intptr_t` if you want a pointer-sized integer.
 
-*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `int64_t`/`uint64_t` member will by default end up being 8-byte aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
+*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `SI8`/`UI8` member will by default end up being 8-byte aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
 
 *   Use [braced-initialization](#Casting) as needed to create 64-bit constants. For example:
 
     ```C++
 
-int64_t my_value{0x123456789};
+SI8 my_value{0x123456789};
 
-    uint64_t my_mask{3ULL << 48};
+    UI8 my_mask{3ULL << 48};
 
     ```
 
@@ -485,7 +485,7 @@ The problems introduced by macros are especially severe when they are used to de
 
 ```
 
-Luckily, macros are not nearly as necessary in C++ as they are in C. Instead of using a macro to inline performance-critical code, use an inline function. Instead of using a macro to store a constant, use a `const` variable. Instead of using a macro to "abbreviate" a long variable name, use a reference. Instead of using a macro to conditionally compile code ... well, don't do that at all (except, of course, for the `#define` guards to prevent double inclusion of header files). It makes testing much more difficult.
+Luckily, macros are not nearly as necessary in C++ as they are in C. Instead of using a macro to inline performance-critical code, use an inline function. Instead of using a macro to store a constant, use a `const` variable. Instead of using a macro to "abbreviate" a long variable name, use a reference. Instead of using a macro to conditionally compile code ... well, don't do that at all (except, of course, for the `#define` guards to prevent DBL inclusion of header files). It makes testing much more difficult.
 
 Macros can do things these other techniques cannot, and you do see them in the codebase, especially in the lower-level libraries. And some of their special features (like stringifying, concatenation, and so forth) are not available through the language proper. But before using a macro, consider carefully whether there's a non-macro way to achieve the same result. If you need to use a macro to define an interface, contact your project leads to request a waiver of this rule.
 
@@ -691,7 +691,7 @@ Finally, brace initialization can also call ordinary constructors of data types,
 
 ```C++
 
-double d{1.23};
+DBL d{1.23};
 
 // Calls ordinary constructor as long as MyOtherType has no
 
@@ -717,13 +717,13 @@ MyOtherType m{"b"};
 
 Never assign a _braced-init-list_ to an auto local variable. In the single element case, what this means can be confusing.
 
-#### badcodeauto d = {1.23};        // d is a std::initializer_list<double>
+#### badcodeauto d = {1.23};        // d is a std::initializer_list<DBL>
 
 ```
 
 ```C++
 
-auto d = double{1.23};  // Good -- d is a double, not a std::initializer_list.
+auto d = DBL{1.23};  // Good -- d is a DBL, not a std::initializer_list.
 
 ```
 

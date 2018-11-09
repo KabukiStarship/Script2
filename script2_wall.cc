@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_wall.cc
+@file    /script2_wall.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -32,7 +32,7 @@ Wall::~Wall() {
 
 Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
   size_bytes = size_bytes < kMinSizeBytes ? (uint_t)kMinSizeBytes : size_bytes;
-  size_bytes = AlignUpUnsigned<int64_t, size_t>(size_bytes);
+  size_bytes = AlignUpUnsigned<SI8, size_t>(size_bytes);
   size_t size_words = (size_bytes >> sizeof(void*)) + 3;
   uintptr_t *buffer = new uintptr_t[size_words],
             *aligned_buffer = AlignUpPointer8<uintptr_t>(buffer);
@@ -46,7 +46,7 @@ Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
 
 Wall::Wall(uintptr_t* buffer, size_t size_bytes) {
   // char* ptr     = reinterpret_cast<char*> (buffer);//,
-  //    * new_ptr = ptr + AlignOffset<uint64_t> (ptr),
+  //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
   //    * end_ptr = ptr + size_bytes;
   enum {
     kBitsShift = sizeof(uintptr_t) == 2 ? 1 : sizeof(uintptr_t) == 2 ? 2 : 3,
@@ -73,7 +73,7 @@ Door* Wall::GetDoor(int index) { return 0; }
 
 int Wall::OpenDoor(Door* door) { return 0; }
 
-bool Wall::CloseDoor(int index) { return false; }
+BOL Wall::CloseDoor(int index) { return false; }
 
 Slot& Wall::Print(Slot& slot) {
   // Printf ("\nDoor:\nis_dynamic %s\nnum_doors: %u\nmax_num_doors: %u\n",

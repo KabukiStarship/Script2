@@ -27,7 +27,6 @@
     <ClInclude Include="0_0_0__04_clock.h" />
     <ClInclude Include="0_0_0__05_ascii_stack.h" />
     <ClInclude Include="0_0_0__06_ascii_array.h" />
-    <ClInclude Include="0_0_0__07_ascii_array.h" />
     <ClInclude Include="0_0_0__07_ascii_loom.h" />
     <ClInclude Include="0_0_0__08_ascii_table.h" />
     <ClInclude Include="0_0_0__09_ascii_list.h" />
@@ -68,9 +67,9 @@
     <ClInclude Include="csocket.h" />
     <ClInclude Include="ctest.h" />
     <ClInclude Include="cutf.h" />
-    <ClInclude Include="cutf16.h" />
-    <ClInclude Include="cutf32.h" />
-    <ClInclude Include="cutf8.h" />
+    <ClInclude Include="cutf2.h" />
+    <ClInclude Include="cutf4.h" />
+    <ClInclude Include="cutf1.h" />
     <ClInclude Include="cvarint.h" />
     <ClInclude Include="cvk.h" />
     <ClInclude Include="cwall.h" />
@@ -79,7 +78,6 @@
     <ClInclude Include="header.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="public.h" />
-    <ClInclude Include="seam.h" />
     <ClInclude Include="tarray.h" />
     <ClInclude Include="tasciidata.h" />
     <ClInclude Include="tbenchmark.h" />
@@ -132,33 +130,33 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc" />
-    <ClCompile Include="script_asciidata.cc" />
-    <ClCompile Include="script_benchmark.cc" />
-    <ClCompile Include="script_bin.cc" />
-    <ClCompile Include="script_binary.cc" />
-    <ClCompile Include="script_bout.cc" />
-    <ClCompile Include="script_bsq.cc" />
-    <ClCompile Include="script_clock.cc" />
-    <ClCompile Include="script_console.cc" />
-    <ClCompile Include="script_door.cc" />
-    <ClCompile Include="script_error.cc" />
-    <ClCompile Include="script_expr.cc" />
-    <ClCompile Include="script_floor.cc" />
-    <ClCompile Include="script_hash.cc" />
-    <ClCompile Include="script_interrupts.cc" />
-    <ClCompile Include="script_lock.cc" />
-    <ClCompile Include="script_morsecode.cc" />
-    <ClCompile Include="script_obj.cc" />
-    <ClCompile Include="script_op.cc" />
-    <ClCompile Include="script_operand.cc" />
-    <ClCompile Include="script_rng.cc" />
-    <ClCompile Include="script_room.cc" />
-    <ClCompile Include="script_slot.cc" />
-    <ClCompile Include="script_socket.cc" />
-    <ClCompile Include="script_str.cc" />
-    <ClCompile Include="script_test.cc" />
-    <ClCompile Include="script_vk.cc" />
-    <ClCompile Include="script_wall.cc" />
+    <ClCompile Include="script2_asciidata.cc" />
+    <ClCompile Include="script2_benchmark.cc" />
+    <ClCompile Include="script2_bin.cc" />
+    <ClCompile Include="script2_binary.cc" />
+    <ClCompile Include="script2_bout.cc" />
+    <ClCompile Include="script2_bsq.cc" />
+    <ClCompile Include="script2_clock.cc" />
+    <ClCompile Include="script2_console.cc" />
+    <ClCompile Include="script2_door.cc" />
+    <ClCompile Include="script2_error.cc" />
+    <ClCompile Include="script2_expr.cc" />
+    <ClCompile Include="script2_floor.cc" />
+    <ClCompile Include="script2_hash.cc" />
+    <ClCompile Include="script2_interrupts.cc" />
+    <ClCompile Include="script2_lock.cc" />
+    <ClCompile Include="script2_morsecode.cc" />
+    <ClCompile Include="script2_obj.cc" />
+    <ClCompile Include="script2_op.cc" />
+    <ClCompile Include="script2_operand.cc" />
+    <ClCompile Include="script2_rng.cc" />
+    <ClCompile Include="script2_room.cc" />
+    <ClCompile Include="script2_slot.cc" />
+    <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_utf.cc" />
+    <ClCompile Include="script2_test.cc" />
+    <ClCompile Include="script2_vk.cc" />
+    <ClCompile Include="script2_wall.cc" />
     <ClCompile Include="seam_tree.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -227,7 +225,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>

@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /casciidata.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -36,43 +36,43 @@ struct API TypeValue {
     Types are organized with types that are allowed in text B-Sequences first,
     followed by objects which get created in text using Script Operations. */
 typedef enum AsciiTypes {
-  NIL = 0,  //< 0.  NIL/nil/void type.
-  SI1,      //< 1.  8-bit signed integer.
-  UI1,      //< 2.  8-bit unsigned integer.
-  SI2,      //< 3.  16-bit signed integer.
-  UI2,      //< 4.  16-bit unsigned integer.
-  HLF,      //< 5.  16-bit floating-point number.
-  BOL,      //< 6.  32-bit non-zero true boolean as signed integer.
-  SI4,      //< 7.  32-bit signed integer.
-  UI4,      //< 8.  32-bit unsigned integer.
-  FLT,      //< 9.  32-bit floating-point number.
-  TMS,      //< 10. 32-bit second since epoch timestamp.
-  TSS,      //< 11. 64-bit sub-second timestamp with TMS and an UI4 tick.
-  TME,      //< 12. 64-bit second since epoch timestamp.
-  SI8,      //< 13. 64-bit signed integer.
-  UI8,      //< 14. 64-bit unsigned integer.
-  DBL,      //< 15. 64-bit floating-point number.
-  SIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
-  UIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
-  DEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
-  UIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
-  OBJ,      //< 20. N-byte object.
-  ADR,      //< 21. UTF-8 Operand stack address.
-  STR,      //< 22. A UTF-8 string.
-  TKN,      //< 23. A UTF-8 string token without whitespace.
-  BSQ,      //< 24. B-Sequence.
-  LOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
-  TBL,      //< 26. A hash table.
-  EXP,      //< 27. Script Expression.
-  LST,      //< 28. Set or multiset of Type-Value tuples.
-  MAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
-  BOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
-  DIC,      //< 31. One-to-one map of Key-{Type-Value} records.
+  kNIL = 0,  //< 0.  kNIL/nil/void type.
+  kSI1,      //< 1.  8-bit signed integer.
+  kUI1,      //< 2.  8-bit unsigned integer.
+  kSI2,      //< 3.  16-bit signed integer.
+  kUI2,      //< 4.  16-bit unsigned integer.
+  kHLF,      //< 5.  16-bit floating-point number.
+  kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
+  kSI4,      //< 7.  32-bit signed integer.
+  kUI4,      //< 8.  32-bit unsigned integer.
+  kFLT,      //< 9.  32-bit floating-point number.
+  kTMS,      //< 10. 32-bit second since epoch timestamp.
+  kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
+  kTME,      //< 12. 64-bit second since epoch timestamp.
+  kSI8,      //< 13. 64-bit signed integer.
+  kUI8,      //< 14. 64-bit unsigned integer.
+  kDBL,      //< 15. 64-bit floating-point number.
+  kSIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
+  kUIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
+  kDEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
+  kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
+  kOBJ,      //< 20. N-byte object.
+  kADR,      //< 21. UTF-8 Operand stack address.
+  kSTR,      //< 22. A UTF-8 string.
+  kTKN,      //< 23. A UTF-8 string token without whitespace.
+  kBSQ,      //< 24. B-Sequence.
+  kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
+  kTBL,      //< 26. A hash table.
+  kEXP,      //< 27. Script Expression.
+  kLST,      //< 28. Set or multiset of Type-Value tuples.
+  kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
+  kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
+  kDIC,      //< 31. One-to-one map of Key-{Type-Value} records.
 } AsciiType;
 
 /* Checks if the given type is valid.
-    @return False if the given type is an 8-bit LST, MAP, BOK, or DIC. */
-inline bool TypeIsValid(type_t type);
+    @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
+inline BOL TypeIsValid(type_t type);
 
 /* Aligns the given pointer to the correct word boundary for the type. */
 API void* TypeAlign(type_t type, void* value);
@@ -91,13 +91,13 @@ API inline const char* TypeString(type_t type);
 API inline const char* TypeString(uint_t type);
 
 /* Masks off the lower 5-LSb to get the type. */
-API inline uint8_t TypeMask(uint8_t value);
+API inline UI1 TypeMask(UI1 value);
 
 /* Returns true if the given type is an Array type. */
-API inline bool TypeIsArray(uint_t type);
+API inline BOL TypeIsArray(uint_t type);
 
-/* Returns true if the given type is a BOK type. */
-API inline bool TypeIsSet(uint_t type);
+/* Returns true if the given type is a kBOK type. */
+API inline BOL TypeIsSet(uint_t type);
 
 /* Returns the size or max size of the given type. */
 API uint_t TypeFixedSize(uint_t type);
@@ -108,16 +108,16 @@ API void* TypeAlign(type_t type, void* value);
 /* Writes the given value to the socket. */
 API char* Write(char* begin, char* end, type_t type, const void* source);
 
-/* Returns true if the given type is an ASCII OBJ. */
-API inline bool TypeIsObj(type_t type);
+/* Returns true if the given type is an ASCII kOBJ. */
+API inline BOL TypeIsObj(type_t type);
 
 /* Returns true if the given type is a string type. */
-API inline bool TypeIsString(type_t type);
+API inline BOL TypeIsString(type_t type);
 
 /* Checks if the given type is UTF-16.
     @param  type The type to check.
     @return True if the given type is UTF-16. */
-API inline bool TypeIsUtf16(type_t type);
+API inline BOL TypeIsUtf16(type_t type);
 
 API inline int TypeSizeWidthCode(type_t type);
 }  // namespace _
@@ -137,7 +137,7 @@ API char* Print(char* begin, char* end, type_t type, const void* value);
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf8& operator<<(_::Utf8& utf, const _::TypeValue& type_value);
+API _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& type_value);
 #endif
 
 #if USING_UTF16
@@ -155,7 +155,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf16& operator<<(_::Utf16& utf, const _::TypeValue& type_value);
+API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF32
 
@@ -173,7 +173,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to print. */
-API _::Utf32& operator<<(_::Utf32& utf, const _::TypeValue& type_value);
+API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 
 #endif  //< INCLUDED_SCRIPT_ASCIIDATA

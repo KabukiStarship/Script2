@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/features/crabs/config.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -57,7 +57,7 @@ specific language governing permissions and limitations under the License. */
 #define EXECECUTABLE 1
 
 // Statically linked library assembly type macro.
-#define STATICALlY_LINKED_LIBRARY 2
+#define STATICALLY_LINKED_LIBRARY 2
 
 // Dynamically linked library assembly type macro.
 #define DYNAMICALLY_LINKED_LIBRARY 3
@@ -67,7 +67,7 @@ specific language governing permissions and limitations under the License. */
 
 #define LARGEST_INT 2147483647  //< Use this for 32-bit CPUs
 
-#include <assembly.h>  //< Inline config stuff for your project.
+#include <assembly.inl>  //< Inline config stuff for your project.
 
 #if CRABS_TEXT == UTF8
 #if USING_UTF8 == 0
@@ -96,23 +96,23 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #if CRABS_STRING_SIZE == 1
-typedef int8_t schar_t;
+typedef SI1 schar_t;
 #elif CRABS_STRING_SIZE == 2
-typedef int16_t schar_t;
+typedef SI2 schar_t;
 #elif CRABS_STRING_SIZE == 4
-typedef int32_t schar_t;
+typedef SI4 schar_t;
 #elif CRABS_STRING_SIZE == 8
-typedef int64_t schar_t;
+typedef SI8 schar_t;
 #endif
 
 #if CRABS_MAX_ERRORS < 0
 #error MAX_ERRORS must be greater than 0
 #elif CRABS_MAX_ERRORS <= 255
-typedef uint8_t ticket_t;
+typedef UI1 ticket_t;
 #elif MAX_ERRORS <= 65535
-typedef uint16_t ticket_t;
+typedef UI2 ticket_t;
 #else
-typedef uint32_t ticket_t;
+typedef UI4 ticket_t;
 #endif
 
 #if CRABS_MAX_PARAMS < 0
@@ -134,7 +134,7 @@ typedef uint32_t ticket_t;
 // Executable assembly type macro.
 #define EXECECUTABLE 1
 // Statically linked library assembly type macro.
-#define STATICALlY_LINKED_LIBRARY 2
+#define STATICALLY_LINKED_LIBRARY 2
 // Dynamically linked library assembly type macro.
 #define DYNAMICALLY_LINKED_LIBRARY 3
 // Dynamically linked library assembly type macro.
@@ -146,13 +146,13 @@ enum {
   kYes = 1,  //< Script yes/true value.
   // kMinFloorSize  = 256,               //< Min size of a room.
   // kMaxFloorSize  = 0x7FFFFFFC,        //< Max room size: 2GB - 7 bits.
-  kMaxFloorsCount = CRABS_MAX_WALLS,     //< Size of the Room Floor (buffer).
-  kSlotSizeMin = 128,                    //< Min size of a Slot - 1.
-  kMaxErrors = CRABS_MAX_ERRORS,         //< Max errors before blowing up.
-  kParamsMax = CRABS_MAX_PARAMS,         //< Max number of parameters.
-  kWordAddressMask = kWordBitsMask,  //< For masking the word address.
+  kMaxFloorsCount = CRABS_MAX_WALLS,  //< Size of the Room Floor (buffer).
+  kSlotSizeMin = 128,                 //< Min size of a Slot - 1.
+  kMaxErrors = CRABS_MAX_ERRORS,      //< Max errors before blowing up.
+  kParamsMax = CRABS_MAX_PARAMS,      //< Max number of parameters.
+  kWordAddressMask = kWordBitsMask,   //< For masking the word address.
   kTimeoutMicroseconds = COM_TIMEOUT_TICKS,  //< Timeout time in microseconds.
-  kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (ADR) length.
+  kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (kADR) length.
   kMinStackSize = 1,                             //< Min Expr stack size.
   kOpNameLengthMax = CRABS_OP_MAX_NAME_LENGTH,
   // Max length of a Op description string.
@@ -188,7 +188,7 @@ enum {
   kFloorSize = 1024,  //< Size, or initial size, of the Floor.
 };
 
-}  //< namespace _
+}  // namespace _
 
 #undef MAX_ERRORS
 #undef MAX_NUM_PARAMS
@@ -203,31 +203,30 @@ enum {
 
 #define API
 
-typedef uint32_t word_t;
+typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
 typedef unsigned char byte;
 typedef unsigned int uint;
 
-typedef int32_t Tms;  //< A 32-bit seconds since epoch timestamp.
-typedef int64_t Tme;  //< A 64-bit seconds since epoch timestamp.
+typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
+typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
 
-typedef uint8_t type_t;  //< ASCII Data Type byte.
+typedef UI1 type_t;  //< ASCII Data Type byte.
 
 #if MAX_NUM_SLOTS <= 255
 typedef byte slot_t;
 enum { kMaxNumSlots = 0xff };
 #elif MAX_NUM_SLOTS <= 65535
-typedef uint16_t slot_t;
+typedef UI2 slot_t;
 enum { kMaxNumSlots = 0xffff };
 #else
-typedef uint32_t slot_t;
+typedef UI4 slot_t;
 enum { kMaxNumSlots = 0xffffffff };
 #endif
 
 /* Below are representations of not-a-numbers.
-<<<<<<< HEAD
 With signed integers, there is one additional negative number than positive
 numbers due to  the 0. In the CRABS Protocol, this number is used to mark
 invalid or corrupted data. If you are not using them and require the ROM
@@ -240,20 +239,6 @@ void BlowUp () { PRINTF ("The sky is falling!");
 if (-1 == NaN_SI4)
     BlowUp ();
 @endcode
-=======
-    With signed integers, there is one additional negative number than positive
-    numbers due to  the 0. In the CRABS Protocol, this number is used to mark
-    invalid or corrupted data. If you are not using them and require the ROM
-    space, it will not harm anything to comment them out.
-
-    @code
-    #include <iostream>
-    #define NaN_SI4 0xFFFFFFF
-    void BlowUp () { PRINTF ("The sky is falling!");
-    if (-1 == NaN_SI4)
-        BlowUp ();
-    @endcode
->>>>>>> af98cdd86f8b7b5188063c203df0e9dd4e771336
 */
 
 // int-sized not-a-number.
@@ -262,19 +247,16 @@ enum {
                             : sizeof(int) == 2 ? static_cast<int>(0xFFFF) : 0,
 };
 
-<<<<<<< HEAD
-=======
-typedef uint16_t hash16_t;  //< Using unsigned 16-bit hash type.
-typedef uint32_t hash32_t;  //< Using unsigned 32-bit hash type.
-typedef uint64_t hash64_t;  //< Using unsigned 64-bit hash type.
+typedef UI2 hash16_t;  //< Using unsigned 16-bit hash type.
+typedef UI4 hash32_t;  //< Using unsigned 32-bit hash type.
+typedef UI8 hash64_t;  //< Using unsigned 64-bit hash type.
 
 enum {
   kLargest16BitPrime = 0xFFE1,      //< Largest 16-bit prime: 65521.
   kLargest32BitPrime = 0xFFFFFFFB,  //< Largest 32-bit prime: 4294967291.
 };
 
->>>>>>> af98cdd86f8b7b5188063c203df0e9dd4e771336
-static const uint64_t kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
+static const UI8 kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
 //< Largest 64-bit prime: 18446744073709551557;
 
 //< A char with a single newline char.
@@ -282,34 +264,31 @@ static const uint64_t kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
 /* The level will more code creating a larger binary. Use one
     underscore to use more memory, and two underscores to use even more. */
 #if CRABS_MEMORY_PROFILE == 1
-typedef int8_t int_t;       //< Buffer signed index type.
-typedef uint8_t uint_t;     //< Buffer unsigned index type.
-typedef int16_t dint_t;     //< Buffer double-wide signed index type.
-typedef uint16_t duint_t;   //< Buffer double-wide unsigned index type.
-typedef uint8_t index_t;    //< Largest bit-depth TIndex this system supports.
-typedef uint16_t header_t;  //< Largest bit-depth THeader this system supports.
-typedef uint16_t data_t;    //< Largest bit-depth TData this system supports.
+typedef SI1 int_t;     //< Buffer signed index type.
+typedef UI1 uint_t;    //< Buffer unsigned index type.
+typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
+typedef UI2 duint_t;   //< Buffer DBL-wide unsigned index type.
+typedef UI1 index_t;   //< Largest bit-depth TIndex this system supports.
+typedef UI2 header_t;  //< Largest bit-depth THeader this system supports.
+typedef UI2 data_t;    //< Largest bit-depth TData this system supports.
 
 #elif (CRABS_MEMORY_PROFILE == 2) || (CRABS_MEMORY_PROFILE == 3)
-typedef int16_t int_t;      //< Buffer signed index type.
-typedef uint16_t uint_t;    //< Buffer unsigned signed index type.
-typedef int32_t dint_t;     //< Buffer double-wide signed index type.
-typedef uint32_t duint_t;   //< Buffer double-wide unsigned index type.
-typedef int16_t index_t;    //< Default TIndex size.
-typedef uint16_t header_t;  //< Default TKey size.
-typedef uint32_t data_t;    //< Default TData size.
+typedef SI2 int_t;     //< Buffer signed index type.
+typedef UI2 uint_t;    //< Buffer unsigned signed index type.
+typedef SI4 dint_t;    //< Buffer DBL-wide signed index type.
+typedef UI4 duint_t;   //< Buffer DBL-wide unsigned index type.
+typedef SI2 index_t;   //< Default TIndex size.
+typedef UI2 header_t;  //< Default TKey size.
+typedef UI4 data_t;    //< Default TData size.
 
-#elif CRABS_MEMORY_PROFILE == 5
-typedef int32_t int_t;      //< Buffer signed index type.
-typedef uint32_t uint_t;    //< Buffer unsigned signed index type.
-typedef int16_t dint_t;     //< Buffer double-wide signed index type.
-typedef uint64_t duint_t;   //< Buffer double-wide unsigned index type.
-typedef uint16_t index_t;   //< Default TIndex size.
-typedef uint32_t header_t;  //< Default TKey size.
-typedef uint64_t data_t;    //< Default TData size.
-
-#else
-#error Invalid CRABS_MEMORY_PROFILE
+#else  // CRABS_MEMORY_PROFILE == 5
+typedef SI4 int_t;     //< Buffer signed index type.
+typedef UI4 uint_t;    //< Buffer unsigned signed index type.
+typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
+typedef UI8 duint_t;   //< Buffer DBL-wide unsigned index type.
+typedef UI2 index_t;   //< Default TIndex size.
+typedef UI4 header_t;  //< Default TKey size.
+typedef UI8 data_t;    //< Default TData size.
 #endif
 
 #if CRABS_MEMORY_PROFILE >= 3 || DEBUG

@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /cobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -26,9 +26,9 @@ typedef uintptr_t* (*HeapManager)(uintptr_t* buffer);
 
 namespace _ {
 
-/* C header for an ASCII OBJ with programmable destructor. */
+/* C header for an ASCII kOBJ with programmable destructor. */
 struct CObject {
-  uintptr_t* begin;     //< Pointer to the contiguous ASCII OBJ.
+  uintptr_t* begin;     //< Pointer to the contiguous ASCII kOBJ.
   HeapManager manager;  //< Pointer to the destructor.
 };
 
@@ -37,43 +37,43 @@ API inline void Delete(CObject obj);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
-API inline bool ObjCountIsValid(int8_t value, int8_t count_min = 1);
+API inline BOL ObjCountIsValid(SI1 value, SI1 count_min = 1);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
-API inline bool ObjCountIsValid(int16_t value, int16_t count_min = 1);
+API inline BOL ObjCountIsValid(SI2 value, SI2 count_min = 1);
 
 /* Checks if the value is a valid index, that it's 7 less than the max
 value or less. */
-API inline bool ObjCountIsValid(int32_t value, int32_t count_min = 1);
+API inline BOL ObjCountIsValid(SI4 value, SI4 count_min = 1);
 
 /* Checks if the value is a valid index, that it's 7 less than the max
 value or less. */
-API inline bool ObjCountIsValid(int64_t value, int64_t count_min = 1);
+API inline BOL ObjCountIsValid(SI8 value, SI8 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline bool ObjSizeIsValid(int16_t value, int16_t count_min = 1);
+API inline BOL ObjSizeIsValid(SI2 value, SI2 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline bool ObjSizeIsValid(int32_t value, int32_t count_min = 1);
+API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline bool ObjSizeIsValid(int64_t value, int64_t count_min = 1);
+API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
-/* Clones the given ASCII OBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, int8_t size);
+/* Clones the given ASCII kOBJ. */
+API uintptr_t* ObjClone(uintptr_t* ascii_object, SI1 size);
 
-/* Clones the given ASCII OBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, int16_t size);
+/* Clones the given ASCII kOBJ. */
+API uintptr_t* ObjClone(uintptr_t* ascii_object, SI2 size);
 
-/* Clones the given ASCII OBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, int32_t size);
+/* Clones the given ASCII kOBJ. */
+API uintptr_t* ObjClone(uintptr_t* ascii_object, SI4 size);
 
-/* Clones the given ASCII OBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, int64_t size);
+/* Clones the given ASCII kOBJ. */
+API uintptr_t* ObjClone(uintptr_t* ascii_object, SI8 size);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02

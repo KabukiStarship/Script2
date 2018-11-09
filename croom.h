@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /kabuki/crabs/room.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -164,7 +164,7 @@ class Room : public Operand {
   const char* GetRoomName();
 
   /* Sets the Room state_. */
-  virtual bool SetRoomName(const char* name);
+  virtual BOL SetRoomName(const char* name);
 
   /* Processes a request from another Room.
       @return Returns false upon success and true if there is an error. */
@@ -185,7 +185,7 @@ class Room : public Operand {
 
   Wall* AddWall(Wall* new_wall);
 
-  bool RemoveWall(int_t wall_number);
+  BOL RemoveWall(int_t wall_number);
 
   uintptr_t GetSizeBytes();
 
@@ -211,7 +211,7 @@ class Room : public Operand {
   virtual const Op* Loop();
 
   /* Returns true if the Room is on. */
-  virtual bool IsOn();
+  virtual BOL IsOn();
 
   /* The default main function.
       Please feel free to override this with your own main function. */
@@ -228,7 +228,7 @@ class Room : public Operand {
 
 #if CRABS_TEXT
   /* Prints the Room to the stdout. */
-  virtual Utf8& Print(Utf8& print);
+  virtual UTF8& Print(UTF8& print);
 #endif
 
  protected:
@@ -246,7 +246,7 @@ class Room : public Operand {
 
  private:
   /* Sets the Room state_. */
-  bool SetState(int new_state);
+  BOL SetState(int new_state);
 };
 
 /* Returns the Room-Level Script. */

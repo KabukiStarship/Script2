@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_console.cc
+@file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -97,49 +97,48 @@ CStack<T, UI, SI>* ArrayNew(const SI* dimensions) {
 }
 
 /* Gets the address of the packed array.
-    @param tarray ASCII Array data structure..
+    @param ary ASCII Array data structure..
     @return Pointer to the first element in the array. */
 template <typename T, typename UI = uint, typename SI = int>
-T* ArrayElements(CStack<T, UI, SI>* tarray) {
-  char* elements = reinterpret_cast<char*>(tarray) + tarray->size_stack;
+T* ArrayElements(CStack<T, UI, SI>* ary) {
+  char* elements = reinterpret_cast<char*>(ary) + ary->size_stack;
   return reinterpret_cast<T*>(elements);
 }
 
 /* Gets the address of the packed SI dimensions.
-    @param tarray ASCII Array data structure..
+    @param ary ASCII Array data structure..
     @return Pointer to the first element in the array. */
 template <typename T, typename UI = uint, typename SI = int>
-SI* ArrayDimensions(CStack<T, UI, SI>* tarray) {
-  char* elements = reinterpret_cast<char*>(tarray) + sizeof(CStack<T, UI, SI>);
+SI* ArrayDimensions(CStack<T, UI, SI>* ary) {
+  char* elements = reinterpret_cast<char*>(ary) + sizeof(CStack<T, UI, SI>);
   return reinterpret_cast<SI*>(elements);
 }
 
 /* Gets the end address of the packed SI dimensions.
-    @param tarray ASCII Array data structure..
+    @param ary ASCII Array data structure..
     @return Pointer to the first element in the array. */
 template <typename T, typename UI = uint, typename SI = int>
-SI* ArrayDimensionsEnd(CStack<T, UI, SI>* tarray) {
-  ASSERT(tarray)
-  return ArrayDimensions<T, UI, SI>(tarray) + tarray->count - 1;
+SI* ArrayDimensionsEnd(CStack<T, UI, SI>* ary) {
+  ASSERT(ary)
+  return ArrayDimensions<T, UI, SI>(ary) + ary->count - 1;
 }
 
 /* Prints the CArray to the Utf. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-Utf8& PrintArray(Utf8& print, CArray<T, UI, SI>* tarray) {
-  ASSERT(tarray)
-  UI size_array = tarray->size_array;
-  SI count = tarray->count;
+UTF8& PrintArray(UTF8& print, CArray<T, UI, SI>* ary) {
+  ASSERT(ary)
+  UI size_array = ary->size_array;
+  SI count = ary->count;
   if (size_array == 0) {
-    return PrintStack<T, UI, SI>(print, tarray);
+    return PrintStack<T, UI, SI>(print, ary);
   }
   if (count <= 0) print << "Array: Error! Dimension count must be positive!";
 
   print << "\n\nArray: dimension_count: " << count
-        << " count_max:" << tarray->count_max
-        << " size_stack:" << tarray->size_stack
-        << " size_array:" << tarray->size_array << "\nDimensions:\n";
+        << " count_max:" << ary->count_max << " size_stack:" << ary->size_stack
+        << " size_array:" << ary->size_array << "\nDimensions:\n";
 
-  SI *dimensions = ArrayDimensions<T, UI, SI>(tarray),
+  SI *dimensions = ArrayDimensions<T, UI, SI>(ary),
      *dimensions_end = dimensions + count - 1;
   SI element_count = *dimensions++;
 
@@ -222,12 +221,12 @@ class TArray {
 }  // namespace _
 
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-inline _::Utf8& operator<<(_::Utf8& printer, _::Stack<T, UI, SI>* stack) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Stack<T, UI, SI>* stack) {
   return _::PrintArray<T, UI, SI>(printer, stack->OBJ());
 }
 
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-inline _::Utf8& operator<<(_::Utf8& printer, _::Stack<T, UI, SI>& stack) {
+inline _::UTF8& operator<<(_::UTF8& printer, _::Stack<T, UI, SI>& stack) {
   return _::PrintArray<T, UI, SI>(printer, stack.OBJ());
 }
 

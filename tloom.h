@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /loom.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* A ordered collection of either UTF-8 or UTF-16 strands starting at index 0.
-CLoom shares the same design pattern as the ASCII STR (Strand) type: the lower
-5 bits store the type LOM, b6:b7 stores the size of the UI type and b5 stores
+CLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
+5 bits store the type kLOM, b6:b7 stores the size of the UI type and b5 stores
 if it is a UTF-8 (de-asserted) or UTF-16 (asserted).
 */
 template <typename UI, typename SI, typename Char>
@@ -118,7 +118,7 @@ Char* LoomString(CLoom* loom, SI index) {
 }
 
 template <typename UI, typename SI, typename Char>
-SI LoomPrint(Utf8& print, CLoom* loom, const Char* strand) {
+SI LoomPrint(UTF8& print, CLoom* loom, const Char* strand) {
   ASSERT(loom)
   ASSERT(strand)
   SI count = loom->count;

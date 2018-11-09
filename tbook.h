@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tbook.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -70,9 +70,9 @@ below:
 |==========================|   |     |
 |_______ count_max         |   |     |
 |_______ ...               |   |     |
-|_______ Type uint8_t N       |   |     |
+|_______ Type UI1 N       |   |     |
 |_______ ...               |   |     |
-|        Type uint8_t 1       |   |     |   ^ Up in addresses
+|        Type UI1 1       |   |     |   ^ Up in addresses
 |==========================|   |     |   |
 |  TMapKey<UI, SI> Struct  |   v     v   ^
 +==========================+ ----------- ^ 0xN
@@ -89,9 +89,9 @@ below:
 * Sizes shown in bytes.
 */
 
-using TMultimap2 = TMap<uint16_t, int16_t, uint8_t>;
-using TMultimap4 = TMap<uint32_t, int32_t, int16_t>;
-using TMultimap8 = TMap<uint64_t, int32_t, int32_t>;
+using TMultimap2 = TMap<UI2, SI2, UI1>;
+using TMultimap4 = TMap<UI4, SI4, SI2>;
+using TMultimap8 = TMap<UI8, SI4, SI4>;
 
 /* The overhead per index for a multimap. */
 template <typename UI, typename SI, typename I>
@@ -110,11 +110,11 @@ enum {
   kMaxNumPagesSet4 = 8 * 1024,           //< The number of pages in a Set4.
   kMaxNumPagesSet8 = 256 * 1024 * 1024,  //< The number of pages in a Set8.
   kOverheadPerSet2Index =
-      MultimapOverheadPerIndex<uint8_t, uint16_t, uint16_t>(),
+      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerSet4Index =
-      MultimapOverheadPerIndex<uint8_t, uint16_t, uint16_t>(),
+      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerSet8Index =
-      MultimapOverheadPerIndex<uint8_t, uint16_t, uint16_t>(),
+      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
 };
 
 /* Initializes a Multimap with the given .
@@ -123,12 +123,12 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4. */
 template <typename UI, typename SI, typename I>
-uintptr_t* MultimapInit(uintptr_t* buffer, uint8_t count_max, uint16_t size) {
+uintptr_t* MultimapInit(uintptr_t* buffer, UI1 count_max, UI2 size) {
   ASSERT(buffer);
   if (table_size <
       sizeof(TMap) +
-          count_max * (MultimapOverheadPerIndex<uint8_t, uint16_t, uint16_t,
-                                                uint16_t>() +
+          count_max * (MultimapOverheadPerIndex<UI1, UI2, UI2,
+                                                UI2>() +
                        2))
     return nullptr;
 
@@ -145,7 +145,7 @@ uintptr_t* MultimapInit(uintptr_t* buffer, uint8_t count_max, uint16_t size) {
 /* Insets the given key-value pair.
  */
 template <typename UI, typename SI, typename I>
-I MultimapInsert(TMap<SI, I>* multimap, uint8_t type, const char* key,
+I MultimapInsert(TMap<SI, I>* multimap, UI1 type, const char* key,
                  void* data, I index) {
   if (multimap == nullptr) return 0;
   return ~0;
@@ -191,7 +191,7 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
 
   // Calculate space left.
   SI value = table_size - count_max * MultimapOverheadPerIndex<SI, I>(),
-     key_length = static_cast<uint16_t>(strlen(key)), size_pile;
+     key_length = static_cast<UI2>(strlen(key)), size_pile;
 
   PrintLine();
   PRINTF(
@@ -212,7 +212,7 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
   if (item_count == 0) {
     multimap->item_count = 1;
     *hashes = hash;
-    *key_offsets = static_cast<uint16_t>(key_length);
+    *key_offsets = static_cast<UI2>(key_length);
     *indexes = ~0;
     *unsorted_indexes = 0;
     destination = keys - key_length;
@@ -336,7 +336,7 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
         // Get offset to write the key too.
         value = key_offsets[item_count - 1] + key_length + 1;
 
-        uint8_t collision_index = unsorted_indexes[mid];
+        UI1 collision_index = unsorted_indexes[mid];
         PRINTF("\n\ncollision_index: %u", collision_index);
 
         SlotWrite(keys - value, key);
@@ -347,8 +347,8 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
         key_offsets[item_count] = value;
 
         size_pile = multimap->size_pile;
-        indexes[mid] = static_cast<uint8_t>(size_pile);
-        indexes[item_count] = static_cast<uint8_t>(size_pile);
+        indexes[mid] = static_cast<UI1>(size_pile);
+        indexes[item_count] = static_cast<UI1>(size_pile);
 
         // Insert the collision into the collision table.
         temp_ptr = &collission_list[size_pile];
@@ -360,7 +360,7 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
         ++temp_ptr;
         *temp_ptr = ~0;
         multimap->size_pile = size_pile + 3;
-        //< Added one term-uint8_t and two indexes.
+        //< Added one term-UI1 and two indexes.
 
         // Add the newest key at the end.
         indexes[item_count] = item_count;
@@ -435,8 +435,8 @@ I MultimapAdd(TMap<SI, I>* multimap, const char* key, TType type, void* data) {
 }
 
 /* Adds a key-value pair to the end of the multimap. */
-// uint8_t Add2 (Set2* multimap, const char* key, uint8_t data) {
-//    return SetAdd<uint8_t, uint16_t, uint16_t, uint16_t> (multimap, key, UI1,
+// UI1 Add2 (Set2* multimap, const char* key, UI1 data) {
+//    return SetAdd<UI1, UI2, UI2, UI2> (multimap, key, kUI1,
 //    &data);
 //}
 
@@ -454,7 +454,7 @@ I MultimapFind(TMap<SI, I>* multimap, const char* key) {
 
   const UI* hashes = reinterpret_cast<const UI*>(
       reinterpret_cast<const char*>(multimap) + sizeof(TMap<SI, I>));
-  const SI* key_offsets = reinterpret_cast<const uint16_t*>(hashes + count_max);
+  const SI* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
   const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
              *collission_list = unsorted_indexes + count_max;
@@ -501,7 +501,7 @@ I MultimapFind(TMap<SI, I>* multimap, const char* key) {
       // Check for collisions
 
       collisions = reinterpret_cast<const char*>(key_offsets) +
-                   count_max * sizeof(uint16_t);
+                   count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index < ~0) {
@@ -563,8 +563,8 @@ I MultimapFind(TMap<SI, I>* multimap, const char* key) {
     return ~((I)0);
 }
 
-// static uint8_t Find2 (Set2* multimap, const char* key) {
-//    return SetFind<uint8_t, uint16_t, uint16_t, uint16_t> (multimap, key);
+// static UI1 Find2 (Set2* multimap, const char* key) {
+//    return SetFind<UI1, UI2, UI2, UI2> (multimap, key);
 //}
 
 /* Prints this object out to the console. */
@@ -666,7 +666,7 @@ void MultimapWipe(TMap<SI, I>* multimap) {
 
 /* Returns true if this expr contains only the given address. */
 template <typename UI, typename SI, typename I>
-bool MultimapContains(TMap<SI, I>* multimap, void* data) {
+BOL MultimapContains(TMap<SI, I>* multimap, void* data) {
   if (multimap == nullptr) return false;
   if (data < multimap) return false;
   if (data > GetEndAddress()) return false;
@@ -675,7 +675,7 @@ bool MultimapContains(TMap<SI, I>* multimap, void* data) {
 
 /* Removes that object from the multimap and copies it to the destination. */
 template <typename UI, typename SI, typename I>
-bool MultimapRemoveCopy(TMap<SI, I>* multimap, void* destination,
+BOL MultimapRemoveCopy(TMap<SI, I>* multimap, void* destination,
                         size_t buffer_size, void* data) {
   if (multimap == nullptr) return false;
 
@@ -684,7 +684,7 @@ bool MultimapRemoveCopy(TMap<SI, I>* multimap, void* destination,
 
 /* Removes the item at the given address from the multimap. */
 template <typename UI, typename SI, typename I>
-bool MultimapRemove(TMap<SI, I>* multimap, void* adress) {
+BOL MultimapRemove(TMap<SI, I>* multimap, void* adress) {
   if (multimap == nullptr) return false;
 
   return false;
@@ -692,7 +692,7 @@ bool MultimapRemove(TMap<SI, I>* multimap, void* adress) {
 
 /* Removes all but the given multimap from the multimap. */
 template <typename UI, typename SI, typename I>
-bool MultimapRetain(TMap<SI, I>* multimap) {
+BOL MultimapRetain(TMap<SI, I>* multimap) {
   if (multimap == nullptr) return false;
 
   return false;
@@ -707,7 +707,7 @@ TMap<SI, I>* MultimapCreate(I buffered_indexes, UI table_size, UI size) {
 
 /* Prints the given TMultimap to the console. */
 template <typename UI, typename SI, typename I>
-Utf8& MultimapPrint(Utf8& print, TMap<SI, I>* multimap) {}
+UTF8& MultimapPrint(UTF8& print, TMap<SI, I>* multimap) {}
 
 /* C++ Wrapper class for an ASCII Multimap that uses dynamic memory and can
     auto-grow. */
@@ -729,7 +729,7 @@ class Multimap {
 
   /* Insets the given key-value pair.
    */
-  inline I Insert(uint8_t type, const char* key, void* data, I index) {
+  inline I Insert(UI1 type, const char* key, void* data, I index) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapInsert<SI, I>(multimap, type, key, data, index);
   }
@@ -760,32 +760,32 @@ class Multimap {
   }
 
   /* Returns true if this expr contains only the given address. */
-  inline bool Contains(void* data) {
+  inline BOL Contains(void* data) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapContains<SI, I>(multimap, void* data);
   }
 
   /* Removes that object from the multimap and copies it to the destination. */
-  inline bool MultimapRemoveCopy(void* destination, size_t buffer_size,
+  inline BOL MultimapRemoveCopy(void* destination, size_t buffer_size,
                                  void* data) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return;
   }
 
   /* Removes the item at the given address from the multimap. */
-  inline bool MultimapRemove(void* adress) {
+  inline BOL MultimapRemove(void* adress) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapRemove<SI, I>(multimap);
   }
 
   /* Removes all but the given multimap from the multimap. */
-  inline bool Retain() {
+  inline BOL Retain() {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapRetain<SI, I>(multimap);
   }
 
   /* Prints the given TMultimap to the console. */
-  inline Utf8& Print(Utf8& printer) {
+  inline UTF8& Print(UTF8& printer) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapPrint<SI, I>(multimap);
   }
@@ -796,9 +796,9 @@ class Multimap {
   TMap
 };
 
-using Multimap2 = TMap<uint8_t, uint16_t, uint16_t>;
-using Multimap4 = TMap<uint16_t, uint16_t, uint32_t>;
-using Multimap8 = TMap<uint32_t, uint32_t, uint64_t>;
+using Multimap2 = TMap<UI1, UI2, UI2>;
+using Multimap4 = TMap<UI2, UI2, UI4>;
+using Multimap8 = TMap<UI4, UI4, UI8>;
 
 }  // namespace _
 

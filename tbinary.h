@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tbinary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -100,7 +100,7 @@ int StringCompare(const Char* string_a, const Char* string_b,
 #define BEGIN_ITOS_ALGORITHM                                          \
   static const char* ui_format = sizeof(UI) == 8 ? FORMAT_UI8 : "%u"; \
   PuffItoSBegin<Char>(cursor);                                        \
-  for (int32_t i = 0; i < 10; ++i) *(cursor + i) = 'x';               \
+  for (SI4 i = 0; i < 10; ++i) *(cursor + i) = 'x';               \
   *(cursor + 21) = 0;                                                 \
   enum { kSize = 256 };                                               \
   char buffer[kSize];                                                 \
@@ -152,11 +152,11 @@ inline UI NanUnsigned() {
 }
 
 template <typename SI, typename UI>
-inline SI NanSigned() {
+inline SI NaNSigned() {
   return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
 }
 
-/* Scrolls over to the next double quote mark.
+/* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 char. */
 template <typename Char = char>
@@ -271,7 +271,7 @@ Char* PrintHex(Char* cursor, Char* end, UI value) {
   *cursor++ = 'x';
   for (int num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
-    *cursor++ = HexNibbleToUpperCase((uint8_t)(value >> num_bits_shift));
+    *cursor++ = HexNibbleToUpperCase((UI1)(value >> num_bits_shift));
   }
   *cursor = 0;
   return cursor;
@@ -280,7 +280,7 @@ Char* PrintHex(Char* cursor, Char* end, UI value) {
 /* Prints the given value to Binary. */
 template <typename Char, typename T>
 Char* PrintBinary(Char* cursor, Char* end, T value) {
-  if (cursor + sizeof(uint64_t) * 8 >= end) {
+  if (cursor + sizeof(UI8) * 8 >= end) {
     return nullptr;
   }
 
@@ -294,7 +294,7 @@ Char* PrintBinary(Char* cursor, Char* end, T value) {
 
 /* Checks if the given character is whitespace. */
 template <typename Char = char>
-inline bool IsWhitespace(Char character) {
+inline BOL IsWhitespace(Char character) {
   return character <= ' ';
 }
 
@@ -344,7 +344,7 @@ inline char32_t* PrintChar(char32_t* cursor, char32_t c) {
 /* Checks if the given char is a digit of a number.
 @return True if it is a digit. */
 template <typename Char = char>
-bool IsDigit(Char c) {
+BOL IsDigit(Char c) {
   return (c >= '0') && (c <= '9');
 }
 
@@ -366,7 +366,7 @@ const Char* ScanUnsigned(const Char* buffer, UI& result) {
   const Char* end = cursor;  // Store end to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (int32_t)(cursor - buffer));
+         (SI4)(cursor - buffer));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
@@ -397,7 +397,7 @@ inline Char* PrintNil(Char* cursor) {
 If the SEAM == _0_0_0 (1), then this function will print debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
-inline Char* Print2Decimals(Char* buffer, uint16_t decimal_pair) {
+inline Char* Print2Decimals(Char* buffer, UI2 decimal_pair) {
   enum { kSizeBits = sizeof(Char) * 8 };
   buffer[0] = (Char)(decimal_pair >> 8);
   char c = (char)decimal_pair;
@@ -406,35 +406,35 @@ inline Char* Print2Decimals(Char* buffer, uint16_t decimal_pair) {
   return buffer;
 }
 
-inline char* PrintCharPair(char* buffer, uint16_t value) {
+inline char* PrintCharPair(char* buffer, UI2 value) {
 #if ALIGN_MEMORY
   buffer[0] = (char)(value >> 8);
   buffer[1] = (char)(value);
 #else
-  *((uint16_t*)buffer) = value;
+  *((UI2*)buffer) = value;
 #endif
   using Char = char;
   PRINT_PRINTED;
   return buffer;
 }
 
-inline char16_t* PrintCharPair(char16_t* cursor, uint16_t decimal_pair) {
+inline char16_t* PrintCharPair(char16_t* cursor, UI2 decimal_pair) {
   return Print2Decimals<char16_t>(cursor, decimal_pair);
 }
 
-inline char32_t* PrintCharPair(char32_t* cursor, uint16_t decimal_pair) {
+inline char32_t* PrintCharPair(char32_t* cursor, UI2 decimal_pair) {
   return Print2Decimals<char32_t>(cursor, decimal_pair);
 }
 
 /* Prints 8 decimals to the given buffer with given LUT.*/
 template <typename Char = char>
-Char* Print8Decimals(Char* cursor, uint32_t value, const uint16_t* lut) {
+Char* Print8Decimals(Char* cursor, UI4 value, const UI2* lut) {
   PRINT("\n    Printing 8 decimals:");
   PRINT(value);
-  uint16_t pow_10_ui2 = 10000, digits6and5 = (uint16_t)(value / pow_10_ui2),
+  UI2 pow_10_ui2 = 10000, digits6and5 = (UI2)(value / pow_10_ui2),
            digits2and1 = value - pow_10_ui2 * digits6and5;
   pow_10_ui2 = 100;
-  uint16_t digits8and7 = digits6and5 / pow_10_ui2,
+  UI2 digits8and7 = digits6and5 / pow_10_ui2,
            digits4and3 = digits2and1 / pow_10_ui2;
   digits6and5 -= pow_10_ui2 * digits8and7;
   digits2and1 -= pow_10_ui2 * digits4and3;
@@ -447,8 +447,8 @@ Char* Print8Decimals(Char* cursor, uint32_t value, const uint16_t* lut) {
 }
 
 template <typename Char = char>
-inline void Print8or16Decimals(Char* cursor, uint32_t lsd, const uint16_t* lut,
-                               uint32_t middle_sd, uint32_t delta) {
+inline void Print8or16Decimals(Char* cursor, UI4 lsd, const UI2* lut,
+                               UI4 middle_sd, UI4 delta) {
   if (delta == 8) {
     PRINTF("\n    Printing less than 17 decimals:");
     Print8Decimals<Char>(cursor, lsd, lut);
@@ -459,24 +459,24 @@ inline void Print8or16Decimals(Char* cursor, uint32_t lsd, const uint16_t* lut,
   }
 }
 
-inline uint32_t ValueUI4(uint32_t value) { return value; }
-inline uint32_t ValueUI4(uint64_t value) { return (uint32_t)value; }
+inline UI4 ValueUI4(UI4 value) { return value; }
+inline UI4 ValueUI4(UI8 value) { return (UI4)value; }
 
 /* Prints the give value to the given buffer as a Unicode string.
 @return Nil upon buffer overflow and a pointer to the nil-term Char upon
 success.
 @param  cursor The beginning of the buffer.
 @param  end    The end address of the buffer. */
-template <typename UI = uint64_t, typename Char = char>
+template <typename UI = UI8, typename Char = char>
 Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
   BEGIN_ITOS_ALGORITHM;
 
   if (!cursor || cursor >= end) return nullptr;
 
   Char* nil_ptr;
-  uint16_t pow_10_ui2, delta = 0;
-  uint32_t pow_10_ui4;
-  const uint16_t* lut = BinaryLUTDecimals();
+  UI2 pow_10_ui2, delta = 0;
+  UI4 pow_10_ui4;
+  const UI2* lut = BinaryLUTDecimals();
 
   // The best way to understand how the numbers are getting converted is that
   // numbers get broken up into up to 8 pairs of 100, in each pair of 10000
@@ -506,7 +506,7 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
         PRINT("\n    Range:[1000, 1023] length:4");
         nil_ptr = cursor + delta + 4;
         if (nil_ptr >= end) return nullptr;
-        uint16_t digits2and1 = (uint16_t)(value - pow_10_ui2);
+        UI2 digits2and1 = (UI2)(value - pow_10_ui2);
 #if CPU_ENDIAN == LITTLE_ENDIAN
         cursor[0] = '1';
         cursor[1] = '0';
@@ -521,7 +521,7 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
       PRINT("\n    Range:[100, 999] length:3");
       nil_ptr = cursor + delta + 3;
       if (nil_ptr >= end) return nullptr;
-      uint16_t digits2and1 = (uint16_t)value, pow_10_ui2 = 100;
+      UI2 digits2and1 = (UI2)value, pow_10_ui2 = 100;
       Char digit = (Char)(digits2and1 / pow_10_ui2);
       digits2and1 -= digit * pow_10_ui2;
       PrintDecimal<Char>(cursor, digit);
@@ -544,7 +544,7 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
         PrintNil<Char>(nil_ptr);
       }
       pow_10_ui2 = 100;
-      uint16_t digits2and1 = (uint16_t)value,
+      UI2 digits2and1 = (UI2)value,
                digits4and3 = digits2and1 / pow_10_ui2;
       digits2and1 -= digits4and3 * pow_10_ui2;
       PrintCharPair(cursor, lut[digits4and3]);
@@ -560,14 +560,14 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
       PRINT("\n    Range:[10000, 65535] length:5");
       nil_ptr = cursor + delta + 5;
       if (nil_ptr >= end) return nullptr;
-      uint32_t value_ui4 = ValueUI4(value);
+      UI4 value_ui4 = ValueUI4(value);
       pow_10_ui2 = 10000;
-      Char digit6 = (uint8_t)(value_ui4 / pow_10_ui2);
+      Char digit6 = (UI1)(value_ui4 / pow_10_ui2);
       value_ui4 -= pow_10_ui2 * digit6;
       cursor = PrintChar<Char>(cursor, '0' + digit6);
       pow_10_ui2 = 100;
-      uint16_t digits4and3 = ((uint16_t)value_ui4) / pow_10_ui2,
-               digits2and1 = (uint16_t)(value_ui4 - digits4and3 * pow_10_ui2);
+      UI2 digits4and3 = ((UI2)value_ui4) / pow_10_ui2,
+               digits2and1 = (UI2)(value_ui4 - digits4and3 * pow_10_ui2);
       PrintCharPair(cursor, lut[digits4and3]);
       PrintCharPair(cursor + 2, lut[digits2and1]);
       return PrintNil<Char>(nil_ptr);
@@ -587,12 +587,12 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
         if (nil_ptr >= end) return nullptr;
         PrintNil<Char>(nil_ptr);
       }
-      uint32_t value_ui4 = (uint32_t)value;
+      UI4 value_ui4 = (UI4)value;
       pow_10_ui2 = 10000;
-      uint16_t digits6and5 = (uint16_t)(value_ui4 / pow_10_ui2),
+      UI2 digits6and5 = (UI2)(value_ui4 / pow_10_ui2),
                digits2and1 = value_ui4 - pow_10_ui2 * digits6and5;
       pow_10_ui2 = 100;
-      uint16_t digits8and7 = digits6and5 / pow_10_ui2,
+      UI2 digits8and7 = digits6and5 / pow_10_ui2,
                digits4and3 = digits2and1 / pow_10_ui2;
       digits6and5 -= pow_10_ui2 * digits8and7;
       digits2and1 -= pow_10_ui2 * digits4and3;
@@ -610,12 +610,12 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
       PRINT("\n    Range:[1048576, 9999999] length:7");
       nil_ptr = cursor + delta + 7;
       if (nil_ptr >= end) return nullptr;
-      uint16_t pow_10_ui2 = 10000;
-      uint32_t value_ui4 = ValueUI4(value);
-      uint16_t digits6and5 = value_ui4 / pow_10_ui2,
+      UI2 pow_10_ui2 = 10000;
+      UI4 value_ui4 = ValueUI4(value);
+      UI2 digits6and5 = value_ui4 / pow_10_ui2,
                digits2and1 = value_ui4 - pow_10_ui2 * digits6and5;
       pow_10_ui2 = 100;
-      uint16_t digit7 = digits6and5 / pow_10_ui2,
+      UI2 digit7 = digits6and5 / pow_10_ui2,
                digits4and3 = digits2and1 / pow_10_ui2;
       digits6and5 -= pow_10_ui2 * digit7;
       digits2and1 -= pow_10_ui2 * digits4and3;
@@ -625,10 +625,10 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
       PrintCharPair(cursor + 5, lut[digits2and1]);
       return PrintNil<Char>(nil_ptr);
     } else {
-      uint32_t comparator = 100000000;  // 10^8
-      UI msd = (value >= (~(uint32_t)0)) ? value / comparator
+      UI4 comparator = 100000000;  // 10^8
+      UI msd = (value >= (~(UI4)0)) ? value / comparator
                                          : ValueUI4(value) / comparator;
-      uint32_t lsd = (uint32_t)(value - comparator * msd), middle_sd;
+      UI4 lsd = (UI4)(value - comparator * msd), middle_sd;
       if (msd >= comparator) {
         delta = 16;
         value = msd / comparator;
@@ -700,7 +700,7 @@ Char* PrintUnsigned(Char* cursor, Char* end, UI value) {
   return nullptr;  //< Unreachable.
 }
 
-template <typename UI = uint64_t, typename Char = char>
+template <typename UI = UI8, typename Char = char>
 inline Char* PrintUnsigned(Char* buffer, int size, UI value) {
   return PrintUnsigned<UI, Char>(buffer, buffer + size - 1, value);
 }
@@ -710,7 +710,7 @@ inline Char* PrintUnsigned(Char* buffer, int size, UI value) {
 success.
 @param  print The text formatter to print to.
 @param value The value to write. */
-template <typename SI = int64_t, typename UI = uint64_t, typename Char = char>
+template <typename SI = SI8, typename UI = UI8, typename Char = char>
 inline Char* PrintSigned(Char* buffer, Char* end, SI value) {
   if (value >= 0) {
     return PrintUnsigned<UI, Char>(buffer, end, (UI)value);
@@ -719,7 +719,7 @@ inline Char* PrintSigned(Char* buffer, Char* end, SI value) {
   return PrintUnsigned<UI, Char>(buffer, end, (UI)(-(SI)value));
 }
 
-template <typename SI = int64_t, typename UI = uint64_t, typename Char = char>
+template <typename SI = SI8, typename UI = UI8, typename Char = char>
 inline Char* PrintSigned(Char* buffer, int size, SI value) {
   return PrintSigned<SI, UI, Char>(buffer, buffer + size - 1, value);
 }
@@ -729,7 +729,7 @@ inline Char* PrintSigned(Char* buffer, int size, SI value) {
 success.
 @param  print The text formatter to print to.
 @param value The value to write. */
-template <typename SI = int64_t, typename UI = uint64_t, typename Char = char>
+template <typename SI = SI8, typename UI = UI8, typename Char = char>
 inline Char* PrintSigned(Char* buffer, intptr_t size, SI value) {
   return PrintSigned<SI, UI, Char>(buffer, buffer + size - 1, value);
 }
@@ -760,7 +760,7 @@ const Char* ScanSigned(const Char* buffer, SI& result) {
   const Char* end = cursor;  // Store end to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (int32_t)(cursor - buffer));
+         (SI4)(cursor - buffer));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
@@ -832,7 +832,7 @@ Char* Print3(Char* buffer, Char* end, Char a, Char b, Char c) {
 }
 
 /* A decimal number in floating-point format.
-template <typename Float = double, typename UI = uint64_t>
+template <typename Float = DBL, typename UI = UI8>
 class TBinary {
  public:
   static int Foo() { return 1; }
@@ -863,11 +863,11 @@ class TBinary {
   // Converts a Float to a TBinary
   TBinary(Float binary) {
     UI ui = *reinterpret_cast<UI*>(&binary);
-    uint32_t biased_e = (uint32_t)(ui << 1);  //< Get rid of sign bit.
+    UI4 biased_e = (UI4)(ui << 1);  //< Get rid of sign bit.
     // Get rid of the integral portion.
     biased_e = biased_e >> (kSizeBits - kExponentSizeBits);
     // Get rid of the sign and exponent.
--    uint64_t coefficient = Coefficient(binary);
+-    UI8 coefficient = Coefficient(binary);
     if (biased_e != 0) {
       f = coefficient + (((UI)1) << kExponentSizeBits);
       e = biased_e - kExponentBias;
@@ -877,7 +877,7 @@ class TBinary {
     }
   }
 
-  TBinary(UI f, int32_t e) : f(f), e(e) {}
+  TBinary(UI f, SI4 e) : f(f), e(e) {}
 
   TBinary(const TBinary a, const TBinary b) {}
 
@@ -914,7 +914,7 @@ class TBinary {
       *buffer++ = '-';
       value = -value;
     }
-    int32_t k;
+    SI4 k;
     Char* cursor = Print<Char>(buffer, end, value, k);
     if (!cursor) return cursor;
     return Standardize<Char>(buffer, end, cursor - buffer, k);
@@ -932,19 +932,19 @@ class TBinary {
     return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
 
-  static TBinary IEEE754Pow10(int32_t e, int32_t& k) {
-    // int32_t k = static_cast<int32_t>(ceil((-61 - e) *
+  static TBinary IEEE754Pow10(SI4 e, SI4& k) {
+    // SI4 k = static_cast<SI4>(ceil((-61 - e) *
     // 0.30102999566398114))
 
     // + 374; dk must be positive to perform ceiling function on positive
     // values.
     Float dk = (-61 - e) * 0.30102999566398114 + 347;
-    k = static_cast<int32_t>(dk);
+    k = static_cast<SI4>(dk);
     if (k != dk) ++k;
 
-    uint32_t index = static_cast<uint32_t>((k >> 3) + 1);
+    UI4 index = static_cast<UI4>((k >> 3) + 1);
 
-    k = -(-348 + static_cast<int32_t>(index << 3));
+    k = -(-348 + static_cast<SI4>(index << 3));
     // decimal exponent no need lookup table.
 
     ASSERT(index < 87);
@@ -955,12 +955,12 @@ class TBinary {
 
  private:
   UI f;
-  int32_t e;
+  SI4 e;
 
   static inline void Multiply(TBinary& result, TBinary& a, TBinary& b) {}
 
   template <typename Char>
-  static Char* Print(Char* buffer, Char* end, Float value, int32_t& k) {
+  static Char* Print(Char* buffer, Char* end, Float value, SI4& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
     v.NormalizedBoundaries(lower_estimate, upper_estimate);
@@ -993,7 +993,7 @@ class TBinary {
 #endif
   }
 
-  // static const uint64_t  kDpExponentMask = 0x7FF0000000000000,
+  // static const UI8  kDpExponentMask = 0x7FF0000000000000,
   //   kDpSignificandMask = 0x000FFFFFFFFFFFFF,
 
   // Normalizes the boundaries.
@@ -1001,8 +1001,8 @@ class TBinary {
     UI l_f,   //< Local copy of f.
         l_e;  //< Local copy of e.
     TBinary pl =
-        TBinary((l_f << 1) + 1, ((int32_t)l_e) - 1).NormalizeBoundary();
-    const uint64_t kHiddenBit = ((uint64_t)1)
+        TBinary((l_f << 1) + 1, ((SI4)l_e) - 1).NormalizeBoundary();
+    const UI8 kHiddenBit = ((UI8)1)
                                 << kMantissaSize;  //< 0x0010000000000000
     TBinary mi = (f == kHiddenBit) ? TBinary((l_f << 2) - 1, e - 2)
                                    : TBinary((l_f << 1) - 1, e - 1);
@@ -1027,10 +1027,10 @@ class TBinary {
   //@return Nil upon failure or a pointer to the nil-term Char upon success.
   template <typename Char>
   static Char* DigitGen(Char* cursor, Char* end, const TBinary& w,
-                        const TBinary& m_plus, uint64_t delta, int32_t& k) {
-    TBinary one(((uint64_t)1) << -m_plus.e, m_plus.e), wp_w = m_plus - w;
-    uint32_t d, pow_10, p_1 = static_cast<uint32_t>(m_plus.f >> -one.e);
-    uint64_t p_2 = m_plus.f & (one.f - 1);
+                        const TBinary& m_plus, UI8 delta, SI4& k) {
+    TBinary one(((UI8)1) << -m_plus.e, m_plus.e), wp_w = m_plus - w;
+    UI4 d, pow_10, p_1 = static_cast<UI4>(m_plus.f >> -one.e);
+    UI8 p_2 = m_plus.f & (one.f - 1);
     int kappa;
     if (p_1 < (pow_10 = 10)) {
       kappa = 1;
@@ -1068,7 +1068,7 @@ class TBinary {
       }
     }
     while (kappa > 0) {
-      uint32_t d;
+      UI4 d;
       d = p_1 / pow_10;
       p_1 -= d * pow_10;
 
@@ -1077,7 +1077,7 @@ class TBinary {
       if (d) cursor = PrintDecimal<Char>(cursor, d);
 
       --kappa;
-      UI tmp = (static_cast<uint64_t>(p_1) << -one.e) + p_2;
+      UI tmp = (static_cast<UI8>(p_1) << -one.e) + p_2;
 
       if (tmp <= delta) {
         k += kappa;
@@ -1139,7 +1139,7 @@ class TBinary {
 
   template <typename Char = char>
   static Char* Standardize(Char* buffer, Char* end, intptr_t length,
-                           int32_t k) {
+                           SI4 k) {
     const intptr_t kk = length + k;  // 10^(kk-1) <= v < 10^kk
     Char* nil_term_char;
     if (length <= kk && kk <= 21) {  // 1234e7 -> 12340000000
@@ -1178,9 +1178,9 @@ class TBinary {
   }
 };
 
-using Binary32 = TBinary<float, uint32_t>;
-using Binary64 = TBinary<double, uint64_t>;
-// using Binary16 = TBinary<half, uint32_t>;
+using Binary32 = TBinary<FLT, UI4>;
+using Binary64 = TBinary<DBL, UI8>;
+// using Binary16 = TBinary<half, UI4>;
 // using Binary128 = TBinary<quad, uint128_t>; */
 
 }  // namespace _
@@ -1191,7 +1191,7 @@ using Binary64 = TBinary<double, uint64_t>;
 #endif  //< #if INCLUDED_SCRIPTTBINARY
 
 /*
-  // Non-working algorithm DOES NOT converts a string-to-float.
+  // Non-working algorithm DOES NOT converts a string-to-FLT.
   //@return nil if there is no number to scan or pointer to the next char after
   // the end of the scanned number upon success.
   //@brief Algorithm uses a 32-bit unsigned value to scan the floating-point
@@ -1200,13 +1200,13 @@ using Binary64 = TBinary<double, uint64_t>;
   template <typename Char = char>
   const Char* Scan(const Char* buffer, Float& result) {
     ASSERT(buffer);
-    PRINTF("\n\nScanning float:%s", buffer);
+    PRINTF("\n\nScanning FLT:%s", buffer);
 
     enum {
       kCharCountMax = 9,  // < (1 + [p*log_10(2)], where p = 32
     };
 
-    uint32_t integer,  //< Integer portion in TBinary.
+    UI4 integer,  //< Integer portion in TBinary.
         sign,          //< Sign in Binary32 format.
         ui_value,      //< Unsigned value.
         pow_10_ui2;    //< Power of 10 for converting integers.
@@ -1214,13 +1214,13 @@ using Binary64 = TBinary<double, uint64_t>;
     // Scan sign of number:
 
     if (*buffer == '-') {
-      sign = NaNSigned<uint32_t, uint32_t>();
+      sign = NaNSigned<UI4, UI4>();
       ++buffer;
     } else {
       sign = 0;
     }
 
-    PRINTF("\nScanning integer portion:%i", static_cast<int32_t>(result));
+    PRINTF("\nScanning integer portion:%i", static_cast<SI4>(result));
 
     const Char* cursor = buffer;
     Char c = *cursor++;
@@ -1232,16 +1232,16 @@ using Binary64 = TBinary<double, uint64_t>;
     const Char* end = cursor;  // Store end to return.
     cursor -= 2;
     PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-           (int32_t)(cursor - buffer));
+           (SI4)(cursor - buffer));
 
     c = *cursor--;
-    ui_value = (uint32_t)(c - '0');
+    ui_value = (UI4)(c - '0');
     pow_10_ui2 = 1;
 
     while (cursor >= buffer) {
       c = *cursor--;
       pow_10_ui2 *= 10;
-      uint32_t new_value = ui_value + pow_10_ui2 * (c - '0');
+      UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
       if (new_value < ui_value) return nullptr;
       ui_value = new_value;
       PRINTF("\nvalue:%u", (uint)ui_value);
@@ -1255,7 +1255,7 @@ using Binary64 = TBinary<double, uint64_t>;
     if (*buffer == '.') goto ScanDecimals;
 
     if (*end != '.') {
-      result = static_cast<float>(integer);
+      result = static_cast<FLT>(integer);
       PRINTF("\nFound value:%f", result);
       return end;
     }
@@ -1280,7 +1280,7 @@ using Binary64 = TBinary<double, uint64_t>;
     cursor -= 2;
 
     intptr_t length = cursor - buffer;
-    PRINTF("\nPointed at \'%c\' and found length:%i", *cursor, (int32_t)length);
+    PRINTF("\nPointed at \'%c\' and found length:%i", *cursor, (SI4)length);
 
     if (length > kCharCountMax) {
       cursor = buffer + kCharCountMax;
@@ -1289,13 +1289,13 @@ using Binary64 = TBinary<double, uint64_t>;
 
     // Manually load the first char.
     c = *cursor--;
-    ui_value = (uint32_t)(c - '0'), pow_10_ui2 = 1;
+    ui_value = (UI4)(c - '0'), pow_10_ui2 = 1;
 
     // Then iterate through the rest in a loop.
     while (cursor >= buffer) {
       c = *cursor--;
       pow_10_ui2 *= 10;
-      uint32_t new_value = ui_value + pow_10_ui2 * (c - '0');
+      UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
       if (new_value < ui_value) {
         PRINTF("\nUnsigned wrap-around!");
         return nullptr;
@@ -1311,9 +1311,9 @@ using Binary64 = TBinary<double, uint64_t>;
     // greater than one then subtract the equivalent of one until the value
     // is zero.
 
-    uint32_t one = IEEE754Pow10E()[length - 1], bit_pattern = 0;
+    UI4 one = IEEE754Pow10E()[length - 1], bit_pattern = 0;
     PRINT('\n');
-    int32_t bit_shift_count = 0;
+    SI4 bit_shift_count = 0;
     while ((ui_value != 0) && (++bit_shift_count < 24)) {
       ui_value = ui_value << 1;  //< << 1 to * 2
       if (ui_value >= one) {
@@ -1335,15 +1335,15 @@ using Binary64 = TBinary<double, uint64_t>;
 
     if (c != 'e' && c != 'E') {
       PRINTF("\nNo \'e\' or \'E\' found.");
-      // ui_value = sign | FloatNormalize<float, uint32_t>(integer);
+      // ui_value = sign | FloatNormalize<FLT, UI4>(integer);
       // result = *reinterpret_cast<Float*>(&ui_value);
       return end;
     }
 
     // @todo This is no doubt optimization, not sure how much it would help
     // though.
-    int32_t signed_value;
-    buffer = ScanSigned<int32_t, uint32_t, Char>(end, signed_value);
+    SI4 signed_value;
+    buffer = ScanSigned<SI4, UI4, Char>(end, signed_value);
     if (!buffer) {
       PRINTF("\nNo exponent found.");
       // result = reinterpret_cast(sign |);

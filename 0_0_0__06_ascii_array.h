@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @file    /0_0_0__06_test_ascii_array.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -43,4 +43,4 @@ static const char* _0_0_0__06_ASCII_Array(char* seam_log, char* seam_end,
 }
 }  // namespace _
 
-#include "seam_footer.inl"
+#include "test_footer.inl"

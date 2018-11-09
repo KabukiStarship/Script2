@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /clock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 namespace _ {
 
-#if USING_F2_UTF
+#if USING_UTF
 
 template <typename Char = char>
 Char* Print(Char* cursor, Char* end, const CClock& clock) {
@@ -101,7 +101,7 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   c = *string++;
   if (!c || IsWhitespace<Char>(c)) {  // Case @HH
     PRINT(" HH ");
-    // Then it's a single number, so create a Tms for the current
+    // Then it's a single number, so create a TMS for the current
     // user-time hour..
     hour = h;
     return string;
@@ -462,7 +462,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
   return cursor + 1;
 }
 
-template <typename SI = Tms>
+template <typename SI = TMS>
 SI StampTime(CClock& clock) {
   SI t = (clock.year - kClockEpochInit) * kSecondsPerYear +
          (clock.day - 1) * kSecondsPerDay + clock.hour * kSecondsPerHour +
@@ -480,15 +480,15 @@ const Char* StringScanTime(const Char* begin, SI& result) {
 
 template <typename Char>
 const Char* StringScanTime(const Char* begin, Tss& result) {
-  begin = StringScanTime<Char, Tms>(begin, result.seconds);
+  begin = StringScanTime<Char, TMS>(begin, result.seconds);
   if (!begin) return nullptr;
   if (*begin++ != ':') {
     result.ticks = 0;
     return begin - 1;
   }
-  return ScanUnsigned<uint32_t, Char>(begin, result.ticks);
+  return ScanUnsigned<UI4, Char>(begin, result.ticks);
 }
-#endif  // #if USING_F2_UTF
+#endif  // #if USING_UTF
 
 }  // namespace _
 

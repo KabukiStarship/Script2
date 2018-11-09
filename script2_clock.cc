@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_clock.cc
+@file    /script2_clock.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -55,27 +55,27 @@ void ClockSet(CClock* clock, SI t) {
 
 CClock::CClock() { ClockInit(*this, 0); }
 
-CClock::CClock(Tms time) { ClockInit(*this, time); }
+CClock::CClock(TMS time) { ClockInit(*this, time); }
 
-CClock::CClock(Tme time) { ClockInit(*this, time); }
+CClock::CClock(TME time) { ClockInit(*this, time); }
 
-void CClock::SetTime(Tms t) { ClockSet<Tms>(this, t); }
-void CClock::SetTime(Tme t) { ClockSet<Tme>(this, t); }
+void CClock::SetTime(TMS t) { ClockSet<TMS>(this, t); }
+void CClock::SetTime(TME t) { ClockSet<TME>(this, t); }
 
-const int16_t* ClockLastDayOfMonth() {
-  static const int16_t kMonthDayOfYear[12] = {31,  59,  90,  120, 151, 181,
+const SI2* ClockLastDayOfMonth() {
+  static const SI2 kMonthDayOfYear[12] = {31,  59,  90,  120, 151, 181,
                                               212, 243, 273, 304, 334, 365};
   return kMonthDayOfYear;
 }
 
-const int16_t* ClockLastDayOfMonthLeapYear() {
-  static const int16_t kMonthDayOfYearLeapYear[12] = {
+const SI2* ClockLastDayOfMonthLeapYear() {
+  static const SI2 kMonthDayOfYearLeapYear[12] = {
       31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
   return kMonthDayOfYearLeapYear;
 }
 
 int MonthByDay(int day, int year) {
-  const int16_t *cursor, *end;
+  const SI2 *cursor, *end;
   if (day < 1) return 0;
   if (year & 3) {  // 3 = 0b'11 which is a much faster way to do modulo 4.
     cursor = ClockLastDayOfMonthLeapYear();
@@ -113,13 +113,13 @@ CClock* ClockInit(CClock& clock, SI t) {
   return &clock;
 }
 
-int16_t ClockEpoch() { return kClockEpochInit; }
+SI2 ClockEpoch() { return kClockEpochInit; }
 
-CClock* ClockInit(CClock& clock, Tms t) { return ClockInit<Tms>(clock, t); }
+CClock* ClockInit(CClock& clock, TMS t) { return ClockInit<TMS>(clock, t); }
 
-CClock* ClockInit(CClock& clock, Tme t) { return ClockInit<Tme>(clock, t); }
+CClock* ClockInit(CClock& clock, TME t) { return ClockInit<TME>(clock, t); }
 
-Tss& StopwatchInit(Tss& tss, Tms t, uint32_t ticks) {
+Tss& StopwatchInit(Tss& tss, TMS t, UI4 ticks) {
   tss.seconds = t;
   tss.ticks = ticks;
   return tss;
@@ -137,18 +137,18 @@ void ClockEpochUpdate() {
   // RoomUnlock();
 }
 
-Tme ClockNow() {
+TME ClockNow() {
   time_t t;
   time(&t);
   if (t > kSecondsPerEpoch) ClockEpochUpdate();
-  return (Tme)t;
+  return (TME)t;
 }
 
-Tms ClockTMS(CClock& clock) { return StampTime<Tms>(clock); }
+TMS ClockTMS(CClock& clock) { return StampTime<TMS>(clock); }
 
-Tme ClockTME(CClock& clock) { return StampTime<Tme>(clock); }
+TME ClockTME(CClock& clock) { return StampTime<TME>(clock); }
 
-int ClockMonthDayCount(Tms t) {
+int ClockMonthDayCount(TMS t) {
   CClock date(t);
   static const char days_per_month[12] = {31, 28, 31, 30, 31, 30,
                                           31, 31, 30, 31, 30, 31};
@@ -223,7 +223,7 @@ int ClockCompare(const CClock& date_a, const CClock& date_b) {
   return 0;
 }
 
-int ClockCompare(Tms time_a, Tms time_b) {
+int ClockCompare(TMS time_a, TMS time_b) {
   CClock a(time_a), b(time_b);
   return ClockCompare(a, b);
 }
@@ -271,10 +271,10 @@ void ClockZeroTime(CClock& local_time) {
   local_time.year = 0;
 }
 
-Tms TimeMake(CClock& time) { return (Tms)mktime(reinterpret_cast<tm*>(&time)); }
+TMS TimeMake(CClock& time) { return (TMS)mktime(reinterpret_cast<tm*>(&time)); }
 
-const int16_t* ClockDaysInMonth() {
-  static const int16_t kDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
+const SI2* ClockDaysInMonth() {
+  static const SI2 kDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
                                            31, 31, 30, 31, 30, 31};
   return kDaysInMonth;
 }
@@ -297,7 +297,7 @@ int ClockDayOfYear(int year, int month, int day) {
   return ClockLastDayOfMonth()[month - 2] + 1 + day;
 }
 
-// Tms ClockTimeBeginningOfYear() {}
+// TMS ClockTimeBeginningOfYear() {}
 
 template <typename SI>
 SI ClockTime(int year, int month, int day, int hour, int minute, int second) {
@@ -312,14 +312,14 @@ SI ClockTime(int year, int month, int day, int hour, int minute, int second) {
               hour * kSecondsPerHour + minute * kSecondsPerMinute + second);
 }
 
-Tms ClockTimeTMS(int year, int month, int day, int hour, int minute,
+TMS ClockTimeTMS(int year, int month, int day, int hour, int minute,
                  int second) {
-  return ClockTime<Tms>(year, month, day, hour, minute, second);
+  return ClockTime<TMS>(year, month, day, hour, minute, second);
 }
 
-Tme ClockTimeTME(int year, int month, int day, int hour, int minute,
+TME ClockTimeTME(int year, int month, int day, int hour, int minute,
                  int second) {
-  return ClockTime<Tms>(year, month, day, hour, minute, second);
+  return ClockTime<TMS>(year, month, day, hour, minute, second);
 }
 
 /*
@@ -340,12 +340,12 @@ char* Print(char* begin, char* end, Tss& t) {
   return Print<char>(begin, end, t);
 }
 
-char* PrintTime(char* begin, char* end, Tms t) {
+char* PrintTime(char* begin, char* end, TMS t) {
   CClock clock(t);
   return Print<char>(begin, end, clock);
 }
 
-char* PrintTime(char* begin, char* end, Tme t) {
+char* PrintTime(char* begin, char* end, TME t) {
   CClock clock(t);
   return Print<char>(begin, end, clock);
 }
@@ -362,13 +362,13 @@ void PrintTime(Tss t) {
   Print(buffer, buffer + kSize - 1, t);
 }
 
-void PrintTime(Tms t) {
+void PrintTime(TMS t) {
   enum { kSize = 64 };
   char buffer[kSize];
   Print(buffer, buffer + kSize - 1, t);
 }
 
-void PrintTime(Tme t) {
+void PrintTime(TME t) {
   enum { kSize = 64 };
   char buffer[kSize];
   Print(buffer, buffer + kSize - 1, t);
@@ -387,12 +387,12 @@ const char* Scan(const char* string, Tss& t) {
   return StringScanTime<char>(string, t);
 }
 
-const char* StringScanTime(const char* string, Tms& t) {
-  return StringScanTime<char, Tms>(string, t);
+const char* StringScanTime(const char* string, TMS& t) {
+  return StringScanTime<char, TMS>(string, t);
 }
 
-const char* StringScanTime(const char* string, Tme& t) {
-  return StringScanTime<char, Tme>(string, t);
+const char* StringScanTime(const char* string, TME& t) {
+  return StringScanTime<char, TME>(string, t);
 }
 
 #endif
@@ -405,14 +405,14 @@ char16_t* Print(char16_t* begin, char16_t* end, Tss& t) {
   return Print<char16_t>(begin, end, t);
 }
 
-char16_t* PrintTime(char16_t* begin, char16_t* end, Tms t) {
+char16_t* PrintTime(char16_t* begin, char16_t* end, TMS t) {
   CClock clock(t);
-  return Print<char16_t, Tms>(begin, end, clock);
+  return Print<char16_t, TMS>(begin, end, clock);
 }
 
-char16_t* PrintTime(char16_t* begin, char16_t* end, Tme t) {
+char16_t* PrintTime(char16_t* begin, char16_t* end, TME t) {
   CClock clock(t);
-  return Print<char16_t, Tme>(begin, end, clock);
+  return Print<char16_t, TME>(begin, end, clock);
 }
 
 char16_t* Print(char16_t* begin, char16_t* end, CClock& t) {
@@ -431,12 +431,12 @@ const char16_t* TextScanMicroseconds(const char16_t* string, Tss& result) {
   return StringScanTime<char16_t, Tss>(string, result);
 }
 
-const char16_t* StringScanTime(const char16_t* string, Tms& result) {
-  return StringScanTime<char16_t, Tms>(string, result);
+const char16_t* StringScanTime(const char16_t* string, TMS& result) {
+  return StringScanTime<char16_t, TMS>(string, result);
 }
 
-const char16_t* StringScanTime(const char16_t* string, Tme& result) {
-  return StringScanTime<char16_t, Tme>(string, result);
+const char16_t* StringScanTime(const char16_t* string, TME& result) {
+  return StringScanTime<char16_t, TME>(string, result);
 }
 #endif
 #if USING_UTF32
@@ -448,14 +448,14 @@ char32_t* Print(char32_t* begin, char32_t* end, Tss& t) {
   return Print<char32_t>(begin, end, t);
 }
 
-char32_t* PrintTime(char32_t* begin, char32_t* end, Tms t) {
+char32_t* PrintTime(char32_t* begin, char32_t* end, TMS t) {
   CClock clock(t);
-  return Print<char32_t, Tms>(begin, end, clock);
+  return Print<char32_t, TMS>(begin, end, clock);
 }
 
-char32_t* PrintTime(char32_t* begin, char32_t* end, Tme t) {
+char32_t* PrintTime(char32_t* begin, char32_t* end, TME t) {
   CClock clock(t);
-  return Print<char32_t, Tme>(begin, end, clock);
+  return Print<char32_t, TME>(begin, end, clock);
 }
 
 char32_t* Print(char32_t* begin, char32_t* end, CClock& clock) {
@@ -475,12 +475,12 @@ const char32_t* Scan(const char32_t* string, Tss& result) {
   return StringScanTime<char32_t, Tss>(string, result);
 }
 
-const char32_t* StringScanTime(const char32_t* string, Tms& result) {
-  return StringScanTime<char32_t, Tms>(string, result);
+const char32_t* StringScanTime(const char32_t* string, TMS& result) {
+  return StringScanTime<char32_t, TMS>(string, result);
 }
 
-const char32_t* StringScanTime(const char32_t* string, Tme& result) {
-  return StringScanTime<char32_t, Tme>(string, result);
+const char32_t* StringScanTime(const char32_t* string, TME& result) {
+  return StringScanTime<char32_t, TME>(string, result);
 }
 
 #endif

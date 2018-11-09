@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /0_0_0__01_itos_and_stoi.h
 @author  Cale McCollough <calemccollough.github.io>
@@ -31,7 +31,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
 #if SEAM >= _0_0_0__01
   TEST_BEGIN;
 
-  static const uint64_t k10ToThe[20] = {
+  static const UI8 k10ToThe[20] = {
       1,           //< 10^0
       10,          //< 10^1
       100,         //< 10^2
@@ -44,7 +44,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
       1000000000,  //< 10^9
   };
 
-  static const uint64_t test_value[] = {
+  static const UI8 test_value[] = {
       1,
       12,
       123,
@@ -97,8 +97,8 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
 
   /*
   PRINTF ("\nTesting quick MSD lookup...\n    Length 1:");
-  static const uint64_t delta_one_bits[] = { 4, 7, 10, 14, 17, 20, 24, 27, 30 };
-  uint64_t max,
+  static const UI8 delta_one_bits[] = { 4, 7, 10, 14, 17, 20, 24, 27, 30 };
+  UI8 max,
            num_bits,
            msd_bit_range;
   PRINTF ("\n| Length | MSD Offset | Min Value  |"
@@ -106,7 +106,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   for (int length = 3; length < 10; ++length) {
       num_bits = delta_one_bits[length - 2];
       msd_bit_range = (length == 10 || length == 20) ? 16: 8;
-      for (uint64_t i = 1;  i <= 8; ++i) {
+      for (UI8 i = 1;  i <= 8; ++i) {
           PRINTF ("\n|   %llu    |     %llu      | %10u |", length, i, i <<
   num_bits);
       }
@@ -114,7 +114,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   PRINT ('\n');
   system ("PAUSE");*/
 
-  static const uint64_t problem_children[] = {
+  static const UI8 problem_children[] = {
       9173263544803952,
   };
   enum { kNumProblemChildren = 0, kSize = 23 };
@@ -122,14 +122,14 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   char text[kSize + 1], expecting[kSize + 1];
   char buffer[kSize];
   char* result;
-  uint64_t result_ui8, expected_ui8;
+  UI8 result_ui8, expected_ui8;
 
   PRINT("\nTesting ScanUnsigned<UI, Char> (const Char*, const char*, I);");
 
   for (int i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(buffer, kSize, FORMAT_UI8, expected_ui8);
-    const char* test = ScanUnsigned<uint64_t, char>(buffer, result_ui8);
+    const char* test = ScanUnsigned<UI8, char>(buffer, result_ui8);
     ASSERT(test);
     AVOW(expected_ui8, result_ui8);
   }
@@ -148,7 +148,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
            StringLength<>(expecting));
     result =
-        PrintUnsigned<uint64_t, char>(text, text + kSize - 1, expected_ui8);
+        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
@@ -168,7 +168,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) ", i + 1);
     result =
-        PrintUnsigned<uint64_t, char>(text, text + kSize - 1, expected_ui8);
+        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
@@ -188,7 +188,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     result =
-        PrintUnsigned<uint64_t, char>(text, text + kSize - 1, expected_ui8);
+        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;

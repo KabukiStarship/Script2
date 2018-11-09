@@ -78,7 +78,7 @@ Namespaces should be used as follows:
 ```C++
 #include "a.h"
 
-    DEFINE_FLAG(bool, someflag, false, "dummy flag");
+    DEFINE_FLAG(BOL, someflag, false, "dummy flag");
 
     namespace mynamespace {
 

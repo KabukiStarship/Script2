@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_lock.h
+@file    /script2_exceptions.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,16 +12,21 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-
-#if SEAM >= _0_0_0__02
-
-#include "clock.h"
+#if SEAM >= _0_0_0__13
+// Dependencies:
+#include "interrupts.h"
+// End dependencies.
+#if USING_CRABS_INTERRUPTS
+#include <cassert>
 
 namespace _ {
 
-void RoomLock() {}
+#if CRABS_TEXT
+const char* RoomCrashException::what() const throw() {
+  return "External crash";
+}
+#endif
 
-void RoomUnlock() {}
-
-}  // namespace _
-#endif  //< #if SEAM >= _0_0_0__02
+}  //< namespace _
+#endif  //< USING_CRABS_INTERRUPTS
+#endif  ///< #if SEAM >= _0_0_0__13

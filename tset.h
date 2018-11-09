@@ -1,4 +1,4 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
 @file    /tset.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
@@ -55,10 +55,10 @@ struct Tuple3 {
     |-----------:|:----:|:--------------------------------------------|
     |      Array | ARY  | A packed c-style array of POD number types. |
     |      Stack | STK  | A stack of POD number types.                |
-    |       List | LST  | A stack of Type-Value tuples.               |
-    |        Map | MAP  | A one-to-one map of Id-Value tuples.        |
-    |   Multimap | DIC  | A multimap of Key-Value tuples.             |
-    | Dictionary | DIC  | A one-to-one map of Key-Value tuples.       |
+    |       List | kLST  | A stack of Type-Value tuples.               |
+    |        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
+    |   Multimap | kDIC  | A multimap of Key-Value tuples.             |
+    | Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |
     |   Observer | STC  | A Observer with Subscriber List.            |
 */
 struct Collection {
@@ -69,22 +69,22 @@ struct Collection {
   virtual void Wipe() = 0;
 
   /* Adds the given Tuple2 to this Set. */
-  virtual bool Push(AsciiType type, void* value) = 0;
+  virtual BOL Push(AsciiType type, void* value) = 0;
 
   /* Adds the given Tuple3 to this Set. */
-  virtual bool Push(AsciiType type, void* value, const char* key) = 0;
+  virtual BOL Push(AsciiType type, void* value, const char* key) = 0;
 
   /* Merges the given Set into this one. */
-  virtual bool Merge(Collection* collection) = 0;
+  virtual BOL Merge(Collection* collection) = 0;
 
   /* Removes the given object from this collection. */
-  virtual bool Remove(Tuple2* tuple) = 0;
+  virtual BOL Remove(Tuple2* tuple) = 0;
 
   /* Removes the given index from this collection. */
-  virtual bool Remove(uintptr_t) = 0;
+  virtual BOL Remove(uintptr_t) = 0;
 
   /* Removes the given key from this collection (if applicable.). */
-  virtual bool Remove(const char* key) = 0;
+  virtual BOL Remove(const char* key) = 0;
 
   /* Gets the element at the given index. */
   virtual void* Get(uintptr_t index) = 0;
@@ -106,7 +106,7 @@ struct Collection {
   virtual uintptr_t GetSizeWidth() = 0;
 
   /*  */
-  virtual Utf8& Print(Utf8& out_) = 0;
+  virtual UTF1& Print(UTF1& out_) = 0;
 };
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__05

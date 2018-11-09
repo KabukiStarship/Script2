@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_ascii_data.cc
+@file    /script2_ascii_data.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -27,8 +27,8 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-bool TypeIsValid(type_t type) {
-  if (type >= LST && type <= DIC || (type >= (ADR + 32) && type <= (TKN + 32)))
+BOL TypeIsValid(type_t type) {
+  if (type >= kLST && type <= kDIC || (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
   return true;
 }
@@ -39,30 +39,30 @@ TypeValue::TypeValue(type_t type, const void* value)
 }
 
 uint_t TypeFixedSize(uint_t type) {
-  static const int8_t kWidths[] = {
-      0,   //< NIL: 0
-      1,   //< SI1: 1
-      1,   //< UI1: 2
-      2,   //< SI2: 3
-      2,   //< UI2: 4
-      2,   //< HLF: 5
-      4,   //< BOL: 6
-      4,   //< SI4: 7
-      4,   //< UI4: 8
-      4,   //< FLT: 9
-      4,   //< TMS: 10
-      8,   //< TME: 11
-      8,   //< SI8: 12
-      8,   //< UI8: 13
-      8,   //< DBL: 14
-      16,  //< SIH: 15
-      16,  //< UIH: 16
-      16,  //< DEC: 17
+  static const SI1 kWidths[] = {
+      0,   //< kNIL: 0
+      1,   //< kSI1: 1
+      1,   //< kUI1: 2
+      2,   //< kSI2: 3
+      2,   //< kUI2: 4
+      2,   //< kHLF: 5
+      4,   //< kBOL: 6
+      4,   //< kSI4: 7
+      4,   //< kUI4: 8
+      4,   //< kFLT: 9
+      4,   //< kTMS: 10
+      8,   //< kTME: 11
+      8,   //< kSI8: 12
+      8,   //< kUI8: 13
+      8,   //< kDBL: 14
+      16,  //< kSIH: 15
+      16,  //< kUIH: 16
+      16,  //< kDEC: 17
   };
   type_t type_upper_bits = type >> 3;
   type &= 0x1f;
-  if (type == UIX) return ((uint_t)2) << type_upper_bits;
-  if (type > OBJ) return -1;
+  if (type == kUIX) return ((uint_t)2) << type_upper_bits;
+  if (type > kOBJ) return -1;
   return kWidths[type];
 }
 
@@ -70,13 +70,13 @@ const char** TypeStrings() { return TypeStrings<char>(); }
 
 const char* TypeString(type_t type) { return TypeStrings()[type & 0x1f]; }
 
-const char* TypeString(uint_t type) { return TypeString((uint8_t)type); }
+const char* TypeString(uint_t type) { return TypeString((UI1)type); }
 
-uint8_t TypeMask(uint8_t value) { return value & 0x1f; }
+UI1 TypeMask(UI1 value) { return value & 0x1f; }
 
-bool TypeIsArray(uint_t type) { return type >= kTypeCount; }
+BOL TypeIsArray(uint_t type) { return type >= kTypeCount; }
 
-bool TypeIsSet(uint_t type) { return type >= kTypeCount; }
+BOL TypeIsSet(uint_t type) { return type >= kTypeCount; }
 
 void* TypeAlign(type_t type, void* value) {
   ASSERT(value);
@@ -84,15 +84,15 @@ void* TypeAlign(type_t type, void* value) {
   if (!TypeIsValid(type)) return nullptr;
 
   uint_t size = TypeFixedSize(type);
-  if (type <= UI1) return value;
+  if (type <= kUI1) return value;
   type_t* value_ptr = reinterpret_cast<type_t*>(value);
 #if WORD_SIZE == 2
-  if (type <= HLF) return AlignUpPointer2<>(value);
+  if (type <= kHLF) return AlignUpPointer2<>(value);
 #else
-  if (type <= BOL) return AlignUp2<>(value);
+  if (type <= kBOL) return AlignUp2<>(value);
 #endif
-  if (type <= TMS) return AlignUp<>(value, 3);
-  if (type <= DEC) return AlignUp<>(value, 7);
+  if (type <= kTMS) return AlignUp<>(value, 3);
+  if (type <= kDEC) return AlignUp<>(value, 7);
 
   switch (type >> 6) {
     case 0:
@@ -137,26 +137,26 @@ char* Write(char* begin, char* end, type_t type, const void* value) {
 
   if (!begin || begin >= end || !value || !TypeIsValid(type)) return nullptr;
 
-  if (type <= UI1) {
+  if (type <= kUI1) {
     char* target_1 = reinterpret_cast<char*>(begin);
     *target_1++ = *reinterpret_cast<const char*>(value);
     return target_1;
   }
-  if (type <= BOL) {
+  if (type <= kBOL) {
     char16_t* target_2 = AlignUp2<char16_t>(begin);
     *target_2++ = *reinterpret_cast<const char16_t*>(value);
     return reinterpret_cast<char*>(target_2);
   }
-  if (type <= TMS) {
+  if (type <= kTMS) {
     char32_t* target_4 = AlignUp<char32_t>(begin, 3);
     *target_4++ = *reinterpret_cast<const char32_t*>(value);
     return reinterpret_cast<char*>(target_4);
   }
-  if (type <= DEC) {
-    uint64_t* target_8 = AlignUp<uint64_t>(begin, 7);
-    const uint64_t* source_8 = reinterpret_cast<const uint64_t*>(value);
+  if (type <= kDEC) {
+    UI8* target_8 = AlignUp<UI8>(begin, 7);
+    const UI8* source_8 = reinterpret_cast<const UI8*>(value);
     *target_8++ = *source_8++;
-    if (type == DEC) {
+    if (type == kDEC) {
       *target_8++ = *source_8;
       return reinterpret_cast<char*>(target_8);
     }
@@ -172,51 +172,51 @@ char* Write(char* begin, char* end, type_t type, const void* value) {
         return Print<char>(begin, end, reinterpret_cast<const char*>(value));
       case 3:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<uint16_t*>(begin),
-                            reinterpret_cast<uint16_t*>(end),
-                            reinterpret_cast<const uint16_t*>(value)));
+            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+                            reinterpret_cast<UI2*>(end),
+                            reinterpret_cast<const UI2*>(value)));
       case 4:
         return Print<char>(begin, end, reinterpret_cast<const char*>(value));
       case 5:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<uint16_t*>(begin),
-                            reinterpret_cast<uint16_t*>(end),
-                            reinterpret_cast<const uint16_t*>(value)));
+            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+                            reinterpret_cast<UI2*>(end),
+                            reinterpret_cast<const UI2*>(value)));
       case 6:
         return Print<char>(begin, end, reinterpret_cast<const char*>(value));
       case 7:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<uint16_t*>(begin),
-                            reinterpret_cast<uint16_t*>(end),
-                            reinterpret_cast<const uint16_t*>(value)));
+            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+                            reinterpret_cast<UI2*>(end),
+                            reinterpret_cast<const UI2*>(value)));
     }
   }
   char array_type = type >> 6;
   switch (array_type) {
     case 0:
-      return WriteObj<uint8_t>(begin, end, value);
+      return WriteObj<UI1>(begin, end, value);
     case 1:
-      return WriteObj<uint16_t>(begin, end, value);
+      return WriteObj<UI2>(begin, end, value);
     case 2:
-      return WriteObj<uint32_t>(begin, end, value);
+      return WriteObj<UI4>(begin, end, value);
     case 3:
-      return WriteObj<uint64_t>(begin, end, value);
+      return WriteObj<UI8>(begin, end, value);
   }
   return nullptr;
 }
 
-bool TypeIsObj(type_t type) {
-  if (type < OBJ) return false;
+BOL TypeIsObj(type_t type) {
+  if (type < kOBJ) return false;
   return true;
 }
 
-bool TypeIsString(type_t type) {
+BOL TypeIsString(type_t type) {
   type &= 0x1f;
-  if (type >= ADR && type <= TKN) return true;
+  if (type >= kADR && type <= kTKN) return true;
   return false;
 }
 
-bool TypeIsUtf16(type_t type) { return (bool)(type & 0x20); }
+BOL TypeIsUtf16(type_t type) { return (BOL)(type & 0x20); }
 
 inline int TypeSizeWidthCode(type_t type) { return type >> 6; }
 
@@ -227,7 +227,7 @@ namespace _ {
 char* Print(char* begin, char* end, type_t type, const void* value) {
   return Print<char>(begin, end, type, value);
 }  //< namespace _
-_::Utf8& operator<<(_::Utf8& utf, const _::TypeValue& item) {
+_::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
 }
 #endif
@@ -238,7 +238,7 @@ char16_t* Print(char16_t* begin, char16_t* end, type_t type,
   return Print<char16_t>(begin, end, type, value);
 }
 }  // namespace _
-_::Utf16& operator<<(_::Utf16& utf, const _::TypeValue& item) {
+_::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
 }
 #endif
@@ -249,7 +249,7 @@ char32_t* Print(char32_t* begin, char32_t* end, type_t type,
   return Print<char32_t>(begin, end, type, value);
 }
 }  // namespace _
-_::Utf32& operator<<(_::Utf32& utf, const _::TypeValue& item) {
+_::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
 }
 #endif

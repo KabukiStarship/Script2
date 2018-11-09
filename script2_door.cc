@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_door.cc
+@file    /script2_door.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -62,7 +62,7 @@ slot_t Door::AddSlot(slot_t slot) {
   return StackPush<slot_t, uint_t, int_t>(slots_, slot);
 }
 
-bool Door::Contains(void* address) {
+BOL Door::Contains(void* address) {
   return StackContains<slot_t, uint_t, int_t>(slots_, address);
 }
 

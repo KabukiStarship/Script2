@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_bin.cc
+@file    /script2_bin.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -165,7 +165,7 @@ int BInStreamByte(BIn* bin) {
                                     : (end - start) + (open - begin) + 2);
 
   if (length < 1) {
-    BInError(bin, kErrorBufferOverflow, Params<1, STR>(), 2, start);
+    BInError(bin, kErrorBufferOverflow, Params<1, kSTR>(), 2, start);
     return -1;
   }
   // byte b = *cursor;
@@ -174,7 +174,7 @@ int BInStreamByte(BIn* bin) {
   return 0;
 }
 
-bool BInIsReadable(BIn* bin) { return BinBufferLength(bin) > 0; }
+BOL BInIsReadable(BIn* bin) { return BinBufferLength(bin) > 0; }
 
 const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
   PRINT_BSQ("\nReading ", params)
@@ -190,13 +190,13 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
     return BInError(bin, kErrorImplementation);
   }
   byte ui1;       //< Temp variable.
-  uint16_t ui2;   //< Temp variable.
-  uint32_t ui4;   //< Temp variable.
-  uint64_t ui8;   //< Temp variable.
-  char* ui1_ptr;  //< Pointer to a UI1.
-  // uint16_t* ui2_ptr;              //< Pointer to a UI2.
-  uint32_t* ui4_ptr;         //< Pointer to a UI4.
-  uint64_t* ui8_ptr;         //< Pointer to a UI1.
+  UI2 ui2;   //< Temp variable.
+  UI4 ui4;   //< Temp variable.
+  UI8 ui8;   //< Temp variable.
+  char* ui1_ptr;  //< Pointer to a kUI1.
+  // UI2* ui2_ptr;              //< Pointer to a kUI2.
+  UI4* ui4_ptr;         //< Pointer to a kUI4.
+  UI8* ui8_ptr;         //< Pointer to a kUI1.
   uint_t type,               //< The current type being read.
       size,                  //< Size of the ring buffer.
       length,                //< Length of the data in the buffer.
@@ -229,10 +229,10 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
            TypeString(type), (int)Size(begin, start), (int)Size(begin, stop),
            length)
     switch (type) {
-      case NIL:
+      case kNIL:
         return BInError(bin, kErrorInvalidType, params, index, start);
-      case ADR:
-      case STR:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
+      case kADR:
+      case kSTR:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
                  // Load buffered-type argument length and increment the index.
         ++num_params;
         count = params[++index];
@@ -241,7 +241,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
         ui1_ptr = reinterpret_cast<char*>(args[arg_index]);
         if (ui1_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, start);
-        PRINTF("\nReading STR:0x%p with length:%u", ui1_ptr, count)
+        PRINTF("\nReading kSTR:0x%p with length:%u", ui1_ptr, count)
         // Read char.
         ui1 = *start;
         hash = Hash16(ui1, hash);
@@ -260,14 +260,14 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
           PRINT(ui1)
         }
         PRINTF("\" success!\n")
-        if (type != ADR) {
+        if (type != kADR) {
           *ui1_ptr = 0;
           // No need to hash 0.
         }
         break;
-      case SI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
-      case UI1:
-      case BOL:
+      case kSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
+      case kUI1:
+      case kBOL:
 #if USING_CRABS_1_BYTE_TYPES
         if (length-- == 0)
           return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -288,9 +288,9 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
 #else
         return BInError(bin, kErrorInvalidType, params, index, start);
 #endif
-      case SI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
-      case UI2:
-      case HLF:
+      case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
+      case kUI2:
+      case kHLF:
 #if USING_CRABS_2_BYTE_TYPES
         if (length < 2)
           return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -321,7 +321,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
       case UVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
 #if WORD_SIZE <= 16
                  // Load next pointer and increment args.
-        ui2_ptr = reinterpret_cast<uint16_t*>(args[arg_index]);
+        ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, start);
         // Scan byte 1.
@@ -337,7 +337,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
           ui1 = *start;
           if (++start >= end) start -= size;
           hash = Hash16(ui1, hash);
-          ui4 |= ((uint32_t)(ui1 & 0x7F)) << temp;
+          ui4 |= ((UI4)(ui1 & 0x7F)) << temp;
           //< @todo I'm starting to second guess if we need to mask ui1
           //< because we're packing them up and will overwrite.
           temp += 7;
@@ -346,12 +346,12 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
         }
         if (count == 5)  //< If there is only one byte we need to
           ui4 &= 0x7F;   //< mask off the terminating varint bit.
-        if (type == SVI) ui4 = TypeUnpackVarint<uint32_t>(ui4);
+        if (type == SVI) ui4 = TypeUnpackVarint<UI4>(ui4);
         *ui4_ptr = ui4;
         break;
 #else
                  // Load next pointer and increment args.
-        ui4_ptr = reinterpret_cast<uint32_t*>(args[arg_index]);
+        ui4_ptr = reinterpret_cast<UI4*>(args[arg_index]);
         if (ui4_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, start);
 
@@ -368,7 +368,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
           ui1 = *start;
           if (++start >= end) start -= size;
           hash = Hash16(ui1, hash);
-          ui4 |= ((uint32_t)(ui1 & 0x7F)) << ui2;
+          ui4 |= ((UI4)(ui1 & 0x7F)) << ui2;
           //< @todo I'm starting to second guess if we need to mask ui1
           //< because we're packing them up and will overwrite.
           ui2 += 7;
@@ -377,14 +377,14 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
         }
         if (count == 5)  //< If there is only one byte we need to
           ui4 &= 0x7F;   //< mask off the terminating varint bit.
-        if (type == SVI) ui4 = TypeUnpackVarint<uint32_t>(ui4);
+        if (type == SVI) ui4 = TypeUnpackVarint<UI4>(ui4);
         *ui4_ptr = ui4;
         break;
 #endif
-      case SI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
-      case UI4:
-      case FLT:
-      case TMS:
+      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
+      case kUI4:
+      case kFLT:
+      case kTMS:
 #if USING_CRABS_4_BYTE_TYPES
         if (length < 4)
           return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -396,7 +396,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
 
         // Read type
 
-        for (value = sizeof(uint32_t); value > 0; --value) {
+        for (value = sizeof(UI4); value > 0; --value) {
           // Byte 1
           ui1 = *start;                       //< Read
           hash = Hash16(ui1, hash);           //< Hash
@@ -406,10 +406,10 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
 #else
         return BInError(bin, kErrorInvalidType, params, index, start);
 #endif
-      case TME:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
-      case SI8:
-      case UI8:
-      case DBL:
+      case kTME:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
+      case kSI8:
+      case kUI8:
+      case kDBL:
 #if USING_CRABS_8_BYTE_TYPES
         if (length < 8)
           return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -420,7 +420,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
         if (!ui1_ptr) break;
 
         // Read type
-        for (value = sizeof(uint64_t); value > 0; --value) {
+        for (value = sizeof(UI8); value > 0; --value) {
           // Byte 1
           ui1 = *start;                       //< Read
           hash = Hash16(ui1, hash);           //< Hash
@@ -434,7 +434,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
       case SV8:  //< _R_e_a_d__V_a_r_i_n_t__8____________________
       case UV8:
         // Load next pointer and increment args.
-        ui8_ptr = reinterpret_cast<uint64_t*>(args[arg_index]);
+        ui8_ptr = reinterpret_cast<UI8*>(args[arg_index]);
         if (!ui8_ptr) {
           return BInError(bin, kErrorImplementation, params, index, start);
         }
@@ -455,10 +455,10 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
             // Varint 8 differs from Varint 2 and 4 in that on the
             // last byte, byte 9 of 9, there is no terminating
             // varint bit.
-            ui8 |= ((uint64_t)(ui1)) << ui2;
+            ui8 |= ((UI8)(ui1)) << ui2;
             break;
           }
-          ui8 |= ((uint64_t)(ui1 & 0x7F)) << ui2;
+          ui8 |= ((UI8)(ui1 & 0x7F)) << ui2;
           //< @todo I'm starting to second guess if we need to mask
           //< ui1 because we're packing them up and will overwrite.
           ui2 += 7;
@@ -467,10 +467,10 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
         }
         if (count == 9)  //< If there is only one byte we need to
           ui8 &= 0x7F;   //< mask off the terminating varint bit.
-        if (type == SV8) ui8 = TypeUnpackVarint<uint64_t>(ui8);
+        if (type == SV8) ui8 = TypeUnpackVarint<UI8>(ui8);
         *ui8_ptr = ui8;
         break;
-      case BSQ:  //< _B_-_S_e_q_u_e_n_c_e__S_t_r_i_n_g______________
+      case kBSQ:  //< _B_-_S_e_q_u_e_n_c_e__S_t_r_i_n_g______________
 #if USING_BSC
         ui1_ptr = reinterpret_cast<char*>(args[arg_index]);
         if (ui1_ptr == nullptr)
@@ -482,7 +482,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
 #if USING_CRABS_ARRAY
         switch (type & 0x60) {
           case 0: {
-            if ((type < LST) && (type < MAP))
+            if ((type < kLST) && (type < kMAP))
               return BInError(bin, kErrorInvalidType, params, index, start);
             if (length < 1)  // 1 byte for the width word.
               return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -504,15 +504,15 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
             if (length < 2)  // 2 byte for the width word.
               return BInError(bin, kErrorBufferUnderflow, params, index, start);
             length -= 2;
-            ui2_ptr = reinterpret_cast<uint16_t*>(args[arg_index]);
+            ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
               return BInError(bin, kErrorImplementation, params, index, start);
 
-            for (temp = 0; temp <= sizeof(uint16_t); temp += 8) {
+            for (temp = 0; temp <= sizeof(UI2); temp += 8) {
               ui1 = *start;
               if (++start >= end) start -= size;
               hash = Hash16(ui1, hash);
-              ui2 |= ((uint16_t)ui1) << temp;
+              ui2 |= ((UI2)ui1) << temp;
             }
             if (ui2 > length)
               return BInError(bin, kErrorBufferOverflow, params, index, start);
@@ -525,15 +525,15 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
             if (length < 4)  // 4 byte for the width word.
               return BInError(bin, kErrorBufferUnderflow, params, index, start);
             length -= 4;
-            ui4_ptr = reinterpret_cast<uint32_t*>(args[arg_index]);
+            ui4_ptr = reinterpret_cast<UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
               return BInError(bin, kErrorImplementation, params, index, start);
 
-            for (temp = 0; temp <= sizeof(uint32_t); temp += 8) {
+            for (temp = 0; temp <= sizeof(UI4); temp += 8) {
               ui1 = *start;
               if (++start >= end) start -= size;
               hash = Hash16(ui1, hash);
-              ui4 |= ((uint32_t)ui1) << temp;
+              ui4 |= ((UI4)ui1) << temp;
             }
             if (ui4 >= length)
               return BInError(bin, kErrorBufferOverflow, params, index, start);
@@ -546,15 +546,15 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
             if (length < 9)
               return BInError(bin, kErrorBufferUnderflow, params, index, start);
             length -= 8;
-            ui8_ptr = reinterpret_cast<uint64_t*>(args[arg_index]);
+            ui8_ptr = reinterpret_cast<UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
               return BInError(bin, kErrorImplementation, params, index, start);
 
-            for (temp = 0; temp <= sizeof(uint64_t); temp += 8) {
+            for (temp = 0; temp <= sizeof(UI8); temp += 8) {
               ui1 = *start;
               if (++start >= end) start -= size;
               hash = Hash16(ui1, hash);
-              ui8 |= ((uint64_t)ui1) << temp;
+              ui8 |= ((UI8)ui1) << temp;
             }
             if (ui8 > length)
               return BInError(bin, kErrorBufferOverflow, params, index, start);
@@ -609,7 +609,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
   if (++start >= end) start -= size;
   ui1 = *start;
   if (++start >= end) start -= size;
-  ui2 |= (((uint16_t)ui1) << 8);
+  ui2 |= (((UI2)ui1) << 8);
   PRINTF("found:0x%x", ui2)
   if (hash != ui2)
     return BInError(bin, kErrorInvalidHash, params, index, start);
@@ -624,7 +624,7 @@ const Op* BInRead(BIn* bin, const uint_t* params, void** args) {
 }
 
 #if CRABS_TEXT
-Utf8& Print(Utf8& print, BIn* bin) {
+UTF8& Print(UTF8& print, BIn* bin) {
   ASSERT(bin);
 
   uint_t size = bin->size;

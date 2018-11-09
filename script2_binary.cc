@@ -1,6 +1,6 @@
-/* Script @version 0.x
+/* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /script_binary.cc
+@file    /script2_binary.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License. */
 #include <cmath>
 
 namespace _ {
-char HexNibbleToUpperCase(uint8_t b) {
+char HexNibbleToUpperCase(UI1 b) {
   b = b & 0xf;
   if (b > 9) return b + ('A' - 10);
   return b + '0';
@@ -28,7 +28,7 @@ char HexNibbleToUpperCase(uint8_t b) {
 #if SEAM >= _0_0_0__01
 namespace _ {
 /*
-int StringLength(uint64_t value) {
+int StringLength(UI8 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
@@ -52,17 +52,17 @@ int StringLength(uint64_t value) {
 }
 
 template <typename Char>
-Char* PrintMod10(Char* cursor, Char* end, uint32_t value) {
+Char* PrintMod10(Char* cursor, Char* end, UI4 value) {
   if (!cursor || cursor >= end) return nullptr;
 
-  uint32_t length;
+  UI4 length;
   if (value < 10) {
     if (cursor + 1 >= end) return nullptr;
     *cursor = '0' + value;
     *(cursor + 1) = 0;
     return cursor + 1;
   } else if (value < 100) {
-    uint32_t ten = 10;
+    UI4 ten = 10;
     length = value / 10;
 
   } else if (value < 1000)
@@ -87,16 +87,16 @@ Char* PrintMod10(Char* cursor, Char* end, uint32_t value) {
     length = 12;
   Char* stop = cursor + length - 1;
   if (stop >= end) return nullptr;
-  uint32_t ten = 10;
+  UI4 ten = 10;
   while (length > 0) {
-    uint32_t scalar = value / ten;
+    UI4 scalar = value / ten;
   }
 } */
 
-// char* PrintMod10(char* cursor, char* end, uint64_t value);
+// char* PrintMod10(char* cursor, char* end, UI8 value);
 
 #if CPU_ENDIAN == LITTLE_ENDIAN
-static const uint16_t kDigits00To99[100] = {
+static const UI2 kDigits00To99[100] = {
     0x3030, 0x3130, 0x3230, 0x3330, 0x3430, 0x3530, 0x3630, 0x3730, 0x3830,
     0x3930, 0x3031, 0x3131, 0x3231, 0x3331, 0x3431, 0x3531, 0x3631, 0x3731,
     0x3831, 0x3931, 0x3032, 0x3132, 0x3232, 0x3332, 0x3432, 0x3532, 0x3632,
@@ -111,7 +111,7 @@ static const uint16_t kDigits00To99[100] = {
     0x3939,
 };
 #else
-static const uint16_t kDigits00To99[100] = {
+static const UI2 kDigits00To99[100] = {
     0x3030, 0x3031, 0x3032, 0x3033, 0x3034, 0x3035, 0x3036, 0x3037, 0x3038,
     0x3039, 0x3130, 0x3131, 0x3132, 0x3133, 0x3134, 0x3135, 0x3136, 0x3137,
     0x3138, 0x3139, 0x3230, 0x3231, 0x3232, 0x3233, 0x3234, 0x3235, 0x3236,
@@ -130,7 +130,7 @@ static const uint16_t kDigits00To99[100] = {
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const int16_t kCachedPowersE[] = {
+static const SI2 kCachedPowersE[] = {
     -1220, -1193, -1166, -1140, -1113, -1087, -1060, -1034, -1007, -980, -954,
     -927,  -901,  -874,  -847,  -821,  -794,  -768,  -741,  -715,  -688, -661,
     -635,  -608,  -582,  -555,  -529,  -502,  -475,  -449,  -422,  -396, -369,
@@ -143,7 +143,7 @@ static const int16_t kCachedPowersE[] = {
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const uint64_t kCachedPowersF[] = {
+static const UI8 kCachedPowersF[] = {
     0xfa8fd5a0081c0288, 0xbaaee17fa23ebf76, 0x8b16fb203055ac76,
     0xcf42894a5dce35ea, 0x9a6bb0aa55653b2d, 0xe61acf033d1a45df,
     0xab70fe17c79ac6ca, 0xff77b1fcbebcdc4f, 0xbe5691ef416bd60c,
@@ -174,74 +174,73 @@ static const uint64_t kCachedPowersF[] = {
     0xbf21e44003acdd2d, 0x8e679c2f5e44ff8f, 0xd433179d9c8cb841,
     0x9e19db92b4e31ba9, 0xeb96bf6ebadf77d9, 0xaf87023b9bf0ee6b};
 
-static const uint32_t kIEEE754Pow10[] = {
-    0,      1,       10,       100,       1000,      10000,
-    100000, 1000000, 10000000, 100000000, 1000000000};
+static const UI4 kIEEE754Pow10[] = {0,        1,         10,        100,
+                                    1000,     10000,     100000,    1000000,
+                                    10000000, 100000000, 1000000000};
 
 #endif  //<  #if SEAM >= _0_0_0__03
 
-const uint16_t* BinaryLUTDecimals() { return kDigits00To99; }
+const UI2* BinaryLUTDecimals() { return kDigits00To99; }
 
-uint8_t Unsigned(int8_t value) { return (uint8_t)(value); }
+UI1 Unsigned(SI1 value) { return (UI1)(value); }
 
-uint16_t Unsigned(int16_t value) { return (uint16_t)(value); }
+UI2 Unsigned(SI2 value) { return (UI2)(value); }
 
-uint32_t Unsigned(int32_t value) { return (uint32_t)(value); }
+UI4 Unsigned(SI4 value) { return (UI4)(value); }
 
-uint64_t Unsigned(int64_t value) { return (uint64_t)(value); }
+UI8 Unsigned(SI8 value) { return (UI8)(value); }
 
-uint8_t Negative(int8_t value) { return (uint8_t)(-value); }
+UI1 Negative(SI1 value) { return (UI1)(-value); }
 
-uint8_t Negative(uint8_t value) { return (uint8_t)(-(int8_t)value); }
+UI1 Negative(UI1 value) { return (UI1)(-(SI1)value); }
 
-uint16_t Negative(int16_t value) { return (uint16_t)(-value); }
+UI2 Negative(SI2 value) { return (UI2)(-value); }
 
-uint16_t Negative(uint16_t value) { return (uint16_t)(-(int16_t)value); }
+UI2 Negative(UI2 value) { return (UI2)(-(SI2)value); }
 
-uint32_t Negative(int32_t value) { return (uint32_t)(-value); }
+UI4 Negative(SI4 value) { return (UI4)(-value); }
 
-uint32_t Negative(uint32_t value) { return (uint32_t)(-(int32_t)value); }
+UI4 Negative(UI4 value) { return (UI4)(-(SI4)value); }
 
-uint64_t Negative(int64_t value) { return (uint64_t)(-value); }
+UI8 Negative(SI8 value) { return (UI8)(-value); }
 
-uint64_t Negative(uint64_t value) { return (uint64_t)(-(int64_t)value); }
+UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
-bool IsNaN(int8_t value) {
-  return (value > NanUnsigned<int8_t>()) &&
-         (value > NanSigned<int8_t, uint8_t>());
+BOL IsNaN(SI1 value) {
+  return (value > NanUnsigned<SI1>()) && (value > NaNSigned<SI1, UI1>());
 }
 
-bool IsNaN(uint8_t value) { return value > NanUnsigned<uint8_t>(); }
+BOL IsNaN(UI1 value) { return value > NanUnsigned<UI1>(); }
 
-bool IsNaN(int16_t value) { return value > NanSigned<int16_t, uint16_t>(); }
+BOL IsNaN(SI2 value) { return value > NaNSigned<SI2, UI2>(); }
 
-bool IsNaN(uint16_t value) { return value > NanUnsigned<uint16_t>(); }
+BOL IsNaN(UI2 value) { return value > NanUnsigned<UI2>(); }
 
-bool IsNaN(int32_t value) { return value > NanSigned<int32_t, uint32_t>(); }
+BOL IsNaN(SI4 value) { return value > NaNSigned<SI4, UI4>(); }
 
-bool IsNaN(uint32_t value) { return value > NanUnsigned<uint32_t>(); }
+BOL IsNaN(UI4 value) { return value > NanUnsigned<UI4>(); }
 
-bool IsNaN(int64_t value) { return value > NanSigned<int64_t, uint64_t>(); }
+BOL IsNaN(SI8 value) { return value > NaNSigned<SI8, UI8>(); }
 
-bool IsNaN(uint64_t value) { return value > NanUnsigned<uint64_t>(); }
+BOL IsNaN(UI8 value) { return value > NanUnsigned<UI8>(); }
 
-char HexNibbleToLowerCase(uint8_t b) {
+char HexNibbleToLowerCase(UI1 b) {
   b = b & 0xf;
   if (b > 9) return b + ('a' - 10);
   return b + '0';
 }
 
-uint16_t HexByteToLowerCase(uint8_t b) {
-  uint16_t value = HexNibbleToLowerCase(b & 0xf);
+UI2 HexByteToLowerCase(UI1 b) {
+  UI2 value = HexNibbleToLowerCase(b & 0xf);
   value = value << 8;
   value |= HexNibbleToLowerCase(b >> 4);
   return value;
 }
 
-uint16_t HexByteToUpperCase(uint8_t b) {
-  uint16_t value = HexNibbleToUpperCase(b & 0xf);
+UI2 HexByteToUpperCase(UI1 b) {
+  UI2 value = HexNibbleToUpperCase(b & 0xf);
   value = value << 8;
-  uint16_t second_nibble = HexNibbleToUpperCase(b >> 4);
+  UI2 second_nibble = HexNibbleToUpperCase(b >> 4);
   value |= second_nibble;
   return value;
 }
@@ -262,7 +261,7 @@ int HexToByte(char c) {
   return c - '0';
 }
 
-int HexToByte(uint16_t h) {
+int HexToByte(UI2 h) {
   int lowerValue = HexToByte((char)(h >> 8));
 
   if (lowerValue < 0) return -1;
@@ -288,11 +287,11 @@ int HexToByte(uint16_t h) {
 #include <cstdio>
 
 namespace _ {
-const int16_t* BinaryLUTE() { return kCachedPowersE; }
+const SI2* BinaryLUTE() { return kCachedPowersE; }
 
-const uint64_t* BinaryLUTF() { return kCachedPowersF; }
+const UI8* BinaryLUTF() { return kCachedPowersF; }
 
-char* Print(char* cursor, char* end, float value) {
+char* Print(char* cursor, char* end, FLT value) {
   if (!cursor || cursor >= end) return nullptr;
   intptr_t size = end - cursor;
   PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, end, (int)size,
@@ -300,16 +299,16 @@ char* Print(char* cursor, char* end, float value) {
   int count = sprintf_s(cursor, end - cursor, "%f", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<float, uint32_t>::Print<char>(cursor, end, value);
+  // return TBinary<FLT, UI4>::Print<char>(cursor, end, value);
 }
 
-char* Print(char* cursor, char* end, double value) {
+char* Print(char* cursor, char* end, DBL value) {
   if (!cursor || cursor >= end) return nullptr;
   intptr_t size = end - cursor;
   int count = sprintf_s(cursor, size, "%lf", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<double, uint64_t>::Print<char>(cursor, end, value);
+  // return TBinary<DBL, UI8>::Print<char>(cursor, end, value);
 }
 
 template <typename Char>
@@ -328,33 +327,33 @@ const Char* StringFloatStop(const Char* cursor) {
   return stop;
 }
 
-const char* Scan(const char* cursor, float& value) {
+const char* Scan(const char* cursor, FLT& value) {
   int count = sscanf_s(cursor, "%f", &value);
   return StringFloatStop<char>(cursor);
 }
 
-const char* Scan(const char* cursor, double& value) {
+const char* Scan(const char* cursor, DBL& value) {
   int count = sscanf_s(cursor, "%lf", &value);
   return StringFloatStop<char>(cursor);
 }
 
 #if USING_UTF16
-char16_t* Print(char16_t* cursor, char16_t* end, float value) {
-  return TBinary<float, uint32_t>.Print<char16_t>(cursor, end, value);
+char16_t* Print(char16_t* cursor, char16_t* end, FLT value) {
+  return TBinary<FLT, UI4>.Print<char16_t>(cursor, end, value);
 }
 
-char16_t* Print(char16_t* cursor, char16_t* end, double value) {
-  return TBinary<double, uint64_t>.Print<char16_t>(cursor, end, value);
+char16_t* Print(char16_t* cursor, char16_t* end, DBL value) {
+  return TBinary<DBL, UI8>.Print<char16_t>(cursor, end, value);
 }
 #endif
 
 #if USING_UTF32
-char32_t* Print(char32_t* cursor, char32_t* end, float value) {
-  return TBinary<float, uint32_t>.Print<char32_t>(cursor, end, value);
+char32_t* Print(char32_t* cursor, char32_t* end, FLT value) {
+  return TBinary<FLT, UI4>.Print<char32_t>(cursor, end, value);
 }
 
-char32_t* Print(char32_t* cursor, char32_t* end, double value) {
-  return TBinary<double, uint64_t>.Print<char32_t>(cursor, end, value);
+char32_t* Print(char32_t* cursor, char32_t* end, DBL value) {
+  return TBinary<DBL, UI8>.Print<char32_t>(cursor, end, value);
 }
 #endif
 
@@ -362,45 +361,37 @@ int FloatDigitsMax() { return 15; }
 
 int DoubleDigitsMax() { return 31; }
 
-int MSbAsserted(uint8_t value) { return MSbAssertedReverse<uint8_t>(value); }
+int MSbAsserted(UI1 value) { return MSbAssertedReverse<UI1>(value); }
 
-int MSbAsserted(int8_t value) {
-  return MSbAssertedReverse<uint8_t>((uint64_t)value);
-}
+int MSbAsserted(SI1 value) { return MSbAssertedReverse<UI1>((UI8)value); }
 
-int MSbAsserted(uint16_t value) { return MSbAssertedReverse<uint16_t>(value); }
+int MSbAsserted(UI2 value) { return MSbAssertedReverse<UI2>(value); }
 
-int MSbAsserted(int16_t value) {
-  return MSbAssertedReverse<uint16_t>((uint64_t)value);
-}
+int MSbAsserted(SI2 value) { return MSbAssertedReverse<UI2>((UI8)value); }
 
-int MSbAsserted(uint32_t value) { return MSbAssertedReverse<uint32_t>(value); }
+int MSbAsserted(UI4 value) { return MSbAssertedReverse<UI4>(value); }
 
-int MSbAsserted(int32_t value) {
-  return MSbAssertedReverse<uint32_t>((uint64_t)value);
-}
+int MSbAsserted(SI4 value) { return MSbAssertedReverse<UI4>((UI8)value); }
 
-int MSbAsserted(uint64_t value) { return MSbAssertedReverse<uint64_t>(value); }
+int MSbAsserted(UI8 value) { return MSbAssertedReverse<UI8>(value); }
 
-int MSbAsserted(int64_t value) {
-  return MSbAssertedReverse<uint64_t>((uint64_t)value);
-}
+int MSbAsserted(SI8 value) { return MSbAssertedReverse<UI8>((UI8)value); }
 
-void FloatBytes(float value, char& byte_0, char& byte_1, char& byte_2,
+void FloatBytes(FLT value, char& byte_0, char& byte_1, char& byte_2,
                 char& byte_3) {
-  uint32_t ui_value = *reinterpret_cast<uint32_t*>(&value);
+  UI4 ui_value = *reinterpret_cast<UI4*>(&value);
   byte_0 = (char)(ui_value);
   byte_1 = (char)(ui_value >> 8);
   byte_2 = (char)(ui_value >> 16);
   byte_3 = (char)(ui_value >> 24);
 }
 
-char* Print(char* begin, uint16_t chars) {
+char* Print(char* begin, UI2 chars) {
 #if ALIGN_MEMORY
-  *reinterpret_cast<uint16_t*>(chars);
+  *reinterpret_cast<UI2*>(chars);
   return begin + 2;
 #else
-  *reinterpret_cast<uint16_t*>(chars);
+  *reinterpret_cast<UI2*>(chars);
   return begin + 2;
 #endif
 }
@@ -415,7 +406,7 @@ char* Print(char* begin, char byte_0, char byte_1) {
   begin[0] = byte_0;
   begin[1] = '\0';
 #else
-  *reinterpret_cast<uint16_t*>(begin) = byte_0 | (((uint16_t)byte_1) << 8);
+  *reinterpret_cast<UI2*>(begin) = byte_0 | (((UI2)byte_1) << 8);
 #endif
   return &begin[2];
 }
@@ -424,39 +415,36 @@ char* Print(char* begin, char* end, char byte_0, char byte_1, char byte_2) {
 #if ALIGN_MEMORY
   switch (reinterpret_cast<uintptr_t>(begin) & 3) {
     case 0: {
-      *reinterpret_cast<uint32_t*>(begin) =
-          ((uint32_t)byte_0) | ((uint32_t)byte_1) << 8 |
-          ((uint32_t)byte_1) << 16 | ((uint32_t)byte_1) << 24;
+      *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+                                       ((UI4)byte_1) << 16 |
+                                       ((UI4)byte_1) << 24;
       return &begin[4];
     }
     case 1: {
-      uint32_t* ptr = reinterpret_cast<uint32_t*>(begin) - 1;
-      uint32_t word = (*ptr) & ((uint32_t)0xff)
-                                   << 24;  //< Mask off byte_0 uint8_t.
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
       *ptr = word;
       begin[3] = 0;
       return &begin[4];
     }
     case 2: {
-      uint16_t ptr = *reinterpret_cast<uint16_t*>(begin);
-      *ptr++ = ((uint16_t)byte_0) | ((uint16_t)byte_1) << 8;
-      *ptr++ = ((uint16_t)byte_2) | ((uint16_t)byte_3) << 8;
+      UI2 ptr = *reinterpret_cast<UI2*>(begin);
+      *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
+      *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
       return reinterpret_cast<char*>(ptr);
     }
     case 3: {
       *begin = byte_0;
-      uint32_t* ptr = reinterpret_cast<uint32_t*>(begin) - 1;
-      uint32_t word = (*ptr) & ((uint32_t)0xff)
-                                   << 24;  //< Mask off byte_0 uint8_t.
-      word |= ((uint32_t)byte_0) | ((uint32_t)byte_0) << 8 |
-              ((uint32_t)byte_0) << 16;  //< OR together three.
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
+      word |= ((UI4)byte_0) | ((UI4)byte_0) << 8 |
+              ((UI4)byte_0) << 16;  //< OR together three.
       begin[3] = 0
     }
   }
 #else
-  *reinterpret_cast<uint32_t*>(begin) =
-      ((uint32_t)byte_0) | ((uint32_t)byte_1) << 8 | ((uint32_t)byte_1) << 16 |
-      ((uint32_t)byte_1) << 24;
+  *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+                                   ((UI4)byte_1) << 16 | ((UI4)byte_1) << 24;
 #endif
   return &begin[4];
 }
@@ -465,19 +453,19 @@ char* Print(char* begin, char* end, char byte_0, char byte_1, char byte_2) {
 
 constexpr intptr_t IEEE754LutElementCount() { return 87; }
 
-const int16_t* IEEE754Pow10E() {
+const SI2* IEEE754Pow10E() {
   /* Precomputed powers of 10 exponents for Grisu. */
   return kCachedPowersE;
 }
 
-const uint64_t* IEEE754Pow10F() { return kCachedPowersF; }
+const UI8* IEEE754Pow10F() { return kCachedPowersF; }
 
 void BinaryLUTAlignedGenerate(char* lut, size_t size) {
   ASSERT(size);
   intptr_t iee754_pow_10_count = IEEE754LutElementCount();
   if (size != ((100 + iee754_pow_10_count) * 2 + iee754_pow_10_count * 8))
     return;
-  uint16_t* ui2_ptr = reinterpret_cast<uint16_t*>(lut);
+  UI2* ui2_ptr = reinterpret_cast<UI2*>(lut);
 
   for (char tens = '0'; tens <= '9'; ++tens)
     for (int ones = '0'; ones <= '9'; ++ones)
@@ -489,42 +477,42 @@ void BinaryLUTAlignedGenerate(char* lut, size_t size) {
 
   for (int i = 0; i < 87; ++i) *ui2_ptr = IEEE754Pow10E()[i];
 
-  uint64_t* ui8_ptr = reinterpret_cast<uint64_t*>(ui2_ptr);
+  UI8* ui8_ptr = reinterpret_cast<UI8*>(ui2_ptr);
 
   for (int i = 0; i < 87; ++i) *ui8_ptr = IEEE754Pow10F()[i];
 }
 
-const uint16_t* DigitsLut(const char* puff_lut) {
-  return reinterpret_cast<const uint16_t*>(puff_lut);
+const UI2* DigitsLut(const char* puff_lut) {
+  return reinterpret_cast<const UI2*>(puff_lut);
 }
 
-const uint16_t* PuffLutExponents(char* puff_lut) {
-  return reinterpret_cast<const uint16_t*>(puff_lut + 200);
+const UI2* PuffLutExponents(char* puff_lut) {
+  return reinterpret_cast<const UI2*>(puff_lut + 200);
 }
 
-const uint64_t* PufLutPow10(char* puff_lut) {
-  return reinterpret_cast<const uint64_t*>(puff_lut + 374);
+const UI8* PufLutPow10(char* puff_lut) {
+  return reinterpret_cast<const UI8*>(puff_lut + 374);
 }
 
-uint32_t Value(float value) { return *reinterpret_cast<uint32_t*>(&value); }
+UI4 Value(FLT value) { return *reinterpret_cast<UI4*>(&value); }
 
-uint64_t Value(double value) { return *reinterpret_cast<uint64_t*>(&value); }
+UI8 Value(DBL value) { return *reinterpret_cast<UI8*>(&value); }
 
-bool IsNaNPositive(int8_t value) { return value > NanUnsigned<int8_t>(); }
+BOL IsNaNPositive(SI1 value) { return value > NanUnsigned<SI1>(); }
 
-bool IsNaNNegative(int8_t value) { return value > NanUnsigned<int8_t>(); }
+BOL IsNaNNegative(SI1 value) { return value > NanUnsigned<SI1>(); }
 
-bool IsNaN(float value) { return isnan(value); }
+BOL IsNaN(FLT value) { return isnan(value); }
 
-bool IsNaN(double value) { return isnan(value); }
+BOL IsNaN(DBL value) { return isnan(value); }
 
-bool IsFinite(float value) { return isfinite(value); }
+BOL IsFinite(FLT value) { return isfinite(value); }
 
-bool IsFinite(double value) { return isfinite(value); }
+BOL IsFinite(DBL value) { return isfinite(value); }
 
-bool IsInfinite(float value) { return isinf(value); }
+BOL IsInfinite(FLT value) { return isinf(value); }
 
-bool IsInfinite(double value) { return isinf(value); }
+BOL IsInfinite(DBL value) { return isinf(value); }
 
 /* Masks the lower bits using faster bit shifting.
 @brief The algorithm has you enter the highest bit rather than bit count because
@@ -563,41 +551,33 @@ I PowerOf2(I n) {
   return value << n;
 }
 
-uint64_t ComputePow10(int e, int alpha, int gamma) {
-  double pow_10 = 0.30102999566398114,  //< 1/lg(10)
-      alpha_minus_e_plus_63 = static_cast<double>(alpha - e + 63),
-         ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
-  return *reinterpret_cast<uint64_t*>(&pow_10);
+UI8 ComputePow10(int e, int alpha, int gamma) {
+  DBL pow_10 = 0.30102999566398114,  //< 1/lg(10)
+      alpha_minus_e_plus_63 = static_cast<DBL>(alpha - e + 63),
+      ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
+  return *reinterpret_cast<UI8*>(&pow_10);
 }
 
-double Ceiling(double value) { return ceil(value); }
+DBL Ceiling(DBL value) { return ceil(value); }
 
-float Ceiling(float value) { return ceil(value); }
+FLT Ceiling(FLT value) { return ceil(value); }
 
 char* LastByte(char* c) { return c; }
 
 #if USING_UTF16
 char* LastByte(char16_t* c) { return reinterpret_cast<char*> + 1; }
 
-char16_t* Print(char16_t* cursor, char16_t* end, float value) {
-  return nullptr;
-}
+char16_t* Print(char16_t* cursor, char16_t* end, FLT value) { return nullptr; }
 
-char16_t* Print(char16_t* cursor, char16_t* end, double value) {
-  return nullptr;
-}
+char16_t* Print(char16_t* cursor, char16_t* end, DBL value) { return nullptr; }
 #endif
 
 #if USING_UTF32
 char* LastByte(char32_t* c) { return reinterpret_cast<char*> + 3; }
 
-char32_t* Print(char32_t* cursor, char32_t* end, float value) {
-  return nullptr;
-}
+char32_t* Print(char32_t* cursor, char32_t* end, FLT value) { return nullptr; }
 
-char32_t* Print(char32_t* cursor, char32_t* end, double value) {
-  return nullptr;
-}
+char32_t* Print(char32_t* cursor, char32_t* end, DBL value) { return nullptr; }
 #endif
 
 }  // namespace _

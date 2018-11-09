@@ -72,13 +72,13 @@ class Wall {
   int OpenDoor(Door* door);
 
   /* Deletes the Door from the Door at the given index. */
-  bool CloseDoor(int index);
+  BOL CloseDoor(int index);
 
   /* Prints the given Door to the stdout. */
   Slot& Print(Slot& slot);
 
  private:
-  bool is_dynamic_;       //< Flag for if using dynamic memory.
+  BOL is_dynamic_;       //< Flag for if using dynamic memory.
   size_t size_bytes_;     //< Size of the Wall in bytes.
   uintptr_t* begin;       //< The Wall's buffer.
   CArray<Door*>* doors_;  //< The doors in the room.
