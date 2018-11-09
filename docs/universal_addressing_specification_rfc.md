@@ -1,7 +1,7 @@
 SCRIPT Specification Experimental RFC
 =====================================
 
-# 4. Universal Addressing Specification
+# 3. Universal Addressing Specification
 
 **Universal Addressing** or UA is a method of conveying physical addresses and Internet Protocol Addressing that works identically on every planet or spherical object. Before we talk about a UA it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.
 
@@ -71,6 +71,8 @@ All address ranges with (longitude greater than +180 or less than -180) and (lat
 
 All off-planet signs are routed using the UAF Height Value of all logic level 1(s). For a 5-byte packet, this is a value of -16. When this Height is detected, the signal gets routed to one of 64800 possible directions based on 360 degrees longitude times 180 latitude. Currently, no starships exist for this task but they are being designed by the Kabuki Starship team; the open-source organization behind Script.
 
-## 3.5 1 Binary Degree Grid Routing
+## 3.4 1 Binary Degree Grid Routing
 
 It is not possible for any router to be located at the exact center of a 1 degree latitude by 1 degree longitude grid, nor does it need to be because there are a manageably small number of fiber optics cables to route and thus the center of the grid is defined as the fastest internet connection in that Degree Grid. All other organizations that provide the internet backbone are then referenced again in polar coordinates from the Degree Grid Reference
+
+[<< Previous](script_sdnp_specification_rfc.md) **|** [Next >>](universal_addressing_specification_rfc.md)

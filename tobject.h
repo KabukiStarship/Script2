@@ -128,7 +128,7 @@ inline SI ObjCountRound(SI count) {
                           ? 7
                           : (sizeof(SI) == 4) ? 3 : (sizeof(SI) == 2) ? 1 : 0,
   };
-  SI count_aligned = AlignUpSigned<SI>(count);
+  return AlignUpSigned<SI>(count);
 }
 
 /* Clones the other ASCII OBJ. */

@@ -1,6 +1,6 @@
-# Script
+# Script^2
 
-Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively refereed to as Script, that are built on the Chinese Room Abstract Stack Machine (Crabs) and SCRIPT Software-defined Networking Protocol.
+Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively refereed to as Script, that are built on the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Software-defined Networking Protocol, and SCRIPT Script (Script^2 or Script2).
 
 ## Quick Links
 

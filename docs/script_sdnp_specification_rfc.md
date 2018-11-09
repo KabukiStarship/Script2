@@ -623,3 +623,5 @@ The Target shall be certified to be a Script Automaton if the Target does not su
 ### 3.13.b Group Automata
 
 The Target shall be certified as a Group Automata if the Target supports Script^2.
+
+[<< Previous](universal_addressing_specification_rfc.md) **|** [Beginning <<](script_specification_rfc.md)
