@@ -548,7 +548,7 @@ Note that when the code wraps in this example, both of the `&&` logical AND oper
 
 Do not needlessly surround the `return` expression with parentheses.
 
-Use parentheses in `return expr;` only where you would use them in `x = expr;`.
+Use parentheses in `return crabs;` only where you would use them in `x = crabs;`.
 
 ```C++
 return result;                  // No parentheses in the simple case.

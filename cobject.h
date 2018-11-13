@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /cobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -15,25 +15,24 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__02
-
 #ifndef INCLUDED_SCRIPTCOBJECT
 #define INCLUDED_SCRIPTCOBJECT
 
 #include "csocket.h"
 #include "ctest.h"
 
-typedef uintptr_t* (*HeapManager)(uintptr_t* buffer);
+typedef UIW* (*AsciiFactory)(UIW* buffer, SIW size);
 
 namespace _ {
 
-/* C header for an ASCII kOBJ with programmable destructor. */
+/* C header for an ASCII OBJ with programmable destructor. */
 struct CObject {
-  uintptr_t* begin;     //< Pointer to the contiguous ASCII kOBJ.
-  HeapManager manager;  //< Pointer to the destructor.
+  UIW* begin;            //< Pointer to the contiguous ASCII OBJ.
+  AsciiFactory factory;  //< ASCII OBJ Factory function pointer.
 };
 
-/* Deletes the given objects dynamic memory if any is used. */
-API inline void Delete(CObject obj);
+/* ASCII OBJ Factory. */
+API void Destruct(CObject obj);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
@@ -63,17 +62,17 @@ API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 8. */
 API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
-/* Clones the given ASCII kOBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, SI1 size);
+/* Clones the given ASCII OBJ. */
+API UIW* ObjClone(UIW* ascii_object, SI1 size);
 
-/* Clones the given ASCII kOBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, SI2 size);
+/* Clones the given ASCII OBJ. */
+API UIW* ObjClone(UIW* ascii_object, SI2 size);
 
-/* Clones the given ASCII kOBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, SI4 size);
+/* Clones the given ASCII OBJ. */
+API UIW* ObjClone(UIW* ascii_object, SI4 size);
 
-/* Clones the given ASCII kOBJ. */
-API uintptr_t* ObjClone(uintptr_t* ascii_object, SI8 size);
+/* Clones the given ASCII OBJ. */
+API UIW* ObjClone(UIW* ascii_object, SI8 size);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02

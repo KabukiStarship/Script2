@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    \kabuki\f2\ttest.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    \ttest.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -19,20 +19,19 @@ specific language governing permissions and limitations under the License. */
 
 #include "ctest.h"
 
-#include "cconsole.h"
+#include "csio.h"
 #include "tbinary.h"
 
 namespace _ {
 
 template <TestCase... N>
-const char* TestTree(char* seam_log, char* seam_end, const char* args) {
+const char* TTestTree(char* seam_log, char* seam_end, const char* args) {
   static TestCase nodes[sizeof...(N)] = {N...};
   return TestTree(seam_log, seam_end, args, nodes, sizeof...(N));
 }
 
 template <TestCase... N>
-int SeamTreeTest(int arg_count, char** args, char* seam_log,
-                 int seam_log_size) {
+int TTestTree(int arg_count, char** args, char* seam_log, int seam_log_size) {
   static TestCase tests[sizeof...(N)] = {N...};
   return SeamTreeTest(arg_count, args, seam_log, seam_log_size, tests,
                       sizeof...(N));

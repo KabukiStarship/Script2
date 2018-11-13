@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /cclock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -164,32 +164,32 @@ API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
 
 #if USING_UTF8
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char* Print(char* begin, char* end, const CClock& clock);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param end   The end of the write buffer.
 @param t     The 64-bit stopwatch timestamp. */
 API char* Print(char* begin, char* end, Tss& t);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char* PrintTime(char* begin, char* end, TMS time);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
@@ -226,7 +226,7 @@ API void PrintTime(TME t);
 @param hour   The location to write the number of hours to.
 @param minute The location to write the number of minutes to.
 @param Second The location to write the number of seconds to. */
-API const char* StringScanTime(const char* string, int& hour, int& minute,
+API const char* TStringScanTime(const char* string, int& hour, int& minute,
                                int& second);
 
 /* Converts a keyboard input to char and deletes the char.
@@ -239,42 +239,42 @@ API const char* Scan(const char* string, CClock& clock);
 API const char* Scan(const char* string, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char* StringScanTime(const char* string, TMS& result);
+API const char* TStringScanTime(const char* string, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char* StringScanTime(const char* string, TME& result);
+API const char* TStringScanTime(const char* string, TME& result);
 
 #endif  //< #if USING_UTF8
 
 #if USING_UTF16
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char16_t* Print(char16_t* begin, char16_t* end, CClock& clock);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char16_t* Print(char16_t* begin, char16_t* end, Tss& t);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char16_t* PrintTime(char16_t* begin, char16_t* end, TMS time);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
@@ -301,7 +301,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, TME time);
 @param hour   The location to write the number of hours to.
 @param minute The location to write the number of minutes to.
 @param Second The location to write the number of seconds to. */
-API const char16_t* StringScanTime(const char16_t* string, int& hour,
+API const char16_t* TStringScanTime(const char16_t* string, int& hour,
                                    int& minute, int& second);
 
 /* Converts a keyboard input to char16_t and deletes the char16_t.
@@ -314,40 +314,40 @@ API const char16_t* Scan(const char16_t* string, CClock& result);
 API const char16_t* Scan(const char16_t* string, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char16_t* StringScanTime(const char16_t* string, TMS& result);
+API const char16_t* TStringScanTime(const char16_t* string, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char16_t* StringScanTime(const char16_t* string, TME& result);
+API const char16_t* TStringScanTime(const char16_t* string, TME& result);
 
 #endif  //< #if USING_UTF16
 #if USING_UTF32
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, CClock& clock);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, Tss& time);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* PrintTime(char32_t* begin, char32_t* end, TMS time);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
@@ -373,7 +373,7 @@ API char32_t* PrintTime(char32_t* begin, char32_t* end, TME time);
 @16:20:00
 @endcode
 */
-API const char32_t* StringScanTime(const char32_t* input, int& hour,
+API const char32_t* TStringScanTime(const char32_t* input, int& hour,
                                    int& minute, int& second);
 
 /* Converts a keyboard input to char and deletes the char.
@@ -384,10 +384,10 @@ API const char32_t* Scan(const char32_t* input, CClock& time);
 API const char32_t* Scan(const char32_t* input, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char32_t* StringScanTime(const char32_t* input, TMS& result);
+API const char32_t* TStringScanTime(const char32_t* input, TMS& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char32_t* StringScanTime(const char32_t* input, TME& result);
+API const char32_t* TStringScanTime(const char32_t* input, TME& result);
 
 #endif  //< #if USING_UTF32
 }  // namespace _

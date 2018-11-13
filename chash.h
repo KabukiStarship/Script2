@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /hash.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /chash.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the

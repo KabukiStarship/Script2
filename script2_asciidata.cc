@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_ascii_data.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -38,7 +38,7 @@ TypeValue::TypeValue(type_t type, const void* value)
   // Nothing to do here! (:-)-+=<
 }
 
-uint_t TypeFixedSize(uint_t type) {
+UIT TypeFixedSize(UIT type) {
   static const SI1 kWidths[] = {
       0,   //< kNIL: 0
       1,   //< kSI1: 1
@@ -61,7 +61,7 @@ uint_t TypeFixedSize(uint_t type) {
   };
   type_t type_upper_bits = type >> 3;
   type &= 0x1f;
-  if (type == kUIX) return ((uint_t)2) << type_upper_bits;
+  if (type == kUIX) return ((UIT)2) << type_upper_bits;
   if (type > kOBJ) return -1;
   return kWidths[type];
 }
@@ -70,20 +70,20 @@ const char** TypeStrings() { return TypeStrings<char>(); }
 
 const char* TypeString(type_t type) { return TypeStrings()[type & 0x1f]; }
 
-const char* TypeString(uint_t type) { return TypeString((UI1)type); }
+const char* TypeString(UIT type) { return TypeString((UI1)type); }
 
 UI1 TypeMask(UI1 value) { return value & 0x1f; }
 
-BOL TypeIsArray(uint_t type) { return type >= kTypeCount; }
+BOL TypeIsArray(UIT type) { return type >= kTypeCount; }
 
-BOL TypeIsSet(uint_t type) { return type >= kTypeCount; }
+BOL TypeIsSet(UIT type) { return type >= kTypeCount; }
 
 void* TypeAlign(type_t type, void* value) {
   ASSERT(value);
   if (type == 0) return nullptr;
   if (!TypeIsValid(type)) return nullptr;
 
-  uint_t size = TypeFixedSize(type);
+  UIT size = TypeFixedSize(type);
   if (type <= kUI1) return value;
   type_t* value_ptr = reinterpret_cast<type_t*>(value);
 #if WORD_SIZE == 2
@@ -112,7 +112,7 @@ inline char* WriteString(char* begin, char* end, const void* value) {
   begin = AlignUpPointer<char>(begin);
   if (end - begin < 2 * sizeof(UI)) return nullptr;
   const Char* source = reinterpret_cast<const Char*>(value);
-  UI length = StringLength<UI, Char>(source);
+  UI length = TStringLength<UI, Char>(source);
   UI* target = reinterpret_cast<UI*>(begin);
   *target++ = length;
   return SocketCopy(target, end, value, length + sizeof(Char));
@@ -165,28 +165,28 @@ char* Write(char* begin, char* end, type_t type, const void* value) {
   if (TypeIsString(type)) {
     switch (type >> 6) {
       case 0:
-        return Print<char>(begin, end, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 1:
-        return Print<char>(begin, end, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 2:
-        return Print<char>(begin, end, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 3:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
                             reinterpret_cast<UI2*>(end),
                             reinterpret_cast<const UI2*>(value)));
       case 4:
-        return Print<char>(begin, end, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 5:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
                             reinterpret_cast<UI2*>(end),
                             reinterpret_cast<const UI2*>(value)));
       case 6:
-        return Print<char>(begin, end, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 7:
         return reinterpret_cast<char*>(
-            Print<char16_t>(reinterpret_cast<UI2*>(begin),
+            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
                             reinterpret_cast<UI2*>(end),
                             reinterpret_cast<const UI2*>(value)));
     }
@@ -225,7 +225,7 @@ inline int TypeSizeWidthCode(type_t type) { return type >> 6; }
 #if USING_UTF8
 namespace _ {
 char* Print(char* begin, char* end, type_t type, const void* value) {
-  return Print<char>(begin, end, type, value);
+  return TPrint<char>(begin, end, type, value);
 }  //< namespace _
 _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
@@ -235,7 +235,7 @@ _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& item) {
 namespace _ {
 char16_t* Print(char16_t* begin, char16_t* end, type_t type,
                 const void* value) {
-  return Print<char16_t>(begin, end, type, value);
+  return TPrint<char16_t>(begin, end, type, value);
 }
 }  // namespace _
 _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
@@ -246,12 +246,12 @@ _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
 namespace _ {
 char32_t* Print(char32_t* begin, char32_t* end, type_t type,
                 const void* value) {
-  return Print<char32_t>(begin, end, type, value);
+  return TPrint<char32_t>(begin, end, type, value);
 }
 }  // namespace _
 _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
 }
 #endif
-#include "test_footer.inl"
+
 #endif  //< #if SEAM >= _0_0_0__12

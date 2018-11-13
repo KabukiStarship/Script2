@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /global.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -18,25 +18,25 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTGLOBAL 1
 
 #if SEAM == _0_0_0__00
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 #endif
 #if SEAM == _0_0_0__01
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 #endif
 #if SEAM == _0_0_0__02
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
 #if SEAM == _0_0_0__03
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
 #if SEAM == _0_0_0__04
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 #include "tclock.h"
 #endif

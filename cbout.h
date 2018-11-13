@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/bout.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /bout.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -34,9 +34,9 @@ typedef enum BOutStates {
 
 /* B-Output ring buffer socket. */
 struct API BOut {
-  uint_t size;            //< Size of the B-Output.
-  volatile uint_t start;  //< Starting index of the ring-buffer data.
-  uint_t stop,            //< Stopping index of the ring-buffer data.
+  UIT size;            //< Size of the B-Output.
+  volatile UIT start;  //< Starting index of the ring-buffer data.
+  UIT stop,            //< Stopping index of the ring-buffer data.
       read;               //< Address that the BOut device is reading from.
 };
 
@@ -51,27 +51,27 @@ API const char** BOutStateStrings();
 #endif
 
 /* Initializes the B-Output buffer with the given buffer size. */
-API BOut* BOutInit(uintptr_t* buffer, uint_t size);
+API BOut* BOutInit(UIW* buffer, UIT size);
 
 /* Calculates the space left in the given ring buffer.
     @param  bout The B-Output buffer. */
-API uint_t BOutSpace(BOut* bout);
+API UIT BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-API uint_t BOutBufferLength(BOut* bout);
+API UIT BOutBufferLength(BOut* bout);
 
 /* Gets the end address of the tx buffer. */
 API char* BOutEndAddress(BOut* bout);
 
-/* Streams a B-Output byte.
-    @param bout A B-Output abstract byte stream. */
+/* Streams a B-Output UI1.
+    @param bout A B-Output abstract UI1 stream. */
 API int BOutStreamByte(BOut* bout);
 
 /* Writes a message with the given params to the given B-Output slot.
     @param bout   The B-Output socket to write to.
     @param params The escape sequence to write.
     @param args   The array of pointers to the stuff to write. */
-API const Op* BOutWrite(BOut* bout, const uint_t* params, void** args);
+API const Op* BOutWrite(BOut* bout, const UIT* params, void** args);
 
 /* Sends a connection message to the given address. */
 API const Op* BOutConnect(BOut* bout, const char* address);

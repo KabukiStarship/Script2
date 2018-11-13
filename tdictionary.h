@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /libraries/f2/dictionary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -85,9 +85,9 @@ namespace _ {
   |==========================|   |     |
   |_______ count_max         |   |     |
   |_______ ...               |   |     |
-  |_______ Type byte N       |   |     |
+  |_______ Type UI1 N       |   |     |
   |_______ ...               |   |     |
-  |        Type byte 1       |   |     |   ^ Up in addresses
+  |        Type UI1 1       |   |     |   ^ Up in addresses
   |==========================|   |     |   |
   |  TMapKey<UI, SI> Struct  |   v     v   ^
   +==========================+ ----------- ^ 0xN
@@ -114,7 +114,7 @@ namespace _ {
 
   # Hash Table Collisions.
   Because there are no pointers in Script collections, the hash tables are
-  done using using a nil-terminated list in the Collision List. In the
+  done using a nil-terminated list in the Collision List. In the
 
   # Use Case Scenario
   We are creating a plug-in API. We need to create a dictionary in the API
@@ -158,7 +158,7 @@ using Dic4 = Dictionary<SI2, UI2, UI4>;
 using Dic8 = Dictionary<SI4, UI4, UI8>;
 
 template <typename UI, typename SI, typename I>
-constexpr uint_t DicOverheadPerIndex() {
+constexpr UIT DicOverheadPerIndex() {
   return sizeof(2 * sizeof(I) + sizeof(SI) + sizeof(UI) + 3);
 };
 
@@ -171,7 +171,7 @@ enum {
   kMaxNumMappingsDic2 = 255,                //< The number of pages in a Dic2.
   kMaxNumMappingsDic4 = 8 * 1024,           //< The number of pages in a Dic4.
   kMaxNumMappingsDic8 = 256 * 1024 * 1024,  //< The number of pages in a Dic8.
-  kOverheadPerDic2Index = DicOverheadPerIndex<byte, UI2, UI2>(),
+  kOverheadPerDic2Index = DicOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerDic4Index = DicOverheadPerIndex<UI2, UI2, UI4>(),
   kOverheadPerDic8Index = DicOverheadPerIndex<UI4, UI4, UI8>(),
 };
@@ -182,13 +182,12 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4. */
 template <typename UI, typename SI, typename I>
-Dictionary<UI, SI, I>* DictionaryInit(uintptr_t* buffer, byte max_size,
+Dictionary<UI, SI, I>* DictionaryInit(UIW* buffer, UI1 max_size,
                                       UI2 table_size, UI2 size) {
   ASSERT(buffer);
   if (table_size >= (size - sizeof(Dictionary<UI, SI, I>))) return nullptr;
-  if (table_size <
-      sizeof(Dictionary<UI, SI, I>) +
-          max_size * (DicOverheadPerIndex<byte, UI2, UI2>() + 2))
+  if (table_size < sizeof(Dictionary<UI, SI, I>) +
+                       max_size * (DicOverheadPerIndex<UI1, UI2, UI2>() + 2))
     return nullptr;
 
   Dictionary<UI, SI, I>* dictionary =
@@ -201,12 +200,9 @@ Dictionary<UI, SI, I>* DictionaryInit(uintptr_t* buffer, byte max_size,
   return dictionary;
 }
 
-Dictionary<UI2, UI2, SI1>* DictionaryInit(uintptr_t* buffer,
-                                                       UI1 max_size,
-                                                       UI2 table_size,
-                                                       UI2 size) {
-  return DictionaryInit<UI2, UI2, SI1>(buffer, max_size,
-                                                    table_size, size);
+Dictionary<UI2, UI2, SI1>* DictionaryInit(UIW* buffer, UI1 max_size,
+                                          UI2 table_size, UI2 size) {
+  return DictionaryInit<UI2, UI2, SI1>(buffer, max_size, table_size, size);
 }
 
 /* Insets the given key-value pair.
@@ -397,7 +393,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
         // Get offset to write the key too.
         value = key_offsets[item_count - 1] + key_length + 1;
 
-        byte collision_index = unsorted_indexes[mid];
+        UI1 collision_index = unsorted_indexes[mid];
         PRINTF("\n\ncollision_index: %u", collision_index)
 
         SlotWrite(keys - value, key);
@@ -408,8 +404,8 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
         key_offsets[item_count] = value;
 
         size_pile = dictionary->size_pile;
-        indexes[mid] = static_cast<byte>(size_pile);
-        indexes[item_count] = static_cast<byte>(size_pile);
+        indexes[mid] = static_cast<UI1>(size_pile);
+        indexes[item_count] = static_cast<UI1>(size_pile);
 
         // Insert the collision into the collision table.
         temp_ptr = &collission_list[size_pile];
@@ -421,7 +417,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
         ++temp_ptr;
         *temp_ptr = ~0;
         dictionary->size_pile = size_pile + 3;
-        //< Added one term-byte and two indexes.
+        //< Added one term-UI1 and two indexes.
 
         // Add the newest key at the end.
         indexes[item_count] = item_count;
@@ -496,8 +492,8 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
 }
 
 /* Adds a key-value pair to the end of the dictionary. */
-// byte Add2 (Dic2* dictionary, const char* key, byte data) {
-//    return DicAdd<byte, UI2, UI2, UI2> (dictionary, key, kUI1,
+// UI1 Add2 (Dic2* dictionary, const char* key, UI1 data) {
+//    return DicAdd<UI1, UI2, UI2, UI2> (dictionary, key, kUI1,
 //    &data);
 //}
 
@@ -709,7 +705,7 @@ void DictionaryWipe(Dictionary<UI, SI, I>* dictionary) {
   memset(dictionary, 0, size);
 }
 
-/* Returns true if this expr contains only the given address. */
+/* Returns true if this crabs contains only the given address. */
 template <typename UI, typename SI, typename I>
 void* DicContains(Dictionary<UI, SI, I>* dictionary, void* data) {
   ASSERT(dictionary)
@@ -724,7 +720,7 @@ void* DicContains(Dictionary<UI, SI, I>* dictionary, void* data) {
 /* Removes that object from the dictionary and copies it to the destination. */
 template <typename UI, typename SI, typename I>
 BOL DicRemoveCopy(Dictionary<UI, SI, I>* dictionary, void* destination,
-                   size_t buffer_size, void* data) {
+                  size_t buffer_size, void* data) {
   ASSERT(dictionary)
 
   return false;
@@ -745,6 +741,6 @@ UTF8& DicPrint(UTF8& print, Dictionary<UI, SI, I>* dictionary) {
 }
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTBOOK
 #endif  //< #if SEAM >= _0_0_0__12

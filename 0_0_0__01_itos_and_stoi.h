@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /0_0_0__01_itos_and_stoi.h
 @author  Cale McCollough <calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -129,7 +129,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   for (int i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(buffer, kSize, FORMAT_UI8, expected_ui8);
-    const char* test = ScanUnsigned<UI8, char>(buffer, result_ui8);
+    const char* test = TScanUnsigned<UI8, char>(buffer, result_ui8);
     ASSERT(test);
     AVOW(expected_ui8, result_ui8);
   }
@@ -146,17 +146,16 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     expected_ui8 = problem_children[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
-           StringLength<>(expecting));
-    result =
-        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+           TStringLength<>(expecting));
+    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
     }
     *result = 0;
-    if (StringCompare<>(expecting, text)) {
+    if (TStringCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, StringLength<>(expecting), text, StringLength<>(text));
+             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
     }
   }
 
@@ -167,8 +166,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     expected_ui8 = test_value[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) ", i + 1);
-    result =
-        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
@@ -176,7 +174,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     *result = 0;
     if (strcmp(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, StringLength<>(expecting), text, StringLength<>(text));
+             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
     }
   }
 
@@ -187,23 +185,22 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     PRINT('\n');
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    result =
-        PrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
     }
     *result = 0;
-    if (StringCompare<>(expecting, text)) {
+    if (TStringCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, StringLength<>(expecting), text, StringLength<>(text));
+             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
     }
   }
 
-  TEST_END;
+
 #endif
   return 0;
 }
 }  // namespace _
 
-#include "test_footer.inl"
+

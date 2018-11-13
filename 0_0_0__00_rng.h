@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /0_0_0__00_rng.h
 @author  Cale McCollough <calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "cconsole.h"
+#include "csio.h"
 #include "crng.h"
 
 #if SEAM == _0_0_0__00
@@ -63,10 +63,10 @@ inline const char* _0_0_0__00_RNG(char* seam_log, char* seam_end,
     PRINT(value);
   }
 
-  TEST_END;
+
 #endif
   return 0;
 }
 }  // namespace _
 
-#include "test_footer.inl"
+

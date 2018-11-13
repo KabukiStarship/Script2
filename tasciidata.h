@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /tascii_data.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -71,7 +71,7 @@ typedef enum AsciiTypes {
   kSTR,      //< 21. A UTF-8 string.
   kTKN,      //< 22. A UTF-8 string token without whitespace.
   kBSQ,      //< 23. B-Sequence.
-  kOBJ,      //< 24. N-byte object.
+  kOBJ,      //< 24. N-UI1 object.
   kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
   kTBL,      //< 26. A hash table.
   kEXP,      //< 27. Script Expression.
@@ -150,14 +150,14 @@ T* TypeAlignUpPointer(void* pointer, type_t type) {
     return AlignUpPointer4<T>(pointer);
   else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
-  // else it's an ASCII kOBJ.
+  // else it's an ASCII OBJ.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |
   // |  1   | 0b'01  |   0b'001    |
   // |  2   | 0b'10  |   0b'011    |
   // |  3   | 0b'11  |   0b'111    |
-  uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer), mask = (type >> 6);
+  UIW ptr = reinterpret_cast<UIW>(pointer), mask = (type >> 6);
   if (mask == 2) return AlignUpPointer4<T>(pointer);
   if (mask == 3) return AlignUpPointer8<T>(pointer);
   ptr += ((~ptr) + 1) & mask;
@@ -169,47 +169,47 @@ Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
-      return Print<Char>("Error");
+      return TPrint<Char>("Error");
     case kSI1:
-      return Print<Char>(cursor, end, *reinterpret_cast<const SI1*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI1*>(value));
     case kUI1:
-      return Print<Char>(cursor, end, *reinterpret_cast<const UI1*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI1*>(value));
     case kSI2:
-      return Print<Char>(cursor, end, *reinterpret_cast<const SI2*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI2*>(value));
     case kUI2:
-      return Print<Char>(cursor, end,
+      return TPrint<Char>(cursor, end,
                          *reinterpret_cast<const UI2*>(value));
     case kHLF:
-      return Print<Char>(cursor, end, "not_implemented");
+      return TPrint<Char>(cursor, end, "not_implemented");
     case kBOL:
-      return Print<Char>(cursor, end, *reinterpret_cast<const BOL*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const BOL*>(value));
     case kSI4:
-      return Print<Char>(cursor, end, *reinterpret_cast<const SI4*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI4*>(value));
     case kUI4:
-      return Print<Char>(cursor, end,
+      return TPrint<Char>(cursor, end,
                          *reinterpret_cast<const UI4*>(value));
     case kFLT:
-      return Print<Char>(cursor, end, *reinterpret_cast<const FLT*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const FLT*>(value));
     case kTMS:
-      return Print<Char>(cursor, end, *reinterpret_cast<const int*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const int*>(value));
     case kTME:
     case kTME:
-      return Print<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
     case kSI8:
-      return Print<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
     case kUI8:
-      return Print<Char>(cursor, end,
+      return TPrint<Char>(cursor, end,
                          *reinterpret_cast<const UI8*>(value));
     case kDBL:
-      return Print<Char>(cursor, end, *reinterpret_cast<const DBL*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const DBL*>(value));
       // case SV8:
-      //  return Print<Char> (cursor, end, *reinterpret_cast<const
+      //  return TPrint<Char> (cursor, end, *reinterpret_cast<const
       //  SI8*>(value));
       // case UV8:
-      //  return Print<Char> (cursor, end, *reinterpret_cast<const
+      //  return TPrint<Char> (cursor, end, *reinterpret_cast<const
       //  UI8*>(value));
     case kDEC:
-      return Print<Char>(cursor, end, "not_implemented");
+      return TPrint<Char>(cursor, end, "not_implemented");
   }
   return nullptr;
 }
@@ -222,23 +222,23 @@ Char* Print(Char* cursor, Char* end, type_t type, const void* value) {
   if (type <= kDEC) {
     cursor = PrintTypePod<Char>(cursor, end, type, value);
     if (!cursor) return nullptr;
-    cursor = Print<Char>(cursor, end, ':');
+    cursor = TPrint<Char>(cursor, end, ':');
     if (!cursor) return nullptr;
-    return Print<Char>(cursor, end, TypeString<Char>(type));
+    return TPrint<Char>(cursor, end, TypeString<Char>(type));
   }
 
-  if (!TypeIsValid(type)) return Print<Char>(cursor, end, "illegal_type");
+  if (!TypeIsValid(type)) return TPrint<Char>(cursor, end, "illegal_type");
 
   if (TypeIsString(type)) {
-    cursor = Print<Char>(cursor, end, '\"');
+    cursor = TPrint<Char>(cursor, end, '\"');
     if (!cursor) return nullptr;
-    cursor = Print<Char>(cursor, end, *reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, end, *reinterpret_cast<const char*>(value));
     if (!cursor) return nullptr;
-    cursor = Print<Char>(cursor, end, reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, end, reinterpret_cast<const char*>(value));
     if (!cursor) return nullptr;
-    cursor = Print<Char>(cursor, end, "\":");
+    cursor = TPrint<Char>(cursor, end, "\":");
     if (!cursor) return nullptr;
-    return cursor = Print<Char>(cursor, end, TypeString(type));
+    return cursor = TPrint<Char>(cursor, end, TypeString(type));
   }
 
   return PrintTypePod(utf, type & 0x1f, value) << "b:" << TypeString(type);

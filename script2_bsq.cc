@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_bsq.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -20,13 +20,13 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-uint_t BsqParamNumber(const uint_t* params, int param_number) {
+UIT BsqParamNumber(const UIT* params, int param_number) {
   if (!params) return 0;
-  uint_t num_params = *params++;
+  UIT num_params = *params++;
   if (param_number > num_params) return kNIL;
   int i;
   for (i = 0; i < param_number; ++i) {
-    uint_t value = params[i];
+    UIT value = params[i];
     if (value == kSTR)
       ++param_number;
     else if (value > 31) {  // It's an array!
@@ -45,8 +45,8 @@ uint_t BsqParamNumber(const uint_t* params, int param_number) {
   return params[i];
 }
 
-UTF8& PrintBsq(UTF8& print, const uint_t* params) {
-  uint_t num_params = *params++, i, type, value = 0;
+UTF8& PrintBsq(UTF8& print, const UIT* params) {
+  UIT num_params = *params++, i, type, value = 0;
 
   print << "Param<";
   if (num_params > kParamsMax) {
@@ -106,7 +106,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
             break;
           }
           print << "kUI1:[" << value << ": ";
-          for (uint_t i = value; i != 0; --i) {
+          for (UIT i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
           }
@@ -121,7 +121,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
             break;
           }
           print << "kUI2:[" << value << ": ";
-          for (uint_t i = value; i != 0; --i) {
+          for (UIT i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
           }
@@ -136,7 +136,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
             break;
           }
           print << "kUI4:[" << value << ": ";
-          for (uint_t i = value; i != 0; --i) {
+          for (UIT i = value; i != 0; --i) {
             value = *params++;
             print << value << ", ";
           }
@@ -190,7 +190,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
           break;
         }
         print << "kUI1:[" << value << ": ";
-        for (uint_t i = value; i != 0; --i) {
+        for (UIT i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";
         }
@@ -205,7 +205,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
           break;
         }
         print << "kUI2:[" << value << ": ";
-        for (uint_t i = value; i != 0; --i) {
+        for (UIT i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";
         }
@@ -220,7 +220,7 @@ UTF8& PrintBsq(UTF8& print, const uint_t* params) {
           break;
         }
         print << "kUI4:[" << value << ": ";
-        for (uint_t i = value; i != 0; --i) {
+        for (UIT i = value; i != 0; --i) {
           value = *params++;
           print << value << ", ";
         }

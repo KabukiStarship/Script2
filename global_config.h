@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /kabuki/features/crabs/config.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -67,7 +67,7 @@ specific language governing permissions and limitations under the License. */
 
 #define LARGEST_INT 2147483647  //< Use this for 32-bit CPUs
 
-#include <assembly.inl>  //< Inline config stuff for your project.
+//#include <assembly.inl>  //< Inline config stuff for your project.
 
 #if CRABS_TEXT == UTF8
 #if USING_UTF8 == 0
@@ -153,7 +153,7 @@ enum {
   kWordAddressMask = kWordBitsMask,   //< For masking the word address.
   kTimeoutMicroseconds = COM_TIMEOUT_TICKS,  //< Timeout time in microseconds.
   kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (kADR) length.
-  kMinStackSize = 1,                             //< Min Expr stack size.
+  kMinStackSize = 1,                             //< Min CCrabs stack size.
   kOpNameLengthMax = CRABS_OP_MAX_NAME_LENGTH,
   // Max length of a Op description string.
   kOpDescriptionLengthMax = CRABS_OP_MAX_DECRABSION_LENGTH,
@@ -176,10 +176,9 @@ enum {
   kWindowSizeMin = 512,
 
   kBufferSizeDefault = 64 * 1024,
-  kBufferSizeDefaultWords = kBufferSizeDefault / sizeof(intptr_t) +
-                                    kBufferSizeDefault % sizeof(intptr_t)
-                                ? 1
-                                : 0,
+  kBufferSizeDefaultWords =
+      kBufferSizeDefault / sizeof(SIW) + kBufferSizeDefault % sizeof(SIW) ? 1
+                                                                          : 0,
 
   kAutoSizeMin = 512,
   kAutoSizeDefault = kAutoSizeMin * 4,
@@ -207,16 +206,16 @@ typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
-typedef unsigned char byte;
+typedef unsigned char UI1;
 typedef unsigned int uint;
 
 typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
 typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
 
-typedef UI1 type_t;  //< ASCII Data Type byte.
+typedef UI1 type_t;  //< ASCII Data Type UI1.
 
 #if MAX_NUM_SLOTS <= 255
-typedef byte slot_t;
+typedef UI1 slot_t;
 enum { kMaxNumSlots = 0xff };
 #elif MAX_NUM_SLOTS <= 65535
 typedef UI2 slot_t;
@@ -265,7 +264,7 @@ static const UI8 kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
     underscore to use more memory, and two underscores to use even more. */
 #if CRABS_MEMORY_PROFILE == 1
 typedef SI1 int_t;     //< Buffer signed index type.
-typedef UI1 uint_t;    //< Buffer unsigned index type.
+typedef UI1 UIT;       //< Buffer unsigned index type.
 typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI2 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef UI1 index_t;   //< Largest bit-depth TIndex this system supports.
@@ -274,7 +273,7 @@ typedef UI2 data_t;    //< Largest bit-depth TData this system supports.
 
 #elif (CRABS_MEMORY_PROFILE == 2) || (CRABS_MEMORY_PROFILE == 3)
 typedef SI2 int_t;     //< Buffer signed index type.
-typedef UI2 uint_t;    //< Buffer unsigned signed index type.
+typedef UI2 UIT;       //< Buffer unsigned signed index type.
 typedef SI4 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI4 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef SI2 index_t;   //< Default TIndex size.
@@ -283,7 +282,7 @@ typedef UI4 data_t;    //< Default TData size.
 
 #else  // CRABS_MEMORY_PROFILE == 5
 typedef SI4 int_t;     //< Buffer signed index type.
-typedef UI4 uint_t;    //< Buffer unsigned signed index type.
+typedef UI4 UIT;       //< Buffer unsigned signed index type.
 typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI8 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef UI2 index_t;   //< Default TIndex size.

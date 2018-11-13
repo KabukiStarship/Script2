@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /cutf1.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -55,11 +55,11 @@ API int StringLength(const char* text);
 API char* StringClone(const char* text); */
 
 /* Returns a pointer to the char at the end of the line. */
-API const char* TextLineEnd(const char* text, int column_count);
+API const char* StringLineEnd(const char* text, int column_count);
 
 /* Returns a pointer to the char at the end of the row. */
-API const char* TextLineEnd(const char* text, const char* text_end,
-                            int column_count);
+API const char* StringLineEnd(const char* text, const char* text_end,
+                              int column_count);
 
 /* Returns the pointer to the next char in the char that is not an ASCII
 number.
@@ -72,7 +72,7 @@ number.
 API const char* StringDecimalStop(const char* text);
 
 /* Skips the leading zeros of a number if there are any. */
-API const char* TextSkipChar(const char* text, char skip_char);
+API const char* TStringSkipChar(const char* text, char skip_char);
 
 /* Skips all the spaces at the start of the char. */
 API const char* StringSkipSpaces(const char* text);
@@ -451,8 +451,8 @@ API char* PrintBinary(char* begin, char* end, DBL value);
 API char* PrintSocket(char* begin, char* end, const void* start, size_t size);
 
 /* Prints out the contents of the address to the utf buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param end   The end of the write buffer.
 @param start The beginning of the read buffer.
@@ -480,22 +480,22 @@ API char* PrintLineString(char* cursor, char* end, const char* string,
                           int column_count);
 
 /* Converts the given string to a 8-bit signed integer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* begin, SI1& result);
 
 /* Converts the given string to a 8-bit signed integer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* text, SI1& result);
 
 /* Converts the given string to a 8-bit unsigned integer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* text, UI1& result);
@@ -556,11 +556,11 @@ API const char* Scan(const char* text, FLT& result);
 of the read number or nil upon failure. */
 API const char* Scan(const char* text, DBL& result);
 
-/* Prints the buffer to the console as a UTF-8 string. */
-void COutUtf8(uintptr_t* buffer);
+/* AsciiFactory Prints the buffer to the console as a UTF-8 string. */
+UIW* COutUtf8(UIW* buffer, SIW size);
 
 /* Prints the buffer to the console as a UTF-8 string. */
-void COutAutoUtf8(uintptr_t* buffer);
+void COutAutoUtf8(UIW* buffer);
 
 /* Utility class for printing strings.
 This class only stores the end of buffer pointer and a pointer to the write

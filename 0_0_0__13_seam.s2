@@ -9,7 +9,7 @@
    the respective input and output parameters:
         +--------------- 4 input parameters
         |   +----------- A string of max length 31.
-        |   |       +--- A signed integer with 1-byte (8-bit) width.
+        |   |       +--- A signed integer with 1-UI1 (8-bit) width.
         |   |       |
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |

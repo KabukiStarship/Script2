@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /script2_console.cc
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2_sio.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License. */
 #include <cstdio>
 #include <iostream>
 
-#include "cconsole.h"
+#include "csio.h"
 
 #include "cascii.h"
 #include "tbinary.h"
@@ -54,7 +54,7 @@ const char* ArgsToString(int arg_count, char** args) {
   return begin;
 }
 #undef PRINT_ARGS
-#include "test_footer.inl"
+
 
 inline void Print(char c) { putchar(c); }
 
@@ -92,9 +92,9 @@ void PrintfLn(const char* format, ...) {
 
 void Print(const char* string) { Printf(string); }
 
-void Print(const char16_t* string) { PrintString<char16_t>(string); }
+void Print(const char16_t* string) { TPrintString<char16_t>(string); }
 
-void Print(const char32_t* string) { PrintString<char32_t>(string); }
+void Print(const char32_t* string) { TPrintString<char32_t>(string); }
 
 void Print(const char* string, char delimiter) {
   Printf(string);
@@ -120,7 +120,7 @@ void Print(UI8 value) {
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintUnsigned<>(buffer, kSize - 1, value);
+  TPrintUnsigned<>(buffer, kSize - 1, value);
   Print(buffer);
 #endif
 }
@@ -131,7 +131,7 @@ void Print(UI4 value) {
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintUnsigned<UI4, char>(buffer, kSize - 1, value);
+  TPrintUnsigned<UI4, char>(buffer, kSize - 1, value);
 #endif
 }
 
@@ -141,7 +141,7 @@ void Print(SI8 value) {
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintSigned<SI8>(buffer, kSize - 1, value);
+  TPrintSigned<SI8>(buffer, kSize - 1, value);
   Print(buffer);
 #endif
 }
@@ -152,7 +152,7 @@ void Print(SI4 value) {
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintSigned<SI8>(buffer, kSize - 1, (SI8)value);
+  TPrintSigned<SI8>(buffer, kSize - 1, (SI8)value);
 #endif
 }
 
@@ -235,33 +235,19 @@ void PrintBinarySigned(SI value) {
 
 void PrintBinary(UI1 value) { return PrintBinaryUnsigned<UI1>(value); }
 
-void PrintBinary(SI1 value) {
-  return PrintBinarySigned<SI1, UI1>(value);
-}
+void PrintBinary(SI1 value) { return PrintBinarySigned<SI1, UI1>(value); }
 
-void PrintBinary(UI2 value) {
-  return PrintBinaryUnsigned<UI2>(value);
-}
+void PrintBinary(UI2 value) { return PrintBinaryUnsigned<UI2>(value); }
 
-void PrintBinary(SI2 value) {
-  return PrintBinarySigned<SI2, UI2>(value);
-}
+void PrintBinary(SI2 value) { return PrintBinarySigned<SI2, UI2>(value); }
 
-void PrintBinary(UI4 value) {
-  return PrintBinaryUnsigned<UI4>(value);
-}
+void PrintBinary(UI4 value) { return PrintBinaryUnsigned<UI4>(value); }
 
-void PrintBinary(SI4 value) {
-  return PrintBinarySigned<SI4, UI4>(value);
-}
+void PrintBinary(SI4 value) { return PrintBinarySigned<SI4, UI4>(value); }
 
-void PrintBinary(UI8 value) {
-  return PrintBinaryUnsigned<UI8>(value);
-}
+void PrintBinary(UI8 value) { return PrintBinaryUnsigned<UI8>(value); }
 
-void PrintBinary(SI8 value) {
-  return PrintBinarySigned<SI8, UI8>(value);
-}
+void PrintBinary(SI8 value) { return PrintBinarySigned<SI8, UI8>(value); }
 
 void PrintBinary(FLT value) {
   return PrintBinaryUnsigned<UI4>(*reinterpret_cast<UI4*>(&value));
@@ -272,12 +258,12 @@ void PrintBinary(DBL value) {
 }
 
 void PrintBinary(const void* ptr) {
-  return PrintBinaryUnsigned<uintptr_t>(*reinterpret_cast<uintptr_t*>(&ptr));
+  return PrintBinaryUnsigned<UIW>(*reinterpret_cast<UIW*>(&ptr));
 }
 
 /* Prints the following value to the console in Hex. */
 template <typename UI>
-void PrintHexConsole(UI value) {
+void TPrintHexConsole(UI value) {
   enum { kHexStringLengthSizeMax = sizeof(UI) * 2 + 3 };
   Print('0', 'x');
   for (int num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
@@ -285,35 +271,35 @@ void PrintHexConsole(UI value) {
     Print(HexNibbleToUpperCase((UI1)(value >> num_bits_shift)));
 }
 
-void PrintHex(UI1 value) { PrintHexConsole<UI1>(value); }
+void PrintHex(UI1 value) { TPrintHexConsole<UI1>(value); }
 
-void PrintHex(SI1 value) { PrintHexConsole<UI1>((UI1)value); }
+void PrintHex(SI1 value) { TPrintHexConsole<UI1>((UI1)value); }
 
-void PrintHex(UI2 value) { PrintHexConsole<UI2>(value); }
+void PrintHex(UI2 value) { TPrintHexConsole<UI2>(value); }
 
-void PrintHex(SI2 value) { PrintHexConsole<UI2>((UI2)value); }
+void PrintHex(SI2 value) { TPrintHexConsole<UI2>((UI2)value); }
 
-void PrintHex(UI4 value) { PrintHexConsole<UI4>(value); }
+void PrintHex(UI4 value) { TPrintHexConsole<UI4>(value); }
 
-void PrintHex(SI4 value) { PrintHexConsole<UI4>((UI4)value); }
+void PrintHex(SI4 value) { TPrintHexConsole<UI4>((UI4)value); }
 
-void PrintHex(UI8 value) { PrintHexConsole<UI8>(value); }
+void PrintHex(UI8 value) { TPrintHexConsole<UI8>(value); }
 
-void PrintHex(SI8 value) { PrintHexConsole<UI8>((UI8)value); }
+void PrintHex(SI8 value) { TPrintHexConsole<UI8>((UI8)value); }
 
 void PrintHex(FLT value) {
   UI4 f = *reinterpret_cast<UI4*>(&value);
-  PrintHexConsole<UI4>(f);
+  TPrintHexConsole<UI4>(f);
 }
 
 void PrintHex(DBL value) {
   UI8 f = *reinterpret_cast<UI8*>(&value);
-  PrintHexConsole<UI8>(f);
+  TPrintHexConsole<UI8>(f);
 }
 
 void PrintHex(const void* ptr) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
-  PrintHexConsole<uintptr_t>(value);
+  UIW value = reinterpret_cast<UIW>(ptr);
+  TPrintHexConsole<UIW>(value);
 }
 
 int CInKey() { return _getch(); }
@@ -355,6 +341,9 @@ void Pausef(const char* format, ...) {
 namespace _ {
 
 void PrintSocket(const char* begin, const char* end) {
+  // @todo This function needs to write the memory to a Socket which then
+  // gets printed to the TSOut ().
+
   if (!begin || begin >= end) return;
 
   const char *address_ptr = reinterpret_cast<const char*>(begin),
@@ -362,26 +351,20 @@ void PrintSocket(const char* begin, const char* end) {
   size_t size = address_end_ptr - address_ptr,
          num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
-  intptr_t num_bytes = 81 * (num_rows + 2);
+  SIW num_bytes = 81 * (num_rows + 2);
   size += num_bytes;
-  Print('\n');
-  Print('|');
+  Print('\n', '|');
 
-  //  columns
-  Print('0');
-  Printf("%8i", 8);
-  Print(' ');
+  //  Columns
+  Printf("0%8i ", 8);
   for (int i = 16; i <= 56; i += 8) Printf("%8i", i);
   for (int j = 6; j > 0; --j) Print(' ');
-  Print('|');
-  Print('\n');
-  Print('|');
+  Print('|', '\n', '|');
   for (int j = 8; j > 0; --j) {
     Print('+');
     for (int k = 7; k > 0; --k) Print('-');
   }
-  Print('|');
-  Print(' ');
+  Print('|', ' ');
 
   PrintHex(address_ptr);
 
@@ -399,29 +382,26 @@ void PrintSocket(const char* begin, const char* end) {
         c = DEL;
       Print(c);
     }
-    Print('|');
-    Print(' ');
+    Print('|', ' ');
     PrintHex(address_ptr);
   }
-  Print('\n');
-  Print('|');
+  Print('\n', '|');
   for (int j = 8; j > 0; --j) {
     Print('+');
     for (int k = 7; k > 0; --k) {
       Print('-');
     }
   }
-  Print('|');
-  Print(' ');
+  Print('|', ' ');
   PrintHex(address_ptr + size);
 }
 
-void PrintSocket(const void* begin, intptr_t size) {
+void PrintSocket(const void* begin, SIW size) {
   const char* begin_char = reinterpret_cast<const char*>(begin);
   return PrintSocket(begin_char, begin_char + size);
 }
 
 }  // namespace _
-#undef PRINT_ARGS
-#include "test_footer.inl"
 #endif  //< #if SEAM >= _0_0_0__02
+#undef PRINT_ARGS
+

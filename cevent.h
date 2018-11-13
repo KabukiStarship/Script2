@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/event.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /event.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -42,7 +42,7 @@ struct API Event : public Operand {
   virtual DBL GetProbability() = 0;
 
   /* Script operations. */
-  virtual const Op* Star(wchar_t index, Expr* expr) = 0;
+  virtual const Op* Star(wchar_t index, CCrabs* crabs) = 0;
 };
 
 }  //< namespace _

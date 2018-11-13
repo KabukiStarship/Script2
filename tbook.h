@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /tbook.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM == _0_0_0__11
 #include "test_debug.inl"
-#endif
 #else
 #include "test_release.inl"
 #endif
@@ -95,7 +94,7 @@ using TMultimap8 = TMap<UI8, SI4, SI4>;
 
 /* The overhead per index for a multimap. */
 template <typename UI, typename SI, typename I>
-constexpr uint_t MultimapOverheadPerIndex() {
+constexpr UIT MultimapOverheadPerIndex() {
   return sizeof(2 * sizeof(I) + sizeof(SI) + sizeof(UI) + 3);
 };
 
@@ -109,12 +108,9 @@ enum {
   kMaxNumPagesSet2 = 120,                //< The number of pages in a Set2.
   kMaxNumPagesSet4 = 8 * 1024,           //< The number of pages in a Set4.
   kMaxNumPagesSet8 = 256 * 1024 * 1024,  //< The number of pages in a Set8.
-  kOverheadPerSet2Index =
-      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
-  kOverheadPerSet4Index =
-      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
-  kOverheadPerSet8Index =
-      MultimapOverheadPerIndex<UI1, UI2, UI2>(),
+  kOverheadPerSet2Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
+  kOverheadPerSet4Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
+  kOverheadPerSet8Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
 };
 
 /* Initializes a Multimap with the given .
@@ -123,13 +119,11 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4. */
 template <typename UI, typename SI, typename I>
-uintptr_t* MultimapInit(uintptr_t* buffer, UI1 count_max, UI2 size) {
+UIW* MultimapInit(UIW* buffer, UI1 count_max, UI2 size) {
   ASSERT(buffer);
   if (table_size <
       sizeof(TMap) +
-          count_max * (MultimapOverheadPerIndex<UI1, UI2, UI2,
-                                                UI2>() +
-                       2))
+          count_max * (MultimapOverheadPerIndex<UI1, UI2, UI2, UI2>() + 2))
     return nullptr;
 
   Multimap<>* multimap = reinterpret_cast<TMap*>(buffer);
@@ -145,8 +139,8 @@ uintptr_t* MultimapInit(uintptr_t* buffer, UI1 count_max, UI2 size) {
 /* Insets the given key-value pair.
  */
 template <typename UI, typename SI, typename I>
-I MultimapInsert(TMap<SI, I>* multimap, UI1 type, const char* key,
-                 void* data, I index) {
+I MultimapInsert(TMap<SI, I>* multimap, UI1 type, const char* key, void* data,
+                 I index) {
   if (multimap == nullptr) return 0;
   return ~0;
 }
@@ -500,8 +494,8 @@ I MultimapFind(TMap<SI, I>* multimap, const char* key) {
 
       // Check for collisions
 
-      collisions = reinterpret_cast<const char*>(key_offsets) +
-                   count_max * sizeof(UI2);
+      collisions =
+          reinterpret_cast<const char*>(key_offsets) + count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index < ~0) {
@@ -664,7 +658,7 @@ void MultimapWipe(TMap<SI, I>* multimap) {
   memset(multimap, 0, size);
 }
 
-/* Returns true if this expr contains only the given address. */
+/* Returns true if this crabs contains only the given address. */
 template <typename UI, typename SI, typename I>
 BOL MultimapContains(TMap<SI, I>* multimap, void* data) {
   if (multimap == nullptr) return false;
@@ -676,7 +670,7 @@ BOL MultimapContains(TMap<SI, I>* multimap, void* data) {
 /* Removes that object from the multimap and copies it to the destination. */
 template <typename UI, typename SI, typename I>
 BOL MultimapRemoveCopy(TMap<SI, I>* multimap, void* destination,
-                        size_t buffer_size, void* data) {
+                       size_t buffer_size, void* data) {
   if (multimap == nullptr) return false;
 
   return false;
@@ -701,7 +695,7 @@ BOL MultimapRetain(TMap<SI, I>* multimap) {
 /* Creates a multimap from dynamic memory. */
 template <typename UI, typename SI, typename I>
 TMap<SI, I>* MultimapCreate(I buffered_indexes, UI table_size, UI size) {
-  TMap<SI, I>* multimap = New<TMap, uint_t>();
+  TMap<SI, I>* multimap = New<TMap, UIT>();
   return multimap;
 }
 
@@ -719,7 +713,7 @@ class Multimap {
   /* Deletes the multimap and it's dynamic memory. */
   ~Multimap() { delete begin; }
 
-  constexpr uint_t MultimapOverheadPerIndex() {
+  constexpr UIT MultimapOverheadPerIndex() {
     return MultimapOverheadPerIndex<SI, I>();
   };
 
@@ -759,7 +753,7 @@ class Multimap {
     return Wipe<SI, I>(multimap);
   }
 
-  /* Returns true if this expr contains only the given address. */
+  /* Returns true if this crabs contains only the given address. */
   inline BOL Contains(void* data) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return MultimapContains<SI, I>(multimap, void* data);
@@ -767,7 +761,7 @@ class Multimap {
 
   /* Removes that object from the multimap and copies it to the destination. */
   inline BOL MultimapRemoveCopy(void* destination, size_t buffer_size,
-                                 void* data) {
+                                void* data) {
     auto multimap = reinterpret_cast<Multimap<SI, I>>(begin);
     return;
   }
@@ -791,7 +785,7 @@ class Multimap {
   }
 
  private:
-  uintptr_t* begin;  //< Dynamic memory buffer.
+  UIW* begin;  //< Dynamic memory buffer.
 
   TMap
 };
@@ -802,6 +796,6 @@ using Multimap8 = TMap<UI4, UI4, UI8>;
 
 }  // namespace _
 
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTTBOOK
 #endif  //< #if SEAM >= _0_0_0__11

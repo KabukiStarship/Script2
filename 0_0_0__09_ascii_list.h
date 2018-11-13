@@ -66,10 +66,10 @@ static const char* _0_0_0__09_ASCII_List(char* seam_log, char* seam_end,
 
   for (int i = list_test_count - 1; i > 0; --i) list.Pop();
 
-  TEST_END;
+
 #endif
   return nullptr;
 }
 }  // namespace _
 
-#include "test_footer.inl"
+

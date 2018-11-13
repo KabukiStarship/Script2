@@ -1,4 +1,5 @@
 #include "ctest.h"
+#include "test_footer.inl"
 #define TEST_BEGIN \
   if (!_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
 #define TEST_END Print("\n\nDone testing ", __FUNCTION__)
@@ -13,6 +14,7 @@
 #define PRINT_SOCKET(begin, end_or_size)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(obj)
+#define PRINT_TOBJ(obj)
 #define SOCKET_SAVE(begin, end)
 #define ASSERT(condition)
 #define CHECK(condition)

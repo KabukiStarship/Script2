@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_wall.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -13,6 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= _0_0_0__13
+
+#if SEAM == _0_0_0__13
+#include "test_release.inl"
+#else
+#include "test_release.inl"
+#endif
 
 #include "wall.h"
 
@@ -31,41 +37,41 @@ Wall::~Wall() {
 }
 
 Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
-  size_bytes = size_bytes < kMinSizeBytes ? (uint_t)kMinSizeBytes : size_bytes;
+  size_bytes = size_bytes < kMinSizeBytes ? (UIT)kMinSizeBytes : size_bytes;
   size_bytes = AlignUpUnsigned<SI8, size_t>(size_bytes);
   size_t size_words = (size_bytes >> sizeof(void*)) + 3;
-  uintptr_t *buffer = new uintptr_t[size_words],
-            *aligned_buffer = AlignUpPointer8<uintptr_t>(buffer);
+  UIW *buffer = new UIW[size_words],
+      *aligned_buffer = AlignUpPointer8<UIW>(buffer);
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
-  size_bytes -= sizeof(uintptr_t) * (aligned_buffer - buffer);
+  size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
   begin = buffer;
   doors_ = reinterpret_cast<CArray<Door*>*>(aligned_buffer);
-  StackInit(buffer, size_bytes >> sizeof(uintptr_t));
+  StackInit(buffer, size_bytes >> sizeof(UIW));
 }
 
-Wall::Wall(uintptr_t* buffer, size_t size_bytes) {
+Wall::Wall(UIW* buffer, size_t size_bytes) {
   // char* ptr     = reinterpret_cast<char*> (buffer);//,
   //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
   //    * end_ptr = ptr + size_bytes;
   enum {
-    kBitsShift = sizeof(uintptr_t) == 2 ? 1 : sizeof(uintptr_t) == 2 ? 2 : 3,
+    kBitsShift = sizeof(UIW) == 2 ? 1 : sizeof(UIW) == 2 ? 2 : 3,
   };
-  // uint_t size_words = (size_bytes >> kBitsShift) + 3;
+  // UIT size_words = (size_bytes >> kBitsShift) + 3;
   //< Computer engineering voodoo for aligning to 64-bit boundary.
 
-  uintptr_t* aligned_buffer = AlignUpPointer8<uintptr_t>(buffer);
+  UIW* aligned_buffer = AlignUpPointer8<UIW>(buffer);
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
-  size_bytes -= sizeof(uintptr_t) * (aligned_buffer - buffer);
+  size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
   begin = buffer;
   doors_ = reinterpret_cast<CArray<Door*>*>(aligned_buffer);
-  StackInit(buffer, size_bytes >> sizeof(uintptr_t));
+  StackInit(buffer, size_bytes >> sizeof(UIW));
 }
 
 Wall::Wall(CArray<Door*>* doors) {}
 
-uintptr_t Wall::GetSizeBytes() { return size_bytes_; }
+UIW Wall::GetSizeBytes() { return size_bytes_; }
 
 CArray<Door*>* Wall::Doors() { return doors_; }
 

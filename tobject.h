@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /tobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -33,51 +33,56 @@ namespace _ {
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
 template <typename SI>
-inline SI ObjSizeMax() {
+inline SI TObjSizeMax() {
   SI count_max = 0;
   return (~count_max) - 15;
 }
 
 /* Checks if the size is in the min max bounds of an ASCII Object. */
-template <typename SI = intptr_t>
-inline BOL ObjSizeIsValid(SI size, SI size_min) {
-  return (size >= size_min) && (size <= ObjSizeMax<SI>());
+template <typename SI = SIW>
+inline BOL TObjSizeIsValid(SI size, SI size_min) {
+  return (size >= size_min) && (size <= TObjSizeMax<SI>());
 }
 
 /* Checks if the given object count is in the min max bounds of an ASCII
 Object. */
 template <typename SI>
-inline BOL ObjCountIsValid(SI index, SI count_min) {
-  return (index >= count_min) && (index < ObjSizeMax<SI>());
+inline BOL TObjCountIsValid(SI index, SI count_min) {
+  return (index >= count_min) && (index < TObjSizeMax<SI>());
 }
 
-/* Gets the ASCII kOBJ size. */
+/* Gets the ASCII OBJ size. */
 template <typename Size>
-inline Size ObjSize(uintptr_t* object) {
+inline Size TObjSize(UIW* object) {
   ASSERT(object);
   return *reinterpret_cast<Size*>(object);
 }
 
-/* Gets the ASCII kOBJ size. */
+/* Gets the ASCII OBJ size. */
 template <typename Size>
-inline Size ObjSize(CObject obj) {
+inline Size TObjSize(CObject obj) {
   ASSERT(obj.begin);
   return *reinterpret_cast<Size*>(obj.begin);
 }
 
-/* Gets the last byte in the ASCII Object. */
 template <typename Size>
-inline char* ObjEnd(CObject obj) {
-  uintptr_t buffer = obj.begin;
+Size TObjSizeRound(Size size) {
+  return size & kObjSizeBuffer;
+}
+
+/* Gets the last UI1 in the ASCII Object. */
+template <typename Size>
+inline char* TObjEnd(CObject obj) {
+  UIW buffer = obj.begin;
   ASSERT(buffer);
   Size size = *reinterpret_cast<Size*>(buffer);
   return reinterpret_cast<char*>(buffer + size);
 }
 
-/* Gets the last byte in the ASCII Object. */
+/* Gets the last UI1 in the ASCII Object. */
 template <typename Size>
-inline const char* ObjEnd(const CObject obj) {
-  uintptr_t buffer = obj.begin;
+inline const char* TObjEnd(const CObject obj) {
+  UIW buffer = obj.begin;
   ASSERT(buffer);
   Size size = *reinterpret_cast<Size*>(buffer);
   return reinterpret_cast<const char*>(buffer + size);
@@ -85,40 +90,55 @@ inline const char* ObjEnd(const CObject obj) {
 
 /* Creates a new object of the given size that is greater than the min_size. */
 template <typename Size>
-uintptr_t* ObjNew(Size size, Size size_min) {
+UIW* TObjNew(Size size, Size size_min) {
   if (size < size_min) return nullptr;
 
-  if (!ObjSizeIsValid<Size>(size, size_min)) return nullptr;
+  if (!TObjSizeIsValid<Size>(size, size_min)) return nullptr;
 
   size = AlignUp<UI2, SI2>(size, 7);
-  uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
+  UIW* buffer = new UIW[size >> kWordBitCount];
   *reinterpret_cast<SI2*>(buffer) = size;
   return buffer;
 }
 
-/* Auto-grows the given obj to the new_size. */
-template <typename Size>
-Size ObjResize(CObject obj, Size new_size) {
-  ASSERT(obj.begin);
-  if (!obj.manager) return 0;
-  Size size = ObjSize<Size>(obj);
-  if (new_size < size) return 0;
-  uintptr_t* temp = obj.begin;
-  obj.begin = ObjClone<Size>(temp, size);
-  delete[] temp;
+/* Clones the other ASCII OBJ. */
+template <typename Size = SI4>
+UIW* TObjClone(UIW* buffer, Size size) {
+  ASSERT(buffer);
+
+  UIW* clone = new UIW[size >> kWordBitCount];
+  SocketCopy(clone, size, buffer, size);
+  *reinterpret_cast<Size*>(buffer) = size;
+  return clone;
 }
 
 /* Auto-grows the given obj to the new_size. */
 template <typename Size>
-Size ObjGrow(CObject obj) {
+Size TObjResize(CObject obj, Size new_size) {
   ASSERT(obj.begin);
-  if (!obj.manager) return 0;
-  Size size = ObjSize<Size>(obj), new_size = 2 * size;
+  if (!obj.factory) return 0;
+  Size size = TObjSize<Size>(obj);
   if (new_size < size) return 0;
-  uintptr_t* temp = obj.begin;
-  obj.begin = ObjClone<Size>(temp, size);
+  UIW* temp = obj.begin;
+  obj.begin = TObjClone<Size>(temp, size);
   delete[] temp;
 }
+
+/* Auto-grows the given obj to the new_size. */
+template <typename Size = SI4>
+UIW* ObjGrow(UIW* begin) {
+  ASSERT(begin);
+  Size size = *reinterpret_cast<Size*>(begin), new_size = 2 * size;
+  if (new_size < size) return 0;
+  UIW* temp = begin;
+  begin = TObjClone<Size>(temp, size);
+  delete[] temp;
+  return begin;
+}
+
+/* Auto-grows the given obj to the new_size. */
+template <typename Size>
+Size ObjGrow(CObject obj) {}
 
 /* Rounds the given count up to a 64-bit aligned value. */
 template <typename T, typename UI = uint, typename SI = int>
@@ -131,18 +151,7 @@ inline SI ObjCountRound(SI count) {
   return AlignUpSigned<SI>(count);
 }
 
-/* Clones the other ASCII kOBJ. */
-template <typename Size = SI4>
-uintptr_t* ObjClone(uintptr_t* buffer, Size size) {
-  ASSERT(buffer);
-
-  uintptr_t* clone = new uintptr_t[size >> kWordBitCount];
-  SocketCopy(clone, size, buffer, size);
-  *reinterpret_cast<Size*>(buffer) = size;
-  return clone;
-}
-
-/* A 64-bit word-aligned ASCII kOBJ.
+/* A 64-bit word-aligned ASCII OBJ.
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. The minimum and maximum bounds of size of ASCII objects are defined by the
 minimum size required to store the header with minimum item count, and the
@@ -166,50 +175,54 @@ class TObject {
 
   /* Constructs a buffer with either statically or dynamically allocated memory
   based on if buffer is nil. */
-  TObject(HeapManager destructor) : obj_({nullptr, destructor}) {
+  TObject(AsciiFactory factory) : obj_({nullptr, factory}) {
     // Nothing to do here! (:-)-/==<
   }
 
   /* Constructs a buffer with either statically or dynamically allocated memory
   based on if buffer is nil. */
-  TObject(Size size, HeapManager destructor = nullptr)
-      : obj_({Buffer(size), destructor}) {}
+  TObject(Size size, AsciiFactory factory = nullptr)
+      : obj_({Buffer(size), factory}) {}
 
   /* Constructs a buffer with either statically or dynamically allocated
   memory based on if buffer is nil. */
-  TObject(Size size, uintptr_t* buffer, HeapManager destructor = nullptr)
-      : obj_({Buffer(size, buffer), destructor}) {}
+  TObject(Size size, UIW* buffer, AsciiFactory factory = nullptr)
+      : obj_({Buffer(size, buffer), factory}) {}
 
-  /* HeapManager deletes dynamic memory if is_dynamic_ is true. */
-  ~TObject() { Delete(obj_); }
-
-  /* Returns the buffer_. */
-  uintptr_t* Begin() { return obj_.begin; }
+  /* Destructor calls the AsciiFactory factory. */
+  ~TObject() { Destruct(obj_); }
 
   /* Returns the buffer_. */
-  uintptr_t* GetStart() { return obj_.begin; }
+  UIW* Begin() { return obj_.begin; }
+
+  UIW* SetBegin(UIW* buffer) {
+    if (!buffer) return buffer;
+    obj_.begin = buffer;
+    return buffer;
+  }
+
+  /* Returns the buffer_. */
+  UIW* GetStart() { return obj_.begin; }
 
   /* Gets the stopping address of the buffer. */
   char* GetStop() {
-    Size size = ObjSize<Size>(obj_.begin);
+    Size size = TObjSize<Size>(obj_.begin);
     return reinterpret_cast<char*>(obj_.begin) + size - 1;
   }
 
   /* Gets the ASCII Object size. */
-  Size GetSize() { return ObjSize<Size>(obj_); }
+  Size GetSize() { return TObjSize<Size>(obj_); }
 
-  /* Doubles the size of the buffer and copies the given byte_count.
-  @return A positive size of the new buffer upon success and -1 upon failure.
-  @param byte_count The number of bytes to copy after growing the buffer. */
-  Size Grow(Size new_size) { return ObjGrow<Size>(obj_, new_size); }
+  /* Gets the AsciiFactory. */
+  AsciiFactory GetFactory() { return obj_.factory; }
 
   /* Gets the CObject. */
-  inline CObject& OBJ() { return obj_.begin; }
+  inline CObject& OBJ() { return obj_; }
 
  private:
-  CObject obj_;  //< ASCII kOBJ harness.
+  CObject obj_;  //< ASCII OBJ harness.
 };
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTTOBJ
 #endif  //< #if SEAM >= _0_0_0__02

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    \kabuki\f2\ctest.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    \ctest.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT_COMPARE
-#define INCLUDED_SCRIPT_COMPARE 1
+#ifndef INCLUDED_SCRIPT_CTEST
+#define INCLUDED_SCRIPT_CTEST 1
 
 /* Function pointer prototype for a test case with command line argument
 string.
@@ -203,6 +203,7 @@ API BOL TestWarn(const char* funciton, const char* file, int line);
 @param  file    The file the error occurred at.
 @param  message An optional message to print. */
 API BOL ErrorFreeze(const char* funciton, const char* file, int line);
+
 }  // namespace _
 
-#endif  //< #ifndef INCLUDED_SCRIPT_COMPARE
+#endif  //< #ifndef INCLUDED_SCRIPT_CTEST

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /list.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII kOBJ Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII OBJ Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -50,9 +50,9 @@ Like most ASCII kOBJ Types, the size may only be 16-bit, 32-bit, or
 |==========================| Header  |
 |_______ count_max         |   |     |
 |_______ ...               |   |     |
-|_______ Type byte N       |   |     |
+|_______ Type UI1 N       |   |     |
 |_______ ...               |   |     |
-|        Type byte 1       |   |     |   ^ Up in addresses
+|        Type UI1 1       |   |     |   ^ Up in addresses
 |==========================|   |     |   |
 | AsciiList<UI, SI> Struct |   v     v   ^
 +==========================+ ----------- ^ 0xN
@@ -75,7 +75,7 @@ The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
 template <typename UI = UI4, typename SI = SI2,
-          size_t largest_expected_type = sizeof(intptr_t)>
+          size_t largest_expected_type = sizeof(SIW)>
 constexpr UI ListSizeMin(SI count_max) {
   return (UI)sizeof(CList<UI, SI>) +
          (UI)(count_max * (largest_expected_type + sizeof(UI) + 1));
@@ -95,7 +95,7 @@ void ListWipe(CList<UI, SI>* list) {
 count_max must be in multiples of 4. Given there is a fixed size, both the
 count_max and size will be downsized to a multiple of 4 automatically. */
 template <typename UI = UI4, typename SI = SI2>
-CList<UI, SI>* ListInit(uintptr_t* buffer, UI size, SI count_max) {
+CList<UI, SI>* ListInit(UIW* buffer, UI size, SI count_max) {
   if (!buffer)  // This may be nullptr if ListNew<UI,SI> (SI, UI) failed.
     return nullptr;
   PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
@@ -124,10 +124,10 @@ CList<UI, SI>* ListInit(uintptr_t* buffer, UI size, SI count_max) {
 
 /* Creates a list from dynamic memory. */
 template <typename UI = UI4, typename SI = SI2>
-uintptr_t* ListNew(SI count_max, UI size) {
+UIW* ListNew(SI count_max, UI size) {
   count_max = AlignUpUnsigned<UI8, UI>(count_max);
   if (size < ListSizeMin<UI, SI>(count_max)) return nullptr;
-  uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
+  UIW* buffer = new UIW[size >> kWordBitCount];
 
   CList<UI, SI>* list = reinterpret_cast<CList<UI, SI>*>(buffer);
   list->size = size;
@@ -140,11 +140,11 @@ uintptr_t* ListNew(SI count_max, UI size) {
 
 /* Creates a list from dynamic memory. */
 template <typename UI = UI4, typename SI = SI2,
-          size_t largest_expected_type = sizeof(intptr_t)>
-inline uintptr_t* ListNew(SI count_max) {
+          size_t largest_expected_type = sizeof(SIW)>
+inline UIW* ListNew(SI count_max) {
   count_max = AlignUp<SI>(count_max);
   UI size = ListSizeMin<UI, SI, largest_expected_type>(count_max);
-  uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
+  UIW* buffer = new UIW[size >> kWordBitCount];
 
   CList<UI, SI>* list = reinterpret_cast<CList<UI, SI>*>(buffer);
   list->size = size;
@@ -172,19 +172,19 @@ inline char* ListDataBegin(CList<UI, SI>* list) {
 /* Gets the base element 0 of the list's offset array. */
 template <typename UI = UI4, typename SI = SI2>
 inline UI* ListOffsets(CList<UI, SI>* list) {
-  uintptr_t ptr = reinterpret_cast<uintptr_t>(list) + sizeof(CList<UI, SI>) +
-                  list->count_max;
+  UIW ptr =
+      reinterpret_cast<UIW>(list) + sizeof(CList<UI, SI>) + list->count_max;
   return reinterpret_cast<UI*>(ptr);
 }
 
-/* Returns the last byte in the data array. */
+/* Returns the last UI1 in the data array. */
 template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataEnd(CList<UI, SI>* list) {
   ASSERT(list)
   return reinterpret_cast<char*>(list) + list->size - 1;
 }
 
-/* Returns the last byte in the data array. */
+/* Returns the last UI1 in the data array. */
 template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataEnd(CList<UI, SI>* list, SI index) {
   ASSERT(list)
@@ -198,7 +198,7 @@ Socket ListDataVector(CList<UI, SI>* list) {
   return Socket(ListDataBegin<UI, SI>(list), ListDataEnd<UI, SI>(list));
 }
 
-/* Returns the last byte in the data array. */
+/* Returns the last UI1 in the data array. */
 template <typename UI = UI4, typename SI = SI2>
 inline char* ListDataStop(CList<UI, SI>* list, SI index = -1) {
   ASSERT(list)
@@ -335,7 +335,7 @@ void ListClear(CList<UI, SI>* list) {
   list->count = 0;
 }
 
-/* Checks if this expr contains only the given address.
+/* Checks if this crabs contains only the given address.
 @return  True if the data lies in the list's memory socket.
 
 @warning This function assumes that the member you're checking for came
@@ -431,7 +431,7 @@ class List {
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
-  inline SI Insert(byte type, void* value, SI index) {
+  inline SI Insert(UI1 type, void* value, SI index) {
     return ListInsert<UI, SI>(OBJ(), type, value, index);
   }
 
@@ -445,7 +445,7 @@ class List {
   /* Deletes the list contents by overwriting it with zeros. */
   inline void Wipe() { ListWipe<UI, SI>(OBJ()); }
 
-  /* Returns true if this expr contains only the given address.
+  /* Returns true if this crabs contains only the given address.
       @warning This function assumes that the member you're checking for came
                from Script. If it's you're own code calling this, you
                are required to ensure the value came from a ASCII List.
@@ -491,6 +491,6 @@ inline _::UTF8& operator<<(_::UTF8& printer, _::CList<UI, SI>* list) {
   return _::PrintList<UI, SI>(printer, list);
 }
 
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTTLIST
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__09

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/bsq.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /cbsq.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -24,9 +24,9 @@ namespace _ {
 
 /* Utility class for printing B-Sequences. */
 struct Bsq {
-  const uint_t* params;  //< Bsq params.
+  const UIT* params;  //< Bsq params.
 
-  Bsq(const uint_t* params) : params(params) {
+  Bsq(const UIT* params) : params(params) {
     // Nothing to do here! (:-)-+=<
   }
 };
@@ -87,32 +87,32 @@ inline SI8 PackSV8(SI8 value) {
 //    return temp;
 //}
 
-constexpr uint_t BsqSize(const uint_t* params) {
+constexpr UIT BsqSize(const UIT* params) {
   if (!params) {
     return 0;
   }
-  uint_t size_bytes = sizeof(uint_t), count = *params++;
+  UIT size_bytes = sizeof(UIT), count = *params++;
 
   if (count > kParamsMax) {
     return 0;
   }
 
   for (; count > 0; --count) {
-    uint_t param = *params++;
+    UIT param = *params++;
 
     if (param == kNIL) {  // This is illegal.
       return 0;
     }
     if (param <= kTKN) {
-      size_bytes += sizeof(uint_t);
+      size_bytes += sizeof(UIT);
       ++params;
     }
     if (param == kSIH) {
-      size_bytes += sizeof(uint_t);
+      size_bytes += sizeof(UIT);
       ++params;
     }
     if (param == kUIH) {
-      size_bytes += sizeof(uint_t);
+      size_bytes += sizeof(UIT);
       ++params;
     }
     if (param >= kLST && param <= kMAP) {  // This is illegal.
@@ -127,7 +127,7 @@ constexpr uint_t BsqSize(const uint_t* params) {
         params += param + 1;  // for the dimension count.
       }
     }
-    size_bytes += sizeof(uint_t);
+    size_bytes += sizeof(UIT);
   }
   return size_bytes;
 }
@@ -135,21 +135,21 @@ constexpr uint_t BsqSize(const uint_t* params) {
 /* Creates a immutable Script B-Sequence.
     C++11 variadic template to ensure only one copy in ROM
     and to eliminate some redundant typing. */
-template <const uint_t... N>
-inline const uint_t* Params() {
-  static const uint_t kSize = 0,  // BsqSize ({ N... })
+template <const UIT... N>
+inline const UIT* Params() {
+  static const UIT kSize = 0,  // BsqSize ({ N... })
       kList[sizeof...(N)] = {N...};
   return &kSize;
 }
 
 /* Prints out the kBSQ parameters. */
-API UTF8& PrintBsq(UTF8& printer, const uint_t* params);
+API UTF8& PrintBsq(UTF8& printer, const UIT* params);
 
 /*  Prints out the parameters. */
-// API Utf& PrintBsq (const uint_t* bsq, Utf& print);
+// API Utf& PrintBsq (const UIT* bsq, Utf& print);
 
 /*< Returns the requested parameter number. */
-API uint_t BsqParamNumber(const uint_t* bsq, int param_number);
+API UIT BsqParamNumber(const UIT* bsq, int param_number);
 
 }  // namespace _
 

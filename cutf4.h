@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /cutf4.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -36,13 +36,13 @@ API char32_t PrintableChar(char32_t value);
 /* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 char32_t. */
-API const char32_t* StringEnd(const char32_t* begin);
+API const char32_t* TStringEnd(const char32_t* begin);
 
 /* Gets the length of the given char32_t.
 @return  Returns -1 if the text char32_t is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 char32_t. */
-API int StringLength(const char32_t* begin);
+API int TStringLength(const char32_t* begin);
 
 /* Clones the given string.
 @param  A nil-terminated string in ROM.
@@ -50,15 +50,15 @@ API int StringLength(const char32_t* begin);
 API char32_t* StringClone(const char32_t* begin);
 
 /* Returns a pointer to the char32_t at the end of the line. */
-API const char32_t* TextLineEnd(const char32_t* begin, int column_count);
+API const char32_t* StringLineEnd(const char32_t* begin, int column_count);
 
 /* Returns the pointer to the next char32_t in the char32_t that is not an ASCII
 number.
 @return A pointer to the next non-number in the text char32_t. */
-API const char32_t* StringDecimalStop(const char32_t* begin);
+API const char32_t* TStringDecimalEnd(const char32_t* begin);
 
 /* Skips the leading zeros of a number if there are any. */
-API const char32_t* TextSkipChar(const char32_t* begin, char32_t skip_char);
+API const char32_t* TStringSkipChar(const char32_t* begin, char32_t skip_char);
 
 /* Skips all the spaces at the start of the char32_t. */
 API const char32_t* StringSkipSpaces(const char32_t* begin);
@@ -387,7 +387,7 @@ upon success.
 @param begin  The beginning address of the buffer.
 @param end    The end address of the buffer.
 @param pointer The pointer to print to hex. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, const void* pointer);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, const void* pointer);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -395,7 +395,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI1 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI1 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -403,7 +403,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI1 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI1 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -411,7 +411,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI2 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI2 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -419,7 +419,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI2 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI2 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -427,7 +427,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI4 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI4 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -435,7 +435,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI4 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI4 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -443,7 +443,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, UI8 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI8 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -451,7 +451,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, SI8 value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI8 value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -459,7 +459,7 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, FLT value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, FLT value);
 
 /* Writes the give char32_t to the given buffer in binary form.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char32_t
@@ -467,15 +467,15 @@ upon success.
 @param begin The beginning address of the buffer.
 @param end The end address of the buffer.
 @param value The value to print. */
-API char32_t* PrintBinary(char32_t* begin, char32_t* end, DBL value);
+API char32_t* TPrintBinary(char32_t* begin, char32_t* end, DBL value);
 
 /* Prints the given memory socket to the text buffer. */
 API char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
                           size_t size);
 
 /* Prints out the contents of the address to the printer buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param end   The end of the write buffer.
 @param start The beginning of the read buffer.
@@ -484,8 +484,8 @@ API char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
                           const void* stop);
 
 /* Prints out the contents of the address to the printer buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param end   The end of the write buffer.
 @param start The beginning of the read buffer.
@@ -494,32 +494,32 @@ API char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
                           size_t size);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, CClock t);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, TMS t);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, TME t);
 
 /* Writes the given time to the text buffer.
-@return Null upon failure or a pointer to the byte after the last
-byte written.
+@return Null upon failure or a pointer to the UI1 after the last
+UI1 written.
 @param begin The beginning of the write buffer.
 @param time  The time to print.
 @param end   The end of the write buffer. */
@@ -555,10 +555,10 @@ API char32_t* PrintLineString(char32_t* cursor, char32_t* end,
                               const char32_t* string, int column_count);
 
 /* Prints the buffer to the console as a UTF-8 string. */
-void COutUtf32(uintptr_t* buffer);
+void COutUtf32(UIW* buffer);
 
 /* Prints the buffer to the console as a UTF-8 string. */
-void COutAutoUtf32(uintptr_t* buffer);
+void COutAutoUtf32(UIW* buffer);
 
 /* Converts the given string to a 8-bit signed integer.
 @param  text A nil-terminated string in ROM.

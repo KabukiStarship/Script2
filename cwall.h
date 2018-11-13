@@ -1,6 +1,6 @@
 /* Script
 @version 0.x
-@file    /kabuki/crabs/wall.h
+@file    /wall.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -55,7 +55,7 @@ class Wall {
   Wall(size_t size_bytes = kMinSizeBytes);
 
   /* Constructs a wall from the given buffer. */
-  Wall(uintptr_t* buffer, size_t size_bytes);
+  Wall(UIW* buffer, size_t size_bytes);
 
   /* Gets the size of the wall in bytes. */
   size_t GetSizeBytes();
@@ -80,7 +80,7 @@ class Wall {
  private:
   BOL is_dynamic_;       //< Flag for if using dynamic memory.
   size_t size_bytes_;     //< Size of the Wall in bytes.
-  uintptr_t* begin;       //< The Wall's buffer.
+  UIW* begin;       //< The Wall's buffer.
   CArray<Door*>* doors_;  //< The doors in the room.
 };
 

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /thash.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= _0_0_0__08
 
-#include "hash.h"
+#include "chash.h"
 
 #ifndef INCLUDED_SCRIPTTHASH
 #define INCLUDED_SCRIPTTHASH

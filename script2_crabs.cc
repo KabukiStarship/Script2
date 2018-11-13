@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /script2_expression.cc
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2_crabs.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,13 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#include "expr.h"
+#include "ccrabs.h"
 
-#include "bsq.h"
+#include "cbsq.h"
+#include "chash.h"
 #include "clock.h"
 #include "ctest.h"
-#include "hash.h"
-#include "hex.h"
 
 #if SEAM == _0_0_0__13
 #include "test_debug.inl"
@@ -32,81 +31,80 @@ namespace _ {
 /* Used to return an erroneous result from a B-Input.
 @return Returns a Static Error Op Result.
 @param error The error type. */
-inline const Op* ExprError(Expr* expr, Error error) {
-  PRINTF("\nExpr %s Error!", ErrorString(error))
+inline const Op* CrabsError(CCrabs* crabs, Error error) {
+  PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  expr    The source Expr.
+@param  crabs    The source CCrabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the byte in error. */
-inline const Op* ExprError(Expr* expr, Error error, const uint_t* header) {
-  PRINTF("\nExpr %s Error!", ErrorString(error))
+@param  address The address of the UI1 in error. */
+inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header) {
+  PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  expr    The source Expr.
+@param  crabs    The source CCrabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the byte in error. */
-inline const Op* ExprError(Expr* expr, Error error, const uint_t* header,
-                           byte offset) {
-  PRINTF("\nExpr %s Error!", ErrorString(error))
+@param  address The address of the UI1 in error. */
+inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
+                            UI1 offset) {
+  PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  expr    The source Expr.
+@param  crabs    The source CCrabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the byte in error. */
-inline const Op* ExprError(Expr* expr, Error error, const uint_t* header,
-                           byte offset, char* address) {
-  PRINTF("\nExpr %s Error!", ErrorString(error))
+@param  address The address of the UI1 in error. */
+inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
+                            UI1 offset, char* address) {
+  PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
 
-uintptr_t* ExprBinAddress(Expr* expr) {
-  if (!expr) return nullptr;
-  return reinterpret_cast<uintptr_t*>(expr) + expr->header_size;
+UIW* CrabsBinAddress(CCrabs* crabs) {
+  if (!crabs) return nullptr;
+  return reinterpret_cast<UIW*>(crabs) + crabs->header_size;
 }
 
-char* ExprBuffer(Expr* expr) {
-  char* ptr = reinterpret_cast<char*>(expr);
-  return ptr + sizeof(Expr);
+char* CrabsBuffer(CCrabs* crabs) {
+  char* ptr = reinterpret_cast<char*>(crabs);
+  return ptr + sizeof(CCrabs);
 }
 
-BIn* ExprBIn(Expr* expr) {
-  return reinterpret_cast<BIn*>(ExprBinAddress(expr));
+BIn* CrabsBIn(CCrabs* crabs) {
+  return reinterpret_cast<BIn*>(CrabsBinAddress(crabs));
 }
 
-uintptr_t* ExprBOutAddress(Expr* expr) {
-  if (!expr) {
+UIW* CrabsBOutAddress(CCrabs* crabs) {
+  if (!crabs) {
     return nullptr;
   }
-  return reinterpret_cast<uintptr_t*>(expr) + expr->header_size;
+  return reinterpret_cast<UIW*>(crabs) + crabs->header_size;
 }
 
-BOut* ExprBOut(Expr* expr) {
-  return reinterpret_cast<BOut*>(ExprBOutAddress(expr));
+BOut* CrabsBOut(CCrabs* crabs) {
+  return reinterpret_cast<BOut*>(CrabsBOutAddress(crabs));
 }
 
-Expr* ExprInit(uintptr_t* buffer, uint_t buffer_size, uint_t stack_size,
-               Operand* root, uintptr_t* unpacked_buffer,
-               uintptr_t unpacked_size) {
+CCrabs* CrabsInit(UIW* buffer, UIT buffer_size, UIT stack_size, Operand* root,
+                  UIW* unpacked_buffer, UIW unpacked_size) {
   if (!buffer) {
     return nullptr;
   }
-  if (buffer_size < Expr::kMinBufferSize) {
+  if (buffer_size < CCrabs::kMinBufferSize) {
     return nullptr;
   }
   if (stack_size < kMinStackSize) {
@@ -121,157 +119,157 @@ Expr* ExprInit(uintptr_t* buffer, uint_t buffer_size, uint_t stack_size,
     return nullptr;
   }
 
-  Expr* expr = reinterpret_cast<Expr*>(buffer);
+  CCrabs* crabs = reinterpret_cast<CCrabs*>(buffer);
 
-  uint_t total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
+  UIT total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
   // Calculate the size of the Slot and Stack.
-  uint_t size = (buffer_size - sizeof(Expr) - total_stack_size + 1) >> 1;
+  UIT size = (buffer_size - sizeof(CCrabs) - total_stack_size + 1) >> 1;
 
   //< >>1 to divide by 2
-  expr->bout_state = kBOutStateDisconnected;
-  expr->bin_state = kBInStateDisconnected;
-  expr->stack_count = 1;
-  expr->type = kNIL;
-  expr->stack_size = stack_size;
-  expr->num_states = 0;
-  expr->operand = nullptr;
+  crabs->bout_state = kBOutStateDisconnected;
+  crabs->bin_state = kBInStateDisconnected;
+  crabs->stack_count = 1;
+  crabs->type = kNIL;
+  crabs->stack_size = stack_size;
+  crabs->num_states = 0;
+  crabs->operand = nullptr;
 #if DEBUG_CRABS_EXPR
     PRINTF ("\nInitializing Stack with size:" << stack_size
             << " buffer_size:" << buffer_size << " size:" << size;
 #endif
-    expr->bytes_left = 0;
-    //uint_t offset    = sizeof (Expr) + total_stack_size - sizeof (void*);
+    crabs->bytes_left = 0;
+    //UIT offset    = sizeof (CCrabs) + total_stack_size - sizeof (void*);
     //bin_offset       = sizeof (BIn) + total_stack_size + offset;
-    expr->header_size = sizeof (Expr) + 2 * sizeof (void*) * stack_size;
-    expr->hash = kPrime2Unsigned;
-    expr->result = nullptr;
-    expr->header = nullptr;
-    expr->header_start = nullptr;
-    expr->root = root;
-    uintptr_t* base_ptr = reinterpret_cast<uintptr_t*> (expr) + sizeof (Expr) +
-                          stack_size * sizeof (uint_t);
-    expr->slot.Set (base_ptr, unpacked_size);
+    crabs->header_size = sizeof (CCrabs) + 2 * sizeof (void*) * stack_size;
+    crabs->hash = kPrime2Unsigned;
+    crabs->result = nullptr;
+    crabs->header = nullptr;
+    crabs->header_start = nullptr;
+    crabs->root = root;
+    UIW* base_ptr = reinterpret_cast<UIW*> (crabs) + sizeof (CCrabs) +
+                          stack_size * sizeof (UIT);
+    crabs->slot.Set (base_ptr, unpacked_size);
 #if DEBUG_CRABS_EXPR
-    PRINTF ("expr->op:" << OutHex (expr->operand);
+    PRINTF ("crabs->op:" << OutHex (crabs->operand);
 #endif
-    BInInit (ExprBinAddress (expr), size);
-    BOutInit (ExprBOutAddress (expr), size);
-    return expr;
+    BInInit (CrabsBinAddress (crabs), size);
+    BOutInit (CrabsBOutAddress (crabs), size);
+    return crabs;
 }
 
-// BOL ExprIsDynamic (Expr* expr) {
-//    return expr->type % 2 == 1;
+// BOL CrabsIsDynamic (CCrabs* crabs) {
+//    return crabs->type % 2 == 1;
 //}
 
-char* ExprEndAddress(Expr* expr) { return BInEnd(ExprBIn(expr)); }
+char* CrabsEndAddress(CCrabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
 
-const Op* ExprReset(Expr* expr) { return 0; }
+const Op* CrabsReset(CCrabs* crabs) { return 0; }
 
-byte ExprExitState(Expr* expr) {
-  // We are guaranteed expr is not nil at this point.
-  // if (!expr) {
-  //    return  ExprError (ExprBIn (expr), kErrorImplementation);
+UI1 CrabsExitState(CCrabs* crabs) {
+  // We are guaranteed crabs is not nil at this point.
+  // if (!crabs) {
+  //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
   //}
 #if DEBUG_CRABS_EXPR
-    PRINTF ("\nExiting " << BInState ()[expr->bin_state]
-            << " state back to the " << BInState ()[expr->last_bin_state]
+    PRINTF ("\nExiting " << BInState ()[crabs->bin_state]
+            << " state back to the " << BInState ()[crabs->last_bin_state]
             << " state .";
 #endif
-    byte state = expr->last_bin_state;
-    expr->bin_state = state;
+    UI1 state = crabs->last_bin_state;
+    crabs->bin_state = state;
     return state;
 }
 
-const Op* ExprSetState(Expr* expr, BInState state) {
-  // We are guaranteed expr is not nil at this point.
-  // if (!expr) {
-  //    return  ExprError (ExprBIn (expr), kErrorImplementation);
+const Op* CrabsSetState(CCrabs* crabs, BInState state) {
+  // We are guaranteed crabs is not nil at this point.
+  // if (!crabs) {
+  //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
   //}
   if (state == kBInStateLocked) {
-    return ExprError(expr, kErrorObjLocked);
+    return CrabsError(crabs, kErrorObjLocked);
   }
 #if DEBUG_CRABS_EXPR
     PRINTF ("\nEntering " << BInState ()[state]
             << " state:" << state;
 #endif
-    expr->bin_state = state;
+    crabs->bin_state = state;
     return nullptr;
 }
 
-const Op* ExprEnterState(Expr* expr, BInState state) {
-  // We are guaranteed expr is not nil at this point.
-  // if (!expr) {
-  //    return  ExprError (ExprBIn (expr), kErrorImplementation);
+const Op* CrabsEnterState(CCrabs* crabs, BInState state) {
+  // We are guaranteed crabs is not nil at this point.
+  // if (!crabs) {
+  //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
   //}
 #if DEBUG_CRABS_EXPR
     PRINTF ("\nEntering " << BInState ()[state]
             << " state:" << state;
 #endif
-    expr->last_bin_state = expr->bin_state;
-    expr->bin_state = state;
+    crabs->last_bin_state = crabs->bin_state;
+    crabs->bin_state = state;
     return nullptr;
 }
 
-byte ExprStreamBOut(Expr* expr) { return BOutStreamByte(ExprBOut(expr)); }
+UI1 CrabsStreamBOut(CCrabs* crabs) { return BOutStreamByte(CrabsBOut(crabs)); }
 
-const Op* Push(Expr* expr, Operand* operand) {
-  if (!expr) {
-    return ExprError(expr, kErrorImplementation);
+const Op* Push(CCrabs* crabs, Operand* operand) {
+  if (!crabs) {
+    return CrabsError(crabs, kErrorImplementation);
   }
   if (!operand) {
-    return ExprError(expr, kErrorInvalidOperand);
+    return CrabsError(crabs, kErrorInvalidOperand);
   }
   PRINTF("\nPushing %s onto the stack", operand->Star('?', nullptr)->name);
-  uint_t stack_count = expr->stack_count;
-  if (stack_count >= expr->stack_size) {
-    return ExprError(expr, kErrorStackOverflow);
+  UIT stack_count = crabs->stack_count;
+  if (stack_count >= crabs->stack_size) {
+    return CrabsError(crabs, kErrorStackOverflow);
   }
-  ExprStack(expr)[stack_count - 1] = expr->operand;
-  expr->operand = operand;
-  expr->stack_count = stack_count + 1;
+  CrabsStack(crabs)[stack_count - 1] = crabs->operand;
+  crabs->operand = operand;
+  crabs->stack_count = stack_count + 1;
 #if DEBUG_CRABS_EXPR
-    PRINTF (ExprPrintStack (expr, Print ());
+    PRINTF (CrabsPrintStack (crabs, Print ());
 #endif
     return nullptr;
 }
 
-const Op* Pop(Expr* expr) {
-  uint_t stack_count = expr->stack_count;
+const Op* Pop(CCrabs* crabs) {
+  UIT stack_count = crabs->stack_count;
   if (stack_count == 0) {  // This should not happen.
-    return ExprError(expr, kErrorInvalidOperand);
+    return CrabsError(crabs, kErrorInvalidOperand);
   }
   if (stack_count == 1) {
     // We ever pop off the root.
-    ExprClose(expr);
+    CrabsClose(crabs);
     return 0;
   }
-  PRINTF("\nPopping %s off the stack.", OperandName(expr->operand))
-  expr->operand = ExprStack(expr)[stack_count - 2];
-  expr->stack_count = stack_count - 1;
+  PRINTF("\nPopping %s off the stack.", OperandName(crabs->operand))
+  crabs->operand = CrabsStack(crabs)[stack_count - 2];
+  crabs->stack_count = stack_count - 1;
 #if DEBUG_CRABS_EXPR
   Slot sout = out;
     PRINTF ("\nTop of stack is now "
-            << OperandName (expr->operand) << "."
-            << ExprPrintStack (expr, Print ());
+            << OperandName (crabs->operand) << "."
+            << CrabsPrintStack (crabs, Print ());
 #endif
     return nullptr;
 }
 
-const Op* ExprUnpack(Expr* expr) {
-  if (!expr) {
-    return ExprError(expr, kErrorImplementation);
+const Op* CrabsUnpack(CCrabs* crabs) {
+  if (!crabs) {
+    return CrabsError(crabs, kErrorImplementation);
   }
 
-  uint_t size,       //< Size of the ring buffer.
+  UIT size,          //< Size of the ring buffer.
       space,         //< Space left in the right buffer.
       length,        //< Length of the ring buffer data.
       type,          //< Current type.
-      bytes_left,    //< Num bytes left to scan.
+      bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
-      shift_bits,    //< Num bytes left to scan.
-      bytes_shift;   //< Num of bytes to shift to scan kOBJ.
-  byte bin_state,    //< Current bin FSM state.
-      b;             //< Current byte being verified.
+      shift_bits,    //< Number of bytes left to scan.
+      bytes_shift;   //< Number of bits to shift to scan the current OBJ.
+  UI1 bin_state,     //< Current bin FSM state.
+      b;             //< Current UI1 being verified.
   hash16_t hash,     //< Expected hash of the B-Sequence.
       found_hash;    //< Found B-Sequence hash.
   TME timestamp,     //< Last time when the expression ran.
@@ -283,11 +281,11 @@ const Op* ExprUnpack(Expr* expr) {
       *bin_start,    //< Start of the ring buffer data.
       *bin_stop,     //< Stop of the ring buffer data.
       *bin_end,      //< End of the ring buffer.
-          *slot_begin = expr->slot.begin,
-          *slot_start = expr->slot.start,  //< Write cursor,
-              *slot_stop = expr->slot.stop, *slot_end = expr->slot.end;
+          *slot_begin = crabs->slot.begin,
+          *slot_start = crabs->slot.start,  //< Write cursor,
+              *slot_stop = crabs->slot.stop, *slot_end = crabs->slot.end;
   const Op* result;  //< Result of the Scan.
-  const uint_t* header = expr->header;
+  const UIT* header = crabs->header;
 
   //< Header of the current Op being verified.
   op = nullptr;
@@ -298,14 +296,14 @@ const Op* ExprUnpack(Expr* expr) {
   //        return;
   //    }
 
-  bin_state = expr->bin_state;  //< This isn't an optimal solution.
-  bin = ExprBIn(expr);
+  bin_state = crabs->bin_state;  //< This isn't an optimal solution.
+  bin = CrabsBIn(crabs);
   size = bin->size;
-  hash = expr->hash;
+  hash = crabs->hash;
   timestamp = ClockNow();
-  delta_t = timestamp - expr->last_time;
+  delta_t = timestamp - crabs->last_time;
 
-  if (delta_t <= expr->timeout_us) {
+  if (delta_t <= crabs->timeout_us) {
     if (delta_t < 0)  //< Special case for Epoch (rare)
       delta_t *= -1;
   }
@@ -314,9 +312,9 @@ const Op* ExprUnpack(Expr* expr) {
   bin_end = bin_begin + size;
   bin_start = bin_begin + bin->start;
   bin_stop = bin_begin + bin->stop;
-  space = (uint_t)SlotSpace(bin_start, bin_stop, size);
+  space = (UIT)SlotSpace(bin_start, bin_stop, size);
   length = size - space;
-  PRINTF("\n    Scanning Expr:0x%p with length:%i", expr, length)
+  PRINTF("\n    Scanning CCrabs:0x%p with length:%i", crabs, length)
   for (; length != 0; --length) {
     b = *bin_start;
     *slot_start++ = b;
@@ -336,23 +334,23 @@ const Op* ExprUnpack(Expr* expr) {
         hash = Hash16(b, hash);
         PRINTF("\nhash:0x%x", hash)
         // When verifying an address, there is guaranteed to be an
-        // expr->op set. We are just looking for nil return values
-        // from the Do (byte, Stack*): const Operand* function,
+        // crabs->op set. We are just looking for nil return values
+        // from the Do (UI1, Stack*): const Operand* function,
         // pushing Star(string) on to the Star stack, and looking for
         // the first procedure call.
         //
         if (b == op->pop) {
-          Pop(expr);
+          Pop(crabs);
           break;
         }
         if (b == op->close) {
-          Pop(expr);
-          expr->bytes_left = 1;
-          ExprSetState(expr, kBInStateVerifyingHash);
+          Pop(crabs);
+          crabs->bytes_left = 1;
+          CrabsSetState(crabs, kBInStateVerifyingHash);
           bin_state = kBInStateVerifyingHash;
           break;
         }
-        operand = expr->operand;
+        operand = crabs->operand;
 
         op = operand->Star('?', nullptr);
         PRINTF("\nCurrent Op is \"%s\"", op->name)
@@ -364,46 +362,46 @@ const Op* ExprUnpack(Expr* expr) {
           // trying to save some CPU resources prematurely and
           // sinfully optimizing things that don't need to be
           // optimized.
-          // result = expr->result;
+          // result = crabs->result;
           // if (result == nullptr) {
-          //    return Result (expr, kErrorInvalidOperand);
+          //    return Result (crabs, kErrorInvalidOperand);
           //}
-          // ExprPushScan (expr, expr->operand);
+          // CrabsPushScan (crabs, crabs->operand);
           // Clear the buffer and return.
-          // ExprClear (expr); //< Do I really need to clear?
-          // return expr->result;
-          return ExprForceDisconnect(expr, kErrorInvalidOperand);
+          // CrabsClear (crabs); //< Do I really need to clear?
+          // return crabs->result;
+          return CrabsForceDisconnect(crabs, kErrorInvalidOperand);
         }
-        const uint_t* params = op->in;
-        uintptr_t num_ops = reinterpret_cast<uintptr_t>(params);
+        const UIT* params = op->in;
+        UIW num_ops = reinterpret_cast<UIW>(params);
         if (num_ops > kParamsMax) {
           // It's an Op.
           // The software implementer pushes the Op on the stack.
 
           // PRINT_BSQ ("\nFound Op with params ", params)
 
-          result = ExprScanHeader(expr, params);
+          result = CrabsScanHeader(crabs, params);
           if (result) {
 #if DEBUG_CRABS_EXPR
-            PRINTF("Expr::Error reading address.");
+            PRINTF("CCrabs::Error reading address.");
 #endif
-            return ExprForceDisconnect(expr, kErrorImplementation);
+            return CrabsForceDisconnect(crabs, kErrorImplementation);
           }
 
-          operand = expr->operand;
+          operand = crabs->operand;
           if (!operand) {
 #if DEBUG_CRABS_EXPR
             PRINTF("\nNull operand found!");
 #endif
-            return ExprForceDisconnect(expr, kErrorInvalidOperand);
+            return CrabsForceDisconnect(crabs, kErrorInvalidOperand);
           }
           header = op->in;
-          expr->params_left = *header;
-          expr->header = header;        //< +1 to bypass the number of params
-          expr->header_start = header;  //< Used to print current header.
-          ExprEnterState(expr, kBInStatePackedArgs);
+          crabs->params_left = *header;
+          crabs->header = header;        //< +1 to bypass the number of params
+          crabs->header_start = header;  //< Used to print current header.
+          CrabsEnterState(crabs, kBInStatePackedArgs);
           bin_state = kBInStatePackedArgs;
-          type = *(++expr->header);  //< Setup to read first type.
+          type = *(++crabs->header);  //< Setup to read first type.
 #if DEBUG_CRABS_EXPR
           PRINTF("\nNext TType to scan:\'"
                  << TypeString(type) << "\' with alignment "
@@ -412,7 +410,7 @@ const Op* ExprUnpack(Expr* expr) {
           slot_start = TypeAlignUpPointer<char>(slot_start, (type_t)type);
           break;
         }
-        op = operand->Star(b, expr);
+        op = operand->Star(b, crabs);
         break;
       }
       case kBInStatePackedArgs: {
@@ -421,7 +419,7 @@ const Op* ExprUnpack(Expr* expr) {
         // header argument and checking for the end of the procedure
         // call.
 
-        if (expr->params_left-- == 0) {
+        if (crabs->params_left-- == 0) {
 #if DEBUG_CRABS_EXPR
           PRINTF("\nBSQ successfully scanned.");
 #endif
@@ -439,21 +437,21 @@ const Op* ExprUnpack(Expr* expr) {
 #if DEBUG_CRABS_EXPR
                         Write("\nScanning address.");
 #endif
-                        ExprError(expr, kErrorInvalidType);
-                        ExprEnterState(expr, kBInStateLocked);
+                        CrabsError(crabs, kErrorInvalidType);
+                        CrabsEnterState(crabs, kBInStateLocked);
                         bin_state = kBInStateLocked;
                         break;
                       }
-                      ExprEnterState(expr, kBInStateAddress);
+                      CrabsEnterState(crabs, kBInStateAddress);
                       bin_state = kBInStateAddress;
                       break;
 
                     } else if (type == kSTR) {  // UTF-8/ASCII string type.
                       // Read the max number of chars off the header.
-                      bytes_left = *(++expr->header);
+                      bytes_left = *(++crabs->header);
                       PRINTF("\nScanning kSTR with max length %u",
                              (uint)bytes_left);
-                      ExprEnterState(expr, kBInStatePackedUtf8);
+                      CrabsEnterState(crabs, kBInStatePackedUtf8);
                       bin_state = kBInStatePackedUtf8;
                       break;
                     } else if (type < kDBL) {  // Plain-old-data type.
@@ -462,13 +460,13 @@ const Op* ExprUnpack(Expr* expr) {
                              (uint)bytes_left);
                       if (bytes_left == 1) {
                         // No need to enter a state because there is only one
-                        // byte to parse and we already have the byte loaded.
+                        // UI1 to parse and we already have the UI1 loaded.
                         PRINTF(
                             "\nDone scanning without state change "
                             "for \"%s\"",
                             TypeString(type))
                         // Setup to read the next type.
-                        type = *(++expr->header);
+                        type = *(++crabs->header);
 #if DEBUG_CRABS_EXPR
                         PRINTF("\nNext TType to scan:\'"
                                << TypeString(type) << "\' with alignment "
@@ -478,7 +476,7 @@ const Op* ExprUnpack(Expr* expr) {
                             TypeAlignUpPointer<>(slot_start, (type_t)type);
                         break;
                       }
-                      ExprEnterState(expr, kBInStatePackedPod);
+                      CrabsEnterState(crabs, kBInStatePackedPod);
                       bin_state = kBInStatePackedPod;
                       break;
                     } else if (type < UVI) {  // Varint type.
@@ -486,7 +484,7 @@ const Op* ExprUnpack(Expr* expr) {
                       Write("\nScanning Varint.");
 #endif
                       bytes_left = TypeFixedSize(type);
-                      ExprEnterState(expr, kBInStatePackedVarint);
+                      CrabsEnterState(crabs, kBInStatePackedVarint);
                       bin_state = kBInStatePackedVarint;
                       break;
                       /*
@@ -495,12 +493,12 @@ const Op* ExprUnpack(Expr* expr) {
                           Write ("\nScanning ST2.");
                           #endif
                           if (bytes_left == 1) {
-                              expr->last_byte = b;
+                              crabs->last_byte = b;
                               break;
                           }
                           // Read the max number of chars off the header.
-                          bytes_left = *expr->header++ * 2;
-                          ExprEnterState (expr,
+                          bytes_left = *crabs->header++ * 2;
+                          CrabsEnterState (crabs,
                                           BIn::Utf16State);
                           bin_state = BIn::Utf16State;
                           break;
@@ -510,8 +508,8 @@ const Op* ExprUnpack(Expr* expr) {
                           Write ("\nScanning ST4.");
                           #endif
                           // Read the max number of chars off the header.
-                          bytes_left = *expr->header++ * 4;
-                          ExprEnterState (expr, BIn::Utf32State);
+                          bytes_left = *crabs->header++ * 4;
+                          CrabsEnterState (crabs, BIn::Utf32State);
                           bin_state = BIn::Utf32State;*/
                     } else {  // It's not a POD type.
 #if DEBUG_CRABS_EXPR
@@ -529,19 +527,19 @@ const Op* ExprUnpack(Expr* expr) {
                       } else if (array_type == 1) {
                         bytes_shift = 0;
                         shift_bits = 16;
-                        ExprEnterState(expr, kBInStatePackedObj);
+                        CrabsEnterState(crabs, kBInStatePackedObj);
                         bin_state = kBInStatePackedObj;
                         break;
                       } else if (array_type == 2) {
                         bytes_shift = 0;
                         shift_bits = 32;
-                        ExprEnterState(expr, kBInStatePackedObj);
+                        CrabsEnterState(crabs, kBInStatePackedObj);
                         bin_state = kBInStatePackedObj;
                         break;
                       } else {  //< array_type == 3
                         bytes_shift = 0;
                         shift_bits = 64;
-                        ExprEnterState(expr, kBInStatePackedObj);
+                        CrabsEnterState(crabs, kBInStatePackedObj);
                         bin_state = kBInStatePackedObj;
                         break;
                       }
@@ -550,25 +548,25 @@ const Op* ExprUnpack(Expr* expr) {
       }
       case kBInStatePackedUtf8: {
         if (bytes_left == 0) {
-          ExprError(expr, kErrorTextOverflow,
-                    const_cast<const uint_t*>(expr->header), 0, bin_start);
+          CrabsError(crabs, kErrorTextOverflow,
+                     const_cast<const UIT*>(crabs->header), 0, bin_start);
           break;
         }
         hash = Hash16(b, hash);
 #if DEBUG_CRABS_EXPR
         PRINTF("\nhash:" << PrintHex(hash));
 #endif
-        // Hash byte.
+        // Hash UI1.
         // Check if char terminated.
         if (b == 0) {
           // Check if there is another argument to scan.
-          ExprExitState(expr);
+          CrabsExitState(crabs);
           bin_state = kBInStatePackedArgs;
           //< We can't go back from kOBJ to POD for Text Types.
           // Setup to read next type.
-          type = *(++expr->header);
-          if (expr->params_left == 0) {
-            ExprSetState(expr, kBInStateAddress);
+          type = *(++crabs->header);
+          if (crabs->params_left == 0) {
+            CrabsSetState(crabs, kBInStateAddress);
             bin_state = kBInStateAddress;
             break;
           }
@@ -588,7 +586,7 @@ const Op* ExprUnpack(Expr* expr) {
 #if DEBUG_CRABS_EXPR
         Write("\nhash:" << PrintHex(hash));
 #endif
-        ExprExitState(expr);
+        CrabsExitState(crabs);
         break;
       }
       case kBInStatePackedUtf32: {
@@ -596,7 +594,7 @@ const Op* ExprUnpack(Expr* expr) {
 #if DEBUG_CRABS_EXPR
         Write("\nhash:" << PrintHex(hash));
 #endif
-        ExprExitState(expr);
+        CrabsExitState(crabs);
         break;
       }
       case kBInStatePackedVarint: {
@@ -608,25 +606,26 @@ const Op* ExprUnpack(Expr* expr) {
         // the type (3, 5, or 9) but the varint may be complete before
         // this number of bytes. We're just basically counting down and
         // looking for an overflow situation.
-        // Hash byte.
+        // Hash UI1.
 
         if (bytes_left == 1) {
 #if DEBUG_CRABS_EXPR
-          Write("Checking last byte:");
+          Write("Checking last UI1:");
 #endif
 
           // @warning I am not current saving the offset. I'm not
           // sure  what to do here. The header class uses a variadic
           // template, I'm kind of tempted to switch to an int
           // type for the headers so I can just use a normal
-          // array bracket newializer. The other option is to
-          // add 32 to the first byte.
+          // array bracket initializer. The other option is to
+          // add 32 to the first UI1.
 
           if ((b >> 7) != 1) {
-            const uint_t* header = const_cast<const uint_t*>(expr->header);
+            const UIT* header = const_cast<const UIT*>(crabs->header);
 
-            ExprEnterState(expr, kBInStateHandlingError);
-            return ExprError(expr, kErrorVarintOverflow, header, 0, bin_start);
+            CrabsEnterState(crabs, kBInStateHandlingError);
+            return CrabsError(crabs, kErrorVarintOverflow, header, 0,
+                              bin_start);
           }
 
           break;
@@ -657,30 +656,30 @@ const Op* ExprUnpack(Expr* expr) {
 #if DEBUG_CRABS_EXPR
           PRINTF("\nLoading object of size:" << bytes_left);
 #endif
-          ExprExitState(expr);
-          ExprEnterState(expr, kBInStatePackedPod);
+          CrabsExitState(crabs);
+          CrabsEnterState(crabs, kBInStatePackedPod);
           bin_state = kBInStatePackedPod;
           break;
         }
-        bytes_left &= ((uint_t)b) << bytes_shift;
+        bytes_left &= ((UIT)b) << bytes_shift;
         shift_bits += 8;
         break;
       }
       case kBInStateVerifyingHash: {
-        if (expr->bytes_left != 0) {  // One more byte to load.
-          expr->last_byte = b;
-          expr->bytes_left = 0;
+        if (crabs->bytes_left != 0) {  // One more UI1 to load.
+          crabs->last_byte = b;
+          crabs->bytes_left = 0;
           break;
         }
         found_hash = b;
         found_hash = found_hash << 8;
-        found_hash |= expr->last_byte;
+        found_hash |= crabs->last_byte;
         if (hash != found_hash) {
 #if DEBUG_CRABS_EXPR
           Write("\nError: expecting hash:" << PrintHex(hash) << " and found "
                                            << PrintHex(found_hash));
 #endif
-          return ExprForceDisconnect(expr, kErrorInvalidHash);
+          return CrabsForceDisconnect(crabs, kErrorInvalidHash);
         }
 #if DEBUG_CRABS_EXPR
         Write("\nSuccess reading hash!");
@@ -696,29 +695,29 @@ const Op* ExprUnpack(Expr* expr) {
       }
       case kBInStateDisconnected: {
         if (b) {
-          ExprSetState(expr, kBInStateHandlingError);
+          CrabsSetState(crabs, kBInStateHandlingError);
           bin_state = kBInStateHandlingError;
         } else {
-          ExprSetState(expr, kBInStateAck);
+          CrabsSetState(crabs, kBInStateAck);
           bin_state = kBInStateAck;
         }
         break;
       }
       case kBInStateAck: {
         if (b) {
-          ExprSetState(expr, kBInStateHandlingError);
+          CrabsSetState(crabs, kBInStateHandlingError);
           bin_state = kBInStateHandlingError;
         } else {
 #if DEBUG_CRABS_EXPR
           Write("\nResetting hash.");
 #endif
           hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
-          expr->operand = expr->root;
-          expr->result = nullptr;
+          crabs->operand = crabs->root;
+          crabs->result = nullptr;
           bin_state = kBInStateAddress;
-          ExprSetState(expr, kBInStateAddress);
+          CrabsSetState(crabs, kBInStateAddress);
 #if DEBUG_CRABS_EXPR
-          PRINTF("\nRoot scope: \"" << OperandName(expr->operand) << '\"');
+          PRINTF("\nRoot scope: \"" << OperandName(crabs->operand) << '\"');
 #endif
         }
         break;
@@ -739,8 +738,8 @@ const Op* ExprUnpack(Expr* expr) {
 #if DEBUG_CRABS_EXPR
           Write("... done!");
 #endif
-          ExprExitState(expr);
-          bin_state = expr->bin_state;
+          CrabsExitState(crabs);
+          bin_state = crabs->bin_state;
 
           // Setup to read the next type.
           type = *(++header);
@@ -755,7 +754,7 @@ const Op* ExprUnpack(Expr* expr) {
         --bytes_left;
                 // b = input->Pull ();
 #if DEBUG_CRABS_EXPR
-        PRINTF("\nLoading next byte:" << PrintHex(b));
+        PRINTF("\nLoading next UI1:" << PrintHex(b));
 #endif
         hash = Hash16(b, hash);
         *bin_start = b;
@@ -765,57 +764,57 @@ const Op* ExprUnpack(Expr* expr) {
             }
   }
   //
-  expr->hash = hash;
-  expr->bytes_left = bytes_left;
-  bin->start = (uint_t)Size(bin_begin, bin_start);
+  crabs->hash = hash;
+  crabs->bytes_left = bytes_left;
+  bin->start = (UIT)Size(bin_begin, bin_start);
   return nullptr;
 }
 
-BOL ExprContains(Expr* expr, void* address) {
-  if (address < reinterpret_cast<uintptr_t*>(expr)) return false;
-  if (address > ExprEndAddress(expr)) return false;
+BOL CrabsContains(CCrabs* crabs, void* address) {
+  if (address < reinterpret_cast<UIW*>(crabs)) return false;
+  if (address > CrabsEndAddress(crabs)) return false;
   return true;
 }
 
-const Op* ExprScanHeader(Expr* expr, const uint_t* header) {
-  if (expr->stack_count >= expr->stack_size) {
+const Op* CrabsScanHeader(CCrabs* crabs, const UIT* header) {
+  if (crabs->stack_count >= crabs->stack_size) {
     // Handle overflow cleanup:
-    return ExprError(expr, kErrorStackOverflow, header);
+    return CrabsError(crabs, kErrorStackOverflow, header);
   }
 
   return 0;
 }
 
-const uint_t* ExprHeaderStack(Expr* expr) {
-  return reinterpret_cast<const uint_t*>(reinterpret_cast<char*>(expr) +
-                                         sizeof(Expr) + expr->stack_count);
+const UIT* CrabsHeaderStack(CCrabs* crabs) {
+  return reinterpret_cast<const UIT*>(reinterpret_cast<char*>(crabs) +
+                                      sizeof(CCrabs) + crabs->stack_count);
 }
 
-void ExprClose(Expr* expr) {
+void CrabsClose(CCrabs* crabs) {
 #if DEBUG_CRABS_EXPR
   Write("\nClosing expression.");
 #endif
-  expr->stack_count = 1;
+  crabs->stack_count = 1;
 }
 
-void ExprCancel(Expr* expr) {
+void CrabsCancel(CCrabs* crabs) {
 #if DEBUG_CRABS_EXPR
   Write("\nCanceling expression.");
 #endif
-  expr->stack_count = 1;
-  expr->bin_state = kBInStateAddress;
-  // ExprPush (expr->root);
+  crabs->stack_count = 1;
+  crabs->bin_state = kBInStateAddress;
+  // CrabsPush (crabs->root);
 }
 
-void ExprClear(Expr* expr) {
+void CrabsClear(CCrabs* crabs) {
   // Erase the buffer by writing zeros to it.
 
-  BIn* bin = ExprBIn(expr);
+  BIn* bin = CrabsBIn(crabs);
 
   char *begin = BInBegin(bin), *end = begin + bin->size,
        *start = begin + bin->start, *stop = begin + bin->stop;
 
-  // uint_t buffer_space = SlotSpace (start, stop, size);
+  // UIT buffer_space = SlotSpace (start, stop, size);
 
   if (start == stop) return;  //< Nothing to do.
   if (start > stop) {
@@ -824,70 +823,69 @@ void ExprClear(Expr* expr) {
     return;
   }
   SocketFill(start, stop - start);
-  bin->start = (uint_t)Size(expr, begin);
-  bin->stop = (uint_t)Size(expr, start + 1);
+  bin->start = (UIT)Size(crabs, begin);
+  bin->stop = (UIT)Size(crabs, start + 1);
 }
 
-void ExprRingBell(Expr* expr, const char* address) {
-  BOutRingBell(ExprBOut(expr), address);
+void CrabsRingBell(CCrabs* crabs, const char* address) {
+  BOutRingBell(CrabsBOut(crabs), address);
 }
 
-void ExprAckBack(Expr* expr, const char* address) {
-  BOutAckBack(ExprBOut(expr), address);
+void CrabsAckBack(CCrabs* crabs, const char* address) {
+  BOutAckBack(CrabsBOut(crabs), address);
 }
 
-const Op* ExprForceDisconnect(Expr* expr, Error error) {
-  expr->bin_state = kBInStateDisconnected;
-  return ExprError(expr, error);
+const Op* CrabsForceDisconnect(CCrabs* crabs, Error error) {
+  crabs->bin_state = kBInStateDisconnected;
+  return CrabsError(crabs, error);
 }
 
-const Op* ExprQuery(Expr* expr, const Op& op) {
-  if (expr) {
+const Op* CrabsQuery(CCrabs* crabs, const Op& op) {
+  if (crabs) {
     void* args[2];
-    uintptr_t num_ops = (uintptr_t)op.in, first_op = (uintptr_t)op.out;
-    // @todo Write params to expr!
-    static const uint_t* header = Params<5, kSTR, kOpNameLengthMax, UVI, UVI,
-                                         kSTR, kOpDescriptionLengthMax>();
-    return BOutWrite(ExprBOut(expr), header,
+    UIW num_ops = (UIW)op.in, first_op = (UIW)op.out;
+    // @todo Write params to crabs!
+    static const UIT* header = Params<5, kSTR, kOpNameLengthMax, UVI, UVI, kSTR,
+                                      kOpDescriptionLengthMax>();
+    return BOutWrite(CrabsBOut(crabs), header,
                      Args(args, op.name, &num_ops, &first_op, op.description));
   }
   return &op;
 }
 
-char* ExprBaseAddress(BIn* bin) {
+char* CrabsBaseAddress(BIn* bin) {
   return reinterpret_cast<char*>(bin) + sizeof(BIn);
 }
 
-uint_t ExprSpace(BIn* bin) {
+UIT CrabsSpace(BIn* bin) {
   if (!bin) {
     return ~0;
   }
 
-  char* begin = ExprBaseAddress(bin);
-  return (uint_t)SlotSpace(begin + bin->start, begin + bin->stop, bin->size);
+  char* begin = CrabsBaseAddress(bin);
+  return (UIT)SlotSpace(begin + bin->start, begin + bin->stop, bin->size);
 }
 
-uintptr_t* ExprBaseAddress(void* ptr, uint_t rx_tx_offset) {
+UIW* CrabsBaseAddress(void* ptr, UIT rx_tx_offset) {
   enum {
-    kSlotHeaderSize =
-        sizeof(BIn) + sizeof(uintptr_t) - sizeof(BIn) % sizeof(uintptr_t),
+    kSlotHeaderSize = sizeof(BIn) + sizeof(UIW) - sizeof(BIn) % sizeof(UIW),
     //< Offset to the start of the ring buffer.
   };
   char* result = reinterpret_cast<char*>(ptr) + rx_tx_offset + kSlotHeaderSize;
-  return reinterpret_cast<uintptr_t*>(result);
+  return reinterpret_cast<UIW*>(result);
 }
 
-char* ExprEndAddress(BIn* bin) {
+char* CrabsEndAddress(BIn* bin) {
   return reinterpret_cast<char*>(bin) + sizeof(BIn) + bin->size;
 }
 
-const Op* ExprQuery(Expr* expr, const Op* op) {
-  if (expr) {
+const Op* CrabsQuery(CCrabs* crabs, const Op* op) {
+  if (crabs) {
     if (!op) {
-      return ExprError(expr, kErrorImplementation);
+      return CrabsError(crabs, kErrorImplementation);
     }
     void* args[2];
-    return BOutWrite(ExprBOut(expr),
+    return BOutWrite(CrabsBOut(crabs),
                      Params<5, kSTR, kOpNameLengthMax, UVI, UVI, kSTR,
                             kOpDescriptionLengthMax>(),
                      Args(args, op->name, op->in, op->out, op->description));
@@ -896,19 +894,19 @@ const Op* ExprQuery(Expr* expr, const Op* op) {
 }
 
 #if CRABS_TEXT
-UTF8& PrintExprStack(UTF8& print, Expr* expr) {
-  ASSERT(expr);
+UTF8& PrintCrabsStack(UTF8& print, CCrabs* crabs) {
+  ASSERT(crabs);
 
-  uint_t i, stack_count;
+  UIT i, stack_count;
   const Op* op;
   Operand* operand;
-  Operand** stack = ExprStack(expr);
+  Operand** stack = CrabsStack(crabs);
 
-  stack_count = expr->stack_count;
+  stack_count = crabs->stack_count;
   print << "\nOperand stack_count:" << stack_count;
 
   if (stack_count == 1) {
-    return print << "\nStack Item 1: " << OperandName(expr->root);
+    return print << "\nStack Item 1: " << OperandName(crabs->root);
   }
   for (i = 0; i < stack_count - 1; ++i) {
     print << "\nStack Item " << i + 1 << ":\"";
@@ -916,31 +914,31 @@ UTF8& PrintExprStack(UTF8& print, Expr* expr) {
     op = operand->Star('?', nullptr);
     print << op->name << '\"';
   }
-  op = expr->operand->Star('?', nullptr);
+  op = crabs->operand->Star('?', nullptr);
   return print << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
-UTF8& PrintExpr(UTF8& print, Expr* expr) {
-  ASSERT(expr);
+UTF8& PrintCrabs(UTF8& utf, CCrabs* crabs) {
+  ASSERT(crabs);
 
-  print << Line('~', 80) << "\nStack:    " << Hex<uintptr_t>(expr) << '\n'
-        << Line('_', 80) << "\nbytes_left : " << expr->bytes_left
-        << "\nheader_size: " << expr->header_size
-        << "\nstack_count: " << expr->stack_count
-        << "\nstack_size : " << expr->stack_size
-        << "\nbin_state  : " << BInStateStrings()[expr->bin_state]
-        << "\nbout_state : " << BOutStateStrings()[expr->bout_state]
-        << "\nnum_states : " << expr->num_states
-        << "\nheader_size: " << expr->header_size << Line('-', 80)
-        << expr->operand << "\nheader     : " << Bsq(expr->header_start)
-        << Line('-', 80);
-  PrintExprStack(print, expr);
-  print << Line('~', 80);
-  return print;
+  utf << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << '\n'
+      << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left
+      << "\nheader_size: " << crabs->header_size
+      << "\nstack_count: " << crabs->stack_count
+      << "\nstack_size : " << crabs->stack_size
+      << "\nbin_state  : " << BInStateStrings()[crabs->bin_state]
+      << "\nbout_state : " << BOutStateStrings()[crabs->bout_state]
+      << "\nnum_states : " << crabs->num_states
+      << "\nheader_size: " << crabs->header_size << Line('-', 80)
+      << crabs->operand << "\nheader     : " << Bsq(crabs->header_start)
+      << Line('-', 80);
+  PrintCrabsStack(utf, crabs);
+  utf << Line('~', 80);
+  return utf;
 }
 
 #endif
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //> #if SEAM >= _0_0_0__13

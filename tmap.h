@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /map.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -62,9 +62,9 @@ namespace _ {
     |==========================|   |     |
     |_____ count_max         |   |     |
     |_____ ...               |   |     |
-    |_____ Type byte N       |   |     |
+    |_____ Type UI1 N       |   |     |
     |_____ ...               |   |     |
-    |        Type byte 1       |   |     |   ^ Up in addresses
+    |        Type UI1 1       |   |     |   ^ Up in addresses
     |==========================|   |     |   |
     |  TSparseArray<UI, SI> Struct |   v     v   ^
     +==========================+ ----------- ^ 0xN
@@ -128,7 +128,7 @@ namespace _ {
 */
 template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 struct TMap {
-  UI size;        //< ASCII kOBJ size.
+  UI size;        //< ASCII OBJ size.
   SI table_size,  /*< Size of the key strings in bytes.
                       Set to 0 for ASCII Map. */
       size_pile;  /*< Size of the collisions pile in bytes.
@@ -138,7 +138,7 @@ struct TMap {
 };
 
 template <typename UI = UI4, typename SI = SI4, typename I = SI2>
-constexpr uint_t MapOverheadPerIndex() {
+constexpr UIT MapOverheadPerIndex() {
   return sizeof(2 * sizeof(SI) + sizeof(UI) + sizeof(UI) + 3);
 };
 
@@ -163,7 +163,7 @@ enum {
              will get rounded up to the next higher multiple of 4.
 */
 template <typename UI = UI4, typename SI = SI4, typename I = SI2>
-TMap<UI, SI, I>* MapInit(uintptr_t* buffer, UI size, I count_max) {
+TMap<UI, SI, I>* MapInit(UIW* buffer, UI size, I count_max) {
   ASSERT(buffer)
 
   if (table_size >= size) return nullptr;
@@ -197,7 +197,7 @@ inline SI MapCountBoundsLower() {
 
 /* Creates a map from dynamic memory. */
 template <typename UI = UI4, typename SI = SI4, typename I = SI2>
-uintptr_t* MapNew(UI size = 0, I count_max = 0) {
+UIW* MapNew(UI size = 0, I count_max = 0) {
   size = AlignDown<SI8, UI>(size);
   count_max = AlignDown<SI8, SI>(count_max);
   UI size_min = MapSizeBoundsLower<UI, SI, I>();
@@ -207,7 +207,7 @@ uintptr_t* MapNew(UI size = 0, I count_max = 0) {
     count_max = size_min;
   }
 
-  uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
+  UIW* buffer = new UIW[size >> kWordBitCount];
   TMap<UI, SI, I>* map = reinterpret_cast<TMap<UI, SI, I>*>(buffer);
   map->size = size;
   map->table_size = 0;
@@ -514,7 +514,7 @@ void MapWipe(TMap<UI, SI, I>* map) {
   MemoryWipe(reinterpret_cast<char*>(map) + sizeof(TMap<UI, SI, I>), size);
 }
 
-/* Returns true if this expr contains only the given address. */
+/* Returns true if this crabs contains only the given address. */
 template <typename UI = UI4, typename SI = SI4, typename I = SI2>
 BOL MapContains(TMap<UI, SI, I>* map, void* value) {
   ASSERT(map)
@@ -652,7 +652,7 @@ class Map {
   }
 
  private:
-  uintptr_t* buffer;
+  UIW* buffer;
 
   /* Returns the buffer casted as a TMap<UI, SI, I>*. */
   inline TMap<UI, SI, I>* OBJ() {
@@ -660,6 +660,6 @@ class Map {
   }
 };  //< class Map
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_CRAPS_MAP
 #endif  //< #if SEAM >= _0_0_0__10

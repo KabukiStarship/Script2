@@ -3,7 +3,7 @@ SCRIPT Specification RFC
 
 # 1. Overview
 
-The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT in all caps) Specification defines this Overview Specification, ASCII Data Types Specification, and the SCRIPT Protocol Specification, Universal Polar Addressing, and ICAN3 Distributed Nomination System. Script, which consists of the SCRIPT Protocol, Chinese Room Abstract Stack Machine (Crabs), and Script^2 is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical reference bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
+The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines this Overview Specification, Automaton Standard Code for Information Interchange (ASCII) Data Types Specification, and the SCRIPT Protocol Specification, and Universal Polar Addressing. Script, which consists of the SCRIPT Protocol, Chinese Room Abstract Stack Machine (Crabs), and Script^2 is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical reference bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
 
 Please note that this RFC is not an ISO Specification but is a living document; your comments and criticism are welcome. If you would like to contribute to this RFC, please email [Cale McCollough](https://calemccollough.github.io) at [cale.mccollough@gmail.com](mailto:cale.mccollough@gmail.com).
 
@@ -23,30 +23,29 @@ Please note that this RFC is not an ISO Specification but is a living document; 
     6.  [Timestamps](ascii_data_specification_rfc.md#16-timestamps)
     7.  [B-Sequences](ascii_data_specification_rfc.md#17-b-sequences)
     8.  [Objects](ascii_data_specification_rfc.md#18-objects)
-3. [Universal Addressing Specification](script_sdnp_specification_rfc.md)
-  1. [Longitude and Latitude](script_sdnp_specification_rfc.md#31-longitude-and-latitude)
-  2. [Most Longitudinal bit](script_sdnp_specification_rfc.md#32-most-longitudinal-bit)
-  3. [Universal Address Format](script_sdnp_specification_rfc.md#33-universal-address-format)
-  4. []
-4. [SCRIPT Protocol Specification](script_sdnp_specification_rfc.md#3-script-protocol-specification)
-    1.  [Chinese Room Abstract Stack Machine (Crabs) Overview](script_sdnp_specification_rfc.md#31-chinese-room-abstract-stack-machine-crabs-overview)
-    2.  [Group Automata Theorem](script_sdnp_specification_rfc.md#332-group-automata-theorem)
-    3.  [Time](script_sdnp_specification_rfc.md#33-time)
-    4.  [Slots](script_sdnp_specification_rfc.md#34-slots)
-    5.  [Expressions](script_sdnp_specification_rfc.md#35-expressions)
-    6.  [Operations](script_sdnp_specification_rfc.md#36-operations)
-    7.  [Generic Handshake](script_sdnp_specification_rfc.md#37-generic-handshake)
-    8.  [Authentication](script_sdnp_specification_rfc.md#38-authentication)
-    9.  [Chinese Room Objects](script_sdnp_specification_rfc.md#39-chinese-room-objects)
-    10. [Quality of Service](script_sdnp_specification_rfc.md#310-quality-of-service)
-    11. [Profiles](script_sdnp_specification_rfc.md#311-profiles)
-    12. [Encryption](script_sdnp_specification_rfc.md#312-encryption)
-    13. [Terminals](script_sdnp_specification_rfc.md#313-terminals)
-    14. [Quality of Service](script_sdnp_specification_rfc.md#314-quality-of-service)
-    15. [Congestion Control](script_sdnp_specification_rfc.md#315-congestion-control)
-    16. [Abnormal Behavior](script_sdnp_specification_rfc.md#316-abnormal-behavior)
-    17. [Crabs Interpreters and Compilers](script_sdnp_specification_rfc.md#317-crabs-interpreters-and-compilers)
-    18. [Conformance Targets](script_sdnp_specification_rfc.md#318-conformance-targets)
+3. [Universal Addressing Specification](script_protocol_specification_rfc.md)
+  1. [Longitude and Latitude](script_protocol_specification_rfc.md#31-longitude-and-latitude)
+  2. [Most Longitudinal bit](script_protocol_specification_rfc.md#32-most-longitudinal-bit)
+  3. [Universal Address Format](script_protocol_specification_rfc.md#33-universal-address-format)
+4. [SCRIPT Protocol Specification](script_protocol_specification_rfc.md#3-script-protocol-specification)
+    1.  [Chinese Room Abstract Stack Machine (Crabs) Overview](script_protocol_specification_rfc.md#31-chinese-room-abstract-stack-machine-crabs-overview)
+    2.  [Group Automata Theorem](script_protocol_specification_rfc.md#332-group-automata-theorem)
+    3.  [Time](script_protocol_specification_rfc.md#33-time)
+    4.  [Slots](script_protocol_specification_rfc.md#34-slots)
+    5.  [Expressions](script_protocol_specification_rfc.md#35-expressions)
+    6.  [Operations](script_protocol_specification_rfc.md#36-operations)
+    7.  [Generic Handshake](script_protocol_specification_rfc.md#37-generic-handshake)
+    8.  [Authentication](script_protocol_specification_rfc.md#38-authentication)
+    9.  [Chinese Room Objects](script_protocol_specification_rfc.md#39-chinese-room-objects)
+    10. [Quality of Service](script_protocol_specification_rfc.md#310-quality-of-service)
+    11. [Profiles](script_protocol_specification_rfc.md#311-profiles)
+    12. [Encryption](script_protocol_specification_rfc.md#312-encryption)
+    13. [Terminals](script_protocol_specification_rfc.md#313-terminals)
+    14. [Quality of Service](script_protocol_specification_rfc.md#314-quality-of-service)
+    15. [Congestion Control](script_protocol_specification_rfc.md#315-congestion-control)
+    16. [Abnormal Behavior](script_protocol_specification_rfc.md#316-abnormal-behavior)
+    17. [Crabs Interpreters and Compilers](script_protocol_specification_rfc.md#317-crabs-interpreters-and-compilers)
+    18. [Conformance Targets](script_protocol_specification_rfc.md#318-conformance-targets)
 ### 1.2. Author
 
 Cale Jamison McCollough
@@ -82,9 +81,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 |         Abstract Simulation | A **thought experiment** under conceptually ideal environment and not a virtual or physical simulation. |
 |             Simulation Time | A period of time existing in a **abstract simulation** or **virtual simulation** that is not real-time. |
 |          Serial Byte Stream | A stream of octets of bits in real or simulation time. |
-|              Serial Devices | A *abstract device* that can communicate input and/or output with a *serial byte stream*. |
+|              Serial Devices | A *abstract device* that can communicate input and/or output with a *serial UI1 stream*. |
 |    Serial Transmission Line | A connection between two *Serial Devices*. |
-|        Abstract Serial Port | A conceptually perfect *Serial Transmission Line* with infinite bandwidth and zero data corruption. A **ABS** is operated by writing a byte and reading a byte simultaneously. |
+|        Abstract Serial Port | A conceptually perfect *Serial Transmission Line* with infinite bandwidth and zero data corruption. A **ABS** is operated by writing a UI1 and reading a UI1 simultaneously. |
 |     Asynchronous B-Sequence | A B-Sequence that can be processed asynchronously. |
 |       Local Procedure Calls | (**LPC**) A procedure call executed on a local computer. |
 |      Remote Procedure Calls | (**RPC**) A procedure call executed on a foreign computer. |
@@ -115,4 +114,4 @@ Unless required by applicable law or agreed to in writing, software distributed 
 |       Wall | A Wall in a Chinese Room composed of a contiguous word-aligned block of memory. |
 
 
-**|** [Next >>](script_universal_addressing_specification_rfc.md)
+**|** [ASCII Data Specification >>](script_universal_addressing_specification_rfc.md)

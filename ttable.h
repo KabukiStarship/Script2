@@ -14,7 +14,6 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__08
-
 #ifndef INCLUDED_SCRIPTTTABLE
 #define INCLUDED_SCRIPTTTABLE
 
@@ -32,7 +31,7 @@ namespace _ {
 
     # Collision Table
 
-    Collision table works by using the maximum key value (i.e. 255 for a byte,
+    Collision table works by using the maximum key value (i.e. 255 for a UI1,
     2^15-1 for a SI2, etc). The collisions list is a sequence of indexes
     terminated by an invalid index that is greater than kMaxNumOps.
     collissionsList[0] is an invalid index, so the collisionsList is searched
@@ -99,8 +98,7 @@ struct API Table {
 
 enum {
   kMinTableSize = 64,  //< Min size of a Table
-  kOverheadPerIndex =
-      sizeof(UI2) + sizeof(UI2) + sizeof(byte) + sizeof(byte),
+  kOverheadPerIndex = sizeof(UI2) + sizeof(UI2) + sizeof(UI1) + sizeof(UI1),
 };
 
 // void Print (Table* rt);
@@ -113,11 +111,11 @@ enum {
             function after
             construction to verify the integrity of the object. */
 template <typename UI, typename SI>
-Table<UI, SI>* TableInit(uintptr_t* buffer, SI count_max, UI size_bytes) {
+Table<UI, SI>* TableInit(UIW* buffer, SI count_max, UI size_bytes) {
   ASSERT(buffer)
   Table* table = reinterpret_cast<Table<UI, SI>*>(buffer);
 
-  uint_t min_required_size =
+  UIT min_required_size =
       sizeof(Table<UI, SI>) + count_max * (kOverheadPerIndex + 2);
   if (set_size < min_required_size) return nullptr;
 
@@ -138,15 +136,15 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 
   // PrintLine (key);
 
-  byte count = table->count, count_max = table->count_max, temp;
+  UI1 count = table->count, count_max = table->count_max, temp;
 
   UI2 size = table->size;
 
   if (count >= count_max) return kInvalidIndex;
   //< We're out of buffered indexes.
 
-  UI2* hashes = reinterpret_cast<UI2*>(
-      reinterpret_cast<char*>(table) + sizeof(Table<UI, SI>));
+  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
+                                       sizeof(Table<UI, SI>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
@@ -155,7 +153,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 
   // Calculate space left.
   UI2 value = size - count_max * kOverheadPerIndex, size_pile,
-           key_length = static_cast<UI2>(SlotLength(key));
+      key_length = static_cast<UI2>(SlotLength(key));
 
   PRINTF(
       "\nAdding key \"%s\":%u\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x"
@@ -169,7 +167,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 
   if (key_length > value) {
     PRINTF("\nBuffer overflow!")
-    return ~(byte)0;
+    return ~(UI1)0;
   }
 
   PRINT_TABLE
@@ -300,7 +298,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
         // Get offset to write the key too.
         value = key_offsets[count - 1] + key_length + 1;
 
-        byte collision_index = unsorted_indexes[mid];
+        UI1 collision_index = unsorted_indexes[mid];
         SlotWrite(keys - value, key);
         PRINTF(
             "Inserting value: into index:%i count:%u with "
@@ -309,8 +307,8 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
         key_offsets[count] = value;
 
         size_pile = table->size_pile;
-        indexes[mid] = static_cast<byte>(size_pile);
-        indexes[count] = static_cast<byte>(size_pile);
+        indexes[mid] = static_cast<UI1>(size_pile);
+        indexes[count] = static_cast<UI1>(size_pile);
 
         // Insert the collision into the collision table.
         temp_ptr = &collission_list[size_pile];
@@ -322,7 +320,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
         ++temp_ptr;
         *temp_ptr = ~0;
         table->size_pile = size_pile + 3;
-        //< Added one term-byte and two indexes.
+        //< Added one term-UI1 and two indexes.
 
         // Add the newest key at the end.
         indexes[count] = count;
@@ -398,7 +396,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 /* Attempts to find the given key.
     @return Returns 0 upon failure, and valid index upon success. */
 template <typename UI, typename SI>
-API byte TableFind(const Table<UI, SI>* table, const char* key) {
+API UI1 TableFind(const Table<UI, SI>* table, const char* key) {
   ASSERT(table)
   SI index, count = table->count, count_max = table->count_max, temp;
 
@@ -410,8 +408,7 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
 
   const UI2* hashes = reinterpret_cast<const UI2*>(
       reinterpret_cast<const char*>(table) + sizeof(Table<UI, SI>));
-  const UI2* key_offsets =
-      reinterpret_cast<const UI2*>(hashes + count_max);
+  const UI2* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
   const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
              *collission_list = unsorted_indexes + count_max;
@@ -460,8 +457,8 @@ API byte TableFind(const Table<UI, SI>* table, const char* key) {
 
       // Check for collisions
 
-      collisions = reinterpret_cast<const char*>(key_offsets) +
-                   count_max * sizeof(UI2);
+      collisions =
+          reinterpret_cast<const char*>(key_offsets) + count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index != kInvalidIndex) {
@@ -535,8 +532,8 @@ UTF8& TablePrint(UTF8& print, Table<UI, SI>* table) {
   for (int i = 0; i < 79; ++i) print << '_';
   print << '\n';
 
-  UI2* hashes = reinterpret_cast<UI2*>(
-      reinterpret_cast<char*>(table) + sizeof(Table<UI, SI>));
+  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
+                                       sizeof(Table<UI, SI>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
@@ -584,6 +581,6 @@ UTF8& TablePrint(UTF8& print, Table<UI, SI>* table) {
 
 }  // namespace _
 
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTTTABLE
 #endif  //< #if SEAM >= _0_0_0__08

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/room.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /room.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* A list of Requests that can be sent from Slot<uint_t, TSize> to
-    Slot<uint_t, TSize>.  */
+/* A list of Requests that can be sent from Slot<UIT, TSize> to
+    Slot<UIT, TSize>.  */
 typedef enum Requests {
   OpenDoorRequest = 0,
   CloseDoorRequest,
@@ -50,7 +50,7 @@ An Chinese Room works the same way as in the Chinese Room thought
 experiment. An Room receives a message through a slot in the door, the man
 in the room reads does manual optical character recognition with a pen and
 paper stack, some filing cabinets, and a library of multimaps.
-  The size of the Expr Stack is defined by the Script Protocol to be a
+  The size of the CCrabs Stack is defined by the Script Protocol to be a
 a maximum of 2^15-1 expressions tall.
 # Memory Layout
 Some systems have the stack grow up from the bottom and heap grow up and
@@ -142,7 +142,7 @@ class Room : public Operand {
     kRoomFloorSize = CRABS_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
-    kFloorSizeWords = kRoomFloorSize / sizeof(uintptr_t) + 2,  //< +2 buffer.
+    kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 buffer.
   };
 
   /* Creates a Room with the given size.
@@ -152,7 +152,7 @@ class Room : public Operand {
                    kMaxRoomSize. */
   Room(const char* room_name = "chinese_room", int num_states = 2);
 
-  /* HeapManager. */
+  /* AsciiFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */
@@ -187,13 +187,13 @@ class Room : public Operand {
 
   BOL RemoveWall(int_t wall_number);
 
-  uintptr_t GetSizeBytes();
+  UIW GetSizeBytes();
 
   /* Function run every main loop cycle to check the system status. */
   virtual void DiagnoseProblems();
 
   /* Sets up the Room. */
-  virtual const Op* Init(Expr* expr);
+  virtual const Op* Init(CCrabs* crabs);
 
   /* Handler for shut down event. */
   virtual void ShutDown();
@@ -224,7 +224,7 @@ class Room : public Operand {
   virtual char CommandNext();
 
   /* Script expressions. */
-  virtual const Op* Star(wchar_t index, Expr* expr);
+  virtual const Op* Star(wchar_t index, CCrabs* crabs);
 
 #if CRABS_TEXT
   /* Prints the Room to the stdout. */
@@ -235,14 +235,14 @@ class Room : public Operand {
   int state_count_,                      //< Number of FSM states.
       state_;                            //< Room state.
   const char* name_;                     //< Room Name.
-  CArray<Wall*, uint_t, int_t>* walls_;  //< Walls in the Room.
-  Expr* expr_;                           //< Current Expr being executed.
+  CArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
+  CCrabs* expr_;                           //< Current CCrabs being executed.
                                          //< DC1: this.
   Door* this_;                           //< DC2: The Door to this room.
   Operand *xoff_,                        //< DC3: XOFF - XOFF handling device.
       *device_,                          //< DC4: the current device control.
-      *devices_;                     //< Pointer to the current device control.
-  uintptr_t begin[kFloorSizeWords];  //< Room Floor buffer.
+      *devices_;               //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];  //< Room Floor buffer.
 
  private:
   /* Sets the Room state_. */

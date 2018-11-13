@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /tsocket.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -34,7 +34,7 @@ tables bellow.
 
 @code
 // The convention KT uses is that the unsigned size always comes first
-// because it's the first byte of an ASCII kOBJ.
+// because it's the first UI1 of an ASCII OBJ.
 SI4 signed_example = 7;
 signed_example = AlignUp<SI8, UI4, SI4> (signed_example);
 
@@ -62,7 +62,7 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
-template <typename I = uintptr_t>
+template <typename I = UIW>
 inline I AlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
   return 0;  // Negative (value) & mask;
 }
@@ -84,25 +84,25 @@ inline SI AlignUpSigned(SI value, SI mask = kWordBitsMask) {
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename T = char>
-inline T* AlignUp(void* pointer, uintptr_t mask = kWordBitsMask) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(pointer);
+inline T* AlignUp(void* pointer, UIW mask = kWordBitsMask) {
+  UIW value = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(value +
-                              AlignUpOffset<>((uintptr_t)pointer, mask));
+                              AlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename T = char>
-inline T* AlignUp(const void* pointer, uintptr_t mask = kWordBitsMask) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(pointer);
+inline T* AlignUp(const void* pointer, UIW mask = kWordBitsMask) {
+  UIW value = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(value +
-                              AlignUpOffset<>((uintptr_t)pointer, mask));
+                              AlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
-template <typename I = uintptr_t>
+template <typename I = UIW>
 inline I AlignDownOffset(I value, I mask = kWordBitsMask) {
   return value & mask;
 }
@@ -110,25 +110,25 @@ inline I AlignDownOffset(I value, I mask = kWordBitsMask) {
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
-template <typename T = uintptr_t>
-inline T AlignDown(void* ptr, uintptr_t mask = kWordBitsMask) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
+template <typename T = UIW>
+inline T AlignDown(void* ptr, UIW mask = kWordBitsMask) {
+  UIW value = reinterpret_cast<UIW>(ptr);
   return reinterpret_cast<T>(value - AlignDownOffset<>(value, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
-template <typename T = uintptr_t>
-inline T AlignDown(const void* ptr, uintptr_t mask = kWordBitsMask) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
+template <typename T = UIW>
+inline T AlignDown(const void* ptr, UIW mask = kWordBitsMask) {
+  UIW value = reinterpret_cast<UIW>(ptr);
   return reinterpret_cast<const T>(value - AlignDownOffset<>(value, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
-template <typename I = uintptr_t>
+template <typename I = UIW>
 inline I AlignDownI(I value, I mask = kWordBitsMask) {
   return value - (value & mask);
 }
@@ -138,7 +138,7 @@ inline I AlignDownI(I value, I mask = kWordBitsMask) {
 template <typename T = char>
 inline T* AlignUp2(void* pointer) {
   // Mask off lower bit and add it to the ptr.
-  uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer);
+  UIW ptr = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(ptr + (ptr & 0x1));
 }
 
@@ -147,7 +147,7 @@ inline T* AlignUp2(void* pointer) {
 template <typename T = char>
 inline T* AlignUp2(const void* pointer) {
   // Mask off lower bit and add it to the ptr.
-  uintptr_t ptr = reinterpret_cast<uintptr_t>(pointer);
+  UIW ptr = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(ptr + (ptr & 0x1));
 }
 
@@ -164,7 +164,7 @@ inline int BitShiftCount() {
 }
 
 /* A memory socket. */
-template <intptr_t kSize_, int kBoundaryBitCount_>
+template <SIW kSize_, int kBoundaryBitCount_>
 class TSocket {
  public:
   enum {
@@ -175,10 +175,10 @@ class TSocket {
     kBoundaryBitCount = kBoundaryBitCount_,
   };
 
-  /* Gets the begin byte of the socket. */
+  /* Gets the begin UI1 of the socket. */
   char* Begin() { return reinterpret_cast<char*>(buffer); }
 
-  /* Gets the begin byte of the socket. */
+  /* Gets the begin UI1 of the socket. */
   char* End() { return reinterpret_cast<char*>(buffer) + kSizeUnaligned; }
 
   template <typename T>
@@ -187,7 +187,7 @@ class TSocket {
   }
 
  private:
-  uintptr_t buffer[kSizeUnaligned];  //< The word-aligned buffer.
+  UIW buffer[kSizeUnaligned];  //< The word-aligned buffer.
 };
 
 /* @group Socket */
@@ -210,15 +210,15 @@ offset.
 @param base The base address.
 @param offset The offset. */
 template <typename T>
-inline T* Ptr(const void* begin, intptr_t offset) {
-  return reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(begin) + offset);
+inline T* Ptr(const void* begin, SIW offset) {
+  return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
 }
 
 /* Creates a new buffer of the given size or deletes it. */
 template <typename Size = SI4>
-uintptr_t* New(uintptr_t* buffer, intptr_t size) {
+UIW* New(UIW* buffer, SIW size) {
   size = AlignUp(size);
-  return new uintptr_t[size >> kWordBitCount];
+  return new UIW[size >> kWordBitCount];
 }
 
 }  // namespace _

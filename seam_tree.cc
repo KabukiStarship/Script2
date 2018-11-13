@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /seam_tree.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -16,12 +16,12 @@ specific language governing permissions and limitations under the License. */
 
 #ifndef INCLUDED_SEAM_TREE
 #define INCLUDED_SEAM_TREE 1
-#include "0_0_0_script.h"
+#include "0_0_0_script2.h"
 
 using namespace _;
 int main(int arg_count, char** args) {
   enum { kSize = 1024 };
   char seam_log[kSize];
-  return SeamTreeTest<_0_0_0_F2>(arg_count, args, seam_log, kSize);
+  return TTestTree<_0_0_0_F2>(arg_count, args, seam_log, kSize);
 }
 #endif

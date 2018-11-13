@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_slot.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -32,24 +32,24 @@ const Op* ReturnError(Slot* slot, Error error) {
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const uint_t* header) {
+const Op* ReturnError(Slot* slot, Error error, const UIT* header) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const uint_t* header,
-                      byte offset) {
+const Op* ReturnError(Slot* slot, Error error, const UIT* header,
+                      UI1 offset) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const uint_t* header,
-                      uint_t offset, char* address) {
+const Op* ReturnError(Slot* slot, Error error, const UIT* header,
+                      UIT offset, char* address) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-Slot::Slot(uintptr_t* buffer, uintptr_t size) {
+Slot::Slot(UIW* buffer, UIW size) {
   ASSERT(buffer);
   ASSERT(size >= kSlotSizeMin);
   char* l_begin = reinterpret_cast<char*>(buffer);
@@ -100,7 +100,7 @@ void Slot::Wipe() {
   while (start != stop) *start++ = 0;
 }
 
-const Op* Slot::Write(const uint_t* params, void** args) {
+const Op* Slot::Write(const UIT* params, void** args) {
   ASSERT(params);
   ASSERT(args);
 
@@ -149,10 +149,10 @@ BOL Slot::IsReadable() { return start != stop; }
     return start + size;
 }*/
 
-const Op* Slot::Read(const uint_t* params, void** args) {
+const Op* Slot::Read(const UIT* params, void** args) {
   ASSERT(params);
   ASSERT(args);
-  byte ui1;      //< Temp variable to load most types.
+  UI1 ui1;      //< Temp variable to load most types.
   UI2 ui2;  //< Temp variable for working with kUI2 types.
 #if USING_CRABS_4_BYTE_TYPES
   UI4 ui4;
@@ -164,12 +164,12 @@ const Op* Slot::Read(const uint_t* params, void** args) {
   UI2* ui2_ptr;         //< Pointer to a kUI2.
   UI4* ui4_ptr;         //< Pointer to a kUI4.
   UI8* ui8_ptr;         //< Pointer to a kUI8.
-  uint_t type,               //< Current type being read.
+  UIT type,               //< Current type being read.
       index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
   ASSERT(num_params);
-  uintptr_t offset;  //< Offset to word align the current type.
-  intptr_t length,   //< Length of the data in the buffer.
+  UIW offset;  //< Offset to word align the current type.
+  SIW length,   //< Length of the data in the buffer.
       count,         //< Argument length.
       size;          //< Size of the ring buffer.
 
@@ -179,7 +179,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
       *l_end = end,                  //< end of the buffer.
           *l_start = start,          //< start of the data.
               *l_stop = stop;        //< stop of the data.
-  const uint_t* param = params + 1;  //< current param.
+  const UIT* param = params + 1;  //< current param.
 
   size = l_end - l_begin;
 
@@ -190,7 +190,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
   // When we scan, we are reading from the beginning of the BIn buffer.
 
   for (index = 0; index < num_params; ++index) {
-    type = (byte)*param;
+    type = (UI1)*param;
     ++param;
     PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (uint)index,
            TypeString(type), (int)Size(l_begin, l_start),
@@ -226,9 +226,9 @@ const Op* Slot::Read(const uint_t* params, void** args) {
                                l_start);
           PRINT(ui1)
 
-          ui1 = *l_start;  // Read byte from ring-buffer.
+          ui1 = *l_start;  // Read UI1 from ring-buffer.
           if (++l_start > l_end) l_start -= size;
-          *ui1_ptr = ui1;  // Write byte to destination.
+          *ui1_ptr = ui1;  // Write UI1 to destination.
           ++ui1_ptr;
         }
 
@@ -277,11 +277,11 @@ const Op* Slot::Read(const uint_t* params, void** args) {
         // Read2ByteType:{
         // Word-align
         offset = AlignUpOffset2(l_start);
-        if ((uintptr_t)length < offset + 2) {
+        if ((UIW)length < offset + 2) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
         }
-        length -= (uint_t)offset + 2;
+        length -= (UIT)offset + 2;
         l_start += offset;
         if (l_start > l_end) {
           l_start -= size;
@@ -321,11 +321,11 @@ const Op* Slot::Read(const uint_t* params, void** args) {
         // Read4ByteType:{
         // Word-align
         offset = AlignUpOffset4(l_start);
-        if ((uintptr_t)length < offset + 4) {
+        if ((UIW)length < offset + 4) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
         }
-        length -= (uint_t)offset + 4;
+        length -= (UIT)offset + 4;
         l_start += offset;
         if (l_start > l_end) {
           l_start -= size;  //< Bound
@@ -356,7 +356,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
         // Read8ByteType:{
         // Word-align
         offset = AlignUpOffset8(l_start);
-        if ((uintptr_t)length < offset + sizeof(SI8)) {
+        if ((UIW)length < offset + sizeof(SI8)) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
         }
@@ -402,7 +402,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
               return ReturnError(this, kErrorInvalidType, params, index,
                                  l_start);
             }
-            count = (uintptr_t)*ui1_ptr;
+            count = (UIW)*ui1_ptr;
             break;
           }
           case 1: {  // It's a 16-bit count.
@@ -412,7 +412,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
             }
             count -= 2;
             ui2_ptr = reinterpret_cast<UI2*>(ui1_ptr);
-            count = (uintptr_t)*ui2_ptr;
+            count = (UIW)*ui2_ptr;
             if (count > length) {
               return ReturnError(this, kErrorBufferOverflow, params, index,
                                  l_start);
@@ -426,7 +426,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
             }
             count -= 4;
             ui4_ptr = reinterpret_cast<UI4*>(ui1_ptr);
-            count = (uintptr_t)*ui4_ptr;
+            count = (UIW)*ui4_ptr;
             if (count > length) {
               return ReturnError(this, kErrorBufferOverflow, params, index,
                                  l_start);
@@ -440,7 +440,7 @@ const Op* Slot::Read(const uint_t* params, void** args) {
             }
             count -= 8;
             ui8_ptr = reinterpret_cast<UI8*>(ui1_ptr);
-            count = (uintptr_t)*ui8_ptr;
+            count = (UIW)*ui8_ptr;
             if (count > length) {
               return ReturnError(this, kErrorBufferOverflow, params, index,
                                  l_start);
@@ -521,5 +521,5 @@ UTF8& Slot::Print(UTF8& print) {
 #endif
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //> #if SEAM >= _0_0_4

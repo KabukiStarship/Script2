@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -42,10 +42,10 @@ typedef enum BInStates {
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct API BIn {
-  uint_t size,           //< The size of the buffer.
+  UIT size,           //< The size of the buffer.
       start;             //< The starting index of the ring buffer data.
-  volatile uint_t stop;  //< The stopping index of the ring buffer data.
-  uint_t read;           //< The read variable.
+  volatile UIT stop;  //< The stopping index of the ring buffer data.
+  UIT read;           //< The read variable.
 };
 
 /* Get's the B-Input's buffer. */
@@ -57,18 +57,18 @@ inline char* BInEnd(BIn* bin);
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the buffer. */
-inline intptr_t SlotLength(char* start, char* stop, uintptr_t size);
+inline SIW SlotLength(char* start, char* stop, UIW size);
 
 /* Calculates the space left in the given ring buffer.
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the buffer. */
-inline intptr_t SlotSpace(char* start, char* stop, uintptr_t size);
+inline SIW SlotSpace(char* start, char* stop, UIW size);
 
 /* Gets the rx buffer length. */
-inline uint_t BInSpace(BIn* bin);
+inline UIT BInSpace(BIn* bin);
 
-inline uint_t BinBufferLength(BIn* bin);
+inline UIT BinBufferLength(BIn* bin);
 
 #if CRABS_TEXT
 /* Gets a a char for printing out the bin_state. */
@@ -79,7 +79,7 @@ API const char** BInStateStrings();
 #endif
 
 /* Initializes the BIn struct API to an empty buffer. */
-API BIn* BInInit(uintptr_t* buffer, uint_t size);
+API BIn* BInInit(UIW* buffer, UIT size);
 
 /* Gets the end address of the rx buffer. */
 API char* BInEnd(BIn* bin);
@@ -97,9 +97,9 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number upon
               failure. */
-API const Op* BInRead(BIn* bin, const uint_t* params, void** args);
+API const Op* BInRead(BIn* bin, const UIT* params, void** args);
 
-inline const Op* BOutRead(BOut* bout, const uint_t* params, void** args) {
+inline const Op* BOutRead(BOut* bout, const UIT* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 

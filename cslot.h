@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/slot.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /slot.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -41,7 +41,7 @@ struct Slot {
   /* Initializes the ring buffer with the given buffer begin and size.
   @param begin Pointer to the beginning of the ring buffer.
   @param size  The size of the ring buffer in bytes. */
-  Slot(uintptr_t* buffer, uintptr_t size);
+  Slot(UIW* buffer, UIW size);
 
   /* Initializes the slot from the BIn. */
   Slot(BIn* bin);
@@ -52,7 +52,7 @@ struct Slot {
   /* Sets the ring buffer to the given buffer begin and size.
       @param begin Pointer to the beginning of the ring buffer.
       @param size  The size of the ring buffer in bytes. */
-  inline BOL Set(uintptr_t* buffer, uintptr_t size) {
+  inline BOL Set(UIW* buffer, UIW size) {
     if (!buffer) return true;
     char* l_begin = reinterpret_cast<char*>(buffer);
     begin = start = stop = l_begin;
@@ -84,7 +84,7 @@ struct Slot {
   @param  op   The Operation to get the in from.
   @param  args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Read(const uint_t* params, void** args);
+  const Op* Read(const UIT* params, void** args);
 
   /* Reads the given Operation input parameters from the slot to the args.
   @param  slot The slot to read from.
@@ -98,7 +98,7 @@ struct Slot {
   @param  op   The Operation to get the in from.
   @param  args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const uint_t* params, void** args);
+  const Op* Write(const UIT* params, void** args);
 
   /* Writes the given Operation output parameters from the slot to the args.
   @param  slot The slot to read from.

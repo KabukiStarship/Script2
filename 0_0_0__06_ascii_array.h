@@ -37,10 +37,10 @@ static const char* _0_0_0__06_ASCII_Array(char* seam_log, char* seam_end,
     for (int y = 0; y < 2; ++y)
       for (int x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
 
-  TEST_END;
+
 #endif
   return nullptr;
 }
 }  // namespace _
 
-#include "test_footer.inl"
+

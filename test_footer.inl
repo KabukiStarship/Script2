@@ -11,6 +11,7 @@
 #undef PRINT_SOCKET
 #undef PRINT_BSQ
 #undef PRINT_OBJ
+#undef PRINT_TOBJ
 #undef SOCKET_SAVE
 #undef CHECK
 #undef COMPARE

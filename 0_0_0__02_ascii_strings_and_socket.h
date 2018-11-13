@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    \kabuki\f2\0_0_0__02_ascii_strings_and_socket.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    \0_0_0__02_ascii_strings_and_socket.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "ttest.h"
 #include "tutf.h"
 
-#include "cconsole.h"
+#include "csio.h"
 
 #if SEAM == _0_0_0__02
 #include "test_debug.inl"
@@ -74,7 +74,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   char* check_char = buffer + kSize + 1;
 
   SocketFill(buffer, kSize);
-  Print<>(buffer, kSize, "Testing 1, 2, 3");
+  TPrint<>(buffer, kSize, "Testing 1, 2, 3");
   PRINT_SOCKET(buffer, kSize);
 
   *check_char = kCheckChar;
@@ -86,7 +86,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
     PRINT_SOCKET(buffer, kSize);
     Test(end);
 
-    end = StringEquals<>(buffer, test_strings[i][0]);
+    end = TStringEquals<>(buffer, test_strings[i][0]);
     Test(end);
   }
 
@@ -121,22 +121,22 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   PRINT_SOCKET(buffer, kSize);
   AVOW(kTesting123, buffer);
 
-  ASSERT(!StringEquals<>(kCompareStrings[0], kCompareStrings[1]));
-  ASSERT(!StringEquals<>(kCompareStrings[0], kCompareStrings[3]));
-  ASSERT(StringEquals<>(kCompareStrings[0], kCompareStrings[0]));
-  ASSERT(!StringEquals<>(kCompareStrings[2], kCompareStrings[3]));
-  ASSERT(StringEquals<>(kCompareStrings[2], kCompareStrings[2]));
+  ASSERT(!TStringEquals<>(kCompareStrings[0], kCompareStrings[1]));
+  ASSERT(!TStringEquals<>(kCompareStrings[0], kCompareStrings[3]));
+  ASSERT(TStringEquals<>(kCompareStrings[0], kCompareStrings[0]));
+  ASSERT(!TStringEquals<>(kCompareStrings[2], kCompareStrings[3]));
+  ASSERT(TStringEquals<>(kCompareStrings[2], kCompareStrings[2]));
 
-  AVOW(9, StringLength<>("123456789"));
+  AVOW(9, TStringLength<>("123456789"));
 
   ASSERT(StringFind(kTestingString, "one"));
   ASSERT(StringFind(kTestingString, "three."));
 
   PRINTF("\n\n    Testing PrintRight");
 
-  ASSERT(PrintRight<>(buffer, buffer + kSize, kTestingString, 28));
+  ASSERT(TPrintRight<>(buffer, buffer + kSize, kTestingString, 28));
   PRINT_SOCKET(buffer, kSize);
-  PRINTF("\n    Wrote:\"%s\":%i", buffer, StringLength<>(buffer));
+  PRINTF("\n    Wrote:\"%s\":%i", buffer, TStringLength<>(buffer));
   AVOW(kStringsRightAligned[0], buffer);
 
   ASSERT(PrintRight(buffer, buffer + kSize, kTestingString, 7));
@@ -222,9 +222,9 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
 
   PRINTF("\n\nDone testing SocketCopy!\n");
 
-  TEST_END;
+
 #endif
   return nullptr;
 }
 }  // namespace _
-#include "test_footer.inl"
+

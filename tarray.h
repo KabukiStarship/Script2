@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -27,7 +27,7 @@ namespace _ {
 @desc  ASCII Array uses the same data structure as the ASCII Stack, the
 difference being that the size_array of the Stack is set to 0 for the Stack and
 the Array has a packed multi-dimensional array after the stack of dimensions. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 constexpr SI ArrayCountUpperLimit(SI dimension_count, SI element_count) {
   UI header_size = (UI)(sizeof(CStack<T, UI, SI>) +
                         AlignUpSigned<SI>(dimension_count * sizeof(SI)));
@@ -35,7 +35,7 @@ constexpr SI ArrayCountUpperLimit(SI dimension_count, SI element_count) {
 }
 
 /* Returns the required size of the given array. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 constexpr SI ArrayElementCount(const SI* dimensions) {
   ASSERT(dimensions);
   SI dimension_count = *dimensions++, element_count = *dimensions++;
@@ -51,7 +51,7 @@ constexpr SI ArrayElementCount(const SI* dimensions) {
 }
 
 /* Returns the required size of the given array. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 constexpr UI ArraySize(const SI* dimensions) {
   SI dimension_count = *dimensions++, element_count = *dimensions++;
   UI header_size = sizeof(CStack<T, UI, SI>);
@@ -67,13 +67,13 @@ constexpr UI ArraySize(const SI* dimensions) {
 
 /* Initializes an stack of n elements of the given type.
     @param buffer An stack of bytes large enough to fit the stack. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 CStack<T, UI, SI>* ArrayInit(const SI* dimensions) {
   ASSERT(dimensions);
   SI dimension_count = *dimension;
   if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
   UI size = (UI)sizeof(CStack<T, UI, SI>) + dimension_count * sizeof(T);
-  uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
+  UIW* buffer = new UIW[size >> kWordBitCount];
   CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(buffer);
   stack->size_array = 0;
   stack->size_stack = size;
@@ -82,12 +82,12 @@ CStack<T, UI, SI>* ArrayInit(const SI* dimensions) {
   return stack;
 }
 
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 SI ArrayElementCountMax() {
   return (UnsignedMax<UI>() - (UI)sizeof(CStack<T, UI, SI>)) / sizeof(T);
 }
 
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 CStack<T, UI, SI>* ArrayNew(const SI* dimensions) {
   ASSERT(dimensions);
   const SI* begin = dimensions;
@@ -124,13 +124,13 @@ SI* ArrayDimensionsEnd(CStack<T, UI, SI>* ary) {
 }
 
 /* Prints the CArray to the Utf. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 UTF8& PrintArray(UTF8& print, CArray<T, UI, SI>* ary) {
   ASSERT(ary)
   UI size_array = ary->size_array;
   SI count = ary->count;
   if (size_array == 0) {
-    return PrintStack<T, UI, SI>(print, ary);
+    return TPrintStack<T, UI, SI>(print, ary);
   }
   if (count <= 0) print << "Array: Error! Dimension count must be positive!";
 
@@ -170,7 +170,7 @@ inline const int* Dimensions() {
     This class is used to save a little bit of ROM space over the Array.
     To use this class with anything other than POD types the class T must have
     a overloaded operator= and operator==. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 class TArray {
  public:
   /* Initializes an array of n elements of the given type.
@@ -216,16 +216,16 @@ class TArray {
   }
 
  private:
-  uintptr_t* begin;  //< Dynamically word-aligned buffer.
-};                   //< class Array
+  UIW* begin;  //< Dynamically word-aligned buffer.
+};             //< class Array
 }  // namespace _
 
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 inline _::UTF8& operator<<(_::UTF8& printer, _::Stack<T, UI, SI>* stack) {
   return _::PrintArray<T, UI, SI>(printer, stack->OBJ());
 }
 
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = SIW, typename UI = uint, typename SI = int>
 inline _::UTF8& operator<<(_::UTF8& printer, _::Stack<T, UI, SI>& stack) {
   return _::PrintArray<T, UI, SI>(printer, stack.OBJ());
 }

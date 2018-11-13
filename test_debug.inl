@@ -1,3 +1,4 @@
+#include "test_footer.inl"
 #include "ttest.h"
 #define TEST_BEGIN \
   if (!_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
@@ -12,7 +13,8 @@
 #define PRINT_TYPE(type, value) Console<>().Out() << TypeValue(type, value)
 #define PRINT_SOCKET(begin, end_or_size) PrintSocket(begin, end_or_size)
 #define PRINT_BSQ(bsq) Console<>().Out() << header << '\n' << Bsq(bsq)
-#define PRINT_OBJ(obj) obj.Print()
+#define PRINT_OBJ(obj) obj->Print()
+#define PRINT_TOBJ(obj) obj.Print()
 #define SOCKET_SAVE(cursor, end_a) Socket socket_to_print(cursor, end_a)
 #define CHECK(condition) \
   if (!_::Test(condition)) _::AssertWarn(__FUNCTION__, __FILE__, __LINE__)

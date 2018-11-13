@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/floor.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2_floor.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,13 +13,14 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#include "clock.h"
 #include "tfloor.h"
+
+#include "clock.h"
 #include "tsocket.h"
 
 namespace _ {
 
-char FloorInit(uintptr_t* buffer) { return 0; }
+char FloorInit(UIW* buffer) { return 0; }
 
 Floor* FloorInit(Floor* floor) {
   floor->epoch = kClockEpochInit;

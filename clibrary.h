@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/expr.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /ccrabs.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 #if CRABS_TEXT
-template <typename TIndex, typename TKey, typename TData, uint_t MaxStackHeight>
+template <typename TIndex, typename TKey, typename TData, UIT MaxStackHeight>
 class Library : public Operand {
  public:
   /* Creates an empty automata. */
@@ -37,20 +37,20 @@ class Library : public Operand {
   BOL HasHashTable() { return collisions_size_ != 0; }
 
   /* Gets the number of keys in the current scope. */
-  uint_t GetBagType() { return 0; }
+  UIT GetBagType() { return 0; }
 
   /* Gets the number of keys in the current scope. */
-  uint_t GetNumKeys() { return num_members_; }
+  UIT GetNumKeys() { return num_members_; }
 
   /* Gets the size of the header in bytes. */
-  uint_t GetHeaderSize() { return header_size_; }
+  UIT GetHeaderSize() { return header_size_; }
 
   /* Gets the data size in bytes. */
-  uint_t GetDataSize() { return data_size_; }
+  UIT GetDataSize() { return data_size_; }
 
   /* Attempts to add the Page data into the Obj at the given BaseAddress.
       @return Returns nil upon success and an error char upon failure. */
-  const Op* Add(byte type, const char* key, void* data) {
+  const Op* Add(UI1 type, const char* key, void* data) {
     TIndex size_of_type = getSizeOfType(type);
     if (size_of_type == 0) {
       return 0;
@@ -60,7 +60,7 @@ class Library : public Operand {
 
   /* Attempts to insert the Page data into the Obj at the given index.
       @return Returns nil upon success and an error char upon failure. */
-  const Op* Insert(byte type, const char* key, void* data, TIndex index = 0) {
+  const Op* Insert(UI1 type, const char* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
     if (index > l_numOps) index = l_numOps;
 
@@ -86,10 +86,10 @@ class Library : public Operand {
   }
 
   /* gets the size of the item at the given index. */
-  byte GetOpSize(TIndex index) { return 0; }
+  UI1 GetOpSize(TIndex index) { return 0; }
 
   /* gets the size of the item at the given index. */
-  byte SetOpSize(TIndex index, TData newSize) { return 0; }
+  UI1 SetOpSize(TIndex index, TData newSize) { return 0; }
 
   /* Returns the data address of the given op if it exists.
       @return Returns a pointer to one of the ChineseRoom error strings upon
@@ -107,7 +107,7 @@ class Library : public Operand {
 
     Index_t size = 0;
 
-    byte type = (*address) & 0x1f;
+    UI1 type = (*address) & 0x1f;
 
     uint array_type = type >> 5;
 
@@ -115,7 +115,7 @@ class Library : public Operand {
       case 0:
 #if CRABS_MEMORY_PROFILE >= 16
         /// Library format: { kUI1, kUI1, kUI2, kUI2 }
-        return size + sizeof(Library) + *(address + 1) * sizeof(byte) +
+        return size + sizeof(Library) + *(address + 1) * sizeof(UI1) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
 #else
         return 0;
@@ -123,7 +123,7 @@ class Library : public Operand {
       case 1:
 #if CRABS_MEMORY_PROFILE >= 32
         /// Library format: { kUI1, kUI1, kUI2, kUI4 }
-        return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(byte) +
+        return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
         return 0;
@@ -131,7 +131,7 @@ class Library : public Operand {
       case 2:
 #if CRABS_MEMORY_PROFILE >= 64
         /// Library format: { kUI2, kUI2, kUI4, kUI8 }
-        return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(byte) +
+        return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
         return 0;
@@ -156,16 +156,16 @@ class Library : public Operand {
 
   /* Abstract Script Op(s).
       @param index The index of the expression.
-      @param expr  The Expr to read and write from.
+      @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(wchar_t index, Expr* expr) {
+  virtual const Op* Star(wchar_t index, CCrabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
     switch (index) {
       case '?':
-        return ExprEnquiry(expr, kThis);
+        return ExprEnquiry(crabs, kThis);
       case 'A': {
         static const Op This = {
             "Foo", Params<0>(), Params<0>(), "Foo is getting old I know.",
@@ -184,10 +184,10 @@ class Library : public Operand {
   int reserved;        //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
-  uint_t index_,       //< Index of the currently selected bag.
+  UIT index_,       //< Index of the currently selected bag.
       height_,         //< Number of bags on the stack.
       num_libraries_;  //< Number of libraries.
-  byte type_;          //< Current type of bag.
+  UI1 type_;          //< Current type of bag.
   TIndex num_keys_,    //< Current number of Star members.
       buffer_size_;    //< Current size of the header and names buffer in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.

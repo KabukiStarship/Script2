@@ -47,9 +47,6 @@
     <ClInclude Include="cclock.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="cconsole.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="cdoor.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -57,9 +54,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="cevent.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="cexpr.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="cfloor.h">
@@ -233,9 +227,6 @@
     <ClInclude Include="0_0_0__13_room.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="0_0_0_script.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="caddress.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -249,6 +240,15 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="cutf4.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="csio.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0_script2.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="ccrabs.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -365,16 +365,10 @@
     <ClCompile Include="script2_clock.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_console.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_door.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_error.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_expr.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_floor.cc">
@@ -423,6 +417,12 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_utf.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_sio.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_crabs.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>

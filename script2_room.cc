@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_room.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= _0_0_0__13
 #include "troom.h"
 
-#include "bsq.h"
+#include "cbsq.h"
 #include "door.h"
 #include "stack.h"
 #include "tutf.h"
@@ -91,7 +91,7 @@ void Room::ClearLog() {}
 void Room::ProcessLog() {}
 
 void Room::PrintErrors(BOut* bout) {
-  // uint_t errorHeader[] = { 0 };
+  // UIT errorHeader[] = { 0 };
   // return a.prints (errorHeader);
 }
 
@@ -100,8 +100,8 @@ void Room::DiagnoseProblems() {
   // throw RoomCrashException ();
 }
 
-const Op* Room::Init(Expr* expr) {
-  if (expr != nullptr) {
+const Op* Room::Init(CCrabs* crabs) {
+  if (crabs != nullptr) {
     // @todo We need to load a stored Room state.
     return nullptr;
   }
@@ -162,13 +162,13 @@ int Room::Main(const char** args, int args_count) {
 
 char Room::CommandNext() { return 0; }
 
-const Op* Room::Star(wchar_t index, Expr* expr) {
+const Op* Room::Star(wchar_t index, CCrabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 
   switch (index) {
     case '?': {
-      return ExprQuery(expr, kThis);
+      return ExprQuery(crabs, kThis);
     }
   }
   return 0;
@@ -179,7 +179,7 @@ int_t Room::WallCount() { return walls_->count; }
 Wall* Room::GetWall(int_t wall_number) {
   if (wall_number < 0) return nullptr;
   if (wall_number >= walls_->count) return nullptr;
-  return StackGet<Wall*, uint_t, int_t>(walls_, wall_number);
+  return StackGet<Wall*, UIT, int_t>(walls_, wall_number);
 }
 
 Wall* Room::AddWall(Wall* new_wall) {
@@ -190,13 +190,13 @@ Wall* Room::AddWall(Wall* new_wall) {
 }
 
 BOL Room::RemoveWall(int_t wall_number) {
-  return StackRemove<Wall*, uint_t, int_t>(walls_, wall_number);
+  return StackRemove<Wall*, UIT, int_t>(walls_, wall_number);
 }
 
-uintptr_t Room::GetSizeBytes() {
-  uintptr_t count = kRoomFloorSize;
+UIW Room::GetSizeBytes() {
+  UIW count = kRoomFloorSize;
   for (int_t i = 0; i < walls_->count; ++i) {
-    count += StackGet<Wall*, uint_t, int_t>(walls_, i)->GetSizeBytes();
+    count += StackGet<Wall*, UIT, int_t>(walls_, i)->GetSizeBytes();
   }
   // @todo Add all memory we used in bytes here.
   return count;
@@ -207,5 +207,5 @@ UTF8& Room::Print(UTF8& print) { return print << "\nRoom: "; }
 #endif
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //> #if SEAM >= _0_0_0__13

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /loom.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -67,7 +67,7 @@ inline SI LoomSizeMin() {
 }
 
 template <typename UI, typename SI, typename Char>
-CLoom* LoomInit(uintptr_t* buffer, UI size, SI count_max) {
+CLoom* LoomInit(UIW* buffer, UI size, SI count_max) {
   ASSERT(buffer)
   ASSERT(size)
   ASSERT(count_max >= 0)
@@ -113,7 +113,7 @@ Char* LoomString(CLoom* loom, SI index) {
   ASSERT(loom)
   if (index < 0 && index >= count) return nullptr;
   UI* offsets = LoomOffsets<UI, SI, Char>(loom);
-  uintptr_t offset = reinterpret_cast<uintptr_t>(loom) + offsets[index];
+  UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
   return offset;
 }
 
@@ -125,13 +125,13 @@ SI LoomPrint(UTF8& print, CLoom* loom, const Char* strand) {
   print << "\nLoom:" << loom->size << "b count_max:" << loom->count_max
         << " count:" << count;
   UI* offsets = LoomOffsets<UI, SI, Char>(loom);
-  uintptr_t offset = reinterpret_cast<uintptr_t>(loom) + offsets[index];
+  UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
   for (SI i = 0; i < count; ++i) {
     print << '\n' << i << ".) \"" <<
   }
 }
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //< INCLUDED_SCRIPTVARINT
 #endif  //< #if SEAM >= _0_0_0__09

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/door.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /cdoor.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -16,37 +16,35 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= _0_0_0__13
 #ifndef INCLUDED_CRABS_DOOR
 #define INCLUDED_CRABS_DOOR
-#include "expr.h"
+#include "ccrabs.h"
 #include "slot.h"
 #include "tstack.h"
 #include "tutf.h"
 
 namespace _ {
 
-/* An door that connects two Chinese rooms.
-    @see https://en.wikipedia.org/wiki/Chinese_room
+/* A door that connects two Chinese rooms.
+A door can lead to one or more Rooms. A Door that can
+be locked, in which case all of the Rooms behind this door are locked
+out. When a door is locked, no messages are processed or sent to or
+from the door and its subsidiary agents.
 
-    A door can lead to one or more rooms. Each room has a Room. A door can
-    be locked, in which case all of the Rooms behind this door are locked
-    out. When a door is locked, no messages are processed or sent to or
-    from the door and its subsidiary agents.
+Rooms can be connected by one or more Portal. An example of a
+system with one Door and multiple Portals is a WiFi plus USB/Serial
+connection. This is a commonly used configuration for debugging the system.
 
-    Rooms can be connected by one or more Portal (string). An example of a
-   system with one Door and multiple Portals is a WiFi plus USB/Serial
-   connection. This is a commonly used configuration for debugging the system.
+Multiple doors also might share the same Portal. An example of this is a
+connection to multiple systems over a WiFi connection.
 
-    Multiple doors also might share the same Portal. An example of this is a
-    connection to multiple systems over a WiFi connection.
+@code
 
-    @code
++=============+
+|    slots    |
+|=============|
+| Door struct |
++=============+
 
-    +=============+
-    |    slots    |
-    |=============|
-    | Door struct |
-    +=============+
-
-    @endcode
+@endcode
 */
 class Door : public Operand {
  public:
@@ -57,35 +55,35 @@ class Door : public Operand {
   };
 
   /* A door in a Chinese room. */
-  Door(const char* roomName = nullptr, uintptr_t* buffer = nullptr,
-       uintptr_t size_bytes = kMinDoorSize);
+  Door(const char* roomName = nullptr, UIW* buffer = nullptr,
+       UIW size_bytes = kMinDoorSize);
 
-  /* HeapManager. */
+  /* AsciiFactory. */
   virtual ~Door();
 
   /* Gets the BOut at the given index. */
   slot_t GetSlot(slot_t index);
 
-  /* Address the given expr to the Door. */
+  /* Address the given crabs to the Door. */
   slot_t AddSlot(slot_t slot);
 
   /* Attempts to find a Slot or Door with the given address. */
   BOL Contains(void* address);
 
   /* Gets the Slot that contains the given address.
-      @return Returns the doors_ stack count if the Door does not
-              contain the given address. */
+  @return Returns the doors_ stack count if the Door does not contain the given
+  address. */
   slot_t FindSlot(void* address);
 
   /* Executes all of the queued escape sequences. */
   const Op* ExecAll();
 
   /* Script expressions. */
-  virtual const Op* Star(wchar_t index, Expr* expr);
+  virtual const Op* Star(wchar_t index, CCrabs* crabs);
 
  private:
-  uintptr_t* begin;                       //< Pointer to dynamic buffer.
-  CArray<slot_t, uint_t, int_t>* slots_;  //< Slots in the door.
+  UIW* begin;                          //< Pointer to dynamic buffer.
+  CArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
 };
 
 /* Returns a Static Error Op. */
@@ -97,16 +95,16 @@ API const char* DoorErrorText(Door::Error error);
 API Door& Doors (); */
 
 /* Initializes a Door at the beginning of the given buffer.
-static Door* DoorInit (int* buffer, uint_t slot_size) {
-    if (buffer == nullptr) return nullptr;
-    if (slot_size < kMinSlotSize) return nullptr;
-    Wall* wall = reinterpret_cast<Door*>(buffer);
-    w->is_dynamic = 0;
-    w->num_doors = 0;
-    w->max_num_doors;
-    w->door_one = nullptr;
+static Door* DoorInit (int* buffer, UIT slot_size) {
+  if (buffer == nullptr) return nullptr;
+  if (slot_size < kMinSlotSize) return nullptr;
+  Wall* wall = reinterpret_cast<Door*>(buffer);
+  w->is_dynamic = 0;
+  w->num_doors = 0;
+  w->max_num_doors;
+  w->door_one = nullptr;
 }*/
 
-}  //< namespace _
+}  // namespace _
 #endif  //< #if SEAM >= _0_0_0__13
 #endif  //< INCLUDED_CRABS_DOOR

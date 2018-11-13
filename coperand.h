@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/operand.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /operand.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-struct API Expr;
+struct API CCrabs;
 
 /* Interface for an abstract A*B Op operand.
     A Script Operand is an object that is being operated on.
@@ -53,17 +53,17 @@ struct API Expr;
 struct API Operand {
   /* Abstract Script Op(s).
       @param index The index of the expression.
-      @param expr  The Expr to read and write from.
+      @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(wchar_t index, Expr* expr) = 0;
+  virtual const Op* Star(wchar_t index, CCrabs* crabs) = 0;
 };
 
 /* Returns the name of the given Operand. */
 API const char* OperandName(Operand* op);
 
 /* Gets the number of ops in the given expressions. */
-API uintptr_t OperandCount(Operand* op);
+API UIW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
     @param  key_begin Beginning of the key slot buffer.
@@ -74,11 +74,11 @@ API wchar_t OperandIndex(Operand* operand, char* key_begin, char* key_end);
 
 #if CRABS_TEXT
 /* Queries the given Operand Op Header.
-    @param  expr The expression to write the query to. Set to nil to return
+    @param  crabs The expression to write the query to. Set to nil to return
                  op.
     @param  op   The Op header.
     @return Returns nil upon success and an error Op upon failure.
-API const Op* OperandQuery (Expr* expr, const Op* op);*/
+API const Op* OperandQuery (CCrabs* crabs, const Op* op);*/
 
 /* Queries the operand for the given ??? @todo fix me */
 Slot& OperandQuery(Operand* root, const char* address, Slot& key);

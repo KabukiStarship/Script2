@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_binary.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -28,7 +28,7 @@ char HexNibbleToUpperCase(UI1 b) {
 #if SEAM >= _0_0_0__01
 namespace _ {
 /*
-int StringLength(UI8 value) {
+int TStringLength(UI8 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
@@ -207,22 +207,22 @@ UI8 Negative(SI8 value) { return (UI8)(-value); }
 UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
 BOL IsNaN(SI1 value) {
-  return (value > NanUnsigned<SI1>()) && (value > NaNSigned<SI1, UI1>());
+  return (value > TNaNUnsigned<SI1>()) && (value > TNaNSigned<SI1, UI1>());
 }
 
-BOL IsNaN(UI1 value) { return value > NanUnsigned<UI1>(); }
+BOL IsNaN(UI1 value) { return value > TNaNUnsigned<UI1>(); }
 
-BOL IsNaN(SI2 value) { return value > NaNSigned<SI2, UI2>(); }
+BOL IsNaN(SI2 value) { return value > TNaNSigned<SI2, UI2>(); }
 
-BOL IsNaN(UI2 value) { return value > NanUnsigned<UI2>(); }
+BOL IsNaN(UI2 value) { return value > TNaNUnsigned<UI2>(); }
 
-BOL IsNaN(SI4 value) { return value > NaNSigned<SI4, UI4>(); }
+BOL IsNaN(SI4 value) { return value > TNaNSigned<SI4, UI4>(); }
 
-BOL IsNaN(UI4 value) { return value > NanUnsigned<UI4>(); }
+BOL IsNaN(UI4 value) { return value > TNaNUnsigned<UI4>(); }
 
-BOL IsNaN(SI8 value) { return value > NaNSigned<SI8, UI8>(); }
+BOL IsNaN(SI8 value) { return value > TNaNSigned<SI8, UI8>(); }
 
-BOL IsNaN(UI8 value) { return value > NanUnsigned<UI8>(); }
+BOL IsNaN(UI8 value) { return value > TNaNUnsigned<UI8>(); }
 
 char HexNibbleToLowerCase(UI1 b) {
   b = b & 0xf;
@@ -293,67 +293,67 @@ const UI8* BinaryLUTF() { return kCachedPowersF; }
 
 char* Print(char* cursor, char* end, FLT value) {
   if (!cursor || cursor >= end) return nullptr;
-  intptr_t size = end - cursor;
+  SIW size = end - cursor;
   PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, end, (int)size,
          value);
   int count = sprintf_s(cursor, end - cursor, "%f", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<FLT, UI4>::Print<char>(cursor, end, value);
+  // return TBinary<FLT, UI4>::TPrint<char>(cursor, end, value);
 }
 
 char* Print(char* cursor, char* end, DBL value) {
   if (!cursor || cursor >= end) return nullptr;
-  intptr_t size = end - cursor;
+  SIW size = end - cursor;
   int count = sprintf_s(cursor, size, "%lf", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<DBL, UI8>::Print<char>(cursor, end, value);
+  // return TBinary<DBL, UI8>::TPrint<char>(cursor, end, value);
 }
 
 template <typename Char>
-const Char* StringFloatStop(const Char* cursor) {
-  const char* stop = StringDecimalStop<char>(cursor);
+const Char* TStringFloatStop(const Char* cursor) {
+  const char* stop = TStringDecimalEnd<char>(cursor);
   if (!stop) return stop;
   char c = *stop++;
   if (c == '.') {
-    stop = StringDecimalStop<char>(cursor);
+    stop = TStringDecimalEnd<char>(cursor);
     c = *stop++;
   }
   if (c == 'e' || c != 'E') {
     if (c == '-') c = *stop++;
-    return StringDecimalStop<char>(cursor);
+    return TStringDecimalEnd<char>(cursor);
   }
   return stop;
 }
 
 const char* Scan(const char* cursor, FLT& value) {
   int count = sscanf_s(cursor, "%f", &value);
-  return StringFloatStop<char>(cursor);
+  return TStringFloatStop<char>(cursor);
 }
 
 const char* Scan(const char* cursor, DBL& value) {
   int count = sscanf_s(cursor, "%lf", &value);
-  return StringFloatStop<char>(cursor);
+  return TStringFloatStop<char>(cursor);
 }
 
 #if USING_UTF16
 char16_t* Print(char16_t* cursor, char16_t* end, FLT value) {
-  return TBinary<FLT, UI4>.Print<char16_t>(cursor, end, value);
+  return TBinary<FLT, UI4>.TPrint<char16_t>(cursor, end, value);
 }
 
 char16_t* Print(char16_t* cursor, char16_t* end, DBL value) {
-  return TBinary<DBL, UI8>.Print<char16_t>(cursor, end, value);
+  return TBinary<DBL, UI8>.TPrint<char16_t>(cursor, end, value);
 }
 #endif
 
 #if USING_UTF32
 char32_t* Print(char32_t* cursor, char32_t* end, FLT value) {
-  return TBinary<FLT, UI4>.Print<char32_t>(cursor, end, value);
+  return TBinary<FLT, UI4>.TPrint<char32_t>(cursor, end, value);
 }
 
 char32_t* Print(char32_t* cursor, char32_t* end, DBL value) {
-  return TBinary<DBL, UI8>.Print<char32_t>(cursor, end, value);
+  return TBinary<DBL, UI8>.TPrint<char32_t>(cursor, end, value);
 }
 #endif
 
@@ -361,21 +361,21 @@ int FloatDigitsMax() { return 15; }
 
 int DoubleDigitsMax() { return 31; }
 
-int MSbAsserted(UI1 value) { return MSbAssertedReverse<UI1>(value); }
+int MSbAsserted(UI1 value) { return TMSbAssertedReverse<UI1>(value); }
 
-int MSbAsserted(SI1 value) { return MSbAssertedReverse<UI1>((UI8)value); }
+int MSbAsserted(SI1 value) { return TMSbAssertedReverse<UI1>((UI8)value); }
 
-int MSbAsserted(UI2 value) { return MSbAssertedReverse<UI2>(value); }
+int MSbAsserted(UI2 value) { return TMSbAssertedReverse<UI2>(value); }
 
-int MSbAsserted(SI2 value) { return MSbAssertedReverse<UI2>((UI8)value); }
+int MSbAsserted(SI2 value) { return TMSbAssertedReverse<UI2>((UI8)value); }
 
-int MSbAsserted(UI4 value) { return MSbAssertedReverse<UI4>(value); }
+int MSbAsserted(UI4 value) { return TMSbAssertedReverse<UI4>(value); }
 
-int MSbAsserted(SI4 value) { return MSbAssertedReverse<UI4>((UI8)value); }
+int MSbAsserted(SI4 value) { return TMSbAssertedReverse<UI4>((UI8)value); }
 
-int MSbAsserted(UI8 value) { return MSbAssertedReverse<UI8>(value); }
+int MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
 
-int MSbAsserted(SI8 value) { return MSbAssertedReverse<UI8>((UI8)value); }
+int MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
 
 void FloatBytes(FLT value, char& byte_0, char& byte_1, char& byte_2,
                 char& byte_3) {
@@ -398,7 +398,7 @@ char* Print(char* begin, UI2 chars) {
 
 char* Print(char* begin, char byte_0, char byte_1) {
 #if ALIGN_MEMORY
-  if (reinterpret_cast<uintptr_t>(begin) & 1) {
+  if (reinterpret_cast<UIW>(begin) & 1) {
     begin[0] = byte_1;
     begin[1] = '\0';
   }
@@ -413,7 +413,7 @@ char* Print(char* begin, char byte_0, char byte_1) {
 
 char* Print(char* begin, char* end, char byte_0, char byte_1, char byte_2) {
 #if ALIGN_MEMORY
-  switch (reinterpret_cast<uintptr_t>(begin) & 3) {
+  switch (reinterpret_cast<UIW>(begin) & 3) {
     case 0: {
       *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
                                        ((UI4)byte_1) << 16 |
@@ -451,7 +451,7 @@ char* Print(char* begin, char* end, char byte_0, char byte_1, char byte_2) {
 
 // char puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
 
-constexpr intptr_t IEEE754LutElementCount() { return 87; }
+constexpr SIW IEEE754LutElementCount() { return 87; }
 
 const SI2* IEEE754Pow10E() {
   /* Precomputed powers of 10 exponents for Grisu. */
@@ -462,7 +462,7 @@ const UI8* IEEE754Pow10F() { return kCachedPowersF; }
 
 void BinaryLUTAlignedGenerate(char* lut, size_t size) {
   ASSERT(size);
-  intptr_t iee754_pow_10_count = IEEE754LutElementCount();
+  SIW iee754_pow_10_count = IEEE754LutElementCount();
   if (size != ((100 + iee754_pow_10_count) * 2 + iee754_pow_10_count * 8))
     return;
   UI2* ui2_ptr = reinterpret_cast<UI2*>(lut);
@@ -498,9 +498,9 @@ UI4 Value(FLT value) { return *reinterpret_cast<UI4*>(&value); }
 
 UI8 Value(DBL value) { return *reinterpret_cast<UI8*>(&value); }
 
-BOL IsNaNPositive(SI1 value) { return value > NanUnsigned<SI1>(); }
+BOL IsNaNPositive(SI1 value) { return value > TNaNUnsigned<SI1>(); }
 
-BOL IsNaNNegative(SI1 value) { return value > NanUnsigned<SI1>(); }
+BOL IsNaNNegative(SI1 value) { return value > TNaNUnsigned<SI1>(); }
 
 BOL IsNaN(FLT value) { return isnan(value); }
 
@@ -581,5 +581,5 @@ char32_t* Print(char32_t* cursor, char32_t* end, DBL value) { return nullptr; }
 #endif
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //< #if SEAM >= _0_0_0__03

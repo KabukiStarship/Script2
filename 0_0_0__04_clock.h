@@ -28,7 +28,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
-  PRINT_HEADING("\n\n    Testing StringScanTime...");
+  PRINT_HEADING("\n\n    Testing TStringScanTime...");
 
   TMS t, t_found;
   const char* result;
@@ -60,7 +60,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
     PRINT_LINE('-');
     PRINTF("\n    %i", i);
     TMS t = 0;
-    result = StringScanTime(strings[i], t);
+    result = TStringScanTime(strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }
 
@@ -71,23 +71,23 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
   Print(buffer, buffer + kSize, t);
-  result = StringScanTime(buffer, t_found);
+  result = TStringScanTime(buffer, t_found);
   ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
   Print(buffer, buffer + kSize, t);
-  result = StringScanTime(buffer, t_found);
+  result = TStringScanTime(buffer, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
   Print(buffer, buffer + kSize, t);
-  result = StringScanTime(buffer, t_found);
+  result = TStringScanTime(buffer, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   PRINT_HEADING("\nTesting invalid input...\n");
-  StringScanTime("cat", t);
+  TStringScanTime("cat", t);
 
-  StringScanTime("2017-30-40", t);
+  TStringScanTime("2017-30-40", t);
 
   PRINTF("\nDone testing date parsing utils! :-)\n");
 #endif
@@ -95,4 +95,4 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
 }
 }  // namespace _
 
-#include "test_footer.inl"
+

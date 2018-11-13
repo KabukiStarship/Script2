@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_socket.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -25,31 +25,23 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-char* AlignDown(char* pointer, uintptr_t mask) {
-  return AlignDown<char*>(pointer);
-}
+char* AlignDown(char* pointer, UIW mask) { return AlignDown<char*>(pointer); }
 
-const char* AlignDown(const char* pointer, uintptr_t mask) {
+const char* AlignDown(const char* pointer, UIW mask) {
   return AlignDown<const char*>(pointer);
 }
 
-const uintptr_t* AlignDown(const uintptr_t* pointer, uintptr_t mask) {
-  return AlignDown<const uintptr_t*>(pointer);
+const UIW* AlignDown(const UIW* pointer, UIW mask) {
+  return AlignDown<const UIW*>(pointer);
 }
 
-uintptr_t* AlignDown(uintptr_t* pointer, uintptr_t mask) {
-  return AlignDown<uintptr_t*>(pointer);
-}
+UIW* AlignDown(UIW* pointer, UIW mask) { return AlignDown<UIW*>(pointer); }
 
-uintptr_t* AlignUp(uintptr_t* buffer, uintptr_t mask) {
-  return AlignUp<uintptr_t>(buffer, mask);
-}
+UIW* AlignUp(UIW* buffer, UIW mask) { return AlignUp<UIW>(buffer, mask); }
 
-char* AlignUp(char* pointer, uintptr_t mask) {
-  return AlignUp<char>(pointer, mask);
-}
+char* AlignUp(char* pointer, UIW mask) { return AlignUp<char>(pointer, mask); }
 
-const char* AlignUp(const char* pointer, uintptr_t mask) {
+const char* AlignUp(const char* pointer, UIW mask) {
   return AlignUp<const char>(pointer, mask);
 }
 
@@ -69,34 +61,32 @@ UI8 AlignUp(UI8 value, UI8 mask) { return AlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return AlignUpSigned<SI8>(value, mask); }
 
-uintptr_t* New(intptr_t size) { return new uintptr_t[size]; }
+UIW* New(SIW size) { return new UIW[size]; }
 
-void Delete(uintptr_t* socket) {
+void Destruct(UIW* socket) {
   ASSERT(socket);
   delete[] socket;
 }
 
-uintptr_t UIntPtr(const void* value) {
-  return reinterpret_cast<uintptr_t>(value);
-}
+UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }
 
-void* VoidPtr(uintptr_t value) { return reinterpret_cast<void*>(value); }
+void* VoidPtr(UIW value) { return reinterpret_cast<void*>(value); }
 
-const void* ConstVoidPtr(uintptr_t value) {
+const void* ConstVoidPtr(UIW value) {
   return reinterpret_cast<const void*>(value);
 }
 
-intptr_t SizeOf(void* begin, void* end) {
+SIW SizeOf(void* begin, void* end) {
   return reinterpret_cast<char*>(end) - reinterpret_cast<char*>(begin);
 }
 
-intptr_t SizeOf(const void* begin, const void* end) {
+SIW SizeOf(const void* begin, const void* end) {
   return reinterpret_cast<const char*>(end) -
          reinterpret_cast<const char*>(begin);
 }
 
-inline uintptr_t FillWord(char fill_char) {
-  uintptr_t value = fill_char;
+inline UIW FillWord(char fill_char) {
+  UIW value = fill_char;
 #if CPU_WORD_SIze == 32
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
@@ -105,7 +95,7 @@ inline uintptr_t FillWord(char fill_char) {
 #endif
 }
 
-char* SocketFill(char* cursor, char* end, intptr_t byte_count, char fill_char) {
+char* SocketFill(char* cursor, char* end, SIW byte_count, char fill_char) {
   ASSERT(cursor);
   PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (int)byte_count);
   ASSERT(byte_count >= 0);
@@ -123,7 +113,7 @@ char* SocketFill(char* cursor, char* end, intptr_t byte_count, char fill_char) {
     return cursor;
   }
 
-  uintptr_t fill_word = FillWord(fill_char);
+  UIW fill_word = FillWord(fill_char);
 
   // Algorithm:
   // 1.) Save return value.
@@ -139,26 +129,25 @@ char* SocketFill(char* cursor, char* end, intptr_t byte_count, char fill_char) {
   aligned_pointer = AlignDown<char*>(end);
   while (end > aligned_pointer) *end-- = fill_char;
 
-  uintptr_t *words = reinterpret_cast<uintptr_t*>(cursor),
-            *words_end = reinterpret_cast<uintptr_t*>(end);
+  UIW *words = reinterpret_cast<UIW*>(cursor),
+      *words_end = reinterpret_cast<UIW*>(end);
 
   while (words < words_end) *words++ = fill_word;
 
   return success;
 }
 
-char* SocketFill(void* cursor, intptr_t count, char fill_char) {
+char* SocketFill(void* cursor, SIW count, char fill_char) {
   return SocketFill(reinterpret_cast<char*>(cursor),
                     reinterpret_cast<char*>(cursor) + count, count, fill_char);
 }
 
-BOL SocketWipe(void* cursor, void* end, intptr_t count) {
+BOL SocketWipe(void* cursor, void* end, SIW count) {
   return SocketFill(reinterpret_cast<char*>(cursor),
                     reinterpret_cast<char*>(end), count) != nullptr;
 }
 
-char* SocketCopy(void* begin, intptr_t size, const void* read,
-                 intptr_t read_size) {
+char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   ASSERT(begin);
   ASSERT(read);
   ASSERT(size > 0);
@@ -197,9 +186,9 @@ char* SocketCopy(void* begin, intptr_t size, const void* read,
   PRINTF("\n  Down-stage pointers are now begin:0x%p end:0x%p", cursor,
          end_ptr);
 
-  uintptr_t *words = reinterpret_cast<uintptr_t*>(cursor),
-            *words_end = reinterpret_cast<uintptr_t*>(end_ptr);
-  const uintptr_t* read_word = reinterpret_cast<const uintptr_t*>(start_ptr);
+  UIW *words = reinterpret_cast<UIW*>(cursor),
+      *words_end = reinterpret_cast<UIW*>(end_ptr);
+  const UIW* read_word = reinterpret_cast<const UIW*>(start_ptr);
 
   while (words < words_end) *words++ = *read_word++;
 
@@ -207,7 +196,7 @@ char* SocketCopy(void* begin, intptr_t size, const void* read,
 }
 
 char* SocketCopy(void* begin, void* end, const void* begin_read,
-                 intptr_t read_size) {
+                 SIW read_size) {
   return SocketCopy(begin, SizeOf(begin, end), begin_read, read_size);
 }
 
@@ -217,8 +206,8 @@ char* SocketCopy(void* begin, void* end, const void* begin_read,
                     SizeOf(begin_read, read_end));
 }
 
-BOL SocketCompare(const void* begin_a, intptr_t size_a, const void* begin_b,
-                  intptr_t size_b) {
+BOL SocketCompare(const void* begin_a, SIW size_a, const void* begin_b,
+                  SIW size_b) {
   if (size_a != size_b) return false;
   const char *cursor_a = reinterpret_cast<const char*>(begin_a),
              *end_a = cursor_a + size_a,
@@ -237,7 +226,7 @@ BOL SocketCompare(const void* begin, const void* end, const void* start,
 }
 
 BOL SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
-                  intptr_t size_b) {
+                  SIW size_b) {
   return SocketCompare(begin_a, end_a, begin_a,
                        reinterpret_cast<const char*>(begin_b) + size_b);
 }
@@ -254,7 +243,7 @@ Socket::Socket(void* begin, void* end)
   }
 }
 
-Socket::Socket(void* begin, intptr_t size)
+Socket::Socket(void* begin, SIW size)
     : begin(reinterpret_cast<char*>(begin)),
       end(reinterpret_cast<char*>(begin) + size) {
   if (!begin || size < 0) {
@@ -273,16 +262,16 @@ Socket& Socket::operator=(const Socket& other) {
   return *this;
 }
 
-void DestructorNoOp(uintptr_t* buffer) {
+void DestructorNoOp(UIW* buffer) {
   // Nothing to do here! (:-)+==<
 }
 
-void DestructorDeleteBuffer(uintptr_t* buffer) {
+void DestructorDeleteBuffer(UIW* buffer) {
   ASSERT(buffer);
   delete buffer;
 }
 
-intptr_t SocketShiftUp(void* begin, void* end, intptr_t count) {
+SIW SocketShiftUp(void* begin, void* end, SIW count) {
   if (!begin || begin <= end || count <= 0) return 0;
   char *start = reinterpret_cast<char*>(begin),
        *stop = reinterpret_cast<char*>(end);
@@ -292,9 +281,8 @@ intptr_t SocketShiftUp(void* begin, void* end, intptr_t count) {
   }
   char* pivot = AlignDown(stop);
   for (int i = 0; i < count; ++i) *(stop + count) = *stop--;
-  uintptr_t *stop_word = reinterpret_cast<uintptr_t*>(stop),
-            *start_word =
-                reinterpret_cast<uintptr_t*>(AlignUp<uintptr_t*>(begin));
+  UIW *stop_word = reinterpret_cast<UIW*>(stop),
+      *start_word = reinterpret_cast<UIW*>(AlignUp<UIW*>(begin));
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
   pivot = reinterpret_cast<char*>(stop_word + 1);
   while (pivot >= start) *(pivot + count) = *pivot--;
@@ -302,5 +290,5 @@ intptr_t SocketShiftUp(void* begin, void* end, intptr_t count) {
 }
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //<  #if SEAM >= _0_0_0__02

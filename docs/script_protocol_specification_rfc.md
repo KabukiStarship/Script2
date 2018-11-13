@@ -1,7 +1,7 @@
 SCRIPT SDNP Specification RFC
 =============================
 
-# 3 SCRIPT SDNP Specification
+# 3 SCRIPT Protocol Specification
 
 The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Software-defined Networking Protocol (SDNP) consists of the Automaton Standard Code for Information Interchange Data Types defined in the ASCII Data Types Specification, and the Chinese Room Abstract Stack Machine (Crabs), and Crabs Calling Convention.
 
@@ -15,7 +15,7 @@ The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine c
 
 A **Crabs Message** is similar to an internet datagram and may be enclosed in a IPv4 or IPv6 datagram. A Crabs Message is defined as set of stack operations that start and end with an empty Operand Stack where one or more Operands is pushed, All Unicode Operation indexes being valid, all keys being resolved correctly, and the B-Stream being of a valid length for each B-Sequence argument. Crabs Room Messages may be written in any language using UTF-8. Messages get Unpacked by the Expression Interpreter and translated into the native Unicode format, UTF-8, UTF-16, or UTF-32 for that room and may be compiled directly to a register-based stack machine.
 
-Crabs Messages beginning with a non-printable Unicode Character shall be byte-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
+Crabs Messages beginning with a non-printable Unicode Character shall be UI1-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
 
 ## 3.1.b Chinese Room Contents
 
@@ -37,7 +37,7 @@ At the root scope of each system lies a *Interrupt Operations* DC1, DC2, DC3, an
 
 ## 3.1.c Compliant Crabs UML Model Example
 
-The following is an example of a Script Compliant UML diagram with pseudo-templates. Pseudo-templates are method of describing templates in UML using underscores and the typename. For instance, **SI** as a templated Signed Integer, **UI** as a templated Unsigned Integer, **T** for a templated Script POD Numbers, and **_ptr** as a byte pointer unaligned to a 64-bit boundary.
+The following is an example of a Script Compliant UML diagram with pseudo-templates. Pseudo-templates are method of describing templates in UML using underscores and the typename. For instance, **SI** as a templated Signed Integer, **UI** as a templated Unsigned Integer, **T** for a templated Script POD Numbers, and **_ptr** as a UI1 pointer unaligned to a 64-bit boundary.
 
 For Crabs UML Model, you will need to download StarUML from [http://staruml.io/](http://staruml.io/) and open ~/docs/kabuki_toolkit.mdj.
 
@@ -60,7 +60,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
 * Let an **automata** be composed of concurrent **automatons**.
 * Let a **Chinese Room** be an *Abstract Stack Machine (ASM)* able to reset to the **initial state** and run **automata** with **Script Operations** indexed by a single *Unicode character*.
 * Let **A** be a set of states in a *state machine* that composes a **Chinese Room**.
-* Let **B** be a set of *abstract parameters* in the form of a *byte stream* of **ASCII Data Types**.
+* Let **B** be a set of *abstract parameters* in the form of a *UI1 stream* of **ASCII Data Types**.
 * Let * be an *abstract binary operation* on sets **A** and **B**.
 * Let **on** be a set of states where a **Chinese Room** is accepting **words**.
 * While in the **on** state, **A** = **A** * **B**.
@@ -101,12 +101,12 @@ A B-Input, BIn, is a type of Slot for incoming Messages that uses offsets from t
 #### BIn C Data Structure
 
 ```
-typedef unsigned int uint_t;
+typedef unsigned int UIT;
 struct BIn {
-    uint_t          size,   //< The size of the buffer.
+    UIT          size,   //< The size of the buffer.
                     start;  //< The starting index of the ring buffer data.
-    volatile uint_t stop;   //< The stopping index of the ring buffer data.
-    uint_t          read;   //< The read variable.
+    volatile UIT stop;   //< The stopping index of the ring buffer data.
+    UIT          read;   //< The read variable.
 };
 ```
 
@@ -134,9 +134,9 @@ A B-Output Slot, BOut, almost works similarly to the BIn except the BOut reserve
 
 ```
 struct KABUKI BOut {
-    uint_t          size;  //< Size of the B-Output.
-    volatile uint_t start; //< Starting index of the ring-buffer data.
-    uint_t          stop,  //< Stopping index of the ring-buffer data.
+    UIT          size;  //< Size of the B-Output.
+    volatile UIT start; //< Starting index of the ring-buffer data.
+    UIT          stop,  //< Stopping index of the ring-buffer data.
                     read;  //< Address that the BOut device is reading from.
 };
 ```
@@ -183,8 +183,8 @@ Once a valid Expression has been received, a room may then **Evaluate** that exp
 #### Hyphenated Script Expression Example
 
 ```
-/* typedef UI1 uint_t;
-   static const uint_t in_params[]  = { 1, kUI4, kUI8 },
+/* typedef UI1 UIT;
+   static const UIT in_params[]  = { 1, kUI4, kUI8 },
                        out_params[] = { 1, NILL, kNIL };
     static const Op kOp= { “Example-Function_with_hypens_and_underscores”,
                           rxHeader, txHeader,
@@ -208,7 +208,7 @@ Example-Function_with_hypens_and_underscores {
 ```
 struct Op {
     const char   * name;          //< Op name.
-    const uint_t * in,            //< Input kBSQ params or OpFirst.
+    const UIT * in,            //< Input kBSQ params or OpFirst.
                  * out;           //< Output kBSQ params or OpLast.
     const char   * description;   //< Op description.
     wchar_t        pop,           //< Index of the Pop Operation.
@@ -222,7 +222,7 @@ struct Op {
 ### C++ Header Examples
 
 ```
-static const uint_t rx_header_without_strings[] = { 2, kUI1, kSI2 },   
+static const UIT rx_header_without_strings[] = { 2, kUI1, kSI2 },   
                     rx_header_with_strings[]    = { 2, kUI1, kSTR, 32 },
                     //< We need to specify the max string length.
                     rx_header_with_array[]      = { 2, kUI1, Array (kUI1, 32) },
@@ -237,7 +237,7 @@ static const uint_t rx_header_without_strings[] = { 2, kUI1, kSI2 },
 #include <crabs/global.h>
 using namespace _;
 
-const Op* Star (wchar_t index, Expression* expr)  {
+const Op* Star (wchar_t index, Expression* crabs)  {
     void* params[2];
 
     if (index != 'A') return 0;  //< switch statements are normally use used.
@@ -247,8 +247,8 @@ const Op* Star (wchar_t index, Expression* expr)  {
     static const Operation kOpExample= { “expression-name”,
                                          params, result,
                                          “Description”, 0 };
-    // Script uses the a nil expr pointer as a flag to get the Operation header.
-    if (!expr) return &kOpExample;
+    // Script uses the a nil crabs pointer as a flag to get the Operation header.
+    if (!crabs) return &kOpExample;
 
     // Example RPC variables.
     UI4 input_a,
@@ -256,12 +256,12 @@ const Op* Star (wchar_t index, Expression* expr)  {
              output_a = 1,
              output_b = 2;
 
-    if (Read (expr, kOpExample, Args (params, &input_a, &input_b)))
-         return expr->result;
+    if (Read (crabs, kOpExample, Args (params, &input_a, &input_b)))
+         return crabs->result;
 
     // Operation logic here.
 
-    return Write (expr, kOpExample, Args (params, &output_a, &output_b));
+    return Write (crabs, kOpExample, Args (params, &output_a, &output_b));
 }
 ```
 
@@ -308,7 +308,7 @@ Clears Expression Operation clears the current Expression Slots without deleting
 
 #### Importance Operation
 
-**Importance Operation** performs  Raises the *Importance Level* for each consecutive ASCII '!' byte.
+**Importance Operation** performs  Raises the *Importance Level* for each consecutive ASCII '!' UI1.
 
 #### Division Operation
 
@@ -348,7 +348,7 @@ Script is whitespace delimited spaces may be skipped by the interpreter or inter
 
 ### 3.4.b Interrupt Escape Sequence
 
-Each Room has a single **Interrupt Expression** in the index '/'. When an ESC interrupt byte is received the *Interrupt Expression* is pushed onto the stack. If this ESC returns a Result this Result must be inserted into the location of the ESC in the B-Stream.
+Each Room has a single **Interrupt Expression** in the index '/'. When an ESC interrupt UI1 is received the *Interrupt Expression* is pushed onto the stack. If this ESC returns a Result this Result must be inserted into the location of the ESC in the B-Stream.
 
 #### Mandatory Single Byte Interrupt Operations
 
@@ -392,13 +392,13 @@ Return values just need an address of an Operation to send the return value too.
 @todo Change from IPv4 to UP IP Addressing
 
 1. Let **host_a** and **host_b** be *Chinese Rooms* connected through a serial connection or package switched network.
-2. Let **host_a** and **host_b** exchange packets of size 1 byte and ** be 16-bit prime multiple hashes of the packets with single bytes.
+2. Let **host_a** and **host_b** exchange packets of size 1 UI1 and ** be 16-bit prime multiple hashes of the packets with single bytes.
 3. Let └¿�☺ be the IPv4 address 192.168.0.1 of **host_a** and ☻�¿└ be the address from **host_b** to host_a**.
 4. Let └¿�☻  be the IPv4 address 192.168.0.1 of **host_b** and ☺�¿└ be the address from **host_a** to **host_b**.
 5. Let **A**, **B**, and **C** be a generic 3-way handshake on a generic application in some generic upper-level communication protocol over Script.
 5. **host_a** initiates a connection handshake by sending the sequence of bytes:
     * ☺└¿�☻A**
-6. **Script Router** automatically adds the inverse router return address, each stage executing the Script Hash Function to create the final byte sequence:
+6. **Script Router** automatically adds the inverse router return address, each stage executing the Script Hash Function to create the final UI1 sequence:
     * ☺└¿�☻A**☺�¿└**
 7. **host_b** response from the handshake with the sequence of bytes:
     * ☺└¿�☺B☻�¿└**
@@ -624,4 +624,4 @@ The Target shall be certified to be a Script Automaton if the Target does not su
 
 The Target shall be certified as a Group Automata if the Target supports Script^2.
 
-[<< Previous](universal_addressing_specification_rfc.md) **|** [Beginning <<](script_specification_rfc.md)
+[<< Universal Addressing Specification](universal_addressing_specification_rfc.md) **|** [Beginning >>](script_specification_rfc.md)

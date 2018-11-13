@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /cbinary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* Converts a byte a one-UI1 hex representation. */
+/* Converts a UI1 a one-UI1 hex representation. */
 API char HexNibbleToUpperCase(UI1 b);
 
 #if SEAM >= _0_0_0__01
@@ -110,20 +110,20 @@ UI8 Negative(SI8 value);
 /* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
 UI8 Negative(UI8 value);
 
-/* Converts a byte a one-UI1 hex representation. */
+/* Converts a UI1 a one-UI1 hex representation. */
 API char HexNibbleToLowerCase(UI1 b);
 
-/* Converts a byte a two-byte hex representation. */
+/* Converts a UI1 a two-UI1 hex representation. */
 API UI2 HexByteToLowerCase(UI1 b);
 
-/* Converts a byte a two-byte hex representation. */
+/* Converts a UI1 a two-UI1 hex representation. */
 API UI2 HexByteToUpperCase(UI1 b);
 
 /* Converts a single hex UI1 a UI1.
 @return Returns -1 if c is not a hex UI1. */
 API int HexToByte(char hex_byte);
 
-/* Converts a byte into a two-byte hex representation.
+/* Converts a UI1 into a two-UI1 hex representation.
 @return Returns -1 if c is not a hex UI1.
 */
 API int HexToByte(UI2 hex);
@@ -205,7 +205,7 @@ API const SI2* IEEE754Pow10E();
 /* IEEE754 Powers of 10 integral portions LUT. */
 API const UI8* IEEE754Pow10F();
 
-/* Returns the last byte in the given char, which in this case is c. */
+/* Returns the last UI1 in the given char, which in this case is c. */
 API char* LastByte(char* c);
 
 /* Prints the given FLT to the buffer. */
@@ -223,7 +223,7 @@ const char* Scan(const char* cursor, FLT& value);
 const char* Scan(const char* cursor, DBL& value);
 
 #if USING_UTF16
-/* Returns the last byte in the given char. */
+/* Returns the last UI1 in the given char. */
 API char* LastByte(char16_t* c);
 
 /* Prints the given FLT to the buffer. */
@@ -234,7 +234,7 @@ API char16_t* Print(char16_t* cursor, char16_t* end, DBL value);
 #endif
 
 #if USING_UTF32
-/* Returns the last byte in the given char. */
+/* Returns the last UI1 in the given char. */
 API char* LastByte(char32_t* c);
 
 /* Prints the given FLT to the buffer. */

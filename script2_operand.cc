@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_operand.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -33,10 +33,10 @@ const char* OperandName(Operand* operand) {
   return op->name;
 }
 
-uintptr_t OperandCount(Operand* operand) {
+UIW OperandCount(Operand* operand) {
   ASSERT(operand);
   const Op* op = operand->Star(0, nullptr);
-  return (op == nullptr) ? 0 : reinterpret_cast<uintptr_t>(op->in);
+  return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
 wchar_t OperandIndex(Operand* operand, char* begin, char* end) {
@@ -74,8 +74,8 @@ UTF8& PrintOperand(UTF8& print, Operand* operand) {
 
   ASSERT(op);
 
-  uintptr_t num_ops = reinterpret_cast<uintptr_t>(op->in),
-            op_num = reinterpret_cast<uintptr_t>(op->out),
+  UIW num_ops = reinterpret_cast<UIW>(op->in),
+            op_num = reinterpret_cast<UIW>(op->out),
             last_op = op_num + num_ops - 1;
   if (num_ops > kParamsMax) {
     return print << "\nError: Too many parameters!";
@@ -109,5 +109,5 @@ Slot& OperandQuery(Operand* root, const char* address, Slot& slot) {
 }
 #endif
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //> #if SEAM >= _0_0_0__13

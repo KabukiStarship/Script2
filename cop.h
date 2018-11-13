@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    /kabuki/crabs/op.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /op.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -50,7 +50,7 @@ struct BOut;
     @endcode */
 struct API Op {
   const char* name;          //< Op name.
-  const uint_t *in,          //< Input kBSQ params or OpFirst.
+  const UIT *in,          //< Input kBSQ params or OpFirst.
       *out;                  //< Output kBSQ params or OpLast.
   const char* description;   //< Op description.
   wchar_t pop,               //< Index of the Pop Operation.
@@ -63,28 +63,28 @@ struct API Op {
 };
 
 /* Converts the given value to a pointer. */
-inline intptr_t OpCount(const Op& op) { return op.out - op.in; }
+inline SIW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const uint_t* OpFirst(wchar_t index) {
-  return reinterpret_cast<const uint_t*>(index);
+inline const UIT* OpFirst(wchar_t index) {
+  return reinterpret_cast<const UIT*>(index);
 }
 
 /* Converts the given value to a pointer. */
 inline wchar_t OpFirst(const Op* op) {
   ASSERT(op);
-  return (wchar_t) reinterpret_cast<uintptr_t>(op->in);
+  return (wchar_t) reinterpret_cast<UIW>(op->in);
 }
 
 /* Converts the given value to a pointer. */
-inline const uint_t* OpLast(wchar_t index) {
-  return reinterpret_cast<const uint_t*>(index);
+inline const UIT* OpLast(wchar_t index) {
+  return reinterpret_cast<const UIT*>(index);
 }
 
 /* Converts the given value to a pointer. */
 inline wchar_t OpLast(const Op* op) {
   ASSERT(op);
-  return (wchar_t) reinterpret_cast<uintptr_t>(op->out);
+  return (wchar_t) reinterpret_cast<UIW>(op->out);
 }
 
 #if CRABS_TEXT

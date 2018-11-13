@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="0_0_0_script.h" />
+    <ClInclude Include="0_0_0_script2.h" />
     <ClInclude Include="0_0_0__00_rng.h" />
     <ClInclude Include="0_0_0__01_itos_and_stoi.h" />
     <ClInclude Include="0_0_0__02_ascii_strings_and_socket.h" />
@@ -45,11 +45,11 @@
     <ClInclude Include="cbsq.h" />
     <ClInclude Include="cbuffer.h" />
     <ClInclude Include="cclock.h" />
-    <ClInclude Include="cconsole.h" />
+    <ClInclude Include="csio.h" />
     <ClInclude Include="cdoor.h" />
     <ClInclude Include="cerror.h" />
     <ClInclude Include="cevent.h" />
-    <ClInclude Include="cexpr.h" />
+    <ClInclude Include="ccrabs.h" />
     <ClInclude Include="cfloor.h" />
     <ClInclude Include="chash.h" />
     <ClInclude Include="cinterrupts.h" />
@@ -137,10 +137,10 @@
     <ClCompile Include="script2_bout.cc" />
     <ClCompile Include="script2_bsq.cc" />
     <ClCompile Include="script2_clock.cc" />
-    <ClCompile Include="script2_console.cc" />
+    <ClCompile Include="script2_sio.cc" />
     <ClCompile Include="script2_door.cc" />
     <ClCompile Include="script2_error.cc" />
-    <ClCompile Include="script2_expr.cc" />
+    <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /clock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-8 Cale McCollough <calemccollough@gmail.com>;
@@ -33,50 +33,51 @@ namespace _ {
 #if USING_UTF
 
 template <typename Char = char>
-Char* Print(Char* cursor, Char* end, const CClock& clock) {
+Char* TPrint(Char* cursor, Char* end, const CClock& clock) {
   // The way the print functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
   ASSERT(cursor < end);
 
-  cursor = Print<Char>(cursor, end, clock.year + ClockEpoch());
+  cursor = TPrint<Char>(cursor, end, clock.year + ClockEpoch());
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = Print<Char>(cursor, end, clock.month + 1);
+  cursor = TPrint<Char>(cursor, end, clock.month + 1);
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = Print<Char>(cursor, end, clock.day);
+  cursor = TPrint<Char>(cursor, end, clock.day);
   if (!cursor) return nullptr;
   *cursor++ = '@';
-  cursor = Print<Char>(cursor, end, clock.hour);
+  cursor = TPrint<Char>(cursor, end, clock.hour);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = Print<Char>(cursor, end, clock.minute);
+  cursor = TPrint<Char>(cursor, end, clock.minute);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = Print<Char>(cursor, end, clock.second);
+  cursor = TPrint<Char>(cursor, end, clock.second);
   if (!cursor) return nullptr;
   return cursor;
 }
 
 template <typename Char = char>
-Char* Print(Char* cursor, Char* end, Tss& t) {
+Char* TPrint(Char* cursor, Char* end, Tss& t) {
   // The way the print functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
   ASSERT(cursor < end);
 
   CClock clock(t.seconds);
-  cursor = Print<Char>(cursor, end, clock);
+  cursor = TPrint<Char>(cursor, end, clock);
   *cursor++ = ':';
-  cursor = Print<Char>(cursor, end, t.ticks);
+  cursor = TPrint<Char>(cursor, end, t.ticks);
   if (!cursor) return nullptr;
   return cursor;
 }
 
+/* Scans a time in seconds from the given string. */
 template <typename Char = char>
-const Char* StringScanTime(const Char* string, int& hour, int& minute,
-                           int& second) {
+const Char* TStringScanTime(const Char* string, int& hour, int& minute,
+                            int& second) {
   if (string == nullptr) return nullptr;
 
   PRINTF("\n\n    Scanning time:%s", string);
@@ -84,11 +85,11 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   int h,   //< Hour.
       m,   //< Minute.
       s;   //< Second.
-  if (!ScanSigned<int, Char>(++string, h)) {
+  if (!TScanSigned<int, Char>(++string, h)) {
     PRINTF("\nInvalid hour:%i", h);
     return nullptr;
   }
-  string = TextSkipNumbers<Char>(string);
+  string = TStringSkipNumbers<Char>(string);
   if (h < 0) {
     PRINTF("\nHours:%i can't be negative.", h);
     return nullptr;
@@ -99,19 +100,19 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   }
   PRINT(h);
   c = *string++;
-  if (!c || IsWhitespace<Char>(c)) {  // Case @HH
+  if (!c || TIsWhitespace<Char>(c)) {  // Case @HH
     PRINT(" HH ");
     // Then it's a single number, so create a TMS for the current
     // user-time hour..
     hour = h;
     return string;
   }
-  c = Lowercase<Char>(c);
+  c = TLowercase<Char>(c);
   if (c == 'a') {  //
     PRINT("\nCase @HHAm\n HHam ");
 
-    if (Lowercase<Char>(c = *string++) == 'm') c = *string++;
-    if (c && !IsWhitespace<Char>(c)) {
+    if (TLowercase<Char>(c = *string++) == 'm') c = *string++;
+    if (c && !TIsWhitespace<Char>(c)) {
       PRINT("\nInvalid am format.");
       return nullptr;
     }
@@ -122,8 +123,8 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   if (c == 'p') {
     PRINT(" Case @HHpm ");
     c = *string++;
-    if (Lowercase<Char>(c) == 'm') c = *string++;
-    if (c && !IsWhitespace<Char>(c)) {
+    if (TLowercase<Char>(c) == 'm') c = *string++;
+    if (c && !TIsWhitespace<Char>(c)) {
       PRINT("\ninvalid pm format.");
       return nullptr;
     }
@@ -140,8 +141,8 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
       "\nCases HH:MM, HH::MMam, HH::MMpm, HH:MM:SS, HH:MM:SSam, and "
       "HH:MM:SSpm");
 
-  if (!ScanSigned<int, Char>(string, m)) return nullptr;
-  string = TextSkipNumbers<Char>(string);
+  if (!TScanSigned<int, Char>(string, m)) return nullptr;
+  string = TStringSkipNumbers<Char>(string);
   if (m < 0) {
     PRINTF("\nMinutes:%i can't be negative!", m);
     return nullptr;
@@ -152,22 +153,22 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   }
   PRINTF(":%i", m);
 
-  string = TextSkipNumbers<Char>(string);
+  string = TStringSkipNumbers<Char>(string);
   c = *string++;
-  if (!c || IsWhitespace<Char>(c)) {  // Case HH:MM
+  if (!c || TIsWhitespace<Char>(c)) {
     PRINT(" HH:MM ");
     hour = h;
     minute = m;
     return string;
   }
-  c = Lowercase<Char>(c);
+  c = TLowercase<Char>(c);
   if (c == 'a') {
     PRINT(" HH:MMam ");
     c = *string++;
-    if (Lowercase<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TLowercase<Char>(c) == 'm') {  // The 'm' is optional.
       c = *string++;
     }
-    if (c && !IsWhitespace<Char>(c)) {  //< The space is not.
+    if (c && !TIsWhitespace<Char>(c)) {  // The space is not.
       PRINT("Invalid am in HH::MM AM");
       return nullptr;
     }
@@ -175,13 +176,13 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
     minute = m;
     return string;
   }
-  if (c == 'p') {  // Case HH:MM PM
+  if (c == 'p') {  //< Case HH:MM PM
     PRINT(" HH:MMpm ");
     c = *string++;
-    if (Lowercase<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TLowercase<Char>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
-    if (c && !IsWhitespace<Char>(c)) {  //< The space is not.
+    if (c && !TIsWhitespace<Char>(c)) {  //< The space is not.
       PRINT("Invalid am in HH::MM PM");
       return nullptr;
     }
@@ -193,7 +194,7 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
 
   PRINT("\n    Cases HH:MM:SS, HH:MM:SSam, and HH:MM:SSpm");
 
-  if (!ScanSigned<int, Char>(string, s)) return nullptr;
+  if (!TScanSigned<int, Char>(string, s)) return nullptr;
   if (s < 0) {
     PRINTF("\nSeconds:%i can't be negative!", s);
     return nullptr;
@@ -203,9 +204,9 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
     return nullptr;
   }
   PRINTF(":%i", s);
-  string = TextSkipNumbers<Char>(string);
-  c = Lowercase<Char>(*string);
-  if (!c || IsWhitespace<Char>(c)) {
+  string = TStringSkipNumbers<Char>(string);
+  c = TLowercase<Char>(*string);
+  if (!c || TIsWhitespace<Char>(c)) {
     PRINTF(" HH:MM:SS ");
     hour = h;
     minute = m;
@@ -215,10 +216,10 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   if (c == 'a') {
     PRINT(" HH:MM:SSam ");
     c = *string++;
-    if (Lowercase<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TLowercase<Char>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
-    if (!c || !IsWhitespace<Char>(c)) {  //< The space is not.
+    if (!c || !TIsWhitespace<Char>(c)) {  //< The space is not.
       PRINT("\nInvalid am in HH::MM:SS AM");
       return nullptr;
     }
@@ -232,11 +233,11 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
     return nullptr;  // Format error!
   }
   PRINTF(" HH:MM:SSpm ");
-  c = Lowercase<Char>(*string++);
+  c = TLowercase<Char>(*string++);
   if (c == 'm') {  //< The 'm' is optional.
     c = *string++;
   }
-  if (!c || !IsWhitespace<Char>(c)) {  //< The space is not.
+  if (!c || !TIsWhitespace<Char>(c)) {  //< The space is not.
     PRINT("\nInvalid am in HH::MM:SS PM");
     return nullptr;
   }
@@ -246,12 +247,13 @@ const Char* StringScanTime(const Char* string, int& hour, int& minute,
   return string;
 }
 
+/* Scans the given string for a timestamp. */
 template <typename Char = char>
-const Char* Scan(const Char* cursor, CClock& clock) {
+const Char* TScan(const Char* cursor, CClock& clock) {
   ASSERT(cursor);
   PRINTF("\n    Scanning CClock: %s\n    Scanning: ", cursor);
 
-  cursor = TextSkipChar<Char>(cursor, '0');
+  cursor = TStringSkipChar<Char>(cursor, '0');
   Char c = *cursor,  //< The current Char.
       delimiter;     //< The delimiter.
   const Char* end;   //< Might not need
@@ -259,7 +261,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
   int hour = 0, minute = 0, second = 0;
 
   if (c == '@') {
-    if (!(cursor = StringScanTime<Char>(cursor, hour, minute, second))) {
+    if (!(cursor = TStringScanTime<Char>(cursor, hour, minute, second))) {
       PRINT("\nCase @ invalid time");
       return nullptr;
     }
@@ -270,7 +272,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
     return cursor + 1;
   }
   if (c == '#') {
-    if (!(cursor = StringScanTime<Char>(cursor, hour, minute, second))) {
+    if (!(cursor = TStringScanTime<Char>(cursor, hour, minute, second))) {
       PRINT("\nCase @ invalid time");
     }
     clock.hour += hour;
@@ -286,7 +288,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
       is_last_year = 0;  //< Flag for if the date was last year or not.
 
   // Scan value1
-  if (!ScanSigned<int, Char>(cursor, value1)) {
+  if (!TScanSigned<int, Char>(cursor, value1)) {
     PRINT("Scan error at value1");
     return nullptr;
   }
@@ -294,14 +296,14 @@ const Char* Scan(const Char* cursor, CClock& clock) {
     PRINT("Dates can't be negative.");
     return nullptr;
   }
-  cursor = StringDecimalStop<Char>(cursor);
+  cursor = TStringDecimalEnd<Char>(cursor);
   if (!cursor) return nullptr;
   delimiter = *cursor++;
   PRINTF("%i%c", value1);
   if (delimiter == '@') {
     PRINT(" HH@ ");
 
-    if (!(cursor = StringScanTime<Char>(cursor, hour, minute, second))) {
+    if (!(cursor = TStringScanTime<Char>(cursor, hour, minute, second))) {
       PRINT("Invalid time DD@");
       return nullptr;
     }
@@ -310,8 +312,8 @@ const Char* Scan(const Char* cursor, CClock& clock) {
     return cursor + 1;
   }
   // Scan value2.
-  cursor = TextSkipChar<Char>(cursor, '0');
-  if (!ScanSigned<int, Char>(cursor, value2)) {
+  cursor = TStringSkipChar<Char>(cursor, '0');
+  if (!TScanSigned<int, Char>(cursor, value2)) {
     PRINT("Failed scanning value2 of date.");
     return nullptr;
   }
@@ -320,17 +322,17 @@ const Char* Scan(const Char* cursor, CClock& clock) {
     return nullptr;  //< Invalid month and day.
   }
   PRINTF("%i", value2);
-  cursor = StringDecimalStop<Char>(cursor);
+  cursor = TStringDecimalEnd<Char>(cursor);
   c = *cursor;
   if (c != delimiter) {
     PRINT("\n    Cases MM/DD and MM/YYyy");
     if (c == '@') {
-      if (!(cursor = StringScanTime<Char>(cursor, hour, minute, second))) {
+      if (!(cursor = TStringScanTime<Char>(cursor, hour, minute, second))) {
         PRINT(" invalid time ");
         return nullptr;
       }
     }
-    if (!c || IsWhitespace<Char>(c)) {
+    if (!c || TIsWhitespace<Char>(c)) {
       PRINTF("\n    Format is MM/DD and year is %i", clock.year + ClockEpoch());
       // is_last_year = ((value1 >= std_tm.mon) &&
       //    (value2 >= std_tm.mday)) ? 0:1;
@@ -344,7 +346,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
 
       return cursor + 1;
     }
-    c = Lowercase<Char>(c);
+    c = TLowercase<Char>(c);
     if ((value1 < 12) && (value2 > 0) &&
         (value2 <= ClockMonthDayCount(value1))) {
       PRINT(" MM/DD ");
@@ -365,7 +367,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
       clock.hour = hour;
       clock.minute = minute;
       clock.second = second;
-      if (!(cursor = StringScanTime(cursor, hour, minute, second))) {
+      if (!(cursor = TStringScanTime(cursor, hour, minute, second))) {
         PRINT("\nInvalid MM/DD@");
         return nullptr;
       }
@@ -376,7 +378,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
       PRINT(" MM/YYyy");
       clock.month = value1 - 1;
       clock.year = value2;
-      if (!(cursor = StringScanTime<Char>(cursor, hour, minute, second))) {
+      if (!(cursor = TStringScanTime<Char>(cursor, hour, minute, second))) {
         PRINT("\nInvalid MM / YYYY@ time");
         return nullptr;
       }
@@ -389,20 +391,20 @@ const Char* Scan(const Char* cursor, CClock& clock) {
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
 
-  cursor = TextSkipChar<Char>(++cursor, '0');
+  cursor = TStringSkipChar<Char>(++cursor, '0');
   c = *cursor;
   // Then there are 3 values and 2 delimiters.
-  if (!IsDigit<Char>(c) || !ScanSigned<int, Char>(cursor, value3)) {
+  if (!TIsDigit<Char>(c) || !TScanSigned<int, Char>(cursor, value3)) {
     PRINTF("\n    SlotRead error reading value3 of date. %c: ", c);
     return nullptr;  //< Invalid format!
   }
-  cursor = StringDecimalStop<Char>(cursor);
+  cursor = TStringDecimalEnd<Char>(cursor);
   PRINTF("%c%i", c, value3);
   // Now we need to check what format it is in.
 
   c = *cursor;
   if (c == '@') {
-    if (!(end = StringScanTime<Char>(cursor, hour, minute, second))) {
+    if (!(end = TStringScanTime<Char>(cursor, hour, minute, second))) {
       PRINT("Invalid YYyy/MM/DD@ time.");
       return nullptr;
     }
@@ -410,7 +412,7 @@ const Char* Scan(const Char* cursor, CClock& clock) {
   clock.hour = hour;
   clock.minute = minute;
   clock.second = second;
-  if (IsWhitespace<Char>(*(++cursor))) {
+  if (TIsWhitespace<Char>(*(++cursor))) {
     PRINT("No date found.");
     return nullptr;
   }
@@ -462,8 +464,9 @@ const Char* Scan(const Char* cursor, CClock& clock) {
   return cursor + 1;
 }
 
+/* Creates a timestamp from the given seconds Clock. */
 template <typename SI = TMS>
-SI StampTime(CClock& clock) {
+SI TStampTime(CClock& clock) {
   SI t = (clock.year - kClockEpochInit) * kSecondsPerYear +
          (clock.day - 1) * kSecondsPerDay + clock.hour * kSecondsPerHour +
          clock.minute * kSecondsPerMinute + clock.second;
@@ -471,27 +474,26 @@ SI StampTime(CClock& clock) {
 }
 
 template <typename Char, typename SI>
-const Char* StringScanTime(const Char* begin, SI& result) {
+const Char* TStringScanTime(const Char* begin, SI& result) {
   CClock clock;
-  const Char* end = Scan<Char>(begin, clock);
-  result = StampTime<SI>(clock);
+  const Char* end = TScan<Char>(begin, clock);
+  result = TStampTime<SI>(clock);
   return end;
 }
 
 template <typename Char>
-const Char* StringScanTime(const Char* begin, Tss& result) {
-  begin = StringScanTime<Char, TMS>(begin, result.seconds);
+const Char* TStringScanTime(const Char* begin, Tss& result) {
+  begin = TStringScanTime<Char, TMS>(begin, result.seconds);
   if (!begin) return nullptr;
   if (*begin++ != ':') {
     result.ticks = 0;
     return begin - 1;
   }
-  return ScanUnsigned<UI4, Char>(begin, result.ticks);
+  return TScanUnsigned<UI4, Char>(begin, result.ticks);
 }
 #endif  // #if USING_UTF
 
 }  // namespace _
 
-#include "test_footer.inl"
 #endif  //< #ifndef INCLUDED_SCRIPTTCLOCK
 #endif  //< #if SEAM >= _0_0_0__04

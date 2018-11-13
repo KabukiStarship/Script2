@@ -438,7 +438,7 @@ bool StackGrow(CObject& obj) {
 
 /* Prints the given stack to the console. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-Utf8& PrintStack(Utf8& print, CStack<T, UI, SI>* stack) {
+Utf8& TPrintStack(Utf8& print, CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   UI size_array = stack->size_array;
   SI count = stack->count;
@@ -570,7 +570,7 @@ class TStack {
   }
 
   /* Resizes the stack to the new_count. */
-  inline bool Resize(SI new_count) { return StackResize<T, UI, SI>(obj_); }
+  inline bool Resize(SI new_count) { return TStackResize<T, UI, SI>(obj_); }
 
   /* Doubles the size of the stack. */
   inline bool Grow() { return StackGrow<T, UI, SI>(obj_); }

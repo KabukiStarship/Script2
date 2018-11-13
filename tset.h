@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /tset.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -81,29 +81,29 @@ struct Collection {
   virtual BOL Remove(Tuple2* tuple) = 0;
 
   /* Removes the given index from this collection. */
-  virtual BOL Remove(uintptr_t) = 0;
+  virtual BOL Remove(UIW) = 0;
 
   /* Removes the given key from this collection (if applicable.). */
   virtual BOL Remove(const char* key) = 0;
 
   /* Gets the element at the given index. */
-  virtual void* Get(uintptr_t index) = 0;
+  virtual void* Get(UIW index) = 0;
 
   /* Searches for the data of the given type and returns a pointer to it.
       @return Returns nil if the Set does not contain the given data. */
   virtual void* Get(const char* key) = 0;
 
   /* Returns true if this Set contains this given key. */
-  virtual uintptr_t FindIndex(const char* key) = 0;
+  virtual UIW FindIndex(const char* key) = 0;
 
   /* Returns true if this Set contains this given Type-Value. */
-  virtual uintptr_t FindIndex(AsciiType type, void* value) = 0;
+  virtual UIW FindIndex(AsciiType type, void* value) = 0;
 
   /* Gets the size_t of the object being stored. */
-  virtual uintptr_t GetSize() = 0;
+  virtual UIW GetSize() = 0;
 
   /* Gets the size_t of the object being stored. */
-  virtual uintptr_t GetSizeWidth() = 0;
+  virtual UIW GetSizeWidth() = 0;
 
   /*  */
   virtual UTF1& Print(UTF1& out_) = 0;

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_benchmark.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -44,7 +44,7 @@ const char* BenchmarkCase::Run(char* cursor, char* end, const char* args) {
   DBL nil_reading;
   int i;
   int columns_max;
-  ASSERT(Scan<>(args, columns_max));
+  ASSERT(TScan<>(args, columns_max));
 
   for (i = 0; i < count; ++i) {
     const char* result = (*cases[i])(nullptr, nullptr, nullptr);
@@ -69,7 +69,7 @@ Benchmark::Benchmark(const char* name, const char* filename,
     : name(name), filename(filename), groups(groups), count(count) {
   ASSERT(count > 0);
   int l_test_count_max = 0;
-  for (intptr_t i = 0; i < count; ++i) {
+  for (SIW i = 0; i < count; ++i) {
   }
 }
 
@@ -96,5 +96,5 @@ const char* Benchmark::Run(char* cursor, char* end, const char* args) {
 
 }  // namespace _
 
-#include "test_footer.inl"
+
 #endif

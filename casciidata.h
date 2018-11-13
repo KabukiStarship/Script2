@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /casciidata.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -15,9 +15,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__12
-
-#ifndef INCLUDED_SCRIPT_ASCIIDATA
-#define INCLUDED_SCRIPT_ASCIIDATA
+#ifndef INCLUDED_SCRIPT_CASCIIDATA
+#define INCLUDED_SCRIPT_CASCIIDATA
 
 #include "csocket.h"
 #include "tutf.h"
@@ -52,18 +51,18 @@ typedef enum AsciiTypes {
   kSI8,      //< 13. 64-bit signed integer.
   kUI8,      //< 14. 64-bit unsigned integer.
   kDBL,      //< 15. 64-bit floating-point number.
-  kSIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
-  kUIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
-  kDEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
+  kSIH,      //< 16. 128-bit (Hexadeca-UI1) signed integer.
+  kUIH,      //< 17. 128-bit (Hexadeca-UI1) unsigned integer.
+  kDEC,      //< 18. 128-bit (Hexadeca-UI1) floating-point number.
   kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
-  kOBJ,      //< 20. N-byte object.
+  kOBJ,      //< 20. N-UI1 object.
   kADR,      //< 21. UTF-8 Operand stack address.
   kSTR,      //< 22. A UTF-8 string.
   kTKN,      //< 23. A UTF-8 string token without whitespace.
   kBSQ,      //< 24. B-Sequence.
   kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
   kTBL,      //< 26. A hash table.
-  kEXP,      //< 27. Script Expression.
+  kEXP,      //< 27. Script^2 Expression.
   kLST,      //< 28. Set or multiset of Type-Value tuples.
   kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
   kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
@@ -88,19 +87,19 @@ API const char** TypeStrings();
 API inline const char* TypeString(type_t type);
 
 /* Returns the name of the given type. */
-API inline const char* TypeString(uint_t type);
+API inline const char* TypeString(UIT type);
 
 /* Masks off the lower 5-LSb to get the type. */
 API inline UI1 TypeMask(UI1 value);
 
 /* Returns true if the given type is an Array type. */
-API inline BOL TypeIsArray(uint_t type);
+API inline BOL TypeIsArray(UIT type);
 
 /* Returns true if the given type is a kBOK type. */
-API inline BOL TypeIsSet(uint_t type);
+API inline BOL TypeIsSet(UIT type);
 
 /* Returns the size or max size of the given type. */
-API uint_t TypeFixedSize(uint_t type);
+API UIT TypeFixedSize(UIT type);
 
 /* Gets the next address that a data type may be stored at. */
 API void* TypeAlign(type_t type, void* value);
@@ -108,7 +107,7 @@ API void* TypeAlign(type_t type, void* value);
 /* Writes the given value to the socket. */
 API char* Write(char* begin, char* end, type_t type, const void* source);
 
-/* Returns true if the given type is an ASCII kOBJ. */
+/* Returns true if the given type is an ASCII OBJ. */
 API inline BOL TypeIsObj(type_t type);
 
 /* Returns true if the given type is a string type. */
@@ -176,5 +175,5 @@ API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
 API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 
-#endif  //< INCLUDED_SCRIPT_ASCIIDATA
+#endif  //< INCLUDED_SCRIPT_CASCIIDATA
 #endif  //< #if SEAM >= _0_0_0__12

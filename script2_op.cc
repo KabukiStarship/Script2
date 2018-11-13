@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
+@link    https://github.com/kabuki-starship/script2.git
 @file    /script2_op.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
@@ -40,7 +40,7 @@ UTF8& Print(UTF8& print, const Op* op) {
 #endif
 /*
 #if CRABS_TEXT
-Op OpInit (uintptr_t* buffer, uint_t buffer_size) {
+Op OpInit (UIW* buffer, UIT buffer_size) {
     BOut* bout = BOutInit (buffer, buffer_size);
     Op log;
     log.bout = bout;
@@ -50,7 +50,7 @@ Op OpInit (uintptr_t* buffer, uint_t buffer_size) {
 void Print (Op& log) {
     BIn    * bin = reinterpret_cast<BIn*> (log.bout);
     void   * args[1];
-    byte     type = 0,
+    UI1     type = 0,
     ui1;
     UI2 ui2;
     UI4 ui4;
@@ -147,5 +147,5 @@ void Print (Op& log) {
 #endif */
 
 }  // namespace _
-#include "test_footer.inl"
+
 #endif  //> #if SEAM >= _0_0_0__13

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
-@link    https://github.com/kabuki-starship/script.git
-@file    \kabuki\f2\0_0_0__03_ftos_and_stof.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    \0_0_0__03_ftos_and_stof.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -36,9 +36,9 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
   TEST_BEGIN;
 
 #if SEAM == _0_0_0__03
-  enum { kTestCount = 1 << 15 };
-#else
   enum { kTestCount = 1 << 20 };
+#else
+  enum { kTestCount = 1 << 15 };
 #endif
 
   enum { kSize = 31 };
@@ -60,7 +60,7 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
   }
 
   PRINT(
-      "\n\nTesting const Char* Scan<Char> (const Char*, const Char*, FLT&) "
+      "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FLT&) "
       "functions...\n");
 
   for (int i = 0; i < kTestCount; ++i) {
@@ -73,7 +73,7 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
     AVOW(dbl_expected, dbl_found);
   }
 
-  PRINTF("\n\nTesting Char* Print<Char> (Char*, Char*, Float)...\n");
+  PRINTF("\n\nTesting Char* TPrint<Char> (Char*, Char*, Float)...\n");
 
   for (int i = 0; i < kTestCount; ++i) {
     do {
@@ -86,9 +86,9 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
     AVOW(dbl_expected, dbl_found);
   }
 
-  TEST_END;
+
 #endif
   return nullptr;
 }
 }  // namespace _
-#include "test_footer.inl"
+

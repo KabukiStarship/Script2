@@ -449,9 +449,9 @@ Code should be 64-bit and 32-bit friendly. Bear in mind problems of printing, co
 
     Unfortunately, the `PRI` macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g. `SI8`, `UI8`, `SI4`, `UI4`, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to `printf`-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t` (`z`), `ptrdiff_t` (`t`), and `maxint_t` (`j`).
 
-*   Remember that `sizeof(void *)` != `sizeof(int)`. Use `intptr_t` if you want a pointer-sized integer.
+*   Remember that `sizeof(void *)` != `sizeof(int)`. Use `SIW` if you want a pointer-sized integer.
 
-*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `SI8`/`UI8` member will by default end up being 8-byte aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
+*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `SI8`/`UI8` member will by default end up being 8-UI1 aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
 
 *   Use [braced-initialization](#Casting) as needed to create 64-bit constants. For example:
 
