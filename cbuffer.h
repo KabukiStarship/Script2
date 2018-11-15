@@ -27,13 +27,12 @@ template <size_t kBufferSize = kBufferSizeDefault>
 inline char* Buffer() {
   enum {
     kBufferSizeWords =
-        (kBufferSize / sizeof(UIW)) + kBufferSize % sizeof(UIW) ? 1
-                                                                            : 0
+        (kBufferSize / sizeof(UIW)) + kBufferSize % sizeof(UIW) ? 1 : 0
   };
   static UIW buffer[kBufferSizeWords];
   return reinterpret_cast<char*>(buffer);
 }
 
-}  //< namespace _
+}  // namespace _
 #endif  //< INCLUDED_CRABS_BUFFER
 #endif  //< #if SEAM >= _0_0_0__13

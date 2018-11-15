@@ -224,23 +224,23 @@ class Room : public Operand {
   virtual char CommandNext();
 
   /* Script expressions. */
-  virtual const Op* Star(wchar_t index, CCrabs* crabs);
+  virtual const Op* Star(CHW index, CCrabs* crabs);
 
 #if CRABS_TEXT
   /* Prints the Room to the stdout. */
-  virtual UTF8& Print(UTF8& print);
+  virtual UTF1& Print(UTF1& utf);
 #endif
 
  protected:
-  int state_count_,                      //< Number of FSM states.
-      state_;                            //< Room state.
-  const char* name_;                     //< Room Name.
-  CArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
-  CCrabs* expr_;                           //< Current CCrabs being executed.
-                                         //< DC1: this.
-  Door* this_;                           //< DC2: The Door to this room.
-  Operand *xoff_,                        //< DC3: XOFF - XOFF handling device.
-      *device_,                          //< DC4: the current device control.
+  int state_count_,                    //< Number of FSM states.
+      state_;                          //< Room state.
+  const char* name_;                   //< Room Name.
+  TCArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
+  CCrabs* expr_;                       //< Current CCrabs being executed.
+                                       //< DC1: this.
+  Door* this_;                         //< DC2: The Door to this room.
+  Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
+      *device_,                        //< DC4: the current device control.
       *devices_;               //< Pointer to the current device control.
   UIW begin[kFloorSizeWords];  //< Room Floor buffer.
 

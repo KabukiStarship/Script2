@@ -56,7 +56,7 @@ struct API Operand {
       @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(wchar_t index, CCrabs* crabs) = 0;
+  virtual const Op* Star(CHW index, CCrabs* crabs) = 0;
 };
 
 /* Returns the name of the given Operand. */
@@ -70,7 +70,7 @@ API UIW OperandCount(Operand* op);
     @param  key_end   End of the key slot buffer.
     @return A value printable Unicode char or invalid if the Operand doesn't
             Contain the given key. */
-API wchar_t OperandIndex(Operand* operand, char* key_begin, char* key_end);
+API CHW OperandIndex(Operand* operand, char* key_begin, char* key_end);
 
 #if CRABS_TEXT
 /* Queries the given Operand Op Header.
@@ -84,17 +84,17 @@ API const Op* OperandQuery (CCrabs* crabs, const Op* op);*/
 Slot& OperandQuery(Operand* root, const char* address, Slot& key);
 
 /* Prints the Operand to the Text.
-    @param  text     The Text to print to.
-    @param  operand The Operand to print.
+    @param  text     The Text to utf to.
+    @param  operand The Operand to utf.
     @return text. */
-API UTF8& PrintOperand(UTF8& slot, Operand* operand);
+API UTF1& PrintOperand(UTF1& slot, Operand* operand);
 #endif
 
-}  //< namespace _
+}  // namespace _
 
 #if CRABS_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
-inline _::UTF8& operator<<(_::UTF8& printer, _::Operand* operand) {
+inline _::UTF1& operator<<(_::UTF1& printer, _::Operand* operand) {
   return _::PrintOperand(printer, operand);
 }
 

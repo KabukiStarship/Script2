@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@file    /kabuki/0_0_0__08_ascii_table.h
+@file    /0_0_0__10_ascii_map_.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -10,10 +10,9 @@ under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
-#pragma once
 #include <pch.h>
 
-#if SEAM == _0_0_0__08
+#if SEAM == _0_0_0__10
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -21,16 +20,16 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const char* _0_0_0__08_ASCII_Table(char* seam_log, char* seam_end,
-                                          const char* args) {
-#if SEAM >= _0_0_0__08
+static const char* _0_0_0__10_ASCII_Map(char* seam_log, char* seam_end,
+                                        const char* args) {
+#if SEAM >= _0_0_0__10
   TEST_BEGIN;
 
   Printf("\n\nTesting ASCII OBJ Types");
 
   Print("\n  - Running TableTest...\n");
 
-  wchar_t index;
+  CHW index;
   UIW buffer[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &buffer[0], &buffer[127]);
 
@@ -159,6 +158,6 @@ static const char* _0_0_0__08_ASCII_Table(char* seam_log, char* seam_end,
 #endif
   return nullptr;
 }
-}  // namespace _
+}  //< namespace _
 
 

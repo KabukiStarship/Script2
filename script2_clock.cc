@@ -374,8 +374,8 @@ void PrintTime(TME t) {
   Print(buffer, buffer + kSize - 1, t);
 }
 
-const char* TStringScanTime(const char* string, int& hour, int& minute,
-                            int& second) {
+const char* StringScanTime(const char* string, int& hour, int& minute,
+                           int& second) {
   return TStringScanTime<char>(string, hour, minute, second);
 }
 
@@ -486,6 +486,5 @@ const char32_t* TStringScanTime(const char32_t* string, TME& result) {
 #endif
 
 }  // namespace _
-
 
 #endif  //< #if SEAM >= _0_0_0__04

@@ -37,7 +37,7 @@ struct API BOut {
   UIT size;            //< Size of the B-Output.
   volatile UIT start;  //< Starting index of the ring-buffer data.
   UIT stop,            //< Stopping index of the ring-buffer data.
-      read;               //< Address that the BOut device is reading from.
+      read;            //< Address that the BOut device is reading from.
 };
 
 /* Get's the B-Output's buffer.*/
@@ -87,18 +87,18 @@ API void BInKeyStrokes();
 
 #if CRABS_TEXT
 /* Prints the BIn to the Text.
-    @param  bout The bout to print.
-    @param  text The Text to print to the bout.
+    @param  bout The bout to utf.
+    @param  text The Text to utf to the bout.
     @return The slot. */
-API UTF8& PrintBOut(UTF8& printer, BOut* bout);
+API UTF1& PrintBOut(UTF1& printer, BOut* bout);
 #endif
 
 }  // namespace _
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::UTF8& operator<<(_::UTF8& print, _::BOut* bout) {
-  return _::PrintBOut(print, bout);
+inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
+  return _::PrintBOut(utf, bout);
 }
 #endif
 

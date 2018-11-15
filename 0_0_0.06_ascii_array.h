@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
+#include "tarray.h"
+
 #if SEAM == _0_0_0__06
 #include "test_debug.inl"
 #else
@@ -29,7 +31,7 @@ static const char* _0_0_0__06_ASCII_Array(char* seam_log, char* seam_end,
   static const int array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
   const int* test = Dimensions<2, 2, 2>();
-  Array<int> test_array(test);
+  TArray<int> test_array(test);
   *test_array.Elements() = {{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
   i = 0;
   int* array_base = test_array.Elements();
@@ -37,10 +39,7 @@ static const char* _0_0_0__06_ASCII_Array(char* seam_log, char* seam_end,
     for (int y = 0; y < 2; ++y)
       for (int x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
 
-
 #endif
   return nullptr;
 }
 }  // namespace _
-
-

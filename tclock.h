@@ -34,7 +34,7 @@ namespace _ {
 
 template <typename Char = char>
 Char* TPrint(Char* cursor, Char* end, const CClock& clock) {
-  // The way the print functions are setup, we return a nil-term char so we
+  // The way the utf functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
   ASSERT(cursor < end);
@@ -61,7 +61,7 @@ Char* TPrint(Char* cursor, Char* end, const CClock& clock) {
 
 template <typename Char = char>
 Char* TPrint(Char* cursor, Char* end, Tss& t) {
-  // The way the print functions are setup, we return a nil-term char so we
+  // The way the utf functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
   ASSERT(cursor < end);

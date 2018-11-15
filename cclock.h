@@ -167,7 +167,7 @@ API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char* Print(char* begin, char* end, const CClock& clock);
 
@@ -183,7 +183,7 @@ API char* Print(char* begin, char* end, Tss& t);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char* PrintTime(char* begin, char* end, TMS time);
 
@@ -191,7 +191,7 @@ API char* PrintTime(char* begin, char* end, TMS time);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char* PrintTime(char* begin, char* end, TME time);
 
@@ -227,7 +227,7 @@ API void PrintTime(TME t);
 @param minute The location to write the number of minutes to.
 @param Second The location to write the number of seconds to. */
 API const char* TStringScanTime(const char* string, int& hour, int& minute,
-                               int& second);
+                                int& second);
 
 /* Converts a keyboard input to char and deletes the char.
 @return Nil upon buffer failure or char directly after the end of the
@@ -252,7 +252,7 @@ API const char* TStringScanTime(const char* string, TME& result);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char16_t* Print(char16_t* begin, char16_t* end, CClock& clock);
 
@@ -260,7 +260,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, CClock& clock);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char16_t* Print(char16_t* begin, char16_t* end, Tss& t);
 
@@ -268,7 +268,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, Tss& t);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char16_t* PrintTime(char16_t* begin, char16_t* end, TMS time);
 
@@ -276,7 +276,7 @@ API char16_t* PrintTime(char16_t* begin, char16_t* end, TMS time);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char16_t* Print(char16_t* begin, char16_t* end, TME time);
 
@@ -302,7 +302,7 @@ API char16_t* Print(char16_t* begin, char16_t* end, TME time);
 @param minute The location to write the number of minutes to.
 @param Second The location to write the number of seconds to. */
 API const char16_t* TStringScanTime(const char16_t* string, int& hour,
-                                   int& minute, int& second);
+                                    int& minute, int& second);
 
 /* Converts a keyboard input to char16_t and deletes the char16_t.
 @return Nil upon buffer failure or char16_t directly after the end of the
@@ -325,7 +325,7 @@ API const char16_t* TStringScanTime(const char16_t* string, TME& result);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, CClock& clock);
 
@@ -333,7 +333,7 @@ API char32_t* Print(char32_t* begin, char32_t* end, CClock& clock);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char32_t* Print(char32_t* begin, char32_t* end, Tss& time);
 
@@ -341,7 +341,7 @@ API char32_t* Print(char32_t* begin, char32_t* end, Tss& time);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char32_t* PrintTime(char32_t* begin, char32_t* end, TMS time);
 
@@ -349,7 +349,7 @@ API char32_t* PrintTime(char32_t* begin, char32_t* end, TMS time);
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
 @param begin The beginning of the write buffer.
-@param time  The time to print.
+@param time  The time to utf.
 @param end   The end of the write buffer. */
 API char32_t* PrintTime(char32_t* begin, char32_t* end, TME time);
 
@@ -374,7 +374,7 @@ API char32_t* PrintTime(char32_t* begin, char32_t* end, TME time);
 @endcode
 */
 API const char32_t* TStringScanTime(const char32_t* input, int& hour,
-                                   int& minute, int& second);
+                                    int& minute, int& second);
 
 /* Converts a keyboard input to char and deletes the char.
  */

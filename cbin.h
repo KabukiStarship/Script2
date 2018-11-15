@@ -43,7 +43,7 @@ typedef enum BInStates {
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct API BIn {
   UIT size,           //< The size of the buffer.
-      start;             //< The starting index of the ring buffer data.
+      start;          //< The starting index of the ring buffer data.
   volatile UIT stop;  //< The stopping index of the ring buffer data.
   UIT read;           //< The read variable.
 };
@@ -105,22 +105,22 @@ inline const Op* BOutRead(BOut* bout, const UIT* params, void** args) {
 
 #if USING_UTF8
 /* Prints the BIn to the Text.
-@param  bin The pin to print.
-@param  text The Text to print the bin to.
+@param  bin The pin to utf.
+@param  text The Text to utf the bin to.
 @return The text. */
-API UTF8& Print(UTF8& printer, BIn* bin);
+API UTF1& Print(UTF1& printer, BIn* bin);
 #endif  //< #if USING_UTF8
 #if USING_UTF16
 /* Prints the BIn to the Text.
-@param  bin The pin to print.
-@param  text The Text to print the bin to.
+@param  bin The pin to utf.
+@param  text The Text to utf the bin to.
 @return The text. */
 API UTF2& Print(UTF2& printer, BIn* bin);
 #endif  //< #if USING_UTF16
 #if USING_UTF32
 /* Prints the BIn to the Text.
-@param  bin The pin to print.
-@param  text The Text to print the bin to.
+@param  bin The pin to utf.
+@param  text The Text to utf the bin to.
 @return The text. */
 API UTF4& Print(UTF4& printer, BIn* bin);
 #endif  //< #if USING_UTF32
@@ -129,8 +129,8 @@ API UTF4& Print(UTF4& printer, BIn* bin);
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::UTF8& operator<<(_::UTF8& print, _::BIn* bin) {
-  return Print(print, bin);
+inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
+  return Print(utf, bin);
 }
 #endif
 

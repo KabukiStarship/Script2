@@ -26,13 +26,13 @@ namespace _ {
     ;
     @endcode
 */
-template <typename TIndex, typename TKey, typename TData, typename THash>
+template <typename Index, typename TKey, typename Size, typename THash>
 struct API TSet {
-  TData size;         //< Total size of the set.
-  TKey table_size,    //< Size of the (optional) key strings in bytes.
-      size_pile;      //< Size of the (optional) collisions pile in bytes.
-  TIndex item_count,  //< Number of items.
-      count_max;      //< Max number of items that can fit in the header.
+  Size size;         //< Total size of the set.
+  TKey table_size,   //< Size of the (optional) key strings in bytes.
+      size_pile;     //< Size of the (optional) collisions pile in bytes.
+  Index item_count,  //< Number of items.
+      count_max;     //< Max number of items that can fit in the header.
 };
 
 /* A Type-Value Tuple. */

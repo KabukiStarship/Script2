@@ -39,11 +39,11 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-wchar_t OperandIndex(Operand* operand, char* begin, char* end) {
+CHW OperandIndex(Operand* operand, char* begin, char* end) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
-  wchar_t index = OpFirst(op), last = OpLast(op);
+  CHW index = OpFirst(op), last = OpLast(op);
   ASSERT(index);
   for (; index <= last; ++index) {
     if (StringEquals(begin, end, operand->Star(index, nullptr)->name)) {
@@ -55,8 +55,8 @@ wchar_t OperandIndex(Operand* operand, char* begin, char* end) {
 
 #if CRABS_TEXT
 /*
-Utf& Print (Utf& print, const Operand* op) {
-    print << "\n Op:\n" << op->name << "\nparams_in:"
+Utf& Print (Utf& utf, const Operand* op) {
+    utf << "\n Op:\n" << op->name << "\nparams_in:"
           << Bsq (op->in)
           << "\nparams_out:" << op->out
           << "\npop:" << op->pop  << " close:" << op->close
@@ -64,10 +64,10 @@ Utf& Print (Utf& print, const Operand* op) {
           << "\nignore_chars :"   << op->ignore_chars
           << "\nallowed_chars:"   << op->allowed_chars
           << "\n description :\"" << op->description;
-    return print;
+    return utf;
 }*/
 
-UTF8& PrintOperand(UTF8& print, Operand* operand) {
+UTF1& PrintOperand(UTF1& utf, Operand* operand) {
   ASSERT(operand);
 
   const Op* op = operand->Star('?', nullptr);
@@ -75,18 +75,16 @@ UTF8& PrintOperand(UTF8& print, Operand* operand) {
   ASSERT(op);
 
   UIW num_ops = reinterpret_cast<UIW>(op->in),
-            op_num = reinterpret_cast<UIW>(op->out),
-            last_op = op_num + num_ops - 1;
+      op_num = reinterpret_cast<UIW>(op->out), last_op = op_num + num_ops - 1;
   if (num_ops > kParamsMax) {
-    return print << "\nError: Too many parameters!";
+    return utf << "\nError: Too many parameters!";
   }
-  print << "\nOperand         :" << op->name << Line('-', 80);
+  utf << "\nOperand         :" << op->name << Line('-', 80);
   for (; op_num <= last_op; ++op_num) {
-    op = operand->Star((wchar_t)op_num, nullptr);
-    print << "\nOp \'" << op_num << "\':" << op_num << ' ' << op
-          << Line('-', 80);
+    op = operand->Star((CHW)op_num, nullptr);
+    utf << "\nOp \'" << op_num << "\':" << op_num << ' ' << op << Line('-', 80);
   }
-  return print;
+  return utf;
 }
 
 Slot& OperandQuery(Operand* root, const char* address, Slot& slot) {

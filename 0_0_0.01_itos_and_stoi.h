@@ -155,7 +155,8 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     *result = 0;
     if (TStringCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
+             expecting, TStringLength<>(expecting), text,
+             TStringLength<>(text));
     }
   }
 
@@ -174,7 +175,8 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     *result = 0;
     if (strcmp(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
+             expecting, TStringLength<>(expecting), text,
+             TStringLength<>(text));
     }
   }
 
@@ -193,14 +195,12 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     *result = 0;
     if (TStringCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStringLength<>(expecting), text, TStringLength<>(text));
+             expecting, TStringLength<>(expecting), text,
+             TStringLength<>(text));
     }
   }
-
 
 #endif
   return 0;
 }
 }  // namespace _
-
-

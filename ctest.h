@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 
 /* Function pointer prototype for a test case with command line argument
 string.
-@return Pointer to a string to print to the stdout.
+@return Pointer to a string to utf to the stdout.
 @param seam_log Beginning of the seam log buffer.
 @param seam_end End of the seam log buffer.
 @param args     Command line argument string. */
@@ -194,15 +194,15 @@ API BOL Test(DBL a, DBL b);
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
-@param  message An optional message to print. */
+@param  message An optional message to utf. */
 API BOL TestWarn(const char* funciton, const char* file, int line);
 
 /* Handles an assert.
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
-@param  message An optional message to print. */
-API BOL ErrorFreeze(const char* funciton, const char* file, int line);
+@param  message An optional message to utf. */
+API BOL TestAssert(const char* funciton, const char* file, int line);
 
 }  // namespace _
 

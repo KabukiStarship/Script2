@@ -25,7 +25,7 @@ namespace _ {
 /* Class for storing information about a failed assertion.
 struct API TestResult {
   const char *name,  //< The file the assertion occurred at.
-      *description;  //< An optional description to print.
+      *description;  //< An optional description to utf.
   int line,          //< The line the assertion failed at.
       code;          //< The test result code.
 }; */

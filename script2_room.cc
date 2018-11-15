@@ -162,7 +162,7 @@ int Room::Main(const char** args, int args_count) {
 
 char Room::CommandNext() { return 0; }
 
-const Op* Room::Star(wchar_t index, CCrabs* crabs) {
+const Op* Room::Star(CHW index, CCrabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 
@@ -203,7 +203,7 @@ UIW Room::GetSizeBytes() {
 }
 
 #if CRABS_TEXT
-UTF8& Room::Print(UTF8& print) { return print << "\nRoom: "; }
+UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 #endif
 
 }  // namespace _

@@ -78,7 +78,7 @@ slot_t Door::FindSlot(void* address) {
 
 const Op* Door::ExecAll() { return 0; }
 
-const Op* Door::Star(wchar_t index, CCrabs* crabs) {
+const Op* Door::Star(CHW index, CCrabs* crabs) {
   static const Op kThis = {
       "Door",
       OpFirst('A'),

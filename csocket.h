@@ -102,7 +102,7 @@ struct Socket {
 API inline UIW* New(SIW size);
 
 /* AsciiFactory deletes the socket. */
-API inline void Destruct(UIW* socket);
+API inline void Destroy(UIW* socket);
 
 /* Converts the pointer to a std::UIW. */
 API inline UIW UIntPtr(const void* value);

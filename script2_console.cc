@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_sio.cc
+@file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License. */
 #include <cstdio>
 #include <iostream>
 
-#include "csio.h"
+#include "cconsole.h"
 
 #include "cascii.h"
 #include "tbinary.h"
@@ -54,7 +54,6 @@ const char* ArgsToString(int arg_count, char** args) {
   return begin;
 }
 #undef PRINT_ARGS
-
 
 inline void Print(char c) { putchar(c); }
 
@@ -162,7 +161,7 @@ void Print(FLT value) {
 #else
   enum { kSize = 16 };
   char buffer[kSize];
-  PrintFloat<FLT, UI4, char>(buffer, kSize, value);
+  TPrintFloat<FLT, UI4, char>(buffer, kSize, value);
   Print(buffer);
 #endif
 }
@@ -173,7 +172,7 @@ void Print(DBL value) {
 #else
   enum { kSize = 24 };
   char buffer[kSize];
-  PrintFloat<DBL, UI8, char>(buffer, kSize - 1, value);
+  TPrintFloat<DBL, UI8, char>(buffer, kSize - 1, value);
   Print(buffer);
 #endif
 }
@@ -218,7 +217,7 @@ void PrintHeading(const char* heading, int line_count, int width, char token,
 }
 
 template <typename UI>
-void PrintBinaryUnsigned(UI value) {
+void TPrintBinaryUnsigned(UI value) {
   enum { kSize = sizeof(UI) * 8 };
 
   for (int i = kSize; i > 0; --i) {
@@ -230,35 +229,35 @@ void PrintBinaryUnsigned(UI value) {
 
 template <typename SI, typename UI>
 void PrintBinarySigned(SI value) {
-  return PrintBinaryUnsigned<UI>((UI)value);
+  return TPrintBinaryUnsigned<UI>((UI)value);
 }
 
-void PrintBinary(UI1 value) { return PrintBinaryUnsigned<UI1>(value); }
+void PrintBinary(UI1 value) { return TPrintBinaryUnsigned<UI1>(value); }
 
 void PrintBinary(SI1 value) { return PrintBinarySigned<SI1, UI1>(value); }
 
-void PrintBinary(UI2 value) { return PrintBinaryUnsigned<UI2>(value); }
+void PrintBinary(UI2 value) { return TPrintBinaryUnsigned<UI2>(value); }
 
 void PrintBinary(SI2 value) { return PrintBinarySigned<SI2, UI2>(value); }
 
-void PrintBinary(UI4 value) { return PrintBinaryUnsigned<UI4>(value); }
+void PrintBinary(UI4 value) { return TPrintBinaryUnsigned<UI4>(value); }
 
 void PrintBinary(SI4 value) { return PrintBinarySigned<SI4, UI4>(value); }
 
-void PrintBinary(UI8 value) { return PrintBinaryUnsigned<UI8>(value); }
+void PrintBinary(UI8 value) { return TPrintBinaryUnsigned<UI8>(value); }
 
 void PrintBinary(SI8 value) { return PrintBinarySigned<SI8, UI8>(value); }
 
 void PrintBinary(FLT value) {
-  return PrintBinaryUnsigned<UI4>(*reinterpret_cast<UI4*>(&value));
+  return TPrintBinaryUnsigned<UI4>(*reinterpret_cast<UI4*>(&value));
 }
 
 void PrintBinary(DBL value) {
-  return PrintBinaryUnsigned<UI8>(*reinterpret_cast<UI8*>(&value));
+  return TPrintBinaryUnsigned<UI8>(*reinterpret_cast<UI8*>(&value));
 }
 
 void PrintBinary(const void* ptr) {
-  return PrintBinaryUnsigned<UIW>(*reinterpret_cast<UIW*>(&ptr));
+  return TPrintBinaryUnsigned<UIW>(*reinterpret_cast<UIW*>(&ptr));
 }
 
 /* Prints the following value to the console in Hex. */
@@ -342,7 +341,7 @@ namespace _ {
 
 void PrintSocket(const char* begin, const char* end) {
   // @todo This function needs to write the memory to a Socket which then
-  // gets printed to the TSOut ().
+  // gets printed to the TCOut ().
 
   if (!begin || begin >= end) return;
 
@@ -404,4 +403,3 @@ void PrintSocket(const void* begin, SIW size) {
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02
 #undef PRINT_ARGS
-

@@ -24,11 +24,11 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 /* A type-value tuple. */
 struct API TypeValue {
-  type_t type;        //< ASCII Type.
+  SIN type;           //< ASCII Type.
   const void* value;  //< Pointer to the value data.
 
   /* Stores the type and value. */
-  TypeValue(type_t type, const void* value = nullptr);
+  TypeValue(SIN type, const void* value = nullptr);
 };
 
 /* List of the 32 ASCII Data Types.
@@ -71,10 +71,10 @@ typedef enum AsciiTypes {
 
 /* Checks if the given type is valid.
     @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
-inline BOL TypeIsValid(type_t type);
+inline BOL TypeIsValid(SIN type);
 
 /* Aligns the given pointer to the correct word boundary for the type. */
-API void* TypeAlign(type_t type, void* value);
+API void* TypeAlign(SIN type, void* value);
 
 enum {
   kTypeCount = 32,  //< The starting index of invalid types.
@@ -84,7 +84,7 @@ enum {
 API const char** TypeStrings();
 
 /* Returns the name of the given type. */
-API inline const char* TypeString(type_t type);
+API inline const char* TypeString(SIN type);
 
 /* Returns the name of the given type. */
 API inline const char* TypeString(UIT type);
@@ -102,23 +102,23 @@ API inline BOL TypeIsSet(UIT type);
 API UIT TypeFixedSize(UIT type);
 
 /* Gets the next address that a data type may be stored at. */
-API void* TypeAlign(type_t type, void* value);
+API void* TypeAlign(SIN type, void* value);
 
 /* Writes the given value to the socket. */
-API char* Write(char* begin, char* end, type_t type, const void* source);
+API char* Write(char* begin, char* end, SIN type, const void* source);
 
 /* Returns true if the given type is an ASCII OBJ. */
-API inline BOL TypeIsObj(type_t type);
+API inline BOL TypeIsObj(SIN type);
 
 /* Returns true if the given type is a string type. */
-API inline BOL TypeIsString(type_t type);
+API inline BOL TypeIsString(SIN type);
 
 /* Checks if the given type is UTF-16.
     @param  type The type to check.
     @return True if the given type is UTF-16. */
-API inline BOL TypeIsUtf16(type_t type);
+API inline BOL TypeIsUtf16(SIN type);
 
-API inline int TypeSizeWidthCode(type_t type);
+API inline int TypeSizeWidthCode(SIN type);
 }  // namespace _
 
 #if USING_UTF8
@@ -126,17 +126,17 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end of the read number or
 nil upon failure.
-@param utf The utf to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char* Print(char* begin, char* end, type_t type, const void* value);
+@param utf The utf to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char* Print(char* begin, char* end, SIN type, const void* value);
 }  // namespace _
 
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
-API _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& type_value);
+@param  item The item to utf. */
+API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #endif
 
 #if USING_UTF16
@@ -144,16 +144,16 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end of the read number or
 nil upon failure.
-@param utf The utf to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
+@param utf The utf to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
                     const void* value);
 }  // namespace _
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
+@param  item The item to utf. */
 API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF32
@@ -162,16 +162,16 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end
 of the read number or nil upon failure.
-@param printer The printer to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
+@param printer The printer to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
                     const void* value);
 }  // namespace _
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
+@param  item The item to utf. */
 API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 

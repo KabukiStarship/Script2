@@ -86,8 +86,7 @@ inline SI AlignUpSigned(SI value, SI mask = kWordBitsMask) {
 template <typename T = char>
 inline T* AlignUp(void* pointer, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value +
-                              AlignUpOffset<>((UIW)pointer, mask));
+  return reinterpret_cast<T*>(value + AlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -95,8 +94,7 @@ inline T* AlignUp(void* pointer, UIW mask = kWordBitsMask) {
 template <typename T = char>
 inline T* AlignUp(const void* pointer, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value +
-                              AlignUpOffset<>((UIW)pointer, mask));
+  return reinterpret_cast<T*>(value + AlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -153,7 +151,7 @@ inline T* AlignUp2(const void* pointer) {
 
 /* Returns the N in 2^N for the sizeof (I). */
 template <typename I>
-inline int BitShiftCount() {
+inline int TBitShiftCount() {
   return (sizeof(I) == 1)
              ? 0
              : (sizeof(I) == 2)
@@ -164,30 +162,27 @@ inline int BitShiftCount() {
 }
 
 /* A memory socket. */
-template <SIW kSize_, int kBoundaryBitCount_>
+template <SIW kSize_>
 class TSocket {
  public:
   enum {
     kSize = kSize_,  //< Size of the buffer aligned.
-    // Size with extra bytes to align to word boundary.
-    kSizeUnaligned = kSize + kBoundaryBitCount_,
-    // Number of bits of the word boundary to align to.
-    kBoundaryBitCount = kBoundaryBitCount_,
   };
 
   /* Gets the begin UI1 of the socket. */
-  char* Begin() { return reinterpret_cast<char*>(buffer); }
+  inline char* Begin() { return reinterpret_cast<char*>(buffer); }
 
   /* Gets the begin UI1 of the socket. */
-  char* End() { return reinterpret_cast<char*>(buffer) + kSizeUnaligned; }
+  inline char* End() { return reinterpret_cast<char*>(buffer) + kSize; }
 
+  /* Returns the first byte of the ASCII Object data. */
   template <typename T>
   inline T* Start() {
-    return reinterpret_cast<T*>(AlignUp(buffer, kBoundaryBitCount));
+    return reinterpret_cast<T*>(buffer);
   }
 
  private:
-  UIW buffer[kSizeUnaligned];  //< The word-aligned buffer.
+  UIW buffer[kSize];  //< The word-aligned buffer.
 };
 
 /* @group Socket */

@@ -36,11 +36,11 @@ namespace _ {
 
 /* A type-value tuple. */
 struct API TypeValue {
-  type_t type;        //< ASCII Type.
+  SIN type;           //< ASCII Type.
   const void* value;  //< Pointer to the value data.
 
   /* Stores the type and value. */
-  TypeValue(type_t type, const void* value = nullptr);
+  TypeValue(SIN type, const void* value = nullptr);
 };
 
 /* List of the 32 ASCII Data Types.
@@ -83,26 +83,26 @@ typedef enum AsciiTypes {
 
 /* Checks if the given type is valid.
     @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
-inline BOL TypeIsValid(type_t type) {
-  if (type >= kLST && type <= kDIC || (type >= (kADR + 32) && type <= (kTKN + 32)))
+inline BOL TypeIsValid(SIN type) {
+  if (type >= kLST && type <= kDIC ||
+      (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
   return true;
 }
 
 /* Aligns the given pointer to the correct word boundary for the type. */
-API void* TypeAlign(type_t type, void* value);
+API void* TypeAlign(SIN type, void* value);
 
 /* An ROM string for one of the 32 types.
     C++11 variadic templates ensure there is only one copy in of the given
     string in ROM. */
 template <char kCharA_, char kCharB_, char kCharC_>
 inline UI4 T() {
-  return ((UI4)kCharA_) & (((UI4)kCharB_) << 8) &
-         (((UI4)kCharC_) << 16);
+  return ((UI4)kCharA_) & (((UI4)kCharB_) << 8) & (((UI4)kCharC_) << 16);
 }
 
 template <typename Char = char>
-const Char** TypeStrings() {
+const Char** TTypeStrings() {
   static const Char* kNames[] = {
       "kNIL",  //<  0
       "kSI1",  //<  1
@@ -111,8 +111,8 @@ const Char** TypeStrings() {
       "kUI2",  //<  4
       "kHLF",  //<  5
       "kBOL",  //<  6
-      "SVI",  //<  7
-      "UVI",  //<  8
+      "SVI",   //<  7
+      "UVI",   //<  8
       "kSI4",  //<  9
       "kUI4",  //< 10
       "kFLT",  //< 11
@@ -121,8 +121,8 @@ const Char** TypeStrings() {
       "kSI8",  //< 14
       "kUI8",  //< 15
       "kDBL",  //< 16
-      "SV8",  //< 17
-      "UV8",  //< 18
+      "SV8",   //< 17
+      "UV8",   //< 18
       "kDEC",  //< 19
       "kUIX",  //< 20
       "kADR",  //< 23
@@ -131,7 +131,7 @@ const Char** TypeStrings() {
       "kOBJ",  //< 21
       "kLOM",  //< 25
       "kBSQ",  //< 26
-      "ESC",  //< 27
+      "ESC",   //< 27
       "kLST",  //< 28
       "kBOK",  //< 29
       "kDIC",  //< 30
@@ -141,7 +141,7 @@ const Char** TypeStrings() {
 }
 
 template <typename T = char>
-T* TypeAlignUpPointer(void* pointer, type_t type) {
+T* TypeAlignUpPointer(void* pointer, SIN type) {
   if (type <= kUI1)
     return reinterpret_cast<T*>(pointer);
   else if (type <= kHLF)
@@ -165,7 +165,7 @@ T* TypeAlignUpPointer(void* pointer, type_t type) {
 }
 
 template <typename Char = char>
-Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
+Char* PrintTypePod(Char* cursor, Char* end, SIN type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
@@ -177,8 +177,7 @@ Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
     case kSI2:
       return TPrint<Char>(cursor, end, *reinterpret_cast<const SI2*>(value));
     case kUI2:
-      return TPrint<Char>(cursor, end,
-                         *reinterpret_cast<const UI2*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI2*>(value));
     case kHLF:
       return TPrint<Char>(cursor, end, "not_implemented");
     case kBOL:
@@ -186,8 +185,7 @@ Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
     case kSI4:
       return TPrint<Char>(cursor, end, *reinterpret_cast<const SI4*>(value));
     case kUI4:
-      return TPrint<Char>(cursor, end,
-                         *reinterpret_cast<const UI4*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI4*>(value));
     case kFLT:
       return TPrint<Char>(cursor, end, *reinterpret_cast<const FLT*>(value));
     case kTMS:
@@ -198,8 +196,7 @@ Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
     case kSI8:
       return TPrint<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
     case kUI8:
-      return TPrint<Char>(cursor, end,
-                         *reinterpret_cast<const UI8*>(value));
+      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI8*>(value));
     case kDBL:
       return TPrint<Char>(cursor, end, *reinterpret_cast<const DBL*>(value));
       // case SV8:
@@ -215,7 +212,7 @@ Char* PrintTypePod(Char* cursor, Char* end, type_t type, const void* value) {
 }
 
 template <typename Char = char>
-Char* Print(Char* cursor, Char* end, type_t type, const void* value) {
+Char* Print(Char* cursor, Char* end, SIN type, const void* value) {
   if (cursor == nullptr) return nullptr;
   ASSERT(cursor < end);
 
@@ -249,32 +246,32 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end of the read number or
 nil upon failure.
-@param utf The utf to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char* Print(char* begin, char* end, type_t type, const void* value);
+@param utf The utf to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char* Print(char* begin, char* end, SIN type, const void* value);
 }  // namespace _
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
-API _::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& type_value);
+@param  item The item to utf. */
+API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF16
 namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end of the read number or
 nil upon failure.
-@param utf The utf to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
+@param utf The utf to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
                     const void* value);
 }  // namespace _
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
+@param  item The item to utf. */
 API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 #endif
 #if USING_UTF32
@@ -283,16 +280,16 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the end
 of the read number or nil upon failure.
-@param printer The printer to print to.
-@param type    The type to print.
-@param value   The value to print or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, type_t type,
+@param printer The printer to utf to.
+@param type    The type to utf.
+@param value   The value to utf or nil. */
+API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
                     const void* value);
 }  // namespace _
-/* Writes the given value to the print justified right.
+/* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
-@param  item The item to print. */
+@param  item The item to utf. */
 API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 

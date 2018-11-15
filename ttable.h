@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__08
-#ifndef INCLUDED_SCRIPTTTABLE
-#define INCLUDED_SCRIPTTTABLE
+#ifndef INCLUDED_SCRIPTT2_TTABLE
+#define INCLUDED_SCRIPTT2_TTABLE
 
 #include "csocket.h"
 
@@ -27,73 +27,73 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* A one-to-one key-index map where indexes are natural numbers.
+/* A one-to-one key-index ASCII Table/map.
 
-    # Collision Table
+# Collision Table
 
-    Collision table works by using the maximum key value (i.e. 255 for a UI1,
-    2^15-1 for a SI2, etc). The collisions list is a sequence of indexes
-    terminated by an invalid index that is greater than kMaxNumOps.
-    collissionsList[0] is an invalid index, so the collisionsList is searched
-    from lower address up.
+Collision table works by using the maximum key value (i.e. 255 for a UI1,
+2^15-1 for a SI2, etc). The collisions list is a sequence of indexes
+terminated by an invalid index that is greater than kMaxNumOps.
+collissionsList[0] is an invalid index, so the collisionsList is searched
+from lower address up.
 
-    # Memory Layout
+# Memory Layout
 
-    @code
-       ___________________________________________________
-       |_____ | Key 1                                    |
-       |_____ | ...                          Keys        |
-       |_____ v Key N                                    |
-       |_________________________________________________|
-       |                                                 |
-       |               Header Buffer Space               |
-       |_________________________________________________|
-       |_____                          UI Size = 2^N     |
-       |_____                                            |
-       |_____   Collision List N          Hash Table     |
-       |_____ ^ ...                        Collision     |
-       |_____ | Collision List 0              List       |
-       |_________________________________________________|
-       |_____                          UI Size = 2^N     |
-       |_____   Buffer Indexes                           |
-       |_____                             Hash Table     |
-       |_____ ^ Collision Table N          Unsorted      |
-       |_____ | ...                         Indexes      |
-       |        | Collision table 0                      |
-       |_________________________________________________|
-       |_____                          UI Size = 2^N     |
-       |_____   Buffer Indexes                           |
-       |_____                             Hash Table     |
-       |_____ ^ Collision SI N            Collision      |
-       |_____ | ...                         Indexes      |
-       |      | Collision SI 0                           |
-       |_________________________________________________|
-       |_____                          UI Size = 2^(N+1) |
-       |_____   Buffer Indexes                           |
-       |_____                                UI          |
-       |_____ ^ Key Offset N                 key         |
-       |_____ | ...                        Offsets       |
-       |        | Key Offset 1                           |
-       |_________________________________________________|
-       |_____                          UI Size = 2^(N+1) |
-       |_____   Buffer Indexes                           |
-       |_____                               UI           |
-       |_____ ^ Sorted Hash N              Hashes        |
-       |_____ | ...                                      |
-       |        | Sorted Hash 1                          |
-       |_________________________________________________|
-     ^ |                                                 |
-     | |                 Header (8 bytes)                |
-    0x0|_________________________________________________|
-    @endcode
+@code
+    ___________________________________________________
+    |_____ | Key 1                                    |
+    |_____ | ...                          Keys        |
+    |_____ v Key N                                    |
+    |_________________________________________________|
+    |                                                 |
+    |               Header Buffer Space               |
+    |_________________________________________________|
+    |_____                          Size Size = 2^N   |
+    |_____                                            |
+    |_____   Collision List N          Hash Table     |
+    |_____ ^ ...                        Collision     |
+    |_____ | Collision List 0              List       |
+    |_________________________________________________|
+    |_____                          Size Size = 2^N   |
+    |_____   Buffer Indexes                           |
+    |_____                             Hash Table     |
+    |_____ ^ Collision Table N          Unsorted      |
+    |_____ | ...                         Indexes      |
+    |        | Collision table 0                      |
+    |_________________________________________________|
+    |_____                          Size Size = 2^N   |
+    |_____   Buffer Indexes                           |
+    |_____                             Hash Table     |
+    |_____ ^ Collision Index N         Collision      |
+    |_____ | ...                        Indexes       |
+    |      | Collision Index 0                        |
+    |_________________________________________________|
+    |_____                        Size Size = 2^(N+1) |
+    |_____   Buffer Indexes                           |
+    |_____                                Size        |
+    |_____ ^ Key Offset N                 key         |
+    |_____ | ...                        Offsets       |
+    |        | Key Offset 1                           |
+    |_________________________________________________|
+    |_____                        Size Size = 2^(N+1) |
+    |_____   Buffer Indexes                           |
+    |_____                              Size          |
+    |_____ ^ Sorted Hash N             Hashes         |
+    |_____ | ...                                      |
+    |        | Sorted Hash 1                          |
+    |_________________________________________________|
+  ^ |                                                 |
+  | |                 Header (8 bytes)                |
+0x0 |_________________________________________________|
+@endcode
 */
-template <typename UI, typename SI>
+template <typename Size, typename Index>
 struct API Table {
-  UI size,        //< Size of this object in bytes.
-      size_pile;  //< Size of the collision table pile.
-  SI first_char,  //< The first char of the Table.
-      count,      //< Number of keys.
-      count_max;  //< Number of buffered indexes.
+  Size size,         //< Size of this object in bytes.
+      size_pile;     //< Size of the collision table pile.
+  Index first_char,  //< The first char of the Table.
+      count,         //< Number of keys.
+      count_max;     //< Number of buffered indexes.
 };
 
 enum {
@@ -104,19 +104,20 @@ enum {
 // void Print (Table* rt);
 
 /* Creates a streamable hash table with enough buffer space for the
-    count_max.
-    @param  buffer
-    @param
-    @post   Users might want to call the TableIsValid<UI,SI> (Table<UI,SI>)
-            function after
-            construction to verify the integrity of the object. */
-template <typename UI, typename SI>
-Table<UI, SI>* TableInit(UIW* buffer, SI count_max, UI size_bytes) {
+count_max.
+@param  buffer
+@param  count_max The max count.
+@param  size      The size in bytes.
+@post   Users might want to call the TableIsValid<Size,Index>
+(Table<Size,Index>) function after construction to verify the integrity of the
+object. */
+template <typename Size, typename Index>
+Table<Size, Index>* TableInit(UIW* buffer, Index count_max, Size size) {
   ASSERT(buffer)
-  Table* table = reinterpret_cast<Table<UI, SI>*>(buffer);
+  Table* table = reinterpret_cast<Table<Size, Index>*>(buffer);
 
   UIT min_required_size =
-      sizeof(Table<UI, SI>) + count_max * (kOverheadPerIndex + 2);
+      sizeof(Table<Size, Index>) + count_max * (kOverheadPerIndex + 2);
   if (set_size < min_required_size) return nullptr;
 
   table->count = 0;
@@ -129,8 +130,8 @@ Table<UI, SI>* TableInit(UIW* buffer, SI count_max, UI size_bytes) {
 /* Adds the given key and returns the index 64-255 of the index of the
     op.
     @return Returns an index 64-255 */
-template <typename UI, typename SI>
-UI1 TableAdd(Table<UI, SI>* table, const char* key) {
+template <typename Size, typename Index>
+UI1 TableAdd(Table<Size, Index>* table, const char* key) {
   ASSERT(table)
   ASSERT(keys)
 
@@ -144,7 +145,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
   //< We're out of buffered indexes.
 
   UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
-                                       sizeof(Table<UI, SI>));
+                                       sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
@@ -195,7 +196,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 
   PRINTF("\nFinding insert location...")
 
-  SI low = 0, mid, high = count, index;
+  Index low = 0, mid, high = count, index;
 
   char* temp_ptr;
 
@@ -215,7 +216,7 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 
       // Check for other collisions.
 
-      index = indexes[mid];  //< SI in the collision table.
+      index = indexes[mid];  //< Index in the collision table.
 
       PRINTF("index:%i", (int)index)
 
@@ -394,11 +395,11 @@ UI1 TableAdd(Table<UI, SI>* table, const char* key) {
 }
 
 /* Attempts to find the given key.
-    @return Returns 0 upon failure, and valid index upon success. */
-template <typename UI, typename SI>
-API UI1 TableFind(const Table<UI, SI>* table, const char* key) {
+@return Returns 0 upon failure, and valid index upon success. */
+template <typename Size, typename Index>
+API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
   ASSERT(table)
-  SI index, count = table->count, count_max = table->count_max, temp;
+  Index index, count = table->count, count_max = table->count_max, temp;
 
   PRINT_HEADING("Finding record...")
 
@@ -407,7 +408,7 @@ API UI1 TableFind(const Table<UI, SI>* table, const char* key) {
   UI2 size = table->size;
 
   const UI2* hashes = reinterpret_cast<const UI2*>(
-      reinterpret_cast<const char*>(table) + sizeof(Table<UI, SI>));
+      reinterpret_cast<const char*>(table) + sizeof(Table<Size, Index>));
   const UI2* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
   const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
@@ -498,8 +499,8 @@ API UI1 TableFind(const Table<UI, SI>* table, const char* key) {
       indexes += count_max;
       index = unsorted_indexes[mid];
 
-      PRINTF("\nmid:%i-%u unsorted_indexes:%SI key:\"%s\" hash:0x%x", (int)mid,
-             (uint)hashes[mid], index, keys - key_offsets[index],
+      PRINTF("\nmid:%i-%u unsorted_indexes:%Index key:\"%s\" hash:0x%x",
+             (int)mid, (uint)hashes[mid], index, keys - key_offsets[index],
              Hash16(keys - key_offsets[index]))
 
       if (!SlotEquals(key, keys - key_offsets[index])) {
@@ -520,67 +521,68 @@ API UI1 TableFind(const Table<UI, SI>* table, const char* key) {
 
 #if USING_UTF
 /* Prints this object out to the console. */
-template <typename UI, typename SI>
-UTF8& TablePrint(UTF8& print, Table<UI, SI>* table) {
+template <typename Size, typename Index>
+UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
   ASSERT(table)
-  SI count = table->count, count_max = table->count_max, collision_index, temp;
-  UI size = table->size, size_pile = table->size_pile;
+  Index count = table->count, count_max = table->count_max, collision_index,
+        temp;
+  Size size = table->size, size_pile = table->size_pile;
 
-  print << Line('_') << "\nTable:" << Hex<>(table) << "\nnum_keys:" << count
-        << " count_max:" << count_max << " size_pile:" << size_pile
-        << " size:" << size << "\n|";
-  for (int i = 0; i < 79; ++i) print << '_';
-  print << '\n';
+  utf << Line('_') << "\nTable:" << Hex<>(table) << "\nnum_keys:" << count
+      << " count_max:" << count_max << " size_pile:" << size_pile
+      << " size:" << size << "\n|";
+  for (int i = 0; i < 79; ++i) utf << '_';
+  utf << '\n';
 
   UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
-                                       sizeof(Table<UI, SI>));
+                                       sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
        *collission_list = unsorted_indexes + count_max, *begin;
   char* keys = reinterpret_cast<char*>(table) + size - 1;
 
-  print << '\n'
-        << Right<SI>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
-        << Right<>("hash_e", 10) << Right<>("hash_u", 10)
-        << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
-  for (int i = 0; i < 79; ++i) print << '_';
-  print << '\n';
+  utf << '\n'
+      << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
+      << Right<>("hash_e", 10) << Right<>("hash_u", 10)
+      << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
+  for (int i = 0; i < 79; ++i) utf << '_';
+  utf << '\n';
 
   for (int i = 0; i < count; ++i) {
     // Print each record as a row.
     // @todo Change count_max to count after done debugging.
     collision_index = indexes[i];
-    print << Right<int>(i, 3) << Right<>(keys - key_offsets[i], 10)
-          << Right<UI>(key_offsets[i], 8)
-          << Right<Hex<UI>>(Hash16(keys - key_offsets[i]), 10)
-          << Right<Hex<UI>>(hashes[unsorted_indexes[i]], 10)
-          << Right<Hex<UI>>(hashes[i], 10) << Right<UI>(unsorted_indexes[i], 10)
-          << Right<UI>(collision_index, 11);
+    utf << Right<int>(i, 3) << Right<>(keys - key_offsets[i], 10)
+        << Right<Size>(key_offsets[i], 8)
+        << Right<Hex<Size>>(Hash16(keys - key_offsets[i]), 10)
+        << Right<Hex<Size>>(hashes[unsorted_indexes[i]], 10)
+        << Right<Hex<Size>>(hashes[i], 10)
+        << Right<Size>(unsorted_indexes[i], 10)
+        << Right<Size>(collision_index, 11);
 
     if ((collision_index != kInvalidIndex) && (i < count)) {
       // Print collisions.
       begin = &collission_list[collision_index];
       temp = *begin;
       ++begin;
-      print << temp;
+      utf << temp;
       while (temp != kInvalidIndex) {
         temp = *begin;
         ++begin;
-        if (temp != kInvalidIndex) print << ", " << temp;
+        if (temp != kInvalidIndex) utf << ", " << temp;
       }
     }
 
-    print << '\n';
+    utf << '\n';
   }
-  print << '|';
-  for (int i = 0; i < 79; ++i) print << '_';
-  print << '\n' << Memory(table, table->size) << '\n';
+  utf << '|';
+  for (int i = 0; i < 79; ++i) utf << '_';
+  utf << '\n' << Memory(table, table->size) << '\n';
 }
 #endif
 
 }  // namespace _
 
-
-#endif  //< INCLUDED_SCRIPTTTABLE
+#endif  //< INCLUDED_SCRIPTT2_TTABLE
 #endif  //< #if SEAM >= _0_0_0__08

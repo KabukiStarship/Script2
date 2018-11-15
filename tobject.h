@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 namespace _ {
+
 /* The maximum object size.
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
@@ -60,9 +61,9 @@ inline Size TObjSize(UIW* object) {
 
 /* Gets the ASCII OBJ size. */
 template <typename Size>
-inline Size TObjSize(CObject obj) {
-  ASSERT(obj.begin);
-  return *reinterpret_cast<Size*>(obj.begin);
+inline Size TObjSize(CObject stack) {
+  ASSERT(stack.begin);
+  return *reinterpret_cast<Size*>(stack.begin);
 }
 
 template <typename Size>
@@ -72,8 +73,8 @@ Size TObjSizeRound(Size size) {
 
 /* Gets the last UI1 in the ASCII Object. */
 template <typename Size>
-inline char* TObjEnd(CObject obj) {
-  UIW buffer = obj.begin;
+inline char* TObjEnd(CObject stack) {
+  UIW buffer = stack.begin;
   ASSERT(buffer);
   Size size = *reinterpret_cast<Size*>(buffer);
   return reinterpret_cast<char*>(buffer + size);
@@ -81,8 +82,8 @@ inline char* TObjEnd(CObject obj) {
 
 /* Gets the last UI1 in the ASCII Object. */
 template <typename Size>
-inline const char* TObjEnd(const CObject obj) {
-  UIW buffer = obj.begin;
+inline const char* TObjEnd(const CObject stack) {
+  UIW buffer = stack.begin;
   ASSERT(buffer);
   Size size = *reinterpret_cast<Size*>(buffer);
   return reinterpret_cast<const char*>(buffer + size);
@@ -101,32 +102,33 @@ UIW* TObjNew(Size size, Size size_min) {
   return buffer;
 }
 
-/* Clones the other ASCII OBJ. */
+/* Clones the other ASCII OBJ including possibly unused buffer space.
+@return Nil upon failure or a pointer to the cloned buffer upon success. */
 template <typename Size = SI4>
-UIW* TObjClone(UIW* buffer, Size size) {
-  ASSERT(buffer);
-
+UIW* TObjClone(UIW* buffer) {
+  if (!buffer) return buffer;
+  Size size = *reinterpret_cast<Size*>(buffer);
   UIW* clone = new UIW[size >> kWordBitCount];
   SocketCopy(clone, size, buffer, size);
   *reinterpret_cast<Size*>(buffer) = size;
   return clone;
 }
 
-/* Auto-grows the given obj to the new_size. */
+/* Grows the given OBJ to the new_size. */
 template <typename Size>
-Size TObjResize(CObject obj, Size new_size) {
-  ASSERT(obj.begin);
-  if (!obj.factory) return 0;
-  Size size = TObjSize<Size>(obj);
+Size TObjGrow(CObject stack, Size new_size) {
+  if (!stack.begin || !stack.factory) return 0;
+  Size size = TObjSize<Size>(stack);
   if (new_size < size) return 0;
-  UIW* temp = obj.begin;
-  obj.begin = TObjClone<Size>(temp, size);
+  UIW* temp = stack.begin;
+  stack.begin = TObjClone<Size>(temp, size);
   delete[] temp;
 }
 
-/* Auto-grows the given obj to the new_size. */
+/* Auto-grows the given OBJ to double the current size; if possible.
+@return Nil upon failure. */
 template <typename Size = SI4>
-UIW* ObjGrow(UIW* begin) {
+UIW* TObjGrow(UIW* begin) {
   ASSERT(begin);
   Size size = *reinterpret_cast<Size*>(begin), new_size = 2 * size;
   if (new_size < size) return 0;
@@ -136,13 +138,9 @@ UIW* ObjGrow(UIW* begin) {
   return begin;
 }
 
-/* Auto-grows the given obj to the new_size. */
-template <typename Size>
-Size ObjGrow(CObject obj) {}
-
 /* Rounds the given count up to a 64-bit aligned value. */
 template <typename T, typename UI = uint, typename SI = int>
-inline SI ObjCountRound(SI count) {
+inline SI TObjCountRound(SI count) {
   enum {
     kRoundEpochMask = (sizeof(SI) == 8)
                           ? 7
@@ -190,7 +188,7 @@ class TObject {
       : obj_({Buffer(size, buffer), factory}) {}
 
   /* Destructor calls the AsciiFactory factory. */
-  ~TObject() { Destruct(obj_); }
+  ~TObject() { Destroy(obj_); }
 
   /* Returns the buffer_. */
   UIW* Begin() { return obj_.begin; }
@@ -222,6 +220,36 @@ class TObject {
  private:
   CObject obj_;  //< ASCII OBJ harness.
 };
+
+/* AsciiFactory prints the begin to the console without deleting the
+begin.
+@return If (size == 0 && begin) then nil indicating success deleting the
+memory. If passing in a . */
+template <typename Size = int>
+UIW* TObjectFactory(UIW* begin, CHW function, void* arg) {
+  switch (function) {
+    case 0: {
+      if (begin) {
+        delete[] begin;
+        return nullptr;
+      }
+      try {
+        Size size = arg ? *reinterpret_cast<Size*>(arg) : kObjSizeDefault;
+        return new UIW[size >> kWordBitCount];
+      } catch (...) {
+        return nullptr;
+      }
+    }
+    case kFactoryGrow: {
+      return TObjClone<Size>(begin);
+    }
+    case kFactoryClone: {
+      return TObjClone<Size>(begin);
+    }
+  }
+  return nullptr;
+}
+
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTOBJ

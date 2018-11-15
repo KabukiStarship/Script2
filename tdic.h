@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= _0_0_0__12
 
-#ifndef INCLUDED_SCRIPTBOOK
-#define INCLUDED_SCRIPTBOOK 1
+#ifndef INCLUDED_SCRIPT2_TDIC
+#define INCLUDED_SCRIPT2_TDIC 1
 
 #include "casciidata.h"
 #include "csocket.h"
@@ -85,11 +85,11 @@ namespace _ {
   |==========================|   |     |
   |_______ count_max         |   |     |
   |_______ ...               |   |     |
-  |_______ Type UI1 N       |   |     |
+  |_______ Type UI1 N        |   |     |
   |_______ ...               |   |     |
-  |        Type UI1 1       |   |     |   ^ Up in addresses
+  |        Type UI1 1        |   |     |   ^ Up in addresses
   |==========================|   |     |   |
-  |  TMapKey<UI, SI> Struct  |   v     v   ^
+  |      TMapKey Header      |   v     v   ^
   +==========================+ ----------- ^ 0xN
   @endcode
 
@@ -105,12 +105,12 @@ namespace _ {
 
   How to calculate size:
   The size of any size dictionary can be calculated as follows:
-  size = ; * (2*sizeof (I) + sizeof (UI)) + collissionSize +
+  size = ; * (2*sizeof (Index) + sizeof (Size)) + collissionSize +
 
   # Cache Page Optimizations
   In order to optimize the cache pages, we need to group hot data together.
-  ChineseRoom Objects work through calling by I, or by key by using the
-  function '\"' (i.e. "foo" is I 44).
+  ChineseRoom Objects work through calling by Index, or by key by using the
+  function '\"' (i.e. "foo" is Index 44).
 
   # Hash Table Collisions.
   Because there are no pointers in Script collections, the hash tables are
@@ -144,27 +144,28 @@ namespace _ {
   ;
   @endcode
 */
-template <typename UI, typename SI, typename I>
+template <typename Size, typename Offset, typename Index>
 struct API Dictionary {
-  UI size;        //< Total size of the set.
-  SI table_size,  //< Size of the (optional) key strings in bytes.
-      size_pile;  //< Size of the (optional) collisions pile in bytes.
-  I item_count,   //< Number of items.
-      count;      //< Max number of items that can fit in the header.
+  Size size;          //< Total size of the set.
+  Offset table_size,  //< Size of the (optional) key strings in bytes.
+      size_pile;      //< Size of the (optional) collisions pile in bytes.
+  Index item_count,   //< Number of items.
+      count;          //< Max number of items that can fit in the header.
 };
 
 using Dic2 = Dictionary<SI1, UI2, UI2>;
 using Dic4 = Dictionary<SI2, UI2, UI4>;
 using Dic8 = Dictionary<SI4, UI4, UI8>;
 
-template <typename UI, typename SI, typename I>
-constexpr UIT DicOverheadPerIndex() {
-  return sizeof(2 * sizeof(I) + sizeof(SI) + sizeof(UI) + 3);
+template <typename Size, typename Offset, typename Index>
+constexpr Size DicOverheadPerIndex() {
+  return sizeof(2 * sizeof(Index) + sizeof(Offset) + sizeof(Size) + 3);
 };
 
-template <typename UI, typename SI, typename I>
-constexpr UI MinSizeDic(I item_count) {
-  return item_count * sizeof(2 * sizeof(I) + sizeof(SI) + sizeof(UI) + 3);
+template <typename Size, typename Offset, typename Index>
+constexpr Size MinSizeDic(Index item_count) {
+  return item_count *
+         sizeof(2 * sizeof(Index) + sizeof(Offset) + sizeof(Size) + 3);
 };
 
 enum {
@@ -181,17 +182,18 @@ enum {
              to verify the integrity of the object.
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4. */
-template <typename UI, typename SI, typename I>
-Dictionary<UI, SI, I>* DictionaryInit(UIW* buffer, UI1 max_size,
-                                      UI2 table_size, UI2 size) {
+template <typename Size, typename Offset, typename Index>
+Dictionary<Size, Offset, Index>* DictionaryInit(UIW* buffer, UI1 max_size,
+                                                UI2 table_size, UI2 size) {
   ASSERT(buffer);
-  if (table_size >= (size - sizeof(Dictionary<UI, SI, I>))) return nullptr;
-  if (table_size < sizeof(Dictionary<UI, SI, I>) +
+  if (table_size >= (size - sizeof(Dictionary<Size, Offset, Index>)))
+    return nullptr;
+  if (table_size < sizeof(Dictionary<Size, Offset, Index>) +
                        max_size * (DicOverheadPerIndex<UI1, UI2, UI2>() + 2))
     return nullptr;
 
-  Dictionary<UI, SI, I>* dictionary =
-      reinterpret_cast<Dictionary<UI, SI, I>*>(buffer);
+  Dictionary<Size, Offset, Index>* dictionary =
+      reinterpret_cast<Dictionary<Size, Offset, Index>*>(buffer);
   dictionary->size = table_size;
   dictionary->table_size = table_size;
   dictionary->item_count = 0;
@@ -207,53 +209,58 @@ Dictionary<UI2, UI2, SI1>* DictionaryInit(UIW* buffer, UI1 max_size,
 
 /* Insets the given key-value pair.
  */
-template <typename UI, typename SI, typename I, typename T, TType kType>
-I DictionaryInsert(Dictionary<UI, SI, I>* dictionary, const char* key, T value,
-                   I index) {
+template <typename Size, typename Offset, typename Index, typename T,
+          AsciiType kType>
+Index DictionaryInsert(Dictionary<Size, Offset, Index>* dictionary,
+                       const char* key, T value, Index index) {
   if (dictionary == nullptr) return 0;
   return ~0;
 }
 
-template <typename I>
-I DictionaryCountUpperBounds() {
-  // return sizeof (I) == 1 ? 255 : sizeof (I) == 2 ? 8 * 1024 :
-  //                                    sizeof (I) == 4 ? 512 * 1024 * 1024
+template <typename Index>
+Index DictionaryCountUpperBounds() {
+  // return sizeof (Index) == 1 ? 255 : sizeof (Index) == 2 ? 8 * 1024 :
+  //                                    sizeof (Index) == 4 ? 512 * 1024 * 1024
   //                            : 0;
-  return ~(I)0;
+  return ~(Index)0;
 }
 
 /* Adds a key-value pair to the end of the dictionary. */
-template <typename UI, typename SI, typename I, typename T, TType type>
-I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
+template <typename Size, typename Offset, typename Index, typename T,
+          AsciiType type>
+Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
+                    const char* key, T data) {
   if (dictionary == nullptr) return 0;
   if (key == nullptr) return 0;
 
   PrintLine(key);
 
-  I item_count = dictionary->item_count, count = dictionary->count, temp;
+  Index item_count = dictionary->item_count, count = dictionary->count, temp;
 
-  SI table_size = dictionary->table_size;
+  Offset table_size = dictionary->table_size;
 
   if (item_count >= count) return ~0;
   //< We're out of buffered indexes.
 
-  char* states =
-      reinterpret_cast<char*>(dictionary) + sizeof(Dictionary<UI, SI, I>);
-  SI* key_offsets = reinterpret_cast<SI*>(states + count);
-  UI* data_offsets = reinterpret_cast<UI*>(states + count * (sizeof(SI)));
-  UI *hashes =
-         reinterpret_cast<UI*>(states + count * (sizeof(SI) + sizeof(UI))),
-     *hash_ptr;
-  I *indexes = reinterpret_cast<I*>(
-        states + count * (sizeof(SI) + sizeof(UI) + sizeof(I))),
-    *unsorted_indexes = indexes + count,
-    *collission_list = unsorted_indexes + count;
+  char* states = reinterpret_cast<char*>(dictionary) +
+                 sizeof(Dictionary<Size, Offset, Index>);
+  Offset* key_offsets = reinterpret_cast<Offset*>(states + count);
+  Size* data_offsets =
+      reinterpret_cast<Size*>(states + count * (sizeof(Offset)));
+  Size *hashes = reinterpret_cast<Size*>(
+           states + count * (sizeof(Offset) + sizeof(Size))),
+       *hash_ptr;
+  Index *indexes = reinterpret_cast<Index*>(
+            states + count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
+        *unsorted_indexes = indexes + count,
+        *collission_list = unsorted_indexes + count;
   char *keys = reinterpret_cast<char*>(dictionary) + table_size - 1,
        *destination;
 
   // Calculate space left.
-  SI value = table_size - count * DicOverheadPerIndex<I, SI, UI>(),
-     key_length = static_cast<UI2>(SlotLength(key)), size_pile;
+  Offset value =
+             table_size - count * DicOverheadPerIndex<Index, Offset, Size>(),
+         key_length = static_cast<UI2>(SlotLength(key)), size_pile;
 
   PrintLine();
   PRINTF(
@@ -262,14 +269,14 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
       key, "hashes", hashes, "key_offsets", key_offsets, "keys", keys,
       "indexes", indexes, "value", value)
 
-  UI hash = Hash16(key), current_hash;
+  Size hash = Hash16(key), current_hash;
 
   if (key_length > value) {
     PRINTF("Buffer overflow\n")
-    return ~((I)0);
+    return ~((Index)0);
   }
 
-  // print ();
+  // utf ();
 
   if (item_count == 0) {
     dictionary->item_count = 1;
@@ -296,7 +303,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
 
   int low = 0, mid, high = item_count, index;
 
-  I* temp_ptr;
+  Index* temp_ptr;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
@@ -328,7 +335,7 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
         temp = indexes[mid];
         temp_ptr = collission_list + temp;
         index = *temp_ptr;  //< Load the index in the collision table.
-        while (index < MaxDicIndexes<I>()) {
+        while (index < MaxDicIndexes<Index>()) {
           PRINTF("comparing to \"%s\"", keys - key_offsets[index])
           if (strcmp(key, keys - key_offsets[index]) == 0) {
             PRINTF(" but table already contains key at offset: %u.\n", index)
@@ -498,34 +505,36 @@ I DictionaryAdd(Dictionary<UI, SI, I>* dictionary, const char* key, T data) {
 //}
 
 /* Returns  the given query char in the hash table. */
-template <typename UI, typename SI, typename I>
-I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
+template <typename Size, typename Offset, typename Index>
+Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
+                     const char* key) {
   if (dictionary == nullptr) return 0;
   PRINT_HEADING("Finding record...")
-  I index, item_count = dictionary->item_count, count = dictionary->count, temp;
+  Index index, item_count = dictionary->item_count, count = dictionary->count,
+               temp;
 
-  if (key == nullptr || item_count == 0) return ~((I)0);
+  if (key == nullptr || item_count == 0) return ~((Index)0);
 
-  SI table_size = dictionary->table_size;
+  Offset table_size = dictionary->table_size;
 
-  const UI* hashes =
-      reinterpret_cast<const UI*>(reinterpret_cast<const char*>(dictionary) +
-                                  sizeof(Dictionary<UI, SI, I>));
-  const SI* key_offsets = reinterpret_cast<const UI2*>(hashes + count);
-  const I *indexes = reinterpret_cast<const I*>(key_offsets + count),
-          *unsorted_indexes = indexes + count,
-          *collission_list = unsorted_indexes + count;
+  const Size* hashes =
+      reinterpret_cast<const Size*>(reinterpret_cast<const char*>(dictionary) +
+                                    sizeof(Dictionary<Size, Offset, Index>));
+  const Offset* key_offsets = reinterpret_cast<const UI2*>(hashes + count);
+  const Index *indexes = reinterpret_cast<const Index*>(key_offsets + count),
+              *unsorted_indexes = indexes + count,
+              *collission_list = unsorted_indexes + count;
   const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
-  const I *collisions, *temp_ptr;
+  const Index *collisions, *temp_ptr;
 
-  UI hash = Hash16(key);
+  Size hash = Hash16(key);
 
   PRINTF("\nSearching for key \"%s\" with hash 0x%x", key, hash)
 
   if (item_count == 1) {
     if (!SlotEquals(key, keys - key_offsets[0])) {
       PRINTF("\nDid not find key %s", key)
-      return ~((I)0);
+      return ~((Index)0);
     }
     PRINTF("\nFound key \"%s\"", key)
     PrintLine();
@@ -534,13 +543,13 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
 
   // Perform a binary search to find the first instance of the hash the
   // binary search yields. If the mid is odd, we need to subtract the
-  // sizeof (UI*) in order to get the right pointer address.
+  // sizeof (Size*) in order to get the right pointer address.
   int low = 0, mid, high = item_count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
 
-    UI current_hash = hashes[mid];
+    Size current_hash = hashes[mid];
     PRINTF("\nlow: %i mid: %i high %i hashes[mid]:%x", low, mid, high,
            hashes[mid])
 
@@ -556,7 +565,8 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
           mid, hashes[mid], key)
 
       // Check for collisions
-      collisions = reinterpret_cast<const I*>(key_offsets) + count * sizeof(SI);
+      collisions =
+          reinterpret_cast<const Index*>(key_offsets) + count * sizeof(Offset);
 
       index = collisions[mid];
 
@@ -573,7 +583,7 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
 
         temp_ptr = collission_list + temp;
         index = *temp_ptr;
-        while (index < MaxDicIndexes<I>()) {
+        while (index < MaxDicIndexes<Index>()) {
           PRINTF("\nComparing to \"%s\"", keys - key_offsets[index]);
           if (!SlotEquals(key, keys - key_offsets[index])) {
             PRINTF("but table already contains key at offset:%u.", index)
@@ -583,7 +593,7 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
           index = *temp_ptr;
         }
         PRINTF("Did not find \"" << key << "\"\n")
-        return ~((I)0);
+        return ~((Index)0);
       }
 
       // There were no collisions.
@@ -596,119 +606,121 @@ I DictionaryFind(Dictionary<UI, SI, I>* dictionary, const char* key) {
 
       PRINTF("\n!!!mid: %i-%x unsorted_indexes: %u key: %s\n hash: %x\n", mid,
              hashes[mid], index, keys - key_offsets[index],
-             Hash16(keys - key_offsets[index]))
+             Hash16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index]) != 0) {
         //< It was a collision so the table doesn't contain string.
-        PRINTF(" but it was a collision and did not find key.\n")
-        return ~((I)0);
+        PRINTF(" but it was a collision and did not find key.\n");
+        return ~((Index)0);
       }
 
-      PRINTF("and found key at mid: %i", (int)mid)
+      PRINTF("and found key at mid: %i", (int)mid);
       return index;
     }
   }
-  PRINTF("\nDid not find a hash for key \"%s\"", key)
+  PRINTF("\nDid not find a hash for key \"%s\"", key);
   PrintLine();
 
-  return ~((I)0);
+  return ~((Index)0);
 }
 
 /* Prints this object out to the console. */
-template <typename UI, typename SI, typename I>
-UTF8& DicPrint(UTF8& print, const Dictionary<UI, SI, I>* dictionary) {
+template <typename Size, typename Offset, typename Index, typename Char = char>
+TUTF<Char> DicPrint(TUTF<Char>& utf,
+                    const Dictionary<Size, Offset, Index>* dictionary) {
   ASSERT(dictionary)
 
-  I item_count = dictionary->item_count, count = dictionary->count,
-    collision_index, temp;
-  SI table_size = dictionary->table_size, size_pile = dictionary->size_pile;
+  Index item_count = dictionary->item_count, count = dictionary->count,
+        collision_index, temp;
+  Offset table_size = dictionary->table_size, size_pile = dictionary->size_pile;
 
   PRINT_LINE('_');
 
-  PRINTF((sizeof(UI) == 2)
+  PRINTF((sizeof(Size) == 2)
              ? "\nDic2:\n"
-             : (sizeof(UI) == 4)
+             : (sizeof(Size) == 4)
                    ? "\nDic4:0x%p\n"
-                   : (sizeof(UI) == 8) ? "\nDic8:0x%p\n" : "\nError:")
+                   : (sizeof(Size) == 8) ? "\nDic8:0x%p\n" : "\nError:");
   PRINTF("\n0x%p %u stack_height: %u size_pile: %u  size: %u\n|", dictionary,
          item_count, stack_height, size_pile, table_size);
-  PRINT_LINE('_')
-  PRINTF('\n')
+  PRINT_LINE('_');
+  PRINTF('\n');
 
-  const char* states =
-      reinterpret_cast<const char*>(dictionary) + sizeof(Dictionary<UI, SI, I>);
-  const SI* key_offsets = reinterpret_cast<const SI*>(states + count);
-  // const UI* data_offsets = reinterpret_cast<const UI*>
-  //                            (states + stack_height *(sizeof (SI)));
-  const UI* hashes =
-      reinterpret_cast<const UI*>(states + count * (sizeof(SI) + sizeof(UI)));
-  const I *indexes = reinterpret_cast<const I*>(
-              states + count * (sizeof(SI) + sizeof(UI) + sizeof(I))),
-          *unsorted_indexes = indexes + count,
-          *collission_list = unsorted_indexes + count, *begin;
+  const char* states = reinterpret_cast<const char*>(dictionary) +
+                       sizeof(Dictionary<Size, Offset, Index>);
+  const Offset* key_offsets = reinterpret_cast<const Offset*>(states + count);
+  // const Size* data_offsets = reinterpret_cast<const Size*>
+  //                            (states + stack_height *(sizeof (Offset)));
+  const Size* hashes = reinterpret_cast<const Size*>(
+      states + count * (sizeof(Offset) + sizeof(Size)));
+  const Index *indexes = reinterpret_cast<const Index*>(
+                  states +
+                  count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
+              *unsorted_indexes = indexes + count,
+              *collission_list = unsorted_indexes + count, *begin;
   const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
-    PRINTF ('|';
-    for (int i = 0; i < 79; ++i)
-        putchar ('_');
-    PRINT ('\n')
+  PRINT('|');
+  for (int i = 0; i < 79; ++i) PRINT('_');
+  PRINT('\n');
 
-    for (I i = 0; i < count; ++i) {
+  for (Index i = 0; i < count; ++i) {
     // Print each record as a row.
     // @todo Change stack_height to ; after done debugging.
     collision_index = indexes[i];
     PRINTF("\n%3i %9s %7u %9x %9x %9x %9u %10u: ", i, keys - key_offsets[i],
            key_offsets[i], Hash16(keys - key_offsets[i]),
            hashes[unsorted_indexes[i]], hashes[i], unsorted_indexes[i],
-           collision_index)
+           collision_index);
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
       begin = &collission_list[collision_index];
       temp = *begin;
       ++begin;
-      PRINTF("%u@", temp)
+      PRINTF("%u@", temp);
       while (temp != ~0) {
         temp = *begin;
         ++begin;
         if (temp == ~0) break;
-        PRINTF(", %u$", temp)
+        PRINTF(", %u$", temp);
       }
     }
 
-        PRINTF ('\n';
-    }
-    PrintLine ('_');
+    PRINT('\n');
+  }
+  PrintLine('_');
 
-    PrintSocket (reinterpret_cast<const char*> (dictionary) + 
-                 sizeof (Dictionary<UI, SI, I>), dictionary->size);
-    PRINT ('\n')
+  PrintSocket(reinterpret_cast<const char*>(dictionary) +
+                  sizeof(Dictionary<Size, Offset, Index>),
+              dictionary->size);
+  PRINT('\n');
 }
 
 /* Deletes the dictionary contents without wiping the contents. */
-template <typename UI, typename SI, typename I>
-void DicClear(Dictionary<UI, SI, I>* dictionary) {
-  ASSERT(dictionary)
+template <typename Size, typename Offset, typename Index>
+void DicClear(Dictionary<Size, Offset, Index>* dictionary) {
+  ASSERT(dictionary);
 
   dictionary->item_count = 0;
   dictionary->size_pile = 0;
 }
 
 /* Deletes the dictionary contents by overwriting it with zeros. */
-template <typename UI, typename SI, typename I>
-void DictionaryWipe(Dictionary<UI, SI, I>* dictionary) {
-  ASSERT(dictionary)
+template <typename Size, typename Offset, typename Index>
+void DictionaryWipe(Dictionary<Size, Offset, Index>* dictionary) {
+  ASSERT(dictionary);
 
-  UI size = dictionary->size;
+  Size size = dictionary->size;
   memset(dictionary, 0, size);
 }
 
 /* Returns true if this crabs contains only the given address. */
-template <typename UI, typename SI, typename I>
-void* DicContains(Dictionary<UI, SI, I>* dictionary, void* data) {
-  ASSERT(dictionary)
+template <typename Size, typename Offset, typename Index>
+void* DicContains(Dictionary<Size, Offset, Index>* dictionary, void* data) {
+  ASSERT(dictionary);
 
   if (data < dictionary) return false;
   char* base = reinterpret_cast<char*>(dictionary);
@@ -718,29 +730,30 @@ void* DicContains(Dictionary<UI, SI, I>* dictionary, void* data) {
 }
 
 /* Removes that object from the dictionary and copies it to the destination. */
-template <typename UI, typename SI, typename I>
-BOL DicRemoveCopy(Dictionary<UI, SI, I>* dictionary, void* destination,
-                  size_t buffer_size, void* data) {
-  ASSERT(dictionary)
+template <typename Size, typename Offset, typename Index>
+BOL DicRemoveCopy(Dictionary<Size, Offset, Index>* dictionary,
+                  void* destination, size_t buffer_size, void* data) {
+  ASSERT(dictionary);
 
   return false;
 }
 
 /* Removes the item at the given address from the dictionary. */
-template <typename UI, typename SI, typename I>
-BOL DicRemove(Dictionary<UI, SI, I>* dictionary, void* adress) {
-  ASSERT(dictionary)
+template <typename Size, typename Offset, typename Index>
+BOL DicRemove(Dictionary<Size, Offset, Index>* dictionary, void* adress) {
+  ASSERT(dictionary);
 
   return false;
 }
 
 /* Prints the given Dictionary to the console. */
-template <typename UI, typename SI, typename I>
-UTF8& DicPrint(UTF8& print, Dictionary<UI, SI, I>* dictionary) {
-  return print;
+template <typename Size, typename Offset, typename Index>
+UTF1& DicPrint(UTF1& utf, Dictionary<Size, Offset, Index>* dictionary) {
+  ASSERT(dictionary);
+  return utf;
 }
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPTBOOK
+#endif  //< INCLUDED_SCRIPT2_TDIC
 #endif  //< #if SEAM >= _0_0_0__12

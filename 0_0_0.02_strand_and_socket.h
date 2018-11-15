@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "ttest.h"
 #include "tutf.h"
 
-#include "csio.h"
+#include "cconsole.h"
 
 #if SEAM == _0_0_0__02
 #include "test_debug.inl"
@@ -38,7 +38,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   PRINT_HEADING("Testing ASCII Strings");
   enum {
     kCompareStringsCount = 5,
-    kSize = 512,
+    kSize = 511,
   };
 
   static const char* test_strings[kCompareStringsCount][2] = {
@@ -68,7 +68,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
                                            "  1234567890 ", "123..."};
 
   const char* end;
-  char buffer[kSize + 2], buffer_b[kSize + 1];
+  char buffer[kSize + 1], buffer_b[kSize + 1];
 
   enum { kCheckChar = '!' };
   char* check_char = buffer + kSize + 1;
@@ -92,7 +92,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
 
   static const char kTesting123[] = "Testing 1, 2, 3\0";
 
-  PRINT_HEADING("    Running HexTest");
+  PRINT_HEADING("Running HexTest");
   for (int i = 0; i < 16; ++i) {
     int value = HexToByte(HexNibbleToLowerCase(i));
     Test(i, value);
@@ -104,8 +104,8 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
 
   for (int i = 0; i < 256; ++i) {
     UI2 c = HexByteToLowerCase(i);
-    PRINTF("\n    %i.) expecting: %x        HexByteToLowerCase:%c%c", i, i,
-           (char)c, (char)(c >> 8));
+    PRINTF("\n%i.) expecting: %x        HexByteToLowerCase:%c%c", i, i, (char)c,
+           (char)(c >> 8));
     int value = HexToByte(c);
     PRINTF("        HexToByte:%i", value);
     AVOW(i, value);
@@ -114,7 +114,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
     Test(i, value);
   }
 
-  PRINT_HEADING("    Testing Universal Text Formatter");
+  PRINT_HEADING("Testing Universal Text Formatter");
   PRINTF("\n\n    Expecting \"%s\"", kTesting123);
 
   utf.Set(buffer) << "Testing " << 1 << ", " << 2 << ", " << 3;
@@ -129,10 +129,12 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
 
   AVOW(9, TStringLength<>("123456789"));
 
+  PRINTF("\n\nTesting StringFind");
+
   ASSERT(StringFind(kTestingString, "one"));
   ASSERT(StringFind(kTestingString, "three."));
 
-  PRINTF("\n\n    Testing PrintRight");
+  PRINTF("\n\nTesting PrintRight");
 
   ASSERT(TPrintRight<>(buffer, buffer + kSize, kTestingString, 28));
   PRINT_SOCKET(buffer, kSize);
@@ -186,11 +188,10 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   AVOW(kStringsCentered[3], buffer);
   int i = 0;  //< Shared looping variable.
 
-  // PRINT_HEADING("\nTesting Console ().Print () ");
+  // PRINT_HEADING("\nTesting utf.Print () ");
   // Console().Print() << "Testing " << 1 << ", 2, " << -3;
 
   PRINT_HEADING("Testing Socket");
-
   PRINT_HEADING("Testing PrintSocket (void*, int size)");
 
   for (int i = 1; i <= kSize; ++i) buffer_b[i - 1] = '0' + i % 10;
@@ -199,7 +200,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   PRINT_SOCKET(buffer, kSize);
   PRINTF("\n    Printed:\n%s", buffer);
 
-  PRINT_HEADING("\n\nTest SocketCopy and MemoryCompare\n\n");
+  PRINT_HEADING("Test SocketCopy and MemoryCompare");
 
   enum {
     kTestCharsCount = 1024,
@@ -221,10 +222,7 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   }
 
   PRINTF("\n\nDone testing SocketCopy!\n");
-
-
 #endif
   return nullptr;
 }
 }  // namespace _
-

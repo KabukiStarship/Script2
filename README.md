@@ -6,9 +6,9 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 * Seam Trees provide low-cost in-order unit tests for Agile, Test, and Issue Driven Development with debug information customized for each tree node.
 * Cross-platform Modern `Embedded-C++11`/GCC 4.7 IoT Nanoframework with Cross-language C Application Binary Interface (ABI) and Doxygen API docs.
 * ASCII Data Types and the ASCII Factory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
-* Rapid compile time using 3-file Translation Units with separated C++ templates.
-* Code automatically formatted to Google C++ Style Guide upon save and formatted to not fight clang-format.
+* Rapid compile time using 3-file Translation Units with unique names an separated C++ templates.
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
+* Code automatically formatted to Google C++ Style Guide upon save and formatted to not fight clang-format.
 
 ## ASCII Data
 
@@ -52,10 +52,9 @@ ASCII Data Types provide:
 
 **3.** Open the `global_config.inl` and look at the typedef(s) and seam macros, then set the seam number in the `pch.h` file. Then look through the `test_debug.inl` and `test_release.inl`, the look through the seam tree tests in the files that start with `0_0_0` and the called functions.
 
-**4.** In order to save the stack debug data when an assert occurs, set breakpoints in two functions in the file `script2_test.cc` at the return line for:
+**4.** In order to save the stack debug data when an assert occurs, set breakpoint in the file `script2_test.cc` at the return line for:
 ```C++
 BOL TestWarn(const char* function, const char* file, int line);
-BOL ErrorFreeze(const char* function, const char* file, int line);
 ```
 
 **5.** To use Script2 with your project all you need to do is link to the code. There is also some extra config steps but the documentation is out of sync.

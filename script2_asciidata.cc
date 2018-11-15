@@ -14,27 +14,27 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__12
+
+#include "tasciidata.h"
+
+#include "tsocket.h"
+
 #if SEAM == _0_0_0__12
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
 #endif
 
-#include "casciidata.h"
-
-#include "tsocket.h"
-#include "ttest.h"
-
 namespace _ {
 
-BOL TypeIsValid(type_t type) {
-  if (type >= kLST && type <= kDIC || (type >= (kADR + 32) && type <= (kTKN + 32)))
+BOL TypeIsValid(SIN type) {
+  if (type >= kLST && type <= kDIC ||
+      (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
   return true;
 }
 
-TypeValue::TypeValue(type_t type, const void* value)
-    : type(type), value(value) {
+TypeValue::TypeValue(SIN type, const void* value) : type(type), value(value) {
   // Nothing to do here! (:-)-+=<
 }
 
@@ -59,16 +59,16 @@ UIT TypeFixedSize(UIT type) {
       16,  //< kUIH: 16
       16,  //< kDEC: 17
   };
-  type_t type_upper_bits = type >> 3;
+  SIN type_upper_bits = type >> 3;
   type &= 0x1f;
   if (type == kUIX) return ((UIT)2) << type_upper_bits;
   if (type > kOBJ) return -1;
   return kWidths[type];
 }
 
-const char** TypeStrings() { return TypeStrings<char>(); }
+const char** TypeStrings() { return TTypeStrings<char>(); }
 
-const char* TypeString(type_t type) { return TypeStrings()[type & 0x1f]; }
+const char* TypeString(SIN type) { return TypeStrings()[type & 0x1f]; }
 
 const char* TypeString(UIT type) { return TypeString((UI1)type); }
 
@@ -78,14 +78,14 @@ BOL TypeIsArray(UIT type) { return type >= kTypeCount; }
 
 BOL TypeIsSet(UIT type) { return type >= kTypeCount; }
 
-void* TypeAlign(type_t type, void* value) {
+void* TypeAlign(SIN type, void* value) {
   ASSERT(value);
   if (type == 0) return nullptr;
   if (!TypeIsValid(type)) return nullptr;
 
   UIT size = TypeFixedSize(type);
   if (type <= kUI1) return value;
-  type_t* value_ptr = reinterpret_cast<type_t*>(value);
+  SIN* value_ptr = reinterpret_cast<SIN*>(value);
 #if WORD_SIZE == 2
   if (type <= kHLF) return AlignUpPointer2<>(value);
 #else
@@ -128,7 +128,7 @@ inline char* WriteObj(char* begin, char* end, const void* value) {
   return SocketCopy(target, end, value, size - sizeof(UI));
 }
 
-char* Write(char* begin, char* end, type_t type, const void* value) {
+char* Write(char* begin, char* end, SIN type, const void* value) {
   // Algorithm:
   // 1.) Determine type.
   // 2.) Align begin pointer to type width.
@@ -171,24 +171,21 @@ char* Write(char* begin, char* end, type_t type, const void* value) {
       case 2:
         return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 3:
-        return reinterpret_cast<char*>(
-            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
-                            reinterpret_cast<UI2*>(end),
-                            reinterpret_cast<const UI2*>(value)));
+        return reinterpret_cast<char*>(TPrint<char16_t>(
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(end),
+            reinterpret_cast<const UI2*>(value)));
       case 4:
         return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 5:
-        return reinterpret_cast<char*>(
-            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
-                            reinterpret_cast<UI2*>(end),
-                            reinterpret_cast<const UI2*>(value)));
+        return reinterpret_cast<char*>(TPrint<char16_t>(
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(end),
+            reinterpret_cast<const UI2*>(value)));
       case 6:
         return TPrint<char>(begin, end, reinterpret_cast<const char*>(value));
       case 7:
-        return reinterpret_cast<char*>(
-            TPrint<char16_t>(reinterpret_cast<UI2*>(begin),
-                            reinterpret_cast<UI2*>(end),
-                            reinterpret_cast<const UI2*>(value)));
+        return reinterpret_cast<char*>(TPrint<char16_t>(
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(end),
+            reinterpret_cast<const UI2*>(value)));
     }
   }
   char array_type = type >> 6;
@@ -205,36 +202,36 @@ char* Write(char* begin, char* end, type_t type, const void* value) {
   return nullptr;
 }
 
-BOL TypeIsObj(type_t type) {
+BOL TypeIsObj(SIN type) {
   if (type < kOBJ) return false;
   return true;
 }
 
-BOL TypeIsString(type_t type) {
+BOL TypeIsString(SIN type) {
   type &= 0x1f;
   if (type >= kADR && type <= kTKN) return true;
   return false;
 }
 
-BOL TypeIsUtf16(type_t type) { return (BOL)(type & 0x20); }
+BOL TypeIsUtf16(SIN type) { return (BOL)(type & 0x20); }
 
-inline int TypeSizeWidthCode(type_t type) { return type >> 6; }
+inline int TypeSizeWidthCode(SIN type) { return type >> 6; }
 
 }  // namespace _
 
 #if USING_UTF8
 namespace _ {
-char* Print(char* begin, char* end, type_t type, const void* value) {
+char* Print(char* begin, char* end, SIN type, const void* value) {
   return TPrint<char>(begin, end, type, value);
-}  //< namespace _
-_::UTF8& operator<<(_::UTF8& utf, const _::TypeValue& item) {
+}
+_::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& item) {
   return utf.Set(_::Print(utf.begin, utf.end, item.type, item.value));
 }
+}  // namespace _
 #endif
 #if USING_UTF16
 namespace _ {
-char16_t* Print(char16_t* begin, char16_t* end, type_t type,
-                const void* value) {
+char16_t* Print(char16_t* begin, char16_t* end, SIN type, const void* value) {
   return TPrint<char16_t>(begin, end, type, value);
 }
 }  // namespace _
@@ -244,8 +241,7 @@ _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
 #endif
 #if USING_UTF32
 namespace _ {
-char32_t* Print(char32_t* begin, char32_t* end, type_t type,
-                const void* value) {
+char32_t* Print(char32_t* begin, char32_t* end, SIN type, const void* value) {
   return TPrint<char32_t>(begin, end, type, value);
 }
 }  // namespace _

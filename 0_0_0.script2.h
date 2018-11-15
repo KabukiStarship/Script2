@@ -13,46 +13,46 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__00
-#include "0_0_0__00_rng.h"
+#include "0_0_0.00_rng.h"
 #endif
 #if SEAM >= _0_0_0__01
-#include "0_0_0__01_itos_and_stoi.h"
+#include "0_0_0.01_itos_and_stoi.h"
 #endif
 #if SEAM >= _0_0_0__02
-#include "0_0_0__02_ascii_strings_and_socket.h"
+#include "0_0_0.02_strand_and_socket.h"
 #endif
 #if SEAM >= _0_0_0__03
-#include "0_0_0__03_ftos_and_stof.h"
+#include "0_0_0.03_ftos_and_stof.h"
 #endif
 #if SEAM >= _0_0_0__04
-#include "0_0_0__04_clock.h"
+#include "0_0_0.04_clock.h"
 #endif
 #if SEAM >= _0_0_0__05
-#include "0_0_0__05_ascii_stack.h"
+#include "0_0_0.05_ascii_stack.h"
 #endif
 #if SEAM >= _0_0_0__06
-#include "0_0_0__06_ascii_array.h"
+#include "0_0_0.06_ascii_array.h"
 #endif
 #if SEAM >= _0_0_0__07
-#include "0_0_0__07_ascii_loom.h"
+#include "0_0_0.07_ascii_loom.h"
 #endif
 #if SEAM >= _0_0_0__08
-#include "0_0_0__08_ascii_table.h"
+#include "0_0_0.08_ascii_table.h"
 #endif
 #if SEAM >= _0_0_0__09
-#include "0_0_0__09_ascii_list.h"
+#include "0_0_0.09_ascii_list.h"
 #endif
 #if SEAM >= _0_0_0__10
-#include "0_0_0__10_ascii_map.h"
+#include "0_0_0.10_ascii_map.h"
 #endif
 #if SEAM >= _0_0_0__11
-#include "0_0_0__11_ascii_book.h"
+#include "0_0_0.11_ascii_book.h"
 #endif
 #if SEAM >= _0_0_0__12
-#include "0_0_0__12_ascii_dictionary.h"
+#include "0_0_0.12_ascii_dictionary.h"
 #endif
 #if SEAM >= _0_0_0__13
-#include "0_0_0__13_crabs.h"
+#include "0_0_0.13_crabs.h"
 #endif
 
 namespace _ {

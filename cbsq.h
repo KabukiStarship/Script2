@@ -143,10 +143,10 @@ inline const UIT* Params() {
 }
 
 /* Prints out the kBSQ parameters. */
-API UTF8& PrintBsq(UTF8& printer, const UIT* params);
+API UTF1& PrintBsq(UTF1& printer, const UIT* params);
 
 /*  Prints out the parameters. */
-// API Utf& PrintBsq (const UIT* bsq, Utf& print);
+// API Utf& PrintBsq (const UIT* bsq, Utf& utf);
 
 /*< Returns the requested parameter number. */
 API UIT BsqParamNumber(const UIT* bsq, int param_number);
@@ -155,7 +155,7 @@ API UIT BsqParamNumber(const UIT* bsq, int param_number);
 
 #if USING_UTF8
 /*  Prints out the parameters. */
-inline _::UTF8& operator<<(_::UTF8& printer, _::Bsq bsq) {
+inline _::UTF1& operator<<(_::UTF1& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8

@@ -30,7 +30,7 @@ static const char* _0_0_0__07_ASCII_Loom(char* seam_log, char* seam_end,
 
   Print("\n  - Running TableTest...\n");
 
-  wchar_t index;
+  CHW index;
   UIW buffer[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &buffer[0], &buffer[127]);
 

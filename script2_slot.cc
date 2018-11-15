@@ -37,14 +37,13 @@ const Op* ReturnError(Slot* slot, Error error, const UIT* header) {
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const UIT* header,
-                      UI1 offset) {
+const Op* ReturnError(Slot* slot, Error error, const UIT* header, UI1 offset) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const UIT* header,
-                      UIT offset, char* address) {
+const Op* ReturnError(Slot* slot, Error error, const UIT* header, UIT offset,
+                      char* address) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
@@ -152,7 +151,7 @@ BOL Slot::IsReadable() { return start != stop; }
 const Op* Slot::Read(const UIT* params, void** args) {
   ASSERT(params);
   ASSERT(args);
-  UI1 ui1;      //< Temp variable to load most types.
+  UI1 ui1;  //< Temp variable to load most types.
   UI2 ui2;  //< Temp variable for working with kUI2 types.
 #if USING_CRABS_4_BYTE_TYPES
   UI4 ui4;
@@ -161,24 +160,24 @@ const Op* Slot::Read(const UIT* params, void** args) {
   UI8 ui8;  //< Temp kUI8 variable.
 #endif
   char* ui1_ptr;             //< Pointer to a kUI1.
-  UI2* ui2_ptr;         //< Pointer to a kUI2.
-  UI4* ui4_ptr;         //< Pointer to a kUI4.
-  UI8* ui8_ptr;         //< Pointer to a kUI8.
-  UIT type,               //< Current type being read.
+  UI2* ui2_ptr;              //< Pointer to a kUI2.
+  UI4* ui4_ptr;              //< Pointer to a kUI4.
+  UI8* ui8_ptr;              //< Pointer to a kUI8.
+  UIT type,                  //< Current type being read.
       index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
   ASSERT(num_params);
   UIW offset;  //< Offset to word align the current type.
-  SIW length,   //< Length of the data in the buffer.
-      count,         //< Argument length.
-      size;          //< Size of the ring buffer.
+  SIW length,  //< Length of the data in the buffer.
+      count,   //< Argument length.
+      size;    //< Size of the ring buffer.
 
   PRINTF("\n\nReading BIn: ")
 
-  char *l_begin = begin,             //< Beginning of the buffer.
-      *l_end = end,                  //< end of the buffer.
-          *l_start = start,          //< start of the data.
-              *l_stop = stop;        //< stop of the data.
+  char *l_begin = begin,          //< Beginning of the buffer.
+      *l_end = end,               //< end of the buffer.
+          *l_start = start,       //< start of the data.
+              *l_stop = stop;     //< stop of the data.
   const UIT* param = params + 1;  //< current param.
 
   size = l_end - l_begin;
@@ -332,7 +331,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         }
         // Read from buffer and write to the stack:
         ui4_ptr = reinterpret_cast<UI4*>(l_start);
-        ui4 = *ui4_ptr;              //< Read
+        ui4 = *ui4_ptr;          //< Read
         l_start += sizeof(SI4);  //< Increment
         if (l_start > l_end) {
           l_start -= size;  //< Bound
@@ -367,7 +366,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         }
         // Read from buffer and write to the stack:
         ui8_ptr = reinterpret_cast<UI8*>(l_start);
-        ui8 = *ui8_ptr;               //< Read
+        ui8 = *ui8_ptr;          //< Read
         l_start += sizeof(UI8);  //< Increment
         if (l_start > l_end) {
           l_start -= size;  //< Bound
@@ -512,11 +511,11 @@ const Op* Slot::Write(Slot& other) { return nullptr; }
 const Op* Slot::Write(const char* message) { return nullptr; }
 
 #if CRABS_TEXT
-UTF8& Slot::Print(UTF8& print) {
+UTF1& Slot::Print(UTF1& utf) {
   char *l_begin = begin, *l_end = end;
-  return print << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)
-               << " start:" << Hex<>(start) << "\nstop:" << Hex<>(stop)
-               << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);
+  return utf << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)
+             << " start:" << Hex<>(start) << "\nstop:" << Hex<>(stop)
+             << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);
 }
 #endif
 

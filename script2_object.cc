@@ -27,12 +27,8 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-enum {
-  kAsciiDelete = 0,  //<
-};
-
-void Destruct(CObject obj) {
-  if (obj.factory) obj.factory(obj.begin, 0);
+void Destroy(CObject stack) {
+  if (stack.factory) stack.factory(stack.begin, 0, nullptr);
 }
 
 BOL ObjSizeIsValid(SI2 size, SI2 size_min) {
@@ -61,22 +57,6 @@ BOL ObjCountIsValid(SI4 index, SI4 count_min) {
 
 BOL ObjCountIsValid(SI8 index, SI8 count_min) {
   return TObjCountIsValid<SI8>(index, count_min);
-}
-
-UIW* ObjClone(UIW* ascii_object, SI1 size) {
-  return TObjClone<SI1>(ascii_object, size);
-}
-
-UIW* ObjClone(UIW* ascii_object, SI2 size) {
-  return TObjClone<SI2>(ascii_object, size);
-}
-
-UIW* ObjClone(UIW* ascii_object, SI4 size) {
-  return TObjClone<SI4>(ascii_object, size);
-}
-
-UIW* ObjClone(UIW* ascii_object, SI8 size) {
-  return TObjClone<SI8>(ascii_object, size);
 }
 
 UIW* ObjNew(SI2 size, size_t header_size) {

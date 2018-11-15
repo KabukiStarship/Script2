@@ -316,7 +316,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // Load number to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         ui2 = *ui2_ptr;
-        // We are using the same code to print both signed and unsigned
+        // We are using the same code to utf both signed and unsigned
         // varints. In order to convert from a negative 2's complement
         // signed integer to a transmittable format, we need to invert
         // the bits and add 1. Then we just shift the bits left one and
@@ -712,28 +712,27 @@ char* Print (BOut* bout, char* buffer, char* buffer_end) {
         return nullptr;
     }
     int size = bout->size;
-    Utf& print (buffer, buffer_end);
-    print << "\nBOut:" << Hex<UIW> (bout)
+    Utf& utf (buffer, buffer_end);
+    utf << "\nBOut:" << Hex<UIW> (bout)
           << " size:" << size
           << " start:" << bout->start << " stop:" << bout->stop
           << " read:"  << bout->read
           << Memory (BOutBuffer (bout), size + 64);
     //< @todo remove the + 64.);
-    return print.cursor;
+    return utf.cursor;
 }*/
 
-UTF8& PrintBOut(UTF8& print, BOut* bout) {
+UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   ASSERT(bout);
   int size = bout->size;
-  print << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
-        << " start:" << bout->start << " stop:" << bout->stop
-        << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
-  Printf("\n!| cursor:%p", print.begin);
-  return print;
+  utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
+      << " start:" << bout->start << " stop:" << bout->stop
+      << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
+  Printf("\n!| cursor:%p", utf.begin);
+  return utf;
 }
 #endif
 
 }  // namespace _
-
 
 #endif  //> #if SEAM >= _0_0_0__13

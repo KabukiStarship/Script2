@@ -42,7 +42,7 @@ struct API Event : public Operand {
   virtual DBL GetProbability() = 0;
 
   /* Script operations. */
-  virtual const Op* Star(wchar_t index, CCrabs* crabs) = 0;
+  virtual const Op* Star(CHW index, CCrabs* crabs) = 0;
 };
 
 }  //< namespace _

@@ -398,16 +398,16 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           header = op->in;
           crabs->params_left = *header;
           crabs->header = header;        //< +1 to bypass the number of params
-          crabs->header_start = header;  //< Used to print current header.
+          crabs->header_start = header;  //< Used to utf current header.
           CrabsEnterState(crabs, kBInStatePackedArgs);
           bin_state = kBInStatePackedArgs;
           type = *(++crabs->header);  //< Setup to read first type.
 #if DEBUG_CRABS_EXPR
-          PRINTF("\nNext TType to scan:\'"
+          PRINTF("\nNext AsciiType to scan:\'"
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<char>(slot_start, (type_t)type);
+          slot_start = TypeAlignUpPointer<char>(slot_start, (SIN)type);
           break;
         }
         op = operand->Star(b, crabs);
@@ -468,12 +468,12 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                         // Setup to read the next type.
                         type = *(++crabs->header);
 #if DEBUG_CRABS_EXPR
-                        PRINTF("\nNext TType to scan:\'"
+                        PRINTF("\nNext AsciiType to scan:\'"
                                << TypeString(type) << "\' with alignment "
                                << TypeAlign(slot_start, type) << '.');
 #endif
                         slot_start =
-                            TypeAlignUpPointer<>(slot_start, (type_t)type);
+                            TypeAlignUpPointer<>(slot_start, (SIN)type);
                         break;
                       }
                       CrabsEnterState(crabs, kBInStatePackedPod);
@@ -571,11 +571,11 @@ const Op* CrabsUnpack(CCrabs* crabs) {
             break;
           }
 #if DEBUG_CRABS_EXPR
-          PRINTF("\nNext TType to scan:\'"
+          PRINTF("\nNext AsciiType to scan:\'"
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (type_t)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
           break;
         }
         --bytes_left;
@@ -637,11 +637,11 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           // Setup to read the next type.
           type = *(++header);
 #if DEBUG_CRABS_EXPR
-          PRINTF("\nNext TType to scan:\'"
+          PRINTF("\nNext AsciiType to scan:\'"
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (type_t)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
         }
         --bytes_left;
         break;
@@ -744,11 +744,11 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           // Setup to read the next type.
           type = *(++header);
 #if DEBUG_CRABS_EXPR
-          PRINTF("\nNext TType to scan:\'"
+          PRINTF("\nNext AsciiType to scan:\'"
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (type_t)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
           break;
         }
         --bytes_left;
@@ -894,7 +894,7 @@ const Op* CrabsQuery(CCrabs* crabs, const Op* op) {
 }
 
 #if CRABS_TEXT
-UTF8& PrintCrabsStack(UTF8& print, CCrabs* crabs) {
+UTF1& PrintCrabsStack(UTF1& utf, CCrabs* crabs) {
   ASSERT(crabs);
 
   UIT i, stack_count;
@@ -903,22 +903,22 @@ UTF8& PrintCrabsStack(UTF8& print, CCrabs* crabs) {
   Operand** stack = CrabsStack(crabs);
 
   stack_count = crabs->stack_count;
-  print << "\nOperand stack_count:" << stack_count;
+  utf << "\nOperand stack_count:" << stack_count;
 
   if (stack_count == 1) {
-    return print << "\nStack Item 1: " << OperandName(crabs->root);
+    return utf << "\nStack Item 1: " << OperandName(crabs->root);
   }
   for (i = 0; i < stack_count - 1; ++i) {
-    print << "\nStack Item " << i + 1 << ":\"";
+    utf << "\nStack Item " << i + 1 << ":\"";
     operand = stack[i];
     op = operand->Star('?', nullptr);
-    print << op->name << '\"';
+    utf << op->name << '\"';
   }
   op = crabs->operand->Star('?', nullptr);
-  return print << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
+  return utf << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
-UTF8& PrintCrabs(UTF8& utf, CCrabs* crabs) {
+UTF1& PrintCrabs(UTF1& utf, CCrabs* crabs) {
   ASSERT(crabs);
 
   utf << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << '\n'

@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License. */
 #include "cbin.h"
 
 #include "bout.h"
-#include "cbsq.h"
 #include "casciidata.h"
-#include "csocket.h"
+#include "cbsq.h"
 #include "chash.h"
+#include "csocket.h"
 #include "hex.h"
 #include "line.h"
 #include "slot.h"
@@ -63,8 +63,7 @@ SIW SlotSpace(char* start, char* stop, UIW size) {
 UIT BInSpace(BIn* bin) {
   ASSERT(bin)
   char* txb_ptr = reinterpret_cast<char*>(bin);
-  return (UIT)SlotSpace(txb_ptr + bin->start, txb_ptr + bin->stop,
-                           bin->size);
+  return (UIT)SlotSpace(txb_ptr + bin->start, txb_ptr + bin->stop, bin->size);
 }
 
 UIT BinBufferLength(BIn* bin) {
@@ -134,8 +133,8 @@ inline const Op* BInError(BIn* bin, Error error, const UIT* header,
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, Error error, const UIT* header,
-                          UIT offset, char* address) {
+inline const Op* BInError(BIn* bin, Error error, const UIT* header, UIT offset,
+                          char* address) {
   PRINTF("\nBIn %s error!", ErrorString(error))
   return reinterpret_cast<const Op*>(error);
 }
@@ -189,15 +188,15 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
   if (!args) {
     return BInError(bin, kErrorImplementation);
   }
-  UI1 ui1;       //< Temp variable.
-  UI2 ui2;   //< Temp variable.
-  UI4 ui4;   //< Temp variable.
-  UI8 ui8;   //< Temp variable.
+  UI1 ui1;        //< Temp variable.
+  UI2 ui2;        //< Temp variable.
+  UI4 ui4;        //< Temp variable.
+  UI8 ui8;        //< Temp variable.
   char* ui1_ptr;  //< Pointer to a kUI1.
   // UI2* ui2_ptr;              //< Pointer to a kUI2.
-  UI4* ui4_ptr;         //< Pointer to a kUI4.
-  UI8* ui8_ptr;         //< Pointer to a kUI1.
-  UIT type,               //< The current type being read.
+  UI4* ui4_ptr;              //< Pointer to a kUI4.
+  UI8* ui8_ptr;              //< Pointer to a kUI1.
+  UIT type,                  //< The current type being read.
       size,                  //< Size of the ring buffer.
       length,                //< Length of the data in the buffer.
       count,                 //< Argument length.
@@ -233,7 +232,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
         return BInError(bin, kErrorInvalidType, params, index, start);
       case kADR:
       case kSTR:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
-                 // Load buffered-type argument length and increment the index.
+                  // Load buffered-type argument length and increment the index.
         ++num_params;
         count = params[++index];
         //< @todo Replace with pointer arithmetic.
@@ -624,14 +623,14 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
 }
 
 #if CRABS_TEXT
-UTF8& Print(UTF8& print, BIn* bin) {
+UTF1& Print(UTF1& utf, BIn* bin) {
   ASSERT(bin);
 
   UIT size = bin->size;
-  return print << Line('_', 80) << " size:" << bin->size
-               << " start:" << bin->start << " stop:" << bin->stop
-               << " read:" << bin->read
-               << Socket(BInBegin(bin), size + sizeof(BIn));
+  return utf << Line('_', 80) << " size:" << bin->size
+             << " start:" << bin->start << " stop:" << bin->stop
+             << " read:" << bin->read
+             << Socket(BInBegin(bin), size + sizeof(BIn));
 }
 #endif
 

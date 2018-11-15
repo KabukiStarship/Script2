@@ -79,11 +79,11 @@ class Door : public Operand {
   const Op* ExecAll();
 
   /* Script expressions. */
-  virtual const Op* Star(wchar_t index, CCrabs* crabs);
+  virtual const Op* Star(CHW index, CCrabs* crabs);
 
  private:
   UIW* begin;                          //< Pointer to dynamic buffer.
-  CArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
+  TCArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
 };
 
 /* Returns a Static Error Op. */

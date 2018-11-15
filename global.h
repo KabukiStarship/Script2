@@ -18,25 +18,25 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTGLOBAL 1
 
 #if SEAM == _0_0_0__00
-#include "csio.h"
+#include "cconsole.h"
 #include "crng.h"
 #endif
 #if SEAM == _0_0_0__01
-#include "csio.h"
+#include "cconsole.h"
 #include "crng.h"
 #endif
 #if SEAM == _0_0_0__02
-#include "csio.h"
+#include "cconsole.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
 #if SEAM == _0_0_0__03
-#include "csio.h"
+#include "cconsole.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
 #if SEAM == _0_0_0__04
-#include "csio.h"
+#include "cconsole.h"
 #include "crng.h"
 #include "tclock.h"
 #endif

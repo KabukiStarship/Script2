@@ -81,7 +81,7 @@ class Library : public Operand {
 
   /* Searches for the given query and returns a bag of query results.  */
   BOL Search(const char* query,
-              Library<TIndex, TKey, TData, TData, MaxStackHeight>* results) {
+             Library<TIndex, TKey, TData, TData, MaxStackHeight>* results) {
     return false;
   }
 
@@ -159,7 +159,7 @@ class Library : public Operand {
       @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(wchar_t index, CCrabs* crabs) {
+  virtual const Op* Star(CHW index, CCrabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
@@ -184,10 +184,10 @@ class Library : public Operand {
   int reserved;        //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
-  UIT index_,       //< Index of the currently selected bag.
+  UIT index_,          //< Index of the currently selected bag.
       height_,         //< Number of bags on the stack.
       num_libraries_;  //< Number of libraries.
-  UI1 type_;          //< Current type of bag.
+  UI1 type_;           //< Current type of bag.
   TIndex num_keys_,    //< Current number of Star members.
       buffer_size_;    //< Current size of the header and names buffer in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
@@ -199,11 +199,11 @@ class Library : public Operand {
 
 /* Destructs the given bag. */
 template <typename TIndex, typename TKey, typename TData, uint MaxStackSize>
-API void Destruct(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+API void Destroy(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<char*>(r);
 }
 #endif  //< CRABS_MEMORY_PROFILE > 2
-}  //< namespace _
+}  // namespace _
 #endif  //< INCLUDED_CRABS_LIBRARY
 #endif  //< #if SEAM >= _0_0_0__13

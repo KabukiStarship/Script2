@@ -45,33 +45,33 @@ UIT BsqParamNumber(const UIT* params, int param_number) {
   return params[i];
 }
 
-UTF8& PrintBsq(UTF8& print, const UIT* params) {
+UTF1& PrintBsq(UTF1& utf, const UIT* params) {
   UIT num_params = *params++, i, type, value = 0;
 
-  print << "Param<";
+  utf << "Param<";
   if (num_params > kParamsMax) {
-    print << "\nInvalid num_params: " << num_params;
-    return print;
+    utf << "\nInvalid num_params: " << num_params;
+    return utf;
   }
-  print << num_params << ": ";
+  utf << num_params << ": ";
   for (i = 1; i < num_params; ++i) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    print << TypeString((type_t)value) << ", ";
+    utf << TypeString((SIN)value) << ", ";
     if (type >= kSTR) {
       if (value) {
-        print << "\nError: arrays may only be created from POD "
-                 "types.";
-        return print;
+        utf << "\nError: arrays may only be created from POD "
+               "types.";
+        return utf;
       }
       // Print out the max length of the string.
       ++i;
       value = *params++;
-      print << value;
+      utf << value;
     } else if (value > 31) {
       if (value > 127) {  //< It's a multi-dimensional array.
-        print << "Multi-dimensional Array:" << value << ", ";
+        utf << "Multi-dimensional Array:" << value << ", ";
       }
       // Then it's an array.
       ++i;
@@ -81,67 +81,67 @@ UTF8& PrintBsq(UTF8& print, const UIT* params) {
         }
         case 1: {
           value = *params++;
-          print << "kUI1:" << value << ", ";
+          utf << "kUI1:" << value << ", ";
           break;
         }
         case 2: {
           value = *params++;
-          print << "kUI2:" << value << ", ";
+          utf << "kUI2:" << value << ", ";
           break;
         }
         case 3: {
           value = *params++;
-          print << "kUI4:" << value << ", ";
+          utf << "kUI4:" << value << ", ";
           break;
         }
         case 4: {
           value = *params++;
-          print << "kUI8:" << value << ", ";
+          utf << "kUI8:" << value << ", ";
           break;
         }
         case 5: {
           value = *params++;
           if (value == 0) {
-            print << "kUI1:[0]";
+            utf << "kUI1:[0]";
             break;
           }
-          print << "kUI1:[" << value << ": ";
+          utf << "kUI1:[" << value << ": ";
           for (UIT i = value; i != 0; --i) {
             value = *params++;
-            print << value << ", ";
+            utf << value << ", ";
           }
           value = *params++;
-          print << value << "]";
+          utf << value << "]";
           break;
         }
         case 6: {
           value = *params++;
           if (value == 0) {
-            print << "kUI2:[0]";
+            utf << "kUI2:[0]";
             break;
           }
-          print << "kUI2:[" << value << ": ";
+          utf << "kUI2:[" << value << ": ";
           for (UIT i = value; i != 0; --i) {
             value = *params++;
-            print << value << ", ";
+            utf << value << ", ";
           }
           value = *params++;
-          print << value << "]";
+          utf << value << "]";
           break;
         }
         case 7: {
           value = *params++;
           if (value == 0) {
-            print << "kUI4:[0]";
+            utf << "kUI4:[0]";
             break;
           }
-          print << "kUI4:[" << value << ": ";
+          utf << "kUI4:[" << value << ": ";
           for (UIT i = value; i != 0; --i) {
             value = *params++;
-            print << value << ", ";
+            utf << value << ", ";
           }
           value = *params++;
-          print << value << "]";
+          utf << value << "]";
           break;
         }
       }
@@ -149,11 +149,11 @@ UTF8& PrintBsq(UTF8& print, const UIT* params) {
   }
   // Do the last set without a comma.
   value = *params++;
-  print << TypeString(value) << ", ";
+  utf << TypeString(value) << ", ";
   if (value == kSTR) {
     ++i;
     value = *params++;
-    print << value;
+    utf << value;
   } else if (value > 31) {
     // Then it's an array.
     type = value & 0x1f;  //< Mask off type.
@@ -165,73 +165,73 @@ UTF8& PrintBsq(UTF8& print, const UIT* params) {
       }
       case 1: {
         value = *params++;
-        print << "kUI1:" << value << ", ";
+        utf << "kUI1:" << value << ", ";
         break;
       }
       case 2: {
         value = *params++;
-        print << "kUI2:" << value << ", ";
+        utf << "kUI2:" << value << ", ";
         break;
       }
       case 3: {
         value = *params++;
-        print << "kUI4:" << value << ", ";
+        utf << "kUI4:" << value << ", ";
         break;
       }
       case 4: {
         value = *params++;
-        print << "UI5:" << value << ", ";
+        utf << "UI5:" << value << ", ";
         break;
       }
       case 5: {
         value = *params++;
         if (value == 0) {
-          print << "kUI1:[0]";
+          utf << "kUI1:[0]";
           break;
         }
-        print << "kUI1:[" << value << ": ";
+        utf << "kUI1:[" << value << ": ";
         for (UIT i = value; i != 0; --i) {
           value = *params++;
-          print << value << ", ";
+          utf << value << ", ";
         }
         value = *params++;
-        print << value << "]";
+        utf << value << "]";
         break;
       }
       case 6: {
         value = *params++;
         if (value == 0) {
-          print << "kUI2:[0]";
+          utf << "kUI2:[0]";
           break;
         }
-        print << "kUI2:[" << value << ": ";
+        utf << "kUI2:[" << value << ": ";
         for (UIT i = value; i != 0; --i) {
           value = *params++;
-          print << value << ", ";
+          utf << value << ", ";
         }
         value = *params++;
-        print << value << "]";
+        utf << value << "]";
         break;
       }
       case 7: {
         value = *params++;
         if (value == 0) {
-          print << "kUI4:[0]";
+          utf << "kUI4:[0]";
           break;
         }
-        print << "kUI4:[" << value << ": ";
+        utf << "kUI4:[" << value << ": ";
         for (UIT i = value; i != 0; --i) {
           value = *params++;
-          print << value << ", ";
+          utf << value << ", ";
         }
         value = *params++;
-        print << value << "]";
+        utf << value << "]";
         break;
       }
     }
   }
-  print << '>';
-  return print;
+  utf << '>';
+  return utf;
 }
 
 }  // namespace _

@@ -49,7 +49,7 @@ class Wall {
 
   virtual ~Wall();
 
-  Wall(CArray<Door*>* doors);
+  Wall(TCArray<Door*>* doors);
 
   /* Constructs a wall from the given buffer. */
   Wall(size_t size_bytes = kMinSizeBytes);
@@ -61,7 +61,7 @@ class Wall {
   size_t GetSizeBytes();
 
   /* Gets a pointer to the array of pointers to Door(string). */
-  CArray<Door*>* Doors();
+  TCArray<Door*>* Doors();
 
   /* Gets the Door from the Door at the given index. */
   Door* GetDoor(int index);
@@ -81,7 +81,7 @@ class Wall {
   BOL is_dynamic_;       //< Flag for if using dynamic memory.
   size_t size_bytes_;     //< Size of the Wall in bytes.
   UIW* begin;       //< The Wall's buffer.
-  CArray<Door*>* doors_;  //< The doors in the room.
+  TCArray<Door*>* doors_;  //< The doors in the room.
 };
 
 }  //< namespace _

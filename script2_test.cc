@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "ttest.h"
 
-#include "csio.h"
+#include "cconsole.h"
 
 #include "test_debug.inl"
 
@@ -27,7 +27,7 @@ BOL TestWarn(const char* function, const char* file, int line) {
   return true;
 }
 
-BOL ErrorFreeze(const char* function, const char* file, int line) {
+BOL TestAssert(const char* function, const char* file, int line) {
   TestWarn(function, file, line);
   Pause();
   return true;
@@ -64,12 +64,12 @@ const char* TestTree(char* seam_log, char* seam_end, const char* args,
       Print(" missing!");
       return "";
     }
-    PrintHeading("Testing ", seam);
+    PrintHeading("Testing ", seam, 1);
     const char* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
   }
-  Print("\n\nUnit test finished successfully! (:-)+==<");
+  Print("\n\nUnit test finished successfully! (:-)+==<\n");
   return nullptr;
 }
 
@@ -221,7 +221,7 @@ BOL Test(DBL a, DBL b) {
 
 BOL Test(const void* value) {
   if (value) return true;
-  Print("\nERROR: Pointer was nil!");
+  Print("\nERROR:Nil pointer!");
   return false;
 }
 

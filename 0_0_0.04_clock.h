@@ -28,7 +28,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
-  PRINT_HEADING("\n\n    Testing TStringScanTime...");
+  PRINT_HEADING("\n\nTesting TStringScanTime...");
 
   TMS t, t_found;
   const char* result;
@@ -64,7 +64,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }
 
-  PRINTF("\n\n    Testing more valid input...\n");
+  PRINTF("\n\nTesting more valid input...\n");
 
   enum { kSize = 128 };
   char buffer[kSize];
@@ -94,5 +94,3 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
   return nullptr;
 }
 }  // namespace _
-
-

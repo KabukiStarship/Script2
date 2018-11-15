@@ -402,10 +402,10 @@ inline SI StackCountUpperBounds() {
 can fit in type UI, the unaltered buffer pointer if the Stack has grown to the
 count_max upper bounds, or a new dynamically allocated buffer upon failure. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-bool StackGrow(CObject& obj) {
+bool StackGrow(CObject& stack) {
   static SI count_max_auto_size_init = kStackCountMaxDefault;
 
-  uintptr_t* buffer = obj.buffer;
+  uintptr_t* buffer = stack.buffer;
 
   ASSERT(buffer);
 
@@ -438,19 +438,19 @@ bool StackGrow(CObject& obj) {
 
 /* Prints the given stack to the console. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-Utf8& TPrintStack(Utf8& print, CStack<T, UI, SI>* stack) {
+Utf8& TPrintStack(Utf8& utf, CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   UI size_array = stack->size_array;
   SI count = stack->count;
-  if (size_array != 0) return print << "\n\nStack: count: Invalid size_array!";
-  print << "\n\nStack: count: " << count << " count_max:" << stack->count_max
-        << " size_stack:" << stack->size_stack;
-  if (stack->size_array != 0) print << " size_array:invalid";
+  if (size_array != 0) return utf << "\n\nStack: count: Invalid size_array!";
+  utf << "\n\nStack: count: " << count << " count_max:" << stack->count_max
+      << " size_stack:" << stack->size_stack;
+  if (stack->size_array != 0) utf << " size_array:invalid";
   T* elements = StackStart(stack);
   for (int i = 0; i < count; ++i) {
-    print << '\n' << i + 1 << ".) " << elements[i];
+    utf << '\n' << i + 1 << ".) " << elements[i];
   }
-  return print;
+  return utf;
 }
 
 /* A stack of data.
@@ -548,7 +548,7 @@ class TStack {
   @return The item popped off the stack. */
   inline T Pop() {
     T value = StackPop<T, UI, SI>(Obj());
-    // print << "\n  Popping " << value;
+    // utf << "\n  Popping " << value;
     return value;
   }
 

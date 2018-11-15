@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #include "cbinary.h"
-#include "csio.h"
+#include "cconsole.h"
 #include "csocket.h"
 
 #if SEAM >= _0_0_0__00
@@ -181,8 +181,8 @@ I TStringLength(const Char* cursor) {
  @return Nil upon failure or a pointer to the nil-term Char upon success.
  @param  cursor    The beginning of the buffer.
  @param  end       The last UI1 in the buffer.
- @param  string    The string to print.
- @param  delimiter The delimiter to print (usually nil).
+ @param  string    The string to utf.
+ @param  delimiter The delimiter to utf (usually nil).
  @desc   This algorithm is designed to fail if the buffer is not a valid buffer
  with one or more bytes in it, or if string is nil. */
 template <typename Char = char>
@@ -206,8 +206,8 @@ Char* TPrint(Char* cursor, Char* end, const Char* string, Char delimiter = 0) {
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the buffer.
 @param  size      The size of the buffer in Char(s).
-@param  string    The string to print.
-@param  delimiter The delimiter to print (usually nil).
+@param  string    The string to utf.
+@param  delimiter The delimiter to utf (usually nil).
 @desc   This algorithm is designed to fail if the buffer is not a valid buffer
 with one or more bytes in it, or if string is nil. */
 template <typename Char = char>
@@ -219,7 +219,7 @@ Char* TPrint(Char* cursor, SIW size, const Char* string, Char delimiter = 0) {
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the buffer.
 @param  end       The last UI1 in the buffer.
-@param  character The Char to print.
+@param  character The Char to utf.
 @desc   This algorithm is designed to fail if the buffer is not a valid buffer
 with one or more bytes in it. */
 template <typename Char = char>
@@ -238,7 +238,7 @@ Char* TPrint(Char* cursor, Char* end, Char character) {
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the buffer.
 @param  size      The size of the buffer in Char(s).
-@param  string    The string to print.
+@param  string    The string to utf.
 @desc   This algorithm is designed to fail if the buffer is not a valid buffer
 with one or more bytes in it. */
 template <typename Char = char>
@@ -250,7 +250,7 @@ Char* TPrint(Char* cursor, SIW size, Char character) {
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the buffer.
 @param  size      The size of the buffer in Char(s).
-@param  character The Char to print.
+@param  character The Char to utf.
 @desc   This algorithm is designed to fail if the buffer is not a valid buffer
 with one or more bytes in it. */
 template <typename Char = char>
@@ -299,7 +299,7 @@ inline BOL TIsWhitespace(Char character) {
 
 /* Prints a single decimal to the buffer.
 @warning This function DOES NOT do any error checking and if the SEAM ==
-_0_0_0 (1), then this function will print debug data. */
+_0_0_0 (1), then this function will utf debug data. */
 template <typename Char = char>
 inline Char* TPrintDecimal(Char* buffer, Char value) {
   *reinterpret_cast<Char*>(buffer) = '0' + value;
@@ -308,7 +308,7 @@ inline Char* TPrintDecimal(Char* buffer, Char value) {
 }
 
 /* Prints a single decimal to the buffer.
-If the SEAM == _0_0_0 (1), then this function will print debug data.
+If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
 inline Char* TPrintChar(Char* buffer, Char value) {
@@ -318,7 +318,7 @@ inline Char* TPrintChar(Char* buffer, Char value) {
 }
 
 /* Prints a single decimal to the buffer.
-If the SEAM == _0_0_0 (1), then this function will print debug data.
+If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
 inline Char* TPrintChar(Char* buffer, Char* end, Char value) {
@@ -393,7 +393,7 @@ inline Char* TPrintNil(Char* cursor) {
 }
 
 /* Prints a two decimals to the buffer.
-If the SEAM == _0_0_0 (1), then this function will print debug data.
+If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
 inline Char* TPrint2Decimals(Char* buffer, UI2 decimal_pair) {
@@ -706,7 +706,7 @@ inline Char* TPrintUnsigned(Char* buffer, int size, UI value) {
 /* Writes the give value to the given buffer as an ASCII string.
 @return Nil upon buffer overflow and a pointer to the nil-term Char upon
 success.
-@param  print The text formatter to print to.
+@param  utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = char>
 inline Char* TPrintSigned(Char* buffer, Char* end, SI value) {
@@ -720,7 +720,7 @@ inline Char* TPrintSigned(Char* buffer, Char* end, SI value) {
 /* Writes the give value to the given buffer as an ASCII string.
 @return Nil upon buffer overflow and a pointer to the nil-term Char upon
 success.
-@param  print The text formatter to print to.
+@param  utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = char>
 inline Char* TPrintSigned(Char* buffer, int size, SI value) {
@@ -774,16 +774,11 @@ const Char* TScanSigned(const Char* buffer, SI& result) {
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__01
 
-#if SEAM >= _0_0_0__03
-#if SEAM == _0_0_0__03
+#if SEAM >= _0_0_0__02
+#if SEAM == _0_0_0__02
 #include "test_debug.inl"
-#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count) \
-  Print("\nBinary:\"");                                      \
-  TPrintBinary(value);                                       \
-  Print('\n')
 #else
 #include "test_release.inl"
-#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 namespace _ {
 
@@ -800,7 +795,21 @@ const Char* TStringDecimalEnd(const Char* cursor) {
   }
   return cursor - 1;
 }
+}  // namespace _
+#endif
 
+#if SEAM >= _0_0_0__03
+#if SEAM == _0_0_0__03
+#include "test_debug.inl"
+#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count) \
+  Print("\nBinary:\"");                                      \
+  TPrintBinary(value);                                       \
+  Print('\n')
+#else
+#include "test_release.inl"
+#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count)
+#endif
+namespace _ {
 template <typename Char = const char>
 Char* TStringDecimalEnd(Char* cursor) {
   return const_cast<Char*>(
@@ -828,8 +837,6 @@ Char* TPrint3(Char* buffer, Char* end, Char a, Char b, Char c) {
 template <typename Float = DBL, typename UI = UI8>
 class TBinary {
  public:
-  static int Foo() { return 1; }
-
   enum {
     kSize = sizeof(Float),
     kSizeBits = kSize * 8,
@@ -1170,6 +1177,16 @@ class TBinary {
 
 using Binary32 = TBinary<FLT, UI4>;
 using Binary64 = TBinary<DBL, UI8>;
+
+template <typename Float, typename UI, typename Char = char>
+Char* TPrintFloat(Char* start, Char* stop, Float value) {
+  return TBinary<Float, UI>.template Print<Char>(start, stop, value);
+}
+
+template <typename Float, typename UI, typename Char = char>
+Char* TPrintFloat(Char* start, SIW size, Float value) {
+  return TPrintFloat<Float, UI, Char>(start, start + size - 1, value);
+}
 
 }  // namespace _
 #undef PRINT_FLOAT_BINARY

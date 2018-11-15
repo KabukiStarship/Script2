@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /csio.h
+@file    /cconsole.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPTCONSOLE
-#define INCLUDED_SCRIPTCONSOLE 1
+#ifndef INCLUDED_SCRIPT2_CCONSOLE
+#define INCLUDED_SCRIPT2_CCONSOLE 1
 
 namespace _ {
 
@@ -52,37 +52,37 @@ API void Print(const char* a, const char* b);
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(SI8 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(UI8 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(SI4 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(UI4 value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(FLT value);
 
 /* Writes the give char to the given buffer.
 @return Returns nil upon buffer overflow and a pointer to the nil-term char
 upon success.
-@param value The value to print. */
+@param value The value to utf. */
 API void Print(DBL value);
 
 /* Prints a new line followed by a single char to the console. */
@@ -109,19 +109,19 @@ API void PrintLine(int width = 80, char token = '-', char first_token = '-');
 
 /* Prints a the given line_count of new lines followed by a PrintLine, the
 heading, followed by another PrintLine.
-@param heading The heading to print.
-@param line_count The number of new lines before the heading to print.
-@param width The width of the line to print.
-@param first_token The first token to print. */
+@param heading The heading to utf.
+@param line_count The number of new lines before the heading to utf.
+@param width The width of the line to utf.
+@param first_token The first token to utf. */
 API void PrintHeading(const char* heading = nullptr, int line_count = 5,
                       int width = 80, char token = '-', char first_token = '+');
 
 /* Prints a the given line_count of new lines followed by a PrintLine, the
 heading, followed by another PrintLine.
-@param heading The heading to print.
-@param line_count The number of new lines before the heading to print.
-@param width The width of the line to print.
-@param first_token The first token to print. */
+@param heading The heading to utf.
+@param line_count The number of new lines before the heading to utf.
+@param width The width of the line to utf.
+@param first_token The first token to utf. */
 API void PrintHeading(const char* heading_a, const char* heading_b,
                       int line_count = 5, int width = 80, char token = '-',
                       char first_token = '+');
@@ -210,4 +210,4 @@ API void PrintSocket(const void* begin, SIW size);
 
 }  // namespace _
 
-#endif  //< #ifndef INCLUDED_SCRIPTCONSOLE
+#endif  //< #ifndef INCLUDED_SCRIPT2_CCONSOLE

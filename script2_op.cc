@@ -29,13 +29,13 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 #if CRABS_TEXT
-UTF8& Print(UTF8& print, const Op* op) {
+UTF1& Print(UTF1& utf, const Op* op) {
   if (!op) {
-    return print << "\nOp: nil";
+    return utf << "\nOp: nil";
   }
-  return print << "\nOp      :" << op->name << "\nBSQ     :" << Bsq(op->in)
-               << "\nResult: :" << Bsq(op->out)
-               << "\nMetadata:" << op->description;
+  return utf << "\nOp      :" << op->name << "\nBSQ     :" << Bsq(op->in)
+             << "\nResult: :" << Bsq(op->out)
+             << "\nMetadata:" << op->description;
 }
 #endif
 /*

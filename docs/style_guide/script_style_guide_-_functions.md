@@ -1,4 +1,4 @@
-Script C++ Style Guide
+ConsScript C++ Style Guide
 =========================================
 
 ### Output Parameters
@@ -33,7 +33,7 @@ All parameters passed by lvalue reference must be labeled `const`.
 
 In C, if a function needs to modify a variable, the parameter must use a pointer, eg `int foo(int *pval)`. In C++, the function can alternatively declare a reference parameter: `int foo(int &val)`.
 
-#### pros
+#### Pros
 
 Defining a parameter as reference avoids ugly code like `(*pval)++`. Necessary for some applications like copy constructors. Makes it clear, unlike with pointers, that a null pointer is not a possible value.
 
@@ -74,13 +74,13 @@ class MyClass {
 };
 ```
 
-#### pros
+#### Pros
 
 Overloading can make code more intuitive by allowing an identically-named function to take different arguments. It may be necessary for templatized code, and it can be convenient for Visitors.
 
 Overloading based on const or ref qualification may make utility code more usable, more efficient, or both. (See [TotW 148](http://abseil.io/tips/148) for more.)
 
-#### cons
+#### Cons
 
 If a function is overloaded by the argument types alone, a reader may have to understand C++'s complex matching rules in order to tell what's going on. Also many people are confused by the semantics of inheritance if a derived class overrides only some of the variants of a function.
 
@@ -92,11 +92,11 @@ You may overload a function when there are no semantic differences between varia
 
 Default arguments are allowed on non-virtual functions when the default is guaranteed to always have the same value. Follow the same restrictions as for [function overloading](#Function_Overloading), and prefer overloaded functions if the readability gained with default arguments doesn't outweigh the downsides below.
 
-#### pros
+#### Pros
 
 Often you have a function that uses default values, but occasionally you want to override the defaults. Default parameters allow an easy way to do this without having to define many functions for the rare exceptions. Compared to overloading the function, default arguments have a cleaner syntax, with less boilerplate and a clearer distinction between 'required' and 'optional' arguments.
 
-#### cons
+#### Cons
 
 Defaulted arguments are another way to achieve the semantics of overloaded functions, so all the [reasons not to overload functions](#Function_Overloading) apply.
 The defaults for arguments in a virtual function call are determined by the static type of the target object, and there's no guarantee that all overrides of a given function declare the same defaults.
@@ -105,7 +105,7 @@ Default parameters are re-evaluated at each call site, which can bloat the gener
 
 Function pointers are confusing in the presence of default arguments, since the function signature often doesn't match the call signature. Adding function overloads avoids these problems.
 
-#### decision
+#### Decision
 
 Default arguments are banned on virtual functions, where they don't work properly, and in cases where the specified default might not evaluate to the same value depending on when it was evaluated. (For example, don't write `void f(int n = counter++);`.)
 
@@ -115,7 +115,7 @@ In some other cases, default arguments can improve the readability of their func
 
 Use trailing return types only where using the ordinary syntax (leading return types) is impractical or much less readable.
 
-#### definition
+#### Definition
 
 C++ allows two different forms of function declarations. In the older form, the return type appears before the function name. For example:
 
@@ -131,7 +131,7 @@ auto foo(int x) -> int;
 
 The trailing return type is in the function's scope. This doesn't make a difference for a simple case like `int` but it matters for more complicated cases, like types declared in class scope or types written in terms of the function parameters.
 
-#### pros
+#### Pros
 
 Trailing return types are the only way to explicitly specify the return type of a [lambda expression](#Lambda_expressions). In some cases the compiler is able to deduce a lambda's return type, but not in all cases. Even when the compiler can deduce it automatically, sometimes specifying it explicitly would be clearer for readers.
 
@@ -149,12 +149,38 @@ versus
     decltype(declval<T&>() + declval<U&>()) add(T t, U u);
 ```
 
-#### cons
+#### Cons
 
 Trailing return type syntax is relatively new and it has no analogue in C++-like languages such as C and Java, so some readers may find it unfamiliar.
 
 Existing code bases have an enormous number of function declarations that aren't going to get changed to use the new syntax, so the realistic choices are using the old syntax only or using a mixture of the two. Using a single version is better for uniformity of style.
 
-#### decision
+#### Decision
 
 In most cases, continue to use the older style of function declaration where the return type goes before the function name. Use the new trailing-return-type form only in cases where it's required (such as lambdas) or where, by putting the type after the function's parameter list, it allows you to write the type in a much more readable way. The latter case should be rare; it's mostly an issue in fairly complicated template code, which is [discouraged in most cases](#Template_metaprogramming).
+
+## Static Array Functions
+
+Static arrays in Script2 are handled using wrapper functions that hide the static data from the headers that get compiled into each translation unit. Whenever the size of the array is used in the software, the wrapper function shall return a pointer to the array and the reference to the size variable passed in as a parameter.
+
+***Example***
+
+```C++
+// In header:
+const int* Foo (int& bar);
+
+// In implementation:
+const int* Foo (int& bar) {
+  static const kFooBar[] = { 1, 2, 3 };
+  bar = 3;
+  return kFooBar;
+}
+```
+
+#### Pros
+
+This method can help reduce bugs when using multiple libraries with static data, and is generally very fast and easy to type.
+
+#### Cons
+
+It requires some more typing in some circumstances.

@@ -63,7 +63,7 @@ SI8 AlignUp(SI8 value, SI8 mask) { return AlignUpSigned<SI8>(value, mask); }
 
 UIW* New(SIW size) { return new UIW[size]; }
 
-void Destruct(UIW* socket) {
+void Destroy(UIW* socket) {
   ASSERT(socket);
   delete[] socket;
 }

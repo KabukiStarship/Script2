@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /loom.h
+@file    /tloom.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -28,107 +28,111 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* A ordered collection of either UTF-8 or UTF-16 strands starting at index 0.
-CLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
-5 bits store the type kLOM, b6:b7 stores the size of the UI type and b5 stores
+TCLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
+5 bits store the type kLOM, b6:b7 stores the size of the Size type and b5 stores
 if it is a UTF-8 (de-asserted) or UTF-16 (asserted).
 */
-template <typename UI, typename SI, typename Char>
-struct CLoom {
-  UI size;       //< Size of the Loom in bytes.
-  SI count_max,  //< Max number of strands in a loom.
-      count;     //< Strand count.
+template <typename Size, typename Index, typename Char>
+struct TCLoom {
+  Size size;        //< Size of the Loom in bytes.
+  Index count_max,  //< Max number of strands in a loom.
+      count;        //< Strand count.
 };
 
 template <typename T>
-size_t BitCount() {
+size_t TBitCount() {
   enum {
-    kBitCount = (sizeof(UI) == 1)
-                    ? 0
-                    : (sizeof(UI) == 2)
-                          ? 1
-                          : (sizeof(UI) == 4) ? 2 : (sizeof(UI) == 8) ? 3 : 4,
+    kBitCount =
+        (sizeof(Size) == 1)
+            ? 0
+            : (sizeof(Size) == 2)
+                  ? 1
+                  : (sizeof(Size) == 4) ? 2 : (sizeof(Size) == 8) ? 3 : 4,
   };
   return kBitCount;
 }
 
-template <typename UI, typename SI, typename Char>
-inline SI LoomCountMin() {
-  enum { kCountMin = 8 / sizeof(SI) };
+template <typename Size, typename Index, typename Char>
+inline Index TLoomCountMin() {
+  enum { kCountMin = 8 / sizeof(Index) };
   return kCountMin;
 }
 
-template <typename UI, typename SI, typename Char>
-inline SI LoomSizeMin() {
+template <typename Size, typename Index, typename Char>
+inline Index TLoomSizeMin() {
   enum {
-    kCountMin = 8 / sizeof(SI),
-    kSizeMin = sizeof(CLoom<UI, SI, Char>) + kCountMin * (sizeof(UI) + 2),
+    kCountMin = 8 / sizeof(Index),
+    kSizeMin =
+        sizeof(TCLoom<Size, Index, Char>) + kCountMin * (sizeof(Size) + 2),
   };
   return kSizeMin;
 }
 
-template <typename UI, typename SI, typename Char>
-CLoom* LoomInit(UIW* buffer, UI size, SI count_max) {
-  ASSERT(buffer)
-  ASSERT(size)
-  ASSERT(count_max >= 0)
-  SI si = 0;  //< Faster to make from instructions than load from ROM.
+template <typename Size, typename Index, typename Char>
+TCLoom<Size, Index, Char>* TLoomInit(UIW* buffer, Size size, Index count_max) {
+  ASSERT(buffer);
+  ASSERT(size);
+  ASSERT(count_max >= 0);
+  Index si = 0;  //< Faster to make from instructions than load from ROM.
   si = (~si) - 7;
   if (count_max >= si) count_max = si;
-  si = LoomCountMin<UI, SI, Char>();
+  si = TLoomCountMin<Size, Index, Char>();
   if (count_max < si) count_max = si;
 
-  UI ui = 0;
+  Size ui = 0;
   ui = (~ui) - 7;  //< Faster to make from instructions than load from ROM.
   if (size >= ui) count_max = ui;
-  ui = LoomSizeMin<UI, SI, Char>();
+  ui = TLoomSizeMin<Size, Index, Char>();
   if (count_max < ui) count_max = ui;
 
-  CLoom* loom = reinterpret_cast<CLoom*>(buffer);
+  TCLoom* loom = reinterpret_cast<TCLoom*>(buffer);
   loom->size = size;
   loom->count_max = count_max;
   loom->count = 0;
 }
 
-template <typename UI, typename SI, typename Char>
-UI* LoomOffsets(CLoom* loom) {
-  ASSERT(loom)
-  return reinterpret_cast<char*>(loom) + (loom->count_max << BitCount<SI>());
-  // << to *
+template <typename Size, typename Index, typename Char>
+Size* TLoomOffsets(CLoom<Size, Index, Char>* loom) {
+  ASSERT(loom);
+  return reinterpret_cast<char*>(loom) +
+         (loom->count_max << TBitCount<Index>());
 }
 
-template <typename UI, typename SI, typename Char>
-SI LoomAdd(CLoom* loom, const Char* strand) {
-  ASSERT(loom)
-  ASSERT(strand)
+template <typename Size, typename Index, typename Char>
+Index TLoomAdd(TCLoom<Size, Index, Char>* loom, const Char* strand) {
+  ASSERT(loom);
+  ASSERT(strand);
 
-  SI count_max = loom->count_max, count = loom->count;
+  Index count_max = loom->count_max, count = loom->count;
   if (count >= count_max) return -1;
-  UI* offsets = LoomOffsets(loom);
-  UI offset = *(offsets + count);
-  Char* begin =
+  Size* offsets = TLoomOffsets(loom);
+  Size offset = *(offsets + count);
+  Char* begin = 0;
 }
 
-template <typename UI, typename SI, typename Char>
-Char* LoomString(CLoom* loom, SI index) {
-  ASSERT(loom)
+template <typename Size, typename Index, typename Char>
+Char* TLoomString(TCLoom<Size, Index, Char>* loom, Index index) {
+  ASSERT(loom);
   if (index < 0 && index >= count) return nullptr;
-  UI* offsets = LoomOffsets<UI, SI, Char>(loom);
+  Size* offsets = TLoomOffsets<Size, Index, Char>(loom);
   UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
   return offset;
 }
 
-template <typename UI, typename SI, typename Char>
-SI LoomPrint(UTF8& print, CLoom* loom, const Char* strand) {
-  ASSERT(loom)
-  ASSERT(strand)
-  SI count = loom->count;
-  print << "\nLoom:" << loom->size << "b count_max:" << loom->count_max
-        << " count:" << count;
-  UI* offsets = LoomOffsets<UI, SI, Char>(loom);
+template <typename Size, typename Index, typename Char>
+TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
+                       const Char* strand) {
+  ASSERT(loom);
+  ASSERT(strand);
+  Index count = loom->count;
+  utf << "\nLoom:" << loom->size << "b count_max:" << loom->count_max
+      << " count:" << count;
+  Size* offsets = TLoomOffsets<Size, Index, Char>(loom);
   UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
-  for (SI i = 0; i < count; ++i) {
-    print << '\n' << i << ".) \"" <<
+  for (Index i = 0; i < count; ++i) {
+    utf << '\n' << i << ".) \"";
   }
+  return utf;
 }
 
 }  // namespace _

@@ -46,7 +46,7 @@ Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
   begin = buffer;
-  doors_ = reinterpret_cast<CArray<Door*>*>(aligned_buffer);
+  doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
   StackInit(buffer, size_bytes >> sizeof(UIW));
 }
 
@@ -65,15 +65,15 @@ Wall::Wall(UIW* buffer, size_t size_bytes) {
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
   begin = buffer;
-  doors_ = reinterpret_cast<CArray<Door*>*>(aligned_buffer);
+  doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
   StackInit(buffer, size_bytes >> sizeof(UIW));
 }
 
-Wall::Wall(CArray<Door*>* doors) {}
+Wall::Wall(TCArray<Door*>* doors) {}
 
 UIW Wall::GetSizeBytes() { return size_bytes_; }
 
-CArray<Door*>* Wall::Doors() { return doors_; }
+TCArray<Door*>* Wall::Doors() { return doors_; }
 
 Door* Wall::GetDoor(int index) { return 0; }
 

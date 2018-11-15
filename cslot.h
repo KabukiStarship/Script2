@@ -117,7 +117,7 @@ struct Slot {
 
 #if CRABS_TEXT
   /* Prints a string rep of this object to the printer. */
-  UTF8& Print(UTF8& printer);
+  UTF1& Print(UTF1& printer);
 #endif
 };
 
@@ -125,7 +125,7 @@ struct Slot {
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */
-inline _::UTF8& operator<<(_::UTF8& printer, _::Slot& slot) {
+inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
   return slot.Print(printer);
 }
 #endif

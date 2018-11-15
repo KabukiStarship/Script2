@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "csio.h"
 #include "crng.h"
+#include "cconsole.h"
 
 #if SEAM == _0_0_0__00
 #include "test_debug.inl"
@@ -63,10 +63,7 @@ inline const char* _0_0_0__00_RNG(char* seam_log, char* seam_end,
     PRINT(value);
   }
 
-
 #endif
   return 0;
 }
 }  // namespace _
-
-

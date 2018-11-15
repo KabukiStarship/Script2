@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT_TTEST
-#define INCLUDED_SCRIPT_TTEST 1
+#ifndef INCLUDED_SCRIPT2_TTEST
+#define INCLUDED_SCRIPT2_TTEST 1
 
 #include "ctest.h"
 
-#include "csio.h"
+#include "cconsole.h"
 #include "tbinary.h"
 
 namespace _ {
@@ -39,4 +39,4 @@ int TTestTree(int arg_count, char** args, char* seam_log, int seam_log_size) {
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT_TTEST
+#endif  //< INCLUDED_SCRIPT2_TTEST

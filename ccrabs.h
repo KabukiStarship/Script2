@@ -104,7 +104,7 @@ struct CCrabs {
       bin_state,         //< Slot streaming state.
       last_bin_state,    //< Last BIn state.
       last_byte;         //< Last UI1 read.
-  wchar_t current_char;  //< Current Unicode char being scanned.
+  CHW current_char;  //< Current Unicode char being scanned.
   hash16_t hash;         //< Packed BSQ hash.
   UI4 timeout_us;        //< Timeout time in microseconds.
   TME last_time;         //< Last time the Stack was scanned.
@@ -275,10 +275,10 @@ API const Op* CrabsQuery(CCrabs* crabs, const Op* op);
 #if CRABS_TEXT
 
 /* Prints the CCrabs stack to the Text buffer */
-API UTF8& PrintCrabs(UTF8& printer, CCrabs* crabs);
+API UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
 
 /* Prints the CCrabs stack to the Text buffer */
-API UTF8& PrintCrabsStack(UTF8& printer, CCrabs* crabs);
+API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 #endif
 
 }  // namespace _
@@ -286,7 +286,7 @@ API UTF8& PrintCrabsStack(UTF8& printer, CCrabs* crabs);
 #if CRABS_TEXT
 
 /* Prints the given CCrabs to the Text buffer. */
-inline _::UTF8& operator<<(_::UTF8& printer, _::CCrabs* crabs) {
+inline _::UTF1& operator<<(_::UTF1& printer, _::CCrabs* crabs) {
   return _::PrintCrabs(printer, crabs);
 }
 #endif

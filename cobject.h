@@ -15,24 +15,37 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__02
-#ifndef INCLUDED_SCRIPTCOBJECT
-#define INCLUDED_SCRIPTCOBJECT
+#ifndef INCLUDED_SCRIPT2_COBJECT
+#define INCLUDED_SCRIPT2_COBJECT
 
 #include "csocket.h"
 #include "ctest.h"
 
-typedef UIW* (*AsciiFactory)(UIW* buffer, SIW size);
+/* ASCII Factory manages memory for ASCII Objects.
+@return Nil upon failure or if no return buffer is expected, or a pointer to a
+word-aligned buffer upon success.
+@param begin    Pointer to an existing buffer or nil to create a buffer.
+@param function A jump table function index.
+@param arg      Pointer to the ASCII Factory argument. */
+typedef UIW* (*AsciiFactory)(UIW* begin, CHW function, void* arg);
 
 namespace _ {
 
-/* C header for an ASCII OBJ with programmable destructor. */
+/* ASCII OBJ with programmable ASCII Factory. */
 struct CObject {
   UIW* begin;            //< Pointer to the contiguous ASCII OBJ.
   AsciiFactory factory;  //< ASCII OBJ Factory function pointer.
 };
 
-/* ASCII OBJ Factory. */
-API void Destruct(CObject obj);
+enum {
+  kFactoryCreateOrDelete =
+      0,          //< ASCII Factory function: Default Create Destroy OBJ.
+  kFactoryGrow,   //< ASCII Factory function: Grow OBJ function index.
+  kFactoryClone,  //< ASCII Factory function: Clones OBJ the given object.
+};
+
+/* Destructs the given ASCII OBJ Factory. */
+API void Destroy(CObject stack);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
@@ -62,18 +75,6 @@ API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 8. */
 API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
-/* Clones the given ASCII OBJ. */
-API UIW* ObjClone(UIW* ascii_object, SI1 size);
-
-/* Clones the given ASCII OBJ. */
-API UIW* ObjClone(UIW* ascii_object, SI2 size);
-
-/* Clones the given ASCII OBJ. */
-API UIW* ObjClone(UIW* ascii_object, SI4 size);
-
-/* Clones the given ASCII OBJ. */
-API UIW* ObjClone(UIW* ascii_object, SI8 size);
-
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02
-#endif  //< INCLUDED_SCRIPTCOBJECT
+#endif  //< INCLUDED_SCRIPT2_COBJECT

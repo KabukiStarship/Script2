@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \f2_str.cc
+@file    \script2_utf.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -30,9 +30,13 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-void Console(UIW* buffer, SIW size) { TSOut<char>(buffer, size); }
+UIW* Console(UIW* buffer, CHW function, void* arg) {
+  return TCOut<char>(buffer, function, arg);
+}
 
-void COutAuto(UIW* buffer, SIW size) { TSOutAuto<char>(buffer, size); }
+UIW* COutAuto(UIW* buffer, CHW function, void* arg) {
+  return TCOutAuto<char>(buffer, function, arg);
+}
 
 }  // namespace _
 
@@ -561,10 +565,12 @@ Utf8LineString::Utf8LineString(const char* string, int column_count)
   // Nothing to do here. (:-)-+=<
 }
 
-UIW* COutUtf8(UIW* buffer, SIW size) { return TSOut<char>(buffer, size); }
+UIW* COutUtf8(UIW* begin, CHW function, void* arg) {
+  return TCOut<char>(begin, function, arg);
+}
 
-UIW* COutAutoUtf8(UIW* buffer, SIW size) {
-  return TSOutAuto<char>(buffer, size);
+UIW* COutAutoUtf8(UIW* begin, CHW function, void* arg) {
+  return TCOutAuto<char>(begin, function, arg);
 }
 
 }  // namespace _
@@ -1001,9 +1007,9 @@ const char16_t* Scan(const char16_t* string, DBL& result) {
   return TScan<char16_t>(string, result);
 }
 
-void COutUtf16(UIW* buffer) { return Console<char16_t>(buffer); }
+void COutUtf16(UIW* begin) { return Console<char16_t>(begin); }
 
-void DCOutUtf16(UIW* buffer) { return DCOut<char16_t>(buffer); }
+void DCOutUtf16(UIW* begin) { return DCOut<char16_t>(begin); }
 
 UTF2::UTF2(char16_t* begin, size_t buffer_size)
     : begin(begin), end(begin + buffer_size - 1) {
@@ -1615,9 +1621,9 @@ const char32_t* Scan(const char32_t* string, DBL& result) {
   return TScan<char32_t>(string, result);
 }
 
-void COuUtf32(UIW* buffer) { return Console<char32_t>(buffer); }
+void COuUtf32(UIW* begin) { return Console<char32_t>(begin); }
 
-void COuUtf32(UIW* buffer) { return DCOut<char32_t>(buffer); }
+void COuUtf32(UIW* begin) { return DCOut<char32_t>(begin); }
 
 UTF4::UTF4(char32_t* begin, size_t buffer_size)
     : begin(begin), end(begin + buffer_size - 1) {

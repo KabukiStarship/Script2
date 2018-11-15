@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License. */
 
 #ifndef INCLUDED_SEAM_TREE
 #define INCLUDED_SEAM_TREE 1
-#include "0_0_0_script2.h"
+#include "0_0_0.script2.h"
 
 using namespace _;
 int main(int arg_count, char** args) {

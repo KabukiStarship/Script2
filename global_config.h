@@ -49,7 +49,7 @@ specific language governing permissions and limitations under the License. */
 #define YES 1  //< Logical yes.
 #define NO 0   //< Logical no.
 
-#define UTF8 1   //< flag for UTF-8.
+#define UTF1 1   //< flag for UTF-8.
 #define UTF16 2  //< Flag for UTF-16.
 #define UTF32 3  //< Flag for UTF-32.
 
@@ -69,9 +69,9 @@ specific language governing permissions and limitations under the License. */
 
 //#include <assembly.inl>  //< Inline config stuff for your project.
 
-#if CRABS_TEXT == UTF8
+#if CRABS_TEXT == UTF1
 #if USING_UTF8 == 0
-#warning You have the CRABS_TEXT set to UTF8 but USING_UTF8 is 0!
+#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF8
 #undef USING_UTF8
 #endif
@@ -79,7 +79,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 #elif CRABS_TEXT == UTF16
 #if USING_UTF16 == 0
-#warning You have the CRABS_TEXT set to UTF8 but USING_UTF8 is 0!
+#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF16
 #undef USING_UTF16
 #endif
@@ -87,7 +87,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 #elif CRABS_TEXT == UTF32
 #if USING_UTF32 == 0
-#warning You have the CRABS_TEXT set to UTF8 but USING_UTF8 is 0!
+#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF32
 #undef USING_UTF32
 #endif
@@ -212,7 +212,7 @@ typedef unsigned int uint;
 typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
 typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
 
-typedef UI1 type_t;  //< ASCII Data Type UI1.
+typedef UI1 SIN;  //< ASCII Data Type UI1.
 
 #if MAX_NUM_SLOTS <= 255
 typedef UI1 slot_t;

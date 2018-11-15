@@ -43,7 +43,7 @@ Hex encoding is also OK, and encouraged where it enhances readability — for ex
 
 Use the `u8` prefix to guarantee that a string literal containing `\uXXXX` escape sequences is encoded as UTF-8. Do not use it for strings containing non-ASCII characters encoded as UTF-8, because that will produce incorrect output if the compiler does not interpret the source file as UTF-8\.
 
-You shouldn't use the C++11 `char16_t` and `char32_t` character types, since they're for non-UTF-8 text. For similar reasons you also shouldn't use `wchar_t` (unless you're writing code that interacts with the Windows API, which uses `wchar_t` extensively).
+You shouldn't use the C++11 `char16_t` and `char32_t` character types, since they're for non-UTF-8 text. For similar reasons you also shouldn't use `CHW` (unless you're writing code that interacts with the Windows API, which uses `CHW` extensively).
 
 ### Spaces vs. Tabs
 

@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@file    /0_0_0__11_ascii_book.h
+@file    /kabuki/0_0_0__08_ascii_table.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == _0_0_0__11
+#if SEAM == _0_0_0__08
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -21,12 +21,16 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
-                                         const char* args) {
-#if SEAM >= _0_0_0__11
+static const char* _0_0_0__08_ASCII_Table(char* seam_log, char* seam_end,
+                                          const char* args) {
+#if SEAM >= _0_0_0__08
   TEST_BEGIN;
 
-  wchar_t index;
+  Printf("\n\nTesting ASCII OBJ Types");
+
+  Print("\n  - Running TableTest...\n");
+
+  CHW index;
   UIW buffer[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &buffer[0], &buffer[127]);
 
@@ -155,5 +159,6 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
 #endif
   return nullptr;
 }
-}  //< namespace _
-#include "0_0_0__11_ascii_book.inl"
+}  // namespace _
+
+
