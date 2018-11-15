@@ -209,7 +209,7 @@ The 32-bit time epoch shall be 16 years starting at the January 1st of the begin
 
 ## 2.8 Objects
 
-ASCII Objects shall be composed of contiguous memory and begin with an 8, 16, 32 or 64-bit unsigned integer that specifies the object's size in bytes.
+ASCII Objects shall be composed of contiguous memory and begin with an 8, 16, 32 or 64-bit signed integer that specifies the object's size in bytes; this requirement is to reduce ROM size.
 
 ### 2.11.a Object Type Table
 

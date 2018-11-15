@@ -127,8 +127,8 @@ inline Size StackSizeMin() {
 /*
 template<typename T = SIW, typename Size = uint, typename Index = int>
 inline Size StackSize (Index count) {
-    Size size = sizeof (TCStack<T, Size, Index>) + (sizeof (T) * 8) * count;
-    return MemoryAlign8<Size> (size);
+  Size size = sizeof (TCStack<T, Size, Index>) + (sizeof (T) * 8) * count;
+  return MemoryAlign8<Size> (size);
 }*/
 
 /* Gets the max number of elements in an obj with the specific index
