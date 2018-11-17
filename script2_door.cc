@@ -33,8 +33,8 @@ const char* DoorErrorText(Door::Error error) {
   return strings[error];
 }
 
-Door::Door(const char* room_name, UIW* buffer, UIW size_bytes) {
-  if (!buffer) {
+Door::Door(const char* room_name, UIW* socket, UIW size_bytes) {
+  if (!socket) {
     if (size_bytes < kMinDoorSize) {
       size_bytes = kMinDoorSize;
     }
@@ -51,19 +51,19 @@ Door::Door(const char* room_name, UIW* buffer, UIW size_bytes) {
 }
 
 Door::~Door() {
-  if (begin) delete[] begin;
+  if (start) delete[] start;
 }
 
 slot_t Door::GetSlot(slot_t index) {
-  return StackGet<slot_t, UIT, int_t>(slots_, index);
+  return TStackGet<slot_t, UIT, int_t>(slots_, index);
 }
 
 slot_t Door::AddSlot(slot_t slot) {
-  return StackPush<slot_t, UIT, int_t>(slots_, slot);
+  return TStackPush<slot_t, UIT, int_t>(slots_, slot);
 }
 
 BOL Door::Contains(void* address) {
-  return StackContains<slot_t, UIT, int_t>(slots_, address);
+  return TStackContains<slot_t, UIT, int_t>(slots_, address);
 }
 
 slot_t Door::FindSlot(void* address) {
@@ -71,7 +71,7 @@ slot_t Door::FindSlot(void* address) {
   for (slot_t i = 0; i < count; ++i) {
     // Slot* slot = nullptr; //< @todo fix me!
 
-    if (StackContains<slot_t, UIT, int_t>(slots_, address)) return i;
+    if (TStackContains<slot_t, UIT, int_t>(slots_, address)) return i;
   }
   return count;
 }
@@ -107,11 +107,11 @@ API Door& Doors () {
   return front_door;
 }*/
 
-/* Initializes a Door at the beginning of the given buffer.
-static Door* DoorInit (UIW* buffer, slot_t slot_size) {
-  if (buffer == nullptr) return nullptr;
+/* Initializes a Door at the beginning of the given socket.
+static Door* DoorInit (UIW* socket, slot_t slot_size) {
+  if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
-  Wall* wall = reinterpret_cast<Door*>(buffer);
+  Wall* wall = reinterpret_cast<Door*>(socket);
   w->is_dynamic = 0;
   w->num_doors = 0;
   w->max_num_doors;

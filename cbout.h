@@ -32,15 +32,15 @@ typedef enum BOutStates {
   kBOutStateWritingBsc,        //< BOut State 2: Writing kBSQ.
 } BOutState;
 
-/* B-Output ring buffer socket. */
+/* B-Output ring socket socket. */
 struct API BOut {
   UIT size;            //< Size of the B-Output.
-  volatile UIT start;  //< Starting index of the ring-buffer data.
-  UIT stop,            //< Stopping index of the ring-buffer data.
+  volatile UIT start;  //< Starting index of the ring-socket data.
+  UIT stop,            //< Stopping index of the ring-socket data.
       read;            //< Address that the BOut device is reading from.
 };
 
-/* Get's the B-Output's buffer.*/
+/* Get's the B-Output's socket.*/
 API char* BOutBuffer(BOut* bout);
 
 #if CRABS_TEXT
@@ -50,17 +50,17 @@ API const char** BOutStateStrings();
 
 #endif
 
-/* Initializes the B-Output buffer with the given buffer size. */
-API BOut* BOutInit(UIW* buffer, UIT size);
+/* Initializes the B-Output socket with the given socket size. */
+API BOut* BOutInit(UIW* socket, UIT size);
 
-/* Calculates the space left in the given ring buffer.
-    @param  bout The B-Output buffer. */
+/* Calculates the space left in the given ring socket.
+    @param  bout The B-Output socket. */
 API UIT BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
 API UIT BOutBufferLength(BOut* bout);
 
-/* Gets the end address of the tx buffer. */
+/* Gets the stop address of the tx socket. */
 API char* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output UI1.

@@ -69,8 +69,8 @@ inline Index TLoomSizeMin() {
 }
 
 template <typename Size, typename Index, typename Char>
-TCLoom<Size, Index, Char>* TLoomInit(UIW* buffer, Size size, Index count_max) {
-  ASSERT(buffer);
+TCLoom<Size, Index, Char>* TLoomInit(UIW* socket, Size size, Index count_max) {
+  ASSERT(socket);
   ASSERT(size);
   ASSERT(count_max >= 0);
   Index si = 0;  //< Faster to make from instructions than load from ROM.
@@ -85,7 +85,7 @@ TCLoom<Size, Index, Char>* TLoomInit(UIW* buffer, Size size, Index count_max) {
   ui = TLoomSizeMin<Size, Index, Char>();
   if (count_max < ui) count_max = ui;
 
-  TCLoom* loom = reinterpret_cast<TCLoom*>(buffer);
+  TCLoom* loom = reinterpret_cast<TCLoom*>(socket);
   loom->size = size;
   loom->count_max = count_max;
   loom->count = 0;
@@ -107,7 +107,7 @@ Index TLoomAdd(TCLoom<Size, Index, Char>* loom, const Char* strand) {
   if (count >= count_max) return -1;
   Size* offsets = TLoomOffsets(loom);
   Size offset = *(offsets + count);
-  Char* begin = 0;
+  Char* start = 0;
 }
 
 template <typename Size, typename Index, typename Char>

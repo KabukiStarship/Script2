@@ -42,7 +42,7 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
 #endif
 
   enum { kSize = 31 };
-  char buffer[kSize + 1];
+  char socket[kSize + 1];
 
   UI8 value;
   DBL dbl_expected, dbl_found;
@@ -68,8 +68,8 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
       value = RandomUI8();
       dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
-    sprintf_s(buffer, kSize, "%lf", dbl_expected);
-    ASSERT(Scan(buffer, dbl_found));
+    sprintf_s(socket, kSize, "%lf", dbl_expected);
+    ASSERT(Scan(socket, dbl_found));
     AVOW(dbl_expected, dbl_found);
   }
 
@@ -80,15 +80,13 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
       value = RandomUI8();
       dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
-    Print(buffer, buffer + kSize, dbl_expected);
-    int r = sscanf_s(buffer, "%lf", &dbl_found);
+    Print(socket, socket + kSize, dbl_expected);
+    int r = sscanf_s(socket, "%lf", &dbl_found);
     ASSERT(r);
     AVOW(dbl_expected, dbl_found);
   }
-
 
 #endif
   return nullptr;
 }
 }  // namespace _
-

@@ -52,12 +52,12 @@ int TStringLength(UI8 value) {
 }
 
 template <typename Char>
-Char* PrintMod10(Char* cursor, Char* end, UI4 value) {
-  if (!cursor || cursor >= end) return nullptr;
+Char* PrintMod10(Char* cursor, Char* stop, UI4 value) {
+  if (!cursor || cursor >= stop) return nullptr;
 
   UI4 length;
   if (value < 10) {
-    if (cursor + 1 >= end) return nullptr;
+    if (cursor + 1 >= stop) return nullptr;
     *cursor = '0' + value;
     *(cursor + 1) = 0;
     return cursor + 1;
@@ -86,14 +86,14 @@ Char* PrintMod10(Char* cursor, Char* end, UI4 value) {
   else
     length = 12;
   Char* stop = cursor + length - 1;
-  if (stop >= end) return nullptr;
+  if (stop >= stop) return nullptr;
   UI4 ten = 10;
   while (length > 0) {
     UI4 scalar = value / ten;
   }
 } */
 
-// char* PrintMod10(char* cursor, char* end, UI8 value);
+// char* PrintMod10(char* cursor, char* stop, UI8 value);
 
 #if CPU_ENDIAN == LITTLE_ENDIAN
 static const UI2 kDigits00To99[100] = {
@@ -291,24 +291,24 @@ const SI2* BinaryLUTE() { return kCachedPowersE; }
 
 const UI8* BinaryLUTF() { return kCachedPowersF; }
 
-char* Print(char* cursor, char* end, FLT value) {
-  if (!cursor || cursor >= end) return nullptr;
-  SIW size = end - cursor;
-  PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, end, (int)size,
+char* Print(char* cursor, char* stop, FLT value) {
+  if (!cursor || cursor >= stop) return nullptr;
+  SIW size = stop - cursor;
+  PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, stop, (int)size,
          value);
-  int count = sprintf_s(cursor, end - cursor, "%f", value);
+  int count = sprintf_s(cursor, stop - cursor, "%f", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<FLT, UI4>::TPrint<char>(cursor, end, value);
+  // return TBinary<FLT, UI4>::TPrint<char>(cursor, stop, value);
 }
 
-char* Print(char* cursor, char* end, DBL value) {
-  if (!cursor || cursor >= end) return nullptr;
-  SIW size = end - cursor;
+char* Print(char* cursor, char* stop, DBL value) {
+  if (!cursor || cursor >= stop) return nullptr;
+  SIW size = stop - cursor;
   int count = sprintf_s(cursor, size, "%lf", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<DBL, UI8>::TPrint<char>(cursor, end, value);
+  // return TBinary<DBL, UI8>::TPrint<char>(cursor, stop, value);
 }
 
 template <typename Char>
@@ -338,22 +338,22 @@ const char* Scan(const char* cursor, DBL& value) {
 }
 
 #if USING_UTF16
-char16_t* Print(char16_t* cursor, char16_t* end, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<char16_t>(cursor, end, value);
+char16_t* Print(char16_t* cursor, char16_t* stop, FLT value) {
+  return TBinary<FLT, UI4>.TPrint<char16_t>(cursor, stop, value);
 }
 
-char16_t* Print(char16_t* cursor, char16_t* end, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<char16_t>(cursor, end, value);
+char16_t* Print(char16_t* cursor, char16_t* stop, DBL value) {
+  return TBinary<DBL, UI8>.TPrint<char16_t>(cursor, stop, value);
 }
 #endif
 
 #if USING_UTF32
-char32_t* Print(char32_t* cursor, char32_t* end, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<char32_t>(cursor, end, value);
+char32_t* Print(char32_t* cursor, char32_t* stop, FLT value) {
+  return TBinary<FLT, UI4>.TPrint<char32_t>(cursor, stop, value);
 }
 
-char32_t* Print(char32_t* cursor, char32_t* end, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<char32_t>(cursor, end, value);
+char32_t* Print(char32_t* cursor, char32_t* stop, DBL value) {
+  return TBinary<DBL, UI8>.TPrint<char32_t>(cursor, stop, value);
 }
 #endif
 
@@ -386,67 +386,67 @@ void FloatBytes(FLT value, char& byte_0, char& byte_1, char& byte_2,
   byte_3 = (char)(ui_value >> 24);
 }
 
-char* Print(char* begin, UI2 chars) {
+char* Print(char* start, UI2 chars) {
 #if ALIGN_MEMORY
   *reinterpret_cast<UI2*>(chars);
-  return begin + 2;
+  return start + 2;
 #else
   *reinterpret_cast<UI2*>(chars);
-  return begin + 2;
+  return start + 2;
 #endif
 }
 
-char* Print(char* begin, char byte_0, char byte_1) {
+char* Print(char* start, char byte_0, char byte_1) {
 #if ALIGN_MEMORY
-  if (reinterpret_cast<UIW>(begin) & 1) {
-    begin[0] = byte_1;
-    begin[1] = '\0';
+  if (reinterpret_cast<UIW>(start) & 1) {
+    start[0] = byte_1;
+    start[1] = '\0';
   }
-  if (align == 0) begin[0] = byte_0;
-  begin[0] = byte_0;
-  begin[1] = '\0';
+  if (align == 0) start[0] = byte_0;
+  start[0] = byte_0;
+  start[1] = '\0';
 #else
-  *reinterpret_cast<UI2*>(begin) = byte_0 | (((UI2)byte_1) << 8);
+  *reinterpret_cast<UI2*>(start) = byte_0 | (((UI2)byte_1) << 8);
 #endif
-  return &begin[2];
+  return &start[2];
 }
 
-char* Print(char* begin, char* end, char byte_0, char byte_1, char byte_2) {
+char* Print(char* start, char* stop, char byte_0, char byte_1, char byte_2) {
 #if ALIGN_MEMORY
-  switch (reinterpret_cast<UIW>(begin) & 3) {
+  switch (reinterpret_cast<UIW>(start) & 3) {
     case 0: {
-      *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+      *reinterpret_cast<UI4*>(start) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
                                        ((UI4)byte_1) << 16 |
                                        ((UI4)byte_1) << 24;
-      return &begin[4];
+      return &start[4];
     }
     case 1: {
-      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      UI4* ptr = reinterpret_cast<UI4*>(start) - 1;
       UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
       *ptr = word;
-      begin[3] = 0;
-      return &begin[4];
+      start[3] = 0;
+      return &start[4];
     }
     case 2: {
-      UI2 ptr = *reinterpret_cast<UI2*>(begin);
+      UI2 ptr = *reinterpret_cast<UI2*>(start);
       *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
       *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
       return reinterpret_cast<char*>(ptr);
     }
     case 3: {
-      *begin = byte_0;
-      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      *start = byte_0;
+      UI4* ptr = reinterpret_cast<UI4*>(start) - 1;
       UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
       word |= ((UI4)byte_0) | ((UI4)byte_0) << 8 |
               ((UI4)byte_0) << 16;  //< OR together three.
-      begin[3] = 0
+      start[3] = 0
     }
   }
 #else
-  *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+  *reinterpret_cast<UI4*>(start) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
                                    ((UI4)byte_1) << 16 | ((UI4)byte_1) << 24;
 #endif
-  return &begin[4];
+  return &start[4];
 }
 
 // char puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
@@ -567,17 +567,17 @@ char* LastByte(char* c) { return c; }
 #if USING_UTF16
 char* LastByte(char16_t* c) { return reinterpret_cast<char*> + 1; }
 
-char16_t* Print(char16_t* cursor, char16_t* end, FLT value) { return nullptr; }
+char16_t* Print(char16_t* cursor, char16_t* stop, FLT value) { return nullptr; }
 
-char16_t* Print(char16_t* cursor, char16_t* end, DBL value) { return nullptr; }
+char16_t* Print(char16_t* cursor, char16_t* stop, DBL value) { return nullptr; }
 #endif
 
 #if USING_UTF32
 char* LastByte(char32_t* c) { return reinterpret_cast<char*> + 3; }
 
-char32_t* Print(char32_t* cursor, char32_t* end, FLT value) { return nullptr; }
+char32_t* Print(char32_t* cursor, char32_t* stop, FLT value) { return nullptr; }
 
-char32_t* Print(char32_t* cursor, char32_t* end, DBL value) { return nullptr; }
+char32_t* Print(char32_t* cursor, char32_t* stop, DBL value) { return nullptr; }
 #endif
 
 }  // namespace _

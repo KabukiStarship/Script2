@@ -66,8 +66,8 @@ API const char* OperandName(Operand* op);
 API UIW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
-    @param  key_begin Beginning of the key slot buffer.
-    @param  key_end   End of the key slot buffer.
+    @param  key_begin Beginning of the key slot socket.
+    @param  key_end   End of the key slot socket.
     @return A value printable Unicode char or invalid if the Operand doesn't
             Contain the given key. */
 API CHW OperandIndex(Operand* operand, char* key_begin, char* key_end);

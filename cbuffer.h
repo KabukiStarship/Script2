@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /buffer.h
+@file    /socket.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -22,15 +22,15 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* Creates/Gets a static buffer of the specified size. */
+/* Creates/Gets a static socket of the specified size. */
 template <size_t kBufferSize = kBufferSizeDefault>
 inline char* Buffer() {
   enum {
     kBufferSizeWords =
         (kBufferSize / sizeof(UIW)) + kBufferSize % sizeof(UIW) ? 1 : 0
   };
-  static UIW buffer[kBufferSizeWords];
-  return reinterpret_cast<char*>(buffer);
+  static UIW socket[kBufferSizeWords];
+  return reinterpret_cast<char*>(socket);
 }
 
 }  // namespace _

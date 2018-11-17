@@ -40,8 +40,8 @@ UTF1& Print(UTF1& utf, const Op* op) {
 #endif
 /*
 #if CRABS_TEXT
-Op OpInit (UIW* buffer, UIT buffer_size) {
-    BOut* bout = BOutInit (buffer, buffer_size);
+Op OpInit (UIW* socket, UIT buffer_size) {
+    BOut* bout = BOutInit (socket, buffer_size);
     Op log;
     log.bout = bout;
     return log;
@@ -65,14 +65,14 @@ void Print (Op& log) {
     char   index;
     //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
     //    return;
-    char buffer[DBL_MAX_10_EXP + 2];
+    char socket[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
             case kSTR: {
                 if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &ui1,
-                             buffer)))
+                             socket)))
                     return;
-                Write (buffer);
+                Write (socket);
             }
             case kSI1: {
                 if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
@@ -96,13 +96,13 @@ void Print (Op& log) {
             }
             case kUI2: {
                 if (BinRead (bin, Params<2, kADR, kUI2> (),
-                             Args (args, &ui2, buffer)))
+                             Args (args, &ui2, socket)))
                     return;
                 Write (si1);
             }
             case kSI4: {
                 if (BinRead (bin, Params<2, kADR, kSI4> (),
-                             Args (args, &si4, buffer)))
+                             Args (args, &si4, socket)))
                     return;
                 Write (si1;
             }

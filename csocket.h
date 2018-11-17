@@ -41,8 +41,8 @@ API const UIW* AlignDown(const UIW* pointer, UIW mask = sizeof(void*));
 /* Aligns the given pointer up to a word boundary. */
 API const char* AlignUp(const char* pointer, UIW mask = sizeof(void*));
 
-/* Aligns the given buffer pointer up to a cache line boundary (64 bytes). */
-API inline UIW* AlignUp(UIW* buffer, UIW mask = kWordBitsMask);
+/* Aligns the given socket pointer up to a cache line boundary (64 bytes). */
+API inline UIW* AlignUp(UIW* socket, UIW mask = kWordBitsMask);
 
 /* Aligns the given pointer up to a word boundary. */
 API char* AlignUp(char* pointer, UIW mask = sizeof(void*));
@@ -75,21 +75,21 @@ API inline SI8 AlignUp(SI8 value, SI8 mask = kWordBitsMask);
     A socket is just a hole in something for fitting something in, like a light
     or electric socket. A socket of memory is just a block of memory you fit
     something in. A network socket is a socket for interprocess communication,
-    which is usually implemented with a ring buffer
+    which is usually implemented with a ring socket
     (@see ~/kabuki-toolkit/slot.h).
 */
 struct Socket {
-  char *begin,  //< Beginning of the socket.
-      *end;     //< End of the socket.
+  char *start,  //< Beginning of the socket.
+      *stop;    //< End of the socket.
 
   /* Constructs an uninitialized socket. */
   Socket();
 
   /* Constructor. */
-  Socket(void* begin, void* end);
+  Socket(void* start, void* stop);
 
   /* Constructor. */
-  Socket(void* begin, SIW size);
+  Socket(void* start, SIW size);
 
   /* Clones the other memory. */
   Socket(const Socket& other);
@@ -99,7 +99,7 @@ struct Socket {
 };
 
 /* Creates a block of dynamic memory. */
-API inline UIW* New(SIW size);
+API inline UIW* TNew(SIW size);
 
 /* AsciiFactory deletes the socket. */
 API inline void Destroy(UIW* socket);
@@ -113,53 +113,53 @@ API inline void* VoidPtr(UIW value);
 /* Converts the std::UIW to a pointer. */
 API inline const void* ConstVoidPtr(UIW value);
 
-/* Calculates the difference between the begin and end address. */
-API inline SIW SizeOf(const void* begin, const void* end);
+/* Calculates the difference between the start and stop address. */
+API inline SIW SizeOf(const void* start, const void* stop);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-API char* SocketFill(char* begin, char* end, SIW size, char fill_char = 0);
+API char* SocketFill(char* start, char* stop, SIW size, char fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-API char* SocketFill(void* begin, SIW size, char fill_char = 0);
+API char* SocketFill(void* start, SIW size, char fill_char = 0);
 
 /* Copies the source to the target functionally identical to memcpy.
-@param  begin     The begin of the write buffer.
-@param  size      The end of the write buffer.
-@param  start     The start of the read buffer.
+@param  start     The start of the write socket.
+@param  size      The stop of the write socket.
+@param  start     The start of the read socket.
 @param  read_size Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
-API char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
+API char* SocketCopy(void* start, SIW size, const void* read, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
-@param  begin The begin of the write buffer.
-@param  end   The end of the write buffer.
-@param  start The start of the read buffer.
+@param  start The start of the write socket.
+@param  stop   The stop of the write socket.
+@param  start The start of the read socket.
 @param  size      Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
-API inline char* SocketCopy(void* begin, void* end, const void* start,
+API inline char* SocketCopy(void* start, void* stop, const void* begin,
                             SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
-    @param  begin The begin of the write buffer.
-    @param  end   The end of the write buffer.
-    @param  start The start of the read buffer.
-    @param  stop  The stop of the read buffer.
+    @param  start The start of the write socket.
+    @param  stop   The stop of the write socket.
+    @param  start The start of the read socket.
+    @param  stop  The stop of the read socket.
     @return Pointer to the last UI1 written or nil upon failure. */
-API inline char* SocketCopy(void* begin, void* end, const void* start,
-                            const void* stop);
+API inline char* SocketCopy(void* start, void* stop, const void* begin,
+                            const void* end);
 
 /* Compares the two memory sockets.
     @param  begin_a The beginning of Socket A.
-    @param  end_a   The end of Socket A.
+    @param  end_a   The stop of Socket A.
     @param  begin_b The start of Socket B.
     @param  stop_b  The stop of Socket B.
     @return True if they are the same and false if they are not. */
-API BOL SocketCompare(const void* begin, const void* end, const void* start,
-                      const void* stop);
+API BOL SocketCompare(const void* start, const void* stop, const void* begin,
+                      const void* end);
 
 /* Compares the two memory sockets.
 @param  begin_a The beginning of Socket A.
-@param  end_a   The end of Socket A.
+@param  end_a   The stop of Socket A.
 @param  begin_a The start of Socket B.
 @param  size_b  The size of Socket B.
 @return True if they are the same and false if they are not. */
@@ -167,9 +167,9 @@ API inline BOL SocketCompare(const void* begin_a, void* end_a,
                              const void* begin_b, SIW read_size);
 
 /* Compares the two memory sockets.
-@param  begin_a The beginning of buffer a.
+@param  begin_a The beginning of socket a.
 @param  size_a  The size of Socket A .
-@param  begin_a The start of buffer b.
+@param  begin_a The start of socket b.
 @param  size_b  The size of Socket B.
 @return True if they are the same and false if they are not. */
 API inline BOL SocketCompare(const void* begin_a, SIW size_a,
@@ -177,10 +177,10 @@ API inline BOL SocketCompare(const void* begin_a, SIW size_a,
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param  begin The start UI1.
-@param  end   The end UI1.
+@param  start The start UI1.
+@param  stop   The stop UI1.
 @param  count The UI1 count to shift up. */
-SIW SocketShiftUp(void* begin, void* end, SIW count);
+SIW SocketShiftUp(void* start, void* stop, SIW count);
 
 }  // namespace _
 

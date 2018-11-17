@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* A memory aligned singled contiguous buffer in a Chinese Room.
+/* A memory aligned singled contiguous socket in a Chinese Room.
 Only one single wall is required for a Chinese Room, but when more memory is
 needed a new Wall may be created and destroyed dynamically.
 
@@ -51,11 +51,11 @@ class Wall {
 
   Wall(TCArray<Door*>* doors);
 
-  /* Constructs a wall from the given buffer. */
+  /* Constructs a wall from the given socket. */
   Wall(size_t size_bytes = kMinSizeBytes);
 
-  /* Constructs a wall from the given buffer. */
-  Wall(UIW* buffer, size_t size_bytes);
+  /* Constructs a wall from the given socket. */
+  Wall(UIW* socket, size_t size_bytes);
 
   /* Gets the size of the wall in bytes. */
   size_t GetSizeBytes();
@@ -68,7 +68,7 @@ class Wall {
 
   /* Adds a Door to the slot.
   @return Returns nil if the Door is full and a pointer to the Door in the
-          buffer upon success. */
+          socket upon success. */
   int OpenDoor(Door* door);
 
   /* Deletes the Door from the Door at the given index. */
@@ -78,12 +78,12 @@ class Wall {
   Slot& Print(Slot& slot);
 
  private:
-  BOL is_dynamic_;       //< Flag for if using dynamic memory.
-  size_t size_bytes_;     //< Size of the Wall in bytes.
-  UIW* begin;       //< The Wall's buffer.
+  BOL is_dynamic_;         //< Flag for if using dynamic memory.
+  size_t size_bytes_;      //< Size of the Wall in bytes.
+  UIW* start;              //< The Wall's socket.
   TCArray<Door*>* doors_;  //< The doors in the room.
 };
 
-}  //< namespace _
+}  // namespace _
 #endif  //< INCLUDED_CRABS_WALL
 #endif  //< #if SEAM >= _0_0_0__13

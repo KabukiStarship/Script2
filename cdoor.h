@@ -51,11 +51,11 @@ class Door : public Operand {
   typedef enum Errors { kErrorInvalidOp = 0, kErrorImplementation } Error;
 
   enum {
-    kMinDoorSize = 128,  //< The min and default size of the door buffer.
+    kMinDoorSize = 128,  //< The min and default size of the door socket.
   };
 
   /* A door in a Chinese room. */
-  Door(const char* roomName = nullptr, UIW* buffer = nullptr,
+  Door(const char* roomName = nullptr, UIW* socket = nullptr,
        UIW size_bytes = kMinDoorSize);
 
   /* AsciiFactory. */
@@ -82,7 +82,7 @@ class Door : public Operand {
   virtual const Op* Star(CHW index, CCrabs* crabs);
 
  private:
-  UIW* begin;                          //< Pointer to dynamic buffer.
+  UIW* start;                           //< Pointer to dynamic socket.
   TCArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
 };
 
@@ -94,11 +94,11 @@ API const char* DoorErrorText(Door::Error error);
 /* Returns the main door of the room.
 API Door& Doors (); */
 
-/* Initializes a Door at the beginning of the given buffer.
-static Door* DoorInit (int* buffer, UIT slot_size) {
-  if (buffer == nullptr) return nullptr;
+/* Initializes a Door at the beginning of the given socket.
+static Door* DoorInit (int* socket, UIT slot_size) {
+  if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
-  Wall* wall = reinterpret_cast<Door*>(buffer);
+  Wall* wall = reinterpret_cast<Door*>(socket);
   w->is_dynamic = 0;
   w->num_doors = 0;
   w->max_num_doors;

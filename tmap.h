@@ -108,15 +108,15 @@ pair, so we need a 64-bit map.
 # Design Strengths
 
 * Uses less memory.
-* Fast push back when within buffer size.
-* Faster inserts on small collections when within buffer size.
+* Fast push back when within socket size.
+* Faster inserts on small collections when within socket size.
 * 64-bit memory alignment ensures highest performance on Intel.
 * Mandating zeros in buffered memory space can serve help sanitize input.
 
 # Design Weaknesses
 
 * Slow insert in large collections.
-* Slow at growing large collections when buffer runs out.
+* Slow at growing large collections when socket runs out.
 * Applications with billions of items may have too much memory overhead.
 * More complicated.
 
@@ -128,7 +128,7 @@ pair, so we need a 64-bit map.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 struct TMap {
-  Size size;        //< ASCII OBJ size.
+  Size size;        //< ASCII Obj size.
   Index table_size, /*< Size of the key strings in bytes.
                      Set to 0 for ASCII Map. */
       size_pile;    /*< Size of the collisions pile in bytes.
@@ -156,22 +156,22 @@ enum {
   kOverheadPerMap8Index = MapOverheadPerIndex<UI8, SI8, SI4>(),
 };
 
-/* Initializes a TMap from a word-aligned buffer.
+/* Initializes a TMap from a word-aligned socket.
     @post    Users might want to call the IsValid () function after construction
              to verify the integrity of the object.
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-TMap<Size, Index, I>* MapInit(UIW* buffer, Size size, I count_max) {
-  ASSERT(buffer);
+TMap<Size, Index, I>* MapInit(UIW* socket, Size size, I count_max) {
+  ASSERT(socket);
 
   if (table_size >= size) return nullptr;
   Size kSizeMin = sizeof(TMap<Size, Index, I>) +
                   count_max * (MapOverheadPerIndex<Size, Index, I>() + 2);
   if (table_size < kSizeMin) return nullptr;
 
-  Map<Size, Index, I>* map = reinterpret_cast<TMap*>(buffer);
+  Map<Size, Index, I>* map = reinterpret_cast<TMap*>(socket);
   map->size = table_size;
   map->table_size = table_size;
   map->size_pile = 1;
@@ -207,14 +207,14 @@ UIW* MapNew(Size size = 0, I count_max = 0) {
     count_max = size_min;
   }
 
-  UIW* buffer = new UIW[size >> kWordBitCount];
-  TMap<Size, Index, I>* map = reinterpret_cast<TMap<Size, Index, I>*>(buffer);
+  UIW* socket = new UIW[size >> kWordBitCount];
+  TMap<Size, Index, I>* map = reinterpret_cast<TMap<Size, Index, I>*>(socket);
   map->size = size;
   map->table_size = 0;
   map->size_pile = 0;
   map->count = 0;
   map->count_max = count_max;
-  return buffer;
+  return socket;
 }
 
 template <typename Index>
@@ -288,11 +288,11 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
     return 0;
   }
 
-  // Calculate left over buffer size by looking up last char.
+  // Calculate left over socket size by looking up last char.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!");
-    return 0;  //< There isn't enough room left in the buffer.
+    return 0;  //< There isn't enough room left in the socket.
   }
 
   PRINTF("\nFinding insert location...");
@@ -376,7 +376,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         // Move collisions pointer to the unsorted_indexes.
         indexes += count;
 
-        //< Add the newest char to the end.
+        //< Add the newest char to the stop.
         indexes[count] = count;
 
         MapPrint(map);
@@ -426,7 +426,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         map->size_pile = size_pile + 3;
         //< Added one term-SIN and two indexes.
 
-        // Add the newest key at the end.
+        // Add the newest key at the stop.
         indexes[count] = count;
 
         // TMap the last hash to 0xFFFF
@@ -563,7 +563,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
                   states +
                   count * (sizeof(Size) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
-              *collission_list = unsorted_indexes + count, *begin;
+              *collission_list = unsorted_indexes + count, *start;
   const char* keys = reinterpret_cast<const char*>(map) + table_size - 1;
   utf << "\n " << Right<>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_s", 10)
@@ -586,13 +586,13 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
-      begin = &collission_list[collision_index];
-      temp = *begin;
-      ++begin;
+      start = &collission_list[collision_index];
+      temp = *start;
+      ++start;
       utf << temp;
       while (temp != ~0) {
-        temp = *begin;
-        ++begin;
+        temp = *start;
+        ++start;
         if (temp == ~0) break;
         utf << ", " << temp;
       }
@@ -620,48 +620,48 @@ class Map {
       If count_max is less than 0 it will be set to the default value. IF the
       */
   Map(Size size = 0, I count_max = 0)
-      : buffer(MapNew<Size, Index, I>(size, count_max)) {
+      : socket(MapNew<Size, Index, I>(size, count_max)) {
     // Nothing to do here! (:-)-+=<
   }
 
-  /* Destructs the dynamically allocated buffer. */
-  ~Map() { delete buffer; }
+  /* Destructs the dynamically allocated socket. */
+  ~Map() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(OBJ(), adress);
+    return MapRemove<Size, Index, I>(Obj(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(OBJ(), value);
+    return MapContains<Size, Index, I>(Obj(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(OBJ()); }
+  inline void Wipe() { MapWipe<Size, Index, I>(Obj()); }
 
   static inline Index CountUpperBounds() {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SIN type) {
-    return MapInsert<Size, Index, I>(OBJ(), value, type, index);
+    return MapInsert<Size, Index, I>(Obj(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(OBJ()); }
+  inline void Clear() { MapClear<Size, Index, I>(Obj()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, OBJ());
+    return MapPrint<Size, Index, I>(utf, Obj());
   }
 
  private:
-  UIW* buffer;
+  UIW* socket;
 
-  /* Returns the buffer casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* OBJ() {
-    return reinterpret_cast<TMap<Size, Index, I>*>(buffer);
+  /* Returns the socket casted as a TMap<Size, Index, I>*. */
+  inline TMap<Size, Index, I>* Obj() {
+    return reinterpret_cast<TMap<Size, Index, I>*>(socket);
   }
 };  //< class Map
 }  // namespace _

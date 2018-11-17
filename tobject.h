@@ -52,18 +52,18 @@ inline BOL TObjCountIsValid(SI index, SI count_min) {
   return (index >= count_min) && (index < TObjSizeMax<SI>());
 }
 
-/* Gets the ASCII OBJ size. */
+/* Gets the ASCII Obj size. */
 template <typename Size>
 inline Size TObjSize(UIW* object) {
   ASSERT(object);
   return *reinterpret_cast<Size*>(object);
 }
 
-/* Gets the ASCII OBJ size. */
+/* Gets the ASCII Obj size. */
 template <typename Size>
 inline Size TObjSize(CObject stack) {
-  ASSERT(stack.begin);
-  return *reinterpret_cast<Size*>(stack.begin);
+  ASSERT(stack.start);
+  return *reinterpret_cast<Size*>(stack.start);
 }
 
 template <typename Size>
@@ -71,22 +71,27 @@ Size TObjSizeRound(Size size) {
   return size & kObjSizeBuffer;
 }
 
-/* Gets the last UI1 in the ASCII Object. */
+/* Gets the last UI1 in the ASCII Object.
+The object end, unlike the UTF which the stop pointer is at the last char in
+the obj, the end of a socket is an out of bounds address. For this reason,
+it is best to cap the obj size as the highest possible value that you can
+word-align to produce a valid result, which is 3 bytes on 32-bit systems and
+7 bytes on 64-bit systems. */
 template <typename Size>
 inline char* TObjEnd(CObject stack) {
-  UIW buffer = stack.begin;
-  ASSERT(buffer);
-  Size size = *reinterpret_cast<Size*>(buffer);
-  return reinterpret_cast<char*>(buffer + size);
+  UIW socket = stack.start;
+  ASSERT(socket);
+  Size size = *reinterpret_cast<Size*>(socket);
+  return reinterpret_cast<char*>(socket) + size;
 }
 
 /* Gets the last UI1 in the ASCII Object. */
 template <typename Size>
 inline const char* TObjEnd(const CObject stack) {
-  UIW buffer = stack.begin;
-  ASSERT(buffer);
-  Size size = *reinterpret_cast<Size*>(buffer);
-  return reinterpret_cast<const char*>(buffer + size);
+  UIW socket = stack.start;
+  ASSERT(socket);
+  Size size = *reinterpret_cast<Size*>(socket);
+  return reinterpret_cast<const char*>(socket) + size;
 }
 
 /* Creates a new object of the given size that is greater than the min_size. */
@@ -96,46 +101,46 @@ UIW* TObjNew(Size size, Size size_min) {
 
   if (!TObjSizeIsValid<Size>(size, size_min)) return nullptr;
 
-  size = AlignUp<UI2, SI2>(size, 7);
-  UIW* buffer = new UIW[size >> kWordBitCount];
-  *reinterpret_cast<SI2*>(buffer) = size;
-  return buffer;
+  size = TAlignUp<UI2, SI2>(size, 7);
+  UIW* socket = new UIW[size >> kWordBitCount];
+  *reinterpret_cast<Size*>(socket) = size;
+  return socket;
 }
 
-/* Clones the other ASCII OBJ including possibly unused buffer space.
-@return Nil upon failure or a pointer to the cloned buffer upon success. */
+/* Clones the other ASCII Obj including possibly unused obj space.
+@return Nil upon failure or a pointer to the cloned obj upon success. */
 template <typename Size = SI4>
-UIW* TObjClone(UIW* buffer) {
-  if (!buffer) return buffer;
-  Size size = *reinterpret_cast<Size*>(buffer);
+UIW* TObjClone(UIW* socket) {
+  if (!socket) return socket;
+  Size size = *reinterpret_cast<Size*>(socket);
   UIW* clone = new UIW[size >> kWordBitCount];
-  SocketCopy(clone, size, buffer, size);
-  *reinterpret_cast<Size*>(buffer) = size;
+  SocketCopy(clone, size, socket, size);
+  *reinterpret_cast<Size*>(socket) = size;
   return clone;
 }
 
-/* Grows the given OBJ to the new_size. */
+/* Grows the given Obj to the new_size. */
 template <typename Size>
 Size TObjGrow(CObject stack, Size new_size) {
-  if (!stack.begin || !stack.factory) return 0;
+  if (!stack.start || !stack.factory) return 0;
   Size size = TObjSize<Size>(stack);
   if (new_size < size) return 0;
-  UIW* temp = stack.begin;
-  stack.begin = TObjClone<Size>(temp, size);
+  UIW* temp = stack.start;
+  stack.start = TObjClone<Size>(temp, size);
   delete[] temp;
 }
 
-/* Auto-grows the given OBJ to double the current size; if possible.
+/* Auto-grows the given Obj to double the current size; if possible.
 @return Nil upon failure. */
 template <typename Size = SI4>
-UIW* TObjGrow(UIW* begin) {
-  ASSERT(begin);
-  Size size = *reinterpret_cast<Size*>(begin), new_size = 2 * size;
+UIW* TObjGrow(UIW* start) {
+  ASSERT(start);
+  Size size = *reinterpret_cast<Size*>(start), new_size = 2 * size;
   if (new_size < size) return 0;
-  UIW* temp = begin;
-  begin = TObjClone<Size>(temp, size);
+  UIW* temp = start;
+  start = TObjClone<Size>(temp, size);
   delete[] temp;
-  return begin;
+  return start;
 }
 
 /* Rounds the given count up to a 64-bit aligned value. */
@@ -146,10 +151,10 @@ inline SI TObjCountRound(SI count) {
                           ? 7
                           : (sizeof(SI) == 4) ? 3 : (sizeof(SI) == 2) ? 1 : 0,
   };
-  return AlignUpSigned<SI>(count);
+  return TAlignUpSigned<SI>(count);
 }
 
-/* A 64-bit word-aligned ASCII OBJ.
+/* A 64-bit word-aligned ASCII Obj.
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. The minimum and maximum bounds of size of ASCII objects are defined by the
 minimum size required to store the header with minimum item count, and the
@@ -165,47 +170,51 @@ SI8 upper_bounds_si8 = (~(SI8)0) - 7;
 template <typename Size>
 class TObject {
  public:
-  /* Constructs a buffer with either statically or dynamically allocated memory
-  based on if buffer is nil. */
+  /* Constructs a obj with either statically or dynamically allocated memory
+  based on if obj is nil. */
   TObject() : obj_({nullptr, nullptr}) {
     // Nothing to do here! (:-)-/==<
   }
 
-  /* Constructs a buffer with either statically or dynamically allocated memory
-  based on if buffer is nil. */
-  TObject(AsciiFactory factory) : obj_({nullptr, factory}) {
-    // Nothing to do here! (:-)-/==<
+  /* Constructs a obj with either statically or dynamically allocated memory
+  based on if obj is nil. */
+  TObject(AsciiFactory factory) : obj_({factory(0, 0, nullptr), factory}) {
+    UIW* begin = factory(nullptr, 0, nullptr);
+    *reinterpret_cast<Size*>(begin) =
+        (Size) reinterpret_cast<uintptr_t>(factory(nullptr, 0, begin));
   }
 
-  /* Constructs a buffer with either statically or dynamically allocated memory
-  based on if buffer is nil. */
+  /* Constructs a obj with either statically or dynamically allocated memory
+  based on if obj is nil. */
   TObject(Size size, AsciiFactory factory = nullptr)
       : obj_({Buffer(size), factory}) {}
 
-  /* Constructs a buffer with either statically or dynamically allocated
-  memory based on if buffer is nil. */
-  TObject(Size size, UIW* buffer, AsciiFactory factory = nullptr)
-      : obj_({Buffer(size, buffer), factory}) {}
+  /* Constructs a obj with either statically or dynamically allocated
+  memory based on if obj is nil. */
+  TObject(Size size, UIW* socket, AsciiFactory factory = nullptr)
+      : obj_({Buffer(size, socket), factory}) {}
+
+  TObject(UIW* socket, AsciiFactory factory) : obj_({socket, factory}) {}
 
   /* Destructor calls the AsciiFactory factory. */
   ~TObject() { Destroy(obj_); }
 
   /* Returns the buffer_. */
-  UIW* Begin() { return obj_.begin; }
+  UIW* Begin() { return obj_.start; }
 
-  UIW* SetBegin(UIW* buffer) {
-    if (!buffer) return buffer;
-    obj_.begin = buffer;
-    return buffer;
+  UIW* SetBegin(UIW* socket) {
+    if (!socket) return socket;
+    obj_.start = socket;
+    return socket;
   }
 
   /* Returns the buffer_. */
-  UIW* GetStart() { return obj_.begin; }
+  UIW* GetStart() { return obj_.start; }
 
-  /* Gets the stopping address of the buffer. */
+  /* Gets the stopping address of the obj. */
   char* GetStop() {
-    Size size = TObjSize<Size>(obj_.begin);
-    return reinterpret_cast<char*>(obj_.begin) + size - 1;
+    Size size = TObjSize<Size>(obj_.start);
+    return reinterpret_cast<char*>(obj_.start) + size - 1;
   }
 
   /* Gets the ASCII Object size. */
@@ -215,22 +224,22 @@ class TObject {
   AsciiFactory GetFactory() { return obj_.factory; }
 
   /* Gets the CObject. */
-  inline CObject& OBJ() { return obj_; }
+  inline CObject& Obj() { return obj_; }
 
  private:
-  CObject obj_;  //< ASCII OBJ harness.
+  CObject obj_;  //< ASCII Obj harness.
 };
 
-/* AsciiFactory prints the begin to the console without deleting the
-begin.
-@return If (size == 0 && begin) then nil indicating success deleting the
+/* AsciiFactory prints the start to the console without deleting the
+start.
+@return If (size == 0 && start) then nil indicating success deleting the
 memory. If passing in a . */
 template <typename Size = int>
-UIW* TObjectFactory(UIW* begin, CHW function, void* arg) {
+UIW* TObjectFactory(UIW* start, SIW function, void* arg) {
   switch (function) {
     case 0: {
-      if (begin) {
-        delete[] begin;
+      if (start) {
+        delete[] start;
         return nullptr;
       }
       try {
@@ -241,10 +250,10 @@ UIW* TObjectFactory(UIW* begin, CHW function, void* arg) {
       }
     }
     case kFactoryGrow: {
-      return TObjClone<Size>(begin);
+      return TObjClone<Size>(start);
     }
     case kFactoryClone: {
-      return TObjClone<Size>(begin);
+      return TObjClone<Size>(start);
     }
   }
   return nullptr;

@@ -25,10 +25,10 @@ namespace _ {
 /* A Mirror in a Chinese Room.
 A Mirror */
 struct API Mirror {
-  UIT size,  //< The size of the buffer.
-      start,    //< The starting index of the ring buffer data.
-      stop,     //< The stopping index of the ring buffer data.
-      read;     //< The read variable.
+  UIT size,   //< The size of the socket.
+      start,  //< The starting index of the ring socket data.
+      stop,   //< The stopping index of the ring socket data.
+      read;   //< The read variable.
 };
 
 const Op* MirrorResult(Mirror* mirror, Error error);
@@ -40,28 +40,28 @@ enum {
 
 static const UIW kMaxMirrorSize = ~((UIW)0);
 
-/* Calculates the used ring buffer space.
+/* Calculates the used ring socket space.
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
-@param  Size The size of the buffer. */
+@param  Size The size of the socket. */
 API UIT MirrorLength(char* start, char* stop, UIT size);
 
-/* Calculates the space left in the given ring buffer.
+/* Calculates the space left in the given ring socket.
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
-@param  Size  The size of the buffer. */
+@param  Size  The size of the socket. */
 API UIT MirrorSpace(char* start, char* stop, UIT size);
 
 /* Checks if the given slot contains the specified address. */
 API void* MirrorContains(Mirror* mirror, void* address);
 
-/* Clears the ring buffer by writing zeros to it. */
+/* Clears the ring socket by writing zeros to it. */
 API void MirrorWipe(Mirror* mirror);
 
-/* Copies a block from a ring-buffer to the given destination. */
+/* Copies a block from a ring-socket to the given destination. */
 // API char* MirrorWrite (Mirror* mirror, void* source, size_t size);
 
-/* Copies a block from a ring-buffer to the given destination. */
+/* Copies a block from a ring-socket to the given destination. */
 // API char* MirrorRead (Mirror* mirror, void* source, size_t size);
 
 /* Gets the args from the b-sequence. */
@@ -131,6 +131,6 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
 API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
                            UIT offset, char* address);
 
-}  //< namespace _
+}  // namespace _
 #endif  //< INCLUDED_SCRIPT_MIRROR
 #endif  //< #if SEAM >= _0_0_0__13

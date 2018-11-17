@@ -139,42 +139,42 @@ inline UI StackCountMax(SI count_max) {
     kStackCountMax =
         (UnsignedMax<UI>() - (UI)sizeof(CStack<T, UI, SI>)) / (UI)sizeof(T),
   };
-  count_max = AlignUpSigned<SI, UI, SI>(count_max);
+  count_max = TAlignUpSigned<SI, UI, SI>(count_max);
   if (count_max > kStackCountMax) count_max = kStackCountMax;
   return count_max;
 }
 
-/* Initializes an stack from a preallocated buffer who's size is a multiple of
+/* Initializes an stack from a preallocated socket who's size is a multiple of
 8 bytes.
-@param buffer An stack of bytes large enough to fit the stack.
-@return A dynamically allocated buffer. */
+@param socket An stack of bytes large enough to fit the stack.
+@return A dynamically allocated socket. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-uintptr_t* StackInit(uintptr_t* buffer, UI size) {
-  ASSERT(buffer);
+uintptr_t* StackInit(uintptr_t* socket, UI size) {
+  ASSERT(socket);
 
-  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(buffer);
+  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   SI count_max = (SI)((size - sizeof(CStack<T, UI, SI>)) >> kWordBitCount);
   stack->count_max = count_max;
   stack->count = 0;
-  return buffer;
+  return socket;
 }
 
-/* Initializes an stack from a preallocated buffer who's size is a multiple of
+/* Initializes an stack from a preallocated socket who's size is a multiple of
 8 bytes.
-@param buffer An stack of bytes large enough to fit the stack.
-@return A dynamically allocated buffer. */
+@param socket An stack of bytes large enough to fit the stack.
+@return A dynamically allocated socket. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-uintptr_t* StackInit(uintptr_t* buffer, UI size, SI count_max) {
-  ASSERT(buffer);
+uintptr_t* StackInit(uintptr_t* socket, UI size, SI count_max) {
+  ASSERT(socket);
 
-  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(buffer);
+  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   stack->count_max = (size - sizeof(CStack<T, UI, SI>)) >> kWordBitCount;
   stack->count = 0;
-  return buffer;
+  return socket;
 }
 
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
@@ -203,8 +203,8 @@ uintptr_t* StackClone(CStack<T, UI, SI>* stack, CStack<T, UI, SI>* other) {
 
   // We've got enough room in the stack's memory.
 
-  uintptr_t *read = reinterpret_cast<uintptr_t*>(StackStart(stack)),
-            *write = reinterpret_cast<uintptr_t*>(StackStart(other));
+  uintptr_t *read = reinterpret_cast<uintptr_t*>(TStackStart(stack)),
+            *write = reinterpret_cast<uintptr_t*>(TStackStart(other));
 
   SI count = other->count;
   stack->count = count;
@@ -215,7 +215,7 @@ uintptr_t* StackClone(CStack<T, UI, SI>* stack, CStack<T, UI, SI>* other) {
 
 /* Returns the first element in the Stack vector. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-T* StackStart(CStack<T, UI, SI>* stack) {
+T* TStackStart(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   return reinterpret_cast<T*>(reinterpret_cast<char*>(stack) +
                               sizeof(CStack<T, UI, SI>));
@@ -225,7 +225,7 @@ T* StackStart(CStack<T, UI, SI>* stack) {
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
 T* StackStop(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
-  return StackStart<T, UI, SI>(stack) + stack->count - 1;
+  return TStackStart<T, UI, SI>(stack) + stack->count - 1;
 }
 
 /* Inserts the item into the stack at the given index.
@@ -237,9 +237,9 @@ if the Stack (@see SI StackInsert<UI, SI> (T*, SI, T, SI)).
 @return -1 if a is nil and -2 if the stack is full. */
 template <typename T = intptr_t, typename SI = int>
 inline SI StackInsert(T* items, SI count, T item, SI index) {
-  T *target = items + index, *end = items + count;
+  T *target = items + index, *stop = items + count;
   // Shift the elements up.
-  while (target < end) *end-- = *end;
+  while (target < stop) *stop-- = *stop;
   *target = item;
   return count + 1;
 }
@@ -277,13 +277,13 @@ T StackAdd (CStack<T, UI, SI>* stack, T item, T index) {
       count = stack->count;
   if (count >= count_max)
       return -1;
-  T* items = StackStart<T, UI, SI> (This ());
+  T* items = TStackStart<T, UI, SI> (This ());
   return StackAdd<T, SI> (items, count, item, index);
 } */
 
 /* Removes an element from the given array. */
 template <typename T = intptr_t, typename SI = intptr_t>
-inline SI StackRemove(T* elements, SI size, SI index) {
+inline SI TStackRemove(T* elements, SI size, SI index) {
   ASSERT(elements);
   if (index < 0) return index;
   if (size < 0) return size;
@@ -300,25 +300,25 @@ inline SI StackRemove(T* elements, SI size, SI index) {
 @param  index The index the item to remove.
 @return True if the index is out of bounds. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-SI StackRemove(CStack<T, UI, SI>* stack, SI index) {
+SI TStackRemove(CStack<T, UI, SI>* stack, SI index) {
   ASSERT(stack);
   SI result =
-      StackRemove<T, SI>(StackStart<T, UI, SI>(stack), stack->count, index);
+      TStackRemove<T, SI>(TStackStart<T, UI, SI>(stack), stack->count, index);
   if (result < 0) return result;
   stack->count = result;
   return result;
 }
 
-/* Adds the given item to the end of the stack.
+/* Adds the given item to the stop of the stack.
 @param  a    The stack.
 @param  item The item to push onto the stack.
 @return The index of the newly stacked item. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-SI StackPush(CStack<T, UI, SI>* stack, T item) {
+SI TStackPush(CStack<T, UI, SI>* stack, T item) {
   ASSERT(stack);
   SI count_max = stack->count_max, count = stack->count;
   if (count >= count_max) return -1;
-  T* items = StackStart<T, UI, SI>(stack);
+  T* items = TStackStart<T, UI, SI>(stack);
   items[count] = item;
   stack->count = count + 1;
   return count;
@@ -329,11 +329,11 @@ SI StackPush(CStack<T, UI, SI>* stack, T item) {
 @param  a The stack.
 @return The item popped off the stack. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-T StackPop(CStack<T, UI, SI>* stack) {
+T TStackPop(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   SI count = stack->count;
   if (count == 0) return 0;
-  T* items = StackStart<T, UI, SI>(stack);
+  T* items = TStackStart<T, UI, SI>(stack);
   stack->count = count - 1;
   T item = items[count - 1];
   return item;
@@ -344,11 +344,11 @@ T StackPop(CStack<T, UI, SI>* stack) {
 @param  a The stack.
 @return The item popped off the stack. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-T StackPeek(CStack<T, UI, SI>* stack) {
+T TStackPeek(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   SI count = stack->count;
   if (count == 0) return 0;
-  T* items = StackStart<T, UI, SI>(stack);
+  T* items = TStackStart<T, UI, SI>(stack);
   T item = items[stack->count - 1];
   return item;
 }
@@ -358,7 +358,7 @@ T StackPeek(CStack<T, UI, SI>* stack) {
 @param  index The index of the element to get.
 @return -1 if a is nil and -2 if the index is out of bounds. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-T StackGet(CStack<T, UI, SI>* stack, SI index) {
+T TStackGet(CStack<T, UI, SI>* stack, SI index) {
   ASSERT(stack);
   if (index >= stack->count) return 0;
   char* address = reinterpret_cast<char*>(stack) + sizeof(CStack<T, UI, SI>);
@@ -368,7 +368,7 @@ T StackGet(CStack<T, UI, SI>* stack, SI index) {
 /* Returns true if the given stack contains the given address.
 @return false upon failure. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-bool StackContains(CStack<T, UI, SI>* stack, void* address) {
+bool TStackContains(CStack<T, UI, SI>* stack, void* address) {
   ASSERT(stack);
   char *ptr = reinterpret_cast<char*>(stack),
        *adr = reinterpret_cast<char*>(address);
@@ -379,7 +379,7 @@ bool StackContains(CStack<T, UI, SI>* stack, void* address) {
 
 /* The stack size in words. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-inline UI StackSizeWords(SI count) {
+inline UI TStackSizeWords(SI count) {
   return StackSizeMin<T, UI, SI>(count) / sizeof(uintptr_t);
 }
 
@@ -388,7 +388,7 @@ in memory.
 @warning Anything above this threshold may cause a critical error; AND
 sizeof (T) must be 1, 2, 4, or 8. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-inline SI StackCountUpperBounds() {
+inline SI TStackCountUpperBounds() {
   enum {
     kShift = (sizeof(T) == 8) ? 3 :             //< Used to divide by 8.
                  (sizeof(T) == 4) ? 2 :         //< Used to divide by 4.
@@ -399,19 +399,19 @@ inline SI StackCountUpperBounds() {
 
 /* Doubles the size of the array until the max count is reached.
 @return Returns nil if the count_max is greater than the amount of memory that
-can fit in type UI, the unaltered buffer pointer if the Stack has grown to the
-count_max upper bounds, or a new dynamically allocated buffer upon failure. */
+can fit in type UI, the unaltered socket pointer if the Stack has grown to the
+count_max upper bounds, or a new dynamically allocated socket upon failure. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
-bool StackGrow(CObject& stack) {
+bool TStackGrow(CObject& stack) {
   static SI count_max_auto_size_init = kStackCountMaxDefault;
 
-  uintptr_t* buffer = stack.buffer;
+  uintptr_t* socket = stack.socket;
 
-  ASSERT(buffer);
+  ASSERT(socket);
 
-  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(buffer);
+  CStack<T, UI, SI>* stack = reinterpret_cast<CStack<T, UI, SI>*>(socket);
   SI count_max = stack->count_max,
-     count_uppoer_bounds = StackCountUpperBounds<T, UI, SI>();
+     count_uppoer_bounds = TStackCountUpperBounds<T, UI, SI>();
   if (count_max > count_uppoer_bounds || count_max >= count_uppoer_bounds)
     return false;
   count_max += count_max;
@@ -430,9 +430,9 @@ bool StackGrow(CObject& stack) {
   new_stack->count = count;
   new_stack->count_max = count_max;
 
-  T *source = StackStart(stack), *destination = StackStart(new_stack);
+  T *source = TStackStart(stack), *destination = TStackStart(new_stack);
   for (; count > 0; count--) *destination++ = *source++;
-  delete buffer;
+  delete socket;
   return true;
 }
 
@@ -446,7 +446,7 @@ Utf8& TPrintStack(Utf8& utf, CStack<T, UI, SI>* stack) {
   utf << "\n\nStack: count: " << count << " count_max:" << stack->count_max
       << " size_stack:" << stack->size_stack;
   if (stack->size_array != 0) utf << " size_array:invalid";
-  T* elements = StackStart(stack);
+  T* elements = TStackStart(stack);
   for (int i = 0; i < count; ++i) {
     utf << '\n' << i + 1 << ".) " << elements[i];
   }
@@ -484,9 +484,9 @@ class TStack {
       count_max = 32;
     }
     UI size = StackSize<T, UI, SI>(count_max);
-    uintptr_t* buffer = new uintptr_t[size >> kWordBitCount];
-    obj_->begin = buffer;
-    StackInit(buffer, size, count_max);
+    uintptr_t* socket = new uintptr_t[size >> kWordBitCount];
+    obj_->start = socket;
+    StackInit(socket, size, count_max);
   }
 
   /* Copy constructor. */
@@ -523,18 +523,18 @@ class TStack {
   /* Removes the given index from the stack.
   @param  index The index the item to remove.
   @return True if the index is out of bounds. */
-  bool Remove(SI index) { return StackRemove<T, UI, SI>(Obj(), index); }
+  bool Remove(SI index) { return TStackRemove<T, UI, SI>(Obj(), index); }
 
-  /* Adds the given item to the end of the stack.
+  /* Adds the given item to the stop of the stack.
   @param  item The item to push onto the stack.
   @return The index of the newly stacked item. */
   SI Push(T item) {
-    SI result = StackPush<T, UI, SI>(Obj(), item);
+    SI result = TStackPush<T, UI, SI>(Obj(), item);
     // std::count << "\n  Pushing " << item;
     if (result < 0) {
       // Printf (" and growing.");
       Grow();
-      SI result = StackPush<T, UI, SI>(Obj(), item);
+      SI result = TStackPush<T, UI, SI>(Obj(), item);
       // COUT << this;
       if (result < 0) return -1;
       return result;
@@ -547,7 +547,7 @@ class TStack {
   @param  a The stack.
   @return The item popped off the stack. */
   inline T Pop() {
-    T value = StackPop<T, UI, SI>(Obj());
+    T value = TStackPop<T, UI, SI>(Obj());
     // utf << "\n  Popping " << value;
     return value;
   }
@@ -556,29 +556,29 @@ class TStack {
   @note We do not delete the item at the
   @param  a The stack.
   @return The item popped off the stack. */
-  inline T Peek() { return StackPeek<T, UI, SI>(Obj()); }
+  inline T Peek() { return TStackPeek<T, UI, SI>(Obj()); }
 
   /* Gets the element at the given index.
   @param  index The index of the element to get.
   @return -1 if a is nil and -2 if the index is out of bounds. */
-  inline T Get(SI index) { return StackGet<T, UI, SI>(Obj(), index); }
+  inline T Get(SI index) { return TStackGet<T, UI, SI>(Obj(), index); }
 
   /* Returns true if the given stack contains the given address.
   @return false upon failure. */
   inline bool Contains(void* address) {
-    return StackContains<T, UI, SI>(Obj(), address);
+    return TStackContains<T, UI, SI>(Obj(), address);
   }
 
   /* Resizes the stack to the new_count. */
   inline bool Resize(SI new_count) { return TStackResize<T, UI, SI>(obj_); }
 
   /* Doubles the size of the stack. */
-  inline bool Grow() { return StackGrow<T, UI, SI>(obj_); }
+  inline bool Grow() { return TStackGrow<T, UI, SI>(obj_); }
 
   /* Prints this object to the given Utf. */
   inline Utf8& Print(Utf8& out_) { return Print(Obj(), out_); }
 
-  /* Returns the CStack OBJ. */
+  /* Returns the CStack Obj. */
   inline CStack<T, UI, SI>* Obj() {
     return reinterpret_cast<CStack<T, UI, SI>*>(base);
   }
@@ -593,7 +593,7 @@ class TStack {
 
   inline void SetBuffer(CStack<T, UI, SI>* stack) {
     ASSERT(stack);
-    obj_->begin = reinterpret_cast<uintptr_t*>(stack);
+    obj_->start = reinterpret_cast<uintptr_t*>(stack);
   }
 };
 

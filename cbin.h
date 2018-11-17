@@ -42,30 +42,30 @@ typedef enum BInStates {
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct API BIn {
-  UIT size,           //< The size of the buffer.
-      start;          //< The starting index of the ring buffer data.
-  volatile UIT stop;  //< The stopping index of the ring buffer data.
+  UIT size,           //< The size of the socket.
+      start;          //< The starting index of the ring socket data.
+  volatile UIT stop;  //< The stopping index of the ring socket data.
   UIT read;           //< The read variable.
 };
 
-/* Get's the B-Input's buffer. */
+/* Get's the B-Input's socket. */
 inline char* BInBegin(BIn* bin);
 
 inline char* BInEnd(BIn* bin);
 
-/* Calculates the used ring buffer space.
+/* Calculates the used ring socket space.
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
-@param  Size  The size of the buffer. */
+@param  Size  The size of the socket. */
 inline SIW SlotLength(char* start, char* stop, UIW size);
 
-/* Calculates the space left in the given ring buffer.
+/* Calculates the space left in the given ring socket.
 @param  Start The start of the data.
 @param  Stop  The stop of the data.
-@param  Size  The size of the buffer. */
+@param  Size  The size of the socket. */
 inline SIW SlotSpace(char* start, char* stop, UIW size);
 
-/* Gets the rx buffer length. */
+/* Gets the rx socket length. */
 inline UIT BInSpace(BIn* bin);
 
 inline UIT BinBufferLength(BIn* bin);
@@ -74,17 +74,17 @@ inline UIT BinBufferLength(BIn* bin);
 /* Gets a a char for printing out the bin_state. */
 API const char** BInStateStrings();
 
-/* Pulls the keyboard input into the ring buffer. */
+/* Pulls the keyboard input into the ring socket. */
 // API void BInKeyboard ()
 #endif
 
-/* Initializes the BIn struct API to an empty buffer. */
-API BIn* BInInit(UIW* buffer, UIT size);
+/* Initializes the BIn struct API to an empty socket. */
+API BIn* BInInit(UIW* socket, UIT size);
 
-/* Gets the end address of the rx buffer. */
+/* Gets the stop address of the rx socket. */
 API char* BInEnd(BIn* bin);
 
-/* Returns true if the BIn buffer contains any data.
+/* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */
 API BOL BInIsReadable(BIn* bin);
 

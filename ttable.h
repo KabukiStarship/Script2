@@ -103,18 +103,18 @@ enum {
 
 // void Print (Table* rt);
 
-/* Creates a streamable hash table with enough buffer space for the
+/* Creates a streamable hash table with enough socket space for the
 count_max.
-@param  buffer
+@param  socket
 @param  count_max The max count.
 @param  size      The size in bytes.
 @post   Users might want to call the TableIsValid<Size,Index>
 (Table<Size,Index>) function after construction to verify the integrity of the
 object. */
 template <typename Size, typename Index>
-Table<Size, Index>* TableInit(UIW* buffer, Index count_max, Size size) {
-  ASSERT(buffer)
-  Table* table = reinterpret_cast<Table<Size, Index>*>(buffer);
+Table<Size, Index>* TableInit(UIW* socket, Index count_max, Size size) {
+  ASSERT(socket)
+  Table* table = reinterpret_cast<Table<Size, Index>*>(socket);
 
   UIT min_required_size =
       sizeof(Table<Size, Index>) + count_max * (kOverheadPerIndex + 2);
@@ -187,11 +187,11 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
     return 0;
   }
 
-  // Calculate left over buffer size by looking up last char.
+  // Calculate left over socket size by looking up last char.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!\n")
-    return 0;  //< There isn't enough room left in the buffer.
+    return 0;  //< There isn't enough room left in the socket.
   }
 
   PRINTF("\nFinding insert location...")
@@ -274,7 +274,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
         // Move collisions pointer to the unsorted_indexes.
         indexes += count_max;
 
-        //< Add the newest char to the end.
+        //< Add the newest char to the stop.
         indexes[count] = count;
 
         PRINT_TABLE
@@ -323,7 +323,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
         table->size_pile = size_pile + 3;
         //< Added one term-UI1 and two indexes.
 
-        // Add the newest key at the end.
+        // Add the newest key at the stop.
         indexes[count] = count;
 
         // Set the last hash to 0xFFFF
@@ -539,7 +539,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
-       *collission_list = unsorted_indexes + count_max, *begin;
+       *collission_list = unsorted_indexes + count_max, *start;
   char* keys = reinterpret_cast<char*>(table) + size - 1;
 
   utf << '\n'
@@ -563,13 +563,13 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
 
     if ((collision_index != kInvalidIndex) && (i < count)) {
       // Print collisions.
-      begin = &collission_list[collision_index];
-      temp = *begin;
-      ++begin;
+      start = &collission_list[collision_index];
+      temp = *start;
+      ++start;
       utf << temp;
       while (temp != kInvalidIndex) {
-        temp = *begin;
-        ++begin;
+        temp = *start;
+        ++start;
         if (temp != kInvalidIndex) utf << ", " << temp;
       }
     }

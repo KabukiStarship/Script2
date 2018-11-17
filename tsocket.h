@@ -34,7 +34,7 @@ tables bellow.
 
 @code
 // The convention KT uses is that the unsigned size always comes first
-// because it's the first UI1 of an ASCII OBJ.
+// because it's the first UI1 of an ASCII Obj.
 SI4 signed_example = 7;
 signed_example = AlignUp<SI8, UI4, SI4> (signed_example);
 
@@ -63,45 +63,45 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 // value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
 template <typename I = UIW>
-inline I AlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
+inline I TAlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
   return 0;  // Negative (value) & mask;
 }
 
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename UI = char>
-inline UI AlignUpUnsigned(UI value, UI mask = kWordBitsMask) {
-  return value + AlignUpOffset<UI>(value, mask);
+inline UI TAlignUpUnsigned(UI value, UI mask = kWordBitsMask) {
+  return value + TAlignUpOffset<UI>(value, mask);
 }
 
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename SI = char>
-inline SI AlignUpSigned(SI value, SI mask = kWordBitsMask) {
-  return value + AlignUpOffset<SI>(value, mask);
+inline SI TAlignUpSigned(SI value, SI mask = kWordBitsMask) {
+  return value + TAlignUpOffset<SI>(value, mask);
 }
 
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename T = char>
-inline T* AlignUp(void* pointer, UIW mask = kWordBitsMask) {
+inline T* TAlignUp(void* pointer, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value + AlignUpOffset<>((UIW)pointer, mask));
+  return reinterpret_cast<T*>(value + TAlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
 @warning Function does not check if the boundary is a power of 2! */
 template <typename T = char>
-inline T* AlignUp(const void* pointer, UIW mask = kWordBitsMask) {
+inline T* TAlignUp(const void* pointer, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value + AlignUpOffset<>((UIW)pointer, mask));
+  return reinterpret_cast<T*>(value + TAlignUpOffset<>((UIW)pointer, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
 template <typename I = UIW>
-inline I AlignDownOffset(I value, I mask = kWordBitsMask) {
+inline I TAlignDownOffset(I value, I mask = kWordBitsMask) {
   return value & mask;
 }
 
@@ -109,32 +109,32 @@ inline I AlignDownOffset(I value, I mask = kWordBitsMask) {
 @param  value The value to align.
 @return The aligned value. */
 template <typename T = UIW>
-inline T AlignDown(void* ptr, UIW mask = kWordBitsMask) {
+inline T TAlignDown(void* ptr, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  return reinterpret_cast<T>(value - AlignDownOffset<>(value, mask));
+  return reinterpret_cast<T>(value - TAlignDownOffset<>(value, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
 template <typename T = UIW>
-inline T AlignDown(const void* ptr, UIW mask = kWordBitsMask) {
+inline T TAlignDown(const void* ptr, UIW mask = kWordBitsMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  return reinterpret_cast<const T>(value - AlignDownOffset<>(value, mask));
+  return reinterpret_cast<const T>(value - TAlignDownOffset<>(value, mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @param  value The value to align.
 @return The aligned value. */
 template <typename I = UIW>
-inline I AlignDownI(I value, I mask = kWordBitsMask) {
+inline I TAlignDownI(I value, I mask = kWordBitsMask) {
   return value - (value & mask);
 }
 
 /* Calculates the offset to align the given pointer to a 16-bit word boundary.
 @return A vector you add to a pointer to align it. */
 template <typename T = char>
-inline T* AlignUp2(void* pointer) {
+inline T* TAlignUp2(void* pointer) {
   // Mask off lower bit and add it to the ptr.
   UIW ptr = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(ptr + (ptr & 0x1));
@@ -143,7 +143,7 @@ inline T* AlignUp2(void* pointer) {
 /* Calculates the offset to align the given pointer to a 16-bit word boundary.
 @return A vector you add to a pointer to align it. */
 template <typename T = char>
-inline T* AlignUp2(const void* pointer) {
+inline T* TAlignUp2(const void* pointer) {
   // Mask off lower bit and add it to the ptr.
   UIW ptr = reinterpret_cast<UIW>(pointer);
   return reinterpret_cast<T*>(ptr + (ptr & 0x1));
@@ -162,40 +162,66 @@ inline int TBitShiftCount() {
 }
 
 /* A memory socket. */
-template <SIW kSize_>
+template <SIW kLengthMax_>
 class TSocket {
  public:
   enum {
-    kSize = kSize_,  //< Size of the buffer aligned.
+    kSize = kLengthMax_,  //< Size of the socket aligned.
   };
 
-  /* Gets the begin UI1 of the socket. */
-  inline char* Begin() { return reinterpret_cast<char*>(buffer); }
+  /* Default destructor does nothing. */
+  TSocket() {}
 
-  /* Gets the begin UI1 of the socket. */
-  inline char* End() { return reinterpret_cast<char*>(buffer) + kSize; }
+  /* Returns the socket as a UIW*. */
+  inline UIW* Words() { return socket; }
+
+  /* Returns the socket as a UIW*. */
+  template <typename Size>
+  inline UIW* ObjInitStart(Size size) {
+    return TObjInit<Size> (size);
+  }
+
+  /* Gets the start UI1 of the socket. */
+  inline char* Begin() { return reinterpret_cast<char*>(socket); }
+
+  /* Gets the start begin of the socket. */
+  template <typename T = char, typename I = size_t>
+  inline char* Begin(I offset) {
+    UIW address = reinterpret_cast<UIW>(socket) + offset;
+    return reinterpret_cast<T>(address);
+  }
+
+  /* Gets the start UI1 of the socket. */
+  inline char* End() { return reinterpret_cast<char*>(socket) + kSize; }
 
   /* Returns the first byte of the ASCII Object data. */
   template <typename T>
   inline T* Start() {
-    return reinterpret_cast<T*>(buffer);
+    return reinterpret_cast<T*>(socket);
+  }
+
+  template <typename Size>
+  inline UIW* SetSize(Size size) {
+    ASSERT((size & kAlignMask) == 0)
+    *reinterpret_cast<Size*>(socket) = size;
+    return socket;
   }
 
  private:
-  UIW buffer[kSize];  //< The word-aligned buffer.
+  UIW socket[kSize];  //< The word-aligned socket.
 };
 
 /* @group Socket */
 
 /* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>
-inline T* Ptr(void* ptr) {
+inline T* TPtr(void* ptr) {
   return reinterpret_cast<T*>(ptr);
 }
 
 /* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>
-inline T* Ptr(const void* ptr) {
+inline T* TPtr(const void* ptr) {
   return reinterpret_cast<T*>(ptr);
 }
 
@@ -205,13 +231,13 @@ offset.
 @param base The base address.
 @param offset The offset. */
 template <typename T>
-inline T* Ptr(const void* begin, SIW offset) {
-  return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
+inline T* TPtr(const void* start, SIW offset) {
+  return reinterpret_cast<T*>(reinterpret_cast<UIW>(start) + offset);
 }
 
-/* Creates a new buffer of the given size or deletes it. */
+/* Creates a new socket of the given size or deletes it. */
 template <typename Size = SI4>
-UIW* New(UIW* buffer, SIW size) {
+UIW* TNew(UIW* socket, SIW size) {
   size = AlignUp(size);
   return new UIW[size >> kWordBitCount];
 }

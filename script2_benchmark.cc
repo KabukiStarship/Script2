@@ -39,7 +39,7 @@ namespace _ {
 BenchmarkCase::BenchmarkCase(const char* name, TestCase* cases, int count)
     : name(name), cases(cases), count(count) {}
 
-const char* BenchmarkCase::Run(char* cursor, char* end, const char* args) {
+const char* BenchmarkCase::Run(char* cursor, char* stop, const char* args) {
   /*
   DBL nil_reading;
   int i;
@@ -73,7 +73,7 @@ Benchmark::Benchmark(const char* name, const char* filename,
   }
 }
 
-const char* Benchmark::Run(char* cursor, char* end, const char* args) {
+const char* Benchmark::Run(char* cursor, char* stop, const char* args) {
   /*
   std::ofstream out(filename);
 
@@ -82,19 +82,18 @@ const char* Benchmark::Run(char* cursor, char* end, const char* args) {
 
   for (size_t i = 0; i < count; ++i) {
     BenchmarkCase group = groups[i];
-    const char* result = group.Run(cursor, end, args);
+    const char* result = group.Run(cursor, stop, args);
     ASSERT(result);
     Print(result);
   }
-  BenchmarkCase *benchmark_case = groups, *end = groups + count - 1;
+  BenchmarkCase *benchmark_case = groups, *stop = groups + count - 1;
   for (int i = 0; i <  {
-    groups[i]->Run(cursor, end, args);
+    groups[i]->Run(cursor, stop, args);
   }
   std::cout.rdbuf(coutbuf);*/
   return nullptr;
 }
 
 }  // namespace _
-
 
 #endif

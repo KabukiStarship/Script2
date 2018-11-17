@@ -30,12 +30,12 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-UIW* Console(UIW* buffer, CHW function, void* arg) {
-  return TCOut<char>(buffer, function, arg);
+UIW* Console(UIW* socket, SIW function, void* arg) {
+  return TCOut<char>(socket, function, arg);
 }
 
-UIW* COutAuto(UIW* buffer, CHW function, void* arg) {
-  return TCOutAuto<char>(buffer, function, arg);
+UIW* COutAuto(UIW* socket, SIW function, void* arg) {
+  return TCOutAuto<char>(socket, function, arg);
 }
 
 }  // namespace _
@@ -117,221 +117,222 @@ const char* StringFind(const char* text, const char* query) {
   return TStringFind<char>(text, query);
 }
 
-char* Print(char* begin, char* end, const char* string) {
-  return TPrint<char>(begin, end, string);
+char* Print(char* start, char* stop, const char* string) {
+  return TPrint<char>(start, stop, string);
 }
 
-char* Print(char* begin, char* end, char character) {
-  return TPrintChar<char>(begin, end, character);
+char* Print(char* start, char* stop, char character) {
+  return TPrintChar<char>(start, stop, character);
 }
 
-char* Print(char* begin, char* end, UI8 value) {
-  return TPrintUnsigned<UI8, char>(begin, end, value);
+char* Print(char* start, char* stop, UI8 value) {
+  return TPrintUnsigned<UI8, char>(start, stop, value);
 }
 
-char* Print(char* begin, char* end, SI8 value) {
-  return TPrintSigned<SI8, UI8, char>(begin, end, value);
+char* Print(char* start, char* stop, SI8 value) {
+  return TPrintSigned<SI8, UI8, char>(start, stop, value);
 }
 
 #if ALU_WORD_SIZE != 32
-char* Print(char* begin, char* end, UI4 value) {
-  return Print(begin, end, (UI8)value);
+char* Print(char* start, char* stop, UI4 value) {
+  return Print(start, stop, (UI8)value);
 }
 
-char* Print(char* begin, char* end, SI4 value) {
-  return Print(begin, end, (SI8)value);
+char* Print(char* start, char* stop, SI4 value) {
+  return Print(start, stop, (SI8)value);
 }
 #else
-char* Print(char* begin, char* end, UI4 value) {
-  return TPrintUnsigned<UI8, char>(begin, end, (UI8)value);
+char* Print(char* start, char* stop, UI4 value) {
+  return TPrintUnsigned<UI8, char>(start, stop, (UI8)value);
 }
 
-char* Print(char* begin, char* end, SI4 value) {
-  return TPrintSigned<SI8, UI8, char>(begin, end, (SI8)value);
+char* Print(char* start, char* stop, SI4 value) {
+  return TPrintSigned<SI8, UI8, char>(start, stop, (SI8)value);
 }
 #endif
 
 #if SEAM >= _0_0_0__03
 
-char* PrintCenter(char* begin, char* end, FLT value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, FLT value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintCenter(char* begin, char* end, DBL value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, DBL value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, FLT value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, FLT value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, DBL value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, DBL value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
 #endif  //< #if SEAM >= _0_0_0__03
 
-char* PrintCenter(char* begin, char* end, const char* string,
+char* PrintCenter(char* start, char* stop, const char* string,
                   int column_count) {
-  return TPrintCenter<char>(begin, end, string, column_count);
+  return TPrintCenter<char>(start, stop, string, column_count);
 }
 
-char* PrintCenter(char* begin, char* end, char character, int column_count) {
-  return TPrintCenter<char>(begin, end, Utf8Text(character).String(),
+char* PrintCenter(char* start, char* stop, char character, int column_count) {
+  return TPrintCenter<char>(start, stop, Utf8Text(character).String(),
                             column_count);
 }
 
-char* PrintCenter(char* begin, char* end, SI4 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, SI4 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintCenter(char* begin, char* end, UI4 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, UI4 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintCenter(char* begin, char* end, UI8 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, UI8 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintCenter(char* begin, char* end, SI8 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintCenter(char* start, char* stop, SI8 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, const char* string, int column_count) {
-  return TPrintRight<char>(begin, end, string, column_count);
+char* PrintRight(char* start, char* stop, const char* string,
+                 int column_count) {
+  return TPrintRight<char>(start, stop, string, column_count);
 }
 
-char* PrintRight(char* begin, char* end, char character, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(character).String(),
+char* PrintRight(char* start, char* stop, char character, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(character).String(),
                            column_count);
 }
 
-char* PrintRight(char* begin, char* end, UI4 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, UI4 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, SI4 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, SI4 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, UI8 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, UI8 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* begin, char* end, SI8 value, int column_count) {
-  return TPrintRight<char>(begin, end, Utf8Text(value).String(), column_count);
+char* PrintRight(char* start, char* stop, SI8 value, int column_count) {
+  return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintHex(char* begin, char* end, const void* pointer) {
+char* PrintHex(char* start, char* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintHex<char>(begin, end, ptr);
+  return TPrintHex<char>(start, stop, ptr);
 }
 
-char* PrintHex(char* begin, char* end, UI1 value) {
-  return TPrintHex<char, UI1>(begin, end, value);
+char* PrintHex(char* start, char* stop, UI1 value) {
+  return TPrintHex<char, UI1>(start, stop, value);
 }
 
-char* PrintHex(char* begin, char* end, SI1 value) {
-  return TPrintHex<char, UI1>(begin, end, (UI1)value);
+char* PrintHex(char* start, char* stop, SI1 value) {
+  return TPrintHex<char, UI1>(start, stop, (UI1)value);
 }
 
-char* PrintHex(char* begin, char* end, UI2 value) {
-  return TPrintHex<char, UI2>(begin, end, value);
+char* PrintHex(char* start, char* stop, UI2 value) {
+  return TPrintHex<char, UI2>(start, stop, value);
 }
 
-char* PrintHex(char* begin, char* end, SI2 value) {
-  return TPrintHex<char, UI2>(begin, end, (UI2)value);
+char* PrintHex(char* start, char* stop, SI2 value) {
+  return TPrintHex<char, UI2>(start, stop, (UI2)value);
 }
 
-char* PrintHex(char* begin, char* end, UI4 value) {
-  return TPrintHex<char, UI4>(begin, end, value);
+char* PrintHex(char* start, char* stop, UI4 value) {
+  return TPrintHex<char, UI4>(start, stop, value);
 }
 
-char* PrintHex(char* begin, char* end, SI4 value) {
-  return TPrintHex<char, UI4>(begin, end, (UI4)value);
+char* PrintHex(char* start, char* stop, SI4 value) {
+  return TPrintHex<char, UI4>(start, stop, (UI4)value);
 }
 
-char* PrintHex(char* begin, char* end, UI8 value) {
-  return TPrintHex<char, UI8>(begin, end, value);
+char* PrintHex(char* start, char* stop, UI8 value) {
+  return TPrintHex<char, UI8>(start, stop, value);
 }
 
-char* PrintHex(char* begin, char* end, SI8 value) {
-  return TPrintHex<char, UI8>(begin, end, (UI8)value);
+char* PrintHex(char* start, char* stop, SI8 value) {
+  return TPrintHex<char, UI8>(start, stop, (UI8)value);
 }
 
-char* PrintHex(char* begin, char* end, FLT value) {
+char* PrintHex(char* start, char* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<char, UI4>(begin, end, ui);
+  return TPrintHex<char, UI4>(start, stop, ui);
 }
 
-char* PrintHex(char* begin, char* end, DBL value) {
+char* PrintHex(char* start, char* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<char, UI8>(begin, end, ui);
+  return TPrintHex<char, UI8>(start, stop, ui);
 }
 
-char* PrintBinary(char* begin, char* end, const void* pointer) {
+char* PrintBinary(char* start, char* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintBinary<char>(begin, end, ptr);
+  return TPrintBinary<char>(start, stop, ptr);
 }
 
-char* PrintBinary(char* begin, char* end, UI1 value) {
-  return TPrintBinary<char, UI1>(begin, end, value);
+char* PrintBinary(char* start, char* stop, UI1 value) {
+  return TPrintBinary<char, UI1>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, SI1 value) {
-  return TPrintBinary<char, UI1>(begin, end, (UI1)value);
+char* PrintBinary(char* start, char* stop, SI1 value) {
+  return TPrintBinary<char, UI1>(start, stop, (UI1)value);
 }
 
-char* PrintBinary(char* begin, char* end, UI2 value) {
-  return TPrintBinary<char, UI2>(begin, end, value);
+char* PrintBinary(char* start, char* stop, UI2 value) {
+  return TPrintBinary<char, UI2>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, SI2 value) {
-  return TPrintBinary<char, UI2>(begin, end, (UI2)value);
+char* PrintBinary(char* start, char* stop, SI2 value) {
+  return TPrintBinary<char, UI2>(start, stop, (UI2)value);
 }
 
-char* PrintBinary(char* begin, char* end, UI4 value) {
-  return TPrintBinary<char, UI4>(begin, end, value);
+char* PrintBinary(char* start, char* stop, UI4 value) {
+  return TPrintBinary<char, UI4>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, SI4 value) {
-  return TPrintBinary<char, UI4>(begin, end, value);
+char* PrintBinary(char* start, char* stop, SI4 value) {
+  return TPrintBinary<char, UI4>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, UI8 value) {
-  return TPrintBinary<char, UI8>(begin, end, value);
+char* PrintBinary(char* start, char* stop, UI8 value) {
+  return TPrintBinary<char, UI8>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, SI8 value) {
-  return TPrintBinary<char, UI8>(begin, end, value);
+char* PrintBinary(char* start, char* stop, SI8 value) {
+  return TPrintBinary<char, UI8>(start, stop, value);
 }
 
-char* PrintBinary(char* begin, char* end, FLT value) {
+char* PrintBinary(char* start, char* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintBinary<char, UI4>(begin, end, ui);
+  return TPrintBinary<char, UI4>(start, stop, ui);
 }
 
-char* PrintBinary(char* begin, char* end, DBL value) {
+char* PrintBinary(char* start, char* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintBinary<char, UI8>(begin, end, ui);
+  return TPrintBinary<char, UI8>(start, stop, ui);
 }
 
-char* PrintSocket(char* begin, char* end, const void* start, size_t size) {
-  return TPrintSocket<char>(begin, end, start,
-                            reinterpret_cast<const char*>(start) + size);
+char* PrintSocket(char* start, char* stop, const void* begin, size_t size) {
+  return TPrintSocket<char>(start, stop, begin,
+                            reinterpret_cast<const char*>(begin) + size);
 }
 
-char* PrintSocket(char* begin, char* end, const void* start, const void* stop) {
-  return TPrintSocket<char>(begin, end, start, stop);
+char* PrintSocket(char* start, char* stop, const void* begin, const void* end) {
+  return TPrintSocket<char>(start, stop, begin, end);
 }
 
-char* PrintLine(char* cursor, char* end, char token, int column_count) {
-  return TPrintLine<char>(cursor, end, token, column_count);
+char* PrintLine(char* cursor, char* stop, char token, int column_count) {
+  return TPrintLine<char>(cursor, stop, token, column_count);
 }
 
-char* PrintLineString(char* cursor, char* end, const char* string,
+char* PrintLineString(char* cursor, char* stop, const char* string,
                       int column_count) {
-  return PrintLineString<char>(cursor, end, string, column_count);
+  return PrintLineString<char>(cursor, stop, string, column_count);
 }
 
 const char* Scan(const char* string, SI1& result) {
@@ -366,103 +367,103 @@ const char* Scan(const char* string, UI8& result) {
   return TScanUnsigned<UI8, char>(string, result);
 }
 
-UTF1::UTF1(char* begin, size_t buffer_size)
-    : begin(begin), end(begin + buffer_size - 1) {
-  ASSERT(begin);
+UTF1::UTF1(char* start, size_t buffer_size)
+    : start(start), stop(start + buffer_size - 1) {
+  ASSERT(start);
   ASSERT(buffer_size);
 }
 
-UTF1::UTF1(char* begin, char* end) : begin(begin), end(end) {
-  ASSERT(begin);
-  ASSERT(begin < end);
+UTF1::UTF1(char* start, char* stop) : start(start), stop(stop) {
+  ASSERT(start);
+  ASSERT(start < stop);
 }
 
-UTF1::UTF1(const UTF1& other) : begin(other.begin), end(other.end) {
-  ASSERT(begin);
-  ASSERT(end);
+UTF1::UTF1(const UTF1& other) : start(other.start), stop(other.stop) {
+  ASSERT(start);
+  ASSERT(stop);
 }
 
 UTF1& UTF1::Set(char* new_cursor) {
-  begin = new_cursor;
+  start = new_cursor;
   return *this;
 }
 
-UTF1& UTF1::Hex(UI1 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(UI1 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(SI1 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(SI1 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(UI2 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(UI2 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(SI2 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(SI2 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(UI4 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(UI4 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(SI4 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(SI4 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(UI8 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(UI8 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
-UTF1& UTF1::Hex(SI8 value) { return Set(TPrintHex<char>(begin, end, value)); }
+UTF1& UTF1::Hex(SI8 value) { return Set(TPrintHex<char>(start, stop, value)); }
 
 UTF1& UTF1::Hex(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<char>(begin, end, ui));
+  return Set(TPrintHex<char>(start, stop, ui));
 }
 
 UTF1& UTF1::Hex(DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Set(TPrintHex<char>(begin, end, ui));
+  return Set(TPrintHex<char>(start, stop, ui));
 }
 
 UTF1& UTF1::Hex(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintHex<char>(begin, end, ptr));
+  return Set(TPrintHex<char>(start, stop, ptr));
 }
 
 UTF1& UTF1::Binary(UI1 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(SI1 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(UI2 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(SI2 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(UI4 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(SI4 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(UI8 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(SI8 value) {
-  return Set(TPrintBinary<char>(begin, end, value));
+  return Set(TPrintBinary<char>(start, stop, value));
 }
 
 UTF1& UTF1::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char>(begin, end, ui));
+  return Set(TPrintBinary<char>(start, stop, ui));
 }
 
 UTF1& UTF1::Binary(DBL value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char>(begin, end, ui));
+  return Set(TPrintBinary<char>(start, stop, ui));
 }
 
 UTF1& UTF1::Binary(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintBinary<char>(begin, end, ptr));
+  return Set(TPrintBinary<char>(start, stop, ptr));
 }
 
 Utf8Text::Utf8Text() {}
@@ -565,80 +566,80 @@ Utf8LineString::Utf8LineString(const char* string, int column_count)
   // Nothing to do here. (:-)-+=<
 }
 
-UIW* COutUtf8(UIW* begin, CHW function, void* arg) {
-  return TCOut<char>(begin, function, arg);
+UIW* COutUtf8(UIW* start, SIW function, void* arg) {
+  return TCOut<char>(start, function, arg);
 }
 
-UIW* COutAutoUtf8(UIW* begin, CHW function, void* arg) {
-  return TCOutAuto<char>(begin, function, arg);
+UIW* COutAutoUtf8(UIW* start, SIW function, void* arg) {
+  return TCOutAuto<char>(start, function, arg);
 }
 
 }  // namespace _
 
 _::UTF1& operator<<(_::UTF1& utf, const char* string) {
-  return utf.Set(_::Print(utf.begin, utf.end, string));
+  return utf.Set(_::Print(utf.start, utf.stop, string));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, char value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, SI4 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, UI4 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, SI8 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, UI8 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 #if SEAM == _0_0_0__03
 _::UTF1& operator<<(_::UTF1& utf, FLT value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, DBL value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 #endif
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8Center item) {
-  return utf.Set(
-      _::PrintCenter(utf.begin, utf.end, item.String(), item.GetColumnCount()));
+  return utf.Set(_::PrintCenter(utf.start, utf.stop, item.String(),
+                                item.GetColumnCount()));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8Right item) {
   return utf.Set(
-      _::PrintRight(utf.begin, utf.end, item.String(), item.GetColumnCount()));
+      _::PrintRight(utf.start, utf.stop, item.String(), item.GetColumnCount()));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line) {
   return utf.Set(
-      _::PrintLine(utf.begin, utf.end, line.token, line.column_count));
+      _::PrintLine(utf.start, utf.stop, line.token, line.column_count));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line) {
   return utf.Set(
-      _::PrintLineString(utf.begin, utf.end, line.string, line.column_count));
+      _::PrintLineString(utf.start, utf.stop, line.string, line.column_count));
 }
 
 #endif  //< #if USING_UTF8
@@ -734,235 +735,235 @@ const char16_t* StringFind(const char16_t* text, const char16_t* query) {
   return StringFind<char16_t>(text, query);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, const char16_t* string) {
-  return TPrint<char16_t>(begin, end, string);
+char16_t* Print(char16_t* start, char16_t* stop, const char16_t* string) {
+  return TPrint<char16_t>(start, stop, string);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, char16_t character) {
-  return TPrintChar<char16_t>(begin, end, character);
+char16_t* Print(char16_t* start, char16_t* stop, char16_t character) {
+  return TPrintChar<char16_t>(start, stop, character);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, UI4 value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, UI4 value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, SI4 value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, SI4 value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, UI8 value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, UI8 value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, SI8 value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, SI8 value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, FLT value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, FLT value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* Print(char16_t* begin, char16_t* end, DBL value) {
-  return TPrint<char16_t>(begin, end, value);
+char16_t* Print(char16_t* start, char16_t* stop, DBL value) {
+  return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, const char16_t* string,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, const char16_t* string,
                       int column_count) {
-  return PrintCenter<char16_t>(begin, end, string, column_count);
+  return PrintCenter<char16_t>(start, stop, string, column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, char16_t character,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, char16_t character,
                       int column_count) {
-  return PrintCenter<char16_t>(begin, end, Text2(character).GetString(),
+  return PrintCenter<char16_t>(start, stop, Text2(character).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, SI4 value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, SI4 value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, UI4 value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, UI4 value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, UI8 value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, UI8 value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, SI8 value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, SI8 value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, FLT value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, FLT value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintCenter(char16_t* begin, char16_t* end, DBL value,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, DBL value,
                       int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, const char16_t* string,
+char16_t* PrintRight(char16_t* start, char16_t* stop, const char16_t* string,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, string, column_count);
+  return TPrintRight<char16_t>(start, stop, string, column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, char16_t character,
+char16_t* PrintRight(char16_t* start, char16_t* stop, char16_t character,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(character).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(character).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, UI4 value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, UI4 value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, SI4 value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, SI4 value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, UI8 value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, UI8 value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, SI8 value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, SI8 value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, FLT value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, FLT value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* begin, char16_t* end, DBL value,
+char16_t* PrintRight(char16_t* start, char16_t* stop, DBL value,
                      int column_count) {
-  return TPrintRight<char16_t>(begin, end, Text2(value).GetString(),
+  return TPrintRight<char16_t>(start, stop, Text2(value).GetString(),
                                column_count);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, const void* pointer) {
+char16_t* PrintHex(char16_t* start, char16_t* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintHex<char16_t>(begin, end, ptr);
+  return TPrintHex<char16_t>(start, stop, ptr);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, UI1 value) {
-  return TPrintHex<char16_t, UI1>(begin, end, value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, UI1 value) {
+  return TPrintHex<char16_t, UI1>(start, stop, value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, SI1 value) {
-  return TPrintHex<char16_t, UI1>(begin, end, (UI1)value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, SI1 value) {
+  return TPrintHex<char16_t, UI1>(start, stop, (UI1)value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, UI2 value) {
-  return TPrintHex<char16_t, UI2>(begin, end, value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, UI2 value) {
+  return TPrintHex<char16_t, UI2>(start, stop, value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, SI2 value) {
-  return TPrintHex<char16_t, UI2>(begin, end, (UI2)value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, SI2 value) {
+  return TPrintHex<char16_t, UI2>(start, stop, (UI2)value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, UI4 value) {
-  return TPrintHex<char16_t, UI4>(begin, end, value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, UI4 value) {
+  return TPrintHex<char16_t, UI4>(start, stop, value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, SI4 value) {
-  return TPrintHex<char16_t, UI4>(begin, end, (UI4)value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, SI4 value) {
+  return TPrintHex<char16_t, UI4>(start, stop, (UI4)value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, UI8 value) {
-  return TPrintHex<char16_t, UI8>(begin, end, value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, UI8 value) {
+  return TPrintHex<char16_t, UI8>(start, stop, value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, SI8 value) {
-  return TPrintHex<char16_t, UI8>(begin, end, (UI8)value);
+char16_t* PrintHex(char16_t* start, char16_t* stop, SI8 value) {
+  return TPrintHex<char16_t, UI8>(start, stop, (UI8)value);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, FLT value) {
+char16_t* PrintHex(char16_t* start, char16_t* stop, FLT value) {
   UI4 float_as_ui32 = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<char16_t, UI4>(begin, end, float_as_ui32);
+  return TPrintHex<char16_t, UI4>(start, stop, float_as_ui32);
 }
 
-char16_t* PrintHex(char16_t* begin, char16_t* end, DBL value) {
+char16_t* PrintHex(char16_t* start, char16_t* stop, DBL value) {
   UI8 double_as_ui64 = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<char16_t, UI8>(begin, end, double_as_ui64);
+  return TPrintHex<char16_t, UI8>(start, stop, double_as_ui64);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, const void* pointer) {
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintBinary<char16_t>(begin, end, ptr);
+  return TPrintBinary<char16_t>(start, stop, ptr);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI1 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI1 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI1 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI1 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI2 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI2 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI2 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI2 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI4 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI4 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI4 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI4 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI8 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI8 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI8 value) {
-  return TPrintBinary<char16_t>(begin, end, value);
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI8 value) {
+  return TPrintBinary<char16_t>(start, stop, value);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, FLT value) {
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Print(begin, end, ui);
+  return Print(start, stop, ui);
 }
 
-char16_t* TPrintBinary(char16_t* begin, char16_t* end, DBL value) {
+char16_t* TPrintBinary(char16_t* start, char16_t* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Print(begin, end, ui);
+  return Print(start, stop, ui);
 }
 
-char16_t* PrintSocket(char16_t* begin, char16_t* end, const void* start,
+char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
                       size_t size) {
-  return PrintSocket<char16_t>(begin, end, start,
+  return PrintSocket<char16_t>(start, stop, start,
                                reinterpret_cast<const char16_t*>(start) + size);
 }
 
-char16_t* PrintSocket(char16_t* begin, char16_t* end, const void* start,
+char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
                       const void* stop) {
-  return PrintSocket<char16_t>(begin, end, start, stop);
+  return PrintSocket<char16_t>(start, stop, start, stop);
 }
 }  // namespace _
 }  //< namespace _
@@ -1007,123 +1008,123 @@ const char16_t* Scan(const char16_t* string, DBL& result) {
   return TScan<char16_t>(string, result);
 }
 
-void COutUtf16(UIW* begin) { return Console<char16_t>(begin); }
+void COutUtf16(UIW* start) { return Console<char16_t>(start); }
 
-void DCOutUtf16(UIW* begin) { return DCOut<char16_t>(begin); }
+void DCOutUtf16(UIW* start) { return DCOut<char16_t>(start); }
 
-UTF2::UTF2(char16_t* begin, size_t buffer_size)
-    : begin(begin), end(begin + buffer_size - 1) {
-  ASSERT(begin);
+UTF2::UTF2(char16_t* start, size_t buffer_size)
+    : start(start), stop(start + buffer_size - 1) {
+  ASSERT(start);
   ASSERT(buffer_size);
 }
 
-UTF2::UTF2(char16_t* begin, char16_t* end) : begin(begin), end(end) {
-  ASSERT(begin);
-  ASSERT(begin < end);
+UTF2::UTF2(char16_t* start, char16_t* stop) : start(start), stop(stop) {
+  ASSERT(start);
+  ASSERT(start < stop);
 }
 
-UTF2::UTF2(const UTF2& other) : begin(other.begin), end(other.end) {
-  ASSERT(begin);
-  ASSERT(end);
+UTF2::UTF2(const UTF2& other) : start(other.start), stop(other.stop) {
+  ASSERT(start);
+  ASSERT(stop);
 }
 
 UTF2& UTF2::Set(char16_t* new_cursor) {
-  begin = new_cursor;
+  start = new_cursor;
   return *this;
 }
 
 UTF2& UTF2::Hex(UI1 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(SI1 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(UI2 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(SI2 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(UI4 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(SI4 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(UI8 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(SI8 value) {
-  return Set(TPrintHex<char16_t>(begin, end, value));
+  return Set(TPrintHex<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Hex(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<char16_t>(begin, end, ui));
+  return Set(TPrintHex<char16_t>(start, stop, ui));
 }
 
 UTF2& UTF2::Hex(DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Set(TPrintHex<char16_t>(begin, end, ui));
+  return Set(TPrintHex<char16_t>(start, stop, ui));
 }
 
 UTF2& UTF2::Hex(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintHex<char16_t>(begin, end, ptr));
+  return Set(TPrintHex<char16_t>(start, stop, ptr));
 }
 
 UTF2& UTF2::Binary(UI1 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(SI1 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(UI2 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(SI2 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(UI4 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(SI4 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(UI8 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(SI8 value) {
-  return Set(TPrintBinary<char16_t>(begin, end, value));
+  return Set(TPrintBinary<char16_t>(start, stop, value));
 }
 
 UTF2& UTF2::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char16_t>(begin, end, ui));
+  return Set(TPrintBinary<char16_t>(start, stop, ui));
 }
 
 UTF2& UTF2::Binary(DBL value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char16_t>(begin, end, ui));
+  return Set(TPrintBinary<char16_t>(start, stop, ui));
 }
 
 UTF2& UTF2::Binary(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintBinary<char16_t>(begin, end, ptr));
+  return Set(TPrintBinary<char16_t>(start, stop, ptr));
 }
 
 Text2::Text2() {}
@@ -1204,56 +1205,56 @@ int Utf16Right::GetColumnCount() { return column_count; }
 }  //< namespace _
 
 _::UTF2& operator<<(_::UTF2& utf, const char16_t* string) {
-  return utf.Set(_::Print(utf.begin, utf.end, string));
+  return utf.Set(_::Print(utf.start, utf.stop, string));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, char16_t value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, SI4 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, UI4 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, SI8 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, UI8 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, FLT value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, DBL value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, _::Utf16Center item) {
-  utf.Set(_::PrintCenter(utf.begin, utf.end, item.GetString(),
+  utf.Set(_::PrintCenter(utf.start, utf.stop, item.GetString(),
                          item.GetColumnCount()));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, _::Utf16Right item) {
-  utf.Set(_::PrintRight(utf.begin, utf.end, item.GetString(),
+  utf.Set(_::PrintRight(utf.start, utf.stop, item.GetString(),
                         item.GetColumnCount()));
 }
 
@@ -1324,9 +1325,9 @@ const char32_t* StringEquals(const char32_t* text_a, const char32_t* text_b) {
   return StringEquals<char32_t>(text_a, text_b);
 }
 
-const char32_t* StringEquals(const char32_t* cursor, const char32_t* end,
+const char32_t* StringEquals(const char32_t* cursor, const char32_t* stop,
                              const char32_t* text_b) {
-  return StringEquals<char32_t>(cursor, end, text_b);
+  return StringEquals<char32_t>(cursor, stop, text_b);
 }
 
 BOL TextQualifies(const char32_t* text) {
@@ -1350,235 +1351,235 @@ const char32_t* StringFind(const char32_t* text, const char32_t* query) {
   return StringFind<char32_t>(text, query);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, const char32_t* string) {
-  return TPrint<char32_t>(begin, end, string);
+char32_t* Print(char32_t* start, char32_t* stop, const char32_t* string) {
+  return TPrint<char32_t>(start, stop, string);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, char32_t character) {
-  return TPrintChar<char32_t>(begin, end, character);
+char32_t* Print(char32_t* start, char32_t* stop, char32_t character) {
+  return TPrintChar<char32_t>(start, stop, character);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, UI4 value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, UI4 value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, SI4 value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, SI4 value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, UI8 value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, UI8 value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, SI8 value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, SI8 value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, FLT value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, FLT value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* Print(char32_t* begin, char32_t* end, DBL value) {
-  return TPrint<char32_t>(begin, end, value);
+char32_t* Print(char32_t* start, char32_t* stop, DBL value) {
+  return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, const char32_t* string,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, const char32_t* string,
                       int column_count) {
-  return PrintCenter<char32_t>(begin, end, string, column_count);
+  return PrintCenter<char32_t>(start, stop, string, column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, char32_t character,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, char32_t character,
                       int column_count) {
-  return PrintCenter<char32_t>(begin, end, Text4(character).GetString(),
+  return PrintCenter<char32_t>(start, stop, Text4(character).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, SI4 value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, SI4 value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, UI4 value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, UI4 value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, UI8 value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, UI8 value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, SI8 value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, SI8 value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, FLT value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, FLT value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintCenter(char32_t* begin, char32_t* end, DBL value,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, DBL value,
                       int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, const char32_t* string,
+char32_t* PrintRight(char32_t* start, char32_t* stop, const char32_t* string,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, string, column_count);
+  return TPrintRight<char32_t>(start, stop, string, column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, char32_t character,
+char32_t* PrintRight(char32_t* start, char32_t* stop, char32_t character,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(character).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(character).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, UI4 value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, UI4 value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, SI4 value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, SI4 value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, UI8 value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, UI8 value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, SI8 value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, SI8 value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, FLT value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, FLT value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* begin, char32_t* end, DBL value,
+char32_t* PrintRight(char32_t* start, char32_t* stop, DBL value,
                      int column_count) {
-  return TPrintRight<char32_t>(begin, end, Text4(value).GetString(),
+  return TPrintRight<char32_t>(start, stop, Text4(value).GetString(),
                                column_count);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, const void* pointer) {
+char32_t* PrintHex(char32_t* start, char32_t* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintHex<char32_t, UIW>(begin, end, ptr);
+  return TPrintHex<char32_t, UIW>(start, stop, ptr);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, UI1 value) {
-  return TPrintHex<char32_t, UI1>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, UI1 value) {
+  return TPrintHex<char32_t, UI1>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, SI1 value) {
-  return TPrintHex<char32_t, UI1>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, SI1 value) {
+  return TPrintHex<char32_t, UI1>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, UI2 value) {
-  return TPrintHex<char32_t, UI2>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, UI2 value) {
+  return TPrintHex<char32_t, UI2>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, SI2 value) {
-  return TPrintHex<char32_t, UI2>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, SI2 value) {
+  return TPrintHex<char32_t, UI2>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, UI4 value) {
-  return TPrintHex<char32_t, UI4>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, UI4 value) {
+  return TPrintHex<char32_t, UI4>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, SI4 value) {
-  return TPrintHex<char32_t, UI4>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, SI4 value) {
+  return TPrintHex<char32_t, UI4>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, UI8 value) {
-  return TPrintHex<char32_t, UI8>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, UI8 value) {
+  return TPrintHex<char32_t, UI8>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, SI8 value) {
-  return TPrintHex<char32_t, UI8>(begin, end, value);
+char32_t* PrintHex(char32_t* start, char32_t* stop, SI8 value) {
+  return TPrintHex<char32_t, UI8>(start, stop, value);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, FLT value) {
+char32_t* PrintHex(char32_t* start, char32_t* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<char32_t, UI8>(begin, end, ui);
+  return TPrintHex<char32_t, UI8>(start, stop, ui);
 }
 
-char32_t* PrintHex(char32_t* begin, char32_t* end, DBL value) {
+char32_t* PrintHex(char32_t* start, char32_t* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<char32_t, UI8>(begin, end, ui);
+  return TPrintHex<char32_t, UI8>(start, stop, ui);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, const void* pointer) {
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintBinary<char32_t>(begin, end, ptr);
+  return TPrintBinary<char32_t>(start, stop, ptr);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI1 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI1 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI1 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI1 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI2 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI2 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI2 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI2 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI4 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI4 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI4 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI4 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, UI8 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI8 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, SI8 value) {
-  return TPrintBinary<char32_t>(begin, end, value);
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI8 value) {
+  return TPrintBinary<char32_t>(start, stop, value);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, FLT value) {
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintBinary<char32_t, UI8>(begin, end, ui);
+  return TPrintBinary<char32_t, UI8>(start, stop, ui);
 }
 
-char32_t* TPrintBinary(char32_t* begin, char32_t* end, DBL value) {
+char32_t* TPrintBinary(char32_t* start, char32_t* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintBinary<char32_t, UI8>(begin, end, ui);
+  return TPrintBinary<char32_t, UI8>(start, stop, ui);
 }
 
-char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
+char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* start,
                       size_t size) {
-  return PrintSocket<char32_t>(begin, end, start,
+  return PrintSocket<char32_t>(start, stop, start,
                                reinterpret_cast<const char32_t*>(start) + size);
 }
 
-char32_t* PrintSocket(char32_t* begin, char32_t* end, const void* start,
+char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* start,
                       const void* stop) {
-  return PrintSocket<char32_t>(begin, end, start, stop);
+  return PrintSocket<char32_t>(start, stop, start, stop);
 }
 
 const char32_t* Scan(const char32_t* string, SI1& result) {
@@ -1621,123 +1622,123 @@ const char32_t* Scan(const char32_t* string, DBL& result) {
   return TScan<char32_t>(string, result);
 }
 
-void COuUtf32(UIW* begin) { return Console<char32_t>(begin); }
+void COuUtf32(UIW* start) { return Console<char32_t>(start); }
 
-void COuUtf32(UIW* begin) { return DCOut<char32_t>(begin); }
+void COuUtf32(UIW* start) { return DCOut<char32_t>(start); }
 
-UTF4::UTF4(char32_t* begin, size_t buffer_size)
-    : begin(begin), end(begin + buffer_size - 1) {
-  ASSERT(begin);
+UTF4::UTF4(char32_t* start, size_t buffer_size)
+    : start(start), stop(start + buffer_size - 1) {
+  ASSERT(start);
   ASSERT(buffer_size);
 }
 
-UTF4::UTF4(char32_t* begin, char32_t* end) : begin(begin), end(end) {
-  ASSERT(begin);
-  ASSERT(begin < end);
+UTF4::UTF4(char32_t* start, char32_t* stop) : start(start), stop(stop) {
+  ASSERT(start);
+  ASSERT(start < stop);
 }
 
-UTF4::UTF4(const UTF4& other) : begin(other.begin), end(other.end) {
-  ASSERT(begin);
-  ASSERT(end);
+UTF4::UTF4(const UTF4& other) : start(other.start), stop(other.stop) {
+  ASSERT(start);
+  ASSERT(stop);
 }
 
 UTF4& UTF4::Set(char32_t* new_cursor) {
-  begin = new_cursor;
+  start = new_cursor;
   return *this;
 }
 
 UTF4& UTF4::Hex(UI1 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(SI1 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(UI2 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(SI2 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(UI4 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(SI4 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(UI8 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(SI8 value) {
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Set(TPrintHex<char32_t>(begin, end, value));
+  return Set(TPrintHex<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Hex(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintHex<char32_t>(begin, end, ptr));
+  return Set(TPrintHex<char32_t>(start, stop, ptr));
 }
 
 UTF4& UTF4::Binary(UI1 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(SI1 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(UI2 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(SI2 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(UI4 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(SI4 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(UI8 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(SI8 value) {
-  return Set(TPrintBinary<char32_t>(begin, end, value));
+  return Set(TPrintBinary<char32_t>(start, stop, value));
 }
 
 UTF4& UTF4::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char32_t>(begin, end, ui));
+  return Set(TPrintBinary<char32_t>(start, stop, ui));
 }
 
 UTF4& UTF4::Binary(DBL value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintBinary<char32_t>(begin, end, ui));
+  return Set(TPrintBinary<char32_t>(start, stop, ui));
 }
 
 UTF4& UTF4::Binary(const void* pointer) {
   UIW ptr = reinterpret_cast<UIW>(pointer);
-  return Set(TPrintBinary<char32_t>(begin, end, ptr));
+  return Set(TPrintBinary<char32_t>(start, stop, ptr));
 }
 
 Text4::Text4() {}
@@ -1818,56 +1819,56 @@ int Utf32Right::GetColumnCount() { return column_count; }
 }  // namespace _
 
 _::UTF4& operator<<(_::UTF4& utf, const char32_t* string) {
-  return utf.Set(_::Print(utf.begin, utf.end, string));
+  return utf.Set(_::Print(utf.start, utf.stop, string));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, char32_t value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.end, value));
+  return utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, SI4 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, UI4 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, SI8 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, UI8 value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, FLT value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, DBL value) {
-  utf.Set(_::Print(utf.begin, utf.end, value));
+  utf.Set(_::Print(utf.start, utf.stop, value));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, _::Utf32Center item) {
-  utf.Set(_::PrintCenter(utf.begin, utf.end, item.GetString(),
+  utf.Set(_::PrintCenter(utf.start, utf.stop, item.GetString(),
                          item.GetColumnCount()));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, _::Utf32Right item) {
-  utf.Set(_::PrintRight(utf.begin, utf.end, item.GetString(),
+  utf.Set(_::PrintRight(utf.start, utf.stop, item.GetString(),
                         item.GetColumnCount()));
 }
 

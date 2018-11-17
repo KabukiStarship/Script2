@@ -103,9 +103,9 @@ int TStringCompare(const Char* string_a, const Char* string_b,
   for (SI4 i = 0; i < 10; ++i) *(cursor + i) = 'x';                   \
   *(cursor + 21) = 0;                                                 \
   enum { kSize = 256 };                                               \
-  char buffer[kSize];                                                 \
-  sprintf_s(buffer, kSize, ui_format, value);                         \
-  Printf(" Expecting %s:%i ", buffer, TStringLength<Char>(buffer))
+  char socket[kSize];                                                 \
+  sprintf_s(socket, kSize, ui_format, value);                         \
+  Printf(" Expecting %s:%i ", socket, TStringLength<Char>(socket))
 #define PRINT_PRINTED TPrintPrinted<Char>(TPuffItoSBegin<Char>())
 #else
 #include "test_release.inl"
@@ -177,81 +177,81 @@ I TStringLength(const Char* cursor) {
   return (I)(TStringEnd<Char>(cursor) - cursor);
 }
 
-/* Prints a Unicode string to the given buffer.
+/* Prints a Unicode string to the given socket.
  @return Nil upon failure or a pointer to the nil-term Char upon success.
- @param  cursor    The beginning of the buffer.
- @param  end       The last UI1 in the buffer.
+ @param  cursor    The beginning of the socket.
+ @param  stop       The last UI1 in the socket.
  @param  string    The string to utf.
  @param  delimiter The delimiter to utf (usually nil).
- @desc   This algorithm is designed to fail if the buffer is not a valid buffer
+ @desc   This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if string is nil. */
 template <typename Char = char>
-Char* TPrint(Char* cursor, Char* end, const Char* string, Char delimiter = 0) {
+Char* TPrint(Char* cursor, Char* stop, const Char* string, Char delimiter = 0) {
   ASSERT(cursor);
   ASSERT(string);
 
-  if (cursor >= end) return nullptr;
+  if (cursor >= stop) return nullptr;
 
   char c = *string++;
   while (c) {
     *cursor++ = c;
-    if (cursor >= end) return nullptr;
+    if (cursor >= stop) return nullptr;
     c = *string++;
   }
   *cursor = delimiter;
   return cursor;
 }
 
-/* Prints a Unicode string to the given buffer.
+/* Prints a Unicode string to the given socket.
 @return Nil upon failure or a pointer to the nil-term Char upon success.
-@param  cursor    The beginning of the buffer.
-@param  size      The size of the buffer in Char(s).
+@param  cursor    The beginning of the socket.
+@param  size      The size of the socket in Char(s).
 @param  string    The string to utf.
 @param  delimiter The delimiter to utf (usually nil).
-@desc   This algorithm is designed to fail if the buffer is not a valid buffer
+@desc   This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = char>
 Char* TPrint(Char* cursor, SIW size, const Char* string, Char delimiter = 0) {
   return TPrint<Char>(cursor, cursor + size - 1, string, delimiter);
 }
 
-/* Prints a Unicode Char to the given buffer.
+/* Prints a Unicode Char to the given socket.
 @return Nil upon failure or a pointer to the nil-term Char upon success.
-@param  cursor    The beginning of the buffer.
-@param  end       The last UI1 in the buffer.
+@param  cursor    The beginning of the socket.
+@param  stop       The last UI1 in the socket.
 @param  character The Char to utf.
-@desc   This algorithm is designed to fail if the buffer is not a valid buffer
+@desc   This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = char>
-Char* TPrint(Char* cursor, Char* end, Char character) {
+Char* TPrint(Char* cursor, Char* stop, Char character) {
   ASSERT(cursor);
-  ASSERT(cursor < end);
+  ASSERT(cursor < stop);
 
-  if (cursor + 1 >= end) return nullptr;
+  if (cursor + 1 >= stop) return nullptr;
 
   *cursor++ = character;
   *cursor = 0;
   return cursor;
 }
 
-/* Prints a Unicode Char to the given buffer.
+/* Prints a Unicode Char to the given socket.
 @return Nil upon failure or a pointer to the nil-term Char upon success.
-@param  cursor    The beginning of the buffer.
-@param  size      The size of the buffer in Char(s).
+@param  cursor    The beginning of the socket.
+@param  size      The size of the socket in Char(s).
 @param  string    The string to utf.
-@desc   This algorithm is designed to fail if the buffer is not a valid buffer
+@desc   This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = char>
 Char* TPrint(Char* cursor, SIW size, Char character) {
   return TPrint<Char>(cursor, cursor + size, character);
 }
 
-/* Prints a Unicode Char to the given buffer.
+/* Prints a Unicode Char to the given socket.
 @return Nil upon failure or a pointer to the nil-term Char upon success.
-@param  cursor    The beginning of the buffer.
-@param  size      The size of the buffer in Char(s).
+@param  cursor    The beginning of the socket.
+@param  size      The size of the socket in Char(s).
 @param  character The Char to utf.
-@desc   This algorithm is designed to fail if the buffer is not a valid buffer
+@desc   This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = char>
 Char* TPrintChar(Char* cursor, SIW size, Char character) {
@@ -260,11 +260,11 @@ Char* TPrintChar(Char* cursor, SIW size, Char character) {
 
 /* Prints a hex value to the Console. */
 template <typename Char, typename UI>
-Char* TPrintHex(Char* cursor, Char* end, UI value) {
+Char* TPrintHex(Char* cursor, Char* stop, UI value) {
   enum { kHexStringLengthSizeMax = sizeof(UI) * 2 + 3 };
 
   ASSERT(cursor);
-  if (cursor + kHexStringLengthSizeMax >= end) return nullptr;
+  if (cursor + kHexStringLengthSizeMax >= stop) return nullptr;
 
   *cursor++ = '0';
   *cursor++ = 'x';
@@ -278,8 +278,8 @@ Char* TPrintHex(Char* cursor, Char* end, UI value) {
 
 /* Prints the given value to Binary. */
 template <typename Char, typename T>
-Char* TPrintBinary(Char* cursor, Char* end, T value) {
-  if (cursor + sizeof(UI8) * 8 >= end) {
+Char* TPrintBinary(Char* cursor, Char* stop, T value) {
+  if (cursor + sizeof(UI8) * 8 >= stop) {
     return nullptr;
   }
 
@@ -297,35 +297,35 @@ inline BOL TIsWhitespace(Char character) {
   return character <= ' ';
 }
 
-/* Prints a single decimal to the buffer.
+/* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking and if the SEAM ==
 _0_0_0 (1), then this function will utf debug data. */
 template <typename Char = char>
-inline Char* TPrintDecimal(Char* buffer, Char value) {
-  *reinterpret_cast<Char*>(buffer) = '0' + value;
+inline Char* TPrintDecimal(Char* socket, Char value) {
+  *reinterpret_cast<Char*>(socket) = '0' + value;
   PRINT_PRINTED;
-  return buffer;
+  return socket;
 }
 
-/* Prints a single decimal to the buffer.
+/* Prints a single decimal to the socket.
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
-inline Char* TPrintChar(Char* buffer, Char value) {
-  *buffer++ = value;
+inline Char* TPrintChar(Char* socket, Char value) {
+  *socket++ = value;
   PRINT_PRINTED;
-  return buffer;
+  return socket;
 }
 
-/* Prints a single decimal to the buffer.
+/* Prints a single decimal to the socket.
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
-inline Char* TPrintChar(Char* buffer, Char* end, Char value) {
-  if (!buffer || buffer >= end) return nullptr;
-  *buffer++ = value;
+inline Char* TPrintChar(Char* socket, Char* stop, Char value) {
+  if (!socket || socket >= stop) return nullptr;
+  *socket++ = value;
   PRINT_PRINTED;
-  return buffer;
+  return socket;
 }
 
 inline char* PrintChar(char* cursor, char c) {
@@ -347,31 +347,31 @@ BOL TIsDigit(Char c) {
   return (c >= '0') && (c <= '9');
 }
 
-/* Scans the given buffer for an unsigned integer (UI).
+/* Scans the given socket for an unsigned integer (UI).
 @return Nil if there is no UI to scan.
-@param buffer The beginning of the buffer.
+@param socket The beginning of the socket.
 @param result The UI to write the scanned UI. */
 template <typename UI, typename Char = char>
-const Char* TScanUnsigned(const Char* buffer, UI& result) {
-  ASSERT(buffer);
-  PRINTF("\nScanning unsigned value:%s", buffer);
-  const Char* cursor = buffer;
+const Char* TScanUnsigned(const Char* socket, UI& result) {
+  ASSERT(socket);
+  PRINTF("\nScanning unsigned value:%s", socket);
+  const Char* cursor = socket;
   Char c = *cursor++;
   if (!TIsDigit<Char>(c)) return nullptr;
 
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* end = cursor;  // Store end to return.
+  const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (SI4)(cursor - buffer));
+         (SI4)(cursor - socket));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
   UI pow_10_ui2 = 1;
 
-  while (cursor >= buffer) {
+  while (cursor >= socket) {
     c = *cursor--;
     pow_10_ui2 *= 10;
     UI new_value = value + pow_10_ui2 * (c - '0');
@@ -381,7 +381,7 @@ const Char* TScanUnsigned(const Char* buffer, UI& result) {
   }
   PRINTF("\nvalue:%u", (uint)value);
   result = value;
-  return end;
+  return stop;
 }
 
 /* Prints two chars to the console.
@@ -392,29 +392,29 @@ inline Char* TPrintNil(Char* cursor) {
   return cursor;
 }
 
-/* Prints a two decimals to the buffer.
+/* Prints a two decimals to the socket.
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = char>
-inline Char* TPrint2Decimals(Char* buffer, UI2 decimal_pair) {
+inline Char* TPrint2Decimals(Char* socket, UI2 decimal_pair) {
   enum { kSizeBits = sizeof(Char) * 8 };
-  buffer[0] = (Char)(decimal_pair >> 8);
+  socket[0] = (Char)(decimal_pair >> 8);
   char c = (char)decimal_pair;
-  buffer[1] = (Char)(c);
+  socket[1] = (Char)(c);
   PRINT_PRINTED;
-  return buffer;
+  return socket;
 }
 
-inline char* PrintCharPair(char* buffer, UI2 value) {
+inline char* PrintCharPair(char* socket, UI2 value) {
 #if ALIGN_MEMORY
-  buffer[0] = (char)(value >> 8);
-  buffer[1] = (char)(value);
+  socket[0] = (char)(value >> 8);
+  socket[1] = (char)(value);
 #else
-  *((UI2*)buffer) = value;
+  *((UI2*)socket) = value;
 #endif
   using Char = char;
   PRINT_PRINTED;
-  return buffer;
+  return socket;
 }
 
 inline char16_t* PrintCharPair(char16_t* cursor, UI2 decimal_pair) {
@@ -425,7 +425,7 @@ inline char32_t* PrintCharPair(char32_t* cursor, UI2 decimal_pair) {
   return TPrint2Decimals<char32_t>(cursor, decimal_pair);
 }
 
-/* Prints 8 decimals to the given buffer with given LUT.*/
+/* Prints 8 decimals to the given socket with given LUT.*/
 template <typename Char = char>
 Char* TPrint8Decimals(Char* cursor, UI4 value, const UI2* lut) {
   PRINT("\n    Printing 8 decimals:");
@@ -461,16 +461,16 @@ inline void TPrint8or16Decimals(Char* cursor, UI4 lsd, const UI2* lut,
 inline UI4 ValueUI4(UI4 value) { return value; }
 inline UI4 ValueUI4(UI8 value) { return (UI4)value; }
 
-/* Prints the give value to the given buffer as a Unicode string.
-@return Nil upon buffer overflow and a pointer to the nil-term Char upon
+/* Prints the give value to the given socket as a Unicode string.
+@return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
-@param  cursor The beginning of the buffer.
-@param  end    The end address of the buffer. */
+@param  cursor The beginning of the socket.
+@param  stop    The stop address of the socket. */
 template <typename UI = UI8, typename Char = char>
-Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
+Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
   BEGIN_ITOS_ALGORITHM;
 
-  if (!cursor || cursor >= end) return nullptr;
+  if (!cursor || cursor >= stop) return nullptr;
 
   Char* nil_ptr;
   UI2 pow_10_ui2, delta = 0;
@@ -487,14 +487,14 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
     PRINT("\n    Range:[0, 9] length:1 ");
   Print1:
     nil_ptr = cursor + delta + 1;
-    if (nil_ptr >= end) return nullptr;
+    if (nil_ptr >= stop) return nullptr;
     TPrintDecimal<Char>(cursor, (Char)value);
     return TPrintNil<Char>(cursor + delta + 1);
   } else if (value < 100) {
   Print2:
     PRINT("\n    Range:[10, 99] length:2 ");
     nil_ptr = cursor + delta + 2;
-    if (cursor + delta + 2 >= end) return nullptr;
+    if (cursor + delta + 2 >= stop) return nullptr;
     PrintCharPair(cursor, lut[value]);
     return TPrintNil<Char>(cursor + delta + 2);
   } else {
@@ -504,7 +504,7 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
       Print4A:
         PRINT("\n    Range:[1000, 1023] length:4");
         nil_ptr = cursor + delta + 4;
-        if (nil_ptr >= end) return nullptr;
+        if (nil_ptr >= stop) return nullptr;
         UI2 digits2and1 = (UI2)(value - pow_10_ui2);
 #if CPU_ENDIAN == LITTLE_ENDIAN
         cursor[0] = '1';
@@ -519,7 +519,7 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
     Print3:
       PRINT("\n    Range:[100, 999] length:3");
       nil_ptr = cursor + delta + 3;
-      if (nil_ptr >= end) return nullptr;
+      if (nil_ptr >= stop) return nullptr;
       UI2 digits2and1 = (UI2)value, pow_10_ui2 = 100;
       Char digit = (Char)(digits2and1 / pow_10_ui2);
       digits2and1 -= digit * pow_10_ui2;
@@ -532,14 +532,14 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
       Print5A:
         PRINT("\n    Range:[10000, 16383] length:5");
         nil_ptr = cursor + delta + 5;
-        if (nil_ptr >= end) return nullptr;
+        if (nil_ptr >= stop) return nullptr;
         cursor = TPrintChar<Char>(cursor, '1');
         value -= pow_10_ui2;
       } else {
       Print4:
         PRINT("\n    Range:[1024, 9999] length:4");
         nil_ptr = cursor + delta + 4;
-        if (nil_ptr >= end) return nullptr;
+        if (nil_ptr >= stop) return nullptr;
         TPrintNil<Char>(nil_ptr);
       }
       pow_10_ui2 = 100;
@@ -557,7 +557,7 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
     Print5:
       PRINT("\n    Range:[10000, 65535] length:5");
       nil_ptr = cursor + delta + 5;
-      if (nil_ptr >= end) return nullptr;
+      if (nil_ptr >= stop) return nullptr;
       UI4 value_ui4 = ValueUI4(value);
       pow_10_ui2 = 10000;
       Char digit6 = (UI1)(value_ui4 / pow_10_ui2);
@@ -575,14 +575,14 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
       Print7A:
         PRINT("\n    Range:[100000, 1048575] length:7");
         nil_ptr = cursor + delta + 7;
-        if (nil_ptr >= end) return nullptr;
+        if (nil_ptr >= stop) return nullptr;
         cursor = PrintChar(cursor, '1');
         value -= pow_10_ui4;
       } else {
       Print6:
         PRINT("\n    Range:[131072, 999999] length:6");
         nil_ptr = cursor + delta + 6;
-        if (nil_ptr >= end) return nullptr;
+        if (nil_ptr >= stop) return nullptr;
         TPrintNil<Char>(nil_ptr);
       }
       UI4 value_ui4 = (UI4)value;
@@ -607,7 +607,7 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
     Print7:
       PRINT("\n    Range:[1048576, 9999999] length:7");
       nil_ptr = cursor + delta + 7;
-      if (nil_ptr >= end) return nullptr;
+      if (nil_ptr >= stop) return nullptr;
       UI2 pow_10_ui2 = 10000;
       UI4 value_ui4 = ValueUI4(value);
       UI2 digits6and5 = value_ui4 / pow_10_ui2,
@@ -699,47 +699,47 @@ Char* TPrintUnsigned(Char* cursor, Char* end, UI value) {
 }
 
 template <typename UI = UI8, typename Char = char>
-inline Char* TPrintUnsigned(Char* buffer, int size, UI value) {
-  return TPrintUnsigned<UI, Char>(buffer, buffer + size - 1, value);
+inline Char* TPrintUnsigned(Char* socket, int size, UI value) {
+  return TPrintUnsigned<UI, Char>(socket, socket + size - 1, value);
 }
 
-/* Writes the give value to the given buffer as an ASCII string.
-@return Nil upon buffer overflow and a pointer to the nil-term Char upon
+/* Writes the give value to the given socket as an ASCII string.
+@return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = char>
-inline Char* TPrintSigned(Char* buffer, Char* end, SI value) {
+inline Char* TPrintSigned(Char* socket, Char* stop, SI value) {
   if (value >= 0) {
-    return TPrintUnsigned<UI, Char>(buffer, end, (UI)value);
+    return TPrintUnsigned<UI, Char>(socket, stop, (UI)value);
   }
-  *buffer++ = '-';
-  return TPrintUnsigned<UI, Char>(buffer, end, (UI)(-(SI)value));
+  *socket++ = '-';
+  return TPrintUnsigned<UI, Char>(socket, stop, (UI)(-(SI)value));
 }
 
-/* Writes the give value to the given buffer as an ASCII string.
-@return Nil upon buffer overflow and a pointer to the nil-term Char upon
+/* Writes the give value to the given socket as an ASCII string.
+@return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = char>
-inline Char* TPrintSigned(Char* buffer, int size, SI value) {
-  return TPrintSigned<SI, UI, Char>(buffer, buffer + size - 1, value);
+inline Char* TPrintSigned(Char* socket, int size, SI value) {
+  return TPrintSigned<SI, UI, Char>(socket, socket + size - 1, value);
 }
 
-/* Scans the given buffer for an Signed Integer (SI).
+/* Scans the given socket for an Signed Integer (SI).
 @return Nil if there is no UI to scan.
-@param buffer The beginning of the buffer.
+@param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
 template <typename SI = SIW, typename UI = UIW, typename Char>
-const Char* TScanSigned(const Char* buffer, SI& result) {
-  ASSERT(buffer);
+const Char* TScanSigned(const Char* socket, SI& result) {
+  ASSERT(socket);
   SI sign;
-  const Char* cursor = buffer;
+  const Char* cursor = socket;
   Char c = *cursor++;
   if (c == '-') {
     PRINTF("\nScanning negative backwards:\"");
-    c = *buffer++;
+    c = *socket++;
     sign = -1;
   } else {
     PRINTF("\nScanning positive backwards:\"");
@@ -750,16 +750,16 @@ const Char* TScanSigned(const Char* buffer, SI& result) {
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* end = cursor;  // Store end to return.
+  const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (SI4)(cursor - buffer));
+         (SI4)(cursor - socket));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
   UI pow_10_ui2 = 1;
 
-  while (cursor >= buffer) {
+  while (cursor >= socket) {
     c = *cursor--;
     pow_10_ui2 *= 10;
     UI new_value = value + pow_10_ui2 * (c - '0');
@@ -768,7 +768,7 @@ const Char* TScanSigned(const Char* buffer, SI& result) {
     PRINTF("\nvalue:%u", (uint)value);
   }
   result = sign * value;
-  return end;
+  return stop;
 }
 
 }  // namespace _
@@ -826,11 +826,11 @@ int TMSbAssertedReverse(UI value) {
 }
 
 template <typename Char>
-Char* TPrint3(Char* buffer, Char* end, Char a, Char b, Char c) {
-  if (!buffer || buffer + 3 >= end) return nullptr;
-  *buffer++ = a;
-  *buffer++ = b;
-  *buffer++ = c;
+Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
+  if (!socket || socket + 3 >= stop) return nullptr;
+  *socket++ = a;
+  *socket++ = b;
+  *socket++ = c;
 }
 
 /* A decimal number in floating-point format. */
@@ -886,38 +886,38 @@ class TBinary {
   }
 
   template <typename Char = char>
-  static Char* Print(Char* buffer, Char* end, Float value) {
+  static Char* Print(Char* socket, Char* stop, Float value) {
     // Not handling NaN and inf
     if (IsNaN(value)) {
-      if (end - buffer < 4) return nullptr;
-      buffer[0] = 'N';
-      buffer[1] = 'a';
-      buffer[2] = 'N';
-      buffer[3] = 0;
-      return buffer + 4;
+      if (stop - socket < 4) return nullptr;
+      socket[0] = 'N';
+      socket[1] = 'a';
+      socket[2] = 'N';
+      socket[3] = 0;
+      return socket + 4;
     }
     if (IsInfinite(value)) {
-      if (end - buffer < 4) return nullptr;
+      if (stop - socket < 4) return nullptr;
       UI f = *reinterpret_cast<UI*>(&value);
-      buffer[0] = (f >> (sizeof(UI) * 8 - 1)) ? '-' : '+';
-      buffer[1] = 'i';
-      buffer[2] = 'n';
-      buffer[3] = 'f';
-      buffer[4] = 0;
-      return buffer + 5;
+      socket[0] = (f >> (sizeof(UI) * 8 - 1)) ? '-' : '+';
+      socket[1] = 'i';
+      socket[2] = 'n';
+      socket[3] = 'f';
+      socket[4] = 0;
+      return socket + 5;
     }
 
     if (value == 0) {
-      return TPrint3<Char>(buffer, end, (Char)'0', (Char)'.', (Char)'0');
+      return TPrint3<Char>(socket, stop, (Char)'0', (Char)'.', (Char)'0');
     }
     if (value < 0) {
-      *buffer++ = '-';
+      *socket++ = '-';
       value = -value;
     }
     SI4 k;
-    Char* cursor = TPrint<Char>(buffer, end, value, k);
+    Char* cursor = TPrint<Char>(socket, stop, value, k);
     if (!cursor) return cursor;
-    return Standardize<Char>(buffer, end, cursor - buffer, k);
+    return Standardize<Char>(socket, stop, cursor - socket, k);
   }
 
   template <typename UI = UIW>
@@ -960,7 +960,7 @@ class TBinary {
   static inline void Multiply(TBinary& result, TBinary& a, TBinary& b) {}
 
   template <typename Char>
-  static Char* Print(Char* buffer, Char* end, Float value, SI4& k) {
+  static Char* Print(Char* socket, Char* stop, Float value, SI4& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
     v.NormalizedBoundaries(lower_estimate, upper_estimate);
@@ -971,7 +971,7 @@ class TBinary {
     TBinary w_plus(upper_estimate, c_mk), w_minus(lower_estimate, c_mk);
     w_minus.f++;
     w_plus.f--;
-    return DigitGen<Char>(buffer, end, W, w_plus, w_plus.f - w_minus.f, k);
+    return DigitGen<Char>(socket, stop, W, w_plus, w_plus.f - w_minus.f, k);
   }
 
   TBinary NormalizeBoundary() const {
@@ -1024,7 +1024,7 @@ class TBinary {
   // Prints the integer portion of the floating-point number.
   //@return Nil upon failure or a pointer to the nil-term Char upon success.
   template <typename Char>
-  static Char* DigitGen(Char* cursor, Char* end, const TBinary& w,
+  static Char* DigitGen(Char* cursor, Char* stop, const TBinary& w,
                         const TBinary& m_plus, UI8 delta, SI4& k) {
     TBinary one(((UI8)1) << -m_plus.e, m_plus.e), wp_w = m_plus - w;
     UI4 d, pow_10, p_1 = static_cast<UI4>(m_plus.f >> -one.e);
@@ -1070,7 +1070,7 @@ class TBinary {
       d = p_1 / pow_10;
       p_1 -= d * pow_10;
 
-      if (cursor >= end) return nullptr;
+      if (cursor >= stop) return nullptr;
 
       if (d) cursor = TPrintDecimal<Char>(cursor, d);
 
@@ -1088,7 +1088,7 @@ class TBinary {
       p_2 *= 10;
       delta *= 10;
       char d = static_cast<char>(p_2 >> -one.e);
-      if (cursor >= end) return nullptr;
+      if (cursor >= stop) return nullptr;
       if (d) *cursor++ = '0' + d;
       p_2 &= one.f - 1;
       --kappa;
@@ -1136,42 +1136,42 @@ class TBinary {
   }
 
   template <typename Char = char>
-  static Char* Standardize(Char* buffer, Char* end, SIW length, SI4 k) {
+  static Char* Standardize(Char* socket, Char* stop, SIW length, SI4 k) {
     const SIW kk = length + k;  // 10^(kk-1) <= v < 10^kk
     Char* nil_term_char;
     if (length <= kk && kk <= 21) {  // 1234e7 -> 12340000000
-      for (SIW i = length; i < kk; i++) buffer[i] = '0';
-      buffer[kk] = '.';
-      buffer[kk + 1] = '0';
-      nil_term_char = &buffer[kk + 2];
+      for (SIW i = length; i < kk; i++) socket[i] = '0';
+      socket[kk] = '.';
+      socket[kk + 1] = '0';
+      nil_term_char = &socket[kk + 2];
       *nil_term_char = '\0';
       return nil_term_char;
     } else if (0 < kk && kk <= 21) {  // 1234e-2 -> 12.34
-      SocketShiftUp(&buffer[kk + 1], LastByte(&buffer[kk]), length - kk);
-      buffer[kk] = '.';
-      nil_term_char = &buffer[length + 1];
+      SocketShiftUp(&socket[kk + 1], LastByte(&socket[kk]), length - kk);
+      socket[kk] = '.';
+      nil_term_char = &socket[length + 1];
       *nil_term_char = '\0';
       return nil_term_char;
     } else if (-6 < kk && kk <= 0) {  // 1234e-6 -> 0.001234
       const SIW offset = 2 - kk;
-      SocketShiftUp(&buffer[offset], LastByte(&buffer[0]), length);
-      buffer[0] = '0';
-      buffer[1] = '.';
-      for (SIW i = 2; i < offset; i++) buffer[i] = '0';
-      nil_term_char = &buffer[length + offset];
+      SocketShiftUp(&socket[offset], LastByte(&socket[0]), length);
+      socket[0] = '0';
+      socket[1] = '.';
+      for (SIW i = 2; i < offset; i++) socket[i] = '0';
+      nil_term_char = &socket[length + offset];
       *nil_term_char = 0;
       return nil_term_char;
     } else if (length == 1) {
       // 1e30
-      buffer[1] = 'e';
-      return TPrintSigned<SIW, Char>(buffer + 2, end, kk - 1);
+      socket[1] = 'e';
+      return TPrintSigned<SIW, Char>(socket + 2, stop, kk - 1);
     }
     // else 1234e30 -> 1.234e33
-    SocketShiftUp(&buffer[2], LastByte(&buffer[1]), length - 1);
+    SocketShiftUp(&socket[2], LastByte(&socket[1]), length - 1);
 
-    *(++buffer)++ = '.';
-    *buffer++ = 'e';
-    return TPrintSigned<SIW, Char>(buffer + length + 2, end, kk - 1);
+    *(++socket)++ = '.';
+    *socket++ = 'e';
+    return TPrintSigned<SIW, Char>(socket + length + 2, stop, kk - 1);
   }
 };
 
@@ -1198,14 +1198,14 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 /*
   // Non-working algorithm DOES NOT converts a string-to-FLT.
   //@return nil if there is no number to scan or pointer to the next char after
-  // the end of the scanned number upon success.
+  // the stop of the scanned number upon success.
   //@brief Algorithm uses a 32-bit unsigned value to scan the floating-point
   // number, which can only have 10 digits max, so the maximum floating-point
   // number digit count we can scan is 9 digits long.
   template <typename Char = char>
-  const Char* Scan(const Char* buffer, Float& result) {
-    ASSERT(buffer);
-    PRINTF("\n\nScanning FLT:%s", buffer);
+  const Char* Scan(const Char* socket, Float& result) {
+    ASSERT(socket);
+    PRINTF("\n\nScanning FLT:%s", socket);
 
     enum {
       kCharCountMax = 9,  // < (1 + [p*log_10(2)], where p = 32
@@ -1218,32 +1218,32 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 
     // Scan sign of number:
 
-    if (*buffer == '-') {
+    if (*socket == '-') {
       sign = TNaNSigned<UI4, UI4>();
-      ++buffer;
+      ++socket;
     } else {
       sign = 0;
     }
 
     PRINTF("\nScanning integer portion:%i", static_cast<SI4>(result));
 
-    const Char* cursor = buffer;
+    const Char* cursor = socket;
     Char c = *cursor++;
     if (!TIsDigit<Char>(c)) return nullptr;
 
     // Find length:
     c = *cursor++;
     while (TIsDigit<Char>(c)) c = *cursor++;
-    const Char* end = cursor;  // Store end to return.
+    const Char* stop = cursor;  // Store stop to return.
     cursor -= 2;
     PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-           (SI4)(cursor - buffer));
+           (SI4)(cursor - socket));
 
     c = *cursor--;
     ui_value = (UI4)(c - '0');
     pow_10_ui2 = 1;
 
-    while (cursor >= buffer) {
+    while (cursor >= socket) {
       c = *cursor--;
       pow_10_ui2 *= 10;
       UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
@@ -1254,41 +1254,41 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 
     // integer = unsigned_integer;
 
-    PRINTF("\nfound %i and pointed at \'%c\'", integer, *end);
+    PRINTF("\nfound %i and pointed at \'%c\'", integer, *stop);
 
     // Numbers may start with a dot like .1, .2, ...
-    if (*buffer == '.') goto ScanDecimals;
+    if (*socket == '.') goto ScanDecimals;
 
-    if (*end != '.') {
+    if (*stop != '.') {
       result = static_cast<FLT>(integer);
       PRINTF("\nFound value:%f", result);
-      return end;
+      return stop;
     }
-    ++buffer;
+    ++socket;
   ScanDecimals:
     // We have to inline the ScanUnsigned here in order to detect if there
     // are too many decimals
-    cursor = end;
+    cursor = stop;
     Char c = *cursor++;
     if (!TIsDigit<Char>(c)) {
       PRINTF("Found a period.");
       return nullptr;
     }
-    PRINTF("\nConverting decimals:\"%s\" with max length %i", buffer,
+    PRINTF("\nConverting decimals:\"%s\" with max length %i", socket,
            kCharCountMax);
 
     // Find length
     c = *cursor++;
     while (TIsDigit<Char>(c)) c = *cursor++;
 
-    end = cursor;  // Store end to return.
+    stop = cursor;  // Store stop to return.
     cursor -= 2;
 
-    SIW length = cursor - buffer;
+    SIW length = cursor - socket;
     PRINTF("\nPointed at \'%c\' and found length:%i", *cursor, (SI4)length);
 
     if (length > kCharCountMax) {
-      cursor = buffer + kCharCountMax;
+      cursor = socket + kCharCountMax;
       length = kCharCountMax;
     }
 
@@ -1297,7 +1297,7 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
     ui_value = (UI4)(c - '0'), pow_10_ui2 = 1;
 
     // Then iterate through the rest in a loop.
-    while (cursor >= buffer) {
+    while (cursor >= socket) {
       c = *cursor--;
       pow_10_ui2 *= 10;
       UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
@@ -1342,27 +1342,27 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
       PRINTF("\nNo \'e\' or \'E\' found.");
       // ui_value = sign | FloatNormalize<FLT, UI4>(integer);
       // result = *reinterpret_cast<Float*>(&ui_value);
-      return end;
+      return stop;
     }
 
     // @todo This is no doubt optimization, not sure how much it would help
     // though.
     SI4 signed_value;
-    buffer = TScanSigned<SI4, UI4, Char>(end, signed_value);
-    if (!buffer) {
+    socket = TScanSigned<SI4, UI4, Char>(stop, signed_value);
+    if (!socket) {
       PRINTF("\nNo exponent found.");
       // result = reinterpret_cast(sign |);
-      return end;
+      return stop;
     }
 
     if (signed_value < -128 || signed_value > 127) {
       PRINTF("\nExponent out of range!");
       // result = result_flt;
-      return end;
+      return stop;
     }
 
     // We're finally done so store the result.
     // result = result_flt;
 
-    return end;
+    return stop;
   } */

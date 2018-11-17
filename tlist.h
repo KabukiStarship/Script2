@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII OBJ Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII Obj Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -95,8 +95,8 @@ void ListWipe(CList<Size, Index>* list) {
 count_max must be in multiples of 4. Given there is a fixed size, both the
 count_max and size will be downsized to a multiple of 4 automatically. */
 template <typename Size = UI4, typename Index = SI2>
-CList<Size, Index>* ListInit(UIW* buffer, Size size, Index count_max) {
-  if (!buffer)  // This may be nullptr if ListNew<Size,Index> (Index, Size)
+CList<Size, Index>* ListInit(UIW* socket, Size size, Index count_max) {
+  if (!socket)  // This may be nullptr if ListNew<Size,Index> (Index, Size)
                 // failed.
     return nullptr;
   PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
@@ -114,7 +114,7 @@ CList<Size, Index>* ListInit(UIW* buffer, Size size, Index count_max) {
   // count_max = AlignUp<Index> (count_max);
   // PRINTF ("\n  Aligning up to count_max:%i", (int)count_max)
 
-  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(buffer);
+  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(socket);
   list->size = size;
   list->count = 0;
   list->count_max = count_max;
@@ -126,17 +126,17 @@ CList<Size, Index>* ListInit(UIW* buffer, Size size, Index count_max) {
 /* Creates a list from dynamic memory. */
 template <typename Size = UI4, typename Index = SI2>
 UIW* ListNew(Index count_max, Size size) {
-  count_max = AlignUpUnsigned<UI8, Size>(count_max);
+  count_max = TAlignUpUnsigned<UI8, Size>(count_max);
   if (size < ListSizeMin<Size, Index>(count_max)) return nullptr;
-  UIW* buffer = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[size >> kWordBitCount];
 
-  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(buffer);
+  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(socket);
   list->size = size;
   list->count = 0;
   list->count_max = count_max;
   // WIPE
   ListWipe<Size, Index>(list);
-  return buffer;
+  return socket;
 }
 
 /* Creates a list from dynamic memory. */
@@ -145,15 +145,15 @@ template <typename Size = UI4, typename Index = SI2,
 inline UIW* ListNew(Index count_max) {
   count_max = AlignUp<Index>(count_max);
   Size size = ListSizeMin<Size, Index, largest_expected_type>(count_max);
-  UIW* buffer = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[size >> kWordBitCount];
 
-  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(buffer);
+  CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(socket);
   list->size = size;
   list->count = 0;
   list->count_max = count_max;
   // WIPE
   ListWipe<Size, Index>(list);
-  return buffer;
+  return socket;
 }
 
 /* Returns the type bytes array. */
@@ -163,7 +163,7 @@ SIN* ListTypes(CList<Size, Index>* list) {
   return reinterpret_cast<SIN*>(list) + sizeof(CList<Size, Index>);
 }
 
-/* Gets a pointer to the begging of the data buffer. */
+/* Gets a pointer to the begging of the data socket. */
 template <typename Size = UI4, typename Index = SI2>
 inline char* ListDataBegin(CList<Size, Index>* list) {
   ASSERT(list)
@@ -193,7 +193,7 @@ inline char* ListDataEnd(CList<Size, Index>* list, Index index) {
   return reinterpret_cast<char*>(list) + list->size - 1;
 }
 
-/* Returns a pointer to the begging of the data buffer. */
+/* Returns a pointer to the begging of the data socket. */
 template <typename Size = UI4, typename Index = SI2>
 Socket ListDataVector(CList<Size, Index>* list) {
   return Socket(ListDataBegin<Size, Index>(list),
@@ -223,13 +223,13 @@ void ListDataSpaceBelow(CList<Size, Index>* list, Index index,
   char* data_stop;
   if (index == 0) {
     data_stop = ListDataBegin<Size, Index>(list);
-    free_space.begin = free_space.end = data_stop;
+    free_space.start = free_space.stop = data_stop;
     return;
   }
   ASSERT(index >= 0 && index <= list->count)
   if (index == list->count) {
-    free_space.begin = ListDataStop<Size, Index>(list);
-    free_space.end = ListDataEnd<Size, Index>(list);
+    free_space.start = ListDataStop<Size, Index>(list);
+    free_space.stop = ListDataEnd<Size, Index>(list);
     return;
   }
   data_stop = ListDataStop<Size, Index>(list, index);
@@ -299,7 +299,7 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
   // any data.
   Socket free_space;
   ListDataSpaceBelow<Size, Index>(list, index, free_space);
-  if (Write(free_space.begin, free_space.end, type, value)) return index;
+  if (Write(free_space.start, free_space.stop, type, value)) return index;
 
   // 6. Shift up the data enough to fit the new value.
 
@@ -310,13 +310,13 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
   return count;
 }
 
-/* Adds a type-value to the end of the list. */
+/* Adds a type-value to the stop of the list. */
 template <typename Size = UI4, typename Index = SI2>
 inline Index ListPush(CList<Size, Index>* list, SIN type, const void* value) {
   return ListInsert<Size, Index>(list, type, value, list->count);
 }
 
-/* Removes a type-value to the end of the list. */
+/* Removes a type-value to the stop of the list. */
 template <typename Size = UI4, typename Index = SI2>
 inline Index ListPop(CList<Size, Index>* list) {
   return ListRemove<Size, Index>(list, list->count - 1);
@@ -361,8 +361,8 @@ BOL ListContains(CList<Size, Index>* list, void* address) {
 template <typename Size = UI4, typename Index = SI2>
 Index ListRemove(CList<Size, Index>* list, Index index) {
   Index count = list->count;
-  StackRemove<Size, Index>(ListOffsets<Size, Index>(list), count, index);
-  return StackRemove<SIN, Index>(ListTypes<Size, Index>(list), count, index);
+  TStackRemove<Size, Index>(ListOffsets<Size, Index>(list), count, index);
+  return TStackRemove<SIN, Index>(ListTypes<Size, Index>(list), count, index);
 }
 
 /* Finds a tuple that contains the given pointer. */
@@ -372,10 +372,10 @@ Index ListFind(CList<Size, Index>* list, void* adress) {
   Size *offsets = ListOffsets<Size, Index>(list),
        *offset_end = offsets + list->count;
   while (offsets < offset_end) {
-    char *begin = reinterpret_cast<char*>(list) + *offsets++,
-         *end = ListDataStop<Size, Index>(list, index);
-    if (reinterpret_cast<char*>(address) >= begin &&
-        reinterpret_cast<char*>(address) <= end)
+    char *start = reinterpret_cast<char*>(list) + *offsets++,
+         *stop = ListDataStop<Size, Index>(list, index);
+    if (reinterpret_cast<char*>(address) >= start &&
+        reinterpret_cast<char*>(address) <= stop)
       return true;
   }
   return -1;
@@ -418,30 +418,30 @@ template <typename Size = UI4, typename Index = SI2>
 class List {
  public:
   /* Constructs a list with a given count_max with estimated size_bytes. */
-  List(Index count_max = 0) : begin(ListNew<Size, Index>(count_max)) {
+  List(Index count_max = 0) : start(ListNew<Size, Index>(count_max)) {
     // Nothing to do here! (:-)|==<,
   }
 
   /* Constructs a List with the given size_bytes and count_max.
   size_bytes and count_max both get rounded down to a multiple of 64
-  before allocating the buffer. If the count_max is not enough for the
-  buffer then the size_bytes will be increased to the minimum size to
+  before allocating the socket. If the count_max is not enough for the
+  socket then the size_bytes will be increased to the minimum size to
   make a valid ASCII List. */
   List(Index count_max, Size size)
-      : begin(ListNew<Size, Index>(count_max, size)) {
+      : start(ListNew<Size, Index>(count_max, size)) {
     // Nothing to do here! (:-)+==<
   }
 
-  /* Deletes the dynamically allocated buffer. */
-  ~List() { delete[] begin; }
+  /* Deletes the dynamically allocated socket. */
+  ~List() { delete[] start; }
 
   inline Index Push(SIN type, const void* value) {
-    return ListPush<Size, Index>(OBJ(), type, value);
+    return ListPush<Size, Index>(Obj(), type, value);
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
   inline Index Insert(UI1 type, void* value, Index index) {
-    return ListInsert<Size, Index>(OBJ(), type, value, index);
+    return ListInsert<Size, Index>(Obj(), type, value, index);
   }
 
   /* Returns the maximum count of the give list in the current memory
@@ -449,10 +449,10 @@ class List {
   inline Index CountMax() { return ListCountMax<Size, Index>(); }
 
   /* Clears the list without overwriting the contents. */
-  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(OBJ()); }
+  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(Obj()); }
 
   /* Deletes the list contents by overwriting it with zeros. */
-  inline void Wipe() { ListWipe<Size, Index>(OBJ()); }
+  inline void Wipe() { ListWipe<Size, Index>(Obj()); }
 
   /* Returns true if this crabs contains only the given address.
       @warning This function assumes that the member you're checking for came
@@ -460,34 +460,34 @@ class List {
                are required to ensure the value came from a ASCII List.
       @return  True if the data lies in the list's memory socket. */
   inline BOL Contains(void* value) {
-    return ListContains<Size, Index>(OBJ(), value);
+    return ListContains<Size, Index>(Obj(), value);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(void* adress) {
-    return ListRemove<Size, Index>(OBJ(), adress);
+    return ListRemove<Size, Index>(Obj(), adress);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(Index index) {
-    return ListRemove<Size, Index>(OBJ(), index);
+    return ListRemove<Size, Index>(Obj(), index);
   }
 
   /* Removes the last item from the list. */
-  inline Index Pop() { return ListPop<Size, Index>(OBJ()); }
+  inline Index Pop() { return ListPop<Size, Index>(Obj()); }
 
   /* Prints the given AsciiList to the console. */
   inline UTF1& Print(UTF1& printer) {
-    return PrintList<Size, Index>(printer, OBJ());
+    return PrintList<Size, Index>(printer, Obj());
   }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline CList<Size, Index>* OBJ() {
-    return reinterpret_cast<CList<Size, Index>*>(begin);
+  inline CList<Size, Index>* Obj() {
+    return reinterpret_cast<CList<Size, Index>*>(start);
   }
 
  private:
-  CObject obj_;  //< Dynamically allocated word-aligned buffer.
+  CObject obj_;  //< Dynamically allocated word-aligned socket.
 };
 
 }  // namespace _

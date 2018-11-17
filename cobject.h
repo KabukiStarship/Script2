@@ -22,29 +22,29 @@ specific language governing permissions and limitations under the License. */
 #include "ctest.h"
 
 /* ASCII Factory manages memory for ASCII Objects.
-@return Nil upon failure or if no return buffer is expected, or a pointer to a
-word-aligned buffer upon success.
-@param begin    Pointer to an existing buffer or nil to create a buffer.
+@return Nil upon failure or if no return socket is expected, or a pointer to a
+word-aligned socket upon success.
+@param start    Pointer to an existing socket or nil to create a socket.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef UIW* (*AsciiFactory)(UIW* begin, CHW function, void* arg);
+typedef UIW* (*AsciiFactory)(UIW* start, SIW function, void* arg);
 
 namespace _ {
 
-/* ASCII OBJ with programmable ASCII Factory. */
+/* ASCII Obj with programmable ASCII Factory. */
 struct CObject {
-  UIW* begin;            //< Pointer to the contiguous ASCII OBJ.
-  AsciiFactory factory;  //< ASCII OBJ Factory function pointer.
+  UIW* start;            //< Pointer to the contiguous ASCII Obj.
+  AsciiFactory factory;  //< ASCII Obj Factory function pointer.
 };
 
 enum {
   kFactoryCreateOrDelete =
-      0,          //< ASCII Factory function: Default Create Destroy OBJ.
-  kFactoryGrow,   //< ASCII Factory function: Grow OBJ function index.
-  kFactoryClone,  //< ASCII Factory function: Clones OBJ the given object.
+      0,          //< ASCII Factory function: Default Create Destroy Obj.
+  kFactoryGrow,   //< ASCII Factory function: Grow Obj function index.
+  kFactoryClone,  //< ASCII Factory function: Clones Obj the given object.
 };
 
-/* Destructs the given ASCII OBJ Factory. */
+/* Destructs the given ASCII Obj Factory. */
 API void Destroy(CObject stack);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max

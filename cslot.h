@@ -28,20 +28,20 @@ namespace _ {
 /* A Slot in a Door in a Chinese Room to pass messages through.
 A Slot is Ring Buffer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
-pointers for the (buffer) begin and (data) start of the ring buffer and
+pointers for the (socket) start and (data) start of the ring socket and
 you may write packed data.
 
 */
 struct Slot {
-  char *stop,  //< Stop of the data in the ring buffer.
-      *end,    //< End of the ring buffer.
-      *begin,  //< Beginning of the ring buffer.
-      *start;  //< Start of the data in the ring buffer.
+  char *stop,  //< Stop of the data in the ring socket.
+      *stop,   //< End of the ring socket.
+      *start,  //< Beginning of the ring socket.
+      *start;  //< Start of the data in the ring socket.
 
-  /* Initializes the ring buffer with the given buffer begin and size.
-  @param begin Pointer to the beginning of the ring buffer.
-  @param size  The size of the ring buffer in bytes. */
-  Slot(UIW* buffer, UIW size);
+  /* Initializes the ring socket with the given socket start and size.
+  @param start Pointer to the beginning of the ring socket.
+  @param size  The size of the ring socket in bytes. */
+  Slot(UIW* socket, UIW size);
 
   /* Initializes the slot from the BIn. */
   Slot(BIn* bin);
@@ -49,14 +49,14 @@ struct Slot {
   /* Initializes the slot from the BIn. */
   Slot(BOut* bout);
 
-  /* Sets the ring buffer to the given buffer begin and size.
-      @param begin Pointer to the beginning of the ring buffer.
-      @param size  The size of the ring buffer in bytes. */
-  inline BOL Set(UIW* buffer, UIW size) {
-    if (!buffer) return true;
-    char* l_begin = reinterpret_cast<char*>(buffer);
-    begin = start = stop = l_begin;
-    end = l_begin + size;
+  /* Sets the ring socket to the given socket start and size.
+      @param start Pointer to the beginning of the ring socket.
+      @param size  The size of the ring socket in bytes. */
+  inline BOL Set(UIW* socket, UIW size) {
+    if (!socket) return true;
+    char* l_begin = reinterpret_cast<char*>(socket);
+    start = start = stop = l_begin;
+    stop = l_begin + size;
     return false;
   }
 
@@ -65,18 +65,18 @@ struct Slot {
           and nil else wise. */
   void* Contains(void* address);
 
-  /* Clears the buffer without zeroing it out. */
-  inline void Clear() { start = end = begin; }
+  /* Clears the socket without zeroing it out. */
+  inline void Clear() { start = stop = start; }
 
   /* Zeros out the Slot. */
   void Wipe();
 
-  /* Checks if there is space in the buffer.
-  @return True if the buffer has space. */
+  /* Checks if there is space in the socket.
+  @return True if the socket has space. */
   BOL IsWritable();
 
-  /* Checks if there is data in the buffer.
-      @return True if the buffer has data. */
+  /* Checks if there is data in the socket.
+      @return True if the socket has data. */
   BOL IsReadable();
 
   /* Reads the given Operation input parameters from the slot to the args.
@@ -107,7 +107,7 @@ struct Slot {
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const Op& op, void** args);
 
-  /* Writes a single string to the slot buffer.
+  /* Writes a single string to the slot socket.
   @param message The string message to send.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const char* message);
@@ -121,7 +121,7 @@ struct Slot {
 #endif
 };
 
-}  //< namespace _
+}  // namespace _
 
 #if CRABS_TEXT
 /* Prints out the bin to the text. */

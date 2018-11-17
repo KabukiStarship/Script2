@@ -23,12 +23,12 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 template <typename UI>
-const char* BenchmarkCaseLoop(char* cursor, char* end, const char* args) {
+const char* BenchmarkCaseLoop(char* cursor, char* stop, const char* args) {
   PrintHeading((sizeof(UI) == 8) ? "Testing 64-bit use case"
                                  : "Testing 32-bit use case");
 }
 
-}  //< namespace _
+}  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTBENCHMARK
 #endif  //< #if SEAM >= _0_0_0__12

@@ -36,7 +36,7 @@ constexpr Index ArrayCountUpperLimit(Index dimension_count,
                                      Index element_count) {
   Size header_size =
       (Size)(sizeof(TCStack<T, Size, Index>) +
-             AlignUpSigned<Index>(dimension_count * sizeof(Index)));
+             TAlignUpSigned<Index>(dimension_count * sizeof(Index)));
   return (Index)(((~(Size)0) - 7) - header_size) / (Size)sizeof(T);
 }
 
@@ -72,7 +72,7 @@ constexpr Size ArraySize(const Index* dimensions) {
 }
 
 /* Initializes an stack of n elements of the given type.
-    @param buffer An stack of bytes large enough to fit the stack. */
+    @param socket An stack of bytes large enough to fit the stack. */
 template <typename T = SIW, typename Size = uint, typename Index = int>
 TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
   ASSERT(dimensions);
@@ -80,9 +80,9 @@ TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
   if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
   Size size =
       (Size)sizeof(TCStack<T, Size, Index>) + dimension_count * sizeof(T);
-  UIW* buffer = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[size >> kWordBitCount];
   TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(buffer);
+      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   stack->count_max = dimension_count;
@@ -99,9 +99,9 @@ Index ArrayElementCountMax() {
 template <typename T = SIW, typename Size = uint, typename Index = int>
 TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
   ASSERT(dimensions);
-  const Index* begin = dimensions;
-  Index count = (*begin++) - 1, element_count = *begin++, index = count;
-  while (index-- > 0) element_count *= *begin++;
+  const Index* start = dimensions;
+  Index count = (*start++) - 1, element_count = *start++, index = count;
+  while (index-- > 0) element_count *= *start++;
   Size size = ((Size)element_count * (Size)sizeof(T));
 }
 
@@ -124,7 +124,7 @@ Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
   return reinterpret_cast<Index*>(elements);
 }
 
-/* Gets the end address of the packed Index dimensions.
+/* Gets the stop address of the packed Index dimensions.
     @param ary ASCII Array data structure..
     @return Pointer to the first element in the array. */
 template <typename T, typename Size = uint, typename Index = int>
@@ -185,33 +185,33 @@ template <typename T = SIW, typename Size = uint, typename Index = int>
 class TArray {
  public:
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number of elements in the array buffer. */
-  TArray(Index demension_count = 1) : begin(ArrayNew<T, Size, Index>(1)) {}
+      @param max_elements The max number of elements in the array socket. */
+  TArray(Index demension_count = 1) : start(ArrayNew<T, Size, Index>(1)) {}
 
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number of elements in the array buffer. */
+      @param max_elements The max number of elements in the array socket. */
   Array(const Array& other)
       : size_array(other.size_array),
         size_stack(other.size_stack),
         count_max(other.count_max),
         count(other.count) {
-    Index *elements_other = StackStart<Index, Size, Index>(other.stack),
-          *element = StackStart<Index, Size, Index>(stack),
+    Index *elements_other = TStackStart<Index, Size, Index>(other.stack),
+          *element = TStackStart<Index, Size, Index>(stack),
           *elements_end = StackStop<Index, Size, Index>(stack);
     while (element < elements_end) *element++ = *elements_other++;
   }
 
   /* Deletes the dynamically allocated Array. */
-  ~Array() { delete[] begin; }
+  ~Array() { delete[] start; }
 
-  /* Clones the other object; up-sizing the buffer only if required. */
+  /* Clones the other object; up-sizing the socket only if required. */
   void Clone(Array<T, Size, Index>& other) {}
 
   /* Gets the number of dimensions. */
   Index GetDimensionCount() { return stack->count; }
 
   /* Gets the dimensions array. */
-  T* Dimension() { return StackStart<T, Size, Index>(stack); }
+  T* Dimension() { return TStackStart<T, Size, Index>(stack); }
 
   /* Gets the underlying array. */
   T* Elements() { return ArrayElements<T, Size, Index>(stack); }
@@ -223,11 +223,11 @@ class TArray {
   }
 
   inline TCArray<T, Size, Index>* stack {
-    return reinterpret_cast<TCArray<T, Size, Index>*>(begin);
+    return reinterpret_cast<TCArray<T, Size, Index>*>(start);
   }
 
  private:
-  UIW* begin;  //< Dynamically word-aligned buffer.
+  UIW* start;  //< Dynamically word-aligned socket.
 };             //< class Array
 }  // namespace _
 

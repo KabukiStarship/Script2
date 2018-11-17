@@ -39,14 +39,14 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CHW OperandIndex(Operand* operand, char* begin, char* end) {
+CHW OperandIndex(Operand* operand, char* start, char* stop) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
   CHW index = OpFirst(op), last = OpLast(op);
   ASSERT(index);
   for (; index <= last; ++index) {
-    if (StringEquals(begin, end, operand->Star(index, nullptr)->name)) {
+    if (StringEquals(start, stop, operand->Star(index, nullptr)->name)) {
       return index;
     }
   }
@@ -93,7 +93,7 @@ Slot& OperandQuery(Operand* root, const char* address, Slot& slot) {
 
   int index = *address++;
   const Op* op = root->Star(index, nullptr);
-  char buffer[1024];
+  char socket[1024];
   PRINTF("%s", op->name)
   index = *address++;
   while (index) {
@@ -102,7 +102,7 @@ Slot& OperandQuery(Operand* root, const char* address, Slot& slot) {
     PRINTF(".%s", op->name)
     index = *address++;
   }
-  slot.Write(buffer);
+  slot.Write(socket);
   return slot;
 }
 #endif

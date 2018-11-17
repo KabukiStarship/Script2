@@ -11,11 +11,12 @@
 #define PRINT_LINE(c)
 #define PRINT_TIME(date)
 #define PRINT_TYPE(type, value)
-#define PRINT_SOCKET(begin, end_or_size)
+#define PRINT_SOCKET(start, end_or_size)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
 #define PRINT_TOBJ(stack)
-#define SOCKET_SAVE(begin, end)
+#define PRINT_FUNCTION
+#define SOCKET_SAVE(start, stop)
 #define ASSERT(condition) \
   if (!_::Test(condition)) _::TestAssert(__FUNCTION__, __FILE__, __LINE__)
 #define CHECK(condition)

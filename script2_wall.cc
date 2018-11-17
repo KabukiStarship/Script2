@@ -31,27 +31,27 @@ namespace _ {
 
 Wall::~Wall() {
   if (is_dynamic_) {
-    char* buffer = reinterpret_cast<char*>(doors_);
-    delete[] buffer;
+    char* socket = reinterpret_cast<char*>(doors_);
+    delete[] socket;
   }
 }
 
 Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
   size_bytes = size_bytes < kMinSizeBytes ? (UIT)kMinSizeBytes : size_bytes;
-  size_bytes = AlignUpUnsigned<SI8, size_t>(size_bytes);
+  size_bytes = TAlignUpUnsigned<SI8, size_t>(size_bytes);
   size_t size_words = (size_bytes >> sizeof(void*)) + 3;
-  UIW *buffer = new UIW[size_words],
-      *aligned_buffer = AlignUpPointer8<UIW>(buffer);
+  UIW *socket = new UIW[size_words],
+      *aligned_buffer = AlignUpPointer8<UIW>(socket);
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
-  size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
-  begin = buffer;
+  size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
+  start = socket;
   doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
-  StackInit(buffer, size_bytes >> sizeof(UIW));
+  StackInit(socket, size_bytes >> sizeof(UIW));
 }
 
-Wall::Wall(UIW* buffer, size_t size_bytes) {
-  // char* ptr     = reinterpret_cast<char*> (buffer);//,
+Wall::Wall(UIW* socket, size_t size_bytes) {
+  // char* ptr     = reinterpret_cast<char*> (socket);//,
   //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
   //    * end_ptr = ptr + size_bytes;
   enum {
@@ -60,13 +60,13 @@ Wall::Wall(UIW* buffer, size_t size_bytes) {
   // UIT size_words = (size_bytes >> kBitsShift) + 3;
   //< Computer engineering voodoo for aligning to 64-bit boundary.
 
-  UIW* aligned_buffer = AlignUpPointer8<UIW>(buffer);
+  UIW* aligned_buffer = AlignUpPointer8<UIW>(socket);
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
-  size_bytes -= sizeof(UIW) * (aligned_buffer - buffer);
-  begin = buffer;
+  size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
+  start = socket;
   doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
-  StackInit(buffer, size_bytes >> sizeof(UIW));
+  StackInit(socket, size_bytes >> sizeof(UIW));
 }
 
 Wall::Wall(TCArray<Door*>* doors) {}

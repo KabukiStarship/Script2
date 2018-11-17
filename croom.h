@@ -96,7 +96,7 @@ There are two ways to access Doors in the CR. in the Root Scope, there are:
 @code
 Use Case Scenario:
 Actors: Jo  - The app developer.
-        Sam - The end-user.
+        Sam - The stop-user.
 1.  Jo is creating an App and needs to make a Chinese Room so Jo downloads
     Script, starts his app, and makes a Room. Jo defines a Floor
     statically but is does not define any walls.
@@ -114,7 +114,7 @@ Actors: Jo  - The app developer.
     8.  Host adds the SlotIn, MirroOut, and Slot to the Ceiling.
 9.  Jo wants to add a Server so Jo creates Wall_1 with 1MB space.
     10. Host creates a Wall_1 with 1MB memory.
-11. Jo wants needs to distribute information to the end-users so Jo
+11. Jo wants needs to distribute information to the stop-users so Jo
     creates Dictionary in Wall_1 with some keys and values.
     12. Host creates dictionary and adds keys and values.
 13. Jo complies the program and launches the server.
@@ -142,7 +142,7 @@ class Room : public Operand {
     kRoomFloorSize = CRABS_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
-    kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 buffer.
+    kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
   };
 
   /* Creates a Room with the given size.
@@ -218,8 +218,8 @@ class Room : public Operand {
   virtual int Main(const char** args, int args_count);
 
   /* Handles Script Commands.
-      @param text     Beginning of the Text buffer.
-      @param text_end End of the Text buffer.
+      @param text     Beginning of the Text socket.
+      @param text_end End of the Text socket.
       @return Returns nil upon success and an error string upon failure. */
   virtual char CommandNext();
 
@@ -242,7 +242,7 @@ class Room : public Operand {
   Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
       *device_,                        //< DC4: the current device control.
       *devices_;               //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];  //< Room Floor buffer.
+  UIW start[kFloorSizeWords];  //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

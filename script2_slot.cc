@@ -48,40 +48,40 @@ const Op* ReturnError(Slot* slot, Error error, const UIT* header, UIT offset,
   return reinterpret_cast<const Op*>(error);
 }
 
-Slot::Slot(UIW* buffer, UIW size) {
-  ASSERT(buffer);
+Slot::Slot(UIW* socket, UIW size) {
+  ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
-  char* l_begin = reinterpret_cast<char*>(buffer);
-  begin = l_begin;
+  char* l_begin = reinterpret_cast<char*>(socket);
+  start = l_begin;
   start = l_begin;
   stop = l_begin;
-  end = l_begin + size - 1;
+  stop = l_begin + size - 1;
 }
 
 Slot::Slot(BIn* bin) {
   ASSERT(bin);
   char* l_begin = reinterpret_cast<char*>(bin) + sizeof(BIn);
-  begin = l_begin;
+  start = l_begin;
   start = l_begin + bin->start;
   stop = l_begin + bin->stop;
-  end = l_begin + bin->size;
+  stop = l_begin + bin->size;
 }
 
 Slot::Slot(BOut* bout) {
   ASSERT(bout);
   char* l_begin = reinterpret_cast<char*>(bout) + sizeof(BIn);
-  begin = l_begin;
+  start = l_begin;
   start = l_begin + bout->start;
   stop = l_begin + bout->stop;
-  end = l_begin + bout->size;
+  stop = l_begin + bout->size;
 }
 
 void* Slot::Contains(void* address) {
-  char* begin = reinterpret_cast<char*>(this) + sizeof(Slot);
-  if (address < begin) {
+  char* start = reinterpret_cast<char*>(this) + sizeof(Slot);
+  if (address < start) {
     return nullptr;
   }
-  char* l_end = end;
+  char* l_end = stop;
   if (address > l_end) {
     return nullptr;
   }
@@ -110,8 +110,8 @@ const Op* Slot::Write(const UIT* params, void** args) {
 
 BOL Slot::IsWritable() {
   char* l_stop = start;
-  if (l_stop == begin) {
-    if (l_stop != end) {
+  if (l_stop == start) {
+    if (l_stop != stop) {
       return false;
     }
     return true;
@@ -121,8 +121,8 @@ BOL Slot::IsWritable() {
 
 BOL Slot::IsReadable() { return start != stop; }
 
-/*char* SlotRead (Slot* slot, char* write, void* write_end, char* const begin,
-                    char* const start, char* const stop , char* const end,
+/*char* SlotRead (Slot* slot, char* write, void* write_end, char* const start,
+                    char* const start, char* const stop , char* const stop,
                     size_t size) {
     if (!slot) {
         return nullptr;
@@ -134,15 +134,15 @@ BOL Slot::IsReadable() { return start != stop; }
         return nullptr;
     }
 
-    if ((start > stop) && (start + size >= end)) {
+    if ((start > stop) && (start + size >= stop)) {
         // Calculate upper chunk size.
-        size_t top_chunk = end - stop;
+        size_t top_chunk = stop - stop;
         size -= top_chunk;
 
         SocketCopy (target, target_end, start, top_chunk);
         SocketCopy (reinterpret_cast<char*>(target) + top_chunk, size,
-                    begin);
-        return begin + size;
+                    start);
+        return start + size;
     }
     SocketCopy (target, target_end, stop, size);
     return start + size;
@@ -168,14 +168,14 @@ const Op* Slot::Read(const UIT* params, void** args) {
       num_params = *params;  //< Number of params.
   ASSERT(num_params);
   UIW offset;  //< Offset to word align the current type.
-  SIW length,  //< Length of the data in the buffer.
+  SIW length,  //< Length of the data in the socket.
       count,   //< Argument length.
-      size;    //< Size of the ring buffer.
+      size;    //< Size of the ring socket.
 
   PRINTF("\n\nReading BIn: ")
 
-  char *l_begin = begin,          //< Beginning of the buffer.
-      *l_end = end,               //< end of the buffer.
+  char *l_begin = start,          //< Beginning of the socket.
+      *l_end = stop,              //< stop of the socket.
           *l_start = start,       //< start of the data.
               *l_stop = stop;     //< stop of the data.
   const UIT* param = params + 1;  //< current param.
@@ -186,7 +186,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
 
   PRINTF("\n\nReading %i bytes.", (int)length)
   // PRINT_BSQ (params)
-  // When we scan, we are reading from the beginning of the BIn buffer.
+  // When we scan, we are reading from the beginning of the BIn socket.
 
   for (index = 0; index < num_params; ++index) {
     type = (UI1)*param;
@@ -225,7 +225,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
                                l_start);
           PRINT(ui1)
 
-          ui1 = *l_start;  // Read UI1 from ring-buffer.
+          ui1 = *l_start;  // Read UI1 from ring-socket.
           if (++l_start > l_end) l_start -= size;
           *ui1_ptr = ui1;  // Write UI1 to destination.
           ++ui1_ptr;
@@ -247,7 +247,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         }
         --length;
 
-        // Read from buffer and write to the stack:
+        // Read from socket and write to the stack:
         ui1 = *l_start;
         if (++l_start > l_end) {
           l_start -= size;
@@ -285,7 +285,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         if (l_start > l_end) {
           l_start -= size;
         }
-        // Read from buffer and write to the stack:
+        // Read from socket and write to the stack:
         ui2_ptr = reinterpret_cast<UI2*>(l_start);
         ui2 = *ui2_ptr;
         l_start += sizeof(UI2);
@@ -329,7 +329,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         if (l_start > l_end) {
           l_start -= size;  //< Bound
         }
-        // Read from buffer and write to the stack:
+        // Read from socket and write to the stack:
         ui4_ptr = reinterpret_cast<UI4*>(l_start);
         ui4 = *ui4_ptr;          //< Read
         l_start += sizeof(SI4);  //< Increment
@@ -364,7 +364,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
         if (l_start > l_end) {
           l_start -= size;  //< Bound
         }
-        // Read from buffer and write to the stack:
+        // Read from socket and write to the stack:
         ui8_ptr = reinterpret_cast<UI8*>(l_start);
         ui8 = *ui8_ptr;          //< Read
         l_start += sizeof(UI8);  //< Increment
@@ -512,7 +512,7 @@ const Op* Slot::Write(const char* message) { return nullptr; }
 
 #if CRABS_TEXT
 UTF1& Slot::Print(UTF1& utf) {
-  char *l_begin = begin, *l_end = end;
+  char *l_begin = start, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)
              << " start:" << Hex<>(start) << "\nstop:" << Hex<>(stop)
              << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);

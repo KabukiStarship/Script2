@@ -143,12 +143,12 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Shrinks the currently selected bag's buffer to the min size. */
+  /* Shrinks the currently selected bag's socket to the min size. */
   void Shrink() {}
 
   /* Handles Script Commands.
-      @param text     Beginning of the Text buffer.
-      @param text_end End of the Text buffer.
+      @param text     Beginning of the Text socket.
+      @param text_end End of the Text socket.
       @return Returns nil upon success and an error string upon failure. */
   virtual const char* Sudo(const char* text, const char* text_end) {
     return nullptr;
@@ -189,9 +189,9 @@ class Library : public Operand {
       num_libraries_;  //< Number of libraries.
   UI1 type_;           //< Current type of bag.
   TIndex num_keys_,    //< Current number of Star members.
-      buffer_size_;    //< Current size of the header and names buffer in bytes.
+      buffer_size_;    //< Current size of the header and names socket in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
-      collisions_size_;  //< Current size of the header and names buffer in
+      collisions_size_;  //< Current size of the header and names socket in
                          // bytes.
   TData data_size_;      //< Current total size of the bag.
                          // Book<TIndex, TKey, TData, TData> bag;

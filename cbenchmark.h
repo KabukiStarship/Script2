@@ -36,7 +36,7 @@ class BenchmarkCase {
   BenchmarkCase(const char* name, TestCase* cases, int count);
 
   /* Runs the benchmark. */
-  const char* Run(char* cursor, char* end, const char* args);
+  const char* Run(char* cursor, char* stop, const char* args);
 
   /* Gets the number of cases in this benchmark. */
   int GetCount();
@@ -56,7 +56,7 @@ class Benchmark {
 
   /* Runs the benchmark.
   @return If args is nil, result will contain the name as */
-  const char* Run(char* cursor, char* end, const char* args);
+  const char* Run(char* cursor, char* stop, const char* args);
 
  private:
   const char *name,       //< Name of the benchmark.

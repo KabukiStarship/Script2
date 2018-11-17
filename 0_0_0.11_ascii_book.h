@@ -27,10 +27,10 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
   TEST_BEGIN;
 
   CHW index;
-  UIW buffer[128];
-  Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &buffer[0], &buffer[127]);
+  UIW socket[128];
+  Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
 
-  Table* table = TableInit(buffer, 8, 128);
+  Table* table = TableInit(socket, 8, 128);
 
   Assert(table != nullptr);
 
@@ -94,14 +94,14 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
   };
 
   slot << 'a' << "b"
-       << "cd" << (SI1)1 << (UI1)2 << (SI2)3 << (UI2)4
-       << (SI4)5 << (UI4)6 << (SI8)7 << (UI8)8;
+       << "cd" << (SI1)1 << (UI1)2 << (SI2)3 << (UI2)4 << (SI4)5 << (UI4)6
+       << (SI8)7 << (UI8)8;
 
   Print(slot);
 
-  UIW buffer[kBufferSizeWords];
+  UIW socket[kBufferSizeWords];
 
-  Multimap2* multimap = Multimap2Init(buffer, 8, kBufferSize, 128);
+  Multimap2* multimap = Multimap2Init(socket, 8, kBufferSize, 128);
 
   Assert(multimap != nullptr);
 
@@ -155,5 +155,5 @@ static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
 #endif
   return nullptr;
 }
-}  //< namespace _
+}  // namespace _
 #include "0_0_0__11_ascii_book.inl"

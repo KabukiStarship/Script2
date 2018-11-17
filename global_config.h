@@ -146,7 +146,7 @@ enum {
   kYes = 1,  //< Script yes/true value.
   // kMinFloorSize  = 256,               //< Min size of a room.
   // kMaxFloorSize  = 0x7FFFFFFC,        //< Max room size: 2GB - 7 bits.
-  kMaxFloorsCount = CRABS_MAX_WALLS,  //< Size of the Room Floor (buffer).
+  kMaxFloorsCount = CRABS_MAX_WALLS,  //< Size of the Room Floor (socket).
   kSlotSizeMin = 128,                 //< Min size of a Slot - 1.
   kMaxErrors = CRABS_MAX_ERRORS,      //< Max errors before blowing up.
   kParamsMax = CRABS_MAX_PARAMS,      //< Max number of parameters.
@@ -164,7 +164,7 @@ enum {
                       (sizeof(void*) == 4) ? 2 :  //< Shift right 2 to / by 4.
                           1,
 
-  // Extra reserved memory at the end of BOut.
+  // Extra reserved memory at the stop of BOut.
   kBOutOverflowSize = 32,
 
   // Size of the Display Print Slot.

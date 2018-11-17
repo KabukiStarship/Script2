@@ -30,7 +30,7 @@ Crabs' (crabs(s)) must be word-aligned in order to run correctly
 so it's best to scan and word align the data types in the same sweep.
 
 Crabs' are composed of one B-Input (BIn) and one B-Output (BOut) socket. The
-App/Driver/User writes to the end of the Tx buffer and the driver reads from
+App/Driver/User writes to the stop of the Tx socket and the driver reads from
 the beginning. The user writes are synchronous and the driver reads are
 asynchronous.
 
@@ -89,38 +89,38 @@ struct CCrabs {
 
   enum {
     kMinStackSize = 16,  //< Size of the crabs stack.
-    kMinBufferSize = 2,  //< Min buffer size.
+    kMinBufferSize = 2,  //< Min socket size.
   };
 
-  UIT size,              //< Offset to the BOut slot.
-      header_size,       //< The total size of the header.
-      stack_count,       //< Stack Operand count.
-      stack_size,        //< Stack Operand buffer size.
-      type,              //< Current type being scanned.
-      num_states,        //< Number of states on the state stack.
-      bytes_left,        //< Countdown counter for parsing POD types.
-      params_left;       //< Height of header and cursors stacks.
-  UI1 bout_state,        //< BOut streaming state.
-      bin_state,         //< Slot streaming state.
-      last_bin_state,    //< Last BIn state.
-      last_byte;         //< Last UI1 read.
-  CHW current_char;  //< Current Unicode char being scanned.
-  hash16_t hash;         //< Packed BSQ hash.
-  UI4 timeout_us;        //< Timeout time in microseconds.
-  TME last_time;         //< Last time the Stack was scanned.
-  const Op* result;      //< Result of the EXR.
-  const UIT *header,     //< Pointer to the header being verified.
-      *header_start;     //< Start of the header being verified.
-  Operand *operand,      //< Current Script Operand.
-      *root;             //< Root-level scope Operand.
-  Slot& args;            //< Arguments slot for running.
-  Slot slot;             //< Slot for unpacking B-Sequences to.
+  UIT size,            //< Offset to the BOut slot.
+      header_size,     //< The total size of the header.
+      stack_count,     //< Stack Operand count.
+      stack_size,      //< Stack Operand socket size.
+      type,            //< Current type being scanned.
+      num_states,      //< Number of states on the state stack.
+      bytes_left,      //< Countdown counter for parsing POD types.
+      params_left;     //< Height of header and cursors stacks.
+  UI1 bout_state,      //< BOut streaming state.
+      bin_state,       //< Slot streaming state.
+      last_bin_state,  //< Last BIn state.
+      last_byte;       //< Last UI1 read.
+  CHW current_char;    //< Current Unicode char being scanned.
+  hash16_t hash;       //< Packed BSQ hash.
+  UI4 timeout_us;      //< Timeout time in microseconds.
+  TME last_time;       //< Last time the Stack was scanned.
+  const Op* result;    //< Result of the EXR.
+  const UIT *header,   //< Pointer to the header being verified.
+      *header_start;   //< Start of the header being verified.
+  Operand *operand,    //< Current Script Operand.
+      *root;           //< Root-level scope Operand.
+  Slot& args;          //< Arguments slot for running.
+  Slot slot;           //< Slot for unpacking B-Sequences to.
 };
 
 /* Gets a pointer to the BIn slot. */
 API UIW* CrabsBinAddress(CCrabs* crabs);
 
-/* Gets the crabs's buffer. */
+/* Gets the crabs's socket. */
 API char* CrabsBuffer(CCrabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
@@ -134,9 +134,9 @@ API BOut* CrabsBOut(CCrabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
-@param unpacked_buffer The word-aligned expression buffer.
-@param unpacked_size   Size of the unpacked buffer. */
-API CCrabs* CrabsInit(UIW* buffer, UIT buffer_size, UIT stack_count,
+@param unpacked_buffer The word-aligned expression socket.
+@param unpacked_size   Size of the unpacked socket. */
+API CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_count,
                       Operand* root, UIW* unpacked_buffer, UIW unpacked_size);
 
 /* Gets the base address of the device stack. */
@@ -174,7 +174,7 @@ API const Op* CrabsEnterState(CCrabs* crabs, BInState state);
 /* Streams a B-Output UI1. */
 API UI1 CrabsStreamBOut(CCrabs* crabs);
 
-/* Scans the BOut buffer and marks the data as being ready to execute.
+/* Scans the BOut socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
 API const Op* CrabsUnpack(CCrabs* crabs);  // , Portal* io);
 
@@ -193,7 +193,7 @@ API void CrabsClose(CCrabs* crabs);
 /* Cancels the current crabs. */
 API void CrabsCancel(CCrabs* crabs);
 
-/* Cancels the current crabs and writes zeros to the buffer. */
+/* Cancels the current crabs and writes zeros to the socket. */
 API void CrabsClear(CCrabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
@@ -274,10 +274,10 @@ API const Op* CrabsQuery(CCrabs* crabs, const Op* op);
 
 #if CRABS_TEXT
 
-/* Prints the CCrabs stack to the Text buffer */
+/* Prints the CCrabs stack to the Text socket */
 API UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
 
-/* Prints the CCrabs stack to the Text buffer */
+/* Prints the CCrabs stack to the Text socket */
 API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 #endif
 
@@ -285,7 +285,7 @@ API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 
 #if CRABS_TEXT
 
-/* Prints the given CCrabs to the Text buffer. */
+/* Prints the given CCrabs to the Text socket. */
 inline _::UTF1& operator<<(_::UTF1& printer, _::CCrabs* crabs) {
   return _::PrintCrabs(printer, crabs);
 }

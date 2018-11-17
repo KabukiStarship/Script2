@@ -179,24 +179,24 @@ int_t Room::WallCount() { return walls_->count; }
 Wall* Room::GetWall(int_t wall_number) {
   if (wall_number < 0) return nullptr;
   if (wall_number >= walls_->count) return nullptr;
-  return StackGet<Wall*, UIT, int_t>(walls_, wall_number);
+  return TStackGet<Wall*, UIT, int_t>(walls_, wall_number);
 }
 
 Wall* Room::AddWall(Wall* new_wall) {
   if (new_wall == nullptr) return nullptr;
   if (walls_->count >= walls_->count_max) return nullptr;
-  StackPush<Wall*>(walls_, new_wall);
+  TStackPush<Wall*>(walls_, new_wall);
   return new_wall;
 }
 
 BOL Room::RemoveWall(int_t wall_number) {
-  return StackRemove<Wall*, UIT, int_t>(walls_, wall_number);
+  return TStackRemove<Wall*, UIT, int_t>(walls_, wall_number);
 }
 
 UIW Room::GetSizeBytes() {
   UIW count = kRoomFloorSize;
   for (int_t i = 0; i < walls_->count; ++i) {
-    count += StackGet<Wall*, UIT, int_t>(walls_, i)->GetSizeBytes();
+    count += TStackGet<Wall*, UIT, int_t>(walls_, i)->GetSizeBytes();
   }
   // @todo Add all memory we used in bytes here.
   return count;

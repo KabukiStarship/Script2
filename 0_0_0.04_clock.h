@@ -67,21 +67,21 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
   PRINTF("\n\nTesting more valid input...\n");
 
   enum { kSize = 128 };
-  char buffer[kSize];
+  char socket[kSize];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
-  Print(buffer, buffer + kSize, t);
-  result = TStringScanTime(buffer, t_found);
+  Print(socket, socket + kSize, t);
+  result = TStringScanTime(socket, t_found);
   ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  Print(buffer, buffer + kSize, t);
-  result = TStringScanTime(buffer, t_found);
+  Print(socket, socket + kSize, t);
+  result = TStringScanTime(socket, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
-  Print(buffer, buffer + kSize, t);
-  result = TStringScanTime(buffer, t_found);
+  Print(socket, socket + kSize, t);
+  result = TStringScanTime(socket, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   PRINT_HEADING("\nTesting invalid input...\n");

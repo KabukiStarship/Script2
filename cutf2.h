@@ -49,18 +49,18 @@ API int TStringLength(const char16_t* text);
 @return Returns a new copy you must delete. */
 API char16_t* StringClone(const char16_t* text);
 
-/* Returns a pointer to the char16_t at the end of the line. */
+/* Returns a pointer to the char16_t at the stop of the line. */
 API const char16_t* StringLineEnd(const char16_t* text, int column_count);
 
 /* Returns the pointer to the next char16_t in the char16_t that is not an ASCII
 number.
 @return A pointer to the next non-number in the text char16_t. */
-API const char16_t* TStringDecimalEnd(const char16_t* begin);
+API const char16_t* TStringDecimalEnd(const char16_t* start);
 
 /* Returns the pointer to the next char16_t in the char16_t that is not an ASCII
 number.
 @return A pointer to the next non-number in the text char16_t. */
-API const char16_t* TStringDecimalEnd(const char16_t* begin);
+API const char16_t* TStringDecimalEnd(const char16_t* start);
 
 /* Skips the leading zeros of a number if there are any. */
 API const char16_t* TStringSkipChar(const char16_t* text, char16_t skip_char);
@@ -76,537 +76,538 @@ API const char16_t* StringEquals(const char16_t* text_a,
 @param  text      The char16_t to search.
 @param  query      The char16_t to search for.
 @return Returns nil if the parsing failed and a pointer to the first char16_t
-after the end of the text upon success. */
-API const char16_t* StringFind(const char16_t* begin, const char16_t* query);
+after the stop of the text upon success. */
+API const char16_t* StringFind(const char16_t* start, const char16_t* query);
 
-/* Prints the given string to the utf buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Prints the given string to the utf socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param  begin  The beginning address of the buffer.
-@param  end    The end address of the buffer.
+@param  start  The beginning address of the socket.
+@param  stop    The stop address of the socket.
 @param  string The potentially unsafe string to write. */
-API char16_t* Print(char16_t* begin, char16_t* end, const char16_t* string);
+API char16_t* Print(char16_t* start, char16_t* stop, const char16_t* string);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin     Beginning address of the buffer.
-@param end       The end address of the buffer.
+@param start     Beginning address of the socket.
+@param stop       The stop address of the socket.
 @param character The value to write. */
-API char16_t* Print(char16_t* begin, char16_t* end, char16_t character);
+API char16_t* Print(char16_t* start, char16_t* stop, char16_t character);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, UI4 value);
+API char16_t* Print(char16_t* start, char16_t* stop, UI4 value);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, SI4 value);
+API char16_t* Print(char16_t* start, char16_t* stop, SI4 value);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, UI8 value);
+API char16_t* Print(char16_t* start, char16_t* stop, UI8 value);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, SI8 value);
+API char16_t* Print(char16_t* start, char16_t* stop, SI8 value);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, FLT value);
+API char16_t* Print(char16_t* start, char16_t* stop, FLT value);
 
-/* Writes the give char16_t to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* Print(char16_t* begin, char16_t* end, DBL value);
+API char16_t* Print(char16_t* start, char16_t* stop, DBL value);
 
-/* Prints the given string to the utf buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Prints the given string to the utf socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin  The beginning address of the buffer.
-@param end    The end address of the buffer.
+@param start  The beginning address of the socket.
+@param stop    The stop address of the socket.
 @param string The potentially unsafe string to write. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop,
                           const char16_t* string, int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin Beginning address of the buffer.
-@param end The end address of the buffer.
+@param start Beginning address of the socket.
+@param stop The stop address of the socket.
 @param character The value to write. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, char16_t character,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, char16_t character,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, UI4 valu,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, UI4 valu,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, SI4 value,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, SI4 value,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, UI8 value,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, UI8 value,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, SI8 value,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, SI8 value,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, FLT value,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, FLT value,
                           int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintCenter(char16_t* begin, char16_t* end, DBL value,
+API char16_t* PrintCenter(char16_t* start, char16_t* stop, DBL value,
                           int column_count);
 
-/* Prints the given string to the utf buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Prints the given string to the utf socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin  The beginning address of the buffer.
-@param end    The end address of the buffer.
+@param start  The beginning address of the socket.
+@param stop    The stop address of the socket.
 @param string The potentially unsafe string to write. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, const char16_t* string,
-                         int column_count);
+API char16_t* PrintRight(char16_t* start, char16_t* stop,
+                         const char16_t* string, int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin     Beginning address of the buffer.
-@param end       The end address of the buffer.
+@param start     Beginning address of the socket.
+@param stop       The stop address of the socket.
 @param character The value to write. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, char16_t character,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, char16_t character,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, UI4 value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, UI4 value,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, SI4 value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, SI4 value,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, UI8 value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, UI8 value,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, SI8 value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, SI8 value,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, FLT value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, FLT value,
                          int column_count);
 
-/* Writes the give char16_t to the given buffer center.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintRight(char16_t* begin, char16_t* end, DBL value,
+API char16_t* PrintRight(char16_t* start, char16_t* stop, DBL value,
                          int column_count);
 
-/* Prints the given string to the utf buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Prints the given string to the utf socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin   The beginning address of the buffer.
-@param end     The end address of the buffer.
+@param start   The beginning address of the socket.
+@param stop     The stop address of the socket.
 @param pointer The pointer to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, const void* pointer);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, const void* pointer);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, UI1 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, UI1 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, SI1 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, SI1 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, UI2 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, UI2 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, SI2 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, SI2 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, UI4 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, UI4 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, SI4 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, SI4 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, UI8 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, UI8 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, SI8 value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, SI8 value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, FLT value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, FLT value);
 
-/* Writes the give char16_t to the given buffer in hex form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* PrintHex(char16_t* begin, char16_t* end, DBL value);
+API char16_t* PrintHex(char16_t* start, char16_t* stop, DBL value);
 
-/* Prints the given string to the utf buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Prints the given string to the utf socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin  The beginning address of the buffer.
-@param end    The end address of the buffer.
+@param start  The beginning address of the socket.
+@param stop    The stop address of the socket.
 @param pointer The pointer to utf to hex. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, const void* pointer);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop,
+                           const void* pointer);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI1 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI1 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI1 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI1 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI2 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI2 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI2 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI2 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI4 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI4 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI4 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI4 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, UI8 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, UI8 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, SI8 value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, SI8 value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, FLT value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, FLT value);
 
-/* Writes the give char16_t to the given buffer in binary form.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char16_t
+/* Writes the give char16_t to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term char16_t
 upon success.
-@param begin The beginning address of the buffer.
-@param end The end address of the buffer.
+@param start The beginning address of the socket.
+@param stop The stop address of the socket.
 @param value The value to utf. */
-API char16_t* TPrintBinary(char16_t* begin, char16_t* end, DBL value);
+API char16_t* TPrintBinary(char16_t* start, char16_t* stop, DBL value);
 
-/* Prints out the contents of the address to the printer buffer.
+/* Prints out the contents of the address to the printer socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
-@param end   The end of the write buffer.
-@param start The beginning of the read buffer.
-@param stop  The end of the read buffer. */
-API char16_t* PrintSocket(char16_t* begin, char16_t* end, const void* start,
+@param start The beginning of the write socket.
+@param stop   The stop of the write socket.
+@param start The beginning of the read socket.
+@param stop  The stop of the read socket. */
+API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
                           const void* stop);
 
-/* Prints out the contents of the address to the printer buffer.
+/* Prints out the contents of the address to the printer socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
-@param end   The end of the write buffer.
-@param start The beginning of the read buffer.
-@param size  The size of the read buffer. */
-API char16_t* PrintSocket(char16_t* begin, char16_t* end, const void* start,
+@param start The beginning of the write socket.
+@param stop   The stop of the write socket.
+@param start The beginning of the read socket.
+@param size  The size of the read socket. */
+API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
                           size_t size);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, TMS t);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, TMS t);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, TME t);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, TME t);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, Tss t);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, Tss t);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char16_t after the end of the read number
+@return Returns a pointer to the next char16_t after the stop of the read number
 or nil upon failure.
-@param begin The beginning of the write buffer.
-@param end   The end of the write buffer.
+@param start The beginning of the write socket.
+@param stop   The stop of the write socket.
 @param token The token to utf.
 @param column_count The number of tokens to utf. */
-API char16_t* PrintLine(char16_t* cursor, char16_t* end, char16_t token,
+API char16_t* PrintLine(char16_t* cursor, char16_t* stop, char16_t token,
                         int column_count);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char16_t after the end of the read number
+@return Returns a pointer to the next char16_t after the stop of the read number
 or nil upon failure.
-@param begin  The beginning of the write buffer.
-@param end    The end of the write buffer.
+@param start  The beginning of the write socket.
+@param stop    The stop of the write socket.
 @param string The string to utf.
 @param column_count The number of columns. */
-API char16_t* PrintLineString(char16_t* cursor, char16_t* end,
+API char16_t* PrintLineString(char16_t* cursor, char16_t* stop,
                               const char16_t* string, int column_count);
 
-/* Prints the buffer to the console as a UTF-8 string. */
-void COutUtf16(UIW* buffer);
+/* Prints the socket to the console as a UTF-8 string. */
+void COutUtf16(UIW* socket);
 
-/* Prints the buffer to the console as a UTF-8 string. */
-void COutAutoUtf16(UIW* buffer);
+/* Prints the socket to the console as a UTF-8 string. */
+void COutAutoUtf16(UIW* socket);
 
 /* Converts the given string to a 8-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
-API const char16_t* Scan(const char16_t* begin, SI1& result);
+API const char16_t* Scan(const char16_t* start, SI1& result);
 
 /* Converts the given string to a 8-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, SI1& result);
 
 /* Converts the given string to a 8-bit unsigned integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, UI1& result);
 
 /* Converts the given string to a 16-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, SI2& result);
 
 /* Converts the given string to a 16-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, UI2& result);
 
 /* Converts the given string to a 32-bit signed integer.
 @param  text A nil-terminated string in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, SI4& result);
 
 /* Converts the given string to a 32-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, UI4& result);
 
 /* Converts the given string to a 64-bit signed integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, SI8& result);
 
 /* Converts the given string to a 64-bit unsigned integer.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, UI8& result);
 
 /* Converts the given string to a 32-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, FLT& result);
 
 /* Converts the given string to a 64-bit floating-point number.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char16_t after the end
+@return Returns a pointer to the next char16_t after the stop
 of the read number or nil upon failure. */
 API const char16_t* Scan(const char16_t* text, DBL& result);
 
@@ -615,29 +616,29 @@ API const char16_t* Scan(const char16_t* text, DBL& result);
 */
 
 /* Utility class for printing strings.
-This class only stores the end of buffer pointer and a pointer to the write
-begin. It is up the user to store start of buffer pointer and if they would
-like to replace the begin with the beginning of buffer pointer when they
+This class only stores the stop of socket pointer and a pointer to the write
+start. It is up the user to store start of socket pointer and if they would
+like to replace the start with the beginning of socket pointer when they
 are done printing.
 */
 struct API UTF2 {
-  char16_t *begin,  //< Write begin pointer.
-      *end;         //< End of buffer pointer.
+  char16_t *start,  //< Write start pointer.
+      *stop;        //< End of socket pointer.
 
-  /* Initializes the Utf& from the given buffer pointers.
-  @param begin The beginning of the buffer.
-  @param end   The end of the buffer. */
-  UTF2(char16_t* begin, size_t size);
+  /* Initializes the Utf& from the given socket pointers.
+  @param start The beginning of the socket.
+  @param stop   The stop of the socket. */
+  UTF2(char16_t* start, size_t size);
 
-  /* Initializes the Utf& from the given buffer pointers.
-  @param begin The beginning of the buffer.
-  @param end   The end of the buffer. */
-  UTF2(char16_t* begin, char16_t* end);
+  /* Initializes the Utf& from the given socket pointers.
+  @param start The beginning of the socket.
+  @param stop   The stop of the socket. */
+  UTF2(char16_t* start, char16_t* stop);
 
   /* Clones the other utf. */
   UTF2(const UTF2& other);
 
-  /* Sets the begin pointer to the new_pointer. */
+  /* Sets the start pointer to the new_pointer. */
   inline UTF2& Set(char16_t* new_pointer);
 
   /* Prints the given value as hex. */
@@ -713,25 +714,25 @@ class Text2 {
   /* Default constructor does nothing. */
   Text2();
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(char16_t character);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(SI4 value);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(UI4 value);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(SI8 value);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(UI8 value);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(FLT value);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Text2(DBL value);
 
   /* Gets the number string. */
@@ -740,31 +741,31 @@ class Text2 {
  private:
   enum { kSize = 24 };
 
-  char16_t string[kSize * sizeof(char16_t) + 1];  //< String buffer.
+  char16_t string[kSize * sizeof(char16_t) + 1];  //< String socket.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf16Center {
  public:
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(const char16_t* string, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(SI4 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(UI4 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(SI8 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(UI8 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(FLT value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Center(DBL value, int column_count);
 
   /* Gets the number string. */
@@ -782,25 +783,25 @@ class Utf16Center {
 /* Utility class for printing hex with operator<<. */
 class Utf16Right {
  public:
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(const char16_t* string, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(SI4 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(UI4 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(SI8 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(UI8 value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(FLT value, int column_count);
 
-  /* Prints the value to the text buffer. */
+  /* Prints the value to the text socket. */
   Utf16Right(DBL value, int column_count);
 
   /* Gets the number string. */

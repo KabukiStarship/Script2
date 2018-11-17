@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 void Destroy(CObject stack) {
-  if (stack.factory) stack.factory(stack.begin, 0, nullptr);
+  if (stack.factory) stack.factory(stack.start, 0, nullptr);
 }
 
 BOL ObjSizeIsValid(SI2 size, SI2 size_min) {
@@ -64,9 +64,9 @@ UIW* ObjNew(SI2 size, size_t header_size) {
 
   if (ObjSizeIsValid(size)) return nullptr;
   size = AlignUp(size);
-  UIW* buffer = new UIW[size >> kWordBitCount];
-  *reinterpret_cast<SI2*>(buffer) = size;
-  return buffer;
+  UIW* socket = new UIW[size >> kWordBitCount];
+  *reinterpret_cast<SI2*>(socket) = size;
+  return socket;
 }
 
 }  // namespace _

@@ -208,11 +208,11 @@ API const UI8* IEEE754Pow10F();
 /* Returns the last UI1 in the given char, which in this case is c. */
 API char* LastByte(char* c);
 
-/* Prints the given FLT to the buffer. */
-API char* Print(char* cursor, char* end, FLT value);
+/* Prints the given FLT to the socket. */
+API char* Print(char* cursor, char* stop, FLT value);
 
-/* Prints the given FLT to the buffer. */
-API char* Print(char* cursor, char* end, DBL value);
+/* Prints the given FLT to the socket. */
+API char* Print(char* cursor, char* stop, DBL value);
 
 /* Scans a FLT from the given string.
 @return Nil if the string doesn't start with a FLT. */
@@ -226,22 +226,22 @@ const char* Scan(const char* cursor, DBL& value);
 /* Returns the last UI1 in the given char. */
 API char* LastByte(char16_t* c);
 
-/* Prints the given FLT to the buffer. */
-API char16_t* Print(char16_t* cursor, char16_t* end, FLT value);
+/* Prints the given FLT to the socket. */
+API char16_t* Print(char16_t* cursor, char16_t* stop, FLT value);
 
-/* Prints the given FLT to the buffer. */
-API char16_t* Print(char16_t* cursor, char16_t* end, DBL value);
+/* Prints the given FLT to the socket. */
+API char16_t* Print(char16_t* cursor, char16_t* stop, DBL value);
 #endif
 
 #if USING_UTF32
 /* Returns the last UI1 in the given char. */
 API char* LastByte(char32_t* c);
 
-/* Prints the given FLT to the buffer. */
-API char32_t* Print(char32_t* cursor, char32_t* end, FLT value);
+/* Prints the given FLT to the socket. */
+API char32_t* Print(char32_t* cursor, char32_t* stop, FLT value);
 
-/* Prints the given FLT to the buffer. */
-API char32_t* Print(char32_t* cursor, char32_t* end, DBL value);
+/* Prints the given FLT to the socket. */
+API char32_t* Print(char32_t* cursor, char32_t* stop, DBL value);
 #endif
 
 #endif  //< #if SEAM >= _0_0_0__03

@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License. */
 /* Function pointer prototype for a test case with command line argument
 string.
 @return Pointer to a string to utf to the stdout.
-@param seam_log Beginning of the seam log buffer.
-@param seam_end End of the seam log buffer.
+@param seam_log Beginning of the seam log socket.
+@param seam_end End of the seam log socket.
 @param args     Command line argument string. */
 typedef const char* (*TestCase)(char* seam_log, char* seam_end,
                                 const char* args);

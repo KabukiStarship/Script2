@@ -47,7 +47,7 @@ namespace _ {
   |        ...               |   |     |
   |        Key N             |   |     |
   |vvvvvvvvvvvvvvvvvvvvvvvvvv|   |     |
-  |        buffer            |   |     |
+  |        socket            |   |     |
   |^^^^^^^^^^^^^^^^^^^^^^^^^^|   |     |
   |_______ Collision N       |   |     |
   |_______ ...               |   |     |
@@ -132,12 +132,12 @@ namespace _ {
 
   # Design Strengths
   * Uses less memory.
-  * Fast push back when within buffer size.
-  * Faster inserts on small collections when within buffer size.
+  * Fast push back when within socket size.
+  * Faster inserts on small collections when within socket size.
 
   # Design Weaknesses
   * Slow insert in large collections.
-  * Slow at growing large collections when buffer runs out.
+  * Slow at growing large collections when socket runs out.
   * More complicated.
 
   @code
@@ -183,9 +183,9 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4. */
 template <typename Size, typename Offset, typename Index>
-Dictionary<Size, Offset, Index>* DictionaryInit(UIW* buffer, UI1 max_size,
+Dictionary<Size, Offset, Index>* DictionaryInit(UIW* socket, UI1 max_size,
                                                 UI2 table_size, UI2 size) {
-  ASSERT(buffer);
+  ASSERT(socket);
   if (table_size >= (size - sizeof(Dictionary<Size, Offset, Index>)))
     return nullptr;
   if (table_size < sizeof(Dictionary<Size, Offset, Index>) +
@@ -193,7 +193,7 @@ Dictionary<Size, Offset, Index>* DictionaryInit(UIW* buffer, UI1 max_size,
     return nullptr;
 
   Dictionary<Size, Offset, Index>* dictionary =
-      reinterpret_cast<Dictionary<Size, Offset, Index>*>(buffer);
+      reinterpret_cast<Dictionary<Size, Offset, Index>*>(socket);
   dictionary->size = table_size;
   dictionary->table_size = table_size;
   dictionary->item_count = 0;
@@ -202,9 +202,9 @@ Dictionary<Size, Offset, Index>* DictionaryInit(UIW* buffer, UI1 max_size,
   return dictionary;
 }
 
-Dictionary<UI2, UI2, SI1>* DictionaryInit(UIW* buffer, UI1 max_size,
+Dictionary<UI2, UI2, SI1>* DictionaryInit(UIW* socket, UI1 max_size,
                                           UI2 table_size, UI2 size) {
-  return DictionaryInit<UI2, UI2, SI1>(buffer, max_size, table_size, size);
+  return DictionaryInit<UI2, UI2, SI1>(socket, max_size, table_size, size);
 }
 
 /* Insets the given key-value pair.
@@ -225,7 +225,7 @@ Index DictionaryCountUpperBounds() {
   return ~(Index)0;
 }
 
-/* Adds a key-value pair to the end of the dictionary. */
+/* Adds a key-value pair to the stop of the dictionary. */
 template <typename Size, typename Offset, typename Index, typename T,
           AsciiType type>
 Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
@@ -292,11 +292,11 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
     return 0;
   }
 
-  // Calculate left over buffer size by looking up last char.
+  // Calculate left over socket size by looking up last char.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!")
-    return 0;  //< There isn't enough room left in the buffer.
+    return 0;  //< There isn't enough room left in the socket.
   }
 
   PRINTF("\nFinding insert location...")
@@ -376,7 +376,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
         // Move collisions pointer to the unsorted_indexes.
         indexes += count;
 
-        //< Add the newest char to the end.
+        //< Add the newest char to the stop.
         indexes[item_count] = item_count;
 
         DicPrint(dictionary);
@@ -426,7 +426,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
         dictionary->size_pile = size_pile + 3;
         //< Added one term-UI1 and two indexes.
 
-        // Add the newest key at the end.
+        // Add the newest key at the stop.
         indexes[item_count] = item_count;
 
         // Dictionary the last hash to 0xFFFF
@@ -498,7 +498,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
   return item_count;
 }
 
-/* Adds a key-value pair to the end of the dictionary. */
+/* Adds a key-value pair to the stop of the dictionary. */
 // UI1 Add2 (Dic2* dictionary, const char* key, UI1 data) {
 //    return DicAdd<UI1, UI2, UI2, UI2> (dictionary, key, kUI1,
 //    &data);
@@ -657,7 +657,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
                   states +
                   count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
-              *collission_list = unsorted_indexes + count, *begin;
+              *collission_list = unsorted_indexes + count, *start;
   const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
@@ -677,13 +677,13 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
-      begin = &collission_list[collision_index];
-      temp = *begin;
-      ++begin;
+      start = &collission_list[collision_index];
+      temp = *start;
+      ++start;
       PRINTF("%u@", temp);
       while (temp != ~0) {
-        temp = *begin;
-        ++begin;
+        temp = *start;
+        ++start;
         if (temp == ~0) break;
         PRINTF(", %u$", temp);
       }

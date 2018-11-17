@@ -120,7 +120,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   enum { kNumProblemChildren = 0, kSize = 23 };
 
   char text[kSize + 1], expecting[kSize + 1];
-  char buffer[kSize];
+  char socket[kSize];
   char* result;
   UI8 result_ui8, expected_ui8;
 
@@ -128,8 +128,8 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
 
   for (int i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
-    sprintf_s(buffer, kSize, FORMAT_UI8, expected_ui8);
-    const char* test = TScanUnsigned<UI8, char>(buffer, result_ui8);
+    sprintf_s(socket, kSize, FORMAT_UI8, expected_ui8);
+    const char* test = TScanUnsigned<UI8, char>(socket, result_ui8);
     ASSERT(test);
     AVOW(expected_ui8, result_ui8);
   }

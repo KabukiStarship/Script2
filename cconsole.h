@@ -49,38 +49,38 @@ API void Print(const char* string, char delimiter);
 /* Prints two strings. */
 API void Print(const char* a, const char* b);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(SI8 value);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(UI8 value);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(SI4 value);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(UI4 value);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(FLT value);
 
-/* Writes the give char to the given buffer.
-@return Returns nil upon buffer overflow and a pointer to the nil-term char
+/* Writes the give char to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param value The value to utf. */
 API void Print(DBL value);
@@ -203,10 +203,10 @@ API void PrintHex(const void* value);
 API int CInKey();
 
 /* Prints the given socket to the stdout. */
-API void PrintSocket(const char* begin, const char* end);
+API void PrintSocket(const char* start, const char* stop);
 
 /* Prints the given socket to the stdout. */
-API void PrintSocket(const void* begin, SIW size);
+API void PrintSocket(const void* start, SIW size);
 
 }  // namespace _
 

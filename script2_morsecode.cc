@@ -30,9 +30,9 @@ const char* ToMorseCode(char code) {
       "...---...",  //< ASCII: BEL, Morse code: SOS distress signal.
       "........",   //< ASCII: BS,  Morse code: Prosign error.
       space,        //< ASCII: HT,  Morse code: non-standard space.
-      ".-.-",       //< ASCII: LF,  Morse code: New Line
-      "-...-",      //< ASCII: VT,  Morse code: New paragraph.
-      ".-.-.",      //< ASCII: FF,  Morse code: New Page
+      ".-.-",       //< ASCII: LF,  Morse code: TNew Line
+      "-...-",      //< ASCII: VT,  Morse code: TNew paragraph.
+      ".-.-.",      //< ASCII: FF,  Morse code: TNew Page
       0,            //< ASCII: CR
       "-..---",     //< ASCII: SO,  Morse code: Change to Wabun Mores code.
       ".--...",     //< ASCII: SI,  Morse code: Non-standard return to Western

@@ -150,7 +150,7 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
     return AlignUpPointer4<T>(pointer);
   else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
-  // else it's an ASCII OBJ.
+  // else it's an ASCII Obj.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |
@@ -165,77 +165,77 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
 }
 
 template <typename Char = char>
-Char* PrintTypePod(Char* cursor, Char* end, SIN type, const void* value) {
+Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
       return TPrint<Char>("Error");
     case kSI1:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI1*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI1*>(value));
     case kUI1:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI1*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI1*>(value));
     case kSI2:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI2*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI2*>(value));
     case kUI2:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI2*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI2*>(value));
     case kHLF:
-      return TPrint<Char>(cursor, end, "not_implemented");
+      return TPrint<Char>(cursor, stop, "not_implemented");
     case kBOL:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const BOL*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const BOL*>(value));
     case kSI4:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI4*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
     case kUI4:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI4*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
     case kFLT:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const FLT*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FLT*>(value));
     case kTMS:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const int*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const int*>(value));
     case kTME:
     case kTME:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
     case kSI8:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const SI8*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
     case kUI8:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const UI8*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI8*>(value));
     case kDBL:
-      return TPrint<Char>(cursor, end, *reinterpret_cast<const DBL*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const DBL*>(value));
       // case SV8:
-      //  return TPrint<Char> (cursor, end, *reinterpret_cast<const
+      //  return TPrint<Char> (cursor, stop, *reinterpret_cast<const
       //  SI8*>(value));
       // case UV8:
-      //  return TPrint<Char> (cursor, end, *reinterpret_cast<const
+      //  return TPrint<Char> (cursor, stop, *reinterpret_cast<const
       //  UI8*>(value));
     case kDEC:
-      return TPrint<Char>(cursor, end, "not_implemented");
+      return TPrint<Char>(cursor, stop, "not_implemented");
   }
   return nullptr;
 }
 
 template <typename Char = char>
-Char* Print(Char* cursor, Char* end, SIN type, const void* value) {
+Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
   if (cursor == nullptr) return nullptr;
-  ASSERT(cursor < end);
+  ASSERT(cursor < stop);
 
   if (type <= kDEC) {
-    cursor = PrintTypePod<Char>(cursor, end, type, value);
+    cursor = PrintTypePod<Char>(cursor, stop, type, value);
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, end, ':');
+    cursor = TPrint<Char>(cursor, stop, ':');
     if (!cursor) return nullptr;
-    return TPrint<Char>(cursor, end, TypeString<Char>(type));
+    return TPrint<Char>(cursor, stop, TypeString<Char>(type));
   }
 
-  if (!TypeIsValid(type)) return TPrint<Char>(cursor, end, "illegal_type");
+  if (!TypeIsValid(type)) return TPrint<Char>(cursor, stop, "illegal_type");
 
   if (TypeIsString(type)) {
-    cursor = TPrint<Char>(cursor, end, '\"');
+    cursor = TPrint<Char>(cursor, stop, '\"');
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, end, *reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, stop, *reinterpret_cast<const char*>(value));
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, end, reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, stop, reinterpret_cast<const char*>(value));
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, end, "\":");
+    cursor = TPrint<Char>(cursor, stop, "\":");
     if (!cursor) return nullptr;
-    return cursor = TPrint<Char>(cursor, end, TypeString(type));
+    return cursor = TPrint<Char>(cursor, stop, TypeString(type));
   }
 
   return PrintTypePod(utf, type & 0x1f, value) << "b:" << TypeString(type);
@@ -244,12 +244,12 @@ Char* Print(Char* cursor, Char* end, SIN type, const void* value) {
 #if USING_UTF8
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end of the read number or
+@return Returns a pointer to the next char after the stop of the read number or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char* Print(char* begin, char* end, SIN type, const void* value);
+API char* Print(char* start, char* stop, SIN type, const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
@@ -260,12 +260,12 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end of the read number or
+@return Returns a pointer to the next char after the stop of the read number or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
+API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -278,12 +278,12 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end
+@return Returns a pointer to the next char after the stop
 of the read number or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
+API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.

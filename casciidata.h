@@ -105,9 +105,9 @@ API UIT TypeFixedSize(UIT type);
 API void* TypeAlign(SIN type, void* value);
 
 /* Writes the given value to the socket. */
-API char* Write(char* begin, char* end, SIN type, const void* source);
+API char* Write(char* start, char* stop, SIN type, const void* source);
 
-/* Returns true if the given type is an ASCII OBJ. */
+/* Returns true if the given type is an ASCII Obj. */
 API inline BOL TypeIsObj(SIN type);
 
 /* Returns true if the given type is a string type. */
@@ -124,12 +124,12 @@ API inline int TypeSizeWidthCode(SIN type);
 #if USING_UTF8
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end of the read number or
+@return Returns a pointer to the next char after the stop of the read number or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char* Print(char* begin, char* end, SIN type, const void* value);
+API char* Print(char* start, char* stop, SIN type, const void* value);
 }  // namespace _
 
 /* Writes the given value to the utf justified right.
@@ -142,12 +142,12 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end of the read number or
+@return Returns a pointer to the next char after the stop of the read number or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
+API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -160,12 +160,12 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the end
+@return Returns a pointer to the next char after the stop
 of the read number or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* end, SIN type,
+API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.

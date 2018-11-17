@@ -45,13 +45,13 @@ const char* ArgsToString(int arg_count, char** args) {
     return args[1];
   }
   PRINT_ARGS;
-  char *begin = args[1], *end = args[arg_count - 1] - 1;
-  while (end != begin) {
-    char c = *end;
+  char *start = args[1], *stop = args[arg_count - 1] - 1;
+  while (stop != start) {
+    char c = *stop;
     if (!c) c = ' ';
-    --end;
+    --stop;
   }
-  return begin;
+  return start;
 }
 #undef PRINT_ARGS
 
@@ -118,9 +118,9 @@ void Print(UI8 value) {
   return Printf(FORMAT_UI8, value);
 #else
   enum { kSize = 24 };
-  char buffer[kSize];
-  TPrintUnsigned<>(buffer, kSize - 1, value);
-  Print(buffer);
+  char socket[kSize];
+  TPrintUnsigned<>(socket, kSize - 1, value);
+  Print(socket);
 #endif
 }
 
@@ -129,8 +129,8 @@ void Print(UI4 value) {
   return Printf("%u", value);
 #else
   enum { kSize = 24 };
-  char buffer[kSize];
-  TPrintUnsigned<UI4, char>(buffer, kSize - 1, value);
+  char socket[kSize];
+  TPrintUnsigned<UI4, char>(socket, kSize - 1, value);
 #endif
 }
 
@@ -139,9 +139,9 @@ void Print(SI8 value) {
   return Printf(FORMAT_SI8, value);
 #else
   enum { kSize = 24 };
-  char buffer[kSize];
-  TPrintSigned<SI8>(buffer, kSize - 1, value);
-  Print(buffer);
+  char socket[kSize];
+  TPrintSigned<SI8>(socket, kSize - 1, value);
+  Print(socket);
 #endif
 }
 
@@ -150,8 +150,8 @@ void Print(SI4 value) {
   return Printf("%i", value);
 #else
   enum { kSize = 24 };
-  char buffer[kSize];
-  TPrintSigned<SI8>(buffer, kSize - 1, (SI8)value);
+  char socket[kSize];
+  TPrintSigned<SI8>(socket, kSize - 1, (SI8)value);
 #endif
 }
 
@@ -160,9 +160,9 @@ void Print(FLT value) {
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
-  char buffer[kSize];
-  TPrintFloat<FLT, UI4, char>(buffer, kSize, value);
-  Print(buffer);
+  char socket[kSize];
+  TPrintFloat<FLT, UI4, char>(socket, kSize, value);
+  Print(socket);
 #endif
 }
 
@@ -171,9 +171,9 @@ void Print(DBL value) {
   return Printf("%f", value);
 #else
   enum { kSize = 24 };
-  char buffer[kSize];
-  TPrintFloat<DBL, UI8, char>(buffer, kSize - 1, value);
-  Print(buffer);
+  char socket[kSize];
+  TPrintFloat<DBL, UI8, char>(socket, kSize - 1, value);
+  Print(socket);
 #endif
 }
 
@@ -395,8 +395,8 @@ void PrintSocket(const char* begin, const char* end) {
   PrintHex(address_ptr + size);
 }
 
-void PrintSocket(const void* begin, SIW size) {
-  const char* begin_char = reinterpret_cast<const char*>(begin);
+void PrintSocket(const void* start, SIW size) {
+  const char* begin_char = reinterpret_cast<const char*>(start);
   return PrintSocket(begin_char, begin_char + size);
 }
 

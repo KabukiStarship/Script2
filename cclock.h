@@ -163,37 +163,37 @@ API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
                      int second = 0);
 
 #if USING_UTF8
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char* Print(char* begin, char* end, const CClock& clock);
+@param stop   The stop of the write socket. */
+API char* Print(char* start, char* stop, const CClock& clock);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
-@param end   The end of the write buffer.
+@param start The beginning of the write socket.
+@param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-API char* Print(char* begin, char* end, Tss& t);
+API char* Print(char* start, char* stop, Tss& t);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char* PrintTime(char* begin, char* end, TMS time);
+@param stop   The stop of the write socket. */
+API char* PrintTime(char* start, char* stop, TMS time);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char* PrintTime(char* begin, char* end, TME time);
+@param stop   The stop of the write socket. */
+API char* PrintTime(char* start, char* stop, TME time);
 
 /* Prints the given timestamp to the stdout. */
 API void PrintTime(const CClock& clock);
@@ -230,7 +230,7 @@ API const char* TStringScanTime(const char* string, int& hour, int& minute,
                                 int& second);
 
 /* Converts a keyboard input to char and deletes the char.
-@return Nil upon buffer failure or char directly after the end of the
+@return Nil upon socket failure or char directly after the stop of the
 timestamp upon success.
 */
 API const char* Scan(const char* string, CClock& clock);
@@ -248,37 +248,37 @@ API const char* TStringScanTime(const char* string, TME& result);
 
 #if USING_UTF16
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, CClock& clock);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, CClock& clock);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, Tss& t);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, Tss& t);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* PrintTime(char16_t* begin, char16_t* end, TMS time);
+@param stop   The stop of the write socket. */
+API char16_t* PrintTime(char16_t* start, char16_t* stop, TMS time);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char16_t* Print(char16_t* begin, char16_t* end, TME time);
+@param stop   The stop of the write socket. */
+API char16_t* Print(char16_t* start, char16_t* stop, TME time);
 
 /* Reads a time or time delta from a a char16_t starting with an '@' sign.
 
@@ -305,7 +305,7 @@ API const char16_t* TStringScanTime(const char16_t* string, int& hour,
                                     int& minute, int& second);
 
 /* Converts a keyboard input to char16_t and deletes the char16_t.
-@return Nil upon buffer failure or char16_t directly after the end of the
+@return Nil upon socket failure or char16_t directly after the stop of the
 timestamp upon success.
 */
 API const char16_t* Scan(const char16_t* string, CClock& result);
@@ -321,44 +321,44 @@ API const char16_t* TStringScanTime(const char16_t* string, TME& result);
 
 #endif  //< #if USING_UTF16
 #if USING_UTF32
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char32_t* Print(char32_t* begin, char32_t* end, CClock& clock);
+@param stop   The stop of the write socket. */
+API char32_t* Print(char32_t* start, char32_t* stop, CClock& clock);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char32_t* Print(char32_t* begin, char32_t* end, Tss& time);
+@param stop   The stop of the write socket. */
+API char32_t* Print(char32_t* start, char32_t* stop, Tss& time);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char32_t* PrintTime(char32_t* begin, char32_t* end, TMS time);
+@param stop   The stop of the write socket. */
+API char32_t* PrintTime(char32_t* start, char32_t* stop, TMS time);
 
-/* Writes the given time to the text buffer.
+/* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write buffer.
+@param start The beginning of the write socket.
 @param time  The time to utf.
-@param end   The end of the write buffer. */
-API char32_t* PrintTime(char32_t* begin, char32_t* end, TME time);
+@param stop   The stop of the write socket. */
+API char32_t* PrintTime(char32_t* start, char32_t* stop, TME time);
 
 /* Reads a time or time delta from a a char starting with an '@' sign..
 @param input  The char to parse.
 @param hour   The location to write the number of hours to.
 @param minute The location to write the number of minutes to.
 @param Second The location to write the number of seconds to.
-@return The offset The end of where the parser exited successfully at.
+@return The offset The stop of where the parser exited successfully at.
 
 @code
 @4        (This is 4AM)

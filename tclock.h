@@ -33,43 +33,43 @@ namespace _ {
 #if USING_UTF
 
 template <typename Char = char>
-Char* TPrint(Char* cursor, Char* end, const CClock& clock) {
+Char* TPrint(Char* cursor, Char* stop, const CClock& clock) {
   // The way the utf functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
-  ASSERT(cursor < end);
+  ASSERT(cursor < stop);
 
-  cursor = TPrint<Char>(cursor, end, clock.year + ClockEpoch());
+  cursor = TPrint<Char>(cursor, stop, clock.year + ClockEpoch());
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = TPrint<Char>(cursor, end, clock.month + 1);
+  cursor = TPrint<Char>(cursor, stop, clock.month + 1);
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = TPrint<Char>(cursor, end, clock.day);
+  cursor = TPrint<Char>(cursor, stop, clock.day);
   if (!cursor) return nullptr;
   *cursor++ = '@';
-  cursor = TPrint<Char>(cursor, end, clock.hour);
+  cursor = TPrint<Char>(cursor, stop, clock.hour);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = TPrint<Char>(cursor, end, clock.minute);
+  cursor = TPrint<Char>(cursor, stop, clock.minute);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = TPrint<Char>(cursor, end, clock.second);
+  cursor = TPrint<Char>(cursor, stop, clock.second);
   if (!cursor) return nullptr;
   return cursor;
 }
 
 template <typename Char = char>
-Char* TPrint(Char* cursor, Char* end, Tss& t) {
+Char* TPrint(Char* cursor, Char* stop, Tss& t) {
   // The way the utf functions are setup, we return a nil-term char so we
   // don't have to check to write a single char in this
   ASSERT(cursor);
-  ASSERT(cursor < end);
+  ASSERT(cursor < stop);
 
   CClock clock(t.seconds);
-  cursor = TPrint<Char>(cursor, end, clock);
+  cursor = TPrint<Char>(cursor, stop, clock);
   *cursor++ = ':';
-  cursor = TPrint<Char>(cursor, end, t.ticks);
+  cursor = TPrint<Char>(cursor, stop, t.ticks);
   if (!cursor) return nullptr;
   return cursor;
 }
@@ -256,7 +256,7 @@ const Char* TScan(const Char* cursor, CClock& clock) {
   cursor = TStringSkipChar<Char>(cursor, '0');
   Char c = *cursor,  //< The current Char.
       delimiter;     //< The delimiter.
-  const Char* end;   //< Might not need
+  const Char* stop;  //< Might not need
 
   int hour = 0, minute = 0, second = 0;
 
@@ -404,7 +404,7 @@ const Char* TScan(const Char* cursor, CClock& clock) {
 
   c = *cursor;
   if (c == '@') {
-    if (!(end = TStringScanTime<Char>(cursor, hour, minute, second))) {
+    if (!(stop = TStringScanTime<Char>(cursor, hour, minute, second))) {
       PRINT("Invalid YYyy/MM/DD@ time.");
       return nullptr;
     }
@@ -474,22 +474,22 @@ SI TStampTime(CClock& clock) {
 }
 
 template <typename Char, typename SI>
-const Char* TStringScanTime(const Char* begin, SI& result) {
+const Char* TStringScanTime(const Char* start, SI& result) {
   CClock clock;
-  const Char* end = TScan<Char>(begin, clock);
+  const Char* stop = TScan<Char>(start, clock);
   result = TStampTime<SI>(clock);
-  return end;
+  return stop;
 }
 
 template <typename Char>
-const Char* TStringScanTime(const Char* begin, Tss& result) {
-  begin = TStringScanTime<Char, TMS>(begin, result.seconds);
-  if (!begin) return nullptr;
-  if (*begin++ != ':') {
+const Char* TStringScanTime(const Char* start, Tss& result) {
+  start = TStringScanTime<Char, TMS>(start, result.seconds);
+  if (!start) return nullptr;
+  if (*start++ != ':') {
     result.ticks = 0;
-    return begin - 1;
+    return start - 1;
   }
-  return TScanUnsigned<UI4, Char>(begin, result.ticks);
+  return TScanUnsigned<UI4, Char>(start, result.ticks);
 }
 #endif  // #if USING_UTF
 
