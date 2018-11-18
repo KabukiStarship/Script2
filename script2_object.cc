@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__02
 
 #include "cobject.h"
 #include "csocket.h"
 #include "tobject.h"
 
-#if SEAM == _0_0_0__03
+#if SEAM == _0_0_0__02
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -71,4 +71,4 @@ UIW* ObjNew(SI2 size, size_t header_size) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__05
+#endif  //< #if SEAM >= _0_0_0__02

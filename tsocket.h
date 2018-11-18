@@ -175,12 +175,6 @@ class TSocket {
   /* Returns the socket as a UIW*. */
   inline UIW* Words() { return socket; }
 
-  /* Returns the socket as a UIW*. */
-  template <typename Size>
-  inline UIW* ObjInitStart(Size size) {
-    return TObjInit<Size> (size);
-  }
-
   /* Gets the start UI1 of the socket. */
   inline char* Begin() { return reinterpret_cast<char*>(socket); }
 

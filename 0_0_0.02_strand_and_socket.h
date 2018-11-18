@@ -188,8 +188,10 @@ static const char* _0_0_0__02_ASCII_Strings_and_Socket(char* seam_log,
   AVOW(kStringsCentered[3], socket);
   int i = 0;  //< Shared looping variable.
 
-  // PRINT_HEADING("\nTesting utf.Print () ");
-  // Console().Print() << "Testing " << 1 << ", 2, " << -3;
+  PRINT_HEADING("\nTesting TStrand...");
+
+  TStrand<> strand;
+  //strand.Print ("Testing");// << " " << 1 << ", 2, " << -3;
 
   PRINT_HEADING("Testing Socket");
   PRINT_HEADING("Testing PrintSocket (void*, int size)");

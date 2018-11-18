@@ -1010,19 +1010,32 @@ struct TUTF {
   }
 };
 
-/* A Unicode String ASCII Object. */
+/* A Unicode String ASCII Object.
 template <typename Char, typename Size>
 struct TString {
   Size size;  //< Size of the ASCII Object.
-};
+
+  TString () { *Begin () = 0; }
+
+  TString (const char* init) {
+    Char* begin = Begin ();
+    TPrint<Char> (begin, begin + );
+  }
+
+
+  Char* Start () {
+    return reinterpret_cast<Char*> (reinterpret_cast<UIW>(this) + sizeof (Size)
+      );
+  }
+}; */
 
 template <typename Size, typename Char>
 Char* TStrandInit(UIW* obj, Size size) {
   ASSERT(obj);
-  ASSERT(size & kWordBitsMask);
+  ASSERT(size > 0);
+  ASSERT((size & kWordBitsMask) == 0);
   *reinterpret_cast<UIW*>(obj) = size;
-  UIW ptr = reinterpret_cast<UIW>(obj);
-  return reinterpret_cast<Char*>(ptr + sizeof(Size));
+  return reinterpret_cast<Char*>(reinterpret_cast<UIW>(obj) + sizeof(Size));
 }
 
 /* A ASCII Factory String that can auto-grow from the obj to the heap.
@@ -1059,12 +1072,18 @@ class TStrand : public TUTF<Char> {
 
   /* Constructs a Strand that auto-grows from stack to heap.
   @param factory ASCII Factory to call when the Strand overflows. */
-  TStrand(AsciiFactory factory)
+  TStrand(AsciiFactory factory = TCOutAuto<Char>)
       : TUTF<Char>(TStrandInit<Size, Char>(socket_.Words(), socket_.kSize),
                    socket_.Begin() + kLengthMax - 1),
-        obj_(reinterpret_cast <, factory) {
-    _::Print("\nTStrand(AsciiFactory factory)");
-    static_assert((kLengthMax_ & kAlignMask) == 0, "TStrand unaligned!");
+        obj_(socket_.Words (), factory) {
+    _::Printf("\nTStrand(AsciiFactory factory)"
+      "\nsocket_.Begin():0x%p socket_.End():0x%p"
+      "\nTUTF<Char>::start:0x%p TUTF<Char>::stop:0x%p"
+      "\nsizeof(Size):%i Char count max:%i end space:%i\n",
+      socket_.Begin (), socket_.End (), TUTF<Char>::stop, TUTF<Char>::start,
+      (int)(reinterpret_cast<UIW> (TUTF<Char>::start) - reinterpret_cast<UIW>(socket_.Begin ())),
+      (int)(TUTF<Char>::stop - TUTF<Char>::start),
+      (int)(reinterpret_cast<UIW> (socket_.End ()) - reinterpret_cast<UIW>(TUTF<Char>::stop)));
     Terminate();
   }
 
@@ -1160,13 +1179,6 @@ class TStrand : public TUTF<Char> {
 
   /* Writes a nil-term char at the stop of the strand. */
   inline void Terminate() {
-    Printf(
-        "\nsocket_.Begin():%p socket_.End():%p"
-        "\nTUTF<Char>::start:0x%p TUTF<Char>::stop:0x%p"
-        "\nChar count max:%i size in bytes:%i",
-        socket_.Begin(), socket_.End(), TUTF<Char>::stop, TUTF<Char>::start,
-        (int)(TUTF<Char>::stop - TUTF<Char>::start),
-        sizeof(Char) * (int)(TUTF<Char>::stop - TUTF<Char>::start));
     *Stop() = 0;
   }
 
@@ -1257,12 +1269,31 @@ TUTF<Char> TCOut() {
 }  // namespace _
 
 /* Writes a nil-terminated UTF-8 or ASCII strand to the utf.
+@return The utf.
 @param  utf The utf.
-@param  value   The value to utf.
-@return The utf. */
+@param  value   The value to utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string));
+}
+
+/* Writes a nil-terminated UTF-8 or ASCII strand to the utf.
+@return The utf.
+@param  utf The utf.
+@param  value   The value to utf. */
+template <typename Char = char>
+_::TUTF<Char>& operator<<(_::TStrand<Char>& utf, const Char* string) {
+  Char* start = utf.start,
+    *stop = utf.stop,
+    * cursor = 0;
+  if (!start || !stop) return utf;
+  try {
+    while (!cursor) {
+      cursor = _::TPrint<Char> (start, stop, string);
+    }
+  }
+  catch (...) {}
+  return utf;
 }
 
 /* Writes the given value to the utf.
@@ -1270,7 +1301,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
 @param  value   The value to utf.
 @return The utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, c));
 }
 
@@ -1279,7 +1310,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1288,7 +1319,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1297,7 +1328,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1306,7 +1337,16 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
+  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value)fd);
+}
+
+/* Writes the given value to the utf.
+@return The utf.
+@param  utf The utf.
+@param  value The value to write to the utf. */
+template <typename Char = char>
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1315,7 +1355,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1324,28 +1364,17 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
-}
-
-/* Writes the given value to the utf.
-@return The utf.
-@param  utf The utf.
-@param  value The value to write to the utf.
-@desc */
-template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__03
 /* Writes the given value to the utf.
 @return The utf.
-@desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
@@ -1354,7 +1383,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 #endif
@@ -1364,7 +1393,7 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
 @param  utf The utf.
 @param  item The item to write to utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, item));
 }
 
@@ -1373,19 +1402,19 @@ API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
 @param  utf The utf.
 @param  item The item to utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, item));
 }
 
 /* Prints a line of the given column_count to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLine<Char> line) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLine<Char> line) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
 }
 
 /* Prints a line strand of the given column_count to the utf. */
 template <typename Char = char>
-API _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineString<Char> line) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineString<Char> line) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
 }
 
