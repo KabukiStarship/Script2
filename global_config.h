@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /kabuki/features/crabs/config.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -46,8 +46,8 @@ specific language governing permissions and limitations under the License. */
 #define IS_NOT_STUPID 1
 #define IS_STUPID 2  //< Don't ask me what they where thinking.
 
-#define YES 1  //< Logical yes.
-#define NO 0   //< Logical no.
+#define YES 0  //< Logical yes.
+#define NO 1   //< Logical no.
 
 #define UTF1 1   //< flag for UTF-8.
 #define UTF16 2  //< Flag for UTF-16.
@@ -69,25 +69,25 @@ specific language governing permissions and limitations under the License. */
 
 //#include <assembly.inl>  //< Inline config stuff for your project.
 
-#if CRABS_TEXT == UTF1
+#if USING_CRABS_TEXT == UTF1
 #if USING_UTF8 == 0
-#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
+#warning You have the USING_CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF8
 #undef USING_UTF8
 #endif
 #define USING_UTF8 YES
 #endif
-#elif CRABS_TEXT == UTF16
+#elif USING_CRABS_TEXT == UTF16
 #if USING_UTF16 == 0
-#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
+#warning You have the USING_CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF16
 #undef USING_UTF16
 #endif
 #define USING_UTF16 YES
 #endif
-#elif CRABS_TEXT == UTF32
+#elif USING_CRABS_TEXT == UTF32
 #if USING_UTF32 == 0
-#warning You have the CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
+#warning You have the USING_CRABS_TEXT set to UTF1 but USING_UTF8 is 0!
 #ifdef USING_UTF32
 #undef USING_UTF32
 #endif
@@ -291,7 +291,7 @@ typedef UI8 data_t;    //< Default TData size.
 #endif
 
 #if CRABS_MEMORY_PROFILE >= 3 || DEBUG
-#define CRABS_TEXT 3
+#define USING_CRABS_TEXT 3
 #endif  //< CRABS_MEMORY_PROFILE >= 3
 
 /* Macro declares a class to be non-copyable. */

@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /slot.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_CRABS_SLOT
-#define INCLUDED_CRABS_SLOT
+#ifndef SCRIPT2_SLOT
+#define SCRIPT2_SLOT
 #include "csocket.h"
 
 #include "bin.h"
@@ -115,7 +115,7 @@ struct Slot {
   /* Copies the contents of the other slot into the slot. */
   const Op* Write(Slot& other);
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
   /* Prints a string rep of this object to the printer. */
   UTF1& Print(UTF1& printer);
 #endif
@@ -123,12 +123,12 @@ struct Slot {
 
 }  // namespace _
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
 /* Prints out the bin to the text. */
 inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
   return slot.Print(printer);
 }
 #endif
 
-#endif  //< INCLUDED_CRABS_SLOT
+#endif  //< SCRIPT2_SLOT
 #endif  //< #if SEAM >= _0_0_0__13

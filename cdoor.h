@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cdoor.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_CRABS_DOOR
-#define INCLUDED_CRABS_DOOR
+#ifndef SCRIPT2_DOOR
+#define SCRIPT2_DOOR
 #include "ccrabs.h"
 #include "slot.h"
 #include "tstack.h"
@@ -107,4 +107,4 @@ static Door* DoorInit (int* socket, UIT slot_size) {
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__13
-#endif  //< INCLUDED_CRABS_DOOR
+#endif  //< SCRIPT2_DOOR

@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tutf.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License. */
 #include "ctest.h"
 #include "tbinary.h"
 #include "tobject.h"
-#include "tsocket.h"
 
 #if SEAM == _0_0_0__02
 #include "test_debug.inl"
@@ -495,8 +494,8 @@ Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count) {
 
 /* Prints the given string repeated to make a line. */
 template <typename Char = char>
-Char* PrintLineString(Char* cursor, Char* stop, const Char* string,
-                      int column_count) {
+Char* TPrintLineString(Char* cursor, Char* stop, const Char* string,
+                       int column_count) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
   if (cursor + column_count + 1 > stop) return nullptr;
@@ -757,12 +756,12 @@ class TRight {
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = char>
-struct API TLine {
+struct API TLineChar {
   Char token;        //< Character to utf.
   int column_count;  //< Column count.
 
   /* Constructor. */
-  TLine(Char token, int column_count)
+  TLineChar(Char token, int column_count)
       : token(token), column_count(column_count) {}
 };
 
@@ -839,6 +838,23 @@ inline void TStringStop(CObject obj) {
   return TStringStop<Char, Size>(obj);
 }
 
+/* A templated-C struct. */
+template <typename Char, typename Size>
+struct TCString {
+  Size size;  //< Size of the ASCII Object.
+};
+
+template <typename Char, typename Size>
+Char* TStringBegin(TCString<Char, Size>* string) {
+  ASSERT(string);
+}
+
+/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 string.*/
+template <typename Char, typename Size>
+struct TString {
+  Size size;  //< Size of the ASCII Object.
+};
+
 /* Universal Text Formatter.
 This class only stores the stop of begin pointer and a pointer to the write
 begin. It is up the user to store begin of begin pointer and if they would
@@ -846,8 +862,8 @@ like to replace the begin with the beginning of begin pointer when they are
 done printing. */
 template <typename Char = char, typename Size = intptr_t>
 struct TUTF {
-  Char *start,  //< Write begin pointer.
-      *stop;    //< End of begin pointer.
+  Char *start,  //< Start address.
+      *stop;    //< Stop address.
 
   /* Initializes the Utf& from the given begin pointers.
   @param begin The beginning of the begin.
@@ -855,7 +871,7 @@ struct TUTF {
   TUTF(Char* start, Size size)
       : start(start), stop(TPtr<Char>(start, size - 1)) {
     ASSERT(start);
-    ASSERT(ObjSizeIsValid<Size>(size, 8));
+    ASSERT(TObjSizeIsValid<Size>(size, 8));
   }
 
   /* Initializes the Utf& from the given begin pointers.
@@ -872,12 +888,6 @@ struct TUTF {
   @param begin The beginning of the begin.
   @param stop   The stop of the begin. */
   TUTF(Char* start, Char* stop) : start(start), stop(stop) {}
-
-  /* Constructs a UTF from the given ASCII Object Buffer. */
-  TUTF(UIW* obj)
-      : start(reinterpret_cast<Char*>(obj)),
-        stop(reinterpret_cast<Char*>(obj) + *reinterpret_cast<Size*>(obj) - 1) {
-  }
 
   /* Clones the other utf. */
   TUTF(const TUTF& other)
@@ -1005,200 +1015,11 @@ struct TUTF {
   }
 #endif
   /* Prints the given pointer as binary. */
-  inline TUTF& Binary(const void* value) {
-    return Set(Binary<Char>(start, stop, value));
+  inline TUTF& Binary(const void* ptr) {
+    UIW address = reinterpret_cast<UIW>(ptr);
+    return Set(Binary<Char>(start, stop, address));
   }
 };
-
-/* A Unicode String ASCII Object.
-template <typename Char, typename Size>
-struct TString {
-  Size size;  //< Size of the ASCII Object.
-
-  TString () { *Begin () = 0; }
-
-  TString (const char* init) {
-    Char* begin = Begin ();
-    TPrint<Char> (begin, begin + );
-  }
-
-
-  Char* Start () {
-    return reinterpret_cast<Char*> (reinterpret_cast<UIW>(this) + sizeof (Size)
-      );
-  }
-}; */
-
-template <typename Size, typename Char>
-Char* TStrandInit(UIW* obj, Size size) {
-  ASSERT(obj);
-  ASSERT(size > 0);
-  ASSERT((size & kWordBitsMask) == 0);
-  *reinterpret_cast<UIW*>(obj) = size;
-  return reinterpret_cast<Char*>(reinterpret_cast<UIW>(obj) + sizeof(Size));
-}
-
-/* A ASCII Factory String that can auto-grow from the obj to the heap.
-
-This class is designed to take advantage of the behavior of the C++ operator
-overloads. When you have a string of overloads, the objects get destructed
-in the opposite order then where called, which is a obj push pop operation.
-For this reason the factory is programmable.
-
-# Statically Allocated Strings
-
-If it is null then the factory is treated as statically allocated factory.
-
-@code
-TStrand<> (TCOut<>) << "Hello world!";
-@endcode
-
-# Dynamic Allocated Strings
-
-Strings that use dynamic memory use the DCOutAuto factory:
-
-@code
-TStrand<UI4> (TCOutAuto<>) << "Hello world!";
-@endcode
-*/
-template <typename Size = int, typename Char = char, SIW kLengthMax_ = 64>
-class TStrand : public TUTF<Char> {
- public:
-  enum {
-    kLengthMax =
-        kLengthMax_,  //< Max length of a string that can fit in the socket_.
-    kSize = kLengthMax * sizeof(Char),  //< The size of the strand in bytes.
-  };
-
-  /* Constructs a Strand that auto-grows from stack to heap.
-  @param factory ASCII Factory to call when the Strand overflows. */
-  TStrand(AsciiFactory factory = TCOutAuto<Char>)
-      : TUTF<Char>(TStrandInit<Size, Char>(socket_.Words(), socket_.kSize),
-                   socket_.Begin() + kLengthMax - 1),
-        obj_(socket_.Words (), factory) {
-    _::Printf("\nTStrand(AsciiFactory factory)"
-      "\nsocket_.Begin():0x%p socket_.End():0x%p"
-      "\nTUTF<Char>::start:0x%p TUTF<Char>::stop:0x%p"
-      "\nsizeof(Size):%i Char count max:%i end space:%i\n",
-      socket_.Begin (), socket_.End (), TUTF<Char>::stop, TUTF<Char>::start,
-      (int)(reinterpret_cast<UIW> (TUTF<Char>::start) - reinterpret_cast<UIW>(socket_.Begin ())),
-      (int)(TUTF<Char>::stop - TUTF<Char>::start),
-      (int)(reinterpret_cast<UIW> (socket_.End ()) - reinterpret_cast<UIW>(TUTF<Char>::stop)));
-    Terminate();
-  }
-
-  /* Constructs a strand from dynamic memory.
-  @param size    Object size IN BYTES.
-  @param factory Non-nil ASCII Factory. */
-  TStrand(Size size, AsciiFactory factory = TCOutAuto<Char>) {
-    _::Print(__FUNCTION__);
-    ASSERT(factory);
-    UIW* socket = factory(nullptr, size, nullptr);
-    obj_.Set(socket, factory);
-    obj_.SetBegin(socket);
-    TUTF<Char>::Set(socket, size);
-    Terminate();
-  }
-
-  /* Constructs the pointers to the buffer_.
-  @param begin   Buffer begin address.
-  @param size    Object size IN BYTES.
-  @param factory ASCII Factory.  */
-  TStrand(UIW* begin, Size size, AsciiFactory factory = nullptr)
-      : TUTF<Char>(begin, size), obj_(size, begin, factory) {
-    _::Print(
-        "\nTStrand(UIW* begin, Size size, AsciiFactory factory = nullptr)");
-    ASSERT(begin);
-    Terminate();
-  }
-
-  /* Gets the UTF. */
-  TUTF<Char> Print() {
-    Size size = TObjSize<Size>(obj_);
-    Char* start_ptr = reinterpret_cast<Char*>(
-        reinterpret_cast<UIW>(obj_.start) + sizeof(Size));
-    return TUTF<Char>(start_ptr, start_ptr + (size >> TBitShiftCount<Size>()));
-  }
-
-  /* Prints a char to the strand.
-  @param item The item to utf.
-  @return A UTF. */
-  template <typename T>
-  TUTF<Char> Print(T item) {
-    UIW start = reinterpret_cast<UIW>(obj_.Begin());
-    Size size = *reinterpret_cast<Size*>(start);
-    ASSERT((size & kAlignMask) == 0);
-    Char *cursor = reinterpret_cast<Char*>(start + sizeof(Size)),
-         *stop = cursor + (size >> TBitShiftCount<Size>()) - 1;
-    cursor = TPrint<Char>(cursor, stop, item);
-    if (!cursor) return TUTF<Char>(reinterpret_cast<Char*>(start), stop);
-    return TUTF<Char>(cursor, stop);
-  }
-
-  /* Prints a char to the strand.
-  @return A UTF. */
-  inline TUTF<Char> Print(Char c) { return TPrint<Char>(c); }
-
-  /* Prints a char to the strand.
-  @return A UTF. */
-  inline TUTF<Char> Print(const Char* string) {
-    return Print<const Char*>(string);
-  }
-
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(SI4 value) { return TPrint<SI4>(value); }
-
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(UI4 value) { return TPrint<UI4>(value); }
-
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(SI8 value) { return TPrint<SI8>(value); }
-
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(UI8 value) { return TPrint<UI8>(value); }
-
-#if SEAM >= _0_0_0__03
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(FLT value) { return TPrint<FLT>(value); }
-
-  /* Prints the given value.
-  @return A UTF. */
-  inline TUTF<Char> Print(DBL value) { return TPrint<DBL>(value); }
-#endif
-
-  /* Returns the stop of the begin. */
-  inline Char* Stop() { return TStringStop<Char, Size>(obj_.Begin()); }
-
-  /* Returns the stop of the begin. */
-  inline char* End() { return TObjEnd<Size>(obj_); }
-
-  /* Writes a nil-term char at the stop of the strand. */
-  inline void Terminate() {
-    *Stop() = 0;
-  }
-
-  /* Gets the begin of the Console begin. */
-  inline TObject<Size>& Obj() { return obj_; }
-
- private:
-  TObject<Size> obj_;      //< ASCII Obj.
-  TSocket<kSize> socket_;  //< An optional socket for obj-to-heap growth.
-};
-
-using Strand1 = TStrand<char>;
-using Strand2 = TStrand<char16_t>;
-using Strand4 = TStrand<char32_t>;
-
-/* Prints the given AsciiFactory. */
-template <typename Char = char>
-TUTF<Char> Print(AsciiFactory factory) {
-  return TStrand<Char>(factory);
-}
 
 /* Queries the given strand for the given query. */
 template <typename Char = char>
@@ -1277,25 +1098,6 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string));
 }
 
-/* Writes a nil-terminated UTF-8 or ASCII strand to the utf.
-@return The utf.
-@param  utf The utf.
-@param  value   The value to utf. */
-template <typename Char = char>
-_::TUTF<Char>& operator<<(_::TStrand<Char>& utf, const Char* string) {
-  Char* start = utf.start,
-    *stop = utf.stop,
-    * cursor = 0;
-  if (!start || !stop) return utf;
-  try {
-    while (!cursor) {
-      cursor = _::TPrint<Char> (start, stop, string);
-    }
-  }
-  catch (...) {}
-  return utf;
-}
-
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value   The value to utf.
@@ -1338,7 +1140,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value)fd);
+  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1408,7 +1210,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
 
 /* Prints a line of the given column_count to the utf. */
 template <typename Char = char>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLine<Char> line) {
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineChar<Char> line) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
 }
 

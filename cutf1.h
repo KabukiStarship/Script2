@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cutf1.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -21,10 +21,10 @@ specific language governing permissions and limitations under the License. */
 #include "cclock.h"
 
 #ifndef USING_UTF8
-#define USING_UTF8 1
+#define USING_UTF8 YES
 #endif
 
-#if USING_UTF8
+#if USING_UTF8 == YES
 
 namespace _ {
 
@@ -477,8 +477,8 @@ nil upon failure.
 @param stop    The stop of the write socket.
 @param string The string to utf.
 @param column_count The number of columns. */
-API char* PrintLineString(char* cursor, char* stop, const char* string,
-                          int column_count);
+API char* TPrintLineString(char* cursor, char* stop, const char* string,
+                           int column_count);
 
 /* Converts the given string to a 8-bit signed integer.
 @return Null upon failure or a pointer to the UI1 after the last

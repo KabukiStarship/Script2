@@ -93,6 +93,7 @@
     <ClInclude Include="tset.h" />
     <ClInclude Include="tsocket.h" />
     <ClInclude Include="tstack.h" />
+    <ClInclude Include="tstrand.h" />
     <ClInclude Include="ttable.h" />
     <ClInclude Include="ttest.h" />
     <ClInclude Include="tutf.h" />

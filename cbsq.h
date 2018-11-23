@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cbsq.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -153,24 +153,24 @@ API UIT BsqParamNumber(const UIT* bsq, int param_number);
 
 }  // namespace _
 
-#if USING_UTF8
+#if USING_UTF8 == YES
 /*  Prints out the parameters. */
 inline _::UTF1& operator<<(_::UTF1& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8
-#if USING_UTF16
+#if USING_UTF16 == YES
 /*  Prints out the parameters. */
 inline _::UTF2& operator<<(_::UTF2& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF16
-#if USING_UTF32
+#if USING_UTF32 == YES
 /*  Prints out the parameters. */
 inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
   return _::PrintBsq(printer, bsq.params);
 }
-#endif  //< USING_UTF8
+#endif  //< USING_UTF8 == YES
 
 #endif  //< INCLUDED_CRABS_BSQ
 #endif  //< #if SEAM >= _0_0_0__13

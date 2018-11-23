@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cclock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -162,7 +162,7 @@ API TMS ClockTimeTMS(int year, int month, int day, int hour = 0, int minute = 0,
 API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
                      int second = 0);
 
-#if USING_UTF8
+#if USING_UTF8 == YES
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
@@ -244,9 +244,9 @@ API const char* TStringScanTime(const char* string, TMS& result);
 /* Converts a keyboard input to a TME. */
 API const char* TStringScanTime(const char* string, TME& result);
 
-#endif  //< #if USING_UTF8
+#endif  //< #if USING_UTF8 == YES
 
-#if USING_UTF16
+#if USING_UTF16 == YES
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -319,8 +319,8 @@ API const char16_t* TStringScanTime(const char16_t* string, TMS& result);
 /* Converts a keyboard input to a TME. */
 API const char16_t* TStringScanTime(const char16_t* string, TME& result);
 
-#endif  //< #if USING_UTF16
-#if USING_UTF32
+#endif  //< #if USING_UTF16 == YES
+#if USING_UTF32 == YES
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
@@ -389,7 +389,7 @@ API const char32_t* TStringScanTime(const char32_t* input, TMS& result);
 /* Converts a keyboard input to a TMS. */
 API const char32_t* TStringScanTime(const char32_t* input, TME& result);
 
-#endif  //< #if USING_UTF32
+#endif  //< #if USING_UTF32 == YES
 }  // namespace _
 
 #undef PRINT

@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cutf2.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "clock.h"
 
-#if USING_UTF16
+#if USING_UTF16 == YES
 
 namespace _ {
 
@@ -471,8 +471,8 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param start The beginning of the read socket.
 @param stop  The stop of the read socket. */
-API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
-                          const void* stop);
+API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* begin,
+                          const void* end);
 
 /* Prints out the contents of the address to the printer socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -481,32 +481,8 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param start The beginning of the read socket.
 @param size  The size of the read socket. */
-API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
+API char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* begin,
                           size_t size);
-
-/* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
-@param start The beginning of the write socket.
-@param time  The time to utf.
-@param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, TMS t);
-
-/* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
-@param start The beginning of the write socket.
-@param time  The time to utf.
-@param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, TME t);
-
-/* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
-@param start The beginning of the write socket.
-@param time  The time to utf.
-@param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, Tss t);
 
 /* Prints a line of the given column_count.
 @return Returns a pointer to the next char16_t after the stop of the read number
@@ -525,8 +501,8 @@ or nil upon failure.
 @param stop    The stop of the write socket.
 @param string The string to utf.
 @param column_count The number of columns. */
-API char16_t* PrintLineString(char16_t* cursor, char16_t* stop,
-                              const char16_t* string, int column_count);
+API char16_t* TPrintLineString(char16_t* cursor, char16_t* stop,
+                               const char16_t* string, int column_count);
 
 /* Prints the socket to the console as a UTF-8 string. */
 void COutUtf16(UIW* socket);

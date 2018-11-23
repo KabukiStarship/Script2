@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -70,7 +70,7 @@ inline UIT BInSpace(BIn* bin);
 
 inline UIT BinBufferLength(BIn* bin);
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 /* Gets a a char for printing out the bin_state. */
 API const char** BInStateStrings();
 
@@ -103,31 +103,31 @@ inline const Op* BOutRead(BOut* bout, const UIT* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 
-#if USING_UTF8
+#if USING_UTF8 == YES
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 API UTF1& Print(UTF1& printer, BIn* bin);
-#endif  //< #if USING_UTF8
-#if USING_UTF16
+#endif  //< #if USING_UTF8 == YES
+#if USING_UTF16 == YES
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 API UTF2& Print(UTF2& printer, BIn* bin);
-#endif  //< #if USING_UTF16
-#if USING_UTF32
+#endif  //< #if USING_UTF16 == YES
+#if USING_UTF32 == YES
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 API UTF4& Print(UTF4& printer, BIn* bin);
-#endif  //< #if USING_UTF32
+#endif  //< #if USING_UTF32 == YES
 
 }  // namespace _
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 /* Prints out the bin to the text. */
 inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
   return Print(utf, bin);

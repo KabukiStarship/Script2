@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -61,9 +61,9 @@ inline Size TObjSize(UIW* object) {
 
 /* Gets the ASCII Obj size. */
 template <typename Size>
-inline Size TObjSize(CObject stack) {
-  ASSERT(stack.start);
-  return *reinterpret_cast<Size*>(stack.start);
+inline Size TObjSize(CObject obj) {
+  ASSERT(obj.start);
+  return *reinterpret_cast<Size*>(obj.start);
 }
 
 template <typename Size>

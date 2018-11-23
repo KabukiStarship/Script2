@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tbinary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -148,7 +148,7 @@ void TPrintPrinted(Char* cursor) {
 
 template <typename UI>
 inline UI TNaNUnsigned() {
-  return ~0;
+  return (~(UI)0) - (sizeof(UIW) - 2);
 }
 
 template <typename SI, typename UI>

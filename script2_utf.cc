@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    \script2_utf.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -36,6 +36,12 @@ UIW* Console(UIW* socket, SIW function, void* arg) {
 
 UIW* COutAuto(UIW* socket, SIW function, void* arg) {
   return TCOutAuto<char>(socket, function, arg);
+}
+
+void UTFAlignCenterSTR1(int column_count, void* item, void* destination) {
+  ASSERT(item);
+  ASSERT(destination);
+  ASSERT(column_count >= 0);
 }
 
 }  // namespace _
@@ -330,9 +336,9 @@ char* PrintLine(char* cursor, char* stop, char token, int column_count) {
   return TPrintLine<char>(cursor, stop, token, column_count);
 }
 
-char* PrintLineString(char* cursor, char* stop, const char* string,
-                      int column_count) {
-  return PrintLineString<char>(cursor, stop, string, column_count);
+char* TPrintLineString(char* cursor, char* stop, const char* string,
+                       int column_count) {
+  return TPrintLineString<char>(cursor, stop, string, column_count);
 }
 
 const char* Scan(const char* string, SI1& result) {
@@ -639,7 +645,7 @@ _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line) {
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line) {
   return utf.Set(
-      _::PrintLineString(utf.start, utf.stop, line.string, line.column_count));
+      _::TPrintLineString(utf.start, utf.stop, line.string, line.column_count));
 }
 
 #endif  //< #if USING_UTF8

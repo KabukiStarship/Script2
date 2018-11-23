@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cbinary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -222,7 +222,7 @@ const char* Scan(const char* cursor, FLT& value);
 @return Nil if the string doesn't start with a DBL. */
 const char* Scan(const char* cursor, DBL& value);
 
-#if USING_UTF16
+#if USING_UTF16 == YES
 /* Returns the last UI1 in the given char. */
 API char* LastByte(char16_t* c);
 
@@ -233,7 +233,7 @@ API char16_t* Print(char16_t* cursor, char16_t* stop, FLT value);
 API char16_t* Print(char16_t* cursor, char16_t* stop, DBL value);
 #endif
 
-#if USING_UTF32
+#if USING_UTF32 == YES
 /* Returns the last UI1 in the given char. */
 API char* LastByte(char32_t* c);
 

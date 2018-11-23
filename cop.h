@@ -1,8 +1,8 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /op.h
+@file    /cop.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -14,91 +14,83 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-<<<<<<< HEAD
-#if SEAM >= _0_0_0__13 == == == =
-#if SEAM >= SEAM_00_00_01__00
->>>>>>> af98cdd86f8b7b5188063c203df0e9dd4e771336
+#if SEAM >= _0_0_01__13
+#ifndef INCLUDED_CRABS_OP
+#define INCLUDED_CRABS_OP 1
 
-                                    #ifndef INCLUDED_CRABS_OP
-#define INCLUDED_CRABS_OP
+#include "tutf.h"
 
-#include "str1.h>
+namespace _ {
 
-#include "error.h"
+// enum {
+//    kOpPush          = 0, //< Operation Type 0: Stack push .
+//    kOpOperation     = 1, //< Operation Type 1: Abstract Operation.
+//    KOpOperationPush = 2, //< Operation Type 2: Operation with stack push.
+//};
 
-    namespace _ {
+struct BOut;
 
-  // enum {
-  //    kOpPush          = 0, //< Operation Type 0: Stack push .
-  //    kOpOperation     = 1, //< Operation Type 1: Abstract Operation.
-  //    KOpOperationPush = 2, //< Operation Type 2: Operation with stack push.
-  //};
+/* An expression Operation with name key, multiple input params,
+    result, and optional description of a data set.
+    @code
+    static const Op kThis = { "Key",
+        Params<1, 2>::Header, Params<1, 2>::Header,
+        "Description", '}', ';', ' ', nullptr, "-", nullptr };
 
-  struct BOut;
+    static const Op kOpExample =   { "Key2",
+        NumOps (0), FirstOp ('A'),
+        "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
+    @endcode */
+struct API Op {
+  const char* name;          //< Op name.
+  const UIT *in,             //< Input kBSQ params or OpFirst.
+      *out;                  //< Output kBSQ params or OpLast.
+  const char* description;   //< Op description.
+  CHW pop,                   //< Index of the Pop Operation.
+      close,                 //< Index of the Close Operation.
+      default_op;            //< Index of the Default Operation.
+  BOL using_numbers;         //< Flag for if tokens may use numbers.
+  const char *ignore_chars,  //< String of chars to ignore.
+      *allowed_chars;        //< String of allowed symbols.
+  const BOut* evaluation;    //< Evaluated expression Slot.
+};
 
-  /* An expression Operation with name key, multiple input params,
-      result, and optional description of a data set.
-      @code
-      static const Op kThis = { "Key",
-          Params<1, 2>::Header, Params<1, 2>::Header,
-          "Description", '}', ';', ' ', nullptr, "-", nullptr };
+/* Converts the given value to a pointer. */
+inline SIW OpCount(const Op& op) { return op.out - op.in; }
 
-      static const Op kOpExample =   { "Key2",
-          NumOps (0), FirstOp ('A'),
-          "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
-      @endcode */
-  struct API Op {
-    const char* name;          //< Op name.
-    const UIT *in,             //< Input kBSQ params or OpFirst.
-        *out;                  //< Output kBSQ params or OpLast.
-    const char* description;   //< Op description.
-    CHW pop,                   //< Index of the Pop Operation.
-        close,                 //< Index of the Close Operation.
-        default_op;            //< Index of the Default Operation.
-    BOL using_numbers;         //< Flag for if tokens may use numbers.
-    const char *ignore_chars,  //< String of chars to ignore.
-        *allowed_chars;        //< String of allowed symbols.
-    const BOut* evaluation;    //< Evaluated expression Slot.
-  };
+/* Converts the given value to a pointer. */
+inline const UIT* OpFirst(CHW index) {
+  return reinterpret_cast<const UIT*>(index);
+}
 
-  /* Converts the given value to a pointer. */
-  inline SIW OpCount(const Op& op) { return op.out - op.in; }
+/* Converts the given value to a pointer. */
+inline CHW OpFirst(const Op* op) {
+  ASSERT(op);
+  return (CHW) reinterpret_cast<UIW>(op->in);
+}
 
-  /* Converts the given value to a pointer. */
-  inline const UIT* OpFirst(CHW index) {
-    return reinterpret_cast<const UIT*>(index);
-  }
+/* Converts the given value to a pointer. */
+inline const UIT* OpLast(CHW index) {
+  return reinterpret_cast<const UIT*>(index);
+}
 
-  /* Converts the given value to a pointer. */
-  inline CHW OpFirst(const Op* op) {
-    ASSERT(op);
-    return (CHW) reinterpret_cast<UIW>(op->in);
-  }
+/* Converts the given value to a pointer. */
+inline CHW OpLast(const Op* op) {
+  ASSERT(op);
+  return (CHW) reinterpret_cast<UIW>(op->out);
+}
 
-  /* Converts the given value to a pointer. */
-  inline const UIT* OpLast(CHW index) {
-    return reinterpret_cast<const UIT*>(index);
-  }
-
-  /* Converts the given value to a pointer. */
-  inline CHW OpLast(const Op* op) {
-    ASSERT(op);
-    return (CHW) reinterpret_cast<UIW>(op->out);
-  }
-
-#if CRABS_TEXT
-  UTF1& Print(UTF1 & utf, const Op* op);
+#if USING_CRABS_TEXT == YES
+template <typename Char>
+TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
 #endif
 
-}  //< namespace _
+}  // namespace _
 
-inline _::UTF1& operator<<(_::UTF1& utf, const _::Op* op) {
+template <typename Char>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const _::Op* op) {
   return _::Print(utf, op);
 }
 
-<<<<<<< HEAD
-== == == =
-#endif               //< #if SEAM >= SEAM_00_00_01__00
->>>>>>> af98cdd86f8b7b5188063c203df0e9dd4e771336
-             #endif  //< INCLUDED_CRABS_OP
-#endif               //< #if SEAM >= _0_0_0__13
+#endif  //< #if INCLUDED_CRABS_OP 1
+#endif  //< #if SEAM >= _0_0_0__13

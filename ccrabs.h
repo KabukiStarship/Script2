@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /ccrabs.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -272,7 +272,7 @@ API const Op* CrabsQuery(CCrabs* crabs, const Op& header);
 @return Returns the header if crabs is nil. */
 API const Op* CrabsQuery(CCrabs* crabs, const Op* op);
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 
 /* Prints the CCrabs stack to the Text socket */
 API UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
@@ -283,7 +283,7 @@ API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 
 }  // namespace _
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 
 /* Prints the given CCrabs to the Text socket. */
 inline _::UTF1& operator<<(_::UTF1& printer, _::CCrabs* crabs) {

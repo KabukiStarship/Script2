@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2_bin.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -72,7 +72,7 @@ UIT BinBufferLength(BIn* bin) {
   return (UIT)SlotLength(start + bin->start, start + bin->stop, bin->size);
 }
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
 const char** BInStateStrings() {
   static const char* kStateStrings[] = {
       "Address",       //< 0
@@ -622,7 +622,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
   return 0;
 }
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
 UTF1& Print(UTF1& utf, BIn* bin) {
   ASSERT(bin);
 

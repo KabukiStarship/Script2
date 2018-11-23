@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tsocket.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -23,6 +23,8 @@ specific language governing permissions and limitations under the License. */
 #include "cbinary.h"
 
 namespace _ {
+
+/* @group Socket */
 
 /* Aligns the given pointer up to a sizeof (T) boundary.
 @return The aligned value.
@@ -161,16 +163,29 @@ inline int TBitShiftCount() {
                          : (sizeof(I) == 8) ? 3 : (sizeof(I) == 16) ? 4 : 0;
 }
 
-/* A memory socket. */
-template <SIW kLengthMax_>
-class TSocket {
- public:
-  enum {
-    kSize = kLengthMax_,  //< Size of the socket aligned.
-  };
+template <typename Size>
+constexpr Size SizeAlign(Size size) {
+  Size lsb_mask = sizeof(UIW) - 1;
+  if (size < sizeof(UIW)) return sizeof(UIW);
+  Size size_max = ~lsb_mask;
+  if (size > size_max) return size;
+  return size + (-size) & lsb_mask;
+}
 
+/* A memory socket. */
+template <typename Size, Size kSize_>
+class TSocket {
   /* Default destructor does nothing. */
   TSocket() {}
+
+  /* The size in bytes. */
+  static constexpr Size GetSize() {
+    Size lsb_mask = sizeof(UIW) - 1;
+    if (kSize_ < sizeof(UIW)) return sizeof(UIW);
+    Size size_max = ~lsb_mask;
+    if (kSize_ > size_max) return size_max;
+    return kSize_ + (-kSize_) & lsb_mask;
+  }
 
   /* Returns the socket as a UIW*. */
   inline UIW* Words() { return socket; }
@@ -186,7 +201,7 @@ class TSocket {
   }
 
   /* Gets the start UI1 of the socket. */
-  inline char* End() { return reinterpret_cast<char*>(socket) + kSize; }
+  inline char* End() { return reinterpret_cast<char*>(socket) + kSize_; }
 
   /* Returns the first byte of the ASCII Object data. */
   template <typename T>
@@ -202,10 +217,8 @@ class TSocket {
   }
 
  private:
-  UIW socket[kSize];  //< The word-aligned socket.
+  UIW socket[Size()];  //< The word-aligned socket.
 };
-
-/* @group Socket */
 
 /* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>

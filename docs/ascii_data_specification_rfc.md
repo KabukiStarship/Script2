@@ -41,22 +41,14 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 | 21 | STR  |   String   |  <=N   | UTF-8 string. |
 | 22 | TKN  |   Token    |  <=N   | UTF-8 string without any whitespace. |
 | 23 | BSQ  | B-Sequence |  <=N   | B-Sequence. |
-| 24 | OBJ  |   Object   |    N   | N-byte object composed of contiguous memory. |
-| 25 | LOM  |   Loom     |    N   | An array of UTF-8, UTF-16, or UTF-32 strings without a hash table. |
-| 26 | TBL  |   Table    |    N   | A hash-table of strings with contiguous indexes. |
+| 24 | OBJ  |   Object   |    N   | N-byte contiguous object staring with the size. |
+| 25 | LOM  |   Loom     |    N   | Array of UTF-8, UTF-16, or UTF-32 strings without a hash table. |
+| 26 | TBL  |   Table    |    N   | Hash-table of strings with contiguous indexes. |
 | 27 | EXP  | Expression |  <=N   | Script expression of B-Sequences. |
 | 28 | LST  |   List     |    N   | Stack of type-Records with contiguous indexes starting at zero. |
 | 29 | MAP  |    Map     |    N   | Unique map of integer-Record records. |
-| 30 | BOK  |    Book    |    N   | A Book, or Multidictionary, of Records without a hash table. |
+| 30 | BOK  |    Book    |    N   | Book, or Multidictionary, of Records without a hash table. |
 | 31 | DIC  | Dictionary |    N   | Unique map of key-value records with a hash table. |
-
-#### Extended ASCII Data types
-
-|   Bits   | Index | Type |  Alt Name  | Width   | Description |
-|:--------:|:-----:|:----:|:----------:|:-------:|:------------|
-| 01010101 |  123  | xyx  |  Example   | Example | The fox jumped over the fence. |
-
-Extended ASCII Data Types are types utilize illegal Primary ASCII Data Types as other data types.
 
 ### 2.1.b List of Types Key
 
@@ -67,9 +59,25 @@ Extended ASCII Data Types are types utilize illegal Primary ASCII Data Types as 
 |   N   | Has pre-specified buffer of size N bytes.|
 | <=N   | Has pre-specified buffer of size N bytes but can use less than that.|
 
+## 2.2 ASCII Factory
+
+Memory management for ASCII Data Types is handled using a C-function pointer called an ASCII Factory, or AsciiFactory, using the prototype:
+
+```C++
+/* ASCII Factory manages memory for ASCII Objects.
+@return Nil upon failure or if no return socket is expected, or a pointer to a
+word-aligned socket upon success.
+@param obj      Pointer to an existing ASCII Object socket if there is one.
+@param function A jump table function index.
+@param arg      Pointer to the ASCII Factory argument. */
+typedef UIW* (*AsciiFactory)(UIW* obj, SIW function, void* arg);
+```
+
+An AsciiFactory is essentially switch statement jump table with index function and one argument that can be multiple to any type of data or SCRIPT Expression. Each ASCII Data Type has it's own set of contiguous indexed functions each with it's own argument.
+
 ## 2.2 Integers
 
-Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's complement integers and unsigned uncomplemented integers. For n-byte integers, implementations may implement n-byte integer math and may require n to be 8, 16, or 32 bytes.
+Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's complement integers and uncomplemented unsigned integers.
 
 ### 2.2.a Valid Integers Examples
 
@@ -91,7 +99,7 @@ SI2 0xFFFFF   ; Too big for size
 Unsigned Not-a-Number (U-NaN) is the bit pattern with all ones as in the following example:
 
 ```C++
-template<typename UI = uintptr_t>
+template<typename UI = UIW>
 inline UI NaNUnsigned () {
   UI nan = 0;
   return ~nan;

@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /casciidata.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -121,7 +121,7 @@ API inline BOL TypeIsUtf16(SIN type);
 API inline int TypeSizeWidthCode(SIN type);
 }  // namespace _
 
-#if USING_UTF8
+#if USING_UTF8 == YES
 namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the stop of the read number or
@@ -139,7 +139,7 @@ API char* Print(char* start, char* stop, SIN type, const void* value);
 API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #endif
 
-#if USING_UTF16
+#if USING_UTF16 == YES
 namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the stop of the read number or
@@ -156,7 +156,7 @@ API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
 @param  item The item to utf. */
 API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 #endif
-#if USING_UTF32
+#if USING_UTF32 == YES
 
 namespace _ {
 /* Prints th given type or type-value.

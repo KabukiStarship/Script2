@@ -251,6 +251,9 @@
     <ClInclude Include="0_0_0.02_strand_and_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="tstrand.h">
+      <Filter>script2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="global_config.inl">

@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /0_0_0_script.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -65,7 +65,7 @@ static const char* _0_0_0_F2(char* seam_log, char* seam_end, const char* args) {
 #endif
 #if SEAM >= _0_0_0__02
                    ,
-                   _0_0_0__02_ASCII_Strings_and_Socket
+                   _0_0_0__02_ASCII_Strand_and_Socket
 #endif
 #if SEAM >= _0_0_0__03
                    ,

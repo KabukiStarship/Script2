@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bout.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -43,7 +43,7 @@ struct API BOut {
 /* Get's the B-Output's socket.*/
 API char* BOutBuffer(BOut* bout);
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 
 /* Gets a a char for printing out the bout_state. */
 API const char** BOutStateStrings();
@@ -85,7 +85,7 @@ API void BOutAckBack(BOut* bout, const char* address);
 /* . */
 API void BInKeyStrokes();
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 /* Prints the BIn to the Text.
     @param  bout The bout to utf.
     @param  text The Text to utf to the bout.
@@ -95,7 +95,7 @@ API UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 }  // namespace _
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT == YES
 /* Prints out the bin to the text. */
 inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
   return _::PrintBOut(utf, bout);

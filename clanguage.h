@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /language.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_CRABS_LANGUAGE
-#define INCLUDED_CRABS_LANGUAGE 1
+#ifndef SCRIPT2_LANGUAGE
+#define SCRIPT2_LANGUAGE 1
 #include "config.h"
 
 namespace _ {
@@ -42,4 +42,4 @@ struct Language {
 
 }  //< namespace _
 #endif  //< #if SEAM >= _0_0_0
-#endif  //< INCLUDED_CRABS_LANGUAGE
+#endif  //< SCRIPT2_LANGUAGE

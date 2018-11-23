@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /operand.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2017 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_CRABS_OPERAND
-#define INCLUDED_CRABS_OPERAND
+#ifndef SCRIPT2_OPERAND
+#define SCRIPT2_OPERAND
 // Dependencies:
 #include "slot.h"
 // End dependencies.
@@ -72,7 +72,7 @@ API UIW OperandCount(Operand* op);
             Contain the given key. */
 API CHW OperandIndex(Operand* operand, char* key_begin, char* key_end);
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
 /* Queries the given Operand Op Header.
     @param  crabs The expression to write the query to. Set to nil to return
                  op.
@@ -92,12 +92,12 @@ API UTF1& PrintOperand(UTF1& slot, Operand* operand);
 
 }  // namespace _
 
-#if CRABS_TEXT
+#if USING_CRABS_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
 inline _::UTF1& operator<<(_::UTF1& printer, _::Operand* operand) {
   return _::PrintOperand(printer, operand);
 }
 
 #endif
-#endif  //< INCLUDED_CRABS_OPERAND
+#endif  //< SCRIPT2_OPERAND
 #endif  //< #if SEAM >= _0_0_0__13
