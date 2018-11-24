@@ -150,7 +150,7 @@ struct API Dictionary {
   Offset table_size,  //< Size of the (optional) key strings in bytes.
       size_pile;      //< Size of the (optional) collisions pile in bytes.
   Index item_count,   //< Number of items.
-      count;          //< Max number of items that can fit in the header.
+      count;          //< Max number_ of items that can fit in the header.
 };
 
 using Dic2 = Dictionary<SI1, UI2, UI2>;
@@ -169,9 +169,9 @@ constexpr Size MinSizeDic(Index item_count) {
 };
 
 enum {
-  kMaxNumMappingsDic2 = 255,                //< The number of pages in a Dic2.
-  kMaxNumMappingsDic4 = 8 * 1024,           //< The number of pages in a Dic4.
-  kMaxNumMappingsDic8 = 256 * 1024 * 1024,  //< The number of pages in a Dic8.
+  kMaxNumMappingsDic2 = 255,                //< The number_ of pages in a Dic2.
+  kMaxNumMappingsDic4 = 8 * 1024,           //< The number_ of pages in a Dic4.
+  kMaxNumMappingsDic8 = 256 * 1024 * 1024,  //< The number_ of pages in a Dic8.
   kOverheadPerDic2Index = DicOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerDic4Index = DicOverheadPerIndex<UI2, UI2, UI4>(),
   kOverheadPerDic8Index = DicOverheadPerIndex<UI4, UI4, UI8>(),
@@ -438,7 +438,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
 
         DicPrint(dictionary);
         PRINTF("\nDone inserting.")
-        // Then it was a collision so the table doesn't contain string.
+        // Then it was a collision so the table doesn't contain string_.
         return item_count;
       }
       PRINTF("\nTable already contains the key")
@@ -609,7 +609,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
              Hash16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index]) != 0) {
-        //< It was a collision so the table doesn't contain string.
+        //< It was a collision so the table doesn't contain string_.
         PRINTF(" but it was a collision and did not find key.\n");
         return ~((Index)0);
       }

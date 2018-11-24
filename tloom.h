@@ -35,7 +35,7 @@ if it is a UTF-8 (de-asserted) or UTF-16 (asserted).
 template <typename Size, typename Index, typename Char>
 struct TCLoom {
   Size size;        //< Size of the Loom in bytes.
-  Index count_max,  //< Max number of strands in a loom.
+  Index count_max,  //< Max number_ of strands in a loom.
       count;        //< Strand count.
 };
 

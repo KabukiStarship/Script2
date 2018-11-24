@@ -52,12 +52,12 @@ typedef enum ScriptError {
   kErrorImplementation,       //< Script Error 28: Implementation error.
 } Error;
 
-/* Returns an array or string pointers for the KabukiError(s). */
+/* Returns an array or string_ pointers for the KabukiError(s). */
 API const char** ErrorStrings();
 
 /* Returns one of the Errors () strings. */
 API const char* ErrorString(Error error);
 
-}  //< namespace _
+}  // namespace _
 #endif  //< SCRIPT2_ERROR
 #endif  //< #if SEAM >= _0_0_0__13

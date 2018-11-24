@@ -65,7 +65,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
                "types.";
         return utf;
       }
-      // Print out the max length of the string.
+      // Print out the max length of the string_.
       ++i;
       value = *params++;
       utf << value;

@@ -374,25 +374,25 @@ void PrintTime(TME t) {
   Print(socket, socket + kSize - 1, t);
 }
 
-const char* StringScanTime(const char* string, int& hour, int& minute,
+const char* StringScanTime(const char* string_, int& hour, int& minute,
                            int& second) {
-  return TStringScanTime<char>(string, hour, minute, second);
+  return TStringScanTime<char>(string_, hour, minute, second);
 }
 
-const char* Scan(const char* string, CClock& clock) {
-  return TScan<char>(string, clock);
+const char* Scan(const char* string_, CClock& clock) {
+  return TScan<char>(string_, clock);
 }
 
-const char* Scan(const char* string, Tss& t) {
-  return TStringScanTime<char>(string, t);
+const char* Scan(const char* string_, Tss& t) {
+  return TStringScanTime<char>(string_, t);
 }
 
-const char* TStringScanTime(const char* string, TMS& t) {
-  return TStringScanTime<char, TMS>(string, t);
+const char* TStringScanTime(const char* string_, TMS& t) {
+  return TStringScanTime<char, TMS>(string_, t);
 }
 
-const char* TStringScanTime(const char* string, TME& t) {
-  return TStringScanTime<char, TME>(string, t);
+const char* TStringScanTime(const char* string_, TME& t) {
+  return TStringScanTime<char, TME>(string_, t);
 }
 
 #endif
@@ -418,25 +418,25 @@ char16_t* PrintTime(char16_t* start, char16_t* stop, TME t) {
 char16_t* Print(char16_t* start, char16_t* stop, CClock& t) {
   return TPrint<char16_t>(start, stop, t);
 }
-const char16_t* TStringScanTime(const char16_t* string, CClock& clock) {
-  return TStringScanTime<char16_t>(string, clock);
+const char16_t* TStringScanTime(const char16_t* string_, CClock& clock) {
+  return TStringScanTime<char16_t>(string_, clock);
 }
 
-const char16_t* TStringScanTime(const char16_t* string, int& hour, int& minute,
+const char16_t* TStringScanTime(const char16_t* string_, int& hour, int& minute,
                                 int& second) {
-  return TStringScanTime<char16_t>(string, hour, minute, second);
+  return TStringScanTime<char16_t>(string_, hour, minute, second);
 }
 
-const char16_t* TextScanMicroseconds(const char16_t* string, Tss& result) {
-  return TStringScanTime<char16_t, Tss>(string, result);
+const char16_t* TextScanMicroseconds(const char16_t* string_, Tss& result) {
+  return TStringScanTime<char16_t, Tss>(string_, result);
 }
 
-const char16_t* TStringScanTime(const char16_t* string, TMS& result) {
-  return TStringScanTime<char16_t, TMS>(string, result);
+const char16_t* TStringScanTime(const char16_t* string_, TMS& result) {
+  return TStringScanTime<char16_t, TMS>(string_, result);
 }
 
-const char16_t* TStringScanTime(const char16_t* string, TME& result) {
-  return TStringScanTime<char16_t, TME>(string, result);
+const char16_t* TStringScanTime(const char16_t* string_, TME& result) {
+  return TStringScanTime<char16_t, TME>(string_, result);
 }
 #endif
 #if USING_UTF32
@@ -462,25 +462,25 @@ char32_t* Print(char32_t* start, char32_t* stop, CClock& clock) {
   return TPrint<char32_t>(start, stop, clock);
 }
 
-const char32_t* TStringScanTime(const char32_t* string, int& hour, int& minute,
+const char32_t* TStringScanTime(const char32_t* string_, int& hour, int& minute,
                                 int& second) {
-  return TStringScanTime<char32_t>(string, hour, minute, second);
+  return TStringScanTime<char32_t>(string_, hour, minute, second);
 }
 
-const char32_t* Scan(const char32_t* string, CClock& time) {
-  return TStringScanTime<char32_t>(string, time);
+const char32_t* Scan(const char32_t* string_, CClock& time) {
+  return TStringScanTime<char32_t>(string_, time);
 }
 
-const char32_t* Scan(const char32_t* string, Tss& result) {
-  return TStringScanTime<char32_t, Tss>(string, result);
+const char32_t* Scan(const char32_t* string_, Tss& result) {
+  return TStringScanTime<char32_t, Tss>(string_, result);
 }
 
-const char32_t* TStringScanTime(const char32_t* string, TMS& result) {
-  return TStringScanTime<char32_t, TMS>(string, result);
+const char32_t* TStringScanTime(const char32_t* string_, TMS& result) {
+  return TStringScanTime<char32_t, TMS>(string_, result);
 }
 
-const char32_t* TStringScanTime(const char32_t* string, TME& result) {
-  return TStringScanTime<char32_t, TME>(string, result);
+const char32_t* TStringScanTime(const char32_t* string_, TME& result) {
+  return TStringScanTime<char32_t, TME>(string_, result);
 }
 
 #endif

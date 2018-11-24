@@ -8,7 +8,7 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 * ASCII Data Types and the ASCII Factory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
 * Rapid compile time using 3-file Translation Units with unique names an separated C++ templates.
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
-* Code automatically formatted to Google C++ Style Guide upon save and formatted to not fight clang-format.
+* Code auto-formatted to Google C++ Style Guide with custom ASCII C++ Style Guide.
 
 ## ASCII Data
 
@@ -48,16 +48,17 @@ ASCII Data Types provide:
 
 > https://github.com/kabuki-starship/script2.git
 
-**2.** Open the `script2.sln` Visual Studio 2017 Project. For Eclipse projects **@see** [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit).
+**2.** Read the
 
-**3.** Open the `global_config.inl` and look at the typedef(s) and seam macros, then set the seam number in the `pch.h` file. Then look through the `test_debug.inl` and `test_release.inl`, the look through the seam tree tests in the files that start with `0_0_0` and the called functions.
+**3.** Open the `script2.sln` Visual Studio 2017 Project. For Eclipse projects **@see** [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit).
 
-**4.** In order to save the stack debug data when an assert occurs, set breakpoint in the file `script2_test.cc` at the return line for:
+**4.** Open the `global_config.inl` and look at the typedef(s) and seam macros, then set the seam number in the `pch.h` file. Then look through the `test_debug.inl` and `test_release.inl`, the look through the seam tree tests in the files that start with `0_0_0` and the called functions.
+
+**5.** In order to save the stack debug data when an assert occurs, set breakpoint in the file `script2_test.cc` at the return line for:
+
 ```C++
 BOL TestWarn(const char* function, const char* file, int line);
 ```
-
-**5.** To use Script2 with your project all you need to do is link to the code. There is also some extra config steps but the documentation is out of sync.
 
 ## Author
 

@@ -26,9 +26,9 @@ namespace _ {
 typedef enum BInStates {
   kBInStateAddress = 0,    //< State  0: Scanning address.
   kBInStatePackedArgs,     //< State  1: Scanning arguments.
-  kBInStatePackedUtf8,     //< State  2: Scanning UTF-8 string.
-  kBInStatePackedUtf16,    //< State  3: Scanning UTF-16 string.
-  kBInStatePackedUtf32,    //< State  4: Scanning UTF-32 string.
+  kBInStatePackedUtf8,     //< State  2: Scanning UTF-8 string_.
+  kBInStatePackedUtf16,    //< State  3: Scanning UTF-16 string_.
+  kBInStatePackedUtf32,    //< State  4: Scanning UTF-32 string_.
   kBInStatePackedVarint,   //< State  5: Scanning varint.
   kBInStatePackedObj,      //< State  6: 8-bit OB1 state.
   kBInStateVerifyingHash,  //< State  7: Verifying the 32-bit hash.
@@ -95,7 +95,7 @@ doesn't have a hash with an escape sequence.
 @param rx     The BIn socket.
 @param params The parameters.
 @param args   The arguments.
-@return       Returns 0 upon success and an ErrorList ticket number upon
+@return       Returns 0 upon success and an ErrorList ticket number_ upon
               failure. */
 API const Op* BInRead(BIn* bin, const UIT* params, void** args);
 

@@ -122,19 +122,19 @@ API inline TMS ClockTMS(CClock& clock);
  */
 API inline TME ClockTME(CClock& clock);
 
-/* Gets the number of days in a months.
+/* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
 API int ClockMonthDayCount(TMS t);
 
-/* Gets the number of days in a months.
+/* Gets the number_ of days in a months.
 @param month The month index 0-11.
 @param year   */
 API int ClockMonthDayCount(int month, int year);
 
-/* Gets the abbreviated day of the week char of the given day number 1-7. */
+/* Gets the abbreviated day of the week char of the given day number_ 1-7. */
 API const char* ClockWeekDay(int day_number);
 
-/* Gets the abbreviated day of the week char of the given day number 1-7. */
+/* Gets the abbreviated day of the week char of the given day number_ 1-7. */
 API char ClockDayOfWeekInitial(int day_number);
 
 /* Compares the two the time and prints the results. */
@@ -223,26 +223,26 @@ API void PrintTime(TME t);
 @endcode
 
 @param input  The char to parse.
-@param hour   The location to write the number of hours to.
-@param minute The location to write the number of minutes to.
-@param Second The location to write the number of seconds to. */
-API const char* TStringScanTime(const char* string, int& hour, int& minute,
+@param hour   The location to write the number_ of hours to.
+@param minute The location to write the number_ of minutes to.
+@param Second The location to write the number_ of seconds to. */
+API const char* TStringScanTime(const char* string_, int& hour, int& minute,
                                 int& second);
 
 /* Converts a keyboard input to char and deletes the char.
 @return Nil upon socket failure or char directly after the stop of the
 timestamp upon success.
 */
-API const char* Scan(const char* string, CClock& clock);
+API const char* Scan(const char* string_, CClock& clock);
 
 /* Converts a keyboard input to a Tss. */
-API const char* Scan(const char* string, Tss& result);
+API const char* Scan(const char* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char* TStringScanTime(const char* string, TMS& result);
+API const char* TStringScanTime(const char* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char* TStringScanTime(const char* string, TME& result);
+API const char* TStringScanTime(const char* string_, TME& result);
 
 #endif  //< #if USING_UTF8 == YES
 
@@ -298,26 +298,26 @@ API char16_t* Print(char16_t* start, char16_t* stop, TME time);
 @endcode
 
 @param input  The char16_t to parse.
-@param hour   The location to write the number of hours to.
-@param minute The location to write the number of minutes to.
-@param Second The location to write the number of seconds to. */
-API const char16_t* TStringScanTime(const char16_t* string, int& hour,
+@param hour   The location to write the number_ of hours to.
+@param minute The location to write the number_ of minutes to.
+@param Second The location to write the number_ of seconds to. */
+API const char16_t* TStringScanTime(const char16_t* string_, int& hour,
                                     int& minute, int& second);
 
 /* Converts a keyboard input to char16_t and deletes the char16_t.
 @return Nil upon socket failure or char16_t directly after the stop of the
 timestamp upon success.
 */
-API const char16_t* Scan(const char16_t* string, CClock& result);
+API const char16_t* Scan(const char16_t* string_, CClock& result);
 
 /* Converts a keyboard input to a Tss. */
-API const char16_t* Scan(const char16_t* string, Tss& result);
+API const char16_t* Scan(const char16_t* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char16_t* TStringScanTime(const char16_t* string, TMS& result);
+API const char16_t* TStringScanTime(const char16_t* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char16_t* TStringScanTime(const char16_t* string, TME& result);
+API const char16_t* TStringScanTime(const char16_t* string_, TME& result);
 
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
@@ -355,9 +355,9 @@ API char32_t* PrintTime(char32_t* start, char32_t* stop, TME time);
 
 /* Reads a time or time delta from a a char starting with an '@' sign..
 @param input  The char to parse.
-@param hour   The location to write the number of hours to.
-@param minute The location to write the number of minutes to.
-@param Second The location to write the number of seconds to.
+@param hour   The location to write the number_ of hours to.
+@param minute The location to write the number_ of minutes to.
+@param Second The location to write the number_ of seconds to.
 @return The offset The stop of where the parser exited successfully at.
 
 @code

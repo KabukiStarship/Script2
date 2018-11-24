@@ -60,7 +60,7 @@ class Wall {
   /* Gets the size of the wall in bytes. */
   size_t GetSizeBytes();
 
-  /* Gets a pointer to the array of pointers to Door(string). */
+  /* Gets a pointer to the array of pointers to Door(string_). */
   TCArray<Door*>* Doors();
 
   /* Gets the Door from the Door at the given index. */

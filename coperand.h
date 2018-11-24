@@ -62,7 +62,7 @@ struct API Operand {
 /* Returns the name of the given Operand. */
 API const char* OperandName(Operand* op);
 
-/* Gets the number of ops in the given expressions. */
+/* Gets the number_ of ops in the given expressions. */
 API UIW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.

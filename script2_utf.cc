@@ -123,8 +123,8 @@ const char* StringFind(const char* text, const char* query) {
   return TStringFind<char>(text, query);
 }
 
-char* Print(char* start, char* stop, const char* string) {
-  return TPrint<char>(start, stop, string);
+char* Print(char* start, char* stop, const char* string_) {
+  return TPrint<char>(start, stop, string_);
 }
 
 char* Print(char* start, char* stop, char character) {
@@ -177,9 +177,9 @@ char* PrintRight(char* start, char* stop, DBL value, int column_count) {
 
 #endif  //< #if SEAM >= _0_0_0__03
 
-char* PrintCenter(char* start, char* stop, const char* string,
+char* PrintCenter(char* start, char* stop, const char* string_,
                   int column_count) {
-  return TPrintCenter<char>(start, stop, string, column_count);
+  return TPrintCenter<char>(start, stop, string_, column_count);
 }
 
 char* PrintCenter(char* start, char* stop, char character, int column_count) {
@@ -203,9 +203,9 @@ char* PrintCenter(char* start, char* stop, SI8 value, int column_count) {
   return TPrintRight<char>(start, stop, Utf8Text(value).String(), column_count);
 }
 
-char* PrintRight(char* start, char* stop, const char* string,
+char* PrintRight(char* start, char* stop, const char* string_,
                  int column_count) {
-  return TPrintRight<char>(start, stop, string, column_count);
+  return TPrintRight<char>(start, stop, string_, column_count);
 }
 
 char* PrintRight(char* start, char* stop, char character, int column_count) {
@@ -336,41 +336,41 @@ char* PrintLine(char* cursor, char* stop, char token, int column_count) {
   return TPrintLine<char>(cursor, stop, token, column_count);
 }
 
-char* TPrintLineString(char* cursor, char* stop, const char* string,
+char* TPrintLineString(char* cursor, char* stop, const char* string_,
                        int column_count) {
-  return TPrintLineString<char>(cursor, stop, string, column_count);
+  return TPrintLineString<char>(cursor, stop, string_, column_count);
 }
 
-const char* Scan(const char* string, SI1& result) {
-  return TScanSigned<SI1, UI1, char>(string, result);
+const char* Scan(const char* string_, SI1& result) {
+  return TScanSigned<SI1, UI1, char>(string_, result);
 }
 
-const char* Scan(const char* string, UI1& result) {
-  return TScanUnsigned<UI1, char>(string, result);
+const char* Scan(const char* string_, UI1& result) {
+  return TScanUnsigned<UI1, char>(string_, result);
 }
 
-const char* Scan(const char* string, SI2& result) {
-  return TScanSigned<SI2, UI2, char>(string, result);
+const char* Scan(const char* string_, SI2& result) {
+  return TScanSigned<SI2, UI2, char>(string_, result);
 }
 
-const char* Scan(const char* string, UI2& result) {
-  return TScanUnsigned<UI2, char>(string, result);
+const char* Scan(const char* string_, UI2& result) {
+  return TScanUnsigned<UI2, char>(string_, result);
 }
 
-const char* Scan(const char* string, SI4& result) {
-  return TScanSigned<SI4, UI4, char>(string, result);
+const char* Scan(const char* string_, SI4& result) {
+  return TScanSigned<SI4, UI4, char>(string_, result);
 }
 
-const char* Scan(const char* string, UI4& result) {
-  return TScanUnsigned<UI4, char>(string, result);
+const char* Scan(const char* string_, UI4& result) {
+  return TScanUnsigned<UI4, char>(string_, result);
 }
 
-const char* Scan(const char* string, SI8& result) {
-  return TScanSigned<SI8, UI8, char>(string, result);
+const char* Scan(const char* string_, SI8& result) {
+  return TScanSigned<SI8, UI8, char>(string_, result);
 }
 
-const char* Scan(const char* string, UI8& result) {
-  return TScanUnsigned<UI8, char>(string, result);
+const char* Scan(const char* string_, UI8& result) {
+  return TScanUnsigned<UI8, char>(string_, result);
 }
 
 UTF1::UTF1(char* start, size_t buffer_size)
@@ -475,89 +475,89 @@ UTF1& UTF1::Binary(const void* pointer) {
 Utf8Text::Utf8Text() {}
 
 Utf8Text::Utf8Text(char character) {
-  *string = character;
-  *(string + 1) = 0;
+  *string_ = character;
+  *(string_ + 1) = 0;
 }
 
 Utf8Text::Utf8Text(SI4 value) {
-  TPrintSigned<SI4, UI4, char>(string, string + kSize - 1, value);
+  TPrintSigned<SI4, UI4, char>(string_, string_ + kSize - 1, value);
 }
 
 Utf8Text::Utf8Text(UI4 value) {
-  TPrintUnsigned<UI4, char>(string, string + kSize - 1, value);
+  TPrintUnsigned<UI4, char>(string_, string_ + kSize - 1, value);
 }
 
 Utf8Text::Utf8Text(SI8 value) {
-  TPrintSigned<SI8, UI8, char>(string, string + kSize - 1, value);
+  TPrintSigned<SI8, UI8, char>(string_, string_ + kSize - 1, value);
 }
 
 Utf8Text::Utf8Text(UI8 value) {
-  TPrintUnsigned<UI8, char>(string, string + kSize - 1, value);
+  TPrintUnsigned<UI8, char>(string_, string_ + kSize - 1, value);
 }
 
 #if SEAM >= _0_0_0__03
-Utf8Text::Utf8Text(FLT value) { Print(string, string + kSize - 1, value); }
+Utf8Text::Utf8Text(FLT value) { Print(string_, string_ + kSize - 1, value); }
 
-Utf8Text::Utf8Text(DBL value) { Print(string, string + kSize - 1, value); }
+Utf8Text::Utf8Text(DBL value) { Print(string_, string_ + kSize - 1, value); }
 
 #endif  //< #if SEAM == _0_0_0__03
 
-const char* Utf8Text::String() { return string; }
+const char* Utf8Text::String() { return string_; }
 
-Utf8Center::Utf8Center(const char* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf8Center::Utf8Center(const char* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf8Center::Utf8Center(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Center::Utf8Center(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Center::Utf8Center(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Center::Utf8Center(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM == _0_0_0__03
 Utf8Center::Utf8Center(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Center::Utf8Center(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
 const char* Utf8Center::String() {
-  return (string == nullptr) ? number.String() : string;
+  return (string_ == nullptr) ? number_.String() : string_;
 }
 
 int Utf8Center::GetColumnCount() { return column_count; }
 
-Utf8Right::Utf8Right(const char* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf8Right::Utf8Right(const char* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf8Right::Utf8Right(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Right::Utf8Right(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Right::Utf8Right(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Right::Utf8Right(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__03
 Utf8Right::Utf8Right(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Right::Utf8Right(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
 const char* Utf8Right::String() {
-  return (string == nullptr) ? number.String() : string;
+  return (string_ == nullptr) ? number_.String() : string_;
 }
 
 int Utf8Right::GetColumnCount() { return column_count; }
@@ -567,8 +567,8 @@ Utf8Line::Utf8Line(char token, int column_count)
   // Nothing to do here. (:-)-+=<
 }
 
-Utf8LineString::Utf8LineString(const char* string, int column_count)
-    : string(string), column_count(column_count) {
+Utf8LineString::Utf8LineString(const char* string_, int column_count)
+    : string_(string_), column_count(column_count) {
   // Nothing to do here. (:-)-+=<
 }
 
@@ -582,8 +582,8 @@ UIW* COutAutoUtf8(UIW* start, SIW function, void* arg) {
 
 }  // namespace _
 
-_::UTF1& operator<<(_::UTF1& utf, const char* string) {
-  return utf.Set(_::Print(utf.start, utf.stop, string));
+_::UTF1& operator<<(_::UTF1& utf, const char* string_) {
+  return utf.Set(_::Print(utf.start, utf.stop, string_));
 }
 
 _::UTF1& operator<<(_::UTF1& utf, char value) {
@@ -644,8 +644,8 @@ _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line) {
 }
 
 _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line) {
-  return utf.Set(
-      _::TPrintLineString(utf.start, utf.stop, line.string, line.column_count));
+  return utf.Set(_::TPrintLineString(utf.start, utf.stop, line.string_,
+                                     line.column_count));
 }
 
 #endif  //< #if USING_UTF8
@@ -741,8 +741,8 @@ const char16_t* StringFind(const char16_t* text, const char16_t* query) {
   return StringFind<char16_t>(text, query);
 }
 
-char16_t* Print(char16_t* start, char16_t* stop, const char16_t* string) {
-  return TPrint<char16_t>(start, stop, string);
+char16_t* Print(char16_t* start, char16_t* stop, const char16_t* string_) {
+  return TPrint<char16_t>(start, stop, string_);
 }
 
 char16_t* Print(char16_t* start, char16_t* stop, char16_t character) {
@@ -773,9 +773,9 @@ char16_t* Print(char16_t* start, char16_t* stop, DBL value) {
   return TPrint<char16_t>(start, stop, value);
 }
 
-char16_t* PrintCenter(char16_t* start, char16_t* stop, const char16_t* string,
+char16_t* PrintCenter(char16_t* start, char16_t* stop, const char16_t* string_,
                       int column_count) {
-  return PrintCenter<char16_t>(start, stop, string, column_count);
+  return PrintCenter<char16_t>(start, stop, string_, column_count);
 }
 
 char16_t* PrintCenter(char16_t* start, char16_t* stop, char16_t character,
@@ -820,9 +820,9 @@ char16_t* PrintCenter(char16_t* start, char16_t* stop, DBL value,
                                column_count);
 }
 
-char16_t* PrintRight(char16_t* start, char16_t* stop, const char16_t* string,
+char16_t* PrintRight(char16_t* start, char16_t* stop, const char16_t* string_,
                      int column_count) {
-  return TPrintRight<char16_t>(start, stop, string, column_count);
+  return TPrintRight<char16_t>(start, stop, string_, column_count);
 }
 
 char16_t* PrintRight(char16_t* start, char16_t* stop, char16_t character,
@@ -974,44 +974,44 @@ char16_t* PrintSocket(char16_t* start, char16_t* stop, const void* start,
 }  // namespace _
 }  //< namespace _
 
-const char16_t* Scan(const char16_t* string, SI1& result) {
-  return TScanSigned<char16_t, SI1>(string, result);
+const char16_t* Scan(const char16_t* string_, SI1& result) {
+  return TScanSigned<char16_t, SI1>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, UI1& result) {
-  return ScanUnsigned<char16_t, UI1>(string, result);
+const char16_t* Scan(const char16_t* string_, UI1& result) {
+  return ScanUnsigned<char16_t, UI1>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, SI2& result) {
-  return TScanSigned<char16_t, SI2>(string, result);
+const char16_t* Scan(const char16_t* string_, SI2& result) {
+  return TScanSigned<char16_t, SI2>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, UI2& result) {
-  return ScanUnsigned<char16_t, UI2>(string, result);
+const char16_t* Scan(const char16_t* string_, UI2& result) {
+  return ScanUnsigned<char16_t, UI2>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, SI4& result) {
-  return TScanSigned<char16_t, SI4>(string, result);
+const char16_t* Scan(const char16_t* string_, SI4& result) {
+  return TScanSigned<char16_t, SI4>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, UI4& result) {
-  return ScanUnsigned<char16_t, UI4>(string, result);
+const char16_t* Scan(const char16_t* string_, UI4& result) {
+  return ScanUnsigned<char16_t, UI4>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, SI8& result) {
-  return TScanSigned<char16_t, SI8>(string, result);
+const char16_t* Scan(const char16_t* string_, SI8& result) {
+  return TScanSigned<char16_t, SI8>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, UI8& result) {
-  return ScanUnsigned<char16_t, UI8>(string, result);
+const char16_t* Scan(const char16_t* string_, UI8& result) {
+  return ScanUnsigned<char16_t, UI8>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, FLT& result) {
-  return TScan<char16_t>(string, result);
+const char16_t* Scan(const char16_t* string_, FLT& result) {
+  return TScan<char16_t>(string_, result);
 }
 
-const char16_t* Scan(const char16_t* string, DBL& result) {
-  return TScan<char16_t>(string, result);
+const char16_t* Scan(const char16_t* string_, DBL& result) {
+  return TScan<char16_t>(string_, result);
 }
 
 void COutUtf16(UIW* start) { return Console<char16_t>(start); }
@@ -1136,82 +1136,94 @@ UTF2& UTF2::Binary(const void* pointer) {
 Text2::Text2() {}
 
 Text2::Text2(char16_t character) {
-  *string = character;
-  *(string + 1) = 0;
+  *string_ = character;
+  *(string_ + 1) = 0;
 }
 
-Text2::Text2(SI4 value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(SI4 value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(UI4 value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(UI4 value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(SI8 value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(SI8 value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(UI8 value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(UI8 value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(FLT value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(FLT value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(DBL value) { TPrint<char16_t>(string, string + kSize - 1, value); }
+Text2::Text2(DBL value) {
+  TPrint<char16_t>(string_, string_ + kSize - 1, value);
+}
 
-const char16_t* Text2::GetString() { return string; }
+const char16_t* Text2::GetString() { return string_; }
 
-Utf16Center::Utf16Center(const char16_t* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf16Center::Utf16Center(const char16_t* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf16Center::Utf16Center(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Center::Utf16Center(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Center::Utf16Center(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Center::Utf16Center(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Center::Utf16Center(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Center::Utf16Center(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 const char16_t* Utf16Center::GetString() {
-  return (string == nullptr) ? number.GetString() : string;
+  return (string_ == nullptr) ? number_.GetString() : string_;
 }
 
 int Utf16Center::GetColumnCount() { return column_count; }
 
-Utf16Right::Utf16Right(const char16_t* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf16Right::Utf16Right(const char16_t* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf16Right::Utf16Right(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Right::Utf16Right(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Right::Utf16Right(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Right::Utf16Right(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Right::Utf16Right(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf16Right::Utf16Right(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 const char16_t* Utf16Right::GetString() {
-  return (string == nullptr) ? number.GetString() : string;
+  return (string_ == nullptr) ? number_.GetString() : string_;
 }
 
 int Utf16Right::GetColumnCount() { return column_count; }
 
 }  //< namespace _
 
-_::UTF2& operator<<(_::UTF2& utf, const char16_t* string) {
-  return utf.Set(_::Print(utf.start, utf.stop, string));
+_::UTF2& operator<<(_::UTF2& utf, const char16_t* string_) {
+  return utf.Set(_::Print(utf.start, utf.stop, string_));
 }
 
 _::UTF2& operator<<(_::UTF2& utf, char16_t value) {
@@ -1357,8 +1369,8 @@ const char32_t* StringFind(const char32_t* text, const char32_t* query) {
   return StringFind<char32_t>(text, query);
 }
 
-char32_t* Print(char32_t* start, char32_t* stop, const char32_t* string) {
-  return TPrint<char32_t>(start, stop, string);
+char32_t* Print(char32_t* start, char32_t* stop, const char32_t* string_) {
+  return TPrint<char32_t>(start, stop, string_);
 }
 
 char32_t* Print(char32_t* start, char32_t* stop, char32_t character) {
@@ -1389,9 +1401,9 @@ char32_t* Print(char32_t* start, char32_t* stop, DBL value) {
   return TPrint<char32_t>(start, stop, value);
 }
 
-char32_t* PrintCenter(char32_t* start, char32_t* stop, const char32_t* string,
+char32_t* PrintCenter(char32_t* start, char32_t* stop, const char32_t* string_,
                       int column_count) {
-  return PrintCenter<char32_t>(start, stop, string, column_count);
+  return PrintCenter<char32_t>(start, stop, string_, column_count);
 }
 
 char32_t* PrintCenter(char32_t* start, char32_t* stop, char32_t character,
@@ -1436,9 +1448,9 @@ char32_t* PrintCenter(char32_t* start, char32_t* stop, DBL value,
                                column_count);
 }
 
-char32_t* PrintRight(char32_t* start, char32_t* stop, const char32_t* string,
+char32_t* PrintRight(char32_t* start, char32_t* stop, const char32_t* string_,
                      int column_count) {
-  return TPrintRight<char32_t>(start, stop, string, column_count);
+  return TPrintRight<char32_t>(start, stop, string_, column_count);
 }
 
 char32_t* PrintRight(char32_t* start, char32_t* stop, char32_t character,
@@ -1588,44 +1600,44 @@ char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* start,
   return PrintSocket<char32_t>(start, stop, start, stop);
 }
 
-const char32_t* Scan(const char32_t* string, SI1& result) {
-  return TScanSigned<char32_t, SI1>(string, result);
+const char32_t* Scan(const char32_t* string_, SI1& result) {
+  return TScanSigned<char32_t, SI1>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, UI1& result) {
-  return ScanUnsigned<char32_t, UI1>(string, result);
+const char32_t* Scan(const char32_t* string_, UI1& result) {
+  return ScanUnsigned<char32_t, UI1>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, SI2& result) {
-  return TScanSigned<char32_t, SI2>(string, result);
+const char32_t* Scan(const char32_t* string_, SI2& result) {
+  return TScanSigned<char32_t, SI2>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, UI2& result) {
-  return ScanUnsigned<char32_t, UI2>(string, result);
+const char32_t* Scan(const char32_t* string_, UI2& result) {
+  return ScanUnsigned<char32_t, UI2>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, SI4& result) {
-  return TScanSigned<char32_t, SI4>(string, result);
+const char32_t* Scan(const char32_t* string_, SI4& result) {
+  return TScanSigned<char32_t, SI4>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, UI4& result) {
-  return ScanUnsigned<char32_t, UI4>(string, result);
+const char32_t* Scan(const char32_t* string_, UI4& result) {
+  return ScanUnsigned<char32_t, UI4>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, SI8& result) {
-  return TScanSigned<char32_t, SI8>(string, result);
+const char32_t* Scan(const char32_t* string_, SI8& result) {
+  return TScanSigned<char32_t, SI8>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, UI8& result) {
-  return ScanUnsigned<char32_t, UI8>(string, result);
+const char32_t* Scan(const char32_t* string_, UI8& result) {
+  return ScanUnsigned<char32_t, UI8>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, FLT& result) {
-  return TScan<char32_t>(string, result);
+const char32_t* Scan(const char32_t* string_, FLT& result) {
+  return TScan<char32_t>(string_, result);
 }
 
-const char32_t* Scan(const char32_t* string, DBL& result) {
-  return TScan<char32_t>(string, result);
+const char32_t* Scan(const char32_t* string_, DBL& result) {
+  return TScan<char32_t>(string_, result);
 }
 
 void COuUtf32(UIW* start) { return Console<char32_t>(start); }
@@ -1750,82 +1762,94 @@ UTF4& UTF4::Binary(const void* pointer) {
 Text4::Text4() {}
 
 Text4::Text4(char32_t character) {
-  *string = character;
-  *(string + 1) = 0;
+  *string_ = character;
+  *(string_ + 1) = 0;
 }
 
-Text4::Text4(SI4 value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(SI4 value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-Text4::Text4(UI4 value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(UI4 value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-Text4::Text4(SI8 value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(SI8 value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-Text4::Text4(UI8 value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(UI8 value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-Text4::Text4(FLT value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(FLT value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-Text4::Text4(DBL value) { TPrint<char32_t>(string, string + kSize - 1, value); }
+Text4::Text4(DBL value) {
+  TPrint<char32_t>(string_, string_ + kSize - 1, value);
+}
 
-const char32_t* Text4::GetString() { return string; }
+const char32_t* Text4::GetString() { return string_; }
 
-Utf32Center::Utf32Center(const char32_t* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf32Center::Utf32Center(const char32_t* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf32Center::Utf32Center(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Center::Utf32Center(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Center::Utf32Center(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Center::Utf32Center(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Center::Utf32Center(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Center::Utf32Center(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 const char32_t* Utf32Center::GetString() {
-  return (string == nullptr) ? number.GetString() : string;
+  return (string_ == nullptr) ? number_.GetString() : string_;
 }
 
 int Utf32Center::GetColumnCount() { return column_count; }
 
-Utf32Right::Utf32Right(const char32_t* string, int column_count)
-    : string(string), column_count(column_count) {}
+Utf32Right::Utf32Right(const char32_t* string_, int column_count)
+    : string_(string_), column_count(column_count) {}
 
 Utf32Right::Utf32Right(SI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Right::Utf32Right(UI4 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Right::Utf32Right(SI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Right::Utf32Right(UI8 value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Right::Utf32Right(FLT value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf32Right::Utf32Right(DBL value, int column_count)
-    : string(nullptr), number(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 const char32_t* Utf32Right::GetString() {
-  return (string == nullptr) ? number.GetString() : string;
+  return (string_ == nullptr) ? number_.GetString() : string_;
 }
 
 int Utf32Right::GetColumnCount() { return column_count; }
 
 }  // namespace _
 
-_::UTF4& operator<<(_::UTF4& utf, const char32_t* string) {
-  return utf.Set(_::Print(utf.start, utf.stop, string));
+_::UTF4& operator<<(_::UTF4& utf, const char32_t* string_) {
+  return utf.Set(_::Print(utf.start, utf.stop, string_));
 }
 
 _::UTF4& operator<<(_::UTF4& utf, char32_t value) {

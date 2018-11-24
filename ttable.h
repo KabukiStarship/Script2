@@ -333,7 +333,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
 
         PRINT_TABLE
         PRINTF("\nDone inserting.")
-        // Then it was a collision so the table doesn't contain string.
+        // Then it was a collision so the table doesn't contain string_.
         return count;
       }
       PRINTF("\nTable already contains the key")
@@ -504,7 +504,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
              Hash16(keys - key_offsets[index]))
 
       if (!SlotEquals(key, keys - key_offsets[index])) {
-        //< It was a collision so the table doesn't contain string.
+        //< It was a collision so the table doesn't contain string_.
         PRINTF(" but it was a collision and did not find key.")
         return kInvalidIndex;
       }

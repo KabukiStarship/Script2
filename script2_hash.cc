@@ -19,35 +19,35 @@ namespace _ {
 
 hash16_t Hash16(char value, hash16_t hash) { return hash + hash * value; }
 
-hash16_t Hash16(const char* string, hash16_t hash) {
-  UI1 c = *string;
+hash16_t Hash16(const char* string_, hash16_t hash) {
+  UI1 c = *string_;
   while (c) {
     hash = Hash16(c, hash);
-    ++string;
-    c = *string;
+    ++string_;
+    c = *string_;
   }
   return hash;
 }
 
 hash32_t Hash32(char16_t value, hash32_t hash) { return hash + hash * value; }
 
-hash32_t Hash32(const char* string, hash32_t hash) {
-  UI1 c = *string;
+hash32_t Hash32(const char* string_, hash32_t hash) {
+  UI1 c = *string_;
   while (c) {
     hash = Hash32(c, hash);
-    ++string;
-    c = *string;
+    ++string_;
+    c = *string_;
   }
   return hash;
 }
 hash64_t Hash64(char32_t value, hash64_t hash) { return hash + hash * value; }
 
-hash64_t Hash64(const char* string, hash64_t hash) {
-  UI1 c = *string;
+hash64_t Hash64(const char* string_, hash64_t hash) {
+  UI1 c = *string_;
   while (c) {
     hash = Hash64(c, hash);
-    ++string;
-    c = *string;
+    ++string_;
+    c = *string_;
   }
   return hash;
 }
@@ -81,5 +81,5 @@ UI2 Hash16UI8(UI8 value, UI2 hash) {
   return hash;
 }
 
-}  //< namespace _
+}  // namespace _
 #endif  //> #if SEAM >= _0_0_0__06

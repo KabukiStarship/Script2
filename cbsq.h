@@ -123,7 +123,7 @@ constexpr UIT BsqSize(const UIT* params) {
         return 0;
       }
       if (param & 0x20) {     // It's a multi-dimensional array so
-        param = *params;      // add the number of dimensions + 1;
+        param = *params;      // add the number_ of dimensions + 1;
         params += param + 1;  // for the dimension count.
       }
     }
@@ -148,7 +148,7 @@ API UTF1& PrintBsq(UTF1& printer, const UIT* params);
 /*  Prints out the parameters. */
 // API Utf& PrintBsq (const UIT* bsq, Utf& utf);
 
-/*< Returns the requested parameter number. */
+/*< Returns the requested parameter number_. */
 API UIT BsqParamNumber(const UIT* bsq, int param_number);
 
 }  // namespace _

@@ -107,8 +107,8 @@ struct Slot {
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const Op& op, void** args);
 
-  /* Writes a single string to the slot socket.
-  @param message The string message to send.
+  /* Writes a single string_ to the slot socket.
+  @param message The string_ message to send.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const char* message);
 
@@ -116,7 +116,7 @@ struct Slot {
   const Op* Write(Slot& other);
 
 #if USING_CRABS_TEXT
-  /* Prints a string rep of this object to the printer. */
+  /* Prints a string_ rep of this object to the printer. */
   UTF1& Print(UTF1& printer);
 #endif
 };

@@ -230,7 +230,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
-          // nil string.
+          // nil string_.
           length = params[++index];  //< Load the max char length.
           ++num_params;
         } else {
@@ -313,7 +313,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 #endif  // USING_CRABS_2_BYTE_TYPES
 #if WORD_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
-        // Load number to write and increment args.
+        // Load number_ to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         ui2 = *ui2_ptr;
         // We are using the same code to utf both signed and unsigned
@@ -374,7 +374,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       } break;
 #else
       case SVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
-        // Load number to write and increment args.
+        // Load number_ to write and increment args.
         ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
         ui4 = *ui4_ptr;
         ui4 = TypePackVarint<UI4>(ui4);
@@ -459,7 +459,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         }
         break;
       case SV8:  //< _W_r_i_t_e__8_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
-        // Load number to write and increment args.
+        // Load number_ to write and increment args.
         ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
         ui8 = *ui8_ptr;
         ui8 = TypePackVarint<UI8>(ui8);
@@ -469,7 +469,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
         ui8 = *ui8_ptr;
       WriteVarint8 : {     //< Optimized manual do while loop.
-        ui2 = 8;           //< The max number of varint bytes - 1.
+        ui2 = 8;           //< The max number_ of varint bytes - 1.
         if (space <= 9) {  //< @todo Benchmark to space--
           return BOutError(bout, kErrorBufferOverflow, params, index, start);
         }

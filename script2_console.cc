@@ -89,14 +89,14 @@ void PrintfLn(const char* format, ...) {
   va_end(arg);
 }
 
-void Print(const char* string) { Printf(string); }
+void Print(const char* string_) { Printf(string_); }
 
-void Print(const char16_t* string) { TPrintString<char16_t>(string); }
+void Print(const char16_t* string_) { TPrintString<char16_t>(string_); }
 
-void Print(const char32_t* string) { TPrintString<char32_t>(string); }
+void Print(const char32_t* string_) { TPrintString<char32_t>(string_); }
 
-void Print(const char* string, char delimiter) {
-  Printf(string);
+void Print(const char* string_, char delimiter) {
+  Printf(string_);
   return Print(delimiter);
 }
 
@@ -177,9 +177,9 @@ void Print(DBL value) {
 #endif
 }
 
-void PrintLn(const char* string) {
+void PrintLn(const char* string_) {
   Print('\n');
-  Print(string);
+  Print(string_);
 }
 
 void PrintIndent(int count) {

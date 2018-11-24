@@ -18,11 +18,11 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPT_CTEST 1
 
 /* Function pointer prototype for a test case with command line argument
-string.
-@return Pointer to a string to utf to the stdout.
+string_.
+@return Pointer to a string_ to utf to the stdout.
 @param seam_log Beginning of the seam log socket.
 @param seam_end End of the seam log socket.
-@param args     Command line argument string. */
+@param args     Command line argument string_. */
 typedef const char* (*TestCase)(char* seam_log, char* seam_end,
                                 const char* args);
 namespace _ {
@@ -33,7 +33,7 @@ int SeamTreeTest(int arg_count, char** args, char* seam_log, int seam_log_size,
                  TestCase* tests, int test_count);
 
 /* Tests an array of TestCase(s).
-@return Nil upon success or an error string upon failure. */
+@return Nil upon success or an error string_ upon failure. */
 const char* TestTree(char* seam_log, char* seam_end, const char* args,
                      TestCase* seams, int node_count);
 

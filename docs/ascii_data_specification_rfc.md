@@ -143,7 +143,7 @@ UIX 1
 
 ## 2.3 Boolean
 
-Booleans in Script are stored as 32-bit types where the deasserted value shall be stored as the number zero and labeled false, and asserted values shall be represented as the number one labeled true or a non-zero SVI value.
+Booleans in Script are stored as 32-bit signed integer types where the deasserted value shall be stored as the number zero and labeled false, and asserted values shall be represented as the number one labeled true or a non-zero integer value.
 
 ### Boolean Examples
 

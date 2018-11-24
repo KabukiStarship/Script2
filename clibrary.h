@@ -36,10 +36,10 @@ class Library : public Operand {
   /* Returns true if the current Book has a hash table. */
   BOL HasHashTable() { return collisions_size_ != 0; }
 
-  /* Gets the number of keys in the current scope. */
+  /* Gets the number_ of keys in the current scope. */
   UIT GetBagType() { return 0; }
 
-  /* Gets the number of keys in the current scope. */
+  /* Gets the number_ of keys in the current scope. */
   UIT GetNumKeys() { return num_members_; }
 
   /* Gets the size of the header in bytes. */
@@ -149,7 +149,7 @@ class Library : public Operand {
   /* Handles Script Commands.
       @param text     Beginning of the Text socket.
       @param text_end End of the Text socket.
-      @return Returns nil upon success and an error string upon failure. */
+      @return Returns nil upon success and an error string_ upon failure. */
   virtual const char* Sudo(const char* text, const char* text_end) {
     return nullptr;
   }
@@ -188,7 +188,7 @@ class Library : public Operand {
       height_,         //< Number of bags on the stack.
       num_libraries_;  //< Number of libraries.
   UI1 type_;           //< Current type of bag.
-  TIndex num_keys_,    //< Current number of Star members.
+  TIndex num_keys_,    //< Current number_ of Star members.
       buffer_size_;    //< Current size of the header and names socket in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
       collisions_size_;  //< Current size of the header and names socket in

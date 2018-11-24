@@ -131,11 +131,11 @@ API int HexToByte(UI2 hex);
 #endif  //< #if SEAM >= _0_0_0__01
 
 #if SEAM >= _0_0_0__03
-/* Gets the maximum number of digits required to represent a FLT as in
+/* Gets the maximum number_ of digits required to represent a FLT as in
 ASCII. */
 API int FloatDigitsMax();
 
-/* Gets the maximum number of digits required to represent a DBL as in
+/* Gets the maximum number_ of digits required to represent a DBL as in
 ASCII. */
 API int DoubleDigitsMax();
 
@@ -168,35 +168,35 @@ API FLT Ceiling(FLT value);
 API DBL Ceiling(DBL value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(UI1 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(SI1 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(UI2 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(SI2 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(UI4 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(SI4 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(UI8 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number if value is zero and the highest bit. */
+@return A negative number_ if value is zero and the highest bit. */
 API int MSbAsserted(SI8 value);
 
 /* IEEE754 Powers of 10 exponents LUT. */
@@ -214,12 +214,12 @@ API char* Print(char* cursor, char* stop, FLT value);
 /* Prints the given FLT to the socket. */
 API char* Print(char* cursor, char* stop, DBL value);
 
-/* Scans a FLT from the given string.
-@return Nil if the string doesn't start with a FLT. */
+/* Scans a FLT from the given string_.
+@return Nil if the string_ doesn't start with a FLT. */
 const char* Scan(const char* cursor, FLT& value);
 
-/* Scans a DBL from the given string.
-@return Nil if the string doesn't start with a DBL. */
+/* Scans a DBL from the given string_.
+@return Nil if the string_ doesn't start with a DBL. */
 const char* Scan(const char* cursor, DBL& value);
 
 #if USING_UTF16 == YES

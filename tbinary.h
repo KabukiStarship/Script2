@@ -33,12 +33,12 @@ specific language governing permissions and limitations under the License. */
 #endif
 namespace _ {
 template <typename Char>
-void TPrintString(const Char* string) {
-  if (!string) return;
-  Char c = *string;
+void TPrintString(const Char* string_) {
+  if (!string_) return;
+  Char c = *string_;
   while (c) {
     Print(c);
-    c = *(++string);
+    c = *(++string_);
   }
 }
 
@@ -68,7 +68,7 @@ int TStringCompare(const Char* string_a, const Char* string_b,
     if (!a) return 0;  //< I like !t code rather than !c code. :-)
     return 0 - a;
   }
-  // string_b SHOULD be a nil-terminated string without whitespace.
+  // string_b SHOULD be a nil-terminated string_ without whitespace.
   while (b) {
     result = b - a;
     if (result) {
@@ -116,14 +116,14 @@ int TStringCompare(const Char* string_a, const Char* string_b,
 namespace _ {
 
 template <typename Char>
-SIW TPrintAndCount(const Char* string) {
-  if (!string) return 0;
+SIW TPrintAndCount(const Char* string_) {
+  if (!string_) return 0;
   int print_count = 0;
-  Char c = *string;
+  Char c = *string_;
   while (c) {
     Print(c);
     ++print_count;
-    c = *(++string);
+    c = *(++string_);
   }
   return print_count;
 }
@@ -146,13 +146,21 @@ void TPrintPrinted(Char* cursor) {
   Print(print_count);
 }
 
+/* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
 template <typename UI>
-inline UI TNaNUnsigned() {
-  return (~(UI)0) - (sizeof(UIW) - 2);
+inline UI TUnsignedNaN() {
+  return (~(UI)0) - sizeof(UIW) - 2;
 }
 
+/* The highest possible signed integer value of the given type SI. */
+template <typename SI>
+inline SI TSignedMax() {
+  return ~(SI)0;
+}
+
+/* Signed Not-a-number_ is the lowest possible signed integer value. */
 template <typename SI, typename UI>
-inline SI TNaNSigned() {
+inline SI TSignedNaN() {
   return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
 }
 
@@ -177,42 +185,43 @@ I TStringLength(const Char* cursor) {
   return (I)(TStringEnd<Char>(cursor) - cursor);
 }
 
-/* Prints a Unicode string to the given socket.
+/* Prints a Unicode string_ to the given socket.
  @return Nil upon failure or a pointer to the nil-term Char upon success.
  @param  cursor    The beginning of the socket.
  @param  stop       The last UI1 in the socket.
- @param  string    The string to utf.
+ @param  string_    The string_ to utf.
  @param  delimiter The delimiter to utf (usually nil).
  @desc   This algorithm is designed to fail if the socket is not a valid socket
- with one or more bytes in it, or if string is nil. */
+ with one or more bytes in it, or if string_ is nil. */
 template <typename Char = char>
-Char* TPrint(Char* cursor, Char* stop, const Char* string, Char delimiter = 0) {
+Char* TPrint(Char* cursor, Char* stop, const Char* string_,
+             Char delimiter = 0) {
   ASSERT(cursor);
-  ASSERT(string);
+  ASSERT(string_);
 
   if (cursor >= stop) return nullptr;
 
-  char c = *string++;
+  char c = *string_++;
   while (c) {
     *cursor++ = c;
     if (cursor >= stop) return nullptr;
-    c = *string++;
+    c = *string_++;
   }
   *cursor = delimiter;
   return cursor;
 }
 
-/* Prints a Unicode string to the given socket.
+/* Prints a Unicode string_ to the given socket.
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the socket.
 @param  size      The size of the socket in Char(s).
-@param  string    The string to utf.
+@param  string_    The string_ to utf.
 @param  delimiter The delimiter to utf (usually nil).
 @desc   This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if string is nil. */
+with one or more bytes in it, or if string_ is nil. */
 template <typename Char = char>
-Char* TPrint(Char* cursor, SIW size, const Char* string, Char delimiter = 0) {
-  return TPrint<Char>(cursor, cursor + size - 1, string, delimiter);
+Char* TPrint(Char* cursor, SIW size, const Char* string_, Char delimiter = 0) {
+  return TPrint<Char>(cursor, cursor + size - 1, string_, delimiter);
 }
 
 /* Prints a Unicode Char to the given socket.
@@ -238,7 +247,7 @@ Char* TPrint(Char* cursor, Char* stop, Char character) {
 @return Nil upon failure or a pointer to the nil-term Char upon success.
 @param  cursor    The beginning of the socket.
 @param  size      The size of the socket in Char(s).
-@param  string    The string to utf.
+@param  string_    The string_ to utf.
 @desc   This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = char>
@@ -340,7 +349,7 @@ inline char32_t* PrintChar(char32_t* cursor, char32_t c) {
   TPrintChar<char32_t>(cursor, c);
 }
 
-/* Checks if the given char is a digit of a number.
+/* Checks if the given char is a digit of a number_.
 @return True if it is a digit. */
 template <typename Char = char>
 BOL TIsDigit(Char c) {
@@ -461,7 +470,7 @@ inline void TPrint8or16Decimals(Char* cursor, UI4 lsd, const UI2* lut,
 inline UI4 ValueUI4(UI4 value) { return value; }
 inline UI4 ValueUI4(UI8 value) { return (UI4)value; }
 
-/* Prints the give value to the given socket as a Unicode string.
+/* Prints the give value to the given socket as a Unicode string_.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  cursor The beginning of the socket.
@@ -703,7 +712,7 @@ inline Char* TPrintUnsigned(Char* socket, int size, UI value) {
   return TPrintUnsigned<UI, Char>(socket, socket + size - 1, value);
 }
 
-/* Writes the give value to the given socket as an ASCII string.
+/* Writes the give value to the given socket as an ASCII string_.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  utf The text formatter to utf to.
@@ -717,7 +726,7 @@ inline Char* TPrintSigned(Char* socket, Char* stop, SI value) {
   return TPrintUnsigned<UI, Char>(socket, stop, (UI)(-(SI)value));
 }
 
-/* Writes the give value to the given socket as an ASCII string.
+/* Writes the give value to the given socket as an ASCII string_.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  utf The text formatter to utf to.
@@ -833,7 +842,7 @@ Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
   *socket++ = c;
 }
 
-/* A decimal number in floating-point format. */
+/* A decimal number_ in floating-point format. */
 template <typename Float = DBL, typename UI = UI8>
 class TBinary {
  public:
@@ -853,7 +862,7 @@ class TBinary {
     kExponentMin = -kExponentBias,
   };
 
-  // Constructs an uninitialized floating-point number.
+  // Constructs an uninitialized floating-point number_.
   TBinary() {}
 
   inline static UI Coefficient(UI decimal) {
@@ -927,7 +936,7 @@ class TBinary {
   }
 
   template <typename SI, typename UI>
-  static inline SI TNaNSigned() {
+  static inline SI TSignedNaN() {
     UI nan = 1;
     return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
@@ -1021,7 +1030,7 @@ class TBinary {
     }
   }
 
-  // Prints the integer portion of the floating-point number.
+  // Prints the integer portion of the floating-point number_.
   //@return Nil upon failure or a pointer to the nil-term Char upon success.
   template <typename Char>
   static Char* DigitGen(Char* cursor, Char* stop, const TBinary& w,
@@ -1196,12 +1205,12 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 #endif  //< #if INCLUDED_SCRIPTTBINARY
 
 /*
-  // Non-working algorithm DOES NOT converts a string-to-FLT.
-  //@return nil if there is no number to scan or pointer to the next char after
-  // the stop of the scanned number upon success.
+  // Non-working algorithm DOES NOT converts a string_-to-FLT.
+  //@return nil if there is no number_ to scan or pointer to the next char after
+  // the stop of the scanned number_ upon success.
   //@brief Algorithm uses a 32-bit unsigned value to scan the floating-point
-  // number, which can only have 10 digits max, so the maximum floating-point
-  // number digit count we can scan is 9 digits long.
+  // number_, which can only have 10 digits max, so the maximum floating-point
+  // number_ digit count we can scan is 9 digits long.
   template <typename Char = char>
   const Char* Scan(const Char* socket, Float& result) {
     ASSERT(socket);
@@ -1216,10 +1225,10 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
         ui_value,      //< Unsigned value.
         pow_10_ui2;    //< Power of 10 for converting integers.
 
-    // Scan sign of number:
+    // Scan sign of number_:
 
     if (*socket == '-') {
-      sign = TNaNSigned<UI4, UI4>();
+      sign = TSignedNaN<UI4, UI4>();
       ++socket;
     } else {
       sign = 0;

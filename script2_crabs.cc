@@ -336,7 +336,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
         // When verifying an address, there is guaranteed to be an
         // crabs->op set. We are just looking for nil return values
         // from the Do (UI1, Stack*): const Operand* function,
-        // pushing Star(string) on to the Star stack, and looking for
+        // pushing Star(string_) on to the Star stack, and looking for
         // the first procedure call.
         //
         if (b == op->pop) {
@@ -397,7 +397,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           }
           header = op->in;
           crabs->params_left = *header;
-          crabs->header = header;        //< +1 to bypass the number of params
+          crabs->header = header;        //< +1 to bypass the number_ of params
           crabs->header_start = header;  //< Used to utf current header.
           CrabsEnterState(crabs, kBInStatePackedArgs);
           bin_state = kBInStatePackedArgs;
@@ -446,8 +446,8 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                       bin_state = kBInStateAddress;
                       break;
 
-                    } else if (type == kSTR) {  // UTF-8/ASCII string type.
-                      // Read the max number of chars off the header.
+                    } else if (type == kSTR) {  // UTF-8/ASCII string_ type.
+                      // Read the max number_ of chars off the header.
                       bytes_left = *(++crabs->header);
                       PRINTF("\nScanning kSTR with max length %u",
                              (uint)bytes_left);
@@ -488,7 +488,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                       bin_state = kBInStatePackedVarint;
                       break;
                       /*
-                      } else if (type == ST2) { // UTF-16 string type.
+                      } else if (type == ST2) { // UTF-16 string_ type.
                           #if DEBUG_CRABS_EXPR
                           Write ("\nScanning ST2.");
                           #endif
@@ -496,18 +496,18 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                               crabs->last_byte = b;
                               break;
                           }
-                          // Read the max number of chars off the header.
+                          // Read the max number_ of chars off the header.
                           bytes_left = *crabs->header++ * 2;
                           CrabsEnterState (crabs,
                                           BIn::Utf16State);
                           bin_state = BIn::Utf16State;
                           break;
                       }
-                      else if (type == ST4) { // UTF-32 string type.
+                      else if (type == ST4) { // UTF-32 string_ type.
                           #if DEBUG_CRABS_EXPR
                           Write ("\nScanning ST4.");
                           #endif
-                          // Read the max number of chars off the header.
+                          // Read the max number_ of chars off the header.
                           bytes_left = *crabs->header++ * 4;
                           CrabsEnterState (crabs, BIn::Utf32State);
                           bin_state = BIn::Utf32State;*/
@@ -602,9 +602,9 @@ const Op* CrabsUnpack(CCrabs* crabs) {
 #if DEBUG_CRABS_EXPR
         Write("\nhash:" << PrintHex(hash));
 #endif
-        // When verifying a varint, there is a max number of bytes for
+        // When verifying a varint, there is a max number_ of bytes for
         // the type (3, 5, or 9) but the varint may be complete before
-        // this number of bytes. We're just basically counting down and
+        // this number_ of bytes. We're just basically counting down and
         // looking for an overflow situation.
         // Hash UI1.
 

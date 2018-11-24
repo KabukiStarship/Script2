@@ -14,6 +14,46 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
+namespace _ {
+/* List of the 32 ASCII Data Types.
+Types are organized with types that are allowed in text B-Sequences first,
+followed by objects which get created in text using Script Operations. */
+typedef enum AsciiTypes {
+  kNIL = 0,  //< 0.  kNIL/nil/void type.
+  kSI1,      //< 1.  8-bit signed integer.
+  kUI1,      //< 2.  8-bit unsigned integer.
+  kSI2,      //< 3.  16-bit signed integer.
+  kUI2,      //< 4.  16-bit unsigned integer.
+  kHLF,      //< 5.  16-bit floating-point number_.
+  kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
+  kSI4,      //< 7.  32-bit signed integer.
+  kUI4,      //< 8.  32-bit unsigned integer.
+  kFLT,      //< 9.  32-bit floating-point number_.
+  kTMS,      //< 10. 32-bit second since epoch timestamp.
+  kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
+  kTME,      //< 12. 64-bit second since epoch timestamp.
+  kSI8,      //< 13. 64-bit signed integer.
+  kUI8,      //< 14. 64-bit unsigned integer.
+  kDBL,      //< 15. 64-bit floating-point number_.
+  kSIH,      //< 16. 128-bit (Hexadeca-UI1) signed integer.
+  kUIH,      //< 17. 128-bit (Hexadeca-UI1) unsigned integer.
+  kDEC,      //< 18. 128-bit (Hexadeca-UI1) floating-point number_.
+  kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
+  kOBJ,      //< 20. N-UI1 object.
+  kADR,      //< 21. UTF-8 Operand stack address.
+  kSTR,      //< 22. A UTF-8 string_.
+  kTKN,      //< 23. A UTF-8 string_ token without whitespace.
+  kBSQ,      //< 24. B-Sequence.
+  kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
+  kTBL,      //< 26. A hash table.
+  kEXP,      //< 27. Script^2 Expression.
+  kLST,      //< 28. Set or multiset of Type-Value tuples.
+  kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
+  kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
+  kDIC,      //< 31. One-to-one map of Key-{Type-Value} records.
+} AsciiType;
+}  // namespace _
+
 #if SEAM >= _0_0_0__12
 #ifndef INCLUDED_SCRIPT_CASCIIDATA
 #define INCLUDED_SCRIPT_CASCIIDATA
@@ -30,44 +70,6 @@ struct API TypeValue {
   /* Stores the type and value. */
   TypeValue(SIN type, const void* value = nullptr);
 };
-
-/* List of the 32 ASCII Data Types.
-    Types are organized with types that are allowed in text B-Sequences first,
-    followed by objects which get created in text using Script Operations. */
-typedef enum AsciiTypes {
-  kNIL = 0,  //< 0.  kNIL/nil/void type.
-  kSI1,      //< 1.  8-bit signed integer.
-  kUI1,      //< 2.  8-bit unsigned integer.
-  kSI2,      //< 3.  16-bit signed integer.
-  kUI2,      //< 4.  16-bit unsigned integer.
-  kHLF,      //< 5.  16-bit floating-point number.
-  kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
-  kSI4,      //< 7.  32-bit signed integer.
-  kUI4,      //< 8.  32-bit unsigned integer.
-  kFLT,      //< 9.  32-bit floating-point number.
-  kTMS,      //< 10. 32-bit second since epoch timestamp.
-  kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
-  kTME,      //< 12. 64-bit second since epoch timestamp.
-  kSI8,      //< 13. 64-bit signed integer.
-  kUI8,      //< 14. 64-bit unsigned integer.
-  kDBL,      //< 15. 64-bit floating-point number.
-  kSIH,      //< 16. 128-bit (Hexadeca-UI1) signed integer.
-  kUIH,      //< 17. 128-bit (Hexadeca-UI1) unsigned integer.
-  kDEC,      //< 18. 128-bit (Hexadeca-UI1) floating-point number.
-  kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
-  kOBJ,      //< 20. N-UI1 object.
-  kADR,      //< 21. UTF-8 Operand stack address.
-  kSTR,      //< 22. A UTF-8 string.
-  kTKN,      //< 23. A UTF-8 string token without whitespace.
-  kBSQ,      //< 24. B-Sequence.
-  kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
-  kTBL,      //< 26. A hash table.
-  kEXP,      //< 27. Script^2 Expression.
-  kLST,      //< 28. Set or multiset of Type-Value tuples.
-  kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
-  kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
-  kDIC,      //< 31. One-to-one map of Key-{Type-Value} records.
-} AsciiType;
 
 /* Checks if the given type is valid.
     @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
@@ -110,7 +112,7 @@ API char* Write(char* start, char* stop, SIN type, const void* source);
 /* Returns true if the given type is an ASCII Obj. */
 API inline BOL TypeIsObj(SIN type);
 
-/* Returns true if the given type is a string type. */
+/* Returns true if the given type is a string_ type. */
 API inline BOL TypeIsString(SIN type);
 
 /* Checks if the given type is UTF-16.
@@ -124,7 +126,7 @@ API inline int TypeSizeWidthCode(SIN type);
 #if USING_UTF8 == YES
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
@@ -142,7 +144,7 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16 == YES
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
@@ -161,7 +163,7 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure.
+of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */

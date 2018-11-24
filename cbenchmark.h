@@ -38,7 +38,7 @@ class BenchmarkCase {
   /* Runs the benchmark. */
   const char* Run(char* cursor, char* stop, const char* args);
 
-  /* Gets the number of cases in this benchmark. */
+  /* Gets the number_ of cases in this benchmark. */
   int GetCount();
 
  private:

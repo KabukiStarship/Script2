@@ -47,28 +47,28 @@ API inline hash64_t Hash64(char32_t value,
 
 /* Hashes the given char using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
-the see to a different prime number.
-@return A prime multiple hash of the given string.
-@param  string The string to hash.
-@param  hash   A prime number seed hash. */
-API hash16_t Hash16(const char* string, hash16_t hash = 65535);
+the see to a different prime number_.
+@return A prime multiple hash of the given string_.
+@param  string_ The string_ to hash.
+@param  hash   A prime number_ seed hash. */
+API hash16_t Hash16(const char* string_, hash16_t hash = 65535);
 
 /* Hashes the given char using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
-the see to a different prime number.
-@return A prime multiple hash of the given string.
-@param  string The string to hash.
-@param  hash   A prime number seed hash. */
-API hash32_t Hash32(const char* string, hash32_t hash = 4294967291);
+the see to a different prime number_.
+@return A prime multiple hash of the given string_.
+@param  string_ The string_ to hash.
+@param  hash   A prime number_ seed hash. */
+API hash32_t Hash32(const char* string_, hash32_t hash = 4294967291);
 
 /* Hashes the given char using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
-the see to a different prime number.
-@return A prime multiple hash of the given string.
-@param  string The string to hash.
-@param  hash   A prime number seed hash. */
-API hash64_t Hash64(const char* string, hash64_t hash = 18446744073709551557);
+the see to a different prime number_.
+@return A prime multiple hash of the given string_.
+@param  string_ The string_ to hash.
+@param  hash   A prime number_ seed hash. */
+API hash64_t Hash64(const char* string_, hash64_t hash = 18446744073709551557);
 
-}  //< namespace _
+}  // namespace _
 #endif  //< #if SEAM >= _0_0_0__08
 #endif  //< INCLUDED_SCRIPTHASH

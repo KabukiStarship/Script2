@@ -49,8 +49,8 @@ API const char* StringEnd(const char* text);
 char. */
 API int StringLength(const char* text);
 
-/* Clones the given string.
-@param  A nil-terminated string in ROM.
+/* Clones the given string_.
+@param  A nil-terminated string_ in ROM.
 @return Returns a new copy you must delete.
 API char* StringClone(const char* text); */
 
@@ -62,16 +62,16 @@ API const char* StringLineEnd(const char* text, const char* text_end,
                               int column_count);
 
 /* Returns the pointer to the next char in the char that is not an ASCII
-number.
-@return A pointer to the next non-number in the text char. */
+number_.
+@return A pointer to the next non-number_ in the text char. */
 API const char* StringDecimalStop(const char* text, const char* text_end);
 
 /* Returns the pointer to the next char in the char that is not an ASCII
-number.
-@return A pointer to the next non-number in the text char. */
+number_.
+@return A pointer to the next non-number_ in the text char. */
 API const char* StringDecimalStop(const char* text);
 
-/* Skips the leading zeros of a number if there are any. */
+/* Skips the leading zeros of a number_ if there are any. */
 API const char* TStringSkipChar(const char* text, char skip_char);
 
 /* Skips all the spaces at the start of the char. */
@@ -97,13 +97,13 @@ API const char* StringEquals(const char* text, const char* text_end,
 after the stop of the text upon success. */
 API const char* StringFind(const char* text, const char* query);
 
-/* Prints the given string to the utf socket.
+/* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param  start  The beginning address of the socket.
 @param  stop    The stop address of the socket.
-@param  string The potentially unsafe string to write. */
-API char* Print(char* start, char* stop, const char* string);
+@param  string_ The potentially unsafe string_ to write. */
+API char* Print(char* start, char* stop, const char* string_);
 
 /* Writes the give char to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
@@ -181,13 +181,13 @@ API char* PrintRight(char* start, char* stop, DBL value, int column_count);
 
 #endif  //< _0_0_0__01
 
-/* Prints the given string to the utf socket.
+/* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
-@param string The potentially unsafe string to write. */
-API char* PrintCenter(char* start, char* stop, const char* string,
+@param string_ The potentially unsafe string_ to write. */
+API char* PrintCenter(char* start, char* stop, const char* string_,
                       int column_count);
 
 /* Writes the give char to the given socket center.
@@ -231,13 +231,13 @@ upon success.
 @param value The value to utf. */
 API char* PrintCenter(char* start, char* stop, SI8 value, int column_count);
 
-/* Prints the given string to the utf socket.
+/* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
-@param string The potentially unsafe string to write. */
-API char* PrintRight(char* start, char* stop, const char* string,
+@param string_ The potentially unsafe string_ to write. */
+API char* PrintRight(char* start, char* stop, const char* string_,
                      int column_count);
 
 /* Writes the give char to the given socket center.
@@ -280,12 +280,12 @@ upon success.
 @param value The value to utf. */
 API char* PrintRight(char* start, char* stop, SI8 value, int column_count);
 
-/* Prints the given string to the utf socket.
+/* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
-@param string The potentially unsafe string to write. */
+@param string_ The potentially unsafe string_ to write. */
 API char* PrintHex(char* start, char* stop, const void* pointer);
 
 /* Writes the give char to the given socket in hex form.
@@ -360,7 +360,7 @@ upon success.
 @param value The value to utf. */
 API char* PrintHex(char* start, char* stop, DBL value);
 
-/* Prints the given string to the utf socket.
+/* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term char
 upon success.
 @param start  The beginning address of the socket.
@@ -462,105 +462,105 @@ API char* PrintSocket(char* start, char* stop, const void* begin,
                       const void* end);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param start The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param token The token to utf.
-@param column_count The number of tokens to utf. */
+@param column_count The number_ of tokens to utf. */
 API char* PrintLine(char* cursor, char* stop, char token, int column_count);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param start  The beginning of the write socket.
 @param stop    The stop of the write socket.
-@param string The string to utf.
-@param column_count The number of columns. */
-API char* TPrintLineString(char* cursor, char* stop, const char* string,
+@param string_ The string_ to utf.
+@param column_count The number_ of columns. */
+API char* TPrintLineString(char* cursor, char* stop, const char* string_,
                            int column_count);
 
-/* Converts the given string to a 8-bit signed integer.
+/* Converts the given string_ to a 8-bit signed integer.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param  text A nil-terminated string in ROM.
+@param  text A nil-terminated string_ in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* start, SI1& result);
 
-/* Converts the given string to a 8-bit signed integer.
+/* Converts the given string_ to a 8-bit signed integer.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param  text A nil-terminated string in ROM.
+@param  text A nil-terminated string_ in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* text, SI1& result);
 
-/* Converts the given string to a 8-bit unsigned integer.
+/* Converts the given string_ to a 8-bit unsigned integer.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param  text A nil-terminated string in ROM.
+@param  text A nil-terminated string_ in ROM.
 @param  result  The result of the conversion. */
 API const char* Scan(const char* text, UI1& result);
 
-/* Converts the given string to a 16-bit signed integer.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 16-bit signed integer.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, SI2& result);
 
-/* Converts the given string to a 16-bit unsigned integer.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 16-bit unsigned integer.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, UI2& result);
 
-/* Converts the given string to a 32-bit signed integer.
-@param  text A nil-terminated string in ROM.
+/* Converts the given string_ to a 32-bit signed integer.
+@param  text A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, SI4& result);
 
-/* Converts the given string to a 32-bit unsigned integer.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 32-bit unsigned integer.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, UI4& result);
 
-/* Converts the given string to a 64-bit signed integer.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 64-bit signed integer.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, SI8& result);
 
-/* Converts the given string to a 64-bit unsigned integer.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 64-bit unsigned integer.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, UI8& result);
 
-/* Converts the given string to a 32-bit floating-point number.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 32-bit floating-point number_.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, FLT& result);
 
-/* Converts the given string to a 64-bit floating-point number.
-@param  text  A nil-terminated string in ROM.
+/* Converts the given string_ to a 64-bit floating-point number_.
+@param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure. */
+of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, DBL& result);
 
-/* AsciiFactory Prints the socket to the console as a UTF-8 string. */
+/* AsciiFactory Prints the socket to the console as a UTF-8 string_. */
 UIW* COutUtf8(UIW* socket, SIW size);
 
-/* Prints the socket to the console as a UTF-8 string. */
+/* Prints the socket to the console as a UTF-8 string_. */
 void COutAutoUtf8(UIW* socket);
 
 /* Utility class for printing strings.
@@ -684,20 +684,20 @@ class Utf8Text {
   /* Prints the value to the text socket. */
   Utf8Text(DBL value);
 #endif
-  /* Gets the number string. */
+  /* Gets the number_ string_. */
   const char* String();
 
  private:
   enum { kSize = 24 };
 
-  char string[kSize * sizeof(char) + 1];  //< String socket.
+  char string_[kSize * sizeof(char) + 1];  //< String socket.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf8Center {
  public:
   /* Prints the value to the text socket. */
-  Utf8Center(const char* string, int column_count);
+  Utf8Center(const char* string_, int column_count);
 
   /* Prints the value to the text socket. */
   Utf8Center(SI4 value, int column_count);
@@ -719,23 +719,23 @@ class Utf8Center {
   Utf8Center(DBL value, int column_count);
 #endif
 
-  /* Gets the number string. */
+  /* Gets the number_ string_. */
   const char* String();
 
   /* Gets the column_count. */
   int GetColumnCount();
 
  private:
-  const char* string;  //< Pointer to the string.
-  Utf8Text number;     //< Pointer to a pointer to utf.
-  int column_count;    //< Number of columns to center.
+  const char* string_;  //< Pointer to the string_.
+  Utf8Text number_;     //< Pointer to a pointer to utf.
+  int column_count;     //< Number of columns to center.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf8Right {
  public:
   /* Prints the value to the text socket. */
-  Utf8Right(const char* string, int column_count);
+  Utf8Right(const char* string_, int column_count);
 
   /* Prints the value to the text socket. */
   Utf8Right(SI4 value, int column_count);
@@ -757,16 +757,16 @@ class Utf8Right {
   Utf8Right(DBL value, int column_count);
 #endif
 
-  /* Gets the number string. */
+  /* Gets the number_ string_. */
   const char* String();
 
   /* Gets the column_count. */
   int GetColumnCount();
 
  private:
-  const char* string;  //< Pointer to the string.
-  Utf8Text number;     //< Pointer to a pointer to utf.
-  int column_count;    //< Number of columns to center.
+  const char* string_;  //< Pointer to the string_.
+  Utf8Text number_;     //< Pointer to a pointer to utf.
+  int column_count;     //< Number of columns to center.
 };
 
 /* Utility class for printing a single char token line with operator<<. */
@@ -778,18 +778,18 @@ struct API Utf8Line {
   Utf8Line(char token, int column_count);
 };
 
-/* Utility class for printing a string line with operator<<. */
+/* Utility class for printing a string_ line with operator<<. */
 struct API Utf8LineString {
-  const char* string;  //< Character to utf.
-  int column_count;    //< Column count.
+  const char* string_;  //< Character to utf.
+  int column_count;     //< Column count.
 
   /* Constructor. */
-  Utf8LineString(const char* string, int column_count);
+  Utf8LineString(const char* string_, int column_count);
 };
 
 // class API Utf8String {
 // public:
-//  /* Constructs a bank UTF-8 string with dynamic memory. */
+//  /* Constructs a bank UTF-8 string_ with dynamic memory. */
 //  Utf8String();
 //
 //  /* Calls the destructor if there is one. */
@@ -800,11 +800,11 @@ struct API Utf8LineString {
 
 }  // namespace _
 
-/* Writes a nil-terminated UTF-8 or ASCII string to the utf.
+/* Writes a nil-terminated UTF-8 or ASCII string_ to the utf.
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, const char* string);
+API _::UTF1& operator<<(_::UTF1& utf, const char* string_);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
@@ -885,7 +885,7 @@ API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Right item);
 /* Prints a line of the given column_count to the utf. */
 API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line);
 
-/* Prints a line string of the given column_count to the utf. */
+/* Prints a line string_ of the given column_count to the utf. */
 API _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line);
 
 #endif  //< #if USING_UTF8

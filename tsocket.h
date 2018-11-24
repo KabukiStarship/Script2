@@ -175,11 +175,12 @@ constexpr Size SizeAlign(Size size) {
 /* A memory socket. */
 template <typename Size, Size kSize_>
 class TSocket {
+ public:
   /* Default destructor does nothing. */
   TSocket() {}
 
   /* The size in bytes. */
-  static constexpr Size GetSize() {
+  static constexpr Size SizeBytes() {
     Size lsb_mask = sizeof(UIW) - 1;
     if (kSize_ < sizeof(UIW)) return sizeof(UIW);
     Size size_max = ~lsb_mask;
@@ -209,6 +210,7 @@ class TSocket {
     return reinterpret_cast<T*>(socket);
   }
 
+  /* Sets the size to the new value. */
   template <typename Size>
   inline UIW* SetSize(Size size) {
     ASSERT((size & kAlignMask) == 0)
@@ -217,7 +219,7 @@ class TSocket {
   }
 
  private:
-  UIW socket[Size()];  //< The word-aligned socket.
+  UIW socket[SizeBytes()];  //< The word-aligned socket.
 };
 
 /* Syntactical sugar for reinterpret_cast using templates. */

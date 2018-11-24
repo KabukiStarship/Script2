@@ -207,7 +207,7 @@ static const char* _0_0_0__02_Strand() {
 
   PRINT_HEADING("\nTesting TStrand...");
 
-  TStrand<Char, Size> strand;
+  TStrand<Char> strand;
   // strand.Print ("Testing");// << " " << 1 << ", 2, " << -3;
 
   return nullptr;

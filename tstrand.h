@@ -19,6 +19,8 @@ specific language governing permissions and limitations under the License. */
 
 #include "tutf.h"
 
+#include "casciidata.h"
+
 #if SEAM == _0_0_0__02
 #include "test_debug.inl"
 #else
@@ -27,21 +29,20 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-template <typename Size, typename Char>
-Char* TStrandInit(UIW* obj, Size size) {
+template <typename SIN, typename Char>
+Char* TStrandInit(UIW* obj, SIN size) {
   ASSERT(obj);
   ASSERT(size > 0);
   ASSERT((size | ~kWordBitsMask) == 0);
   *reinterpret_cast<UIW*>(obj) = size;
-  return reinterpret_cast<Char*>(reinterpret_cast<UIW>(obj) + sizeof(Size));
+  return reinterpret_cast<Char*>(reinterpret_cast<UIW>(obj) + sizeof(SIN));
 }
 
-/* A ASCII Factory String that can auto-grow from the obj to the heap.
+/* An ASCII String that can auto-grow from stack to heap.
 
 This class is designed to take advantage of the behavior of the C++ operator
-overloads. When you have a string of overloads, the objects get destructed
+overloads. When you have a string_ of overloads, the objects get destructed
 in the opposite order then where called, which is a obj push pop operation.
-For this reason the factory is programmable.
 
 # Statically Allocated Strings
 
@@ -59,51 +60,55 @@ Strings that use dynamic memory use the DCOutAuto factory:
 TStrand<UI4> (TCOutAuto<>) << "Hello world!";
 @endcode
 */
-template <typename Size = int, typename Char = char,
-          AsciiFactory kFactory_ = TCOutAuto<Char>, Size kLengthMax_ = 64>
-class TStrand : public TUTF<Char> {
+template <typename Char = char, AsciiFactory kFactory_ = TCOutAuto<Char>,
+          SIN kLengthMax_ = 63 - sizeof(SIN)>
+class TStrand {
  public:
-  /* The max length f the Strand's stack-allocated buffer. */
-  static constexpr Size LengthMax() { return kLengthMax_; }
-
-  /* The size of the Strand in bytes. */
-  static constexpr Size SizeBytes() {
-    return sizeof(Size) + kLengthMax_ * sizeof(Char);
-  }
+  enum {
+    kSizeMax = (~(SIN)0) - sizeof(SIN) + 1,        //< Max size in bytes
+    kCountMax = kSizeMax / sizeof(Char),           //< Max element of chars.
+    kCountMin = (sizeof(SIN) / sizeof(Char)) + 1,  // Min element count.
+    // kLengthMax bounded to the min max range.
+    kLengthMax = (int)((kLengthMax_ < kCountMin)
+                           ? kCountMin
+                           : (kLengthMax_ > kCountMax - 1) ? kCountMax - 1
+                                                           : kLengthMax_),
+    kSize = (int)sizeof(SIN) + (kLengthMax + 1) * (int)sizeof(Char),
+  };
 
   /* Constructs a Strand that auto-grows from stack to heap.
   @param factory ASCII Factory to call when the Strand overflows. */
   TStrand(AsciiFactory factory = nullptr)
-      : TUTF<Char>(TStrandInit<Size, Char>(socket_.Words(), socket_.Size()),
-                   LengthMax()),
-        obj_(socket_.Words(), factory) {
+      : obj_(socket_.Words(), factory),
+        utf_(TStrandInit<SIN, Char>(socket_.Words(), socket_.SizeBytes()),
+             kLengthMax) {
     // static_assert((kSize & (sizeof(Char)) == 0, "!(kSize & (sizeof (Char))");
-    // static_assert(sizeof(Size) >= sizeof(Char),
-    //              "!(sizeof (Size) >= sizeof (Char))");
+    // static_assert(sizeof(SIN) >= sizeof(Char),
+    //              "!(sizeof (SIN) >= sizeof (Char))");
     _::Printf(
         "\nTStrand(AsciiFactory factory)"
         "\nsocket_.Begin():0x%p socket_.End():0x%p"
         "\nTUTF:start:0x%p TUTF::stop:0x%p"
-        "\nsizeof(Size):%i Char count max:%i end space:%i\n",
-        socket_.Begin(), socket_.End(), TUTF<Char>::start, TUTF<Char>::stop,
-        (int)(reinterpret_cast<UIW>(TUTF<Char>::start) -
+        "\nsizeof(SIN):%i Char count max:%i end space:%i\n",
+        socket_.Begin(), socket_.End(), utf_.start, utf_.stop,
+        (SIN)(reinterpret_cast<UIW>(utf_.start) -
               reinterpret_cast<UIW>(socket_.Begin())),
-        (int)(TUTF<Char>::stop - TUTF<Char>::start),
-        (int)(reinterpret_cast<UIW>(socket_.End()) -
-              reinterpret_cast<UIW>(TUTF<Char>::stop)));
+        (SIN)(utf_.stop - utf_.start),
+        (SIN)(reinterpret_cast<UIW>(socket_.End()) -
+              reinterpret_cast<UIW>(utf_.stop)));
     Terminate();
   }
 
   /* Constructs a strand from dynamic memory.
   @param size    Object size IN BYTES.
   @param factory Non-nil ASCII Factory. */
-  TStrand(Size size, AsciiFactory factory = TCOutAuto<Char>) {
+  TStrand(SIN size, AsciiFactory factory = TCOutAuto<Char>) {
     ASSERT(factory);
     static_assert(factory != nullptr, "factory != nullptr");
     UIW* socket = factory(nullptr, size, nullptr);
     obj_.Set(socket, factory);
     obj_.SetBegin(socket);
-    TUTF<Char>::Set(socket, size);
+    utf_.Set(socket, size);
     Terminate();
   }
 
@@ -111,18 +116,18 @@ class TStrand : public TUTF<Char> {
   @param begin   Buffer begin address.
   @param size    Object size IN BYTES.
   @param factory ASCII Factory.  */
-  TStrand(UIW* begin, Size size, AsciiFactory factory = nullptr)
-      : TUTF<Char>(begin, size), obj_(size, begin, factory) {
+  TStrand(UIW* begin, SIN size, AsciiFactory factory = nullptr)
+      : obj_(size, begin, factory), utf_(begin, size) {
     ASSERT(begin);
     Terminate();
   }
 
   /* Gets the UTF. */
   TUTF<Char> Print() {
-    Size size = TObjSize<Size>(obj_);
+    SIN size = TObjSize<SIN>(obj_);
     Char* start_ptr = reinterpret_cast<Char*>(
-        reinterpret_cast<UIW>(obj_.start) + sizeof(Size));
-    return TUTF<Char>(start_ptr, start_ptr + (size >> TBitShiftCount<Size>()));
+        reinterpret_cast<UIW>(obj_.start) + sizeof(SIN));
+    return TUTF<Char>(start_ptr, start_ptr + (size >> TBitShiftCount<SIN>()));
   }
 
   /* Prints a char to the strand.
@@ -131,10 +136,10 @@ class TStrand : public TUTF<Char> {
   template <typename T>
   TUTF<Char> Print(T item) {
     UIW start = reinterpret_cast<UIW>(obj_.Begin());
-    Size size = *reinterpret_cast<Size*>(this);
+    SIN size = *reinterpret_cast<SIN*>(this);
     ASSERT((size & kAlignMask) == 0);
-    Char *cursor = reinterpret_cast<Char*>(start + sizeof(Size)),
-         *stop = cursor + (size >> TBitShiftCount<Size>()) - 1;
+    Char *cursor = reinterpret_cast<Char*>(start + sizeof(SIN)),
+         *stop = cursor + (size >> TBitShiftCount<SIN>()) - 1;
     cursor = TPrint<Char>(cursor, stop, item);
     if (!cursor) {
       // Attempt to grow.
@@ -149,8 +154,8 @@ class TStrand : public TUTF<Char> {
 
   /* Prints a char to the strand.
   @return A UTF. */
-  inline TUTF<Char> Print(const Char* string) {
-    return Print<const Char*>(string);
+  inline TUTF<Char> Print(const Char* string_) {
+    return Print<const Char*>(string_);
   }
 
   /* Prints the given value.
@@ -180,24 +185,21 @@ class TStrand : public TUTF<Char> {
 #endif
 
   /* Returns the stop of the begin. */
-  inline Char* Stop() { return TStringStop<Char, Size>(obj_.Begin()); }
+  inline Char* Stop() { return TStringStop<Char, SIN>(obj_.Begin()); }
 
   /* Returns the stop of the begin. */
-  inline char* End() { return TObjEnd<Size>(obj_); }
+  inline char* End() { return TObjEnd<SIN>(obj_); }
 
   /* Writes a nil-term char at the stop of the strand. */
   inline void Terminate() { *Stop() = 0; }
 
   /* Gets the begin of the Console begin. */
-  inline TObject<Size>& Obj() { return obj_; }
-
-  constexpr Size SizeBytes() {
-    return (Size)(sizeof(Size) + kLengthMax_ * sizeof(Char));
-  }
+  inline TObject<SIN>& Obj() { return obj_; }
 
  private:
-  TObject<Size> obj_;                  //< ASCII Obj.
-  TSocket<Size, SizeBytes()> socket_;  //< A socket on the stack.
+  TObject<SIN> obj_;            //< ASCII Obj.
+  TUTF<Char> utf_;              //< The UTF for the strand.
+  TSocket<SIN, kSize> socket_;  //< A socket on the stack.
 };
 
 #if USING_UTF1 == YES
@@ -216,20 +218,19 @@ using Strand4 = TStrand<char32_t>;
 @return The strand.
 @param  strand The strand.
 @param  value   The value to strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand,
-    const Char* string) {
-  return strand.Print(string);
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, const Char* string_) {
+  return strand.Print(string_);
 }
 
 /* Writes the given value to the strand.
 @param  strand The strand.
 @param  value   The value to strand.
 @return The strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, Char c) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, Char c) {
   return strand.Print(c);
 }
 
@@ -237,9 +238,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @param  strand The strand.
 @param  value The value to write to the strand.
 @return The strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, UI1 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, UI1 value) {
   return strand.Print(value);
 }
 
@@ -247,9 +248,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @param  strand The strand.
 @param  value The value to write to the strand.
 @return The strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, SI2 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, SI2 value) {
   return strand.Print(value);
 }
 
@@ -257,9 +258,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @param  strand The strand.
 @param  value The value to write to the strand.
 @return The strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, UI2 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, UI2 value) {
   return strand.Print(value);
 }
 
@@ -267,9 +268,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, SI4 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, SI4 value) {
   return strand.Print(value);
 }
 
@@ -277,9 +278,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, UI4 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, UI4 value) {
   return strand.Print(value);
 }
 
@@ -287,9 +288,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, SI8 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, SI8 value) {
   return strand.Print(value);
 }
 
@@ -297,9 +298,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, UI8 value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, UI8 value) {
   return strand.Print(value);
 }
 
@@ -308,9 +309,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand, FLT value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, FLT value) {
   return strand.Print(value);
 }
 
@@ -318,9 +319,9 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  value The value to write to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, AsciiFactory, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, AsciiFactory, kLengthMax_>& strand, DBL value) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, AsciiFactory, kLengthMax_>& operator<<(
+    _::TStrand<Char, AsciiFactory, kLengthMax_>& strand, DBL value) {
   return strand.Print(value);
 }
 #endif
@@ -329,10 +330,9 @@ _::TStrand<Size, Char, AsciiFactory, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  item The item to write to strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand,
-    _::TCenter<Char> item) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, _::TCenter<Char> item) {
   return strand.Print(item);
 }
 
@@ -340,25 +340,23 @@ _::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
 @return The strand.
 @param  strand The strand.
 @param  item The item to strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand,
-    _::TRight<Char> item) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, _::TRight<Char> item) {
   return strand.Print(item);
 }
 
 /* Prints a line of the given column_count to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand,
-    _::TLineChar<Char> item) {
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand, _::TLineChar<Char> item) {
   return strand.Print(item);
 }
 
 /* Prints a line strand of the given column_count to the strand. */
-template <typename Size, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
-_::TStrand<Size, Char, kFactory_, kLengthMax_>& operator<<(
-    _::TStrand<Size, Char, kFactory_, kLengthMax_>& strand,
+template <typename SIN, typename Char, AsciiFactory kFactory_, SIW kLengthMax_>
+inline _::TStrand<Char, kFactory_, kLengthMax_>& operator<<(
+    _::TStrand<Char, kFactory_, kLengthMax_>& strand,
     _::TLineString<Char> item) {
   return strand.Print(item);
 }

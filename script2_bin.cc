@@ -329,7 +329,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
         hash = Hash16(ui1, hash);
         ui2 = ui1;
         temp = 7;   //< Number of bits to shift ui1 to the left.
-        count = 5;  //< The max number of Varint4 bytes.
+        count = 5;  //< The max number_ of Varint4 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
             return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -360,7 +360,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
         hash = Hash16(ui1, hash);
         ui4 = ui1;
         ui2 = 7;    //< Number of bits to shift ui1 to the left.
-        count = 5;  //< The max number of Varint4 bytes.
+        count = 5;  //< The max number_ of Varint4 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
             return BInError(bin, kErrorBufferUnderflow, params, index, start);
@@ -443,7 +443,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
         hash = Hash16(ui1, hash);
         ui8 = ui1;
         ui2 = 7;    //< Number of bits to shift ui1 to the left.
-        count = 9;  //< The max number of Varint8 bytes.
+        count = 9;  //< The max number_ of Varint8 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
             return BInError(bin, kErrorBufferUnderflow, params, index, start);

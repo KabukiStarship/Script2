@@ -32,7 +32,7 @@ typedef enum Requests {
 } Request;
 
 enum {
-  NumRequests = 2,  //< The number of Requests.
+  NumRequests = 2,  //< The number_ of Requests.
 };
 
 /* Returns an array of pointers to strings that describe the program states.
@@ -220,7 +220,7 @@ class Room : public Operand {
   /* Handles Script Commands.
       @param text     Beginning of the Text socket.
       @param text_end End of the Text socket.
-      @return Returns nil upon success and an error string upon failure. */
+      @return Returns nil upon success and an error string_ upon failure. */
   virtual char CommandNext();
 
   /* Script expressions. */

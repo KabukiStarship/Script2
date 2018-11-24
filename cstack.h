@@ -110,7 +110,7 @@ inline UI StackSize (SI count) {
     return MemoryAlign8<UI> (size);
 }*/
 
-/* Gets the max number of elements in an stack with the specific index
+/* Gets the max number_ of elements in an stack with the specific index
 width. */
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
 inline SI StackCountMax() {
@@ -476,7 +476,7 @@ template <typename T = intptr_t, typename UI = uint, typename SI = int>
 class TStack {
  public:
   /* Initializes an stack of n elements of the given type.
-  @param count_max The max number of elements that can fit in memory in this
+  @param count_max The max number_ of elements that can fit in memory in this
   Stack. */
   TStack(SI count_max = 0) {
     // Align the count_max to a 64-bit word boundary
@@ -501,7 +501,7 @@ class TStack {
     StackClone<T, UI, SI>(Obj(), *other);
   }
 
-  /* Gets the max number of elements in an stack with the specific index
+  /* Gets the max number_ of elements in an stack with the specific index
   width. */
   inline SI GetElementsMax() { return StackCountMax<T, UI, SI>(); }
 

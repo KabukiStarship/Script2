@@ -185,11 +185,11 @@ template <typename T = SIW, typename Size = uint, typename Index = int>
 class TArray {
  public:
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number of elements in the array socket. */
+      @param max_elements The max number_ of elements in the array socket. */
   TArray(Index demension_count = 1) : start(ArrayNew<T, Size, Index>(1)) {}
 
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number of elements in the array socket. */
+      @param max_elements The max number_ of elements in the array socket. */
   Array(const Array& other)
       : size_array(other.size_array),
         size_stack(other.size_stack),
@@ -207,7 +207,7 @@ class TArray {
   /* Clones the other object; up-sizing the socket only if required. */
   void Clone(Array<T, Size, Index>& other) {}
 
-  /* Gets the number of dimensions. */
+  /* Gets the number_ of dimensions. */
   Index GetDimensionCount() { return stack->count; }
 
   /* Gets the dimensions array. */

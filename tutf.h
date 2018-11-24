@@ -62,16 +62,16 @@ inline Char TPrintableChar(Char value) {
 }
 
 /* Sets the strand to either the given value or empty strand if input
- * is nil. */
+is nil. */
 template <typename Char = char>
-inline Char* TStringSet(Char* string) {
-  if (!string) return TStringEmpty<Char>();
-  return string;
+inline Char* TStringSet(Char* string_) {
+  if (!string_) return TStringEmpty<Char>();
+  return string_;
 }
 
 /* Searches fro the strand line stop. */
 template <typename Char = char>
-const Char* TStringLineEnd(const Char* cursor, int column_count) {
+const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
   Char c;
   // Scroll to the stop of the line.
   c = *cursor++;
@@ -93,7 +93,7 @@ const Char* TStringLineEnd(const Char* cursor, int column_count) {
 @param column_coun In characters. */
 template <typename Char = char>
 const Char* TStringLineEnd(const Char* cursor, const Char* stop,
-                           int column_count) {
+                           int column_count = 80) {
   if (!cursor) {
     PRINTF("\nText buffer overflow!");
     return nullptr;
@@ -175,28 +175,28 @@ const Char* TStringSkipSpaces(const Char* cursor) {
 /* Attempts to find the given strand.
 @return Nil upon failed search or a pointer to the stop of the . */
 template <typename Char = char>
-const Char* TStringFind(const Char* string, const Char* query) {
-  ASSERT(string);
+const Char* TStringFind(const Char* string_, const Char* query) {
+  ASSERT(string_);
   ASSERT(query);
 
-  Char strand = *string,  //< Current strand Char.
-      t = *query,         //< Current query Char.
-      c = t;              //< The first Char of the query we're searching for.
-  if (c == 0)             //< We're not allowing empty queries.
+  Char strand = *string_,  //< Current strand Char.
+      t = *query,          //< Current query Char.
+      c = t;               //< The first Char of the query we're searching for.
+  if (c == 0)              //< We're not allowing empty queries.
     return nullptr;
-  const Char *start_of_query, *start = string;
+  const Char *start_of_query, *start = string_;
   query = TStringSkipSpaces<Char>(query);
 
   // Scroll through each Char and match it to the query Char.
   while (strand) {
     if (strand == c) {  // The first Char matches:
                         // Setup to compare the strings;
-      start_of_query = string;
+      start_of_query = string_;
       start = query;
       t = c;
       // check the rest of the Char:
       while (strand == t) {
-        strand = *(++string);
+        strand = *(++string_);
         t = *(++start);
         if (t == 0)  // Once we've reached the delimiter it's a match!
           return start_of_query;
@@ -205,7 +205,7 @@ const Char* TStringFind(const Char* string, const Char* query) {
       }
     }
     // The Char did not match so repeat the process for each Char.
-    strand = *(++string);
+    strand = *(++string_);
     t = *(++start);
   }
   // If we haven't found it by now it's not in the strand.
@@ -301,17 +301,17 @@ const Char* TStringEquals(const Char* cursor, const Char* stop,
 @return False if the strand is empty and true otherwise.
 @desc A strand is defined as empty if it is NIL or all whitespace. */
 template <typename Char = char>
-BOL TStringIsntEmpty(const Char* string) {
-  if (!string) return false;
-  Char c = *string;
+BOL TStringIsntEmpty(const Char* string_) {
+  if (!string_) return false;
+  Char c = *string_;
   while (c) {
     if (!TIsWhitespace<Char>(c)) return true;
-    c = *(++string);
+    c = *(++string_);
   }
   return false;
 }
 
-/* Checks to see if the string isn't empty or whitespace. */
+/* Checks to see if the string_ isn't empty or whitespace. */
 template <typename Char = char>
 BOL TStringIsntEmpty(const Char* cursor, const Char* stop) {
   if (!cursor) return false;
@@ -356,15 +356,15 @@ pointer to the nil-term char upon success.
 @param  strand The begin of the begin.
 @param  stop    The stop of the begin.
 @param  token  The token to utf.
-@param  column_count The number of columns to align right to. */
+@param  column_count The number_ of columns to align right to. */
 template <typename Char = char>
 Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
-                  int column_count) {
+                  int column_count = 80) {
   ASSERT(token);
   PRINTF("\ncursor:%p end:%p", cursor, stop);
   ASSERT(cursor <= stop);
 
-  if (cursor == nullptr || column_count < 1) return nullptr;
+  if (!cursor || column_count < 1) return nullptr;
 
   if (cursor + column_count > stop) {
     PRINT("\nBuffer overflow!");
@@ -432,16 +432,16 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
   return cursor + column_count;
 }
 
-/* Prints the given string center aligned to the given column_count. */
+/* Prints the given string_ center aligned to the given column_count. */
 template <typename Char = char>
-Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
-                   int column_count) {
+Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
+                   int column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
 
   // We need to leave at least one space to the left and right of
-  int length = TStringLength<Char>(string), offset;
-  PRINTF("\n\n    Printing \"%s\":%i column_count:%i", string, length,
+  int length = TStringLength<Char>(string_), offset;
+  PRINTF("\n\n    Printing \"%s\":%i column_count:%i", string_, length,
          column_count);
 
   if (column_count < length) {
@@ -451,7 +451,7 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
     }
     column_count -= offset;
     while (column_count-- > 0) {
-      *cursor++ = *string++;
+      *cursor++ = *string_++;
     }
     while (offset-- > 0) {
       *cursor++ = '.';
@@ -465,20 +465,20 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
 
   while (length-- > 0) *cursor++ = ' ';
 
-  char c = *string++;
+  char c = *string_++;
   while (c) {
     *cursor++ = c;
-    c = *string++;
+    c = *string_++;
   }
   while (offset-- > 0) *cursor++ = ' ';
   *cursor = 0;
-  PRINTF("\n    Printed:\"%s\"", string);
+  PRINTF("\n    Printed:\"%s\"", string_);
   return cursor;
 }
 
 /* Prints a line of the given column_count the given begin. */
 template <typename Char = char>
-Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count) {
+Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
   int l_column_count = column_count;
@@ -492,16 +492,16 @@ Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count) {
   return cursor;
 }
 
-/* Prints the given string repeated to make a line. */
+/* Prints the given string_ repeated to make a line. */
 template <typename Char = char>
-Char* TPrintLineString(Char* cursor, Char* stop, const Char* string,
-                       int column_count) {
+Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
+                       int column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
   if (cursor + column_count + 1 > stop) return nullptr;
 
   while (column_count-- > 0) {
-    char c = *string++;
+    char c = *string_++;
     if (!c) {
       cursor = 0;
     }
@@ -511,13 +511,34 @@ Char* TPrintLineString(Char* cursor, Char* stop, const Char* string,
   return cursor;
 }
 
+/* Prints a string_ to the given buffer without */
+template <typename Char = char>
+Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
+                 int column_count = 80) {
+  ASSERT(cursor && cursor < stop && string_);
+  if (column_count < 3) {
+  }
+  Char c = *string_++;
+
+  while (c) {
+    for (int i = column_count; i > 0; --i) {
+      *cursor++ = c;
+      c = *string_++;
+      if (cursor >= stop) return nullptr;
+      if (!c) {
+        *cursor++ = 0;
+        return cursor;
+      }
+    }
+  }
+  return cursor;
+}
+
 /* Prints the given socket to the COut. */
 template <typename Char = char>
 Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                    const void* end) {
-  ASSERT(begin);
-  ASSERT(cursor);
-  ASSERT(cursor < stop);
+  ASSERT(begin || cursor || cursor < stop);
 
   Char* buffer_begin = cursor;
   const Char *address_ptr = reinterpret_cast<const Char*>(begin),
@@ -593,267 +614,6 @@ Char TLowercase(Char c) {
   if ((c & 0x3f) == 3) return c - 64;
   return c;
 }
-
-/* A UTF-8, UTF-16, or UTF-32 Text token without any whitespace. */
-template <typename Char = char>
-class TToken {
- public:
-  /* Default constructor does nothing. */
-  TToken() { *string = 0; }
-
-  /* Prints the value to the text begin. */
-  TToken(Char character) { TPrint<Char>(string, string + kSize, character); }
-
-  /* Prints the value to the text begin. */
-  TToken(const Char* string) { TPrint<Char>(string, string + kSize, string); }
-
-  /* Prints the value to the text begin. */
-  TToken(SI4 value) { TPrint<Char>(string, string + kSize, value); }
-
-  /* Prints the value to the text begin. */
-  TToken(UI4 value) { TPrint<Char>(string, string + kSize, value); }
-
-  /* Prints the value to the text begin. */
-  TToken(SI8 value) { TPrint<Char>(string, string + kSize, value); }
-
-  /* Prints the value to the text begin. */
-  TToken(UI8 value) { TPrint<Char>(string, string + kSize, value); }
-
-#if SEAM >= _0_0_0__03
-  /* Prints the value to the text begin. */
-  TToken(FLT value) { TPrint<Char>(string, string + kSize, value); }
-
-  /* Prints the value to the text begin. */
-  TToken(DBL value) { TPrint<Char>(string, string + kSize, value); }
-#endif
-  /* Gets the number strand. */
-  const Char* String() { return string; }
-
- private:
-  enum { kSize = 31 };
-
-  Char string[kSize * sizeof(Char) + 1];  //< String begin.
-};
-
-/* Utility class for printing hex with operator<<. */
-template <typename Char = char>
-class TCenter {
- public:
-  /* Prints the value to the text begin. */
-  TCenter(const Char* string, int column_count)
-      : string(TStringSet<Char>(string)), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TCenter(SI4 value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TCenter(UI4 value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TCenter(SI8 value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TCenter(UI8 value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-#if SEAM >= _0_0_0__03
-  /* Prints the value to the text begin. */
-  TCenter(FLT value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TCenter(DBL value, int column_count)
-      : string(nullptr), number(value), column_count(column_count) {
-    // Nothing to do here!
-  }
-#endif
-
-  /* Gets the number strand. */
-  const Char* String() { return string; }
-
-  /* Gets the column_count. */
-  int GetColumnCount() { return column_count; }
-
- private:
-  const Char* string;   //< Pointer to the strand.
-  TToken<Char> number;  //< Pointer to a pointer to utf.
-  int column_count;     //< Number of columns to center.
-};
-
-/* Utility class for printing hex with operator<<. */
-template <typename Char = char>
-class TRight {
- public:
-  /* Prints the value to the text begin. */
-  TRight(const Char* string, int column_count)
-      : string_(TStringSet<Char>(string)), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TRight(SI4 value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TRight(UI4 value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TRight(SI8 value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TRight(UI8 value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-#if SEAM >= _0_0_0__03
-  /* Prints the value to the text begin. */
-  TRight(FLT value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-
-  /* Prints the value to the text begin. */
-  TRight(DBL value, int column_count)
-      : string_(nullptr), number_(value), column_count_(column_count) {
-    // Nothing to do here!
-  }
-#endif
-  /* Gets the number strand. */
-  const Char* String() { return string_; }
-
-  /* Gets the column_count. */
-  int GetColumnCount() { return column_count_; }
-
- private:
-  const Char* string_;   //< Pointer to the strand.
-  TToken<Char> number_;  //< Pointer to a pointer to utf.
-  int column_count_;     //< Number of columns to center.
-};
-
-/* Utility class for printing a single Char token line with operator<<. */
-template <typename Char = char>
-struct API TLineChar {
-  Char token;        //< Character to utf.
-  int column_count;  //< Column count.
-
-  /* Constructor. */
-  TLineChar(Char token, int column_count)
-      : token(token), column_count(column_count) {}
-};
-
-/* Utility class for printing a strand line with operator<<. */
-template <typename Char = char>
-struct API TLineString {
-  const Char* string;  //< Character to utf.
-  int column_count;    //< Column count.
-
-  /* Constructor. */
-  TLineString(const Char* string, int column_count)
-      : string(string), column_count(column_count) {}
-};
-
-/* AsciiFactory prints the begin to the console without deleting the
-begin.
-@return If (size == 0 && begin) then nil indicating success deleting the
-factory. If passing in a argument it will have to get passed through the obj.
-*/
-template <typename Size = int, typename Char = char>
-UIW* TCOut(UIW* start, SIW function, void* arg) {
-  if (function < kFactoryClone)
-    return TObjectFactory<Size>(start, function, arg);
-
-  if (!start) {
-    if (!arg) return nullptr;
-    Size size = *reinterpret_cast<Size*>(arg);
-    if (size <= 0) size = (Size)kObjSizeDefault;
-  }
-
-  Size size = *reinterpret_cast<Size*>(arg);
-  if (size > 0) {
-    size = TObjSizeRound<Size>(size);
-  }
-  if (start) return TObjClone<Size>(start);
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
-  Print(reinterpret_cast<const char*>(address));
-  return start;
-}
-
-/* AsciiFactory prints the begin to the console and deletes the
-begin. */
-template <typename Size = int, typename Char = char>
-UIW* TCOutAuto(UIW* start, SIW function, void* arg) {
-  UIW* result = TCOut<Char, Size>(start, function, arg);
-  if (!start) return result;
-  delete[] start;
-  return nullptr;
-}
-
-/* Returns the first char in the string socket. */
-template <typename Char = char, typename Size = int>
-inline Char* TStringStart(UIW* start) {
-  ASSERT(start);
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
-  return reinterpret_cast<Char*>(address);
-}
-
-/* Searches for the stop of the strand. */
-template <typename Char = char, typename Size = int>
-inline Char* TStringStop(UIW* start) {
-  ASSERT(start);
-
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
-  Size size = *reinterpret_cast<Size*>(start);
-  // Char* begin = reinterpret_cast<Char*>(address);
-  return reinterpret_cast<Char*>(address) + (size >> TBitShiftCount<Size>()) -
-         1;
-}
-
-/* Searches for the stop of the strand. */
-template <typename Char = char, typename Size = int>
-inline void TStringStop(CObject obj) {
-  return TStringStop<Char, Size>(obj);
-}
-
-/* A templated-C struct. */
-template <typename Char, typename Size>
-struct TCString {
-  Size size;  //< Size of the ASCII Object.
-};
-
-template <typename Char, typename Size>
-Char* TStringBegin(TCString<Char, Size>* string) {
-  ASSERT(string);
-}
-
-/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 string.*/
-template <typename Char, typename Size>
-struct TString {
-  Size size;  //< Size of the ASCII Object.
-};
 
 /* Universal Text Formatter.
 This class only stores the stop of begin pointer and a pointer to the write
@@ -1021,6 +781,288 @@ struct TUTF {
   }
 };
 
+/* A UTF-8, UTF-16, or UTF-32 Text token without any whitespace. */
+template <typename Char = char>
+class TToken {
+ public:
+  /* Default constructor does nothing. */
+  TToken() { *string_ = 0; }
+
+  /* Prints the value to the text begin. */
+  TToken(Char character) { TPrint<Char>(string_, string_ + kSize, character); }
+
+  /* Prints the value to the text begin. */
+  TToken(const Char* string_) {
+    TPrint<Char>(string_, string_ + kSize, string_);
+  }
+
+  /* Prints the value to the text begin. */
+  TToken(SI4 value) { TPrint<Char>(string_, string_ + kSize, value); }
+
+  /* Prints the value to the text begin. */
+  TToken(UI4 value) { TPrint<Char>(string_, string_ + kSize, value); }
+
+  /* Prints the value to the text begin. */
+  TToken(SI8 value) { TPrint<Char>(string_, string_ + kSize, value); }
+
+  /* Prints the value to the text begin. */
+  TToken(UI8 value) { TPrint<Char>(string_, string_ + kSize, value); }
+
+#if SEAM >= _0_0_0__03
+  /* Prints the value to the text begin. */
+  TToken(FLT value) { TPrint<Char>(string_, string_ + kSize, value); }
+
+  /* Prints the value to the text begin. */
+  TToken(DBL value) { TPrint<Char>(string_, string_ + kSize, value); }
+#endif
+  /* Gets the number_ strand. */
+  const Char* String() { return string_; }
+
+  TUTF<Char>& Print(TUTF<Char>& utf) {
+    return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string_));
+  }
+
+ private:
+  enum { kSize = 31 };
+
+  Char string_[kSize * sizeof(Char) + 1];  //< String buffer for the token.
+};
+
+/* Utility class for printing hex with operator<<. */
+template <typename Char = char>
+class TCenter {
+ public:
+  /* Prints the value to the text begin. */
+  TCenter(const Char* string_, int column_count = 80)
+      : string_(TStringSet<const Char>(string_)), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TCenter(SI4 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TCenter(UI4 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TCenter(SI8 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TCenter(UI8 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+#if SEAM >= _0_0_0__03
+  /* Prints the value to the text begin. */
+  TCenter(FLT value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TCenter(DBL value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count(column_count) {
+    // Nothing to do here!
+  }
+#endif
+
+  /* Gets the number_ strand. */
+  const Char* String() { return string_; }
+
+  /* Gets the column_count. */
+  int GetColumnCount() { return column_count; }
+
+  TUTF<Char>& Print(TUTF<Char>& utf) {
+    if (string_) {
+      return utf.Set(
+          _::TPrintCenter<Char>(utf.start, utf.stop, string_, column_count));
+    }
+    return utf.Set(_::TPrintCenter<Char>(utf.start, utf.stop, number_.String(),
+                                         column_count));
+  }
+
+ private:
+  const Char* string_;   //< Pointer to the strand.
+  TToken<Char> number_;  //< Pointer to a pointer to utf.
+  int column_count;      //< Number of columns to center.
+};
+
+/* Utility class for printing hex with operator<<. */
+template <typename Char = char>
+class TRight {
+ public:
+  /* Prints the value to the text begin. */
+  TRight(const Char* string_, int column_count = 80)
+      : string_(TStringSet<Char>(string_)), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TRight(SI4 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TRight(UI4 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TRight(SI8 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TRight(UI8 value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+#if SEAM >= _0_0_0__03
+  /* Prints the value to the text begin. */
+  TRight(FLT value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+
+  /* Prints the value to the text begin. */
+  TRight(DBL value, int column_count = 80)
+      : string_(nullptr), number_(value), column_count_(column_count) {
+    // Nothing to do here!
+  }
+#endif
+  /* Gets the number_ strand. */
+  const Char* String() { return string_; }
+
+  /* Gets the column_count. */
+  int GetColumnCount() { return column_count_; }
+
+  TUTF<Char>& Print(TUTF<Char>& utf) {
+    return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
+  }
+
+ private:
+  const Char* string_;   //< Pointer to the strand.
+  TToken<Char> number_;  //< Pointer to a pointer to utf.
+  int column_count_;     //< Number of columns to center.
+};
+
+/* Utility class for printing a single Char token line with operator<<. */
+template <typename Char = char>
+struct API TLineChar {
+  Char token;        //< Character to utf.
+  int column_count;  //< Column count.
+
+  /* Constructor. */
+  TLineChar(Char token, int column_count = 80)
+      : token(token), column_count(column_count) {}
+};
+
+/* Utility class for printing a strand line with operator<<. */
+template <typename Char = char>
+struct API TLineString {
+  const Char* string_;  //< Character to utf.
+  int column_count;     //< Column count.
+
+  /* Constructor. */
+  TLineString(const Char* string_, int column_count = 80)
+      : string_(string_), column_count(column_count) {}
+
+  TUTF<Char>& Print(TUTF<Char>& utf) {}
+};
+
+/* AsciiFactory prints the begin to the console without deleting the
+begin.
+@return If (size == 0 && begin) then nil indicating success deleting the
+factory. If passing in a argument it will have to get passed through the obj.
+*/
+template <typename Size = int, typename Char = char>
+UIW* TCOut(UIW* start, SIW function, void* arg) {
+  if (function < kFactoryClone)
+    return TObjectFactory<Size>(start, function, arg);
+
+  if (!start) {
+    if (!arg) return nullptr;
+    Size size = *reinterpret_cast<Size*>(arg);
+    if (size <= 0) size = (Size)kObjSizeDefault;
+  }
+
+  Size size = *reinterpret_cast<Size*>(arg);
+  if (size > 0) {
+    size = TObjSizeRound<Size>(size);
+  }
+  if (start) return TObjClone<Size>(start);
+  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
+  Print(reinterpret_cast<const char*>(address));
+  return start;
+}
+
+/* AsciiFactory prints the begin to the console and deletes the
+begin. */
+template <typename Size = int, typename Char = char>
+UIW* TCOutAuto(UIW* start, SIW function, void* arg) {
+  UIW* result = TCOut<Char, Size>(start, function, arg);
+  if (!start) return result;
+  delete[] start;
+  return nullptr;
+}
+
+/* Returns the first char in the string_ socket. */
+template <typename Char = char, typename Size = int>
+inline Char* TStringStart(UIW* start) {
+  ASSERT(start);
+  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
+  return reinterpret_cast<Char*>(address);
+}
+
+/* Searches for the stop of the strand. */
+template <typename Char = char, typename Size = int>
+inline Char* TStringStop(UIW* start) {
+  ASSERT(start);
+
+  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
+  Size size = *reinterpret_cast<Size*>(start);
+  // Char* begin = reinterpret_cast<Char*>(address);
+  return reinterpret_cast<Char*>(address) + (size >> TBitShiftCount<Size>()) -
+         1;
+}
+
+/* Searches for the stop of the strand. */
+template <typename Char = char, typename Size = int>
+inline void TStringStop(CObject obj) {
+  return TStringStop<Char, Size>(obj);
+}
+
+/* A templated-C struct. */
+template <typename Char, typename Size>
+struct TCString {
+  Size size;  //< Size of the ASCII Object.
+};
+
+template <typename Char, typename Size>
+Char* TStringBegin(TCString<Char, Size>* string_) {
+  ASSERT(string_);
+}
+
+/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 string_.*/
+template <typename Char, typename Size>
+struct TString {
+  Size size;  //< Size of the ASCII Object.
+};
+
 /* Queries the given strand for the given query. */
 template <typename Char = char>
 int StringQuery(const Char* cursor, const Char* stop, const Char* query) {
@@ -1094,8 +1136,8 @@ TUTF<Char> TCOut() {
 @param  utf The utf.
 @param  value   The value to utf. */
 template <typename Char = char>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string));
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
+  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string_));
 }
 
 /* Writes the given value to the utf.
@@ -1208,16 +1250,22 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
   return utf.Set(_::TPrint<Char>(utf.start, utf.stop, item));
 }
 
-/* Prints a line of the given column_count to the utf. */
+/* Prints a TLineChar<Char> to the UTF. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineChar<Char> line) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
+  return line.Print(utf);
 }
 
-/* Prints a line strand of the given column_count to the utf. */
+/* Prints a TLineString<Char> to the UTF. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineString<Char> line) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, line));
+  return line.Print(utf);
+}
+
+/* Prints a TLineString<Char> to the UTF. */
+template <typename Char = char>
+_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TToken<Char> token) {
+  return token.Print(utf);
 }
 
 #endif  //< #if INCLUDED_SCRIPT_TUTF

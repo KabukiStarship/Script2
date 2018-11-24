@@ -149,13 +149,13 @@ enum {
   kMaxFloorsCount = CRABS_MAX_WALLS,  //< Size of the Room Floor (socket).
   kSlotSizeMin = 128,                 //< Min size of a Slot - 1.
   kMaxErrors = CRABS_MAX_ERRORS,      //< Max errors before blowing up.
-  kParamsMax = CRABS_MAX_PARAMS,      //< Max number of parameters.
+  kParamsMax = CRABS_MAX_PARAMS,      //< Max number_ of parameters.
   kWordAddressMask = kWordBitsMask,   //< For masking the word address.
   kTimeoutMicroseconds = COM_TIMEOUT_TICKS,  //< Timeout time in microseconds.
   kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (kADR) length.
   kMinStackSize = 1,                             //< Min CCrabs stack size.
   kOpNameLengthMax = CRABS_OP_MAX_NAME_LENGTH,
-  // Max length of a Op description string.
+  // Max length of a Op description string_.
   kOpDescriptionLengthMax = CRABS_OP_MAX_DECRABSION_LENGTH,
   // Max length of a Text.
   kCharCount = CRABS_TEXT_LENGTH,
@@ -226,8 +226,8 @@ enum { kMaxNumSlots = 0xffffffff };
 #endif
 
 /* Below are representations of not-a-numbers.
-With signed integers, there is one additional negative number than positive
-numbers due to  the 0. In the CRABS Protocol, this number is used to mark
+With signed integers, there is one additional negative number_ than positive
+numbers due to  the 0. In the CRABS Protocol, this number_ is used to mark
 invalid or corrupted data. If you are not using them and require the ROM
 space, it will not harm anything to comment them out.
 
@@ -240,7 +240,7 @@ if (-1 == NaN_SI4)
 @endcode
 */
 
-// int-sized not-a-number.
+// int-sized not-a-number_.
 enum {
   NaNInt = sizeof(int) == 4 ? static_cast<int>(0xFFFFFFFF)
                             : sizeof(int) == 2 ? static_cast<int>(0xFFFF) : 0,

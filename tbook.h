@@ -30,7 +30,7 @@ namespace _ {
 /* A multimap created from contiguous memory.
 @ingroup Book
 A multimap is like a Python dictionary or C++ map, the difference being a
-TMultimap can contain nested TMultimap (string). The key design difference
+TMultimap can contain nested TMultimap (string_). The key design difference
 between both Python dictionaries and C++ maps are Sets do not contains
 points, and instead works using offsets.
 
@@ -104,9 +104,9 @@ constexpr Size MultimapSizeMin(I item_count) {
 };
 
 enum {
-  kMaxNumPagesSet2 = 120,                //< The number of pages in a Set2.
-  kMaxNumPagesSet4 = 8 * 1024,           //< The number of pages in a Set4.
-  kMaxNumPagesSet8 = 256 * 1024 * 1024,  //< The number of pages in a Set8.
+  kMaxNumPagesSet2 = 120,                //< The number_ of pages in a Set2.
+  kMaxNumPagesSet4 = 8 * 1024,           //< The number_ of pages in a Set4.
+  kMaxNumPagesSet8 = 256 * 1024 * 1024,  //< The number_ of pages in a Set8.
   kOverheadPerSet2Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerSet4Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
   kOverheadPerSet8Index = MultimapOverheadPerIndex<UI1, UI2, UI2>(),
@@ -369,7 +369,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
 
         SetPrint(multimap);
         PRINTF("Done inserting.\n");
-        // Then it was a collision so the table doesn't contain string.
+        // Then it was a collision so the table doesn't contain string_.
         return item_count;
       }
       PRINTF("table already contains the key\n");
@@ -543,7 +543,7 @@ I MultimapFind(TMap<Index, I>* multimap, const char* key) {
           Hash16(keys - key_offsets[index]));
 
       if (strcmp(key, keys - key_offsets[index]) != 0) {
-        //< It was a collision so the table doesn't contain string.
+        //< It was a collision so the table doesn't contain string_.
         PRINTF(" but it was a collision and did not find key.\n");
         return ~((I)0);
       }

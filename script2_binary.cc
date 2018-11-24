@@ -207,22 +207,22 @@ UI8 Negative(SI8 value) { return (UI8)(-value); }
 UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
 BOL IsNaN(SI1 value) {
-  return (value > TNaNUnsigned<SI1>()) && (value > TNaNSigned<SI1, UI1>());
+  return (value > TUnsignedNaN<SI1>()) && (value > TSignedNaN<SI1, UI1>());
 }
 
-BOL IsNaN(UI1 value) { return value > TNaNUnsigned<UI1>(); }
+BOL IsNaN(UI1 value) { return value > TUnsignedNaN<UI1>(); }
 
-BOL IsNaN(SI2 value) { return value > TNaNSigned<SI2, UI2>(); }
+BOL IsNaN(SI2 value) { return value > TSignedNaN<SI2, UI2>(); }
 
-BOL IsNaN(UI2 value) { return value > TNaNUnsigned<UI2>(); }
+BOL IsNaN(UI2 value) { return value > TUnsignedNaN<UI2>(); }
 
-BOL IsNaN(SI4 value) { return value > TNaNSigned<SI4, UI4>(); }
+BOL IsNaN(SI4 value) { return value > TSignedNaN<SI4, UI4>(); }
 
-BOL IsNaN(UI4 value) { return value > TNaNUnsigned<UI4>(); }
+BOL IsNaN(UI4 value) { return value > TUnsignedNaN<UI4>(); }
 
-BOL IsNaN(SI8 value) { return value > TNaNSigned<SI8, UI8>(); }
+BOL IsNaN(SI8 value) { return value > TSignedNaN<SI8, UI8>(); }
 
-BOL IsNaN(UI8 value) { return value > TNaNUnsigned<UI8>(); }
+BOL IsNaN(UI8 value) { return value > TUnsignedNaN<UI8>(); }
 
 char HexNibbleToLowerCase(UI1 b) {
   b = b & 0xf;
@@ -498,9 +498,9 @@ UI4 Value(FLT value) { return *reinterpret_cast<UI4*>(&value); }
 
 UI8 Value(DBL value) { return *reinterpret_cast<UI8*>(&value); }
 
-BOL IsNaNPositive(SI1 value) { return value > TNaNUnsigned<SI1>(); }
+BOL IsNaNPositive(SI1 value) { return value > TUnsignedNaN<SI1>(); }
 
-BOL IsNaNNegative(SI1 value) { return value > TNaNUnsigned<SI1>(); }
+BOL IsNaNNegative(SI1 value) { return value > TUnsignedNaN<SI1>(); }
 
 BOL IsNaN(FLT value) { return isnan(value); }
 
@@ -527,8 +527,8 @@ UI ShiftLeftRight(UI value, int left_bits, int right_bits) {
   return value >> right_bits;
 }
 
-/* Creates a mask with the given number of zeros in the MSb(s).
-@param msb_zero_count The number of zeros in the Most Significant bits. */
+/* Creates a mask with the given number_ of zeros in the MSb(s).
+@param msb_zero_count The number_ of zeros in the Most Significant bits. */
 template <typename UI>
 UI CreateMaskLSb(UI msb_zero_count) {
   UI mask = 0;
@@ -536,7 +536,7 @@ UI CreateMaskLSb(UI msb_zero_count) {
 }
 
 /* Masks off the lower bits.
-@param msb_zero_count The number of zeros in the Most Significant bits. */
+@param msb_zero_count The number_ of zeros in the Most Significant bits. */
 template <typename UI>
 UI MaskLSb(UI value, UI msb_zero_count) {
   return value & CreateMaskLSb<UI>(msb_zero_count);

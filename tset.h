@@ -32,7 +32,7 @@ struct API TSet {
   TKey table_size,   //< Size of the (optional) key strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.
   Index item_count,  //< Number of items.
-      count_max;     //< Max number of items that can fit in the header.
+      count_max;     //< Max number_ of items that can fit in the header.
 };
 
 /* A Type-Value Tuple. */
@@ -53,8 +53,8 @@ struct Tuple3 {
 
     | Name       | Code | Description                                 |
     |-----------:|:----:|:--------------------------------------------|
-    |      Array | ARY  | A packed c-style array of POD number types. |
-    |      Stack | STK  | A stack of POD number types.                |
+    |      Array | ARY  | A packed c-style array of POD number_ types. |
+    |      Stack | STK  | A stack of POD number_ types.                |
     |       List | kLST  | A stack of Type-Value tuples.               |
     |        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
     |   Multimap | kDIC  | A multimap of Key-Value tuples.             |

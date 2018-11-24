@@ -36,7 +36,7 @@ stack_height, size_bytes, and header_size that is a multiple of 8 as well as
 being .
 
 It is easiest to explain this data structure in terms of the Socket. Sockets
-use a TMap to map a Slot number to a slot.
+use a TMap to map a Slot number_ to a slot.
 
 # TMap Data Structure
 
@@ -148,9 +148,9 @@ constexpr Size MapSizeRequired(Index count) {
 };
 
 enum {
-  kMaxNumPagesMap2 = 255,                //< The number of pages in a Map2.
-  kMaxNumPagesMap4 = 8 * 1024,           //< The number of pages in a Map4.
-  kMaxNumPagesMap8 = 256 * 1024 * 1024,  //< The number of pages in a Map8.
+  kMaxNumPagesMap2 = 255,                //< The number_ of pages in a Map2.
+  kMaxNumPagesMap4 = 8 * 1024,           //< The number_ of pages in a Map4.
+  kMaxNumPagesMap8 = 256 * 1024 * 1024,  //< The number_ of pages in a Map8.
   kOverheadPerMap2Index = MapOverheadPerIndex<UI2, SI2, SI1>(),
   kOverheadPerMap4Index = MapOverheadPerIndex<UI4, SI4, SI2>(),
   kOverheadPerMap8Index = MapOverheadPerIndex<UI8, SI8, SI4>(),
@@ -438,7 +438,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
 
         MapPrint(map);
         PRINT("\nDone inserting.");
-        // Then it was a collision so the table doesn't contain string.
+        // Then it was a collision so the table doesn't contain string_.
         return count;
       }
       PRINT("\nTable already contains the key");

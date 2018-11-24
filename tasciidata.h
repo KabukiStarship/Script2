@@ -52,24 +52,24 @@ typedef enum AsciiTypes {
   kUI1,      //< 2.  8-bit unsigned integer.
   kSI2,      //< 3.  16-bit signed integer.
   kUI2,      //< 4.  16-bit unsigned integer.
-  kHLF,      //< 5.  16-bit floating-point number.
+  kHLF,      //< 5.  16-bit floating-point number_.
   kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
   kSI4,      //< 7.  32-bit signed integer.
   kUI4,      //< 8.  32-bit unsigned integer.
-  kFLT,      //< 9.  32-bit floating-point number.
+  kFLT,      //< 9.  32-bit floating-point number_.
   kTMS,      //< 10. 32-bit second since epoch timestamp.
   kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
   kTME,      //< 12. 64-bit second since epoch timestamp.
   kSI8,      //< 13. 64-bit signed integer.
   kUI8,      //< 14. 64-bit unsigned integer.
-  kDBL,      //< 15. 64-bit floating-point number.
+  kDBL,      //< 15. 64-bit floating-point number_.
   kSIH,      //< 16. 128-bit (Hexadeca-bit) signed integer.
   kUIH,      //< 17. 128-bit (Hexadeca-bit) unsigned integer.
-  kDEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number.
+  kDEC,      //< 18. 128-bit (Hexadeca-bit) floating-point number_.
   kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
   kADR,      //< 20. UTF-8 Operand stack address.
-  kSTR,      //< 21. A UTF-8 string.
-  kTKN,      //< 22. A UTF-8 string token without whitespace.
+  kSTR,      //< 21. A UTF-8 string_.
+  kTKN,      //< 22. A UTF-8 string_ token without whitespace.
   kBSQ,      //< 23. B-Sequence.
   kOBJ,      //< 24. N-UI1 object.
   kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
@@ -93,9 +93,9 @@ inline BOL TypeIsValid(SIN type) {
 /* Aligns the given pointer to the correct word boundary for the type. */
 API void* TypeAlign(SIN type, void* value);
 
-/* An ROM string for one of the 32 types.
+/* An ROM string_ for one of the 32 types.
     C++11 variadic templates ensure there is only one copy in of the given
-    string in ROM. */
+    string_ in ROM. */
 template <char kCharA_, char kCharB_, char kCharC_>
 inline UI4 T() {
   return ((UI4)kCharA_) & (((UI4)kCharB_) << 8) & (((UI4)kCharC_) << 16);
@@ -244,7 +244,7 @@ Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
 #if USING_UTF8
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
@@ -260,7 +260,7 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number or
+@return Returns a pointer to the next char after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
@@ -279,7 +279,7 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next char after the stop
-of the read number or nil upon failure.
+of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
