@@ -1,5 +1,5 @@
-ConsScript C++ Style Guide
-=========================================
+ASCII C++ Style Guide
+=====================
 
 ### Output Parameters
 

@@ -61,7 +61,7 @@ TStrand<UI4> (TCOutAuto<>) << "Hello world!";
 @endcode
 */
 template <typename Char = char, AsciiFactory kFactory_ = TCOutAuto<Char>,
-          SIN kLengthMax_ = 63 - sizeof(SIN)>
+          SIN kLengthMax_ = 64>
 class TStrand {
  public:
   enum {

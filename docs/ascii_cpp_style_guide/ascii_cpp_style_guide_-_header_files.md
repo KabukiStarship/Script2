@@ -1,5 +1,5 @@
-Script C++ Style Guide
-=========================================
+ASCII C++ Style Guide
+=====================
 
 ## Header Files
 

@@ -289,39 +289,6 @@
     <None Include="docs\experimental\script_distributed_nomination_system_specification_rfc.md">
       <Filter>script2\docs\experimental</Filter>
     </None>
-    <None Include="docs\style_guide\script_style_guide.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_c_plus_plus.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_classes.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_comments.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_exceptions_to_the_rules.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_formatting.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_functions.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_header_files.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_naming.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_other.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
-    <None Include="docs\style_guide\script_style_guide_-_scoping.md">
-      <Filter>script2\docs\style_guide</Filter>
-    </None>
     <None Include="0_0_0.13_seam.s2">
       <Filter>script2</Filter>
     </None>
@@ -333,6 +300,39 @@
     </None>
     <None Include="0_0_0.release.inl">
       <Filter>script2</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_c_plus_plus.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_classes.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_comments.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_exceptions_to_the_rules.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_formatting.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_functions.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_header_files.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_naming.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_other.md">
+      <Filter>script2\docs\style_guide</Filter>
+    </None>
+    <None Include="docs\style_guide\ascii_cpp_style_guide_-_scoping.md">
+      <Filter>script2\docs\style_guide</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

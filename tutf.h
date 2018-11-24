@@ -651,7 +651,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                          reinterpret_cast<UIW>(address_ptr) + size);
 }
 
-/* . */
+/* Converts the given Char to lowercase. */
 template <typename Char = char>
 Char TLowercase(Char c) {
   if ((c & 0x3f) == 3) return c - 64;
@@ -684,7 +684,6 @@ struct TUTF {
       : start(reinterpret_cast<Char*>(start)),
         stop(TPtr<Char>(start, size - 1)) {
     ASSERT(start);
-    ASSERT(ObjSizeIsValid<Size>(size, 8));
   }
 
   /* Initializes the Utf& from the given begin pointers.
