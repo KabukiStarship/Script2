@@ -558,10 +558,10 @@ of the read number_ or nil upon failure. */
 API const char* Scan(const char* text, DBL& result);
 
 /* AsciiFactory Prints the socket to the console as a UTF-8 string_. */
-UIW* COutUtf8(UIW* socket, SIW size);
+UIW* COutUtf8(UIW* socket, SIW function, void* arg);
 
 /* Prints the socket to the console as a UTF-8 string_. */
-void COutAutoUtf8(UIW* socket);
+UIW* COutAutoUtf8(UIW* socket, SIW function, void* arg);
 
 /* Utility class for printing strings.
 This class only stores the stop of socket pointer and a pointer to the write

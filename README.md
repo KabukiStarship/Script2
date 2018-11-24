@@ -8,7 +8,7 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 * ASCII Data Types and the ASCII Factory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
 * Rapid compile time using 3-file Translation Units with unique names an separated C++ templates.
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
-* Code auto-formatted to Google C++ Style Guide with custom ASCII C++ Style Guide.
+* ASCII C++ Style Guide is a modified version of the Google C++ Style Guide.
 
 ## ASCII Data
 
