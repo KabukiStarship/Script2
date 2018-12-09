@@ -35,7 +35,7 @@ typedef enum BOutStates {
 /* B-Output ring socket socket. */
 struct API BOut {
   UIT size;            //< Size of the B-Output.
-  volatile UIT start;  //< Starting index of the ring-socket data.
+  volatile UIT begin;  //< Starting index of the ring-socket data.
   UIT stop,            //< Stopping index of the ring-socket data.
       read;            //< Address that the BOut device is reading from.
 };

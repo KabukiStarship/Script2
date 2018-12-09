@@ -28,18 +28,18 @@ namespace _ {
 /* A Slot in a Door in a Chinese Room to pass messages through.
 A Slot is Ring Buffer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
-pointers for the (socket) start and (data) start of the ring socket and
+pointers for the (socket) begin and (data) begin of the ring socket and
 you may write packed data.
 
 */
 struct Slot {
   char *stop,  //< Stop of the data in the ring socket.
       *stop,   //< End of the ring socket.
-      *start,  //< Beginning of the ring socket.
-      *start;  //< Start of the data in the ring socket.
+      *begin,  //< Beginning of the ring socket.
+      *begin;  //< Start of the data in the ring socket.
 
-  /* Initializes the ring socket with the given socket start and size.
-  @param start Pointer to the beginning of the ring socket.
+  /* Initializes the ring socket with the given socket begin and size.
+  @param begin Pointer to the beginning of the ring socket.
   @param size  The size of the ring socket in bytes. */
   Slot(UIW* socket, UIW size);
 
@@ -49,13 +49,13 @@ struct Slot {
   /* Initializes the slot from the BIn. */
   Slot(BOut* bout);
 
-  /* Sets the ring socket to the given socket start and size.
-      @param start Pointer to the beginning of the ring socket.
+  /* Sets the ring socket to the given socket begin and size.
+      @param begin Pointer to the beginning of the ring socket.
       @param size  The size of the ring socket in bytes. */
   inline BOL Set(UIW* socket, UIW size) {
     if (!socket) return true;
     char* l_begin = reinterpret_cast<char*>(socket);
-    start = start = stop = l_begin;
+    begin = begin = stop = l_begin;
     stop = l_begin + size;
     return false;
   }
@@ -66,7 +66,7 @@ struct Slot {
   void* Contains(void* address);
 
   /* Clears the socket without zeroing it out. */
-  inline void Clear() { start = stop = start; }
+  inline void Clear() { begin = stop = begin; }
 
   /* Zeros out the Slot. */
   void Wipe();

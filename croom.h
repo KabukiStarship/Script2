@@ -242,7 +242,7 @@ class Room : public Operand {
   Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
       *device_,                        //< DC4: the current device control.
       *devices_;               //< Pointer to the current device control.
-  UIW start[kFloorSizeWords];  //< Room Floor socket.
+  UIW begin[kFloorSizeWords];  //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

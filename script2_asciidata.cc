@@ -108,19 +108,19 @@ void* TypeAlign(SIN type, void* value) {
 }
 /*
 template <typename Char, typename UI>
-inline char* WriteString(char* start, char* stop, const void* value) {
-  start = AlignUpPointer<char>(start);
-  if (stop - start < 2 * sizeof(UI)) return nullptr;
+inline char* WriteString(char* begin, char* stop, const void* value) {
+  begin = AlignUpPointer<char>(begin);
+  if (stop - begin < 2 * sizeof(UI)) return nullptr;
   const Char* source = reinterpret_cast<const Char*>(value);
   UI length = TStringLength<UI, Char>(source);
-  UI* target = reinterpret_cast<UI*>(start);
+  UI* target = reinterpret_cast<UI*>(begin);
   *target++ = length;
   return SocketCopy(target, stop, value, length + sizeof(Char));
 }*/
 
 template <typename UI>
-inline char* WriteObj(char* start, char* stop, const void* value) {
-  UI* target = AlignUpPointer<UI>(start);
+inline char* WriteObj(char* begin, char* stop, const void* value) {
+  UI* target = AlignUpPointer<UI>(begin);
   const UI* source = reinterpret_cast<const UI*>(value);
   UI size = *source++;
   if (size < sizeof(UI) || size >=) return nullptr;
@@ -128,32 +128,32 @@ inline char* WriteObj(char* start, char* stop, const void* value) {
   return SocketCopy(target, stop, value, size - sizeof(UI));
 }
 
-char* Write(char* start, char* stop, SIN type, const void* value) {
+char* Write(char* begin, char* stop, SIN type, const void* value) {
   // Algorithm:
   // 1.) Determine type.
-  // 2.) Align start pointer to type width.
-  // 3.) Check for enough room in start-stop socket.
-  // 4.) Use SocketCopy to copy the data into the given start-stop socket.
+  // 2.) Align begin pointer to type width.
+  // 3.) Check for enough room in begin-stop socket.
+  // 4.) Use SocketCopy to copy the data into the given begin-stop socket.
 
-  if (!start || start >= stop || !value || !TypeIsValid(type)) return nullptr;
+  if (!begin || begin >= stop || !value || !TypeIsValid(type)) return nullptr;
 
   if (type <= kUI1) {
-    char* target_1 = reinterpret_cast<char*>(start);
+    char* target_1 = reinterpret_cast<char*>(begin);
     *target_1++ = *reinterpret_cast<const char*>(value);
     return target_1;
   }
   if (type <= kBOL) {
-    char16_t* target_2 = TAlignUp2<char16_t>(start);
+    char16_t* target_2 = TAlignUp2<char16_t>(begin);
     *target_2++ = *reinterpret_cast<const char16_t*>(value);
     return reinterpret_cast<char*>(target_2);
   }
   if (type <= kTMS) {
-    char32_t* target_4 = AlignUp<char32_t>(start, 3);
+    char32_t* target_4 = AlignUp<char32_t>(begin, 3);
     *target_4++ = *reinterpret_cast<const char32_t*>(value);
     return reinterpret_cast<char*>(target_4);
   }
   if (type <= kDEC) {
-    UI8* target_8 = AlignUp<UI8>(start, 7);
+    UI8* target_8 = AlignUp<UI8>(begin, 7);
     const UI8* source_8 = reinterpret_cast<const UI8*>(value);
     *target_8++ = *source_8++;
     if (type == kDEC) {
@@ -165,39 +165,39 @@ char* Write(char* start, char* stop, SIN type, const void* value) {
   if (TypeIsString(type)) {
     switch (type >> 6) {
       case 0:
-        return TPrint<char>(start, stop, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, stop, reinterpret_cast<const char*>(value));
       case 1:
-        return TPrint<char>(start, stop, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, stop, reinterpret_cast<const char*>(value));
       case 2:
-        return TPrint<char>(start, stop, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, stop, reinterpret_cast<const char*>(value));
       case 3:
         return reinterpret_cast<char*>(TPrint<char16_t>(
-            reinterpret_cast<UI2*>(start), reinterpret_cast<UI2*>(stop),
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
             reinterpret_cast<const UI2*>(value)));
       case 4:
-        return TPrint<char>(start, stop, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, stop, reinterpret_cast<const char*>(value));
       case 5:
         return reinterpret_cast<char*>(TPrint<char16_t>(
-            reinterpret_cast<UI2*>(start), reinterpret_cast<UI2*>(stop),
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
             reinterpret_cast<const UI2*>(value)));
       case 6:
-        return TPrint<char>(start, stop, reinterpret_cast<const char*>(value));
+        return TPrint<char>(begin, stop, reinterpret_cast<const char*>(value));
       case 7:
         return reinterpret_cast<char*>(TPrint<char16_t>(
-            reinterpret_cast<UI2*>(start), reinterpret_cast<UI2*>(stop),
+            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
             reinterpret_cast<const UI2*>(value)));
     }
   }
   char array_type = type >> 6;
   switch (array_type) {
     case 0:
-      return WriteObj<UI1>(start, stop, value);
+      return WriteObj<UI1>(begin, stop, value);
     case 1:
-      return WriteObj<UI2>(start, stop, value);
+      return WriteObj<UI2>(begin, stop, value);
     case 2:
-      return WriteObj<UI4>(start, stop, value);
+      return WriteObj<UI4>(begin, stop, value);
     case 3:
-      return WriteObj<UI8>(start, stop, value);
+      return WriteObj<UI8>(begin, stop, value);
   }
   return nullptr;
 }
@@ -221,32 +221,32 @@ inline int TypeSizeWidthCode(SIN type) { return type >> 6; }
 
 #if USING_UTF8
 namespace _ {
-char* Print(char* start, char* stop, SIN type, const void* value) {
-  return TPrint<char>(start, stop, type, value);
+char* Print(char* begin, char* stop, SIN type, const void* value) {
+  return TPrint<char>(begin, stop, type, value);
 }
 _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.start, utf.stop, item.type, item.value));
+  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 }  // namespace _
 #endif
 #if USING_UTF16
 namespace _ {
-char16_t* Print(char16_t* start, char16_t* stop, SIN type, const void* value) {
-  return TPrint<char16_t>(start, stop, type, value);
+char16_t* Print(char16_t* begin, char16_t* stop, SIN type, const void* value) {
+  return TPrint<char16_t>(begin, stop, type, value);
 }
 }  // namespace _
 _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.start, utf.stop, item.type, item.value));
+  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 #if USING_UTF32
 namespace _ {
-char32_t* Print(char32_t* start, char32_t* stop, SIN type, const void* value) {
-  return TPrint<char32_t>(start, stop, type, value);
+char32_t* Print(char32_t* begin, char32_t* stop, SIN type, const void* value) {
+  return TPrint<char32_t>(begin, stop, type, value);
 }
 }  // namespace _
 _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.start, utf.stop, item.type, item.value));
+  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 

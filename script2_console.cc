@@ -45,13 +45,13 @@ const char* ArgsToString(int arg_count, char** args) {
     return args[1];
   }
   PRINT_ARGS;
-  char *start = args[1], *stop = args[arg_count - 1] - 1;
-  while (stop != start) {
+  char *begin = args[1], *stop = args[arg_count - 1] - 1;
+  while (stop != begin) {
     char c = *stop;
     if (!c) c = ' ';
     --stop;
   }
-  return start;
+  return begin;
 }
 #undef PRINT_ARGS
 
@@ -395,8 +395,8 @@ void PrintSocket(const char* begin, const char* end) {
   PrintHex(address_ptr + size);
 }
 
-void PrintSocket(const void* start, SIW size) {
-  const char* begin_char = reinterpret_cast<const char*>(start);
+void PrintSocket(const void* begin, SIW size) {
+  const char* begin_char = reinterpret_cast<const char*>(begin);
   return PrintSocket(begin_char, begin_char + size);
 }
 

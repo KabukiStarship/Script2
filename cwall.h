@@ -80,7 +80,7 @@ class Wall {
  private:
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
   size_t size_bytes_;      //< Size of the Wall in bytes.
-  UIW* start;              //< The Wall's socket.
+  UIW* begin;              //< The Wall's socket.
   TCArray<Door*>* doors_;  //< The doors in the room.
 };
 

@@ -485,20 +485,20 @@ class TStack {
     }
     UI size = StackSize<T, UI, SI>(count_max);
     uintptr_t* socket = new uintptr_t[size >> kWordBitCount];
-    obj_->start = socket;
+    obj_->begin = socket;
     StackInit(socket, size, count_max);
   }
 
   /* Copy constructor. */
-  TStack(const TStack& other) : obj_(other.Obj()) {}
+  TStack(const TStack& other) : obj_(other.CObj()) {}
 
   /* Deallocates the buffer_. */
   ~TStack() {}
 
-  TStack<T, UI, SI>& Clone() { StackClone<T, UI, SI>(Obj()); }
+  TStack<T, UI, SI>& Clone() { StackClone<T, UI, SI>(CObj()); }
 
   TStack<T, UI, SI>& Clone(TStack<T, UI, SI>& other) {
-    StackClone<T, UI, SI>(Obj(), *other);
+    StackClone<T, UI, SI>(CObj(), *other);
   }
 
   /* Gets the max number_ of elements in an stack with the specific index
@@ -506,35 +506,35 @@ class TStack {
   inline SI GetElementsMax() { return StackCountMax<T, UI, SI>(); }
 
   /* Gets the size of the entire Stack, including header, in bytes. */
-  inline UI GetSize() { return Obj()->size; }
+  inline UI GetSize() { return CObj()->size; }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
   inline UI GetSizeMin() { return StackSizeMin<T, UI, SI>(); }
 
   /* Gets a pointer to the first element in the stack. */
-  inline T* Elements() { return StackBegin<T, UI, SI>(Obj()); }
+  inline T* Elements() { return StackBegin<T, UI, SI>(CObj()); }
 
   /* Inserts the item into the stack at the given index.
   @param item  The item to insert.
   @param index The index to insert at.
   @return -1 if a is nil and -2 if the stack is full. */
-  T Insert(T item, T index) { return TStack<T, UI, SI>(Obj(), item, index); }
+  T Insert(T item, T index) { return TStack<T, UI, SI>(CObj(), item, index); }
 
   /* Removes the given index from the stack.
   @param  index The index the item to remove.
   @return True if the index is out of bounds. */
-  bool Remove(SI index) { return TStackRemove<T, UI, SI>(Obj(), index); }
+  bool Remove(SI index) { return TStackRemove<T, UI, SI>(CObj(), index); }
 
   /* Adds the given item to the stop of the stack.
   @param  item The item to push onto the stack.
   @return The index of the newly stacked item. */
   SI Push(T item) {
-    SI result = TStackPush<T, UI, SI>(Obj(), item);
+    SI result = TStackPush<T, UI, SI>(CObj(), item);
     // std::count << "\n  Pushing " << item;
     if (result < 0) {
       // Printf (" and growing.");
       Grow();
-      SI result = TStackPush<T, UI, SI>(Obj(), item);
+      SI result = TStackPush<T, UI, SI>(CObj(), item);
       // COUT << this;
       if (result < 0) return -1;
       return result;
@@ -547,7 +547,7 @@ class TStack {
   @param  a The stack.
   @return The item popped off the stack. */
   inline T Pop() {
-    T value = TStackPop<T, UI, SI>(Obj());
+    T value = TStackPop<T, UI, SI>(CObj());
     // utf << "\n  Popping " << value;
     return value;
   }
@@ -556,17 +556,17 @@ class TStack {
   @note We do not delete the item at the
   @param  a The stack.
   @return The item popped off the stack. */
-  inline T Peek() { return TStackPeek<T, UI, SI>(Obj()); }
+  inline T Peek() { return TStackPeek<T, UI, SI>(CObj()); }
 
   /* Gets the element at the given index.
   @param  index The index of the element to get.
   @return -1 if a is nil and -2 if the index is out of bounds. */
-  inline T Get(SI index) { return TStackGet<T, UI, SI>(Obj(), index); }
+  inline T Get(SI index) { return TStackGet<T, UI, SI>(CObj(), index); }
 
   /* Returns true if the given stack contains the given address.
   @return false upon failure. */
   inline bool Contains(void* address) {
-    return TStackContains<T, UI, SI>(Obj(), address);
+    return TStackContains<T, UI, SI>(CObj(), address);
   }
 
   /* Resizes the stack to the new_count. */
@@ -576,10 +576,10 @@ class TStack {
   inline bool Grow() { return TStackGrow<T, UI, SI>(obj_); }
 
   /* Prints this object to the given Utf. */
-  inline Utf8& Print(Utf8& out_) { return Print(Obj(), out_); }
+  inline Utf8& Print(Utf8& out_) { return Print(CObj(), out_); }
 
-  /* Returns the CStack Obj. */
-  inline CStack<T, UI, SI>* Obj() {
+  /* Returns the CStack CObj. */
+  inline CStack<T, UI, SI>* CObj() {
     return reinterpret_cast<CStack<T, UI, SI>*>(base);
   }
 
@@ -593,7 +593,7 @@ class TStack {
 
   inline void SetBuffer(CStack<T, UI, SI>* stack) {
     ASSERT(stack);
-    obj_->start = reinterpret_cast<uintptr_t*>(stack);
+    obj_->begin = reinterpret_cast<uintptr_t*>(stack);
   }
 };
 

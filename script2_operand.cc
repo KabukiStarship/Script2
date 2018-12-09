@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= _0_0_0__13
 #include "cop.h"
 #include "coperand.h"
-#include "cutf1.h"
+#include "cstr1.h"
 
 #if SEAM == _0_0_0__13
 #include "test_debug.inl"
@@ -39,14 +39,14 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CHW OperandIndex(Operand* operand, char* start, char* stop) {
+CHW OperandIndex(Operand* operand, char* begin, char* stop) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
   CHW index = OpFirst(op), last = OpLast(op);
   ASSERT(index);
   for (; index <= last; ++index) {
-    if (StringEquals(start, stop, operand->Star(index, nullptr)->name)) {
+    if (StringEquals(begin, stop, operand->Star(index, nullptr)->name)) {
       return index;
     }
   }

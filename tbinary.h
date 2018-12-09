@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "cbinary.h"
 #include "cconsole.h"
-#include "csocket.h"
+#include "tsocket.h"
 
 #if SEAM >= _0_0_0__00
 #if SEAM == _0_0_0__00
@@ -47,9 +47,8 @@ void TPrintString(const Char* string_) {
 @param  string_a String A.
 @param  string_b String B.
 @param  delimiter The delimiter.*/
-template <typename Char = char>
-int TStringCompare(const Char* string_a, const Char* string_b,
-                   Char delimiter = 0) {
+template <typename Char = const char>
+int TStringCompare(Char* string_a, Char* string_b, Char delimiter = 0) {
   int a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
@@ -149,7 +148,7 @@ void TPrintPrinted(Char* cursor) {
 /* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
 template <typename UI>
 inline UI TUnsignedNaN() {
-  return (~(UI)0) - sizeof(UIW) - 2;
+  return (~(UI)0);  // -sizeof (UIW) - 2;
 }
 
 /* The highest possible signed integer value of the given type SI. */
@@ -175,6 +174,15 @@ inline const Char* TStringEnd(const Char* cursor, Char delimiter = 0) {
   return cursor - 1;
 }
 
+/* Scrolls over to the next DBL quote mark.
+@warning This function is only safe to use on ROM strings with a nil-term
+char. */
+template <typename Char = char>
+inline Char* TStringEnd(Char* cursor, Char delimiter = 0) {
+  return const_cast<Char*>(
+      TStringEnd(reinterpret_cast<const Char*>(cursor), delimiter));
+}
+
 /* Gets the length of the given char.
 @return  Returns -1 if the text char is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
@@ -183,6 +191,15 @@ template <typename Char, typename I = int>
 I TStringLength(const Char* cursor) {
   ASSERT(cursor);
   return (I)(TStringEnd<Char>(cursor) - cursor);
+}
+
+/* Gets the length of the given char.
+@return  Returns -1 if the text char is nil.
+@warning This function is only safe to use on ROM strings with a nil-term
+char. */
+template <typename Char, typename I = int>
+inline I TStringLength(Char* cursor) {
+  return TStringLength<Char>(reinterpret_cast<const Char*>(cursor));
 }
 
 /* Prints a Unicode string_ to the given socket.
@@ -233,11 +250,7 @@ Char* TPrint(Char* cursor, SIW size, const Char* string_, Char delimiter = 0) {
 with one or more bytes in it. */
 template <typename Char = char>
 Char* TPrint(Char* cursor, Char* stop, Char character) {
-  ASSERT(cursor);
-  ASSERT(cursor < stop);
-
-  if (cursor + 1 >= stop) return nullptr;
-
+  if (!cursor || cursor + 1 >= stop) return nullptr;
   *cursor++ = character;
   *cursor = 0;
   return cursor;
@@ -361,17 +374,17 @@ BOL TIsDigit(Char c) {
 @param socket The beginning of the socket.
 @param result The UI to write the scanned UI. */
 template <typename UI, typename Char = char>
-const Char* TScanUnsigned(const Char* socket, UI& result) {
+Char* TScanUnsigned(Char* socket, UI& result) {
   ASSERT(socket);
   PRINTF("\nScanning unsigned value:%s", socket);
-  const Char* cursor = socket;
+  Char* cursor = socket;
   Char c = *cursor++;
   if (!TIsDigit<Char>(c)) return nullptr;
 
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* stop = cursor;  // Store stop to return.
+  Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
          (SI4)(cursor - socket));
@@ -741,10 +754,10 @@ inline Char* TPrintSigned(Char* socket, int size, SI value) {
 @param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
 template <typename SI = SIW, typename UI = UIW, typename Char>
-const Char* TScanSigned(const Char* socket, SI& result) {
+Char* TScanSigned(Char* socket, SI& result) {
   ASSERT(socket);
   SI sign;
-  const Char* cursor = socket;
+  Char* cursor = socket;
   Char c = *cursor++;
   if (c == '-') {
     PRINTF("\nScanning negative backwards:\"");
@@ -759,7 +772,7 @@ const Char* TScanSigned(const Char* socket, SI& result) {
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* stop = cursor;  // Store stop to return.
+  Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
          (SI4)(cursor - socket));
@@ -792,7 +805,7 @@ const Char* TScanSigned(const Char* socket, SI& result) {
 namespace _ {
 
 template <typename Char = const char>
-const Char* TStringDecimalEnd(const Char* cursor) {
+Char* TStringDecimalEnd(Char* cursor) {
   if (!cursor) return cursor;
   Char c = *cursor++;
   if (c == '-') c = *cursor++;
@@ -819,11 +832,6 @@ const Char* TStringDecimalEnd(const Char* cursor) {
 #define PRINT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 namespace _ {
-template <typename Char = const char>
-Char* TStringDecimalEnd(Char* cursor) {
-  return const_cast<Char*>(
-      TStringDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor)));
-}
 
 /* Searches for the highest MSb asserted.
 @return -1 */
@@ -1188,13 +1196,13 @@ using Binary32 = TBinary<FLT, UI4>;
 using Binary64 = TBinary<DBL, UI8>;
 
 template <typename Float, typename UI, typename Char = char>
-Char* TPrintFloat(Char* start, Char* stop, Float value) {
-  return TBinary<Float, UI>.template Print<Char>(start, stop, value);
+Char* TPrintFloat(Char* begin, Char* stop, Float value) {
+  return TBinary<Float, UI>.template Print<Char>(begin, stop, value);
 }
 
 template <typename Float, typename UI, typename Char = char>
-Char* TPrintFloat(Char* start, SIW size, Float value) {
-  return TPrintFloat<Float, UI, Char>(start, start + size - 1, value);
+Char* TPrintFloat(Char* begin, SIW size, Float value) {
+  return TPrintFloat<Float, UI, Char>(begin, begin + size - 1, value);
 }
 
 }  // namespace _
@@ -1212,7 +1220,7 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
   // number_, which can only have 10 digits max, so the maximum floating-point
   // number_ digit count we can scan is 9 digits long.
   template <typename Char = char>
-  const Char* Scan(const Char* socket, Float& result) {
+  Char* Scan(Char* socket, Float& result) {
     ASSERT(socket);
     PRINTF("\n\nScanning FLT:%s", socket);
 
@@ -1236,14 +1244,14 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 
     PRINTF("\nScanning integer portion:%i", static_cast<SI4>(result));
 
-    const Char* cursor = socket;
+    Char* cursor = socket;
     Char c = *cursor++;
     if (!TIsDigit<Char>(c)) return nullptr;
 
     // Find length:
     c = *cursor++;
     while (TIsDigit<Char>(c)) c = *cursor++;
-    const Char* stop = cursor;  // Store stop to return.
+    Char* stop = cursor;  // Store stop to return.
     cursor -= 2;
     PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
            (SI4)(cursor - socket));
@@ -1265,7 +1273,7 @@ Char* TPrintFloat(Char* start, SIW size, Float value) {
 
     PRINTF("\nfound %i and pointed at \'%c\'", integer, *stop);
 
-    // Numbers may start with a dot like .1, .2, ...
+    // Numbers may begin with a dot like .1, .2, ...
     if (*socket == '.') goto ScanDecimals;
 
     if (*stop != '.') {

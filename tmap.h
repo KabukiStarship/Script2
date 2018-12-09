@@ -128,7 +128,7 @@ pair, so we need a 64-bit map.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 struct TMap {
-  Size size;        //< ASCII Obj size.
+  Size size;        //< ASCII CObj size.
   Index table_size, /*< Size of the key strings in bytes.
                      Set to 0 for ASCII Map. */
       size_pile;    /*< Size of the collisions pile in bytes.
@@ -563,7 +563,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
                   states +
                   count * (sizeof(Size) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
-              *collission_list = unsorted_indexes + count, *start;
+              *collission_list = unsorted_indexes + count, *begin;
   const char* keys = reinterpret_cast<const char*>(map) + table_size - 1;
   utf << "\n " << Right<>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_s", 10)
@@ -586,13 +586,13 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
-      start = &collission_list[collision_index];
-      temp = *start;
-      ++start;
+      begin = &collission_list[collision_index];
+      temp = *begin;
+      ++begin;
       utf << temp;
       while (temp != ~0) {
-        temp = *start;
-        ++start;
+        temp = *begin;
+        ++begin;
         if (temp == ~0) break;
         utf << ", " << temp;
       }
@@ -628,39 +628,39 @@ class Map {
   ~Map() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(Obj(), adress);
+    return MapRemove<Size, Index, I>(CObj(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(Obj(), value);
+    return MapContains<Size, Index, I>(CObj(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(Obj()); }
+  inline void Wipe() { MapWipe<Size, Index, I>(CObj()); }
 
   static inline Index CountUpperBounds() {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SIN type) {
-    return MapInsert<Size, Index, I>(Obj(), value, type, index);
+    return MapInsert<Size, Index, I>(CObj(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(Obj()); }
+  inline void Clear() { MapClear<Size, Index, I>(CObj()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, Obj());
+    return MapPrint<Size, Index, I>(utf, CObj());
   }
 
  private:
   UIW* socket;
 
   /* Returns the socket casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* Obj() {
+  inline TMap<Size, Index, I>* CObj() {
     return reinterpret_cast<TMap<Size, Index, I>*>(socket);
   }
 };  //< class Map

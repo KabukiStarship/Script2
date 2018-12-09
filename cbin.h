@@ -43,7 +43,7 @@ typedef enum BInStates {
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct API BIn {
   UIT size,           //< The size of the socket.
-      start;          //< The starting index of the ring socket data.
+      begin;          //< The starting index of the ring socket data.
   volatile UIT stop;  //< The stopping index of the ring socket data.
   UIT read;           //< The read variable.
 };
@@ -54,16 +54,16 @@ inline char* BInBegin(BIn* bin);
 inline char* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
-@param  Start The start of the data.
+@param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotLength(char* start, char* stop, UIW size);
+inline SIW SlotLength(char* begin, char* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
-@param  Start The start of the data.
+@param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotSpace(char* start, char* stop, UIW size);
+inline SIW SlotSpace(char* begin, char* stop, UIW size);
 
 /* Gets the rx socket length. */
 inline UIT BInSpace(BIn* bin);

@@ -11,7 +11,7 @@
 #define PRINT_HEADING(message) _::PrintHeading(message, 5)
 #define PRINT_LINE(c) _::PrintLine(c)
 #define PRINT_TYPE(type, value) Console<>().Out() << TypeValue(type, value)
-#define PRINT_SOCKET(start, end_or_size) PrintSocket(start, end_or_size)
+#define PRINT_SOCKET(begin, end_or_size) PrintSocket(begin, end_or_size)
 #define PRINT_BSQ(bsq) Console<>().Out() << header << '\n' << Bsq(bsq)
 #define PRINT_OBJ(stack) stack->Print()
 #define PRINT_TOBJ(stack) stack.Print()

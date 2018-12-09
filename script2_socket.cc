@@ -63,7 +63,7 @@ SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
 UIW* TNew(SIW size) { return new UIW[size]; }
 
-void Destroy(UIW* socket) {
+void Delete(UIW* socket) {
   ASSERT(socket);
   delete[] socket;
 }
@@ -76,8 +76,8 @@ const void* ConstVoidPtr(UIW value) {
   return reinterpret_cast<const void*>(value);
 }
 
-SIW SizeOf(void* start, void* stop) {
-  return reinterpret_cast<char*>(stop) - reinterpret_cast<char*>(start);
+SIW SizeOf(void* begin, void* stop) {
+  return reinterpret_cast<char*>(stop) - reinterpret_cast<char*>(begin);
 }
 
 SIW SizeOf(const void* start, const void* stop) {
@@ -147,14 +147,14 @@ BOL SocketWipe(void* cursor, void* stop, SIW count) {
                     reinterpret_cast<char*>(stop), count) != nullptr;
 }
 
-char* SocketCopy(void* start, SIW size, const void* read, SIW read_size) {
-  ASSERT(start);
+char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
+  ASSERT(begin);
   ASSERT(read);
   ASSERT(size > 0);
   ASSERT(read_size > 0);
 
   if (size < read_size) return nullptr;
-  char *cursor = reinterpret_cast<char*>(start), *end_ptr = cursor + size;
+  char *cursor = reinterpret_cast<char*>(begin), *end_ptr = cursor + size;
   const char *start_ptr = reinterpret_cast<const char*>(read),
              *stop_ptr = start_ptr + read_size;
 
@@ -195,15 +195,15 @@ char* SocketCopy(void* start, SIW size, const void* read, SIW read_size) {
   return success;
 }
 
-char* SocketCopy(void* start, void* stop, const void* begin_read,
+char* SocketCopy(void* begin, void* stop, const void* read_begin,
                  SIW read_size) {
-  return SocketCopy(start, SizeOf(start, stop), begin_read, read_size);
+  return SocketCopy(begin, SizeOf(begin, stop), read_begin, read_size);
 }
 
-char* SocketCopy(void* start, void* stop, const void* begin_read,
+char* SocketCopy(void* begin, void* stop, const void* read_begin,
                  const void* read_end) {
-  return SocketCopy(start, SizeOf(start, stop), begin_read,
-                    SizeOf(begin_read, read_end));
+  return SocketCopy(begin, SizeOf(begin, stop), read_begin,
+                    SizeOf(read_begin, read_end));
 }
 
 BOL SocketCompare(const void* begin_a, SIW size_a, const void* begin_b,
@@ -236,30 +236,30 @@ Socket::Socket() {
   // Nothing to do here! (:-)-+=<
 }
 
-Socket::Socket(void* start, void* stop)
-    : start(reinterpret_cast<char*>(start)),
-      stop(reinterpret_cast<char*>(stop)) {
-  if (!start || !stop || start > stop) {
-    start = stop = 0;
+Socket::Socket(void* begin, void* end)
+    : begin(reinterpret_cast<char*>(begin)),
+      stop(reinterpret_cast<char*>(end)) {
+  if (!begin || !end || begin > end) {
+    begin = end = 0;
     return;
   }
 }
 
-Socket::Socket(void* start, SIW size)
-    : start(reinterpret_cast<char*>(start)),
-      stop(reinterpret_cast<char*>(start) + size) {
-  if (!start || size < 0) {
-    stop = reinterpret_cast<char*>(start);
+Socket::Socket(void* begin, SIW size)
+    : begin(reinterpret_cast<char*>(begin)),
+      stop(reinterpret_cast<char*>(begin) + size) {
+  if (!begin || size < 0) {
+    stop = reinterpret_cast<char*>(begin);
     return;
   }
 }
 
-Socket::Socket(const Socket& other) : start(other.start), stop(other.stop) {
+Socket::Socket(const Socket& other) : begin(other.begin), stop(other.stop) {
   // Nothing to do here! (:-)-+=<
 }
 
 Socket& Socket::operator=(const Socket& other) {
-  start = other.start;
+  begin = other.begin;
   stop = other.stop;
   return *this;
 }

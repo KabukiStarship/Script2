@@ -45,7 +45,7 @@ Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
-  start = socket;
+  begin = socket;
   doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
   StackInit(socket, size_bytes >> sizeof(UIW));
 }
@@ -64,7 +64,7 @@ Wall::Wall(UIW* socket, size_t size_bytes) {
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
-  start = socket;
+  begin = socket;
   doors_ = reinterpret_cast<TCArray<Door*>*>(aligned_buffer);
   StackInit(socket, size_bytes >> sizeof(UIW));
 }

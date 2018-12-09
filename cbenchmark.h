@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__12
-#ifndef INCLUDED_SCRIPT_BENCHMARK
-#define INCLUDED_SCRIPT_BENCHMARK 1
+#ifndef INCLUDED_SCRIPT2_BENCHMARK
+#define INCLUDED_SCRIPT2_BENCHMARK 1
 
 #include "ctest.h"
 
@@ -68,5 +68,5 @@ class Benchmark {
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT_BENCHMARK
+#endif  //< INCLUDED_SCRIPT2_BENCHMARK
 #endif  //< #if SEAM >= _0_0_0__12

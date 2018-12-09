@@ -267,7 +267,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
       bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Number of bytes left to scan.
-      bytes_shift;   //< Number of bits to shift to scan the current Obj.
+      bytes_shift;   //< Number of bits to shift to scan the current CObj.
   UI1 bin_state,     //< Current bin FSM state.
       b;             //< Current UI1 being verified.
   hash16_t hash,     //< Expected hash of the B-Sequence.
@@ -281,8 +281,8 @@ const Op* CrabsUnpack(CCrabs* crabs) {
       *bin_start,    //< Start of the ring socket data.
       *bin_stop,     //< Stop of the ring socket data.
       *bin_end,      //< End of the ring socket.
-          *slot_begin = crabs->slot.start,
-          *slot_start = crabs->slot.start,  //< Write cursor,
+          *slot_begin = crabs->slot.begin,
+          *slot_start = crabs->slot.begin,  //< Write cursor,
               *slot_stop = crabs->slot.stop, *slot_end = crabs->slot.stop;
   const Op* result;  //< Result of the Scan.
   const UIT* header = crabs->header;
@@ -310,7 +310,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
 
   bin_begin = BInBegin(bin);
   bin_end = bin_begin + size;
-  bin_start = bin_begin + bin->start;
+  bin_start = bin_begin + bin->begin;
   bin_stop = bin_begin + bin->stop;
   space = (UIT)SlotSpace(bin_start, bin_stop, size);
   length = size - space;
@@ -766,7 +766,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
   //
   crabs->hash = hash;
   crabs->bytes_left = bytes_left;
-  bin->start = (UIT)Size(bin_begin, bin_start);
+  bin->begin = (UIT)Size(bin_begin, bin_start);
   return nullptr;
 }
 
@@ -811,20 +811,20 @@ void CrabsClear(CCrabs* crabs) {
 
   BIn* bin = CrabsBIn(crabs);
 
-  char *start = BInBegin(bin), *stop = start + bin->size,
-       *start = start + bin->start, *stop = start + bin->stop;
+  char *begin = BInBegin(bin), *stop = begin + bin->size,
+       *begin = begin + bin->begin, *stop = begin + bin->stop;
 
-  // UIT buffer_space = SlotSpace (start, stop, size);
+  // UIT buffer_space = SlotSpace (begin, stop, size);
 
-  if (start == stop) return;  //< Nothing to do.
-  if (start > stop) {
-    SocketFill(start, stop - start);
-    SocketFill(start, start - start);
+  if (begin == stop) return;  //< Nothing to do.
+  if (begin > stop) {
+    SocketFill(begin, stop - begin);
+    SocketFill(begin, begin - begin);
     return;
   }
-  SocketFill(start, stop - start);
-  bin->start = (UIT)Size(crabs, start);
-  bin->stop = (UIT)Size(crabs, start + 1);
+  SocketFill(begin, stop - begin);
+  bin->begin = (UIT)Size(crabs, begin);
+  bin->stop = (UIT)Size(crabs, begin + 1);
 }
 
 void CrabsRingBell(CCrabs* crabs, const char* address) {
@@ -862,14 +862,14 @@ UIT CrabsSpace(BIn* bin) {
     return ~0;
   }
 
-  char* start = CrabsBaseAddress(bin);
-  return (UIT)SlotSpace(start + bin->start, start + bin->stop, bin->size);
+  char* begin = CrabsBaseAddress(bin);
+  return (UIT)SlotSpace(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
 UIW* CrabsBaseAddress(void* ptr, UIT rx_tx_offset) {
   enum {
     kSlotHeaderSize = sizeof(BIn) + sizeof(UIW) - sizeof(BIn) % sizeof(UIW),
-    //< Offset to the start of the ring socket.
+    //< Offset to the begin of the ring socket.
   };
   char* result = reinterpret_cast<char*>(ptr) + rx_tx_offset + kSlotHeaderSize;
   return reinterpret_cast<UIW*>(result);

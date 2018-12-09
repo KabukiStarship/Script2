@@ -598,7 +598,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   const I *indexes = reinterpret_cast<const I*>(
               states + count_max * (sizeof(Index) + sizeof(Size) + sizeof(I))),
           *unsorted_indexes = indexes + count_max,
-          *collission_list = unsorted_indexes + count_max, *start;
+          *collission_list = unsorted_indexes + count_max, *begin;
   const char* keys = reinterpret_cast<const char*>(multimap) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
@@ -618,13 +618,13 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
-      start = &collission_list[collision_index];
-      temp = *start;
-      ++start;
+      begin = &collission_list[collision_index];
+      temp = *begin;
+      ++begin;
       PRINTF("%u", temp);
       while (temp != ~0) {
-        temp = *start;
-        ++start;
+        temp = *begin;
+        ++begin;
         if (temp == ~0) break;
         PRINTF(", %u", temp);
       }
@@ -708,7 +708,7 @@ class Multimap {
   Multimap(Size size) { MultimapInit<Size, Index, I> }
 
   /* Deletes the multimap and it's dynamic memory. */
-  ~Multimap() { delete start; }
+  ~Multimap() { delete begin; }
 
   constexpr UIT MultimapOverheadPerIndex() {
     return MultimapOverheadPerIndex<Index, I>();
@@ -721,68 +721,68 @@ class Multimap {
   /* Insets the given key-value pair.
    */
   inline I Insert(UI1 type, const char* key, void* data, I index) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapInsert<Index, I>(multimap, type, key, data, index);
   }
 
   inline I IndexMax() { return MultimapIndexMax<Index, I>(); }
 
   inline I Add(const char* key, AsciiType type, void* data) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapAdd<Index, I>(multimap, key, type, data);
   }
 
   /* Returns  the given query char in the hash table. */
   inline I Find(const char* key) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapFind(multimap, key);
   }
 
   /* Deletes the multimap contents without wiping the contents. */
   inline void Clear() {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapClear<Index, I>(multimap);
   }
 
   /* Deletes the multimap contents by overwriting it with zeros. */
   inline void Wipe() {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return Wipe<Index, I>(multimap);
   }
 
   /* Returns true if this crabs contains only the given address. */
   inline BOL Contains(void* data) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapContains<Index, I>(multimap, void* data);
   }
 
   /* Removes that object from the multimap and copies it to the destination. */
   inline BOL MultimapRemoveCopy(void* destination, size_t buffer_size,
                                 void* data) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return;
   }
 
   /* Removes the item at the given address from the multimap. */
   inline BOL MultimapRemove(void* adress) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapRemove<Index, I>(multimap);
   }
 
   /* Removes all but the given multimap from the multimap. */
   inline BOL Retain() {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapRetain<Index, I>(multimap);
   }
 
   /* Prints the given TMultimap to the console. */
   inline UTF1& Print(UTF1& printer) {
-    auto multimap = reinterpret_cast<Multimap<Index, I>>(start);
+    auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapPrint<Index, I>(multimap);
   }
 
  private:
-  UIW* start;  //< Dynamic memory socket.
+  UIW* begin;  //< Dynamic memory socket.
 
   TMap
 };

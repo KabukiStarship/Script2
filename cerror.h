@@ -45,7 +45,7 @@ typedef enum ScriptError {
   kErrorMalformedUtf8,        //< Script Error 21: Malformed UTF-8.
   kErrorMalformedUtf16,       //< Script Error 22: Malformed UTF-16.
   kErrorMalformedUtf32,       //< Script Error 23: Malformed UTF-32.
-  kErrorObjLocked,            //< Script Error 24: Obj locked.
+  kErrorObjLocked,            //< Script Error 24: CObj locked.
   kErrorInvalidArgs,          //< Script Error 25: Invalid args.
   kErrorAuthenticationError,  //< Script Error 26: Authentication error.
   kErrorRoomNotFound,         //< Script Error 27: Room not found.

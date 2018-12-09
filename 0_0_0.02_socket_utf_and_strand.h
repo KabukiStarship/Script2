@@ -76,7 +76,7 @@ static const char* _0_0_0__02_Strand() {
   static const Char* kStringsCentered[] = {" 1234567890", " 1234567890 ",
                                            "  1234567890 ", "123..."};
 
-  const char* stop;
+  const Char* stop;
   char socket[kSize + 1], buffer_b[kSize + 1];
 
   enum { kCheckChar = '!' };
@@ -104,7 +104,8 @@ static const char* _0_0_0__02_Strand() {
   PRINT_HEADING("Testing Universal Text Formatter");
   PRINTF("\n\n    Expecting \"%s\"", kTesting123);
 
-  utf.Set(socket) << "Testing " << 1 << ", " << 2 << ", " << 3;
+  utf.Set(socket) << "Testing " << 1 + (int)'0' << ", " << 2 + (int)'0' << ", "
+                  << 3 + (int)'0';
   PRINT_SOCKET(socket, kSize);
   AVOW(kTesting123, socket);
 
@@ -205,10 +206,24 @@ static const char* _0_0_0__02_Strand() {
                           kTestCharsCount));
   }
 
-  PRINT_HEADING("\nTesting TStrand...");
+  PRINT_HEADING("Testing TStrand...");
 
-  TStrand<Char> strand;
-  // strand.Print ("Testing");// << " " << 1 << ", 2, " << -3;
+  enum {
+    kStrandLoopCount = 100,
+  };
+
+  TStrand<Char> strand("Testing ");
+  for (SIN i = 0; i < kStrandLoopCount; ++i) {
+    strand << i << ", ";
+  }
+  PrintSocket(strand.Obj().Begin(), strand.Obj().GetSize());
+  Char* cursor = strand.Find("Testing ");
+  ASSERT(cursor);
+  for (SIN i = 0; i < kStrandLoopCount; ++i) {
+    strand << i << ", ";
+    TToken<Char> i_string(i);
+    cursor = TStringFind<Char>(cursor, i_string.String());
+  }
 
   return nullptr;
 }
@@ -242,6 +257,7 @@ static const char* _0_0_0__02_ASCII_Strand_and_Socket(char* seam_log,
   }
 
   const char* result = _0_0_0__02_Strand<char, int32_t>();
+  if (result) return result;
 
 #endif
   return nullptr;

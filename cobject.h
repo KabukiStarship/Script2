@@ -21,33 +21,42 @@ specific language governing permissions and limitations under the License. */
 #include "csocket.h"
 #include "ctest.h"
 
+namespace _ {
+struct CObject;
+}
+
 /* ASCII Factory manages memory for ASCII Objects.
 @return Nil upon failure or if no return socket is expected, or a pointer to a
 word-aligned socket upon success.
-@param start    Pointer to an existing socket or nil to create a socket.
+@param obj      The ASCII Object and AsciiFactory.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef UIW* (*AsciiFactory)(UIW* start, SIW function, void* arg);
+typedef int (*AsciiFactory)(_::CObject& obj, SIW function, void* arg);
 
 namespace _ {
 
-/* ASCII Obj with programmable ASCII Factory. */
+/* ASCII OBJ and AsciiFactory. */
 struct CObject {
-  UIW* start;            //< Pointer to the contiguous ASCII Obj.
-  AsciiFactory factory;  //< ASCII Obj Factory function pointer.
+  UIW* begin;            //< Pointer to the contiguous ASCII CObj.
+  AsciiFactory factory;  //< ASCII CObj Factory function pointer.
 };
 
-enum {
-  kFactoryDefault = 0,  //< ASCII Factory function: Creates or Destroys an OBJ.
-  kFactoryGrow,         //< ASCII Factory function: Grow OBJ function index.
-  kFactoryPrint1,       //< Prints the OBJ to the COut.
-  kFactoryPrint2,       //< Prints the OBJ to the COut.
-  kFactoryPrint4,       //< Prints the OBJ to the COut.
-  kFactoryClone,        //< ASCII Factory function: Clones the OBJ.
+enum AsciiFactoryFunctions {
+  kFactoryDelete = 0,  //< Factory function deletes an OBJ.
+  kFactoryNew = 1,     //< Factory function creates a new OBJ.
+  kFactoryClone = 2,   //< ASCII Factory function: Clones the OBJ.
+  kFactoryGrow = 3,    //< ASCII Factory function: Grow OBJ function index.
+  kFactoryLast = 3,    //< The last ASCII Factory function.
 };
 
-/* Destructs the given ASCII Obj Factory. */
-API void Destroy(CObject stack);
+enum AsciiFactoryErrors {
+  kFactorySuccess = 0,      //< Factory operation completed successfully.
+  kFactoryNilOBJ = 1,       //< Factory found nil obj.begin pointer.
+  kFactoryNilArg = 2,       //< Factory arg nil.
+  kFactorySizeInvalid = 3,  //< Factory size invalid.
+  kFactoryOutOfMemory = 4,  //< Factory out of memory.
+  kFactoryCantGrow = 5,     //< Factory can't double in size.
+};
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
@@ -76,6 +85,14 @@ API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
 API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
+
+/* Destructs the given ASCII CObj Factory. */
+API void Delete(CObject& object);
+
+/* Checks if the given function is an ASCII OBJ function.
+@return True if the function is less than or equal to kFactoryLast.
+ASCII Object functions are 0 through kFactoryLast. */
+inline API BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02

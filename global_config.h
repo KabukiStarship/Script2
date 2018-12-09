@@ -150,7 +150,7 @@ enum {
   kSlotSizeMin = 128,                 //< Min size of a Slot - 1.
   kMaxErrors = CRABS_MAX_ERRORS,      //< Max errors before blowing up.
   kParamsMax = CRABS_MAX_PARAMS,      //< Max number_ of parameters.
-  kWordAddressMask = kWordBitsMask,   //< For masking the word address.
+  kWordAddressMask = kWordLSbMask,    //< For masking the word address.
   kTimeoutMicroseconds = COM_TIMEOUT_TICKS,  //< Timeout time in microseconds.
   kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (kADR) length.
   kMinStackSize = 1,                             //< Min CCrabs stack size.

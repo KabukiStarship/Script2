@@ -85,7 +85,7 @@ static const char kStringDifference[] = "\n      Difference:";
 static const char kStringErrorNil[] = "\nERROR: value was nil!";
 
 BOL Test(const char* a, const char* b) {
-  int result = ::_::TStringCompare<char>(a, b);
+  int result = ::_::TStringCompare<const char>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -97,7 +97,7 @@ BOL Test(const char* a, const char* b) {
 }
 
 BOL Test(const char16_t* a, const char16_t* b) {
-  int result = ::_::TStringCompare<char16_t>(a, b);
+  int result = ::_::TStringCompare<const char16_t>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -109,7 +109,7 @@ BOL Test(const char16_t* a, const char16_t* b) {
 }
 
 BOL Test(const char32_t* a, const char32_t* b) {
-  int result = ::_::TStringCompare<char32_t>(a, b);
+  int result = ::_::TStringCompare<const char32_t>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);

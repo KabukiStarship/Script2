@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_SCRIPT_MIRROR
-#define INCLUDED_SCRIPT_MIRROR
+#ifndef INCLUDED_SCRIPT2_MIRROR
+#define INCLUDED_SCRIPT2_MIRROR
 #include "bin.h"
 #include "bout.h"
 #include "op.h"
@@ -26,7 +26,7 @@ namespace _ {
 A Mirror */
 struct API Mirror {
   UIT size,   //< The size of the socket.
-      start,  //< The starting index of the ring socket data.
+      begin,  //< The starting index of the ring socket data.
       stop,   //< The stopping index of the ring socket data.
       read;   //< The read variable.
 };
@@ -41,16 +41,16 @@ enum {
 static const UIW kMaxMirrorSize = ~((UIW)0);
 
 /* Calculates the used ring socket space.
-@param  Start The start of the data.
+@param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size The size of the socket. */
-API UIT MirrorLength(char* start, char* stop, UIT size);
+API UIT MirrorLength(char* begin, char* stop, UIT size);
 
 /* Calculates the space left in the given ring socket.
-@param  Start The start of the data.
+@param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-API UIT MirrorSpace(char* start, char* stop, UIT size);
+API UIT MirrorSpace(char* begin, char* stop, UIT size);
 
 /* Checks if the given slot contains the specified address. */
 API void* MirrorContains(Mirror* mirror, void* address);
@@ -132,5 +132,5 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
                            UIT offset, char* address);
 
 }  // namespace _
-#endif  //< INCLUDED_SCRIPT_MIRROR
+#endif  //< INCLUDED_SCRIPT2_MIRROR
 #endif  //< #if SEAM >= _0_0_0__13

@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__05
-#ifndef INCLUDED_SCRIPT_TSTACK
-#define INCLUDED_SCRIPT_TSTACK 1
+#ifndef INCLUDED_SCRIPT2_TSTACK
+#define INCLUDED_SCRIPT2_TSTACK 1
 
 #include "csocket.h"
 #include "tobject.h"
-#include "tutf.h"
+#include "tstr.h"
 
 #if SEAM == _0_0_0__05
 #include "test_debug.inl"
@@ -433,7 +433,7 @@ template <typename T = SIW, typename Size = uint, typename Index = int>
 BOL TStackGrow(CObject obj) {
   static Index count_max_auto_size_init = kStackCountMaxDefault;
 
-  UIW* socket = obj.start;
+  UIW* socket = obj.begin;
 
   ASSERT(socket);
 
@@ -463,12 +463,12 @@ BOL TStackGrow(CObject obj) {
   return true;
 }
 
-/* Attempts to resize the given Obj to the new_count.
+/* Attempts to resize the given CObj to the new_count.
 @return Nil upon failure. */
 template <typename T = SIW, typename Size = uint, typename Index = int>
 BOL TStackResize(CObject obj, Index new_count) {
   TCStack<T, Size, Index> stack =
-      *reinterpret_cast<TCStack<T, Size, Index>*>(obj.start);
+      *reinterpret_cast<TCStack<T, Size, Index>*>(obj.begin);
   Index count = obj.count, count_max = StackCountMax<T, Size, Index>();
   if (count > count_max || count == new_count) return false;
 }
@@ -528,18 +528,18 @@ class TStack {
   }
 
   /* Copy constructor. */
-  TStack(const TStack& other) : obj_(other.Obj()) {}
+  TStack(const TStack& other) : obj_(other.CObj()) {}
 
   /* Destructs nothing.
   @see ~TObject<Index> */
   ~TStack() {}
 
   /* Returns a clone from dynamic memory. */
-  TStack<T, Size, Index>& Clone() { StackClone<T, Size, Index>(Obj()); }
+  TStack<T, Size, Index>& Clone() { StackClone<T, Size, Index>(CObj()); }
 
   /* Clones the other object. */
   TStack<T, Size, Index>& Clone(TStack<T, Size, Index>& other) {
-    StackClone<T, Size, Index>(Obj(), *other);
+    StackClone<T, Size, Index>(CObj(), *other);
   }
 
   /* Gets the max number_ of elements in an obj with the specific index
@@ -547,7 +547,7 @@ class TStack {
   inline Index GetElementsMax() { return StackCountMax<T, Size, Index>(); }
 
   /* Gets the size of the entire Stack, including header, in bytes. */
-  inline Size GetSize() { return Obj()->size; }
+  inline Size GetSize() { return CObj()->size; }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
   inline Size GetSizeMin() { return StackSizeMin<T, Size, Index>(); }
@@ -556,7 +556,7 @@ class TStack {
   inline Index GetCount() { return Header().count; }
 
   /* Gets a pointer to the first element in the obj. */
-  inline T* Start() { return TStackStart<T, Size, Index>(Obj()); }
+  inline T* Start() { return TStackStart<T, Size, Index>(CObj()); }
 
   /* Gets a pointer to the first element in the obj. */
   inline T* Stop() { return Start() + GetCount(); }
@@ -566,14 +566,14 @@ class TStack {
   @param item  The item to insert.
   @param index The index to insert at. */
   inline T Insert(T item, T index) {
-    return TStack<T, Size, Index>(Obj(), item, index);
+    return TStack<T, Size, Index>(CObj(), item, index);
   }
 
   /* Removes the given index from the obj.
   @return True if the index is out of bounds.
   @param  index The index the item to remove. */
   inline BOL Remove(Index index) {
-    return TStackRemove<T, Size, Index>(Obj(), index);
+    return TStackRemove<T, Size, Index>(CObj(), index);
   }
 
   /* Adds the given item to the stop of the obj.
@@ -604,17 +604,17 @@ class TStack {
 
   /* Peeks the top item off of the obj without popping it.
   @return The item popped off the obj. */
-  inline T Peek() { return TStackPeek<T, Size, Index>(Obj()); }
+  inline T Peek() { return TStackPeek<T, Size, Index>(CObj()); }
 
   /* Gets the element at the given index.
   @return -1 if a is nil and -2 if the index is out of bounds.
   @param  index The index of the element to get. */
-  inline T Get(Index index) { return TStackGet<T, Size, Index>(Obj(), index); }
+  inline T Get(Index index) { return TStackGet<T, Size, Index>(CObj(), index); }
 
   /* Returns true if the given obj contains the given address.
   @return false upon failure. */
   inline BOL Contains(void* address) {
-    return TStackContains<T, Size, Index>(Obj(), address);
+    return TStackContains<T, Size, Index>(CObj(), address);
   }
 
   /* Resizes the obj to the new_count.
@@ -625,13 +625,13 @@ class TStack {
 
   /* Doubles the size of the obj.
   @return False upon failure. */
-  inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.Obj()); }
+  inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.CObj()); }
 
   /* Gets this TObject. */
-  inline TObject<Index>& Obj() { return obj_; }
+  inline TObject<Index>& CObj() { return obj_; }
 
   /* Gets this TObject. */
-  inline CObject& CObj() { return obj_.Obj(); }
+  inline CObject& CObj() { return obj_.CObj(); }
 
   /* Returns the TCStack Object. */
   inline TCStack<T, Size, Index>* Header() {
@@ -646,7 +646,7 @@ class TStack {
 
   /* Prints this object to the SIO. */
   template <typename Char = char, SIW size = kObjSizeDefault>
-  inline void Print(AsciiFactory factory = TCOutAuto<UI4, Char>) {
+  inline void Print(AsciiFactory factory = TCOutHeap<UI4, Char>) {
     TStrand<UI4, char> utf(factory);  //< The UTF.
     Print<Char>(utf);
   }
@@ -677,11 +677,11 @@ class TStack {
   /* Sets the socket to the new pointer. */
   inline void SetBuffer(TCStack<T, Size, Index>* stack) {
     ASSERT(stack);
-    obj_->start = reinterpret_cast<UIW*>(stack);
+    obj_->begin = reinterpret_cast<UIW*>(stack);
   }
 };
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT_TSTACK
+#endif  //< INCLUDED_SCRIPT2_TSTACK
 #endif  //< #if SEAM >= _0_0_0__05

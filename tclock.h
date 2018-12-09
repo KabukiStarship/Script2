@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 #include "cclock.h"
 
 #include "ctest.h"
-#include "tutf.h"
+#include "tstr.h"
 
 #if SEAM == _0_0_0__04
 #include "test_debug.inl"
@@ -474,22 +474,22 @@ SI TStampTime(CClock& clock) {
 }
 
 template <typename Char, typename SI>
-const Char* TStringScanTime(const Char* start, SI& result) {
+const Char* TStringScanTime(const Char* begin, SI& result) {
   CClock clock;
-  const Char* stop = TScan<Char>(start, clock);
+  const Char* stop = TScan<Char>(begin, clock);
   result = TStampTime<SI>(clock);
   return stop;
 }
 
 template <typename Char>
-const Char* TStringScanTime(const Char* start, Tss& result) {
-  start = TStringScanTime<Char, TMS>(start, result.seconds);
-  if (!start) return nullptr;
-  if (*start++ != ':') {
+const Char* TStringScanTime(const Char* begin, Tss& result) {
+  begin = TStringScanTime<Char, TMS>(begin, result.seconds);
+  if (!begin) return nullptr;
+  if (*begin++ != ':') {
     result.ticks = 0;
-    return start - 1;
+    return begin - 1;
   }
-  return TScanUnsigned<UI4, Char>(start, result.ticks);
+  return TScanUnsigned<UI4, Char>(begin, result.ticks);
 }
 #endif  // #if USING_UTF
 

@@ -98,7 +98,7 @@ BOut* BOutInit(UIW* socket, UIT size) {
   BOut* bout = reinterpret_cast<BOut*>(socket);
   // bout->size  = size - sizeof (BIn); //< Not sure why I did that?
   bout->size = size;
-  bout->start = 0;
+  bout->begin = 0;
   bout->stop = 0;
   bout->read = 0;
 
@@ -113,7 +113,7 @@ UIT BOutSpace(BOut* bout) {
     return 0;
   }
   char* txb_ptr = reinterpret_cast<char*>(bout);
-  return (uint)SlotSpace(txb_ptr + bout->start, txb_ptr + bout->stop,
+  return (uint)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
                          bout->size);
 }
 
@@ -121,8 +121,8 @@ UIT BOutBufferLength(BOut* bout) {
   if (!bout) {
     return 0;
   }
-  char* start = BOutBuffer(bout);
-  return (uint)SlotLength(start + bout->start, start + bout->stop, bout->size);
+  char* begin = BOutBuffer(bout);
+  return (uint)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
 }
 
 char* BOutEndAddress(BOut* bout) {
@@ -130,20 +130,20 @@ char* BOutEndAddress(BOut* bout) {
 }
 
 int BOutStreamByte(BOut* bout) {
-  char *start = BOutBuffer(bout), *stop = start + bout->size;
-  char *open = (char*)start + bout->read, *start = start + bout->start,
-       *start = start;
+  char *begin = BOutBuffer(bout), *stop = begin + bout->size;
+  char *open = (char*)begin + bout->read, *begin = begin + bout->begin,
+       *begin = begin;
 
-  SIW length = (int)(start < open) ? open - start + 1
-                                   : (stop - start) + (open - start) + 2;
+  SIW length = (int)(begin < open) ? open - begin + 1
+                                   : (stop - begin) + (open - begin) + 2;
 
   if (length < 1) {
-    BOutError(bout, kErrorBufferOverflow, Params<1, kSTR>(), 2, start);
+    BOutError(bout, kErrorBufferOverflow, Params<1, kSTR>(), 2, begin);
     return -1;
   }
   // UI1 b = *cursor;
-  bout->stop = (++start > stop) ? static_cast<UIT>(Size(start, stop))
-                                : static_cast<UIT>(Size(start, start));
+  bout->stop = (++begin > stop) ? static_cast<UIT>(Size(begin, stop))
+                                : static_cast<UIT>(Size(begin, begin));
   return 0;
 }
 
@@ -190,10 +190,10 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       params;  //< Pointer to the current param.
                //* bsc_param;          //< Pointer to the current kBSQ param.
   // Convert the socket offsets to pointers.
-  char *start = BOutBuffer(bout),          //< Beginning of the socket.
-      *stop = start + size,                //< End of the socket.
-          *start = start + bout->start,    //< Start of the data.
-              *stop = start + bout->stop;  //< Stop of the data.
+  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+      *stop = begin + size,                //< End of the socket.
+          *begin = begin + bout->begin,    //< Start of the data.
+              *stop = begin + bout->stop;  //< Stop of the data.
   const char* ui1_ptr;                     //< Pointer to a 1-UI1 type.
 #if USING_CRABS_2_BYTE_TYPES
   const UI2* ui2_ptr;  //< Pointer to a 2-UI1 type.
@@ -206,7 +206,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 #endif
   UI2 hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
 
-  space = (UIT)SlotSpace(start, stop, size);
+  space = (UIT)SlotSpace(begin, stop, size);
 
   // Check if the socket has enough room.
   if (space == 0) return BOutError(bout, kErrorBufferOverflow);
@@ -218,7 +218,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeString(type), (int)Size(start, start), (int)Size(start, stop),
+           TypeString(type), (int)Size(begin, begin), (int)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -227,7 +227,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       case kADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
       case kSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
         if (space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
           // nil string_.
@@ -244,7 +244,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         ui1 = *ui1_ptr;
         while (ui1 != 0) {
           if (space-- == 0)
-            return BOutError(bout, kErrorBufferOverflow, params, index, start);
+            return BOutError(bout, kErrorBufferOverflow, params, index, begin);
           hash = Hash16(ui1, hash);
 
           *stop = ui1;  // Write UI1
@@ -266,7 +266,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 #if USING_CRABS_1_BYTE_TYPES
         // Check if the socket has enough room.
         if (space-- == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
 
         // Load pointer and read data to write.
         ui1_ptr = reinterpret_cast<const char*>(args[arg_index]);
@@ -287,7 +287,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // Align the socket to a word boundary and check if the
         // socket has enough room.
         if (space < sizeof(UI2))
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         space -= sizeof(UI2);
 
         // Load pointer and value to write.
@@ -327,13 +327,13 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // Load next pointer value to write.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
-          return BOutError(bout, kErrorImplementation, params, index, start);
+          return BOutError(bout, kErrorImplementation, params, index, begin);
         ui2 = *ui2_ptr;
 
       WriteVarint2 : {
         // Byte 1
         if (space-- == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         ui1 = ui2 & 0x7f;
         ui2 = ui2 >> 7;
         if (ui2 == 0) {
@@ -349,7 +349,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 
         // Byte 2
         if (--space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         ui1 = ui2 & 0x7f;
         ui2 = ui2 >> 7;
         if (ui2 == 0) {
@@ -365,7 +365,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 
         // Byte 3
         if (--space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         ui1 = ui2 & 0x7f;
         ui1 |= 0x80;
         *stop = ui1;
@@ -386,7 +386,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       WriteVarint4 : {  //< Optimized manual do while loop.
         ui2 = 5;
         if (space == 0)  //< @todo Benchmark to space--
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         --space;  //< @todo Benchmark to space--
         ui1 = ui4 & 0x7f;
         ui4 = ui4 >> 7;
@@ -403,7 +403,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // This wont happen I don't think.
         // if (--ui2 == 0)
         //    return BOutError (kErrorVarintOverflow, params, index,
-        //                       start);
+        //                       begin);
 
         goto WriteVarint4;
       } break;
@@ -417,7 +417,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // has enough room.
 
         if (space < sizeof(UI4))
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         space -= sizeof(UI8);
 
         // Load pointer and value to write.
@@ -441,7 +441,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         // Align the socket to a word boundary and check if the socket
         // has enough room.
         if (space < sizeof(UI8))
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         space -= sizeof(UI8);
 
         // Load pointer and value to write.
@@ -471,7 +471,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       WriteVarint8 : {     //< Optimized manual do while loop.
         ui2 = 8;           //< The max number_ of varint bytes - 1.
         if (space <= 9) {  //< @todo Benchmark to space--
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         }
         --space;           //< @todo Benchmark to space--
         if (--ui2 == 0) {  //< It's the last UI1 not term bit.
@@ -509,7 +509,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         if ((type >> 7) && ((type & 0x1f) >= kOBJ)) {
           // Cannot have multi-dimensional arrays of objects!
           type &= 0x1f;
-          return BOutError(bout, kErrorImplementation, params, index, start);
+          return BOutError(bout, kErrorImplementation, params, index, begin);
         }
         type = type & 0x1f;  //< Mask off lower 5 bits.
         switch (value) {
@@ -517,14 +517,14 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
             ui1_ptr = reinterpret_cast<const char*>(args[arg_index]);
             if (ui1_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
-                               start);
+                               begin);
           }
 #if USING_CRABS_2_BYTE_TYPES
           case 1: {
             ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
-                               start);
+                               begin);
             ui2 = *ui2_ptr;
             length = static_cast<UIT>(ui2);
             ui1_ptr = reinterpret_cast<const char*>(ui2_ptr);
@@ -535,7 +535,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
             ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
-                               start);
+                               begin);
             ui4 = *ui4_ptr;
             length = static_cast<UIT>(ui4);
             ui1_ptr = reinterpret_cast<const char*>(ui4_ptr);
@@ -546,7 +546,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
             ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
-                               start);
+                               begin);
             ui8 = *ui8_ptr;
             length = static_cast<UIT>(ui8);
             ui1_ptr = reinterpret_cast<const char*>(ui8_ptr);
@@ -555,23 +555,23 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
           default: {
             // This wont happen due to the & 0x3 bit mask
             // but it stops the compiler from barking.
-            return BOutError(bout, kErrorImplementation, params, index, start);
+            return BOutError(bout, kErrorImplementation, params, index, begin);
           }
         }
         if (space < length) {
-          return BOutError(bout, kErrorBufferOverflow, params, index, start);
+          return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         }
         if (length == 0) {
           break;  //< Not sure if this is an error.
         }
-        if (start + length >= stop) {
+        if (begin + length >= stop) {
           for (; size - length > 0; --length) {
             ui1 = *(ui1_ptr++);
             hash = Hash16(ui1, hash);
             *stop = ui1;
             ++stop;
           }
-          stop = start - 1;
+          stop = begin - 1;
           for (; length > 0; --length) {
             ui1 = *(ui1_ptr++);
             hash = Hash16(ui1, hash);
@@ -592,13 +592,13 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
     ++arg_index;
   }
   if (space < 3)
-    return BOutError(bout, kErrorBufferOverflow, params, index, start);
+    return BOutError(bout, kErrorBufferOverflow, params, index, begin);
   // space -= 2;   //< We don't need to save this variable.
   *stop = (UI1)hash;
   if (++stop >= stop) stop -= size;
   *stop = (UI1)(hash >> 8);
   if (++stop >= stop) stop -= size;
-  bout->stop = (UIT)Size(start, stop);
+  bout->stop = (UIT)Size(begin, stop);
   PRINTF("\nDone writing to B-Output with the hash 0x%x.", hash)
   return 0;
 }
@@ -617,11 +617,11 @@ void BOutRingBell(BOut* bout, const char* address) {
   UIT size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  char *start = BOutBuffer(bout),          //< Beginning of the socket.
-      *stop = start + size,                //< End of the socket.
-          *start = start + bout->start,    //< Start of the data.
-              *stop = start + bout->stop;  //< Stop of the data.
-  space = (UIT)SlotSpace(start, stop, size);
+  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+      *stop = begin + size,                //< End of the socket.
+          *begin = begin + bout->begin,    //< Start of the data.
+              *stop = begin + bout->stop;  //< Stop of the data.
+  space = (UIT)SlotSpace(begin, stop, size);
   if (space == 0) {
     PRINTF("\nBuffer overflow!")
     return;
@@ -640,7 +640,7 @@ void BOutRingBell(BOut* bout, const char* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (UIT)Size(start, stop);
+  bout->stop = (UIT)Size(begin, stop);
 }
 
 void BOutAckBack(BOut* bout, const char* address) {
@@ -658,11 +658,11 @@ void BOutAckBack(BOut* bout, const char* address) {
   UIT size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  char *start = BOutBuffer(bout),          //< Beginning of the socket.
-      *stop = start + size,                //< End of the socket.
-          *start = start + bout->start,    //< Start of the data.
-              *stop = start + bout->stop;  //< Stop of the data.
-  space = (UIT)SlotSpace(start, stop, size);
+  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+      *stop = begin + size,                //< End of the socket.
+          *begin = begin + bout->begin,    //< Start of the data.
+              *stop = begin + bout->stop;  //< Stop of the data.
+  space = (UIT)SlotSpace(begin, stop, size);
   if (space == 0) {
     PRINTF("\nBuffer overflow!")
     return;
@@ -681,7 +681,7 @@ void BOutAckBack(BOut* bout, const char* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (UIT)Size(start, stop);
+  bout->stop = (UIT)Size(begin, stop);
 }
 
 const Op* BOutConnect(BOut* bout, const char* address) {
@@ -715,7 +715,7 @@ char* Print (BOut* bout, char* socket, char* buffer_end) {
     Utf& utf (socket, buffer_end);
     utf << "\nBOut:" << Hex<UIW> (bout)
           << " size:" << size
-          << " start:" << bout->start << " stop:" << bout->stop
+          << " begin:" << bout->begin << " stop:" << bout->stop
           << " read:"  << bout->read
           << Memory (BOutBuffer (bout), size + 64);
     //< @todo remove the + 64.);
@@ -726,9 +726,9 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   ASSERT(bout);
   int size = bout->size;
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
-      << " start:" << bout->start << " stop:" << bout->stop
+      << " start:" << bout->begin << " stop:" << bout->stop
       << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
-  Printf("\n!| cursor:%p", utf.start);
+  Printf("\n!| cursor:%p", utf.begin);
   return utf;
 }
 #endif

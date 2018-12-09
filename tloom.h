@@ -107,7 +107,7 @@ Index TLoomAdd(TCLoom<Size, Index, Char>* loom, const Char* strand) {
   if (count >= count_max) return -1;
   Size* offsets = TLoomOffsets(loom);
   Size offset = *(offsets + count);
-  Char* start = 0;
+  Char* begin = 0;
 }
 
 template <typename Size, typename Index, typename Char>

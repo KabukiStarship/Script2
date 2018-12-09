@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPTBINARY
-#define INCLUDED_SCRIPTBINARY 1
+#ifndef INCLUDED_SCRIPT2_CBINARY
+#define INCLUDED_SCRIPT2_CBINARY 1
 
 namespace _ {
 
@@ -215,11 +215,11 @@ API char* Print(char* cursor, char* stop, FLT value);
 API char* Print(char* cursor, char* stop, DBL value);
 
 /* Scans a FLT from the given string_.
-@return Nil if the string_ doesn't start with a FLT. */
+@return Nil if the string_ doesn't begin with a FLT. */
 const char* Scan(const char* cursor, FLT& value);
 
 /* Scans a DBL from the given string_.
-@return Nil if the string_ doesn't start with a DBL. */
+@return Nil if the string_ doesn't begin with a DBL. */
 const char* Scan(const char* cursor, DBL& value);
 
 #if USING_UTF16 == YES
@@ -246,4 +246,4 @@ API char32_t* Print(char32_t* cursor, char32_t* stop, DBL value);
 
 #endif  //< #if SEAM >= _0_0_0__03
 }  // namespace _
-#endif  //< #ifndef INCLUDED_SCRIPTBINARY
+#endif  //< #ifndef INCLUDED_SCRIPT2_CBINARY

@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License. */
 #include "cbsq.h"
 
 #include "ctest.h"
-#include "cutf1.h"
+#include "cstr1.h"
 
 namespace _ {
 

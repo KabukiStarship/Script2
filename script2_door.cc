@@ -51,7 +51,7 @@ Door::Door(const char* room_name, UIW* socket, UIW size_bytes) {
 }
 
 Door::~Door() {
-  if (start) delete[] start;
+  if (begin) delete[] begin;
 }
 
 slot_t Door::GetSlot(slot_t index) {

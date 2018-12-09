@@ -48,7 +48,7 @@ class Library : public Operand {
   /* Gets the data size in bytes. */
   UIT GetDataSize() { return data_size_; }
 
-  /* Attempts to add the Page data into the Obj at the given BaseAddress.
+  /* Attempts to add the Page data into the CObj at the given BaseAddress.
       @return Returns nil upon success and an error char upon failure. */
   const Op* Add(UI1 type, const char* key, void* data) {
     TIndex size_of_type = getSizeOfType(type);
@@ -58,7 +58,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to insert the Page data into the Obj at the given index.
+  /* Attempts to insert the Page data into the CObj at the given index.
       @return Returns nil upon success and an error char upon failure. */
   const Op* Insert(UI1 type, const char* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
@@ -67,7 +67,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to remove the Page data into the Obj at the given index.
+  /* Attempts to remove the Page data into the CObj at the given index.
       @return Returns nil upon success and an error char upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 
@@ -199,7 +199,7 @@ class Library : public Operand {
 
 /* Destructs the given bag. */
 template <typename TIndex, typename TKey, typename TData, uint MaxStackSize>
-API void Destroy(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+API void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<char*>(r);
 }

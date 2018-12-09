@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tutf.h
+@file    /tstr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,10 +14,10 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__02
-#ifndef INCLUDED_SCRIPT_TUTF
-#define INCLUDED_SCRIPT_TUTF 1
+#ifndef INCLUDED_SCRIPT2_TUTF
+#define INCLUDED_SCRIPT2_TUTF 1
 
-#include "cutf.h"
+#include "cstr.h"
 
 #include "cascii.h"
 #include "cconsole.h"
@@ -33,14 +33,14 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* An empty strand. */
+/* An empty s. */
 template <typename Char = char>
 const Char* TStringEmpty() {
   static const Char kString[] = {'\0'};
   return kString;
 }
 
-/* The new-line strand. */
+/* The new-line s. */
 template <typename Char = char>
 const Char* TStringNL() {
   static const Char kString[] = {'\n'};
@@ -61,7 +61,7 @@ inline Char TPrintableChar(Char value) {
   return value;
 }
 
-/* Sets the strand to either the given value or empty strand if input
+/* Sets the s to either the given value or empty s if input
 is nil. */
 template <typename Char = char>
 inline Char* TStringSet(Char* string_) {
@@ -69,7 +69,8 @@ inline Char* TStringSet(Char* string_) {
   return string_;
 }
 
-/* Searches fro the strand line stop. */
+/* Searches fro the s line stop.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = char>
 const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
   Char c;
@@ -89,7 +90,18 @@ const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
   return cursor - 1;
 }
 
+/* Searches fro the s line stop.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
+template <typename Char = char>
+Char* TStringLineEnd(Char* cursor, int column_count = 80) {
+  return const_cast<Char*>(
+      TStringLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
+}
+
 /* Finds the stop of the line, wrapped to the given column_count.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer.
 @param column_coun In characters. */
 template <typename Char = char>
 const Char* TStringLineEnd(const Char* cursor, const Char* stop,
@@ -117,8 +129,20 @@ const Char* TStringLineEnd(const Char* cursor, const Char* stop,
   return cursor - 1;
 }
 
-/* Finds the stop of the decimals in the strand, if there are any.
-The stop of */
+/* Finds the stop of the line, wrapped to the given column_count.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer.
+@param column_coun In characters. */
+template <typename Char = char>
+inline Char* TStringLineEnd(Char* cursor, Char* stop, int column_count = 80) {
+  return const_cast<const Char*>(
+      TStringLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
+                           reinterpret_cast<const Char*>(stop), column_count));
+}
+
+/* Finds the stop of the decimals in the s, if there are any.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
 template <typename Char = char>
 const Char* TStringDecimalEnd(const Char* cursor, const Char* stop) {
   ASSERT(cursor);
@@ -138,7 +162,18 @@ const Char* TStringDecimalEnd(const Char* cursor, const Char* stop) {
   return cursor - 1;
 }
 
-/* Skips the given Char in a strand if there are any.. */
+/* Finds the stop of the decimals in the s, if there are any.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
+template <typename Char = char>
+inline Char* TStringDecimalEnd(Char* cursor, Char* stop) {
+  return const_cast<Char*>(
+      TStringDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
+                              reinterpret_cast<const Char*>(stop)));
+}
+
+/* Skips the given Char in a s if there are any.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = char>
 const Char* TStringSkipChar(const Char* cursor, Char skip_char) {
   if (cursor == nullptr) return nullptr;
@@ -154,11 +189,16 @@ const Char* TStringSkipChar(const Char* cursor, Char skip_char) {
   return cursor;
 }
 
+/* Skips the given Char in a s if there are any.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = char>
-Char* TStringSkipChar(Char* cursor, Char skip_char) {
-  return const_cast<Char*>(TStringSkipChar<Char>(cursor, skip_char));
+inline Char* TStringSkipChar(Char* cursor, Char skip_char) {
+  return const_cast<const Char*>(
+      TStringSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
 }
 
+/* Scrolls over any whitespace.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = char>
 const Char* TStringSkipSpaces(const Char* cursor) {
   if (!cursor) return nullptr;
@@ -172,44 +212,62 @@ const Char* TStringSkipSpaces(const Char* cursor) {
   return cursor;
 }
 
-/* Attempts to find the given strand.
-@return Nil upon failed search or a pointer to the stop of the . */
+/* Scrolls over any whitespace.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = char>
-const Char* TStringFind(const Char* string_, const Char* query) {
-  ASSERT(string_);
+Char* TStringSkipSpaces(Char* cursor) {
+  return const_cast<Char*>(TStringSkipSpaces<Char>(cursor));
+}
+
+/* Attempts to find the given query.
+@return Nil upon failed search or a pointer to the stop of the cursor query.
+@param  cursor  The first Char in the buffer.
+@param  query   A query string.  */
+template <typename Char = char>
+const Char* TStringFind(const Char* cursor, const Char* query) {
+  ASSERT(cursor);
   ASSERT(query);
 
-  Char strand = *string_,  //< Current strand Char.
-      t = *query,          //< Current query Char.
-      c = t;               //< The first Char of the query we're searching for.
-  if (c == 0)              //< We're not allowing empty queries.
+  Char s = *cursor,  //< Current s Char.
+      t = *query,    //< Current query Char.
+      c = t;         //< The first Char of the query we're searching for.
+  if (!c)            //< We're not allowing empty queries.
     return nullptr;
-  const Char *start_of_query, *start = string_;
+  const Char *start_of_query, *begin = cursor;
   query = TStringSkipSpaces<Char>(query);
 
   // Scroll through each Char and match it to the query Char.
-  while (strand) {
-    if (strand == c) {  // The first Char matches:
-                        // Setup to compare the strings;
-      start_of_query = string_;
-      start = query;
+  while (s) {
+    if (s == c) {  // The first Char matches:
+                   // Setup to compare the strings;
+      start_of_query = cursor;
+      begin = query;
       t = c;
       // check the rest of the Char:
-      while (strand == t) {
-        strand = *(++string_);
-        t = *(++start);
+      while (s == t) {
+        s = *(++cursor);
+        t = *(++begin);
         if (t == 0)  // Once we've reached the delimiter it's a match!
           return start_of_query;
-        if (!strand)  // We've reached the stop of Char without a hit.
+        if (!s)  // We've reached the stop of Char without a hit.
           return nullptr;
       }
     }
     // The Char did not match so repeat the process for each Char.
-    strand = *(++string_);
-    t = *(++start);
+    s = *(++cursor);
+    t = *(++begin);
   }
-  // If we haven't found it by now it's not in the strand.
+  // If we haven't found it by now it's not in the s.
   return nullptr;
+}
+
+/* Attempts to find the given query.
+@return Nil upon failed search or a pointer to the stop of the . */
+template <typename Char = char>
+inline Char* TStringFind(Char* string, const Char* query) {
+  return const_cast<Char*>(
+      TStringFind<Char>(reinterpret_cast<const Char*>(string),
+                        reinterpret_cast<const Char*>(query)));
 }
 
 /* String skip spaces.
@@ -229,16 +287,29 @@ const Char* TStringSkipSpaces(const Char* cursor, const Char* stop) {
   return cursor;
 }
 
+/* String skip spaces.
+@return Nil if there are no spaces to skip.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
+template <typename Char = char>
+inline Char* TStringSkipSpaces(Char* cursor, Char* stop) {
+  return const_cast<Char*>(
+      TStringSkipSpaces<Char>(reinterpret_cast<const Char*>(cursor),
+                              reinterpret_cast<const Char*>(stop)));
+}
+
 /* Checks if the two strings are the same.
 @return Nil upon strings not being the same or a pointer to the stop of the
-equivalent strand upon success. */
+equivalent s upon success.
+@param  string_a  A cursor to compare to string_b.
+@param  string_b  A cursor to compare to string_a. */
 template <typename Char = char>
-const Char* TStringEquals(const Char* text_a, const Char* text_b) {
-  ASSERT(text_a);
-  ASSERT(text_b);
-  PRINTF("\nComparing \"%s\" to \"%s\"", text_a, text_b);
+const Char* TStringEquals(const Char* string_a, const Char* string_b) {
+  ASSERT(string_a);
+  ASSERT(string_b);
+  PRINTF("\nComparing \"%s\" to \"%s\"", string_a, string_b);
 
-  Char a = *text_a, b = *text_b;
+  Char a = *string_a, b = *string_b;
   while (a) {
     PRINT(a);
     if (a != b) {  // Not a hit.
@@ -246,33 +317,45 @@ const Char* TStringEquals(const Char* text_a, const Char* text_b) {
       return nullptr;
     }
     if (b == 0) {  // Hit!
-      PRINTF("\nFound hit at 0x%p", text_a);
-      return text_a;
+      PRINTF("\nFound hit at 0x%p", string_a);
+      return string_a;
     }
-    a = *(++text_a);
-    b = *(++text_b);
+    a = *(++string_a);
+    b = *(++string_b);
   }
   if (b) {
     PRINTF("\nNot a hit: no nil-term Char found");
     return nullptr;
   }
-  PRINTF("\nFound hit at 0x%p", text_a);
-  return text_a;  //< Find hit!
+  PRINTF("\nFound hit at 0x%p", string_a);
+  return string_a;  //< Find hit!
+}
+
+/* Checks if the two strings are the same.
+@return Nil upon strings not being the same or a pointer to the stop of the
+equivalent s upon success.
+@param  string_a  A cursor to compare to string_b.
+@param  string_b  A cursor to compare to string_a.
+*/
+template <typename Char = char>
+inline Char* TStringEquals(Char* string_a, const Char* string_b) {
+  return const_cast<Char*>(
+      TStringEquals<Char>(reinterpret_cast<const Char*>(string_a),
+                          reinterpret_cast<const Char*>(string_b)));
 }
 
 /* Compares the two strings to see if the are equal.
 @return Nil of the two strings aren't equal or a pointer to the stop of the
-strand upon success. */
+s upon success. */
 template <typename Char = char>
-const Char* TStringEquals(const Char* cursor, const Char* stop,
-                          const Char* query) {
+const Char* TStringEquals(const Char* cursor, const Char* stop, Char* query) {
   if (!cursor) return nullptr;
   ASSERT(cursor < stop);
   if (!query) return nullptr;
 
   PRINTF("\nComparing \"%s\" to \"%s\"", cursor, query);
 
-  Char a = *cursor, b = *query;
+  const Char a = *cursor, b = *query;
   while (a) {
     PRINT(a);
     if (a != b) {  // Not a hit.
@@ -297,21 +380,44 @@ const Char* TStringEquals(const Char* cursor, const Char* stop,
   return cursor;
 }
 
-/* Checks if the given strand isn't empty.
-@return False if the strand is empty and true otherwise.
-@desc A strand is defined as empty if it is NIL or all whitespace. */
+/* Compares the two strings to see if the are equal.
+@return Nil of the two strings aren't equal or a pointer to the stop of the
+s upon success. */
 template <typename Char = char>
-BOL TStringIsntEmpty(const Char* string_) {
-  if (!string_) return false;
-  Char c = *string_;
+Char* TStringEquals(Char* cursor, Char* stop, Char* query) {
+  return const_cast<Char*>(TStringEquals(reinterpret_cast<const Char*>(cursor),
+                                         reinterpret_cast<const Char*>(stop),
+                                         query));
+}
+
+/* Checks if the given s isn't empty.
+@return False if the s is empty and true otherwise.
+@param  cursor  The first Char in the buffer.
+@desc A s is defined as empty if it is NIL or all whitespace. */
+template <typename Char = char>
+BOL TStringIsntEmpty(const Char* cursor) {
+  if (!cursor) return false;
+  Char c = *cursor;
   while (c) {
     if (!TIsWhitespace<Char>(c)) return true;
-    c = *(++string_);
+    c = *(++cursor);
   }
   return false;
 }
 
-/* Checks to see if the string_ isn't empty or whitespace. */
+/* Checks if the given s isn't empty.
+@return False if the s is empty and true otherwise.
+@param  cursor  The first Char in the buffer.
+@desc A s is defined as empty if it is NIL or all whitespace. */
+template <typename Char = char>
+BOL TStringIsntEmpty(Char* cursor) {
+  return TStringIsntEmpty<Char>(reinterpret_cast<const Char*>(cursor));
+}
+
+/* Checks to see if the cursor isn't empty or whitespace.
+@return False if the s is empty and true otherwise.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
 template <typename Char = char>
 BOL TStringIsntEmpty(const Char* cursor, const Char* stop) {
   if (!cursor) return false;
@@ -333,7 +439,22 @@ BOL TStringIsntEmpty(const Char* cursor, const Char* stop) {
   return false;
 }
 
-/* Skips all the chars in a given range. */
+/* Checks to see if the cursor isn't empty or whitespace.
+@return False if the s is empty and true otherwise.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer. */
+template <typename Char = char>
+BOL TStringIsntEmpty(Char* cursor, const Char* stop) {
+  return TStringIsntEmpty(reinterpret_cast<const Char*>(cursor),
+                          reinterpret_cast<const Char*>(stop));
+}
+
+/* Skips all the chars in a given range.
+@return Nil upon failure or a pointer to the Char after the last Char in the
+given range.
+@param  cursor  The first Char in the buffer.
+@param  lower_bounds
+@param  upper bounds*/
 template <typename Char = char>
 const Char* TStringSkipCharsInRange(const Char* cursor, Char lower_bounds,
                                     Char upper_bounds) {
@@ -344,17 +465,31 @@ const Char* TStringSkipCharsInRange(const Char* cursor, Char lower_bounds,
   return cursor;
 }
 
+/* Skips all the chars in a given range.
+@return Nil upon failure or a pointer to the Char after the last Char in the
+given range.
+@param  cursor  The first Char in the buffer.
+@param  lower_bounds
+@param  upper bounds*/
+template <typename Char = char>
+Char* TStringSkipCharsInRange(Char* cursor, Char lower_bounds,
+                              Char upper_bounds) {
+  return const_cast<Char*>(TStringSkipCharsInRange(
+      reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
+}
+
 /* Skips the numbers in the given range. */
 template <typename Char = char>
-inline const Char* TStringSkipNumbers(const Char* cursor) {
-  return TStringSkipCharsInRange<Char>(cursor, '0', '9');
+inline Char* TStringSkipNumbers(Char* cursor) {
+  return const_cast<Char*>(TStringSkipCharsInRange<Char>(
+      reinterpret_cast<const Char*>(cursor), '0', '9'));
 }
 
 /* Prints the given token aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term char upon success.
-@param  strand The begin of the begin.
-@param  stop    The stop of the begin.
+@param  cursor  The first Char in the buffer.
+@param  stop    The last Char in the buffer.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Char = char>
@@ -371,7 +506,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
     return nullptr;
   }
 
-  const Char* token_end = TStringEnd<Char>(token);
+  auto token_end = TStringEnd<Char>(token);
   Char c;  //< Temp variable.
   if (token == token_end) return cursor;
   SIW length = token_end - token;
@@ -432,7 +567,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
   return cursor + column_count;
 }
 
-/* Prints the given string_ center aligned to the given column_count. */
+/* Prints the given cursor center aligned to the given column_count. */
 template <typename Char = char>
 Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
                    int column_count = 80) {
@@ -478,7 +613,8 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
 
 /* Prints a line of the given column_count the given begin. */
 template <typename Char = char>
-Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count = 80) {
+Char* TPrintLine(Char* cursor, const Char* stop, Char token,
+                 int column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
   int l_column_count = column_count;
@@ -492,7 +628,7 @@ Char* TPrintLine(Char* cursor, Char* stop, Char token, int column_count = 80) {
   return cursor;
 }
 
-/* Prints the given string_ repeated to make a line. */
+/* Prints the given cursor repeated to make a line. */
 template <typename Char = char>
 Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
                        int column_count = 80) {
@@ -511,7 +647,7 @@ Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
   return cursor;
 }
 
-/* Prints a string_ to the given buffer without */
+/* Prints a cursor to the given buffer without */
 template <typename Char = char>
 Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
                  int column_count = 80) {
@@ -526,9 +662,14 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
       c = *string_++;
       if (cursor >= stop) return nullptr;
       if (!c) {
-        *cursor++ = 0;
+        *cursor = c;
         return cursor;
       }
+    }
+    *cursor++ = '\n';
+    if (!c) {
+      *cursor = c;
+      return cursor;
     }
   }
   return cursor;
@@ -563,12 +704,12 @@ class TToken {
 
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text begin. */
-  TToken(FLT value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(FLT value) { TPrint<Char>(cursor, cursor + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(DBL value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(DBL value) { TPrint<Char>(cursor, cursor + kSize, value); }
 #endif
-  /* Gets the number_ strand. */
+  /* Gets the number_ s. */
   const Char* String() { return string_; }
 
  private:
@@ -663,43 +804,42 @@ This class only stores the stop of begin pointer and a pointer to the write
 begin. It is up the user to store begin of begin pointer and if they would
 like to replace the begin with the beginning of begin pointer when they are
 done printing. */
-template <typename Char = char, typename Size = intptr_t>
+template <typename Char = char, typename Size = SIN>
 struct TUTF {
-  Char *start,  //< Start address.
+  Char *begin,  //< Start address.
       *stop;    //< Stop address.
 
   /* Initializes the Utf& from the given begin pointers.
   @param begin The beginning of the begin.
   @param stop   The stop of the begin. */
-  TUTF(Char* start, Size size)
-      : start(start), stop(TPtr<Char>(start, size - 1)) {
-    ASSERT(start);
-    ASSERT(TObjSizeIsValid<Size>(size, 8));
+  TUTF(Char* begin, Size size)
+      : begin(begin), stop(TPtr<Char>(begin, size - 1)) {
+    ASSERT(begin);
   }
 
   /* Initializes the Utf& from the given begin pointers.
   @param begin The beginning of the begin.
   @param stop   The stop of the begin. */
-  TUTF(UIW* start, Size size)
-      : start(reinterpret_cast<Char*>(start)),
-        stop(TPtr<Char>(start, size - 1)) {
-    ASSERT(start);
+  TUTF(UIW* begin, Size size)
+      : begin(reinterpret_cast<Char*>(begin)),
+        stop(TPtr<Char>(begin, size - 1)) {
+    ASSERT(begin);
   }
 
   /* Initializes the Utf& from the given begin pointers.
   @param begin The beginning of the begin.
   @param stop   The stop of the begin. */
-  TUTF(Char* start, Char* stop) : start(start), stop(stop) {}
+  TUTF(Char* begin, Char* stop) : begin(begin), stop(stop) {}
 
   /* Clones the other utf. */
   TUTF(const TUTF& other)
-      : start(other.start), stop(other.stop) {  // Nothing to do here!.
+      : begin(other.begin), stop(other.stop) {  // Nothing to do here!.
   }
 
   /* Sets the begin pointer to the new_pointer. */
   inline TUTF& Set(Char* new_pointer) {
     if (!new_pointer) return *this;
-    start = new_pointer;
+    begin = new_pointer;
     return *this;
   }
 
@@ -710,116 +850,116 @@ struct TUTF {
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(SI1 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(UI1 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(SI2 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(UI2 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(SI4 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(UI4 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(SI8 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(UI8 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
 #if SEAM >= _0_0_0__03
   /* Prints the given value as hex. */
   inline TUTF& Hex(FLT value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as hex. */
   inline TUTF& Hex(DBL value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 #endif
 
   /* Prints the given pointer as hex. */
   inline TUTF& Hex(const void* value) {
-    return Set(TPrintHex<Char>(start, stop, value));
+    return Set(TPrintHex<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(SI1 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(UI1 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(SI2 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(UI2 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(SI4 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(UI4 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(SI8 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(UI8 value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
 #if SEAM >= _0_0_0__03
   /* Prints the given value as binary. */
   inline TUTF& Binary(FLT value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 
   /* Prints the given value as binary. */
   inline TUTF& Binary(DBL value) {
-    return Set(Binary<Char>(start, stop, value));
+    return Set(Binary<Char>(begin, stop, value));
   }
 #endif
   /* Prints the given pointer as binary. */
   inline TUTF& Binary(const void* ptr) {
     UIW address = reinterpret_cast<UIW>(ptr);
-    return Set(Binary<Char>(start, stop, address));
+    return Set(Binary<Char>(begin, stop, address));
   }
 };
 
@@ -860,18 +1000,18 @@ class TCenter {
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text begin. */
   TCenter(FLT value, int column_count = 80)
-      : string_(nullptr), number_(value), column_count(column_count) {
+      : cursor(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
   TCenter(DBL value, int column_count = 80)
-      : string_(nullptr), number_(value), column_count(column_count) {
+      : cursor(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 #endif
 
-  /* Gets the number_ strand. */
+  /* Gets the number_ s. */
   const Char* String() { return string_; }
 
   /* Gets the column_count. */
@@ -880,14 +1020,14 @@ class TCenter {
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_) {
       return utf.Set(
-          _::TPrintCenter<Char>(utf.start, utf.stop, string_, column_count));
+          _::TPrintCenter<Char>(utf.begin, utf.stop, string_, column_count));
     }
-    return utf.Set(_::TPrintCenter<Char>(utf.start, utf.stop, number_.String(),
+    return utf.Set(_::TPrintCenter<Char>(utf.begin, utf.stop, number_.String(),
                                          column_count));
   }
 
  private:
-  const Char* string_;   //< Pointer to the strand.
+  const Char* string_;   //< Pointer to the s.
   TToken<Char> number_;  //< Pointer to a pointer to utf.
   int column_count;      //< Number of columns to center.
 };
@@ -929,17 +1069,17 @@ class TRight {
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text begin. */
   TRight(FLT value, int column_count = 80)
-      : string_(nullptr), number_(value), column_count_(column_count) {
+      : cursor(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
   TRight(DBL value, int column_count = 80)
-      : string_(nullptr), number_(value), column_count_(column_count) {
+      : cursor(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 #endif
-  /* Gets the number_ strand. */
+  /* Gets the number_ s. */
   const Char* String() { return string_; }
 
   /* Gets the column_count. */
@@ -948,13 +1088,13 @@ class TRight {
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_)
       return utf.Set(
-          _::TPrintRight<Char>(utf.start, utf.stop, string_, column_count_));
-    return utf.Set(_::TPrintRight<Char>(utf.start, utf.stop, number_.String(),
+          _::TPrintRight<Char>(utf.begin, utf.stop, string_, column_count_));
+    return utf.Set(_::TPrintRight<Char>(utf.begin, utf.stop, number_.String(),
                                         column_count_));
   }
 
  private:
-  const Char* string_;   //< Pointer to the strand.
+  const Char* string_;   //< Pointer to the s.
   TToken<Char> number_;  //< Pointer to a pointer to utf.
   int column_count_;     //< Number of columns to center.
 };
@@ -970,7 +1110,7 @@ struct API TLineChar {
       : token(token), column_count(column_count) {}
 };
 
-/* Utility class for printing a strand line with operator<<. */
+/* Utility class for printing a s line with operator<<. */
 template <typename Char = char>
 struct API TLineString {
   const Char* string_;  //< Character to utf.
@@ -983,88 +1123,91 @@ struct API TLineString {
   TUTF<Char>& Print(TUTF<Char>& utf) {}
 };
 
-/* AsciiFactory prints the begin to the console without deleting the
-begin.
-@return If (size == 0 && begin) then nil indicating success deleting the
-factory. If passing in a argument it will have to get passed through the obj.
-*/
-template <typename Size = int, typename Char = char>
-UIW* TCOut(UIW* start, SIW function, void* arg) {
-  if (function < kFactoryClone)
-    return TObjectFactory<Size>(start, function, arg);
-
-  if (!start) {
-    if (!arg) return nullptr;
-    Size size = *reinterpret_cast<Size*>(arg);
-    if (size <= 0) size = (Size)kObjSizeDefault;
-  }
-
-  Size size = *reinterpret_cast<Size*>(arg);
-  if (size > 0) {
-    size = TObjSizeRound<Size>(size);
-  }
-  if (start) return TObjClone<Size>(start);
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
-  Print(reinterpret_cast<const char*>(address));
-  return start;
-}
-
-/* AsciiFactory prints the begin to the console and deletes the
-begin. */
-template <typename Size = int, typename Char = char>
-UIW* TCOutAuto(UIW* start, SIW function, void* arg) {
-  UIW* result = TCOut<Char, Size>(start, function, arg);
-  if (!start) return result;
-  delete[] start;
-  return nullptr;
-}
-
-/* Returns the first char in the string_ socket. */
+/* Returns the first char in the cursor socket. */
 template <typename Char = char, typename Size = int>
-inline Char* TStringStart(UIW* start) {
-  ASSERT(start);
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
+inline Char* TStringStart(UIW* begin) {
+  ASSERT(begin);
+  UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
   return reinterpret_cast<Char*>(address);
 }
 
-/* Searches for the stop of the strand. */
+/* Searches for the stop of the s. */
 template <typename Char = char, typename Size = int>
-inline Char* TStringStop(UIW* start) {
-  ASSERT(start);
+inline Char* TStringStop(UIW* begin) {
+  ASSERT(begin);
 
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(Size);
-  Size size = *reinterpret_cast<Size*>(start);
+  UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
+  Size size = *reinterpret_cast<Size*>(begin);
   // Char* begin = reinterpret_cast<Char*>(address);
   return reinterpret_cast<Char*>(address) + (size >> TBitShiftCount<Size>()) -
          1;
 }
 
-/* Searches for the stop of the strand. */
+/* Searches for the stop of the string. */
 template <typename Char = char, typename Size = int>
-inline void TStringStop(CObject obj) {
+inline Char* TStringStop(CObject obj) {
   return TStringStop<Char, Size>(obj);
 }
 
-/* A templated-C struct. */
-template <typename Char, typename Size>
-struct TCString {
+/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 cursor.*/
+template <typename Size, typename Char>
+struct TCSTR {
   Size size;  //< Size of the ASCII Object.
 };
 
 template <typename Char, typename Size>
-Char* TStringBegin(TCString<Char, Size>* string_) {
+Char* TStringBegin(TCSTR<Char, Size>* string_) {
   ASSERT(string_);
 }
 
-/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 string_.*/
-template <typename Char, typename Size>
-struct TString {
-  Size size;  //< Size of the ASCII Object.
+/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 cursor.*/
+template <typename Size, typename Char>
+class TSTR {
+ public:
+  /* Constructs a string from a raw buffer pointer. */
+  TSTR(UIW* obj) : obj_(reinterpret_cast<TCSTR<Size, Char>*>(obj)) {}
+
+  /* Gets the Start, meaning the first Char, of the string. */
+  Char* Start() {
+    UIW ptr = reinterpret_cast<UIW>(obj_);
+    return reinterpret_cast<Char*>(ptr + sizeof(Size));
+  }
+
+  /* Prints this object to the COut. */
+  inline void Print() { _::Print(Start()); }
+
+ private:
+  TCSTR<Size, Char>* obj_;  //< Pointer to an ASCII STR.
 };
 
-/* Queries the given strand for the given query. */
+/* AsciiFactory prints the begin to the console without deleting the begin.
+@return If (size == 0 && begin) then nil indicating success deleting the
+factory. If passing in a argument it will have to get passed through the obj.
+*/
+template <typename Size = int, typename Char = char>
+int TCOut(CObject& obj, SIW function, void* arg) {
+  UIW* begin = obj.begin;
+  if (!begin) return kFactoryNilOBJ;
+  UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
+  Print(reinterpret_cast<const Char*>(address));
+  return 0;
+}
+
+/* AsciiFactory prints the begin to the console and deletes the
+obj.begin. */
+template <typename Size = int, typename Char = char>
+int TCOutHeap(CObject& obj, SIW fun, void* arg) {
+  UIW* begin = obj.begin;
+  if (!begin) return kFactoryNilOBJ;
+  UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
+  Print(reinterpret_cast<const Char*>(address));
+  delete[] begin;
+  return 0;
+}
+
+/* Queries the given s for the given query. */
 template <typename Char = char>
-int StringQuery(const Char* cursor, const Char* stop, const Char* query) {
+int TStringQuery(const Char* cursor, const Char* stop, const Char* query) {
   Char a = *cursor, b = *query;
   int result;
 
@@ -1092,7 +1235,7 @@ int StringQuery(const Char* cursor, const Char* stop, const Char* query) {
     if (!a) return 0;
     return 0 - a;
   }
-  // text SHOULD be a nil-terminated strand without whitespace.
+  // text SHOULD be a nil-terminated s without whitespace.
   while (b) {
     result = b - a;
     if (result) {
@@ -1122,7 +1265,7 @@ int StringQuery(const Char* cursor, const Char* stop, const Char* query) {
 /* Returns the static default printer that doesn't work in multi-threaded or
 interrupt situations.
 If you are using more than one thread or interrupts, the*/
-template <typename Char = char>
+template <typename Char = char, typename Size = intptr_t>
 TUTF<Char> TCOut() {
   static TUTF<Char> serial_out(TCOut<Char>);
   return serial_out;
@@ -1130,13 +1273,13 @@ TUTF<Char> TCOut() {
 
 }  // namespace _
 
-/* Writes a nil-terminated UTF-8 or ASCII strand to the utf.
+/* Writes a nil-terminated UTF-8 or ASCII s to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value   The value to utf. */
-template <typename Char = char>
+template <typename Char = char, typename Size = intptr_t>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, string_));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, string_));
 }
 
 /* Writes the given value to the utf.
@@ -1145,7 +1288,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
 @return The utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, c));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, c));
 }
 
 /* Writes the given value to the utf.
@@ -1154,7 +1297,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
 @return The utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1163,7 +1306,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
 @return The utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1172,7 +1315,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
 @return The utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1181,7 +1324,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1190,7 +1333,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1199,7 +1342,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1208,7 +1351,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__03
@@ -1218,7 +1361,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1227,7 +1370,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
 @param  value The value to write to the utf. */
 template <typename Char = char>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
-  return utf.Set(_::TPrint<Char>(utf.start, utf.stop, value));
+  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 #endif
 
@@ -1268,5 +1411,5 @@ inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TToken<Char> token) {
   return token.Print(utf);
 }
 
-#endif  //< #if INCLUDED_SCRIPT_TUTF
+#endif  //< #if INCLUDED_SCRIPT2_TUTF
 #endif  //< #if SEAM >= _0_0_0__02

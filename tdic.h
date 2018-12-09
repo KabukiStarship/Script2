@@ -657,7 +657,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
                   states +
                   count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
-              *collission_list = unsorted_indexes + count, *start;
+              *collission_list = unsorted_indexes + count, *begin;
   const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
@@ -677,13 +677,13 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
-      start = &collission_list[collision_index];
-      temp = *start;
-      ++start;
+      begin = &collission_list[collision_index];
+      temp = *begin;
+      ++begin;
       PRINTF("%u@", temp);
       while (temp != ~0) {
-        temp = *start;
-        ++start;
+        temp = *begin;
+        ++begin;
         if (temp == ~0) break;
         PRINTF(", %u$", temp);
       }

@@ -386,67 +386,67 @@ void FloatBytes(FLT value, char& byte_0, char& byte_1, char& byte_2,
   byte_3 = (char)(ui_value >> 24);
 }
 
-char* Print(char* start, UI2 chars) {
+char* Print(char* begin, UI2 chars) {
 #if ALIGN_MEMORY
   *reinterpret_cast<UI2*>(chars);
-  return start + 2;
+  return begin + 2;
 #else
   *reinterpret_cast<UI2*>(chars);
-  return start + 2;
+  return begin + 2;
 #endif
 }
 
-char* Print(char* start, char byte_0, char byte_1) {
+char* Print(char* begin, char byte_0, char byte_1) {
 #if ALIGN_MEMORY
-  if (reinterpret_cast<UIW>(start) & 1) {
-    start[0] = byte_1;
-    start[1] = '\0';
+  if (reinterpret_cast<UIW>(begin) & 1) {
+    begin[0] = byte_1;
+    begin[1] = '\0';
   }
-  if (align == 0) start[0] = byte_0;
-  start[0] = byte_0;
-  start[1] = '\0';
+  if (align == 0) begin[0] = byte_0;
+  begin[0] = byte_0;
+  begin[1] = '\0';
 #else
-  *reinterpret_cast<UI2*>(start) = byte_0 | (((UI2)byte_1) << 8);
+  *reinterpret_cast<UI2*>(begin) = byte_0 | (((UI2)byte_1) << 8);
 #endif
-  return &start[2];
+  return &begin[2];
 }
 
-char* Print(char* start, char* stop, char byte_0, char byte_1, char byte_2) {
+char* Print(char* begin, char* stop, char byte_0, char byte_1, char byte_2) {
 #if ALIGN_MEMORY
-  switch (reinterpret_cast<UIW>(start) & 3) {
+  switch (reinterpret_cast<UIW>(begin) & 3) {
     case 0: {
-      *reinterpret_cast<UI4*>(start) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+      *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
                                        ((UI4)byte_1) << 16 |
                                        ((UI4)byte_1) << 24;
-      return &start[4];
+      return &begin[4];
     }
     case 1: {
-      UI4* ptr = reinterpret_cast<UI4*>(start) - 1;
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
       UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
       *ptr = word;
-      start[3] = 0;
-      return &start[4];
+      begin[3] = 0;
+      return &begin[4];
     }
     case 2: {
-      UI2 ptr = *reinterpret_cast<UI2*>(start);
+      UI2 ptr = *reinterpret_cast<UI2*>(begin);
       *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
       *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
       return reinterpret_cast<char*>(ptr);
     }
     case 3: {
-      *start = byte_0;
-      UI4* ptr = reinterpret_cast<UI4*>(start) - 1;
+      *begin = byte_0;
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
       UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
       word |= ((UI4)byte_0) | ((UI4)byte_0) << 8 |
               ((UI4)byte_0) << 16;  //< OR together three.
-      start[3] = 0
+      begin[3] = 0
     }
   }
 #else
-  *reinterpret_cast<UI4*>(start) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+  *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
                                    ((UI4)byte_1) << 16 | ((UI4)byte_1) << 24;
 #endif
-  return &start[4];
+  return &begin[4];
 }
 
 // char puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.

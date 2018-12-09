@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT_CTEST
-#define INCLUDED_SCRIPT_CTEST 1
+#ifndef INCLUDED_SCRIPT2_CTEST
+#define INCLUDED_SCRIPT2_CTEST 1
 
 /* Function pointer prototype for a test case with command line argument
 string_.
@@ -206,4 +206,4 @@ API BOL TestAssert(const char* funciton, const char* file, int line);
 
 }  // namespace _
 
-#endif  //< #ifndef INCLUDED_SCRIPT_CTEST
+#endif  //< #ifndef INCLUDED_SCRIPT2_CTEST

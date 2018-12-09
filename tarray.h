@@ -99,9 +99,9 @@ Index ArrayElementCountMax() {
 template <typename T = SIW, typename Size = uint, typename Index = int>
 TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
   ASSERT(dimensions);
-  const Index* start = dimensions;
-  Index count = (*start++) - 1, element_count = *start++, index = count;
-  while (index-- > 0) element_count *= *start++;
+  const Index* begin = dimensions;
+  Index count = (*begin++) - 1, element_count = *begin++, index = count;
+  while (index-- > 0) element_count *= *begin++;
   Size size = ((Size)element_count * (Size)sizeof(T));
 }
 
@@ -186,7 +186,7 @@ class TArray {
  public:
   /* Initializes an array of n elements of the given type.
       @param max_elements The max number_ of elements in the array socket. */
-  TArray(Index demension_count = 1) : start(ArrayNew<T, Size, Index>(1)) {}
+  TArray(Index demension_count = 1) : begin(ArrayNew<T, Size, Index>(1)) {}
 
   /* Initializes an array of n elements of the given type.
       @param max_elements The max number_ of elements in the array socket. */
@@ -202,7 +202,7 @@ class TArray {
   }
 
   /* Deletes the dynamically allocated Array. */
-  ~Array() { delete[] start; }
+  ~Array() { delete[] begin; }
 
   /* Clones the other object; up-sizing the socket only if required. */
   void Clone(Array<T, Size, Index>& other) {}
@@ -223,11 +223,11 @@ class TArray {
   }
 
   inline TCArray<T, Size, Index>* stack {
-    return reinterpret_cast<TCArray<T, Size, Index>*>(start);
+    return reinterpret_cast<TCArray<T, Size, Index>*>(begin);
   }
 
  private:
-  UIW* start;  //< Dynamically word-aligned socket.
+  UIW* begin;  //< Dynamically word-aligned socket.
 };             //< class Array
 }  // namespace _
 

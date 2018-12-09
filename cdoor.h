@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "ccrabs.h"
 #include "slot.h"
 #include "tstack.h"
-#include "tutf.h"
+#include "tstr.h"
 
 namespace _ {
 
@@ -82,7 +82,7 @@ class Door : public Operand {
   virtual const Op* Star(CHW index, CCrabs* crabs);
 
  private:
-  UIW* start;                           //< Pointer to dynamic socket.
+  UIW* begin;                           //< Pointer to dynamic socket.
   TCArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
 };
 

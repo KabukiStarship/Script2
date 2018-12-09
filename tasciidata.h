@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTTYPES
 
 #include "csocket.h"
-#include "tutf.h"
+#include "tstr.h"
 
 #if SEAM == _0_0_0__12
 #include "test_debug.inl"
@@ -150,7 +150,7 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
     return AlignUpPointer4<T>(pointer);
   else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
-  // else it's an ASCII Obj.
+  // else it's an ASCII CObj.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |
@@ -249,7 +249,7 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char* Print(char* start, char* stop, SIN type, const void* value);
+API char* Print(char* begin, char* stop, SIN type, const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
@@ -265,7 +265,7 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
+API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -283,7 +283,7 @@ of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* start, char16_t* stop, SIN type,
+API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.

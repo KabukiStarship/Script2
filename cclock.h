@@ -23,7 +23,7 @@ namespace _ {
 /* A time in seconds and optional microseconds format that is compatible with
 the C++ standard library.
 Data structure is identical to std::tm with the execution that it has an
-additional microseconds from start of second variable.
+additional microseconds from begin of second variable.
 */
 struct API CClock {
   int second,  //< Second of the minute [0, 59].
@@ -166,34 +166,34 @@ API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* Print(char* start, char* stop, const CClock& clock);
+API char* Print(char* begin, char* stop, const CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-API char* Print(char* start, char* stop, Tss& t);
+API char* Print(char* begin, char* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* PrintTime(char* start, char* stop, TMS time);
+API char* PrintTime(char* begin, char* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* PrintTime(char* start, char* stop, TME time);
+API char* PrintTime(char* begin, char* stop, TME time);
 
 /* Prints the given timestamp to the stdout. */
 API void PrintTime(const CClock& clock);
@@ -251,34 +251,34 @@ API const char* TStringScanTime(const char* string_, TME& result);
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, CClock& clock);
+API char16_t* Print(char16_t* begin, char16_t* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, Tss& t);
+API char16_t* Print(char16_t* begin, char16_t* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* PrintTime(char16_t* start, char16_t* stop, TMS time);
+API char16_t* PrintTime(char16_t* begin, char16_t* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* start, char16_t* stop, TME time);
+API char16_t* Print(char16_t* begin, char16_t* stop, TME time);
 
 /* Reads a time or time delta from a a char16_t starting with an '@' sign.
 
@@ -324,34 +324,34 @@ API const char16_t* TStringScanTime(const char16_t* string_, TME& result);
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* Print(char32_t* start, char32_t* stop, CClock& clock);
+API char32_t* Print(char32_t* begin, char32_t* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* Print(char32_t* start, char32_t* stop, Tss& time);
+API char32_t* Print(char32_t* begin, char32_t* stop, Tss& time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* PrintTime(char32_t* start, char32_t* stop, TMS time);
+API char32_t* PrintTime(char32_t* begin, char32_t* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param start The beginning of the write socket.
+@param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* PrintTime(char32_t* start, char32_t* stop, TME time);
+API char32_t* PrintTime(char32_t* begin, char32_t* stop, TME time);
 
 /* Reads a time or time delta from a a char starting with an '@' sign..
 @param input  The char to parse.

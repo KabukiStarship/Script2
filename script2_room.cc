@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License. */
 #include "cbsq.h"
 #include "door.h"
 #include "stack.h"
-#include "tutf.h"
+#include "tstr.h"
 
 #if SEAM == _0_0_0__13
 #include "test_debug.inl"

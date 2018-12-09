@@ -27,9 +27,12 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-void Destroy(CObject stack) {
-  if (stack.factory) stack.factory(stack.start, 0, nullptr);
+void Delete(CObject& obj) {
+  AsciiFactory factory = obj.factory;
+  if (factory) factory(obj, kFactoryDelete, nullptr);
 }
+
+BOL IsOBJFactoryFunction(SIW function) { return function <= kFactoryLast; }
 
 BOL ObjSizeIsValid(SI2 size, SI2 size_min) {
   return TObjSizeIsValid<SI2>(size, size_min);

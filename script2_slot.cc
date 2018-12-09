@@ -17,7 +17,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "casciidata.h"
 #include "csocket.h"
-#include "tutf.h"
+#include "tstr.h"
 
 #if SEAM == _0_0_0__13
 #include "test_debug.inl"
@@ -52,8 +52,8 @@ Slot::Slot(UIW* socket, UIW size) {
   ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
   char* l_begin = reinterpret_cast<char*>(socket);
-  start = l_begin;
-  start = l_begin;
+  begin = l_begin;
+  begin = l_begin;
   stop = l_begin;
   stop = l_begin + size - 1;
 }
@@ -61,8 +61,8 @@ Slot::Slot(UIW* socket, UIW size) {
 Slot::Slot(BIn* bin) {
   ASSERT(bin);
   char* l_begin = reinterpret_cast<char*>(bin) + sizeof(BIn);
-  start = l_begin;
-  start = l_begin + bin->start;
+  begin = l_begin;
+  begin = l_begin + bin->begin;
   stop = l_begin + bin->stop;
   stop = l_begin + bin->size;
 }
@@ -70,15 +70,15 @@ Slot::Slot(BIn* bin) {
 Slot::Slot(BOut* bout) {
   ASSERT(bout);
   char* l_begin = reinterpret_cast<char*>(bout) + sizeof(BIn);
-  start = l_begin;
-  start = l_begin + bout->start;
+  begin = l_begin;
+  begin = l_begin + bout->begin;
   stop = l_begin + bout->stop;
   stop = l_begin + bout->size;
 }
 
 void* Slot::Contains(void* address) {
-  char* start = reinterpret_cast<char*>(this) + sizeof(Slot);
-  if (address < start) {
+  char* begin = reinterpret_cast<char*>(this) + sizeof(Slot);
+  if (address < begin) {
     return nullptr;
   }
   char* l_end = stop;
@@ -90,13 +90,13 @@ void* Slot::Contains(void* address) {
 
 void Slot::Wipe() {
   char *l_begin = reinterpret_cast<char*>(this) + sizeof(Slot),
-       *l_start = start, *l_stop = stop, *temp;
+       *l_start = begin, *l_stop = stop, *temp;
   if (l_start > l_stop) {
     temp = l_start;
-    start = l_stop;
+    begin = l_stop;
     stop = temp;
   }
-  while (start != stop) *start++ = 0;
+  while (begin != stop) *begin++ = 0;
 }
 
 const Op* Slot::Write(const UIT* params, void** args) {
@@ -109,20 +109,20 @@ const Op* Slot::Write(const UIT* params, void** args) {
 }
 
 BOL Slot::IsWritable() {
-  char* l_stop = start;
-  if (l_stop == start) {
+  char* l_stop = begin;
+  if (l_stop == begin) {
     if (l_stop != stop) {
       return false;
     }
     return true;
   }
-  return start != stop - 1;
+  return begin != stop - 1;
 }
 
-BOL Slot::IsReadable() { return start != stop; }
+BOL Slot::IsReadable() { return begin != stop; }
 
-/*char* SlotRead (Slot* slot, char* write, void* write_end, char* const start,
-                    char* const start, char* const stop , char* const stop,
+/*char* SlotRead (Slot* slot, char* write, void* write_end, char* const begin,
+                    char* const begin, char* const stop , char* const stop,
                     size_t size) {
     if (!slot) {
         return nullptr;
@@ -134,18 +134,18 @@ BOL Slot::IsReadable() { return start != stop; }
         return nullptr;
     }
 
-    if ((start > stop) && (start + size >= stop)) {
+    if ((begin > stop) && (begin + size >= stop)) {
         // Calculate upper chunk size.
         size_t top_chunk = stop - stop;
         size -= top_chunk;
 
-        SocketCopy (target, target_end, start, top_chunk);
+        SocketCopy (target, target_end, begin, top_chunk);
         SocketCopy (reinterpret_cast<char*>(target) + top_chunk, size,
-                    start);
-        return start + size;
+                    begin);
+        return begin + size;
     }
     SocketCopy (target, target_end, stop, size);
-    return start + size;
+    return begin + size;
 }*/
 
 const Op* Slot::Read(const UIT* params, void** args) {
@@ -174,9 +174,9 @@ const Op* Slot::Read(const UIT* params, void** args) {
 
   PRINTF("\n\nReading BIn: ")
 
-  char *l_begin = start,          //< Beginning of the socket.
+  char *l_begin = begin,          //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
-          *l_start = start,       //< start of the data.
+          *l_start = begin,       //< begin of the data.
               *l_stop = stop;     //< stop of the data.
   const UIT* param = params + 1;  //< current param.
 
@@ -497,7 +497,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
   // SlotWipe (slot);
 
   // Convert pointer back to offset
-  start = l_start;
+  begin = l_start;
 
   return 0;
 }
@@ -512,9 +512,9 @@ const Op* Slot::Write(const char* message) { return nullptr; }
 
 #if USING_CRABS_TEXT
 UTF1& Slot::Print(UTF1& utf) {
-  char *l_begin = start, *l_end = stop;
+  char *l_begin = begin, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)
-             << " start:" << Hex<>(start) << "\nstop:" << Hex<>(stop)
+             << " start:" << Hex<>(begin) << "\nstop:" << Hex<>(stop)
              << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);
 }
 #endif

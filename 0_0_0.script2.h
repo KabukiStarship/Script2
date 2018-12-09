@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "0_0_0.01_itos_and_stoi.h"
 #endif
 #if SEAM >= _0_0_0__02
-#include "0_0_0.02_strand_and_socket.h"
+#include "0_0_0.02_socket_utf_and_strand.h"
 #endif
 #if SEAM >= _0_0_0__03
 #include "0_0_0.03_ftos_and_stof.h"

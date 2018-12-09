@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cutf.h
+@file    /cstr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -25,13 +25,13 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #if USING_UTF8 == YES
-#include "cutf1.h"
+#include "cstr1.h"
 #endif
 #if USING_UTF16 == YES
-#include "cutf2.h"
+#include "cstr2.h"
 #endif
 #if USING_UTF32 == YES
-#include "cutf4.h"
+#include "cstr4.h"
 #endif
 
 #endif  //< #if INCLUDED_SCRIPTUTF

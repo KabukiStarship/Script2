@@ -22,7 +22,7 @@
     <ClInclude Include="0_0_0.script2.h" />
     <ClInclude Include="0_0_0.00_rng.h" />
     <ClInclude Include="0_0_0.01_itos_and_stoi.h" />
-    <ClInclude Include="0_0_0.02_strand_and_socket.h" />
+    <ClInclude Include="0_0_0.02_socket_utf_and_strand.h" />
     <ClInclude Include="0_0_0.03_ftos_and_stof.h" />
     <ClInclude Include="0_0_0.04_clock.h" />
     <ClInclude Include="0_0_0.05_ascii_stack.h" />
@@ -66,10 +66,10 @@
     <ClInclude Include="cslot.h" />
     <ClInclude Include="csocket.h" />
     <ClInclude Include="ctest.h" />
-    <ClInclude Include="cutf.h" />
-    <ClInclude Include="cutf2.h" />
-    <ClInclude Include="cutf4.h" />
-    <ClInclude Include="cutf1.h" />
+    <ClInclude Include="cstr.h" />
+    <ClInclude Include="cstr2.h" />
+    <ClInclude Include="cstr4.h" />
+    <ClInclude Include="cstr1.h" />
     <ClInclude Include="cvarint.h" />
     <ClInclude Include="cvk.h" />
     <ClInclude Include="cwall.h" />
@@ -96,30 +96,13 @@
     <ClInclude Include="tstrand.h" />
     <ClInclude Include="ttable.h" />
     <ClInclude Include="ttest.h" />
-    <ClInclude Include="tutf.h" />
+    <ClInclude Include="tstr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="0_0_0.debug.inl" />
     <None Include="0_0_0.footer.inl" />
     <None Include="0_0_0.release.inl" />
     <None Include="0_0_0.13_seam.s2" />
-    <None Include="docs\ascii_data_types_specification_rfc.md" />
-    <None Include="docs\experimental\script_distributed_nomination_system_specification_rfc.md" />
-    <None Include="docs\readme.md" />
-    <None Include="docs\script_sdnp_specification_rfc.md" />
-    <None Include="docs\script_specification_rfc.md" />
-    <None Include="docs\script_universal_addressing_specification_rfc.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_classes.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_comments.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_c_plus_plus.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_exceptions_to_the_rules.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_formatting.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_functions.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_header_files.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_naming.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_other.md" />
-    <None Include="docs\style_guide\ascii_cpp_style_guide_-_scoping.md" />
     <None Include="global_config.inl" />
     <None Include="README.md" />
     <None Include="test_debug.inl" />
@@ -154,7 +137,7 @@
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_utf.cc" />
+    <ClCompile Include="script2_str.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_vk.cc" />
     <ClCompile Include="script2_wall.cc" />

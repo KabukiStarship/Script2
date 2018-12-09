@@ -539,7 +539,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
-       *collission_list = unsorted_indexes + count_max, *start;
+       *collission_list = unsorted_indexes + count_max, *begin;
   char* keys = reinterpret_cast<char*>(table) + size - 1;
 
   utf << '\n'
@@ -563,13 +563,13 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
 
     if ((collision_index != kInvalidIndex) && (i < count)) {
       // Print collisions.
-      start = &collission_list[collision_index];
-      temp = *start;
-      ++start;
+      begin = &collission_list[collision_index];
+      temp = *begin;
+      ++begin;
       utf << temp;
       while (temp != kInvalidIndex) {
-        temp = *start;
-        ++start;
+        temp = *begin;
+        ++begin;
         if (temp != kInvalidIndex) utf << ", " << temp;
       }
     }
