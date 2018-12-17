@@ -43,7 +43,7 @@ const Op* ReturnError(Slot* slot, Error error, const UIT* header, UI1 offset) {
 }
 
 const Op* ReturnError(Slot* slot, Error error, const UIT* header, UIT offset,
-                      char* address) {
+                      CH1* address) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
@@ -51,7 +51,7 @@ const Op* ReturnError(Slot* slot, Error error, const UIT* header, UIT offset,
 Slot::Slot(UIW* socket, UIW size) {
   ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
-  char* l_begin = reinterpret_cast<char*>(socket);
+  CH1* l_begin = reinterpret_cast<CH1*>(socket);
   begin = l_begin;
   begin = l_begin;
   stop = l_begin;
@@ -60,7 +60,7 @@ Slot::Slot(UIW* socket, UIW size) {
 
 Slot::Slot(BIn* bin) {
   ASSERT(bin);
-  char* l_begin = reinterpret_cast<char*>(bin) + sizeof(BIn);
+  CH1* l_begin = reinterpret_cast<CH1*>(bin) + sizeof(BIn);
   begin = l_begin;
   begin = l_begin + bin->begin;
   stop = l_begin + bin->stop;
@@ -69,7 +69,7 @@ Slot::Slot(BIn* bin) {
 
 Slot::Slot(BOut* bout) {
   ASSERT(bout);
-  char* l_begin = reinterpret_cast<char*>(bout) + sizeof(BIn);
+  CH1* l_begin = reinterpret_cast<CH1*>(bout) + sizeof(BIn);
   begin = l_begin;
   begin = l_begin + bout->begin;
   stop = l_begin + bout->stop;
@@ -77,11 +77,11 @@ Slot::Slot(BOut* bout) {
 }
 
 void* Slot::Contains(void* address) {
-  char* begin = reinterpret_cast<char*>(this) + sizeof(Slot);
+  CH1* begin = reinterpret_cast<CH1*>(this) + sizeof(Slot);
   if (address < begin) {
     return nullptr;
   }
-  char* l_end = stop;
+  CH1* l_end = stop;
   if (address > l_end) {
     return nullptr;
   }
@@ -89,7 +89,7 @@ void* Slot::Contains(void* address) {
 }
 
 void Slot::Wipe() {
-  char *l_begin = reinterpret_cast<char*>(this) + sizeof(Slot),
+  CH1 *l_begin = reinterpret_cast<CH1*>(this) + sizeof(Slot),
        *l_start = begin, *l_stop = stop, *temp;
   if (l_start > l_stop) {
     temp = l_start;
@@ -109,7 +109,7 @@ const Op* Slot::Write(const UIT* params, void** args) {
 }
 
 BOL Slot::IsWritable() {
-  char* l_stop = begin;
+  CH1* l_stop = begin;
   if (l_stop == begin) {
     if (l_stop != stop) {
       return false;
@@ -121,8 +121,8 @@ BOL Slot::IsWritable() {
 
 BOL Slot::IsReadable() { return begin != stop; }
 
-/*char* SlotRead (Slot* slot, char* write, void* write_end, char* const begin,
-                    char* const begin, char* const stop , char* const stop,
+/*CH1* SlotRead (Slot* slot, CH1* write, void* write_end, CH1* const begin,
+                    CH1* const begin, CH1* const stop , CH1* const stop,
                     size_t size) {
     if (!slot) {
         return nullptr;
@@ -140,7 +140,7 @@ BOL Slot::IsReadable() { return begin != stop; }
         size -= top_chunk;
 
         SocketCopy (target, target_end, begin, top_chunk);
-        SocketCopy (reinterpret_cast<char*>(target) + top_chunk, size,
+        SocketCopy (reinterpret_cast<CH1*>(target) + top_chunk, size,
                     begin);
         return begin + size;
     }
@@ -159,7 +159,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
 #if USING_CRABS_8_BYTE_TYPES
   UI8 ui8;  //< Temp kUI8 variable.
 #endif
-  char* ui1_ptr;             //< Pointer to a kUI1.
+  CH1* ui1_ptr;             //< Pointer to a kUI1.
   UI2* ui2_ptr;              //< Pointer to a kUI2.
   UI4* ui4_ptr;              //< Pointer to a kUI4.
   UI8* ui8_ptr;              //< Pointer to a kUI8.
@@ -174,7 +174,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
 
   PRINTF("\n\nReading BIn: ")
 
-  char *l_begin = begin,          //< Beginning of the socket.
+  CH1 *l_begin = begin,          //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
           *l_start = begin,       //< begin of the data.
               *l_stop = stop;     //< stop of the data.
@@ -205,10 +205,10 @@ const Op* Slot::Read(const UIT* params, void** args) {
         count = *param;
         ++param;
 
-        // std::cout << "\nReading char with max length " << count;
+        // std::cout << "\nReading CH1 with max length " << count;
 
         // Load next pointer and increment args.
-        ui1_ptr = reinterpret_cast<char*>(args[index]);
+        ui1_ptr = reinterpret_cast<CH1*>(args[index]);
         if (!ui1_ptr) {
           break;
         }
@@ -253,7 +253,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           l_start -= size;
         }
         // Load next pointer and increment args.
-        ui1_ptr = reinterpret_cast<char*>(args[index]);
+        ui1_ptr = reinterpret_cast<CH1*>(args[index]);
         if (!ui1_ptr) {
           break;
         }
@@ -389,7 +389,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           return ReturnError(this, kErrorInvalidType, params, index, l_start);
         }
         // We don't care if it's a multidimensional array anymore.
-        ui1_ptr = reinterpret_cast<char*>(args[index]);
+        ui1_ptr = reinterpret_cast<CH1*>(args[index]);
         if (ui1_ptr == nullptr)
           return ReturnError(this, kErrorImplementation, params, index,
                              l_start);
@@ -508,11 +508,11 @@ const Op* Slot::Write(const Op& op, void** args) { return Write(op.out, args); }
 
 const Op* Slot::Write(Slot& other) { return nullptr; }
 
-const Op* Slot::Write(const char* message) { return nullptr; }
+const Op* Slot::Write(const CH1* message) { return nullptr; }
 
 #if USING_CRABS_TEXT
 UTF1& Slot::Print(UTF1& utf) {
-  char *l_begin = begin, *l_end = stop;
+  CH1 *l_begin = begin, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)
              << " start:" << Hex<>(begin) << "\nstop:" << Hex<>(stop)
              << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);

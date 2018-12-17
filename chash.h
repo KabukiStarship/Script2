@@ -28,46 +28,46 @@ namespace _ {
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
-@param  value The char value to hash.
+@param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash16_t Hash16(char value, hash16_t hash = 65535);
+API inline hash16_t Hash16(CH1 value, hash16_t hash = 65535);
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
-@param  value The char value to hash.
+@param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash32_t Hash32(char16_t value, hash32_t hash = 4294967291);
+API inline hash32_t Hash32(CH2 value, hash32_t hash = 4294967291);
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
-@param  value The char value to hash.
+@param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash64_t Hash64(char32_t value,
+API inline hash64_t Hash64(CH4 value,
                            hash64_t hash = 18446744073709551557);
 
-/* Hashes the given char using the primeHash function.
+/* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
 the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash16_t Hash16(const char* string_, hash16_t hash = 65535);
+API hash16_t Hash16(const CH1* string_, hash16_t hash = 65535);
 
-/* Hashes the given char using the primeHash function.
+/* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
 the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash32_t Hash32(const char* string_, hash32_t hash = 4294967291);
+API hash32_t Hash32(const CH1* string_, hash32_t hash = 4294967291);
 
-/* Hashes the given char using the primeHash function.
+/* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
 the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash64_t Hash64(const char* string_, hash64_t hash = 18446744073709551557);
+API hash64_t Hash64(const CH1* string_, hash64_t hash = 18446744073709551557);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__08

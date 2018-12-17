@@ -1,10 +1,10 @@
 # SCRIPT Script
 
-Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively refereed to as Script, that are built on the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and SCRIPT Script (Script^2 or Script2) and provides:
+Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively referred to as Script, that are built on the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and SCRIPT Script (Script^2 or Script2) and provides:
 
 * Replacement for C++ std library suitable for embedded systems.
 * Seam Trees provide low-cost in-order unit tests for Agile, Test, and Issue Driven Development with debug information customized for each tree node.
-* Cross-platform Modern `Embedded-C++11`/GCC 4.7 IoT Nanoframework with Cross-language C Application Binary Interface (ABI) and Doxygen API docs.
+* Cross-platform Modern `Embedded-C++11` IoT Nanoframework with Cross-language C Application Binary Interface (ABI) and Doxygen API docs.
 * ASCII Data Types and the ASCII Factory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
 * Rapid compile time using 3-file Translation Units with unique names an separated C++ templates.
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
@@ -29,7 +29,7 @@ ASCII Data Types provide:
   * Book - A multidictionary (i.e. unordered map) without hash table.
   * Dictionary - A dictionary of ASCII Data Types with hash table.
   * B-Sequence - Describes the order and maximum sizes of a Byte-Sequence of ASCII Data.
-  * Expression - Asynchronous Chinese Room Script Expressions capable of concurrently executing scripts in multiple language in real-time.
+  * Expression - Asynchronous Chinese Room Script Expressions capable of concurrently executing scripts in multiple languages in real-time.
 
 ## Quick Links
 
@@ -57,7 +57,7 @@ ASCII Data Types provide:
 **5.** In order to save the stack debug data when an assert occurs, set breakpoint in the file `script2_test.cc` at the return line for:
 
 ```C++
-BOL TestWarn(const char* function, const char* file, int line);
+BOL TestWarn(const CH1* function, const CH1* file, int line);
 ```
 
 ## Author

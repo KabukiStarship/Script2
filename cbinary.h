@@ -14,13 +14,13 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT2_CBINARY
-#define INCLUDED_SCRIPT2_CBINARY 1
+#ifndef SCRIPT2_CBINARY
+#define SCRIPT2_CBINARY 1
 
 namespace _ {
 
 /* Converts a UI1 a one-UI1 hex representation. */
-API char HexNibbleToUpperCase(UI1 b);
+API CH1 HexNibbleToUpperCase(UI1 b);
 
 #if SEAM >= _0_0_0__01
 
@@ -111,7 +111,7 @@ UI8 Negative(SI8 value);
 UI8 Negative(UI8 value);
 
 /* Converts a UI1 a one-UI1 hex representation. */
-API char HexNibbleToLowerCase(UI1 b);
+API CH1 HexNibbleToLowerCase(UI1 b);
 
 /* Converts a UI1 a two-UI1 hex representation. */
 API UI2 HexByteToLowerCase(UI1 b);
@@ -121,7 +121,7 @@ API UI2 HexByteToUpperCase(UI1 b);
 
 /* Converts a single hex UI1 a UI1.
 @return Returns -1 if c is not a hex UI1. */
-API int HexToByte(char hex_byte);
+API int HexToByte(CH1 hex_byte);
 
 /* Converts a UI1 into a two-UI1 hex representation.
 @return Returns -1 if c is not a hex UI1.
@@ -205,45 +205,45 @@ API const SI2* IEEE754Pow10E();
 /* IEEE754 Powers of 10 integral portions LUT. */
 API const UI8* IEEE754Pow10F();
 
-/* Returns the last UI1 in the given char, which in this case is c. */
-API char* LastByte(char* c);
+/* Returns the last UI1 in the given CH1, which in this case is c. */
+API CH1* LastByte(CH1* c);
 
 /* Prints the given FLT to the socket. */
-API char* Print(char* cursor, char* stop, FLT value);
+API CH1* Print(CH1* cursor, CH1* stop, FLT value);
 
 /* Prints the given FLT to the socket. */
-API char* Print(char* cursor, char* stop, DBL value);
+API CH1* Print(CH1* cursor, CH1* stop, DBL value);
 
 /* Scans a FLT from the given string_.
 @return Nil if the string_ doesn't begin with a FLT. */
-const char* Scan(const char* cursor, FLT& value);
+const CH1* Scan(const CH1* cursor, FLT& value);
 
 /* Scans a DBL from the given string_.
 @return Nil if the string_ doesn't begin with a DBL. */
-const char* Scan(const char* cursor, DBL& value);
+const CH1* Scan(const CH1* cursor, DBL& value);
 
 #if USING_UTF16 == YES
-/* Returns the last UI1 in the given char. */
-API char* LastByte(char16_t* c);
+/* Returns the last UI1 in the given CH1. */
+API CH1* LastByte(CH2* c);
 
 /* Prints the given FLT to the socket. */
-API char16_t* Print(char16_t* cursor, char16_t* stop, FLT value);
+API CH2* Print(CH2* cursor, CH2* stop, FLT value);
 
 /* Prints the given FLT to the socket. */
-API char16_t* Print(char16_t* cursor, char16_t* stop, DBL value);
+API CH2* Print(CH2* cursor, CH2* stop, DBL value);
 #endif
 
 #if USING_UTF32 == YES
-/* Returns the last UI1 in the given char. */
-API char* LastByte(char32_t* c);
+/* Returns the last UI1 in the given CH1. */
+API CH1* LastByte(CH4* c);
 
 /* Prints the given FLT to the socket. */
-API char32_t* Print(char32_t* cursor, char32_t* stop, FLT value);
+API CH4* Print(CH4* cursor, CH4* stop, FLT value);
 
 /* Prints the given FLT to the socket. */
-API char32_t* Print(char32_t* cursor, char32_t* stop, DBL value);
+API CH4* Print(CH4* cursor, CH4* stop, DBL value);
 #endif
 
 #endif  //< #if SEAM >= _0_0_0__03
 }  // namespace _
-#endif  //< #ifndef INCLUDED_SCRIPT2_CBINARY
+#endif  //< #ifndef SCRIPT2_CBINARY

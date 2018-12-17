@@ -110,7 +110,7 @@ TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
     @return Pointer to the first element in the array. */
 template <typename T, typename Size = uint, typename Index = int>
 T* ArrayElements(TCStack<T, Size, Index>* ary) {
-  char* elements = reinterpret_cast<char*>(ary) + ary->size_stack;
+  CH1* elements = reinterpret_cast<CH1*>(ary) + ary->size_stack;
   return reinterpret_cast<T*>(elements);
 }
 
@@ -119,8 +119,8 @@ T* ArrayElements(TCStack<T, Size, Index>* ary) {
     @return Pointer to the first element in the array. */
 template <typename T, typename Size = uint, typename Index = int>
 Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
-  char* elements =
-      reinterpret_cast<char*>(ary) + sizeof(TCStack<T, Size, Index>);
+  CH1* elements =
+      reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
   return reinterpret_cast<Index*>(elements);
 }
 
@@ -135,7 +135,7 @@ Index* ArrayDimensionsEnd(TCStack<T, Size, Index>* ary) {
 
 /* Prints the TCArray to the Utf. */
 template <typename T = SIW, typename Size = uint, typename Index = int,
-          typename Char = char>
+          typename Char = CH1>
 TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
   ASSERT(ary);
   Size size_array = ary->size_array;
@@ -232,14 +232,14 @@ class TArray {
 }  // namespace _
 
 template <typename T = SIW, typename Size = uint, typename Index = int,
-          typename Char = char>
+          typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
                                  _::TCArray<T, Size, Index>* stack) {
   return _::PrintArray<T, Size, Index>(printer, stack);
 }
 
 template <typename T = SIW, typename Size = uint, typename Index = int,
-          typename Char = char>
+          typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
                                  _::TCArray<T, Size, Index>& stack) {
   return _::PrintArray<T, Size, Index>(printer, stack);

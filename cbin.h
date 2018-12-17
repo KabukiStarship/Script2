@@ -49,21 +49,21 @@ struct API BIn {
 };
 
 /* Get's the B-Input's socket. */
-inline char* BInBegin(BIn* bin);
+inline CH1* BInBegin(BIn* bin);
 
-inline char* BInEnd(BIn* bin);
+inline CH1* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotLength(char* begin, char* stop, UIW size);
+inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotSpace(char* begin, char* stop, UIW size);
+inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
 
 /* Gets the rx socket length. */
 inline UIT BInSpace(BIn* bin);
@@ -71,8 +71,8 @@ inline UIT BInSpace(BIn* bin);
 inline UIT BinBufferLength(BIn* bin);
 
 #if USING_CRABS_TEXT == YES
-/* Gets a a char for printing out the bin_state. */
-API const char** BInStateStrings();
+/* Gets a a CH1 for printing out the bin_state. */
+API const CH1** BInStateStrings();
 
 /* Pulls the keyboard input into the ring socket. */
 // API void BInKeyboard ()
@@ -82,7 +82,7 @@ API const char** BInStateStrings();
 API BIn* BInInit(UIW* socket, UIT size);
 
 /* Gets the stop address of the rx socket. */
-API char* BInEnd(BIn* bin);
+API CH1* BInEnd(BIn* bin);
 
 /* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */

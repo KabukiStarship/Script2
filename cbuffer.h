@@ -24,13 +24,13 @@ namespace _ {
 
 /* Creates/Gets a static socket of the specified size. */
 template <size_t kBufferSize = kBufferSizeDefault>
-inline char* Buffer() {
+inline CH1* Buffer() {
   enum {
     kBufferSizeWords =
         (kBufferSize / sizeof(UIW)) + kBufferSize % sizeof(UIW) ? 1 : 0
   };
   static UIW socket[kBufferSizeWords];
-  return reinterpret_cast<char*>(socket);
+  return reinterpret_cast<CH1*>(socket);
 }
 
 }  // namespace _

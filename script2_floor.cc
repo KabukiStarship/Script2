@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-char FloorInit(UIW* socket) { return 0; }
+CH1 FloorInit(UIW* socket) { return 0; }
 
 Floor* FloorInit(Floor* floor) {
   floor->epoch = kClockEpochInit;

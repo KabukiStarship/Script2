@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__13
-#ifndef INCLUDED_SCRIPT2_MIRROR
-#define INCLUDED_SCRIPT2_MIRROR
+#ifndef SCRIPT2_MIRROR
+#define SCRIPT2_MIRROR
 #include "bin.h"
 #include "bout.h"
 #include "op.h"
@@ -44,13 +44,13 @@ static const UIW kMaxMirrorSize = ~((UIW)0);
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size The size of the socket. */
-API UIT MirrorLength(char* begin, char* stop, UIT size);
+API UIT MirrorLength(CH1* begin, CH1* stop, UIT size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-API UIT MirrorSpace(char* begin, char* stop, UIT size);
+API UIT MirrorSpace(CH1* begin, CH1* stop, UIT size);
 
 /* Checks if the given slot contains the specified address. */
 API void* MirrorContains(Mirror* mirror, void* address);
@@ -59,10 +59,10 @@ API void* MirrorContains(Mirror* mirror, void* address);
 API void MirrorWipe(Mirror* mirror);
 
 /* Copies a block from a ring-socket to the given destination. */
-// API char* MirrorWrite (Mirror* mirror, void* source, size_t size);
+// API CH1* MirrorWrite (Mirror* mirror, void* source, size_t size);
 
 /* Copies a block from a ring-socket to the given destination. */
-// API char* MirrorRead (Mirror* mirror, void* source, size_t size);
+// API CH1* MirrorRead (Mirror* mirror, void* source, size_t size);
 
 /* Gets the args from the b-sequence. */
 API const Op* MirrorRead(Mirror* mirror, const UIT* params, void** args);
@@ -119,7 +119,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
-                           UIT offset, char* address);
+                           UIT offset, CH1* address);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
@@ -129,8 +129,8 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
-                           UIT offset, char* address);
+                           UIT offset, CH1* address);
 
 }  // namespace _
-#endif  //< INCLUDED_SCRIPT2_MIRROR
+#endif  //< SCRIPT2_MIRROR
 #endif  //< #if SEAM >= _0_0_0__13

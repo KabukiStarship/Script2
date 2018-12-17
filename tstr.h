@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__02
-#ifndef INCLUDED_SCRIPT2_TUTF
-#define INCLUDED_SCRIPT2_TUTF 1
+#ifndef SCRIPT2_TUTF
+#define SCRIPT2_TUTF 1
 
 #include "cstr.h"
 
@@ -33,29 +33,36 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* An empty s. */
-template <typename Char = char>
+/* Initializes an ASCII String. */
+template <typename Size, typename Char>
+inline Char* TStringInit(UIW* obj, Size size) {
+  UIW address = reinterpret_cast<UIW>(TObjInit<Size>(obj, size));
+  return reinterpret_cast<Char*>(address + sizeof(Size));
+}
+
+/* An empty string. */
+template <typename Char = CH1>
 const Char* TStringEmpty() {
   static const Char kString[] = {'\0'};
   return kString;
 }
 
 /* The new-line s. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringNL() {
   static const Char kString[] = {'\n'};
   return kString;
 }
 
 /* String the reads "Error:". */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringError() {
   static const Char kString[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', '\0'};
   return kString;
 }
 
-/* Converts the given value to a printable char if it's non-printable. */
-template <typename Char = char>
+/* Converts the given value to a printable CH1 if it's non-printable. */
+template <typename Char = CH1>
 inline Char TPrintableChar(Char value) {
   if (value < 32 || value == 127) return ' ';
   return value;
@@ -63,7 +70,7 @@ inline Char TPrintableChar(Char value) {
 
 /* Sets the s to either the given value or empty s if input
 is nil. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringSet(Char* string_) {
   if (!string_) return TStringEmpty<Char>();
   return string_;
@@ -71,7 +78,7 @@ inline Char* TStringSet(Char* string_) {
 
 /* Searches fro the s line stop.
 @param  cursor  The first Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
   Char c;
   // Scroll to the stop of the line.
@@ -93,7 +100,7 @@ const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
 /* Searches fro the s line stop.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TStringLineEnd(Char* cursor, int column_count = 80) {
   return const_cast<Char*>(
       TStringLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
@@ -103,7 +110,7 @@ Char* TStringLineEnd(Char* cursor, int column_count = 80) {
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer.
 @param column_coun In characters. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringLineEnd(const Char* cursor, const Char* stop,
                            int column_count = 80) {
   if (!cursor) {
@@ -133,7 +140,7 @@ const Char* TStringLineEnd(const Char* cursor, const Char* stop,
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer.
 @param column_coun In characters. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringLineEnd(Char* cursor, Char* stop, int column_count = 80) {
   return const_cast<const Char*>(
       TStringLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
@@ -143,7 +150,7 @@ inline Char* TStringLineEnd(Char* cursor, Char* stop, int column_count = 80) {
 /* Finds the stop of the decimals in the s, if there are any.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringDecimalEnd(const Char* cursor, const Char* stop) {
   ASSERT(cursor);
   ASSERT(cursor <= stop);
@@ -165,7 +172,7 @@ const Char* TStringDecimalEnd(const Char* cursor, const Char* stop) {
 /* Finds the stop of the decimals in the s, if there are any.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringDecimalEnd(Char* cursor, Char* stop) {
   return const_cast<Char*>(
       TStringDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
@@ -174,7 +181,7 @@ inline Char* TStringDecimalEnd(Char* cursor, Char* stop) {
 
 /* Skips the given Char in a s if there are any.
 @param  cursor  The first Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringSkipChar(const Char* cursor, Char skip_char) {
   if (cursor == nullptr) return nullptr;
   Char c = *cursor, d;
@@ -191,7 +198,7 @@ const Char* TStringSkipChar(const Char* cursor, Char skip_char) {
 
 /* Skips the given Char in a s if there are any.
 @param  cursor  The first Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringSkipChar(Char* cursor, Char skip_char) {
   return const_cast<const Char*>(
       TStringSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
@@ -199,7 +206,7 @@ inline Char* TStringSkipChar(Char* cursor, Char skip_char) {
 
 /* Scrolls over any whitespace.
 @param  cursor  The first Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringSkipSpaces(const Char* cursor) {
   if (!cursor) return nullptr;
   Char c = *cursor;
@@ -214,7 +221,7 @@ const Char* TStringSkipSpaces(const Char* cursor) {
 
 /* Scrolls over any whitespace.
 @param  cursor  The first Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TStringSkipSpaces(Char* cursor) {
   return const_cast<Char*>(TStringSkipSpaces<Char>(cursor));
 }
@@ -223,7 +230,7 @@ Char* TStringSkipSpaces(Char* cursor) {
 @return Nil upon failed search or a pointer to the stop of the cursor query.
 @param  cursor  The first Char in the buffer.
 @param  query   A query string.  */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringFind(const Char* cursor, const Char* query) {
   ASSERT(cursor);
   ASSERT(query);
@@ -263,7 +270,7 @@ const Char* TStringFind(const Char* cursor, const Char* query) {
 
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the . */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringFind(Char* string, const Char* query) {
   return const_cast<Char*>(
       TStringFind<Char>(reinterpret_cast<const Char*>(string),
@@ -272,7 +279,7 @@ inline Char* TStringFind(Char* string, const Char* query) {
 
 /* String skip spaces.
 @return Nil if there are no spaces to skip. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringSkipSpaces(const Char* cursor, const Char* stop) {
   if (!cursor) return nullptr;
   if (cursor > stop) return nullptr;
@@ -291,7 +298,7 @@ const Char* TStringSkipSpaces(const Char* cursor, const Char* stop) {
 @return Nil if there are no spaces to skip.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringSkipSpaces(Char* cursor, Char* stop) {
   return const_cast<Char*>(
       TStringSkipSpaces<Char>(reinterpret_cast<const Char*>(cursor),
@@ -303,7 +310,7 @@ inline Char* TStringSkipSpaces(Char* cursor, Char* stop) {
 equivalent s upon success.
 @param  string_a  A cursor to compare to string_b.
 @param  string_b  A cursor to compare to string_a. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringEquals(const Char* string_a, const Char* string_b) {
   ASSERT(string_a);
   ASSERT(string_b);
@@ -337,7 +344,7 @@ equivalent s upon success.
 @param  string_a  A cursor to compare to string_b.
 @param  string_b  A cursor to compare to string_a.
 */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringEquals(Char* string_a, const Char* string_b) {
   return const_cast<Char*>(
       TStringEquals<Char>(reinterpret_cast<const Char*>(string_a),
@@ -347,7 +354,7 @@ inline Char* TStringEquals(Char* string_a, const Char* string_b) {
 /* Compares the two strings to see if the are equal.
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringEquals(const Char* cursor, const Char* stop, Char* query) {
   if (!cursor) return nullptr;
   ASSERT(cursor < stop);
@@ -383,7 +390,7 @@ const Char* TStringEquals(const Char* cursor, const Char* stop, Char* query) {
 /* Compares the two strings to see if the are equal.
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TStringEquals(Char* cursor, Char* stop, Char* query) {
   return const_cast<Char*>(TStringEquals(reinterpret_cast<const Char*>(cursor),
                                          reinterpret_cast<const Char*>(stop),
@@ -394,7 +401,7 @@ Char* TStringEquals(Char* cursor, Char* stop, Char* query) {
 @return False if the s is empty and true otherwise.
 @param  cursor  The first Char in the buffer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
-template <typename Char = char>
+template <typename Char = CH1>
 BOL TStringIsntEmpty(const Char* cursor) {
   if (!cursor) return false;
   Char c = *cursor;
@@ -409,7 +416,7 @@ BOL TStringIsntEmpty(const Char* cursor) {
 @return False if the s is empty and true otherwise.
 @param  cursor  The first Char in the buffer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
-template <typename Char = char>
+template <typename Char = CH1>
 BOL TStringIsntEmpty(Char* cursor) {
   return TStringIsntEmpty<Char>(reinterpret_cast<const Char*>(cursor));
 }
@@ -418,7 +425,7 @@ BOL TStringIsntEmpty(Char* cursor) {
 @return False if the s is empty and true otherwise.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 BOL TStringIsntEmpty(const Char* cursor, const Char* stop) {
   if (!cursor) return false;
   if (cursor > stop) return false;
@@ -443,7 +450,7 @@ BOL TStringIsntEmpty(const Char* cursor, const Char* stop) {
 @return False if the s is empty and true otherwise.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
-template <typename Char = char>
+template <typename Char = CH1>
 BOL TStringIsntEmpty(Char* cursor, const Char* stop) {
   return TStringIsntEmpty(reinterpret_cast<const Char*>(cursor),
                           reinterpret_cast<const Char*>(stop));
@@ -455,7 +462,7 @@ given range.
 @param  cursor  The first Char in the buffer.
 @param  lower_bounds
 @param  upper bounds*/
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringSkipCharsInRange(const Char* cursor, Char lower_bounds,
                                     Char upper_bounds) {
   ASSERT(cursor);
@@ -471,7 +478,7 @@ given range.
 @param  cursor  The first Char in the buffer.
 @param  lower_bounds
 @param  upper bounds*/
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TStringSkipCharsInRange(Char* cursor, Char lower_bounds,
                               Char upper_bounds) {
   return const_cast<Char*>(TStringSkipCharsInRange(
@@ -479,7 +486,7 @@ Char* TStringSkipCharsInRange(Char* cursor, Char lower_bounds,
 }
 
 /* Skips the numbers in the given range. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline Char* TStringSkipNumbers(Char* cursor) {
   return const_cast<Char*>(TStringSkipCharsInRange<Char>(
       reinterpret_cast<const Char*>(cursor), '0', '9'));
@@ -487,12 +494,12 @@ inline Char* TStringSkipNumbers(Char* cursor) {
 
 /* Prints the given token aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
-pointer to the nil-term char upon success.
+pointer to the nil-term CH1 upon success.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
                   int column_count = 80) {
   ASSERT(token);
@@ -552,7 +559,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
   // backwards back from the token_end.
   PRINTF("\n Wrote backwards:\"");
   stop = cursor + column_count;
-  --token_end;  //< This is pointed at the nil-term char
+  --token_end;  //< This is pointed at the nil-term CH1
   *stop-- = 0;  //< and there is no need to load a 0.
   while (token_end >= token) {
     c = *token_end--;
@@ -568,7 +575,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
 }
 
 /* Prints the given cursor center aligned to the given column_count. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
                    int column_count = 80) {
   ASSERT(cursor);
@@ -600,7 +607,7 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
 
   while (length-- > 0) *cursor++ = ' ';
 
-  char c = *string_++;
+  CH1 c = *string_++;
   while (c) {
     *cursor++ = c;
     c = *string_++;
@@ -612,7 +619,7 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
 }
 
 /* Prints a line of the given column_count the given begin. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintLine(Char* cursor, const Char* stop, Char token,
                  int column_count = 80) {
   ASSERT(cursor);
@@ -629,7 +636,7 @@ Char* TPrintLine(Char* cursor, const Char* stop, Char token,
 }
 
 /* Prints the given cursor repeated to make a line. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
                        int column_count = 80) {
   ASSERT(cursor);
@@ -637,7 +644,7 @@ Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
   if (cursor + column_count + 1 > stop) return nullptr;
 
   while (column_count-- > 0) {
-    char c = *string_++;
+    CH1 c = *string_++;
     if (!c) {
       cursor = 0;
     }
@@ -648,7 +655,7 @@ Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
 }
 
 /* Prints a cursor to the given buffer without */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
                  int column_count = 80) {
   ASSERT(cursor && cursor < stop && string_);
@@ -676,7 +683,7 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
 }
 
 /* A UTF-8, UTF-16, or UTF-32 Text token without any whitespace. */
-template <typename Char = char>
+template <typename Char = CH1>
 class TToken {
  public:
   /* Default constructor does nothing. */
@@ -719,7 +726,7 @@ class TToken {
 };
 
 /* Prints the given socket to the COut. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                    const void* end) {
   ASSERT(begin || cursor || cursor < stop);
@@ -793,7 +800,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
 }
 
 /* Converts the given Char to lowercase. */
-template <typename Char = char>
+template <typename Char = CH1>
 Char TLowercase(Char c) {
   if ((c & 0x3f) == 3) return c - 64;
   return c;
@@ -804,7 +811,7 @@ This class only stores the stop of begin pointer and a pointer to the write
 begin. It is up the user to store begin of begin pointer and if they would
 like to replace the begin with the beginning of begin pointer when they are
 done printing. */
-template <typename Char = char, typename Size = SIN>
+template <typename Char = CH1, typename Size = SIN>
 struct TUTF {
   Char *begin,  //< Start address.
       *stop;    //< Stop address.
@@ -964,7 +971,7 @@ struct TUTF {
 };
 
 /* Utility class for printing hex with operator<<. */
-template <typename Char = char>
+template <typename Char = CH1>
 class TCenter {
  public:
   /* Prints the value to the text begin. */
@@ -1033,7 +1040,7 @@ class TCenter {
 };
 
 /* Utility class for printing hex with operator<<. */
-template <typename Char = char>
+template <typename Char = CH1>
 class TRight {
  public:
   /* Prints the value to the text begin. */
@@ -1100,7 +1107,7 @@ class TRight {
 };
 
 /* Utility class for printing a single Char token line with operator<<. */
-template <typename Char = char>
+template <typename Char = CH1>
 struct API TLineChar {
   Char token;        //< Character to utf.
   int column_count;  //< Column count.
@@ -1111,7 +1118,7 @@ struct API TLineChar {
 };
 
 /* Utility class for printing a s line with operator<<. */
-template <typename Char = char>
+template <typename Char = CH1>
 struct API TLineString {
   const Char* string_;  //< Character to utf.
   int column_count;     //< Column count.
@@ -1123,8 +1130,8 @@ struct API TLineString {
   TUTF<Char>& Print(TUTF<Char>& utf) {}
 };
 
-/* Returns the first char in the cursor socket. */
-template <typename Char = char, typename Size = int>
+/* Returns the first CH1 in the cursor socket. */
+template <typename Char = CH1, typename Size = int>
 inline Char* TStringStart(UIW* begin) {
   ASSERT(begin);
   UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
@@ -1132,7 +1139,7 @@ inline Char* TStringStart(UIW* begin) {
 }
 
 /* Searches for the stop of the s. */
-template <typename Char = char, typename Size = int>
+template <typename Char = CH1, typename Size = int>
 inline Char* TStringStop(UIW* begin) {
   ASSERT(begin);
 
@@ -1144,7 +1151,7 @@ inline Char* TStringStop(UIW* begin) {
 }
 
 /* Searches for the stop of the string. */
-template <typename Char = char, typename Size = int>
+template <typename Char = CH1, typename Size = int>
 inline Char* TStringStop(CObject obj) {
   return TStringStop<Char, Size>(obj);
 }
@@ -1184,7 +1191,7 @@ class TSTR {
 @return If (size == 0 && begin) then nil indicating success deleting the
 factory. If passing in a argument it will have to get passed through the obj.
 */
-template <typename Size = int, typename Char = char>
+template <typename Size = int, typename Char = CH1>
 int TCOut(CObject& obj, SIW function, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
@@ -1195,7 +1202,7 @@ int TCOut(CObject& obj, SIW function, void* arg) {
 
 /* AsciiFactory prints the begin to the console and deletes the
 obj.begin. */
-template <typename Size = int, typename Char = char>
+template <typename Size = int, typename Char = CH1>
 int TCOutHeap(CObject& obj, SIW fun, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
@@ -1206,7 +1213,7 @@ int TCOutHeap(CObject& obj, SIW fun, void* arg) {
 }
 
 /* Queries the given s for the given query. */
-template <typename Char = char>
+template <typename Char = CH1>
 int TStringQuery(const Char* cursor, const Char* stop, const Char* query) {
   Char a = *cursor, b = *query;
   int result;
@@ -1265,7 +1272,7 @@ int TStringQuery(const Char* cursor, const Char* stop, const Char* query) {
 /* Returns the static default printer that doesn't work in multi-threaded or
 interrupt situations.
 If you are using more than one thread or interrupts, the*/
-template <typename Char = char, typename Size = intptr_t>
+template <typename Char = CH1, typename Size = intptr_t>
 TUTF<Char> TCOut() {
   static TUTF<Char> serial_out(TCOut<Char>);
   return serial_out;
@@ -1277,7 +1284,7 @@ TUTF<Char> TCOut() {
 @return The utf.
 @param  utf The utf.
 @param  value   The value to utf. */
-template <typename Char = char, typename Size = intptr_t>
+template <typename Char = CH1, typename Size = intptr_t>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, string_));
 }
@@ -1286,7 +1293,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, c));
 }
@@ -1295,7 +1302,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1304,7 +1311,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1313,7 +1320,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1322,7 +1329,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1331,7 +1338,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1340,7 +1347,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1349,7 +1356,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1359,7 +1366,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1368,7 +1375,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
@@ -1378,7 +1385,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
 @return The utf.
 @param  utf The utf.
 @param  item The item to write to utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
   return item.Print(utf);
 }
@@ -1387,29 +1394,29 @@ inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
   return item.Print(utf);
 }
 
 /* Prints a TLineChar<Char> to the UTF. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineChar<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
                                  _::TLineString<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
-template <typename Char = char>
+template <typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TToken<Char> token) {
   return token.Print(utf);
 }
 
-#endif  //< #if INCLUDED_SCRIPT2_TUTF
+#endif  //< #if SCRIPT2_TUTF
 #endif  //< #if SEAM >= _0_0_0__02

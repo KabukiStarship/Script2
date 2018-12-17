@@ -41,12 +41,12 @@ struct API BOut {
 };
 
 /* Get's the B-Output's socket.*/
-API char* BOutBuffer(BOut* bout);
+API CH1* BOutBuffer(BOut* bout);
 
 #if USING_CRABS_TEXT == YES
 
-/* Gets a a char for printing out the bout_state. */
-API const char** BOutStateStrings();
+/* Gets a a CH1 for printing out the bout_state. */
+API const CH1** BOutStateStrings();
 
 #endif
 
@@ -61,7 +61,7 @@ API UIT BOutSpace(BOut* bout);
 API UIT BOutBufferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
-API char* BOutEndAddress(BOut* bout);
+API CH1* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output UI1.
     @param bout A B-Output abstract UI1 stream. */
@@ -74,13 +74,13 @@ API int BOutStreamByte(BOut* bout);
 API const Op* BOutWrite(BOut* bout, const UIT* params, void** args);
 
 /* Sends a connection message to the given address. */
-API const Op* BOutConnect(BOut* bout, const char* address);
+API const Op* BOutConnect(BOut* bout, const CH1* address);
 
 /* Sends a connection message to the given address. */
-API void BOutRingBell(BOut* bout, const char* address);
+API void BOutRingBell(BOut* bout, const CH1* address);
 
 /* Sends a connection message to the given address. */
-API void BOutAckBack(BOut* bout, const char* address);
+API void BOutAckBack(BOut* bout, const CH1* address);
 
 /* . */
 API void BInKeyStrokes();

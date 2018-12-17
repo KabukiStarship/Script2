@@ -30,10 +30,10 @@ namespace _ {
     Address<'A', 'B', 'C'> ()
     @endcode
 */
-template <const char... N>
-API const char* Address() {
-  static const char path[sizeof...(N)] = {N...};
-  static const char term_char = 0;
+template <const CH1... N>
+API const CH1* Address() {
+  static const CH1 path[sizeof...(N)] = {N...};
+  static const CH1 term_char = 0;
   return path;
 }
 

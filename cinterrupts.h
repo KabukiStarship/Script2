@@ -26,7 +26,7 @@ namespace _ {
 #if USING_TEXT_SCRIPT == YES
 /* Exception thrown to interrupt and crash the program. */
 struct API RoomCrashException : public std::exception {
-  const char* what() const throw();
+  const CH1* what() const throw();
 };
 #endif
 }  // namespace _

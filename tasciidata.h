@@ -96,12 +96,12 @@ API void* TypeAlign(SIN type, void* value);
 /* An ROM string_ for one of the 32 types.
     C++11 variadic templates ensure there is only one copy in of the given
     string_ in ROM. */
-template <char kCharA_, char kCharB_, char kCharC_>
+template <CH1 kCharA_, CH1 kCharB_, CH1 kCharC_>
 inline UI4 T() {
   return ((UI4)kCharA_) & (((UI4)kCharB_) << 8) & (((UI4)kCharC_) << 16);
 }
 
-template <typename Char = char>
+template <typename Char = CH1>
 const Char** TTypeStrings() {
   static const Char* kNames[] = {
       "kNIL",  //<  0
@@ -140,7 +140,7 @@ const Char** TTypeStrings() {
   return kNames;
 }
 
-template <typename T = char>
+template <typename T = CH1>
 T* TypeAlignUpPointer(void* pointer, SIN type) {
   if (type <= kUI1)
     return reinterpret_cast<T*>(pointer);
@@ -150,7 +150,7 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
     return AlignUpPointer4<T>(pointer);
   else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
-  // else it's an ASCII CObj.
+  // else it's an ASCII CObject.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |
@@ -164,7 +164,7 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
   return reinterpret_cast<T*>(ptr);
 }
 
-template <typename Char = char>
+template <typename Char = CH1>
 Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
@@ -211,7 +211,7 @@ Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
   return nullptr;
 }
 
-template <typename Char = char>
+template <typename Char = CH1>
 Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
   if (cursor == nullptr) return nullptr;
   ASSERT(cursor < stop);
@@ -229,9 +229,9 @@ Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
   if (TypeIsString(type)) {
     cursor = TPrint<Char>(cursor, stop, '\"');
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, *reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, stop, *reinterpret_cast<const CH1*>(value));
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, reinterpret_cast<const char*>(value));
+    cursor = TPrint<Char>(cursor, stop, reinterpret_cast<const CH1*>(value));
     if (!cursor) return nullptr;
     cursor = TPrint<Char>(cursor, stop, "\":");
     if (!cursor) return nullptr;
@@ -244,12 +244,12 @@ Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
 #if USING_UTF8
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number_ or
+@return Returns a pointer to the next CH1 after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char* Print(char* begin, char* stop, SIN type, const void* value);
+API CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
@@ -260,12 +260,12 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number_ or
+@return Returns a pointer to the next CH1 after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -278,12 +278,12 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop
+@return Returns a pointer to the next CH1 after the stop
 of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.

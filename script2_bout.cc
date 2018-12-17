@@ -76,19 +76,19 @@ inline const Op* BOutError(BOut* bout, Error error, const UIT* header,
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const UIT* header,
-                           UIT offset, char* address) {
+                           UIT offset, CH1* address) {
   std::cerr << "\nBOut " << ErrorString(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
-const char** BOutStateStrings() {
-  static const char* strings[] = {"WritingState", "kBInStateLocked"};
+const CH1** BOutStateStrings() {
+  static const CH1* strings[] = {"WritingState", "kBInStateLocked"};
   return strings;
 }
 
-char* BOutBuffer(BOut* bout) {
+CH1* BOutBuffer(BOut* bout) {
   ASSERT(bout);
-  return reinterpret_cast<char*>(bout) + sizeof(BOut);
+  return reinterpret_cast<CH1*>(bout) + sizeof(BOut);
 }
 
 BOut* BOutInit(UIW* socket, UIT size) {
@@ -112,7 +112,7 @@ UIT BOutSpace(BOut* bout) {
   if (!bout) {
     return 0;
   }
-  char* txb_ptr = reinterpret_cast<char*>(bout);
+  CH1* txb_ptr = reinterpret_cast<CH1*>(bout);
   return (uint)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
                          bout->size);
 }
@@ -121,17 +121,17 @@ UIT BOutBufferLength(BOut* bout) {
   if (!bout) {
     return 0;
   }
-  char* begin = BOutBuffer(bout);
+  CH1* begin = BOutBuffer(bout);
   return (uint)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
 }
 
-char* BOutEndAddress(BOut* bout) {
-  return reinterpret_cast<char*>(bout) + (4 * sizeof(UIT)) + bout->size;
+CH1* BOutEndAddress(BOut* bout) {
+  return reinterpret_cast<CH1*>(bout) + (4 * sizeof(UIT)) + bout->size;
 }
 
 int BOutStreamByte(BOut* bout) {
-  char *begin = BOutBuffer(bout), *stop = begin + bout->size;
-  char *open = (char*)begin + bout->read, *begin = begin + bout->begin,
+  CH1 *begin = BOutBuffer(bout), *stop = begin + bout->size;
+  CH1 *open = (CH1*)begin + bout->read, *begin = begin + bout->begin,
        *begin = begin;
 
   SIW length = (int)(begin < open) ? open - begin + 1
@@ -190,11 +190,11 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
       params;  //< Pointer to the current param.
                //* bsc_param;          //< Pointer to the current kBSQ param.
   // Convert the socket offsets to pointers.
-  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
-  const char* ui1_ptr;                     //< Pointer to a 1-UI1 type.
+  const CH1* ui1_ptr;                     //< Pointer to a 1-UI1 type.
 #if USING_CRABS_2_BYTE_TYPES
   const UI2* ui2_ptr;  //< Pointer to a 2-UI1 type.
 #endif
@@ -211,7 +211,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   // Check if the socket has enough room.
   if (space == 0) return BOutError(bout, kErrorBufferOverflow);
   --space;
-  length = params[0];  //< Load the max char length.
+  length = params[0];  //< Load the max CH1 length.
   ++param;
 
   // Write data.
@@ -231,16 +231,16 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
           // nil string_.
-          length = params[++index];  //< Load the max char length.
+          length = params[++index];  //< Load the max CH1 length.
           ++num_params;
         } else {
           length = kAddressLengthMax;
         }
         // Load the source data pointer and increment args.fs
-        ui1_ptr = reinterpret_cast<const char*>(args[arg_index]);
+        ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
         PRINTF("\"%p", ui1_ptr);
 
-        // We know we will always have at least one nil-term char.
+        // We know we will always have at least one nil-term CH1.
         ui1 = *ui1_ptr;
         while (ui1 != 0) {
           if (space-- == 0)
@@ -254,7 +254,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         }
         if (type != kADR) {  //< 1 is faster to compare than 2
                              // More likely to have kADR than kSTR
-          *stop = 0;         // Write nil-term char.
+          *stop = 0;         // Write nil-term CH1.
           if (++stop >= stop) stop -= size;
           break;
         }
@@ -269,7 +269,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
           return BOutError(bout, kErrorBufferOverflow, params, index, begin);
 
         // Load pointer and read data to write.
-        ui1_ptr = reinterpret_cast<const char*>(args[arg_index]);
+        ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
         ui1 = *ui1_ptr;
 
         // Write data.
@@ -514,7 +514,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
         type = type & 0x1f;  //< Mask off lower 5 bits.
         switch (value) {
           case 0: {
-            ui1_ptr = reinterpret_cast<const char*>(args[arg_index]);
+            ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
             if (ui1_ptr == nullptr)
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
@@ -527,7 +527,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
                                begin);
             ui2 = *ui2_ptr;
             length = static_cast<UIT>(ui2);
-            ui1_ptr = reinterpret_cast<const char*>(ui2_ptr);
+            ui1_ptr = reinterpret_cast<const CH1*>(ui2_ptr);
           }
 #endif
 #if USING_CRABS_4_BYTE_TYPES
@@ -538,7 +538,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
                                begin);
             ui4 = *ui4_ptr;
             length = static_cast<UIT>(ui4);
-            ui1_ptr = reinterpret_cast<const char*>(ui4_ptr);
+            ui1_ptr = reinterpret_cast<const CH1*>(ui4_ptr);
           }
 #endif
 #if USING_CRABS_8_BYTE_TYPES
@@ -549,7 +549,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
                                begin);
             ui8 = *ui8_ptr;
             length = static_cast<UIT>(ui8);
-            ui1_ptr = reinterpret_cast<const char*>(ui8_ptr);
+            ui1_ptr = reinterpret_cast<const CH1*>(ui8_ptr);
           }
 #endif  //< USING_CRABS_8_BYTE_TYPES
           default: {
@@ -603,7 +603,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   return 0;
 }
 
-void BOutRingBell(BOut* bout, const char* address) {
+void BOutRingBell(BOut* bout, const CH1* address) {
   if (!bout) {
     return;
   }
@@ -617,7 +617,7 @@ void BOutRingBell(BOut* bout, const char* address) {
   UIT size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
@@ -643,7 +643,7 @@ void BOutRingBell(BOut* bout, const char* address) {
   bout->stop = (UIT)Size(begin, stop);
 }
 
-void BOutAckBack(BOut* bout, const char* address) {
+void BOutAckBack(BOut* bout, const CH1* address) {
   if (!bout) {
     return;
   }
@@ -658,7 +658,7 @@ void BOutAckBack(BOut* bout, const char* address) {
   UIT size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  char *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
@@ -684,7 +684,7 @@ void BOutAckBack(BOut* bout, const char* address) {
   bout->stop = (UIT)Size(begin, stop);
 }
 
-const Op* BOutConnect(BOut* bout, const char* address) {
+const Op* BOutConnect(BOut* bout, const CH1* address) {
   void* args[2];
   return BOutWrite(bout, Params<2, kADR, kADR>(), Args(args, address, 0));
 }
@@ -693,13 +693,13 @@ void BInKeyStrokes() {
   int current = -1;
   while (current >= 0) {
     current = _getch();
-    // @todo Do something with the char!
+    // @todo Do something with the CH1!
   }
 }
 
 #if USING_CRABS_TEXT
 /*
-char* Print (BOut* bout, char* socket, char* buffer_end) {
+CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     BOL print_now = !socket;
     if (!socket) {
         return socket;

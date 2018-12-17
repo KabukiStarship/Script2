@@ -45,7 +45,7 @@ struct Tuple2 {
 struct Tuple3 {
   AsciiType type;   //< The tuple type.
   void* value;      //< The tuple value.
-  const char* key;  //< The Tuple key.
+  const CH1* key;  //< The Tuple key.
 };
 
 /* Interface for a Script Set.
@@ -72,7 +72,7 @@ struct Collection {
   virtual BOL Push(AsciiType type, void* value) = 0;
 
   /* Adds the given Tuple3 to this Set. */
-  virtual BOL Push(AsciiType type, void* value, const char* key) = 0;
+  virtual BOL Push(AsciiType type, void* value, const CH1* key) = 0;
 
   /* Merges the given Set into this one. */
   virtual BOL Merge(Collection* collection) = 0;
@@ -84,23 +84,23 @@ struct Collection {
   virtual BOL Remove(UIW) = 0;
 
   /* Removes the given key from this collection (if applicable.). */
-  virtual BOL Remove(const char* key) = 0;
+  virtual BOL Remove(const CH1* key) = 0;
 
   /* Gets the element at the given index. */
   virtual void* Get(UIW index) = 0;
 
   /* Searches for the data of the given type and returns a pointer to it.
       @return Returns nil if the Set does not contain the given data. */
-  virtual void* Get(const char* key) = 0;
+  virtual void* Get(const CH1* key) = 0;
 
   /* Returns true if this Set contains this given key. */
-  virtual UIW FindIndex(const char* key) = 0;
+  virtual UIW FindIndex(const CH1* key) = 0;
 
   /* Returns true if this Set contains this given Type-Value. */
   virtual UIW FindIndex(AsciiType type, void* value) = 0;
 
   /* Gets the size_t of the object being stored. */
-  virtual UIW GetSize() = 0;
+  virtual UIW Size() = 0;
 
   /* Gets the size_t of the object being stored. */
   virtual UIW GetSizeWidth() = 0;

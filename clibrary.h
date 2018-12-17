@@ -48,9 +48,9 @@ class Library : public Operand {
   /* Gets the data size in bytes. */
   UIT GetDataSize() { return data_size_; }
 
-  /* Attempts to add the Page data into the CObj at the given BaseAddress.
-      @return Returns nil upon success and an error char upon failure. */
-  const Op* Add(UI1 type, const char* key, void* data) {
+  /* Attempts to add the Page data into the CObject at the given BaseAddress.
+      @return Returns nil upon success and an error CH1 upon failure. */
+  const Op* Add(UI1 type, const CH1* key, void* data) {
     TIndex size_of_type = getSizeOfType(type);
     if (size_of_type == 0) {
       return 0;
@@ -58,29 +58,29 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to insert the Page data into the CObj at the given index.
-      @return Returns nil upon success and an error char upon failure. */
-  const Op* Insert(UI1 type, const char* key, void* data, TIndex index = 0) {
+  /* Attempts to insert the Page data into the CObject at the given index.
+      @return Returns nil upon success and an error CH1 upon failure. */
+  const Op* Insert(UI1 type, const CH1* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
     if (index > l_numOps) index = l_numOps;
 
     return 0;
   }
 
-  /* Attempts to remove the Page data into the CObj at the given index.
-      @return Returns nil upon success and an error char upon failure. */
+  /* Attempts to remove the Page data into the CObject at the given index.
+      @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 
   /* Attempts to clear the page at the given index.
-      @return Returns nil upon success and an error char upon failure. */
+      @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Clear(TIndex index) { return 0; }
 
   /* Attempts to find the given op name.
       @return Returns an invalid index upon failure. */
-  TIndex Find(const char* key) { return 0; }
+  TIndex Find(const CH1* key) { return 0; }
 
   /* Searches for the given query and returns a bag of query results.  */
-  BOL Search(const char* query,
+  BOL Search(const CH1* query,
              Library<TIndex, TKey, TData, TData, MaxStackHeight>* results) {
     return false;
   }
@@ -150,7 +150,7 @@ class Library : public Operand {
       @param text     Beginning of the Text socket.
       @param text_end End of the Text socket.
       @return Returns nil upon success and an error string_ upon failure. */
-  virtual const char* Sudo(const char* text, const char* text_end) {
+  virtual const CH1* Sudo(const CH1* text, const CH1* text_end) {
     return nullptr;
   }
 
@@ -201,7 +201,7 @@ class Library : public Operand {
 template <typename TIndex, typename TKey, typename TData, uint MaxStackSize>
 API void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
-  delete reinterpret_cast<char*>(r);
+  delete reinterpret_cast<CH1*>(r);
 }
 #endif  //< CRABS_MEMORY_PROFILE > 2
 }  // namespace _

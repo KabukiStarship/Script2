@@ -69,7 +69,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
 inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
-                            UI1 offset, char* address) {
+                            UI1 offset, CH1* address) {
   PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
@@ -79,8 +79,8 @@ UIW* CrabsBinAddress(CCrabs* crabs) {
   return reinterpret_cast<UIW*>(crabs) + crabs->header_size;
 }
 
-char* CrabsBuffer(CCrabs* crabs) {
-  char* ptr = reinterpret_cast<char*>(crabs);
+CH1* CrabsBuffer(CCrabs* crabs) {
+  CH1* ptr = reinterpret_cast<CH1*>(crabs);
   return ptr + sizeof(CCrabs);
 }
 
@@ -161,7 +161,7 @@ CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_size, Operand* root,
 //    return crabs->type % 2 == 1;
 //}
 
-char* CrabsEndAddress(CCrabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
+CH1* CrabsEndAddress(CCrabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
 
 const Op* CrabsReset(CCrabs* crabs) { return 0; }
 
@@ -267,7 +267,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
       bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Number of bytes left to scan.
-      bytes_shift;   //< Number of bits to shift to scan the current CObj.
+      bytes_shift;   //< Number of bits to shift to scan the current CObject.
   UI1 bin_state,     //< Current bin FSM state.
       b;             //< Current UI1 being verified.
   hash16_t hash,     //< Expected hash of the B-Sequence.
@@ -277,7 +277,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
   const Op* op;      //< Current Op.
   Operand* operand;  //< The operand.
   BIn* bin;          //< BIn.
-  char *bin_begin,   //< Beginning of the ring socket.
+  CH1 *bin_begin,   //< Beginning of the ring socket.
       *bin_start,    //< Start of the ring socket data.
       *bin_stop,     //< Stop of the ring socket data.
       *bin_end,      //< End of the ring socket.
@@ -407,7 +407,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<char>(slot_start, (SIN)type);
+          slot_start = TypeAlignUpPointer<CH1>(slot_start, (SIN)type);
           break;
         }
         op = operand->Star(b, crabs);
@@ -557,7 +557,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
         PRINTF("\nhash:" << PrintHex(hash));
 #endif
         // Hash UI1.
-        // Check if char terminated.
+        // Check if CH1 terminated.
         if (b == 0) {
           // Check if there is another argument to scan.
           CrabsExitState(crabs);
@@ -786,7 +786,7 @@ const Op* CrabsScanHeader(CCrabs* crabs, const UIT* header) {
 }
 
 const UIT* CrabsHeaderStack(CCrabs* crabs) {
-  return reinterpret_cast<const UIT*>(reinterpret_cast<char*>(crabs) +
+  return reinterpret_cast<const UIT*>(reinterpret_cast<CH1*>(crabs) +
                                       sizeof(CCrabs) + crabs->stack_count);
 }
 
@@ -811,7 +811,7 @@ void CrabsClear(CCrabs* crabs) {
 
   BIn* bin = CrabsBIn(crabs);
 
-  char *begin = BInBegin(bin), *stop = begin + bin->size,
+  CH1 *begin = BInBegin(bin), *stop = begin + bin->size,
        *begin = begin + bin->begin, *stop = begin + bin->stop;
 
   // UIT buffer_space = SlotSpace (begin, stop, size);
@@ -827,11 +827,11 @@ void CrabsClear(CCrabs* crabs) {
   bin->stop = (UIT)Size(crabs, begin + 1);
 }
 
-void CrabsRingBell(CCrabs* crabs, const char* address) {
+void CrabsRingBell(CCrabs* crabs, const CH1* address) {
   BOutRingBell(CrabsBOut(crabs), address);
 }
 
-void CrabsAckBack(CCrabs* crabs, const char* address) {
+void CrabsAckBack(CCrabs* crabs, const CH1* address) {
   BOutAckBack(CrabsBOut(crabs), address);
 }
 
@@ -853,8 +853,8 @@ const Op* CrabsQuery(CCrabs* crabs, const Op& op) {
   return &op;
 }
 
-char* CrabsBaseAddress(BIn* bin) {
-  return reinterpret_cast<char*>(bin) + sizeof(BIn);
+CH1* CrabsBaseAddress(BIn* bin) {
+  return reinterpret_cast<CH1*>(bin) + sizeof(BIn);
 }
 
 UIT CrabsSpace(BIn* bin) {
@@ -862,7 +862,7 @@ UIT CrabsSpace(BIn* bin) {
     return ~0;
   }
 
-  char* begin = CrabsBaseAddress(bin);
+  CH1* begin = CrabsBaseAddress(bin);
   return (UIT)SlotSpace(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
@@ -871,12 +871,12 @@ UIW* CrabsBaseAddress(void* ptr, UIT rx_tx_offset) {
     kSlotHeaderSize = sizeof(BIn) + sizeof(UIW) - sizeof(BIn) % sizeof(UIW),
     //< Offset to the begin of the ring socket.
   };
-  char* result = reinterpret_cast<char*>(ptr) + rx_tx_offset + kSlotHeaderSize;
+  CH1* result = reinterpret_cast<CH1*>(ptr) + rx_tx_offset + kSlotHeaderSize;
   return reinterpret_cast<UIW*>(result);
 }
 
-char* CrabsEndAddress(BIn* bin) {
-  return reinterpret_cast<char*>(bin) + sizeof(BIn) + bin->size;
+CH1* CrabsEndAddress(BIn* bin) {
+  return reinterpret_cast<CH1*>(bin) + sizeof(BIn) + bin->size;
 }
 
 const Op* CrabsQuery(CCrabs* crabs, const Op* op) {

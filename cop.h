@@ -42,15 +42,15 @@ struct BOut;
         "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
     @endcode */
 struct API Op {
-  const char* name;          //< Op name.
+  const CH1* name;          //< Op name.
   const UIT *in,             //< Input kBSQ params or OpFirst.
       *out;                  //< Output kBSQ params or OpLast.
-  const char* description;   //< Op description.
+  const CH1* description;   //< Op description.
   CHW pop,                   //< Index of the Pop Operation.
       close,                 //< Index of the Close Operation.
       default_op;            //< Index of the Default Operation.
   BOL using_numbers;         //< Flag for if tokens may use numbers.
-  const char *ignore_chars,  //< String of chars to ignore.
+  const CH1 *ignore_chars,  //< String of chars to ignore.
       *allowed_chars;        //< String of allowed symbols.
   const BOut* evaluation;    //< Evaluated expression Slot.
 };

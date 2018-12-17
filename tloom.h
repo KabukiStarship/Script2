@@ -94,7 +94,7 @@ TCLoom<Size, Index, Char>* TLoomInit(UIW* socket, Size size, Index count_max) {
 template <typename Size, typename Index, typename Char>
 Size* TLoomOffsets(CLoom<Size, Index, Char>* loom) {
   ASSERT(loom);
-  return reinterpret_cast<char*>(loom) +
+  return reinterpret_cast<CH1*>(loom) +
          (loom->count_max << TBitCount<Index>());
 }
 

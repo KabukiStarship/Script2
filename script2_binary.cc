@@ -18,7 +18,7 @@ specific language governing permissions and limitations under the License. */
 #include <cmath>
 
 namespace _ {
-char HexNibbleToUpperCase(UI1 b) {
+CH1 HexNibbleToUpperCase(UI1 b) {
   b = b & 0xf;
   if (b > 9) return b + ('A' - 10);
   return b + '0';
@@ -93,7 +93,7 @@ Char* PrintMod10(Char* cursor, Char* stop, UI4 value) {
   }
 } */
 
-// char* PrintMod10(char* cursor, char* stop, UI8 value);
+// CH1* PrintMod10(CH1* cursor, CH1* stop, UI8 value);
 
 #if CPU_ENDIAN == LITTLE_ENDIAN
 static const UI2 kDigits00To99[100] = {
@@ -224,7 +224,7 @@ BOL IsNaN(SI8 value) { return value > TSignedNaN<SI8, UI8>(); }
 
 BOL IsNaN(UI8 value) { return value > TUnsignedNaN<UI8>(); }
 
-char HexNibbleToLowerCase(UI1 b) {
+CH1 HexNibbleToLowerCase(UI1 b) {
   b = b & 0xf;
   if (b > 9) return b + ('a' - 10);
   return b + '0';
@@ -245,7 +245,7 @@ UI2 HexByteToUpperCase(UI1 b) {
   return value;
 }
 
-int HexToByte(char c) {
+int HexToByte(CH1 c) {
   if (c < '0') {
     return -1;
   }
@@ -262,11 +262,11 @@ int HexToByte(char c) {
 }
 
 int HexToByte(UI2 h) {
-  int lowerValue = HexToByte((char)(h >> 8));
+  int lowerValue = HexToByte((CH1)(h >> 8));
 
   if (lowerValue < 0) return -1;
 
-  int upper_value = HexToByte((char)h);
+  int upper_value = HexToByte((CH1)h);
   if (upper_value < 0) return -1;
 
   return lowerValue | (upper_value << 4);
@@ -291,7 +291,7 @@ const SI2* BinaryLUTE() { return kCachedPowersE; }
 
 const UI8* BinaryLUTF() { return kCachedPowersF; }
 
-char* Print(char* cursor, char* stop, FLT value) {
+CH1* Print(CH1* cursor, CH1* stop, FLT value) {
   if (!cursor || cursor >= stop) return nullptr;
   SIW size = stop - cursor;
   PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, stop, (int)size,
@@ -299,61 +299,61 @@ char* Print(char* cursor, char* stop, FLT value) {
   int count = sprintf_s(cursor, stop - cursor, "%f", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<FLT, UI4>::TPrint<char>(cursor, stop, value);
+  // return TBinary<FLT, UI4>::TPrint<CH1>(cursor, stop, value);
 }
 
-char* Print(char* cursor, char* stop, DBL value) {
+CH1* Print(CH1* cursor, CH1* stop, DBL value) {
   if (!cursor || cursor >= stop) return nullptr;
   SIW size = stop - cursor;
   int count = sprintf_s(cursor, size, "%lf", value);
   if (count <= 0) return nullptr;
   return cursor + count;
-  // return TBinary<DBL, UI8>::TPrint<char>(cursor, stop, value);
+  // return TBinary<DBL, UI8>::TPrint<CH1>(cursor, stop, value);
 }
 
 template <typename Char>
 const Char* TStringFloatStop(const Char* cursor) {
-  const char* stop = TStringDecimalEnd<char>(cursor);
+  const CH1* stop = TStringDecimalEnd<CH1>(cursor);
   if (!stop) return stop;
-  char c = *stop++;
+  CH1 c = *stop++;
   if (c == '.') {
-    stop = TStringDecimalEnd<char>(cursor);
+    stop = TStringDecimalEnd<CH1>(cursor);
     c = *stop++;
   }
   if (c == 'e' || c != 'E') {
     if (c == '-') c = *stop++;
-    return TStringDecimalEnd<char>(cursor);
+    return TStringDecimalEnd<CH1>(cursor);
   }
   return stop;
 }
 
-const char* Scan(const char* cursor, FLT& value) {
+const CH1* Scan(const CH1* cursor, FLT& value) {
   int count = sscanf_s(cursor, "%f", &value);
-  return TStringFloatStop<char>(cursor);
+  return TStringFloatStop<CH1>(cursor);
 }
 
-const char* Scan(const char* cursor, DBL& value) {
+const CH1* Scan(const CH1* cursor, DBL& value) {
   int count = sscanf_s(cursor, "%lf", &value);
-  return TStringFloatStop<char>(cursor);
+  return TStringFloatStop<CH1>(cursor);
 }
 
 #if USING_UTF16
-char16_t* Print(char16_t* cursor, char16_t* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<char16_t>(cursor, stop, value);
+CH2* Print(CH2* cursor, CH2* stop, FLT value) {
+  return TBinary<FLT, UI4>.TPrint<CH2>(cursor, stop, value);
 }
 
-char16_t* Print(char16_t* cursor, char16_t* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<char16_t>(cursor, stop, value);
+CH2* Print(CH2* cursor, CH2* stop, DBL value) {
+  return TBinary<DBL, UI8>.TPrint<CH2>(cursor, stop, value);
 }
 #endif
 
 #if USING_UTF32
-char32_t* Print(char32_t* cursor, char32_t* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<char32_t>(cursor, stop, value);
+CH4* Print(CH4* cursor, CH4* stop, FLT value) {
+  return TBinary<FLT, UI4>.TPrint<CH4>(cursor, stop, value);
 }
 
-char32_t* Print(char32_t* cursor, char32_t* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<char32_t>(cursor, stop, value);
+CH4* Print(CH4* cursor, CH4* stop, DBL value) {
+  return TBinary<DBL, UI8>.TPrint<CH4>(cursor, stop, value);
 }
 #endif
 
@@ -377,16 +377,16 @@ int MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
 
 int MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
 
-void FloatBytes(FLT value, char& byte_0, char& byte_1, char& byte_2,
-                char& byte_3) {
+void FloatBytes(FLT value, CH1& byte_0, CH1& byte_1, CH1& byte_2,
+                CH1& byte_3) {
   UI4 ui_value = *reinterpret_cast<UI4*>(&value);
-  byte_0 = (char)(ui_value);
-  byte_1 = (char)(ui_value >> 8);
-  byte_2 = (char)(ui_value >> 16);
-  byte_3 = (char)(ui_value >> 24);
+  byte_0 = (CH1)(ui_value);
+  byte_1 = (CH1)(ui_value >> 8);
+  byte_2 = (CH1)(ui_value >> 16);
+  byte_3 = (CH1)(ui_value >> 24);
 }
 
-char* Print(char* begin, UI2 chars) {
+CH1* Print(CH1* begin, UI2 chars) {
 #if ALIGN_MEMORY
   *reinterpret_cast<UI2*>(chars);
   return begin + 2;
@@ -396,7 +396,7 @@ char* Print(char* begin, UI2 chars) {
 #endif
 }
 
-char* Print(char* begin, char byte_0, char byte_1) {
+CH1* Print(CH1* begin, CH1 byte_0, CH1 byte_1) {
 #if ALIGN_MEMORY
   if (reinterpret_cast<UIW>(begin) & 1) {
     begin[0] = byte_1;
@@ -411,7 +411,7 @@ char* Print(char* begin, char byte_0, char byte_1) {
   return &begin[2];
 }
 
-char* Print(char* begin, char* stop, char byte_0, char byte_1, char byte_2) {
+CH1* Print(CH1* begin, CH1* stop, CH1 byte_0, CH1 byte_1, CH1 byte_2) {
 #if ALIGN_MEMORY
   switch (reinterpret_cast<UIW>(begin) & 3) {
     case 0: {
@@ -431,7 +431,7 @@ char* Print(char* begin, char* stop, char byte_0, char byte_1, char byte_2) {
       UI2 ptr = *reinterpret_cast<UI2*>(begin);
       *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
       *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
-      return reinterpret_cast<char*>(ptr);
+      return reinterpret_cast<CH1*>(ptr);
     }
     case 3: {
       *begin = byte_0;
@@ -449,7 +449,7 @@ char* Print(char* begin, char* stop, char byte_0, char byte_1, char byte_2) {
   return &begin[4];
 }
 
-// char puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
+// CH1 puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
 
 constexpr SIW IEEE754LutElementCount() { return 87; }
 
@@ -460,14 +460,14 @@ const SI2* IEEE754Pow10E() {
 
 const UI8* IEEE754Pow10F() { return kCachedPowersF; }
 
-void BinaryLUTAlignedGenerate(char* lut, size_t size) {
+void BinaryLUTAlignedGenerate(CH1* lut, size_t size) {
   ASSERT(size);
   SIW iee754_pow_10_count = IEEE754LutElementCount();
   if (size != ((100 + iee754_pow_10_count) * 2 + iee754_pow_10_count * 8))
     return;
   UI2* ui2_ptr = reinterpret_cast<UI2*>(lut);
 
-  for (char tens = '0'; tens <= '9'; ++tens)
+  for (CH1 tens = '0'; tens <= '9'; ++tens)
     for (int ones = '0'; ones <= '9'; ++ones)
 #if ENDIAN == LITTLE
       *ui2_ptr++ = (tens << 8) | ones;
@@ -482,15 +482,15 @@ void BinaryLUTAlignedGenerate(char* lut, size_t size) {
   for (int i = 0; i < 87; ++i) *ui8_ptr = IEEE754Pow10F()[i];
 }
 
-const UI2* DigitsLut(const char* puff_lut) {
+const UI2* DigitsLut(const CH1* puff_lut) {
   return reinterpret_cast<const UI2*>(puff_lut);
 }
 
-const UI2* PuffLutExponents(char* puff_lut) {
+const UI2* PuffLutExponents(CH1* puff_lut) {
   return reinterpret_cast<const UI2*>(puff_lut + 200);
 }
 
-const UI8* PufLutPow10(char* puff_lut) {
+const UI8* PufLutPow10(CH1* puff_lut) {
   return reinterpret_cast<const UI8*>(puff_lut + 374);
 }
 
@@ -562,22 +562,22 @@ DBL Ceiling(DBL value) { return ceil(value); }
 
 FLT Ceiling(FLT value) { return ceil(value); }
 
-char* LastByte(char* c) { return c; }
+CH1* LastByte(CH1* c) { return c; }
 
 #if USING_UTF16
-char* LastByte(char16_t* c) { return reinterpret_cast<char*> + 1; }
+CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*> + 1; }
 
-char16_t* Print(char16_t* cursor, char16_t* stop, FLT value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, FLT value) { return nullptr; }
 
-char16_t* Print(char16_t* cursor, char16_t* stop, DBL value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, DBL value) { return nullptr; }
 #endif
 
 #if USING_UTF32
-char* LastByte(char32_t* c) { return reinterpret_cast<char*> + 3; }
+CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*> + 3; }
 
-char32_t* Print(char32_t* cursor, char32_t* stop, FLT value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, FLT value) { return nullptr; }
 
-char32_t* Print(char32_t* cursor, char32_t* stop, DBL value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, DBL value) { return nullptr; }
 #endif
 
 }  // namespace _

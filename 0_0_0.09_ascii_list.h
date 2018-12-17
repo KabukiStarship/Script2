@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const char* _0_0_0__09_ASCII_List(char* seam_log, char* seam_end,
-                                         const char* args) {
+static const CH1* _0_0_0__09_ASCII_List(CH1* seam_log, CH1* seam_end,
+                                         const CH1* args) {
 #if SEAM >= _0_0_0__09
   TEST_BEGIN;
 
@@ -53,7 +53,7 @@ static const char* _0_0_0__09_ASCII_List(char* seam_log, char* seam_end,
     PRINT (Socket (list.This (), list.This ()->size));
   }
 
-  const char* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};
+  const CH1* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};
   for (int i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kSTR, test_strings[i++]);

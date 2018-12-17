@@ -206,7 +206,7 @@ typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
-typedef unsigned char UI1;
+typedef unsigned CH1 UI1;
 typedef unsigned int uint;
 
 typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
@@ -258,7 +258,7 @@ enum {
 static const UI8 kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
 //< Largest 64-bit prime: 18446744073709551557;
 
-//< A char with a single newline char.
+//< A CH1 with a single newline CH1.
 
 /* The level will more code creating a larger binary. Use one
     underscore to use more memory, and two underscores to use even more. */

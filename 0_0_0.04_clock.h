@@ -23,19 +23,19 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
-                                    const char* args) {
+static const CH1* _0_0_0__04_Clock(CH1* seam_log, CH1* seam_end,
+                                    const CH1* args) {
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
   PRINT_HEADING("\n\nTesting TStringScanTime...");
 
   TMS t, t_found;
-  const char* result;
+  const CH1* result;
 
   // @note The following dates must be the current day to work right in order
   //       to auto-detect the year.
-  const char* strings[] = {
+  const CH1* strings[] = {
       "8/9",
       "08/09",
       "8/9/18",
@@ -67,7 +67,7 @@ static const char* _0_0_0__04_Clock(char* seam_log, char* seam_end,
   PRINTF("\n\nTesting more valid input...\n");
 
   enum { kSize = 128 };
-  char socket[kSize];
+  CH1 socket[kSize];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
   Print(socket, socket + kSize, t);

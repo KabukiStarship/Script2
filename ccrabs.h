@@ -104,7 +104,7 @@ struct CCrabs {
       bin_state,       //< Slot streaming state.
       last_bin_state,  //< Last BIn state.
       last_byte;       //< Last UI1 read.
-  CHW current_char;    //< Current Unicode char being scanned.
+  CHW current_char;    //< Current Unicode CH1 being scanned.
   hash16_t hash;       //< Packed BSQ hash.
   UI4 timeout_us;      //< Timeout time in microseconds.
   TME last_time;       //< Last time the Stack was scanned.
@@ -121,7 +121,7 @@ struct CCrabs {
 API UIW* CrabsBinAddress(CCrabs* crabs);
 
 /* Gets the crabs's socket. */
-API char* CrabsBuffer(CCrabs* crabs);
+API CH1* CrabsBuffer(CCrabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
 API BIn* CrabsBIn(CCrabs* crabs);
@@ -147,19 +147,19 @@ inline Operand** CrabsStack(CCrabs* crabs) {
 /* Returns true if the Stack uses dynamic memory. */
 // API BOL CrabsIsDynamic (CCrabs* crabs);
 
-API char* CrabsEndAddress(CCrabs* crabs);
+API CH1* CrabsEndAddress(CCrabs* crabs);
 
 /* Resets this Stack to the new state. */
 API const Op* CrabsReset(CCrabs* crabs);
 
 /* Pushes the operand at the given index of the current
 device control onto the stack.
-@return Returns nil upon success and a pointer to a char
+@return Returns nil upon success and a pointer to a CH1
 upon failure. */
 API const Op* Push(CCrabs* crabs, Operand* operand);
 
 /* Attempts to pop an Star off the stack and returns a pointer to a
-    char upon failure. */
+    CH1 upon failure. */
 API const Op* Pop(CCrabs* crabs);
 
 /* Exits the current state. */
@@ -197,17 +197,17 @@ API void CrabsCancel(CCrabs* crabs);
 API void CrabsClear(CCrabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
-API void CrabsRingBell(CCrabs* crabs, const char* address = "");
+API void CrabsRingBell(CCrabs* crabs, const CH1* address = "");
 
 /* Script Ack-back Op replies an ACK to a Bell Op. */
-API void CrabsAckBack(CCrabs* crabs, const char* address = "");
+API void CrabsAckBack(CCrabs* crabs, const CH1* address = "");
 
 /* Disconnects the expression. */
 API const Op* CrabsForceDisconnect(CCrabs* crabs, Error error);
 
 /* Reads the CCrabs args from the crabs->slot.
 inline const Op* CrabsArgs (CCrabs* crabs, const UIT* params, void** args) {
-   const char* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
+   const CH1* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
                                    params, args);
    if (!cursor) {
    }

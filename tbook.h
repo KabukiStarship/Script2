@@ -138,7 +138,7 @@ UIW* MultimapInit(UIW* socket, UI1 count_max, UI2 size) {
 /* Insets the given key-value pair.
  */
 template <typename Size, typename Index, typename I>
-I MultimapInsert(TMap<Index, I>* multimap, UI1 type, const char* key,
+I MultimapInsert(TMap<Index, I>* multimap, UI1 type, const CH1* key,
                  void* data, I index) {
   if (multimap == nullptr) return 0;
   return ~0;
@@ -157,7 +157,7 @@ I MultimapIndexMax() {
 
 /* Adds a key-value pair to the stop of the multimap. */
 template <typename Size, typename Index, typename I>
-I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
+I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
               void* data) {
   if (multimap == nullptr) return 0;
   if (key == nullptr) return 0;
@@ -171,7 +171,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
   if (item_count >= count_max) return ~0;
   //< We're out of buffered indexes.
 
-  char* states = reinterpret_cast<char*>(multimap) + sizeof(TMap<Index, I>);
+  CH1* states = reinterpret_cast<CH1*>(multimap) + sizeof(TMap<Index, I>);
   Index* key_offsets = reinterpret_cast<Index*>(states + count_max);
   Size* data_offsets =
       reinterpret_cast<Size*>(states + count_max * (sizeof(Index)));
@@ -182,7 +182,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
         states + count_max * (sizeof(Index) + sizeof(Size) + sizeof(I))),
     *unsorted_indexes = indexes + count_max,
     *collission_list = unsorted_indexes + count_max;
-  char *keys = reinterpret_cast<char*>(multimap) + table_size - 1, *destination;
+  CH1 *keys = reinterpret_cast<CH1*>(multimap) + table_size - 1, *destination;
 
   // Calculate space left.
   Index value = table_size - count_max * MultimapOverheadPerIndex<Index, I>(),
@@ -218,7 +218,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
     return 0;
   }
 
-  // Calculate left over socket size by looking up last char.
+  // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
     PRINTF("Not enough room in buffer!\n");
@@ -307,7 +307,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
         // Move collisions pointer to the unsorted_indexes.
         indexes += count_max;
 
-        //< Add the newest char to the stop.
+        //< Add the newest CH1 to the stop.
         indexes[item_count] = item_count;
 
         SetPrint(multimap);
@@ -315,7 +315,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
         return item_count;
       }
 
-      // But we still don't know if the char is a new collision.
+      // But we still don't know if the CH1 is a new collision.
 
       PRINTF("Checking if it's a collision... ");
 
@@ -387,7 +387,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
       " %i at index %u before hash 0x%x \n",
       hash, key, mid, Diff(multimap, destination), hashes[mid]);
 
-  // First copy the char and set the key offset.
+  // First copy the CH1 and set the key offset.
   SlotWrite(destination, key);
   key_offsets[item_count] = value;
 
@@ -430,14 +430,14 @@ I MultimapAdd(TMap<Index, I>* multimap, const char* key, AsciiType type,
 }
 
 /* Adds a key-value pair to the stop of the multimap. */
-// UI1 Add2 (Set2* multimap, const char* key, UI1 data) {
+// UI1 Add2 (Set2* multimap, const CH1* key, UI1 data) {
 //    return SetAdd<UI1, UI2, UI2, UI2> (multimap, key, kUI1,
 //    &data);
 //}
 
-/* Returns  the given query char in the hash table. */
+/* Returns  the given query CH1 in the hash table. */
 template <typename Size, typename Index, typename I>
-I MultimapFind(TMap<Index, I>* multimap, const char* key) {
+I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
   if (multimap == nullptr) return 0;
   PrintLineBreak("Finding record...", 5);
   I index, item_count = multimap->item_count, count_max = multimap->count_max,
@@ -448,12 +448,12 @@ I MultimapFind(TMap<Index, I>* multimap, const char* key) {
   Index table_size = multimap->table_size;
 
   const Size* hashes = reinterpret_cast<const Size*>(
-      reinterpret_cast<const char*>(multimap) + sizeof(TMap<Index, I>));
+      reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>));
   const Index* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
-  const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
+  const CH1 *indexes = reinterpret_cast<const CH1*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
              *collission_list = unsorted_indexes + count_max;
-  const char* keys = reinterpret_cast<const char*>(multimap) + table_size - 1;
+  const CH1* keys = reinterpret_cast<const CH1*>(multimap) + table_size - 1;
   const I *collisions, *temp_ptr;
 
   Size hash = Hash16(key);
@@ -496,7 +496,7 @@ I MultimapFind(TMap<Index, I>* multimap, const char* key) {
       // Check for collisions
 
       collisions =
-          reinterpret_cast<const char*>(key_offsets) + count_max * sizeof(UI2);
+          reinterpret_cast<const CH1*>(key_offsets) + count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index < ~0) {
@@ -530,7 +530,7 @@ I MultimapFind(TMap<Index, I>* multimap, const char* key) {
 
       // There were no collisions.
 
-      // But we still don't know if the char is new or a collision.
+      // But we still don't know if the CH1 is new or a collision.
 
       // Move collisions pointer to the unsorted indexes.
       indexes += count_max;
@@ -558,7 +558,7 @@ I MultimapFind(TMap<Index, I>* multimap, const char* key) {
   return ~((I)0);
 }
 
-// static UI1 Find2 (Set2* multimap, const char* key) {
+// static UI1 Find2 (Set2* multimap, const CH1* key) {
 //    return SetFind<UI1, UI2, UI2, UI2> (multimap, key);
 //}
 
@@ -588,8 +588,8 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   for (int i = 0; i < 79; ++i) PRINT('_');
   PRINT('\n');
 
-  const char* states =
-      reinterpret_cast<const char*>(multimap) + sizeof(TMap<Index, I>);
+  const CH1* states =
+      reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>);
   const Index* key_offsets = reinterpret_cast<const Index*>(states + count_max);
   const Size* data_offsets =
       reinterpret_cast<const Size*>(states + count_max * (sizeof(Index)));
@@ -599,7 +599,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
               states + count_max * (sizeof(Index) + sizeof(Size) + sizeof(I))),
           *unsorted_indexes = indexes + count_max,
           *collission_list = unsorted_indexes + count_max, *begin;
-  const char* keys = reinterpret_cast<const char*>(multimap) + table_size - 1;
+  const CH1* keys = reinterpret_cast<const CH1*>(multimap) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
@@ -634,7 +634,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   }
   PrintLine('_');
 
-  PrintSocket(reinterpret_cast<const char*>(multimap) + sizeof(TMap<Index, I>),
+  PrintSocket(reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>),
               multimap->size);
   PRINT('\n');
 }
@@ -720,20 +720,20 @@ class Multimap {
 
   /* Insets the given key-value pair.
    */
-  inline I Insert(UI1 type, const char* key, void* data, I index) {
+  inline I Insert(UI1 type, const CH1* key, void* data, I index) {
     auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapInsert<Index, I>(multimap, type, key, data, index);
   }
 
   inline I IndexMax() { return MultimapIndexMax<Index, I>(); }
 
-  inline I Add(const char* key, AsciiType type, void* data) {
+  inline I Add(const CH1* key, AsciiType type, void* data) {
     auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapAdd<Index, I>(multimap, key, type, data);
   }
 
-  /* Returns  the given query char in the hash table. */
-  inline I Find(const char* key) {
+  /* Returns  the given query CH1 in the hash table. */
+  inline I Find(const CH1* key) {
     auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return MultimapFind(multimap, key);
   }

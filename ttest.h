@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT2_TTEST
-#define INCLUDED_SCRIPT2_TTEST 1
+#ifndef SCRIPT2_TTEST
+#define SCRIPT2_TTEST 1
 
 #include "ctest.h"
 
@@ -25,13 +25,13 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 template <TestCase... N>
-const char* TTestTree(char* seam_log, char* seam_end, const char* args) {
+const CH1* TTestTree(CH1* seam_log, CH1* seam_end, const CH1* args) {
   static TestCase nodes[sizeof...(N)] = {N...};
   return TestTree(seam_log, seam_end, args, nodes, sizeof...(N));
 }
 
 template <TestCase... N>
-int TTestTree(int arg_count, char** args, char* seam_log, int seam_log_size) {
+int TTestTree(int arg_count, CH1** args, CH1* seam_log, int seam_log_size) {
   static TestCase tests[sizeof...(N)] = {N...};
   return SeamTreeTest(arg_count, args, seam_log, seam_log_size, tests,
                       sizeof...(N));
@@ -39,4 +39,4 @@ int TTestTree(int arg_count, char** args, char* seam_log, int seam_log_size) {
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT2_TTEST
+#endif  //< SCRIPT2_TTEST

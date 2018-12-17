@@ -30,8 +30,8 @@ using namespace std;
 
 namespace _ {
 
-const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
-                                     const char* args) {
+const CH1* _0_0_0__03_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
+                                     const CH1* args) {
 #if SEAM >= _0_0_0__03
   TEST_BEGIN;
 
@@ -42,7 +42,7 @@ const char* _0_0_0__03_FtoS_and_StoF(char* seam_log, char* seam_end,
 #endif
 
   enum { kSize = 31 };
-  char socket[kSize + 1];
+  CH1 socket[kSize + 1];
 
   UI8 value;
   DBL dbl_expected, dbl_found;

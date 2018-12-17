@@ -150,7 +150,7 @@ TME ClockTME(CClock& clock) { return TStampTime<TME>(clock); }
 
 int ClockMonthDayCount(TMS t) {
   CClock date(t);
-  static const char days_per_month[12] = {31, 28, 31, 30, 31, 30,
+  static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
                                           31, 31, 30, 31, 30, 31};
   if ((date.year & 3) && (date.month == 4)) {
     // Then it's a leap year and April:
@@ -162,17 +162,17 @@ int ClockMonthDayCount(TMS t) {
 int ClockMonthDayCount(int month, int year) {
   if (month < 1) return 0;
   if (month > 12) return 0;
-  static const char days_per_month[12] = {31, 28, 31, 30, 31, 30,
+  static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
                                           31, 31, 30, 31, 30, 31};
   if ((year & 0xC) && (month == 4))  // Then it's a leap year and April:
     return 29;
   return days_per_month[month];
 }
 
-const char* ClockWeekDay(int day_number) {
-  static const char* days[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
+const CH1* ClockWeekDay(int day_number) {
+  static const CH1* days[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
                                "Thursday", "Friday", "Saturday"};
-  static const char kInvalidText[] = "Invalid\0";
+  static const CH1 kInvalidText[] = "Invalid\0";
   if (day_number < 0) {
     return kInvalidText;
   }
@@ -182,8 +182,8 @@ const char* ClockWeekDay(int day_number) {
   return days[day_number];
 }
 
-char ClockDayOfWeekInitial(int day_number) {
-  static const char days[] = "SMTWRFSU";
+CH1 ClockDayOfWeekInitial(int day_number) {
+  static const CH1 days[] = "SMTWRFSU";
   if (day_number < 0) return 'I';
   if (day_number >= 7) return 'I';
   return days[day_number];
@@ -323,7 +323,7 @@ TME ClockTimeTME(int year, int month, int day, int hour, int minute,
 }
 
 /*
-template <typename Char = char>
+template <typename Char = CH1>
 Char* Print(Char* cursor, Char* stop, Tss& t) {
   CClock c (t.seconds);
   cursor = TPrint<Char>(cursor, stop, c);
@@ -332,155 +332,155 @@ Char* Print(Char* cursor, Char* stop, Tss& t) {
 }*/
 
 #if USING_UTF8
-char* Print(char* begin, char* stop, const CClock& clock) {
-  return TPrint<char>(begin, stop, clock);
+CH1* Print(CH1* begin, CH1* stop, const CClock& clock) {
+  return TPrint<CH1>(begin, stop, clock);
 }
 
-char* Print(char* begin, char* stop, Tss& t) {
-  return TPrint<char>(begin, stop, t);
+CH1* Print(CH1* begin, CH1* stop, Tss& t) {
+  return TPrint<CH1>(begin, stop, t);
 }
 
-char* PrintTime(char* begin, char* stop, TMS t) {
+CH1* PrintTime(CH1* begin, CH1* stop, TMS t) {
   CClock clock(t);
-  return TPrint<char>(begin, stop, clock);
+  return TPrint<CH1>(begin, stop, clock);
 }
 
-char* PrintTime(char* begin, char* stop, TME t) {
+CH1* PrintTime(CH1* begin, CH1* stop, TME t) {
   CClock clock(t);
-  return TPrint<char>(begin, stop, clock);
+  return TPrint<CH1>(begin, stop, clock);
 }
 
 void PrintTime(const CClock& clock) {
   enum { kSize = 64 };
-  char socket[kSize];
+  CH1 socket[kSize];
   Print(socket, socket + kSize - 1, clock);
 }
 
 void PrintTime(Tss t) {
   enum { kSize = 64 };
-  char socket[kSize];
+  CH1 socket[kSize];
   Print(socket, socket + kSize - 1, t);
 }
 
 void PrintTime(TMS t) {
   enum { kSize = 64 };
-  char socket[kSize];
+  CH1 socket[kSize];
   Print(socket, socket + kSize - 1, t);
 }
 
 void PrintTime(TME t) {
   enum { kSize = 64 };
-  char socket[kSize];
+  CH1 socket[kSize];
   Print(socket, socket + kSize - 1, t);
 }
 
-const char* StringScanTime(const char* string_, int& hour, int& minute,
+const CH1* StringScanTime(const CH1* string_, int& hour, int& minute,
                            int& second) {
-  return TStringScanTime<char>(string_, hour, minute, second);
+  return TStringScanTime<CH1>(string_, hour, minute, second);
 }
 
-const char* Scan(const char* string_, CClock& clock) {
-  return TScan<char>(string_, clock);
+const CH1* Scan(const CH1* string_, CClock& clock) {
+  return TScan<CH1>(string_, clock);
 }
 
-const char* Scan(const char* string_, Tss& t) {
-  return TStringScanTime<char>(string_, t);
+const CH1* Scan(const CH1* string_, Tss& t) {
+  return TStringScanTime<CH1>(string_, t);
 }
 
-const char* TStringScanTime(const char* string_, TMS& t) {
-  return TStringScanTime<char, TMS>(string_, t);
+const CH1* TStringScanTime(const CH1* string_, TMS& t) {
+  return TStringScanTime<CH1, TMS>(string_, t);
 }
 
-const char* TStringScanTime(const char* string_, TME& t) {
-  return TStringScanTime<char, TME>(string_, t);
+const CH1* TStringScanTime(const CH1* string_, TME& t) {
+  return TStringScanTime<CH1, TME>(string_, t);
 }
 
 #endif
 #if USING_UTF16
-char16_t* Print(char16_t* begin, char16_t* stop, CClock& clock) {
-  return TPrint<char16_t>(begin, stop, clock);
+CH2* Print(CH2* begin, CH2* stop, CClock& clock) {
+  return TPrint<CH2>(begin, stop, clock);
 }
 
-char16_t* Print(char16_t* begin, char16_t* stop, Tss& t) {
-  return TPrint<char16_t>(begin, stop, t);
+CH2* Print(CH2* begin, CH2* stop, Tss& t) {
+  return TPrint<CH2>(begin, stop, t);
 }
 
-char16_t* PrintTime(char16_t* begin, char16_t* stop, TMS t) {
+CH2* PrintTime(CH2* begin, CH2* stop, TMS t) {
   CClock clock(t);
-  return TPrint<char16_t, TMS>(begin, stop, clock);
+  return TPrint<CH2, TMS>(begin, stop, clock);
 }
 
-char16_t* PrintTime(char16_t* begin, char16_t* stop, TME t) {
+CH2* PrintTime(CH2* begin, CH2* stop, TME t) {
   CClock clock(t);
-  return TPrint<char16_t, TME>(begin, stop, clock);
+  return TPrint<CH2, TME>(begin, stop, clock);
 }
 
-char16_t* Print(char16_t* begin, char16_t* stop, CClock& t) {
-  return TPrint<char16_t>(begin, stop, t);
+CH2* Print(CH2* begin, CH2* stop, CClock& t) {
+  return TPrint<CH2>(begin, stop, t);
 }
-const char16_t* TStringScanTime(const char16_t* string_, CClock& clock) {
-  return TStringScanTime<char16_t>(string_, clock);
+const CH2* TStringScanTime(const CH2* string_, CClock& clock) {
+  return TStringScanTime<CH2>(string_, clock);
 }
 
-const char16_t* TStringScanTime(const char16_t* string_, int& hour, int& minute,
+const CH2* TStringScanTime(const CH2* string_, int& hour, int& minute,
                                 int& second) {
-  return TStringScanTime<char16_t>(string_, hour, minute, second);
+  return TStringScanTime<CH2>(string_, hour, minute, second);
 }
 
-const char16_t* TextScanMicroseconds(const char16_t* string_, Tss& result) {
-  return TStringScanTime<char16_t, Tss>(string_, result);
+const CH2* TextScanMicroseconds(const CH2* string_, Tss& result) {
+  return TStringScanTime<CH2, Tss>(string_, result);
 }
 
-const char16_t* TStringScanTime(const char16_t* string_, TMS& result) {
-  return TStringScanTime<char16_t, TMS>(string_, result);
+const CH2* TStringScanTime(const CH2* string_, TMS& result) {
+  return TStringScanTime<CH2, TMS>(string_, result);
 }
 
-const char16_t* TStringScanTime(const char16_t* string_, TME& result) {
-  return TStringScanTime<char16_t, TME>(string_, result);
+const CH2* TStringScanTime(const CH2* string_, TME& result) {
+  return TStringScanTime<CH2, TME>(string_, result);
 }
 #endif
 #if USING_UTF32
-char32_t* Print(char32_t* begin, char32_t* stop, CClock& clock) {
-  return TPrint<char32_t>(begin, stop, clock);
+CH4* Print(CH4* begin, CH4* stop, CClock& clock) {
+  return TPrint<CH4>(begin, stop, clock);
 }
 
-char32_t* Print(char32_t* begin, char32_t* stop, Tss& t) {
-  return TPrint<char32_t>(begin, stop, t);
+CH4* Print(CH4* begin, CH4* stop, Tss& t) {
+  return TPrint<CH4>(begin, stop, t);
 }
 
-char32_t* PrintTime(char32_t* begin, char32_t* stop, TMS t) {
+CH4* PrintTime(CH4* begin, CH4* stop, TMS t) {
   CClock clock(t);
-  return TPrint<char32_t, TMS>(begin, stop, clock);
+  return TPrint<CH4, TMS>(begin, stop, clock);
 }
 
-char32_t* PrintTime(char32_t* begin, char32_t* stop, TME t) {
+CH4* PrintTime(CH4* begin, CH4* stop, TME t) {
   CClock clock(t);
-  return TPrint<char32_t, TME>(begin, stop, clock);
+  return TPrint<CH4, TME>(begin, stop, clock);
 }
 
-char32_t* Print(char32_t* begin, char32_t* stop, CClock& clock) {
-  return TPrint<char32_t>(begin, stop, clock);
+CH4* Print(CH4* begin, CH4* stop, CClock& clock) {
+  return TPrint<CH4>(begin, stop, clock);
 }
 
-const char32_t* TStringScanTime(const char32_t* string_, int& hour, int& minute,
+const CH4* TStringScanTime(const CH4* string_, int& hour, int& minute,
                                 int& second) {
-  return TStringScanTime<char32_t>(string_, hour, minute, second);
+  return TStringScanTime<CH4>(string_, hour, minute, second);
 }
 
-const char32_t* Scan(const char32_t* string_, CClock& time) {
-  return TStringScanTime<char32_t>(string_, time);
+const CH4* Scan(const CH4* string_, CClock& time) {
+  return TStringScanTime<CH4>(string_, time);
 }
 
-const char32_t* Scan(const char32_t* string_, Tss& result) {
-  return TStringScanTime<char32_t, Tss>(string_, result);
+const CH4* Scan(const CH4* string_, Tss& result) {
+  return TStringScanTime<CH4, Tss>(string_, result);
 }
 
-const char32_t* TStringScanTime(const char32_t* string_, TMS& result) {
-  return TStringScanTime<char32_t, TMS>(string_, result);
+const CH4* TStringScanTime(const CH4* string_, TMS& result) {
+  return TStringScanTime<CH4, TMS>(string_, result);
 }
 
-const char32_t* TStringScanTime(const char32_t* string_, TME& result) {
-  return TStringScanTime<char32_t, TME>(string_, result);
+const CH4* TStringScanTime(const CH4* string_, TME& result) {
+  return TStringScanTime<CH4, TME>(string_, result);
 }
 
 #endif

@@ -32,7 +32,7 @@ void Delete(CObject& obj) {
   if (factory) factory(obj, kFactoryDelete, nullptr);
 }
 
-BOL IsOBJFactoryFunction(SIW function) { return function <= kFactoryLast; }
+BOL IsOBJFactoryFunction(SIW function) { return function <= kFactoryInfo; }
 
 BOL ObjSizeIsValid(SI2 size, SI2 size_min) {
   return TObjSizeIsValid<SI2>(size, size_min);
@@ -71,6 +71,12 @@ UIW* ObjNew(SI2 size, size_t header_size) {
   *reinterpret_cast<SI2*>(socket) = size;
   return socket;
 }
+
+void SocketHeap(UIW* socket) {
+  if (socket) delete[] socket;
+}
+
+void SocketStack(UIW* socket) {}
 
 }  // namespace _
 

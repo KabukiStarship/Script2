@@ -25,10 +25,10 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-char* AlignDown(char* pointer, UIW mask) { return TAlignDown<char*>(pointer); }
+CH1* AlignDown(CH1* pointer, UIW mask) { return TAlignDown<CH1*>(pointer); }
 
-const char* AlignDown(const char* pointer, UIW mask) {
-  return TAlignDown<const char*>(pointer);
+const CH1* AlignDown(const CH1* pointer, UIW mask) {
+  return TAlignDown<const CH1*>(pointer);
 }
 
 const UIW* AlignDown(const UIW* pointer, UIW mask) {
@@ -37,12 +37,20 @@ const UIW* AlignDown(const UIW* pointer, UIW mask) {
 
 UIW* AlignDown(UIW* pointer, UIW mask) { return TAlignDown<UIW*>(pointer); }
 
+SI1 AlignDown(SI1 value, SI1 mask) { return TAlignDownI<SI1>(value, mask); }
+
+SI2 AlignDown(SI2 value, SI2 mask) { return TAlignDownI<SI2>(value, mask); }
+
+SI4 AlignDown(SI4 value, SI4 mask) { return TAlignDownI<SI4>(value, mask); }
+
+SI8 AlignDown(SI8 value, SI8 mask) { return TAlignDownI<SI8>(value, mask); }
+
 UIW* AlignUp(UIW* socket, UIW mask) { return TAlignUp<UIW>(socket, mask); }
 
-char* AlignUp(char* pointer, UIW mask) { return TAlignUp<char>(pointer, mask); }
+CH1* AlignUp(CH1* pointer, UIW mask) { return TAlignUp<CH1>(pointer, mask); }
 
-const char* AlignUp(const char* pointer, UIW mask) {
-  return TAlignUp<const char>(pointer, mask);
+const CH1* AlignUp(const CH1* pointer, UIW mask) {
+  return TAlignUp<const CH1>(pointer, mask);
 }
 
 UI1 AlignUp(UI1 value, UI1 mask) { return TAlignUpUnsigned<UI1>(value, mask); }
@@ -61,7 +69,7 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
-UIW* TNew(SIW size) { return new UIW[size]; }
+UIW* New(SIW size) { return new UIW[size]; }
 
 void Delete(UIW* socket) {
   ASSERT(socket);
@@ -77,15 +85,15 @@ const void* ConstVoidPtr(UIW value) {
 }
 
 SIW SizeOf(void* begin, void* stop) {
-  return reinterpret_cast<char*>(stop) - reinterpret_cast<char*>(begin);
+  return reinterpret_cast<CH1*>(stop) - reinterpret_cast<CH1*>(begin);
 }
 
 SIW SizeOf(const void* start, const void* stop) {
-  return reinterpret_cast<const char*>(stop) -
-         reinterpret_cast<const char*>(start);
+  return reinterpret_cast<const CH1*>(stop) -
+         reinterpret_cast<const CH1*>(start);
 }
 
-inline UIW FillWord(char fill_char) {
+inline UIW FillWord(CH1 fill_char) {
   UIW value = fill_char;
 #if CPU_WORD_SIze == 32
   return value | (value << 8) | (value << 16) | (value << 24);
@@ -95,7 +103,7 @@ inline UIW FillWord(char fill_char) {
 #endif
 }
 
-char* SocketFill(char* cursor, char* stop, SIW byte_count, char fill_char) {
+CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
   ASSERT(cursor);
   PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (int)byte_count);
   ASSERT(byte_count >= 0);
@@ -124,9 +132,9 @@ char* SocketFill(char* cursor, char* stop, SIW byte_count, char fill_char) {
   // bytes in the
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
-  char *success = stop, *aligned_pointer = TAlignUp<>(cursor);
+  CH1 *success = stop, *aligned_pointer = TAlignUp<>(cursor);
   while (cursor < aligned_pointer) *cursor++ = fill_char;
-  aligned_pointer = TAlignDown<char*>(stop);
+  aligned_pointer = TAlignDown<CH1*>(stop);
   while (stop > aligned_pointer) *stop-- = fill_char;
 
   UIW *words = reinterpret_cast<UIW*>(cursor),
@@ -137,26 +145,26 @@ char* SocketFill(char* cursor, char* stop, SIW byte_count, char fill_char) {
   return success;
 }
 
-char* SocketFill(void* cursor, SIW count, char fill_char) {
-  return SocketFill(reinterpret_cast<char*>(cursor),
-                    reinterpret_cast<char*>(cursor) + count, count, fill_char);
+CH1* SocketFill(void* cursor, SIW count, CH1 fill_char) {
+  return SocketFill(reinterpret_cast<CH1*>(cursor),
+                    reinterpret_cast<CH1*>(cursor) + count, count, fill_char);
 }
 
 BOL SocketWipe(void* cursor, void* stop, SIW count) {
-  return SocketFill(reinterpret_cast<char*>(cursor),
-                    reinterpret_cast<char*>(stop), count) != nullptr;
+  return SocketFill(reinterpret_cast<CH1*>(cursor),
+                    reinterpret_cast<CH1*>(stop), count) != nullptr;
 }
 
-char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
+CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   ASSERT(begin);
   ASSERT(read);
   ASSERT(size > 0);
   ASSERT(read_size > 0);
 
   if (size < read_size) return nullptr;
-  char *cursor = reinterpret_cast<char*>(begin), *end_ptr = cursor + size;
-  const char *start_ptr = reinterpret_cast<const char*>(read),
-             *stop_ptr = start_ptr + read_size;
+  CH1 *cursor = reinterpret_cast<CH1*>(begin), *end_ptr = cursor + size;
+  const CH1 *start_ptr = reinterpret_cast<const CH1*>(read),
+            *stop_ptr = start_ptr + read_size;
 
   if (read_size < (2 * sizeof(void*) + 1)) {
     // There is not enough bytes to copy in words.
@@ -168,7 +176,7 @@ char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
          (int)(stop_ptr - start_ptr), cursor, stop_ptr);
 
   // Debug stuff.
-  char *begin_debug = cursor, *end_debug = end_ptr;
+  CH1 *begin_debug = cursor, *end_debug = end_ptr;
 
   // Algorithm:
   // 1.) Save return value.
@@ -177,10 +185,10 @@ char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   // 3.) Align write_end pointer down and copy the unaligned bytes in the
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
-  char *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
+  CH1 *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
   PRINTF("\n  AlignUpPointer<> (begin):0x%p", aligned_pointer);
   while (cursor < aligned_pointer) *cursor++ = *start_ptr++;
-  aligned_pointer = TAlignDown<char*>(end_ptr);
+  aligned_pointer = TAlignDown<CH1*>(end_ptr);
   PRINTF("\n  AlignDownPointer<> (begin):0x%p", aligned_pointer);
   while (end_ptr > aligned_pointer) *end_ptr-- = *stop_ptr--;
   PRINTF("\n  Down-stage pointers are now begin:0x%p end:0x%p", cursor,
@@ -195,13 +203,13 @@ char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   return success;
 }
 
-char* SocketCopy(void* begin, void* stop, const void* read_begin,
-                 SIW read_size) {
+CH1* SocketCopy(void* begin, void* stop, const void* read_begin,
+                SIW read_size) {
   return SocketCopy(begin, SizeOf(begin, stop), read_begin, read_size);
 }
 
-char* SocketCopy(void* begin, void* stop, const void* read_begin,
-                 const void* read_end) {
+CH1* SocketCopy(void* begin, void* stop, const void* read_begin,
+                const void* read_end) {
   return SocketCopy(begin, SizeOf(begin, stop), read_begin,
                     SizeOf(read_begin, read_end));
 }
@@ -209,12 +217,12 @@ char* SocketCopy(void* begin, void* stop, const void* read_begin,
 BOL SocketCompare(const void* begin_a, SIW size_a, const void* begin_b,
                   SIW size_b) {
   if (size_a != size_b) return false;
-  const char *cursor_a = reinterpret_cast<const char*>(begin_a),
-             *end_a = cursor_a + size_a,
-             *cursor_b = reinterpret_cast<const char*>(begin_b),
-             *end_b = cursor_b + size_b;
+  const CH1 *cursor_a = reinterpret_cast<const CH1*>(begin_a),
+            *end_a = cursor_a + size_a,
+            *cursor_b = reinterpret_cast<const CH1*>(begin_b),
+            *end_b = cursor_b + size_b;
   while (cursor_a < end_a) {
-    char a = *cursor_a++, b = *end_a++;
+    CH1 a = *cursor_a++, b = *end_a++;
     if (a != b) return false;
   }
   return true;
@@ -229,7 +237,7 @@ BOL SocketCompare(const void* begin_a, const void* end_a, const void* begin_b,
 BOL SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
                   SIW size_b) {
   return SocketCompare(begin_a, end_a, begin_a,
-                       reinterpret_cast<const char*>(begin_b) + size_b);
+                       reinterpret_cast<const CH1*>(begin_b) + size_b);
 }
 
 Socket::Socket() {
@@ -237,8 +245,7 @@ Socket::Socket() {
 }
 
 Socket::Socket(void* begin, void* end)
-    : begin(reinterpret_cast<char*>(begin)),
-      stop(reinterpret_cast<char*>(end)) {
+    : begin(reinterpret_cast<CH1*>(begin)), stop(reinterpret_cast<CH1*>(end)) {
   if (!begin || !end || begin > end) {
     begin = end = 0;
     return;
@@ -246,10 +253,10 @@ Socket::Socket(void* begin, void* end)
 }
 
 Socket::Socket(void* begin, SIW size)
-    : begin(reinterpret_cast<char*>(begin)),
-      stop(reinterpret_cast<char*>(begin) + size) {
+    : begin(reinterpret_cast<CH1*>(begin)),
+      stop(reinterpret_cast<CH1*>(begin) + size) {
   if (!begin || size < 0) {
-    stop = reinterpret_cast<char*>(begin);
+    stop = reinterpret_cast<CH1*>(begin);
     return;
   }
 }
@@ -275,18 +282,18 @@ void DestructorDeleteBuffer(UIW* socket) {
 
 SIW SocketShiftUp(void* begin, void* end, SIW count) {
   if (!begin || begin <= end || count <= 0) return 0;
-  char *start = reinterpret_cast<char*>(begin),
-       *stop = reinterpret_cast<char*>(end);
+  CH1 *start = reinterpret_cast<CH1*>(begin),
+      *stop = reinterpret_cast<CH1*>(end);
   if (count < 3 * sizeof(void*)) {
     for (int i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
-  char* pivot = TAlignDown<char*>(stop);
+  CH1* pivot = TAlignDown<CH1*>(stop);
   for (int i = 0; i < count; ++i) *(stop + count) = *stop--;
   UIW *stop_word = reinterpret_cast<UIW*>(stop),
       *start_word = reinterpret_cast<UIW*>(TAlignUp<UIW*>(start));
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
-  pivot = reinterpret_cast<char*>(stop_word + 1);
+  pivot = reinterpret_cast<CH1*>(stop_word + 1);
   while (pivot >= start) *(pivot + count) = *pivot--;
   return count;
 }

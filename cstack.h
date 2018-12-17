@@ -217,7 +217,7 @@ uintptr_t* StackClone(CStack<T, UI, SI>* stack, CStack<T, UI, SI>* other) {
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
 T* TStackStart(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
-  return reinterpret_cast<T*>(reinterpret_cast<char*>(stack) +
+  return reinterpret_cast<T*>(reinterpret_cast<CH1*>(stack) +
                               sizeof(CStack<T, UI, SI>));
 }
 
@@ -361,7 +361,7 @@ template <typename T = intptr_t, typename UI = uint, typename SI = int>
 T TStackGet(CStack<T, UI, SI>* stack, SI index) {
   ASSERT(stack);
   if (index >= stack->count) return 0;
-  char* address = reinterpret_cast<char*>(stack) + sizeof(CStack<T, UI, SI>);
+  CH1* address = reinterpret_cast<CH1*>(stack) + sizeof(CStack<T, UI, SI>);
   return reinterpret_cast<T*>(address)[index];
 }
 
@@ -370,8 +370,8 @@ T TStackGet(CStack<T, UI, SI>* stack, SI index) {
 template <typename T = intptr_t, typename UI = uint, typename SI = int>
 bool TStackContains(CStack<T, UI, SI>* stack, void* address) {
   ASSERT(stack);
-  char *ptr = reinterpret_cast<char*>(stack),
-       *adr = reinterpret_cast<char*>(address);
+  CH1 *ptr = reinterpret_cast<CH1*>(stack),
+       *adr = reinterpret_cast<CH1*>(address);
   if (adr < ptr) return false;
   if (adr >= ptr + stack->size_array) return false;
   return true;
@@ -490,15 +490,15 @@ class TStack {
   }
 
   /* Copy constructor. */
-  TStack(const TStack& other) : obj_(other.CObj()) {}
+  TStack(const TStack& other) : obj_(other.CObject()) {}
 
   /* Deallocates the buffer_. */
   ~TStack() {}
 
-  TStack<T, UI, SI>& Clone() { StackClone<T, UI, SI>(CObj()); }
+  TStack<T, UI, SI>& Clone() { StackClone<T, UI, SI>(CObject()); }
 
   TStack<T, UI, SI>& Clone(TStack<T, UI, SI>& other) {
-    StackClone<T, UI, SI>(CObj(), *other);
+    StackClone<T, UI, SI>(CObject(), *other);
   }
 
   /* Gets the max number_ of elements in an stack with the specific index
@@ -506,35 +506,37 @@ class TStack {
   inline SI GetElementsMax() { return StackCountMax<T, UI, SI>(); }
 
   /* Gets the size of the entire Stack, including header, in bytes. */
-  inline UI GetSize() { return CObj()->size; }
+  inline UI Size() { return CObject()->size; }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
   inline UI GetSizeMin() { return StackSizeMin<T, UI, SI>(); }
 
   /* Gets a pointer to the first element in the stack. */
-  inline T* Elements() { return StackBegin<T, UI, SI>(CObj()); }
+  inline T* Elements() { return StackBegin<T, UI, SI>(CObject()); }
 
   /* Inserts the item into the stack at the given index.
   @param item  The item to insert.
   @param index The index to insert at.
   @return -1 if a is nil and -2 if the stack is full. */
-  T Insert(T item, T index) { return TStack<T, UI, SI>(CObj(), item, index); }
+  T Insert(T item, T index) {
+    return TStack<T, UI, SI>(CObject(), item, index);
+  }
 
   /* Removes the given index from the stack.
   @param  index The index the item to remove.
   @return True if the index is out of bounds. */
-  bool Remove(SI index) { return TStackRemove<T, UI, SI>(CObj(), index); }
+  bool Remove(SI index) { return TStackRemove<T, UI, SI>(CObject(), index); }
 
   /* Adds the given item to the stop of the stack.
   @param  item The item to push onto the stack.
   @return The index of the newly stacked item. */
   SI Push(T item) {
-    SI result = TStackPush<T, UI, SI>(CObj(), item);
+    SI result = TStackPush<T, UI, SI>(CObject(), item);
     // std::count << "\n  Pushing " << item;
     if (result < 0) {
       // Printf (" and growing.");
       Grow();
-      SI result = TStackPush<T, UI, SI>(CObj(), item);
+      SI result = TStackPush<T, UI, SI>(CObject(), item);
       // COUT << this;
       if (result < 0) return -1;
       return result;
@@ -547,7 +549,7 @@ class TStack {
   @param  a The stack.
   @return The item popped off the stack. */
   inline T Pop() {
-    T value = TStackPop<T, UI, SI>(CObj());
+    T value = TStackPop<T, UI, SI>(CObject());
     // utf << "\n  Popping " << value;
     return value;
   }
@@ -556,17 +558,17 @@ class TStack {
   @note We do not delete the item at the
   @param  a The stack.
   @return The item popped off the stack. */
-  inline T Peek() { return TStackPeek<T, UI, SI>(CObj()); }
+  inline T Peek() { return TStackPeek<T, UI, SI>(CObject()); }
 
   /* Gets the element at the given index.
   @param  index The index of the element to get.
   @return -1 if a is nil and -2 if the index is out of bounds. */
-  inline T Get(SI index) { return TStackGet<T, UI, SI>(CObj(), index); }
+  inline T Get(SI index) { return TStackGet<T, UI, SI>(CObject(), index); }
 
   /* Returns true if the given stack contains the given address.
   @return false upon failure. */
   inline bool Contains(void* address) {
-    return TStackContains<T, UI, SI>(CObj(), address);
+    return TStackContains<T, UI, SI>(CObject(), address);
   }
 
   /* Resizes the stack to the new_count. */
@@ -576,10 +578,10 @@ class TStack {
   inline bool Grow() { return TStackGrow<T, UI, SI>(obj_); }
 
   /* Prints this object to the given Utf. */
-  inline Utf8& Print(Utf8& out_) { return Print(CObj(), out_); }
+  inline Utf8& Print(Utf8& out_) { return Print(CObject(), out_); }
 
-  /* Returns the CStack CObj. */
-  inline CStack<T, UI, SI>* CObj() {
+  /* Returns the CStack CObject. */
+  inline CStack<T, UI, SI>* CObject() {
     return reinterpret_cast<CStack<T, UI, SI>*>(base);
   }
 

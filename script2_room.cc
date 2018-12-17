@@ -28,26 +28,26 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-const char** RoomStateTexts() {
-  static const char* states[] = {"Initializing", "Waking up", "Running",
+const CH1** RoomStateTexts() {
+  static const CH1* states[] = {"Initializing", "Waking up", "Running",
                                  "Going to sleep", "Exiting"};
   return states;
 }
 
-const char** RequestTexts() {
-  static const char* RequestTexts[] = {"Open door", "Close door",
+const CH1** RequestTexts() {
+  static const CH1* RequestTexts[] = {"Open door", "Close door",
                                        "Invalid request"};
 
   return RequestTexts;
 }
 
-const char* RequestText(Request r) {
+const CH1* RequestText(Request r) {
   // if (r < 0 || r >= InvalidRequest)
   if (r >= InvalidRequest) return RequestTexts()[InvalidRequest];
   return RequestTexts()[r];
 }
 
-Room::Room(const char* room_name, int state_count)
+Room::Room(const CH1* room_name, int state_count)
     : state_(1),
       state_count_(state_count < 1 ? 1 : state_count),
       name_(!room_name ? "Unnamed" : room_name),
@@ -73,9 +73,9 @@ BOL Room::SetState(int new_state) {
   return true;
 }
 
-const char* Room::GetRoomName() { return name_; }
+const CH1* Room::GetRoomName() { return name_; }
 
-BOL Room::SetRoomName(const char* name) {
+BOL Room::SetRoomName(const CH1* name) {
   if (!name) {
     return false;
   }
@@ -136,7 +136,7 @@ const Op* Room::Loop() { return 0; }
 
 BOL Room::IsOn() { return true; }
 
-int Room::Main(const char** args, int args_count) {
+int Room::Main(const CH1** args, int args_count) {
   const Op* result = nullptr;
   PRINTF("\nInitializing Chinese Room with %i args:", args_count)
   for (int i = 0; i < args_count; ++i) {
@@ -160,7 +160,7 @@ int Room::Main(const char** args, int args_count) {
   return 1;
 }
 
-char Room::CommandNext() { return 0; }
+CH1 Room::CommandNext() { return 0; }
 
 const Op* Room::Star(CHW index, CCrabs* crabs) {
   static const Op kThis = {

@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const char* _0_0_0__11_ASCII_Book(char* seam_log, char* seam_end,
-                                         const char* args) {
+static const CH1* _0_0_0__11_ASCII_Book(CH1* seam_log, CH1* seam_end,
+                                         const CH1* args) {
 #if SEAM >= _0_0_0__11
   TEST_BEGIN;
 

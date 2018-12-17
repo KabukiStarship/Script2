@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII CObj Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII CObject Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -88,7 +88,7 @@ void ListWipe(CList<Size, Index>* list) {
   ASSERT(list)
   list->count = 0;
   Size size = list->size - sizeof(CList<Size, Index>);
-  memset(reinterpret_cast<char*>(list) + sizeof(CList<Size, Index>), 0, size);
+  memset(reinterpret_cast<CH1*>(list) + sizeof(CList<Size, Index>), 0, size);
 }
 
 /* Initializes a AsciiList from preallocated memory.
@@ -165,9 +165,9 @@ SIN* ListTypes(CList<Size, Index>* list) {
 
 /* Gets a pointer to the begging of the data socket. */
 template <typename Size = UI4, typename Index = SI2>
-inline char* ListDataBegin(CList<Size, Index>* list) {
+inline CH1* ListDataBegin(CList<Size, Index>* list) {
   ASSERT(list)
-  return reinterpret_cast<char*>(list) + list->count_max * (sizeof(Index) + 1);
+  return reinterpret_cast<CH1*>(list) + list->count_max * (sizeof(Index) + 1);
 }
 
 /* Gets the base element 0 of the list's offset array. */
@@ -180,17 +180,17 @@ inline Size* ListOffsets(CList<Size, Index>* list) {
 
 /* Returns the last UI1 in the data array. */
 template <typename Size = UI4, typename Index = SI2>
-inline char* ListDataEnd(CList<Size, Index>* list) {
+inline CH1* ListDataEnd(CList<Size, Index>* list) {
   ASSERT(list)
-  return reinterpret_cast<char*>(list) + list->size - 1;
+  return reinterpret_cast<CH1*>(list) + list->size - 1;
 }
 
 /* Returns the last UI1 in the data array. */
 template <typename Size = UI4, typename Index = SI2>
-inline char* ListDataEnd(CList<Size, Index>* list, Index index) {
+inline CH1* ListDataEnd(CList<Size, Index>* list, Index index) {
   ASSERT(list)
   if (index < 0 || index >= index->count) return nullptr;
-  return reinterpret_cast<char*>(list) + list->size - 1;
+  return reinterpret_cast<CH1*>(list) + list->size - 1;
 }
 
 /* Returns a pointer to the begging of the data socket. */
@@ -202,7 +202,7 @@ Socket ListDataVector(CList<Size, Index>* list) {
 
 /* Returns the last UI1 in the data array. */
 template <typename Size = UI4, typename Index = SI2>
-inline char* ListDataStop(CList<Size, Index>* list, Index index = -1) {
+inline CH1* ListDataStop(CList<Size, Index>* list, Index index = -1) {
   ASSERT(list)
   Index count = list->count;
   if (count == 0) {
@@ -212,7 +212,7 @@ inline char* ListDataStop(CList<Size, Index>* list, Index index = -1) {
   SIN type = ListTypes<Size, Index>(list)[index];
   Size offset = ListOffsets<Size, Index>(list)[index];
   PRINTF("!offset %u", offset)
-  char* pointer = reinterpret_cast<char*>(list) + offset;
+  CH1* pointer = reinterpret_cast<CH1*>(list) + offset;
   return ObjEnd<Size>(pointer, type);
 }
 
@@ -220,7 +220,7 @@ template <typename Size = UI4, typename Index = SI2>
 void ListDataSpaceBelow(CList<Size, Index>* list, Index index,
                         Socket& free_space) {
   ASSERT(list)
-  char* data_stop;
+  CH1* data_stop;
   if (index == 0) {
     data_stop = ListDataBegin<Size, Index>(list);
     free_space.begin = free_space.stop = data_stop;
@@ -264,11 +264,11 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
     // Push type onto the top of the type stack.
     types[index] = type;
     //  Push the offset onto the top of the offset stack.
-    char* data_stop = ListDataStop<Size, Index>(list, count - 1);
+    CH1* data_stop = ListDataStop<Size, Index>(list, count - 1);
     PRINTF("\n  Aligning data_stop from %i to ", (int)Size(list, data_stop))
-    data_stop = TypeAlignUpPointer<char>(data_stop, type);
+    data_stop = TypeAlignUpPointer<CH1>(data_stop, type);
     PRINTF("%i", (int)Size(list, data_stop))
-    Size stop_offset = (Size)(data_stop - reinterpret_cast<char*>(list));
+    Size stop_offset = (Size)(data_stop - reinterpret_cast<CH1*>(list));
     ListOffsets<Size, Index>(list)[index] = stop_offset;
     // Write the value to the top of the value stack.
     PRINTF(" leaving %i bytes.",
@@ -283,10 +283,10 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
   StackInsert<SIN, Index>(types, count, type, index);
 
   // 3. Calculate the offset to insert at.
-  char* aligned_begin = ListDataStop<Size, Index>(list, index);
+  CH1* aligned_begin = ListDataStop<Size, Index>(list, index);
   PRINTF("\nListDataStop<Size, Index> (list) starts as %p then is aligned to ",
          aligned_begin)
-  aligned_begin = TypeAlignUpPointer<char>(aligned_begin, type);
+  aligned_begin = TypeAlignUpPointer<CH1>(aligned_begin, type);
   PRINTF("%p", aligned_begin)
 
   // 4. Insert the offset.
@@ -351,9 +351,9 @@ required to ensure the value came from a ASCII List. */
 template <typename Size = UI4, typename Index = SI2>
 BOL ListContains(CList<Size, Index>* list, void* address) {
   ASSERT(list)
-  if (reinterpret_cast<char*>(address) < reinterpret_cast<char*>(list))
+  if (reinterpret_cast<CH1*>(address) < reinterpret_cast<CH1*>(list))
     return false;
-  if (reinterpret_cast<char*>(address) > ListEndByte()) return false;
+  if (reinterpret_cast<CH1*>(address) > ListEndByte()) return false;
   return true;
 }
 
@@ -372,10 +372,10 @@ Index ListFind(CList<Size, Index>* list, void* adress) {
   Size *offsets = ListOffsets<Size, Index>(list),
        *offset_end = offsets + list->count;
   while (offsets < offset_end) {
-    char *begin = reinterpret_cast<char*>(list) + *offsets++,
+    CH1 *begin = reinterpret_cast<CH1*>(list) + *offsets++,
          *stop = ListDataStop<Size, Index>(list, index);
-    if (reinterpret_cast<char*>(address) >= begin &&
-        reinterpret_cast<char*>(address) <= stop)
+    if (reinterpret_cast<CH1*>(address) >= begin &&
+        reinterpret_cast<CH1*>(address) <= stop)
       return true;
   }
   return -1;
@@ -393,7 +393,7 @@ template <typename Size = UI4, typename Index = SI2>
 const void* ListValue(CList<Size, Index>* list, Index index) {
   ASSERT(list)
   if (index < 0 || index >= list->count) return nullptr;
-  return reinterpret_cast<char*>(list) + ListOffsets<Size, Index>(list)[index];
+  return reinterpret_cast<CH1*>(list) + ListOffsets<Size, Index>(list)[index];
 }
 
 /* Prints the given AsciiList to the console. */
@@ -436,12 +436,12 @@ class List {
   ~List() { delete[] begin; }
 
   inline Index Push(SIN type, const void* value) {
-    return ListPush<Size, Index>(CObj(), type, value);
+    return ListPush<Size, Index>(CObject(), type, value);
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
   inline Index Insert(UI1 type, void* value, Index index) {
-    return ListInsert<Size, Index>(CObj(), type, value, index);
+    return ListInsert<Size, Index>(CObject(), type, value, index);
   }
 
   /* Returns the maximum count of the give list in the current memory
@@ -449,10 +449,10 @@ class List {
   inline Index CountMax() { return ListCountMax<Size, Index>(); }
 
   /* Clears the list without overwriting the contents. */
-  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(CObj()); }
+  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(CObject()); }
 
   /* Deletes the list contents by overwriting it with zeros. */
-  inline void Wipe() { ListWipe<Size, Index>(CObj()); }
+  inline void Wipe() { ListWipe<Size, Index>(CObject()); }
 
   /* Returns true if this crabs contains only the given address.
       @warning This function assumes that the member you're checking for came
@@ -460,29 +460,29 @@ class List {
                are required to ensure the value came from a ASCII List.
       @return  True if the data lies in the list's memory socket. */
   inline BOL Contains(void* value) {
-    return ListContains<Size, Index>(CObj(), value);
+    return ListContains<Size, Index>(CObject(), value);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(void* adress) {
-    return ListRemove<Size, Index>(CObj(), adress);
+    return ListRemove<Size, Index>(CObject(), adress);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(Index index) {
-    return ListRemove<Size, Index>(CObj(), index);
+    return ListRemove<Size, Index>(CObject(), index);
   }
 
   /* Removes the last item from the list. */
-  inline Index Pop() { return ListPop<Size, Index>(CObj()); }
+  inline Index Pop() { return ListPop<Size, Index>(CObject()); }
 
   /* Prints the given AsciiList to the console. */
   inline UTF1& Print(UTF1& printer) {
-    return PrintList<Size, Index>(printer, CObj());
+    return PrintList<Size, Index>(printer, CObject());
   }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline CList<Size, Index>* CObj() {
+  inline CList<Size, Index>* CObject() {
     return reinterpret_cast<CList<Size, Index>*>(begin);
   }
 

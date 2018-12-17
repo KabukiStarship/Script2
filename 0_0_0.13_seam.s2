@@ -115,7 +115,7 @@ let root :=DIC_4 (2048, 3) {
 	@param <kNIL>:<kBSQ>
 */
 
-abc123 := { 1 2 3 }    /*< Operand "=$" default takes a Unicode char.
+abc123 := { 1 2 3 }    /*< Operand "=$" default takes a Unicode CH1.
                            and returns a kBSQ token 123.
 				   +------ Then we pass the return address as a input parameter
 				   |       using the $ operator which is similar to static const.

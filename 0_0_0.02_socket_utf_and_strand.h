@@ -29,14 +29,13 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 template <typename Char, typename Size>
-static const char* _0_0_0__02_Strand() {
-  const char* char_type_string =
+static const CH1* _0_0_0__02_Strand() {
+  const CH1* char_type_string =
       (sizeof(Char) == 1)
-          ? "char"
-          : (sizeof(Char) == 2)
-                ? "char16_t"
-                : (sizeof(Char) == 4) ? "char32_t" : "Invalid Char";
-  const char* size_type_string =
+          ? "CH1"
+          : (sizeof(Char) == 2) ? "CH2"
+                                : (sizeof(Char) == 4) ? "CH4" : "Invalid Char";
+  const CH1* size_type_string =
       (sizeof(Size) == 1)
           ? "int8_t"
           : (sizeof(Size) == 2)
@@ -77,10 +76,10 @@ static const char* _0_0_0__02_Strand() {
                                            "  1234567890 ", "123..."};
 
   const Char* stop;
-  char socket[kSize + 1], buffer_b[kSize + 1];
+  CH1 socket[kSize + 1], buffer_b[kSize + 1];
 
   enum { kCheckChar = '!' };
-  char* check_char = socket + kSize + 1;
+  CH1* check_char = socket + kSize + 1;
 
   SocketFill(socket, kSize);
   TPrint<Char>(socket, kSize, "Testing 1, 2, 3");
@@ -185,27 +184,6 @@ static const char* _0_0_0__02_Strand() {
   PRINT_SOCKET(socket, kSize);
   PRINTF("\n    Printed:\n%s", socket);
 
-  PRINT_HEADING("Test SocketCopy and MemoryCompare");
-
-  enum {
-    kTestCharsCount = 1024,
-    kTestCharsOffsetCount = 16,
-  };
-  char test_chars[kTestCharsCount];
-  char test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
-
-  PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
-         test_chars_result);
-
-  for (int i = 0; i < kTestCharsOffsetCount; ++i) {
-    for (int j = 0; j < kTestCharsCount; ++j) test_chars[j] = (char)(j % 256);
-    char* result = SocketCopy(test_chars_result + i, kTestCharsCount,
-                              test_chars, kTestCharsCount);
-    ASSERT(result);
-    ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
-                          kTestCharsCount));
-  }
-
   PRINT_HEADING("Testing TStrand...");
 
   enum {
@@ -213,10 +191,12 @@ static const char* _0_0_0__02_Strand() {
   };
 
   TStrand<Char> strand("Testing ");
+  PrintSocket(strand.Obj().Begin(), strand.Obj().SizeBytes());
   for (SIN i = 0; i < kStrandLoopCount; ++i) {
     strand << i << ", ";
   }
-  PrintSocket(strand.Obj().Begin(), strand.Obj().GetSize());
+  PRINTF("\nstrand.Obj().SizeBytes():%i", (int)strand.Obj().SizeBytes());
+  PrintSocket(strand.Obj().Begin(), strand.Obj().SizeBytes());
   Char* cursor = strand.Find("Testing ");
   ASSERT(cursor);
   for (SIN i = 0; i < kStrandLoopCount; ++i) {
@@ -228,9 +208,9 @@ static const char* _0_0_0__02_Strand() {
   return nullptr;
 }
 
-static const char* _0_0_0__02_ASCII_Strand_and_Socket(char* seam_log,
-                                                      char* seam_end,
-                                                      const char* args) {
+static const CH1* _0_0_0__02_ASCII_Strand_and_Socket(CH1* seam_log,
+                                                     CH1* seam_end,
+                                                     const CH1* args) {
 #if SEAM >= _0_0_0__02
   TEST_BEGIN;
 
@@ -246,8 +226,8 @@ static const char* _0_0_0__02_ASCII_Strand_and_Socket(char* seam_log,
 
   for (int i = 0; i < 256; ++i) {
     UI2 c = HexByteToLowerCase(i);
-    PRINTF("\n%i.) expecting: %x        HexByteToLowerCase:%c%c", i, i, (char)c,
-           (char)(c >> 8));
+    PRINTF("\n%i.) expecting: %x        HexByteToLowerCase:%c%c", i, i, (CH1)c,
+           (CH1)(c >> 8));
     int value = HexToByte(c);
     PRINTF("        HexToByte:%i", value);
     AVOW(i, value);
@@ -256,7 +236,28 @@ static const char* _0_0_0__02_ASCII_Strand_and_Socket(char* seam_log,
     Test(i, value);
   }
 
-  const char* result = _0_0_0__02_Strand<char, int32_t>();
+  PRINT_HEADING("Test SocketCopy and MemoryCompare");
+
+  enum {
+    kTestCharsCount = 1024,
+    kTestCharsOffsetCount = 16,
+  };
+  CH1 test_chars[kTestCharsCount];
+  CH1 test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
+
+  PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
+         test_chars_result);
+
+  for (int i = 0; i < kTestCharsOffsetCount; ++i) {
+    for (int j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
+    CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
+                             kTestCharsCount);
+    ASSERT(result);
+    ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
+                          kTestCharsCount));
+  }
+
+  const CH1* result = _0_0_0__02_Strand<CH1, SI4>();
   if (result) return result;
 
 #endif

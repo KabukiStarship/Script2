@@ -21,22 +21,22 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-BOL TestWarn(const char* function, const char* file, int line) {
+BOL TestWarn(const CH1* function, const CH1* file, int line) {
   Printf("\nAssertion failed in function %s at line %d in \"%s\"", function,
          line, file);
   return true;
 }
 
-BOL TestAssert(const char* function, const char* file, int line) {
+BOL TestAssert(const CH1* function, const CH1* file, int line) {
   TestWarn(function, file, line);
   Pause();
   return true;
 }
 
-int SeamTreeTest(int arg_count, char** args, char* seam_log, int seam_log_size,
+int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
                  TestCase* tests, int test_count) {
   if (seam_log_size < 0) return APP_EXIT_FAILURE;
-  const char* result =
+  const CH1* result =
       TestTree(seam_log, seam_log + seam_log_size - 1,
                ArgsToString(arg_count, args), tests, test_count);
   if (result) {
@@ -46,8 +46,8 @@ int SeamTreeTest(int arg_count, char** args, char* seam_log, int seam_log_size,
   return APP_EXIT_SUCCESS;
 }
 
-const char* TestTree(char* seam_log, char* seam_end, const char* args,
-                     TestCase* tests, int count) {
+const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
+                    TestCase* tests, int count) {
   ASSERT(seam_log || seam_end || args || tests);
   for (int i = 0; i < count; ++i) {
     TestCase test = tests[i];
@@ -57,7 +57,7 @@ const char* TestTree(char* seam_log, char* seam_end, const char* args,
       Print(" missing!");
       return "";
     }
-    const char* seam = test(nullptr, nullptr, nullptr);
+    const CH1* seam = test(nullptr, nullptr, nullptr);
     if (!seam) {
       Print("\nERROR: SEAM ");
       Print(i + 1);
@@ -65,7 +65,7 @@ const char* TestTree(char* seam_log, char* seam_end, const char* args,
       return "";
     }
     PrintHeading("Testing ", seam, 1);
-    const char* error = test(seam_log, seam_end, args);
+    const CH1* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
   }
@@ -73,19 +73,19 @@ const char* TestTree(char* seam_log, char* seam_end, const char* args,
   return nullptr;
 }
 
-BOL TestBegin(char* seam_log, char* seam_end, const char* args) {
+BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args) {
   return !(!seam_log || !seam_end || !args);
 }
 
 BOL Test(BOL condition) { return condition; }
 
-static const char kStringErrorExpecting[] = "\nERROR: Expecting:";
-static const char kStringFound[] = "\n           Found:";
-static const char kStringDifference[] = "\n      Difference:";
-static const char kStringErrorNil[] = "\nERROR: value was nil!";
+static const CH1 kStringErrorExpecting[] = "\nERROR: Expecting:\0";
+static const CH1 kStringFound[] = "\n           Found:\0";
+static const CH1 kStringDifference[] = "\n      Difference:\0";
+static const CH1 kStringErrorNil[] = "\nERROR: value was nil!\0";
 
-BOL Test(const char* a, const char* b) {
-  int result = ::_::TStringCompare<const char>(a, b);
+BOL Test(const CH1* a, const CH1* b) {
+  int result = ::_::TStringCompare<const CH1>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -96,8 +96,8 @@ BOL Test(const char* a, const char* b) {
   return false;
 }
 
-BOL Test(const char16_t* a, const char16_t* b) {
-  int result = ::_::TStringCompare<const char16_t>(a, b);
+BOL Test(const CH2* a, const CH2* b) {
+  int result = ::_::TStringCompare<const CH2>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -108,8 +108,8 @@ BOL Test(const char16_t* a, const char16_t* b) {
   return false;
 }
 
-BOL Test(const char32_t* a, const char32_t* b) {
-  int result = ::_::TStringCompare<const char32_t>(a, b);
+BOL Test(const CH4* a, const CH4* b) {
+  int result = ::_::TStringCompare<const CH4>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);

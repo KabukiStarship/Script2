@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT2_CTEST
-#define INCLUDED_SCRIPT2_CTEST 1
+#ifndef SCRIPT2_CTEST
+#define SCRIPT2_CTEST 1
 
 /* Function pointer prototype for a test case with command line argument
 string_.
@@ -23,22 +23,22 @@ string_.
 @param seam_log Beginning of the seam log socket.
 @param seam_end End of the seam log socket.
 @param args     Command line argument string_. */
-typedef const char* (*TestCase)(char* seam_log, char* seam_end,
-                                const char* args);
+typedef const CH1* (*TestCase)(CH1* seam_log, CH1* seam_end,
+                                const CH1* args);
 namespace _ {
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
-int SeamTreeTest(int arg_count, char** args, char* seam_log, int seam_log_size,
+int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
                  TestCase* tests, int test_count);
 
 /* Tests an array of TestCase(s).
 @return Nil upon success or an error string_ upon failure. */
-const char* TestTree(char* seam_log, char* seam_end, const char* args,
+const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
                      TestCase* seams, int node_count);
 
 /* Prints a message when a TestCase completes without failure. */
-BOL TestBegin(char* seam_log, char* seam_end, const char* args);
+BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
@@ -104,19 +104,19 @@ API BOL Test(const void* value);
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const char* a, const char* b);
+API BOL Test(const CH1* a, const CH1* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const char16_t* a, const char16_t* b);
+API BOL Test(const CH2* a, const CH2* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const char32_t* a, const char32_t* b);
+API BOL Test(const CH4* a, const CH4* b);
 
 /* Tests if the two pointers are equal.
 @return false if the condition is false.
@@ -195,15 +195,15 @@ API BOL Test(DBL a, DBL b);
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-API BOL TestWarn(const char* funciton, const char* file, int line);
+API BOL TestWarn(const CH1* funciton, const CH1* file, int line);
 
 /* Handles an assert.
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-API BOL TestAssert(const char* funciton, const char* file, int line);
+API BOL TestAssert(const CH1* funciton, const CH1* file, int line);
 
 }  // namespace _
 
-#endif  //< #ifndef INCLUDED_SCRIPT2_CTEST
+#endif  //< #ifndef SCRIPT2_CTEST

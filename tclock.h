@@ -32,10 +32,10 @@ namespace _ {
 
 #if USING_UTF
 
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrint(Char* cursor, Char* stop, const CClock& clock) {
-  // The way the utf functions are setup, we return a nil-term char so we
-  // don't have to check to write a single char in this
+  // The way the utf functions are setup, we return a nil-term CH1 so we
+  // don't have to check to write a single CH1 in this
   ASSERT(cursor);
   ASSERT(cursor < stop);
 
@@ -59,10 +59,10 @@ Char* TPrint(Char* cursor, Char* stop, const CClock& clock) {
   return cursor;
 }
 
-template <typename Char = char>
+template <typename Char = CH1>
 Char* TPrint(Char* cursor, Char* stop, Tss& t) {
-  // The way the utf functions are setup, we return a nil-term char so we
-  // don't have to check to write a single char in this
+  // The way the utf functions are setup, we return a nil-term CH1 so we
+  // don't have to check to write a single CH1 in this
   ASSERT(cursor);
   ASSERT(cursor < stop);
 
@@ -75,7 +75,7 @@ Char* TPrint(Char* cursor, Char* stop, Tss& t) {
 }
 
 /* Scans a time in seconds from the given string_. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TStringScanTime(const Char* string_, int& hour, int& minute,
                             int& second) {
   if (string_ == nullptr) return nullptr;
@@ -248,7 +248,7 @@ const Char* TStringScanTime(const Char* string_, int& hour, int& minute,
 }
 
 /* Scans the given string_ for a timestamp. */
-template <typename Char = char>
+template <typename Char = CH1>
 const Char* TScan(const Char* cursor, CClock& clock) {
   ASSERT(cursor);
   PRINTF("\n    Scanning CClock: %s\n    Scanning: ", cursor);

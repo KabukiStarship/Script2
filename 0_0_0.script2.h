@@ -56,7 +56,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 namespace _ {
-static const char* _0_0_0_F2(char* seam_log, char* seam_end, const char* args) {
+static const CH1* _0_0_0_F2(CH1* seam_log, CH1* seam_end, const CH1* args) {
   return TTestTree<_0_0_0__00_RNG
 
 #if SEAM >= _0_0_0__01

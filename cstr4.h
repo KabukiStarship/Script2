@@ -28,454 +28,454 @@ namespace _ {
 
 /* Checks if the given character is whitespace.
  */
-API BOL IsWhitespace(char32_t character);
+API BOL IsWhitespace(CH4 character);
 
-/* Converts the given value to a printable char32_t if it's non-printable. */
-API char32_t PrintableChar(char32_t value);
+/* Converts the given value to a printable CH4 if it's non-printable. */
+API CH4 PrintableChar(CH4 value);
 
 /* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
-char32_t. */
-API const char32_t* TStringEnd(const char32_t* begin);
+CH4. */
+API const CH4* TStringEnd(const CH4* begin);
 
-/* Gets the length of the given char32_t.
-@return  Returns -1 if the text char32_t is nil.
+/* Gets the length of the given CH4.
+@return  Returns -1 if the text CH4 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
-char32_t. */
-API int TStringLength(const char32_t* begin);
+CH4. */
+API int TStringLength(const CH4* begin);
 
 /* Clones the given string_.
 @param  A nil-terminated string_ in ROM.
 @return Returns a new copy you must delete. */
-API char32_t* StringClone(const char32_t* begin);
+API CH4* StringClone(const CH4* begin);
 
-/* Returns a pointer to the char32_t at the stop of the line. */
-API const char32_t* StringLineEnd(const char32_t* begin, int column_count);
+/* Returns a pointer to the CH4 at the stop of the line. */
+API const CH4* StringLineEnd(const CH4* begin, int column_count);
 
-/* Returns the pointer to the next char32_t in the char32_t that is not an ASCII
+/* Returns the pointer to the next CH4 in the CH4 that is not an ASCII
 number_.
-@return A pointer to the next non-number_ in the text char32_t. */
-API const char32_t* TStringDecimalEnd(const char32_t* begin);
+@return A pointer to the next non-number_ in the text CH4. */
+API const CH4* TStringDecimalEnd(const CH4* begin);
 
 /* Skips the leading zeros of a number_ if there are any. */
-API const char32_t* TStringSkipChar(const char32_t* begin, char32_t skip_char);
+API const CH4* TStringSkipChar(const CH4* begin, CH4 skip_char);
 
-/* Skips all the spaces at the begin of the char32_t. */
-API const char32_t* StringSkipSpaces(const char32_t* begin);
+/* Skips all the spaces at the begin of the CH4. */
+API const CH4* StringSkipSpaces(const CH4* begin);
 
-/* Skips all the spaces at the begin of the char32_t.
+/* Skips all the spaces at the begin of the CH4.
 @param  begin Beginning address of the read socket.
 @param  stop   The stop address of the input socket.
 @return A pointer to the stop of the text read or if no text read. */
-API const char32_t* StringSkipSpaces(const char32_t* begin,
-                                     const char32_t* text_end);
+API const CH4* StringSkipSpaces(const CH4* begin,
+                                     const CH4* text_end);
 
-/* Compares the source and query char32_t as nil-terminated strings. */
-API const char32_t* StringEquals(const char32_t* text_a,
-                                 const char32_t* text_b);
+/* Compares the source and query CH4 as nil-terminated strings. */
+API const CH4* StringEquals(const CH4* text_a,
+                                 const CH4* text_b);
 
-/* Compares the source and query char32_t as nil-terminated strings. */
-API const char32_t* StringEquals(const char32_t* begin, const char32_t* stop,
-                                 const char32_t* query);
+/* Compares the source and query CH4 as nil-terminated strings. */
+API const CH4* StringEquals(const CH4* begin, const CH4* stop,
+                                 const CH4* query);
 
-/* Searches the given char32_t for the given char32_t.
-@param  begin  The char32_t to search.
-@param  query The char32_t to search for.
-@return Returns nil if the parsing failed and a pointer to the first char32_t
+/* Searches the given CH4 for the given CH4.
+@param  begin  The CH4 to search.
+@param  query The CH4 to search for.
+@return Returns nil if the parsing failed and a pointer to the first CH4
 after the stop of the text upon success. */
-API const char32_t* StringFind(const char32_t* begin, const char32_t* query);
+API const CH4* StringFind(const CH4* begin, const CH4* query);
 
 /* Prints the given string_ to the utf socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param  begin  The beginning address of the socket.
 @param  stop    The stop address of the socket.
 @param  string_ The potentially unsafe string_ to write. */
-API char32_t* Print(char32_t* start, char32_t* stop, const char32_t* string_);
+API CH4* Print(CH4* start, CH4* stop, const CH4* string_);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The value to write. */
-API char32_t* Print(char32_t* start, char32_t* stop, char32_t character);
+API CH4* Print(CH4* start, CH4* stop, CH4 character);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, UI4 value);
+API CH4* Print(CH4* start, CH4* stop, UI4 value);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, SI4 value);
+API CH4* Print(CH4* start, CH4* stop, SI4 value);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, UI8 value);
+API CH4* Print(CH4* start, CH4* stop, UI8 value);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, SI8 value);
+API CH4* Print(CH4* start, CH4* stop, SI8 value);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, FLT value);
+API CH4* Print(CH4* start, CH4* stop, FLT value);
 
-/* Writes the give char32_t to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* Print(char32_t* start, char32_t* stop, DBL value);
+API CH4* Print(CH4* start, CH4* stop, DBL value);
 
 /* Prints the given string_ to the utf socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop,
-                          const char32_t* string_, int column_count);
+API CH4* PrintCenter(CH4* start, CH4* stop,
+                          const CH4* string_, int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The value to write. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, char32_t character,
+API CH4* PrintCenter(CH4* start, CH4* stop, CH4 character,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, UI4 valu,
+API CH4* PrintCenter(CH4* start, CH4* stop, UI4 valu,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, SI4 value,
+API CH4* PrintCenter(CH4* start, CH4* stop, SI4 value,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, UI8 value,
+API CH4* PrintCenter(CH4* start, CH4* stop, UI8 value,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, SI8 value,
+API CH4* PrintCenter(CH4* start, CH4* stop, SI8 value,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, FLT value,
+API CH4* PrintCenter(CH4* start, CH4* stop, FLT value,
                           int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintCenter(char32_t* start, char32_t* stop, DBL value,
+API CH4* PrintCenter(CH4* start, CH4* stop, DBL value,
                           int column_count);
 
 /* Prints the given string_ to the utf socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop,
-                         const char32_t* string_, int column_count);
+API CH4* PrintRight(CH4* start, CH4* stop,
+                         const CH4* string_, int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The value to write. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, char32_t character,
+API CH4* PrintRight(CH4* start, CH4* stop, CH4 character,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, UI4 value,
+API CH4* PrintRight(CH4* start, CH4* stop, UI4 value,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, SI4 value,
+API CH4* PrintRight(CH4* start, CH4* stop, SI4 value,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, UI8 value,
+API CH4* PrintRight(CH4* start, CH4* stop, UI8 value,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, SI8 value,
+API CH4* PrintRight(CH4* start, CH4* stop, SI8 value,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, FLT value,
+API CH4* PrintRight(CH4* start, CH4* stop, FLT value,
                          int column_count);
 
-/* Writes the give char32_t to the given socket center.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket center.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintRight(char32_t* start, char32_t* stop, DBL value,
+API CH4* PrintRight(CH4* start, CH4* stop, DBL value,
                          int column_count);
 
 /* Prints the given string_ to the utf socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin   The beginning address of the socket.
 @param stop     The stop address of the socket.
 @param pointer The pointer to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, const void* pointer);
+API CH4* PrintHex(CH4* start, CH4* stop, const void* pointer);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, UI1 value);
+API CH4* PrintHex(CH4* start, CH4* stop, UI1 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, SI1 value);
+API CH4* PrintHex(CH4* start, CH4* stop, SI1 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, UI2 value);
+API CH4* PrintHex(CH4* start, CH4* stop, UI2 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, SI2 value);
+API CH4* PrintHex(CH4* start, CH4* stop, SI2 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, UI4 value);
+API CH4* PrintHex(CH4* start, CH4* stop, UI4 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, SI4 value);
+API CH4* PrintHex(CH4* start, CH4* stop, SI4 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, UI8 value);
+API CH4* PrintHex(CH4* start, CH4* stop, UI8 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, SI8 value);
+API CH4* PrintHex(CH4* start, CH4* stop, SI8 value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, FLT value);
+API CH4* PrintHex(CH4* start, CH4* stop, FLT value);
 
-/* Writes the give char32_t to the given socket in hex form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in hex form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* PrintHex(char32_t* start, char32_t* stop, DBL value);
+API CH4* PrintHex(CH4* start, CH4* stop, DBL value);
 
 /* Prints the given string_ to the utf socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param pointer The pointer to utf to hex. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop,
+API CH4* TPrintBinary(CH4* start, CH4* stop,
                            const void* pointer);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI1 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, UI1 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI1 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, SI1 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI2 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, UI2 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI2 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, SI2 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI4 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, UI4 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI4 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, SI4 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, UI8 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, UI8 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, SI8 value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, SI8 value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, FLT value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, FLT value);
 
-/* Writes the give char32_t to the given socket in binary form.
-@return Returns nil upon socket overflow and a pointer to the nil-term char32_t
+/* Writes the give CH4 to the given socket in binary form.
+@return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API char32_t* TPrintBinary(char32_t* start, char32_t* stop, DBL value);
+API CH4* TPrintBinary(CH4* start, CH4* stop, DBL value);
 
 /* Prints the given memory socket to the text socket.
 @param begin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param begin The beginning of the read socket.
 @param size  The size of the socket in bytes. */
-API char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* begin,
+API CH4* PrintSocket(CH4* start, CH4* stop, const void* begin,
                           size_t size);
 
 /* Prints out the contents of the address to the printer socket.
@@ -485,7 +485,7 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param begin The beginning of the read socket.
 @param end  The stop of the read socket. */
-API char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* begin,
+API CH4* PrintSocket(CH4* start, CH4* stop, const void* begin,
                           const void* end);
 
 /* Prints out the contents of the address to the printer socket.
@@ -495,37 +495,37 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param begin The beginning of the read socket.
 @param size  The size of the read socket. */
-API char32_t* PrintSocket(char32_t* start, char32_t* stop, const void* begin,
+API CH4* PrintSocket(CH4* start, CH4* stop, const void* begin,
                           size_t size);
 
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop
+@return Returns a pointer to the next CH1 after the stop
 of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char32_t* Print(char32_t* start, char32_t* stop, SIN type,
+API CH4* Print(CH4* start, CH4* stop, SIN type,
                     const void* value);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char32_t after the stop of the read
+@return Returns a pointer to the next CH4 after the stop of the read
 number_ or nil upon failure.
 @param begin The beginning of the write socket.
 @param stop  The stop of the write socket.
 @param token The token to utf.
 @param column_count The number_ of tokens to utf. */
-API char32_t* PrintLine(char32_t* cursor, char32_t* stop, char32_t token,
+API CH4* PrintLine(CH4* cursor, CH4* stop, CH4 token,
                         int column_count);
 
 /* Prints a line of the given column_count.
-@return Returns a pointer to the next char32_t after the stop of the read
+@return Returns a pointer to the next CH4 after the stop of the read
 number_ or nil upon failure.
 @param begin  The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param string_ The string_ to utf.
 @param column_count The number_ of columns. */
-API char32_t* TPrintLineString(char32_t* cursor, char32_t* stop,
-                               const char32_t* string_, int column_count);
+API CH4* TPrintLineString(CH4* cursor, CH4* stop,
+                               const CH4* string_, int column_count);
 
 /* Prints the socket to the console as a UTF-8 string_. */
 void COutUtf32(UIW* socket);
@@ -536,141 +536,141 @@ void COutAutoUtf32(UIW* socket);
 /* Converts the given string_ to a 8-bit signed integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, SI1& result);
+API const CH4* Scan(const CH4* begin, SI1& result);
 
 /* Converts the given string_ to a 8-bit unsigned integer.
 @param  begin   A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, UI1& result);
+API const CH4* Scan(const CH4* begin, UI1& result);
 
 /* Converts the given string_ to a 16-bit signed integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, SI2& result);
+API const CH4* Scan(const CH4* begin, SI2& result);
 
 /* Converts the given string_ to a 16-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, UI2& result);
+API const CH4* Scan(const CH4* begin, UI2& result);
 
 /* Converts the given string_ to a 32-bit signed integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, SI4& result);
+API const CH4* Scan(const CH4* begin, SI4& result);
 
 /* Converts the given string_ to a 32-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, UI4& result);
+API const CH4* Scan(const CH4* begin, UI4& result);
 
 /* Converts the given string_ to a 64-bit signed integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, SI8& result);
+API const CH4* Scan(const CH4* begin, SI8& result);
 
 /* Converts the given string_ to a 64-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, UI8& result);
+API const CH4* Scan(const CH4* begin, UI8& result);
 
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  begin A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, FLT& result);
+API const CH4* Scan(const CH4* begin, FLT& result);
 
 /* Converts the given string_ to a 64-bit floating-point number_.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* begin, DBL& result);
+API const CH4* Scan(const CH4* begin, DBL& result);
 /* Converts the given string_ to a 8-bit signed integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, SI1& result);
+API const CH4* Scan(const CH4* text, SI1& result);
 
 /* Converts the given string_ to a 8-bit unsigned integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, UI1& result);
+API const CH4* Scan(const CH4* text, UI1& result);
 
 /* Converts the given string_ to a 16-bit signed integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, SI2& result);
+API const CH4* Scan(const CH4* text, SI2& result);
 
 /* Converts the given string_ to a 16-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, UI2& result);
+API const CH4* Scan(const CH4* text, UI2& result);
 
 /* Converts the given string_ to a 32-bit signed integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, SI4& result);
+API const CH4* Scan(const CH4* text, SI4& result);
 
 /* Converts the given string_ to a 32-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, UI4& result);
+API const CH4* Scan(const CH4* text, UI4& result);
 
 /* Converts the given string_ to a 64-bit signed integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, SI8& result);
+API const CH4* Scan(const CH4* text, SI8& result);
 
 /* Converts the given string_ to a 64-bit unsigned integer.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, UI8& result);
+API const CH4* Scan(const CH4* text, UI8& result);
 
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, FLT& result);
+API const CH4* Scan(const CH4* text, FLT& result);
 
 /* Converts the given string_ to a 64-bit floating-point number_.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
-@return Returns a pointer to the next char32_t after the stop
+@return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
-API const char32_t* Scan(const char32_t* text, DBL& result);
+API const CH4* Scan(const CH4* text, DBL& result);
 
 /* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
 strings.
@@ -680,24 +680,24 @@ would like to replace the begin with the beginning of socket pointer when they
 are done printing.
 */
 struct API UTF4 {
-  char32_t *begin,  //< Write begin pointer.
+  CH4 *begin,  //< Write begin pointer.
       *stop;        //< End of socket pointer.
 
   /* Initializes the Utf& from the given socket pointers.
   @param begin The beginning of the socket.
   @param stop   The stop of the socket. */
-  UTF4(char32_t* begin, size_t size);
+  UTF4(CH4* begin, size_t size);
 
   /* Initializes the Utf& from the given socket pointers.
   @param begin The beginning of the socket.
   @param stop   The stop of the socket. */
-  UTF4(char32_t* start, char32_t* stop);
+  UTF4(CH4* start, CH4* stop);
 
   /* Clones the other utf. */
   UTF4(const UTF4& other);
 
   /* Sets the begin pointer to the new_pointer. */
-  inline UTF4& Set(char32_t* new_pointer);
+  inline UTF4& Set(CH4* new_pointer);
 
   /* Prints the given value as hex. */
   inline UTF4& Hex(SI1 value);
@@ -773,7 +773,7 @@ class Text4 {
   Text4();
 
   /* Prints the value to the text socket. */
-  Text4(char32_t character);
+  Text4(CH4 character);
 
   /* Prints the value to the text socket. */
   Text4(SI4 value);
@@ -794,19 +794,19 @@ class Text4 {
   Text4(DBL value);
 
   /* Gets the number_ string_. */
-  const char32_t* GetString();
+  const CH4* GetString();
 
  private:
   enum { kSize = 24 };
 
-  char32_t string_[kSize * sizeof(char32_t) + 1];  //< String socket.
+  CH4 string_[kSize * sizeof(CH4) + 1];  //< String socket.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf32Center {
  public:
   /* Prints the value to the text socket. */
-  Utf32Center(const char32_t* string_, int column_count);
+  Utf32Center(const CH4* string_, int column_count);
 
   /* Prints the value to the text socket. */
   Utf32Center(SI4 value, int column_count);
@@ -827,13 +827,13 @@ class Utf32Center {
   Utf32Center(DBL value, int column_count);
 
   /* Gets the number_ string_. */
-  const char32_t* GetString();
+  const CH4* GetString();
 
   /* Gets the column_count. */
   int GetColumnCount();
 
  private:
-  const char32_t* string_;  //< Pointer to the string_.
+  const CH4* string_;  //< Pointer to the string_.
   Text4 number_;            //< Pointer to a pointer to utf.
   int column_count;         //< Number of columns to center.
 };
@@ -842,7 +842,7 @@ class Utf32Center {
 class Utf32Right {
  public:
   /* Prints the value to the text socket. */
-  Utf32Right(const char32_t* string_, int column_count);
+  Utf32Right(const CH4* string_, int column_count);
 
   /* Prints the value to the text socket. */
   Utf32Right(SI4 value, int column_count);
@@ -863,13 +863,13 @@ class Utf32Right {
   Utf32Right(DBL value, int column_count);
 
   /* Gets the number_ string_. */
-  const char32_t* GetString();
+  const CH4* GetString();
 
   /* Gets the column_count. */
   int GetColumnCount();
 
  private:
-  const char32_t* string_;  //< Pointer to the string_.
+  const CH4* string_;  //< Pointer to the string_.
   Text4 number_;            //< Pointer to a pointer to utf.
   int column_count;         //< Number of columns to center.
 };
@@ -880,13 +880,13 @@ class Utf32Right {
 @param  printer The printer.
 @param  value   The value to utf.
 @return The printer. */
-API _::UTF4& operator<<(_::UTF4& printer, const char32_t* string_);
+API _::UTF4& operator<<(_::UTF4& printer, const CH4* string_);
 
 /* Writes the given value to the utf.
 @param  printer The printer.
 @param  value   The value to utf.
 @return The printer. */
-API _::UTF4& operator<<(_::UTF4& printer, char32_t value);
+API _::UTF4& operator<<(_::UTF4& printer, CH4 value);
 
 /* Writes the given value to the utf.
 @param  printer The printer.

@@ -36,10 +36,10 @@ using namespace std::chrono;
 
 namespace _ {
 
-BenchmarkCase::BenchmarkCase(const char* name, TestCase* cases, int count)
+BenchmarkCase::BenchmarkCase(const CH1* name, TestCase* cases, int count)
     : name(name), cases(cases), count(count) {}
 
-const char* BenchmarkCase::Run(char* cursor, char* stop, const char* args) {
+const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
   /*
   DBL nil_reading;
   int i;
@@ -47,14 +47,14 @@ const char* BenchmarkCase::Run(char* cursor, char* stop, const char* args) {
   ASSERT(TScan<>(args, columns_max));
 
   for (i = 0; i < count; ++i) {
-    const char* result = (*cases[i])(nullptr, nullptr, nullptr);
+    const CH1* result = (*cases[i])(nullptr, nullptr, nullptr);
     Print(result);
     if (i < count) Print(',', ' ');
   }
   for (; i < columns_max; ++i) Print(',');
   PrintLn();
   for (i = 0; i < count; ++i) {
-    const char* result = (*cases[i])(nullptr, nullptr, nullptr);
+    const CH1* result = (*cases[i])(nullptr, nullptr, nullptr);
     if (i < count) Print(',', ' ');
   }
   PrintLn();
@@ -64,7 +64,7 @@ const char* BenchmarkCase::Run(char* cursor, char* stop, const char* args) {
 
 int BenchmarkCase::GetCount() { return count; }
 
-Benchmark::Benchmark(const char* name, const char* filename,
+Benchmark::Benchmark(const CH1* name, const CH1* filename,
                      BenchmarkCase* groups, int count)
     : name(name), filename(filename), groups(groups), count(count) {
   ASSERT(count > 0);
@@ -73,7 +73,7 @@ Benchmark::Benchmark(const char* name, const char* filename,
   }
 }
 
-const char* Benchmark::Run(char* cursor, char* stop, const char* args) {
+const CH1* Benchmark::Run(CH1* cursor, CH1* stop, const CH1* args) {
   /*
   std::ofstream out(filename);
 
@@ -82,7 +82,7 @@ const char* Benchmark::Run(char* cursor, char* stop, const char* args) {
 
   for (size_t i = 0; i < count; ++i) {
     BenchmarkCase group = groups[i];
-    const char* result = group.Run(cursor, stop, args);
+    const CH1* result = group.Run(cursor, stop, args);
     ASSERT(result);
     Print(result);
   }

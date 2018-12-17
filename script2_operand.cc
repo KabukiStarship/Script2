@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-const char* OperandName(Operand* operand) {
+const CH1* OperandName(Operand* operand) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
@@ -39,7 +39,7 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CHW OperandIndex(Operand* operand, char* begin, char* stop) {
+CHW OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
@@ -87,13 +87,13 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
   return utf;
 }
 
-Slot& OperandQuery(Operand* root, const char* address, Slot& slot) {
+Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
   ASSERT(address);
   ASSERT(root);
 
   int index = *address++;
   const Op* op = root->Star(index, nullptr);
-  char socket[1024];
+  CH1 socket[1024];
   PRINTF("%s", op->name)
   index = *address++;
   while (index) {

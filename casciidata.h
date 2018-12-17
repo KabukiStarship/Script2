@@ -55,8 +55,8 @@ typedef enum AsciiTypes {
 }  // namespace _
 
 #if SEAM >= _0_0_0__12
-#ifndef INCLUDED_SCRIPT2_CASCIIDATA
-#define INCLUDED_SCRIPT2_CASCIIDATA
+#ifndef SCRIPT2_CASCIIDATA
+#define SCRIPT2_CASCIIDATA
 
 #include "csocket.h"
 #include "tstr.h"
@@ -83,13 +83,13 @@ enum {
 };
 
 /* Returns a pointer to an array of pointers to the type names.*/
-API const char** TypeStrings();
+API const CH1** TypeStrings();
 
 /* Returns the name of the given type. */
-API inline const char* TypeString(SIN type);
+API inline const CH1* TypeString(SIN type);
 
 /* Returns the name of the given type. */
-API inline const char* TypeString(UIT type);
+API inline const CH1* TypeString(UIT type);
 
 /* Masks off the lower 5-LSb to get the type. */
 API inline UI1 TypeMask(UI1 value);
@@ -107,9 +107,9 @@ API UIT TypeFixedSize(UIT type);
 API void* TypeAlign(SIN type, void* value);
 
 /* Writes the given value to the socket. */
-API char* Write(char* begin, char* stop, SIN type, const void* source);
+API CH1* Write(CH1* begin, CH1* stop, SIN type, const void* source);
 
-/* Returns true if the given type is an ASCII CObj. */
+/* Returns true if the given type is an ASCII CObject. */
 API inline BOL TypeIsObj(SIN type);
 
 /* Returns true if the given type is a string_ type. */
@@ -126,12 +126,12 @@ API inline int TypeSizeWidthCode(SIN type);
 #if USING_UTF8 == YES
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number_ or
+@return Returns a pointer to the next CH1 after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char* Print(char* begin, char* stop, SIN type, const void* value);
+API CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value);
 }  // namespace _
 
 /* Writes the given value to the utf justified right.
@@ -144,12 +144,12 @@ API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
 #if USING_UTF16 == YES
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop of the read number_ or
+@return Returns a pointer to the next CH1 after the stop of the read number_ or
 nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -162,12 +162,12 @@ API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
 
 namespace _ {
 /* Prints th given type or type-value.
-@return Returns a pointer to the next char after the stop
+@return Returns a pointer to the next CH1 after the stop
 of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SIN type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -177,5 +177,5 @@ API char16_t* Print(char16_t* begin, char16_t* stop, SIN type,
 API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 
-#endif  //< INCLUDED_SCRIPT2_CASCIIDATA
+#endif  //< SCRIPT2_CASCIIDATA
 #endif  //< #if SEAM >= _0_0_0__12

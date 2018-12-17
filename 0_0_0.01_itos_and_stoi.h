@@ -26,8 +26,8 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 namespace _ {
-inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
-                                            const char* args) {
+inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
+                                            const CH1* args) {
 #if SEAM >= _0_0_0__01
   TEST_BEGIN;
 
@@ -119,17 +119,17 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
   };
   enum { kNumProblemChildren = 0, kSize = 23 };
 
-  char text[kSize + 1], expecting[kSize + 1];
-  char socket[kSize];
-  char* result;
+  CH1 text[kSize + 1], expecting[kSize + 1];
+  CH1 socket[kSize];
+  CH1* result;
   UI8 result_ui8, expected_ui8;
 
-  PRINT("\nTesting ScanUnsigned<UI, Char> (const Char*, const char*, I);");
+  PRINT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
 
   for (int i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(socket, kSize, FORMAT_UI8, expected_ui8);
-    const char* test = TScanUnsigned<UI8, char>(socket, result_ui8);
+    const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
     ASSERT(test);
     AVOW(expected_ui8, result_ui8);
   }
@@ -147,7 +147,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
            TStringLength<>(expecting));
-    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
@@ -167,7 +167,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     expected_ui8 = test_value[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) ", i + 1);
-    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
@@ -187,7 +187,7 @@ inline const char* _0_0_0__01_ItoS_and_StoI(char* seam_log, char* seam_end,
     PRINT('\n');
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    result = TPrintUnsigned<UI8, char>(text, text + kSize - 1, expected_ui8);
+    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;

@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= _0_0_0__12
 
-#ifndef INCLUDED_SCRIPT2_TDIC
-#define INCLUDED_SCRIPT2_TDIC 1
+#ifndef SCRIPT2_TDIC
+#define SCRIPT2_TDIC 1
 
 #include "casciidata.h"
 #include "csocket.h"
@@ -212,7 +212,7 @@ Dictionary<UI2, UI2, SI1>* DictionaryInit(UIW* socket, UI1 max_size,
 template <typename Size, typename Offset, typename Index, typename T,
           AsciiType kType>
 Index DictionaryInsert(Dictionary<Size, Offset, Index>* dictionary,
-                       const char* key, T value, Index index) {
+                       const CH1* key, T value, Index index) {
   if (dictionary == nullptr) return 0;
   return ~0;
 }
@@ -229,7 +229,7 @@ Index DictionaryCountUpperBounds() {
 template <typename Size, typename Offset, typename Index, typename T,
           AsciiType type>
 Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
-                    const char* key, T data) {
+                    const CH1* key, T data) {
   if (dictionary == nullptr) return 0;
   if (key == nullptr) return 0;
 
@@ -242,7 +242,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
   if (item_count >= count) return ~0;
   //< We're out of buffered indexes.
 
-  char* states = reinterpret_cast<char*>(dictionary) +
+  CH1* states = reinterpret_cast<CH1*>(dictionary) +
                  sizeof(Dictionary<Size, Offset, Index>);
   Offset* key_offsets = reinterpret_cast<Offset*>(states + count);
   Size* data_offsets =
@@ -254,7 +254,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
             states + count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
         *unsorted_indexes = indexes + count,
         *collission_list = unsorted_indexes + count;
-  char *keys = reinterpret_cast<char*>(dictionary) + table_size - 1,
+  CH1 *keys = reinterpret_cast<CH1*>(dictionary) + table_size - 1,
        *destination;
 
   // Calculate space left.
@@ -292,7 +292,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
     return 0;
   }
 
-  // Calculate left over socket size by looking up last char.
+  // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!")
@@ -376,7 +376,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
         // Move collisions pointer to the unsorted_indexes.
         indexes += count;
 
-        //< Add the newest char to the stop.
+        //< Add the newest CH1 to the stop.
         indexes[item_count] = item_count;
 
         DicPrint(dictionary);
@@ -384,7 +384,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
         return item_count;
       }
 
-      // But we still don't know if the char is a new collision.
+      // But we still don't know if the CH1 is a new collision.
 
       PRINTF("Checking if it's a collision... ")
 
@@ -456,7 +456,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
       "index %u before hash 0x%x \n",
       hash, key, mid, Diff(dictionary, destination), hashes[mid]);
 
-  // First copy the char and set the key offset.
+  // First copy the CH1 and set the key offset.
   SlotWrite(destination, key);
   key_offsets[item_count] = value;
 
@@ -499,15 +499,15 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
 }
 
 /* Adds a key-value pair to the stop of the dictionary. */
-// UI1 Add2 (Dic2* dictionary, const char* key, UI1 data) {
+// UI1 Add2 (Dic2* dictionary, const CH1* key, UI1 data) {
 //    return DicAdd<UI1, UI2, UI2, UI2> (dictionary, key, kUI1,
 //    &data);
 //}
 
-/* Returns  the given query char in the hash table. */
+/* Returns  the given query CH1 in the hash table. */
 template <typename Size, typename Offset, typename Index>
 Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
-                     const char* key) {
+                     const CH1* key) {
   if (dictionary == nullptr) return 0;
   PRINT_HEADING("Finding record...")
   Index index, item_count = dictionary->item_count, count = dictionary->count,
@@ -518,13 +518,13 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
   Offset table_size = dictionary->table_size;
 
   const Size* hashes =
-      reinterpret_cast<const Size*>(reinterpret_cast<const char*>(dictionary) +
+      reinterpret_cast<const Size*>(reinterpret_cast<const CH1*>(dictionary) +
                                     sizeof(Dictionary<Size, Offset, Index>));
   const Offset* key_offsets = reinterpret_cast<const UI2*>(hashes + count);
   const Index *indexes = reinterpret_cast<const Index*>(key_offsets + count),
               *unsorted_indexes = indexes + count,
               *collission_list = unsorted_indexes + count;
-  const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
+  const CH1* keys = reinterpret_cast<const CH1*>(dictionary) + table_size - 1;
   const Index *collisions, *temp_ptr;
 
   Size hash = Hash16(key);
@@ -598,7 +598,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
 
       // There were no collisions.
 
-      // But we still don't know if the char is new or a collision.
+      // But we still don't know if the CH1 is new or a collision.
 
       // Move collisions pointer to the unsorted indexes.
       indexes += count;
@@ -625,7 +625,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
 }
 
 /* Prints this object out to the console. */
-template <typename Size, typename Offset, typename Index, typename Char = char>
+template <typename Size, typename Offset, typename Index, typename Char = CH1>
 TUTF<Char> DicPrint(TUTF<Char>& utf,
                     const Dictionary<Size, Offset, Index>* dictionary) {
   ASSERT(dictionary)
@@ -646,7 +646,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
   PRINT_LINE('_');
   PRINTF('\n');
 
-  const char* states = reinterpret_cast<const char*>(dictionary) +
+  const CH1* states = reinterpret_cast<const CH1*>(dictionary) +
                        sizeof(Dictionary<Size, Offset, Index>);
   const Offset* key_offsets = reinterpret_cast<const Offset*>(states + count);
   // const Size* data_offsets = reinterpret_cast<const Size*>
@@ -658,7 +658,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
                   count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
               *collission_list = unsorted_indexes + count, *begin;
-  const char* keys = reinterpret_cast<const char*>(dictionary) + table_size - 1;
+  const CH1* keys = reinterpret_cast<const CH1*>(dictionary) + table_size - 1;
 
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
@@ -693,7 +693,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
   }
   PrintLine('_');
 
-  PrintSocket(reinterpret_cast<const char*>(dictionary) +
+  PrintSocket(reinterpret_cast<const CH1*>(dictionary) +
                   sizeof(Dictionary<Size, Offset, Index>),
               dictionary->size);
   PRINT('\n');
@@ -723,7 +723,7 @@ void* DicContains(Dictionary<Size, Offset, Index>* dictionary, void* data) {
   ASSERT(dictionary);
 
   if (data < dictionary) return false;
-  char* base = reinterpret_cast<char*>(dictionary);
+  CH1* base = reinterpret_cast<CH1*>(dictionary);
   if (data < base) return nullptr;
   if (data > base + dictionary->size_bytes) return nullptr;
   return data;
@@ -755,5 +755,5 @@ UTF1& DicPrint(UTF1& utf, Dictionary<Size, Offset, Index>* dictionary) {
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT2_TDIC
+#endif  //< SCRIPT2_TDIC
 #endif  //< #if SEAM >= _0_0_0__12

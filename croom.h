@@ -37,13 +37,13 @@ enum {
 
 /* Returns an array of pointers to strings that describe the program states.
  */
-API const char** RoomStateTexts();
+API const CH1** RoomStateTexts();
 
 /* Returns a pointer to an array of pointers to the Request strings. */
-API const char** RequestTexts();
+API const CH1** RequestTexts();
 
-/* Gets the response char corresponding to the given request. */
-API const char* RequestText(Request r);
+/* Gets the response CH1 corresponding to the given request. */
+API const CH1* RequestText(Request r);
 
 /* A Chinese Room.
 An Chinese Room works the same way as in the Chinese Room thought
@@ -150,7 +150,7 @@ class Room : public Operand {
                    enable dynamic memory.
       @param size  The room size that is bounded between the kMinRoomSize and
                    kMaxRoomSize. */
-  Room(const char* room_name = "chinese_room", int num_states = 2);
+  Room(const CH1* room_name = "chinese_room", int num_states = 2);
 
   /* AsciiFactory. */
   virtual ~Room();
@@ -161,10 +161,10 @@ class Room : public Operand {
   /* Gets the Room state_. */
   int GetStateCount();
 
-  const char* GetRoomName();
+  const CH1* GetRoomName();
 
   /* Sets the Room state_. */
-  virtual BOL SetRoomName(const char* name);
+  virtual BOL SetRoomName(const CH1* name);
 
   /* Processes a request from another Room.
       @return Returns false upon success and true if there is an error. */
@@ -215,13 +215,13 @@ class Room : public Operand {
 
   /* The default main function.
       Please feel free to override this with your own main function. */
-  virtual int Main(const char** args, int args_count);
+  virtual int Main(const CH1** args, int args_count);
 
   /* Handles Script Commands.
       @param text     Beginning of the Text socket.
       @param text_end End of the Text socket.
       @return Returns nil upon success and an error string_ upon failure. */
-  virtual char CommandNext();
+  virtual CH1 CommandNext();
 
   /* Script expressions. */
   virtual const Op* Star(CHW index, CCrabs* crabs);
@@ -234,7 +234,7 @@ class Room : public Operand {
  protected:
   int state_count_,                    //< Number of FSM states.
       state_;                          //< Room state.
-  const char* name_;                   //< Room Name.
+  const CH1* name_;                   //< Room Name.
   TCArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
   CCrabs* expr_;                       //< Current CCrabs being executed.
                                        //< DC1: this.

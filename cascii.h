@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT2_ASCII
-#define INCLUDED_SCRIPT2_ASCII
+#ifndef SCRIPT2_ASCII
+#define SCRIPT2_ASCII
 
 namespace _ {
 enum {
@@ -54,4 +54,4 @@ enum {
   DEL = 127
 };
 }  // namespace _
-#endif  //< INCLUDED_SCRIPT2_ASCII
+#endif  //< SCRIPT2_ASCII

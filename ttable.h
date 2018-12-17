@@ -91,7 +91,7 @@ template <typename Size, typename Index>
 struct API Table {
   Size size,         //< Size of this object in bytes.
       size_pile;     //< Size of the collision table pile.
-  Index first_char,  //< The first char of the Table.
+  Index first_char,  //< The first CH1 of the Table.
       count,         //< Number of keys.
       count_max;     //< Number of buffered indexes.
 };
@@ -131,7 +131,7 @@ Table<Size, Index>* TableInit(UIW* socket, Index count_max, Size size) {
     op.
     @return Returns an index 64-255 */
 template <typename Size, typename Index>
-UI1 TableAdd(Table<Size, Index>* table, const char* key) {
+UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
   ASSERT(table)
   ASSERT(keys)
 
@@ -144,13 +144,13 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
   if (count >= count_max) return kInvalidIndex;
   //< We're out of buffered indexes.
 
-  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
+  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<CH1*>(table) +
                                        sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
-  char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
+  CH1 *indexes = reinterpret_cast<CH1*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
        *collission_list = unsorted_indexes + count_max;
-  char *keys = reinterpret_cast<char*>(table) + size - 1, *destination;
+  CH1 *keys = reinterpret_cast<CH1*>(table) + size - 1, *destination;
 
   // Calculate space left.
   UI2 value = size - count_max * kOverheadPerIndex, size_pile,
@@ -187,7 +187,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
     return 0;
   }
 
-  // Calculate left over socket size by looking up last char.
+  // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!\n")
@@ -198,7 +198,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
 
   Index low = 0, mid, high = count, index;
 
-  char* temp_ptr;
+  CH1* temp_ptr;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
@@ -274,7 +274,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
         // Move collisions pointer to the unsorted_indexes.
         indexes += count_max;
 
-        //< Add the newest char to the stop.
+        //< Add the newest CH1 to the stop.
         indexes[count] = count;
 
         PRINT_TABLE
@@ -282,7 +282,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
         return count;
       }
 
-      // But we still don't know if the char is a new collision.
+      // But we still don't know if the CH1 is a new collision.
 
       index = unsorted_indexes[mid];
 
@@ -349,10 +349,10 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
   PRINTF(
       "\nThe hash 0x%x was not in the table so inserting \"%s\""
       "into mid:%i at index 0x%p before hash 0x%x",
-      hash, key, (int)mid, destination - reinterpret_cast<char*>(table),
+      hash, key, (int)mid, destination - reinterpret_cast<CH1*>(table),
       hashes[mid])
 
-  // First copy the char and set the key offset.
+  // First copy the CH1 and set the key offset.
   SlotWrite(destination, key);
   key_offsets[count] = value;
 
@@ -397,7 +397,7 @@ UI1 TableAdd(Table<Size, Index>* table, const char* key) {
 /* Attempts to find the given key.
 @return Returns 0 upon failure, and valid index upon success. */
 template <typename Size, typename Index>
-API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
+API UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
   ASSERT(table)
   Index index, count = table->count, count_max = table->count_max, temp;
 
@@ -408,13 +408,13 @@ API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
   UI2 size = table->size;
 
   const UI2* hashes = reinterpret_cast<const UI2*>(
-      reinterpret_cast<const char*>(table) + sizeof(Table<Size, Index>));
+      reinterpret_cast<const CH1*>(table) + sizeof(Table<Size, Index>));
   const UI2* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
-  const char *indexes = reinterpret_cast<const char*>(key_offsets + count_max),
+  const CH1 *indexes = reinterpret_cast<const CH1*>(key_offsets + count_max),
              *unsorted_indexes = indexes + count_max,
              *collission_list = unsorted_indexes + count_max;
-  const char* keys = reinterpret_cast<const char*>(table) + size - 1;
-  const char *collisions, *temp_ptr;
+  const CH1* keys = reinterpret_cast<const CH1*>(table) + size - 1;
+  const CH1 *collisions, *temp_ptr;
 
   UI2 hash = Hash16(key);
 
@@ -422,7 +422,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
 
   if (count == 1) {
     PRINTF("Comparing keys - key_offsets[0] - this %u\n%s\n",
-           (keys - key_offsets[0]) - reinterpret_cast<const char*>(table),
+           (keys - key_offsets[0]) - reinterpret_cast<const CH1*>(table),
            keys - key_offsets[0])
     if (!SlotEquals(key, keys - key_offsets[0])) {
       PRINTF("Did not find key %s\n", key)
@@ -459,7 +459,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
       // Check for collisions
 
       collisions =
-          reinterpret_cast<const char*>(key_offsets) + count_max * sizeof(UI2);
+          reinterpret_cast<const CH1*>(key_offsets) + count_max * sizeof(UI2);
       index = collisions[mid];
 
       if (index != kInvalidIndex) {
@@ -493,7 +493,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const char* key) {
 
       // There were no collisions.
 
-      // But we still don't know if the char is new or a collision.
+      // But we still don't know if the CH1 is new or a collision.
 
       // Move collisions pointer to the unsorted indexes.
       indexes += count_max;
@@ -534,13 +534,13 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
   for (int i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
-  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<char*>(table) +
+  UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<CH1*>(table) +
                                        sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
-  char *indexes = reinterpret_cast<char*>(key_offsets + count_max),
+  CH1 *indexes = reinterpret_cast<CH1*>(key_offsets + count_max),
        *unsorted_indexes = indexes + count_max,
        *collission_list = unsorted_indexes + count_max, *begin;
-  char* keys = reinterpret_cast<char*>(table) + size - 1;
+  CH1* keys = reinterpret_cast<CH1*>(table) + size - 1;
 
   utf << '\n'
       << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)

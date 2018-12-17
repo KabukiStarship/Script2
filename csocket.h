@@ -26,26 +26,38 @@ enum {
   kWordBitCount = sizeof(void*) == 8 ? 3 : sizeof(void*) == 4 ? 2 : 0
 };
 
-/* Aligns the given pointer down to a word boundary. */
-API char* AlignDown(char* pointer, UIW mask = sizeof(void*));
+/* Aligns the given pointer down to the given mask. */
+API CH1* AlignDown(CH1* pointer, UIW mask = kWordLSbMask);
 
-/* Aligns the given pointer down to a word boundary. */
-API const char* AlignDown(const char* pointer, UIW mask = sizeof(void*));
+/* Aligns the given pointer down to the given mask. */
+API const CH1* AlignDown(const CH1* pointer, UIW mask = kWordLSbMask);
 
-/* Aligns the given pointer down to a word boundary. */
-API UIW* AlignDown(UIW* pointer, UIW mask = sizeof(void*));
+/* Aligns the given pointer down to the given mask. */
+API UIW* AlignDown(UIW* pointer, UIW mask = kWordLSbMask);
 
-/* Aligns the given pointer down to a word boundary. */
-API const UIW* AlignDown(const UIW* pointer, UIW mask = sizeof(void*));
+/* Aligns the given pointer down to the given mask. */
+API const UIW* AlignDown(const UIW* pointer, UIW mask = kWordLSbMask);
 
-/* Aligns the given pointer up to a word boundary. */
-API const char* AlignUp(const char* pointer, UIW mask = sizeof(void*));
+/* Aligns the given value down to the given mask. */
+API inline SI1 AlignDown(SI1 value, SI1 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
+API inline SI2 AlignDown(SI2 value, SI2 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
+API inline SI4 AlignDown(SI4 value, SI4 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
+API inline SI8 AlignDown(SI8 value, SI8 mask = kWordLSbMask);
+
+/* Aligns the given pointer up to the given mask. */
+API const CH1* AlignUp(const CH1* pointer, UIW mask = kWordLSbMask);
 
 /* Aligns the given socket pointer up to a cache line boundary (64 bytes). */
 API inline UIW* AlignUp(UIW* socket, UIW mask = kWordLSbMask);
 
-/* Aligns the given pointer up to a word boundary. */
-API char* AlignUp(char* pointer, UIW mask = sizeof(void*));
+/* Aligns the given pointer up to the given mask. */
+API CH1* AlignUp(CH1* pointer, UIW mask = kWordLSbMask);
 
 /* Aligns the given value up to an 8-UI1 boundary. */
 API inline UI1 AlignUp(UI1 value, UI1 mask = kWordLSbMask);
@@ -79,8 +91,8 @@ API inline SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
     (@see ~/kabuki-toolkit/slot.h).
 */
 struct Socket {
-  char *begin,  //< Beginning of the socket.
-      *stop;    //< End of the socket.
+  CH1 *begin,  //< Beginning of the socket.
+      *stop;   //< End of the socket.
 
   /* Constructs an uninitialized socket. */
   Socket();
@@ -99,7 +111,7 @@ struct Socket {
 };
 
 /* Creates a block of dynamic memory. */
-API inline UIW* TNew(SIW size);
+API inline UIW* New(SIW size);
 
 /* AsciiFactory deletes the socket. */
 API inline void Delete(UIW* socket);
@@ -117,10 +129,10 @@ API inline const void* ConstVoidPtr(UIW value);
 API inline SIW SizeOf(const void* begin, const void* stop);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-API char* SocketFill(char* begin, char* stop, SIW size, char fill_char = 0);
+API CH1* SocketFill(CH1* begin, CH1* stop, SIW size, CH1 fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-API char* SocketFill(void* begin, SIW size, char fill_char = 0);
+API CH1* SocketFill(void* begin, SIW size, CH1 fill_char = 0);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin     The begin of the write socket.
@@ -128,7 +140,7 @@ API char* SocketFill(void* begin, SIW size, char fill_char = 0);
 @param  begin     The begin of the read socket.
 @param  read_size Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
-API char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
+API CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin The begin of the write socket.
@@ -136,8 +148,8 @@ API char* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 @param  begin The begin of the read socket.
 @param  size      Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
-API inline char* SocketCopy(void* start, void* stop, const void* begin,
-                            SIW read_size);
+API inline CH1* SocketCopy(void* start, void* stop, const void* begin,
+                           SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
     @param  begin The begin of the write socket.
@@ -145,8 +157,8 @@ API inline char* SocketCopy(void* start, void* stop, const void* begin,
     @param  begin The begin of the read socket.
     @param  stop  The stop of the read socket.
     @return Pointer to the last UI1 written or nil upon failure. */
-API inline char* SocketCopy(void* start, void* stop, const void* begin,
-                            const void* end);
+API inline CH1* SocketCopy(void* start, void* stop, const void* begin,
+                           const void* end);
 
 /* Compares the two memory sockets.
     @param  begin_a The beginning of Socket A.

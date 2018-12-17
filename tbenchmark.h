@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 template <typename UI>
-const char* BenchmarkCaseLoop(char* cursor, char* stop, const char* args) {
+const CH1* BenchmarkCaseLoop(CH1* cursor, CH1* stop, const CH1* args) {
   PrintHeading((sizeof(UI) == 8) ? "Testing 64-bit use case"
                                  : "Testing 32-bit use case");
 }

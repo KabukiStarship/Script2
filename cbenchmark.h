@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__12
-#ifndef INCLUDED_SCRIPT2_BENCHMARK
-#define INCLUDED_SCRIPT2_BENCHMARK 1
+#ifndef SCRIPT2_BENCHMARK
+#define SCRIPT2_BENCHMARK 1
 
 #include "ctest.h"
 
@@ -24,7 +24,7 @@ namespace _ {
 
 /* Class for storing information about a failed assertion.
 struct API TestResult {
-  const char *name,  //< The file the assertion occurred at.
+  const CH1 *name,  //< The file the assertion occurred at.
       *description;  //< An optional description to utf.
   int line,          //< The line the assertion failed at.
       code;          //< The test result code.
@@ -33,16 +33,16 @@ struct API TestResult {
 class BenchmarkCase {
  public:
   /* Constructs an object from the given values. */
-  BenchmarkCase(const char* name, TestCase* cases, int count);
+  BenchmarkCase(const CH1* name, TestCase* cases, int count);
 
   /* Runs the benchmark. */
-  const char* Run(char* cursor, char* stop, const char* args);
+  const CH1* Run(CH1* cursor, CH1* stop, const CH1* args);
 
   /* Gets the number_ of cases in this benchmark. */
   int GetCount();
 
  private:
-  const char* name;  //< Name of this benchmark case.
+  const CH1* name;  //< Name of this benchmark case.
   TestCase* cases;   //< Array of pointers of BenchmarkCase(s).
   int count;         //< Number of test cases.
 };
@@ -51,15 +51,15 @@ class BenchmarkCase {
 class Benchmark {
  public:
   /* Constructs an object from the given values. */
-  Benchmark(const char* name, const char* filename, BenchmarkCase* groups,
+  Benchmark(const CH1* name, const CH1* filename, BenchmarkCase* groups,
             int count);
 
   /* Runs the benchmark.
   @return If args is nil, result will contain the name as */
-  const char* Run(char* cursor, char* stop, const char* args);
+  const CH1* Run(CH1* cursor, CH1* stop, const CH1* args);
 
  private:
-  const char *name,       //< Name of the benchmark.
+  const CH1 *name,       //< Name of the benchmark.
       *filename;          //< Filename including .csv file extention.
   BenchmarkCase* groups;  //< Array of pointers of BenchmarkCase(s).
   int count,              //< Number of test cases.
@@ -68,5 +68,5 @@ class Benchmark {
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPT2_BENCHMARK
+#endif  //< SCRIPT2_BENCHMARK
 #endif  //< #if SEAM >= _0_0_0__12

@@ -31,7 +31,7 @@ namespace _ {
 
 Wall::~Wall() {
   if (is_dynamic_) {
-    char* socket = reinterpret_cast<char*>(doors_);
+    CH1* socket = reinterpret_cast<CH1*>(doors_);
     delete[] socket;
   }
 }
@@ -51,7 +51,7 @@ Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
 }
 
 Wall::Wall(UIW* socket, size_t size_bytes) {
-  // char* ptr     = reinterpret_cast<char*> (socket);//,
+  // CH1* ptr     = reinterpret_cast<CH1*> (socket);//,
   //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
   //    * end_ptr = ptr + size_bytes;
   enum {

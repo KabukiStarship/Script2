@@ -131,11 +131,11 @@ API int ClockMonthDayCount(TMS t);
 @param year   */
 API int ClockMonthDayCount(int month, int year);
 
-/* Gets the abbreviated day of the week char of the given day number_ 1-7. */
-API const char* ClockWeekDay(int day_number);
+/* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
+API const CH1* ClockWeekDay(int day_number);
 
-/* Gets the abbreviated day of the week char of the given day number_ 1-7. */
-API char ClockDayOfWeekInitial(int day_number);
+/* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
+API CH1 ClockDayOfWeekInitial(int day_number);
 
 /* Compares the two the time and prints the results. */
 API int ClockCompare(TMS a, TMS b);
@@ -169,7 +169,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* Print(char* begin, char* stop, const CClock& clock);
+API CH1* Print(CH1* begin, CH1* stop, const CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -177,7 +177,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-API char* Print(char* begin, char* stop, Tss& t);
+API CH1* Print(CH1* begin, CH1* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -185,7 +185,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* PrintTime(char* begin, char* stop, TMS time);
+API CH1* PrintTime(CH1* begin, CH1* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -193,7 +193,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char* PrintTime(char* begin, char* stop, TME time);
+API CH1* PrintTime(CH1* begin, CH1* stop, TME time);
 
 /* Prints the given timestamp to the stdout. */
 API void PrintTime(const CClock& clock);
@@ -207,7 +207,7 @@ API void PrintTime(TMS t);
 /* Prints the given timestamp to the stdout. */
 API void PrintTime(TME t);
 
-/* Reads a time or time delta from a a char starting with an '@' sign.
+/* Reads a time or time delta from a a CH1 starting with an '@' sign.
 @brief
 @code
 @4        (This is 4AM)
@@ -222,27 +222,27 @@ API void PrintTime(TME t);
 @16:20:00
 @endcode
 
-@param input  The char to parse.
+@param input  The CH1 to parse.
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const char* TStringScanTime(const char* string_, int& hour, int& minute,
+API const CH1* TStringScanTime(const CH1* string_, int& hour, int& minute,
                                 int& second);
 
-/* Converts a keyboard input to char and deletes the char.
-@return Nil upon socket failure or char directly after the stop of the
+/* Converts a keyboard input to CH1 and deletes the CH1.
+@return Nil upon socket failure or CH1 directly after the stop of the
 timestamp upon success.
 */
-API const char* Scan(const char* string_, CClock& clock);
+API const CH1* Scan(const CH1* string_, CClock& clock);
 
 /* Converts a keyboard input to a Tss. */
-API const char* Scan(const char* string_, Tss& result);
+API const CH1* Scan(const CH1* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char* TStringScanTime(const char* string_, TMS& result);
+API const CH1* TStringScanTime(const CH1* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char* TStringScanTime(const char* string_, TME& result);
+API const CH1* TStringScanTime(const CH1* string_, TME& result);
 
 #endif  //< #if USING_UTF8 == YES
 
@@ -254,7 +254,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* begin, char16_t* stop, CClock& clock);
+API CH2* Print(CH2* begin, CH2* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -262,7 +262,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* begin, char16_t* stop, Tss& t);
+API CH2* Print(CH2* begin, CH2* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -270,7 +270,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* PrintTime(char16_t* begin, char16_t* stop, TMS time);
+API CH2* PrintTime(CH2* begin, CH2* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -278,9 +278,9 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char16_t* Print(char16_t* begin, char16_t* stop, TME time);
+API CH2* Print(CH2* begin, CH2* stop, TME time);
 
-/* Reads a time or time delta from a a char16_t starting with an '@' sign.
+/* Reads a time or time delta from a a CH2 starting with an '@' sign.
 
 # Legal Time Formats
 
@@ -297,27 +297,27 @@ API char16_t* Print(char16_t* begin, char16_t* stop, TME time);
 @16:20:00
 @endcode
 
-@param input  The char16_t to parse.
+@param input  The CH2 to parse.
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const char16_t* TStringScanTime(const char16_t* string_, int& hour,
+API const CH2* TStringScanTime(const CH2* string_, int& hour,
                                     int& minute, int& second);
 
-/* Converts a keyboard input to char16_t and deletes the char16_t.
-@return Nil upon socket failure or char16_t directly after the stop of the
+/* Converts a keyboard input to CH2 and deletes the CH2.
+@return Nil upon socket failure or CH2 directly after the stop of the
 timestamp upon success.
 */
-API const char16_t* Scan(const char16_t* string_, CClock& result);
+API const CH2* Scan(const CH2* string_, CClock& result);
 
 /* Converts a keyboard input to a Tss. */
-API const char16_t* Scan(const char16_t* string_, Tss& result);
+API const CH2* Scan(const CH2* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char16_t* TStringScanTime(const char16_t* string_, TMS& result);
+API const CH2* TStringScanTime(const CH2* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const char16_t* TStringScanTime(const char16_t* string_, TME& result);
+API const CH2* TStringScanTime(const CH2* string_, TME& result);
 
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
@@ -327,7 +327,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* Print(char32_t* begin, char32_t* stop, CClock& clock);
+API CH4* Print(CH4* begin, CH4* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -335,7 +335,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* Print(char32_t* begin, char32_t* stop, Tss& time);
+API CH4* Print(CH4* begin, CH4* stop, Tss& time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -343,7 +343,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* PrintTime(char32_t* begin, char32_t* stop, TMS time);
+API CH4* PrintTime(CH4* begin, CH4* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -351,10 +351,10 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API char32_t* PrintTime(char32_t* begin, char32_t* stop, TME time);
+API CH4* PrintTime(CH4* begin, CH4* stop, TME time);
 
-/* Reads a time or time delta from a a char starting with an '@' sign..
-@param input  The char to parse.
+/* Reads a time or time delta from a a CH1 starting with an '@' sign..
+@param input  The CH1 to parse.
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to.
@@ -373,21 +373,21 @@ API char32_t* PrintTime(char32_t* begin, char32_t* stop, TME time);
 @16:20:00
 @endcode
 */
-API const char32_t* TStringScanTime(const char32_t* input, int& hour,
+API const CH4* TStringScanTime(const CH4* input, int& hour,
                                     int& minute, int& second);
 
-/* Converts a keyboard input to char and deletes the char.
+/* Converts a keyboard input to CH1 and deletes the CH1.
  */
-API const char32_t* Scan(const char32_t* input, CClock& time);
+API const CH4* Scan(const CH4* input, CClock& time);
 
 /* Converts a keyboard input to a TMS. */
-API const char32_t* Scan(const char32_t* input, Tss& result);
+API const CH4* Scan(const CH4* input, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char32_t* TStringScanTime(const char32_t* input, TMS& result);
+API const CH4* TStringScanTime(const CH4* input, TMS& result);
 
 /* Converts a keyboard input to a TMS. */
-API const char32_t* TStringScanTime(const char32_t* input, TME& result);
+API const CH4* TStringScanTime(const CH4* input, TME& result);
 
 #endif  //< #if USING_UTF32 == YES
 }  // namespace _

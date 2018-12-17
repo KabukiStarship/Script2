@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-const char* ArgsToString(int arg_count, char** args) {
+const CH1* ArgsToString(int arg_count, CH1** args) {
   if (!args || arg_count <= 1) {
     PRINT("\n!args || arg_count <= 1");
     return "";
@@ -45,9 +45,9 @@ const char* ArgsToString(int arg_count, char** args) {
     return args[1];
   }
   PRINT_ARGS;
-  char *begin = args[1], *stop = args[arg_count - 1] - 1;
+  CH1 *begin = args[1], *stop = args[arg_count - 1] - 1;
   while (stop != begin) {
-    char c = *stop;
+    CH1 c = *stop;
     if (!c) c = ' ';
     --stop;
   }
@@ -55,24 +55,24 @@ const char* ArgsToString(int arg_count, char** args) {
 }
 #undef PRINT_ARGS
 
-inline void Print(char c) { putchar(c); }
+inline void Print(CH1 c) { putchar(c); }
 
-inline void Print(char first, char second) {
+inline void Print(CH1 first, CH1 second) {
   Print(first);
   Print(second);
 }
 
-inline void Print(char first, char second, char third) {
+inline void Print(CH1 first, CH1 second, CH1 third) {
   Print(first);
   Print(second);
   Print(third);
 }
 
-void PrintLn(char c) { Print('\n', c); }
+void PrintLn(CH1 c) { Print('\n', c); }
 
-void PrintLn(char first, char second) { return Print('\n', first, second); }
+void PrintLn(CH1 first, CH1 second) { return Print('\n', first, second); }
 
-void Printf(const char* format, ...) {
+void Printf(const CH1* format, ...) {
   if (!format) return;
   va_list arg;
   va_start(arg, format);
@@ -80,7 +80,7 @@ void Printf(const char* format, ...) {
   va_end(arg);
 }
 
-void PrintfLn(const char* format, ...) {
+void PrintfLn(const CH1* format, ...) {
   if (!format) return;
   PrintLn();
   va_list arg;
@@ -89,24 +89,24 @@ void PrintfLn(const char* format, ...) {
   va_end(arg);
 }
 
-void Print(const char* string_) { Printf(string_); }
+void Print(const CH1* string_) { Printf(string_); }
 
-void Print(const char16_t* string_) { TPrintString<char16_t>(string_); }
+void Print(const CH2* string_) { TPrintString<CH2>(string_); }
 
-void Print(const char32_t* string_) { TPrintString<char32_t>(string_); }
+void Print(const CH4* string_) { TPrintString<CH4>(string_); }
 
-void Print(const char* string_, char delimiter) {
+void Print(const CH1* string_, CH1 delimiter) {
   Printf(string_);
   return Print(delimiter);
 }
 
-void Print(const char* a, const char* b) {
+void Print(const CH1* a, const CH1* b) {
   if (!a || !b) return;
   Print(a);
   Print(b);
 }
 
-void Print(const char* a, const char* b, const char* c) {
+void Print(const CH1* a, const CH1* b, const CH1* c) {
   if (!a || !b || !c) return;
   Print(a);
   Print(b);
@@ -118,7 +118,7 @@ void Print(UI8 value) {
   return Printf(FORMAT_UI8, value);
 #else
   enum { kSize = 24 };
-  char socket[kSize];
+  CH1 socket[kSize];
   TPrintUnsigned<>(socket, kSize - 1, value);
   Print(socket);
 #endif
@@ -129,8 +129,8 @@ void Print(UI4 value) {
   return Printf("%u", value);
 #else
   enum { kSize = 24 };
-  char socket[kSize];
-  TPrintUnsigned<UI4, char>(socket, kSize - 1, value);
+  CH1 socket[kSize];
+  TPrintUnsigned<UI4, CH1>(socket, kSize - 1, value);
 #endif
 }
 
@@ -139,7 +139,7 @@ void Print(SI8 value) {
   return Printf(FORMAT_SI8, value);
 #else
   enum { kSize = 24 };
-  char socket[kSize];
+  CH1 socket[kSize];
   TPrintSigned<SI8>(socket, kSize - 1, value);
   Print(socket);
 #endif
@@ -150,7 +150,7 @@ void Print(SI4 value) {
   return Printf("%i", value);
 #else
   enum { kSize = 24 };
-  char socket[kSize];
+  CH1 socket[kSize];
   TPrintSigned<SI8>(socket, kSize - 1, (SI8)value);
 #endif
 }
@@ -160,8 +160,8 @@ void Print(FLT value) {
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
-  char socket[kSize];
-  TPrintFloat<FLT, UI4, char>(socket, kSize, value);
+  CH1 socket[kSize];
+  TPrintFloat<FLT, UI4, CH1>(socket, kSize, value);
   Print(socket);
 #endif
 }
@@ -171,13 +171,13 @@ void Print(DBL value) {
   return Printf("%f", value);
 #else
   enum { kSize = 24 };
-  char socket[kSize];
-  TPrintFloat<DBL, UI8, char>(socket, kSize - 1, value);
+  CH1 socket[kSize];
+  TPrintFloat<DBL, UI8, CH1>(socket, kSize - 1, value);
   Print(socket);
 #endif
 }
 
-void PrintLn(const char* string_) {
+void PrintLn(const CH1* string_) {
   Print('\n');
   Print(string_);
 }
@@ -187,14 +187,14 @@ void PrintIndent(int count) {
   while (--count > 0) Print(' ');
 }
 
-void PrintLine(int width, char token, char first_token) {
+void PrintLine(int width, CH1 token, CH1 first_token) {
   Print('\n');
   if (width > 1) Print(first_token);
   while (width-- > 0) Print(token);
 }
 
-void PrintHeading(const char* heading_a, const char* heading_b, int line_count,
-                  int width, char token, char first_token) {
+void PrintHeading(const CH1* heading_a, const CH1* heading_b, int line_count,
+                  int width, CH1 token, CH1 first_token) {
   if (line_count < 1 || width < 1)
     while (line_count-- > 0) Print('\n');
   PrintLine(width, token, '+');
@@ -205,8 +205,8 @@ void PrintHeading(const char* heading_a, const char* heading_b, int line_count,
   Print('\n');
 }
 
-void PrintHeading(const char* heading, int line_count, int width, char token,
-                  char first_token) {
+void PrintHeading(const CH1* heading, int line_count, int width, CH1 token,
+                  CH1 first_token) {
   if (line_count < 1 || width < 1) return;
   while (line_count-- > 0) Print('\n');
   PrintLine(width, token, '+');
@@ -221,7 +221,7 @@ void TPrintBinaryUnsigned(UI value) {
   enum { kSize = sizeof(UI) * 8 };
 
   for (int i = kSize; i > 0; --i) {
-    char c = (char)('0' + (value >> (kSize - 1)));
+    CH1 c = (CH1)('0' + (value >> (kSize - 1)));
     Print(c);
     value = value << 1;
   }
@@ -314,14 +314,14 @@ BOL CInState(int vk_code) {
   return false;
 }
 
-void Pause(const char* message) {
+void Pause(const CH1* message) {
   if (!message) message = "";
   Printf("\n\n%s\nPress any key to continue...", message);
   while (CInKey() < 0)
     ;
 }
 
-void Pausef(const char* format, ...) {
+void Pausef(const CH1* format, ...) {
   if (!format) return;
   PrintLn();
   va_list arg;
@@ -339,14 +339,14 @@ void Pausef(const char* format, ...) {
 #if SEAM >= _0_0_0__02
 namespace _ {
 
-void PrintSocket(const char* begin, const char* end) {
+void PrintSocket(const CH1* begin, const CH1* end) {
   // @todo This function needs to write the memory to a Socket which then
   // gets printed to the TCOut ().
 
   if (!begin || begin >= end) return;
 
-  const char *address_ptr = reinterpret_cast<const char*>(begin),
-             *address_end_ptr = reinterpret_cast<const char*>(end);
+  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
+             *address_end_ptr = reinterpret_cast<const CH1*>(end);
   size_t size = address_end_ptr - address_ptr,
          num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
@@ -367,7 +367,7 @@ void PrintSocket(const char* begin, const char* end) {
 
   PrintHex(address_ptr);
 
-  char c;
+  CH1 c;
   while (address_ptr < address_end_ptr) {
     Print('\n');
     Print('|');
@@ -396,7 +396,7 @@ void PrintSocket(const char* begin, const char* end) {
 }
 
 void PrintSocket(const void* begin, SIW size) {
-  const char* begin_char = reinterpret_cast<const char*>(begin);
+  const CH1* begin_char = reinterpret_cast<const CH1*>(begin);
   return PrintSocket(begin_char, begin_char + size);
 }
 

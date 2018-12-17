@@ -15,10 +15,10 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-const char* ToMorseCode(char code) {
-  static const char* space = " ";  //<
+const CH1* ToMorseCode(CH1 code) {
+  static const CH1* space = " ";  //<
 
-  static const char* cypher[] = {
+  static const CH1* cypher[] = {
       ".-.-.",      //< ASCII: NUL, Morse code: End of message.
       0,            //< ASCII: SOH.
       "-.-.-",      //< ASCII: STX, Morse code: Start copying.

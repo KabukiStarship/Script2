@@ -25,15 +25,15 @@ namespace _ {
 
 const Op* DoorResult(Door* door, Door::Error error) { return 0; }
 
-const char* DoorErrorText(Door::Error error) {
-  static const char* strings[] = {"Invalid op", "Room error"};
+const CH1* DoorErrorText(Door::Error error) {
+  static const CH1* strings[] = {"Invalid op", "Room error"};
 
   // if (error < 0)
   //    return strings[Door::kErrorImplementation];
   return strings[error];
 }
 
-Door::Door(const char* room_name, UIW* socket, UIW size_bytes) {
+Door::Door(const CH1* room_name, UIW* socket, UIW size_bytes) {
   if (!socket) {
     if (size_bytes < kMinDoorSize) {
       size_bytes = kMinDoorSize;

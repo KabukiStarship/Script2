@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_0__02
-#ifndef INCLUDED_SCRIPT2_COBJECT
-#define INCLUDED_SCRIPT2_COBJECT
+#ifndef SCRIPT2_COBJECT
+#define SCRIPT2_COBJECT
 
 #include "csocket.h"
 #include "ctest.h"
@@ -37,16 +37,16 @@ namespace _ {
 
 /* ASCII OBJ and AsciiFactory. */
 struct CObject {
-  UIW* begin;            //< Pointer to the contiguous ASCII CObj.
-  AsciiFactory factory;  //< ASCII CObj Factory function pointer.
+  UIW* begin;            //< Pointer to the contiguous ASCII CObject.
+  AsciiFactory factory;  //< ASCII CObject Factory function pointer.
 };
 
 enum AsciiFactoryFunctions {
-  kFactoryDelete = 0,  //< Factory function deletes an OBJ.
-  kFactoryNew = 1,     //< Factory function creates a new OBJ.
-  kFactoryClone = 2,   //< ASCII Factory function: Clones the OBJ.
-  kFactoryGrow = 3,    //< ASCII Factory function: Grow OBJ function index.
-  kFactoryLast = 3,    //< The last ASCII Factory function.
+  kFactoryDelete = 0,  //< ASCII Factory function deletes an OBJ.
+  kFactoryNew = 1,     //< ASCII Factory function creates a new OBJ.
+  kFactoryClone = 2,   //< ASCII Factory function clones the OBJ.
+  kFactoryGrow = 3,    //< ASCII Factory function double OBJ size in bytes.
+  kFactoryInfo = 4,    //< The last ASCII Factory function.
 };
 
 enum AsciiFactoryErrors {
@@ -86,14 +86,14 @@ API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 8. */
 API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
-/* Destructs the given ASCII CObj Factory. */
+/* Destructs the given ASCII CObject Factory. */
 API void Delete(CObject& object);
 
 /* Checks if the given function is an ASCII OBJ function.
-@return True if the function is less than or equal to kFactoryLast.
-ASCII Object functions are 0 through kFactoryLast. */
+@return True if the function is less than or equal to kFactoryInfo.
+@desc   ASCII Object functions are 0 through kFactoryInfo. */
 inline API BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__02
-#endif  //< INCLUDED_SCRIPT2_COBJECT
+#endif  //< SCRIPT2_COBJECT

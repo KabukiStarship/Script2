@@ -128,7 +128,7 @@ pair, so we need a 64-bit map.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 struct TMap {
-  Size size;        //< ASCII CObj size.
+  Size size;        //< ASCII CObject size.
   Index table_size, /*< Size of the key strings in bytes.
                      Set to 0 for ASCII Map. */
       size_pile;    /*< Size of the collisions pile in bytes.
@@ -245,7 +245,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
   if (count >= count) return ~0;
   //< We're out of buffered indexes.
 
-  char* types = reinterpret_cast<char*>(map) + sizeof(TMap<Size, Index, I>);
+  CH1* types = reinterpret_cast<CH1*>(map) + sizeof(TMap<Size, Index, I>);
   Size* data_offsets = reinterpret_cast<Size*>(types + count * (sizeof(Size)));
   Size *hashes = reinterpret_cast<Size*>(types +
                                          count * (sizeof(Size) + sizeof(Size))),
@@ -254,7 +254,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
             types + count * (sizeof(Size) + 2 * sizeof(Index))),
         *unsorted_indexes = indexes + count,
         *collission_list = unsorted_indexes + count;
-  char *keys = reinterpret_cast<char*>(map) + table_size - 1, *destination;
+  CH1 *keys = reinterpret_cast<CH1*>(map) + table_size - 1, *destination;
 
   // Calculate space left.
   Size value = table_size - count * MapOverheadPerIndex<Size, Index, I>(),
@@ -288,7 +288,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
     return 0;
   }
 
-  // Calculate left over socket size by looking up last char.
+  // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
     PRINTF("\nNot enough room in buffer!");
@@ -376,7 +376,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         // Move collisions pointer to the unsorted_indexes.
         indexes += count;
 
-        //< Add the newest char to the stop.
+        //< Add the newest CH1 to the stop.
         indexes[count] = count;
 
         MapPrint(map);
@@ -384,7 +384,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         return count;
       }
 
-      // But we still don't know if the char is a new collision.
+      // But we still don't know if the CH1 is a new collision.
 
       PRINT("\nChecking if it's a collision... ");
 
@@ -456,7 +456,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
       " %i at index %u before hash 0x%x",
       temp_id, id, mid, Diff(map, destination), hashes[mid]);
 
-  // First copy the char and set the key offset.
+  // First copy the CH1 and set the key offset.
   SlotWrite(destination, id);
   key_offsets[count] = value;
 
@@ -512,7 +512,7 @@ void MapWipe(TMap<Size, Index, I>* map) {
   ASSERT(map);
 
   Size size = map->size;
-  MemoryWipe(reinterpret_cast<char*>(map) + sizeof(TMap<Size, Index, I>), size);
+  MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<Size, Index, I>), size);
 }
 
 /* Returns true if this crabs contains only the given address. */
@@ -535,7 +535,7 @@ BOL MapRemove(TMap<Size, Index, I>* map, void* adress) {
 
 /* Prints this object out to the console. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2,
-          typename Char = char>
+          typename Char = CH1>
 TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
   ASSERT(map)
   l
@@ -552,8 +552,8 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
   for (int i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
-  const char* states =
-      reinterpret_cast<const char*>(map) + sizeof(TMap<Size, Index, I>);
+  const CH1* states =
+      reinterpret_cast<const CH1*>(map) + sizeof(TMap<Size, Index, I>);
   const Size* key_offsets = reinterpret_cast<const Size*>(states + count);
   const Size* data_offsets =
       reinterpret_cast<const Size*>(states + count * sizeof(Size));
@@ -564,7 +564,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
                   count * (sizeof(Size) + sizeof(Size) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
               *collission_list = unsorted_indexes + count, *begin;
-  const char* keys = reinterpret_cast<const char*>(map) + table_size - 1;
+  const CH1* keys = reinterpret_cast<const CH1*>(map) + table_size - 1;
   utf << "\n " << Right<>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_s", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11);
@@ -601,7 +601,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
     utf << '_';
   }
 
-  return utf << '_' << Socket(reinterpret_cast<const char*>(map), map->size)
+  return utf << '_' << Socket(reinterpret_cast<const CH1*>(map), map->size)
              << '\n';
 }
 
@@ -628,39 +628,39 @@ class Map {
   ~Map() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(CObj(), adress);
+    return MapRemove<Size, Index, I>(CObject(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(CObj(), value);
+    return MapContains<Size, Index, I>(CObject(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(CObj()); }
+  inline void Wipe() { MapWipe<Size, Index, I>(CObject()); }
 
   static inline Index CountUpperBounds() {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SIN type) {
-    return MapInsert<Size, Index, I>(CObj(), value, type, index);
+    return MapInsert<Size, Index, I>(CObject(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(CObj()); }
+  inline void Clear() { MapClear<Size, Index, I>(CObject()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, CObj());
+    return MapPrint<Size, Index, I>(utf, CObject());
   }
 
  private:
   UIW* socket;
 
   /* Returns the socket casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* CObj() {
+  inline TMap<Size, Index, I>* CObject() {
     return reinterpret_cast<TMap<Size, Index, I>*>(socket);
   }
 };  //< class Map

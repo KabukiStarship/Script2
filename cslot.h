@@ -33,7 +33,7 @@ you may write packed data.
 
 */
 struct Slot {
-  char *stop,  //< Stop of the data in the ring socket.
+  CH1 *stop,  //< Stop of the data in the ring socket.
       *stop,   //< End of the ring socket.
       *begin,  //< Beginning of the ring socket.
       *begin;  //< Start of the data in the ring socket.
@@ -54,7 +54,7 @@ struct Slot {
       @param size  The size of the ring socket in bytes. */
   inline BOL Set(UIW* socket, UIW size) {
     if (!socket) return true;
-    char* l_begin = reinterpret_cast<char*>(socket);
+    CH1* l_begin = reinterpret_cast<CH1*>(socket);
     begin = begin = stop = l_begin;
     stop = l_begin + size;
     return false;
@@ -110,7 +110,7 @@ struct Slot {
   /* Writes a single string_ to the slot socket.
   @param message The string_ message to send.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const char* message);
+  const Op* Write(const CH1* message);
 
   /* Copies the contents of the other slot into the slot. */
   const Op* Write(Slot& other);

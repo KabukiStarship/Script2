@@ -55,7 +55,7 @@ class Door : public Operand {
   };
 
   /* A door in a Chinese room. */
-  Door(const char* roomName = nullptr, UIW* socket = nullptr,
+  Door(const CH1* roomName = nullptr, UIW* socket = nullptr,
        UIW size_bytes = kMinDoorSize);
 
   /* AsciiFactory. */
@@ -89,7 +89,7 @@ class Door : public Operand {
 /* Returns a Static Error Op. */
 API const Op* DoorResult(Door* door, Door::Error error);
 
-API const char* DoorErrorText(Door::Error error);
+API const CH1* DoorErrorText(Door::Error error);
 
 /* Returns the main door of the room.
 API Door& Doors (); */

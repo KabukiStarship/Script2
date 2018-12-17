@@ -62,10 +62,10 @@ void Print (Op& log) {
     UI8 si8;
     FLT    flt;
     DBL   dbl;
-    char   index;
+    CH1   index;
     //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
     //    return;
-    char socket[DBL_MAX_10_EXP + 2];
+    CH1 socket[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
             case kSTR: {

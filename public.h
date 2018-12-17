@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SCRIPT2_PUBLIC
-#define INCLUDED_SCRIPT2_PUBLIC
+#ifndef SCRIPT2_PUBLIC
+#define SCRIPT2_PUBLIC
 
 #include "cconsole.h"
 #include "ctest.h"
 #include "tbinary.h"
 
-#endif  //< INCLUDED_SCRIPT2_PUBLIC
+#endif  //< SCRIPT2_PUBLIC
