@@ -282,8 +282,9 @@ class TStrand {
   /* Gets the obj of the Console obj. */
   inline TObject<SIN>& Obj() { return obj_; }
 
+  /* Prints to the given  */
   void Print() {
-    _::Print("\nTStrand<CH", char_string);
+    _::Print("\nTStrand<CH");
     _::Print('0' + sizeof(Char));
     _::Print('>');
     obj_.Print();

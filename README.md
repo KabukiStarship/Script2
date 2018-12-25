@@ -35,7 +35,7 @@ ASCII Data Types provide:
 
 * [FAQ](https://github.com/kabuki-starship/script/blob/master/docs/readme.md)
   - *Frequently asked questions.*
-* [Script Specification RFC](https://github.com/kabuki-starship/script2/blob/master/docs/script_specification_rfc.md)
+* [Script Specification RFC](https://github.com/kabuki-starship/script2/blob/master/docs/rfc/readme.md)
   - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
 * [Script](https://github.com/kabuki-starship/kabuki-toolkit)
   - *Primary repository of the Script, a Script^2 Toolkit.*

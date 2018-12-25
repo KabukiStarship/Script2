@@ -329,7 +329,7 @@ class TObject {
   inline BOL Grow() { return TObjGrow<Size>(obj_); }
 
   void Print() {
-    _::Print("\nTObject<SI", size_string);
+    _::Print("\nTObject<SI");
     _::Print('0' + sizeof(Size));
     _::Print(">");
     UIW* begin = obj_.begin;
