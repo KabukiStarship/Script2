@@ -15,7 +15,7 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 ASCII Data Types provide:
 
 * All of the C++ POD types.
-* Year 2038-safe 32-bit, 64- bit and dual-32-bit with 16-year epoch and sub-second tick timestamps.
+* Year 2038-safe 32-bit, 64- bit and dual-32-bit with 32-year epoch and sub-second tick timestamps.
 * All data types are 64-bit aligned so they may be rapidly copied from one system to another on homo-endian system.
 * Optional MSB variant encoding provides fast data compression similar to UTF-8.
 * Convenient and easy-to-read-and-type 3-letter all-caps abbreviations that POP out around lower_snake_case.
@@ -37,8 +37,8 @@ ASCII Data Types provide:
   - *Frequently asked questions.*
 * [Script Specification RFC](https://github.com/kabuki-starship/script2/blob/master/docs/rfc/readme.md)
   - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [Script](https://github.com/kabuki-starship/kabuki-toolkit)
-  - *Primary repository of the Script, a Script^2 Toolkit.*
+* [Script2](https://github.com/kabuki-starship/script2)
+  - *Primary repository of the SCRIPT Specification and Script2.*
 * [Kabuki Starship Website](https://kabuki-starship.github.io/)
   - *Official Kabuki Starship website. #WorkInProgress*
 
