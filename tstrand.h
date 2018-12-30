@@ -200,7 +200,7 @@ class TStrand {
 #endif
 
   /* Gets the UTF. */
-  TUTF<Char>& Print() { return utf_; }
+  TUTF<Char>& Plus() { return utf_; }
 
   /* Prints a CH1 to the strand.
   @param item The item to utf.

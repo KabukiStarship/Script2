@@ -205,11 +205,7 @@ Foo 2016-07-13@15:39:23:999
 
 ### 2.6.a Epoch and Invalid Timestamps
 
-The 32-bit time epoch shall be 16 years starting at the January 1st of the beginning of each decade beginning from 0 AD but not starting until January 1st 2032. Before January 1st 2032 the epoch shall be the Unix Timestamp Epoch.
-
-#### Max 32-bit Timestamp Range
-
-`(+/-) ((2^30)-1)/(60*60*24*365) = (+/-) 36 years`
+The 32-bit time epoch shall be 32 years starting at the January 1st of the beginning of each decade beginning from 0 AD and the date of the first epoch is January 1st 2048.
 
 #### Max 64-bit Timestamp Range
 
@@ -287,28 +283,26 @@ struct Array {
 
 #### Array Examples
 
-Script uses a modified MatLab/Octave-style syntax that allows for Script Stack Operations.
-
 ```
-/*              +---------------------- Operand Push "[UI1#2" with signature
-                |                       <NIL>:<UI2#2>, Creates an Array and pushes
-                |                       it onto the Operand Stack.
-                |     +---------------- Operand '>':<
-                |     |                 header onto stack.
-                |     |  +------------- Operation 'x'<UI2>:<NIL> pushes a
-                |     |  |              dimension on the Stack.
-                |     |  | +----------- X Elements
-                |     |  | | +--------- By Y elements
-                |     |  | | | +------- By Z elements
-                |     |  | | | | +----- Element (0,0,0)
-                |     |  | | | | |      +------ Operation ','<UI2>:<NIL> sets the next
-                |     |  | | | | |      |       array element.
-                |     |  | | | | |      |  +--- Everything is just a function call so it's
-                |     |  | | | | |      |  |    REALLY fast to interpret!
-                v     v  v   v v v      v  v
-let ui1_array = [UI1#2<1 x 1 x 3>]{ 1, 2, (3) }
-let flt_array = [FLT#2<1 x 1 x 3>]{ 1.0, 2.0, 3.0 }
-let 3d_array  = [UI1#2<1 x 3 x 3>]{ 1, 2, 3; 1, 2, 3; 1, 2, 3 }
+/*            +---------------------- Operand Push "[UI1#2" with signature
+              |                       <NIL>:<UI2#2>, Creates an Array and pushes
+              |                       it onto the Operand Stack.
+              |   +---------------- Operand '>':<
+              |   |                 header onto stack.
+              |   |  +------------- Operation 'x'<UI2>:<NIL> pushes a
+              |   |  |              dimension on the Stack.
+              |   |  | +----------- X Elements
+              |   |  | | +--------- By Y elements
+              |   |  | | | +------- By Z elements
+              |   |  | | | | +----- Element (0,0,0)
+              |   |  | | | | |      +------ Operation ','<UI2>:<NIL> sets the next
+              |   |  | | | | |      |       array element.
+              |   |  | | | | |      |  +--- Everything is just a function call so it's
+              |   |  | | | | |      |  |    REALLY fast to interpret!
+              v   v  v   v v v      v  v
+ui1_array = [UI1#2<1 x 1 x 3>]{ 1, 2, (3) }
+flt_array = [FLT#2<1 x 1 x 3>]{ 1.0, 2.0, 3.0 }
+3d_array  = [UI1#2<1 x 3 x 3>]{ 1, 2, 3; 1, 2, 3; 1, 2, 3 }
                                                /*   ^
                                                     |
   Matlab style Multi-dimensional array separator ---+   */
