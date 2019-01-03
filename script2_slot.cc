@@ -12,14 +12,14 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__13
-#include "tslot.h"
+#if SEAM >= _0_0_0__14
+#include "cslot.h"
 
 #include "casciidata.h"
 #include "csocket.h"
 #include "tstr.h"
 
-#if SEAM == _0_0_0__13
+#if SEAM == _0_0_0__14
 #include "test_debug.inl"
 #else
 #include "test_release.inl"

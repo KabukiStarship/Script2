@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #include <cstdio>
 
 #include "tstr.h"
@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 #include "csocket.h"
 #include "tbinary.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_release.inl"
 #else
 #include "test_release.inl"
@@ -1905,4 +1905,4 @@ _::UTF4& operator<<(_::UTF4& utf, _::Utf32Right item) {
 
 #endif  //< #if USING_UTF32
 
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

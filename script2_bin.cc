@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #include "cbin.h"
 
 #include "bout.h"
@@ -642,4 +642,4 @@ UTF1& Print(UTF1& utf, BIn* bin) {
 #undef PRINT_BSQ
 #undef PRINT_BIN
 #undef DEBUG
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

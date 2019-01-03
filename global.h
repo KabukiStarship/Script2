@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 #if SEAM == _0_0_0__02
 #include "cconsole.h"
+#include "tsocket.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
@@ -38,9 +39,12 @@ specific language governing permissions and limitations under the License. */
 #if SEAM == _0_0_0__04
 #include "cconsole.h"
 #include "crng.h"
-#include "tclock.h"
+#include "tbinary.h"
 #endif
 #if SEAM == _0_0_0__05
+#include "cconsole.h"
+#include "crng.h"
+#include "tclock.h"
 #endif
 #if SEAM == _0_0_0__06
 #endif
@@ -57,6 +61,8 @@ specific language governing permissions and limitations under the License. */
 #if SEAM == _0_0_0__12
 #endif
 #if SEAM == _0_0_0__13
+#endif
+#if SEAM == _0_0_0__14
 #endif
 
 #endif  //< #ifndef INCLUDED_SCRIPTGLOBAL

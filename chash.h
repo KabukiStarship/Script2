@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__08
+#if SEAM >= _0_0_0__11
 
 #ifndef INCLUDED_SCRIPTHASH
 #define INCLUDED_SCRIPTHASH
@@ -70,5 +70,5 @@ the see to a different prime number_.
 API hash64_t Hash64(const CH1* string_, hash64_t hash = 18446744073709551557);
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__08
+#endif  //< #if SEAM >= _0_0_0__11
 #endif  //< INCLUDED_SCRIPTHASH

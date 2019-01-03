@@ -156,7 +156,7 @@ void Print(SI4 value) {
 }
 
 void Print(FLT value) {
-#if SEAM <= _0_0_0__12
+#if SEAM <= _0_0_0__13
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
@@ -167,7 +167,7 @@ void Print(FLT value) {
 }
 
 void Print(DBL value) {
-#if SEAM <= _0_0_0__12
+#if SEAM <= _0_0_0__13
   return Printf("%f", value);
 #else
   enum { kSize = 24 };

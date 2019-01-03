@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@file    /0_0_0__06_test_ascii_array.h
+@file    /script2/0_0_0.14_room.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,33 +13,23 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "tarray.h"
-
-#if SEAM == _0_0_0__06
+#if SEAM == _0_0_0__15
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
 #endif
 
+#include "croom.h"
+
 namespace _ {
 
-static const CH1* _0_0_0__06_ASCII_Array(CH1* seam_log, CH1* seam_end,
-                                          const CH1* args) {
-#if SEAM >= _0_0_0__06
-  TEST_BEGIN;
-
-  static const int array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
-                                                {{4, 5}, {6, 7}}};
-  const int* test = Dimensions<2, 2, 2>();
-  TArray<int> test_array(test);
-  *test_array.Elements() = {{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
-  i = 0;
-  int* array_base = test_array.Elements();
-  for (int z = 0; z < 2; ++z)
-    for (int y = 0; y < 2; ++y)
-      for (int x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
-
+static const CH1* _0_0_0__15_Room(CH1* seam_log, CH1* seam_end,
+                                    const CH1* args) {
+#if SEAM == _0_0_0__15
+  Room room;
 #endif
   return nullptr;
 }
 }  // namespace _
+
+#include "test_footer.inl"

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef SCRIPT2_COBJECT
 #define SCRIPT2_COBJECT
 
@@ -95,5 +95,5 @@ API void Delete(CObject& object);
 inline API BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03
 #endif  //< SCRIPT2_COBJECT

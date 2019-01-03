@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__08
+#if SEAM >= _0_0_0__11
 
 #include "chash.h"
 
@@ -51,4 +51,4 @@ inline UI PrimeMaxUnigned() {
 
 }  //< namespace _
 #endif  //< INCLUDED_SCRIPTTHASH
-#endif  //< #if SEAM >= _0_0_0__08
+#endif  //< #if SEAM >= _0_0_0__11

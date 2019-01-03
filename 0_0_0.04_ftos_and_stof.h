@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 
 using namespace std;
 
-#if SEAM == _0_0_0__03
+#if SEAM == _0_0_0__04
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -32,10 +32,10 @@ namespace _ {
 
 const CH1* _0_0_0__03_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
                                      const CH1* args) {
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
-#if SEAM == _0_0_0__03
+#if SEAM == _0_0_0__04
   enum { kTestCount = 1 << 20 };
 #else
   enum { kTestCount = 1 << 15 };

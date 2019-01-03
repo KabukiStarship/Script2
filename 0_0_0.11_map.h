@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@file    /0_0_0__10_ascii_map_.h
+@file    /0_0_0__11_ascii_map_.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,7 +12,7 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM == _0_0_0__10
+#if SEAM == _0_0_0__11
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const CH1* _0_0_0__10_ASCII_Map(CH1* seam_log, CH1* seam_end,
+static const CH1* _0_0_0__11_ASCII_Map(CH1* seam_log, CH1* seam_end,
                                         const CH1* args) {
-#if SEAM >= _0_0_0__10
+#if SEAM >= _0_0_0__11
   TEST_BEGIN;
 
   Printf("\n\nTesting ASCII OBJ Types");

@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef INCLUDED_SCRIPTUTF8
 #define INCLUDED_SCRIPTUTF8
 
@@ -855,7 +855,7 @@ API _::UTF1& operator<<(_::UTF1& utf, SI8 value);
 @param  value The value to write to the utf. */
 API _::UTF1& operator<<(_::UTF1& utf, UI8 value);
 
-#if SEAM >= _0_0_0__01
+#if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
 @return The utf.
 @desc
@@ -890,4 +890,4 @@ API _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line);
 
 #endif  //< #if USING_UTF8
 #endif  //< #if INCLUDED_SCRIPTUTF8
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

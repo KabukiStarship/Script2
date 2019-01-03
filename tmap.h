@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__10
+#if SEAM >= _0_0_0__11
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
 #include "casciidata.h"
 #include "csocket.h"
 
-#if SEAM == _0_0_0__10
+#if SEAM == _0_0_0__11
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -667,4 +667,4 @@ class Map {
 }  // namespace _
 
 #endif  //< INCLUDED_CRAPS_TMAP
-#endif  //< #if SEAM >= _0_0_0__10
+#endif  //< #if SEAM >= _0_0_0__11

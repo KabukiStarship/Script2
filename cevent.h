@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_EVENT
 #define SCRIPT2_EVENT
 // Dependencies:
@@ -47,4 +47,4 @@ struct API Event : public Operand {
 
 }  //< namespace _
 #endif  //< SCRIPT2_EVENT
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

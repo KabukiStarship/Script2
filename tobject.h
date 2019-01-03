@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef SCRIPT2_TOBJECT
 #define SCRIPT2_TOBJECT 1
 
@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "tsocket.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -181,6 +181,7 @@ int TObjFactory(CObject& obj, SIW function, void* arg) {
 
 template <typename Size>
 int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
+  /*
   Size size;
   UIW* begin;
   switch (function) {
@@ -218,7 +219,7 @@ int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
       *ptr = __FUNCTION__;
       return 0;
     }
-  }
+  }*/
   return 0;
 }
 
@@ -356,4 +357,4 @@ class TObject {
 }  // namespace _
 
 #endif  //< SCRIPT2_TOBJECT
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
 #include "bout.h"
-#include "op.h"
+#include "cop.h"
 
 namespace _ {
 
@@ -133,4 +133,4 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const UIT* header,
 
 }  // namespace _
 #endif  //< SCRIPT2_MIRROR
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

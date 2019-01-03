@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef INCLUDED_CRABS_BSQ
 #define INCLUDED_CRABS_BSQ
 
 #include "casciidata.h"
-#include "str1.h"
+#include "cstr1.h"
 
 namespace _ {
 
@@ -173,4 +173,4 @@ inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
 #endif  //< USING_UTF8 == YES
 
 #endif  //< INCLUDED_CRABS_BSQ
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

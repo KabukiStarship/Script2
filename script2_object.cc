@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 
 #include "cobject.h"
 #include "csocket.h"
 #include "tobject.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -80,4 +80,4 @@ void SocketStack(UIW* socket) {}
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

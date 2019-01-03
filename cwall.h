@@ -13,11 +13,11 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_WALL
 #define SCRIPT2_WALL
 #include "door.h"
-#include "op.h"
+#include "cop.h"
 
 namespace _ {
 
@@ -86,4 +86,4 @@ class Wall {
 
 }  // namespace _
 #endif  //< SCRIPT2_WALL
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

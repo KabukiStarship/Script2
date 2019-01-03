@@ -54,7 +54,7 @@ typedef enum AsciiTypes {
 } AsciiType;
 }  // namespace _
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 #ifndef SCRIPT2_CASCIIDATA
 #define SCRIPT2_CASCIIDATA
 
@@ -178,4 +178,4 @@ API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
 #endif
 
 #endif  //< SCRIPT2_CASCIIDATA
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__13

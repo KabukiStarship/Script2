@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == _0_0_0__07
+#if SEAM == _0_0_0__08
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -21,9 +21,9 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const CH1* _0_0_0__07_ASCII_Loom(CH1* seam_log, CH1* seam_end,
+static const CH1* _0_0_0__08_ASCII_Loom(CH1* seam_log, CH1* seam_end,
                                          const CH1* args) {
-#if SEAM >= _0_0_0__07
+#if SEAM >= _0_0_0__08
   TEST_BEGIN;
 
   Printf("\n\nTesting ASCII OBJ Types");

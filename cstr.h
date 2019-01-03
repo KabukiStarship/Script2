@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef INCLUDED_SCRIPTUTF
 #define INCLUDED_SCRIPTUTF
 
@@ -35,4 +35,4 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #endif  //< #if INCLUDED_SCRIPTUTF
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03
