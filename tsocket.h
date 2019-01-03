@@ -204,6 +204,11 @@ class TSocket {
     //return (kSize_ <= sizeof(Size)) ? (Size)sizeof(Size) : kSize_;
   }
 
+  /* The size in bytes. */
+  static constexpr SIW SizeBytesUnsigned () {
+    return (UIW)SizeBytes;
+  }
+
   /* The size in words rounded down. */
   static constexpr Size SizeWords() { return kSize_ >> kWordBitCount; }
 
@@ -242,7 +247,7 @@ class TSocket {
   }
 
  private:
-  UIW socket[SizeBytes()];  //< The word-aligned socket.
+  UIW socket[SizeBytesUnsigned ()];  //< The word-aligned socket.
 };
 
 /* Syntactical sugar for reinterpret_cast using templates. */
