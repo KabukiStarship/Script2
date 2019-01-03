@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef SCRIPT2_TUTF
 #define SCRIPT2_TUTF 1
 
@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License. */
 #include "tbinary.h"
 #include "tobject.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -711,10 +711,10 @@ class TToken {
 
 #if SEAM >= _0_0_0__03
   /* Prints the value to the text begin. */
-  TToken(FLT value) { TPrint<Char>(cursor, cursor + kSize, value); }
+  TToken(FLT value) { TPrint<Char>(string_, string_ + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(DBL value) { TPrint<Char>(cursor, cursor + kSize, value); }
+  TToken(DBL value) { TPrint<Char>(string_, string_ + kSize, value); }
 #endif
   /* Gets the number_ s. */
   const Char* String() { return string_; }
@@ -1004,16 +1004,16 @@ class TCenter {
     // Nothing to do here!
   }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
   TCenter(FLT value, int column_count = 80)
-      : cursor(nullptr), number_(value), column_count(column_count) {
+      : string_ (nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
   TCenter(DBL value, int column_count = 80)
-      : cursor(nullptr), number_(value), column_count(column_count) {
+      : string_ (nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 #endif
@@ -1073,7 +1073,7 @@ class TRight {
     // Nothing to do here!
   }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
   TRight(FLT value, int column_count = 80)
       : cursor(nullptr), number_(value), column_count_(column_count) {
@@ -1419,4 +1419,4 @@ inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TToken<Char> token) {
 }
 
 #endif  //< #if SCRIPT2_TUTF
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

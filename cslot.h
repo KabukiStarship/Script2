@@ -13,15 +13,15 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
 #include "csocket.h"
 
-#include "bin.h"
-#include "bout.h"
-#include "op.h"
-#include "str1.h"
+#include "cbin.h"
+#include "cbout.h"
+#include "cop.h"
+#include "cstr1.h"
 
 namespace _ {
 
@@ -131,4 +131,4 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
 #endif
 
 #endif  //< SCRIPT2_SLOT
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

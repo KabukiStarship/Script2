@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__09
+#if SEAM >= _0_0_0__08
 
 #ifndef INCLUDED_SCRIPTVARINT
 #define INCLUDED_SCRIPTVARINT
 
-#if SEAM == _0_0_0__09
+#if SEAM == _0_0_0__08
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -138,4 +138,4 @@ TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTVARINT
-#endif  //< #if SEAM >= _0_0_0__09
+#endif  //< #if SEAM >= _0_0_0__08

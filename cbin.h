@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef INCLUDED_CRABS_CBIN
 #define INCLUDED_CRABS_CBIN 1
 #include "cbout.h"
@@ -135,4 +135,4 @@ inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
 #endif
 
 #endif  //< INCLUDED_CRABS_CBIN
-#endif  //> #if SEAM >= _0_0_0__13
+#endif  //> #if SEAM >= _0_0_0__14

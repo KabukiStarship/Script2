@@ -12,15 +12,15 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__13
-#include "troom.h"
+#if SEAM >= _0_0_0__14
+#include "croom.h"
 
 #include "cbsq.h"
-#include "door.h"
-#include "stack.h"
+#include "cdoor.h"
+#include "cstack.h"
 #include "tstr.h"
 
-#if SEAM == _0_0_0__13
+#if SEAM == _0_0_0__14
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -208,4 +208,4 @@ UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 
 }  // namespace _
 
-#endif  //> #if SEAM >= _0_0_0__13
+#endif  //> #if SEAM >= _0_0_0__14

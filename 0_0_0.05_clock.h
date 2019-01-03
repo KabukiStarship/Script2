@@ -15,7 +15,7 @@ specific language governing permissions and limitations under the License. */
 
 #include <cclock.h>
 
-#if SEAM == _0_0_0__04
+#if SEAM == _0_0_0__05
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -23,9 +23,9 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-static const CH1* _0_0_0__04_Clock(CH1* seam_log, CH1* seam_end,
+static const CH1* _0_0_0__05_Clock(CH1* seam_log, CH1* seam_end,
                                     const CH1* args) {
-#if SEAM >= _0_0_0__04
+#if SEAM >= _0_0_0__05
   TEST_BEGIN;
 
   PRINT_HEADING("\n\nTesting TStringScanTime...");

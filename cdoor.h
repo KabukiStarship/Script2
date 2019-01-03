@@ -13,11 +13,11 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_DOOR
 #define SCRIPT2_DOOR
 #include "ccrabs.h"
-#include "slot.h"
+#include "cslot.h"
 #include "tstack.h"
 #include "tstr.h"
 
@@ -83,7 +83,7 @@ class Door : public Operand {
 
  private:
   UIW* begin;                           //< Pointer to dynamic socket.
-  TCArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
+  TArray<slot_t, UIT, int_t>* slots_;  //< Slots in the door.
 };
 
 /* Returns a Static Error Op. */
@@ -106,5 +106,5 @@ static Door* DoorInit (int* socket, UIT slot_size) {
 }*/
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14
 #endif  //< SCRIPT2_DOOR

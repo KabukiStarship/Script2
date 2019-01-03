@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef INCLUDED_CRABS_EXCEPTIONS
 #define INCLUDED_CRABS_EXCEPTIONS YES
 // Dependencies:
@@ -32,4 +32,4 @@ struct API RoomCrashException : public std::exception {
 }  // namespace _
 #endif  //< #if USING_CRABS_INTERRUPTS == YES
 #endif  //< #if INCLUDED_CRABS_EXCEPTIONS == YES
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

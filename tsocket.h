@@ -71,7 +71,7 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 @endcode */
 template <typename I = UIW>
 inline I TAlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
-  return 0;  // Negative (value) & mask;
+  return Negative (value) & mask;
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -181,6 +181,7 @@ inline int TBitShiftCount() {
                          : (sizeof(I) == 8) ? 3 : (sizeof(I) == 16) ? 4 : 0;
 }
 
+/* Aligns the given size to a word-sized boundary. */
 template <typename Size>
 constexpr Size SizeAlign(Size size) {
   Size lsb_mask = sizeof(UIW) - 1;
@@ -198,8 +199,9 @@ class TSocket {
   TSocket() {}
 
   /* The size in bytes. */
-  static constexpr SIW SizeBytes() {
-    return (kSize_ <= sizeof(Size)) ? (Size)sizeof(Size) : kSize_;
+  static constexpr Size SizeBytes() {
+    return 64;
+    //return (kSize_ <= sizeof(Size)) ? (Size)sizeof(Size) : kSize_;
   }
 
   /* The size in bytes. */

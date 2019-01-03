@@ -275,10 +275,10 @@ int HexToByte(UI2 h) {
 }  // namespace _
 #endif
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 //#include <cmath>
 
-#if SEAM == _0_0_0__03
+#if SEAM == _0_0_0__04
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -582,4 +582,4 @@ CH4* Print(CH4* cursor, CH4* stop, DBL value) { return nullptr; }
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__03
+#endif  //< #if SEAM >= _0_0_0__04

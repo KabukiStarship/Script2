@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 #include "tbenchmark.h"
 
 #include "rng.h"
@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License. */
 using namespace std;
 using namespace std::chrono;
 
-#if SEAM == _0_0_0__12
+#if SEAM == _0_0_0__13
 #include "test_debug.inl"
 #else
 #include "test_release.inl"

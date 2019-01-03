@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef INCLUDED_SCRIPTPRINT_UTF32
 #define INCLUDED_SCRIPTPRINT_UTF32
 
@@ -958,4 +958,4 @@ API _::UTF4& operator<<(_::UTF4& printer, _::Utf32Right item);
 
 #endif  //< #if USING_UTF32 == YES
 #endif  //< #if INCLUDED_SCRIPTPRINT_UTF32
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__03

@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "cconsole.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -28,8 +28,9 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
+#if SEAM >= _0_0_0__03
 template <typename Char, typename Size>
-static const CH1* _0_0_0__02_Strand() {
+static const CH1* _0_0_0__03_UTF_and_Strand() {
   const CH1* char_type_string =
       (sizeof(Char) == 1)
           ? "CH1"
@@ -207,11 +208,12 @@ static const CH1* _0_0_0__02_Strand() {
 
   return nullptr;
 }
+#endif  //< #if SEAM >= _0_0_0__03
 
-static const CH1* _0_0_0__02_ASCII_Strand_and_Socket(CH1* seam_log,
-                                                     CH1* seam_end,
-                                                     const CH1* args) {
-#if SEAM >= _0_0_0__02
+static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log,
+                                            CH1* seam_end,
+                                            const CH1* args) {
+#if SEAM >= _0_0_0__03
   TEST_BEGIN;
 
   PRINT("\nRunning HexTest");
@@ -257,7 +259,7 @@ static const CH1* _0_0_0__02_ASCII_Strand_and_Socket(CH1* seam_log,
                           kTestCharsCount));
   }
 
-  const CH1* result = _0_0_0__02_Strand<CH1, SI4>();
+  const CH1* result = _0_0_0__03_UTF_and_Strand<CH1, SI4>();
   if (result) return result;
 
 #endif

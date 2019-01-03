@@ -13,10 +13,9 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_ERROR
 #define SCRIPT2_ERROR
-#include "config.h"
 
 namespace _ {
 
@@ -60,4 +59,4 @@ API const CH1* ErrorString(Error error);
 
 }  // namespace _
 #endif  //< SCRIPT2_ERROR
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

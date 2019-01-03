@@ -12,9 +12,9 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 // Dependencies:
-#include "interrupts.h"
+#include "cinterrupts.h"
 // End dependencies.
 #if USING_CRABS_INTERRUPTS
 #include <cassert>
@@ -29,4 +29,4 @@ const CH1* RoomCrashException::what() const throw() {
 
 }  //< namespace _
 #endif  //< USING_CRABS_INTERRUPTS
-#endif  ///< #if SEAM >= _0_0_0__13
+#endif  ///< #if SEAM >= _0_0_0__14

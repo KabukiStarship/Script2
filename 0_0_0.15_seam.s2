@@ -50,27 +50,27 @@ Parent1 {
    into another Operation. */
 Foo ("Bar goes the programmer." .Parent1.Child1.Bar ("Lets go!"))
 
-/*                 +-------------------- Operation "." pushes the root Operand 
-                   |                     on stack. This helps speed up key 
-                   |                     resolution but is not required because 
-                   |                     any key not in the current scope will 
-                   |                     get checked for in the root scope if 
-                   v                     it's not in the current scope. */
-let esc_sequence = .Parent.Child1.Bar ("This is an Escape sequence!");
+/*             +-------------------- Operation "." pushes the root Operand 
+               |                     on stack. This helps speed up key 
+               |                     resolution but is not required because 
+               |                     any key not in the current scope will 
+               |                     get checked for in the root scope if 
+               v                     it's not in the current scope. */
+esc_sequence = .Parent.Child1.Bar ("This is an Escape sequence!");
 .Parent1.Child1.Foo ("This is an Escape Sequence", esc_sequence);
 
 /* Dictionary Example.
    Dictionaries are created and edited using Escape Sequences.
 
 
-             +-------------------- Operation Push "=DIC_4" is a special 
-             |                     function that creates a dictionary that is size 1024 
-             |                     bytes with a maximum of 3 entries and 
-             |                     pushes it onto the stack. This Operation Push
-             |                     gets written to the new Expression.
-             |    
-             V  */
-let root :=DIC_4 (2048, 3) {
+         +-------------------- Operation Push "=DIC_4" is a special 
+         |                     function that creates a dictionary that is size 1024 
+         |                     bytes with a maximum of 3 entries and 
+         |                     pushes it onto the stack. This Operation Push
+         |                     gets written to the new Expression.
+         |    
+         V  */
+root :=DIC_4 (2048, 3) {
 /*< 
     +----------------------------------- Operation with key "+DIC_4" identical 
     |                                    to "$DIC_4" except it will be evaluated 

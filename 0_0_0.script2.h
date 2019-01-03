@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /0_0_0_script.h
+@file    /0_0_0.script.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -19,40 +19,40 @@ specific language governing permissions and limitations under the License. */
 #include "0_0_0.01_itos_and_stoi.h"
 #endif
 #if SEAM >= _0_0_0__02
-#include "0_0_0.02_socket_utf_and_strand.h"
+#include "0_0_0.02_socket.h"
 #endif
 #if SEAM >= _0_0_0__03
-#include "0_0_0.03_ftos_and_stof.h"
+#include "0_0_0.03_utf_and_strand.h"
 #endif
 #if SEAM >= _0_0_0__04
-#include "0_0_0.04_clock.h"
+#include "0_0_0.04_ftos_and_stof.h"
 #endif
 #if SEAM >= _0_0_0__05
-#include "0_0_0.05_ascii_stack.h"
+#include "0_0_0.05_clock.h"
 #endif
 #if SEAM >= _0_0_0__06
-#include "0_0_0.06_ascii_array.h"
+#include "0_0_0.06_stack.h"
 #endif
 #if SEAM >= _0_0_0__07
-#include "0_0_0.07_ascii_loom.h"
-#endif
-#if SEAM >= _0_0_0__08
-#include "0_0_0.08_ascii_table.h"
-#endif
-#if SEAM >= _0_0_0__09
-#include "0_0_0.09_ascii_list.h"
-#endif
-#if SEAM >= _0_0_0__10
-#include "0_0_0.10_ascii_map.h"
+#include "0_0_0.07_array.h"
 #endif
 #if SEAM >= _0_0_0__11
-#include "0_0_0.11_ascii_book.h"
+#include "0_0_0.08_loom.h"
+#endif
+#if SEAM >= _0_0_0__10
+#include "0_0_0.09_table.h"
+#endif
+#if SEAM >= _0_0_0__11
+#include "0_0_0.10_list.h"
 #endif
 #if SEAM >= _0_0_0__12
-#include "0_0_0.12_ascii_dictionary.h"
+#include "0_0_0.11_map.h"
 #endif
 #if SEAM >= _0_0_0__13
-#include "0_0_0.13_crabs.h"
+#include "0_0_0.12_book.h"
+#endif
+#if SEAM >= _0_0_0__14
+#include "0_0_0.14_dictionary.h"
 #endif
 
 namespace _ {
@@ -65,51 +65,55 @@ static const CH1* _0_0_0_F2(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= _0_0_0__02
                    ,
-                   _0_0_0__02_ASCII_Strand_and_Socket
+                   _0_0_0__02_Socket
 #endif
 #if SEAM >= _0_0_0__03
                    ,
-                   _0_0_0__03_FtoS_and_StoF
+                   _0_0_0__03_UTF_and_Strand
 #endif
 #if SEAM >= _0_0_0__04
                    ,
-                   _0_0_0__04_Clock
+                   _0_0_0__04_FtoS_and_StoF
 #endif
 #if SEAM >= _0_0_0__05
                    ,
-                   _0_0_0__05_ASCII_Stack
+                   _0_0_0__05_Clock
 #endif
 #if SEAM >= _0_0_0__06
                    ,
-                   _0_0_0__06_ASCII_Array
+                   _0_0_0__06_Stack
 #endif
 #if SEAM >= _0_0_0__07
                    ,
-                   _0_0_0__07_ASCII_Loom
+                   _0_0_0__07_Array
 #endif
 #if SEAM >= _0_0_0__08
                    ,
-                   _0_0_0__08_ASCII_Table
+                   _0_0_0__08_Loom
 #endif
 #if SEAM >= _0_0_0__09
                    ,
-                   _0_0_0__09_ASCII_List
+                   _0_0_0__09_Table
 #endif
 #if SEAM >= _0_0_0__10
                    ,
-                   _0_0_0__10_ASCII_Map
+                   _0_0_0__10_List
 #endif
 #if SEAM >= _0_0_0__11
                    ,
-                   _0_0_0__11_ASCII_Book
+                   _0_0_0__11_Map
 #endif
 #if SEAM >= _0_0_0__12
                    ,
-                   _0_0_0__12_ASCII_Dictionary
+                   _0_0_0__12_Book
 #endif
 #if SEAM >= _0_0_0__13
                    ,
-                   _0_0_0__13_Crabs
+                   _0_0_0__13_Dictionary
+#endif
+#if SEAM >= _0_0_0__14
+                   ,
+                   _0_0_0__14_Room
 #endif
                    >(seam_log, seam_end, args);
 }

@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__08
+#if SEAM >= _0_0_0__11
 #ifndef INCLUDED_SCRIPTARRAY
 #define INCLUDED_SCRIPTARRAY
 
@@ -246,4 +246,4 @@ inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
 }
 
 #endif  //< INCLUDED_SCRIPTARRAY
-#endif  //< #if SEAM >= _0_0_0__08
+#endif  //< #if SEAM >= _0_0_0__11

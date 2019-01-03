@@ -179,42 +179,6 @@
     <ClInclude Include="cconsole.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="0_0_0.00_rng.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.01_itos_and_stoi.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.04_clock.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.05_ascii_stack.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.06_ascii_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.07_ascii_loom.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.08_ascii_table.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.09_ascii_list.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.10_ascii_map.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.11_ascii_book.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.12_ascii_dictionary.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.13_room.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="0_0_0.script2.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -222,12 +186,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="tstrand.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.03_ftos_and_stof.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="0_0_0.02_socket_utf_and_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="cstr.h">
@@ -243,6 +201,54 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="tstr.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.03_utf_and_strand.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.04_ftos_and_stof.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.05_clock.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.06_stack.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.07_array.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.08_loom.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.09_table.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.10_list.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.11_map.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.12_book.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.13_dictionary.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.14_expr.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.00_rng.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.01_itos_and_stoi.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.02_socket.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.15_room.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -262,9 +268,6 @@
     <None Include="README.md">
       <Filter>script2</Filter>
     </None>
-    <None Include="0_0_0.13_seam.s2">
-      <Filter>script2</Filter>
-    </None>
     <None Include="0_0_0.debug.inl">
       <Filter>script2</Filter>
     </None>
@@ -272,6 +275,9 @@
       <Filter>script2</Filter>
     </None>
     <None Include="0_0_0.release.inl">
+      <Filter>script2</Filter>
+    </None>
+    <None Include="0_0_0.15_seam.s2">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>

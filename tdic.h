@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 
 #ifndef SCRIPT2_TDIC
 #define SCRIPT2_TDIC 1
@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 #include "casciidata.h"
 #include "csocket.h"
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -756,4 +756,4 @@ UTF1& DicPrint(UTF1& utf, Dictionary<Size, Offset, Index>* dictionary) {
 }  // namespace _
 
 #endif  //< SCRIPT2_TDIC
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__13

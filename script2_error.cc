@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 // Dependencies:
 #include "cerror.h"
 // End dependencies.
@@ -63,4 +63,4 @@ const CH1* ErrorString(Error error) {
 }
 
 }  // namespace _
-#endif  //> #if SEAM >= _0_0_0__13
+#endif  //> #if SEAM >= _0_0_0__14
