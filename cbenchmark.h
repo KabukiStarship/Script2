@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 #ifndef SCRIPT2_BENCHMARK
 #define SCRIPT2_BENCHMARK 1
 
@@ -69,4 +69,4 @@ class Benchmark {
 }  // namespace _
 
 #endif  //< SCRIPT2_BENCHMARK
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__13

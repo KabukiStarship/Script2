@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
 #include "interrupts.h"
@@ -74,7 +74,7 @@ vice versa.
 # ASCII Mappings
 
 The mapping of the layout of the Chinese Room can be seen in the following
-super cute ASCII house is:
+super cute ASCII houses:
 
 @code
  _________
@@ -179,14 +179,22 @@ class Room : public Operand {
   /* Prints the error log to a expression. */
   void PrintErrors(BOut* bout);
 
+  /* Gets the wall_count_. */
   int_t WallCount();
 
+  /* Gets the given wall by index.
+  @return Nil if the index is invalid  */
   Wall* GetWall(int_t wall_number);
 
+  /* Ads a wall to the room.
+  @return The inputed new_wall pointer upon success or nil upon failre. */
   Wall* AddWall(Wall* new_wall);
 
+  /* Removes the given Wall by index.
+  @return False upon failure.  */
   BOL RemoveWall(int_t wall_number);
-
+  
+  /* Gets the entire Room size, including dynamic memory, in bytes. */
   UIW GetSizeBytes();
 
   /* Function run every main loop cycle to check the system status. */
@@ -234,15 +242,15 @@ class Room : public Operand {
  protected:
   int state_count_,                    //< Number of FSM states.
       state_;                          //< Room state.
-  const CH1* name_;                   //< Room Name.
+  const CH1* name_;                    //< Room Name.
   TCArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
   CCrabs* expr_;                       //< Current CCrabs being executed.
                                        //< DC1: this.
   Door* this_;                         //< DC2: The Door to this room.
   Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
       *device_,                        //< DC4: the current device control.
-      *devices_;               //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];  //< Room Floor socket.
+      *devices_;                      //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];       //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */
@@ -254,4 +262,4 @@ class Room : public Operand {
 
 }  // namespace _
 #endif  //< CRABS_ROOM_HDi
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

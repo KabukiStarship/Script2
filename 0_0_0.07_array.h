@@ -1,5 +1,5 @@
 /* Script^2 @version 0.x
-@file    ~/seam_00/00/01_test_f2/00/seam.h
+@file    /0_0_0__06_test_ascii_array.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,18 +13,33 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "troom.h"
+#include "tarray.h"
 
-#include "header.h"
+#if SEAM == _0_0_0__07
+#include "test_debug.inl"
+#else
+#include "test_release.inl"
+#endif
 
 namespace _ {
 
-static const CH1* Seam_0_0_4_0__00(CH1* seam_log, CH1* seam_end,
-                                    const CH1* args) {
-#if SEAM == _0_0_4_0__00
+static const CH1* _0_0_0__07_ASCII_Array(CH1* seam_log, CH1* seam_end,
+                                          const CH1* args) {
+#if SEAM >= _0_0_0__07
+  TEST_BEGIN;
+
+  static const int array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
+                                                {{4, 5}, {6, 7}}};
+  const int* test = Dimensions<2, 2, 2>();
+  TArray<int> test_array(test);
+  *test_array.Elements() = {{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
+  i = 0;
+  int* array_base = test_array.Elements();
+  for (int z = 0; z < 2; ++z)
+    for (int y = 0; y < 2; ++y)
+      for (int x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
+
 #endif
   return nullptr;
 }
 }  // namespace _
-
-#include "test_footer.h"

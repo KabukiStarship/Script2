@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 #ifndef INCLUDED_SCRIPTTBENCHMARK
 #define INCLUDED_SCRIPTTBENCHMARK
 
@@ -31,4 +31,4 @@ const CH1* BenchmarkCaseLoop(CH1* cursor, CH1* stop, const CH1* args) {
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTBENCHMARK
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__13

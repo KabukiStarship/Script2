@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__14
 #ifndef SCRIPT2_BUFFER
 #define SCRIPT2_BUFFER
 // Dependencies:
@@ -35,4 +35,4 @@ inline CH1* Buffer() {
 
 }  // namespace _
 #endif  //< SCRIPT2_BUFFER
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= _0_0_0__14

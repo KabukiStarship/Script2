@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__11
+#if SEAM >= _0_0_0__12
 #ifndef INCLUDED_SCRIPTTBOOK
 #define INCLUDED_SCRIPTTBOOK
 
 #include "tdic.h"
 
-#if SEAM == _0_0_0__11
+#if SEAM == _0_0_0__12
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -794,4 +794,4 @@ using Multimap8 = TMap<UI4, UI4, UI8>;
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTBOOK
-#endif  //< #if SEAM >= _0_0_0__11
+#endif  //< #if SEAM >= _0_0_0__12

@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__13
 
 #include "tasciidata.h"
 
 #include "tsocket.h"
 
-#if SEAM == _0_0_0__12
+#if SEAM == _0_0_0__13
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -250,4 +250,4 @@ _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& item) {
 }
 #endif
 
-#endif  //< #if SEAM >= _0_0_0__12
+#endif  //< #if SEAM >= _0_0_0__13

@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__08
+#if SEAM >= _0_0_0__11
 #ifndef INCLUDED_SCRIPTT2_TTABLE
 #define INCLUDED_SCRIPTT2_TTABLE
 
 #include "csocket.h"
 
-#if SEAM == _0_0_0__08
+#if SEAM == _0_0_0__11
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -585,4 +585,4 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTT2_TTABLE
-#endif  //< #if SEAM >= _0_0_0__08
+#endif  //< #if SEAM >= _0_0_0__11

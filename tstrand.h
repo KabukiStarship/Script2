@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= _0_0_0__03
 #ifndef SCRIPT2_TSTRAND
 #define SCRIPT2_TSTRAND 1
 
@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "casciidata.h"
 
-#if SEAM == _0_0_0__02
+#if SEAM == _0_0_0__03
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -55,7 +55,7 @@ either be configured using the class template argument kFactory1_. If the
 obj_.Factory () is nil then it will get replaced with the
 
 @code
-TStrand<> (TCOut<>).Print ("Hello ") << "world!";
+TStrand<> (TCOut<>).Plus ("Hello ") << "world!";
 @endcode
 
 # Dynamic Allocated Strings
@@ -200,7 +200,7 @@ class TStrand {
 #endif
 
   /* Gets the UTF. */
-  TUTF<Char>& Plus() { return utf_; }
+  TUTF<Char>& Star() { return utf_; }
 
   /* Prints a CH1 to the strand.
   @param item The item to utf.
@@ -284,12 +284,13 @@ class TStrand {
 
   /* Prints to the given  */
   void Print() {
+    /*
     _::Print("\nTStrand<CH");
     _::Print('0' + sizeof(Char));
     _::Print('>');
     obj_.Print();
     utf_.Print();
-    socket_.Print();
+    socket_.Print();*/
   }
 
  private:
@@ -478,8 +479,8 @@ inline _::TUTF<Char>& operator<<(
 @param  strand The strand.
 @param  value The value to write to the strand. */
 template <typename Char, SIN kLengthMax_, AsciiFactory kFactory_>
-inline _::TStrand<Char, AsciiFactory, kLengthMax_>& operator<<(
-    _::TStrand<Char, AsciiFactory, kLengthMax_>& strand, DBL value) {
+inline _::TStrand<Char, kLengthMax_, kFactory_>& operator<<(
+    _::TStrand<Char, kLengthMax_, kFactory_>& strand, DBL value) {
   return strand.Print(value);
 }
 #endif
@@ -520,4 +521,4 @@ inline _::TUTF<Char>& operator<<(
 }
 
 #endif  //< #if SCRIPT2_TSTRAND
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= _0_0_0__04

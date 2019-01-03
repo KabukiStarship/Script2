@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__09
+#if SEAM >= _0_0_0__10
 #ifndef INCLUDED_SCRIPTTLIST
 #define INCLUDED_SCRIPTTLIST
 
@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 #include "tsocket.h"
 #include "tstack.h"
 
-#if SEAM == _0_0_0__09
+#if SEAM == _0_0_0__10
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -505,4 +505,4 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::CList<Size, Index>* list) {
 }
 
 #endif  //< INCLUDED_SCRIPTTLIST
-#endif  //< #if SEAM >= _0_0_0__09
+#endif  //< #if SEAM >= _0_0_0__10
