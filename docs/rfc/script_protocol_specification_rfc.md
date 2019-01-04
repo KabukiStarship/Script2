@@ -83,7 +83,7 @@ The Unix timestamp cycles around in the year 3038, so to ensure stability on 32-
 
 A Socket is defined a block of memory used to transceived data, and is typically implemented as ring buffer. There are two types of slots, a B-Input (BIn) and B-Output (BOut). A **Slot** is defined as a Ring Buffer Socket. BIn and BOut implementations written in a Hardware Development Language may not strictly comply with the contiguous memory operation but shall operate functionally equivalent to the specified register stack machine implementation. For register stack machines with contiguous memory. Each Slot shall begin a 64-bit aligned memory address and shall have a 64-bit aligned end address.
 
-### 3.4.a Slot Data Structure in C
+### 3.5.a Slot Data Structure in C
 
 ```
 struct Slot {
@@ -133,10 +133,10 @@ A B-Output Slot, BOut, almost works similarly to the BIn except the BOut reserve
 #### BOut C Data Structure
 
 ```
-struct KABUKI BOut {
-    UIT          size;  //< Size of the B-Output.
+struct API BOut {
+    UIN          size;  //< Size of the B-Output.
     volatile UIT start; //< Starting index of the ring-buffer data.
-    UIT          stop,  //< Stopping index of the ring-buffer data.
+    UI4          stop,  //< Stopping index of the ring-buffer data.
                     read;  //< Address that the BOut device is reading from.
 };
 ```
@@ -153,7 +153,7 @@ struct KABUKI BOut {
 +------------------------------------+
 ```
 
-### 3.4.e Windows
+### 3.5.e Windows
 
 Windows combine a BIn and BOut in contiguous memory. The ring buffers function similar to BIn and BOut except that the Slot.stop offset in the B-Input Window gets swapped with duplex B-Output Window. This is because one is a read-only and one is a write only that may occur in parallel as opposed to a strictly serial Slot operation where the room may both read and write to the same Slot.
 
@@ -167,7 +167,7 @@ Windows combine a BIn and BOut in contiguous memory. The ring buffers function s
 +------+  0xN
 ```
 
-### 3.4.f Default In Slot and Out Slot
+### 3.5.f Default In Slot and Out Slot
 
 Script implementations may implement a default BIn Slot named In (**in UpperCaseCamel**)
  and default BOut Slot named Out (**in UpperCaseCamel**). In shall stream bytes from a Text keyboard, BOut Slot or Text display input. Out stream bytes to a Abstract text display, BIn Slot, or Abstract serial output.
@@ -284,7 +284,7 @@ const Op* Star (wchar_t index, Expression* crabs)  {
 |:-----------------:|:---------------------:|:--------------------:|
 | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
 
-### 3.4.a Crabs Operations
+### 3.6.a Crabs Operations
 
 #### Default Operation
 
@@ -346,7 +346,7 @@ Signals the current automaton to finish processing a word.
 
 Script is whitespace delimited spaces may be skipped by the interpreter or interpreted as a Operating with index 64 (ASCII ' '). For real-time streaming natural language processing Whitespace Operations are used to identify pauses in speech (i.e. dead audio).
 
-### 3.4.b Interrupt Escape Sequence
+### 3.6.b Interrupt Escape Sequence
 
 Each Room has a single **Interrupt Expression** in the index '/'. When an ESC interrupt UI1 is received the *Interrupt Expression* is pushed onto the stack. If this ESC returns a Result this Result must be inserted into the location of the ESC in the B-Stream.
 
@@ -357,7 +357,7 @@ Each Room has a single **Interrupt Expression** in the index '/'. When an ESC in
 |  EOT  | End of transmission | Disconnects from the host. |
 |  CAN  | Cancel              | Cancels the current Expression being scanned. |
 
-### 3.4.c Device Controls 1-4
+### 3.6.c Device Controls 1-4
 
 Device Controls 1 through 4 are the ASCII DC1, DC2, DC3, and DC4 Operations. These Operations may be directly mapped the VK_SHIFT, VK_CONTROL, VK_ALT, and VK_PAUSE buttons on the keyboard. DC1, DC2, and DC3 may be used with momentary switch where that Device Control Operation is called when the button is pressed and depressed. DC4 is may be used with a momentary switch where the Device Control Operation is called when the button is pressed or depressed.
 
@@ -379,15 +379,15 @@ DC3 must be a device that does nothing by default and uses DC3 for a Closure Ope
 
 DC4 must be an <kNIL>:<kNIL> Operand that does nothing by default and uses ASCII DC4 for it's Closure Operation. DC4 may be used to pause the system and may be overridden by the user for application specific purposes.
 
-### 3.4.d Reset Operations
+### 3.6.d Reset Operations
 
 Reset Operations are operations that required the slot in the Chinese Door to be closed. This is typically something like remote firmware updating. Each implementation is responsible for initializing the system and proving The Chinese Room Group Automata Theorem.
 
-### 3.4.e Return Values
+### 3.6.e Return Values
 
 Return values just need an address of an Operation to send the return value too. Return values shall be written to the BOut that leads to the initiating Operation's BIn in an automated process. In the case that a different Operation's return address is needed Rooms may pass the return address of the as an input parameter as a kTKN type.
 
-## 3.5 Generic Handshake
+## 3.7 Generic Handshake
 
 @todo Change from IPv4 to UP IP Addressing
 
@@ -410,11 +410,11 @@ Return values just need an address of an Operation to send the return value too.
     * ☺└¿�☺B**☻�¿└**
 11. **host_a** and **host_b** are now connected.
 
-## 3.6 Authentication
+## 3.8 Authentication
 
 Authentication in Script shall be done using a sequence of Script Operations.
 
-## 3.7 Crabs Objects
+## 3.9 Crabs Objects
 
 ASCII Data Types kLST, kMAP, kDIC, kBOK, and Stacks and Arrays or ASCII Types 4 through 22 shall be created using Crabs.
 
@@ -426,12 +426,7 @@ ASCII Data Types kLST, kMAP, kDIC, kBOK, and Stacks and Arrays or ASCII Types 4 
   |                           dictionary of size 64KB bytes with a
   |                           maximum of 3 entries and pushes it
   |                           onto the stack. This Operation Push
-<<<<<<< HEAD
   v                           gets written to the new Expression. */
-=======
-  v                           gets written to the new Expression.
- v           v                    */
->>>>>>> 8aa74e7eb95d53324850b2fb8a195d79431287d2
 stuff =DIC4 65536 1 {
 /*  +--------------------------- This is a function with key "kUI2".
     |       +------------------- This is a 16-bit unsigned int.
@@ -483,19 +478,19 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
                    stuff things item3;
  ```
 
-## 3.8 Abnormal Behaviors
+## 3.10 Abnormal Behaviors
 
 Abnormal behavior may be recognized by sever methods. Abnormal behavior are expected to be in burst errors and occasional flipped bits. Script implementations shall utilize the [NIST](https://www.nist.gov/) guidelines.
 
-### 3.8.a Integrity of Escape Sequences
+### 3.10.a Integrity of Escape Sequences
 
 ESC must be checked for integrity before calling the operation if using an insecure transmission line or memory device.
 
-### 3.8.b Integrity of ASCII Objects
+### 3.10.b Integrity of ASCII Objects
 
 kLST, kMAP, kBOK, kDIC, Stacks, and Arrays may be used to detect abnormal behavior by checking data structure members are in bounds and all offsets, keys, and hashes are within specification.
 
-### 3.8.c Compromise of Group Automata
+### 3.10.c Compromise of Group Automata
 
 Compromised Rooms can be detected by monitoring.
 
@@ -509,51 +504,51 @@ Compromised Rooms can be detected by monitoring.
 
 It is out of the scope of Script to detect variables that are out of range for Operation arguments.
 
-### 3.7.d Handling Abnormal Behavior
+### 3.10.d Handling Abnormal Behavior
 
 Handling abnormal behavior is left up to the implementation. Implementation may display an error message.
 
-### 3.7.e Reporting Compromised Automata
+### 3.10.e Reporting Compromised Automata
 
 Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
-## 3.8 Quality of Service
+## 3.11 Quality of Service
 
 For all operations that return kNIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received.
 
-## 3.8.a Message Delivery Retry
+## 3.11.a Message Delivery Retry
 
 Each time a data transfer is initiated, a Book with a
 
-### 3.8.b Message Receipt
+### 3.11.b Message Receipt
 
 A Message may have attached to it a return address. If the message is marked as having a
 
-### 3.8.c Message Ordering
+### 3.11.c Message Ordering
 
 Message ordering is performed using a Library and ESC.
 
-### 3.8.d Observed Operations
+### 3.11.d Observed Operations
 
 Some Operations may be observed by a list of Observers. When an Operation is Observed, any time any of the operation is called, the Observer will report it's changed to the broker using an ESC.
 
-## 3.9 Profiles
+## 3.12 Profiles
 
 Profiles are used to group sets of security profiles into understandable categories. The official structure has not been set, but it is current **Low, Medium, High, and Vital Security Levels**.
 
-## 3.9.a Slave Profiles
+## 3.12.a Slave Profiles
 
 A slave device assumes that there is another Automaton or Automata performing the security role.
 
-## 3.10 Encryption
+## 3.13 Encryption
 
 Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
 
-## 3.11 Portals
+## 3.14 Portals
 
 A portal is a connection that connects two or more rooms. The following is a short list of some of the officially supported protocol transport layers. This is a living document that will be standardized many times thus do not expect this to be the only Portals; as that would be silly.
 
-## 3.11.a Configurations
+## 3.14.a Configurations
 
 #### Room-to-Room Portals
 
@@ -563,7 +558,7 @@ Room-to-Room (R2R) Portals are connections from one Chinese Room to another with
 
 Hallways connect multiple rooms. For each hallway, there exists a Slot that broadcasts messages to Slot in each Door.
 
-### 3.11.b Known Portal Types
+### 3.10.b Known Portal Types
 
 #### UART
 
@@ -593,7 +588,7 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
 
-## 3.12 Congestion Control Table
+## 3.15 Congestion Control Table
 
 The **Script Congestion Control Table** (**CCT**) is an array of 2^16 (65536) time slices of 15-bit integers per day offset from midnight. Each value represents the average load of the network from 0 through 32767. This value is then translated directly into the maximum length of a *ASCII Packet*. Endpoints may request a copy of the CCT using the *ENQ Operation*.
 
@@ -603,7 +598,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 
    current_sample = Sigma (0.85* previos_sample + 0.15 * current) / num_samples
 
-### 3.12.a. Memory Footprint
+### 3.15.a. Memory Footprint
 
 * *60 (seconds/minute) × 60 (minutes/hour) × 24 (hours/day)* = ***86400 (seconds/day)***
 * *(86400 seconds/day) / 2^16(samples/day* = ***1.318359375 (seconds/sample)***
@@ -612,16 +607,16 @@ Three years of data must be stored in order to detect annual cycles such as holi
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
 
-## 3.13 Conformance Targets
+## 3.16 Conformance Targets
 
 Script has two currently supported conformance targets: Automaton and Automata.
 
-### 3.13.a Automaton
+### 3.16.a Automaton
 
 The Target shall be certified to be a Script Automaton if the Target does not support Script^2.
 
-### 3.13.b Group Automata
+### 3.16.b Group Automata
 
 The Target shall be certified as a Group Automata if the Target supports Script^2.
 
-[<< Universal Addressing Specification](universal_addressing_specification_rfc.md) **|** [Beginning >>](script_specification_rfc.md)
+[<< Universal Addressing Specification](universal_addressing_specification_rfc.md) **|** [Beginning >>](readme.md)
