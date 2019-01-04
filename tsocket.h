@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tsocket.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -198,19 +198,23 @@ class TSocket {
   /* Default destructor does nothing. */
   TSocket() {}
 
-  /* The size in bytes. */
-  static constexpr Size SizeBytes() {
-    return 64;
-    //return (kSize_ <= sizeof(Size)) ? (Size)sizeof(Size) : kSize_;
-  }
+  /* The size of the Size type. */
+  static constexpr Size SizeSize () { return (Size)sizeof (Size); }
+
+  /* The min size in bytes. */
+  static constexpr Size SizeMin () { return SizeSize (); }
 
   /* The size in bytes. */
-  static constexpr SIW SizeBytesUnsigned () {
-    return (UIW)SizeBytes;
+  static constexpr Size SizeBytes() {
+    if (kSize_ <= SizeMin ()) return SizeMin ();
+    return kSize_;
   }
 
   /* The size in words rounded down. */
-  static constexpr Size SizeWords() { return kSize_ >> kWordBitCount; }
+  static constexpr UIW SizeWords() { 
+    UIW size_words = (UIW)(SizeBytes () / (Size)sizeof (UIW));
+    return size_words < 1 ? 1 : size_words;
+  }
 
   /* Returns the socket as a UIW*. */
   inline UIW* Words() { return socket; }
@@ -247,7 +251,7 @@ class TSocket {
   }
 
  private:
-  UIW socket[SizeBytesUnsigned ()];  //< The word-aligned socket.
+  UIW socket[SizeWords ()];  //< The word-aligned socket.
 };
 
 /* Syntactical sugar for reinterpret_cast using templates. */

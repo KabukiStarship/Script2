@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /tstrand.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
-@license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
@@ -284,13 +284,12 @@ class TStrand {
 
   /* Prints to the given  */
   void Print() {
-    /*
     _::Print("\nTStrand<CH");
     _::Print('0' + sizeof(Char));
     _::Print('>');
     obj_.Print();
     utf_.Print();
-    socket_.Print();*/
+    socket_.Print();
   }
 
  private:

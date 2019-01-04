@@ -5,7 +5,7 @@ SCRIPT Specification RFC
 
 There are 32 Automaton Standard Code for Information Interchange (ASCII) Data Types composed of 23 Plain-Old-Data and 8 object types composed of contiguous memory. Types are stored as bytes where the 5 LSb are used to store the type and the upper 3 bits are used to store either bit width of the size of the object, 8, 16, 32, or 64-bit, or to store the dimensions of a stack or multi-dimensional array. Implementations shall support types SVI, UVI, ADR, and STR and may support more types.
 
-## 2.1 Type Byte
+## 2.1 Type Table
 
 All ASCII Types can be represented as a single byte where the lower 5 bits are used to store the type, and the upper three bits are used to store if the type is an array.
 
@@ -58,6 +58,17 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |   ?   | Type of unknown size.|
 |   N   | Has pre-specified buffer of size N bytes.|
 | <=N   | Has pre-specified buffer of size N bytes but can use less than that.|
+
+## 2.1.c Abstract ASCII Types
+
+Abstract ASCII Types do not have a pre-defined size.
+
+| ID | Type |  Alt Name  | Width  | Description         |
+|:--:|:----:|:----------:|:------:|:--------------------|
+|    | SIN  |     int    |    0   | Signed integer of 16-bits or more, typically 32-bits. |
+|    | UIN  |    uint    |    0   | Unsigned integer of 16-bits or more, typically 32-bits. |
+|    | SIW  |  intptr_t  |    0   | Signed integer of the size of the host CPU's ALU. |
+|    | UIW  | uintptr_t  |    0   | Unsigned integer of the size of the host CPU's ALU. |
 
 ## 2.2 ASCII Factory
 
