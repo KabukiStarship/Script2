@@ -10,7 +10,7 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
 * ASCII C++ Style Guide is a modified version of the Google C++ Style Guide.
 
-## ASCII Data
+## ASCII Data and the ASCII Factory
 
 ASCII Data Types provide:
 
@@ -39,6 +39,8 @@ ASCII Data Types provide:
   - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
 * [Script2](https://github.com/kabuki-starship/script2)
   - *Primary repository of the SCRIPT Specification and Script2.*
+* [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit)
+  - *A cross-platform Modern Embedded-C++ toolkit for making intelligent connected technologies, plugins, games, servers, firmware, and art with Script2.*
 * [Kabuki Starship Website](https://kabuki-starship.github.io/)
   - *Official Kabuki Starship website. #WorkInProgress*
 
@@ -59,6 +61,8 @@ ASCII Data Types provide:
 ```C++
 BOL TestWarn(const CH1* function, const CH1* file, int line);
 ```
+
+**6.** Check out the various seam tests starting at `0_0_0`, which is reserved for Script2. For more information about Seam Trees, please see [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit).
 
 ## Author
 
