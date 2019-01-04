@@ -20,13 +20,13 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-UIT BsqParamNumber(const UIT* params, int param_number) {
+SI4 BsqParamNumber(const SI4* params, int param_number) {
   if (!params) return 0;
-  UIT num_params = *params++;
+  SI4 num_params = *params++;
   if (param_number > num_params) return kNIL;
   int i;
   for (i = 0; i < param_number; ++i) {
-    UIT value = params[i];
+    SI4 value = params[i];
     if (value == kSTR)
       ++param_number;
     else if (value > 31) {  // It's an array!
@@ -45,8 +45,8 @@ UIT BsqParamNumber(const UIT* params, int param_number) {
   return params[i];
 }
 
-UTF1& PrintBsq(UTF1& utf, const UIT* params) {
-  UIT num_params = *params++, i, type, value = 0;
+UTF1& PrintBsq(UTF1& utf, const SI4* params) {
+  SI4 num_params = *params++, i, type, value = 0;
 
   utf << "Param<";
   if (num_params > kParamsMax) {
@@ -106,7 +106,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
             break;
           }
           utf << "kUI1:[" << value << ": ";
-          for (UIT i = value; i != 0; --i) {
+          for (SI4 i = value; i != 0; --i) {
             value = *params++;
             utf << value << ", ";
           }
@@ -121,7 +121,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
             break;
           }
           utf << "kUI2:[" << value << ": ";
-          for (UIT i = value; i != 0; --i) {
+          for (SI4 i = value; i != 0; --i) {
             value = *params++;
             utf << value << ", ";
           }
@@ -136,7 +136,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
             break;
           }
           utf << "kUI4:[" << value << ": ";
-          for (UIT i = value; i != 0; --i) {
+          for (SI4 i = value; i != 0; --i) {
             value = *params++;
             utf << value << ", ";
           }
@@ -190,7 +190,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
           break;
         }
         utf << "kUI1:[" << value << ": ";
-        for (UIT i = value; i != 0; --i) {
+        for (SI4 i = value; i != 0; --i) {
           value = *params++;
           utf << value << ", ";
         }
@@ -205,7 +205,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
           break;
         }
         utf << "kUI2:[" << value << ": ";
-        for (UIT i = value; i != 0; --i) {
+        for (SI4 i = value; i != 0; --i) {
           value = *params++;
           utf << value << ", ";
         }
@@ -220,7 +220,7 @@ UTF1& PrintBsq(UTF1& utf, const UIT* params) {
           break;
         }
         utf << "kUI4:[" << value << ": ";
-        for (UIT i = value; i != 0; --i) {
+        for (SI4 i = value; i != 0; --i) {
           value = *params++;
           utf << value << ", ";
         }

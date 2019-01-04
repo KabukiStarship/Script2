@@ -93,7 +93,7 @@ using TMultimap8 = TMap<UI8, SI4, SI4>;
 
 /* The overhead per index for a multimap. */
 template <typename Size, typename Index, typename I>
-constexpr UIT MultimapOverheadPerIndex() {
+constexpr SI4 MultimapOverheadPerIndex() {
   return sizeof(2 * sizeof(I) + sizeof(Index) + sizeof(Size) + 3);
 };
 
@@ -692,7 +692,7 @@ BOL MultimapRetain(TMap<Index, I>* multimap) {
 /* Creates a multimap from dynamic memory. */
 template <typename Size, typename Index, typename I>
 TMap<Index, I>* MultimapCreate(I buffered_indexes, Size table_size, Size size) {
-  TMap<Index, I>* multimap = TNew<TMap, UIT>();
+  TMap<Index, I>* multimap = TNew<TMap, SI4>();
   return multimap;
 }
 
@@ -710,7 +710,7 @@ class Multimap {
   /* Deletes the multimap and it's dynamic memory. */
   ~Multimap() { delete begin; }
 
-  constexpr UIT MultimapOverheadPerIndex() {
+  constexpr SI4 MultimapOverheadPerIndex() {
     return MultimapOverheadPerIndex<Index, I>();
   };
 

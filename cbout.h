@@ -34,9 +34,9 @@ typedef enum BOutStates {
 
 /* B-Output ring socket socket. */
 struct API BOut {
-  UIT size;            //< Size of the B-Output.
-  volatile UIT begin;  //< Starting index of the ring-socket data.
-  UIT stop,            //< Stopping index of the ring-socket data.
+  SI4 size;            //< Size of the B-Output.
+  volatile SI4 begin;  //< Starting index of the ring-socket data.
+  SI4 stop,            //< Stopping index of the ring-socket data.
       read;            //< Address that the BOut device is reading from.
 };
 
@@ -51,14 +51,14 @@ API const CH1** BOutStateStrings();
 #endif
 
 /* Initializes the B-Output socket with the given socket size. */
-API BOut* BOutInit(UIW* socket, UIT size);
+API BOut* BOutInit(UIW* socket, SI4 size);
 
 /* Calculates the space left in the given ring socket.
     @param  bout The B-Output socket. */
-API UIT BOutSpace(BOut* bout);
+API SI4 BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-API UIT BOutBufferLength(BOut* bout);
+API SI4 BOutBufferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
 API CH1* BOutEndAddress(BOut* bout);
@@ -71,7 +71,7 @@ API int BOutStreamByte(BOut* bout);
     @param bout   The B-Output socket to write to.
     @param params The escape sequence to write.
     @param args   The array of pointers to the stuff to write. */
-API const Op* BOutWrite(BOut* bout, const UIT* params, void** args);
+API const Op* BOutWrite(BOut* bout, const SI4* params, void** args);
 
 /* Sends a connection message to the given address. */
 API const Op* BOutConnect(BOut* bout, const CH1* address);

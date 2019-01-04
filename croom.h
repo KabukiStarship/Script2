@@ -21,19 +21,15 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* A list of Requests that can be sent from Slot<UIT, TSize> to
-    Slot<UIT, TSize>.  */
+/* A list of Requests that can be sent from Slot<SI4, TSize> to
+    Slot<SI4, TSize>.  */
 typedef enum Requests {
-  OpenDoorRequest = 0,
-  CloseDoorRequest,
-  ConnectionRequest,
-  DisconnectRequest,
-  InvalidRequest,
+  kOpenDoorRequest = 0,
+  kCloseDoorRequest,
+  kConnectionRequest,
+  kDisconnectRequest,
+  kInvalidRequest,
 } Request;
-
-enum {
-  NumRequests = 2,  //< The number_ of Requests.
-};
 
 /* Returns an array of pointers to strings that describe the program states.
  */
@@ -193,7 +189,7 @@ class Room : public Operand {
   /* Removes the given Wall by index.
   @return False upon failure.  */
   BOL RemoveWall(int_t wall_number);
-  
+
   /* Gets the entire Room size, including dynamic memory, in bytes. */
   UIW GetSizeBytes();
 
@@ -231,7 +227,7 @@ class Room : public Operand {
       @return Returns nil upon success and an error string_ upon failure. */
   virtual CH1 CommandNext();
 
-  /* Script expressions. */
+  /* Script2 operations. */
   virtual const Op* Star(CHW index, CCrabs* crabs);
 
 #if USING_CRABS_TEXT
@@ -243,14 +239,14 @@ class Room : public Operand {
   int state_count_,                    //< Number of FSM states.
       state_;                          //< Room state.
   const CH1* name_;                    //< Room Name.
-  TCArray<Wall*, UIT, int_t>* walls_;  //< Walls in the Room.
+  TCArray<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
   CCrabs* expr_;                       //< Current CCrabs being executed.
                                        //< DC1: this.
   Door* this_;                         //< DC2: The Door to this room.
   Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
       *device_,                        //< DC4: the current device control.
-      *devices_;                      //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];       //< Room Floor socket.
+      *devices_;               //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];  //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

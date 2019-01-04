@@ -91,7 +91,7 @@ void Room::ClearLog() {}
 void Room::ProcessLog() {}
 
 void Room::PrintErrors(BOut* bout) {
-  // UIT errorHeader[] = { 0 };
+  // SI4 errorHeader[] = { 0 };
   // return a.prints (errorHeader);
 }
 
@@ -179,7 +179,7 @@ int_t Room::WallCount() { return walls_->count; }
 Wall* Room::GetWall(int_t wall_number) {
   if (wall_number < 0) return nullptr;
   if (wall_number >= walls_->count) return nullptr;
-  return TStackGet<Wall*, UIT, int_t>(walls_, wall_number);
+  return TStackGet<Wall*, SI4, int_t>(walls_, wall_number);
 }
 
 Wall* Room::AddWall(Wall* new_wall) {
@@ -190,13 +190,13 @@ Wall* Room::AddWall(Wall* new_wall) {
 }
 
 BOL Room::RemoveWall(int_t wall_number) {
-  return TStackRemove<Wall*, UIT, int_t>(walls_, wall_number);
+  return TStackRemove<Wall*, SI4, int_t>(walls_, wall_number);
 }
 
 UIW Room::GetSizeBytes() {
   UIW count = kRoomFloorSize;
   for (int_t i = 0; i < walls_->count; ++i) {
-    count += TStackGet<Wall*, UIT, int_t>(walls_, i)->GetSizeBytes();
+    count += TStackGet<Wall*, SI4, int_t>(walls_, i)->GetSizeBytes();
   }
   // @todo Add all memory we used in bytes here.
   return count;

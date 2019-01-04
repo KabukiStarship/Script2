@@ -38,7 +38,7 @@ TypeValue::TypeValue(SIN type, const void* value) : type(type), value(value) {
   // Nothing to do here! (:-)-+=<
 }
 
-UIT TypeFixedSize(UIT type) {
+SI4 TypeFixedSize(SI4 type) {
   static const SI1 kWidths[] = {
       0,   //< kNIL: 0
       1,   //< kSI1: 1
@@ -61,7 +61,7 @@ UIT TypeFixedSize(UIT type) {
   };
   SIN type_upper_bits = type >> 3;
   type &= 0x1f;
-  if (type == kUIX) return ((UIT)2) << type_upper_bits;
+  if (type == kUIX) return ((SI4)2) << type_upper_bits;
   if (type > kOBJ) return -1;
   return kWidths[type];
 }
@@ -70,20 +70,20 @@ const CH1** TypeStrings() { return TTypeStrings<CH1>(); }
 
 const CH1* TypeString(SIN type) { return TypeStrings()[type & 0x1f]; }
 
-const CH1* TypeString(UIT type) { return TypeString((UI1)type); }
+const CH1* TypeString(SI4 type) { return TypeString((UI1)type); }
 
 UI1 TypeMask(UI1 value) { return value & 0x1f; }
 
-BOL TypeIsArray(UIT type) { return type >= kTypeCount; }
+BOL TypeIsArray(SI4 type) { return type >= kTypeCount; }
 
-BOL TypeIsSet(UIT type) { return type >= kTypeCount; }
+BOL TypeIsSet(SI4 type) { return type >= kTypeCount; }
 
 void* TypeAlign(SIN type, void* value) {
   ASSERT(value);
   if (type == 0) return nullptr;
   if (!TypeIsValid(type)) return nullptr;
 
-  UIT size = TypeFixedSize(type);
+  SI4 size = TypeFixedSize(type);
   if (type <= kUI1) return value;
   SIN* value_ptr = reinterpret_cast<SIN*>(value);
 #if WORD_SIZE == 2

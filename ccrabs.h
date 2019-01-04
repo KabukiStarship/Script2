@@ -92,7 +92,7 @@ struct CCrabs {
     kMinBufferSize = 2,  //< Min socket size.
   };
 
-  UIT size,            //< Offset to the BOut slot.
+  SI4 size,            //< Offset to the BOut slot.
       header_size,     //< The total size of the header.
       stack_count,     //< Stack Operand count.
       stack_size,      //< Stack Operand socket size.
@@ -109,7 +109,7 @@ struct CCrabs {
   UI4 timeout_us;      //< Timeout time in microseconds.
   TME last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
-  const UIT *header,   //< Pointer to the header being verified.
+  const SI4 *header,   //< Pointer to the header being verified.
       *header_start;   //< Start of the header being verified.
   Operand *operand,    //< Current Script Operand.
       *root;           //< Root-level scope Operand.
@@ -136,7 +136,7 @@ API BOut* CrabsBOut(CCrabs* crabs);
 @param root The root-scope device.
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-API CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_count,
+API CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
                       Operand* root, UIW* unpacked_buffer, UIW unpacked_size);
 
 /* Gets the base address of the device stack. */
@@ -182,10 +182,10 @@ API const Op* CrabsUnpack(CCrabs* crabs);  // , Portal* io);
 API BOL CrabsContains(CCrabs* crabs, void* address);
 
 /* Pushes a header onto the scan stack.*/
-API const Op* CrabsScanHeader(CCrabs* crabs, const UIT* header);
+API const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header);
 
 /* Gets the base address of the header stack. */
-API const UIT* CrabsHeaderStack(CCrabs* crabs);
+API const SI4* CrabsHeaderStack(CCrabs* crabs);
 
 /* Closes the current crabs and cues it for execution. */
 API void CrabsClose(CCrabs* crabs);
@@ -206,7 +206,7 @@ API void CrabsAckBack(CCrabs* crabs, const CH1* address = "");
 API const Op* CrabsForceDisconnect(CCrabs* crabs, Error error);
 
 /* Reads the CCrabs args from the crabs->slot.
-inline const Op* CrabsArgs (CCrabs* crabs, const UIT* params, void** args) {
+inline const Op* CrabsArgs (CCrabs* crabs, const SI4* params, void** args) {
    const CH1* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
                                    params, args);
    if (!cursor) {
@@ -214,7 +214,7 @@ inline const Op* CrabsArgs (CCrabs* crabs, const UIT* params, void** args) {
 }*/
 
 /* Pops the args off the CCrabs Args Stack. */
-inline const Op* CrabsArgs(CCrabs* crabs, const UIT* params, void** args) {
+inline const Op* CrabsArgs(CCrabs* crabs, const SI4* params, void** args) {
   ASSERT(params);
   ASSERT(args);
   Slot slot(CrabsBIn(crabs));
@@ -241,7 +241,7 @@ inline const Op* CrabsResult(CCrabs* crabs, const Op& op, void** args) {
 @param  crabs The resulting expression.
 @param  op   The Operation with result B-Sequence header.
 @param  args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(CCrabs* crabs, const UIT* params, void** args) {
+inline const Op* CrabsResult(CCrabs* crabs, const SI4* params, void** args) {
   if (!params) {
     return nullptr;
   }

@@ -34,7 +34,8 @@
     <ClInclude Include="0_0_0.12_book.h" />
     <ClInclude Include="0_0_0.13_dictionary.h" />
     <ClInclude Include="0_0_0.14_expr.h" />
-    <ClInclude Include="0_0_0.15_room.h" />
+    <ClInclude Include="0_0_0.15_door.h" />
+    <ClInclude Include="0_0_0.16_room_and_wall.h" />
     <ClInclude Include="0_0_0.script2.h" />
     <ClInclude Include="caddress.h" />
     <ClInclude Include="cargs.h" />
@@ -48,7 +49,7 @@
     <ClInclude Include="cbuffer.h" />
     <ClInclude Include="cclock.h" />
     <ClInclude Include="cconsole.h" />
-    <ClInclude Include="cdoor.h" />
+    <ClInclude Include="tdoor.h" />
     <ClInclude Include="cerror.h" />
     <ClInclude Include="cevent.h" />
     <ClInclude Include="ccrabs.h" />
@@ -101,7 +102,7 @@
     <ClInclude Include="tstr.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="0_0_0.15_seam.s2" />
+    <None Include="0_0_0.16_seam.s2" />
     <None Include="0_0_0.debug.inl" />
     <None Include="0_0_0.footer.inl" />
     <None Include="0_0_0.release.inl" />
@@ -124,7 +125,6 @@
     <ClCompile Include="script2_bsq.cc" />
     <ClCompile Include="script2_clock.cc" />
     <ClCompile Include="script2_console.cc" />
-    <ClCompile Include="script2_door.cc" />
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_floor.cc" />

@@ -43,7 +43,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error) {
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header) {
+inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header) {
   PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
 }
@@ -55,7 +55,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header) {
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
+inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
                             UI1 offset) {
   PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
@@ -68,7 +68,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const UIT* header,
+inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
                             UI1 offset, CH1* address) {
   PRINTF("\nCrabs %s Error!", ErrorString(error))
   return reinterpret_cast<const Op*>(1);
@@ -99,7 +99,7 @@ BOut* CrabsBOut(CCrabs* crabs) {
   return reinterpret_cast<BOut*>(CrabsBOutAddress(crabs));
 }
 
-CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_size, Operand* root,
+CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
                   UIW* unpacked_buffer, UIW unpacked_size) {
   if (!socket) {
     return nullptr;
@@ -121,9 +121,9 @@ CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_size, Operand* root,
 
   CCrabs* crabs = reinterpret_cast<CCrabs*>(socket);
 
-  UIT total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
+  SI4 total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
   // Calculate the size of the Slot and Stack.
-  UIT size = (buffer_size - sizeof(CCrabs) - total_stack_size + 1) >> 1;
+  SI4 size = (buffer_size - sizeof(CCrabs) - total_stack_size + 1) >> 1;
 
   //< >>1 to divide by 2
   crabs->bout_state = kBOutStateDisconnected;
@@ -138,7 +138,7 @@ CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_size, Operand* root,
             << " buffer_size:" << buffer_size << " size:" << size;
 #endif
     crabs->bytes_left = 0;
-    //UIT offset    = sizeof (CCrabs) + total_stack_size - sizeof (void*);
+    //SI4 offset    = sizeof (CCrabs) + total_stack_size - sizeof (void*);
     //bin_offset       = sizeof (BIn) + total_stack_size + offset;
     crabs->header_size = sizeof (CCrabs) + 2 * sizeof (void*) * stack_size;
     crabs->hash = kPrime2Unsigned;
@@ -147,7 +147,7 @@ CCrabs* CrabsInit(UIW* socket, UIT buffer_size, UIT stack_size, Operand* root,
     crabs->header_start = nullptr;
     crabs->root = root;
     UIW* base_ptr = reinterpret_cast<UIW*> (crabs) + sizeof (CCrabs) +
-                          stack_size * sizeof (UIT);
+                          stack_size * sizeof (SI4);
     crabs->slot.Set (base_ptr, unpacked_size);
 #if DEBUG_CRABS_EXPR
     PRINTF ("crabs->op:" << OutHex (crabs->operand);
@@ -220,7 +220,7 @@ const Op* Push(CCrabs* crabs, Operand* operand) {
     return CrabsError(crabs, kErrorInvalidOperand);
   }
   PRINTF("\nPushing %s onto the stack", operand->Star('?', nullptr)->name);
-  UIT stack_count = crabs->stack_count;
+  SI4 stack_count = crabs->stack_count;
   if (stack_count >= crabs->stack_size) {
     return CrabsError(crabs, kErrorStackOverflow);
   }
@@ -234,7 +234,7 @@ const Op* Push(CCrabs* crabs, Operand* operand) {
 }
 
 const Op* Pop(CCrabs* crabs) {
-  UIT stack_count = crabs->stack_count;
+  SI4 stack_count = crabs->stack_count;
   if (stack_count == 0) {  // This should not happen.
     return CrabsError(crabs, kErrorInvalidOperand);
   }
@@ -260,7 +260,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
     return CrabsError(crabs, kErrorImplementation);
   }
 
-  UIT size,          //< Size of the ring socket.
+  SI4 size,          //< Size of the ring socket.
       space,         //< Space left in the right socket.
       length,        //< Length of the ring socket data.
       type,          //< Current type.
@@ -285,7 +285,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           *slot_start = crabs->slot.begin,  //< Write cursor,
               *slot_stop = crabs->slot.stop, *slot_end = crabs->slot.stop;
   const Op* result;  //< Result of the Scan.
-  const UIT* header = crabs->header;
+  const SI4* header = crabs->header;
 
   //< Header of the current Op being verified.
   op = nullptr;
@@ -312,7 +312,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
   bin_end = bin_begin + size;
   bin_start = bin_begin + bin->begin;
   bin_stop = bin_begin + bin->stop;
-  space = (UIT)SlotSpace(bin_start, bin_stop, size);
+  space = (SI4)SlotSpace(bin_start, bin_stop, size);
   length = size - space;
   PRINTF("\n    Scanning CCrabs:0x%p with length:%i", crabs, length)
   for (; length != 0; --length) {
@@ -372,7 +372,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           // return crabs->result;
           return CrabsForceDisconnect(crabs, kErrorInvalidOperand);
         }
-        const UIT* params = op->in;
+        const SI4* params = op->in;
         UIW num_ops = reinterpret_cast<UIW>(params);
         if (num_ops > kParamsMax) {
           // It's an Op.
@@ -549,7 +549,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
       case kBInStatePackedUtf8: {
         if (bytes_left == 0) {
           CrabsError(crabs, kErrorTextOverflow,
-                     const_cast<const UIT*>(crabs->header), 0, bin_start);
+                     const_cast<const SI4*>(crabs->header), 0, bin_start);
           break;
         }
         hash = Hash16(b, hash);
@@ -621,7 +621,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           // add 32 to the first UI1.
 
           if ((b >> 7) != 1) {
-            const UIT* header = const_cast<const UIT*>(crabs->header);
+            const SI4* header = const_cast<const SI4*>(crabs->header);
 
             CrabsEnterState(crabs, kBInStateHandlingError);
             return CrabsError(crabs, kErrorVarintOverflow, header, 0,
@@ -661,7 +661,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           bin_state = kBInStatePackedPod;
           break;
         }
-        bytes_left &= ((UIT)b) << bytes_shift;
+        bytes_left &= ((SI4)b) << bytes_shift;
         shift_bits += 8;
         break;
       }
@@ -766,7 +766,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
   //
   crabs->hash = hash;
   crabs->bytes_left = bytes_left;
-  bin->begin = (UIT)Size(bin_begin, bin_start);
+  bin->begin = (SI4)Size(bin_begin, bin_start);
   return nullptr;
 }
 
@@ -776,7 +776,7 @@ BOL CrabsContains(CCrabs* crabs, void* address) {
   return true;
 }
 
-const Op* CrabsScanHeader(CCrabs* crabs, const UIT* header) {
+const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header) {
   if (crabs->stack_count >= crabs->stack_size) {
     // Handle overflow cleanup:
     return CrabsError(crabs, kErrorStackOverflow, header);
@@ -785,8 +785,8 @@ const Op* CrabsScanHeader(CCrabs* crabs, const UIT* header) {
   return 0;
 }
 
-const UIT* CrabsHeaderStack(CCrabs* crabs) {
-  return reinterpret_cast<const UIT*>(reinterpret_cast<CH1*>(crabs) +
+const SI4* CrabsHeaderStack(CCrabs* crabs) {
+  return reinterpret_cast<const SI4*>(reinterpret_cast<CH1*>(crabs) +
                                       sizeof(CCrabs) + crabs->stack_count);
 }
 
@@ -814,7 +814,7 @@ void CrabsClear(CCrabs* crabs) {
   CH1 *begin = BInBegin(bin), *stop = begin + bin->size,
        *begin = begin + bin->begin, *stop = begin + bin->stop;
 
-  // UIT buffer_space = SlotSpace (begin, stop, size);
+  // SI4 buffer_space = SlotSpace (begin, stop, size);
 
   if (begin == stop) return;  //< Nothing to do.
   if (begin > stop) {
@@ -823,8 +823,8 @@ void CrabsClear(CCrabs* crabs) {
     return;
   }
   SocketFill(begin, stop - begin);
-  bin->begin = (UIT)Size(crabs, begin);
-  bin->stop = (UIT)Size(crabs, begin + 1);
+  bin->begin = (SI4)Size(crabs, begin);
+  bin->stop = (SI4)Size(crabs, begin + 1);
 }
 
 void CrabsRingBell(CCrabs* crabs, const CH1* address) {
@@ -845,7 +845,7 @@ const Op* CrabsQuery(CCrabs* crabs, const Op& op) {
     void* args[2];
     UIW num_ops = (UIW)op.in, first_op = (UIW)op.out;
     // @todo Write params to crabs!
-    static const UIT* header = Params<5, kSTR, kOpNameLengthMax, UVI, UVI, kSTR,
+    static const SI4* header = Params<5, kSTR, kOpNameLengthMax, UVI, UVI, kSTR,
                                       kOpDescriptionLengthMax>();
     return BOutWrite(CrabsBOut(crabs), header,
                      Args(args, op.name, &num_ops, &first_op, op.description));
@@ -857,16 +857,16 @@ CH1* CrabsBaseAddress(BIn* bin) {
   return reinterpret_cast<CH1*>(bin) + sizeof(BIn);
 }
 
-UIT CrabsSpace(BIn* bin) {
+SI4 CrabsSpace(BIn* bin) {
   if (!bin) {
     return ~0;
   }
 
   CH1* begin = CrabsBaseAddress(bin);
-  return (UIT)SlotSpace(begin + bin->begin, begin + bin->stop, bin->size);
+  return (SI4)SlotSpace(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
-UIW* CrabsBaseAddress(void* ptr, UIT rx_tx_offset) {
+UIW* CrabsBaseAddress(void* ptr, SI4 rx_tx_offset) {
   enum {
     kSlotHeaderSize = sizeof(BIn) + sizeof(UIW) - sizeof(BIn) % sizeof(UIW),
     //< Offset to the begin of the ring socket.
@@ -897,7 +897,7 @@ const Op* CrabsQuery(CCrabs* crabs, const Op* op) {
 UTF1& PrintCrabsStack(UTF1& utf, CCrabs* crabs) {
   ASSERT(crabs);
 
-  UIT i, stack_count;
+  SI4 i, stack_count;
   const Op* op;
   Operand* operand;
   Operand** stack = CrabsStack(crabs);

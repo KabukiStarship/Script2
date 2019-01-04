@@ -40,7 +40,7 @@ UTF1& Print(UTF1& utf, const Op* op) {
 #endif
 /*
 #if USING_CRABS_TEXT
-Op OpInit (UIW* socket, UIT buffer_size) {
+Op OpInit (UIW* socket, SI4 buffer_size) {
     BOut* bout = BOutInit (socket, buffer_size);
     Op log;
     log.bout = bout;

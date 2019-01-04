@@ -116,7 +116,7 @@ Table<Size, Index>* TableInit(UIW* socket, Index count_max, Size size) {
   ASSERT(socket)
   Table* table = reinterpret_cast<Table<Size, Index>*>(socket);
 
-  UIT min_required_size =
+  SI4 min_required_size =
       sizeof(Table<Size, Index>) + count_max * (kOverheadPerIndex + 2);
   if (set_size < min_required_size) return nullptr;
 

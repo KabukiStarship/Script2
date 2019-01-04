@@ -89,19 +89,19 @@ API const CH1** TypeStrings();
 API inline const CH1* TypeString(SIN type);
 
 /* Returns the name of the given type. */
-API inline const CH1* TypeString(UIT type);
+API inline const CH1* TypeString(SI4 type);
 
 /* Masks off the lower 5-LSb to get the type. */
 API inline UI1 TypeMask(UI1 value);
 
 /* Returns true if the given type is an Array type. */
-API inline BOL TypeIsArray(UIT type);
+API inline BOL TypeIsArray(SI4 type);
 
 /* Returns true if the given type is a kBOK type. */
-API inline BOL TypeIsSet(UIT type);
+API inline BOL TypeIsSet(SI4 type);
 
 /* Returns the size or max size of the given type. */
-API UIT TypeFixedSize(UIT type);
+API SI4 TypeFixedSize(SI4 type);
 
 /* Gets the next address that a data type may be stored at. */
 API void* TypeAlign(SIN type, void* value);

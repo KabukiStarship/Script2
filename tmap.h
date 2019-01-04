@@ -138,7 +138,7 @@ struct TMap {
 };
 
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-constexpr UIT MapOverheadPerIndex() {
+constexpr SI4 MapOverheadPerIndex() {
   return sizeof(2 * sizeof(Index) + sizeof(Size) + sizeof(Size) + 3);
 };
 

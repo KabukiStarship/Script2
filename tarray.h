@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_console.cc
+@file    /tarray.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__11
-#ifndef INCLUDED_SCRIPTARRAY
-#define INCLUDED_SCRIPTARRAY
+#if SEAM >= _0_0_0__07
+#ifndef INCLUDED_SCRIPT2_ARRAY
+#define INCLUDED_SCRIPT2_ARRAY
 
 #include "tstack.h"
 
@@ -26,12 +26,12 @@ namespace _ {
 ASCII Array uses the same data structure as the ASCII Stack, the
 difference being that the size_array of the Stack is set to 0 for the Stack and
 the Array has a packed multi-dimensional array after the stack of dimensions. */
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 struct TCArray {
   TCStack<T, Size, Index> stack;
 };
 
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 constexpr Index ArrayCountUpperLimit(Index dimension_count,
                                      Index element_count) {
   Size header_size =
@@ -41,7 +41,7 @@ constexpr Index ArrayCountUpperLimit(Index dimension_count,
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 constexpr Index ArrayElementCount(const Index* dimensions) {
   ASSERT(dimensions);
   Index dimension_count = *dimensions++, element_count = *dimensions++;
@@ -57,7 +57,7 @@ constexpr Index ArrayElementCount(const Index* dimensions) {
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 constexpr Size ArraySize(const Index* dimensions) {
   Index dimension_count = *dimensions++, element_count = *dimensions++;
   Size header_size = sizeof(TCStack<T, Size, Index>);
@@ -72,8 +72,8 @@ constexpr Size ArraySize(const Index* dimensions) {
 }
 
 /* Initializes an stack of n elements of the given type.
-    @param socket An stack of bytes large enough to fit the stack. */
-template <typename T = SIW, typename Size = uint, typename Index = int>
+@param socket An stack of bytes large enough to fit the stack. */
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
   ASSERT(dimensions);
   Index dimension_count = *dimension;
@@ -90,13 +90,13 @@ TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
   return stack;
 }
 
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 Index ArrayElementCountMax() {
   return (UnsignedMax<Size>() - (Size)sizeof(TCStack<T, Size, Index>)) /
          sizeof(T);
 }
 
-template <typename T = SIW, typename Size = uint, typename Index = int>
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
   ASSERT(dimensions);
   const Index* begin = dimensions;
@@ -106,35 +106,34 @@ TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
 }
 
 /* Gets the address of the packed array.
-    @param ary ASCII Array data structure..
-    @return Pointer to the first element in the array. */
-template <typename T, typename Size = uint, typename Index = int>
+@param ary ASCII Array data structure.
+@return Pointer to the first element in the array. */
+template <typename T, typename Size = SI4, typename Index = int>
 T* ArrayElements(TCStack<T, Size, Index>* ary) {
   CH1* elements = reinterpret_cast<CH1*>(ary) + ary->size_stack;
   return reinterpret_cast<T*>(elements);
 }
 
 /* Gets the address of the packed Index dimensions.
-    @param ary ASCII Array data structure..
-    @return Pointer to the first element in the array. */
-template <typename T, typename Size = uint, typename Index = int>
+@param ary ASCII Array data structure.
+@return Pointer to the first element in the array. */
+template <typename T, typename Size = SI4, typename Index = int>
 Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
-  CH1* elements =
-      reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
+  CH1* elements = reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
   return reinterpret_cast<Index*>(elements);
 }
 
 /* Gets the stop address of the packed Index dimensions.
-    @param ary ASCII Array data structure..
-    @return Pointer to the first element in the array. */
-template <typename T, typename Size = uint, typename Index = int>
+@param ary ASCII Array data structure.
+@return Pointer to the first element in the array. */
+template <typename T, typename Size = SI4, typename Index = int>
 Index* ArrayDimensionsEnd(TCStack<T, Size, Index>* ary) {
   ASSERT(ary);
   return ArrayDimensions<T, Size, Index>(ary) + ary->count - 1;
 }
 
 /* Prints the TCArray to the Utf. */
-template <typename T = SIW, typename Size = uint, typename Index = int,
+template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
 TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
   ASSERT(ary);
@@ -174,14 +173,15 @@ inline const int* Dimensions() {
 }
 
 /* A multi-dimensional array that uses dynamic memory that can auto-grow.
-    An ASCII Stack struct is identical to an Array
 
-    @todo This is an older data structure that needs to be replace this with
-    Array.
-    This class is used to save a little bit of ROM space over the Array.
-    To use this class with anything other than POD types the class T must have
-    a overloaded operator= and operator==. */
-template <typename T = SIW, typename Size = uint, typename Index = int>
+An ASCII Stack struct is identical to an Array
+
+@todo This is an older data structure that needs to be replace this with
+Array.
+This class is used to save a little bit of ROM space over the Array.
+To use this class with anything other than POD types the class T must have
+a overloaded operator= and operator==. */
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 class TArray {
  public:
   /* Initializes an array of n elements of the given type.
@@ -189,8 +189,8 @@ class TArray {
   TArray(Index demension_count = 1) : begin(ArrayNew<T, Size, Index>(1)) {}
 
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number_ of elements in the array socket. */
-  Array(const Array& other)
+  @param max_elements The max number_ of elements in the array socket. */
+  TArray(const Array& other)
       : size_array(other.size_array),
         size_stack(other.size_stack),
         count_max(other.count_max),
@@ -202,13 +202,13 @@ class TArray {
   }
 
   /* Deletes the dynamically allocated Array. */
-  ~Array() { delete[] begin; }
+  ~TArray() { delete[] begin; }
 
   /* Clones the other object; up-sizing the socket only if required. */
   void Clone(Array<T, Size, Index>& other) {}
 
   /* Gets the number_ of dimensions. */
-  Index GetDimensionCount() { return stack->count; }
+  Index DimensionCount() { return stack->count; }
 
   /* Gets the dimensions array. */
   T* Dimension() { return TStackStart<T, Size, Index>(stack); }
@@ -227,23 +227,24 @@ class TArray {
   }
 
  private:
-  UIW* begin;  //< Dynamically word-aligned socket.
-};             //< class Array
+  UIW* begin;             //< OBJ base address.
+  AsciiFactory factory_;  //< AsciiFactory.
+};
 }  // namespace _
 
-template <typename T = SIW, typename Size = uint, typename Index = int,
+template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
                                  _::TCArray<T, Size, Index>* stack) {
   return _::PrintArray<T, Size, Index>(printer, stack);
 }
 
-template <typename T = SIW, typename Size = uint, typename Index = int,
+template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
 inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
                                  _::TCArray<T, Size, Index>& stack) {
   return _::PrintArray<T, Size, Index>(printer, stack);
 }
 
-#endif  //< INCLUDED_SCRIPTARRAY
-#endif  //< #if SEAM >= _0_0_0__11
+#endif  //< INCLUDED_SCRIPT2_ARRAY
+#endif  //< #if SEAM >= _0_0_0__07
