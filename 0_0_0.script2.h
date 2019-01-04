@@ -36,27 +36,36 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= _0_0_0__07
 #include "0_0_0.07_array.h"
 #endif
-#if SEAM >= _0_0_0__11
+#if SEAM >= _0_0_0__08
 #include "0_0_0.08_loom.h"
 #endif
-#if SEAM >= _0_0_0__10
+#if SEAM >= _0_0_0__09
 #include "0_0_0.09_table.h"
 #endif
-#if SEAM >= _0_0_0__11
+#if SEAM >= _0_0_0__10
 #include "0_0_0.10_list.h"
 #endif
-#if SEAM >= _0_0_0__12
+#if SEAM >= _0_0_0__11
 #include "0_0_0.11_map.h"
 #endif
-#if SEAM >= _0_0_0__13
+#if SEAM >= _0_0_0__12
 #include "0_0_0.12_book.h"
 #endif
-#if SEAM >= _0_0_0__14
+#if SEAM >= _0_0_0__13
 #include "0_0_0.14_dictionary.h"
+#endif
+#if SEAM >= _0_0_0__14
+#include "0_0_0.14_expr.h"
+#endif
+#if SEAM >= _0_0_0__15
+#include "0_0_0.15_door.h"
+#endif
+#if SEAM >= _0_0_0__16
+#include "0_0_0.16_room_and_wall.h"
 #endif
 
 namespace _ {
-static const CH1* _0_0_0_F2(CH1* seam_log, CH1* seam_end, const CH1* args) {
+static const CH1* _0_0_0_Script2(CH1* seam_log, CH1* seam_end, const CH1* args) {
   return TTestTree<_0_0_0__00_RNG
 
 #if SEAM >= _0_0_0__01
@@ -113,7 +122,15 @@ static const CH1* _0_0_0_F2(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= _0_0_0__14
                    ,
-                   _0_0_0__14_Room
+                   _0_0_0__14_Expr
+#endif
+#if SEAM >= _0_0_0__15
+    ,
+    _0_0_0__15_Door
+#endif
+#if SEAM >= _0_0_0__16
+    ,
+    _0_0_0__16_Room
 #endif
                    >(seam_log, seam_end, args);
 }

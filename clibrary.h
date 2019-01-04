@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 #if USING_CRABS_TEXT
-template <typename TIndex, typename TKey, typename TData, UIT MaxStackHeight>
+template <typename TIndex, typename TKey, typename TData, SI4 MaxStackHeight>
 class Library : public Operand {
  public:
   /* Creates an empty automata. */
@@ -37,16 +37,16 @@ class Library : public Operand {
   BOL HasHashTable() { return collisions_size_ != 0; }
 
   /* Gets the number_ of keys in the current scope. */
-  UIT GetBagType() { return 0; }
+  SI4 GetBagType() { return 0; }
 
   /* Gets the number_ of keys in the current scope. */
-  UIT GetNumKeys() { return num_members_; }
+  SI4 GetNumKeys() { return num_members_; }
 
   /* Gets the size of the header in bytes. */
-  UIT GetHeaderSize() { return header_size_; }
+  SI4 GetHeaderSize() { return header_size_; }
 
   /* Gets the data size in bytes. */
-  UIT GetDataSize() { return data_size_; }
+  SI4 GetDataSize() { return data_size_; }
 
   /* Attempts to add the Page data into the CObject at the given BaseAddress.
       @return Returns nil upon success and an error CH1 upon failure. */
@@ -184,7 +184,7 @@ class Library : public Operand {
   int reserved;        //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
-  UIT index_,          //< Index of the currently selected bag.
+  SI4 index_,          //< Index of the currently selected bag.
       height_,         //< Number of bags on the stack.
       num_libraries_;  //< Number of libraries.
   UI1 type_;           //< Current type of bag.

@@ -206,22 +206,22 @@ typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
-typedef unsigned CH1 UI1;
+//typedef unsigned CH1 UI1;
 typedef unsigned int uint;
 
 typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
 typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
 
-typedef UI1 SIN;  //< ASCII Data Type UI1.
+typedef UI4 SIN;  //< ASCII Data Type UI1.
 
 #if MAX_NUM_SLOTS <= 255
-typedef UI1 slot_t;
+typedef UI1 SIN;
 enum { kMaxNumSlots = 0xff };
 #elif MAX_NUM_SLOTS <= 65535
-typedef UI2 slot_t;
+typedef UI2 SIN;
 enum { kMaxNumSlots = 0xffff };
 #else
-typedef UI4 slot_t;
+typedef UI4 SIN;
 enum { kMaxNumSlots = 0xffffffff };
 #endif
 
@@ -261,10 +261,10 @@ static const UI8 kLargest64BitPrime = 0xFFFFFFFFFFFFFFC5;
 //< A CH1 with a single newline CH1.
 
 /* The level will more code creating a larger binary. Use one
-    underscore to use more memory, and two underscores to use even more. */
+    underscore to use more memory, and two underscores to use even more.
 #if CRABS_MEMORY_PROFILE == 1
 typedef SI1 int_t;     //< Buffer signed index type.
-typedef UI1 UIT;       //< Buffer unsigned index type.
+typedef UI1 SI4;       //< Buffer unsigned index type.
 typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI2 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef UI1 index_t;   //< Largest bit-depth TIndex this system supports.
@@ -273,7 +273,7 @@ typedef UI2 data_t;    //< Largest bit-depth TData this system supports.
 
 #elif (CRABS_MEMORY_PROFILE == 2) || (CRABS_MEMORY_PROFILE == 3)
 typedef SI2 int_t;     //< Buffer signed index type.
-typedef UI2 UIT;       //< Buffer unsigned signed index type.
+typedef UI2 SI4;       //< Buffer unsigned signed index type.
 typedef SI4 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI4 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef SI2 index_t;   //< Default TIndex size.
@@ -281,8 +281,7 @@ typedef UI2 header_t;  //< Default TKey size.
 typedef UI4 data_t;    //< Default TData size.
 
 #else  // CRABS_MEMORY_PROFILE == 5
-typedef SI4 int_t;     //< Buffer signed index type.
-typedef UI4 UIT;       //< Buffer unsigned signed index type.
+typedef UI4 SI4;       //< Buffer unsigned signed index type.
 typedef SI2 dint_t;    //< Buffer DBL-wide signed index type.
 typedef UI8 duint_t;   //< Buffer DBL-wide unsigned index type.
 typedef UI2 index_t;   //< Default TIndex size.
@@ -293,11 +292,11 @@ typedef UI8 data_t;    //< Default TData size.
 #if CRABS_MEMORY_PROFILE >= 3 || DEBUG
 #define USING_CRABS_TEXT 3
 #endif  //< CRABS_MEMORY_PROFILE >= 3
-
+ */
 /* Macro declares a class to be non-copyable. */
 #define NONCOPYABLE                                 \
   (ClassName) ClassName(const ClassName&) = delete; \
   void operator=(const ClassName&) = delete;
-    // ClassName () = default //< Saw this once on the net but do we need it?
+// ClassName () = default //< Saw this once on the net but do we need it?
 
 #endif  //< HEADER_FOR_CRABS_CONFIG

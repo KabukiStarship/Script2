@@ -24,9 +24,9 @@ namespace _ {
 
 /* Utility class for printing B-Sequences. */
 struct Bsq {
-  const UIT* params;  //< Bsq params.
+  const SI4* params;  //< Bsq params.
 
-  Bsq(const UIT* params) : params(params) {
+  Bsq(const SI4* params) : params(params) {
     // Nothing to do here! (:-)-+=<
   }
 };
@@ -87,32 +87,32 @@ inline SI8 PackSV8(SI8 value) {
 //    return temp;
 //}
 
-constexpr UIT BsqSize(const UIT* params) {
+constexpr SI4 BsqSize(const SI4* params) {
   if (!params) {
     return 0;
   }
-  UIT size_bytes = sizeof(UIT), count = *params++;
+  SI4 size_bytes = sizeof(SI4), count = *params++;
 
   if (count > kParamsMax) {
     return 0;
   }
 
   for (; count > 0; --count) {
-    UIT param = *params++;
+    SI4 param = *params++;
 
     if (param == kNIL) {  // This is illegal.
       return 0;
     }
     if (param <= kTKN) {
-      size_bytes += sizeof(UIT);
+      size_bytes += sizeof(SI4);
       ++params;
     }
     if (param == kSIH) {
-      size_bytes += sizeof(UIT);
+      size_bytes += sizeof(SI4);
       ++params;
     }
     if (param == kUIH) {
-      size_bytes += sizeof(UIT);
+      size_bytes += sizeof(SI4);
       ++params;
     }
     if (param >= kLST && param <= kMAP) {  // This is illegal.
@@ -127,7 +127,7 @@ constexpr UIT BsqSize(const UIT* params) {
         params += param + 1;  // for the dimension count.
       }
     }
-    size_bytes += sizeof(UIT);
+    size_bytes += sizeof(SI4);
   }
   return size_bytes;
 }
@@ -135,21 +135,21 @@ constexpr UIT BsqSize(const UIT* params) {
 /* Creates a immutable Script B-Sequence.
     C++11 variadic template to ensure only one copy in ROM
     and to eliminate some redundant typing. */
-template <const UIT... N>
-inline const UIT* Params() {
-  static const UIT kSize = 0,  // BsqSize ({ N... })
+template <const SI4... N>
+inline const SI4* Params() {
+  static const SI4 kSize = 0,  // BsqSize ({ N... })
       kList[sizeof...(N)] = {N...};
   return &kSize;
 }
 
 /* Prints out the kBSQ parameters. */
-API UTF1& PrintBsq(UTF1& printer, const UIT* params);
+API UTF1& PrintBsq(UTF1& printer, const SI4* params);
 
 /*  Prints out the parameters. */
-// API Utf& PrintBsq (const UIT* bsq, Utf& utf);
+// API Utf& PrintBsq (const SI4* bsq, Utf& utf);
 
 /*< Returns the requested parameter number_. */
-API UIT BsqParamNumber(const UIT* bsq, int param_number);
+API SI4 BsqParamNumber(const SI4* bsq, int param_number);
 
 }  // namespace _
 

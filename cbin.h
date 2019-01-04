@@ -42,10 +42,10 @@ typedef enum BInStates {
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct API BIn {
-  UIT size,           //< The size of the socket.
+  SI4 size,           //< The size of the socket.
       begin;          //< The starting index of the ring socket data.
-  volatile UIT stop;  //< The stopping index of the ring socket data.
-  UIT read;           //< The read variable.
+  volatile SI4 stop;  //< The stopping index of the ring socket data.
+  SI4 read;           //< The read variable.
 };
 
 /* Get's the B-Input's socket. */
@@ -66,9 +66,9 @@ inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
 inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
 
 /* Gets the rx socket length. */
-inline UIT BInSpace(BIn* bin);
+inline SI4 BInSpace(BIn* bin);
 
-inline UIT BinBufferLength(BIn* bin);
+inline SI4 BinBufferLength(BIn* bin);
 
 #if USING_CRABS_TEXT == YES
 /* Gets a a CH1 for printing out the bin_state. */
@@ -79,7 +79,7 @@ API const CH1** BInStateStrings();
 #endif
 
 /* Initializes the BIn struct API to an empty socket. */
-API BIn* BInInit(UIW* socket, UIT size);
+API BIn* BInInit(UIW* socket, SI4 size);
 
 /* Gets the stop address of the rx socket. */
 API CH1* BInEnd(BIn* bin);
@@ -97,9 +97,9 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number_ upon
               failure. */
-API const Op* BInRead(BIn* bin, const UIT* params, void** args);
+API const Op* BInRead(BIn* bin, const SI4* params, void** args);
 
-inline const Op* BOutRead(BOut* bout, const UIT* params, void** args) {
+inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 

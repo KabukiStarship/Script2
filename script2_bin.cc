@@ -60,16 +60,16 @@ SIW SlotSpace(CH1* begin, CH1* stop, UIW size) {
   return size - (stop - begin);
 }
 
-UIT BInSpace(BIn* bin) {
+SI4 BInSpace(BIn* bin) {
   ASSERT(bin)
   CH1* txb_ptr = reinterpret_cast<CH1*>(bin);
-  return (UIT)SlotSpace(txb_ptr + bin->begin, txb_ptr + bin->stop, bin->size);
+  return (SI4)SlotSpace(txb_ptr + bin->begin, txb_ptr + bin->stop, bin->size);
 }
 
-UIT BinBufferLength(BIn* bin) {
+SI4 BinBufferLength(BIn* bin) {
   ASSERT(bin)
   CH1* begin = BInBegin(bin);
-  return (UIT)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
+  return (SI4)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
 #if USING_CRABS_TEXT
@@ -108,7 +108,7 @@ inline const Op* BInError(BIn* bin, Error error) {
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, Error error, const UIT* header) {
+inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
   PRINTF("\nBIn %s error!", ErrorString(error))
   return reinterpret_cast<const Op*>(error);
 }
@@ -120,8 +120,8 @@ inline const Op* BInError(BIn* bin, Error error, const UIT* header) {
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, Error error, const UIT* header,
-                          UIT offset) {
+inline const Op* BInError(BIn* bin, Error error, const SI4* header,
+                          SI4 offset) {
   PRINTF("\nBIn %s error!", ErrorString(error))
   return reinterpret_cast<const Op*>(error);
 }
@@ -133,13 +133,13 @@ inline const Op* BInError(BIn* bin, Error error, const UIT* header,
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, Error error, const UIT* header, UIT offset,
+inline const Op* BInError(BIn* bin, Error error, const SI4* header, SI4 offset,
                           CH1* address) {
   PRINTF("\nBIn %s error!", ErrorString(error))
   return reinterpret_cast<const Op*>(error);
 }
 
-BIn* BInInit(UIW* socket, UIT size) {
+BIn* BInInit(UIW* socket, SI4 size) {
   ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
 
@@ -158,7 +158,7 @@ BIn* BInInit(UIW* socket, UIT size) {
 int BInStreamByte(BIn* bin) {
   CH1 *begin = BInBegin(bin), *stop = begin + bin->size - 1;
   CH1 *open = (CH1*)begin + bin->read, *begin = begin + bin->begin,
-       *begin = begin;
+      *begin = begin;
 
   int length = (int)((begin < open) ? open - begin + 1
                                     : (stop - begin) + (open - begin) + 2);
@@ -168,14 +168,14 @@ int BInStreamByte(BIn* bin) {
     return -1;
   }
   // UI1 b = *cursor;
-  bin->stop = (++begin >= stop) ? static_cast<UIT>(Size(begin, stop))
-                                : static_cast<UIT>(Size(begin, begin));
+  bin->stop = (++begin >= stop) ? static_cast<SI4>(Size(begin, stop))
+                                : static_cast<SI4>(Size(begin, begin));
   return 0;
 }
 
 BOL BInIsReadable(BIn* bin) { return BinBufferLength(bin) > 0; }
 
-const Op* BInRead(BIn* bin, const UIT* params, void** args) {
+const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   PRINT_BSQ("\nReading ", params)
   PRINT_BIN(" from B-Input:", bin)
 
@@ -188,15 +188,15 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
   if (!args) {
     return BInError(bin, kErrorImplementation);
   }
-  UI1 ui1;        //< Temp variable.
-  UI2 ui2;        //< Temp variable.
-  UI4 ui4;        //< Temp variable.
-  UI8 ui8;        //< Temp variable.
+  UI1 ui1;       //< Temp variable.
+  UI2 ui2;       //< Temp variable.
+  UI4 ui4;       //< Temp variable.
+  UI8 ui8;       //< Temp variable.
   CH1* ui1_ptr;  //< Pointer to a kUI1.
   // UI2* ui2_ptr;              //< Pointer to a kUI2.
   UI4* ui4_ptr;              //< Pointer to a kUI4.
   UI8* ui8_ptr;              //< Pointer to a kUI1.
-  UIT type,                  //< The current type being read.
+  SI4 type,                  //< The current type being read.
       size,                  //< Size of the ring socket.
       length,                //< Length of the data in the socket.
       count,                 //< Argument length.
@@ -211,14 +211,14 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
   hash = kPrime2Unsigned;
   size = bin->size;
 
-  CH1 *begin = BInBegin(bin),            //< The beginning of the socket.
+  CH1 *begin = BInBegin(bin),             //< The beginning of the socket.
       *stop = begin + size - 1,           //< The stop of the socket.
           *begin = begin + bin->begin,    //< The begin of the data.
               *stop = begin + bin->stop;  //< The stop of the data.
-                                          // const UIT* param = params + 1;
+                                          // const SI4* param = params + 1;
                                           // //< The current param.
 
-  length = (UIT)SlotLength(begin, stop, size);
+  length = (SI4)SlotLength(begin, stop, size);
 
   // When we scan, we are reading from the beginning of the Slot socket.
 
@@ -617,7 +617,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
   CLEAR(begin, stop)
 
   // Convert pointer back to offset
-  bin->begin = (UIT)Size(begin, begin);
+  bin->begin = (SI4)Size(begin, begin);
 
   return 0;
 }
@@ -626,7 +626,7 @@ const Op* BInRead(BIn* bin, const UIT* params, void** args) {
 UTF1& Print(UTF1& utf, BIn* bin) {
   ASSERT(bin);
 
-  UIT size = bin->size;
+  SI4 size = bin->size;
   return utf << Line('_', 80) << " size:" << bin->size
              << " start:" << bin->begin << " stop:" << bin->stop
              << " read:" << bin->read

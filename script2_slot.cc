@@ -32,23 +32,23 @@ const Op* ReturnError(Slot* slot, Error error) {
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const UIT* header) {
+const Op* ReturnError(Slot* slot, Error error, const SI4* header) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const UIT* header, UI1 offset) {
+const Op* ReturnError(Slot* slot, Error error, const SI4* header, UI1 offset) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const UIT* header, UIT offset,
+const Op* ReturnError(Slot* slot, Error error, const SI4* header, SI4 offset,
                       CH1* address) {
   PRINTF("\n%s", ErrorStrings()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
-Slot::Slot(UIW* socket, UIW size) {
+Slot::Slot(UIW* socket, SI4 size) {
   ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
   CH1* l_begin = reinterpret_cast<CH1*>(socket);
@@ -89,8 +89,8 @@ void* Slot::Contains(void* address) {
 }
 
 void Slot::Wipe() {
-  CH1 *l_begin = reinterpret_cast<CH1*>(this) + sizeof(Slot),
-       *l_start = begin, *l_stop = stop, *temp;
+  CH1 *l_begin = reinterpret_cast<CH1*>(this) + sizeof(Slot), *l_start = begin,
+      *l_stop = stop, *temp;
   if (l_start > l_stop) {
     temp = l_start;
     begin = l_stop;
@@ -99,7 +99,7 @@ void Slot::Wipe() {
   while (begin != stop) *begin++ = 0;
 }
 
-const Op* Slot::Write(const UIT* params, void** args) {
+const Op* Slot::Write(const SI4* params, void** args) {
   ASSERT(params);
   ASSERT(args);
 
@@ -148,7 +148,7 @@ BOL Slot::IsReadable() { return begin != stop; }
     return begin + size;
 }*/
 
-const Op* Slot::Read(const UIT* params, void** args) {
+const Op* Slot::Read(const SI4* params, void** args) {
   ASSERT(params);
   ASSERT(args);
   UI1 ui1;  //< Temp variable to load most types.
@@ -159,26 +159,27 @@ const Op* Slot::Read(const UIT* params, void** args) {
 #if USING_CRABS_8_BYTE_TYPES
   UI8 ui8;  //< Temp kUI8 variable.
 #endif
-  CH1* ui1_ptr;             //< Pointer to a kUI1.
+  CH1* ui1_ptr;              //< Pointer to a kUI1.
   UI2* ui2_ptr;              //< Pointer to a kUI2.
   UI4* ui4_ptr;              //< Pointer to a kUI4.
   UI8* ui8_ptr;              //< Pointer to a kUI8.
-  UIT type,                  //< Current type being read.
+  SI4 type,                  //< Current type being read.
       index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
+  SI4 offset,                //< Offset to word align the current type.
+      length,                //< Length of the data in the socket.
+      count,                 //< Argument length.
+      size;                  //< Size of the ring socket.
+
   ASSERT(num_params);
-  UIW offset;  //< Offset to word align the current type.
-  SIW length,  //< Length of the data in the socket.
-      count,   //< Argument length.
-      size;    //< Size of the ring socket.
 
-  PRINTF("\n\nReading BIn: ")
+  PRINTF("\n\nReading BIn: ");
 
-  CH1 *l_begin = begin,          //< Beginning of the socket.
+  CH1 *l_begin = begin,           //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
           *l_start = begin,       //< begin of the data.
               *l_stop = stop;     //< stop of the data.
-  const UIT* param = params + 1;  //< current param.
+  const SI4* param = params + 1;  //< current param.
 
   size = l_end - l_begin;
 
@@ -193,7 +194,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
     ++param;
     PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (uint)index,
            TypeString(type), (int)Size(l_begin, l_start),
-           (int)Size(l_begin, l_stop))
+           (int)Size(l_begin, l_stop));
 
     switch (type) {
       case kNIL:
@@ -223,7 +224,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           if (count-- == 0)
             return ReturnError(this, kErrorBufferUnderflow, params, index,
                                l_start);
-          PRINT(ui1)
+          PRINT(ui1);
 
           ui1 = *l_start;  // Read UI1 from ring-socket.
           if (++l_start > l_end) l_start -= size;
@@ -231,7 +232,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           ++ui1_ptr;
         }
 
-        PRINTF(" done!\n")
+        PRINT(" done!\n");
 
         if (type == 0) {
           *ui1_ptr = ui1;
@@ -280,7 +281,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
         }
-        length -= (UIT)offset + 2;
+        length -= (SI4)offset + 2;
         l_start += offset;
         if (l_start > l_end) {
           l_start -= size;
@@ -324,7 +325,7 @@ const Op* Slot::Read(const UIT* params, void** args) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
         }
-        length -= (UIT)offset + 4;
+        length -= (SI4)offset + 4;
         l_start += offset;
         if (l_start > l_end) {
           l_start -= size;  //< Bound
@@ -490,10 +491,10 @@ const Op* Slot::Read(const UIT* params, void** args) {
         break;
 #endif
       }
-        PRINTF(" |")
+        PRINT(" |");
     }
   }
-  PRINTF("\nDone reading.")
+  PRINT("\nDone reading.");
   // SlotWipe (slot);
 
   // Convert pointer back to offset

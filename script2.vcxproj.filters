@@ -38,9 +38,6 @@
     <ClInclude Include="cclock.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="cdoor.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="cerror.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -248,7 +245,13 @@
     <ClInclude Include="0_0_0.02_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="0_0_0.15_room.h">
+    <ClInclude Include="0_0_0.15_door.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="0_0_0.16_room_and_wall.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="tdoor.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -277,7 +280,7 @@
     <None Include="0_0_0.release.inl">
       <Filter>script2</Filter>
     </None>
-    <None Include="0_0_0.15_seam.s2">
+    <None Include="0_0_0.16_seam.s2">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>
@@ -312,9 +315,6 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_clock.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_door.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_error.cc">

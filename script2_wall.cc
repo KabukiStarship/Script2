@@ -35,7 +35,7 @@ Wall::~Wall() {
 }
 
 Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
-  size_bytes = size_bytes < kMinSizeBytes ? (UIT)kMinSizeBytes : size_bytes;
+  size_bytes = size_bytes < kMinSizeBytes ? (SI4)kMinSizeBytes : size_bytes;
   size_bytes = TAlignUpUnsigned<SI8, size_t>(size_bytes);
   size_t size_words = (size_bytes >> sizeof(void*)) + 3;
   UIW *socket = new UIW[size_words],
@@ -55,7 +55,7 @@ Wall::Wall(UIW* socket, size_t size_bytes) {
   enum {
     kBitsShift = sizeof(UIW) == 2 ? 1 : sizeof(UIW) == 2 ? 2 : 3,
   };
-  // UIT size_words = (size_bytes >> kBitsShift) + 3;
+  // SI4 size_words = (size_bytes >> kBitsShift) + 3;
   //< Computer engineering voodoo for aligning to 64-bit boundary.
 
   UIW* aligned_buffer = AlignUpPointer8<UIW>(socket);

@@ -84,7 +84,7 @@ struct Slot {
   @param  op   The Operation to get the in from.
   @param  args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Read(const UIT* params, void** args);
+  const Op* Read(const SI4* params, void** args);
 
   /* Reads the given Operation input parameters from the slot to the args.
   @param  slot The slot to read from.
@@ -98,7 +98,7 @@ struct Slot {
   @param  op   The Operation to get the in from.
   @param  args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const UIT* params, void** args);
+  const Op* Write(const SI4* params, void** args);
 
   /* Writes the given Operation output parameters from the slot to the args.
   @param  slot The slot to read from.

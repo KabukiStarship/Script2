@@ -43,7 +43,7 @@ struct BOut;
     @endcode */
 struct API Op {
   const CH1* name;          //< Op name.
-  const UIT *in,             //< Input kBSQ params or OpFirst.
+  const SI4 *in,             //< Input kBSQ params or OpFirst.
       *out;                  //< Output kBSQ params or OpLast.
   const CH1* description;   //< Op description.
   CHW pop,                   //< Index of the Pop Operation.
@@ -59,8 +59,8 @@ struct API Op {
 inline SIW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const UIT* OpFirst(CHW index) {
-  return reinterpret_cast<const UIT*>(index);
+inline const SI4* OpFirst(CHW index) {
+  return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */
@@ -70,8 +70,8 @@ inline CHW OpFirst(const Op* op) {
 }
 
 /* Converts the given value to a pointer. */
-inline const UIT* OpLast(CHW index) {
-  return reinterpret_cast<const UIT*>(index);
+inline const SI4* OpLast(CHW index) {
+  return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */

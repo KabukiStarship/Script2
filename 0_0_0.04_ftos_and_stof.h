@@ -30,7 +30,7 @@ using namespace std;
 
 namespace _ {
 
-const CH1* _0_0_0__03_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
+const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
                                      const CH1* args) {
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;

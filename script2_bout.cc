@@ -50,7 +50,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BOutError(BOut* bout, Error error, const UIT* header) {
+inline const Op* BOutError(BOut* bout, Error error, const SI4* header) {
   std::cerr << "\nBOut " << ErrorString(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
@@ -62,8 +62,8 @@ inline const Op* BOutError(BOut* bout, Error error, const UIT* header) {
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BOutError(BOut* bout, Error error, const UIT* header,
-                           UIT offset) {
+inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
+                           SI4 offset) {
   std::cerr << "\nBOut " << ErrorString(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
@@ -75,8 +75,8 @@ inline const Op* BOutError(BOut* bout, Error error, const UIT* header,
     @param  offset  The offset to the type in error in the B-Sequence.
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
-inline const Op* BOutError(BOut* bout, Error error, const UIT* header,
-                           UIT offset, CH1* address) {
+inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
+                           SI4 offset, CH1* address) {
   std::cerr << "\nBOut " << ErrorString(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
@@ -91,7 +91,7 @@ CH1* BOutBuffer(BOut* bout) {
   return reinterpret_cast<CH1*>(bout) + sizeof(BOut);
 }
 
-BOut* BOutInit(UIW* socket, UIT size) {
+BOut* BOutInit(UIW* socket, SI4 size) {
   if (size < kSlotSizeMin) return nullptr;
   if (socket == nullptr) return nullptr;
 
@@ -108,7 +108,7 @@ BOut* BOutInit(UIW* socket, UIT size) {
   return bout;
 }
 
-UIT BOutSpace(BOut* bout) {
+SI4 BOutSpace(BOut* bout) {
   if (!bout) {
     return 0;
   }
@@ -117,7 +117,7 @@ UIT BOutSpace(BOut* bout) {
                          bout->size);
 }
 
-UIT BOutBufferLength(BOut* bout) {
+SI4 BOutBufferLength(BOut* bout) {
   if (!bout) {
     return 0;
   }
@@ -126,7 +126,7 @@ UIT BOutBufferLength(BOut* bout) {
 }
 
 CH1* BOutEndAddress(BOut* bout) {
-  return reinterpret_cast<CH1*>(bout) + (4 * sizeof(UIT)) + bout->size;
+  return reinterpret_cast<CH1*>(bout) + (4 * sizeof(SI4)) + bout->size;
 }
 
 int BOutStreamByte(BOut* bout) {
@@ -142,12 +142,12 @@ int BOutStreamByte(BOut* bout) {
     return -1;
   }
   // UI1 b = *cursor;
-  bout->stop = (++begin > stop) ? static_cast<UIT>(Size(begin, stop))
-                                : static_cast<UIT>(Size(begin, begin));
+  bout->stop = (++begin > stop) ? static_cast<SI4>(Size(begin, stop))
+                                : static_cast<SI4>(Size(begin, begin));
   return 0;
 }
 
-const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
+const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   PRINT_BSQ("\n\nWriting ", params)
   enum {
     kBOutBufferSize = 1024,
@@ -172,7 +172,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   UI8 ui8;
 #endif
 
-  UIT num_params,  //< Num params in the b-sequence.
+  SI4 num_params,  //< Num params in the b-sequence.
       type,        //< Current type.
       size,        //< Size of the socket.
       space,       //< Space in the socket.
@@ -186,7 +186,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   }
   arg_index = 0;
   size = bout->size;
-  const UIT* param =
+  const SI4* param =
       params;  //< Pointer to the current param.
                //* bsc_param;          //< Pointer to the current kBSQ param.
   // Convert the socket offsets to pointers.
@@ -206,7 +206,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
 #endif
   UI2 hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
 
-  space = (UIT)SlotSpace(begin, stop, size);
+  space = (SI4)SlotSpace(begin, stop, size);
 
   // Check if the socket has enough room.
   if (space == 0) return BOutError(bout, kErrorBufferOverflow);
@@ -526,7 +526,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
             ui2 = *ui2_ptr;
-            length = static_cast<UIT>(ui2);
+            length = static_cast<SI4>(ui2);
             ui1_ptr = reinterpret_cast<const CH1*>(ui2_ptr);
           }
 #endif
@@ -537,7 +537,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
             ui4 = *ui4_ptr;
-            length = static_cast<UIT>(ui4);
+            length = static_cast<SI4>(ui4);
             ui1_ptr = reinterpret_cast<const CH1*>(ui4_ptr);
           }
 #endif
@@ -548,7 +548,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
             ui8 = *ui8_ptr;
-            length = static_cast<UIT>(ui8);
+            length = static_cast<SI4>(ui8);
             ui1_ptr = reinterpret_cast<const CH1*>(ui8_ptr);
           }
 #endif  //< USING_CRABS_8_BYTE_TYPES
@@ -598,7 +598,7 @@ const Op* BOutWrite(BOut* bout, const UIT* params, void** args) {
   if (++stop >= stop) stop -= size;
   *stop = (UI1)(hash >> 8);
   if (++stop >= stop) stop -= size;
-  bout->stop = (UIT)Size(begin, stop);
+  bout->stop = (SI4)Size(begin, stop);
   PRINTF("\nDone writing to B-Output with the hash 0x%x.", hash)
   return 0;
 }
@@ -614,14 +614,14 @@ void BOutRingBell(BOut* bout, const CH1* address) {
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
-  UIT size = bout->size,  //< Size of the socket.
+  SI4 size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
   CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
-  space = (UIT)SlotSpace(begin, stop, size);
+  space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
     PRINTF("\nBuffer overflow!")
     return;
@@ -640,7 +640,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (UIT)Size(begin, stop);
+  bout->stop = (SI4)Size(begin, stop);
 }
 
 void BOutAckBack(BOut* bout, const CH1* address) {
@@ -655,14 +655,14 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
 
-  UIT size = bout->size,  //< Size of the socket.
+  SI4 size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
   CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
-  space = (UIT)SlotSpace(begin, stop, size);
+  space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
     PRINTF("\nBuffer overflow!")
     return;
@@ -681,7 +681,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (UIT)Size(begin, stop);
+  bout->stop = (SI4)Size(begin, stop);
 }
 
 const Op* BOutConnect(BOut* bout, const CH1* address) {
