@@ -129,7 +129,7 @@ API UTF4& Print(UTF4& printer, BIn* bin);
 
 #if USING_CRABS_TEXT == YES
 /* Prints out the bin to the text. */
-inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
+inline ::_::UTF1& operator<<(_::UTF1& utf, ::_::BIn* bin) {
   return Print(utf, bin);
 }
 #endif

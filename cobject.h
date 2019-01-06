@@ -95,5 +95,5 @@ API void Delete(CObject& object);
 inline API BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__03
 #endif  //< SCRIPT2_COBJECT
+#endif  //< #if SEAM >= _0_0_0__03

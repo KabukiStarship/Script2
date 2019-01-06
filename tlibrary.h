@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /ccrabs.h
+@file    /tlibrary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__14
-#ifndef INCLUDED_CRABS_LIBRARY
-#define INCLUDED_CRABS_LIBRARY
+#ifndef INCLUDED_SCRIPT2_TLIBRARY
+#define INCLUDED_SCRIPT2_TLIBRARY
 #include "config.h"
 
 namespace _ {
@@ -49,9 +49,9 @@ class Library : public Operand {
   SI4 GetDataSize() { return data_size_; }
 
   /* Attempts to add the Page data into the CObject at the given BaseAddress.
-      @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Add(UI1 type, const CH1* key, void* data) {
-    TIndex size_of_type = getSizeOfType(type);
+    TIndex size_of_type = GetSizeOfType(type);
     if (size_of_type == 0) {
       return 0;
     }
@@ -59,7 +59,7 @@ class Library : public Operand {
   }
 
   /* Attempts to insert the Page data into the CObject at the given index.
-      @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Insert(UI1 type, const CH1* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
     if (index > l_numOps) index = l_numOps;
@@ -68,15 +68,15 @@ class Library : public Operand {
   }
 
   /* Attempts to remove the Page data into the CObject at the given index.
-      @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 
   /* Attempts to clear the page at the given index.
-      @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Clear(TIndex index) { return 0; }
 
   /* Attempts to find the given op name.
-      @return Returns an invalid index upon failure. */
+  @return Returns an invalid index upon failure. */
   TIndex Find(const CH1* key) { return 0; }
 
   /* Searches for the given query and returns a bag of query results.  */
@@ -88,12 +88,12 @@ class Library : public Operand {
   /* gets the size of the item at the given index. */
   UI1 GetOpSize(TIndex index) { return 0; }
 
-  /* gets the size of the item at the given index. */
-  UI1 SetOpSize(TIndex index, TData newSize) { return 0; }
+  /* Sets the size of the item to the given index to the new_size. */
+  UI1 SetOpSize(TIndex index, TData new_size) { return 0; }
 
   /* Returns the data address of the given op if it exists.
-      @return Returns a pointer to one of the ChineseRoom error strings upon
-     failure. */
+  @return Returns a pointer to one of the ChineseRoom error strings upon
+  failure. */
   void* GetDataAddress(TIndex index) {
 #if CRABS_MEMORY_PROFILE >= 64
     Index64* UI8_ptr = (Index64*)address;
@@ -146,19 +146,11 @@ class Library : public Operand {
   /* Shrinks the currently selected bag's socket to the min size. */
   void Shrink() {}
 
-  /* Handles Script Commands.
-      @param text     Beginning of the Text socket.
-      @param text_end End of the Text socket.
-      @return Returns nil upon success and an error string_ upon failure. */
-  virtual const CH1* Sudo(const CH1* text, const CH1* text_end) {
-    return nullptr;
-  }
-
-  /* Abstract Script Op(s).
-      @param index The index of the expression.
-      @param crabs  The CCrabs to read and write from.
-      @return      Returns nil upon success, a Set header upon query, and an
-                   error_t ticket upon Read-Write failure. */
+  /* Script2 Operations.
+  @return       Returns nil upon success, a Set header upon query, and an
+  error_t ticket upon Read-Write failure.
+  @param index The index of the expression.
+  @param crabs  The CCrabs to read and write from. */
   virtual const Op* Star(CHW index, CCrabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
@@ -181,7 +173,7 @@ class Library : public Operand {
  private:
   // NONCOPYABLE (Library)
 
-  int reserved;        //< Reserved for 64-bit memory alignment.
+  int reserved_;       //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
   SI4 index_,          //< Index of the currently selected bag.
@@ -205,5 +197,5 @@ API void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
 }
 #endif  //< CRABS_MEMORY_PROFILE > 2
 }  // namespace _
-#endif  //< INCLUDED_CRABS_LIBRARY
+#endif  //< INCLUDED_SCRIPT2_TLIBRARY
 #endif  //< #if SEAM >= _0_0_0__14

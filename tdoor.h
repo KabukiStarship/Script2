@@ -46,7 +46,7 @@ connection to multiple systems over a WiFi connection.
 
 @endcode
 */
-template <SIN kDoorCount_, SIN kSlotSizeDefault_>
+template <SI4 kDoorCount_, SI4 kSlotSizeDefault_>
 class TDoor : public Operand {
  public:
   enum {
@@ -111,17 +111,22 @@ class TDoor : public Operand {
     return count;
   }
 
+  BIn* Slot(SI4 index) {
+    if (!slots_.InBounds(index)) return nullptr;
+    return slots[i];
+  }
+
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(CCrabs* crabs) {
+    TArray<SI4, SI4, SI4>* slots = slots_;
     SI4 scan_count_max = scan_count_max_;
-    for (SI4 i = 0; i < slots_->Count(); ++i) {
-      SI4 offset = slots_[i];
-      CBIn* bin = OffsetToBIn(offset);
+    for (SI4 i = 0; i < slots->Count(); ++i) {
+      BIn* bin = Slot(i);
       for (SI4 count = scan_count_max; count > 0; --count) {
         SI4 value = BInNextByte(bin);
         if (value < 0) break;
-        const COp* result = crabs->Scan(value);
+        const Op* result = crabs->Scan(value);
       }
     }
     return nullptr;

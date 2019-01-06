@@ -130,7 +130,7 @@ API int HexToByte(UI2 hex);
 
 #endif  //< #if SEAM >= _0_0_0__01
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 /* Gets the maximum number_ of digits required to represent a FLT as in
 ASCII. */
 API int FloatDigitsMax();

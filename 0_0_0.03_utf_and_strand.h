@@ -26,7 +26,7 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 #if SEAM >= _0_0_0__03
 template <typename Char, typename Size>
@@ -65,7 +65,10 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
       "Texting@",
   };
 
-  static const Char kTestingString[] = "Testing one, two, three.";
+  static const Char kStringTesting123[] = "Testing 1, 2, 3\0";
+
+  static const Char kStringTestingOneTwoThree[] =
+      "Testing one, two, three.";  //< @todo Replace with kStringTesting123.
 
   static const Char* kStringsRightAligned[] = {
       "    Testing one, two, three.", "Test...", ".", "..", "...", "T...",
@@ -83,7 +86,7 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
   CH1* check_char = socket + kSize + 1;
 
   SocketFill(socket, kSize);
-  TPrint<Char>(socket, kSize, "Testing 1, 2, 3");
+  TPrint<Char>(socket, kSize, kStringTesting123);
   PRINT_SOCKET(socket, kSize);
 
   *check_char = kCheckChar;
@@ -99,15 +102,13 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
     Test(stop);
   }
 
-  static const Char kTesting123[] = "Testing 1, 2, 3\0";
-
   PRINT_HEADING("Testing Universal Text Formatter");
-  PRINTF("\n\n    Expecting \"%s\"", kTesting123);
+  PRINTF("\n\n    Expecting \"%s\"", kStringTesting123);
 
   utf.Set(socket) << "Testing " << 1 + (int)'0' << ", " << 2 + (int)'0' << ", "
                   << 3 + (int)'0';
   PRINT_SOCKET(socket, kSize);
-  AVOW(kTesting123, socket);
+  AVOW(kStringTesting123, socket);
 
   ASSERT(!TStringEquals<Char>(kCompareStrings[0], kCompareStrings[1]));
   ASSERT(!TStringEquals<Char>(kCompareStrings[0], kCompareStrings[3]));
@@ -119,33 +120,39 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
 
   PRINTF("\n\nTesting StringFind");
 
-  ASSERT(TStringFind<Char>(kTestingString, "one"));
-  ASSERT(TStringFind<Char>(kTestingString, "three."));
+  ASSERT(TStringFind<Char>(kStringTestingOneTwoThree, "one"));
+  ASSERT(TStringFind<Char>(kStringTestingOneTwoThree, "three."));
 
   PRINTF("\n\nTesting PrintRight");
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 28));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 28));
   PRINT_SOCKET(socket, kSize);
   PRINTF("\n    Wrote:\"%s\":%i", socket, TStringLength<Char>(socket));
   AVOW(kStringsRightAligned[0], socket);
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 7));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 7));
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsRightAligned[1], socket);
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 1));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 1));
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsRightAligned[2], socket);
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 2));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 2));
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsRightAligned[3], socket);
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 3));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 3));
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsRightAligned[4], socket);
 
-  ASSERT(TPrintRight<Char>(socket, socket + kSize, kTestingString, 4));
+  ASSERT(
+      TPrintRight<Char>(socket, socket + kSize, kStringTestingOneTwoThree, 4));
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsRightAligned[5], socket);
 
@@ -188,30 +195,28 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
   PRINT_HEADING("Testing TStrand...");
 
   enum {
-    kStrandLoopCount = 100,
+    kStrandLoopCount = 3,
   };
 
   TStrand<Char> strand("Testing ");
   PrintSocket(strand.Obj().Begin(), strand.Obj().SizeBytes());
-  for (SIN i = 0; i < kStrandLoopCount; ++i) {
-    strand << i << ", ";
-  }
-  PRINTF("\nstrand.Obj().SizeBytes():%i", (int)strand.Obj().SizeBytes());
-  PrintSocket(strand.Obj().Begin(), strand.Obj().SizeBytes());
-  Char* cursor = strand.Find("Testing ");
+
+  PRINT("\n\nExpecting \"Testing 1, 2, 3\"\n\n");
+  strand << 1 << ", " << 2 << ", " << 3;
+  PRINT_SOCKET(strand.Obj().Start<>(), strand.Obj().SizeBytes());
+  const Char* cursor = strand.Find("Testing ");
   ASSERT(cursor);
-  for (SIN i = 0; i < kStrandLoopCount; ++i) {
+  for (SI4 i = 0; i < kStrandLoopCount; ++i) {
     strand << i << ", ";
     TToken<Char> i_string(i);
     cursor = TStringFind<Char>(cursor, i_string.String());
+    ASSERT(cursor);
   }
-
   return nullptr;
 }
 #endif  //< #if SEAM >= _0_0_0__03
 
-static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log,
-                                            CH1* seam_end,
+static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log, CH1* seam_end,
                                             const CH1* args) {
 #if SEAM >= _0_0_0__03
   TEST_BEGIN;
@@ -265,5 +270,3 @@ static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log,
 #endif
   return nullptr;
 }
-
-}  // namespace _

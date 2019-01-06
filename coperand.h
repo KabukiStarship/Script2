@@ -51,7 +51,7 @@ struct API CCrabs;
 */
 
 struct API Operand {
-  /* Abstract Script Op(s).
+  /* Script2 Operations.
       @param index The index of the expression.
       @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
@@ -94,8 +94,8 @@ API UTF1& PrintOperand(UTF1& slot, Operand* operand);
 
 #if USING_CRABS_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
-inline _::UTF1& operator<<(_::UTF1& printer, _::Operand* operand) {
-  return _::PrintOperand(printer, operand);
+inline ::_::UTF1& operator<<(_::UTF1& printer, ::_::Operand* operand) {
+  return ::_::PrintOperand(printer, operand);
 }
 
 #endif

@@ -234,16 +234,16 @@ class TArray {
 
 template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
-                                 _::TCArray<T, Size, Index>* stack) {
-  return _::PrintArray<T, Size, Index>(printer, stack);
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
+                                 ::_::TCArray<T, Size, Index>* stack) {
+  return ::_::PrintArray<T, Size, Index>(printer, stack);
 }
 
 template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
-                                 _::TCArray<T, Size, Index>& stack) {
-  return _::PrintArray<T, Size, Index>(printer, stack);
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
+                                 ::_::TCArray<T, Size, Index>& stack) {
+  return ::_::PrintArray<T, Size, Index>(printer, stack);
 }
 
 #endif  //< INCLUDED_SCRIPT2_ARRAY

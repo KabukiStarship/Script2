@@ -21,16 +21,13 @@ specific language governing permissions and limitations under the License. */
 
 #include "croom.h"
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__16_Room_and_Wall(CH1* seam_log, CH1* seam_end,
-    const CH1* args) {
+                                           const CH1* args) {
 #if SEAM == _0_0_0__16
   TEST_BEGIN
   Room room_a, room_b;
 #endif
   return nullptr;
 }
-}  // namespace _
-
-#include "test_footer.inl"

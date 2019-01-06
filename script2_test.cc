@@ -13,16 +13,19 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#include "ttest.h"
+#include "ctest.h"
 
 #include "cconsole.h"
+
+#include "tbinary.h"
 
 #include "test_debug.inl"
 
 namespace _ {
 
 BOL TestWarn(const CH1* function, const CH1* file, int line) {
-  Printf("\nAssertion failed in function %s at line %d in \"%s\"", function, line, file);
+  Printf("\nAssertion failed in function %s at line %d in \"%s\"", function,
+         line, file);
   return true;
 }
 

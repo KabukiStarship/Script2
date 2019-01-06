@@ -21,56 +21,50 @@ specific language governing permissions and limitations under the License. */
 
 #include "croom.h"
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__14_Expr(CH1* seam_log, CH1* seam_end,
-                                    const CH1* args) {
+                                  const CH1* args) {
 #if SEAM == _0_0_0__14
-    enum {
-        kBufferSize = 2048,
-        kBufferWords = kBufferSize / sizeof (UIW),
-        kStackHeight = 8,
-    };
-    UIW buffer[kBufferWords],
-              unpacked_expr[kBufferWords];
-    PRINTF ("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
-            &buffer[0], &buffer[kBufferWords-1]);
+  enum {
+    kBufferSize = 2048,
+    kBufferWords = kBufferSize / sizeof(UIW),
+    kStackHeight = 8,
+  };
+  UIW buffer[kBufferWords], unpacked_expr[kBufferWords];
+  PRINTF("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
+         &buffer[0], &buffer[kBufferWords - 1]);
 
-    This a;
+  This a;
 
-    Expression* expr = ExpressionInit (buffer, kBufferSize, kStackHeight, &a,
-                                       unpacked_expr, kBufferSize);
-    ExpressionPrint (expr);
+  Expression* expr = ExpressionInit(buffer, kBufferSize, kStackHeight, &a,
+                                    unpacked_expr, kBufferSize);
+  ExpressionPrint(expr);
 
-    std::cout << "\n|    Testing Root (@see \"a.h\")...\n";
+  std::cout << "\n|    Testing Root (@see \"a.h\")...\n";
 
-    void* args[4];
-    uint8_t io_number_ = 98; //< ASCII:'b'
-    Bin * bin  = ExpressionBin  (expr);
-    Bout* bout = ExpressionBout (expr);
-    
-    const Operation* result;
-    ExpressionRingBell (expr);
-    ExpressionAckBack (expr);
-    result = BoutWrite (bout,
-                        Params<4, ADR, UI1, STR, Parent::kTextBufferSize, 
-                                ADR> (),
-                        Args (args, Address <'A', 'A', 'A'> (), 
-                              &io_number_, Const ("Test"), 
-                              Address<BS, CR> ()));
-    BoutPrint (bout);
-    ASSERT (!result);
+  void* args[4];
+  uint8_t io_number_ = 98;  //< ASCII:'b'
+  Bin* bin = ExpressionBin(expr);
+  Bout* bout = ExpressionBout(expr);
 
-    ExprPrint (expr);
+  const Operation* result;
+  ExpressionRingBell(expr);
+  ExpressionAckBack(expr);
+  result =
+      BoutWrite(bout, Params<4, ADR, UI1, STR, Parent::kTextBufferSize, ADR>(),
+                Args(args, Address<'A', 'A', 'A'>(), &io_number_, Const("Test"),
+                     Address<BS, CR>()));
+  BoutPrint(bout);
+  ASSERT(!result);
 
-    //Mirror mirror (bin, bout);
-    // Bypass handshake for testing purposes.
-    ExpressionScan (expr);//, &mirror);
-    ExpressionPrint (expr);
-    std::cout << "\n| Done with Operation tests.";
+  ExprPrint(expr);
+
+  // Mirror mirror (bin, bout);
+  // Bypass handshake for testing purposes.
+  ExpressionScan(expr);  //, &mirror);
+  ExpressionPrint(expr);
+  std::cout << "\n| Done with Operation tests.";
 #endif
   return nullptr;
 }
-}  //< namespace _
-
-#include "test_footer.inl"

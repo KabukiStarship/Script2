@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "crng.h"
 #include "cconsole.h"
+#include "crng.h"
 
 #if SEAM == _0_0_0__00
 #include "test_debug.inl"
@@ -23,10 +23,10 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 inline const CH1* _0_0_0__00_RNG(CH1* seam_log, CH1* seam_end,
-                                  const CH1* args) {
+                                 const CH1* args) {
 #if SEAM >= _0_0_0__00
   TEST_BEGIN;
 
@@ -34,7 +34,7 @@ inline const CH1* _0_0_0__00_RNG(CH1* seam_log, CH1* seam_end,
 
   CH1 arg_string[] = "C:\\Windows\0Foo\0\0Bar    \0\0\0   420    \0";
   CH1* test_args[] = {arg_string, arg_string + 11, arg_string + 16,
-                       arg_string + 26};
+                      arg_string + 26};
   const int kArgCount = 4;
 
   PRINT("\nArguments:\n");
@@ -66,4 +66,3 @@ inline const CH1* _0_0_0__00_RNG(CH1* seam_log, CH1* seam_end,
 #endif
   return 0;
 }
-}  // namespace _

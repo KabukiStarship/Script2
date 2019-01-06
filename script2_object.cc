@@ -79,5 +79,4 @@ void SocketHeap(UIW* socket) {
 void SocketStack(UIW* socket) {}
 
 }  // namespace _
-
 #endif  //< #if SEAM >= _0_0_0__03

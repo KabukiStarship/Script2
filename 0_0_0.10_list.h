@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
-                                         const CH1* args) {
+                                        const CH1* args) {
 #if SEAM >= _0_0_0__10
   TEST_BEGIN;
 
@@ -66,10 +66,6 @@ static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
 
   for (int i = list_test_count - 1; i > 0; --i) list.Pop();
 
-
 #endif
   return nullptr;
 }
-}  // namespace _
-
-

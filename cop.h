@@ -88,8 +88,8 @@ TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
 }  // namespace _
 
 template <typename Char>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const _::Op* op) {
-  return _::Print(utf, op);
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const ::_::Op* op) {
+  return ::_::Print(utf, op);
 }
 
 #endif  //< #if INCLUDED_CRABS_OP 1

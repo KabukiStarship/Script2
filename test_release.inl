@@ -1,7 +1,7 @@
 #include "ctest.h"
 #include "test_footer.inl"
 #define TEST_BEGIN \
-  if (!_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
+  if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
 #define TEST_END Print("\n\nDone testing ", __FUNCTION__)
 #define PRINT(item)
 #define PRINTF(format, ...)
@@ -18,7 +18,7 @@
 #define PRINT_FUNCTION
 #define SOCKET_SAVE(begin, stop)
 #define ASSERT(condition) \
-  if (!_::Test(condition)) _::TestAssert(__FUNCTION__, __FILE__, __LINE__)
+  if (!::_::Test(condition)) ::_::TestAssert(__FUNCTION__, __FILE__, __LINE__)
 #define CHECK(condition)
 #define COMPARE(a, b)
 #define AVOW(a, b)

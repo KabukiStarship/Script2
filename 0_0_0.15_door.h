@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "croom.h"
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__15_Door(CH1* seam_log, CH1* seam_end,
                                   const CH1* args) {
@@ -30,8 +30,5 @@ static const CH1* _0_0_0__15_Door(CH1* seam_log, CH1* seam_end,
   Door door;
   Slot slot
 #endif
-  return nullptr;
+      return nullptr;
 }
-}  // namespace _
-
-#include "test_footer.inl"

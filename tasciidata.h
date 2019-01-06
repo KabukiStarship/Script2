@@ -255,7 +255,7 @@ API CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value);
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
+API ::_::UTF1& operator<<(_::UTF1& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF16
 namespace _ {
@@ -272,7 +272,7 @@ API CH2* Print(CH2* begin, CH2* stop, SIN type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
+API ::_::UTF2& operator<<(_::UTF2& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF32
 
@@ -290,7 +290,7 @@ API CH2* Print(CH2* begin, CH2* stop, SIN type,
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
+API ::_::UTF4& operator<<(_::UTF4& utf, const ::_::TypeValue& type_value);
 #endif
 
 }  // namespace _

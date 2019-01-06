@@ -709,7 +709,7 @@ class TToken {
   /* Prints the value to the text begin. */
   TToken(UI8 value) { TPrint<Char>(string_, string_ + kSize, value); }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
   TToken(FLT value) { TPrint<Char>(string_, string_ + kSize, value); }
 
@@ -895,7 +895,7 @@ struct TUTF {
     return Set(TPrintHex<Char>(begin, stop, value));
   }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the given value as hex. */
   inline TUTF& Hex(FLT value) {
     return Set(TPrintHex<Char>(begin, stop, value));
@@ -952,7 +952,7 @@ struct TUTF {
     return Set(Binary<Char>(begin, stop, value));
   }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the given value as binary. */
   inline TUTF& Binary(FLT value) {
     return Set(Binary<Char>(begin, stop, value));
@@ -1007,13 +1007,13 @@ class TCenter {
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
   TCenter(FLT value, int column_count = 80)
-      : string_ (nullptr), number_(value), column_count(column_count) {
+      : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
   TCenter(DBL value, int column_count = 80)
-      : string_ (nullptr), number_(value), column_count(column_count) {
+      : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 #endif
@@ -1027,7 +1027,7 @@ class TCenter {
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_) {
       return utf.Set(
-          _::TPrintCenter<Char>(utf.begin, utf.stop, string_, column_count));
+          ::_::TPrintCenter<Char>(utf.begin, utf.stop, string_, column_count));
     }
     return utf.Set(_::TPrintCenter<Char>(utf.begin, utf.stop, number_.String(),
                                          column_count));
@@ -1095,7 +1095,7 @@ class TRight {
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_)
       return utf.Set(
-          _::TPrintRight<Char>(utf.begin, utf.stop, string_, column_count_));
+          ::_::TPrintRight<Char>(utf.begin, utf.stop, string_, column_count_));
     return utf.Set(_::TPrintRight<Char>(utf.begin, utf.stop, number_.String(),
                                         column_count_));
   }
@@ -1181,7 +1181,7 @@ class TSTR {
   }
 
   /* Prints this object to the COut. */
-  inline void Print() { _::Print(Start()); }
+  inline void Print() { ::_::Print(Start()); }
 
  private:
   TCSTR<Size, Char>* obj_;  //< Pointer to an ASCII STR.
@@ -1331,6 +1331,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
+  PRINT("\n\nJFKLDJSDFJKFSD\n\n");
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
@@ -1361,7 +1362,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
@@ -1386,7 +1387,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
 @param  utf The utf.
 @param  item The item to write to utf. */
 template <typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+                                   ::_::TCenter<Char> item) {
   return item.Print(utf);
 }
 
@@ -1395,26 +1397,28 @@ inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TCenter<Char> item) {
 @param  utf The utf.
 @param  item The item to utf. */
 template <typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TRight<Char> item) {
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, ::_::TRight<Char> item) {
   return item.Print(utf);
 }
 
 /* Prints a TLineChar<Char> to the UTF. */
 template <typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TLineChar<Char> line) {
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+                                   ::_::TLineChar<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
 template <typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
-                                 _::TLineString<Char> line) {
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+                                   ::_::TLineString<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
 template <typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TToken<Char> token) {
+inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+                                   ::_::TToken<Char> token) {
   return token.Print(utf);
 }
 

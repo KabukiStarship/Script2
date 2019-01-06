@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 
 #include "cbinary.h"
+
 #include "cconsole.h"
 #include "tsocket.h"
 
@@ -73,11 +74,11 @@ int TStringCompare(Char* string_a, Char* string_b, Char delimiter = 0) {
   while (b) {
     result = b - a;
     if (result) {
-      PRINTF(" is not a hit.");
+      PRINT(" is not a hit.");
       return result;
     }
     if (a <= (int)delimiter) {
-      PRINTF(" is a partial match but a reached a delimiter first.");
+      PRINT(" is a partial match but a reached a delimiter first.");
       return result;
     }
     ++string_a;
@@ -156,7 +157,7 @@ inline UI TUnsignedNaN() {
 /* The highest possible signed integer value of the given type SI. */
 template <typename SI>
 inline SI TSignedMax() {
-  return ~(SI)0;
+  return ((~(SI)0) << 4) >> 1;
 }
 
 /* Signed Not-a-number_ is the lowest possible signed integer value. */
@@ -815,8 +816,8 @@ Char* TStringDecimalEnd(Char* cursor) {
 }  // namespace _
 #endif
 
-#if SEAM >= _0_0_0__03
-#if SEAM == _0_0_0__03
+#if SEAM >= _0_0_0__04
+#if SEAM == _0_0_0__04
 #include "test_debug.inl"
 #define PRINT_FLOAT_BINARY(integer, decimals, decimal_count) \
   Print("\nBinary:\"");                                      \
@@ -1202,179 +1203,6 @@ Char* TPrintFloat(Char* begin, SIW size, Float value) {
 
 }  // namespace _
 #undef PRINT_FLOAT_BINARY
-
-#endif  //< #if SEAM >= _0_0_0__03
+#endif
 
 #endif  //< #if INCLUDED_SCRIPTTBINARY
-
-/*
-  // Non-working algorithm DOES NOT converts a string-to-FLT.
-  //@return nil if there is no number_ to scan or pointer to the next CH1 after
-  // the stop of the scanned number_ upon success.
-  //@brief Algorithm uses a 32-bit unsigned value to scan the floating-point
-  // number_, which can only have 10 digits max, so the maximum floating-point
-  // number_ digit count we can scan is 9 digits long.
-  template <typename Char = CH1>
-  Char* Scan(Char* socket, Float& result) {
-    ASSERT(socket);
-    PRINTF("\n\nScanning FLT:%s", socket);
-
-    enum {
-      kCharCountMax = 9,  // < (1 + [p*log_10(2)], where p = 32
-    };
-
-    UI4 integer,  //< Integer portion in TBinary.
-        sign,          //< Sign in Binary32 format.
-        ui_value,      //< Unsigned value.
-        pow_10_ui2;    //< Power of 10 for converting integers.
-
-    // Scan sign of number_:
-
-    if (*socket == '-') {
-      sign = TSignedNaN<UI4, UI4>();
-      ++socket;
-    } else {
-      sign = 0;
-    }
-
-    PRINTF("\nScanning integer portion:%i", static_cast<SI4>(result));
-
-    Char* cursor = socket;
-    Char c = *cursor++;
-    if (!TIsDigit<Char>(c)) return nullptr;
-
-    // Find length:
-    c = *cursor++;
-    while (TIsDigit<Char>(c)) c = *cursor++;
-    Char* stop = cursor;  // Store stop to return.
-    cursor -= 2;
-    PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-           (SI4)(cursor - socket));
-
-    c = *cursor--;
-    ui_value = (UI4)(c - '0');
-    pow_10_ui2 = 1;
-
-    while (cursor >= socket) {
-      c = *cursor--;
-      pow_10_ui2 *= 10;
-      UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
-      if (new_value < ui_value) return nullptr;
-      ui_value = new_value;
-      PRINTF("\nvalue:%u", (uint)ui_value);
-    }
-
-    // integer = unsigned_integer;
-
-    PRINTF("\nfound %i and pointed at \'%c\'", integer, *stop);
-
-    // Numbers may begin with a dot like .1, .2, ...
-    if (*socket == '.') goto ScanDecimals;
-
-    if (*stop != '.') {
-      result = static_cast<FLT>(integer);
-      PRINTF("\nFound value:%f", result);
-      return stop;
-    }
-    ++socket;
-  ScanDecimals:
-    // We have to inline the ScanUnsigned here in order to detect if there
-    // are too many decimals
-    cursor = stop;
-    Char c = *cursor++;
-    if (!TIsDigit<Char>(c)) {
-      PRINTF("Found a period.");
-      return nullptr;
-    }
-    PRINTF("\nConverting decimals:\"%s\" with max length %i", socket,
-           kCharCountMax);
-
-    // Find length
-    c = *cursor++;
-    while (TIsDigit<Char>(c)) c = *cursor++;
-
-    stop = cursor;  // Store stop to return.
-    cursor -= 2;
-
-    SIW length = cursor - socket;
-    PRINTF("\nPointed at \'%c\' and found length:%i", *cursor, (SI4)length);
-
-    if (length > kCharCountMax) {
-      cursor = socket + kCharCountMax;
-      length = kCharCountMax;
-    }
-
-    // Manually load the first CH1.
-    c = *cursor--;
-    ui_value = (UI4)(c - '0'), pow_10_ui2 = 1;
-
-    // Then iterate through the rest in a loop.
-    while (cursor >= socket) {
-      c = *cursor--;
-      pow_10_ui2 *= 10;
-      UI4 new_value = ui_value + pow_10_ui2 * (c - '0');
-      if (new_value < ui_value) {
-        PRINTF("\nUnsigned wrap-around!");
-        return nullptr;
-      }
-      ui_value = new_value;
-      PRINTF("\nFound integer_value:%u", (uint)ui_value);
-    }
-    PRINTF("\nFound integer_value:%u", (uint)ui_value);
-
-    PRINTF("\nConverting bit_pattern backwards:");
-
-    // Convert decimals to base 2 by multiply in a loop the integer value is
-    // greater than one then subtract the equivalent of one until the value
-    // is zero.
-
-    UI4 one = IEEE754Pow10E()[length - 1], bit_pattern = 0;
-    PRINT('\n');
-    SI4 bit_shift_count = 0;
-    while ((ui_value != 0) && (++bit_shift_count < 24)) {
-      ui_value = ui_value << 1;  //< << 1 to * 2
-      if (ui_value >= one) {
-        bit_pattern = (bit_pattern << 1) | 1;
-        ui_value -= one;
-        PRINT('1');
-      } else {
-        bit_pattern = bit_pattern << 1;
-        PRINT('0');
-      }
-    }
-    PRINTF("'b0");
-    PRINT_FLOAT_BINARY(integer, ui_value, length);
-    // Now check for the exponent.
-
-    ui_value |= integer << length;
-
-    PRINTF("\nNormalizing bits...");
-
-    if (c != 'e' && c != 'E') {
-      PRINTF("\nNo \'e\' or \'E\' found.");
-      // ui_value = sign | FloatNormalize<FLT, UI4>(integer);
-      // result = *reinterpret_cast<Float*>(&ui_value);
-      return stop;
-    }
-
-    // @todo This is no doubt optimization, not sure how much it would help
-    // though.
-    SI4 signed_value;
-    socket = TScanSigned<SI4, UI4, Char>(stop, signed_value);
-    if (!socket) {
-      PRINTF("\nNo exponent found.");
-      // result = reinterpret_cast(sign |);
-      return stop;
-    }
-
-    if (signed_value < -128 || signed_value > 127) {
-      PRINTF("\nExponent out of range!");
-      // result = result_flt;
-      return stop;
-    }
-
-    // We're finally done so store the result.
-    // result = result_flt;
-
-    return stop;
-  } */

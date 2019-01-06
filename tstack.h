@@ -543,6 +543,10 @@ class TStack {
     StackClone<T, Size, Index>(CObject(), *other);
   }
 
+  /* Checks if the given index is a valid element.
+  @return true if the index is in bounds. */
+  inline BOL InBounds(Index index) { return index >= 0 && index < count_max_; }
+
   /* Gets the max number_ of elements in an obj with the specific index
   width. */
   inline Index GetElementsMax() { return StackCountMax<T, Size, Index>(); }

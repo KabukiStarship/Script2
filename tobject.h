@@ -307,7 +307,11 @@ class TObject {
   }
 
   /* Returns the begin of the OBJ. */
-  inline UIW* Start() { return obj_.begin; }
+  template <typename T = char>
+  inline T* Start() {
+    UIW ptr = reinterpret_cast<UIW>(obj_.begin);
+    return reinterpret_cast<T*>(ptr + sizeof(Size));
+  }
 
   /* Gets the stopping address of the object, AKA the address of the last
   element. */
@@ -330,23 +334,23 @@ class TObject {
   inline BOL Grow() { return TObjGrow<Size>(obj_); }
 
   void Print() {
-    _::Print("\nTObject<SI");
-    _::Print('0' + sizeof(Size));
-    _::Print(">");
+    ::_::Print("\nTObject<SI");
+    ::_::Print('0' + sizeof(Size));
+    ::_::Print(">");
     UIW* begin = obj_.begin;
     if (begin) {
       Size size = *reinterpret_cast<Size>(begin);
-      _::Print(" size:");
-      _::Print(size);
+      ::_::Print(" size:");
+      ::_::Print(size);
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {
-      _::Print(" factory:\"");
+      ::_::Print(" factory:\"");
       const CH1 info_string;
       if (factory(obj_, kFactoryInfo, &info_string)) {
-        _::Print(info_string);
+        ::_::Print(info_string);
       }
-      _::Print('\"');
+      ::_::Print('\"');
     }
   }
 

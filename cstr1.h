@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__03
-#ifndef INCLUDED_SCRIPTUTF8
-#define INCLUDED_SCRIPTUTF8
+#ifndef INCLUDED_SCRIPT2_UTF8
+#define INCLUDED_SCRIPT2_UTF8
 
 #include "casciidata.h"
 #include "cclock.h"
@@ -59,7 +59,7 @@ API const CH1* StringLineEnd(const CH1* text, int column_count);
 
 /* Returns a pointer to the CH1 at the stop of the row. */
 API const CH1* StringLineEnd(const CH1* text, const CH1* text_end,
-                              int column_count);
+                             int column_count);
 
 /* Returns the pointer to the next CH1 in the CH1 that is not an ASCII
 number_.
@@ -88,7 +88,7 @@ API const CH1* StringEquals(const CH1* text_a, const CH1* text_b);
 
 /* Compares the source and query CH1 as nil-terminated strings. */
 API const CH1* StringEquals(const CH1* text, const CH1* text_end,
-                             const CH1* query);
+                            const CH1* query);
 
 /* Searches the given CH1 for the given CH1.
 @param  text      The CH1 to search.
@@ -145,7 +145,7 @@ upon success.
 @param value The value to utf. */
 API CH1* Print(CH1* start, CH1* stop, SI8 value);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -188,7 +188,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH1* PrintCenter(CH1* start, CH1* stop, const CH1* string_,
-                      int column_count);
+                     int column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -196,8 +196,7 @@ upon success.
 @param begin Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The value to write. */
-API CH1* PrintCenter(CH1* start, CH1* stop, CH1 character,
-                      int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, CH1 character, int column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -238,7 +237,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH1* PrintRight(CH1* start, CH1* stop, const CH1* string_,
-                     int column_count);
+                    int column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -458,8 +457,7 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param begin The beginning of the read socket.
 @param stop  The stop of the read socket. */
-API CH1* PrintSocket(CH1* start, CH1* stop, const void* begin,
-                      const void* end);
+API CH1* PrintSocket(CH1* start, CH1* stop, const void* begin, const void* end);
 
 /* Prints a line of the given column_count.
 @return Returns a pointer to the next CH1 after the stop of the read number_ or
@@ -478,7 +476,7 @@ nil upon failure.
 @param string_ The string_ to utf.
 @param column_count The number_ of columns. */
 API CH1* TPrintLineString(CH1* cursor, CH1* stop, const CH1* string_,
-                           int column_count);
+                          int column_count);
 
 /* Converts the given string_ to a 8-bit signed integer.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -571,7 +569,7 @@ are done printing.
 */
 struct API UTF1 {
   CH1 *begin,  //< Write begin pointer.
-      *stop;    //< End of socket pointer.
+      *stop;   //< End of socket pointer.
 
   /* Initializes the Utf& from the given socket pointers.
   @param begin The beginning of the socket.
@@ -677,7 +675,7 @@ class Utf8Text {
   /* Prints the value to the text socket. */
   Utf8Text(UI8 value);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf8Text(FLT value);
 
@@ -711,7 +709,7 @@ class Utf8Center {
   /* Prints the value to the text socket. */
   Utf8Center(UI8 value, int column_count);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf8Center(FLT value, int column_count);
 
@@ -727,8 +725,8 @@ class Utf8Center {
 
  private:
   const CH1* string_;  //< Pointer to the string_.
-  Utf8Text number_;     //< Pointer to a pointer to utf.
-  int column_count;     //< Number of columns to center.
+  Utf8Text number_;    //< Pointer to a pointer to utf.
+  int column_count;    //< Number of columns to center.
 };
 
 /* Utility class for printing hex with operator<<. */
@@ -749,7 +747,7 @@ class Utf8Right {
   /* Prints the value to the text socket. */
   Utf8Right(UI8 value, int column_count);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf8Right(FLT value, int column_count);
 
@@ -765,13 +763,13 @@ class Utf8Right {
 
  private:
   const CH1* string_;  //< Pointer to the string_.
-  Utf8Text number_;     //< Pointer to a pointer to utf.
-  int column_count;     //< Number of columns to center.
+  Utf8Text number_;    //< Pointer to a pointer to utf.
+  int column_count;    //< Number of columns to center.
 };
 
 /* Utility class for printing a single CH1 token line with operator<<. */
 struct API Utf8Line {
-  CH1 token;        //< Character to utf.
+  CH1 token;         //< Character to utf.
   int column_count;  //< Column count.
 
   /* Constructor. */
@@ -781,7 +779,7 @@ struct API Utf8Line {
 /* Utility class for printing a string_ line with operator<<. */
 struct API Utf8LineString {
   const CH1* string_;  //< Character to utf.
-  int column_count;     //< Column count.
+  int column_count;    //< Column count.
 
   /* Constructor. */
   Utf8LineString(const CH1* string_, int column_count);
@@ -804,56 +802,56 @@ struct API Utf8LineString {
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, const CH1* string_);
+API ::_::UTF1& operator<<(_::UTF1& utf, const CH1* string_);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, CH1 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, CH1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI1 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, UI1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI2 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, SI2 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI2 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, UI2 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI4 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, SI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI4 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, UI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI8 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, SI8 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI8 value);
+API ::_::UTF1& operator<<(_::UTF1& utf, UI8 value);
 
 #if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
@@ -861,33 +859,33 @@ API _::UTF1& operator<<(_::UTF1& utf, UI8 value);
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, FLT value);
+API ::_::UTF1& operator<<(_::UTF1& utf, FLT value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, DBL value);
+API ::_::UTF1& operator<<(_::UTF1& utf, DBL value);
 #endif
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  item The item to write to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Center item);
+API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Center item);
 
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Right item);
+API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Right item);
 
 /* Prints a line of the given column_count to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line);
+API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Line line);
 
 /* Prints a line string_ of the given column_count to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line);
+API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8LineString line);
 
 #endif  //< #if USING_UTF8
-#endif  //< #if INCLUDED_SCRIPTUTF8
+#endif  //< #if INCLUDED_SCRIPT2_UTF8
 #endif  //< #if SEAM >= _0_0_0__03

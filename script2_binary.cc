@@ -126,7 +126,7 @@ static const UI2 kDigits00To99[100] = {
     0x3939};
 #endif
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
@@ -178,7 +178,7 @@ static const UI4 kIEEE754Pow10[] = {0,        1,         10,        100,
                                     1000,     10000,     100000,    1000000,
                                     10000000, 100000000, 1000000000};
 
-#endif  //<  #if SEAM >= _0_0_0__03
+#endif
 
 const UI2* BinaryLUTDecimals() { return kDigits00To99; }
 
@@ -377,8 +377,7 @@ int MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
 
 int MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
 
-void FloatBytes(FLT value, CH1& byte_0, CH1& byte_1, CH1& byte_2,
-                CH1& byte_3) {
+void FloatBytes(FLT value, CH1& byte_0, CH1& byte_1, CH1& byte_2, CH1& byte_3) {
   UI4 ui_value = *reinterpret_cast<UI4*>(&value);
   byte_0 = (CH1)(ui_value);
   byte_1 = (CH1)(ui_value >> 8);

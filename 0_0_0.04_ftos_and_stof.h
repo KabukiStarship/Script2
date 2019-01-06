@@ -28,10 +28,10 @@ using namespace std;
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
-                                     const CH1* args) {
+                                    const CH1* args) {
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
@@ -89,4 +89,3 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-}  // namespace _
