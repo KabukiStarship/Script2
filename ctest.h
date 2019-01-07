@@ -23,9 +23,30 @@ string_.
 @param seam_log Beginning of the seam log socket.
 @param seam_end End of the seam log socket.
 @param args     Command line argument string_. */
-typedef const CH1* (*TestCase)(CH1* seam_log, CH1* seam_end,
-                                const CH1* args);
+typedef const CH1* (*TestCase)(CH1* seam_log, CH1* seam_end, const CH1* args);
 namespace _ {
+
+/* Handles an assert.
+@return True upon failure.
+@param  line    The line the program failed at.
+@param  file    The file the error occurred at.
+@param  message An optional message to utf. */
+API void TestFunctionLine(int line, const CH1* funciton, const CH1* file);
+
+/* Handles an assert.
+@return True upon failure.
+@param  line    The line the program failed at.
+@param  file    The file the error occurred at.
+@param  message An optional message to utf. */
+API BOL TestWarn(int line, const CH1* funciton, const CH1* file,
+                 const CH1* header = "Assertion failed at ");
+
+/* Handles an assert.
+@return True upon failure.
+@param  line    The line the program failed at.
+@param  file    The file the error occurred at.
+@param  message An optional message to utf. */
+API BOL TestAssert(int line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
@@ -35,7 +56,7 @@ int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
 /* Tests an array of TestCase(s).
 @return Nil upon success or an error string_ upon failure. */
 const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
-                     TestCase* seams, int node_count);
+                    TestCase* seams, int node_count);
 
 /* Prints a message when a TestCase completes without failure. */
 BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
@@ -189,20 +210,6 @@ API BOL Test(FLT a, FLT b);
 @param  a Parameter a.
 @param  b Parameter b. */
 API BOL Test(DBL a, DBL b);
-
-/* Handles an assert.
-@return True upon failure.
-@param  line    The line the program failed at.
-@param  file    The file the error occurred at.
-@param  message An optional message to utf. */
-API BOL TestWarn(const CH1* funciton, const CH1* file, int line);
-
-/* Handles an assert.
-@return True upon failure.
-@param  line    The line the program failed at.
-@param  file    The file the error occurred at.
-@param  message An optional message to utf. */
-API BOL TestAssert(const CH1* funciton, const CH1* file, int line);
 
 }  // namespace _
 

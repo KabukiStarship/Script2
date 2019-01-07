@@ -16,9 +16,11 @@
 #define PRINT_OBJ(stack)
 #define PRINT_TOBJ(stack)
 #define PRINT_FUNCTION
+#define PRINTLN
+#define PRINT_FUNCTION_LINE
 #define SOCKET_SAVE(begin, stop)
 #define ASSERT(condition) \
-  if (!::_::Test(condition)) ::_::TestAssert(__FUNCTION__, __FILE__, __LINE__)
+  if (!::_::Test(condition)) ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__)
 #define CHECK(condition)
 #define COMPARE(a, b)
 #define AVOW(a, b)

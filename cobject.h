@@ -50,12 +50,12 @@ enum AsciiFactoryFunctions {
 };
 
 enum AsciiFactoryErrors {
-  kFactorySuccess = 0,      //< Factory operation completed successfully.
-  kFactoryNilOBJ = 1,       //< Factory found nil obj.begin pointer.
-  kFactoryNilArg = 2,       //< Factory arg nil.
-  kFactorySizeInvalid = 3,  //< Factory size invalid.
-  kFactoryOutOfMemory = 4,  //< Factory out of memory.
-  kFactoryCantGrow = 5,     //< Factory can't double in size.
+  kFactorySuccess = 0,       //< Factory operation completed successfully.
+  kFactoryNilOBJ = 1,        //< Factory found nil obj.begin pointer.
+  kFactoryNilArg = 2,        //< Factory arg nil.
+  kFactorySizeInvalid = 3,   //< Factory size invalid.
+  kFactoryOutOfRAM = 4,      //< Factory out of memory.
+  kFactorySizeOverflow = 5,  //< Factory ASCII Type Size limit reached.
 };
 
 /* Checks if the value is a valid object index, that it's 7 less than the max

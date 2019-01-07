@@ -1131,7 +1131,7 @@ struct API TLineString {
 };
 
 /* Returns the first CH1 in the cursor socket. */
-template <typename Char = CH1, typename Size = int>
+template <typename Char = CH1, typename Size = SI4>
 inline Char* TStringStart(UIW* begin) {
   ASSERT(begin);
   UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
@@ -1139,7 +1139,7 @@ inline Char* TStringStart(UIW* begin) {
 }
 
 /* Searches for the stop of the s. */
-template <typename Char = CH1, typename Size = int>
+template <typename Char = CH1, typename Size = SI4>
 inline Char* TStringStop(UIW* begin) {
   ASSERT(begin);
 
@@ -1151,7 +1151,7 @@ inline Char* TStringStop(UIW* begin) {
 }
 
 /* Searches for the stop of the string. */
-template <typename Char = CH1, typename Size = int>
+template <typename Char = CH1, typename Size = SI4>
 inline Char* TStringStop(CObject obj) {
   return TStringStop<Char, Size>(obj);
 }
@@ -1191,7 +1191,7 @@ class TSTR {
 @return If (size == 0 && begin) then nil indicating success deleting the
 factory. If passing in a argument it will have to get passed through the obj.
 */
-template <typename Size = int, typename Char = CH1>
+template <typename Size = SI4, typename Char = CH1>
 int TCOut(CObject& obj, SIW function, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
@@ -1202,7 +1202,7 @@ int TCOut(CObject& obj, SIW function, void* arg) {
 
 /* AsciiFactory prints the begin to the console and deletes the
 obj.begin. */
-template <typename Size = int, typename Char = CH1>
+template <typename Size = SI4, typename Char = CH1>
 int TCOutHeap(CObject& obj, SIW fun, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
@@ -1331,7 +1331,6 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
 _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
-  PRINT("\n\nJFKLDJSDFJKFSD\n\n");
   return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 

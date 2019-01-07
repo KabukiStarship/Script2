@@ -17,24 +17,27 @@
 #define PRINT_OBJ(stack) stack->Print()
 #define PRINT_TOBJ(stack) stack.Print()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
+#define PRINTLN ::_::Print('\n')
+#define PRINT_FUNCTION_LINE ::_::Print('\n'); \
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
 #define SOCKET_SAVE(cursor, end_a) Socket socket_to_print(cursor, end_a)
 #define CHECK(condition) \
-  if (!_::Test(condition)) ::_::AssertWarn(__FUNCTION__, __FILE__, __LINE__)
+  if (!_::Test(condition)) ::_::AssertWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)                               \
   if (!::_::Test(a, b)) {                             \
     ::_::Print("\n\nExpecting:");                     \
     ::_::Print(a);                                    \
     ::_::Print("\nFound    :");                       \
     ::_::Print(b);                                    \
-    ::_::AssertWarn(__FUNCTION__, __FILE__, __LINE__) \
+    ::_::AssertWarn(__LINE__, __FUNCTION__, __FILE__) \
   }
 #define ASSERT(condition) \
-  if (!_::Test(condition)) ::_::TestAssert(__FUNCTION__, __FILE__, __LINE__)
+  if (!_::Test(condition)) ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__)
 #define AVOW(a, b)                                   \
   if (!::_::Test(a, b)) {                              \
     ::_::Print("\n\nExpecting:");                      \
     ::_::Print(a);                                     \
     ::_::Print("\nFound    :");                        \
     ::_::Print(b);                                     \
-    ::_::TestAssert(__FUNCTION__, __FILE__, __LINE__); \
+    ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
   }

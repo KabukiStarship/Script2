@@ -37,6 +37,11 @@ constexpr Size TObjSizeMin() {
   return sizeof(Size);
 }
 
+template <typename Size>
+inline Size SizeWords(Size size) {
+  return size >> kWordBitCount;
+}
+
 /* Writes the size to the given word-aligned-down socket, making a new one if
 required. */
 template <typename Size>
@@ -44,7 +49,7 @@ inline UIW* TObjInit(UIW* socket, Size size) {
   PRINTF("\nsocket:0x%p size:%i", socket, (int)size);
   size = TAlignDownI<Size>(size);
   if (size < TObjSizeMin<Size>()) return nullptr;
-  if (!socket) socket = new UIW[size >> kWordBitCount];
+  if (!socket) socket = new UIW[SizeWords<Size>(size)];
   *reinterpret_cast<Size*>(socket) = size;
   return socket;
 }
@@ -135,7 +140,7 @@ UIW* TObjNew(Size size, Size size_min) {
   if (!TObjSizeIsValid<Size>(size, size_min)) return nullptr;
 
   size = TAlignUpSigned<SI2>(size, kWordLSbMask);
-  UIW* socket = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[SizeWords<Size>(size)];
   *reinterpret_cast<Size*>(socket) = size;
   return socket;
 }
@@ -145,7 +150,12 @@ UIW* TObjNew(Size size, Size size_min) {
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
 UIW* TObjClone(UIW* socket, Size size) {
-  UIW* clone = new UIW[size >> kWordBitCount];
+  UIW* clone;
+  try {
+    clone = new UIW[SizeWords<Size>(size)];
+  } catch (const std::bad_alloc& exception) {
+    return nullptr;
+  }
   SocketCopy(clone, size, socket, size);
   *reinterpret_cast<Size*>(socket) = size;
   return clone;
@@ -193,7 +203,7 @@ int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
     case kFactoryNew:
       size = TAlignUpSigned<Size>(*reinterpret_cast<Size*>(arg));
       if ((~size) == 0) return kFactorySizeInvalid;
-      obj.begin = new UIW[size >> kWordBitCount];
+      obj.begin = new UIW[SizeWords<Size> (size)];
       return 0;
     case kFactoryGrow:
       size = *reinterpret_cast<Size*>(obj.begin);

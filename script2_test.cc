@@ -23,16 +23,21 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-BOL TestWarn(const CH1* function, const CH1* file, int line) {
-  Printf("\nAssertion failed in function %s at line %d in \"%s\"", function,
-         line, file);
+void TestFunctionLine(int line, const CH1* function, const CH1* file) {
+  Printf("line %d in %s in \"%s\"", line, function, file);
+}
+
+BOL TestWarn(int line, const CH1* function, const CH1* file,
+             const CH1* header) {
+  Print('\n');
+  Print(header);
+  TestFunctionLine(line, function, file);
   return true;
 }
 
-BOL TestAssert(const CH1* function, const CH1* file, int line) {
-  TestWarn(function, file, line);
-  Pause();
-  return true;
+BOL TestAssert(int line, const CH1* function, const CH1* file) {
+  BOL result = TestWarn(line, function, file);
+  return result;
 }
 
 int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
