@@ -343,6 +343,7 @@ upon success.
 @param value The value to utf. */
 API CH1* PrintHex(CH1* start, CH1* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH1 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
 upon success.
@@ -350,6 +351,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH1* PrintHex(CH1* start, CH1* stop, FLT value);
+#endif
 
 /* Writes the give CH1 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -431,6 +433,7 @@ upon success.
 @param value The value to utf. */
 API CH1* PrintBinary(CH1* start, CH1* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH1 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
 upon success.
@@ -438,6 +441,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH1* PrintBinary(CH1* start, CH1* stop, FLT value);
+#endif
 
 /* Writes the give CH1 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -541,12 +545,14 @@ API const CH1* Scan(const CH1* text, SI8& result);
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, UI8& result);
 
+#if SEAM >= _0_0_0__04
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH1 after the stop
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, FLT& result);
+#endif
 
 /* Converts the given string_ to a 64-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
@@ -555,11 +561,11 @@ API const CH1* Scan(const CH1* text, FLT& result);
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, DBL& result);
 
-/* AsciiFactory Prints the socket to the console as a UTF-8 string_. */
-UIW* COutUtf8(UIW* socket, SIW function, void* arg);
+/* AsciiFactory Prints the socket to the console as a UTF-8 string_.
+UIW* COutUtf8(UIW* socket, SIW function, void* arg); */
 
-/* Prints the socket to the console as a UTF-8 string_. */
-UIW* COutAutoUtf8(UIW* socket, SIW function, void* arg);
+/* Prints the socket to the console as a UTF-8 string_.
+UIW* COutAutoUtf8(UIW* socket, SIW function, void* arg); */
 
 /* Utility class for printing strings.
 This class only stores the stop of socket pointer and a pointer to the write
@@ -611,11 +617,13 @@ struct API UTF1 {
   /* Prints the given value as hex. */
   inline UTF1& Hex(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as hex. */
   inline UTF1& Hex(FLT value);
 
   /* Prints the given value as hex. */
   inline UTF1& Hex(DBL value);
+#endif
 
   /* Prints the given pointer as hex. */
   inline UTF1& Hex(const void* pointer);
@@ -644,11 +652,13 @@ struct API UTF1 {
   /* Prints the given value as binary. */
   inline UTF1& Binary(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as binary. */
   inline UTF1& Binary(FLT value);
 
   /* Prints the given value as binary. */
   inline UTF1& Binary(DBL value);
+#endif
 
   /* Prints the given pointer as binary. */
   inline UTF1& Binary(const void* pointer);
@@ -682,6 +692,7 @@ class Utf8Text {
   /* Prints the value to the text socket. */
   Utf8Text(DBL value);
 #endif
+
   /* Gets the number_ string_. */
   const CH1* String();
 

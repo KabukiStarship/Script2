@@ -128,6 +128,12 @@ API int HexToByte(CH1 hex_byte);
 */
 API int HexToByte(UI2 hex);
 
+/* Prints the given SI4 to the socket. */
+API CH1* Print(CH1* cursor, CH1* stop, SI4 value);
+
+/* Prints the given UI4 to the socket. */
+API CH1* Print(CH1* cursor, CH1* stop, UI4 value);
+
 #endif  //< #if SEAM >= _0_0_0__01
 
 #if SEAM >= _0_0_0__04

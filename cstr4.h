@@ -131,6 +131,7 @@ upon success.
 @param value The value to utf. */
 API CH4* Print(CH4* start, CH4* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH4 to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
@@ -146,6 +147,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH4* Print(CH4* start, CH4* stop, DBL value);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
@@ -196,6 +198,7 @@ upon success.
 @param value The value to utf. */
 API CH4* PrintCenter(CH4* start, CH4* stop, SI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH4 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
@@ -211,6 +214,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH4* PrintCenter(CH4* start, CH4* stop, DBL value, int column_count);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
@@ -261,6 +265,7 @@ upon success.
 @param value The value to utf. */
 API CH4* PrintRight(CH4* start, CH4* stop, SI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH4 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
@@ -276,6 +281,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH4* PrintRight(CH4* start, CH4* stop, DBL value, int column_count);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
@@ -349,6 +355,7 @@ upon success.
 @param value The value to utf. */
 API CH4* PrintHex(CH4* start, CH4* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH4 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
@@ -364,6 +371,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH4* PrintHex(CH4* start, CH4* stop, DBL value);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
@@ -437,6 +445,7 @@ upon success.
 @param value The value to utf. */
 API CH4* TPrintBinary(CH4* start, CH4* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH4 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH4
 upon success.
@@ -452,6 +461,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH4* TPrintBinary(CH4* start, CH4* stop, DBL value);
+#endif
 
 /* Prints the given memory socket to the text socket.
 @param begin The beginning of the write socket.
@@ -567,6 +577,7 @@ API const CH4* Scan(const CH4* begin, SI8& result);
 of the read number_ or nil upon failure. */
 API const CH4* Scan(const CH4* begin, UI8& result);
 
+#if SEAM >= _0_0_0__04
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  begin A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
@@ -580,6 +591,8 @@ API const CH4* Scan(const CH4* begin, FLT& result);
 @return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
 API const CH4* Scan(const CH4* begin, DBL& result);
+#endif
+
 /* Converts the given string_ to a 8-bit signed integer.
 @param  begin A nil-terminated string_ in ROM.
 @param  result  The result of the conversion.
@@ -636,6 +649,7 @@ API const CH4* Scan(const CH4* text, SI8& result);
 of the read number_ or nil upon failure. */
 API const CH4* Scan(const CH4* text, UI8& result);
 
+#if SEAM >= _0_0_0__04
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  begin  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
@@ -649,6 +663,7 @@ API const CH4* Scan(const CH4* text, FLT& result);
 @return Returns a pointer to the next CH4 after the stop
 of the read number_ or nil upon failure. */
 API const CH4* Scan(const CH4* text, DBL& result);
+#endif
 
 /* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
 strings.
@@ -701,11 +716,13 @@ struct API UTF4 {
   /* Prints the given value as hex. */
   inline UTF4& Hex(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as hex. */
   inline UTF4& Hex(FLT value);
 
   /* Prints the given value as hex. */
   inline UTF4& Hex(DBL value);
+#endif
 
   /* Prints the given pointer as hex. */
   inline UTF4& Hex(const void* pointer);
@@ -734,11 +751,13 @@ struct API UTF4 {
   /* Prints the given value as binary. */
   inline UTF4& Binary(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as binary. */
   inline UTF4& Binary(FLT value);
 
   /* Prints the given value as binary. */
   inline UTF4& Binary(DBL value);
+#endif
 
   /* Prints the given pointer as binary. */
   inline UTF4& Binary(const void* pointer);
@@ -765,11 +784,13 @@ class Text4 {
   /* Prints the value to the text socket. */
   Text4(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Text4(FLT value);
 
   /* Prints the value to the text socket. */
   Text4(DBL value);
+#endif
 
   /* Gets the number_ string_. */
   const CH4* GetString();
@@ -798,11 +819,13 @@ class Utf32Center {
   /* Prints the value to the text socket. */
   Utf32Center(UI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf32Center(FLT value, int column_count);
 
   /* Prints the value to the text socket. */
   Utf32Center(DBL value, int column_count);
+#endif
 
   /* Gets the number_ string_. */
   const CH4* GetString();
@@ -834,11 +857,13 @@ class Utf32Right {
   /* Prints the value to the text socket. */
   Utf32Right(UI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf32Right(FLT value, int column_count);
 
   /* Prints the value to the text socket. */
   Utf32Right(DBL value, int column_count);
+#endif
 
   /* Gets the number_ string_. */
   const CH4* GetString();
@@ -909,6 +934,7 @@ API ::_::UTF4& operator<<(_::UTF4& printer, SI8 value);
 @param  value The value to write to the utf. */
 API ::_::UTF4& operator<<(_::UTF4& printer, UI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
 @return The printer.
 @desc
@@ -921,6 +947,7 @@ API ::_::UTF4& operator<<(_::UTF4& printer, FLT value);
 @param  printer The printer.
 @param  value The value to write to the utf. */
 API ::_::UTF4& operator<<(_::UTF4& printer, DBL value);
+#endif
 
 /* Writes the given value to the utf.
 @return The printer.

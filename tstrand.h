@@ -216,8 +216,7 @@ class TStrand {
       do {
         int result = TObjGrow<SI4>(obj_.Obj());
         if (result) return utf_;
-        cursor = TPrint<Char>(cursor, stop,
-                              item);  //< This is only printing as char?
+        cursor = Print(cursor, stop, item);
       } while (!cursor);
     }
     utf_.begin = cursor;

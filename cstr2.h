@@ -126,6 +126,7 @@ upon success.
 @param value The value to utf. */
 API CH2* Print(CH2* start, CH2* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -141,6 +142,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH2* Print(CH2* start, CH2* stop, DBL value);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -191,6 +193,7 @@ upon success.
 @param value The value to utf. */
 API CH2* PrintCenter(CH2* start, CH2* stop, SI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -206,6 +209,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH2* PrintCenter(CH2* start, CH2* stop, DBL value, int column_count);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -256,6 +260,7 @@ upon success.
 @param value The value to utf. */
 API CH2* PrintRight(CH2* start, CH2* stop, SI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -271,6 +276,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH2* PrintRight(CH2* start, CH2* stop, DBL value, int column_count);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -344,6 +350,7 @@ upon success.
 @param value The value to utf. */
 API CH2* PrintHex(CH2* start, CH2* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -359,6 +366,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH2* PrintHex(CH2* start, CH2* stop, DBL value);
+#endif
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -432,6 +440,7 @@ upon success.
 @param value The value to utf. */
 API CH2* TPrintBinary(CH2* start, CH2* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -447,6 +456,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH2* TPrintBinary(CH2* start, CH2* stop, DBL value);
+#endif
 
 /* Prints out the contents of the address to the printer socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -554,6 +564,7 @@ API const CH2* Scan(const CH2* text, SI8& result);
 of the read number_ or nil upon failure. */
 API const CH2* Scan(const CH2* text, UI8& result);
 
+#if SEAM >= _0_0_0__04
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
@@ -567,6 +578,7 @@ API const CH2* Scan(const CH2* text, FLT& result);
 @return Returns a pointer to the next CH2 after the stop
 of the read number_ or nil upon failure. */
 API const CH2* Scan(const CH2* text, DBL& result);
+#endif
 
 /* ASCII printing utilities
 @ingroup Utf
@@ -622,11 +634,13 @@ struct API UTF2 {
   /* Prints the given value as hex. */
   inline UTF2& Hex(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as hex. */
   inline UTF2& Hex(FLT value);
 
   /* Prints the given value as hex. */
   inline UTF2& Hex(DBL value);
+#endif
 
   /* Prints the given pointer as hex. */
   inline UTF2& Hex(const void* pointer);
@@ -655,11 +669,13 @@ struct API UTF2 {
   /* Prints the given value as binary. */
   inline UTF2& Binary(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as binary. */
   inline UTF2& Binary(FLT value);
 
   /* Prints the given value as binary. */
   inline UTF2& Binary(DBL value);
+#endif
 
   /* Prints the given pointer as binary. */
   inline UTF2& Binary(const void* pointer);
@@ -686,11 +702,13 @@ class Text2 {
   /* Prints the value to the text socket. */
   Text2(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Text2(FLT value);
 
   /* Prints the value to the text socket. */
   Text2(DBL value);
+#endif
 
   /* Gets the number_ string_. */
   const CH2* GetString();
@@ -719,11 +737,13 @@ class Utf16Center {
   /* Prints the value to the text socket. */
   Utf16Center(UI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf16Center(FLT value, int column_count);
 
   /* Prints the value to the text socket. */
   Utf16Center(DBL value, int column_count);
+#endif
 
   /* Gets the number_ string_. */
   const CH2* GetString();
@@ -755,11 +775,13 @@ class Utf16Right {
   /* Prints the value to the text socket. */
   Utf16Right(UI8 value, int column_count);
 
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf16Right(FLT value, int column_count);
 
   /* Prints the value to the text socket. */
   Utf16Right(DBL value, int column_count);
+#endif
 
   /* Gets the number_ string_. */
   const CH2* GetString();
@@ -830,6 +852,7 @@ API ::_::UTF2& operator<<(_::UTF2& printer, SI8 value);
 @param  value The value to write to the utf. */
 API ::_::UTF2& operator<<(_::UTF2& printer, UI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
 @return The printer.
 @desc
@@ -842,6 +865,7 @@ API ::_::UTF2& operator<<(_::UTF2& printer, FLT value);
 @param  printer The printer.
 @param  value The value to write to the utf. */
 API ::_::UTF2& operator<<(_::UTF2& printer, DBL value);
+#endif
 
 /* Writes the given value to the utf.
 @return The printer.

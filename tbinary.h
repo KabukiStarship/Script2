@@ -51,7 +51,8 @@ void TPrintString(const Char* string) {
 @param  string_b String B.
 @param  delimiter The delimiter.*/
 template <typename Char = const CH1>
-int TStringCompare(Char* string_a, Char* string_b, Char delimiter = 0) {
+int TStringCompare(const Char* string_a, const Char* string_b,
+                   Char delimiter = 0) {
   int a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
@@ -220,7 +221,7 @@ Char* TPrint(Char* cursor, Char* stop, const Char* string, Char delimiter = 0) {
 
   if (cursor >= stop) return nullptr;
 
-  CH1 c = *string++;
+  Char c = *string++;
   while (c) {
     *cursor++ = c;
     if (cursor >= stop) return nullptr;
@@ -370,26 +371,26 @@ BOL TIsDigit(Char c) {
 @param socket The beginning of the socket.
 @param result The UI to write the scanned UI. */
 template <typename UI, typename Char = CH1>
-Char* TScanUnsigned(Char* socket, UI& result) {
-  ASSERT(socket);
-  PRINTF("\nScanning unsigned value:%s", socket);
-  Char* cursor = socket;
+const Char* TScanUnsigned(const Char* start, UI& result) {
+  ASSERT(start);
+  PRINTF("\nScanning unsigned value:%s", start);
+  const Char* cursor = start;
   Char c = *cursor++;
   if (!TIsDigit<Char>(c)) return nullptr;
 
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  Char* stop = cursor;  // Store stop to return.
+  const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (SI4)(cursor - socket));
+         (SI4)(cursor - start));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
   UI pow_10_ui2 = 1;
 
-  while (cursor >= socket) {
+  while (cursor >= start) {
     c = *cursor--;
     pow_10_ui2 *= 10;
     UI new_value = value + pow_10_ui2 * (c - '0');
@@ -402,6 +403,15 @@ Char* TScanUnsigned(Char* socket, UI& result) {
   return stop;
 }
 
+/* Scans the given socket for an unsigned integer (UI).
+@return Nil if there is no UI to scan.
+@param socket The beginning of the socket.
+@param result The UI to write the scanned UI. */
+template <typename UI, typename Char = CH1>
+Char* TScanUnsigned(Char* cursor, UI& result) {
+  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+  return const_cast<Char*>(TScanUnsigned<UI, Char>(ptr, result));
+}
 /* Prints two chars to the console.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = CH1>
@@ -750,14 +760,14 @@ inline Char* TPrintSigned(Char* socket, int size, SI value) {
 @param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
 template <typename SI = SIW, typename UI = UIW, typename Char>
-Char* TScanSigned(Char* socket, SI& result) {
-  ASSERT(socket);
+const Char* TScanSigned(const Char* start, SI& result) {
+  ASSERT(start);
   SI sign;
-  Char* cursor = socket;
+  const Char* cursor = start;
   Char c = *cursor++;
   if (c == '-') {
     PRINTF("\nScanning negative backwards:\"");
-    c = *socket++;
+    c = *start++;
     sign = -1;
   } else {
     PRINTF("\nScanning positive backwards:\"");
@@ -768,16 +778,16 @@ Char* TScanSigned(Char* socket, SI& result) {
   // Find length:
   c = *cursor++;
   while (TIsDigit<Char>(c)) c = *cursor++;
-  Char* stop = cursor;  // Store stop to return.
+  const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
   PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-         (SI4)(cursor - socket));
+         (SI4)(cursor - start));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
   UI pow_10_ui2 = 1;
 
-  while (cursor >= socket) {
+  while (cursor >= start) {
     c = *cursor--;
     pow_10_ui2 *= 10;
     UI new_value = value + pow_10_ui2 * (c - '0');
@@ -789,6 +799,15 @@ Char* TScanSigned(Char* socket, SI& result) {
   return stop;
 }
 
+/* Scans the given socket for an Signed Integer (SI).
+@return Nil if there is no UI to scan.
+@param socket The beginning of the socket.
+@param result The SI to write the scanned SI. */
+template <typename SI = SIW, typename UI = UIW, typename Char>
+Char* TScanSigned(Char* cursor, SI& result) {
+  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+  return const_cast<Char*>(TScanSigned<SI, UI, Char>(ptr));
+}
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__01
 
@@ -800,8 +819,11 @@ Char* TScanSigned(Char* socket, SI& result) {
 #endif
 namespace _ {
 
+/* Finds the end of a decimal number starting at the given cursor.
+@return Nil if the string doesn't contain a decimal or is nil.
+@param  cursor The start of the string to search. */
 template <typename Char = const CH1>
-Char* TStringDecimalEnd(Char* cursor) {
+const Char* TStringDecimalEnd(const Char* cursor) {
   if (!cursor) return cursor;
   Char c = *cursor++;
   if (c == '-') c = *cursor++;
@@ -812,6 +834,12 @@ Char* TStringDecimalEnd(Char* cursor) {
     if (c <= 0) return cursor - 1;
   }
   return cursor - 1;
+}
+
+template <typename Char = const CH1>
+Char* TStringDecimalEnd(Char* cursor) {
+  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+  return const_cast<Char*>(TStringDecimalEnd<Char>(ptr));
 }
 }  // namespace _
 #endif

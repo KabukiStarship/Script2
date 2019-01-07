@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License. */
 #include "cstr.h"
 
 #include "cascii.h"
-#include "cconsole.h"
 #include "ctest.h"
 #include "tbinary.h"
 #include "tobject.h"
@@ -355,14 +354,14 @@ inline Char* TStringEquals(Char* string_a, const Char* string_b) {
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
 template <typename Char = CH1>
-const Char* TStringEquals(const Char* cursor, const Char* stop, Char* query) {
+const Char* TStringEquals(const Char* cursor, const Char* stop, const Char* query) {
   if (!cursor) return nullptr;
   ASSERT(cursor < stop);
   if (!query) return nullptr;
 
   PRINTF("\nComparing \"%s\" to \"%s\"", cursor, query);
 
-  const Char a = *cursor, b = *query;
+  Char a = *cursor, b = *query;
   while (a) {
     PRINT(a);
     if (a != b) {  // Not a hit.
@@ -391,7 +390,7 @@ const Char* TStringEquals(const Char* cursor, const Char* stop, Char* query) {
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
 template <typename Char = CH1>
-Char* TStringEquals(Char* cursor, Char* stop, Char* query) {
+Char* TStringEquals(Char* cursor, Char* stop, const Char* query) {
   return const_cast<Char*>(TStringEquals(reinterpret_cast<const Char*>(cursor),
                                          reinterpret_cast<const Char*>(stop),
                                          query));
