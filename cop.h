@@ -88,7 +88,7 @@ TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
 }  // namespace _
 
 template <typename Char>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const ::_::Op* op) {
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const ::_::Op* op) {
   return ::_::Print(utf, op);
 }
 

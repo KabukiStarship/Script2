@@ -354,7 +354,8 @@ inline Char* TStringEquals(Char* string_a, const Char* string_b) {
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
 template <typename Char = CH1>
-const Char* TStringEquals(const Char* cursor, const Char* stop, const Char* query) {
+const Char* TStringEquals(const Char* cursor, const Char* stop,
+                          const Char* query) {
   if (!cursor) return nullptr;
   ASSERT(cursor < stop);
   if (!query) return nullptr;
@@ -606,7 +607,7 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
 
   while (length-- > 0) *cursor++ = ' ';
 
-  CH1 c = *string_++;
+  Char c = *string_++;
   while (c) {
     *cursor++ = c;
     c = *string_++;
@@ -1028,8 +1029,8 @@ class TCenter {
       return utf.Set(
           ::_::TPrintCenter<Char>(utf.begin, utf.stop, string_, column_count));
     }
-    return utf.Set(_::TPrintCenter<Char>(utf.begin, utf.stop, number_.String(),
-                                         column_count));
+    return utf.Set(::_::TPrintCenter<Char>(utf.begin, utf.stop,
+                                           number_.String(), column_count));
   }
 
  private:
@@ -1095,8 +1096,8 @@ class TRight {
     if (string_)
       return utf.Set(
           ::_::TPrintRight<Char>(utf.begin, utf.stop, string_, column_count_));
-    return utf.Set(_::TPrintRight<Char>(utf.begin, utf.stop, number_.String(),
-                                        column_count_));
+    return utf.Set(::_::TPrintRight<Char>(utf.begin, utf.stop, number_.String(),
+                                          column_count_));
   }
 
  private:
@@ -1284,8 +1285,8 @@ TUTF<Char> TCOut() {
 @param  utf The utf.
 @param  value   The value to utf. */
 template <typename Char = CH1, typename Size = intptr_t>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, string_));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const Char* string_) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, string_));
 }
 
 /* Writes the given value to the utf.
@@ -1293,8 +1294,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const Char* string_) {
 @param  value   The value to utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, c));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, Char c) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, c));
 }
 
 /* Writes the given value to the utf.
@@ -1302,8 +1303,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, Char c) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1311,8 +1312,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1320,8 +1321,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1329,8 +1330,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1338,8 +1339,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1347,8 +1348,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1356,8 +1357,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__04
@@ -1366,8 +1367,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1375,8 +1376,8 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FLT value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
-  return utf.Set(_::TPrint<Char>(utf.begin, utf.stop, value));
+_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL value) {
+  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 #endif
 
@@ -1385,7 +1386,7 @@ _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, DBL value) {
 @param  utf The utf.
 @param  item The item to write to utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TCenter<Char> item) {
   return item.Print(utf);
 }
@@ -1395,27 +1396,28 @@ inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
 @param  utf The utf.
 @param  item The item to utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf, ::_::TRight<Char> item) {
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
+                                   ::_::TRight<Char> item) {
   return item.Print(utf);
 }
 
 /* Prints a TLineChar<Char> to the UTF. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TLineChar<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TLineString<Char> line) {
   return line.Print(utf);
 }
 
 /* Prints a TLineString<Char> to the UTF. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(_::TUTF<Char>& utf,
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TToken<Char> token) {
   return token.Print(utf);
 }

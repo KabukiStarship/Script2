@@ -286,7 +286,7 @@ API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 #if USING_CRABS_TEXT == YES
 
 /* Prints the given CCrabs to the Text socket. */
-inline ::_::UTF1& operator<<(_::UTF1& printer, ::_::CCrabs* crabs) {
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
   return ::_::PrintCrabs(printer, crabs);
 }
 #endif

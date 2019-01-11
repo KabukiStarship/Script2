@@ -94,7 +94,7 @@ API UTF1& PrintOperand(UTF1& slot, Operand* operand);
 
 #if USING_CRABS_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
-inline ::_::UTF1& operator<<(_::UTF1& printer, ::_::Operand* operand) {
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Operand* operand) {
   return ::_::PrintOperand(printer, operand);
 }
 

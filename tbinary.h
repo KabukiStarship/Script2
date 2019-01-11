@@ -355,9 +355,9 @@ inline Char* TPrintChar(Char* socket, Char* stop, Char value) {
 
 inline CH1* PrintChar(CH1* cursor, CH1 c) { return TPrintChar<CH1>(cursor, c); }
 
-inline CH2* PrintChar(CH2* cursor, CH2 c) { TPrintChar<CH2>(cursor, c); }
+inline CH2* PrintChar(CH2* cursor, CH2 c) { return TPrintChar<CH2>(cursor, c); }
 
-inline CH4* PrintChar(CH4* cursor, CH4 c) { TPrintChar<CH4>(cursor, c); }
+inline CH4* PrintChar(CH4* cursor, CH4 c) { return TPrintChar<CH4>(cursor, c); }
 
 /* Checks if the given CH1 is a digit of a number_.
 @return True if it is a digit. */
@@ -393,7 +393,7 @@ const Char* TScanUnsigned(const Char* start, UI& result) {
   while (cursor >= start) {
     c = *cursor--;
     pow_10_ui2 *= 10;
-    UI new_value = value + pow_10_ui2 * (c - '0');
+    UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
     PRINTF("\nvalue:%u", (uint)value);
@@ -550,7 +550,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
       if (nil_ptr >= stop) return nullptr;
       UI2 digits2and1 = (UI2)value, pow_10_ui2 = 100;
       Char digit = (Char)(digits2and1 / pow_10_ui2);
-      digits2and1 -= digit * pow_10_ui2;
+      digits2and1 -= ((UI2)digit) * pow_10_ui2;
       TPrintDecimal<Char>(cursor, digit);
       PrintCharPair(cursor + 1, lut[digits2and1]);
       return TPrintNil<Char>(nil_ptr);
@@ -790,7 +790,7 @@ const Char* TScanSigned(const Char* start, SI& result) {
   while (cursor >= start) {
     c = *cursor--;
     pow_10_ui2 *= 10;
-    UI new_value = value + pow_10_ui2 * (c - '0');
+    UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
     PRINTF("\nvalue:%u", (uint)value);
@@ -1205,14 +1205,14 @@ class TBinary {
     } else if (length == 1) {
       // 1e30
       socket[1] = 'e';
-      return TPrintSigned<SIW, Char>(socket + 2, stop, kk - 1);
+      return TPrintSigned<SIW, UIW, Char>(socket + 2, stop, kk - 1);
     }
     // else 1234e30 -> 1.234e33
     SocketShiftUp(&socket[2], LastByte(&socket[1]), length - 1);
 
     *(++socket)++ = '.';
     *socket++ = 'e';
-    return TPrintSigned<SIW, Char>(socket + length + 2, stop, kk - 1);
+    return TPrintSigned<SIW, UIW, Char>(socket + length + 2, stop, kk - 1);
   }
 };
 

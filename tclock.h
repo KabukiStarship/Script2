@@ -85,7 +85,7 @@ const Char* TStringScanTime(const Char* string_, int& hour, int& minute,
   int h,   //< Hour.
       m,   //< Minute.
       s;   //< Second.
-  if (!TScanSigned<int, Char>(++string_, h)) {
+  if (!TScanSigned<SI4, UI4, Char>(++string_, h)) {
     PRINTF("\nInvalid hour:%i", h);
     return nullptr;
   }
@@ -141,7 +141,7 @@ const Char* TStringScanTime(const Char* string_, int& hour, int& minute,
       "\nCases HH:MM, HH::MMam, HH::MMpm, HH:MM:SS, HH:MM:SSam, and "
       "HH:MM:SSpm");
 
-  if (!TScanSigned<int, Char>(string_, m)) return nullptr;
+  if (!TScanSigned<SI4, UI4, Char>(string_, m)) return nullptr;
   string_ = TStringSkipNumbers<Char>(string_);
   if (m < 0) {
     PRINTF("\nMinutes:%i can't be negative!", m);
@@ -194,7 +194,7 @@ const Char* TStringScanTime(const Char* string_, int& hour, int& minute,
 
   PRINT("\n    Cases HH:MM:SS, HH:MM:SSam, and HH:MM:SSpm");
 
-  if (!TScanSigned<int, Char>(string_, s)) return nullptr;
+  if (!TScanSigned<SI4, UI4, Char>(string_, s)) return nullptr;
   if (s < 0) {
     PRINTF("\nSeconds:%i can't be negative!", s);
     return nullptr;
@@ -288,7 +288,7 @@ const Char* TScan(const Char* cursor, CClock& clock) {
       is_last_year = 0;  //< Flag for if the date was last year or not.
 
   // Scan value1
-  if (!TScanSigned<int, Char>(cursor, value1)) {
+  if (!TScanSigned<SI4, UI4, Char>(cursor, value1)) {
     PRINT("Scan error at value1");
     return nullptr;
   }
@@ -313,7 +313,7 @@ const Char* TScan(const Char* cursor, CClock& clock) {
   }
   // Scan value2.
   cursor = TStringSkipChar<Char>(cursor, '0');
-  if (!TScanSigned<int, Char>(cursor, value2)) {
+  if (!TScanSigned<SI4, UI4, Char>(cursor, value2)) {
     PRINT("Failed scanning value2 of date.");
     return nullptr;
   }
@@ -394,7 +394,7 @@ const Char* TScan(const Char* cursor, CClock& clock) {
   cursor = TStringSkipChar<Char>(++cursor, '0');
   c = *cursor;
   // Then there are 3 values and 2 delimiters.
-  if (!TIsDigit<Char>(c) || !TScanSigned<int, Char>(cursor, value3)) {
+  if (!TIsDigit<Char>(c) || !TScanSigned<SI4, UI4, Char>(cursor, value3)) {
     PRINTF("\n    SlotRead error reading value3 of date. %c: ", c);
     return nullptr;  //< Invalid format!
   }

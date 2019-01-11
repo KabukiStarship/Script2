@@ -63,10 +63,13 @@ inline SI TObjSizeMax() {
   return (~count_max) - 15;
 }
 
-/* Checks if the size is in the min max bounds of an ASCII Object. */
-template <typename SI = SIW>
-inline BOL TObjSizeIsValid(SI size, SI size_min) {
-  return (size >= size_min) && (size <= TObjSizeMax<SI>());
+/* Checks if the size is in the min max bounds of an ASCII Object.
+@return 0 If the size is valid. */
+template <typename Size = SIW>
+inline int TObjCanGrow(Size size, Size size_min) {
+  if (size < size_min) return kFactorySizeInvalid;
+  size = size >> (sizeof(Size) * 8 - 2);
+  return (int)size;
 }
 
 /* Checks if the given object count is in the min max bounds of an ASCII
@@ -137,7 +140,7 @@ inline const CH1* TObjEnd(const CObject stack) {
  */
 template <typename Size>
 UIW* TObjNew(Size size, Size size_min) {
-  if (!TObjSizeIsValid<Size>(size, size_min)) return nullptr;
+  if (!TObjCanGrow<Size>(size, size_min)) return nullptr;
 
   size = TAlignUpSigned<SI2>(size, kWordLSbMask);
   UIW* socket = new UIW[SizeWords<Size>(size)];
@@ -154,6 +157,7 @@ UIW* TObjClone(UIW* socket, Size size) {
   try {
     clone = new UIW[SizeWords<Size>(size)];
   } catch (const std::bad_alloc& exception) {
+    PRINTF("\nERROR:%s\n", exception.what());
     return nullptr;
   }
   SocketCopy(clone, size, socket, size);
@@ -172,82 +176,29 @@ inline UIW* TObjClone(CObject& obj) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-BOL TObjCanGrow(Size size) {
-  return (BOL)(size >> (sizeof(Size) * 8 - 2));
-}
-
-/* Standard ASCII Object Factory.
-The ASCII Object Factory function table is defined by the kFactoryDelete enum.
-*/
-template <typename Size>
-int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap);
-
-/* Pushes kUsingHeap_ onto the hardware assisted stack and calls the Factory
-function. */
-template <typename Size, BOL kUsingHeap_>
-int TObjFactory(CObject& obj, SIW function, void* arg) {
-  return TObjFactory<Size>(obj, function, arg, kUsingHeap_);
-}
-
-template <typename Size>
-int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
-  /*
-  Size size;
-  UIW* begin;
-  switch (function) {
-    case kFactoryDelete:
-      begin = obj.begin;
-      if (!begin) return kFactoryNilOBJ;
-      if (using_heap) delete[] begin;
-      return 0;
-    case kFactoryNew:
-      size = TAlignUpSigned<Size>(*reinterpret_cast<Size*>(arg));
-      if ((~size) == 0) return kFactorySizeInvalid;
-      obj.begin = new UIW[SizeWords<Size> (size)];
-      return 0;
-    case kFactoryGrow:
-      size = *reinterpret_cast<Size*>(obj.begin);
-      if (!TObjCanGrow<Size>(size)) return kFactoryCantGrow;
-      size = size << 1;  // size *= 2;
-      begin = obj.begin;
-      obj.begin = TObjClone<Size>(begin, size);
-      if (using_heap) {
-        delete[] begin;
-        obj.factory = TObjFactory<Size, kHeap>;
-      }
-      return 0;
-    case kFactoryClone:
-      if (!arg) return kFactoryNilArg;
-      CObject* other = reinterpret_cast<CObject*>(arg);
-      begin = obj.begin;
-      size = *reinterpret_cast<Size*>(begin);
-      other->begin = TObjClone<Size>(begin, size);
-      other->factory = TObjFactory<Size, kHeap>;
-      return 0;
-    case kFactoryInfo: {
-      const CH1** ptr = *reinterpret_cast<const CH1**>(arg);
-      *ptr = __FUNCTION__;
-      return 0;
-    }
-  }*/
-  return 0;
+int TObjCanGrow(Size size) {
+  return (int)(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-int TObjGrow(CObject& obj, Size new_size) {
-  return TObjFactory<Size, kStack>(obj, kFactoryGrow, nullptr);
+int TObjCanGrow(CObject& obj, Size new_size) {
+  UIW* begin = obj.begin;
+  if (!begin) return kFactoryNilOBJ;
+  Size size = *reinterpret_cast<Size*>(begin);
+  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
+  size = size << 1;  // size *= 2;
+  obj.begin = TObjClone<Size>(begin, size);
+  delete[] begin;
+  return kFactorySuccess;
 }
 
-/* Grows the given CObject to the new_size.
-It is not possible to shrink a raw ASCII object. It is only possible to */
 template <typename Size>
-inline int TObjGrow(CObject& obj) {
-  return TObjFactory<Size, kStack>(obj, kFactoryGrow, nullptr);
+inline int TObjCanGrow(CObject& obj) {
+  return TObjCanGrow(obj, TObjSize<Size>(obj) * 2);
 }
-
 /* A contiguous ASCII Object that starts with the size.
  */
 template <typename Size>
@@ -341,7 +292,7 @@ class TObject {
 
   /* Attempts to grow the this object.
   @return false if the grow op failed. */
-  inline BOL Grow() { return TObjGrow<Size>(obj_); }
+  inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
   void Print() {
     ::_::Print("\nTObject<SI");

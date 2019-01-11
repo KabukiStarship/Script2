@@ -97,7 +97,7 @@ API UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 #if USING_CRABS_TEXT == YES
 /* Prints out the bin to the text. */
-inline ::_::UTF1& operator<<(_::UTF1& utf, ::_::BOut* bout) {
+inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
   return ::_::PrintBOut(utf, bout);
 }
 #endif

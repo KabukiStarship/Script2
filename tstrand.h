@@ -214,9 +214,9 @@ class TStrand {
     cursor = TPrint<Char>(cursor, stop, item);
     if (!cursor) {
       do {
-        int result = TObjGrow<SI4>(obj_.Obj());
+        int result = TObjCanGrow<SI4>(obj_.Obj());
         if (result) return utf_;
-        cursor = Print(cursor, stop, item);
+        cursor = TPrint<Char>(cursor, stop, item);
       } while (!cursor);
     }
     utf_.begin = cursor;
@@ -349,7 +349,7 @@ int TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
     }
     case kFactoryGrow: {
       size = *reinterpret_cast<Size*>(obj.begin);
-      if (!TObjCanGrow<Size>(size)) return kFactorySizeOverflow;
+      if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
       size = size << 1;  // << 1 to * 2
       temp = obj.begin;
       obj.begin = TObjNew<Size>(temp, size);
@@ -367,7 +367,7 @@ int TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
       UIW* obj = TObjClone<Size>(begin, size);
       if (!obj) return kFactoryOutOfRAM;
       other->begin = obj;
-      other->factory = TObjFactory<Size, kHeap>;
+      other->factory = TStrandFactory<Size, kHeap>;
       return 0;
     }
     case kFactoryInfo: {

@@ -581,70 +581,70 @@ UIW* COutAutoUtf8(UIW* begin, SIW function, void* arg) {
 
 }  // namespace _
 
-_::UTF1& operator<<(_::UTF1& utf, const CH1* cursor) {
-  return utf.Set(_::Print(utf.begin, utf.stop, cursor));
+_::UTF1& operator<<(::_::UTF1& utf, const CH1* cursor) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, cursor));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, CH1 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, CH1 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, UI1 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, SI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, UI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, SI4 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, SI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, UI4 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, UI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, SI8 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, SI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, UI8 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, UI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
 #if SEAM == _0_0_0__04
-_::UTF1& operator<<(_::UTF1& utf, FLT value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, FLT value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, DBL value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF1& operator<<(::_::UTF1& utf, DBL value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 #endif
 
-_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Center item) {
-  return utf.Set(_::PrintCenter(utf.begin, utf.stop, item.String(),
-                                item.GetColumnCount()));
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Center item) {
+  return utf.Set(::_::PrintCenter(utf.begin, utf.stop, item.String(),
+                                  item.GetColumnCount()));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Right item) {
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Right item) {
   return utf.Set(::_::PrintRight(utf.begin, utf.stop, item.String(),
                                  item.GetColumnCount()));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Line line) {
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Line line) {
   return utf.Set(
       ::_::PrintLine(utf.begin, utf.stop, line.token, line.column_count));
 }
 
-_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8LineString line) {
-  return utf.Set(_::TPrintLineString(utf.begin, utf.stop, line.string_,
-                                     line.column_count));
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8LineString line) {
+  return utf.Set(::_::TPrintLineString(utf.begin, utf.stop, line.string_,
+                                       line.column_count));
 }
 
 #endif  //< #if USING_UTF8
@@ -720,11 +720,11 @@ CH2* Print(CH2* cursor, CH2* stop, CH2 character) {
 }
 
 CH2* Print(CH2* cursor, CH2* stop, UI4 value) {
-  return TPrintUnsigned<CH2>(cursor, stop, value);
+  return TPrintUnsigned<UI4, CH2>(cursor, stop, value);
 }
 
 CH2* Print(CH2* cursor, CH2* stop, SI4 value) {
-  return TPrintSigned<CH2>(cursor, stop, value);
+  return TPrintSigned<SI4, UI4, CH2>(cursor, stop, value);
 }
 
 CH2* Print(CH2* cursor, CH2* stop, UI8 value) {
@@ -1080,25 +1080,29 @@ Text2::Text2(CH2 character) {
 }
 
 Text2::Text2(SI4 value) {
-  TPrintSigned<CH2>(string_, string_ + kSize - 1, value);
+  TPrintSigned<SI4, UI4, CH2>(string_, string_ + kSize - 1, value);
 }
 
 Text2::Text2(UI4 value) {
-  TPrintUnsigned<CH2>(string_, string_ + kSize - 1, value);
+  TPrintUnsigned<UI4, CH2>(string_, string_ + kSize - 1, value);
 }
 
 Text2::Text2(SI8 value) {
-  TPrintSigned<CH2>(string_, string_ + kSize - 1, value);
+  TPrintSigned<SI8, UI8, CH2>(string_, string_ + kSize - 1, value);
 }
 
 Text2::Text2(UI8 value) {
-  TPrintUnsigned<CH2>(string_, string_ + kSize - 1, value);
+  TPrintUnsigned<UI8, CH2>(string_, string_ + kSize - 1, value);
 }
 
 #if SEAM >= _0_0_0__04
-Text2::Text2(FLT value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
+Text2::Text2(FLT value) {
+  TPrintFloat<FLT, CH2>(string_, string_ + kSize - 1, value);
+}
 
-Text2::Text2(DBL value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
+Text2::Text2(DBL value) {
+  TPrintFloat<DBL, CH2>(string_, string_ + kSize - 1, value);
+}
 #endif
 
 const CH2* Text2::GetString() { return string_; }
@@ -1165,60 +1169,60 @@ int Utf16Right::GetColumnCount() { return column_count; }
 
 }  // namespace _
 
-_::UTF2& operator<<(_::UTF2& utf, const CH2* cursor) {
-  return utf.Set(_::Print(utf.begin, utf.stop, cursor));
+_::UTF2& operator<<(::_::UTF2& utf, const CH2* cursor) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, cursor));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, CH2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, CH2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, UI1 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, SI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, UI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, SI4 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, SI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, UI4 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, UI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, SI8 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, SI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, UI8 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, UI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__04
-_::UTF2& operator<<(_::UTF2& utf, FLT value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, FLT value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, DBL value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF2& operator<<(::_::UTF2& utf, DBL value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 #endif
 
-_::UTF2& operator<<(_::UTF2& utf, ::_::Utf16Center item) {
-  utf.Set(_::PrintCenter(utf.begin, utf.stop, item.GetString(),
-                         item.GetColumnCount()));
+_::UTF2& operator<<(::_::UTF2& utf, ::_::Utf16Center item) {
+  return utf.Set(::_::PrintCenter(utf.begin, utf.stop, item.GetString(),
+                                  item.GetColumnCount()));
 }
 
-_::UTF2& operator<<(_::UTF2& utf, ::_::Utf16Right item) {
-  utf.Set(_::PrintRight(utf.begin, utf.stop, item.GetString(),
-                        item.GetColumnCount()));
+_::UTF2& operator<<(::_::UTF2& utf, ::_::Utf16Right item) {
+  return utf.Set(::_::PrintRight(utf.begin, utf.stop, item.GetString(),
+                                 item.GetColumnCount()));
 }
 
 #endif  //< #if USING_UTF16
@@ -1301,19 +1305,19 @@ CH4* Print(CH4* cursor, CH4* stop, CH4 character) {
 }
 
 CH4* Print(CH4* cursor, CH4* stop, UI4 value) {
-  return TPrintUnsigned<CH4>(cursor, stop, value);
+  return TPrintUnsigned<UI4, CH4>(cursor, stop, value);
 }
 
 CH4* Print(CH4* cursor, CH4* stop, SI4 value) {
-  return TPrintSigned<CH4>(cursor, stop, value);
+  return TPrintSigned<SI4, UI4, CH4>(cursor, stop, value);
 }
 
 CH4* Print(CH4* cursor, CH4* stop, UI8 value) {
-  return TPrintUnsigned<CH4>(cursor, stop, value);
+  return TPrintUnsigned<UI8, CH4>(cursor, stop, value);
 }
 
 CH4* Print(CH4* cursor, CH4* stop, SI8 value) {
-  return TPrintSigned<CH4>(cursor, stop, value);
+  return TPrintSigned<SI8, UI8, CH4>(cursor, stop, value);
 }
 
 #if SEAM >= _0_0_0__04
@@ -1661,19 +1665,19 @@ Text4::Text4(CH4 character) {
 }
 
 Text4::Text4(SI4 value) {
-  TPrintUnsigned<CH4>(string_, string_ + kSize - 1, value);
+  TPrintSigned<SI4, UI4, CH4>(string_, string_ + kSize - 1, value);
 }
 
 Text4::Text4(UI4 value) {
-  TPrintSigned<CH4>(string_, string_ + kSize - 1, value);
+  TPrintUnsigned<UI4, CH4>(string_, string_ + kSize - 1, value);
 }
 
 Text4::Text4(SI8 value) {
-  TPrintSigned<CH4>(string_, string_ + kSize - 1, value);
+  TPrintSigned<SI8, UI8, CH4>(string_, string_ + kSize - 1, value);
 }
 
 Text4::Text4(UI8 value) {
-  TPrintUnsigned<CH4>(string_, string_ + kSize - 1, value);
+  TPrintUnsigned<UI8, CH4>(string_, string_ + kSize - 1, value);
 }
 
 #if SEAM >= _0_0_0__04
@@ -1750,60 +1754,60 @@ int Utf32Right::GetColumnCount() { return column_count; }
 
 }  // namespace _
 
-_::UTF4& operator<<(_::UTF4& utf, const CH4* cursor) {
-  return utf.Set(_::Print(utf.begin, utf.stop, cursor));
+_::UTF4& operator<<(::_::UTF4& utf, const CH4* cursor) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, cursor));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, CH4 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, CH4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, UI1 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, UI1 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, SI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, SI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, UI2 value) {
-  return utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, UI2 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, SI4 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, SI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, UI4 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, UI4 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, SI8 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, SI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, UI8 value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, UI8 value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__04
-_::UTF4& operator<<(_::UTF4& utf, FLT value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, FLT value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, DBL value) {
-  utf.Set(_::Print(utf.begin, utf.stop, value));
+_::UTF4& operator<<(::_::UTF4& utf, DBL value) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 #endif
 
-_::UTF4& operator<<(_::UTF4& utf, ::_::Utf32Center item) {
-  utf.Set(_::PrintCenter(utf.begin, utf.stop, item.GetString(),
-                         item.GetColumnCount()));
+_::UTF4& operator<<(::_::UTF4& utf, ::_::Utf32Center item) {
+  return utf.Set(::_::PrintCenter(utf.begin, utf.stop, item.GetString(),
+                                  item.GetColumnCount()));
 }
 
-_::UTF4& operator<<(_::UTF4& utf, ::_::Utf32Right item) {
-  utf.Set(_::PrintRight(utf.begin, utf.stop, item.GetString(),
-                        item.GetColumnCount()));
+_::UTF4& operator<<(::_::UTF4& utf, ::_::Utf32Right item) {
+  return utf.Set(::_::PrintRight(utf.begin, utf.stop, item.GetString(),
+                                 item.GetColumnCount()));
 }
 
 #endif  //< #if USING_UTF32

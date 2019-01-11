@@ -119,7 +119,7 @@ void Print(UI8 value) {
 #else
   enum { kSize = 24 };
   CH1 socket[kSize];
-  TPrintUnsigned<>(socket, kSize - 1, value);
+  TPrintUnsigned<UI8, CH1>(socket, kSize - 1, value);
   Print(socket);
 #endif
 }
@@ -140,7 +140,7 @@ void Print(SI8 value) {
 #else
   enum { kSize = 24 };
   CH1 socket[kSize];
-  TPrintSigned<SI8>(socket, kSize - 1, value);
+  TPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, value);
   Print(socket);
 #endif
 }
@@ -151,7 +151,7 @@ void Print(SI4 value) {
 #else
   enum { kSize = 24 };
   CH1 socket[kSize];
-  TPrintSigned<SI8>(socket, kSize - 1, (SI8)value);
+  TPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
 #endif
 }
 
@@ -346,7 +346,7 @@ void PrintSocket(const CH1* begin, const CH1* end) {
   if (!begin || begin >= end) return;
 
   const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
-             *address_end_ptr = reinterpret_cast<const CH1*>(end);
+            *address_end_ptr = reinterpret_cast<const CH1*>(end);
   size_t size = address_end_ptr - address_ptr,
          num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 

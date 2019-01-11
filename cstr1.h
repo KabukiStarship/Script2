@@ -813,56 +813,56 @@ struct API Utf8LineString {
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, const CH1* string_);
+API ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* string_);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, CH1 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, CH1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, UI1 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, SI2 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI2 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, UI2 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI2 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, SI4 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, UI4 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, SI8 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI8 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, UI8 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI8 value);
 
 #if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
@@ -870,32 +870,32 @@ API ::_::UTF1& operator<<(_::UTF1& utf, UI8 value);
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, FLT value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, FLT value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, DBL value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, DBL value);
 #endif
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  item The item to write to utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Center item);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Center item);
 
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Right item);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Right item);
 
 /* Prints a line of the given column_count to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8Line line);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Line line);
 
 /* Prints a line string_ of the given column_count to the utf. */
-API ::_::UTF1& operator<<(_::UTF1& utf, ::_::Utf8LineString line);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8LineString line);
 
 #endif  //< #if USING_UTF8
 #endif  //< #if INCLUDED_SCRIPT2_UTF8

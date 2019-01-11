@@ -801,56 +801,56 @@ class Utf16Right {
 @param  printer The printer.
 @param  value   The value to utf.
 @return The printer. */
-API ::_::UTF2& operator<<(_::UTF2& printer, const CH2* string_);
+API ::_::UTF2& operator<<(::_::UTF2& printer, const CH2* string_);
 
 /* Writes the given value to the utf.
 @param  printer The printer.
 @param  value   The value to utf.
 @return The printer. */
-API ::_::UTF2& operator<<(_::UTF2& printer, CH2 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, CH2 value);
 
 /* Writes the given value to the utf.
 @param  printer The printer.
 @param  value The value to write to the utf.
 @return The printer. */
-API ::_::UTF2& operator<<(_::UTF2& printer, UI1 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, UI1 value);
 
 /* Writes the given value to the utf.
 @param  printer The printer.
 @param  value The value to write to the utf.
 @return The printer. */
-API ::_::UTF2& operator<<(_::UTF2& printer, SI2 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, SI2 value);
 
 /* Writes the given value to the utf.
 @param  printer The printer.
 @param  value The value to write to the utf.
 @return The printer. */
-API ::_::UTF2& operator<<(_::UTF2& printer, UI2 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, UI2 value);
 
 /* Writes the given value to the utf.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, SI4 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, SI4 value);
 
 /* Writes the given value to the utf.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, UI4 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, UI4 value);
 
 /* Writes the given value to the utf.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, SI8 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, SI8 value);
 
 /* Writes the given value to the utf.
 @return The printer.
 @desc
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, UI8 value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, UI8 value);
 
 #if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
@@ -858,26 +858,26 @@ API ::_::UTF2& operator<<(_::UTF2& printer, UI8 value);
 @desc
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, FLT value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, FLT value);
 
 /* Writes the given value to the utf.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, DBL value);
+API ::_::UTF2& operator<<(::_::UTF2& printer, DBL value);
 #endif
 
 /* Writes the given value to the utf.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf justified center. */
-API ::_::UTF2& operator<<(_::UTF2& printer, ::_::Utf16Center item);
+API ::_::UTF2& operator<<(::_::UTF2& printer, ::_::Utf16Center item);
 
 /* Writes the given value to the utf justified right.
 @return The printer.
 @param  printer The printer.
 @param  value The value to write to the utf. */
-API ::_::UTF2& operator<<(_::UTF2& printer, ::_::Utf16Right item);
+API ::_::UTF2& operator<<(::_::UTF2& printer, ::_::Utf16Right item);
 
 #endif  //< #if USING_UTF16
 #endif  //< #if INCLUDED_SCRIPTPRINT_UTF16

@@ -494,13 +494,13 @@ class List {
 
 /* Overloaded operator<< prints the list. */
 template <typename Size = UI4, typename Index = SI2>
-inline ::_::UTF1& operator<<(_::UTF1& printer, ::_::List<Size, Index>& list) {
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::List<Size, Index>& list) {
   return list.Print(printer);
 }
 
 /* Overloaded operator<< prints the list. */
 template <typename Size = UI4, typename Index = SI2>
-inline ::_::UTF1& operator<<(_::UTF1& printer, ::_::CList<Size, Index>* list) {
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CList<Size, Index>* list) {
   return ::_::PrintList<Size, Index>(printer, list);
 }
 

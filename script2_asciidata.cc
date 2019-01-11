@@ -224,8 +224,8 @@ namespace _ {
 CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value) {
   return TPrint<CH1>(begin, stop, type, value);
 }
-_::UTF1& operator<<(_::UTF1& utf, const ::_::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 }  // namespace _
 #endif
@@ -235,8 +235,8 @@ CH2* Print(CH2* begin, CH2* stop, SIN type, const void* value) {
   return TPrint<CH2>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF2& operator<<(_::UTF2& utf, const ::_::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 #if USING_UTF32
@@ -245,8 +245,8 @@ CH4* Print(CH4* begin, CH4* stop, SIN type, const void* value) {
   return TPrint<CH4>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF4& operator<<(_::UTF4& utf, const ::_::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 

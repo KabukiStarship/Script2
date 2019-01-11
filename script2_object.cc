@@ -35,15 +35,15 @@ void Delete(CObject& obj) {
 BOL IsOBJFactoryFunction(SIW function) { return function <= kFactoryInfo; }
 
 BOL ObjSizeIsValid(SI2 size, SI2 size_min) {
-  return TObjSizeIsValid<SI2>(size, size_min);
+  return TObjCanGrow<SI2>(size, size_min);
 }
 
 BOL ObjSizeIsValid(SI4 size, SI4 size_min) {
-  return TObjSizeIsValid<SI4>(size, size_min);
+  return TObjCanGrow<SI4>(size, size_min);
 }
 
 BOL ObjSizeIsValid(SI8 size, SI8 size_min) {
-  return TObjSizeIsValid<SI8>(size, size_min);
+  return TObjCanGrow<SI8>(size, size_min);
 }
 
 BOL ObjCountIsValid(SI1 index, SI1 count_min) {
