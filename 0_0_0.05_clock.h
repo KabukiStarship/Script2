@@ -56,7 +56,7 @@ static const CH1* _0_0_0__05_Clock(CH1* seam_log, CH1* seam_end,
       "2018-08-09@00:00:00a ",
   };
 
-  for (int i = 0; i < 18; ++i) {
+  for (SI4 i = 0; i < 18; ++i) {
     PRINT_LINE('-');
     PRINTF("\n    %i", i);
     TMS t = 0;

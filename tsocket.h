@@ -171,7 +171,7 @@ inline T* TAlignUp2(const void* pointer) {
 
 /* Returns the N in 2^N for the sizeof (I). */
 template <typename I>
-inline int TBitShiftCount() {
+inline SI4 TBitShiftCount() {
   return (sizeof(I) == 1)
              ? 0
              : (sizeof(I) == 2)

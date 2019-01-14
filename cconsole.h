@@ -19,11 +19,11 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* Converts int main(int,CH1**) arguments back into a string.
+/* Converts SI4 main(SI4,CH1**) arguments back into a string.
 @return nil if there are no arguments or the args string upon success.
 @param arg_count The number_ of arguments.
 @param args      The arguments. */
-API const CH1* ArgsToString(int arg_count, CH1** args);
+API const CH1* ArgsToString(SI4 arg_count, CH1** args);
 
 /* Prints a single CH1 to the console. */
 API inline void Print(CH1 c);
@@ -102,10 +102,10 @@ API void PrintfLn(const CH1* format, ...);
 
 /* Prints a new line followed by the given number_ of spaces.
 @param The number_ of spaces to indent. */
-API void PrintIndent(int count = 1);
+API void PrintIndent(SI4 count = 1);
 
 /* Prints the given token CH1 a specified number_ of times. */
-API void PrintLine(int width = 80, CH1 token = '-', CH1 first_token = '-');
+API void PrintLine(SI4 width = 80, CH1 token = '-', CH1 first_token = '-');
 
 /* Prints a the given line_count of new lines followed by a PrintLine, the
 heading, followed by another PrintLine.
@@ -113,8 +113,8 @@ heading, followed by another PrintLine.
 @param line_count The number_ of new lines before the heading to utf.
 @param width The width of the line to utf.
 @param first_token The first token to utf. */
-API void PrintHeading(const CH1* heading = nullptr, int line_count = 5,
-                      int width = 80, CH1 token = '-', CH1 first_token = '+');
+API void PrintHeading(const CH1* heading = nullptr, SI4 line_count = 5,
+                      SI4 width = 80, CH1 token = '-', CH1 first_token = '+');
 
 /* Prints a the given line_count of new lines followed by a PrintLine, the
 heading, followed by another PrintLine.
@@ -123,7 +123,7 @@ heading, followed by another PrintLine.
 @param width The width of the line to utf.
 @param first_token The first token to utf. */
 API void PrintHeading(const CH1* heading_a, const CH1* heading_b,
-                      int line_count = 5, int width = 80, CH1 token = '-',
+                      SI4 line_count = 5, SI4 width = 80, CH1 token = '-',
                       CH1 first_token = '+');
 
 /* Prints a message then pauses the application until a key is pressed. */
@@ -200,7 +200,7 @@ API void PrintHex(const void* value);
 
 /* Reads the current key depressed on the keyboard.
 @return A negative number_ (typically 1) if no keys are pressed. */
-API int CInKey();
+API SI4 CInKey();
 
 /* Prints the given socket to the stdout. */
 API void PrintSocket(const CH1* begin, const CH1* stop);

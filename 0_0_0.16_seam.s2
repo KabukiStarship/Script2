@@ -92,7 +92,7 @@ root :=DIC_4 (2048, 3) {
         -=Key item1               /*      Operation "-Key" removes "item1".
           
           +----------------------------- This is a function with key "kUI2".
-          |       +--------------------- henThis is a 16-bit unsigned int.
+          |       +--------------------- henThis is a 16-bit unsigned SI4.
           |       |
           v       v */
         +=kSI1 item1 1

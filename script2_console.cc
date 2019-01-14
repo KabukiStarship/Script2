@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License. */
 #include "test_debug.inl"
 #define PRINT_ARGS                                    \
   Printf("\nargs_count:%i args:%p", arg_count, args); \
-  for (int i = 0; i < arg_count; ++i) Printf("\n%i:\"%s", i, args[i])
+  for (SI4 i = 0; i < arg_count; ++i) Printf("\n%i:\"%s", i, args[i])
 #else
 #include "test_release.inl"
 #define PRINT_ARGS
@@ -35,7 +35,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-const CH1* ArgsToString(int arg_count, CH1** args) {
+const CH1* ArgsToString(SI4 arg_count, CH1** args) {
   if (!args || arg_count <= 1) {
     PRINT("\n!args || arg_count <= 1");
     return "";
@@ -55,7 +55,10 @@ const CH1* ArgsToString(int arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-inline void Print(CH1 c) { putchar(c); }
+inline void Print(CH1 c) {
+  PRINT_FUNCTION_LINE;
+  putchar(c);
+}
 
 inline void Print(CH1 first, CH1 second) {
   Print(first);
@@ -182,19 +185,19 @@ void PrintLn(const CH1* string_) {
   Print(string_);
 }
 
-void PrintIndent(int count) {
+void PrintIndent(SI4 count) {
   Print('\n');
   while (--count > 0) Print(' ');
 }
 
-void PrintLine(int width, CH1 token, CH1 first_token) {
+void PrintLine(SI4 width, CH1 token, CH1 first_token) {
   Print('\n');
   if (width > 1) Print(first_token);
   while (width-- > 0) Print(token);
 }
 
-void PrintHeading(const CH1* heading_a, const CH1* heading_b, int line_count,
-                  int width, CH1 token, CH1 first_token) {
+void PrintHeading(const CH1* heading_a, const CH1* heading_b, SI4 line_count,
+                  SI4 width, CH1 token, CH1 first_token) {
   if (line_count < 1 || width < 1)
     while (line_count-- > 0) Print('\n');
   PrintLine(width, token, '+');
@@ -205,7 +208,7 @@ void PrintHeading(const CH1* heading_a, const CH1* heading_b, int line_count,
   Print('\n');
 }
 
-void PrintHeading(const CH1* heading, int line_count, int width, CH1 token,
+void PrintHeading(const CH1* heading, SI4 line_count, SI4 width, CH1 token,
                   CH1 first_token) {
   if (line_count < 1 || width < 1) return;
   while (line_count-- > 0) Print('\n');
@@ -220,7 +223,7 @@ template <typename UI>
 void TPrintBinaryUnsigned(UI value) {
   enum { kSize = sizeof(UI) * 8 };
 
-  for (int i = kSize; i > 0; --i) {
+  for (SI4 i = kSize; i > 0; --i) {
     CH1 c = (CH1)('0' + (value >> (kSize - 1)));
     Print(c);
     value = value << 1;
@@ -265,7 +268,7 @@ template <typename UI>
 void TPrintHexConsole(UI value) {
   enum { kHexStringLengthSizeMax = sizeof(UI) * 2 + 3 };
   Print('0', 'x');
-  for (int num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4)
     Print(HexNibbleToUpperCase((UI1)(value >> num_bits_shift)));
 }
@@ -301,9 +304,9 @@ void PrintHex(const void* ptr) {
   TPrintHexConsole<UIW>(value);
 }
 
-int CInKey() { return _getch(); }
+SI4 CInKey() { return _getch(); }
 
-BOL CInState(int vk_code) {
+BOL CInState(SI4 vk_code) {
 #if COMPILER == VISUAL_CPP
 
 #elif COMPILER == GCC
@@ -356,12 +359,12 @@ void PrintSocket(const CH1* begin, const CH1* end) {
 
   //  Columns
   Printf("0%8i ", 8);
-  for (int i = 16; i <= 56; i += 8) Printf("%8i", i);
-  for (int j = 6; j > 0; --j) Print(' ');
+  for (SI4 i = 16; i <= 56; i += 8) Printf("%8i", i);
+  for (SI4 j = 6; j > 0; --j) Print(' ');
   Print('|', '\n', '|');
-  for (int j = 8; j > 0; --j) {
+  for (SI4 j = 8; j > 0; --j) {
     Print('+');
-    for (int k = 7; k > 0; --k) Print('-');
+    for (SI4 k = 7; k > 0; --k) Print('-');
   }
   Print('|', ' ');
 
@@ -371,7 +374,7 @@ void PrintSocket(const CH1* begin, const CH1* end) {
   while (address_ptr < address_end_ptr) {
     Print('\n');
     Print('|');
-    for (int i = 0; i < 64; ++i) {
+    for (SI4 i = 0; i < 64; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
         c = 'x';
@@ -385,9 +388,9 @@ void PrintSocket(const CH1* begin, const CH1* end) {
     PrintHex(address_ptr);
   }
   Print('\n', '|');
-  for (int j = 8; j > 0; --j) {
+  for (SI4 j = 8; j > 0; --j) {
     Print('+');
-    for (int k = 7; k > 0; --k) {
+    for (SI4 k = 7; k > 0; --k) {
       Print('-');
     }
   }

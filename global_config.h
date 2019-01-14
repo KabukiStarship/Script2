@@ -67,7 +67,9 @@ specific language governing permissions and limitations under the License. */
 
 #define LARGEST_INT 2147483647  //< Use this for 32-bit CPUs
 
-//#include <assembly.inl>  //< Inline config stuff for your project.
+#if DEBUG == NO
+#include <assembly.inl>  //< Inline config stuff for your project.
+#endif
 
 #if USING_CRABS_TEXT == UTF1
 #if USING_UTF8 == 0
@@ -179,10 +181,9 @@ enum {
   kBufferSizeDefaultWords =
       kBufferSizeDefault / sizeof(SIW) + kBufferSizeDefault % sizeof(SIW) ? 1
                                                                           : 0,
-
   kAutoSizeMin = 512,
   kAutoSizeDefault = kAutoSizeMin * 4,
-
+  // Default max stack count.
   kStackCountMaxDefault = 32,
   kFloorSize = 1024,  //< Size, or initial size, of the Floor.
 };
@@ -206,22 +207,19 @@ typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
-//typedef unsigned CH1 UI1;
-typedef unsigned int uint;
-
 typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
 typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
 
-typedef UI4 SIN;  //< ASCII Data Type UI1.
+typedef UI4 SI4;  //< ASCII Data Type UI1.
 
 #if MAX_NUM_SLOTS <= 255
-typedef UI1 SIN;
+typedef UI1 SI4;
 enum { kMaxNumSlots = 0xff };
 #elif MAX_NUM_SLOTS <= 65535
-typedef UI2 SIN;
+typedef UI2 SI4;
 enum { kMaxNumSlots = 0xffff };
 #else
-typedef UI4 SIN;
+typedef UI4 SI4;
 enum { kMaxNumSlots = 0xffffffff };
 #endif
 
@@ -240,10 +238,10 @@ if (-1 == NaN_SI4)
 @endcode
 */
 
-// int-sized not-a-number_.
+// SI4-sized not-a-number_.
 enum {
-  NaNInt = sizeof(int) == 4 ? static_cast<int>(0xFFFFFFFF)
-                            : sizeof(int) == 2 ? static_cast<int>(0xFFFF) : 0,
+  NaNInt = sizeof(SI4) == 4 ? static_cast<SI4>(0xFFFFFFFF)
+                            : sizeof(SI4) == 2 ? static_cast<SI4>(0xFFFF) : 0,
 };
 
 typedef UI2 hash16_t;  //< Using unsigned 16-bit hash type.

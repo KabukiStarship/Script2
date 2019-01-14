@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \0_0_0__02_ascii_strings_and_socket.h
+@file    \0_0_0__03_socket.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -80,10 +80,10 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
                                            "  1234567890 ", "123..."};
 
   const Char* stop;
-  CH1 socket[kSize + 1], buffer_b[kSize + 1];
+  Char socket[kSize + 1], buffer_b[kSize + 1];
 
   enum { kCheckChar = '!' };
-  CH1* check_char = socket + kSize + 1;
+  Char* check_char = socket + kSize + 1;
 
   SocketFill(socket, kSize);
   TPrint<Char>(socket, kSize, kStringTesting123);
@@ -93,7 +93,7 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
 
   TUTF<Char> utf(socket, kSize);
 
-  for (int i = 0; i < kCompareStringsCount; ++i) {
+  for (SI4 i = 0; i < kCompareStringsCount; ++i) {
     stop = TPrint<Char>(socket, socket + kSize, test_strings[i][0]);
     PRINT_SOCKET(socket, kSize);
     Test(stop);
@@ -105,8 +105,7 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
   PRINT_HEADING("Testing Universal Text Formatter");
   PRINTF("\n\n    Expecting \"%s\"", kStringTesting123);
 
-  utf.Set(socket) << "Testing " << 1 + (int)'0' << ", " << 2 + (int)'0' << ", "
-                  << 3 + (int)'0';
+  utf.Set(socket) << "Testing " << 1 << ", " << 2 << ", " << 3;
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringTesting123, socket);
 
@@ -158,7 +157,7 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
 
   PRINTF("\n\n    Testing PrintCentered");
 
-  for (int i = 0; i < 4; ++i) {
+  for (SI4 i = 0; i < 4; ++i) {
     PRINTF("\n    %i.)\"%s\"", i, kStringsCentered[i]);
   }
 
@@ -181,12 +180,12 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
   utf.Set(socket) << TCenter<Char>(kStringNumbers, 6);
   PRINT_SOCKET(socket, kSize);
   AVOW(kStringsCentered[3], socket);
-  int i = 0;  //< Shared looping variable.
+  SI4 i = 0;  //< Shared looping variable.
 
   PRINT_HEADING("Testing Socket");
-  PRINT_HEADING("Testing PrintSocket (void*, int size)");
+  PRINT_HEADING("Testing PrintSocket (void*, SI4 size)");
 
-  for (int i = 1; i <= kSize; ++i) buffer_b[i - 1] = '0' + i % 10;
+  for (SI4 i = 1; i <= kSize; ++i) buffer_b[i - 1] = '0' + i % 10;
   buffer_b[kSize] = 0;
   ASSERT(TPrintSocket<Char>(socket, socket + kSize, buffer_b, buffer_b + 160));
   PRINT_SOCKET(socket, kSize);
@@ -204,14 +203,8 @@ static const CH1* _0_0_0__03_UTF_and_Strand() {
   PRINT("\n\nExpecting \"Testing 1, 2, 3\"\n\n");
   strand << 1 << ", " << 2 << ", " << 3;
   PRINT_SOCKET(strand.Obj().Start<>(), strand.Obj().SizeBytes());
-  const Char* cursor = strand.Find("Testing ");
+  const Char* cursor = strand.Find("Testing 1, 2, 3");
   ASSERT(cursor);
-  for (SI4 i = 0; i < kStrandLoopCount; ++i) {
-    strand << i << ", ";
-    TToken<Char> i_string(i);
-    cursor = TStringFind<Char>(cursor, i_string.String());
-    ASSERT(cursor);
-  }
   return nullptr;
 }
 #endif  //< #if SEAM >= _0_0_0__03
@@ -222,8 +215,8 @@ static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log, CH1* seam_end,
   TEST_BEGIN;
 
   PRINT("\nRunning HexTest");
-  for (int i = 0; i < 16; ++i) {
-    int value = HexToByte(HexNibbleToLowerCase(i));
+  for (SI4 i = 0; i < 16; ++i) {
+    SI4 value = HexToByte(HexNibbleToLowerCase(i));
     Test(i, value);
     PRINTF("\n    %i.) %i", i, value);
     value = HexToByte(HexNibbleToUpperCase(i));
@@ -231,11 +224,11 @@ static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log, CH1* seam_end,
     Test(i, value);
   }
 
-  for (int i = 0; i < 256; ++i) {
+  for (SI4 i = 0; i < 256; ++i) {
     UI2 c = HexByteToLowerCase(i);
     PRINTF("\n%i.) expecting: %x        HexByteToLowerCase:%c%c", i, i, (CH1)c,
            (CH1)(c >> 8));
-    int value = HexToByte(c);
+    SI4 value = HexToByte(c);
     PRINTF("        HexToByte:%i", value);
     AVOW(i, value);
     value = HexToByte(HexByteToUpperCase(i));
@@ -255,8 +248,8 @@ static const CH1* _0_0_0__03_UTF_and_Strand(CH1* seam_log, CH1* seam_end,
   PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
          test_chars_result);
 
-  for (int i = 0; i < kTestCharsOffsetCount; ++i) {
-    for (int j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
+  for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
+    for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
     CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
                              kTestCharsCount);
     ASSERT(result);

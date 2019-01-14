@@ -149,7 +149,7 @@ API UTF1& PrintBsq(UTF1& printer, const SI4* params);
 // API Utf& PrintBsq (const SI4* bsq, Utf& utf);
 
 /*< Returns the requested parameter number_. */
-API SI4 BsqParamNumber(const SI4* bsq, int param_number);
+API SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
 
 }  // namespace _
 

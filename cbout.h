@@ -65,7 +65,7 @@ API CH1* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output UI1.
     @param bout A B-Output abstract UI1 stream. */
-API int BOutStreamByte(BOut* bout);
+API SI4 BOutStreamByte(BOut* bout);
 
 /* Writes a message with the given params to the given B-Output slot.
     @param bout   The B-Output socket to write to.

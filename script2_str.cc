@@ -31,15 +31,15 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-int Console(CObject& obj, SIW function, void* arg) {
+SI4 Console(CObject& obj, SIW function, void* arg) {
   return TCOut<CH1>(obj, function, arg);
 }
 
-int COutHeap(CObject& obj, SIW function, void* arg) {
+SI4 COutHeap(CObject& obj, SIW function, void* arg) {
   return TCOutHeap<CH1>(obj, function, arg);
 }
 
-void UTFAlignCenterSTR1(int column_count, void* item, void* destination) {
+void UTFAlignCenterSTR1(SI4 column_count, void* item, void* destination) {
   ASSERT(item);
   ASSERT(destination);
   ASSERT(column_count >= 0);
@@ -65,13 +65,13 @@ CH1 PrintableChar(CH1 value) { return TPrintableChar<CH1>(value); }
 
 const CH1* StringEnd(const CH1* cursor) { return TStringEnd<CH1>(cursor); }
 
-int StringLength(const CH1* cursor) { return TStringLength<CH1, int>(cursor); }
+SI4 StringLength(const CH1* cursor) { return TStringLength<CH1, SI4>(cursor); }
 
-const CH1* StringLineEnd(const CH1* cursor, int column_count) {
+const CH1* StringLineEnd(const CH1* cursor, SI4 column_count) {
   return TStringLineEnd<CH1>(cursor, column_count);
 }
 
-const CH1* StringLineEnd(const CH1* cursor, const CH1* stop, int column_count) {
+const CH1* StringLineEnd(const CH1* cursor, const CH1* stop, SI4 column_count) {
   return TStringLineEnd<CH1>(cursor, stop, column_count);
 }
 
@@ -103,11 +103,11 @@ const CH1* StringEquals(const CH1* cursor, const CH1* stop, const CH1* query) {
   return TStringEquals<CH1>(cursor, stop, query);
 }
 
-int StringCompare(const CH1* text_a, const CH1* text_b) {
+SI4 StringCompare(const CH1* text_a, const CH1* text_b) {
   return TStringCompare<CH1>(text_a, text_b);
 }
 /*
-int TStringCompare(const CH1* text_a, const CH1* stop,
+SI4 TStringCompare(const CH1* text_a, const CH1* stop,
                   const CH1* text_b) {
   return TStringCompare<CH1>(text_a, stop, text_b);
 }*/
@@ -120,10 +120,6 @@ CH1* Print(CH1* cursor, CH1* stop, const CH1* string) {
   return TPrint<CH1>(cursor, stop, string);
 }
 
-CH1* Print(CH1* cursor, CH1* stop, CH1 character) {
-  return TPrintChar<CH1>(cursor, stop, character);
-}
-
 CH1* Print(CH1* cursor, CH1* stop, UI8 value) {
   return TPrintUnsigned<UI8, CH1>(cursor, stop, value);
 }
@@ -132,7 +128,7 @@ CH1* Print(CH1* cursor, CH1* stop, SI8 value) {
   return TPrintSigned<SI8, UI8, CH1>(cursor, stop, value);
 }
 
-#if ALU_WORD_SIZE != 32
+#if WORD_SIZE != 32
 CH1* Print(CH1* cursor, CH1* stop, UI4 value) {
   return Print(cursor, stop, (UI8)value);
 }
@@ -152,71 +148,71 @@ CH1* Print(CH1* cursor, CH1* stop, SI4 value) {
 
 #if SEAM >= _0_0_0__04
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, FLT value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, DBL value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, FLT value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, DBL value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
 #endif
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, const CH1* begin, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, const CH1* begin, SI4 column_count) {
   return TPrintCenter<CH1>(cursor, stop, begin, column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, CH1 character, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, CH1 character, SI4 column_count) {
   return TPrintCenter<CH1>(cursor, stop, Utf8Text(character).String(),
                            column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, SI4 value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, UI4 value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, UI8 value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintCenter(CH1* cursor, CH1* stop, SI8 value, int column_count) {
+CH1* PrintCenter(CH1* cursor, CH1* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, const CH1* string, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, const CH1* string, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, string, column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, CH1 character, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, CH1 character, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(character).String(),
                           column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, UI4 value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, SI4 value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, UI8 value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintRight(CH1* cursor, CH1* stop, SI8 value, int column_count) {
+CH1* PrintRight(CH1* cursor, CH1* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
@@ -325,12 +321,12 @@ CH1* PrintSocket(CH1* cursor, CH1* stop, const void* begin, const void* end) {
   return TPrintSocket<CH1>(cursor, stop, begin, end);
 }
 
-CH1* PrintLine(CH1* cursor, CH1* stop, CH1 token, int column_count) {
+CH1* PrintLine(CH1* cursor, CH1* stop, CH1 token, SI4 column_count) {
   return TPrintLine<CH1>(cursor, stop, token, column_count);
 }
 
 CH1* TPrintLineString(CH1* cursor, CH1* stop, const CH1* string,
-                      int column_count) {
+                      SI4 column_count) {
   return TPrintLineString<CH1>(cursor, stop, string, column_count);
 }
 
@@ -501,26 +497,26 @@ Utf8Text::Utf8Text(DBL value) { Print(cursor, cursor + kSize - 1, value); }
 
 const CH1* Utf8Text::String() { return string_; }
 
-Utf8Center::Utf8Center(const CH1* string, int column_count)
+Utf8Center::Utf8Center(const CH1* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf8Center::Utf8Center(SI4 value, int column_count)
+Utf8Center::Utf8Center(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Center::Utf8Center(UI4 value, int column_count)
+Utf8Center::Utf8Center(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Center::Utf8Center(SI8 value, int column_count)
+Utf8Center::Utf8Center(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Center::Utf8Center(UI8 value, int column_count)
+Utf8Center::Utf8Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM == _0_0_0__04
-Utf8Center::Utf8Center(FLT value, int column_count)
+Utf8Center::Utf8Center(FLT value, SI4 column_count)
     : cursor(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Center::Utf8Center(DBL value, int column_count)
+Utf8Center::Utf8Center(DBL value, SI4 column_count)
     : cursor(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -528,28 +524,28 @@ const CH1* Utf8Center::String() {
   return (!string_) ? number_.String() : string_;
 }
 
-int Utf8Center::GetColumnCount() { return column_count; }
+SI4 Utf8Center::GetColumnCount() { return column_count; }
 
-Utf8Right::Utf8Right(const CH1* string, int column_count)
+Utf8Right::Utf8Right(const CH1* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf8Right::Utf8Right(SI4 value, int column_count)
+Utf8Right::Utf8Right(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Right::Utf8Right(UI4 value, int column_count)
+Utf8Right::Utf8Right(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Right::Utf8Right(SI8 value, int column_count)
+Utf8Right::Utf8Right(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Right::Utf8Right(UI8 value, int column_count)
+Utf8Right::Utf8Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__04
-Utf8Right::Utf8Right(FLT value, int column_count)
+Utf8Right::Utf8Right(FLT value, SI4 column_count)
     : cursor(nullptr), number_(value), column_count(column_count) {}
 
-Utf8Right::Utf8Right(DBL value, int column_count)
+Utf8Right::Utf8Right(DBL value, SI4 column_count)
     : cursor(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -558,14 +554,14 @@ const CH1* Utf8Right::String() {
   return (!string) ? number_.String() : string;
 }
 
-int Utf8Right::GetColumnCount() { return column_count; }
+SI4 Utf8Right::GetColumnCount() { return column_count; }
 
-Utf8Line::Utf8Line(CH1 token, int column_count)
+Utf8Line::Utf8Line(CH1 token, SI4 column_count)
     : token(token), column_count(column_count) {
   // Nothing to do here. (:-)-+=<
 }
 
-Utf8LineString::Utf8LineString(const CH1* string, int column_count)
+Utf8LineString::Utf8LineString(const CH1* string, SI4 column_count)
     : string_(string), column_count(column_count) {
   // Nothing to do here. (:-)-+=<
 }
@@ -665,13 +661,13 @@ CH2 PrintableChar(CH2 value) { return TPrintableChar<CH2>(value); }
 
 const CH2* TStringEnd(const CH2* cursor) { return TStringEnd<CH2>(cursor); }
 
-int TStringLength(const CH2* cursor) { return TStringLength<CH2, int>(cursor); }
+SI4 TStringLength(const CH2* cursor) { return TStringLength<CH2, SI4>(cursor); }
 
-const CH2* StringLineEnd(const CH2* cursor, int column_count) {
+const CH2* StringLineEnd(const CH2* cursor, SI4 column_count) {
   return TStringLineEnd<CH2>(cursor, column_count);
 }
 
-const CH2* StringLineEnd(const CH2* cursor, const CH2* stop, int column_count) {
+const CH2* StringLineEnd(const CH2* cursor, const CH2* stop, SI4 column_count) {
   return TStringLineEnd<CH2>(cursor, stop, column_count);
 }
 
@@ -703,7 +699,7 @@ const CH2* StringEquals(const CH2* cursor, const CH2* stop, const CH2* query) {
   return TStringEquals<CH2>(cursor, stop, query);
 }
 
-int TStringCompare(const CH2* text_a, const CH2* text_b) {
+SI4 TStringCompare(const CH2* text_a, const CH2* text_b) {
   return TStringCompare<CH2>(text_a, text_b);
 }
 
@@ -713,10 +709,6 @@ const CH2* StringFind(const CH2* cursor, const CH2* query) {
 
 CH2* Print(CH2* cursor, CH2* stop, const CH2* string) {
   return TPrint<CH2>(cursor, stop, string);
-}
-
-CH2* Print(CH2* cursor, CH2* stop, CH2 character) {
-  return TPrintChar<CH2>(cursor, stop, character);
 }
 
 CH2* Print(CH2* cursor, CH2* stop, UI4 value) {
@@ -745,72 +737,72 @@ CH2* Print(CH2* cursor, CH2* stop, DBL value) {
 }
 #endif
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, const CH2* string, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, const CH2* string, SI4 column_count) {
   return TPrintCenter<CH2>(cursor, stop, string, column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, CH2 character, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, CH2 character, SI4 column_count) {
   return TPrintCenter<CH2>(cursor, stop, Text2(character).GetString(),
                            column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, SI4 value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, UI4 value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, UI8 value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, SI8 value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
 #if SEAM >= _0_0_0__04
-CH2* PrintCenter(CH2* cursor, CH2* stop, FLT value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintCenter(CH2* cursor, CH2* stop, DBL value, int column_count) {
+CH2* PrintCenter(CH2* cursor, CH2* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 #endif
 
-CH2* PrintRight(CH2* cursor, CH2* stop, const CH2* string, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, const CH2* string, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, string, column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, CH2 character, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, CH2 character, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(character).GetString(),
                           column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, UI4 value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, SI4 value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, UI8 value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, SI8 value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
 #if SEAM >= _0_0_0__04
-CH2* PrintRight(CH2* cursor, CH2* stop, FLT value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-CH2* PrintRight(CH2* cursor, CH2* stop, DBL value, int column_count) {
+CH2* PrintRight(CH2* cursor, CH2* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 #endif
@@ -1107,26 +1099,26 @@ Text2::Text2(DBL value) {
 
 const CH2* Text2::GetString() { return string_; }
 
-Utf16Center::Utf16Center(const CH2* string, int column_count)
+Utf16Center::Utf16Center(const CH2* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf16Center::Utf16Center(SI4 value, int column_count)
+Utf16Center::Utf16Center(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Center::Utf16Center(UI4 value, int column_count)
+Utf16Center::Utf16Center(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Center::Utf16Center(SI8 value, int column_count)
+Utf16Center::Utf16Center(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Center::Utf16Center(UI8 value, int column_count)
+Utf16Center::Utf16Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__04
-Utf16Center::Utf16Center(FLT value, int column_count)
+Utf16Center::Utf16Center(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Center::Utf16Center(DBL value, int column_count)
+Utf16Center::Utf16Center(DBL value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -1135,28 +1127,28 @@ const CH2* Utf16Center::GetString() {
   return (!string) ? number_.GetString() : string;
 }
 
-int Utf16Center::GetColumnCount() { return column_count; }
+SI4 Utf16Center::GetColumnCount() { return column_count; }
 
-Utf16Right::Utf16Right(const CH2* string, int column_count)
+Utf16Right::Utf16Right(const CH2* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf16Right::Utf16Right(SI4 value, int column_count)
+Utf16Right::Utf16Right(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Right::Utf16Right(UI4 value, int column_count)
+Utf16Right::Utf16Right(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Right::Utf16Right(SI8 value, int column_count)
+Utf16Right::Utf16Right(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Right::Utf16Right(UI8 value, int column_count)
+Utf16Right::Utf16Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__04
-Utf16Right::Utf16Right(FLT value, int column_count)
+Utf16Right::Utf16Right(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf16Right::Utf16Right(DBL value, int column_count)
+Utf16Right::Utf16Right(DBL value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -1165,7 +1157,7 @@ const CH2* Utf16Right::GetString() {
   return (!string) ? number_.GetString() : string;
 }
 
-int Utf16Right::GetColumnCount() { return column_count; }
+SI4 Utf16Right::GetColumnCount() { return column_count; }
 
 }  // namespace _
 
@@ -1243,13 +1235,13 @@ CH4 PrintableChar(CH4 value) { return TPrintableChar<CH4>(value); }
 
 const CH4* TStringEnd(const CH4* cursor) { return TStringEnd<CH4>(cursor); }
 
-int TStringLength(const CH4* cursor) { return TStringLength<CH4, int>(cursor); }
+SI4 TStringLength(const CH4* cursor) { return TStringLength<CH4, SI4>(cursor); }
 
-const CH4* StringLineEnd(const CH4* cursor, int column_count) {
+const CH4* StringLineEnd(const CH4* cursor, SI4 column_count) {
   return TStringLineEnd<CH4>(cursor, column_count);
 }
 
-const CH4* StringLineEnd(const CH4* cursor, const CH4* stop, int column_count) {
+const CH4* StringLineEnd(const CH4* cursor, const CH4* stop, SI4 column_count) {
   return TStringLineEnd<CH4>(cursor, stop, column_count);
 }
 
@@ -1288,7 +1280,7 @@ BOL TTextQualifies(const CH4* cursor, const CH4* stop) {
   return TTextQualifies<CH4>(cursor, stop);
 }*/
 
-int TStringCompare(const CH4* text_a, const CH4* text_b) {
+SI4 TStringCompare(const CH4* text_a, const CH4* text_b) {
   return TStringCompare<CH4>(text_a, text_b);
 }
 
@@ -1298,10 +1290,6 @@ const CH4* StringFind(const CH4* cursor, const CH4* query) {
 
 CH4* Print(CH4* cursor, CH4* stop, const CH4* string) {
   return TPrint<CH4>(cursor, stop, string);
-}
-
-CH4* Print(CH4* cursor, CH4* stop, CH4 character) {
-  return TPrintChar<CH4>(cursor, stop, character);
 }
 
 CH4* Print(CH4* cursor, CH4* stop, UI4 value) {
@@ -1330,72 +1318,72 @@ CH4* Print(CH4* cursor, CH4* stop, DBL value) {
 }
 #endif
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, const CH4* begin, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, const CH4* begin, SI4 column_count) {
   return TPrintCenter<CH4>(cursor, stop, begin, column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, CH4 character, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, CH4 character, SI4 column_count) {
   return TPrintCenter<CH4>(cursor, stop, Text4(character).GetString(),
                            column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, SI4 value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, UI4 value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, UI8 value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, SI8 value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
 #if SEAM >= _0_0_0__04
-CH4* PrintCenter(CH4* cursor, CH4* stop, FLT value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintCenter(CH4* cursor, CH4* stop, DBL value, int column_count) {
+CH4* PrintCenter(CH4* cursor, CH4* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 #endif
 
-CH4* PrintRight(CH4* cursor, CH4* stop, const CH4* begin, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, const CH4* begin, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, begin, column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, CH4 character, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, CH4 character, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(character).GetString(),
                           column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, UI4 value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, UI4 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, SI4 value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, SI4 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, UI8 value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, UI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, SI8 value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
 #if SEAM >= _0_0_0__04
-CH4* PrintRight(CH4* cursor, CH4* stop, FLT value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-CH4* PrintRight(CH4* cursor, CH4* stop, DBL value, int column_count) {
+CH4* PrintRight(CH4* cursor, CH4* stop, DBL value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 #endif
@@ -1692,26 +1680,26 @@ Text4::Text4(DBL value) {
 
 const CH4* Text4::GetString() { return string_; }
 
-Utf32Center::Utf32Center(const CH4* string, int column_count)
+Utf32Center::Utf32Center(const CH4* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf32Center::Utf32Center(SI4 value, int column_count)
+Utf32Center::Utf32Center(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Center::Utf32Center(UI4 value, int column_count)
+Utf32Center::Utf32Center(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Center::Utf32Center(SI8 value, int column_count)
+Utf32Center::Utf32Center(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Center::Utf32Center(UI8 value, int column_count)
+Utf32Center::Utf32Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__04
-Utf32Center::Utf32Center(FLT value, int column_count)
+Utf32Center::Utf32Center(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Center::Utf32Center(DBL value, int column_count)
+Utf32Center::Utf32Center(DBL value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -1720,28 +1708,28 @@ const CH4* Utf32Center::GetString() {
   return (!string) ? number_.GetString() : string;
 }
 
-int Utf32Center::GetColumnCount() { return column_count; }
+SI4 Utf32Center::GetColumnCount() { return column_count; }
 
-Utf32Right::Utf32Right(const CH4* string, int column_count)
+Utf32Right::Utf32Right(const CH4* string, SI4 column_count)
     : string_(string), column_count(column_count) {}
 
-Utf32Right::Utf32Right(SI4 value, int column_count)
+Utf32Right::Utf32Right(SI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Right::Utf32Right(UI4 value, int column_count)
+Utf32Right::Utf32Right(UI4 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Right::Utf32Right(SI8 value, int column_count)
+Utf32Right::Utf32Right(SI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Right::Utf32Right(UI8 value, int column_count)
+Utf32Right::Utf32Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
 #if SEAM >= _0_0_0__04
-Utf32Right::Utf32Right(FLT value, int column_count)
+Utf32Right::Utf32Right(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-Utf32Right::Utf32Right(DBL value, int column_count)
+Utf32Right::Utf32Right(DBL value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
@@ -1750,7 +1738,7 @@ const CH4* Utf32Right::GetString() {
   return (!string) ? number_.GetString() : string;
 }
 
-int Utf32Right::GetColumnCount() { return column_count; }
+SI4 Utf32Right::GetColumnCount() { return column_count; }
 
 }  // namespace _
 

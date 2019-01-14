@@ -77,7 +77,7 @@ All ASCII Data Types are 64-bit aligned so stack sizes are:
 0xN +-----------------+
 @endcode
 */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 struct CStack {
   UI size_array,   //< Used for multi-dimensional array.
       size_stack;  //< Total size of the Stack in 64-bit aligned bytes.
@@ -86,7 +86,7 @@ struct CStack {
 };
 
 /* Gets the size of a Stack with the given count_max. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI StackSize(SI count_max) {
   enum { kCountMaxMin = sizeof(uint64_t) / sizeof(T) };
   if (count_max < kCountMaxMin) count_max = kCountMaxMin;
@@ -94,7 +94,7 @@ inline UI StackSize(SI count_max) {
 }
 
 /* Gets the min size of a Stack. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI StackSizeMin() {
   enum {
     kStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
@@ -104,7 +104,7 @@ inline UI StackSizeMin() {
 }
 
 /*
-template<typename T = intptr_t, typename UI = uint, typename SI = int>
+template<typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI StackSize (SI count) {
     UI size = sizeof (CStack<T, UI, SI>) + (sizeof (T) * 8) * count;
     return MemoryAlign8<UI> (size);
@@ -112,20 +112,20 @@ inline UI StackSize (SI count) {
 
 /* Gets the max number_ of elements in an stack with the specific index
 width. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline SI StackCountMax() {
   return (SI)((((~(UI)0) - 7) - (UI)sizeof(CStack<T, UI, SI>)) / (UI)sizeof(T));
 }
 
 /*
-template<typename T = intptr_t, typename UI = uint, typename SI = int>
+template<typename T = intptr_t, typename UI = uint, typename SI = SI4>
 SI StackCountMax () {
     return (SI)((UnsignedMax<UI> () - (UI)sizeof (CStack<T, UI, SI>)) /
         (UI)sizeof (T));
 }*/
 
 /* The minimum stack size. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI StackSizeMin(SI count_max) {
   SI count_upper_bounds = StackCountMax<T, UI, SI>();
   if (count_max > count_upper_bounds) count_max = count_upper_bounds;
@@ -133,7 +133,7 @@ inline UI StackSizeMin(SI count_max) {
 }
 
 /* Rounds up the count to the 64-bit align the value. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI StackCountMax(SI count_max) {
   enum {
     kStackCountMax =
@@ -148,7 +148,7 @@ inline UI StackCountMax(SI count_max) {
 8 bytes.
 @param socket An stack of bytes large enough to fit the stack.
 @return A dynamically allocated socket. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 uintptr_t* StackInit(uintptr_t* socket, UI size) {
   ASSERT(socket);
 
@@ -165,7 +165,7 @@ uintptr_t* StackInit(uintptr_t* socket, UI size) {
 8 bytes.
 @param socket An stack of bytes large enough to fit the stack.
 @return A dynamically allocated socket. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 uintptr_t* StackInit(uintptr_t* socket, UI size, SI count_max) {
   ASSERT(socket);
 
@@ -177,7 +177,7 @@ uintptr_t* StackInit(uintptr_t* socket, UI size, SI count_max) {
   return socket;
 }
 
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 uintptr_t* StackClone(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   UI size = stack->size_stack >> kWordBitCount;
@@ -192,7 +192,7 @@ uintptr_t* StackClone(CStack<T, UI, SI>* stack) {
 }
 
 /* Clones the given stack. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 uintptr_t* StackClone(CStack<T, UI, SI>* stack, CStack<T, UI, SI>* other) {
   ASSERT(stack);
   ASSERT(other);
@@ -214,7 +214,7 @@ uintptr_t* StackClone(CStack<T, UI, SI>* stack, CStack<T, UI, SI>* other) {
 }
 
 /* Returns the first element in the Stack vector. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T* TStackStart(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   return reinterpret_cast<T*>(reinterpret_cast<CH1*>(stack) +
@@ -222,7 +222,7 @@ T* TStackStart(CStack<T, UI, SI>* stack) {
 }
 
 /* Returns the first element in the Stack vector. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T* StackStop(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   return TStackStart<T, UI, SI>(stack) + stack->count - 1;
@@ -235,7 +235,7 @@ if the Stack (@see SI StackInsert<UI, SI> (T*, SI, T, SI)).
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the stack is full. */
-template <typename T = intptr_t, typename SI = int>
+template <typename T = intptr_t, typename SI = SI4>
 inline SI StackInsert(T* items, SI count, T item, SI index) {
   T *target = items + index, *stop = items + count;
   // Shift the elements up.
@@ -249,7 +249,7 @@ inline SI StackInsert(T* items, SI count, T item, SI index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the stack is full. */
-template <typename T = intptr_t, typename SI = int>
+template <typename T = intptr_t, typename SI = SI4>
 inline SI StackAdd(T* items, SI count, T item, SI index) {
   ASSERT(items);
   if (index < 0 || index > count) return -1;
@@ -270,7 +270,7 @@ inline SI StackAdd(T* items, SI count, T item, SI index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the stack is full.
-template<typename T = intptr_t, typename UI = uint, typename SI = int>
+template<typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T StackAdd (CStack<T, UI, SI>* stack, T item, T index) {
   ASSERT (stack);
   SI count_max  = stack->count_max,
@@ -299,7 +299,7 @@ inline SI TStackRemove(T* elements, SI size, SI index) {
 @param  a     The stack.
 @param  index The index the item to remove.
 @return True if the index is out of bounds. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 SI TStackRemove(CStack<T, UI, SI>* stack, SI index) {
   ASSERT(stack);
   SI result =
@@ -313,7 +313,7 @@ SI TStackRemove(CStack<T, UI, SI>* stack, SI index) {
 @param  a    The stack.
 @param  item The item to push onto the stack.
 @return The index of the newly stacked item. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 SI TStackPush(CStack<T, UI, SI>* stack, T item) {
   ASSERT(stack);
   SI count_max = stack->count_max, count = stack->count;
@@ -328,7 +328,7 @@ SI TStackPush(CStack<T, UI, SI>* stack, T item) {
 @note We do not delete the item at the
 @param  a The stack.
 @return The item popped off the stack. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T TStackPop(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   SI count = stack->count;
@@ -343,7 +343,7 @@ T TStackPop(CStack<T, UI, SI>* stack) {
 @note We do not delete the item at the
 @param  a The stack.
 @return The item popped off the stack. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T TStackPeek(CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   SI count = stack->count;
@@ -357,7 +357,7 @@ T TStackPeek(CStack<T, UI, SI>* stack) {
 @param  stack    The stack.
 @param  index The index of the element to get.
 @return -1 if a is nil and -2 if the index is out of bounds. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 T TStackGet(CStack<T, UI, SI>* stack, SI index) {
   ASSERT(stack);
   if (index >= stack->count) return 0;
@@ -367,7 +367,7 @@ T TStackGet(CStack<T, UI, SI>* stack, SI index) {
 
 /* Returns true if the given stack contains the given address.
 @return false upon failure. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 bool TStackContains(CStack<T, UI, SI>* stack, void* address) {
   ASSERT(stack);
   CH1 *ptr = reinterpret_cast<CH1*>(stack),
@@ -378,7 +378,7 @@ bool TStackContains(CStack<T, UI, SI>* stack, void* address) {
 }
 
 /* The stack size in words. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline UI TStackSizeWords(SI count) {
   return StackSizeMin<T, UI, SI>(count) / sizeof(uintptr_t);
 }
@@ -387,7 +387,7 @@ inline UI TStackSizeWords(SI count) {
 in memory.
 @warning Anything above this threshold may cause a critical error; AND
 sizeof (T) must be 1, 2, 4, or 8. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 inline SI TStackCountUpperBounds() {
   enum {
     kShift = (sizeof(T) == 8) ? 3 :             //< Used to divide by 8.
@@ -401,7 +401,7 @@ inline SI TStackCountUpperBounds() {
 @return Returns nil if the count_max is greater than the amount of memory that
 can fit in type UI, the unaltered socket pointer if the Stack has grown to the
 count_max upper bounds, or a new dynamically allocated socket upon failure. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 bool TStackGrow(CObject& stack) {
   static SI count_max_auto_size_init = kStackCountMaxDefault;
 
@@ -437,7 +437,7 @@ bool TStackGrow(CObject& stack) {
 }
 
 /* Prints the given stack to the console. */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 Utf8& TPrintStack(Utf8& utf, CStack<T, UI, SI>* stack) {
   ASSERT(stack);
   UI size_array = stack->size_array;
@@ -447,7 +447,7 @@ Utf8& TPrintStack(Utf8& utf, CStack<T, UI, SI>* stack) {
       << " size_stack:" << stack->size_stack;
   if (stack->size_array != 0) utf << " size_array:invalid";
   T* elements = TStackStart(stack);
-  for (int i = 0; i < count; ++i) {
+  for (SI4 i = 0; i < count; ++i) {
     utf << '\n' << i + 1 << ".) " << elements[i];
   }
   return utf;
@@ -472,7 +472,7 @@ This is a wrapper class for the
 +----------------+ 0x0
 @endcode
 */
-template <typename T = intptr_t, typename UI = uint, typename SI = int>
+template <typename T = intptr_t, typename UI = uint, typename SI = SI4>
 class TStack {
  public:
   /* Initializes an stack of n elements of the given type.

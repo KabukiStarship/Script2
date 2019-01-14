@@ -36,11 +36,11 @@ namespace _ {
 
 /* A type-value tuple. */
 struct API TypeValue {
-  SIN type;           //< ASCII Type.
+  SI4 type;           //< ASCII Type.
   const void* value;  //< Pointer to the value data.
 
   /* Stores the type and value. */
-  TypeValue(SIN type, const void* value = nullptr);
+  TypeValue(SI4 type, const void* value = nullptr);
 };
 
 /* List of the 32 ASCII Data Types.
@@ -83,7 +83,7 @@ typedef enum AsciiTypes {
 
 /* Checks if the given type is valid.
     @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
-inline BOL TypeIsValid(SIN type) {
+inline BOL TypeIsValid(SI4 type) {
   if (type >= kLST && type <= kDIC ||
       (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
@@ -91,7 +91,7 @@ inline BOL TypeIsValid(SIN type) {
 }
 
 /* Aligns the given pointer to the correct word boundary for the type. */
-API void* TypeAlign(SIN type, void* value);
+API void* TypeAlign(SI4 type, void* value);
 
 /* An ROM string_ for one of the 32 types.
     C++11 variadic templates ensure there is only one copy in of the given
@@ -141,7 +141,7 @@ const Char** TTypeStrings() {
 }
 
 template <typename T = CH1>
-T* TypeAlignUpPointer(void* pointer, SIN type) {
+T* TypeAlignUpPointer(void* pointer, SI4 type) {
   if (type <= kUI1)
     return reinterpret_cast<T*>(pointer);
   else if (type <= kHLF)
@@ -165,7 +165,7 @@ T* TypeAlignUpPointer(void* pointer, SIN type) {
 }
 
 template <typename Char = CH1>
-Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
+Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
@@ -189,7 +189,7 @@ Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
     case kFLT:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const FLT*>(value));
     case kTMS:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const int*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
     case kTME:
     case kTME:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
@@ -212,7 +212,7 @@ Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
 }
 
 template <typename Char = CH1>
-Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
+Char* Print(Char* cursor, Char* stop, SI4 type, const void* value) {
   if (cursor == nullptr) return nullptr;
   ASSERT(cursor < stop);
 
@@ -249,7 +249,7 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value);
+API CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
@@ -265,7 +265,7 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
@@ -283,7 +283,7 @@ of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.

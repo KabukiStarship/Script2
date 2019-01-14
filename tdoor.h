@@ -88,25 +88,25 @@ class TDoor : public Operand {
   }
 
   /* Gets the BOut at the given index. */
-  BOut* GetSlot(SIN index) { return slots_->Element(index); }
+  BOut* GetSlot(SI4 index) { return slots_->Element(index); }
 
   /* Address the given crabs to the Door. */
-  SIN AddSlot(SIN slot) { return TStackPush<SIN, SIN, SIN>(slots_, slot); }
+  SI4 AddSlot(SI4 slot) { return TStackPush<SI4, SI4, SI4>(slots_, slot); }
 
   /* Attempts to find a Slot or Door with the given address. */
   BOL Contains(void* address) {
-    return TStackContains<SIN, SIN, SIN>(slots_, address);
+    return TStackContains<SI4, SI4, SI4>(slots_, address);
   }
 
   /* Gets the Slot that contains the given address.
   @return Returns the doors_ stack count if the Door does not contain the given
   address. */
-  SIN FindSlot(void* address) {
-    SIN count = slots_->count;
-    for (SIN i = 0; i < count; ++i) {
+  SI4 FindSlot(void* address) {
+    SI4 count = slots_->count;
+    for (SI4 i = 0; i < count; ++i) {
       // Slot* slot = nullptr; //< @todo fix me!
 
-      if (TStackContains<SIN, SIN, SIN>(slots_, address)) return i;
+      if (TStackContains<SI4, SI4, SI4>(slots_, address)) return i;
     }
     return count;
   }
@@ -150,7 +150,7 @@ class TDoor : public Operand {
       return CrabsQuery(crabs, kThis);
     }
     index -= ' ';
-    if (((SIN)index) >= slots_->count) {
+    if (((SI4)index) >= slots_->count) {
       return DoorResult(this, Door::kErrorInvalidOp);
     }
     return nullptr;
@@ -167,7 +167,7 @@ class TDoor : public Operand {
 };
 
 /* Initializes a Door at the beginning of the given socket.
-static Door* DoorInit (int* socket, SI4 slot_size) {
+static Door* DoorInit (SI4* socket, SI4 slot_size) {
   if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
   Wall* wall = reinterpret_cast<Door*>(socket);

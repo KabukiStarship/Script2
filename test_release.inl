@@ -12,6 +12,7 @@
 #define PRINT_TIME(date)
 #define PRINT_TYPE(type, value)
 #define PRINT_SOCKET(begin, end_or_size)
+#define PRINT_SOCKET_OBJ(obj)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
 #define PRINT_TOBJ(stack)

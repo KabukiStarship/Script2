@@ -78,7 +78,7 @@ inline Char* TStringSet(Char* string_) {
 /* Searches fro the s line stop.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
+const Char* TStringLineEnd(const Char* cursor, SI4 column_count = 80) {
   Char c;
   // Scroll to the stop of the line.
   c = *cursor++;
@@ -100,7 +100,7 @@ const Char* TStringLineEnd(const Char* cursor, int column_count = 80) {
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
 template <typename Char = CH1>
-Char* TStringLineEnd(Char* cursor, int column_count = 80) {
+Char* TStringLineEnd(Char* cursor, SI4 column_count = 80) {
   return const_cast<Char*>(
       TStringLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
 }
@@ -111,7 +111,7 @@ Char* TStringLineEnd(Char* cursor, int column_count = 80) {
 @param column_coun In characters. */
 template <typename Char = CH1>
 const Char* TStringLineEnd(const Char* cursor, const Char* stop,
-                           int column_count = 80) {
+                           SI4 column_count = 80) {
   if (!cursor) {
     PRINTF("\nText buffer overflow!");
     return nullptr;
@@ -140,7 +140,7 @@ const Char* TStringLineEnd(const Char* cursor, const Char* stop,
 @param  stop    The last Char in the buffer.
 @param column_coun In characters. */
 template <typename Char = CH1>
-inline Char* TStringLineEnd(Char* cursor, Char* stop, int column_count = 80) {
+inline Char* TStringLineEnd(Char* cursor, Char* stop, SI4 column_count = 80) {
   return const_cast<const Char*>(
       TStringLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
                            reinterpret_cast<const Char*>(stop), column_count));
@@ -501,7 +501,7 @@ pointer to the nil-term CH1 upon success.
 @param  column_count The number_ of columns to align right to. */
 template <typename Char = CH1>
 Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
-                  int column_count = 80) {
+                  SI4 column_count = 80) {
   ASSERT(token);
   PRINTF("\ncursor:%p end:%p", cursor, stop);
   ASSERT(cursor <= stop);
@@ -518,7 +518,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
   if (token == token_end) return cursor;
   SIW length = token_end - token;
 
-  PRINTF("\n\nPrinting \"%s\":%i aligned right %i columns", token, (int)length,
+  PRINTF("\n\nPrinting \"%s\":%i aligned right %i columns", token, (SI4)length,
          column_count);
 
   // If the length is less than the column_count we need to utf ".", "..",
@@ -577,12 +577,12 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* token,
 /* Prints the given cursor center aligned to the given column_count. */
 template <typename Char = CH1>
 Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
-                   int column_count = 80) {
+                   SI4 column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
 
   // We need to leave at least one space to the left and right of
-  int length = TStringLength<Char>(string_), offset;
+  SI4 length = TStringLength<Char>(string_), offset;
   PRINTF("\n\n    Printing \"%s\":%i column_count:%i", string_, length,
          column_count);
 
@@ -621,10 +621,10 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string_,
 /* Prints a line of the given column_count the given begin. */
 template <typename Char = CH1>
 Char* TPrintLine(Char* cursor, const Char* stop, Char token,
-                 int column_count = 80) {
+                 SI4 column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
-  int l_column_count = column_count;
+  SI4 l_column_count = column_count;
   if (cursor + l_column_count + 1 >= stop) return nullptr;
 
   *cursor++ = '\n';
@@ -638,7 +638,7 @@ Char* TPrintLine(Char* cursor, const Char* stop, Char token,
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
 Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
-                       int column_count = 80) {
+                       SI4 column_count = 80) {
   ASSERT(cursor);
   ASSERT(cursor < stop);
   if (cursor + column_count + 1 > stop) return nullptr;
@@ -657,14 +657,14 @@ Char* TPrintLineString(Char* cursor, Char* stop, const Char* string_,
 /* Prints a cursor to the given buffer without */
 template <typename Char = CH1>
 Char* TPrintWrap(Char* cursor, Char* stop, const Char* string_,
-                 int column_count = 80) {
+                 SI4 column_count = 80) {
   ASSERT(cursor && cursor < stop && string_);
   if (column_count < 3) {
   }
   Char c = *string_++;
 
   while (c) {
-    for (int i = column_count; i > 0; --i) {
+    for (SI4 i = column_count; i > 0; --i) {
       *cursor++ = c;
       c = *string_++;
       if (cursor >= stop) return nullptr;
@@ -690,31 +690,29 @@ class TToken {
   TToken() { *string_ = 0; }
 
   /* Prints the value to the text begin. */
-  TToken(Char character) { TPrint<Char>(string_, string_ + kSize, character); }
+  TToken(Char character) { Print(string_, string_ + kSize, character); }
 
   /* Prints the value to the text begin. */
-  TToken(const Char* string_) {
-    TPrint<Char>(string_, string_ + kSize, string_);
-  }
+  TToken(const Char* string_) { Print(string_, string_ + kSize, string_); }
 
   /* Prints the value to the text begin. */
-  TToken(SI4 value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(SI4 value) { Print(string_, string_ + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(UI4 value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(UI4 value) { Print(string_, string_ + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(SI8 value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(SI8 value) { Print(string_, string_ + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(UI8 value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(UI8 value) { Print(string_, string_ + kSize, value); }
 
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
-  TToken(FLT value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(FLT value) { Print(string_, string_ + kSize, value); }
 
   /* Prints the value to the text begin. */
-  TToken(DBL value) { TPrint<Char>(string_, string_ + kSize, value); }
+  TToken(DBL value) { Print(string_, string_ + kSize, value); }
 #endif
   /* Gets the number_ s. */
   const Char* String() { return string_; }
@@ -740,7 +738,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   SIW num_bytes = 81 * (num_rows + 2);
   if ((stop - cursor) <= num_bytes) {
     PRINTF("\n    ERROR: buffer overflow trying to fit %i in %i bytes!",
-           (int)num_bytes, (int)(stop - cursor));
+           (SI4)num_bytes, (SI4)(stop - cursor));
     return nullptr;
   }
   size += num_bytes;
@@ -751,27 +749,27 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   *cursor++ = '0';
   cursor = TPrintRight<Char>(cursor, stop, TToken<Char>(8).String(), 8);
   *cursor++ = ' ';
-  for (int i = 16; i <= 56; i += 8)
+  for (SI4 i = 16; i <= 56; i += 8)
     cursor = TPrintRight<Char>(cursor, stop, TToken<Char>(i).String(), 8);
-  for (int j = 6; j > 0; --j) *cursor++ = ' ';
+  for (SI4 j = 6; j > 0; --j) *cursor++ = ' ';
   *cursor++ = '|';
   *cursor++ = '\n';
   *cursor++ = '|';
-  for (int j = 8; j > 0; --j) {
+  for (SI4 j = 8; j > 0; --j) {
     *cursor++ = '+';
-    for (int k = 7; k > 0; --k) *cursor++ = '-';
+    for (SI4 k = 7; k > 0; --k) *cursor++ = '-';
   }
   *cursor++ = '|';
   *cursor++ = ' ';
 
   cursor = TPrintHex<Char>(cursor, stop, reinterpret_cast<UIW>(address_ptr));
 
-  PRINTF("\nBuffer space left:%i", (int)(stop - cursor));
+  PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
   Char c;
   while (address_ptr < address_end_ptr) {
     *cursor++ = '\n';
     *cursor++ = '|';
-    for (int i = 0; i < 64; ++i) {
+    for (SI4 i = 0; i < 64; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
         c = 'x';
@@ -787,9 +785,9 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   }
   *cursor++ = '\n';
   *cursor++ = '|';
-  for (int j = 8; j > 0; --j) {
+  for (SI4 j = 8; j > 0; --j) {
     *cursor++ = '+';
-    for (int k = 7; k > 0; --k) {
+    for (SI4 k = 7; k > 0; --k) {
       *cursor++ = '-';
     }
   }
@@ -811,7 +809,7 @@ This class only stores the stop of begin pointer and a pointer to the write
 begin. It is up the user to store begin of begin pointer and if they would
 like to replace the begin with the beginning of begin pointer when they are
 done printing. */
-template <typename Char = CH1, typename Size = SIN>
+template <typename Char = CH1, typename Size = SI4>
 struct TUTF {
   Char *begin,  //< Start address.
       *stop;    //< Stop address.
@@ -975,44 +973,44 @@ template <typename Char = CH1>
 class TCenter {
  public:
   /* Prints the value to the text begin. */
-  TCenter(const Char* string_, int column_count = 80)
+  TCenter(const Char* string_, SI4 column_count = 80)
       : string_(TStringSet<const Char>(string_)), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TCenter(SI4 value, int column_count = 80)
+  TCenter(SI4 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TCenter(UI4 value, int column_count = 80)
+  TCenter(UI4 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TCenter(SI8 value, int column_count = 80)
+  TCenter(SI8 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TCenter(UI8 value, int column_count = 80)
+  TCenter(UI8 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
-  TCenter(FLT value, int column_count = 80)
+  TCenter(FLT value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TCenter(DBL value, int column_count = 80)
+  TCenter(DBL value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count(column_count) {
     // Nothing to do here!
   }
@@ -1022,7 +1020,7 @@ class TCenter {
   const Char* String() { return string_; }
 
   /* Gets the column_count. */
-  int GetColumnCount() { return column_count; }
+  SI4 GetColumnCount() { return column_count; }
 
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_) {
@@ -1036,7 +1034,7 @@ class TCenter {
  private:
   const Char* string_;   //< Pointer to the s.
   TToken<Char> number_;  //< Pointer to a pointer to utf.
-  int column_count;      //< Number of columns to center.
+  SI4 column_count;      //< Number of columns to center.
 };
 
 /* Utility class for printing hex with operator<<. */
@@ -1044,44 +1042,44 @@ template <typename Char = CH1>
 class TRight {
  public:
   /* Prints the value to the text begin. */
-  TRight(const Char* string_, int column_count = 80)
+  TRight(const Char* string_, SI4 column_count = 80)
       : string_(TStringSet<Char>(string_)), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TRight(SI4 value, int column_count = 80)
+  TRight(SI4 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TRight(UI4 value, int column_count = 80)
+  TRight(UI4 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TRight(SI8 value, int column_count = 80)
+  TRight(SI8 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TRight(UI8 value, int column_count = 80)
+  TRight(UI8 value, SI4 column_count = 80)
       : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
-  TRight(FLT value, int column_count = 80)
+  TRight(FLT value, SI4 column_count = 80)
       : cursor(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
-  TRight(DBL value, int column_count = 80)
+  TRight(DBL value, SI4 column_count = 80)
       : cursor(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
@@ -1090,7 +1088,7 @@ class TRight {
   const Char* String() { return string_; }
 
   /* Gets the column_count. */
-  int GetColumnCount() { return column_count_; }
+  SI4 GetColumnCount() { return column_count_; }
 
   TUTF<Char>& Print(TUTF<Char>& utf) {
     if (string_)
@@ -1103,17 +1101,17 @@ class TRight {
  private:
   const Char* string_;   //< Pointer to the s.
   TToken<Char> number_;  //< Pointer to a pointer to utf.
-  int column_count_;     //< Number of columns to center.
+  SI4 column_count_;     //< Number of columns to center.
 };
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = CH1>
 struct API TLineChar {
   Char token;        //< Character to utf.
-  int column_count;  //< Column count.
+  SI4 column_count;  //< Column count.
 
   /* Constructor. */
-  TLineChar(Char token, int column_count = 80)
+  TLineChar(Char token, SI4 column_count = 80)
       : token(token), column_count(column_count) {}
 };
 
@@ -1121,10 +1119,10 @@ struct API TLineChar {
 template <typename Char = CH1>
 struct API TLineString {
   const Char* string_;  //< Character to utf.
-  int column_count;     //< Column count.
+  SI4 column_count;     //< Column count.
 
   /* Constructor. */
-  TLineString(const Char* string_, int column_count = 80)
+  TLineString(const Char* string_, SI4 column_count = 80)
       : string_(string_), column_count(column_count) {}
 
   TUTF<Char>& Print(TUTF<Char>& utf) {}
@@ -1192,7 +1190,7 @@ class TSTR {
 factory. If passing in a argument it will have to get passed through the obj.
 */
 template <typename Size = SI4, typename Char = CH1>
-int TCOut(CObject& obj, SIW function, void* arg) {
+SI4 TCOut(CObject& obj, SIW function, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
@@ -1203,7 +1201,7 @@ int TCOut(CObject& obj, SIW function, void* arg) {
 /* AsciiFactory prints the begin to the console and deletes the
 obj.begin. */
 template <typename Size = SI4, typename Char = CH1>
-int TCOutHeap(CObject& obj, SIW fun, void* arg) {
+SI4 TCOutHeap(CObject& obj, SIW fun, void* arg) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   UIW address = reinterpret_cast<UIW>(begin) + sizeof(Size);
@@ -1214,9 +1212,9 @@ int TCOutHeap(CObject& obj, SIW fun, void* arg) {
 
 /* Queries the given s for the given query. */
 template <typename Char = CH1>
-int TStringQuery(const Char* cursor, const Char* stop, const Char* query) {
+SI4 TStringQuery(const Char* cursor, const Char* stop, const Char* query) {
   Char a = *cursor, b = *query;
-  int result;
+  SI4 result;
 
   if (!cursor) {
     if (!query) return 0;
@@ -1285,7 +1283,7 @@ TUTF<Char> TCOut() {
 @param  utf The utf.
 @param  value   The value to utf. */
 template <typename Char = CH1, typename Size = intptr_t>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const Char* string_) {
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const Char* string_) {
   return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, string_));
 }
 
@@ -1294,8 +1292,26 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const Char* string_) {
 @param  value   The value to utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, Char c) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, c));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 c) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, c));
+}
+
+/* Writes the given value to the utf.
+@param  utf The utf.
+@param  value   The value to utf.
+@return The utf. */
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 c) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, c));
+}
+
+/* Writes the given value to the utf.
+@param  utf The utf.
+@param  value   The value to utf.
+@return The utf. */
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 c) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, c));
 }
 
 /* Writes the given value to the utf.
@@ -1303,8 +1319,9 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, Char c) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI1 value) {
+  return utf.Set(
+      ::_::TPrintSigned<SIW, UIW, Char>(utf.begin, utf.stop, (SIW)value));
 }
 
 /* Writes the given value to the utf.
@@ -1312,8 +1329,9 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 value) {
+  return utf.Set(
+      ::_::TPrintUnsigned<UIW, Char>(utf.begin, utf.stop, (UIW)value));
 }
 
 /* Writes the given value to the utf.
@@ -1321,8 +1339,19 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 value) {
 @param  value The value to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 value) {
+  return utf.Set(
+      ::_::TPrintSigned<SIW, UIW, Char>(utf.begin, utf.stop, (SIW)value));
+}
+
+/* Writes the given value to the utf.
+@param  utf The utf.
+@param  value The value to write to the utf.
+@return The utf. */
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 value) {
+  return utf.Set(
+      ::_::TPrintUnsigned<UIW, Char>(utf.begin, utf.stop, (UIW)value));
 }
 
 /* Writes the given value to the utf.
@@ -1330,8 +1359,9 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 value) {
+  return utf.Set(
+      ::_::TPrintSigned<SI4, UI4, Char>(utf.begin, utf.stop, (SIW)value));
 }
 
 /* Writes the given value to the utf.
@@ -1339,8 +1369,8 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 value) {
+  return utf.Set(::_::TPrintUnsigned<UI4, Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1348,8 +1378,8 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 value) {
+  return utf.Set(::_::TPrintSigned<SI8, UI8, Char>(utf.begin, utf.stop, value));
 }
 
 /* Writes the given value to the utf.
@@ -1357,8 +1387,8 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 value) {
-  return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 value) {
+  return utf.Set(::_::TPrintUnsigned<UI8, Char>(utf.begin, utf.stop, value));
 }
 
 #if SEAM >= _0_0_0__04
@@ -1367,7 +1397,7 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT value) {
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT value) {
   return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 
@@ -1376,7 +1406,7 @@ _::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT value) {
 @param  utf The utf.
 @param  value The value to write to the utf. */
 template <typename Char = CH1>
-_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL value) {
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL value) {
   return utf.Set(::_::TPrint<Char>(utf.begin, utf.stop, value));
 }
 #endif

@@ -28,16 +28,16 @@ static const CH1* _0_0_0__07_ASCII_Array(CH1* seam_log, CH1* seam_end,
 #if SEAM >= _0_0_0__07
   TEST_BEGIN;
 
-  static const int array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
+  static const SI4 array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
-  const int* test = Dimensions<2, 2, 2>();
-  TArray<int> test_array(test);
+  const SI4* test = Dimensions<2, 2, 2>();
+  TArray<SI4> test_array(test);
   *test_array.Elements() = {{{0, 1}, {2, 3}}, {{4, 5}, {6, 7}}};
   i = 0;
-  int* array_base = test_array.Elements();
-  for (int z = 0; z < 2; ++z)
-    for (int y = 0; y < 2; ++y)
-      for (int x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
+  SI4* array_base = test_array.Elements();
+  for (SI4 z = 0; z < 2; ++z)
+    for (SI4 y = 0; y < 2; ++y)
+      for (SI4 x = 0; x < 2; ++x) Compare(i++, array_3d_exected[x][y][z]);
 
 #endif
   return nullptr;

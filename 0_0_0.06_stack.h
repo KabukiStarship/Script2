@@ -30,15 +30,15 @@ static const CH1* _0_0_0__06_ASCII_Stack(CH1* seam_log, CH1* seam_end,
 
   PRINT("\n\nPushing items on to the Stack...\n");
 
-  TStack<int> stack(8);
+  TStack<SI4> stack(8);
 
-  for (int i = 0; i <= 10; ++i) stack.Push(i);
+  for (SI4 i = 0; i <= 10; ++i) stack.Push(i);
 
   PRINT_TOBJ(stack);
 
   PRINT("\nPopping items off the Stack...\n");
 
-  for (int i = 10; i > 0; --i) AVOW(i, stack.Pop());
+  for (SI4 i = 10; i > 0; --i) AVOW(i, stack.Pop());
 
   PRINT_TOBJ(stack);
 

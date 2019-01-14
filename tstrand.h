@@ -39,7 +39,7 @@ Char* TStrandInit(TSocket<SI4, kSize_>& socket) {
 All you have to do to grow from stack-to-heap is set the kUsingHeap_ template
 parameter to a non-zero value and you're good to go. */
 template <typename Char, BOL kUsingHeap_ = kStack>
-int TStrandFactory(CObject& obj, SIW function, void* arg);
+SI4 TStrandFactory(CObject& obj, SIW function, void* arg);
 
 /* An ASCII String that can auto-grow from stack to heap.
 
@@ -55,7 +55,7 @@ either be configured using the class template argument kFactory1_. If the
 obj_.Factory () is nil then it will get replaced with the
 
 @code
-TStrand<> (TCOut<>).Plus ("Hello ") << "world!";
+TStrand<> (TCOut<>).Star ("Hello ") << "world!";
 @endcode
 
 # Dynamic Allocated Strings
@@ -75,11 +75,11 @@ class TStrand {
     kCountMin = (sizeof(SI4) / sizeof(Char)) + 1,  //< Min element count.
     // kLengthMax bounded to the min max range.
     kLengthMax =
-        (int)((kLengthMax_ < kCountMin)
+        (SI4)((kLengthMax_ < kCountMin)
                   ? kCountMin
                   : (kLengthMax_ > kCountMax) ? kCountMax : kLengthMax_),
     // OBJ size in bytes.
-    kSize = (int)sizeof(SI4) + (kLengthMax + 1) * (int)sizeof(Char),
+    kSize = (SI4)sizeof(SI4) + (kLengthMax + 1) * (SI4)sizeof(Char),
   };
 
   /* Constructs a Strand that auto-grows from stack to heap.
@@ -211,12 +211,12 @@ class TStrand {
   template <typename T>
   TUTF<Char>& Print(T item) {
     Char *cursor = utf_.begin, *stop = TStringStop<Char>(obj_.Begin());
-    cursor = TPrint<Char>(cursor, stop, item);
+    cursor = ::_::Print(cursor, stop, item);
     if (!cursor) {
       do {
-        int result = TObjCanGrow<SI4>(obj_.Obj());
+        SI4 result = TObjCanGrow<SI4>(obj_.Obj());
         if (result) return utf_;
-        cursor = TPrint<Char>(cursor, stop, item);
+        cursor = ::_::Print(cursor, stop, item);
       } while (!cursor);
     }
     utf_.begin = cursor;
@@ -312,17 +312,17 @@ using Strand4 = TStrand<CH4>;
 #endif
 
 template <typename Size>
-int TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap);
+SI4 TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap);
 
 template <typename Size, typename Char, BOL kUsingHeap_ = false>
-int TStrandFactory(CObject& obj, SIW function, void* arg) {
+SI4 TStrandFactory(CObject& obj, SIW function, void* arg) {
   return TStrandFactory<Size>(obj, function, arg, kUsingHeap_);
 }
 
 /* Strand factory.
  */
 template <typename Size>
-int TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
+SI4 TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
   Size size;
   UIW *begin, *temp;
   switch (function) {
@@ -388,7 +388,6 @@ int TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, const Char* string) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(string);
 }
 
@@ -399,7 +398,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, Char c) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(c);
 }
 
@@ -410,7 +408,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, UI1 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -421,7 +418,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, SI2 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -432,7 +428,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, UI2 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -443,7 +438,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, SI4 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -454,7 +448,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, UI4 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -465,7 +458,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, SI8 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -476,7 +468,6 @@ inline ::_::TUTF<Char>& operator<<(
 template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand, UI8 value) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(value);
 }
 
@@ -510,7 +501,6 @@ template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand,
     ::_::TCenter<Char> item) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(item);
 }
 
@@ -522,7 +512,6 @@ template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand,
     ::_::TRight<Char> item) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(item);
 }
 
@@ -531,7 +520,6 @@ template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand,
     ::_::TLineChar<Char> item) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(item);
 }
 
@@ -540,7 +528,6 @@ template <typename Char, SI4 kLengthMax_, AsciiFactory kFactory_>
 inline ::_::TUTF<Char>& operator<<(
     ::_::TStrand<Char, kLengthMax_, kFactory_>& strand,
     ::_::TLineString<Char> item) {
-  PRINT_FUNCTION_LINE;
   return strand.Print(item);
 }
 

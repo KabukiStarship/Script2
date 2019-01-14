@@ -46,7 +46,7 @@ inline Size SizeWords(Size size) {
 required. */
 template <typename Size>
 inline UIW* TObjInit(UIW* socket, Size size) {
-  PRINTF("\nsocket:0x%p size:%i", socket, (int)size);
+  PRINTF("\nsocket:0x%p size:%i", socket, (SI4)size);
   size = TAlignDownI<Size>(size);
   if (size < TObjSizeMin<Size>()) return nullptr;
   if (!socket) socket = new UIW[SizeWords<Size>(size)];
@@ -66,10 +66,10 @@ inline SI TObjSizeMax() {
 /* Checks if the size is in the min max bounds of an ASCII Object.
 @return 0 If the size is valid. */
 template <typename Size = SIW>
-inline int TObjCanGrow(Size size, Size size_min) {
+inline SI4 TObjCanGrow(Size size, Size size_min) {
   if (size < size_min) return kFactorySizeInvalid;
   size = size >> (sizeof(Size) * 8 - 2);
-  return (int)size;
+  return (SI4)size;
 }
 
 /* Checks if the given object count is in the min max bounds of an ASCII
@@ -176,15 +176,15 @@ inline UIW* TObjClone(CObject& obj) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-int TObjCanGrow(Size size) {
-  return (int)(size >> (sizeof(Size) * 8 - 2));
+SI4 TObjCanGrow(Size size) {
+  return (SI4)(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-int TObjCanGrow(CObject& obj, Size new_size) {
+SI4 TObjCanGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
@@ -196,7 +196,7 @@ int TObjCanGrow(CObject& obj, Size new_size) {
 }
 
 template <typename Size>
-inline int TObjCanGrow(CObject& obj) {
+inline SI4 TObjCanGrow(CObject& obj) {
   return TObjCanGrow(obj, TObjSize<Size>(obj) * 2);
 }
 /* A contiguous ASCII Object that starts with the size.
@@ -294,6 +294,7 @@ class TObject {
   @return false if the grow op failed. */
   inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
+  /* Prints this object to the COut. */
   void Print() {
     ::_::Print("\nTObject<SI");
     ::_::Print('0' + sizeof(Size));

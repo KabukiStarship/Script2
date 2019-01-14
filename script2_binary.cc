@@ -28,7 +28,7 @@ CH1 HexNibbleToUpperCase(UI1 b) {
 #if SEAM >= _0_0_0__01
 namespace _ {
 /*
-int TStringLength(UI8 value) {
+SI4 TStringLength(UI8 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
@@ -245,7 +245,7 @@ UI2 HexByteToUpperCase(UI1 b) {
   return value;
 }
 
-int HexToByte(CH1 c) {
+SI4 HexToByte(CH1 c) {
   if (c < '0') {
     return -1;
   }
@@ -261,17 +261,155 @@ int HexToByte(CH1 c) {
   return c - '0';
 }
 
-int HexToByte(UI2 h) {
-  int lowerValue = HexToByte((CH1)(h >> 8));
+SI4 HexToByte(UI2 h) {
+  SI4 lowerValue = HexToByte((CH1)(h >> 8));
 
   if (lowerValue < 0) return -1;
 
-  int upper_value = HexToByte((CH1)h);
+  SI4 upper_value = HexToByte((CH1)h);
   if (upper_value < 0) return -1;
 
   return lowerValue | (upper_value << 4);
 }
 
+#if USING_UTF8 == YES
+CH1* Print(CH1* cursor, CH1* stop, CH1 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = c;
+  *cursor = 0;
+  return cursor;
+}
+
+CH1* Print(CH1* cursor, CH1* stop, CH4 c) {
+  // | Byte 1   | Byte 2   | Byte 3   | Byte 4   | UTF-32 Result         |
+  // |:--------:|:--------:|:--------:|:--------:|:---------------------:|
+  // | 0aaaaaaa |          |          |          | 00000000000000aaaaaaa |
+  // | 110aaaaa | 10bbbbbb |          |          | 0000000000aaaaabbbbbb |
+  // | 1110aaaa | 10bbbbbb | 10cccccc |          | 00000aaaabbbbbbcccccc |
+  // | 11110aaa | 10bbbbbb | 10cccccc | 10dddddd | aaabbbbbbccccccdddddd |
+  if (!cursor) return nullptr;
+  if (!(c >> 7)) {  // 1 ASCII char.
+    if (cursor + 1 >= stop) return nullptr;
+    *cursor++ = (CH1)c;
+    *cursor = 0;
+    return cursor;
+  }
+  CH2 lsb_mask = 0x3f, msb_mask = 0x80;
+  if (!(c >> 12)) {  // 2 bytes.
+    if (cursor + 2 >= stop) return nullptr;
+    *cursor++ = (CH1)(0xC0 | c >> 6);
+    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *cursor = 0;
+    return cursor;
+  }
+  if (!(c >> 18)) {  // 3 bytes.
+    if (cursor + 3 >= stop) return nullptr;
+    *cursor++ = (CH1)(0xE0 | c >> 12);
+    *cursor++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *cursor = 0;
+    return cursor;
+  } else {  // 4 bytes.
+    if (c >= (1 << 20) || cursor + 4 >= stop) return nullptr;
+    *cursor++ = (CH1)(0xF0 | c >> 18);
+    *cursor++ = (CH1)(msb_mask | ((c >> 18) & lsb_mask));
+    *cursor++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *cursor = 0;
+    return cursor;
+  }
+}
+
+CH1* Print(CH1* cursor, CH1* stop, CH2 c) {
+#if USING_UTF32 == YES
+  return Print(cursor, stop, (CH4)c);
+#else
+  enum { k2ByteMSbMask = 0xC0, k3ByteMSbMask = 0xE0, k4ByteMSbMask = 0xF0 };
+  if (!cursor) return nullptr;
+  if (!(c >> 7)) {  // 1 byte.
+    if (cursor + 1 >= stop) return nullptr;
+    *cursor++ = (CH1)c;
+    *cursor = 0;
+    return cursor;
+  }
+  CH2 lsb_mask = 0x3f, msb_mask = 0x80;
+  if (!(c >> 12)) {  // 2 bytes.
+    if (cursor + 2 >= stop) return nullptr;
+    *cursor++ = (CH1)(0xC0 | c >> 6);
+    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *cursor = 0;
+    return cursor;
+  } else {  // 3 bytes.
+    if (cursor + 3 >= stop) return nullptr;
+    *cursor++ = (CH1)(0xE0 | c >> 12);
+    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *cursor++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+    *cursor = 0;
+    return cursor;
+  }
+}
+#endif
+}
+#endif
+#if USING_UTF16 == YES
+CH2* Print(CH2* cursor, CH2* stop, CH1 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = (CH2)c;
+  *cursor = 0;
+  return cursor;
+}
+
+CH2* Print(CH2* cursor, CH2* stop, CH2 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = c;
+  *cursor = 0;
+  return cursor;
+}
+
+CH2* Print(CH2* cursor, CH2* stop, CH4 c) {
+  // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
+  // |:-----------------:|:---------------------:|:--------------------:|
+  // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  CH4 lsb_mask = 0x3f, lsb = c & lsb_mask, msb = c >> 10;
+  if (msb) {
+    CH4 msb_mask = 0xDC00;
+    if (msb >> 10) return nullptr;  // Non-Unicode value.
+    if (cursor + 2 >= stop) return nullptr;
+    *cursor++ = (CH2)(lsb & msb_mask);
+    *cursor++ = (CH2)(msb & msb_mask);
+    *cursor = 0;
+    return cursor;
+  } else {
+    if (cursor + 1 >= stop) return nullptr;
+    *cursor++ = (CH2)c;
+    *cursor = 0;
+    return cursor;
+  }
+}
+#endif
+#if USING_UTF32 == YES
+CH4* Print(CH4* cursor, CH4* stop, CH1 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = (CH4)c;
+  *cursor = 0;
+  return cursor;
+}
+
+CH4* Print(CH4* cursor, CH4* stop, CH2 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = (CH4)c;
+  *cursor = 0;
+  return cursor;
+}
+
+CH4* Print(CH4* cursor, CH4* stop, CH4 c) {
+  if (!cursor || cursor + 1 >= stop) return nullptr;
+  *cursor++ = c;
+  *cursor = 0;
+  return cursor;
+}
+#endif
 }  // namespace _
 #endif
 
@@ -294,9 +432,9 @@ const UI8* BinaryLUTF() { return kCachedPowersF; }
 CH1* Print(CH1* cursor, CH1* stop, FLT value) {
   if (!cursor || cursor >= stop) return nullptr;
   SIW size = stop - cursor;
-  PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, stop, (int)size,
+  PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", cursor, stop, (SI4)size,
          value);
-  int count = sprintf_s(cursor, stop - cursor, "%f", value);
+  SI4 count = sprintf_s(cursor, stop - cursor, "%f", value);
   if (count <= 0) return nullptr;
   return cursor + count;
   // return TBinary<FLT, UI4>::TPrint<CH1>(cursor, stop, value);
@@ -305,7 +443,7 @@ CH1* Print(CH1* cursor, CH1* stop, FLT value) {
 CH1* Print(CH1* cursor, CH1* stop, DBL value) {
   if (!cursor || cursor >= stop) return nullptr;
   SIW size = stop - cursor;
-  int count = sprintf_s(cursor, size, "%lf", value);
+  SI4 count = sprintf_s(cursor, size, "%lf", value);
   if (count <= 0) return nullptr;
   return cursor + count;
   // return TBinary<DBL, UI8>::TPrint<CH1>(cursor, stop, value);
@@ -328,12 +466,12 @@ const Char* TStringFloatStop(const Char* cursor) {
 }
 
 const CH1* Scan(const CH1* cursor, FLT& value) {
-  int count = sscanf_s(cursor, "%f", &value);
+  SI4 count = sscanf_s(cursor, "%f", &value);
   return TStringFloatStop<CH1>(cursor);
 }
 
 const CH1* Scan(const CH1* cursor, DBL& value) {
-  int count = sscanf_s(cursor, "%lf", &value);
+  SI4 count = sscanf_s(cursor, "%lf", &value);
   return TStringFloatStop<CH1>(cursor);
 }
 
@@ -357,25 +495,25 @@ CH4* Print(CH4* cursor, CH4* stop, DBL value) {
 }
 #endif
 
-int FloatDigitsMax() { return 15; }
+SI4 FloatDigitsMax() { return 15; }
 
-int DoubleDigitsMax() { return 31; }
+SI4 DoubleDigitsMax() { return 31; }
 
-int MSbAsserted(UI1 value) { return TMSbAssertedReverse<UI1>(value); }
+SI4 MSbAsserted(UI1 value) { return TMSbAssertedReverse<UI1>(value); }
 
-int MSbAsserted(SI1 value) { return TMSbAssertedReverse<UI1>((UI8)value); }
+SI4 MSbAsserted(SI1 value) { return TMSbAssertedReverse<UI1>((UI8)value); }
 
-int MSbAsserted(UI2 value) { return TMSbAssertedReverse<UI2>(value); }
+SI4 MSbAsserted(UI2 value) { return TMSbAssertedReverse<UI2>(value); }
 
-int MSbAsserted(SI2 value) { return TMSbAssertedReverse<UI2>((UI8)value); }
+SI4 MSbAsserted(SI2 value) { return TMSbAssertedReverse<UI2>((UI8)value); }
 
-int MSbAsserted(UI4 value) { return TMSbAssertedReverse<UI4>(value); }
+SI4 MSbAsserted(UI4 value) { return TMSbAssertedReverse<UI4>(value); }
 
-int MSbAsserted(SI4 value) { return TMSbAssertedReverse<UI4>((UI8)value); }
+SI4 MSbAsserted(SI4 value) { return TMSbAssertedReverse<UI4>((UI8)value); }
 
-int MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
+SI4 MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
 
-int MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
+SI4 MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
 
 void FloatBytes(FLT value, CH1& byte_0, CH1& byte_1, CH1& byte_2, CH1& byte_3) {
   UI4 ui_value = *reinterpret_cast<UI4*>(&value);
@@ -467,18 +605,18 @@ void BinaryLUTAlignedGenerate(CH1* lut, size_t size) {
   UI2* ui2_ptr = reinterpret_cast<UI2*>(lut);
 
   for (CH1 tens = '0'; tens <= '9'; ++tens)
-    for (int ones = '0'; ones <= '9'; ++ones)
+    for (SI4 ones = '0'; ones <= '9'; ++ones)
 #if ENDIAN == LITTLE
       *ui2_ptr++ = (tens << 8) | ones;
 #else
       *ui2_ptr++ = (ones << 8) | tens;
 #endif
 
-  for (int i = 0; i < 87; ++i) *ui2_ptr = IEEE754Pow10E()[i];
+  for (SI4 i = 0; i < 87; ++i) *ui2_ptr = IEEE754Pow10E()[i];
 
   UI8* ui8_ptr = reinterpret_cast<UI8*>(ui2_ptr);
 
-  for (int i = 0; i < 87; ++i) *ui8_ptr = IEEE754Pow10F()[i];
+  for (SI4 i = 0; i < 87; ++i) *ui8_ptr = IEEE754Pow10F()[i];
 }
 
 const UI2* DigitsLut(const CH1* puff_lut) {
@@ -521,7 +659,7 @@ wish to do so.
 @param left_bits Number of bits to shift left.
 @param right_bits Number of bits to shift right. */
 template <typename UI>
-UI ShiftLeftRight(UI value, int left_bits, int right_bits) {
+UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
   value = value << left_bits;
   return value >> right_bits;
 }
@@ -550,7 +688,7 @@ I PowerOf2(I n) {
   return value << n;
 }
 
-UI8 ComputePow10(int e, int alpha, int gamma) {
+UI8 ComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
   DBL pow_10 = 0.30102999566398114,  //< 1/lg(10)
       alpha_minus_e_plus_63 = static_cast<DBL>(alpha - e + 63),
       ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);

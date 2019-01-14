@@ -23,11 +23,11 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-void TestFunctionLine(int line, const CH1* function, const CH1* file) {
+void TestFunctionLine(SI4 line, const CH1* function, const CH1* file) {
   Printf("line %d in %s in \"%s\"", line, function, file);
 }
 
-BOL TestWarn(int line, const CH1* function, const CH1* file,
+BOL TestWarn(SI4 line, const CH1* function, const CH1* file,
              const CH1* header) {
   Print('\n');
   Print(header);
@@ -35,13 +35,13 @@ BOL TestWarn(int line, const CH1* function, const CH1* file,
   return true;
 }
 
-BOL TestAssert(int line, const CH1* function, const CH1* file) {
+BOL TestAssert(SI4 line, const CH1* function, const CH1* file) {
   BOL result = TestWarn(line, function, file);
   return result;
 }
 
-int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
-                 TestCase* tests, int test_count) {
+SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
+                 TestCase* tests, SI4 test_count) {
   if (seam_log_size < 0) return APP_EXIT_FAILURE;
   const CH1* result =
       TestTree(seam_log, seam_log + seam_log_size - 1,
@@ -54,9 +54,9 @@ int SeamTreeTest(int arg_count, CH1** args, CH1* seam_log, int seam_log_size,
 }
 
 const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
-                    TestCase* tests, int count) {
+                    TestCase* tests, SI4 count) {
   ASSERT(seam_log || seam_end || args || tests);
-  for (int i = 0; i < count; ++i) {
+  for (SI4 i = 0; i < count; ++i) {
     TestCase test = tests[i];
     if (!test) {
       Print("\nERROR: Test ");
@@ -92,7 +92,7 @@ static const CH1 kStringDifference[] = "\n      Difference:\0";
 static const CH1 kStringErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL Test(const CH1* a, const CH1* b) {
-  int result = ::_::TStringCompare<const CH1>(a, b);
+  SI4 result = ::_::TStringCompare<const CH1>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -104,7 +104,7 @@ BOL Test(const CH1* a, const CH1* b) {
 }
 
 BOL Test(const CH2* a, const CH2* b) {
-  int result = ::_::TStringCompare<const CH2>(a, b);
+  SI4 result = ::_::TStringCompare<const CH2>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
@@ -116,7 +116,7 @@ BOL Test(const CH2* a, const CH2* b) {
 }
 
 BOL Test(const CH4* a, const CH4* b) {
-  int result = ::_::TStringCompare<const CH4>(a, b);
+  SI4 result = ::_::TStringCompare<const CH4>(a, b);
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);

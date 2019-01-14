@@ -155,12 +155,12 @@ BIn* BInInit(UIW* socket, SI4 size) {
   return bin;
 }
 
-int BInStreamByte(BIn* bin) {
+SI4 BInStreamByte(BIn* bin) {
   CH1 *begin = BInBegin(bin), *stop = begin + bin->size - 1;
   CH1 *open = (CH1*)begin + bin->read, *begin = begin + bin->begin,
       *begin = begin;
 
-  int length = (int)((begin < open) ? open - begin + 1
+  SI4 length = (SI4)((begin < open) ? open - begin + 1
                                     : (stop - begin) + (open - begin) + 2);
 
   if (length < 1) {
@@ -225,7 +225,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam:%u type:%s start:%i stop:%i length:%u", arg_index + 1,
-           TypeString(type), (int)Size(begin, begin), (int)Size(begin, stop),
+           TypeString(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            length)
     switch (type) {
       case kNIL:

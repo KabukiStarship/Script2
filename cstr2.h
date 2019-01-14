@@ -42,7 +42,7 @@ API const CH2* TStringEnd(const CH2* text);
 @return  Returns -1 if the text CH2 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH2. */
-API int TStringLength(const CH2* text);
+API SI4 TStringLength(const CH2* text);
 
 /* Clones the given string_.
 @param  A nil-terminated string_ in ROM.
@@ -50,7 +50,7 @@ API int TStringLength(const CH2* text);
 API CH2* StringClone(const CH2* text);
 
 /* Returns a pointer to the CH2 at the stop of the line. */
-API const CH2* StringLineEnd(const CH2* text, int column_count);
+API const CH2* StringLineEnd(const CH2* text, SI4 column_count);
 
 /* Returns the pointer to the next CH2 in the CH2 that is not an ASCII
 number_.
@@ -85,14 +85,6 @@ upon success.
 @param  stop    The stop address of the socket.
 @param  string_ The potentially unsafe string_ to write. */
 API CH2* Print(CH2* start, CH2* stop, const CH2* string_);
-
-/* Writes the give CH2 to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term CH2
-upon success.
-@param begin     Beginning address of the socket.
-@param stop       The stop address of the socket.
-@param character The value to write. */
-API CH2* Print(CH2* start, CH2* stop, CH2 character);
 
 /* Writes the give CH2 to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -151,7 +143,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH2* PrintCenter(CH2* start, CH2* stop, const CH2* string_,
-                     int column_count);
+                     SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -159,7 +151,7 @@ upon success.
 @param begin Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The value to write. */
-API CH2* PrintCenter(CH2* start, CH2* stop, CH2 character, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, CH2 character, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -167,7 +159,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, UI4 valu, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, UI4 valu, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -175,7 +167,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, SI4 value, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, SI4 value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -183,7 +175,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, UI8 value, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, UI8 value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -191,7 +183,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, SI8 value, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, SI8 value, SI4 column_count);
 
 #if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket center.
@@ -200,7 +192,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, FLT value, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, FLT value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -208,7 +200,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintCenter(CH2* start, CH2* stop, DBL value, int column_count);
+API CH2* PrintCenter(CH2* start, CH2* stop, DBL value, SI4 column_count);
 #endif
 
 /* Prints the given string_ to the utf socket.
@@ -218,7 +210,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH2* PrintRight(CH2* start, CH2* stop, const CH2* string_,
-                    int column_count);
+                    SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -226,7 +218,7 @@ upon success.
 @param begin     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The value to write. */
-API CH2* PrintRight(CH2* start, CH2* stop, CH2 character, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, CH2 character, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -234,7 +226,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, UI4 value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, UI4 value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -242,7 +234,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, SI4 value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, SI4 value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -250,7 +242,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, UI8 value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, UI8 value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -258,7 +250,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, SI8 value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, SI8 value, SI4 column_count);
 
 #if SEAM >= _0_0_0__04
 /* Writes the give CH2 to the given socket center.
@@ -267,7 +259,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, FLT value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, FLT value, SI4 column_count);
 
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
@@ -275,7 +267,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH2* PrintRight(CH2* start, CH2* stop, DBL value, int column_count);
+API CH2* PrintRight(CH2* start, CH2* stop, DBL value, SI4 column_count);
 #endif
 
 /* Prints the given string_ to the utf socket.
@@ -483,7 +475,7 @@ number_ or nil upon failure.
 @param stop   The stop of the write socket.
 @param token The token to utf.
 @param column_count The number_ of tokens to utf. */
-API CH2* PrintLine(CH2* cursor, CH2* stop, CH2 token, int column_count);
+API CH2* PrintLine(CH2* cursor, CH2* stop, CH2 token, SI4 column_count);
 
 /* Prints a line of the given column_count.
 @return Returns a pointer to the next CH2 after the stop of the read
@@ -493,7 +485,7 @@ number_ or nil upon failure.
 @param string_ The string_ to utf.
 @param column_count The number_ of columns. */
 API CH2* TPrintLineString(CH2* cursor, CH2* stop, const CH2* string_,
-                          int column_count);
+                          SI4 column_count);
 
 /* Prints the socket to the console as a UTF-8 string_. */
 void COutUtf16(UIW* socket);
@@ -723,76 +715,76 @@ class Text2 {
 class Utf16Center {
  public:
   /* Prints the value to the text socket. */
-  Utf16Center(const CH2* string_, int column_count);
+  Utf16Center(const CH2* string_, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Center(SI4 value, int column_count);
+  Utf16Center(SI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Center(UI4 value, int column_count);
+  Utf16Center(UI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Center(SI8 value, int column_count);
+  Utf16Center(SI8 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Center(UI8 value, int column_count);
+  Utf16Center(UI8 value, SI4 column_count);
 
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
-  Utf16Center(FLT value, int column_count);
+  Utf16Center(FLT value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Center(DBL value, int column_count);
+  Utf16Center(DBL value, SI4 column_count);
 #endif
 
   /* Gets the number_ string_. */
   const CH2* GetString();
 
   /* Gets the column_count. */
-  int GetColumnCount();
+  SI4 GetColumnCount();
 
  private:
   const CH2* string_;  //< Pointer to the string_.
   Text2 number_;       //< Pointer to a pointer to utf.
-  int column_count;    //< Number of columns to center.
+  SI4 column_count;    //< Number of columns to center.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf16Right {
  public:
   /* Prints the value to the text socket. */
-  Utf16Right(const CH2* string_, int column_count);
+  Utf16Right(const CH2* string_, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Right(SI4 value, int column_count);
+  Utf16Right(SI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Right(UI4 value, int column_count);
+  Utf16Right(UI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Right(SI8 value, int column_count);
+  Utf16Right(SI8 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Right(UI8 value, int column_count);
+  Utf16Right(UI8 value, SI4 column_count);
 
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
-  Utf16Right(FLT value, int column_count);
+  Utf16Right(FLT value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf16Right(DBL value, int column_count);
+  Utf16Right(DBL value, SI4 column_count);
 #endif
 
   /* Gets the number_ string_. */
   const CH2* GetString();
 
   /* Gets the column_count. */
-  int GetColumnCount();
+  SI4 GetColumnCount();
 
  private:
   const CH2* string_;  //< Pointer to the string_.
   Text2 number_;       //< Pointer to a pointer to utf.
-  int column_count;    //< Number of columns to center.
+  SI4 column_count;    //< Number of columns to center.
 };
 
 }  // namespace _

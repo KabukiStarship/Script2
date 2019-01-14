@@ -47,7 +47,7 @@ const CH1* RequestText(Request r) {
   return RequestTexts()[r];
 }
 
-Room::Room(const CH1* room_name, int state_count)
+Room::Room(const CH1* room_name, SI4 state_count)
     : state_(1),
       state_count_(state_count < 1 ? 1 : state_count),
       name_(!room_name ? "Unnamed" : room_name),
@@ -58,11 +58,11 @@ Room::Room(const CH1* room_name, int state_count)
 
 Room::~Room() {}
 
-int Room::GetState() { return state_; }
+SI4 Room::GetState() { return state_; }
 
-int Room::GetStateCount() { return state_count_; }
+SI4 Room::GetStateCount() { return state_count_; }
 
-BOL Room::SetState(int new_state) {
+BOL Room::SetState(SI4 new_state) {
   if (new_state < 0) {
     return false;
   }
@@ -136,10 +136,10 @@ const Op* Room::Loop() { return 0; }
 
 BOL Room::IsOn() { return true; }
 
-int Room::Main(const CH1** args, int args_count) {
+SI4 Room::Main(const CH1** args, SI4 args_count) {
   const Op* result = nullptr;
   PRINTF("\nInitializing Chinese Room with %i args:", args_count)
-  for (int i = 0; i < args_count; ++i) {
+  for (SI4 i = 0; i < args_count; ++i) {
     PRINTF("\n%i:\"%s\"", i, args[i])
   }
   PRINT('\n')

@@ -26,7 +26,7 @@ Data structure is identical to std::tm with the execution that it has an
 additional microseconds from begin of second variable.
 */
 struct API CClock {
-  int second,  //< Second of the minute [0, 59].
+  SI4 second,  //< Second of the minute [0, 59].
       minute,  //< Minute of the hour [0, 59].
       hour,    //< Hour of the day [0, 23].
       day,     //< Day of the month [1, 31].
@@ -97,7 +97,7 @@ API inline const SI2* ClockLastDayOfMonth();
 API inline const SI2* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
-API inline int MonthByDay(int day, int year);
+API inline SI4 MonthByDay(SI4 day, SI4 year);
 
 /* Initializes the clock from the given timestamp. */
 API CClock* ClockInit(CClock& clock, TMS time);
@@ -124,43 +124,43 @@ API inline TME ClockTME(CClock& clock);
 
 /* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
-API int ClockMonthDayCount(TMS t);
+API SI4 ClockMonthDayCount(TMS t);
 
 /* Gets the number_ of days in a months.
 @param month The month index 0-11.
 @param year   */
-API int ClockMonthDayCount(int month, int year);
+API SI4 ClockMonthDayCount(SI4 month, SI4 year);
 
 /* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-API const CH1* ClockWeekDay(int day_number);
+API const CH1* ClockWeekDay(SI4 day_number);
 
 /* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-API CH1 ClockDayOfWeekInitial(int day_number);
+API CH1 ClockDayOfWeekInitial(SI4 day_number);
 
 /* Compares the two the time and prints the results. */
-API int ClockCompare(TMS a, TMS b);
+API SI4 ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
-API int ClockCompare(TMS a, TMS b);
+API SI4 ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
-API int ClockCompare(const CClock& clock, const CClock& other);
+API SI4 ClockCompare(const CClock& clock, const CClock& other);
 
 /* Compares the given TMS to the time and prints the results. */
-API int ClockCompare(const CClock& clock, int year, int month, int day,
-                     int hour, int minute, int second);
+API SI4 ClockCompare(const CClock& clock, SI4 year, SI4 month, SI4 day,
+                     SI4 hour, SI4 minute, SI4 second);
 
 /* Zeros out the struct values.
     @param calendar_time A calendar time struct to zero out. */
 API void ClockZeroTime(CClock& seconds);
 
 /* Creates a 32-bit seconds timestamp.  */
-API TMS ClockTimeTMS(int year, int month, int day, int hour = 0, int minute = 0,
-                     int second = 0);
+API TMS ClockTimeTMS(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
+                     SI4 second = 0);
 
 /* Creates a 64-bit seconds timestamp.  */
-API TME ClockTimeTME(int year, int month, int day, int hour = 0, int minute = 0,
-                     int second = 0);
+API TME ClockTimeTME(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
+                     SI4 second = 0);
 
 #if USING_UTF8 == YES
 /* Writes the given time to the text socket.
@@ -226,8 +226,8 @@ API void PrintTime(TME t);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const CH1* TStringScanTime(const CH1* string_, int& hour, int& minute,
-                                int& second);
+API const CH1* TStringScanTime(const CH1* string_, SI4& hour, SI4& minute,
+                                SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
 @return Nil upon socket failure or CH1 directly after the stop of the
@@ -301,8 +301,8 @@ API CH2* Print(CH2* begin, CH2* stop, TME time);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const CH2* TStringScanTime(const CH2* string_, int& hour,
-                                    int& minute, int& second);
+API const CH2* TStringScanTime(const CH2* string_, SI4& hour,
+                                    SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH2 and deletes the CH2.
 @return Nil upon socket failure or CH2 directly after the stop of the
@@ -373,8 +373,8 @@ API CH4* PrintTime(CH4* begin, CH4* stop, TME time);
 @16:20:00
 @endcode
 */
-API const CH4* TStringScanTime(const CH4* input, int& hour,
-                                    int& minute, int& second);
+API const CH4* TStringScanTime(const CH4* input, SI4& hour,
+                                    SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
  */

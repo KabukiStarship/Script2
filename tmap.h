@@ -232,7 +232,7 @@ Index MapCountUpperBounds() {
 /* Insets the given key-type-value tuple.
  */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
+Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   ASSERT(map);
   ASSERT(value);
 
@@ -319,7 +319,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%i", (int)index);
+      PRINTF("index:%i", (SI4)index);
 
       if (index < ~0) {  //< There are other collisions.
         PRINTF("with collisions, ");
@@ -400,7 +400,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         // Get offset to write the key too.
         value = key_offsets[count - 1] + key_length + 1;
 
-        SIN collision_index = unsorted_indexes[mid];
+        SI4 collision_index = unsorted_indexes[mid];
         PRINTF("\n\ncollision_index: %u", collision_index);
 
         SlotWrite(keys - value, id);
@@ -411,8 +411,8 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         key_offsets[count] = value;
 
         size_pile = map->size_pile;
-        indexes[mid] = static_cast<SIN>(size_pile);
-        indexes[count] = static_cast<SIN>(size_pile);
+        indexes[mid] = static_cast<SI4>(size_pile);
+        indexes[count] = static_cast<SI4>(size_pile);
 
         // Insert the collision into the collision table.
         temp_ptr = &collission_list[size_pile];
@@ -424,7 +424,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SIN type, Index index) {
         ++temp_ptr;
         *temp_ptr = ~0;
         map->size_pile = size_pile + 3;
-        //< Added one term-SIN and two indexes.
+        //< Added one term-SI4 and two indexes.
 
         // Add the newest key at the stop.
         indexes[count] = count;
@@ -549,7 +549,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
   utf << "\nMap" << sizeof(Size) << ": " << Hex<>(map) << " count:" << count
       << "size_pile:" << size_pile << " size:" << map->size;
   utf << "\n|";
-  for (int i = 0; i < 79; ++i) utf << '_';
+  for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
   const CH1* states =
@@ -569,7 +569,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
       << Right<>("hash_e", 10) << Right<>("hash_s", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11);
   utf << '|';
-  for (int i = 0; i < 79; ++i) utf << '_';
+  for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
   for (Index i = 0; i < count; ++i) {
@@ -644,7 +644,7 @@ class Map {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
-  inline Index Insert(void* value, Index index, SIN type) {
+  inline Index Insert(void* value, Index index, SI4 type) {
     return MapInsert<Size, Index, I>(CObject(), value, type, index);
   }
 

@@ -31,10 +31,10 @@ static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
 
       PRINTF("\nPushing items on to the List stack...\n")
 
-          const int test_ints[] = {'1', '2', '3', '4'};
+          const SI4 test_ints[] = {'1', '2', '3', '4'};
 
-  const int list_test_count = 12;
-  for (int i = 0; i < 4;) {
+  const SI4 list_test_count = 12;
+  for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kSI4, &test_ints[i++]);
     COUT << '\n'
@@ -43,7 +43,7 @@ static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
          << Socket(list.This(), list.This()->size);
   }
   const FLT test_floats[] = {9.0, 10.0, 11.0, 12.0};
-  for (int i = 0; i < 4;) {
+  for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kFLT, &test_floats[i++]);
     PRINT('\n');
@@ -54,7 +54,7 @@ static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
   }
 
   const CH1* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};
-  for (int i = 0; i < 4;) {
+  for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kSTR, test_strings[i++]);
     PRINT('\n');
@@ -64,7 +64,7 @@ static const CH1* _0_0_0__10_ASCII_List(CH1* seam_log, CH1* seam_end,
     PRINT(Socket(list.This(), list.This()->size));
   }
 
-  for (int i = list_test_count - 1; i > 0; --i) list.Pop();
+  for (SI4 i = list_test_count - 1; i > 0; --i) list.Pop();
 
 #endif
   return nullptr;

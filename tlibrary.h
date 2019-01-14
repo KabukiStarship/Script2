@@ -173,7 +173,7 @@ class Library : public Operand {
  private:
   // NONCOPYABLE (Library)
 
-  int reserved_;       //< Reserved for 64-bit memory alignment.
+  SI4 reserved_;       //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
   SI4 index_,          //< Index of the currently selected bag.

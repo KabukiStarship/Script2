@@ -100,19 +100,19 @@ CList<Size, Index>* ListInit(UIW* socket, Size size, Index count_max) {
                 // failed.
     return nullptr;
   PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
-         (uint)size, (int)count_max)
+         (uint)size, (SI4)count_max)
   Index count_max_bounds_lower = ListCountMaxBoundsLower<Size, Index>();
   if (count_max < count_max_bounds_lower) {
-    PRINTF("\n count_max == 0 and is now %i", (int)count_max_bounds_lower)
+    PRINTF("\n count_max == 0 and is now %i", (SI4)count_max_bounds_lower)
     count_max = count_max_bounds_lower;
   } else {
-    PRINTF("\ncount_max was %i ", (int)count_max)
+    PRINTF("\ncount_max was %i ", (SI4)count_max)
     count_max = AlignUp<Index>(count_max);
-    PRINTF("\n and now is %i.", (int)count_max)
+    PRINTF("\n and now is %i.", (SI4)count_max)
   }
 
   // count_max = AlignUp<Index> (count_max);
-  // PRINTF ("\n  Aligning up to count_max:%i", (int)count_max)
+  // PRINTF ("\n  Aligning up to count_max:%i", (SI4)count_max)
 
   CList<Size, Index>* list = reinterpret_cast<CList<Size, Index>*>(socket);
   list->size = size;
@@ -158,9 +158,9 @@ inline UIW* ListNew(Index count_max) {
 
 /* Returns the type bytes array. */
 template <typename Size = UI4, typename Index = SI2>
-SIN* ListTypes(CList<Size, Index>* list) {
+SI4* ListTypes(CList<Size, Index>* list) {
   ASSERT(list)
-  return reinterpret_cast<SIN*>(list) + sizeof(CList<Size, Index>);
+  return reinterpret_cast<SI4*>(list) + sizeof(CList<Size, Index>);
 }
 
 /* Gets a pointer to the begging of the data socket. */
@@ -209,7 +209,7 @@ inline CH1* ListDataStop(CList<Size, Index>* list, Index index = -1) {
     if (index != -1) return nullptr;
     return ListDataBegin<Size, Index>(list);
   }
-  SIN type = ListTypes<Size, Index>(list)[index];
+  SI4 type = ListTypes<Size, Index>(list)[index];
   Size offset = ListOffsets<Size, Index>(list)[index];
   PRINTF("!offset %u", offset)
   CH1* pointer = reinterpret_cast<CH1*>(list) + offset;
@@ -240,7 +240,7 @@ void ListDataSpaceBelow(CList<Size, Index>* list, Index index,
 /* Insets the given type-value tuple.
     @return -1 upon failure or the index upon success. */
 template <typename Size = UI4, typename Index = SI2>
-Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
+Index ListInsert(CList<Size, Index>* list, SI4 type, const void* value,
                  Index index) {
   ASSERT(list)
   ASSERT(value)
@@ -251,12 +251,12 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
   Index count = list->count, count_max = list->count_max;
   if (count >= count_max || index > count || !TypeIsValid(type) || index < 0) {
     PRINTF("\nError inserting type:%s into index %i", TypeString(type),
-           (int)index);
+           (SI4)index);
     return -1;
   }
-  PRINTF(" when count is %i", (int)count)
+  PRINTF(" when count is %i", (SI4)count)
 
-  SIN* types = ListTypes<Size, Index>(list);
+  SI4* types = ListTypes<Size, Index>(list);
 
   // 1. Check for stack push operation.
   if (index == count) {
@@ -265,14 +265,14 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
     types[index] = type;
     //  Push the offset onto the top of the offset stack.
     CH1* data_stop = ListDataStop<Size, Index>(list, count - 1);
-    PRINTF("\n  Aligning data_stop from %i to ", (int)Size(list, data_stop))
+    PRINTF("\n  Aligning data_stop from %i to ", (SI4)Size(list, data_stop))
     data_stop = TypeAlignUpPointer<CH1>(data_stop, type);
-    PRINTF("%i", (int)Size(list, data_stop))
+    PRINTF("%i", (SI4)Size(list, data_stop))
     Size stop_offset = (Size)(data_stop - reinterpret_cast<CH1*>(list));
     ListOffsets<Size, Index>(list)[index] = stop_offset;
     // Write the value to the top of the value stack.
     PRINTF(" leaving %i bytes.",
-           (int)(ListDataEnd<Size, Index>(list) - data_stop))
+           (SI4)(ListDataEnd<Size, Index>(list) - data_stop))
     if (!Write(data_stop, ListDataEnd<Size, Index>(list), type, value))
       return -2;
     list->count = count + 1;
@@ -280,7 +280,7 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
   }
 
   // 2. Shift up the types.
-  StackInsert<SIN, Index>(types, count, type, index);
+  StackInsert<SI4, Index>(types, count, type, index);
 
   // 3. Calculate the offset to insert at.
   CH1* aligned_begin = ListDataStop<Size, Index>(list, index);
@@ -312,7 +312,7 @@ Index ListInsert(CList<Size, Index>* list, SIN type, const void* value,
 
 /* Adds a type-value to the stop of the list. */
 template <typename Size = UI4, typename Index = SI2>
-inline Index ListPush(CList<Size, Index>* list, SIN type, const void* value) {
+inline Index ListPush(CList<Size, Index>* list, SI4 type, const void* value) {
   return ListInsert<Size, Index>(list, type, value, list->count);
 }
 
@@ -362,7 +362,7 @@ template <typename Size = UI4, typename Index = SI2>
 Index ListRemove(CList<Size, Index>* list, Index index) {
   Index count = list->count;
   TStackRemove<Size, Index>(ListOffsets<Size, Index>(list), count, index);
-  return TStackRemove<SIN, Index>(ListTypes<Size, Index>(list), count, index);
+  return TStackRemove<SI4, Index>(ListTypes<Size, Index>(list), count, index);
 }
 
 /* Finds a tuple that contains the given pointer. */
@@ -435,7 +435,7 @@ class List {
   /* Deletes the dynamically allocated socket. */
   ~List() { delete[] begin; }
 
-  inline Index Push(SIN type, const void* value) {
+  inline Index Push(SI4 type, const void* value) {
     return ListPush<Size, Index>(CObject(), type, value);
   }
 

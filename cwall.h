@@ -64,15 +64,15 @@ class Wall {
   TCArray<Door*>* Doors();
 
   /* Gets the Door from the Door at the given index. */
-  Door* GetDoor(int index);
+  Door* GetDoor(SI4 index);
 
   /* Adds a Door to the slot.
   @return Returns nil if the Door is full and a pointer to the Door in the
           socket upon success. */
-  int OpenDoor(Door* door);
+  SI4 OpenDoor(Door* door);
 
   /* Deletes the Door from the Door at the given index. */
-  BOL CloseDoor(int index);
+  BOL CloseDoor(SI4 index);
 
   /* Prints the given Door to the stdout. */
   Slot& Print(Slot& slot);

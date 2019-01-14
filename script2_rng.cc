@@ -25,7 +25,7 @@ static std::default_random_engine rng;
 
 UI4 RandomUI4() { return rng(); }
 
-uint RandomSeed() { return std::random_device()(); }
+UI4 RandomSeed() { return std::random_device()(); }
 
 void RandomizeSeed() { return rng.seed(RandomSeed()); }
 
@@ -72,19 +72,13 @@ I Random(I min, I max) {
   return dist(rng);
 }
 
-UI2 Random(UI2 min, UI2 max) {
-  return Random<UI2>(min, max);
-}
+UI2 Random(UI2 min, UI2 max) { return Random<UI2>(min, max); }
 
 UI2 Random(SI2 min, SI2 max) { return Random<SI2>(min, max); }
 
-UI4 Random(UI4 min, UI4 max) {
-  return Random<UI4>(min, max);
-}
+UI4 Random(UI4 min, UI4 max) { return Random<UI4>(min, max); }
 
-UI8 Random(UI8 min, UI8 max) {
-  return Random<UI8>(min, max);
-}
+UI8 Random(UI8 min, UI8 max) { return Random<UI8>(min, max); }
 
 UI8 Random(SI8 min, SI8 max) { return Random<SI8>(min, max); }
 

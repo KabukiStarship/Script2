@@ -46,14 +46,14 @@ void TPrintString(const Char* string) {
 }
 
 /* Compares the two strings up to the given delimiter.
-@return int 0 if the strings are equal or a non-zero delta upon failure.
+@return SI4 0 if the strings are equal or a non-zero delta upon failure.
 @param  string_a String A.
 @param  string_b String B.
 @param  delimiter The delimiter.*/
 template <typename Char = const CH1>
-int TStringCompare(const Char* string_a, const Char* string_b,
+SI4 TStringCompare(const Char* string_a, const Char* string_b,
                    Char delimiter = 0) {
-  int a, b, result;
+  SI4 a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
     return *string_a;
@@ -78,7 +78,7 @@ int TStringCompare(const Char* string_a, const Char* string_b,
       PRINT(" is not a hit.");
       return result;
     }
-    if (a <= (int)delimiter) {
+    if (a <= (SI4)delimiter) {
       PRINT(" is a partial match but a reached a delimiter first.");
       return result;
     }
@@ -87,7 +87,7 @@ int TStringCompare(const Char* string_a, const Char* string_b,
     a = *string_a;
     b = *string_b;
   }
-  if (a > (int)delimiter) {
+  if (a > (SI4)delimiter) {
     PRINTF(" is only a partial match but b reached a delimiter first.");
     return b - a;
   }
@@ -121,7 +121,7 @@ namespace _ {
 template <typename Char>
 SIW TPrintAndCount(const Char* string) {
   if (!string) return 0;
-  int print_count = 0;
+  SI4 print_count = 0;
   Char c = *string;
   while (c) {
     Print(c);
@@ -191,7 +191,7 @@ inline Char* TStringEnd(Char* cursor, Char delimiter = 0) {
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
-template <typename Char, typename I = int>
+template <typename Char, typename I = SI4>
 I TStringLength(const Char* cursor) {
   ASSERT(cursor);
   return (I)(TStringEnd<Char>(cursor) - cursor);
@@ -201,7 +201,7 @@ I TStringLength(const Char* cursor) {
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
-template <typename Char, typename I = int>
+template <typename Char, typename I = SI4>
 inline I TStringLength(Char* cursor) {
   return TStringLength<Char>(reinterpret_cast<const Char*>(cursor));
 }
@@ -247,21 +247,6 @@ Char* TPrint(Char* cursor, SIW size, const Char* string, Char delimiter = 0) {
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor    The beginning of the socket.
-@param   stop       The last UI1 in the socket.
-@param   character The Char to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-template <typename Char = CH1>
-Char* TPrint(Char* cursor, Char* stop, Char character) {
-  if (!cursor || cursor + 1 >= stop) return nullptr;
-  *cursor++ = character;
-  *cursor = 0;
-  return cursor;
-}
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   string    The string to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
@@ -293,7 +278,7 @@ Char* TPrintHex(Char* cursor, Char* stop, UI value) {
 
   *cursor++ = '0';
   *cursor++ = 'x';
-  for (int num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
     *cursor++ = HexNibbleToUpperCase((UI1)(value >> num_bits_shift));
   }
@@ -308,7 +293,7 @@ Char* TPrintBinary(Char* cursor, Char* stop, T value) {
     return nullptr;
   }
 
-  for (int i = 0; i < sizeof(T) * 8; ++i) {
+  for (SI4 i = 0; i < sizeof(T) * 8; ++i) {
     *cursor++ = (CH1)('0' + (value >> (sizeof(T) * 8 - 1)));
     value = value << 1;
   }
@@ -727,7 +712,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
 }
 
 template <typename UI = UI8, typename Char = CH1>
-inline Char* TPrintUnsigned(Char* socket, int size, UI value) {
+inline Char* TPrintUnsigned(Char* socket, SI4 size, UI value) {
   return TPrintUnsigned<UI, Char>(socket, socket + size - 1, value);
 }
 
@@ -751,7 +736,7 @@ success.
 @param  utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = CH1>
-inline Char* TPrintSigned(Char* socket, int size, SI value) {
+inline Char* TPrintSigned(Char* socket, SI4 size, SI value) {
   return TPrintSigned<SI, UI, Char>(socket, socket + size - 1, value);
 }
 
@@ -860,8 +845,8 @@ namespace _ {
 /* Searches for the highest MSb asserted.
 @return -1 */
 template <typename UI>
-int TMSbAssertedReverse(UI value) {
-  for (int i = sizeof(UI) * 8 - 1; i > 0; --i)
+SI4 TMSbAssertedReverse(UI value) {
+  for (SI4 i = sizeof(UI) * 8 - 1; i > 0; --i)
     if ((value >> i) != 0) return i;
   return -1;
 }
@@ -1016,7 +1001,7 @@ class TBinary {
   }
 
   TBinary NormalizeBoundary() const {
-    // int msba = MSbAsserted(0);
+    // SI4 msba = MSbAsserted(0);
 #if defined(_MSC_VER) && defined(_M_AMD64)
     unsigned long index;  //< This is Microsoft's fault.
     _BitScanReverse64(&index, f);
@@ -1070,7 +1055,7 @@ class TBinary {
     TBinary one(((UI8)1) << -m_plus.e, m_plus.e), wp_w = m_plus - w;
     UI4 d, pow_10, p_1 = static_cast<UI4>(m_plus.f >> -one.e);
     UI8 p_2 = m_plus.f & (one.f - 1);
-    int kappa;
+    SI4 kappa;
     if (p_1 < (pow_10 = 10)) {
       kappa = 1;
     } else if (p_1 < (pow_10 = 100)) {

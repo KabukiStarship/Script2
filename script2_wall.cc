@@ -73,11 +73,11 @@ UIW Wall::GetSizeBytes() { return size_bytes_; }
 
 TCArray<Door*>* Wall::Doors() { return doors_; }
 
-Door* Wall::GetDoor(int index) { return 0; }
+Door* Wall::GetDoor(SI4 index) { return 0; }
 
-int Wall::OpenDoor(Door* door) { return 0; }
+SI4 Wall::OpenDoor(Door* door) { return 0; }
 
-BOL Wall::CloseDoor(int index) { return false; }
+BOL Wall::CloseDoor(SI4 index) { return false; }
 
 Slot& Wall::Print(Slot& slot) {
   // Printf ("\nDoor:\nis_dynamic %s\nnum_doors: %u\nmax_num_doors: %u\n",

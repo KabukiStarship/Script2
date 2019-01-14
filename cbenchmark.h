@@ -26,25 +26,25 @@ namespace _ {
 struct API TestResult {
   const CH1 *name,  //< The file the assertion occurred at.
       *description;  //< An optional description to utf.
-  int line,          //< The line the assertion failed at.
+  SI4 line,          //< The line the assertion failed at.
       code;          //< The test result code.
 }; */
 
 class BenchmarkCase {
  public:
   /* Constructs an object from the given values. */
-  BenchmarkCase(const CH1* name, TestCase* cases, int count);
+  BenchmarkCase(const CH1* name, TestCase* cases, SI4 count);
 
   /* Runs the benchmark. */
   const CH1* Run(CH1* cursor, CH1* stop, const CH1* args);
 
   /* Gets the number_ of cases in this benchmark. */
-  int GetCount();
+  SI4 GetCount();
 
  private:
   const CH1* name;  //< Name of this benchmark case.
   TestCase* cases;   //< Array of pointers of BenchmarkCase(s).
-  int count;         //< Number of test cases.
+  SI4 count;         //< Number of test cases.
 };
 
 /* A Benchmark composed of one or more BenchmarkCase(s). */
@@ -52,7 +52,7 @@ class Benchmark {
  public:
   /* Constructs an object from the given values. */
   Benchmark(const CH1* name, const CH1* filename, BenchmarkCase* groups,
-            int count);
+            SI4 count);
 
   /* Runs the benchmark.
   @return If args is nil, result will contain the name as */
@@ -62,7 +62,7 @@ class Benchmark {
   const CH1 *name,       //< Name of the benchmark.
       *filename;          //< Filename including .csv file extention.
   BenchmarkCase* groups;  //< Array of pointers of BenchmarkCase(s).
-  int count,              //< Number of test cases.
+  SI4 count,              //< Number of test cases.
       columns_max;        //< Max test cases in any BenchmarkCase(s).
 };
 

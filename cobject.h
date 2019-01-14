@@ -31,7 +31,7 @@ word-aligned socket upon success.
 @param obj      The ASCII Object and AsciiFactory.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef int (*AsciiFactory)(::_::CObject& obj, SIW function, void* arg);
+typedef SI4 (*AsciiFactory)(::_::CObject& obj, SIW function, void* arg);
 
 namespace _ {
 
