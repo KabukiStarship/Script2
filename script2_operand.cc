@@ -91,7 +91,7 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
   ASSERT(address);
   ASSERT(root);
 
-  int index = *address++;
+  SI4 index = *address++;
   const Op* op = root->Star(index, nullptr);
   CH1 socket[1024];
   PRINTF("%s", op->name)

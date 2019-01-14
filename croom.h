@@ -146,16 +146,16 @@ class Room : public Operand {
                    enable dynamic memory.
       @param size  The room size that is bounded between the kMinRoomSize and
                    kMaxRoomSize. */
-  Room(const CH1* room_name = "chinese_room", int num_states = 2);
+  Room(const CH1* room_name = "chinese_room", SI4 num_states = 2);
 
   /* AsciiFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */
-  int GetState();
+  SI4 GetState();
 
   /* Gets the Room state_. */
-  int GetStateCount();
+  SI4 GetStateCount();
 
   const CH1* GetRoomName();
 
@@ -219,7 +219,7 @@ class Room : public Operand {
 
   /* The default main function.
       Please feel free to override this with your own main function. */
-  virtual int Main(const CH1** args, int args_count);
+  virtual SI4 Main(const CH1** args, SI4 args_count);
 
   /* Handles Script Commands.
       @param text     Beginning of the Text socket.
@@ -236,7 +236,7 @@ class Room : public Operand {
 #endif
 
  protected:
-  int state_count_,                    //< Number of FSM states.
+  SI4 state_count_,                    //< Number of FSM states.
       state_;                          //< Room state.
   const CH1* name_;                    //< Room Name.
   TCArray<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
@@ -250,7 +250,7 @@ class Room : public Operand {
 
  private:
   /* Sets the Room state_. */
-  BOL SetState(int new_state);
+  BOL SetState(SI4 new_state);
 };
 
 /* Returns the Room-Level Script. */

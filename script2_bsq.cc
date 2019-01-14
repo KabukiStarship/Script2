@@ -20,11 +20,11 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-SI4 BsqParamNumber(const SI4* params, int param_number) {
+SI4 BsqParamNumber(const SI4* params, SI4 param_number) {
   if (!params) return 0;
   SI4 num_params = *params++;
   if (param_number > num_params) return kNIL;
-  int i;
+  SI4 i;
   for (i = 0; i < param_number; ++i) {
     SI4 value = params[i];
     if (value == kSTR)
@@ -58,7 +58,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    utf << TypeString((SIN)value) << ", ";
+    utf << TypeString((SI4)value) << ", ";
     if (type >= kSTR) {
       if (value) {
         utf << "\nError: arrays may only be created from POD "

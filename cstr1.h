@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= _0_0_0__03
-#ifndef INCLUDED_SCRIPTUTF8
-#define INCLUDED_SCRIPTUTF8
+#ifndef INCLUDED_SCRIPT2_UTF8
+#define INCLUDED_SCRIPT2_UTF8
 
 #include "casciidata.h"
 #include "cclock.h"
@@ -47,7 +47,7 @@ API const CH1* StringEnd(const CH1* text);
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
-API int StringLength(const CH1* text);
+API SI4 StringLength(const CH1* text);
 
 /* Clones the given string_.
 @param  A nil-terminated string_ in ROM.
@@ -55,11 +55,11 @@ API int StringLength(const CH1* text);
 API CH1* StringClone(const CH1* text); */
 
 /* Returns a pointer to the CH1 at the stop of the line. */
-API const CH1* StringLineEnd(const CH1* text, int column_count);
+API const CH1* StringLineEnd(const CH1* text, SI4 column_count);
 
 /* Returns a pointer to the CH1 at the stop of the row. */
 API const CH1* StringLineEnd(const CH1* text, const CH1* text_end,
-                              int column_count);
+                             SI4 column_count);
 
 /* Returns the pointer to the next CH1 in the CH1 that is not an ASCII
 number_.
@@ -88,7 +88,7 @@ API const CH1* StringEquals(const CH1* text_a, const CH1* text_b);
 
 /* Compares the source and query CH1 as nil-terminated strings. */
 API const CH1* StringEquals(const CH1* text, const CH1* text_end,
-                             const CH1* query);
+                            const CH1* query);
 
 /* Searches the given CH1 for the given CH1.
 @param  text      The CH1 to search.
@@ -104,14 +104,6 @@ upon success.
 @param  stop    The stop address of the socket.
 @param  string_ The potentially unsafe string_ to write. */
 API CH1* Print(CH1* start, CH1* stop, const CH1* string_);
-
-/* Writes the give CH1 to the given socket.
-@return Returns nil upon socket overflow and a pointer to the nil-term CH1
-upon success.
-@param begin     Beginning address of the socket.
-@param stop       The stop address of the socket.
-@param character The value to write. */
-API CH1* Print(CH1* start, CH1* stop, CH1 character);
 
 /* Writes the give CH1 to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -145,7 +137,7 @@ upon success.
 @param value The value to utf. */
 API CH1* Print(CH1* start, CH1* stop, SI8 value);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -153,7 +145,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, FLT value, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, FLT value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -161,7 +153,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, DBL value, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, DBL value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -169,7 +161,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, FLT value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, FLT value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -177,7 +169,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, DBL value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, DBL value, SI4 column_count);
 
 #endif  //< _0_0_0__01
 
@@ -188,7 +180,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH1* PrintCenter(CH1* start, CH1* stop, const CH1* string_,
-                      int column_count);
+                     SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -196,8 +188,7 @@ upon success.
 @param begin Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The value to write. */
-API CH1* PrintCenter(CH1* start, CH1* stop, CH1 character,
-                      int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, CH1 character, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -205,7 +196,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, UI4 valu, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, UI4 valu, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -213,7 +204,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, SI4 value, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, SI4 value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -221,7 +212,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, UI8 value, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, UI8 value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -229,7 +220,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintCenter(CH1* start, CH1* stop, SI8 value, int column_count);
+API CH1* PrintCenter(CH1* start, CH1* stop, SI8 value, SI4 column_count);
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -238,7 +229,7 @@ upon success.
 @param stop    The stop address of the socket.
 @param string_ The potentially unsafe string_ to write. */
 API CH1* PrintRight(CH1* start, CH1* stop, const CH1* string_,
-                     int column_count);
+                    SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -246,7 +237,7 @@ upon success.
 @param begin     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The value to write. */
-API CH1* PrintRight(CH1* start, CH1* stop, CH1 character, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, CH1 character, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -254,7 +245,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, UI4 value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, UI4 value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -262,7 +253,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, SI4 value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, SI4 value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -270,7 +261,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, UI8 value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, UI8 value, SI4 column_count);
 
 /* Writes the give CH1 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -278,7 +269,7 @@ upon success.
 @param begin The beginning address of the socket.
 @param stop The stop address of the socket.
 @param value The value to utf. */
-API CH1* PrintRight(CH1* start, CH1* stop, SI8 value, int column_count);
+API CH1* PrintRight(CH1* start, CH1* stop, SI8 value, SI4 column_count);
 
 /* Prints the given string_ to the utf socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -344,6 +335,7 @@ upon success.
 @param value The value to utf. */
 API CH1* PrintHex(CH1* start, CH1* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH1 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
 upon success.
@@ -351,6 +343,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH1* PrintHex(CH1* start, CH1* stop, FLT value);
+#endif
 
 /* Writes the give CH1 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -432,6 +425,7 @@ upon success.
 @param value The value to utf. */
 API CH1* PrintBinary(CH1* start, CH1* stop, SI8 value);
 
+#if SEAM >= _0_0_0__04
 /* Writes the give CH1 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
 upon success.
@@ -439,6 +433,7 @@ upon success.
 @param stop The stop address of the socket.
 @param value The value to utf. */
 API CH1* PrintBinary(CH1* start, CH1* stop, FLT value);
+#endif
 
 /* Writes the give CH1 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH1
@@ -458,8 +453,7 @@ UI1 written.
 @param stop   The stop of the write socket.
 @param begin The beginning of the read socket.
 @param stop  The stop of the read socket. */
-API CH1* PrintSocket(CH1* start, CH1* stop, const void* begin,
-                      const void* end);
+API CH1* PrintSocket(CH1* start, CH1* stop, const void* begin, const void* end);
 
 /* Prints a line of the given column_count.
 @return Returns a pointer to the next CH1 after the stop of the read number_ or
@@ -468,7 +462,7 @@ nil upon failure.
 @param stop   The stop of the write socket.
 @param token The token to utf.
 @param column_count The number_ of tokens to utf. */
-API CH1* PrintLine(CH1* cursor, CH1* stop, CH1 token, int column_count);
+API CH1* PrintLine(CH1* cursor, CH1* stop, CH1 token, SI4 column_count);
 
 /* Prints a line of the given column_count.
 @return Returns a pointer to the next CH1 after the stop of the read number_ or
@@ -478,7 +472,7 @@ nil upon failure.
 @param string_ The string_ to utf.
 @param column_count The number_ of columns. */
 API CH1* TPrintLineString(CH1* cursor, CH1* stop, const CH1* string_,
-                           int column_count);
+                          SI4 column_count);
 
 /* Converts the given string_ to a 8-bit signed integer.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -543,12 +537,14 @@ API const CH1* Scan(const CH1* text, SI8& result);
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, UI8& result);
 
+#if SEAM >= _0_0_0__04
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH1 after the stop
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, FLT& result);
+#endif
 
 /* Converts the given string_ to a 64-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
@@ -557,11 +553,11 @@ API const CH1* Scan(const CH1* text, FLT& result);
 of the read number_ or nil upon failure. */
 API const CH1* Scan(const CH1* text, DBL& result);
 
-/* AsciiFactory Prints the socket to the console as a UTF-8 string_. */
-UIW* COutUtf8(UIW* socket, SIW function, void* arg);
+/* AsciiFactory Prints the socket to the console as a UTF-8 string_.
+UIW* COutUtf8(UIW* socket, SIW function, void* arg); */
 
-/* Prints the socket to the console as a UTF-8 string_. */
-UIW* COutAutoUtf8(UIW* socket, SIW function, void* arg);
+/* Prints the socket to the console as a UTF-8 string_.
+UIW* COutAutoUtf8(UIW* socket, SIW function, void* arg); */
 
 /* Utility class for printing strings.
 This class only stores the stop of socket pointer and a pointer to the write
@@ -571,7 +567,7 @@ are done printing.
 */
 struct API UTF1 {
   CH1 *begin,  //< Write begin pointer.
-      *stop;    //< End of socket pointer.
+      *stop;   //< End of socket pointer.
 
   /* Initializes the Utf& from the given socket pointers.
   @param begin The beginning of the socket.
@@ -613,11 +609,13 @@ struct API UTF1 {
   /* Prints the given value as hex. */
   inline UTF1& Hex(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as hex. */
   inline UTF1& Hex(FLT value);
 
   /* Prints the given value as hex. */
   inline UTF1& Hex(DBL value);
+#endif
 
   /* Prints the given pointer as hex. */
   inline UTF1& Hex(const void* pointer);
@@ -646,11 +644,13 @@ struct API UTF1 {
   /* Prints the given value as binary. */
   inline UTF1& Binary(UI8 value);
 
+#if SEAM >= _0_0_0__04
   /* Prints the given value as binary. */
   inline UTF1& Binary(FLT value);
 
   /* Prints the given value as binary. */
   inline UTF1& Binary(DBL value);
+#endif
 
   /* Prints the given pointer as binary. */
   inline UTF1& Binary(const void* pointer);
@@ -677,13 +677,14 @@ class Utf8Text {
   /* Prints the value to the text socket. */
   Utf8Text(UI8 value);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
   Utf8Text(FLT value);
 
   /* Prints the value to the text socket. */
   Utf8Text(DBL value);
 #endif
+
   /* Gets the number_ string_. */
   const CH1* String();
 
@@ -697,94 +698,94 @@ class Utf8Text {
 class Utf8Center {
  public:
   /* Prints the value to the text socket. */
-  Utf8Center(const CH1* string_, int column_count);
+  Utf8Center(const CH1* string_, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Center(SI4 value, int column_count);
+  Utf8Center(SI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Center(UI4 value, int column_count);
+  Utf8Center(UI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Center(SI8 value, int column_count);
+  Utf8Center(SI8 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Center(UI8 value, int column_count);
+  Utf8Center(UI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
-  Utf8Center(FLT value, int column_count);
+  Utf8Center(FLT value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Center(DBL value, int column_count);
+  Utf8Center(DBL value, SI4 column_count);
 #endif
 
   /* Gets the number_ string_. */
   const CH1* String();
 
   /* Gets the column_count. */
-  int GetColumnCount();
+  SI4 GetColumnCount();
 
  private:
   const CH1* string_;  //< Pointer to the string_.
-  Utf8Text number_;     //< Pointer to a pointer to utf.
-  int column_count;     //< Number of columns to center.
+  Utf8Text number_;    //< Pointer to a pointer to utf.
+  SI4 column_count;    //< Number of columns to center.
 };
 
 /* Utility class for printing hex with operator<<. */
 class Utf8Right {
  public:
   /* Prints the value to the text socket. */
-  Utf8Right(const CH1* string_, int column_count);
+  Utf8Right(const CH1* string_, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Right(SI4 value, int column_count);
+  Utf8Right(SI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Right(UI4 value, int column_count);
+  Utf8Right(UI4 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Right(SI8 value, int column_count);
+  Utf8Right(SI8 value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Right(UI8 value, int column_count);
+  Utf8Right(UI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
   /* Prints the value to the text socket. */
-  Utf8Right(FLT value, int column_count);
+  Utf8Right(FLT value, SI4 column_count);
 
   /* Prints the value to the text socket. */
-  Utf8Right(DBL value, int column_count);
+  Utf8Right(DBL value, SI4 column_count);
 #endif
 
   /* Gets the number_ string_. */
   const CH1* String();
 
   /* Gets the column_count. */
-  int GetColumnCount();
+  SI4 GetColumnCount();
 
  private:
   const CH1* string_;  //< Pointer to the string_.
-  Utf8Text number_;     //< Pointer to a pointer to utf.
-  int column_count;     //< Number of columns to center.
+  Utf8Text number_;    //< Pointer to a pointer to utf.
+  SI4 column_count;    //< Number of columns to center.
 };
 
 /* Utility class for printing a single CH1 token line with operator<<. */
 struct API Utf8Line {
-  CH1 token;        //< Character to utf.
-  int column_count;  //< Column count.
+  CH1 token;         //< Character to utf.
+  SI4 column_count;  //< Column count.
 
   /* Constructor. */
-  Utf8Line(CH1 token, int column_count);
+  Utf8Line(CH1 token, SI4 column_count);
 };
 
 /* Utility class for printing a string_ line with operator<<. */
 struct API Utf8LineString {
   const CH1* string_;  //< Character to utf.
-  int column_count;     //< Column count.
+  SI4 column_count;    //< Column count.
 
   /* Constructor. */
-  Utf8LineString(const CH1* string_, int column_count);
+  Utf8LineString(const CH1* string_, SI4 column_count);
 };
 
 // class API Utf8String {
@@ -804,56 +805,56 @@ struct API Utf8LineString {
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, const CH1* string_);
+API ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* string_);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value   The value to utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, CH1 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, CH1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI1 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI1 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI2 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI2 value);
 
 /* Writes the given value to the utf.
 @param  utf The utf.
 @param  value The value to write to the utf.
 @return The utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI2 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI2 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI4 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI4 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI4 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, SI8 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, SI8 value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, UI8 value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, UI8 value);
 
 #if SEAM >= _0_0_0__04
 /* Writes the given value to the utf.
@@ -861,33 +862,33 @@ API _::UTF1& operator<<(_::UTF1& utf, UI8 value);
 @desc
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, FLT value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, FLT value);
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  value The value to write to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, DBL value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, DBL value);
 #endif
 
 /* Writes the given value to the utf.
 @return The utf.
 @param  utf The utf.
 @param  item The item to write to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Center item);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Center item);
 
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Right item);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Right item);
 
 /* Prints a line of the given column_count to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8Line line);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8Line line);
 
 /* Prints a line string_ of the given column_count to the utf. */
-API _::UTF1& operator<<(_::UTF1& utf, _::Utf8LineString line);
+API ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8LineString line);
 
 #endif  //< #if USING_UTF8
-#endif  //< #if INCLUDED_SCRIPTUTF8
+#endif  //< #if INCLUDED_SCRIPT2_UTF8
 #endif  //< #if SEAM >= _0_0_0__03

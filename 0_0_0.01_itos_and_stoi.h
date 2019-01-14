@@ -25,9 +25,10 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
+
 inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
-                                            const CH1* args) {
+                                           const CH1* args) {
 #if SEAM >= _0_0_0__01
   TEST_BEGIN;
 
@@ -103,7 +104,7 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
            msd_bit_range;
   PRINTF ("\n| Length | MSD Offset | Min Value  |"
           "\n|:------:|:----------:|:----------:|");
-  for (int length = 3; length < 10; ++length) {
+  for (SI4 length = 3; length < 10; ++length) {
       num_bits = delta_one_bits[length - 2];
       msd_bit_range = (length == 10 || length == 20) ? 16: 8;
       for (UI8 i = 1;  i <= 8; ++i) {
@@ -126,7 +127,7 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
 
   PRINT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
 
-  for (int i = 0; i < 1 << 6; ++i) {
+  for (SI4 i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(socket, kSize, FORMAT_UI8, expected_ui8);
     const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
@@ -140,7 +141,7 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
 
   PRINT("\n\nTesting problem children...\n\n");
 
-  for (int i = 0; i < kNumProblemChildren; ++i) {
+  for (SI4 i = 0; i < kNumProblemChildren; ++i) {
     PRINT_LINE('-');
     PRINT('\n');
     expected_ui8 = problem_children[i];
@@ -161,7 +162,7 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
   }
 
   PRINT("\n\nTesting edge conditions...\n\n");
-  for (int i = 0; i < 28; ++i) {
+  for (SI4 i = 0; i < 28; ++i) {
     PRINT_LINE('-');
     PRINT('\n');
     expected_ui8 = test_value[i];
@@ -182,7 +183,7 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
 
   PRINTF("\n\nTesting random numbers...\n\n");
 
-  for (int i = 0; i < 0x0000ffff; ++i) {
+  for (SI4 i = 0; i < 0x0000ffff; ++i) {
     PRINT_LINE('-');
     PRINT('\n');
     expected_ui8 = RandomUI8();
@@ -203,4 +204,3 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
 #endif
   return 0;
 }
-}  // namespace _

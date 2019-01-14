@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__12_ASCII_Book(CH1* seam_log, CH1* seam_end,
-                                         const CH1* args) {
+                                        const CH1* args) {
 #if SEAM >= _0_0_0__12
   TEST_BEGIN;
 
@@ -85,5 +85,3 @@ static const CH1* _0_0_0__12_ASCII_Book(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-}  // namespace _
-#include "test_footer.inl"

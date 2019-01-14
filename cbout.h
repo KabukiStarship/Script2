@@ -65,7 +65,7 @@ API CH1* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output UI1.
     @param bout A B-Output abstract UI1 stream. */
-API int BOutStreamByte(BOut* bout);
+API SI4 BOutStreamByte(BOut* bout);
 
 /* Writes a message with the given params to the given B-Output slot.
     @param bout   The B-Output socket to write to.
@@ -97,8 +97,8 @@ API UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 #if USING_CRABS_TEXT == YES
 /* Prints out the bin to the text. */
-inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
-  return _::PrintBOut(utf, bout);
+inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
+  return ::_::PrintBOut(utf, bout);
 }
 #endif
 

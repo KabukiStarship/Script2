@@ -36,14 +36,14 @@ using namespace std::chrono;
 
 namespace _ {
 
-BenchmarkCase::BenchmarkCase(const CH1* name, TestCase* cases, int count)
+BenchmarkCase::BenchmarkCase(const CH1* name, TestCase* cases, SI4 count)
     : name(name), cases(cases), count(count) {}
 
 const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
   /*
   DBL nil_reading;
-  int i;
-  int columns_max;
+  SI4 i;
+  SI4 columns_max;
   ASSERT(TScan<>(args, columns_max));
 
   for (i = 0; i < count; ++i) {
@@ -62,13 +62,13 @@ const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
   return nullptr;
 }
 
-int BenchmarkCase::GetCount() { return count; }
+SI4 BenchmarkCase::GetCount() { return count; }
 
 Benchmark::Benchmark(const CH1* name, const CH1* filename,
-                     BenchmarkCase* groups, int count)
+                     BenchmarkCase* groups, SI4 count)
     : name(name), filename(filename), groups(groups), count(count) {
   ASSERT(count > 0);
-  int l_test_count_max = 0;
+  SI4 l_test_count_max = 0;
   for (SIW i = 0; i < count; ++i) {
   }
 }
@@ -87,7 +87,7 @@ const CH1* Benchmark::Run(CH1* cursor, CH1* stop, const CH1* args) {
     Print(result);
   }
   BenchmarkCase *benchmark_case = groups, *stop = groups + count - 1;
-  for (int i = 0; i <  {
+  for (SI4 i = 0; i <  {
     groups[i]->Run(cursor, stop, args);
   }
   std::cout.rdbuf(coutbuf);*/

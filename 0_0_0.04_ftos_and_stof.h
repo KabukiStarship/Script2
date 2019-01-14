@@ -28,10 +28,10 @@ using namespace std;
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
-                                     const CH1* args) {
+                                    const CH1* args) {
 #if SEAM >= _0_0_0__04
   TEST_BEGIN;
 
@@ -49,7 +49,7 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 
   PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
-  for (int i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<DBL>(value);
@@ -63,7 +63,7 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
       "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FLT&) "
       "functions...\n");
 
-  for (int i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<DBL>(value);
@@ -75,13 +75,13 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 
   PRINTF("\n\nTesting Char* TPrint<Char> (Char*, Char*, Float)...\n");
 
-  for (int i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<DBL>(value);
     } while (!IsFinite(dbl_expected));
     Print(socket, socket + kSize, dbl_expected);
-    int r = sscanf_s(socket, "%lf", &dbl_found);
+    SI4 r = sscanf_s(socket, "%lf", &dbl_found);
     ASSERT(r);
     AVOW(dbl_expected, dbl_found);
   }
@@ -89,4 +89,3 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-}  // namespace _

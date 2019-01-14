@@ -27,14 +27,14 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-BOL TypeIsValid(SIN type) {
+BOL TypeIsValid(SI4 type) {
   if (type >= kLST && type <= kDIC ||
       (type >= (kADR + 32) && type <= (kTKN + 32)))
     return false;
   return true;
 }
 
-TypeValue::TypeValue(SIN type, const void* value) : type(type), value(value) {
+TypeValue::TypeValue(SI4 type, const void* value) : type(type), value(value) {
   // Nothing to do here! (:-)-+=<
 }
 
@@ -59,7 +59,7 @@ SI4 TypeFixedSize(SI4 type) {
       16,  //< kUIH: 16
       16,  //< kDEC: 17
   };
-  SIN type_upper_bits = type >> 3;
+  SI4 type_upper_bits = type >> 3;
   type &= 0x1f;
   if (type == kUIX) return ((SI4)2) << type_upper_bits;
   if (type > kOBJ) return -1;
@@ -68,7 +68,7 @@ SI4 TypeFixedSize(SI4 type) {
 
 const CH1** TypeStrings() { return TTypeStrings<CH1>(); }
 
-const CH1* TypeString(SIN type) { return TypeStrings()[type & 0x1f]; }
+const CH1* TypeString(SI4 type) { return TypeStrings()[type & 0x1f]; }
 
 const CH1* TypeString(SI4 type) { return TypeString((UI1)type); }
 
@@ -78,14 +78,14 @@ BOL TypeIsArray(SI4 type) { return type >= kTypeCount; }
 
 BOL TypeIsSet(SI4 type) { return type >= kTypeCount; }
 
-void* TypeAlign(SIN type, void* value) {
+void* TypeAlign(SI4 type, void* value) {
   ASSERT(value);
   if (type == 0) return nullptr;
   if (!TypeIsValid(type)) return nullptr;
 
   SI4 size = TypeFixedSize(type);
   if (type <= kUI1) return value;
-  SIN* value_ptr = reinterpret_cast<SIN*>(value);
+  SI4* value_ptr = reinterpret_cast<SI4*>(value);
 #if WORD_SIZE == 2
   if (type <= kHLF) return AlignUpPointer2<>(value);
 #else
@@ -128,7 +128,7 @@ inline CH1* WriteObj(CH1* begin, CH1* stop, const void* value) {
   return SocketCopy(target, stop, value, size - sizeof(UI));
 }
 
-CH1* Write(CH1* begin, CH1* stop, SIN type, const void* value) {
+CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
   // Algorithm:
   // 1.) Determine type.
   // 2.) Align begin pointer to type width.
@@ -202,51 +202,51 @@ CH1* Write(CH1* begin, CH1* stop, SIN type, const void* value) {
   return nullptr;
 }
 
-BOL TypeIsObj(SIN type) {
+BOL TypeIsObj(SI4 type) {
   if (type < kOBJ) return false;
   return true;
 }
 
-BOL TypeIsString(SIN type) {
+BOL TypeIsString(SI4 type) {
   type &= 0x1f;
   if (type >= kADR && type <= kTKN) return true;
   return false;
 }
 
-BOL TypeIsUtf16(SIN type) { return (BOL)(type & 0x20); }
+BOL TypeIsUtf16(SI4 type) { return (BOL)(type & 0x20); }
 
-inline int TypeSizeWidthCode(SIN type) { return type >> 6; }
+inline SI4 TypeSizeWidthCode(SI4 type) { return type >> 6; }
 
 }  // namespace _
 
 #if USING_UTF8
 namespace _ {
-CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value) {
+CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value) {
   return TPrint<CH1>(begin, stop, type, value);
 }
-_::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 }  // namespace _
 #endif
 #if USING_UTF16
 namespace _ {
-CH2* Print(CH2* begin, CH2* stop, SIN type, const void* value) {
+CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value) {
   return TPrint<CH2>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 #if USING_UTF32
 namespace _ {
-CH4* Print(CH4* begin, CH4* stop, SIN type, const void* value) {
+CH4* Print(CH4* begin, CH4* stop, SI4 type, const void* value) {
   return TPrint<CH4>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& item) {
-  return utf.Set(_::Print(utf.begin, utf.stop, item.type, item.value));
+_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
+  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
 }
 #endif
 

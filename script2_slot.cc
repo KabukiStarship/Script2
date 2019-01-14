@@ -185,7 +185,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
   length = SlotLength(l_start, l_stop, size);
 
-  PRINTF("\n\nReading %i bytes.", (int)length)
+  PRINTF("\n\nReading %i bytes.", (SI4)length)
   // PRINT_BSQ (params)
   // When we scan, we are reading from the beginning of the BIn socket.
 
@@ -193,8 +193,8 @@ const Op* Slot::Read(const SI4* params, void** args) {
     type = (UI1)*param;
     ++param;
     PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (uint)index,
-           TypeString(type), (int)Size(l_begin, l_start),
-           (int)Size(l_begin, l_stop));
+           TypeString(type), (SI4)Size(l_begin, l_start),
+           (SI4)Size(l_begin, l_stop));
 
     switch (type) {
       case kNIL:

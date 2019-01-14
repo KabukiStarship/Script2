@@ -9,10 +9,13 @@
 #undef PRINT_TIME
 #undef PRINT_TYPE
 #undef PRINT_SOCKET
+#undef PRINT_SOCKET_OBJ
 #undef PRINT_BSQ
 #undef PRINT_OBJ
 #undef PRINT_TOBJ
 #undef PRINT_FUNCTION
+#undef PRINTLN
+#undef PRINT_FUNCTION_LINE
 #undef SOCKET_SAVE
 #undef CHECK
 #undef COMPARE

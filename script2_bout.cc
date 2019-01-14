@@ -129,12 +129,12 @@ CH1* BOutEndAddress(BOut* bout) {
   return reinterpret_cast<CH1*>(bout) + (4 * sizeof(SI4)) + bout->size;
 }
 
-int BOutStreamByte(BOut* bout) {
+SI4 BOutStreamByte(BOut* bout) {
   CH1 *begin = BOutBuffer(bout), *stop = begin + bout->size;
   CH1 *open = (CH1*)begin + bout->read, *begin = begin + bout->begin,
        *begin = begin;
 
-  SIW length = (int)(begin < open) ? open - begin + 1
+  SIW length = (SI4)(begin < open) ? open - begin + 1
                                    : (stop - begin) + (open - begin) + 2;
 
   if (length < 1) {
@@ -218,7 +218,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeString(type), (int)Size(begin, begin), (int)Size(begin, stop),
+           TypeString(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -690,7 +690,7 @@ const Op* BOutConnect(BOut* bout, const CH1* address) {
 }
 
 void BInKeyStrokes() {
-  int current = -1;
+  SI4 current = -1;
   while (current >= 0) {
     current = _getch();
     // @todo Do something with the CH1!
@@ -711,7 +711,7 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     if (!bout) {
         return nullptr;
     }
-    int size = bout->size;
+    SI4 size = bout->size;
     Utf& utf (socket, buffer_end);
     utf << "\nBOut:" << Hex<UIW> (bout)
           << " size:" << size
@@ -724,7 +724,7 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
 
 UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   ASSERT(bout);
-  int size = bout->size;
+  SI4 size = bout->size;
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
       << " start:" << bout->begin << " stop:" << bout->stop
       << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);

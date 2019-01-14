@@ -64,19 +64,19 @@ typedef enum AsciiTypes {
 namespace _ {
 /* A type-value tuple. */
 struct API TypeValue {
-  SIN type;           //< ASCII Type.
+  SI4 type;           //< ASCII Type.
   const void* value;  //< Pointer to the value data.
 
   /* Stores the type and value. */
-  TypeValue(SIN type, const void* value = nullptr);
+  TypeValue(SI4 type, const void* value = nullptr);
 };
 
 /* Checks if the given type is valid.
     @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
-inline BOL TypeIsValid(SIN type);
+inline BOL TypeIsValid(SI4 type);
 
 /* Aligns the given pointer to the correct word boundary for the type. */
-API void* TypeAlign(SIN type, void* value);
+API void* TypeAlign(SI4 type, void* value);
 
 enum {
   kTypeCount = 32,  //< The starting index of invalid types.
@@ -86,7 +86,7 @@ enum {
 API const CH1** TypeStrings();
 
 /* Returns the name of the given type. */
-API inline const CH1* TypeString(SIN type);
+API inline const CH1* TypeString(SI4 type);
 
 /* Returns the name of the given type. */
 API inline const CH1* TypeString(SI4 type);
@@ -104,23 +104,23 @@ API inline BOL TypeIsSet(SI4 type);
 API SI4 TypeFixedSize(SI4 type);
 
 /* Gets the next address that a data type may be stored at. */
-API void* TypeAlign(SIN type, void* value);
+API void* TypeAlign(SI4 type, void* value);
 
 /* Writes the given value to the socket. */
-API CH1* Write(CH1* begin, CH1* stop, SIN type, const void* source);
+API CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* source);
 
 /* Returns true if the given type is an ASCII CObject. */
-API inline BOL TypeIsObj(SIN type);
+API inline BOL TypeIsObj(SI4 type);
 
 /* Returns true if the given type is a string_ type. */
-API inline BOL TypeIsString(SIN type);
+API inline BOL TypeIsString(SI4 type);
 
 /* Checks if the given type is UTF-16.
     @param  type The type to check.
     @return True if the given type is UTF-16. */
-API inline BOL TypeIsUtf16(SIN type);
+API inline BOL TypeIsUtf16(SI4 type);
 
-API inline int TypeSizeWidthCode(SIN type);
+API inline SI4 TypeSizeWidthCode(SI4 type);
 }  // namespace _
 
 #if USING_UTF8 == YES
@@ -131,14 +131,14 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH1* Print(CH1* begin, CH1* stop, SIN type, const void* value);
+API CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value);
 }  // namespace _
 
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF1& operator<<(_::UTF1& utf, const _::TypeValue& type_value);
+API ::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& type_value);
 #endif
 
 #if USING_UTF16 == YES
@@ -149,14 +149,14 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF2& operator<<(_::UTF2& utf, const _::TypeValue& type_value);
+API ::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF32 == YES
 
@@ -167,14 +167,14 @@ of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SIN type,
+API CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API _::UTF4& operator<<(_::UTF4& utf, const _::TypeValue& type_value);
+API ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
 #endif
 
 #endif  //< SCRIPT2_CASCIIDATA

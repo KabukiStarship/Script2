@@ -37,14 +37,19 @@ constexpr Size TObjSizeMin() {
   return sizeof(Size);
 }
 
+template <typename Size>
+inline Size SizeWords(Size size) {
+  return size >> kWordBitCount;
+}
+
 /* Writes the size to the given word-aligned-down socket, making a new one if
 required. */
 template <typename Size>
 inline UIW* TObjInit(UIW* socket, Size size) {
-  PRINTF("\nsocket:0x%p size:%i", socket, (int)size);
+  PRINTF("\nsocket:0x%p size:%i", socket, (SI4)size);
   size = TAlignDownI<Size>(size);
   if (size < TObjSizeMin<Size>()) return nullptr;
-  if (!socket) socket = new UIW[size >> kWordBitCount];
+  if (!socket) socket = new UIW[SizeWords<Size>(size)];
   *reinterpret_cast<Size*>(socket) = size;
   return socket;
 }
@@ -58,10 +63,13 @@ inline SI TObjSizeMax() {
   return (~count_max) - 15;
 }
 
-/* Checks if the size is in the min max bounds of an ASCII Object. */
-template <typename SI = SIW>
-inline BOL TObjSizeIsValid(SI size, SI size_min) {
-  return (size >= size_min) && (size <= TObjSizeMax<SI>());
+/* Checks if the size is in the min max bounds of an ASCII Object.
+@return 0 If the size is valid. */
+template <typename Size = SIW>
+inline SI4 TObjCanGrow(Size size, Size size_min) {
+  if (size < size_min) return kFactorySizeInvalid;
+  size = size >> (sizeof(Size) * 8 - 2);
+  return (SI4)size;
 }
 
 /* Checks if the given object count is in the min max bounds of an ASCII
@@ -132,10 +140,10 @@ inline const CH1* TObjEnd(const CObject stack) {
  */
 template <typename Size>
 UIW* TObjNew(Size size, Size size_min) {
-  if (!TObjSizeIsValid<Size>(size, size_min)) return nullptr;
+  if (!TObjCanGrow<Size>(size, size_min)) return nullptr;
 
   size = TAlignUpSigned<SI2>(size, kWordLSbMask);
-  UIW* socket = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[SizeWords<Size>(size)];
   *reinterpret_cast<Size*>(socket) = size;
   return socket;
 }
@@ -145,7 +153,13 @@ UIW* TObjNew(Size size, Size size_min) {
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
 UIW* TObjClone(UIW* socket, Size size) {
-  UIW* clone = new UIW[size >> kWordBitCount];
+  UIW* clone;
+  try {
+    clone = new UIW[SizeWords<Size>(size)];
+  } catch (const std::bad_alloc& exception) {
+    PRINTF("\nERROR:%s\n", exception.what());
+    return nullptr;
+  }
   SocketCopy(clone, size, socket, size);
   *reinterpret_cast<Size*>(socket) = size;
   return clone;
@@ -162,82 +176,29 @@ inline UIW* TObjClone(CObject& obj) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-BOL TObjCanGrow(Size size) {
-  return (BOL)(size >> (sizeof(Size) * 8 - 2));
-}
-
-/* Standard ASCII Object Factory.
-The ASCII Object Factory function table is defined by the kFactoryDelete enum.
-*/
-template <typename Size>
-int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap);
-
-/* Pushes kUsingHeap_ onto the hardware assisted stack and calls the Factory
-function. */
-template <typename Size, BOL kUsingHeap_>
-int TObjFactory(CObject& obj, SIW function, void* arg) {
-  return TObjFactory<Size>(obj, function, arg, kUsingHeap_);
-}
-
-template <typename Size>
-int TObjFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
-  /*
-  Size size;
-  UIW* begin;
-  switch (function) {
-    case kFactoryDelete:
-      begin = obj.begin;
-      if (!begin) return kFactoryNilOBJ;
-      if (using_heap) delete[] begin;
-      return 0;
-    case kFactoryNew:
-      size = TAlignUpSigned<Size>(*reinterpret_cast<Size*>(arg));
-      if ((~size) == 0) return kFactorySizeInvalid;
-      obj.begin = new UIW[size >> kWordBitCount];
-      return 0;
-    case kFactoryGrow:
-      size = *reinterpret_cast<Size*>(obj.begin);
-      if (!TObjCanGrow<Size>(size)) return kFactoryCantGrow;
-      size = size << 1;  // size *= 2;
-      begin = obj.begin;
-      obj.begin = TObjClone<Size>(begin, size);
-      if (using_heap) {
-        delete[] begin;
-        obj.factory = TObjFactory<Size, kHeap>;
-      }
-      return 0;
-    case kFactoryClone:
-      if (!arg) return kFactoryNilArg;
-      CObject* other = reinterpret_cast<CObject*>(arg);
-      begin = obj.begin;
-      size = *reinterpret_cast<Size*>(begin);
-      other->begin = TObjClone<Size>(begin, size);
-      other->factory = TObjFactory<Size, kHeap>;
-      return 0;
-    case kFactoryInfo: {
-      const CH1** ptr = *reinterpret_cast<const CH1**>(arg);
-      *ptr = __FUNCTION__;
-      return 0;
-    }
-  }*/
-  return 0;
+SI4 TObjCanGrow(Size size) {
+  return (SI4)(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-int TObjGrow(CObject& obj, Size new_size) {
-  return TObjFactory<Size, kStack>(obj, kFactoryGrow, nullptr);
+SI4 TObjCanGrow(CObject& obj, Size new_size) {
+  UIW* begin = obj.begin;
+  if (!begin) return kFactoryNilOBJ;
+  Size size = *reinterpret_cast<Size*>(begin);
+  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
+  size = size << 1;  // size *= 2;
+  obj.begin = TObjClone<Size>(begin, size);
+  delete[] begin;
+  return kFactorySuccess;
 }
 
-/* Grows the given CObject to the new_size.
-It is not possible to shrink a raw ASCII object. It is only possible to */
 template <typename Size>
-inline int TObjGrow(CObject& obj) {
-  return TObjFactory<Size, kStack>(obj, kFactoryGrow, nullptr);
+inline SI4 TObjCanGrow(CObject& obj) {
+  return TObjCanGrow(obj, TObjSize<Size>(obj) * 2);
 }
-
 /* A contiguous ASCII Object that starts with the size.
  */
 template <typename Size>
@@ -307,7 +268,11 @@ class TObject {
   }
 
   /* Returns the begin of the OBJ. */
-  inline UIW* Start() { return obj_.begin; }
+  template <typename T = char>
+  inline T* Start() {
+    UIW ptr = reinterpret_cast<UIW>(obj_.begin);
+    return reinterpret_cast<T*>(ptr + sizeof(Size));
+  }
 
   /* Gets the stopping address of the object, AKA the address of the last
   element. */
@@ -327,26 +292,27 @@ class TObject {
 
   /* Attempts to grow the this object.
   @return false if the grow op failed. */
-  inline BOL Grow() { return TObjGrow<Size>(obj_); }
+  inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
+  /* Prints this object to the COut. */
   void Print() {
-    _::Print("\nTObject<SI");
-    _::Print('0' + sizeof(Size));
-    _::Print(">");
+    ::_::Print("\nTObject<SI");
+    ::_::Print('0' + sizeof(Size));
+    ::_::Print(">");
     UIW* begin = obj_.begin;
     if (begin) {
       Size size = *reinterpret_cast<Size>(begin);
-      _::Print(" size:");
-      _::Print(size);
+      ::_::Print(" size:");
+      ::_::Print(size);
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {
-      _::Print(" factory:\"");
+      ::_::Print(" factory:\"");
       const CH1 info_string;
       if (factory(obj_, kFactoryInfo, &info_string)) {
-        _::Print(info_string);
+        ::_::Print(info_string);
       }
-      _::Print('\"');
+      ::_::Print('\"');
     }
   }
 

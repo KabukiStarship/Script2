@@ -407,7 +407,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<CH1>(slot_start, (SIN)type);
+          slot_start = TypeAlignUpPointer<CH1>(slot_start, (SI4)type);
           break;
         }
         op = operand->Star(b, crabs);
@@ -473,7 +473,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                                << TypeAlign(slot_start, type) << '.');
 #endif
                         slot_start =
-                            TypeAlignUpPointer<>(slot_start, (SIN)type);
+                            TypeAlignUpPointer<>(slot_start, (SI4)type);
                         break;
                       }
                       CrabsEnterState(crabs, kBInStatePackedPod);
@@ -575,7 +575,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
           break;
         }
         --bytes_left;
@@ -615,7 +615,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
 
           // @warning I am not current saving the offset. I'm not
           // sure  what to do here. The header class uses a variadic
-          // template, I'm kind of tempted to switch to an int
+          // template, I'm kind of tempted to switch to an SI4
           // type for the headers so I can just use a normal
           // array bracket initializer. The other option is to
           // add 32 to the first UI1.
@@ -641,7 +641,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
         }
         --bytes_left;
         break;
@@ -748,7 +748,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                  << TypeString(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
-          slot_start = TypeAlignUpPointer<>(slot_start, (SIN)type);
+          slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
           break;
         }
         --bytes_left;

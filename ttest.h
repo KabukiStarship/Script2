@@ -31,7 +31,7 @@ const CH1* TTestTree(CH1* seam_log, CH1* seam_end, const CH1* args) {
 }
 
 template <TestCase... N>
-int TTestTree(int arg_count, CH1** args, CH1* seam_log, int seam_log_size) {
+SI4 TTestTree(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size) {
   static TestCase tests[sizeof...(N)] = {N...};
   return SeamTreeTest(arg_count, args, seam_log, seam_log_size, tests,
                       sizeof...(N));

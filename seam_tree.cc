@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "0_0_0.script2.h"
 
 using namespace _;
-int main(int arg_count, CH1** args) {
+SI4 main(SI4 arg_count, CH1** args) {
   enum { kSize = 1024 };
   CH1 seam_log[kSize];
   return TTestTree<_0_0_0_Script2>(arg_count, args, seam_log, kSize);

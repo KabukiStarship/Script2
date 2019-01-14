@@ -31,7 +31,7 @@ word-aligned socket upon success.
 @param obj      The ASCII Object and AsciiFactory.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef int (*AsciiFactory)(_::CObject& obj, SIW function, void* arg);
+typedef SI4 (*AsciiFactory)(::_::CObject& obj, SIW function, void* arg);
 
 namespace _ {
 
@@ -53,9 +53,8 @@ enum AsciiFactoryErrors {
   kFactorySuccess = 0,      //< Factory operation completed successfully.
   kFactoryNilOBJ = 1,       //< Factory found nil obj.begin pointer.
   kFactoryNilArg = 2,       //< Factory arg nil.
-  kFactorySizeInvalid = 3,  //< Factory size invalid.
-  kFactoryOutOfMemory = 4,  //< Factory out of memory.
-  kFactoryCantGrow = 5,     //< Factory can't double in size.
+  kFactoryOutOfRAM = 3,     //< Factory out of memory.
+  kFactorySizeInvalid = 4,  //< Factory ASCII Type Size limit reached.
 };
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
@@ -95,5 +94,5 @@ API void Delete(CObject& object);
 inline API BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__03
 #endif  //< SCRIPT2_COBJECT
+#endif  //< #if SEAM >= _0_0_0__03

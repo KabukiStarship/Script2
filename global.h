@@ -27,16 +27,11 @@ specific language governing permissions and limitations under the License. */
 #endif
 #if SEAM == _0_0_0__02
 #include "cconsole.h"
+#include "crng.h"
+#include "tbinary.h"
 #include "tsocket.h"
-#include "crng.h"
-#include "tbinary.h"
 #endif
-#if SEAM == _0_0_0__03
-#include "cconsole.h"
-#include "crng.h"
-#include "tbinary.h"
-#endif
-#if SEAM == _0_0_0__04
+#if SEAM == _0_0_0__03 || SEAM == _0_0_0__04
 #include "cconsole.h"
 #include "crng.h"
 #include "tbinary.h"

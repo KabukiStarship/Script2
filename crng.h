@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* Gets a random generator device seed. */
-API uint RandomSeed();
+API UI4 RandomSeed();
 
 /* Re-seeds the static mersenne twister engine. */
 API void RandomizeSeed();

@@ -59,16 +59,15 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |   N   | Has pre-specified buffer of size N bytes.|
 | <=N   | Has pre-specified buffer of size N bytes but can use less than that.|
 
-## 2.1.c Abstract ASCII Types
+## 2.1.c ASCII Word Types
 
 Abstract ASCII Types do not have a pre-defined size.
 
 | ID | Type |  Alt Name  | Width  | Description         |
 |:--:|:----:|:----------:|:------:|:--------------------|
-|    | SIN  |     int    |    0   | Signed integer of 16-bits or more, typically 32-bits. |
-|    | UIN  |    uint    |    0   | Unsigned integer of 16-bits or more, typically 32-bits. |
 |    | SIW  |  intptr_t  |    0   | Signed integer of the size of the host CPU's ALU. |
 |    | UIW  | uintptr_t  |    0   | Unsigned integer of the size of the host CPU's ALU. |
+|    | FLW  |   float_t  |    0   | Native hardware or software Floating-point number size. |
 
 ## 2.2 ASCII Factory
 
@@ -81,7 +80,7 @@ word-aligned socket upon success.
 @param obj      Pointer to an existing ASCII Object socket if there is one.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef UIW* (*AsciiFactory)(UIW* obj, SIW function, void* arg);
+typedef int (*AsciiFactory)(UIW* obj, SIW function, void* arg);
 ```
 
 An AsciiFactory is essentially switch statement jump table with index function and one argument that can be multiple to any type of data or SCRIPT Expression. Each ASCII Data Type has it's own set of contiguous indexed functions each with it's own argument.

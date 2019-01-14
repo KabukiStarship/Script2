@@ -105,7 +105,7 @@ inline UIW FillWord(CH1 fill_char) {
 
 CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
   ASSERT(cursor);
-  PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (int)byte_count);
+  PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (SI4)byte_count);
   ASSERT(byte_count >= 0);
 
   if ((stop - cursor) < byte_count) {
@@ -114,7 +114,7 @@ CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
   }
   stop = cursor + byte_count;
 
-  PRINTF("\nFilling %i bytes from %p", (int)byte_count, cursor);
+  PRINTF("\nFilling %i bytes from %p", (SI4)byte_count, cursor);
 
   if (byte_count < (2 * sizeof(void*) + 1)) {
     while (cursor < stop) *cursor++ = fill_char;
@@ -173,7 +173,7 @@ CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   }
 
   PRINTF("\nCopying %i bytes from %p and writing to %p",
-         (int)(stop_ptr - start_ptr), cursor, stop_ptr);
+         (SI4)(stop_ptr - start_ptr), cursor, stop_ptr);
 
   // Debug stuff.
   CH1 *begin_debug = cursor, *end_debug = end_ptr;
@@ -285,11 +285,11 @@ SIW SocketShiftUp(void* begin, void* end, SIW count) {
   CH1 *start = reinterpret_cast<CH1*>(begin),
       *stop = reinterpret_cast<CH1*>(end);
   if (count < 3 * sizeof(void*)) {
-    for (int i = 0; i < count; ++i) *(stop + count) = *stop;
+    for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
   CH1* pivot = TAlignDown<CH1*>(stop);
-  for (int i = 0; i < count; ++i) *(stop + count) = *stop--;
+  for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop--;
   UIW *stop_word = reinterpret_cast<UIW*>(stop),
       *start_word = reinterpret_cast<UIW*>(TAlignUp<UIW*>(start));
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;

@@ -262,7 +262,7 @@ if the Stack (@see Index StackInsert<Size, Index> (T*, Index, T, Index)).
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename Index = int>
+template <typename T = SIW, typename Index = SI4>
 inline Index StackInsert(T* items, Index count, T item, Index index) {
   T *target = items + index, *stop = items + count;
   // Shift the elements up.
@@ -276,7 +276,7 @@ inline Index StackInsert(T* items, Index count, T item, Index index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename Index = int>
+template <typename T = SIW, typename Index = SI4>
 inline Index StackAdd(T* items, Index count, T item, Index index) {
   ASSERT(items);
   if (index < 0 || index > count) return -1;
@@ -486,7 +486,7 @@ TUTF<Char>& TPrintStack(TUTF<Char>& utf, TCStack<T, Size, Index>* stack) {
       << " size_stack:" << stack->size_stack;
   if (stack->size_array != 0) utf << " size_array:invalid";
   T* elements = TStackStart(stack);
-  for (int i = 0; i < count; ++i) {
+  for (SI4 i = 0; i < count; ++i) {
     utf << '\n' << i + 1 << ".) " << elements[i];
   }
   return utf;
@@ -542,6 +542,10 @@ class TStack {
   TStack<T, Size, Index>& Clone(TStack<T, Size, Index>& other) {
     StackClone<T, Size, Index>(CObject(), *other);
   }
+
+  /* Checks if the given index is a valid element.
+  @return true if the index is in bounds. */
+  inline BOL InBounds(Index index) { return index >= 0 && index < count_max_; }
 
   /* Gets the max number_ of elements in an obj with the specific index
   width. */

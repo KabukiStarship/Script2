@@ -301,7 +301,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
 
   PRINTF("\nFinding insert location...")
 
-  int low = 0, mid, high = item_count, index;
+  SI4 low = 0, mid, high = item_count, index;
 
   Index* temp_ptr;
 
@@ -544,7 +544,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
   // Perform a binary search to find the first instance of the hash the
   // binary search yields. If the mid is odd, we need to subtract the
   // sizeof (Size*) in order to get the right pointer address.
-  int low = 0, mid, high = item_count - 1;
+  SI4 low = 0, mid, high = item_count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
@@ -614,7 +614,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
         return ~((Index)0);
       }
 
-      PRINTF("and found key at mid: %i", (int)mid);
+      PRINTF("and found key at mid: %i", (SI4)mid);
       return index;
     }
   }
@@ -663,7 +663,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
   PRINT('|');
-  for (int i = 0; i < 79; ++i) PRINT('_');
+  for (SI4 i = 0; i < 79; ++i) PRINT('_');
   PRINT('\n');
 
   for (Index i = 0; i < count; ++i) {

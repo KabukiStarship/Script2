@@ -227,7 +227,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
 
   PRINTF("Finding insert location... \n");
 
-  int low = 0, mid, high = item_count, index;
+  SI4 low = 0, mid, high = item_count, index;
 
   I* temp_ptr;
 
@@ -473,7 +473,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
   // Perform a binary search to find the first instance of the hash the
   // binary search yields. If the mid is odd, we need to subtract the
   // sizeof (Size*) in order to get the right pointer address.
-  int low = 0, mid, high = item_count - 1;
+  SI4 low = 0, mid, high = item_count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
@@ -548,7 +548,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
         return ~((I)0);
       }
 
-      PRINTF("and found key at mid: %i\n", (int)mid);
+      PRINTF("and found key at mid: %i\n", (SI4)mid);
       return index;
     }
   }
@@ -585,7 +585,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       item_count, count_max, size_pile, table_size);
   PRINT('\n');
   PRINT('|');
-  for (int i = 0; i < 79; ++i) PRINT('_');
+  for (SI4 i = 0; i < 79; ++i) PRINT('_');
   PRINT('\n');
 
   const CH1* states =
@@ -604,7 +604,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
   PRINT('|');
-  for (int i = 0; i < 79; ++i) Print('_');
+  for (SI4 i = 0; i < 79; ++i) Print('_');
   PRINT('\n');
 
   for (I i = 0; i < count_max; ++i) {

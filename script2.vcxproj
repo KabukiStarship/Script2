@@ -49,16 +49,14 @@
     <ClInclude Include="cbuffer.h" />
     <ClInclude Include="cclock.h" />
     <ClInclude Include="cconsole.h" />
-    <ClInclude Include="tdoor.h" />
+    <ClInclude Include="ccrabs.h" />
     <ClInclude Include="cerror.h" />
     <ClInclude Include="cevent.h" />
-    <ClInclude Include="ccrabs.h" />
     <ClInclude Include="cfloor.h" />
     <ClInclude Include="chash.h" />
     <ClInclude Include="cinterrupts.h" />
     <ClInclude Include="citerator.h" />
     <ClInclude Include="clanguage.h" />
-    <ClInclude Include="clibrary.h" />
     <ClInclude Include="clock.h" />
     <ClInclude Include="cmirror.h" />
     <ClInclude Include="cobject.h" />
@@ -68,11 +66,12 @@
     <ClInclude Include="croom.h" />
     <ClInclude Include="cslot.h" />
     <ClInclude Include="csocket.h" />
-    <ClInclude Include="ctest.h" />
+    <ClInclude Include="cstack.h" />
     <ClInclude Include="cstr.h" />
+    <ClInclude Include="cstr1.h" />
     <ClInclude Include="cstr2.h" />
     <ClInclude Include="cstr4.h" />
-    <ClInclude Include="cstr1.h" />
+    <ClInclude Include="ctest.h" />
     <ClInclude Include="cvarint.h" />
     <ClInclude Include="cvk.h" />
     <ClInclude Include="cwall.h" />
@@ -88,7 +87,9 @@
     <ClInclude Include="tbook.h" />
     <ClInclude Include="tclock.h" />
     <ClInclude Include="tdic.h" />
+    <ClInclude Include="tdoor.h" />
     <ClInclude Include="thash.h" />
+    <ClInclude Include="tlibrary.h" />
     <ClInclude Include="tlist.h" />
     <ClInclude Include="tloom.h" />
     <ClInclude Include="tmap.h" />
@@ -96,10 +97,10 @@
     <ClInclude Include="tset.h" />
     <ClInclude Include="tsocket.h" />
     <ClInclude Include="tstack.h" />
+    <ClInclude Include="tstr.h" />
     <ClInclude Include="tstrand.h" />
     <ClInclude Include="ttable.h" />
     <ClInclude Include="ttest.h" />
-    <ClInclude Include="tstr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="0_0_0.16_seam.s2" />
@@ -107,13 +108,9 @@
     <None Include="0_0_0.footer.inl" />
     <None Include="0_0_0.release.inl" />
     <None Include="global_config.inl" />
-    <None Include="README.md" />
     <None Include="test_debug.inl" />
     <None Include="test_footer.inl" />
     <None Include="test_release.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc" />
@@ -125,8 +122,8 @@
     <ClCompile Include="script2_bsq.cc" />
     <ClCompile Include="script2_clock.cc" />
     <ClCompile Include="script2_console.cc" />
-    <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_crabs.cc" />
+    <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
@@ -147,10 +144,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{F5520550-30EB-40D4-AC2B-7A596CE635E3}</ProjectGuid>
+    <ProjectGuid>{51F6FFD5-FE44-4C7A-92C1-B20759D55144}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>script</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <RootNamespace>script2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -211,14 +208,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir).\.</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -234,7 +230,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir).\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir).\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

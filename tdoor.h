@@ -46,7 +46,7 @@ connection to multiple systems over a WiFi connection.
 
 @endcode
 */
-template <SIN kDoorCount_, SIN kSlotSizeDefault_>
+template <SI4 kDoorCount_, SI4 kSlotSizeDefault_>
 class TDoor : public Operand {
  public:
   enum {
@@ -88,40 +88,45 @@ class TDoor : public Operand {
   }
 
   /* Gets the BOut at the given index. */
-  BOut* GetSlot(SIN index) { return slots_->Element(index); }
+  BOut* GetSlot(SI4 index) { return slots_->Element(index); }
 
   /* Address the given crabs to the Door. */
-  SIN AddSlot(SIN slot) { return TStackPush<SIN, SIN, SIN>(slots_, slot); }
+  SI4 AddSlot(SI4 slot) { return TStackPush<SI4, SI4, SI4>(slots_, slot); }
 
   /* Attempts to find a Slot or Door with the given address. */
   BOL Contains(void* address) {
-    return TStackContains<SIN, SIN, SIN>(slots_, address);
+    return TStackContains<SI4, SI4, SI4>(slots_, address);
   }
 
   /* Gets the Slot that contains the given address.
   @return Returns the doors_ stack count if the Door does not contain the given
   address. */
-  SIN FindSlot(void* address) {
-    SIN count = slots_->count;
-    for (SIN i = 0; i < count; ++i) {
+  SI4 FindSlot(void* address) {
+    SI4 count = slots_->count;
+    for (SI4 i = 0; i < count; ++i) {
       // Slot* slot = nullptr; //< @todo fix me!
 
-      if (TStackContains<SIN, SIN, SIN>(slots_, address)) return i;
+      if (TStackContains<SI4, SI4, SI4>(slots_, address)) return i;
     }
     return count;
+  }
+
+  BIn* Slot(SI4 index) {
+    if (!slots_.InBounds(index)) return nullptr;
+    return slots[i];
   }
 
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(CCrabs* crabs) {
+    TArray<SI4, SI4, SI4>* slots = slots_;
     SI4 scan_count_max = scan_count_max_;
-    for (SI4 i = 0; i < slots_->Count(); ++i) {
-      SI4 offset = slots_[i];
-      CBIn* bin = OffsetToBIn(offset);
+    for (SI4 i = 0; i < slots->Count(); ++i) {
+      BIn* bin = Slot(i);
       for (SI4 count = scan_count_max; count > 0; --count) {
         SI4 value = BInNextByte(bin);
         if (value < 0) break;
-        const COp* result = crabs->Scan(value);
+        const Op* result = crabs->Scan(value);
       }
     }
     return nullptr;
@@ -145,7 +150,7 @@ class TDoor : public Operand {
       return CrabsQuery(crabs, kThis);
     }
     index -= ' ';
-    if (((SIN)index) >= slots_->count) {
+    if (((SI4)index) >= slots_->count) {
       return DoorResult(this, Door::kErrorInvalidOp);
     }
     return nullptr;
@@ -162,7 +167,7 @@ class TDoor : public Operand {
 };
 
 /* Initializes a Door at the beginning of the given socket.
-static Door* DoorInit (int* socket, SI4 slot_size) {
+static Door* DoorInit (SI4* socket, SI4 slot_size) {
   if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
   Wall* wall = reinterpret_cast<Door*>(socket);

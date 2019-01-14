@@ -64,8 +64,10 @@ specific language governing permissions and limitations under the License. */
 #include "0_0_0.16_room_and_wall.h"
 #endif
 
-namespace _ {
-static const CH1* _0_0_0_Script2(CH1* seam_log, CH1* seam_end, const CH1* args) {
+using namespace _;
+
+static const CH1* _0_0_0_Script2(CH1* seam_log, CH1* seam_end,
+                                 const CH1* args) {
   return TTestTree<_0_0_0__00_RNG
 
 #if SEAM >= _0_0_0__01
@@ -125,13 +127,12 @@ static const CH1* _0_0_0_Script2(CH1* seam_log, CH1* seam_end, const CH1* args) 
                    _0_0_0__14_Expr
 #endif
 #if SEAM >= _0_0_0__15
-    ,
-    _0_0_0__15_Door
+                   ,
+                   _0_0_0__15_Door
 #endif
 #if SEAM >= _0_0_0__16
-    ,
-    _0_0_0__16_Room
+                   ,
+                   _0_0_0__16_Room
 #endif
                    >(seam_log, seam_end, args);
 }
-}  // namespace _

@@ -149,26 +149,26 @@ API UTF1& PrintBsq(UTF1& printer, const SI4* params);
 // API Utf& PrintBsq (const SI4* bsq, Utf& utf);
 
 /*< Returns the requested parameter number_. */
-API SI4 BsqParamNumber(const SI4* bsq, int param_number);
+API SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
 
 }  // namespace _
 
 #if USING_UTF8 == YES
 /*  Prints out the parameters. */
-inline _::UTF1& operator<<(_::UTF1& printer, _::Bsq bsq) {
-  return _::PrintBsq(printer, bsq.params);
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Bsq bsq) {
+  return ::_::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8
 #if USING_UTF16 == YES
 /*  Prints out the parameters. */
-inline _::UTF2& operator<<(_::UTF2& printer, _::Bsq bsq) {
-  return _::PrintBsq(printer, bsq.params);
+inline ::_::UTF2& operator<<(::_::UTF2& printer, ::_::Bsq bsq) {
+  return ::_::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF16
 #if USING_UTF32 == YES
 /*  Prints out the parameters. */
-inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
-  return _::PrintBsq(printer, bsq.params);
+inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
+  return ::_::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8 == YES
 

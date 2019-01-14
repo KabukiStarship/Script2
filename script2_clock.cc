@@ -41,16 +41,16 @@ void ClockSet(CClock* clock, SI t) {
   //   f. Second.
   SI value = t / kSecondsPerYear;
   t -= value * kSecondsPerYear;
-  clock->year = (int)(value + ClockEpoch());
+  clock->year = (SI4)(value + ClockEpoch());
   value = t / kSecondsPerDay;
   t -= value * kSecondsPerDay;
-  clock->day = (int)value;
+  clock->day = (SI4)value;
   value = t / kSecondsPerHour;
   t -= value * kSecondsPerHour;
-  clock->hour = (int)value;
+  clock->hour = (SI4)value;
   value = t / kSecondsPerMinute;
-  clock->minute = (int)value;
-  clock->second = (int)(t - value * kSecondsPerMinute);
+  clock->minute = (SI4)value;
+  clock->second = (SI4)(t - value * kSecondsPerMinute);
 }
 
 CClock::CClock() { ClockInit(*this, 0); }
@@ -74,7 +74,7 @@ const SI2* ClockLastDayOfMonthLeapYear() {
   return kMonthDayOfYearLeapYear;
 }
 
-int MonthByDay(int day, int year) {
+SI4 MonthByDay(SI4 day, SI4 year) {
   const SI2 *cursor, *stop;
   if (day < 1) return 0;
   if (year & 3) {  // 3 = 0b'11 which is a much faster way to do modulo 4.
@@ -84,7 +84,7 @@ int MonthByDay(int day, int year) {
   }
   stop = cursor + 11;
   while (cursor <= stop)
-    if (day < *cursor++) return (int)(stop - cursor);
+    if (day < *cursor++) return (SI4)(stop - cursor);
   return 0;
 }
 
@@ -98,18 +98,18 @@ CClock* ClockInit(CClock& clock, SI t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  int value = (int)(t / kSecondsPerYear);
+  SI4 value = (SI4)(t / kSecondsPerYear);
   t -= value * kSecondsPerYear;
   clock.year = value + ClockEpoch();
-  value = (int)(t / kSecondsPerDay);
+  value = (SI4)(t / kSecondsPerDay);
   t -= value * kSecondsPerDay;
   clock.day = value;
-  value = (int)(t / kSecondsPerHour);
+  value = (SI4)(t / kSecondsPerHour);
   t -= value * kSecondsPerHour;
   clock.hour = value;
-  value = (int)(t / kSecondsPerMinute);
+  value = (SI4)(t / kSecondsPerMinute);
   clock.minute = value;
-  clock.second = (int)(t - value * kSecondsPerMinute);
+  clock.second = (SI4)(t - value * kSecondsPerMinute);
   return &clock;
 }
 
@@ -148,7 +148,7 @@ TMS ClockTMS(CClock& clock) { return TStampTime<TMS>(clock); }
 
 TME ClockTME(CClock& clock) { return TStampTime<TME>(clock); }
 
-int ClockMonthDayCount(TMS t) {
+SI4 ClockMonthDayCount(TMS t) {
   CClock date(t);
   static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
                                           31, 31, 30, 31, 30, 31};
@@ -159,7 +159,7 @@ int ClockMonthDayCount(TMS t) {
   return days_per_month[date.month];
 }
 
-int ClockMonthDayCount(int month, int year) {
+SI4 ClockMonthDayCount(SI4 month, SI4 year) {
   if (month < 1) return 0;
   if (month > 12) return 0;
   static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
@@ -169,7 +169,7 @@ int ClockMonthDayCount(int month, int year) {
   return days_per_month[month];
 }
 
-const CH1* ClockWeekDay(int day_number) {
+const CH1* ClockWeekDay(SI4 day_number) {
   static const CH1* days[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
                                "Thursday", "Friday", "Saturday"};
   static const CH1 kInvalidText[] = "Invalid\0";
@@ -182,14 +182,14 @@ const CH1* ClockWeekDay(int day_number) {
   return days[day_number];
 }
 
-CH1 ClockDayOfWeekInitial(int day_number) {
+CH1 ClockDayOfWeekInitial(SI4 day_number) {
   static const CH1 days[] = "SMTWRFSU";
   if (day_number < 0) return 'I';
   if (day_number >= 7) return 'I';
   return days[day_number];
 }
 
-int ClockCompare(const CClock& date_a, const CClock& date_b) {
+SI4 ClockCompare(const CClock& date_a, const CClock& date_b) {
   PRINT("\n    Expecting Date:");
   PRINT_TIME(date_a);
   PRINT(" and found:");
@@ -223,13 +223,13 @@ int ClockCompare(const CClock& date_a, const CClock& date_b) {
   return 0;
 }
 
-int ClockCompare(TMS time_a, TMS time_b) {
+SI4 ClockCompare(TMS time_a, TMS time_b) {
   CClock a(time_a), b(time_b);
   return ClockCompare(a, b);
 }
 
-int ClockCompare(const CClock& clock, int year, int month, int day,
-                 int hour = 0, int minute = 0, int second = 0) {
+SI4 ClockCompare(const CClock& clock, SI4 year, SI4 month, SI4 day,
+                 SI4 hour = 0, SI4 minute = 0, SI4 second = 0) {
   PRINTF("\n    Expecting %i/%i/%i@%i:%i:%i and found ", year, month, day, hour,
          minute, second);
   PRINT_TIME(clock);
@@ -279,7 +279,7 @@ const SI2* ClockDaysInMonth() {
   return kDaysInMonth;
 }
 
-int ClockDaysInMonth(int month, int year) {
+SI4 ClockDaysInMonth(SI4 month, SI4 year) {
   if ((year & 3) == 0) {
     if (month == 4) return 29;
   }
@@ -287,7 +287,7 @@ int ClockDaysInMonth(int month, int year) {
   return ClockDaysInMonth()[month - 1];
 }
 
-int ClockDayOfYear(int year, int month, int day) {
+SI4 ClockDayOfYear(SI4 year, SI4 month, SI4 day) {
   if (day < 1 || day > ClockDaysInMonth(month, year) || month < 1 || month > 12)
     return 0;
   if (month == 1) {
@@ -300,7 +300,7 @@ int ClockDayOfYear(int year, int month, int day) {
 // TMS ClockTimeBeginningOfYear() {}
 
 template <typename SI>
-SI ClockTime(int year, int month, int day, int hour, int minute, int second) {
+SI ClockTime(SI4 year, SI4 month, SI4 day, SI4 hour, SI4 minute, SI4 second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
       return 0;
@@ -312,13 +312,13 @@ SI ClockTime(int year, int month, int day, int hour, int minute, int second) {
               hour * kSecondsPerHour + minute * kSecondsPerMinute + second);
 }
 
-TMS ClockTimeTMS(int year, int month, int day, int hour, int minute,
-                 int second) {
+TMS ClockTimeTMS(SI4 year, SI4 month, SI4 day, SI4 hour, SI4 minute,
+                 SI4 second) {
   return ClockTime<TMS>(year, month, day, hour, minute, second);
 }
 
-TME ClockTimeTME(int year, int month, int day, int hour, int minute,
-                 int second) {
+TME ClockTimeTME(SI4 year, SI4 month, SI4 day, SI4 hour, SI4 minute,
+                 SI4 second) {
   return ClockTime<TMS>(year, month, day, hour, minute, second);
 }
 
@@ -374,8 +374,8 @@ void PrintTime(TME t) {
   Print(socket, socket + kSize - 1, t);
 }
 
-const CH1* StringScanTime(const CH1* string_, int& hour, int& minute,
-                           int& second) {
+const CH1* StringScanTime(const CH1* string_, SI4& hour, SI4& minute,
+                           SI4& second) {
   return TStringScanTime<CH1>(string_, hour, minute, second);
 }
 
@@ -422,8 +422,8 @@ const CH2* TStringScanTime(const CH2* string_, CClock& clock) {
   return TStringScanTime<CH2>(string_, clock);
 }
 
-const CH2* TStringScanTime(const CH2* string_, int& hour, int& minute,
-                                int& second) {
+const CH2* TStringScanTime(const CH2* string_, SI4& hour, SI4& minute,
+                                SI4& second) {
   return TStringScanTime<CH2>(string_, hour, minute, second);
 }
 
@@ -462,8 +462,8 @@ CH4* Print(CH4* begin, CH4* stop, CClock& clock) {
   return TPrint<CH4>(begin, stop, clock);
 }
 
-const CH4* TStringScanTime(const CH4* string_, int& hour, int& minute,
-                                int& second) {
+const CH4* TStringScanTime(const CH4* string_, SI4& hour, SI4& minute,
+                                SI4& second) {
   return TStringScanTime<CH4>(string_, hour, minute, second);
 }
 

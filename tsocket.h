@@ -71,7 +71,7 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 @endcode */
 template <typename I = UIW>
 inline I TAlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
-  return Negative (value) & mask;
+  return Negative(value) & mask;
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -171,7 +171,7 @@ inline T* TAlignUp2(const void* pointer) {
 
 /* Returns the N in 2^N for the sizeof (I). */
 template <typename I>
-inline int TBitShiftCount() {
+inline SI4 TBitShiftCount() {
   return (sizeof(I) == 1)
              ? 0
              : (sizeof(I) == 2)
@@ -199,59 +199,60 @@ class TSocket {
   TSocket() {}
 
   /* The size of the Size type. */
-  static constexpr Size SizeSize () { return (Size)sizeof (Size); }
+  static constexpr Size SizeSize() { return (Size)sizeof(Size); }
 
   /* The min size in bytes. */
-  static constexpr Size SizeMin () { return SizeSize (); }
+  static constexpr Size SizeMin() { return SizeSize(); }
 
   /* The size in bytes. */
   static constexpr Size SizeBytes() {
-    if (kSize_ <= SizeMin ()) return SizeMin ();
+    // static_assert(kSize_ >= SizeMin(), "kSize_ < SizeMin ()");
+    if (kSize_ < SizeMin()) return SizeMin();
     return kSize_;
   }
 
   /* The size in words rounded down. */
-  static constexpr UIW SizeWords() { 
-    UIW size_words = (UIW)(SizeBytes () / (Size)sizeof (UIW));
-    return size_words < 1 ? 1 : size_words;
+  static constexpr UIW SizeWords() {
+    UIW size_words = (UIW)(SizeBytes() / (Size)sizeof(UIW));
+    return (size_words <= 0) ? 1 : size_words;
   }
 
   /* Returns the socket as a UIW*. */
-  inline UIW* Words() { return socket; }
+  inline UIW* Words() { return socket_; }
 
   /* Gets the begin UI1 of the socket. */
   template <typename T = UIW>
   inline T* Begin() {
-    return reinterpret_cast<T*>(socket);
-  }
-
-  /* Gets the begin of the socket. */
-  template <typename T = CH1, typename I = Size>
-  inline T* Element(I offset) {
-    UIW address = reinterpret_cast<UIW>(socket) + offset;
-    return reinterpret_cast<T>(address);
+    return reinterpret_cast<T*>(socket_);
   }
 
   /* Gets the begin UI1 of the socket. */
-  inline CH1* End() { return reinterpret_cast<CH1*>(socket) + kSize_; }
+  inline CH1* End() { return reinterpret_cast<CH1*>(socket_) + kSize_; }
 
   /* Returns the first byte of the ASCII Object. */
   template <typename Size, typename T>
   inline T* Start() {
-    UIW ptr = reinterpret_cast<UIW>(socket);
+    UIW ptr = reinterpret_cast<UIW>(socket_);
     return reinterpret_cast<T*>(ptr + sizeof(Size));
+  }
+
+  /* Gets the begin of the socket. */
+  template <typename T = CH1, typename I = Size>
+  inline T* Element(I index) {
+    if (!InRange(index)) return nullptr;
+    return Start()[index];
   }
 
   /* Sets the size to the new value. */
   template <typename Size>
   inline UIW* SetSize(Size size) {
     ASSERT((size & kAlignMask) == 0)
-    *reinterpret_cast<Size*>(socket) = size;
-    return socket;
+    *reinterpret_cast<Size*>(socket_) = size;
+    return socket_;
   }
 
  private:
-  UIW socket[SizeWords ()];  //< The word-aligned socket.
+  UIW socket_[SizeWords()];  //< The word-aligned socket.
 };
 
 /* Syntactical sugar for reinterpret_cast using templates. */

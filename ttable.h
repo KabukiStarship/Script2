@@ -218,7 +218,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%i", (int)index)
+      PRINTF("index:%i", (SI4)index)
 
       if (index != kInvalidIndex) {  //< There are other collisions.
         PRINTF("with collisions, ")
@@ -237,7 +237,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
             PRINTF(
                 "but table already contains key at "
                 "offset:%i",
-                (int)index)
+                (SI4)index)
             return index;
           }
           ++temp_ptr;
@@ -265,7 +265,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
         *temp_ptr = count;
 
         table->size_pile = size_pile + 1;
-        PRINTF("\ncollision index:%i", (int)temp)
+        PRINTF("\ncollision index:%i", (SI4)temp)
         // Store the collision index.
         indexes[count] = temp;  //< Store the collision index
         table->count = count + 1;
@@ -286,7 +286,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
       index = unsorted_indexes[mid];
 
-      PRINTF("\nChecking if %i is a collision...", (int)index)
+      PRINTF("\nChecking if %i is a collision...", (SI4)index)
       if (!SlotEquals(key, keys - key_offsets[index])) {
         // It's a new collision!
         PRINTF("\nIt's a new collision!")
@@ -349,7 +349,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
   PRINTF(
       "\nThe hash 0x%x was not in the table so inserting \"%s\""
       "into mid:%i at index 0x%p before hash 0x%x",
-      hash, key, (int)mid, destination - reinterpret_cast<CH1*>(table),
+      hash, key, (SI4)mid, destination - reinterpret_cast<CH1*>(table),
       hashes[mid])
 
   // First copy the CH1 and set the key offset.
@@ -436,7 +436,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
   // Perform a binary search to find the first instance of the hash the
   // binary search yields. If the mid is odd, we need to subtract the
   // sizeof (UI2*) in order to get the right pointer address.
-  int low = 0, mid, high = count - 1;
+  SI4 low = 0, mid, high = count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
@@ -500,7 +500,7 @@ API UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
       index = unsorted_indexes[mid];
 
       PRINTF("\nmid:%i-%u unsorted_indexes:%Index key:\"%s\" hash:0x%x",
-             (int)mid, (uint)hashes[mid], index, keys - key_offsets[index],
+             (SI4)mid, (uint)hashes[mid], index, keys - key_offsets[index],
              Hash16(keys - key_offsets[index]))
 
       if (!SlotEquals(key, keys - key_offsets[index])) {
@@ -531,7 +531,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
   utf << Line('_') << "\nTable:" << Hex<>(table) << "\nnum_keys:" << count
       << " count_max:" << count_max << " size_pile:" << size_pile
       << " size:" << size << "\n|";
-  for (int i = 0; i < 79; ++i) utf << '_';
+  for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
   UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<CH1*>(table) +
@@ -546,14 +546,14 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_u", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
-  for (int i = 0; i < 79; ++i) utf << '_';
+  for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << '\n';
 
-  for (int i = 0; i < count; ++i) {
+  for (SI4 i = 0; i < count; ++i) {
     // Print each record as a row.
     // @todo Change count_max to count after done debugging.
     collision_index = indexes[i];
-    utf << Right<int>(i, 3) << Right<>(keys - key_offsets[i], 10)
+    utf << Right<SI4>(i, 3) << Right<>(keys - key_offsets[i], 10)
         << Right<Size>(key_offsets[i], 8)
         << Right<Hex<Size>>(Hash16(keys - key_offsets[i]), 10)
         << Right<Hex<Size>>(hashes[unsorted_indexes[i]], 10)
@@ -577,7 +577,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
     utf << '\n';
   }
   utf << '|';
-  for (int i = 0; i < 79; ++i) utf << '_';
+  for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << '\n' << Memory(table, table->size) << '\n';
 }
 #endif

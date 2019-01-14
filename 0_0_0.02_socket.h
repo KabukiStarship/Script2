@@ -26,10 +26,10 @@ specific language governing permissions and limitations under the License. */
 #include "test_release.inl"
 #endif
 
-namespace _ {
+using namespace _;
 
 static const CH1* _0_0_0__02_Socket(CH1* seam_log, CH1* seam_end,
-    const CH1* args) {
+                                    const CH1* args) {
 #if SEAM >= _0_0_0__02
   TEST_BEGIN;
 
@@ -45,8 +45,8 @@ static const CH1* _0_0_0__02_Socket(CH1* seam_log, CH1* seam_end,
   PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
          test_chars_result);
 
-  for (int i = 0; i < kTestCharsOffsetCount; ++i) {
-    for (int j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
+  for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
+    for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
     CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
                              kTestCharsCount);
     ASSERT(result);
@@ -56,5 +56,3 @@ static const CH1* _0_0_0__02_Socket(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-
-}  // namespace _

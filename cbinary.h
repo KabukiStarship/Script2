@@ -121,23 +121,116 @@ API UI2 HexByteToUpperCase(UI1 b);
 
 /* Converts a single hex UI1 a UI1.
 @return Returns -1 if c is not a hex UI1. */
-API int HexToByte(CH1 hex_byte);
+API SI4 HexToByte(CH1 hex_byte);
 
 /* Converts a UI1 into a two-UI1 hex representation.
 @return Returns -1 if c is not a hex UI1.
 */
-API int HexToByte(UI2 hex);
+API SI4 HexToByte(UI2 hex);
+
+/* Prints the given SI4 to the socket. */
+API CH1* Print(CH1* cursor, CH1* stop, SI4 value);
+
+/* Prints the given UI4 to the socket. */
+API CH1* Print(CH1* cursor, CH1* stop, UI4 value);
+
+#if USING_UTF8 == YES
+/* Prints a CH2 to the STR by converting it to a CH4.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH1* Print(CH1* cursor, CH1* stop, CH1 c);
+
+/* Prints a CH2 to the STR by converting it to a CH4.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH1* Print(CH1* cursor, CH1* stop, CH2 c);
+
+/* Prints a CH2 to the STR by converting it to a CH4.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH1* Print(CH1* cursor, CH1* stop, CH4 c);
+#endif
+
+#if USING_UTF16 == YES
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH2* Print(CH2* cursor, CH2* stop, CH1 c);
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH2* Print(CH2* cursor, CH2* stop, CH2 c);
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH2* Print(CH2* cursor, CH2* stop, CH4 c);
+#endif
+
+#if USING_UTF32 == YES
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH1 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH4* Print(CH4* cursor, CH4* stop, CH1 c);
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH4* Print(CH4* cursor, CH4* stop, CH2 c);
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH4 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+API CH4* Print(CH4* cursor, CH4* stop, CH4 c);
+#endif
 
 #endif  //< #if SEAM >= _0_0_0__01
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= _0_0_0__04
 /* Gets the maximum number_ of digits required to represent a FLT as in
 ASCII. */
-API int FloatDigitsMax();
+API SI4 FloatDigitsMax();
 
 /* Gets the maximum number_ of digits required to represent a DBL as in
 ASCII. */
-API int DoubleDigitsMax();
+API SI4 DoubleDigitsMax();
 
 /* Checks if the given value is Not-a-Number.
 @param  value The value to check.
@@ -169,35 +262,35 @@ API DBL Ceiling(DBL value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(UI1 value);
+API SI4 MSbAsserted(UI1 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(SI1 value);
+API SI4 MSbAsserted(SI1 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(UI2 value);
+API SI4 MSbAsserted(UI2 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(SI2 value);
+API SI4 MSbAsserted(SI2 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(UI4 value);
+API SI4 MSbAsserted(UI4 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(SI4 value);
+API SI4 MSbAsserted(SI4 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(UI8 value);
+API SI4 MSbAsserted(UI8 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
-API int MSbAsserted(SI8 value);
+API SI4 MSbAsserted(SI8 value);
 
 /* IEEE754 Powers of 10 exponents LUT. */
 API const SI2* IEEE754Pow10E();

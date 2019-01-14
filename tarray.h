@@ -108,7 +108,7 @@ TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
 /* Gets the address of the packed array.
 @param ary ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = int>
+template <typename T, typename Size = SI4, typename Index = SI4>
 T* ArrayElements(TCStack<T, Size, Index>* ary) {
   CH1* elements = reinterpret_cast<CH1*>(ary) + ary->size_stack;
   return reinterpret_cast<T*>(elements);
@@ -117,7 +117,7 @@ T* ArrayElements(TCStack<T, Size, Index>* ary) {
 /* Gets the address of the packed Index dimensions.
 @param ary ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = int>
+template <typename T, typename Size = SI4, typename Index = SI4>
 Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
   CH1* elements = reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
   return reinterpret_cast<Index*>(elements);
@@ -126,7 +126,7 @@ Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
 /* Gets the stop address of the packed Index dimensions.
 @param ary ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = int>
+template <typename T, typename Size = SI4, typename Index = SI4>
 Index* ArrayDimensionsEnd(TCStack<T, Size, Index>* ary) {
   ASSERT(ary);
   return ArrayDimensions<T, Size, Index>(ary) + ary->count - 1;
@@ -166,9 +166,9 @@ TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
 }
 
 /* Creates a immutable array of dimensions. */
-template <const int... N>
-inline const int* Dimensions() {
-  static const int kCount = (int)sizeof...(N), kList[sizeof...(N)] = {N...};
+template <const SI4... N>
+inline const SI4* Dimensions() {
+  static const SI4 kCount = (SI4)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &kCount;
 }
 
@@ -234,16 +234,16 @@ class TArray {
 
 template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
-                                 _::TCArray<T, Size, Index>* stack) {
-  return _::PrintArray<T, Size, Index>(printer, stack);
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
+                                 ::_::TCArray<T, Size, Index>* stack) {
+  return ::_::PrintArray<T, Size, Index>(printer, stack);
 }
 
 template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Char = CH1>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& printer,
-                                 _::TCArray<T, Size, Index>& stack) {
-  return _::PrintArray<T, Size, Index>(printer, stack);
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
+                                 ::_::TCArray<T, Size, Index>& stack) {
+  return ::_::PrintArray<T, Size, Index>(printer, stack);
 }
 
 #endif  //< INCLUDED_SCRIPT2_ARRAY
