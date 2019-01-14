@@ -31,7 +31,7 @@ namespace _ {
     @endcode
 */
 template <const CH1... N>
-API const CH1* Address() {
+SDK const CH1* Address() {
   static const CH1 path[sizeof...(N)] = {N...};
   static const CH1 term_char = 0;
   return path;

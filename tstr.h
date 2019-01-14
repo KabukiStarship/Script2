@@ -1106,7 +1106,7 @@ class TRight {
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = CH1>
-struct API TLineChar {
+struct SDK TLineChar {
   Char token;        //< Character to utf.
   SI4 column_count;  //< Column count.
 
@@ -1117,7 +1117,7 @@ struct API TLineChar {
 
 /* Utility class for printing a s line with operator<<. */
 template <typename Char = CH1>
-struct API TLineString {
+struct SDK TLineString {
   const Char* string_;  //< Character to utf.
   SI4 column_count;     //< Column count.
 

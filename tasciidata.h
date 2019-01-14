@@ -35,7 +35,7 @@ like this.
 namespace _ {
 
 /* A type-value tuple. */
-struct API TypeValue {
+struct SDK TypeValue {
   SI4 type;           //< ASCII Type.
   const void* value;  //< Pointer to the value data.
 
@@ -91,7 +91,7 @@ inline BOL TypeIsValid(SI4 type) {
 }
 
 /* Aligns the given pointer to the correct word boundary for the type. */
-API void* TypeAlign(SI4 type, void* value);
+SDK void* TypeAlign(SI4 type, void* value);
 
 /* An ROM string_ for one of the 32 types.
     C++11 variadic templates ensure there is only one copy in of the given
@@ -249,13 +249,13 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value);
+SDK CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API ::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& type_value);
+SDK ::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF16
 namespace _ {
@@ -265,14 +265,14 @@ nil upon failure.
 @param utf The utf to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SI4 type,
+SDK CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API ::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& type_value);
+SDK ::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF32
 
@@ -283,14 +283,14 @@ of the read number_ or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-API CH2* Print(CH2* begin, CH2* stop, SI4 type,
+SDK CH2* Print(CH2* begin, CH2* stop, SI4 type,
                     const void* value);
 }  // namespace _
 /* Writes the given value to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
-API ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
+SDK ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
 #endif
 
 }  // namespace _

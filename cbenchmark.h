@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* Class for storing information about a failed assertion.
-struct API TestResult {
+struct SDK TestResult {
   const CH1 *name,  //< The file the assertion occurred at.
       *description;  //< An optional description to utf.
   SI4 line,          //< The line the assertion failed at.

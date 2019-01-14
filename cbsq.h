@@ -143,13 +143,13 @@ inline const SI4* Params() {
 }
 
 /* Prints out the kBSQ parameters. */
-API UTF1& PrintBsq(UTF1& printer, const SI4* params);
+SDK UTF1& PrintBsq(UTF1& printer, const SI4* params);
 
 /*  Prints out the parameters. */
-// API Utf& PrintBsq (const SI4* bsq, Utf& utf);
+// SDK Utf& PrintBsq (const SI4* bsq, Utf& utf);
 
 /*< Returns the requested parameter number_. */
-API SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
+SDK SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
 
 }  // namespace _
 

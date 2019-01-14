@@ -41,7 +41,7 @@ typedef enum BInStates {
 
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
-struct API BIn {
+struct SDK BIn {
   SI4 size,           //< The size of the socket.
       begin;          //< The starting index of the ring socket data.
   volatile SI4 stop;  //< The stopping index of the ring socket data.
@@ -72,21 +72,21 @@ inline SI4 BinBufferLength(BIn* bin);
 
 #if USING_CRABS_TEXT == YES
 /* Gets a a CH1 for printing out the bin_state. */
-API const CH1** BInStateStrings();
+SDK const CH1** BInStateStrings();
 
 /* Pulls the keyboard input into the ring socket. */
-// API void BInKeyboard ()
+// SDK void BInKeyboard ()
 #endif
 
-/* Initializes the BIn struct API to an empty socket. */
-API BIn* BInInit(UIW* socket, SI4 size);
+/* Initializes the BIn struct SDK to an empty socket. */
+SDK BIn* BInInit(UIW* socket, SI4 size);
 
 /* Gets the stop address of the rx socket. */
-API CH1* BInEnd(BIn* bin);
+SDK CH1* BInEnd(BIn* bin);
 
 /* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */
-API BOL BInIsReadable(BIn* bin);
+SDK BOL BInIsReadable(BIn* bin);
 
 /* Scans a message with the given params to the given BIn.
 The data in the BIn is word-aligned, unlike the Slot. It also
@@ -97,7 +97,7 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number_ upon
               failure. */
-API const Op* BInRead(BIn* bin, const SI4* params, void** args);
+SDK const Op* BInRead(BIn* bin, const SI4* params, void** args);
 
 inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
@@ -108,21 +108,21 @@ inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-API UTF1& Print(UTF1& printer, BIn* bin);
+SDK UTF1& Print(UTF1& printer, BIn* bin);
 #endif  //< #if USING_UTF8 == YES
 #if USING_UTF16 == YES
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-API UTF2& Print(UTF2& printer, BIn* bin);
+SDK UTF2& Print(UTF2& printer, BIn* bin);
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-API UTF4& Print(UTF4& printer, BIn* bin);
+SDK UTF4& Print(UTF4& printer, BIn* bin);
 #endif  //< #if USING_UTF32 == YES
 
 }  // namespace _

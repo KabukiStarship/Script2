@@ -191,7 +191,7 @@ class Library : public Operand {
 
 /* Destructs the given bag. */
 template <typename TIndex, typename TKey, typename TData, uint MaxStackSize>
-API void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CH1*>(r);
 }

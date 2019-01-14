@@ -33,13 +33,13 @@ typedef enum Requests {
 
 /* Returns an array of pointers to strings that describe the program states.
  */
-API const CH1** RoomStateTexts();
+SDK const CH1** RoomStateTexts();
 
 /* Returns a pointer to an array of pointers to the Request strings. */
-API const CH1** RequestTexts();
+SDK const CH1** RequestTexts();
 
 /* Gets the response CH1 corresponding to the given request. */
-API const CH1* RequestText(Request r);
+SDK const CH1* RequestText(Request r);
 
 /* A Chinese Room.
 An Chinese Room works the same way as in the Chinese Room thought
@@ -254,7 +254,7 @@ class Room : public Operand {
 };
 
 /* Returns the Room-Level Script. */
-// API Room* ChineseRoom (Room* room = nullptr);
+// SDK Room* ChineseRoom (Room* room = nullptr);
 
 }  // namespace _
 #endif  //< CRABS_ROOM_HDi

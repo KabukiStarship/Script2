@@ -41,7 +41,7 @@ struct BOut;
         NumOps (0), FirstOp ('A'),
         "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
     @endcode */
-struct API Op {
+struct SDK Op {
   const CH1* name;          //< Op name.
   const SI4 *in,             //< Input kBSQ params or OpFirst.
       *out;                  //< Output kBSQ params or OpLast.

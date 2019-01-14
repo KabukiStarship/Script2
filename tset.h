@@ -27,7 +27,7 @@ namespace _ {
     @endcode
 */
 template <typename Index, typename TKey, typename Size, typename THash>
-struct API TSet {
+struct SDK TSet {
   Size size;         //< Total size of the set.
   TKey table_size,   //< Size of the (optional) key strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.

@@ -25,7 +25,7 @@ the C++ standard library.
 Data structure is identical to std::tm with the execution that it has an
 additional microseconds from begin of second variable.
 */
-struct API CClock {
+struct SDK CClock {
   SI4 second,  //< Second of the minute [0, 59].
       minute,  //< Minute of the hour [0, 59].
       hour,    //< Hour of the day [0, 23].
@@ -88,78 +88,78 @@ enum ClockConstants {
 };
 
 /* Gets the 32-bit kTMS clock epoch. */
-API inline SI2 ClockEpoch();
+SDK inline SI2 ClockEpoch();
 
 /* Lookup table for converting from day-of-year to month. */
-API inline const SI2* ClockLastDayOfMonth();
+SDK inline const SI2* ClockLastDayOfMonth();
 
 /* Lookup table for converting from day-of-year to month. */
-API inline const SI2* ClockLastDayOfMonthLeapYear();
+SDK inline const SI2* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
-API inline SI4 MonthByDay(SI4 day, SI4 year);
+SDK inline SI4 MonthByDay(SI4 day, SI4 year);
 
 /* Initializes the clock from the given timestamp. */
-API CClock* ClockInit(CClock& clock, TMS time);
+SDK CClock* ClockInit(CClock& clock, TMS time);
 
 /* Initializes the clock from the given timestamp. */
-API CClock* ClockInit(CClock& clock, TME time);
+SDK CClock* ClockInit(CClock& clock, TME time);
 
 /* Initializes the clock from the given 64-bit microsecond timestamp. */
-API Tss& StopwatchInit(Tss& clock, TMS t, UI4 ticks);
+SDK Tss& StopwatchInit(Tss& clock, TMS t, UI4 ticks);
 
 /* Initializes the clock from the given timestamp. */
-API CClock* ClockInit(CClock& clock);
+SDK CClock* ClockInit(CClock& clock);
 
 /* Gets the current microsecond timestamp. */
-API inline TME ClockNow();
+SDK inline TME ClockNow();
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-API inline TMS ClockTMS(CClock& clock);
+SDK inline TMS ClockTMS(CClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-API inline TME ClockTME(CClock& clock);
+SDK inline TME ClockTME(CClock& clock);
 
 /* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
-API SI4 ClockMonthDayCount(TMS t);
+SDK SI4 ClockMonthDayCount(TMS t);
 
 /* Gets the number_ of days in a months.
 @param month The month index 0-11.
 @param year   */
-API SI4 ClockMonthDayCount(SI4 month, SI4 year);
+SDK SI4 ClockMonthDayCount(SI4 month, SI4 year);
 
 /* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-API const CH1* ClockWeekDay(SI4 day_number);
+SDK const CH1* ClockWeekDay(SI4 day_number);
 
 /* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-API CH1 ClockDayOfWeekInitial(SI4 day_number);
+SDK CH1 ClockDayOfWeekInitial(SI4 day_number);
 
 /* Compares the two the time and prints the results. */
-API SI4 ClockCompare(TMS a, TMS b);
+SDK SI4 ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
-API SI4 ClockCompare(TMS a, TMS b);
+SDK SI4 ClockCompare(TMS a, TMS b);
 
 /* Compares the two the time and prints the results. */
-API SI4 ClockCompare(const CClock& clock, const CClock& other);
+SDK SI4 ClockCompare(const CClock& clock, const CClock& other);
 
 /* Compares the given TMS to the time and prints the results. */
-API SI4 ClockCompare(const CClock& clock, SI4 year, SI4 month, SI4 day,
+SDK SI4 ClockCompare(const CClock& clock, SI4 year, SI4 month, SI4 day,
                      SI4 hour, SI4 minute, SI4 second);
 
 /* Zeros out the struct values.
     @param calendar_time A calendar time struct to zero out. */
-API void ClockZeroTime(CClock& seconds);
+SDK void ClockZeroTime(CClock& seconds);
 
 /* Creates a 32-bit seconds timestamp.  */
-API TMS ClockTimeTMS(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
+SDK TMS ClockTimeTMS(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
                      SI4 second = 0);
 
 /* Creates a 64-bit seconds timestamp.  */
-API TME ClockTimeTME(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
+SDK TME ClockTimeTME(SI4 year, SI4 month, SI4 day, SI4 hour = 0, SI4 minute = 0,
                      SI4 second = 0);
 
 #if USING_UTF8 == YES
@@ -169,7 +169,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH1* Print(CH1* begin, CH1* stop, const CClock& clock);
+SDK CH1* Print(CH1* begin, CH1* stop, const CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -177,7 +177,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-API CH1* Print(CH1* begin, CH1* stop, Tss& t);
+SDK CH1* Print(CH1* begin, CH1* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -185,7 +185,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH1* PrintTime(CH1* begin, CH1* stop, TMS time);
+SDK CH1* PrintTime(CH1* begin, CH1* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -193,19 +193,19 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH1* PrintTime(CH1* begin, CH1* stop, TME time);
+SDK CH1* PrintTime(CH1* begin, CH1* stop, TME time);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(const CClock& clock);
+SDK void PrintTime(const CClock& clock);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(Tss t);
+SDK void PrintTime(Tss t);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(TMS t);
+SDK void PrintTime(TMS t);
 
 /* Prints the given timestamp to the stdout. */
-API void PrintTime(TME t);
+SDK void PrintTime(TME t);
 
 /* Reads a time or time delta from a a CH1 starting with an '@' sign.
 @brief
@@ -226,23 +226,23 @@ API void PrintTime(TME t);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const CH1* TStringScanTime(const CH1* string_, SI4& hour, SI4& minute,
+SDK const CH1* TStringScanTime(const CH1* string_, SI4& hour, SI4& minute,
                                 SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
 @return Nil upon socket failure or CH1 directly after the stop of the
 timestamp upon success.
 */
-API const CH1* Scan(const CH1* string_, CClock& clock);
+SDK const CH1* Scan(const CH1* string_, CClock& clock);
 
 /* Converts a keyboard input to a Tss. */
-API const CH1* Scan(const CH1* string_, Tss& result);
+SDK const CH1* Scan(const CH1* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const CH1* TStringScanTime(const CH1* string_, TMS& result);
+SDK const CH1* TStringScanTime(const CH1* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const CH1* TStringScanTime(const CH1* string_, TME& result);
+SDK const CH1* TStringScanTime(const CH1* string_, TME& result);
 
 #endif  //< #if USING_UTF8 == YES
 
@@ -254,7 +254,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH2* Print(CH2* begin, CH2* stop, CClock& clock);
+SDK CH2* Print(CH2* begin, CH2* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -262,7 +262,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH2* Print(CH2* begin, CH2* stop, Tss& t);
+SDK CH2* Print(CH2* begin, CH2* stop, Tss& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -270,7 +270,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH2* PrintTime(CH2* begin, CH2* stop, TMS time);
+SDK CH2* PrintTime(CH2* begin, CH2* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -278,7 +278,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH2* Print(CH2* begin, CH2* stop, TME time);
+SDK CH2* Print(CH2* begin, CH2* stop, TME time);
 
 /* Reads a time or time delta from a a CH2 starting with an '@' sign.
 
@@ -301,23 +301,23 @@ API CH2* Print(CH2* begin, CH2* stop, TME time);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-API const CH2* TStringScanTime(const CH2* string_, SI4& hour,
+SDK const CH2* TStringScanTime(const CH2* string_, SI4& hour,
                                     SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH2 and deletes the CH2.
 @return Nil upon socket failure or CH2 directly after the stop of the
 timestamp upon success.
 */
-API const CH2* Scan(const CH2* string_, CClock& result);
+SDK const CH2* Scan(const CH2* string_, CClock& result);
 
 /* Converts a keyboard input to a Tss. */
-API const CH2* Scan(const CH2* string_, Tss& result);
+SDK const CH2* Scan(const CH2* string_, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const CH2* TStringScanTime(const CH2* string_, TMS& result);
+SDK const CH2* TStringScanTime(const CH2* string_, TMS& result);
 
 /* Converts a keyboard input to a TME. */
-API const CH2* TStringScanTime(const CH2* string_, TME& result);
+SDK const CH2* TStringScanTime(const CH2* string_, TME& result);
 
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
@@ -327,7 +327,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH4* Print(CH4* begin, CH4* stop, CClock& clock);
+SDK CH4* Print(CH4* begin, CH4* stop, CClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -335,7 +335,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH4* Print(CH4* begin, CH4* stop, Tss& time);
+SDK CH4* Print(CH4* begin, CH4* stop, Tss& time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -343,7 +343,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH4* PrintTime(CH4* begin, CH4* stop, TMS time);
+SDK CH4* PrintTime(CH4* begin, CH4* stop, TMS time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -351,7 +351,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-API CH4* PrintTime(CH4* begin, CH4* stop, TME time);
+SDK CH4* PrintTime(CH4* begin, CH4* stop, TME time);
 
 /* Reads a time or time delta from a a CH1 starting with an '@' sign..
 @param input  The CH1 to parse.
@@ -373,21 +373,21 @@ API CH4* PrintTime(CH4* begin, CH4* stop, TME time);
 @16:20:00
 @endcode
 */
-API const CH4* TStringScanTime(const CH4* input, SI4& hour,
+SDK const CH4* TStringScanTime(const CH4* input, SI4& hour,
                                     SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
  */
-API const CH4* Scan(const CH4* input, CClock& time);
+SDK const CH4* Scan(const CH4* input, CClock& time);
 
 /* Converts a keyboard input to a TMS. */
-API const CH4* Scan(const CH4* input, Tss& result);
+SDK const CH4* Scan(const CH4* input, Tss& result);
 
 /* Converts a keyboard input to a TMS. */
-API const CH4* TStringScanTime(const CH4* input, TMS& result);
+SDK const CH4* TStringScanTime(const CH4* input, TMS& result);
 
 /* Converts a keyboard input to a TMS. */
-API const CH4* TStringScanTime(const CH4* input, TME& result);
+SDK const CH4* TStringScanTime(const CH4* input, TME& result);
 
 #endif  //< #if USING_UTF32 == YES
 }  // namespace _

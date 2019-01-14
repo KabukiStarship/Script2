@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-struct API CCrabs;
+struct SDK CCrabs;
 
 /* Interface for an abstract A*B Op operand.
     A Script Operand is an object that is being operated on.
@@ -50,7 +50,7 @@ struct API CCrabs;
     @see Console for example of how to use Operand interface.
 */
 
-struct API Operand {
+struct SDK Operand {
   /* Script2 Operations.
       @param index The index of the expression.
       @param crabs  The CCrabs to read and write from.
@@ -60,17 +60,17 @@ struct API Operand {
 };
 
 /* Returns the name of the given Operand. */
-API const CH1* OperandName(Operand* op);
+SDK const CH1* OperandName(Operand* op);
 
 /* Gets the number_ of ops in the given expressions. */
-API UIW OperandCount(Operand* op);
+SDK UIW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
     @param  key_begin Beginning of the key slot socket.
     @param  key_end   End of the key slot socket.
     @return A value printable Unicode CH1 or invalid if the Operand doesn't
             Contain the given key. */
-API CHW OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
+SDK CHW OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
 
 #if USING_CRABS_TEXT
 /* Queries the given Operand Op Header.
@@ -78,7 +78,7 @@ API CHW OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
                  op.
     @param  op   The Op header.
     @return Returns nil upon success and an error Op upon failure.
-API const Op* OperandQuery (CCrabs* crabs, const Op* op);*/
+SDK const Op* OperandQuery (CCrabs* crabs, const Op* op);*/
 
 /* Queries the operand for the given ??? @todo fix me */
 Slot& OperandQuery(Operand* root, const CH1* address, Slot& key);
@@ -87,7 +87,7 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& key);
     @param  text     The Text to utf to.
     @param  operand The Operand to utf.
     @return text. */
-API UTF1& PrintOperand(UTF1& slot, Operand* operand);
+SDK UTF1& PrintOperand(UTF1& slot, Operand* operand);
 #endif
 
 }  // namespace _

@@ -59,39 +59,39 @@ enum AsciiFactoryErrors {
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
-API inline BOL ObjCountIsValid(SI1 value, SI1 count_min = 1);
+SDK inline BOL ObjCountIsValid(SI1 value, SI1 count_min = 1);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
-API inline BOL ObjCountIsValid(SI2 value, SI2 count_min = 1);
+SDK inline BOL ObjCountIsValid(SI2 value, SI2 count_min = 1);
 
 /* Checks if the value is a valid index, that it's 7 less than the max
 value or less. */
-API inline BOL ObjCountIsValid(SI4 value, SI4 count_min = 1);
+SDK inline BOL ObjCountIsValid(SI4 value, SI4 count_min = 1);
 
 /* Checks if the value is a valid index, that it's 7 less than the max
 value or less. */
-API inline BOL ObjCountIsValid(SI8 value, SI8 count_min = 1);
+SDK inline BOL ObjCountIsValid(SI8 value, SI8 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline BOL ObjSizeIsValid(SI2 value, SI2 count_min = 1);
+SDK inline BOL ObjSizeIsValid(SI2 value, SI2 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
+SDK inline BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 
 /* Checks if the value is a valid object size, that it's an even multiple of
 8. */
-API inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
+SDK inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
 /* Destructs the given ASCII CObject Factory. */
-API void Delete(CObject& object);
+SDK void Delete(CObject& object);
 
 /* Checks if the given function is an ASCII OBJ function.
 @return True if the function is less than or equal to kFactoryInfo.
 @desc   ASCII Object functions are 0 through kFactoryInfo. */
-inline API BOL IsOBJFactoryFunction(SIW function);
+inline SDK BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
 #endif  //< SCRIPT2_COBJECT
