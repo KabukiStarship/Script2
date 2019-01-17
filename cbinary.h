@@ -32,7 +32,16 @@ SDK const UI2* BinaryLUTDecimals();
 SDK const SI2* BinaryLUTE();
 
 /* Lookup table of the IEEE754 exponent of pre-computed powers of ten. */
-SDK const UI8* BinaryLUTF();
+SDK const UI8* BinaryLUTF8();
+
+/* Gets the specified LUT entry by index. */
+SDK UI4 IEEE754LUTF(SI4 index);
+
+/* Gets the specified LUT entry by index. */
+SDK UI8 IEEE754LUTF(SI8 index);
+
+/* Gets the specified LUT entry by index. */
+SDK SI2 IEEE754LUTE(SI4 index);
 
 /* Checks if the given value is Not-a-Number.
 @param  value The value to check.

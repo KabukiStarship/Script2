@@ -157,7 +157,7 @@ UIW* TObjClone(UIW* socket, Size size) {
   try {
     clone = new UIW[SizeWords<Size>(size)];
   } catch (const std::bad_alloc& exception) {
-    PRINTF("\nERROR:%s\n", exception.what());
+    ObjException(exception.what());
     return nullptr;
   }
   SocketCopy(clone, size, socket, size);

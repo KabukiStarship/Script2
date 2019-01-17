@@ -78,5 +78,9 @@ void SocketHeap(UIW* socket) {
 
 void SocketStack(UIW* socket) {}
 
+void ObjException(const char* what) {
+  PRINTF("\nERROR:%s\n", exception.what());
+}
+
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__03

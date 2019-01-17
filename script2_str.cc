@@ -216,57 +216,53 @@ CH1* PrintRight(CH1* cursor, CH1* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
 }
 
-CH1* PrintHex(CH1* cursor, CH1* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+CH1* PrintHex(CH1* cursor, CH1* stop, const void* ptr) {
   return TPrintHex<CH1>(cursor, stop, ptr);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, UI1 value) {
-  return TPrintHex<CH1, UI1>(cursor, stop, value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, SI1 value) {
-  return TPrintHex<CH1, UI1>(cursor, stop, (UI1)value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, UI2 value) {
-  return TPrintHex<CH1, UI2>(cursor, stop, value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, SI2 value) {
-  return TPrintHex<CH1, UI2>(cursor, stop, (UI2)value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, UI4 value) {
-  return TPrintHex<CH1, UI4>(cursor, stop, value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, SI4 value) {
-  return TPrintHex<CH1, UI4>(cursor, stop, (UI4)value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, UI8 value) {
-  return TPrintHex<CH1, UI8>(cursor, stop, value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, SI8 value) {
-  return TPrintHex<CH1, UI8>(cursor, stop, (UI8)value);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 #if SEAM >= _0_0_0__04
 CH1* PrintHex(CH1* cursor, CH1* stop, FLT value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<CH1, UI4>(cursor, stop, ui);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 
 CH1* PrintHex(CH1* cursor, CH1* stop, DBL value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<CH1, UI8>(cursor, stop, ui);
+  return TPrintHex<CH1>(cursor, stop, value);
 }
 #endif
 
-CH1* PrintBinary(CH1* cursor, CH1* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+CH1* PrintBinary(CH1* cursor, CH1* stop, const void* ptr) {
   return TPrintBinary<CH1>(cursor, stop, ptr);
 }
 
@@ -401,18 +397,15 @@ UTF1& UTF1::Hex(SI8 value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
 #if SEAM >= _0_0_0__04
 UTF1& UTF1::Hex(FLT value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<CH1>(begin, stop, ui));
+  return Set(TPrintHex<CH1>(begin, stop, value));
 }
 
 UTF1& UTF1::Hex(DBL value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Set(TPrintHex<CH1>(begin, stop, ui));
+  return Set(TPrintHex<CH1>(begin, stop, value));
 }
 #endif
 
-UTF1& UTF1::Hex(const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+UTF1& UTF1::Hex(const void* ptr) {
   return Set(TPrintHex<CH1>(begin, stop, ptr));
 }
 
@@ -489,9 +482,9 @@ Utf8Text::Utf8Text(UI8 value) {
 }
 
 #if SEAM >= _0_0_0__04
-Utf8Text::Utf8Text(FLT value) { Print(cursor, cursor + kSize - 1, value); }
+Utf8Text::Utf8Text(FLT value) { Print(string_, string_ + kSize - 1, value); }
 
-Utf8Text::Utf8Text(DBL value) { Print(cursor, cursor + kSize - 1, value); }
+Utf8Text::Utf8Text(DBL value) { Print(string_, string_ + kSize - 1, value); }
 
 #endif  //< #if SEAM == _0_0_0__04
 
@@ -514,10 +507,10 @@ Utf8Center::Utf8Center(UI8 value, SI4 column_count)
 
 #if SEAM == _0_0_0__04
 Utf8Center::Utf8Center(FLT value, SI4 column_count)
-    : cursor(nullptr), number_(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Center::Utf8Center(DBL value, SI4 column_count)
-    : cursor(nullptr), number_(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
 const CH1* Utf8Center::String() {
@@ -543,10 +536,10 @@ Utf8Right::Utf8Right(UI8 value, SI4 column_count)
 
 #if SEAM >= _0_0_0__04
 Utf8Right::Utf8Right(FLT value, SI4 column_count)
-    : cursor(nullptr), number_(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 
 Utf8Right::Utf8Right(DBL value, SI4 column_count)
-    : cursor(nullptr), number_(value), column_count(column_count) {}
+    : string_(nullptr), number_(value), column_count(column_count) {}
 #endif
 
 const CH1* Utf8Right::String() {
@@ -807,57 +800,53 @@ CH2* PrintRight(CH2* cursor, CH2* stop, DBL value, SI4 column_count) {
 }
 #endif
 
-CH2* PrintHex(CH2* cursor, CH2* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+CH2* PrintHex(CH2* cursor, CH2* stop, const void* ptr) {
   return TPrintHex<CH2>(cursor, stop, ptr);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, UI1 value) {
-  return TPrintHex<CH2, UI1>(cursor, stop, value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, SI1 value) {
-  return TPrintHex<CH2, UI1>(cursor, stop, (UI1)value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, UI2 value) {
-  return TPrintHex<CH2, UI2>(cursor, stop, value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, SI2 value) {
-  return TPrintHex<CH2, UI2>(cursor, stop, (UI2)value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, UI4 value) {
-  return TPrintHex<CH2, UI4>(cursor, stop, value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, SI4 value) {
-  return TPrintHex<CH2, UI4>(cursor, stop, (UI4)value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, UI8 value) {
-  return TPrintHex<CH2, UI8>(cursor, stop, value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, SI8 value) {
-  return TPrintHex<CH2, UI8>(cursor, stop, (UI8)value);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 #if SEAM >= _0_0_0__04
 CH2* PrintHex(CH2* cursor, CH2* stop, FLT value) {
-  UI4 float_as_ui32 = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<CH2, UI4>(cursor, stop, float_as_ui32);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 
 CH2* PrintHex(CH2* cursor, CH2* stop, DBL value) {
-  UI8 double_as_ui64 = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<CH2, UI8>(cursor, stop, double_as_ui64);
+  return TPrintHex<CH2>(cursor, stop, value);
 }
 #endif
 
-CH2* TPrintBinary(CH2* cursor, CH2* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+CH2* TPrintBinary(CH2* cursor, CH2* stop, const void* ptr) {
   return TPrintBinary<CH2>(cursor, stop, ptr);
 }
 
@@ -946,17 +935,17 @@ const CH2* Scan(const CH2* cursor, UI8& result) {
   return TScanUnsigned<UI8, CH2>(cursor, result);
 }
 
+/*
 #if SEAM >= _0_0_0__04
 const CH2* Scan(const CH2* cursor, FLT& result) {
-  return TScanFloat<CH2>(cursor, result);
+  return TScanFloat<FLT, UI4, CH2>(cursor, result);
 }
 
 const CH2* Scan(const CH2* cursor, DBL& result) {
-  return TScanFloat<CH2>(cursor, result);
+  return TScanFloat<DBL, UI8 CH2>(cursor, result);
 }
 #endif
 
-/* ???
 void COutUtf16(UIW* begin) { return TCOut<CH2>(begin); }
 
 void DCOutUtf16(UIW* begin) { return TCOut<CH2>(begin); }*/
@@ -1000,18 +989,15 @@ UTF2& UTF2::Hex(SI8 value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
 #if SEAM >= _0_0_0__04
 UTF2& UTF2::Hex(FLT value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<CH2>(begin, stop, ui));
+  return Set(TPrintHex<CH2>(begin, stop, value));
 }
 
 UTF2& UTF2::Hex(DBL value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return Set(TPrintHex<CH2>(begin, stop, ui));
+  return Set(TPrintHex<CH2>(begin, stop, value));
 }
 #endif
 
-UTF2& UTF2::Hex(const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+UTF2& UTF2::Hex(const void* ptr) {
   return Set(TPrintHex<CH2>(begin, stop, ptr));
 }
 
@@ -1088,13 +1074,9 @@ Text2::Text2(UI8 value) {
 }
 
 #if SEAM >= _0_0_0__04
-Text2::Text2(FLT value) {
-  TPrintFloat<FLT, CH2>(string_, string_ + kSize - 1, value);
-}
+Text2::Text2(FLT value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
 
-Text2::Text2(DBL value) {
-  TPrintFloat<DBL, CH2>(string_, string_ + kSize - 1, value);
-}
+Text2::Text2(DBL value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
 #endif
 
 const CH2* Text2::GetString() { return string_; }
@@ -1388,57 +1370,53 @@ CH4* PrintRight(CH4* cursor, CH4* stop, DBL value, SI4 column_count) {
 }
 #endif
 
-CH4* PrintHex(CH4* cursor, CH4* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
-  return TPrintHex<CH4, UIW>(cursor, stop, ptr);
+CH4* PrintHex(CH4* cursor, CH4* stop, const void* ptr) {
+  return TPrintHex<CH4>(cursor, stop, ptr);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, UI1 value) {
-  return TPrintHex<CH4, UI1>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, SI1 value) {
-  return TPrintHex<CH4, UI1>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, UI2 value) {
-  return TPrintHex<CH4, UI2>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, SI2 value) {
-  return TPrintHex<CH4, UI2>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, UI4 value) {
-  return TPrintHex<CH4, UI4>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, SI4 value) {
-  return TPrintHex<CH4, UI4>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, UI8 value) {
-  return TPrintHex<CH4, UI8>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, SI8 value) {
-  return TPrintHex<CH4, UI8>(cursor, stop, value);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 #if SEAM >= _0_0_0__04
 CH4* PrintHex(CH4* cursor, CH4* stop, FLT value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<CH4, UI8>(cursor, stop, ui);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 
 CH4* PrintHex(CH4* cursor, CH4* stop, DBL value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<CH4, UI8>(cursor, stop, ui);
+  return TPrintHex<CH4>(cursor, stop, value);
 }
 #endif
 
-CH4* TPrintBinary(CH4* cursor, CH4* stop, const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+CH4* TPrintBinary(CH4* cursor, CH4* stop, const void* ptr) {
   return TPrintBinary<CH4>(cursor, stop, ptr);
 }
 
@@ -1527,6 +1505,7 @@ const CH4* Scan(const CH4* cursor, UI8& result) {
   return TScanUnsigned<UI8, CH4>(cursor, result);
 }
 
+/*
 #if SEAM >= _0_0_0__04
 const CH4* Scan(const CH4* cursor, FLT& result) {
   return TScanFloat<CH4>(cursor, result);
@@ -1537,7 +1516,6 @@ const CH4* Scan(const CH4* cursor, DBL& result) {
 }
 #endif
 
-/*
 void COuUtf32(UIW* begin) { return TCOut<CH4>(begin); }
 
 void COuUtf32(UIW* begin) { return TCOut<CH4>(begin); }*/
@@ -1569,30 +1547,31 @@ UTF4& UTF4::Hex(SI1 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
 UTF4& UTF4::Hex(UI2 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
-UTF4& UTF4::Hex(SI2 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
+UTF4& UTF4::Hex(SI2 value) {
+  return Set(TPrintHex<CH4>(begin, stop, (UI2)value));
+}
 
 UTF4& UTF4::Hex(UI4 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
-UTF4& UTF4::Hex(SI4 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
+UTF4& UTF4::Hex(SI4 value) {
+  return Set(TPrintHex<CH4>(begin, stop, (UI4)value));
+}
 
 UTF4& UTF4::Hex(UI8 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
-UTF4& UTF4::Hex(SI8 value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
-
-#if SEAM >= _0_0_0__04
-UTF4& UTF4::Hex(FLT value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return Set(TPrintHex<CH4>(begin, stop, value));
+UTF4& UTF4::Hex(SI8 value) {
+  return Set(TPrintHex<CH4>(begin, stop, (UI8)value));
 }
 
+#if SEAM >= _0_0_0__04
+UTF4& UTF4::Hex(FLT value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
+
 UTF4& UTF4::Hex(DBL value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
   return Set(TPrintHex<CH4>(begin, stop, value));
 }
 #endif
 
-UTF4& UTF4::Hex(const void* pointer) {
-  UIW ptr = reinterpret_cast<UIW>(pointer);
+UTF4& UTF4::Hex(const void* ptr) {
   return Set(TPrintHex<CH4>(begin, stop, ptr));
 }
 
@@ -1669,13 +1648,9 @@ Text4::Text4(UI8 value) {
 }
 
 #if SEAM >= _0_0_0__04
-Text4::Text4(FLT value) {
-  TPrintFloat<CH4>(string_, string_ + kSize - 1, value);
-}
+Text4::Text4(FLT value) { TPrint<CH4>(string_, string_ + kSize - 1, value); }
 
-Text4::Text4(DBL value) {
-  TPrintFloat<CH4>(string_, string_ + kSize - 1, value);
-}
+Text4::Text4(DBL value) { TPrint<CH4>(string_, string_ + kSize - 1, value); }
 #endif
 
 const CH4* Text4::GetString() { return string_; }

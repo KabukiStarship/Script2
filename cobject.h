@@ -88,6 +88,9 @@ SDK inline BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 /* Destructs the given ASCII CObject Factory. */
 SDK void Delete(CObject& object);
 
+/* Utility function to statasfy compiler warning for unused exception. */
+SDK void ObjException(const char* what);
+
 /* Checks if the given function is an ASCII OBJ function.
 @return True if the function is less than or equal to kFactoryInfo.
 @desc   ASCII Object functions are 0 through kFactoryInfo. */
