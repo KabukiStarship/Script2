@@ -201,8 +201,6 @@ enum {
 #undef CRABS_BUFFER_SIZE_RX
 #undef CRABS_BUFFER_SIZE_TX
 
-#define API
-
 typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.

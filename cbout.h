@@ -33,7 +33,7 @@ typedef enum BOutStates {
 } BOutState;
 
 /* B-Output ring socket socket. */
-struct API BOut {
+struct SDK BOut {
   SI4 size;            //< Size of the B-Output.
   volatile SI4 begin;  //< Starting index of the ring-socket data.
   SI4 stop,            //< Stopping index of the ring-socket data.
@@ -41,56 +41,56 @@ struct API BOut {
 };
 
 /* Get's the B-Output's socket.*/
-API CH1* BOutBuffer(BOut* bout);
+SDK CH1* BOutBuffer(BOut* bout);
 
 #if USING_CRABS_TEXT == YES
 
 /* Gets a a CH1 for printing out the bout_state. */
-API const CH1** BOutStateStrings();
+SDK const CH1** BOutStateStrings();
 
 #endif
 
 /* Initializes the B-Output socket with the given socket size. */
-API BOut* BOutInit(UIW* socket, SI4 size);
+SDK BOut* BOutInit(UIW* socket, SI4 size);
 
 /* Calculates the space left in the given ring socket.
     @param  bout The B-Output socket. */
-API SI4 BOutSpace(BOut* bout);
+SDK SI4 BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-API SI4 BOutBufferLength(BOut* bout);
+SDK SI4 BOutBufferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
-API CH1* BOutEndAddress(BOut* bout);
+SDK CH1* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output UI1.
     @param bout A B-Output abstract UI1 stream. */
-API SI4 BOutStreamByte(BOut* bout);
+SDK SI4 BOutStreamByte(BOut* bout);
 
 /* Writes a message with the given params to the given B-Output slot.
     @param bout   The B-Output socket to write to.
     @param params The escape sequence to write.
     @param args   The array of pointers to the stuff to write. */
-API const Op* BOutWrite(BOut* bout, const SI4* params, void** args);
+SDK const Op* BOutWrite(BOut* bout, const SI4* params, void** args);
 
 /* Sends a connection message to the given address. */
-API const Op* BOutConnect(BOut* bout, const CH1* address);
+SDK const Op* BOutConnect(BOut* bout, const CH1* address);
 
 /* Sends a connection message to the given address. */
-API void BOutRingBell(BOut* bout, const CH1* address);
+SDK void BOutRingBell(BOut* bout, const CH1* address);
 
 /* Sends a connection message to the given address. */
-API void BOutAckBack(BOut* bout, const CH1* address);
+SDK void BOutAckBack(BOut* bout, const CH1* address);
 
 /* . */
-API void BInKeyStrokes();
+SDK void BInKeyStrokes();
 
 #if USING_CRABS_TEXT == YES
 /* Prints the BIn to the Text.
     @param  bout The bout to utf.
     @param  text The Text to utf to the bout.
     @return The slot. */
-API UTF1& PrintBOut(UTF1& printer, BOut* bout);
+SDK UTF1& PrintBOut(UTF1& printer, BOut* bout);
 #endif
 
 }  // namespace _

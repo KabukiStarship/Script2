@@ -18,7 +18,14 @@
 #undef PRINT_FUNCTION_LINE
 #undef SOCKET_SAVE
 #undef CHECK
+#undef DCHECK
+#undef RCHECK
 #undef COMPARE
+#undef DCOMPARE
+#undef RCOMPARE
 #undef ASSERT
+#undef DASSERT
+#undef RASSERT
 #undef AVOW
-#undef ASSERT
+#undef DAVOW
+#undef RAVOW

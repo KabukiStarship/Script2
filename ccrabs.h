@@ -118,25 +118,25 @@ struct CCrabs {
 };
 
 /* Gets a pointer to the BIn slot. */
-API UIW* CrabsBinAddress(CCrabs* crabs);
+SDK UIW* CrabsBinAddress(CCrabs* crabs);
 
 /* Gets the crabs's socket. */
-API CH1* CrabsBuffer(CCrabs* crabs);
+SDK CH1* CrabsBuffer(CCrabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
-API BIn* CrabsBIn(CCrabs* crabs);
+SDK BIn* CrabsBIn(CCrabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-API UIW* CrabsBOutAddress(CCrabs* crabs);
+SDK UIW* CrabsBOutAddress(CCrabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-API BOut* CrabsBOut(CCrabs* crabs);
+SDK BOut* CrabsBOut(CCrabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-API CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
+SDK CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
                       Operand* root, UIW* unpacked_buffer, UIW unpacked_size);
 
 /* Gets the base address of the device stack. */
@@ -145,65 +145,65 @@ inline Operand** CrabsStack(CCrabs* crabs) {
 }
 
 /* Returns true if the Stack uses dynamic memory. */
-// API BOL CrabsIsDynamic (CCrabs* crabs);
+// SDK BOL CrabsIsDynamic (CCrabs* crabs);
 
-API CH1* CrabsEndAddress(CCrabs* crabs);
+SDK CH1* CrabsEndAddress(CCrabs* crabs);
 
 /* Resets this Stack to the new state. */
-API const Op* CrabsReset(CCrabs* crabs);
+SDK const Op* CrabsReset(CCrabs* crabs);
 
 /* Pushes the operand at the given index of the current
 device control onto the stack.
 @return Returns nil upon success and a pointer to a CH1
 upon failure. */
-API const Op* Push(CCrabs* crabs, Operand* operand);
+SDK const Op* Push(CCrabs* crabs, Operand* operand);
 
 /* Attempts to pop an Star off the stack and returns a pointer to a
     CH1 upon failure. */
-API const Op* Pop(CCrabs* crabs);
+SDK const Op* Pop(CCrabs* crabs);
 
 /* Exits the current state. */
-API UI1 CrabsExitState(CCrabs* crabs);
+SDK UI1 CrabsExitState(CCrabs* crabs);
 
 /* Sets the new state onto the expression stack.
-API const Op* CrabsSetState (CCrabs* crabs, BInState state); */
+SDK const Op* CrabsSetState (CCrabs* crabs, BInState state); */
 
 /* Saves the current bin_state and sets the bin_state to the new state. */
-API const Op* CrabsEnterState(CCrabs* crabs, BInState state);
+SDK const Op* CrabsEnterState(CCrabs* crabs, BInState state);
 
 /* Streams a B-Output UI1. */
-API UI1 CrabsStreamBOut(CCrabs* crabs);
+SDK UI1 CrabsStreamBOut(CCrabs* crabs);
 
 /* Scans the BOut socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
-API const Op* CrabsUnpack(CCrabs* crabs);  // , Portal* io);
+SDK const Op* CrabsUnpack(CCrabs* crabs);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
-API BOL CrabsContains(CCrabs* crabs, void* address);
+SDK BOL CrabsContains(CCrabs* crabs, void* address);
 
 /* Pushes a header onto the scan stack.*/
-API const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header);
+SDK const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header);
 
 /* Gets the base address of the header stack. */
-API const SI4* CrabsHeaderStack(CCrabs* crabs);
+SDK const SI4* CrabsHeaderStack(CCrabs* crabs);
 
 /* Closes the current crabs and cues it for execution. */
-API void CrabsClose(CCrabs* crabs);
+SDK void CrabsClose(CCrabs* crabs);
 
 /* Cancels the current crabs. */
-API void CrabsCancel(CCrabs* crabs);
+SDK void CrabsCancel(CCrabs* crabs);
 
 /* Cancels the current crabs and writes zeros to the socket. */
-API void CrabsClear(CCrabs* crabs);
+SDK void CrabsClear(CCrabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
-API void CrabsRingBell(CCrabs* crabs, const CH1* address = "");
+SDK void CrabsRingBell(CCrabs* crabs, const CH1* address = "");
 
 /* Script Ack-back Op replies an ACK to a Bell Op. */
-API void CrabsAckBack(CCrabs* crabs, const CH1* address = "");
+SDK void CrabsAckBack(CCrabs* crabs, const CH1* address = "");
 
 /* Disconnects the expression. */
-API const Op* CrabsForceDisconnect(CCrabs* crabs, Error error);
+SDK const Op* CrabsForceDisconnect(CCrabs* crabs, Error error);
 
 /* Reads the CCrabs args from the crabs->slot.
 inline const Op* CrabsArgs (CCrabs* crabs, const SI4* params, void** args) {
@@ -264,21 +264,21 @@ inline const Op* CrabsResult(CCrabs* crabs, const Op* op, void** args) {
 @param crabs  The expression to write the Op header to.
 @param header The Op header.
 @return Returns the header if crabs is nil. */
-API const Op* CrabsQuery(CCrabs* crabs, const Op& header);
+SDK const Op* CrabsQuery(CCrabs* crabs, const Op& header);
 
 /* Returns the Op header or writes it to the CCrabs.
 @param crabs The expression to write the Op header to.
 @param op    The Op header.
 @return Returns the header if crabs is nil. */
-API const Op* CrabsQuery(CCrabs* crabs, const Op* op);
+SDK const Op* CrabsQuery(CCrabs* crabs, const Op* op);
 
 #if USING_CRABS_TEXT == YES
 
 /* Prints the CCrabs stack to the Text socket */
-API UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
+SDK UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
 
 /* Prints the CCrabs stack to the Text socket */
-API UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
+SDK UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 #endif
 
 }  // namespace _

@@ -91,7 +91,8 @@ Char* PrintMod10(Char* cursor, Char* stop, UI4 value) {
   while (length > 0) {
     UI4 scalar = value / ten;
   }
-} */
+}
+*/
 
 // CH1* PrintMod10(CH1* cursor, CH1* stop, UI8 value);
 
@@ -143,7 +144,7 @@ static const SI2 kCachedPowersE[] = {
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const UI8 kCachedPowersF[] = {
+static const UI8 kCachedPowersF64[] = {
     0xfa8fd5a0081c0288, 0xbaaee17fa23ebf76, 0x8b16fb203055ac76,
     0xcf42894a5dce35ea, 0x9a6bb0aa55653b2d, 0xe61acf033d1a45df,
     0xab70fe17c79ac6ca, 0xff77b1fcbebcdc4f, 0xbe5691ef416bd60c,
@@ -177,6 +178,17 @@ static const UI8 kCachedPowersF[] = {
 static const UI4 kIEEE754Pow10[] = {0,        1,         10,        100,
                                     1000,     10000,     100000,    1000000,
                                     10000000, 100000000, 1000000000};
+
+/* Precomputed IEEE 754 powers of ten integral portions:
+10^-348, 10^-340, ..., 10^340.
+Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
+static const UI4 kCachedPowersF32[] = {0};
+
+UI4 IEEE754LUTF(SI4 index) { return kCachedPowersF32[index]; }
+
+UI8 IEEE754LUTF(SI8 index) { return kCachedPowersF64[index]; }
+
+SI2 IEEE754LUTE(SI4 index) { return kCachedPowersE[index]; }
 
 #endif
 
@@ -425,9 +437,15 @@ CH4* Print(CH4* cursor, CH4* stop, CH4 c) {
 #include <cstdio>
 
 namespace _ {
+
 const SI2* BinaryLUTE() { return kCachedPowersE; }
 
-const UI8* BinaryLUTF() { return kCachedPowersF; }
+const UI8* BinaryLUTF8() { return kCachedPowersF64; }
+
+template <typename UI>
+UI8 BinaryLUT(UI8 index) {
+  return (sizeof(UI) == 8) ? BinaryLUTF8[index] : 0;
+}
 
 CH1* Print(CH1* cursor, CH1* stop, FLT value) {
   if (!cursor || cursor >= stop) return nullptr;
@@ -474,26 +492,6 @@ const CH1* Scan(const CH1* cursor, DBL& value) {
   SI4 count = sscanf_s(cursor, "%lf", &value);
   return TStringFloatStop<CH1>(cursor);
 }
-
-#if USING_UTF16
-CH2* Print(CH2* cursor, CH2* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<CH2>(cursor, stop, value);
-}
-
-CH2* Print(CH2* cursor, CH2* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<CH2>(cursor, stop, value);
-}
-#endif
-
-#if USING_UTF32
-CH4* Print(CH4* cursor, CH4* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<CH4>(cursor, stop, value);
-}
-
-CH4* Print(CH4* cursor, CH4* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<CH4>(cursor, stop, value);
-}
-#endif
 
 SI4 FloatDigitsMax() { return 15; }
 
@@ -595,7 +593,7 @@ const SI2* IEEE754Pow10E() {
   return kCachedPowersE;
 }
 
-const UI8* IEEE754Pow10F() { return kCachedPowersF; }
+const UI8* IEEE754Pow10F() { return kCachedPowersF64; }
 
 void BinaryLUTAlignedGenerate(CH1* lut, size_t size) {
   ASSERT(size);
@@ -659,7 +657,7 @@ wish to do so.
 @param left_bits Number of bits to shift left.
 @param right_bits Number of bits to shift right. */
 template <typename UI>
-UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
+inline UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
   value = value << left_bits;
   return value >> right_bits;
 }
@@ -667,7 +665,7 @@ UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
 /* Creates a mask with the given number_ of zeros in the MSb(s).
 @param msb_zero_count The number_ of zeros in the Most Significant bits. */
 template <typename UI>
-UI CreateMaskLSb(UI msb_zero_count) {
+inline UI CreateMaskLSb(UI msb_zero_count) {
   UI mask = 0;
   return (~mask) >> msb_zero_count;
 }
@@ -675,7 +673,7 @@ UI CreateMaskLSb(UI msb_zero_count) {
 /* Masks off the lower bits.
 @param msb_zero_count The number_ of zeros in the Most Significant bits. */
 template <typename UI>
-UI MaskLSb(UI value, UI msb_zero_count) {
+inline UI MaskLSb(UI value, UI msb_zero_count) {
   return value & CreateMaskLSb<UI>(msb_zero_count);
 }
 
@@ -683,7 +681,7 @@ UI MaskLSb(UI value, UI msb_zero_count) {
 @brief Function forces the compiler to create the mask without a LDR
 instruction. */
 template <typename I>
-I PowerOf2(I n) {
+inline I PowerOf2(I n) {
   I value = 1;
   return value << n;
 }
@@ -701,20 +699,28 @@ FLT Ceiling(FLT value) { return ceil(value); }
 
 CH1* LastByte(CH1* c) { return c; }
 
-#if USING_UTF16
-CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*> + 1; }
+#if USING_UTF16 == YES
+CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*>(c) + 1; }
 
-CH2* Print(CH2* cursor, CH2* stop, FLT value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, FLT value) {
+  return TBinary<FLT, SI4, UI4>::template Print<CH2>(cursor, stop, value);
+}
 
-CH2* Print(CH2* cursor, CH2* stop, DBL value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, DBL value) {
+  return TBinary<DBL, SI8, UI8>::template Print<CH2>(cursor, stop, value);
+}
 #endif
 
-#if USING_UTF32
-CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*> + 3; }
+#if USING_UTF32 == YES
+CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*>(c) + 3; }
 
-CH4* Print(CH4* cursor, CH4* stop, FLT value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, FLT value) {
+  return TBinary<FLT, SI4, UI4>::template Print<CH4>(cursor, stop, value);
+}
 
-CH4* Print(CH4* cursor, CH4* stop, DBL value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, DBL value) {
+  return TBinary<DBL, SI8, UI8>::template Print<CH4>(cursor, stop, value);
+}
 #endif
 
 }  // namespace _

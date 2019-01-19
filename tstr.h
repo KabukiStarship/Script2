@@ -762,7 +762,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   *cursor++ = '|';
   *cursor++ = ' ';
 
-  cursor = TPrintHex<Char>(cursor, stop, reinterpret_cast<UIW>(address_ptr));
+  cursor = TPrintHex<Char>(cursor, stop, address_ptr);
 
   PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
   Char c;
@@ -781,7 +781,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     }
     *cursor++ = '|';
     *cursor++ = ' ';
-    cursor = TPrintHex<Char>(cursor, stop, reinterpret_cast<UIW>(address_ptr));
+    cursor = TPrintHex<Char>(cursor, stop, address_ptr);
   }
   *cursor++ = '\n';
   *cursor++ = '|';
@@ -793,8 +793,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   }
   *cursor++ = '|';
   *cursor++ = ' ';
-  return TPrintHex<Char>(cursor, stop,
-                         reinterpret_cast<UIW>(address_ptr) + size);
+  return TPrintHex<Char>(cursor, stop, address_ptr + size);
 }
 
 /* Converts the given Char to lowercase. */
@@ -906,8 +905,8 @@ struct TUTF {
 #endif
 
   /* Prints the given pointer as hex. */
-  inline TUTF& Hex(const void* value) {
-    return Set(TPrintHex<Char>(begin, stop, value));
+  inline TUTF& Hex(const void* ptr) {
+    return Set(TPrintHex<Char>(begin, stop, ptr));
   }
 
   /* Prints the given value as binary. */
@@ -1074,13 +1073,13 @@ class TRight {
 #if SEAM >= _0_0_0__04
   /* Prints the value to the text begin. */
   TRight(FLT value, SI4 column_count = 80)
-      : cursor(nullptr), number_(value), column_count_(column_count) {
+      : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 
   /* Prints the value to the text begin. */
   TRight(DBL value, SI4 column_count = 80)
-      : cursor(nullptr), number_(value), column_count_(column_count) {
+      : string_(nullptr), number_(value), column_count_(column_count) {
     // Nothing to do here!
   }
 #endif
@@ -1106,7 +1105,7 @@ class TRight {
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = CH1>
-struct API TLineChar {
+struct SDK TLineChar {
   Char token;        //< Character to utf.
   SI4 column_count;  //< Column count.
 
@@ -1117,7 +1116,7 @@ struct API TLineChar {
 
 /* Utility class for printing a s line with operator<<. */
 template <typename Char = CH1>
-struct API TLineString {
+struct SDK TLineString {
   const Char* string_;  //< Character to utf.
   SI4 column_count;     //< Column count.
 

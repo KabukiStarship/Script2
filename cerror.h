@@ -52,10 +52,10 @@ typedef enum ScriptError {
 } Error;
 
 /* Returns an array or string_ pointers for the KabukiError(s). */
-API const CH1** ErrorStrings();
+SDK const CH1** ErrorStrings();
 
 /* Returns one of the Errors () strings. */
-API const CH1* ErrorString(Error error);
+SDK const CH1* ErrorString(Error error);
 
 }  // namespace _
 #endif  //< SCRIPT2_ERROR

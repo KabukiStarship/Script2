@@ -25,12 +25,12 @@ The Floor is the Floor in the Chinese Room. In Kabuki Crabs, the floor is
 designed to store variables without having to include the classes the variable
 controls. For this reason only strings and POD types are in the Floor.
 */
-struct API Floor {
+struct SDK Floor {
   SI2 epoch;
 };
 
 /* Returns the the global Floor. */
-API inline Floor* Global();
+SDK inline Floor* Global();
 
 }  //< namespace _
 

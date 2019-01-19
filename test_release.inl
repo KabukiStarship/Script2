@@ -22,6 +22,36 @@
 #define SOCKET_SAVE(begin, stop)
 #define ASSERT(condition) \
   if (!::_::Test(condition)) ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__)
+#define DASSERT(condition)
 #define CHECK(condition)
+#define DCHECK(condition)
+#define RCHECK(condition) \
+  if (!_::Test(condition)) ::_::AssertWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)
+#define DCOMPARE(a, b)
+#define RCOMPARE(a, b)                                 \
+  if (!::_::Test(a, b)) {                             \
+    ::_::Print("\n\nExpecting:");                     \
+    ::_::Print(a);                                    \
+    ::_::Print("\nFound    :");                       \
+    ::_::Print(b);                                    \
+    ::_::AssertWarn(__LINE__, __FUNCTION__, __FILE__) \
+  }
 #define AVOW(a, b)
+#define DAVOW(a, b)
+#define RAVOW(a, b)                                     \
+  if (!::_::Test(a, b)) {                              \
+    ::_::Print("\n\nExpecting:");                      \
+    ::_::Print(a);                                     \
+    ::_::Print("\nFound    :");                        \
+    ::_::Print(b);                                     \
+    ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define RAVOW(a, b)                                    \
+  if (!::_::Test(a, b)) {                              \
+    ::_::Print("\n\nExpecting:");                      \
+    ::_::Print(a);                                     \
+    ::_::Print("\nFound    :");                        \
+    ::_::Print(b);                                     \
+    ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
+  }

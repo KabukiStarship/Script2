@@ -24,7 +24,7 @@ namespace _ {
 
 /* A Mirror in a Chinese Room.
 A Mirror */
-struct API Mirror {
+struct SDK Mirror {
   SI4 size,   //< The size of the socket.
       begin,  //< The starting index of the ring socket data.
       stop,   //< The stopping index of the ring socket data.
@@ -44,34 +44,34 @@ static const UIW kMaxMirrorSize = ~((UIW)0);
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size The size of the socket. */
-API SI4 MirrorLength(CH1* begin, CH1* stop, SI4 size);
+SDK SI4 MirrorLength(CH1* begin, CH1* stop, SI4 size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-API SI4 MirrorSpace(CH1* begin, CH1* stop, SI4 size);
+SDK SI4 MirrorSpace(CH1* begin, CH1* stop, SI4 size);
 
 /* Checks if the given slot contains the specified address. */
-API void* MirrorContains(Mirror* mirror, void* address);
+SDK void* MirrorContains(Mirror* mirror, void* address);
 
 /* Clears the ring socket by writing zeros to it. */
-API void MirrorWipe(Mirror* mirror);
+SDK void MirrorWipe(Mirror* mirror);
 
 /* Copies a block from a ring-socket to the given destination. */
-// API CH1* MirrorWrite (Mirror* mirror, void* source, size_t size);
+// SDK CH1* MirrorWrite (Mirror* mirror, void* source, size_t size);
 
 /* Copies a block from a ring-socket to the given destination. */
-// API CH1* MirrorRead (Mirror* mirror, void* source, size_t size);
+// SDK CH1* MirrorRead (Mirror* mirror, void* source, size_t size);
 
 /* Gets the args from the b-sequence. */
-API const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);
+SDK const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);
 
 /* Posts a evaluated result to the b-sequence. */
-// API const Op* MirrorWrite (Mirror* mirror, const SI4* params,
+// SDK const Op* MirrorWrite (Mirror* mirror, const SI4* params,
 //                                   void** args);
 
-API BOL MirrorIsReadable(Mirror* mirror);
+SDK BOL MirrorIsReadable(Mirror* mirror);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
@@ -80,7 +80,7 @@ API BOL MirrorIsReadable(Mirror* mirror);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
+SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
 @param  error   The error type.
@@ -88,7 +88,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
+SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
@@ -97,7 +97,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            UI1 offset);
 
 /* Used to return an erroneous result from a B-Input.
@@ -107,7 +107,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-// API const Op* MirrorResult (Mirror* mirror, Error error,
+// SDK const Op* MirrorResult (Mirror* mirror, Error error,
 //                                   const SI4* header,
 //                                   SI4 offset);
 
@@ -118,7 +118,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);
 
 /* Used to return an erroneous result from a B-Input.
@@ -128,7 +128,7 @@ API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-API const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);
 
 }  // namespace _

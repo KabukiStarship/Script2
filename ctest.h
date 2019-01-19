@@ -31,14 +31,14 @@ namespace _ {
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-API void TestFunctionLine(SI4 line, const CH1* funciton, const CH1* file);
+SDK void TestFunctionLine(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Handles an assert.
 @return True upon failure.
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-API BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file,
+SDK BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file,
                  const CH1* header = "Assertion failed at ");
 
 /* Handles an assert.
@@ -46,7 +46,7 @@ API BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file,
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-API BOL TestAssert(SI4 line, const CH1* funciton, const CH1* file);
+SDK BOL TestAssert(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
@@ -64,152 +64,152 @@ BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param condition The condition to check. */
-API BOL Test(BOL condition);
+SDK BOL Test(BOL condition);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(SI1 value);
+SDK BOL Test(SI1 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(UI1 value);
+SDK BOL Test(UI1 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(SI2 value);
+SDK BOL Test(SI2 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(UI2 value);
+SDK BOL Test(UI2 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(SI4 value);
+SDK BOL Test(SI4 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(UI4 value);
+SDK BOL Test(UI4 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(SI8 value);
+SDK BOL Test(SI8 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(UI8 value);
+SDK BOL Test(UI8 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(FLT value);
+SDK BOL Test(FLT value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-API BOL Test(DBL value);
+SDK BOL Test(DBL value);
 
 /* Tests if the pointer is nil.
 @return false if the condition is false.
 @param  value The value to test.  */
-API BOL Test(const void* value);
+SDK BOL Test(const void* value);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const CH1* a, const CH1* b);
+SDK BOL Test(const CH1* a, const CH1* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const CH2* a, const CH2* b);
+SDK BOL Test(const CH2* a, const CH2* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const CH4* a, const CH4* b);
+SDK BOL Test(const CH4* a, const CH4* b);
 
 /* Tests if the two pointers are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(const void* a, const void* b);
+SDK BOL Test(const void* a, const void* b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(UI1 a, UI1 b);
+SDK BOL Test(UI1 a, UI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(SI1 a, SI1 b);
+SDK BOL Test(SI1 a, SI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(UI1 a, UI1 b);
+SDK BOL Test(UI1 a, UI1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(SI2 a, SI2 b);
+SDK BOL Test(SI2 a, SI2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(UI2 a, UI2 b);
+SDK BOL Test(UI2 a, UI2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(SI4 a, SI4 b);
+SDK BOL Test(SI4 a, SI4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(UI4 a, UI4 b);
+SDK BOL Test(UI4 a, UI4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(SI8 a, SI8 b);
+SDK BOL Test(SI8 a, SI8 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(UI8 a, UI8 b);
+SDK BOL Test(UI8 a, UI8 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(FLT a, FLT b);
+SDK BOL Test(FLT a, FLT b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-API BOL Test(DBL a, DBL b);
+SDK BOL Test(DBL a, DBL b);
 
 }  // namespace _
 

@@ -16,9 +16,9 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTLOCK
 namespace _ {
 /* Locks the processor. */
-API inline void RoomLock();
+SDK inline void RoomLock();
 
 /* Unlocks the processor. */
-API inline void RoomUnlock();
+SDK inline void RoomUnlock();
 }  //< namespace _
 #endif  //< #if INCLUDED_SCRIPTLOCK

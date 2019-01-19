@@ -30,19 +30,19 @@ namespace _ {
 @return hash + value * hash.
 @param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash16_t Hash16(CH1 value, hash16_t hash = 65535);
+SDK inline hash16_t Hash16(CH1 value, hash16_t hash = 65535);
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
 @param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash32_t Hash32(CH2 value, hash32_t hash = 4294967291);
+SDK inline hash32_t Hash32(CH2 value, hash32_t hash = 4294967291);
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
 @param  value The CH1 value to hash.
 @param  hash  The hash. */
-API inline hash64_t Hash64(CH4 value,
+SDK inline hash64_t Hash64(CH4 value,
                            hash64_t hash = 18446744073709551557);
 
 /* Hashes the given CH1 using the primeHash function.
@@ -51,7 +51,7 @@ the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash16_t Hash16(const CH1* string_, hash16_t hash = 65535);
+SDK hash16_t Hash16(const CH1* string_, hash16_t hash = 65535);
 
 /* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
@@ -59,7 +59,7 @@ the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash32_t Hash32(const CH1* string_, hash32_t hash = 4294967291);
+SDK hash32_t Hash32(const CH1* string_, hash32_t hash = 4294967291);
 
 /* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change
@@ -67,7 +67,7 @@ the see to a different prime number_.
 @return A prime multiple hash of the given string_.
 @param  string_ The string_ to hash.
 @param  hash   A prime number_ seed hash. */
-API hash64_t Hash64(const CH1* string_, hash64_t hash = 18446744073709551557);
+SDK hash64_t Hash64(const CH1* string_, hash64_t hash = 18446744073709551557);
 
 }  // namespace _
 #endif  //< #if SEAM >= _0_0_0__11

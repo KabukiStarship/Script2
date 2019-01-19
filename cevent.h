@@ -25,14 +25,14 @@ namespace _ {
 /* Interface for a temporal event in a Bayesian net.
 @code
 #include <script/Event.h>
-struct API Example: public Event {
+struct SDK Example: public Event {
 virtual void Trigger () {
     // ...
 }
 };
 @endcode
 */
-struct API Event : public Operand {
+struct SDK Event : public Operand {
   /* Virtual destructor. */
   virtual ~Event() = 0;
 

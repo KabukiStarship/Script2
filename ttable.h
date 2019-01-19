@@ -88,7 +88,7 @@ from lower address up.
 @endcode
 */
 template <typename Size, typename Index>
-struct API Table {
+struct SDK Table {
   Size size,         //< Size of this object in bytes.
       size_pile;     //< Size of the collision table pile.
   Index first_char,  //< The first CH1 of the Table.
@@ -397,7 +397,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 /* Attempts to find the given key.
 @return Returns 0 upon failure, and valid index upon success. */
 template <typename Size, typename Index>
-API UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
+SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
   ASSERT(table)
   Index index, count = table->count, count_max = table->count_max, temp;
 
