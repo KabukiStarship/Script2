@@ -24,7 +24,7 @@
 #define SOCKET_SAVE(cursor, end_a) Socket socket_to_print(cursor, end_a)
 #define CHECK(condition) \
   if (!_::Test(condition)) ::_::AssertWarn(__LINE__, __FUNCTION__, __FILE__)
-#define COMPARE(a, b)                               \
+#define COMPARE(a, b)                                 \
   if (!::_::Test(a, b)) {                             \
     ::_::Print("\n\nExpecting:");                     \
     ::_::Print(a);                                    \
@@ -34,7 +34,10 @@
   }
 #define ASSERT(condition) \
   if (!_::Test(condition)) ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__)
-#define AVOW(a, b)                                   \
+#define DASSERT(condition) \
+  if (!_::Test(condition)) ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__)
+#define RASSERT(condition)
+#define AVOW(a, b)                                     \
   if (!::_::Test(a, b)) {                              \
     ::_::Print("\n\nExpecting:");                      \
     ::_::Print(a);                                     \
@@ -42,3 +45,12 @@
     ::_::Print(b);                                     \
     ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
   }
+#define DAVOW(a, b)                                    \
+  if (!::_::Test(a, b)) {                              \
+    ::_::Print("\n\nExpecting:");                      \
+    ::_::Print(a);                                     \
+    ::_::Print("\nFound    :");                        \
+    ::_::Print(b);                                     \
+    ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define RAVOW(a, b) 

@@ -1001,12 +1001,13 @@ Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
   *socket++ = a;
   *socket++ = b;
   *socket++ = c;
+  return socket;
 }
 
 /* A decimal number in floating-point format.
 To use this class template the sizeof (Float) must equal the sizeof (UI) and
 sizeof (SI). */
-template <typename Float = FPW, typename UI = UIW, typename SI = SI4>
+template <typename Float = FPW, typename SI = SI4, typename UI = UIW>
 class TBinary {
  public:
   enum {
@@ -1104,6 +1105,9 @@ class TBinary {
     return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
 
+  template <typename SI>
+  inline void Lookup(SI index, UI& integral, SI& exponent) {}
+
   static TBinary IEEE754Pow10(SI e, SI& k) {
     // SI k = static_cast<SI>(ceil((-61 - e) *
     // 0.30102999566398114))
@@ -1115,20 +1119,24 @@ class TBinary {
     k = static_cast<SI>(dk);
     if (k != dk) ++k;
 
-    SI index = static_cast<UI4>((k >> 3) + 1);
+    SI index = (k >> 3) + 1;
 
-    k = -(-348 + static_cast<SI>(index << 3));
+    k = -(-((SI)348) + (index << 3));
     // decimal exponent no need lookup table.
 
     ASSERT(index < 87);
 
     // Save exponents pointer and offset to avoid creating base pointer again.
     UI new_f = IEEE754LUTF(index);
-    SI new_e = (SI)IEEE754LUTE(index);
+    SI new_e = IEEE754LUTE(index);
     return TBinary(new_f, new_e);
   }
 
-  TBinary<Float, UI, SI> Minus(const TBinary<Float, UI, SI>& value) const {}
+  TBinary Minus(const TBinary<Float, SI, UI>& value) const {
+    DASSERT(e == value.e);
+    DASSERT(f >= value.f);
+    return TBinary(f - value.f, e);
+  }
 
   void Print() {
     PRINTF(
@@ -1185,8 +1193,8 @@ class TBinary {
 
   // Normalizes the boundaries.
   void NormalizedBoundaries(TBinary& m_minus, TBinary& m_plus) const {
-    UI l_f,   //< Local copy of f.
-        l_e;  //< Local copy of e.
+    UI l_f = f,   //< Local copy of f.
+        l_e = e;  //< Local copy of e.
     TBinary pl = TBinary((l_f << 1) + 1, ((SI)l_e) - 1).NormalizeBoundary();
     const UI kHiddenBit = ((UI)1) << kMantissaSize;  //< 0x0010000000000000
     TBinary mi = (f == kHiddenBit) ? TBinary((l_f << 2) - 1, e - 2)
@@ -1257,6 +1265,7 @@ class TBinary {
       kappa = 9;
       return pow_10;
     }
+    return 0;
   }
 
   static inline UI4 Pow10(UI4 p_1, SI8& kappa) {
@@ -1302,6 +1311,7 @@ class TBinary {
       kappa = 8;
       pow_10 = pow_10;
     }
+    return 0;
   }
 
   /* Prints the integer portion of the floating-point number_.
@@ -1427,12 +1437,12 @@ class TBinary {
   }
 };
 
-using Binary32 = TBinary<FLT, UI4>;
-using Binary64 = TBinary<DBL, UI8>;
+using Binary32 = TBinary<FLT, SI4, UI4>;
+using Binary64 = TBinary<DBL, SI4, UI8>;
 
 template <typename Char = CH1>
 Char* TPrint(Char* begin, Char* stop, FLT value) {
-  return TBinary<FLT, UI4, SI4>::template Print<Char>(begin, stop, value);
+  return TBinary<FLT, SI4, UI4>::template Print<Char>(begin, stop, value);
 }
 
 template <typename Char = CH1>
@@ -1442,7 +1452,7 @@ Char* TPrintFloat(Char* begin, SIW size, FLT value) {
 
 template <typename Char = CH1>
 Char* TPrint(Char* begin, Char* stop, DBL value) {
-  return TBinary<DBL, UI8, SI8>::template Print<Char>(begin, stop, value);
+  return TBinary<DBL, SI8, UI8>::template Print<Char>(begin, stop, value);
 }
 
 template <typename Char = CH1>

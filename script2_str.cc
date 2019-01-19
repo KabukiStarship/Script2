@@ -396,13 +396,9 @@ UTF1& UTF1::Hex(UI8 value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 UTF1& UTF1::Hex(SI8 value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
 #if SEAM >= _0_0_0__04
-UTF1& UTF1::Hex(FLT value) {
-  return Set(TPrintHex<CH1>(begin, stop, value));
-}
+UTF1& UTF1::Hex(FLT value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
-UTF1& UTF1::Hex(DBL value) {
-  return Set(TPrintHex<CH1>(begin, stop, value));
-}
+UTF1& UTF1::Hex(DBL value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 #endif
 
 UTF1& UTF1::Hex(const void* ptr) {
@@ -720,16 +716,6 @@ CH2* Print(CH2* cursor, CH2* stop, SI8 value) {
   return TPrintSigned<SI8, UI8, CH2>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
-CH2* Print(CH2* cursor, CH2* stop, FLT value) {
-  return TPrint<CH2>(cursor, stop, value);
-}
-
-CH2* Print(CH2* cursor, CH2* stop, DBL value) {
-  return TPrint<CH2>(cursor, stop, value);
-}
-#endif
-
 CH2* PrintCenter(CH2* cursor, CH2* stop, const CH2* string, SI4 column_count) {
   return TPrintCenter<CH2>(cursor, stop, string, column_count);
 }
@@ -988,13 +974,9 @@ UTF2& UTF2::Hex(UI8 value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 UTF2& UTF2::Hex(SI8 value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
 #if SEAM >= _0_0_0__04
-UTF2& UTF2::Hex(FLT value) {
-  return Set(TPrintHex<CH2>(begin, stop, value));
-}
+UTF2& UTF2::Hex(FLT value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
-UTF2& UTF2::Hex(DBL value) {
-  return Set(TPrintHex<CH2>(begin, stop, value));
-}
+UTF2& UTF2::Hex(DBL value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 #endif
 
 UTF2& UTF2::Hex(const void* ptr) {
@@ -1290,16 +1272,6 @@ CH4* Print(CH4* cursor, CH4* stop, SI8 value) {
   return TPrintSigned<SI8, UI8, CH4>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
-CH4* Print(CH4* cursor, CH4* stop, FLT value) {
-  return TPrint<CH4>(cursor, stop, value);
-}
-
-CH4* Print(CH4* cursor, CH4* stop, DBL value) {
-  return TPrint<CH4>(cursor, stop, value);
-}
-#endif
-
 CH4* PrintCenter(CH4* cursor, CH4* stop, const CH4* begin, SI4 column_count) {
   return TPrintCenter<CH4>(cursor, stop, begin, column_count);
 }
@@ -1566,9 +1538,7 @@ UTF4& UTF4::Hex(SI8 value) {
 #if SEAM >= _0_0_0__04
 UTF4& UTF4::Hex(FLT value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
-UTF4& UTF4::Hex(DBL value) {
-  return Set(TPrintHex<CH4>(begin, stop, value));
-}
+UTF4& UTF4::Hex(DBL value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 #endif
 
 UTF4& UTF4::Hex(const void* ptr) {

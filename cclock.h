@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= _0_0_0__05
 #ifndef INCLUDED_SCRIPTCCLOCK
 #define INCLUDED_SCRIPTCCLOCK
 
@@ -227,7 +227,7 @@ SDK void PrintTime(TME t);
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
 SDK const CH1* TStringScanTime(const CH1* string_, SI4& hour, SI4& minute,
-                                SI4& second);
+                               SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
 @return Nil upon socket failure or CH1 directly after the stop of the
@@ -301,8 +301,8 @@ SDK CH2* Print(CH2* begin, CH2* stop, TME time);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-SDK const CH2* TStringScanTime(const CH2* string_, SI4& hour,
-                                    SI4& minute, SI4& second);
+SDK const CH2* TStringScanTime(const CH2* string_, SI4& hour, SI4& minute,
+                               SI4& second);
 
 /* Converts a keyboard input to CH2 and deletes the CH2.
 @return Nil upon socket failure or CH2 directly after the stop of the
@@ -373,8 +373,8 @@ SDK CH4* PrintTime(CH4* begin, CH4* stop, TME time);
 @16:20:00
 @endcode
 */
-SDK const CH4* TStringScanTime(const CH4* input, SI4& hour,
-                                    SI4& minute, SI4& second);
+SDK const CH4* TStringScanTime(const CH4* input, SI4& hour, SI4& minute,
+                               SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
  */
@@ -395,4 +395,4 @@ SDK const CH4* TStringScanTime(const CH4* input, TME& result);
 #undef PRINT
 #undef PRINTF
 #endif  //< #ifndef INCLUDED_SCRIPTCCLOCK
-#endif  //< #if SEAM >= _0_0_0__04
+#endif  //< #if SEAM >= _0_0_0__05

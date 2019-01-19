@@ -49,7 +49,7 @@ SI4 TStringLength(UI8 value) {
   if (value < 1000000000000000000) return 18;
   if (value < 10000000000000000000) return 19;
   return 20;
-}f
+}
 
 template <typename Char>
 Char* PrintMod10(Char* cursor, Char* stop, UI4 value) {
@@ -493,26 +493,6 @@ const CH1* Scan(const CH1* cursor, DBL& value) {
   return TStringFloatStop<CH1>(cursor);
 }
 
-#if USING_UTF16
-CH2* Print(CH2* cursor, CH2* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<CH2>(cursor, stop, value);
-}
-
-CH2* Print(CH2* cursor, CH2* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<CH2>(cursor, stop, value);
-}
-#endif
-
-#if USING_UTF32
-CH4* Print(CH4* cursor, CH4* stop, FLT value) {
-  return TBinary<FLT, UI4>.TPrint<CH4>(cursor, stop, value);
-}
-
-CH4* Print(CH4* cursor, CH4* stop, DBL value) {
-  return TBinary<DBL, UI8>.TPrint<CH4>(cursor, stop, value);
-}
-#endif
-
 SI4 FloatDigitsMax() { return 15; }
 
 SI4 DoubleDigitsMax() { return 31; }
@@ -719,20 +699,28 @@ FLT Ceiling(FLT value) { return ceil(value); }
 
 CH1* LastByte(CH1* c) { return c; }
 
-#if USING_UTF16
-CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*> + 1; }
+#if USING_UTF16 == YES
+CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*>(c) + 1; }
 
-CH2* Print(CH2* cursor, CH2* stop, FLT value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, FLT value) {
+  return TBinary<FLT, SI4, UI4>::template Print<CH2>(cursor, stop, value);
+}
 
-CH2* Print(CH2* cursor, CH2* stop, DBL value) { return nullptr; }
+CH2* Print(CH2* cursor, CH2* stop, DBL value) {
+  return TBinary<DBL, SI8, UI8>::template Print<CH2>(cursor, stop, value);
+}
 #endif
 
-#if USING_UTF32
-CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*> + 3; }
+#if USING_UTF32 == YES
+CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*>(c) + 3; }
 
-CH4* Print(CH4* cursor, CH4* stop, FLT value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, FLT value) {
+  return TBinary<FLT, SI4, UI4>::template Print<CH4>(cursor, stop, value);
+}
 
-CH4* Print(CH4* cursor, CH4* stop, DBL value) { return nullptr; }
+CH4* Print(CH4* cursor, CH4* stop, DBL value) {
+  return TBinary<DBL, SI8, UI8>::template Print<CH4>(cursor, stop, value);
+}
 #endif
 
 }  // namespace _

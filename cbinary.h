@@ -307,7 +307,7 @@ SDK const SI2* IEEE754Pow10E();
 /* IEEE754 Powers of 10 integral portions LUT. */
 SDK const UI8* IEEE754Pow10F();
 
-/* Returns the last UI1 in the given CH1, which in this case is c. */
+/* Returns the last UI1 in the given CH1, which is c in this case. */
 SDK CH1* LastByte(CH1* c);
 
 /* Prints the given FLT to the socket. */
@@ -325,7 +325,7 @@ const CH1* Scan(const CH1* cursor, FLT& value);
 const CH1* Scan(const CH1* cursor, DBL& value);
 
 #if USING_UTF16 == YES
-/* Returns the last UI1 in the given CH1. */
+/* Returns the last UI1 in the given CH2. */
 SDK CH1* LastByte(CH2* c);
 
 /* Prints the given FLT to the socket. */
@@ -336,7 +336,7 @@ SDK CH2* Print(CH2* cursor, CH2* stop, DBL value);
 #endif
 
 #if USING_UTF32 == YES
-/* Returns the last UI1 in the given CH1. */
+/* Returns the last UI1 in the given CH4. */
 SDK CH1* LastByte(CH4* c);
 
 /* Prints the given FLT to the socket. */

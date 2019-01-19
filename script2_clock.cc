@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= _0_0_0__05
 
 #include <ctime>
 
 #include "tbinary.h"
 #include "tclock.h"
 
-#if SEAM == _0_0_0__04
+#if SEAM == _0_0_0__05
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -151,7 +151,7 @@ TME ClockTME(CClock& clock) { return TStampTime<TME>(clock); }
 SI4 ClockMonthDayCount(TMS t) {
   CClock date(t);
   static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
-                                          31, 31, 30, 31, 30, 31};
+                                         31, 31, 30, 31, 30, 31};
   if ((date.year & 3) && (date.month == 4)) {
     // Then it's a leap year and April:
     return 29;
@@ -163,7 +163,7 @@ SI4 ClockMonthDayCount(SI4 month, SI4 year) {
   if (month < 1) return 0;
   if (month > 12) return 0;
   static const CH1 days_per_month[12] = {31, 28, 31, 30, 31, 30,
-                                          31, 31, 30, 31, 30, 31};
+                                         31, 31, 30, 31, 30, 31};
   if ((year & 0xC) && (month == 4))  // Then it's a leap year and April:
     return 29;
   return days_per_month[month];
@@ -171,7 +171,7 @@ SI4 ClockMonthDayCount(SI4 month, SI4 year) {
 
 const CH1* ClockWeekDay(SI4 day_number) {
   static const CH1* days[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
-                               "Thursday", "Friday", "Saturday"};
+                              "Thursday", "Friday", "Saturday"};
   static const CH1 kInvalidText[] = "Invalid\0";
   if (day_number < 0) {
     return kInvalidText;
@@ -375,7 +375,7 @@ void PrintTime(TME t) {
 }
 
 const CH1* StringScanTime(const CH1* string_, SI4& hour, SI4& minute,
-                           SI4& second) {
+                          SI4& second) {
   return TStringScanTime<CH1>(string_, hour, minute, second);
 }
 
@@ -423,7 +423,7 @@ const CH2* TStringScanTime(const CH2* string_, CClock& clock) {
 }
 
 const CH2* TStringScanTime(const CH2* string_, SI4& hour, SI4& minute,
-                                SI4& second) {
+                           SI4& second) {
   return TStringScanTime<CH2>(string_, hour, minute, second);
 }
 
@@ -463,7 +463,7 @@ CH4* Print(CH4* begin, CH4* stop, CClock& clock) {
 }
 
 const CH4* TStringScanTime(const CH4* string_, SI4& hour, SI4& minute,
-                                SI4& second) {
+                           SI4& second) {
   return TStringScanTime<CH4>(string_, hour, minute, second);
 }
 
@@ -487,4 +487,4 @@ const CH4* TStringScanTime(const CH4* string_, TME& result) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__04
+#endif  //< #if SEAM >= _0_0_0__05

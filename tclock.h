@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__04
+#if SEAM >= _0_0_0__05
 #ifndef INCLUDED_SCRIPT2_TCLOCK
 #define INCLUDED_SCRIPT2_TCLOCK
 
@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License. */
 #include "ctest.h"
 #include "tstr.h"
 
-#if SEAM == _0_0_0__04
+#if SEAM == _0_0_0__05
 #include "test_debug.inl"
 #else
 #include "test_release.inl"
@@ -496,4 +496,4 @@ const Char* TStringScanTime(const Char* begin, Tss& result) {
 }  // namespace _
 
 #endif  //< #ifndef INCLUDED_SCRIPT2_TCLOCK
-#endif  //< #if SEAM >= _0_0_0__04
+#endif  //< #if SEAM >= _0_0_0__05
