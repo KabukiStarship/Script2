@@ -122,7 +122,7 @@
     <ClCompile Include="script2_bsq.cc" />
     <ClCompile Include="script2_clock.cc" />
     <ClCompile Include="script2_console.cc" />
-    <ClCompile Include="script2_crabs.cc" />
+    <ClCompile Include="script2_expr.cc" />
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_hash.cc" />

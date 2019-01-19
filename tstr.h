@@ -487,9 +487,15 @@ Char* TStringSkipCharsInRange(Char* cursor, Char lower_bounds,
 
 /* Skips the numbers in the given range. */
 template <typename Char = CH1>
-inline Char* TStringSkipNumbers(Char* cursor) {
+inline const Char* TStringSkipNumbers(const Char* cursor) {
   return const_cast<Char*>(TStringSkipCharsInRange<Char>(
       reinterpret_cast<const Char*>(cursor), '0', '9'));
+}
+/* Skips the numbers in the given range. */
+template <typename Char = CH1>
+inline Char* TStringSkipNumbers(Char* cursor) {
+  return const_cast<Char*>(
+      TStringSkipNumbers<Char>(reinterpret_cast<const Char*>(cursor)));
 }
 
 /* Prints the given token aligned right the given column_count.

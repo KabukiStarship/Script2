@@ -175,9 +175,9 @@ static const UI8 kIEEE754Pow10F8[] = {
     0xbf21e44003acdd2d, 0x8e679c2f5e44ff8f, 0xd433179d9c8cb841,
     0x9e19db92b4e31ba9, 0xeb96bf6ebadf77d9, 0xaf87023b9bf0ee6b};
 
-static const UI4 kIEEE754Pow10[] = {0,        1,         10,        100,
-                                    1000,     10000,     100000,    1000000,
-                                    10000000, 100000000, 1000000000};
+static const UI4 kPow10[] = {0,        1,         10,        100,
+                             1000,     10000,     100000,    1000000,
+                             10000000, 100000000, 1000000000};
 
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.

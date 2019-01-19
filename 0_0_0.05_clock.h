@@ -28,39 +28,39 @@ static const CH1* _0_0_0__05_Clock(CH1* seam_log, CH1* seam_end,
 #if SEAM >= _0_0_0__05
   TEST_BEGIN;
 
-  PRINT_HEADING("\n\nTesting TStringScanTime...");
+  PRINT_HEADING("\n\nTesting TScanTime...");
 
-  TMS t, t_found;
+  TM4 t, t_found;
   const CH1* result;
 
   // @note The following dates must be the current day to work right in order
   //       to auto-detect the year.
   const CH1* strings[] = {
-      "8/9",
-      "08/09",
-      "8/9/18",
-      "8/09/18",
-      "8/9/2018",
-      "8/09/2018",
-      "8/09/2018",
-      "08/9/2018",
-      "8/09/2018@00",
-      "8.09.2018@00AM",
-      "8/09/2018@00:00",
-      "8/09/18@00:0AM",
-      "8/09/2018@00:00:00",
-      "8/09/2018@00:00:00AM",
-      "2018-08-09@00:00:00AM",
-      "2018-08-09@00:00:00am",
-      "2018-08-09@00:00:00A",
-      "2018-08-09@00:00:00a ",
+      "1/19",
+      "01/19",
+      "1/9/19",
+      "1/19/19",
+      "1/9/2019",
+      "1/19/2019",
+      "1/19/2019",
+      "01/19/2019",
+      "1/19/2019@00",
+      "1.19.2019@00AM",
+      "1/19/2019@00:00",
+      "1/19/19@00:0AM",
+      "1/19/2019@00:00:00",
+      "1/19/2019@00:00:00AM",
+      "2019-01-19@00:00:00AM",
+      "2019-01-19@00:00:00am",
+      "2019-01-19@00:00:00A",
+      "2019-01-19@00:00:00a ",
   };
 
   for (SI4 i = 0; i < 18; ++i) {
     PRINT_LINE('-');
     PRINTF("\n    %i", i);
-    TMS t = 0;
-    result = TStringScanTime(strings[i], t);
+    TM4 t = 0;
+    result = ScanTime(strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }
 
@@ -70,24 +70,30 @@ static const CH1* _0_0_0__05_Clock(CH1* seam_log, CH1* seam_end,
   CH1 socket[kSize];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
-  Print(socket, socket + kSize, t);
-  result = TStringScanTime(socket, t_found);
+  PrintTime (socket, socket + kSize, t);
+  result = ScanTime(socket, t_found);
   ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  Print(socket, socket + kSize, t);
-  result = TStringScanTime(socket, t_found);
+  PrintTime (socket, socket + kSize, t);
+  result = ScanTime(socket, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
-  Print(socket, socket + kSize, t);
-  result = TStringScanTime(socket, t_found);
+  PrintTime(socket, socket + kSize, t);
+  PRINT ("\n  Before:\"");
+  PRINT (socket);
+  PRINT ('\"');
+  result = Scan(socket, t_found);
+  PRINT ("\n\n\nresult:\"");
+  PRINT_TIME (t_found);
+  PRINT ("\"\"");
   ASSERT(ClockCompare(t, t_found));
 
-  PRINT_HEADING("\nTesting invalid input...\n");
-  TStringScanTime("cat", t);
+  PRINT_HEADING("Testing invalid input");
+  Scan("cat", t);
 
-  TStringScanTime("2017-30-40", t);
+  Scan("2017-30-40", t);
 
   PRINTF("\nDone testing date parsing utils! :-)\n");
 #endif

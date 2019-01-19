@@ -50,8 +50,8 @@ SI4 TypeFixedSize(SI4 type) {
       4,   //< kSI4: 7
       4,   //< kUI4: 8
       4,   //< kFLT: 9
-      4,   //< kTMS: 10
-      8,   //< kTME: 11
+      4,   //< kTM4: 10
+      8,   //< kTM8: 11
       8,   //< kSI8: 12
       8,   //< kUI8: 13
       8,   //< kDBL: 14
@@ -91,7 +91,7 @@ void* TypeAlign(SI4 type, void* value) {
 #else
   if (type <= kBOL) return TAlignUp2<>(value);
 #endif
-  if (type <= kTMS) return AlignUp<>(value, 3);
+  if (type <= kTM4) return AlignUp<>(value, 3);
   if (type <= kDEC) return AlignUp<>(value, 7);
 
   switch (type >> 6) {
@@ -147,7 +147,7 @@ CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
     *target_2++ = *reinterpret_cast<const CH2*>(value);
     return reinterpret_cast<CH1*>(target_2);
   }
-  if (type <= kTMS) {
+  if (type <= kTM4) {
     CH4* target_4 = AlignUp<CH4>(begin, 3);
     *target_4++ = *reinterpret_cast<const CH4*>(value);
     return reinterpret_cast<CH1*>(target_4);

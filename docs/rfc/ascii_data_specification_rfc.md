@@ -28,7 +28,7 @@ All ASCII Types can be represented as a single byte where the lower 5 bits are u
 |  8 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer. |
 |  9 | FLT  |    float   |    4   | 32-bit floating-point number. |
 | 10 | TM4  |   int32_t  |   -4   | 32-bit signed integer second since epoch timestamp. |
-| 11 | TME  |   int64_t  |   -8   | 32-bit/32-bit signed integer second since epoch timestamp and sub-second ticker. |
+| 11 | TME  |   int64_t  |   -8   | Dual-SI4 seconds since epoch timestamp and sub-second ticker. |
 | 12 | TM8  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
 | 13 | SI8  |   int64_t  |   -8   | 64-bit signed integer. |
 | 14 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer. |
@@ -193,13 +193,13 @@ STR8 "\"Hello world!\"" //< This is a string that is up to 2^64-1 bytes long.
 
 ## 2.6 Timestamps
 
-ASCII provides three types of timestamps, a 32-bit signed integer TMS seconds from epoch timestamp, a 64-bit signed integer TME seconds from epoch timestamp, and 64-bit Time Sub-second (TSS) timestamp composed of a TMS timestamp and a UI4 tick that gets incremented at a variable time period. The Sub-second Tick Epoch (STE) shall be programmable but shall be set to the defaults of either 1000 or 64, depending on if a microsecond or OS update timer is used respectively. It is important to note that ASCII Timestamps do not contain the STE period by design.
+ASCII provides three types of timestamps, a 32-bit signed integer TM4 seconds from epoch timestamp, a 64-bit signed integer TME seconds from epoch timestamp, and 64-bit Time Sub-second (TME) timestamp composed of a TM4 timestamp and a UI4 tick that gets incremented at a variable time period. The Sub-second Tick Epoch (STE) shall be programmable but shall be set to the defaults of either 1000 or 64, depending on if a microsecond or OS update timer is used respectively. It is important to note that ASCII Timestamps do not contain the STE period by design.
 
 ```C++
 /* Example functions.
-@fn Foo <TMS>:<NIL>
+@fn Foo <TM4>:<NIL>
+@fn Foo <TM8>:<NIL>
 @fn Foo <TME>:<NIL>
-@fn Foo <TSS>:<NIL>
 
 # Timestamp Format
 | Seconds Since Epoch | Microseconds Since Epoch |
