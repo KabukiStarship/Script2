@@ -1004,24 +1004,49 @@ Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
   return socket;
 }
 
+/* Masks off the given bits starting at b0. */
+template <typename I, SIN kMSb_, SIN kLSb_>
+I TMiddleBits(I value) {
+  // The goal is to not allow for undefined shifting behavior and not pay for
+  // the error checking.
+  //                              b15 ---vv--- b8
+  // Example: TMiddleBits<SI4, 15, 7> (0xff00)
+  //          Expecting 0xff
+  // right_shift_count = 32 - 16 = 16
+  enum {
+    kSize = sizeof(I) * 8,
+    kMSbNatural = (kMSb_ < 0) ? 0 : kMSb_,
+    kLSbLNatural = (kLSb_ < 0) ? 0 : kLSb_,
+    kRightShiftTemp1 = kSize - kMSbNatural + 1,
+    kRightShiftTemp2 = (kRightShiftTemp1 >= kSize) ? 0 : kRightShiftTemp1,
+    kLeftShift = (kRightShiftTemp2 < kLSb_) ? 0 : kRightShiftTemp2,
+    kRightShift = (kRightShiftTemp2 < kLSb_) ? 0 : kRightShiftTemp2,
+  };
+  return (value << kRightShift) >> kLeftShift;
+}
+
 /* A decimal number in floating-point format.
-To use this class template the sizeof (Float) must equal the sizeof (UI) and
-sizeof (SI). */
+To use this class the sizeof (Float) must equal the sizeof (UI) and sizeof (SI).
+*/
 template <typename Float = FPW, typename SI = SI4, typename UI = UIW>
 class TBinary {
  public:
   enum {
-    kSize = sizeof(Float),
+    kSizeMax = 8,
+    kSize = sizeof(Float) >= kSizeMax ? 0 : sizeof(Float),
     kSizeBits = kSize * 8,
-    kMSbIndex = kSizeBits - 1,
+    kMSb = kSizeBits - 1,
     kStringLengthMax = 24,
     kExponentSizeBits =
         (sizeof(Float) == 2)
             ? 5
             : (sizeof(Float) == 4) ? 8 : (sizeof(Float) == 8) ? 11 : 15,
     kCoefficientSize = kSizeBits - kExponentSizeBits - 1,
-    kMantissaSize = kSizeBits - kExponentSizeBits - 2,
-    kExponentMaskUnshifted = (~((UI)0)) >> (kSizeBits - kExponentSizeBits),
+    kMantissaSize = kSizeBits - kExponentSizeBits - 1,
+    kExponentMaskUnshifted =
+        (sizeof(kSize) == 2)
+            ? 0xf
+            : (sizeof(kSize) == 4) ? 0x7f : (sizeof(kSize) == 8) ? 0x3FF : 0,
     kExponentBias = kExponentMaskUnshifted + kCoefficientSize,
     kExponentMin = -kExponentBias,
   };
@@ -1034,12 +1059,10 @@ class TBinary {
   }
 
   // Converts a Float to a TBinary
-  TBinary(Float binary) {
-    UI ui = *reinterpret_cast<UI*>(&binary);
-    UI4 biased_e = (UI4)(ui << 1);  //< Get rid of sign bit.
-    // Get rid of the integral portion.
-    biased_e = biased_e >> (kSizeBits - kExponentSizeBits);
-    // Get rid of the sign and exponent.
+  TBinary(Float value) {
+    UI ui = *reinterpret_cast<UI*>(&value);
+
+    UI biased_e = TMiddleBits<UI, kMSb - 1, kMantissaSize - 1>(ui);
     UI coefficient = Coefficient(ui);
     if (biased_e != 0) {
       f = coefficient + (((UI)1) << kExponentSizeBits);
@@ -1105,9 +1128,6 @@ class TBinary {
     return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
 
-  template <typename SI>
-  inline void Lookup(SI index, UI& integral, SI& exponent) {}
-
   static TBinary IEEE754Pow10(SI e, SI& k) {
     // SI k = static_cast<SI>(ceil((-61 - e) *
     // 0.30102999566398114))
@@ -1126,10 +1146,9 @@ class TBinary {
 
     ASSERT(index < 87);
 
-    // Save exponents pointer and offset to avoid creating base pointer again.
-    UI new_f = IEEE754LUTF(index);
-    SI new_e = IEEE754LUTE(index);
-    return TBinary(new_f, new_e);
+    const UI* f_lut = Pow10IntegralLUT();
+    const SI2* e_lut = reinterpret_cast<const SI2*>(BinaryPow10Exponents());
+    return TBinary(f_lut[index], e_lut[index]);
   }
 
   TBinary Minus(const TBinary<Float, SI, UI>& value) const {
@@ -1138,14 +1157,14 @@ class TBinary {
     return TBinary(f - value.f, e);
   }
 
-  void Print() {
+  static void PrintDebugInfo() {
     PRINTF(
         "\nkSize:%i kSizeBits:%i kMSbIndex:%i kStringLengthMax:%i"
         "\nkExponentSizeBits:%i kCoefficientSize:%i kMantissaSize:%i"
-        "\nkExponentMaskUnshifted:%i kExponentBias:%i kExponentMin:%i\n\n",
-        kSize, kSizeBits, kMSbIndex, kStringLengthMax, kExponentSizeBits,
-        kCoefficientSize, kMantissaSize, kExponentMaskUnshifted, kExponentBias,
-        kExponentMin);
+        "\nkExponentMaskUnshifted:%i kExponentBias:%i ExponentMin ():%i\n\n",
+        kSize, kSizeBits, kMSb, kStringLengthMax, kExponentSizeBits,
+        kCoefficientSize, kMantissaSize, (int)kExponentMaskUnshifted,
+        (int)kExponentBias, (int)kExponentMin);
   }
 
  private:
@@ -1153,6 +1172,40 @@ class TBinary {
   SI e;
 
   static inline void Multiply(TBinary& result, TBinary& a, TBinary& b) {}
+
+  static constexpr SIW LUTCount() {
+    // @todo Figure out the LUT sizes for Half and Single precision FP numbers.
+    return (sizeof(Float) == 4) ? 83 : (sizeof(Float) == 8) ? 83 : 0;
+  }
+
+  static const UI* Pow10IntegralLUT() {
+    const void* ptr =
+        (sizeof(UI) == 4)
+            ? Binary32Pow10IntegralPortions()
+            : (sizeof(UI) == 8) ? Binary64Pow10IntegralPortions() : nullptr;
+    return reinterpret_cast<const UI*>(ptr);
+  }
+
+  static void AlignLUT(CH1* begin, size_t size) {
+    ASSERT(size);
+    SIW lut_count = LUTCount();
+    if (size != ((100 + lut_count) * 2 + lut_count * 8)) return;
+    UI2* ui2_ptr = reinterpret_cast<UI2*>(begin);
+
+    for (CH1 tens = '0'; tens <= '9'; ++tens)
+      for (SI4 ones = '0'; ones <= '9'; ++ones)
+#if ENDIAN == LITTLE
+        *ui2_ptr++ = (tens << 8) | ones;
+#else
+        *ui2_ptr++ = (ones << 8) | tens;
+#endif
+    const UI2* e_lut = BinaryPow10Exponents();
+    for (SI4 i = 0; i < 87; ++i) *ui2_ptr = e_lut[i];
+
+    UI8* ui8_ptr = reinterpret_cast<UI8*>(ui2_ptr);
+    const UI* f_lut = Pow10IntegralLUT();
+    for (SI4 i = 0; i < 87; ++i) *ui8_ptr = f_lut[i];
+  }
 
   template <typename Char>
   static Char* Print(Char* socket, Char* stop, Float value, SI& k) {
@@ -1174,7 +1227,7 @@ class TBinary {
 #if defined(_MSC_VER) && defined(_M_AMD64)
     unsigned long index;  //< This is Microsoft's fault.
     _BitScanReverse64(&index, f);
-    return TBinary(f << (kMSbIndex - index), e - (kMSbIndex - index));
+    return TBinary(f << (kMSb - index), e - (kMSb - index));
 #else
     TBinary res = *this;
     UI kDpHiddenBit = ((UI)1) << kMantissaSize;  // 0x0010000000000000;
@@ -1196,7 +1249,8 @@ class TBinary {
     UI l_f = f,   //< Local copy of f.
         l_e = e;  //< Local copy of e.
     TBinary pl = TBinary((l_f << 1) + 1, ((SI)l_e) - 1).NormalizeBoundary();
-    const UI kHiddenBit = ((UI)1) << kMantissaSize;  //< 0x0010000000000000
+    int kShiftCount = (kMantissaSize >= 8) ? 0 : kMantissaSize;
+    const UI kHiddenBit = ((UI)1) << kShiftCount;
     TBinary mi = (f == kHiddenBit) ? TBinary((l_f << 2) - 1, e - 2)
                                    : TBinary((l_f << 1) - 1, e - 1);
     mi.f <<= mi.e - pl.e;
@@ -1324,6 +1378,7 @@ class TBinary {
     UI p_2 = m_plus.f & (one.f - 1);
     SI kappa;
     pow_10 = Pow10(p_1, kappa);
+    const UI* f_lut = Pow10IntegralLUT();
     while (kappa > 0) {
       UI4 d;
       d = p_1 / pow_10;
@@ -1338,7 +1393,7 @@ class TBinary {
 
       if (tmp <= delta) {
         k += kappa;
-        UI pow_10_f = IEEE754LUTF(kappa);
+        UI pow_10_f = f_lut[kappa];
         d = Round(d, delta, tmp, pow_10_f << -one.e, wp_w.f);
         return cursor;
       }
@@ -1354,7 +1409,7 @@ class TBinary {
       --kappa;
       if (p_2 < delta) {
         k += kappa;
-        UI pow_10_f = IEEE754LUTF(-kappa);
+        UI pow_10_f = f_lut[-kappa];
         d = Round(d, delta, p_2, one.f, wp_w.f * pow_10_f);
         return cursor;
       }
@@ -1435,7 +1490,7 @@ class TBinary {
     *socket++ = 'e';
     return TPrintSigned<SIW, UIW, Char>(socket + length + 2, stop, kk - 1);
   }
-};
+};  // namespace _
 
 using Binary32 = TBinary<FLT, SI4, UI4>;
 using Binary64 = TBinary<DBL, SI4, UI8>;

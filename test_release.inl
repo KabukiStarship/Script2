@@ -55,3 +55,15 @@
     ::_::Print(b);                                     \
     ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
   }
+#define RETURN(value) return;
+#define DRETURN(value)
+#define RRETURN(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+return; \
+}
+#define RETURN_VALUE(value) return value;
+#define DRETURN_VALUE(value)
+#define RRETURN_VALUE(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+return; \
+}

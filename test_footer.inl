@@ -29,3 +29,9 @@
 #undef AVOW
 #undef DAVOW
 #undef RAVOW
+#undef RETURN
+#undef DRETURN
+#undef RRETURN
+#undef RETURN_VALUE
+#undef DRETURN_VALUE
+#undef RRETURN_VALUE
