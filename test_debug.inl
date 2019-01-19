@@ -54,3 +54,21 @@
     ::_::TestAssert(__LINE__, __FUNCTION__, __FILE__); \
   }
 #define RAVOW(a, b) 
+#define RETURN(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+  return value; \
+}
+#define DRETURN(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+return value; \
+}
+#define RRETURN(value)
+#define RETURN_VALUE(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+  return value; \
+}
+#define DRETURN_VALUE(value) {\
+  ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) \
+return value; \
+}
+#define RRETURN_VALUE(value)

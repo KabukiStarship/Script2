@@ -27,21 +27,15 @@ SDK CH1 HexNibbleToUpperCase(UI1 b);
 /* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
 SDK const UI2* BinaryLUTDecimals();
 
-/* Lookup table of the IEEE754 integral portion of pre-computed powers of ten.
+/* IEEE754 Powers of 10 integral portions LUT. */
+SDK inline const void* Binary32Pow10IntegralPortions();
+
+/* IEEE754 Powers of 10 integral portions LUT. */
+SDK inline const void* Binary64Pow10IntegralPortions();
+
+/* Lookup table of the IEEE754 integral portion of pre-computed powers of 10.
  */
-SDK const SI2* BinaryLUTE();
-
-/* Lookup table of the IEEE754 exponent of pre-computed powers of ten. */
-SDK const UI8* BinaryLUTF8();
-
-/* Gets the specified LUT entry by index. */
-SDK UI4 IEEE754LUTF(SI4 index);
-
-/* Gets the specified LUT entry by index. */
-SDK UI8 IEEE754LUTF(SI8 index);
-
-/* Gets the specified LUT entry by index. */
-SDK SI2 IEEE754LUTE(SI4 index);
+SDK inline const void* BinaryPow10Exponents();
 
 /* Checks if the given value is Not-a-Number.
 @param  value The value to check.
@@ -300,12 +294,6 @@ SDK SI4 MSbAsserted(UI8 value);
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(SI8 value);
-
-/* IEEE754 Powers of 10 exponents LUT. */
-SDK const SI2* IEEE754Pow10E();
-
-/* IEEE754 Powers of 10 integral portions LUT. */
-SDK const UI8* IEEE754Pow10F();
 
 /* Returns the last UI1 in the given CH1, which is c in this case. */
 SDK CH1* LastByte(CH1* c);

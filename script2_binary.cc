@@ -131,7 +131,7 @@ static const UI2 kDigits00To99[100] = {
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const SI2 kCachedPowersE[] = {
+static const SI2 IEEE754Pow10E[] = {
     -1220, -1193, -1166, -1140, -1113, -1087, -1060, -1034, -1007, -980, -954,
     -927,  -901,  -874,  -847,  -821,  -794,  -768,  -741,  -715,  -688, -661,
     -635,  -608,  -582,  -555,  -529,  -502,  -475,  -449,  -422,  -396, -369,
@@ -144,7 +144,7 @@ static const SI2 kCachedPowersE[] = {
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const UI8 kCachedPowersF64[] = {
+static const UI8 kIEEE754Pow10F8[] = {
     0xfa8fd5a0081c0288, 0xbaaee17fa23ebf76, 0x8b16fb203055ac76,
     0xcf42894a5dce35ea, 0x9a6bb0aa55653b2d, 0xe61acf033d1a45df,
     0xab70fe17c79ac6ca, 0xff77b1fcbebcdc4f, 0xbe5691ef416bd60c,
@@ -182,13 +182,13 @@ static const UI4 kIEEE754Pow10[] = {0,        1,         10,        100,
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const UI4 kCachedPowersF32[] = {0};
+static const UI4 kIEEE754Pow10F4[] = {0};
 
-UI4 IEEE754LUTF(SI4 index) { return kCachedPowersF32[index]; }
+const void* BinaryPow10Exponents() { return IEEE754Pow10E; }
 
-UI8 IEEE754LUTF(SI8 index) { return kCachedPowersF64[index]; }
+const void* Binary32Pow10IntegralPortions() { return kIEEE754Pow10F4; }
 
-SI2 IEEE754LUTE(SI4 index) { return kCachedPowersE[index]; }
+const void* Binary64Pow10IntegralPortions() { return kIEEE754Pow10F8; }
 
 #endif
 
@@ -438,15 +438,6 @@ CH4* Print(CH4* cursor, CH4* stop, CH4 c) {
 
 namespace _ {
 
-const SI2* BinaryLUTE() { return kCachedPowersE; }
-
-const UI8* BinaryLUTF8() { return kCachedPowersF64; }
-
-template <typename UI>
-UI8 BinaryLUT(UI8 index) {
-  return (sizeof(UI) == 8) ? BinaryLUTF8[index] : 0;
-}
-
 CH1* Print(CH1* cursor, CH1* stop, FLT value) {
   if (!cursor || cursor >= stop) return nullptr;
   SIW size = stop - cursor;
@@ -587,35 +578,6 @@ CH1* Print(CH1* begin, CH1* stop, CH1 byte_0, CH1 byte_1, CH1 byte_2) {
 // CH1 puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
 
 constexpr SIW IEEE754LutElementCount() { return 87; }
-
-const SI2* IEEE754Pow10E() {
-  /* Precomputed powers of 10 exponents for Grisu. */
-  return kCachedPowersE;
-}
-
-const UI8* IEEE754Pow10F() { return kCachedPowersF64; }
-
-void BinaryLUTAlignedGenerate(CH1* lut, size_t size) {
-  ASSERT(size);
-  SIW iee754_pow_10_count = IEEE754LutElementCount();
-  if (size != ((100 + iee754_pow_10_count) * 2 + iee754_pow_10_count * 8))
-    return;
-  UI2* ui2_ptr = reinterpret_cast<UI2*>(lut);
-
-  for (CH1 tens = '0'; tens <= '9'; ++tens)
-    for (SI4 ones = '0'; ones <= '9'; ++ones)
-#if ENDIAN == LITTLE
-      *ui2_ptr++ = (tens << 8) | ones;
-#else
-      *ui2_ptr++ = (ones << 8) | tens;
-#endif
-
-  for (SI4 i = 0; i < 87; ++i) *ui2_ptr = IEEE754Pow10E()[i];
-
-  UI8* ui8_ptr = reinterpret_cast<UI8*>(ui2_ptr);
-
-  for (SI4 i = 0; i < 87; ++i) *ui8_ptr = IEEE754Pow10F()[i];
-}
 
 const UI2* DigitsLut(const CH1* puff_lut) {
   return reinterpret_cast<const UI2*>(puff_lut);

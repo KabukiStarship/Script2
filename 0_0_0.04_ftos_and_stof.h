@@ -40,7 +40,7 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 #else
   enum { kTestCount = 1 << 15 };
 #endif
-
+  /*
   enum { kSize = 31 };
   CH1 socket[kSize + 1];
 
@@ -85,7 +85,8 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
     ASSERT(r);
     AVOW(dbl_expected, dbl_found);
   }
-
+  */
+  TBinary<>::PrintDebugInfo();
 #endif
   return nullptr;
 }

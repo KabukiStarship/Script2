@@ -24,6 +24,7 @@ string_.
 @param seam_end End of the seam log socket.
 @param args     Command line argument string_. */
 typedef const CH1* (*TestCase)(CH1* seam_log, CH1* seam_end, const CH1* args);
+
 namespace _ {
 
 /* Handles an assert.
