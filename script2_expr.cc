@@ -272,7 +272,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
       b;             //< Current UI1 being verified.
   hash16_t hash,     //< Expected hash of the B-Sequence.
       found_hash;    //< Found B-Sequence hash.
-  TME timestamp,     //< Last time when the expression ran.
+  TM8 timestamp,     //< Last time when the expression ran.
       delta_t;       //< Time delta between the last timestamp.
   const Op* op;      //< Current Op.
   Operand* operand;  //< The operand.

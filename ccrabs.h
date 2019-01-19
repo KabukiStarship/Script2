@@ -107,7 +107,7 @@ struct CCrabs {
   CHW current_char;    //< Current Unicode CH1 being scanned.
   hash16_t hash;       //< Packed BSQ hash.
   UI4 timeout_us;      //< Timeout time in microseconds.
-  TME last_time;       //< Last time the Stack was scanned.
+  TM8 last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
   const SI4 *header,   //< Pointer to the header being verified.
       *header_start;   //< Start of the header being verified.

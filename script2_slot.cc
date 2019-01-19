@@ -316,7 +316,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
       case kUI4:
       case kFLT:
-      case kTMS:
+      case kTM4:
 #if USING_CRABS_4_BYTE_TYPES
         // Read4ByteType:{
         // Word-align
@@ -351,7 +351,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
       case kUI8:
       case kDBL:
-      case kTME:
+      case kTM8:
 #if USING_CRABS_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align

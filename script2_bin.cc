@@ -383,7 +383,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
       case kUI4:
       case kFLT:
-      case kTMS:
+      case kTM4:
 #if USING_CRABS_4_BYTE_TYPES
         if (length < 4)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
@@ -405,7 +405,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #else
         return BInError(bin, kErrorInvalidType, params, index, begin);
 #endif
-      case kTME:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
+      case kTM8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
       case kSI8:
       case kUI8:
       case kDBL:

@@ -121,13 +121,13 @@ void Print (Op& log) {
                  return;
                 Write (ui8;
             }
-            case kTMS: {
-                if (BinRead (bin, Params<2, kADR, kTMS> (), Args (args, &ui4)))
+            case kTM4: {
+                if (BinRead (bin, Params<2, kADR, kTM4> (), Args (args, &ui4)))
                     return;
                 ClockPrintTime (ui4);
             }
-            case kTME: {
-                if (BinRead (bin, Params<2, kADR, kTME> (), Args (args, &ui8)))
+            case kTM8: {
+                if (BinRead (bin, Params<2, kADR, kTM8> (), Args (args, &ui8)))
                     return;
                 ClockPrintTimestamp (ui8);
             }

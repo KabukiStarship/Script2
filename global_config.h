@@ -205,8 +205,8 @@ typedef UI4 word_t;
 
 // Pre-compiled headers: comment out those you're not using.
 
-typedef SI4 TMS;  //< A 32-bit seconds since epoch timestamp.
-typedef SI8 TME;  //< A 64-bit seconds since epoch timestamp.
+typedef SI4 TM4;  //< A 32-bit seconds since epoch timestamp.
+typedef SI8 TM8;  //< A 64-bit seconds since epoch timestamp.
 
 typedef UI4 SI4;  //< ASCII Data Type UI1.
 

@@ -411,7 +411,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case kUI4:
       case kFLT:
-      case kTMS:
+      case kTM4:
 #if USING_CRABS_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
@@ -436,7 +436,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case kUI8:
       case kDBL:
-      case kTME:
+      case kTM8:
 #if USING_CRABS_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.

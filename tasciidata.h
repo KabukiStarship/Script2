@@ -57,9 +57,9 @@ typedef enum AsciiTypes {
   kSI4,      //< 7.  32-bit signed integer.
   kUI4,      //< 8.  32-bit unsigned integer.
   kFLT,      //< 9.  32-bit floating-point number_.
-  kTMS,      //< 10. 32-bit second since epoch timestamp.
-  kTSS,      //< 11. 64-bit sub-second timestamp with kTMS and an kUI4 tick.
-  kTME,      //< 12. 64-bit second since epoch timestamp.
+  kTM4,      //< 10. 32-bit second since epoch timestamp.
+  kTME,      //< 11. 64-bit sub-second timestamp with kTM4 and an kUI4 tick.
+  kTM8,      //< 12. 64-bit second since epoch timestamp.
   kSI8,      //< 13. 64-bit signed integer.
   kUI8,      //< 14. 64-bit unsigned integer.
   kDBL,      //< 15. 64-bit floating-point number_.
@@ -116,8 +116,8 @@ const Char** TTypeStrings() {
       "kSI4",  //<  9
       "kUI4",  //< 10
       "kFLT",  //< 11
-      "kTMS",  //< 12
-      "kTME",  //< 13
+      "kTM4",  //< 12
+      "kTM8",  //< 13
       "kSI8",  //< 14
       "kUI8",  //< 15
       "kDBL",  //< 16
@@ -146,7 +146,7 @@ T* TypeAlignUpPointer(void* pointer, SI4 type) {
     return reinterpret_cast<T*>(pointer);
   else if (type <= kHLF)
     return AlignUpPointer2<T>(pointer);
-  else if (type <= kTMS)
+  else if (type <= kTM4)
     return AlignUpPointer4<T>(pointer);
   else if (type <= kDEC)
     return AlignUpPointer8<T>(pointer);
@@ -188,10 +188,10 @@ Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
     case kFLT:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const FLT*>(value));
-    case kTMS:
+    case kTM4:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
-    case kTME:
-    case kTME:
+    case kTM8:
+    case kTM8:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
     case kSI8:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
