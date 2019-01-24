@@ -282,6 +282,7 @@ const Op* Star (wchar_t index, Expression* crabs)  {
 
 | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
 |:-----------------:|:---------------------:|:--------------------:|
+| 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
 | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
 
 ### 3.6.a Crabs Operations

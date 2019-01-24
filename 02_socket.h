@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \0_0_0__02_ascii_strings_and_socket.h
+@file    \02_ascii_strings_and_socket.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -20,17 +20,17 @@ specific language governing permissions and limitations under the License. */
 
 #include "cconsole.h"
 
-#if SEAM == _0_0_0__02
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_2
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 using namespace _;
 
-static const CH1* _0_0_0__02_Socket(CH1* seam_log, CH1* seam_end,
-                                    const CH1* args) {
-#if SEAM >= _0_0_0__02
+namespace script2 {
+static const CH1* _02_Socket(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_2
   TEST_BEGIN;
 
   PRINT_HEADING("Test SocketCopy and MemoryCompare");
@@ -56,3 +56,4 @@ static const CH1* _0_0_0__02_Socket(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
+} //< namespace script2

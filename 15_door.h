@@ -1,5 +1,6 @@
 /* Script^2 @version 0.x
-@file    /0_0_0__05_ascii_stack.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2/15_door.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,35 +14,23 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "tstack.h"
-
-#if SEAM == _0_0_0__06
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_15
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
+
+#include "croom.h"
 
 using namespace _;
 
-static const CH1* _0_0_0__06_ASCII_Stack(CH1* seam_log, CH1* seam_end,
-                                         const CH1* args) {
-#if SEAM >= _0_0_0__06
+namespace script2 {
+static const CH1* _15_Door(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM == SCRIPT2_15
   TEST_BEGIN;
-
-  PRINT("\n\nPushing items on to the Stack...\n");
-
-  TStack<SI4> stack(8);
-
-  for (SI4 i = 0; i <= 10; ++i) stack.Push(i);
-
-  PRINT_TOBJ(stack);
-
-  PRINT("\nPopping items off the Stack...\n");
-
-  for (SI4 i = 10; i > 0; --i) AVOW(i, stack.Pop());
-
-  PRINT_TOBJ(stack);
-
+  Door door;
+  Slot slot
 #endif
-  return nullptr;
+      return nullptr;
 }
+} //< namespace script2

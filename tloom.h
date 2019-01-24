@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tloom.h
+@file    /script2/tloom.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,15 +14,15 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__08
+#if SEAM >= SCRIPT2_8
 
 #ifndef INCLUDED_SCRIPTVARINT
 #define INCLUDED_SCRIPTVARINT
 
-#if SEAM == _0_0_0__08
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_8
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 namespace _ {
@@ -138,4 +138,4 @@ TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTVARINT
-#endif  //< #if SEAM >= _0_0_0__08
+#endif  //< #if SEAM >= SCRIPT2_8

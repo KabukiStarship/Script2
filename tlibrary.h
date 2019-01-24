@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tlibrary.h
+@file    /script2/tlibrary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,9 +13,9 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__14
-#ifndef INCLUDED_SCRIPT2_TLIBRARY
-#define INCLUDED_SCRIPT2_TLIBRARY
+#if SEAM >= SCRIPT2_14
+#ifndef INCLUDEDSCRIPT2_TLIBRARY
+#define INCLUDEDSCRIPT2_TLIBRARY
 #include "config.h"
 
 namespace _ {
@@ -197,5 +197,5 @@ SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
 }
 #endif  //< CRABS_MEMORY_PROFILE > 2
 }  // namespace _
-#endif  //< INCLUDED_SCRIPT2_TLIBRARY
-#endif  //< #if SEAM >= _0_0_0__14
+#endif  //< INCLUDEDSCRIPT2_TLIBRARY
+#endif  //< #if SEAM >= SCRIPT2_14

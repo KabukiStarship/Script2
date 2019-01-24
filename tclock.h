@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /clock.h
+@file    /script2/clock.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-8 Cale McCollough <calemccollough@gmail.com>;
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
@@ -14,19 +14,19 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__05
-#ifndef INCLUDED_SCRIPT2_TCLOCK
-#define INCLUDED_SCRIPT2_TCLOCK
+#if SEAM >= SCRIPT2_5
+#ifndef INCLUDEDSCRIPT2_TCLOCK
+#define INCLUDEDSCRIPT2_TCLOCK
 
 #include "cclock.h"
 
 #include "ctest.h"
-#include "tstr.h"
+#include "tstrand.h"
 
-#if SEAM == _0_0_0__05
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_5
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 namespace _ {
 
@@ -553,5 +553,5 @@ class SDK TClock {
 
 }  // namespace _
 
-#endif  //< #ifndef INCLUDED_SCRIPT2_TCLOCK
-#endif  //< #if SEAM >= _0_0_0__05
+#endif  //< #ifndef INCLUDEDSCRIPT2_TCLOCK
+#endif  //< #if SEAM >= SCRIPT2_5

@@ -1,5 +1,6 @@
 /* Script^2 @version 0.x
-@file    /0_0_0__06_test_ascii_array.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2/06_array.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -15,17 +16,17 @@ specific language governing permissions and limitations under the License. */
 
 #include "tarray.h"
 
-#if SEAM == _0_0_0__07
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_7
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 using namespace _;
 
-static const CH1* _0_0_0__07_ASCII_Array(CH1* seam_log, CH1* seam_end,
-                                         const CH1* args) {
-#if SEAM >= _0_0_0__07
+namespace script2 {
+static const CH1* _07_Array(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_7
   TEST_BEGIN;
 
   static const SI4 array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
@@ -42,3 +43,4 @@ static const CH1* _0_0_0__07_ASCII_Array(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
+} //< namespace script2

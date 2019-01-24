@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \0_0_0__03_ftos_and_stof.h
+@file    /script2/script2\03_ftos_and_stof.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -22,20 +22,20 @@ specific language governing permissions and limitations under the License. */
 
 using namespace std;
 
-#if SEAM == _0_0_0__04
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_4
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 using namespace _;
 
-const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
-                                    const CH1* args) {
-#if SEAM >= _0_0_0__04
+namespace script2 {
+const CH1* _04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_4
   TEST_BEGIN;
 
-#if SEAM == _0_0_0__04
+#if SEAM == SCRIPT2_4
   enum { kTestCount = 1 << 20 };
 #else
   enum { kTestCount = 1 << 15 };
@@ -90,3 +90,4 @@ const CH1* _0_0_0__04_FtoS_and_StoF(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
+} //< namespace script2

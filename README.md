@@ -70,7 +70,7 @@ BOL TestWarn(const CH1* function, const CH1* file, int line);
 
 ## License
 
-Copyright 2014-18 (C) [Cale McCollough](mailto:calemccollough@gmail.com) and contributors. All rights reserved (R).
+Copyright 2014-18 (C) [Cale McCollough](mailto:cale@astartup.net) and contributors. All rights reserved (R).
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License [here](http://www.apache.org/licenses/LICENSE-2.0).
 

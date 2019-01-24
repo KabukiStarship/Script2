@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /ccrabs.h
+@file    /script2/ccrabs.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__14
+#if SEAM >= SCRIPT2_14
 #ifndef INCLUDED_CRABS_EXPR
 #define INCLUDED_CRABS_EXPR
 #include "cargs.h"
@@ -292,4 +292,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
 #endif
 
 #endif  //< INCLUDED_CRABS_EXPR
-#endif  //< #if SEAM >= _0_0_0__14
+#endif  //< #if SEAM >= SCRIPT2_14

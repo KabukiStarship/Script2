@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cbinary.h
+@file    /script2/cbinary.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -22,7 +22,19 @@ namespace _ {
 /* Converts a UI1 a one-UI1 hex representation. */
 SDK CH1 HexNibbleToUpperCase(UI1 b);
 
-#if SEAM >= _0_0_0__01
+#if SEAM >= SCRIPT2_1
+
+/* Gets the header to print for PrintSocket(const void*, const void*). */
+SDK const CH1* StringSocketHeader ();
+
+/* Gets the header to print for PrintSocket(const void*, const void*). */
+SDK const CH1* StringSocketBorder ();
+
+/* Gets the header to print for PrintHex(const void*, const void*). */
+SDK const CH1* StringSocketHexHeader ();
+
+/* Gets the header to print for PrintHex(const void*, const void*). */
+SDK const CH1* StringSocketHexBorder ();
 
 /* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
 SDK const UI2* BinaryLUTDecimals();
@@ -138,7 +150,7 @@ SDK CH1* Print(CH1* cursor, CH1* stop, SI4 value);
 SDK CH1* Print(CH1* cursor, CH1* stop, UI4 value);
 
 #if USING_UTF8 == YES
-/* Prints a CH2 to the STR by converting it to a CH4.
+/* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor The beginning of the socket.
 @param   stop   The last UI1 in the socket.
@@ -147,7 +159,7 @@ SDK CH1* Print(CH1* cursor, CH1* stop, UI4 value);
 with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH1 c);
 
-/* Prints a CH2 to the STR by converting it to a CH4.
+/* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor The beginning of the socket.
 @param   stop   The last UI1 in the socket.
@@ -156,7 +168,10 @@ SDK CH1* Print(CH1* cursor, CH1* stop, CH1 c);
 with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH2 c);
 
-/* Prints a CH2 to the STR by converting it to a CH4.
+/* Converts a signed or unsigned char to a (unsigned) cH4. */
+inline SDK CH4 ToCH4 (CH1 c);
+
+/* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor The beginning of the socket.
 @param   stop   The last UI1 in the socket.
@@ -164,6 +179,12 @@ SDK CH1* Print(CH1* cursor, CH1* stop, CH2 c);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH4 c);
+SDK CH1* Print (CH1* cursor, SIW size, CH4 c);
+
+/* Attempts to scan a UTF-32 char from the given UTF-8 string.
+@return  Nil upon failure or a pointer to the end of the UTF-8 char upon
+success. */
+SDK const CH1* Scan (const CH1* string, CH4& result);
 #endif
 
 #if USING_UTF16 == YES
@@ -193,6 +214,13 @@ SDK CH2* Print(CH2* cursor, CH2* stop, CH2 c);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 SDK CH2* Print(CH2* cursor, CH2* stop, CH4 c);
+
+SDK CH2* Print (CH2* cursor, SIW size, CH4 c);
+
+/* Attempts to scan a UTF-32 char from the given UTF-16 string.
+@return  Nil upon failure or a pointer to the end of the UTF-8 char upon
+success. */
+SDK const CH2* Scan (const CH2* string, CH4& result);
 #endif
 
 #if USING_UTF32 == YES
@@ -222,11 +250,12 @@ SDK CH4* Print(CH4* cursor, CH4* stop, CH2 c);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 SDK CH4* Print(CH4* cursor, CH4* stop, CH4 c);
+
 #endif
 
-#endif  //< #if SEAM >= _0_0_0__01
+#endif  //< #if SEAM >= SCRIPT2_1
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Gets the maximum number_ of digits required to represent a FLT as in
 ASCII. */
 SDK SI4 FloatDigitsMax();
@@ -334,6 +363,6 @@ SDK CH4* Print(CH4* cursor, CH4* stop, FLT value);
 SDK CH4* Print(CH4* cursor, CH4* stop, DBL value);
 #endif
 
-#endif  //< #if SEAM >= _0_0_0__03
+#endif  //< #if SEAM >= SCRIPT2_3
 }  // namespace _
 #endif  //< #ifndef SCRIPT2_CBINARY

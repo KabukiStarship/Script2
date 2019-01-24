@@ -1,5 +1,6 @@
 /* Script^2 @version 0.x
-@file    /script2/0_0_0.14_room.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2/14_expr.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,19 +14,21 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == _0_0_0__14
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_14
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 #include "croom.h"
 
 using namespace _;
 
-static const CH1* _0_0_0__14_Expr(CH1* seam_log, CH1* seam_end,
-                                  const CH1* args) {
-#if SEAM == _0_0_0__14
+namespace script2 {
+static const CH1* _14_Expr(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM == SCRIPT2_14
+  TEST_BEGIN;
+
   enum {
     kBufferSize = 2048,
     kBufferWords = kBufferSize / sizeof(UIW),
@@ -52,7 +55,7 @@ static const CH1* _0_0_0__14_Expr(CH1* seam_log, CH1* seam_end,
   ExpressionRingBell(expr);
   ExpressionAckBack(expr);
   result =
-      BoutWrite(bout, Params<4, ADR, UI1, STR, Parent::kTextBufferSize, ADR>(),
+      BoutWrite(bout, Params<4, ADR, UI1, CH1*, Parent::kTextBufferSize, ADR>(),
                 Args(args, Address<'A', 'A', 'A'>(), &io_number_, Const("Test"),
                      Address<BS, CR>()));
   BoutPrint(bout);
@@ -68,3 +71,4 @@ static const CH1* _0_0_0__14_Expr(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
+} //< namespace script2

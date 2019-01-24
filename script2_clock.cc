@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_clock.cc
+@file    /script2/script2_clock.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,17 +13,17 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= _0_0_0__05
+#if SEAM >= SCRIPT2_5
 
 #include <ctime>
 
 #include "tbinary.h"
 #include "tclock.h"
 
-#if SEAM == _0_0_0__05
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_5
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 namespace _ {
@@ -458,4 +458,4 @@ const CH4* ScanTime(const CH4* string, TM8& result) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__05
+#endif  //< #if SEAM >= SCRIPT2_5
