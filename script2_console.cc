@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_console.cc
+@file    /script2/script2_console.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -23,13 +23,13 @@ specific language governing permissions and limitations under the License. */
 #include "tbinary.h"
 #include "ttest.h"
 
-#if SEAM == _0_0_0__00
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_0
+#include "global_debug.inl"
 #define PRINT_ARGS                                    \
   Printf("\nargs_count:%i args:%p", arg_count, args); \
   for (SI4 i = 0; i < arg_count; ++i) Printf("\n%i:\"%s", i, args[i])
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #define PRINT_ARGS
 #endif
 
@@ -56,8 +56,15 @@ const CH1* ArgsToString(SI4 arg_count, CH1** args) {
 #undef PRINT_ARGS
 
 inline void Print(CH1 c) {
-  PRINT_FUNCTION_LINE;
   putchar(c);
+}
+
+inline void Print (CH4 c) {
+  std::wcout << c;
+}
+
+inline void Print (CH2 c) {
+  Print ((CH4)c);
 }
 
 inline void Print(CH1 first, CH1 second) {
@@ -117,7 +124,7 @@ void Print(const CH1* a, const CH1* b, const CH1* c) {
 }
 
 void Print(UI8 value) {
-#if SEAM <= _0_0_0__01
+#if SEAM <= SCRIPT2_1
   return Printf(FORMAT_UI8, value);
 #else
   enum { kSize = 24 };
@@ -128,7 +135,7 @@ void Print(UI8 value) {
 }
 
 void Print(UI4 value) {
-#if SEAM <= _0_0_0__01
+#if SEAM <= SCRIPT2_1
   return Printf("%u", value);
 #else
   enum { kSize = 24 };
@@ -138,7 +145,7 @@ void Print(UI4 value) {
 }
 
 void Print(SI8 value) {
-#if SEAM <= _0_0_0__01
+#if SEAM <= SCRIPT2_1
   return Printf(FORMAT_SI8, value);
 #else
   enum { kSize = 24 };
@@ -149,7 +156,7 @@ void Print(SI8 value) {
 }
 
 void Print(SI4 value) {
-#if SEAM <= _0_0_0__01
+#if SEAM <= SCRIPT2_1
   return Printf("%i", value);
 #else
   enum { kSize = 24 };
@@ -159,7 +166,7 @@ void Print(SI4 value) {
 }
 
 void Print(FLT value) {
-#if SEAM <= _0_0_0__13
+#if SEAM <= SCRIPT2_13
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
@@ -170,7 +177,7 @@ void Print(FLT value) {
 }
 
 void Print(DBL value) {
-#if SEAM <= _0_0_0__13
+#if SEAM <= SCRIPT2_13
   return Printf("%f", value);
 #else
   enum { kSize = 24 };
@@ -267,11 +274,16 @@ void PrintBinary(const void* ptr) {
 template <typename UI>
 void TPrintHexConsole(UI value) {
   enum { kHexStringLengthSizeMax = sizeof(UI) * 2 + 3 };
-  Print('0', 'x');
   for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4)
     Print(HexNibbleToUpperCase((UI1)(value >> num_bits_shift)));
 }
+
+void PrintHex (CH1 value) { TPrintHexConsole<UI1> (value); }
+
+void PrintHex (CH2 value) { TPrintHexConsole<UI2> (value); }
+
+void PrintHex (CH4 value) { TPrintHexConsole<UI4> (value); }
 
 void PrintHex(UI1 value) { TPrintHexConsole<UI1>(value); }
 
@@ -302,6 +314,45 @@ void PrintHex(DBL value) {
 void PrintHex(const void* ptr) {
   UIW value = reinterpret_cast<UIW>(ptr);
   TPrintHexConsole<UIW>(value);
+}
+
+void PrintHex (const void* begin, const void* end) {
+  if (!begin || begin >= end) return;
+
+  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
+    *address_end_ptr = reinterpret_cast<const CH1*>(end);
+  size_t size = address_end_ptr - address_ptr,
+    num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+
+  SIW num_bytes = 81 * (num_rows + 2);
+  size += num_bytes;
+  Print (StringSocketHexHeader ());
+  Print (StringSocketHexBorder ());
+  PrintHex (address_ptr);
+
+  CH1 c;
+  while (address_ptr < address_end_ptr) {
+    Print ('\n', '|');
+    for (SI4 i = 0; i < 32; ++i) {
+      c = *address_ptr++;
+      if (address_ptr > address_end_ptr)
+        c = 'x';
+      else if (!c || c == TAB)
+        c = ' ';
+      else if (c < ' ')
+        c = DEL;
+      PrintHex (c);
+    }
+    Print ('|', ' ');
+    PrintHex (address_ptr);
+  }
+  Print (StringSocketHexBorder ());
+  PrintHex (address_ptr + size);
+}
+
+void PrintHex (const void* begin, SIW size) {
+  const CH1* begin_char = reinterpret_cast<const CH1*>(begin);
+  return PrintHex (begin_char, begin_char + size);
 }
 
 SI4 CInKey() { return _getch(); }
@@ -339,13 +390,10 @@ void Pausef(const CH1* format, ...) {
 
 }  // namespace _
 
-#if SEAM >= _0_0_0__02
+#if SEAM >= SCRIPT2_2
 namespace _ {
 
-void PrintSocket(const CH1* begin, const CH1* end) {
-  // @todo This function needs to write the memory to a Socket which then
-  // gets printed to the TCOut ().
-
+void PrintSocket(const void* begin, const void* end) {
   if (!begin || begin >= end) return;
 
   const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
@@ -355,18 +403,8 @@ void PrintSocket(const CH1* begin, const CH1* end) {
 
   SIW num_bytes = 81 * (num_rows + 2);
   size += num_bytes;
-  Print('\n', '|');
-
-  //  Columns
-  Printf("0%8i ", 8);
-  for (SI4 i = 16; i <= 56; i += 8) Printf("%8i", i);
-  for (SI4 j = 6; j > 0; --j) Print(' ');
-  Print('|', '\n', '|');
-  for (SI4 j = 8; j > 0; --j) {
-    Print('+');
-    for (SI4 k = 7; k > 0; --k) Print('-');
-  }
-  Print('|', ' ');
+  Print(StringSocketHeader ());
+  Print (StringSocketBorder ());
 
   PrintHex(address_ptr);
 
@@ -387,14 +425,7 @@ void PrintSocket(const CH1* begin, const CH1* end) {
     Print('|', ' ');
     PrintHex(address_ptr);
   }
-  Print('\n', '|');
-  for (SI4 j = 8; j > 0; --j) {
-    Print('+');
-    for (SI4 k = 7; k > 0; --k) {
-      Print('-');
-    }
-  }
-  Print('|', ' ');
+  Print (StringSocketBorder ());
   PrintHex(address_ptr + size);
 }
 
@@ -404,5 +435,5 @@ void PrintSocket(const void* begin, SIW size) {
 }
 
 }  // namespace _
-#endif  //< #if SEAM >= _0_0_0__02
+#endif  //< #if SEAM >= SCRIPT2_2
 #undef PRINT_ARGS

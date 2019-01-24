@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cconsole.h
+@file    /script2/cconsole.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -27,6 +27,12 @@ SDK const CH1* ArgsToString(SI4 arg_count, CH1** args);
 
 /* Prints a single CH1 to the console. */
 SDK inline void Print(CH1 c);
+
+/* Prints a single CH1 to the console. */
+SDK inline void Print (CH4 c);
+
+/* Prints a single CH1 to the console. */
+SDK inline void Print (CH2 c);
 
 /* Prints a single CH1 to the console. */
 SDK void Print(CH1 first, CH1 second);
@@ -132,68 +138,83 @@ SDK void Pause(const CH1* message = "");
 /* Prints a message then pauses the application until a key is pressed. */
 SDK void Pausef(const CH1* message, ...);
 
-/* Prints a 8-bit binary value to the console. */
-SDK void PrintBinary(UI1 value);
+/* Prints a 8-bit binary item to the console. */
+SDK void PrintBinary(UI1 item);
 
-/* Prints a 8-bit binary value to the console. */
-SDK void PrintBinary(SI1 value);
+/* Prints a 8-bit binary item to the console. */
+SDK void PrintBinary(SI1 item);
 
-/* Prints a 16-bit binary value to the console. */
-SDK void PrintBinary(UI2 value);
+/* Prints a 16-bit binary item to the console. */
+SDK void PrintBinary(UI2 item);
 
-/* Prints a 16-bit binary value to the console. */
-SDK void PrintBinary(SI2 value);
+/* Prints a 16-bit binary item to the console. */
+SDK void PrintBinary(SI2 item);
 
-/* Prints a 32-bit binary value to the console. */
-SDK void PrintBinary(UI4 value);
+/* Prints a 32-bit binary item to the console. */
+SDK void PrintBinary(UI4 item);
 
-/* Prints a 32-bit binary value to the console. */
-SDK void PrintBinary(SI4 value);
+/* Prints a 32-bit binary item to the console. */
+SDK void PrintBinary(SI4 item);
 
-/* Prints a 64-bit binary value to the console. */
-SDK void PrintBinary(UI8 value);
+/* Prints a 64-bit binary item to the console. */
+SDK void PrintBinary(UI8 item);
 
-/* Prints a 64-bit binary value to the console. */
-SDK void PrintBinary(SI8 value);
+/* Prints a 64-bit binary item to the console. */
+SDK void PrintBinary(SI8 item);
 
 /* Prints a 32-bit floating-point number_ to the console in binary. */
-SDK void PrintBinary(FLT value);
+SDK void PrintBinary(FLT item);
 
 /* Prints a 64-bit floating-point number_ to the console in binary. */
-SDK void PrintBinary(DBL value);
+SDK void PrintBinary(DBL item);
 
 /* Prints a pointer to the console in binary. */
-SDK void PrintBinary(const void* value);
+SDK void PrintBinary(const void* item);
 
-/* Prints a 8-bit binary value to the console to hex. */
-SDK void PrintHex(UI1 value);
+/* Prints a item to the console to hex. */
+SDK void PrintHex (CH1 item);
 
-/* Prints a 8-bit binary value to the console to hex. */
-SDK void PrintHex(SI1 value);
+/* Prints a item to the console to hex. */
+SDK void PrintHex (CH2 item);
 
-/* Prints a 16-bit binary value to the console to hex. */
-SDK void PrintHex(UI2 value);
+/* Prints a item to the console to hex. */
+SDK void PrintHex (CH4 item);
 
-/* Prints a 16-bit binary value to the console to hex. */
-SDK void PrintHex(SI2 value);
+/* Prints a 8-bit binary item to the console to hex. */
+SDK void PrintHex(UI1 item);
 
-/* Prints a 32-bit binary value to the console to hex. */
-SDK void PrintHex(UI4 value);
+/* Prints a 8-bit binary item to the console to hex. */
+SDK void PrintHex(SI1 item);
 
-/* Prints a 32-bit binary value to the console to hex. */
-SDK void PrintHex(SI4 value);
+/* Prints a 16-bit binary item to the console to hex. */
+SDK void PrintHex(UI2 item);
 
-/* Prints a 64-bit binary value to the console to hex. */
-SDK void PrintHex(UI8 value);
+/* Prints a 16-bit binary item to the console to hex. */
+SDK void PrintHex(SI2 item);
 
-/* Prints a 64-bit binary value to the console to hex. */
-SDK void PrintHex(SI8 value);
+/* Prints a 32-bit binary item to the console to hex. */
+SDK void PrintHex(UI4 item);
+
+/* Prints a 32-bit binary item to the console to hex. */
+SDK void PrintHex(SI4 item);
+
+/* Prints a 64-bit binary item to the console to hex. */
+SDK void PrintHex(UI8 item);
+
+/* Prints a 64-bit binary item to the console to hex. */
+SDK void PrintHex(SI8 item);
 
 /* Prints a 32-bit floating-point number_ to the console in hex. */
-SDK void PrintHex(FLT value);
+SDK void PrintHex(FLT item);
 
 /* Prints a 64-bit floating-point number_ to the console in hex. */
-SDK void PrintHex(DBL value);
+SDK void PrintHex(DBL item);
+
+/* Prints the given socket to the stdout in hex format. */
+SDK void PrintHex (const void* begin, const void* end);
+
+/* Prints the given socket to the stdout in hex format. */
+SDK void PrintHex (const void* begin, SIW size);
 
 /* Prints a pointer to the console in hex. */
 SDK void PrintHex(const void* value);
@@ -203,7 +224,7 @@ SDK void PrintHex(const void* value);
 SDK SI4 CInKey();
 
 /* Prints the given socket to the stdout. */
-SDK void PrintSocket(const CH1* begin, const CH1* stop);
+SDK void PrintSocket(const void* begin, const void* end);
 
 /* Prints the given socket to the stdout. */
 SDK void PrintSocket(const void* begin, SIW size);

@@ -1,14 +1,14 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_test.cc
+@file    /script2/script2_test.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
 Unless required by applicable law or agreed to in writing, software distributed
-  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "tbinary.h"
 
-#include "test_debug.inl"
+#include "global_debug.inl"
 
 namespace _ {
 
@@ -120,6 +120,8 @@ BOL Test(const CH4* a, const CH4* b) {
   if (!result) return true;
   Print(kStringErrorExpecting);
   Print(a);
+  Print ("   ");
+  PrintHex (a);
   Print(kStringFound);
   Print(b);
   Print(kStringDifference);
@@ -127,30 +129,77 @@ BOL Test(const CH4* a, const CH4* b) {
   return false;
 }
 
+BOL Test (CH1 a, CH1 b) {
+  if (a == b) return true;
+  Print (kStringErrorExpecting);
+  PrintHex (a);
+  Print (':');
+  Print (a);
+  Print (kStringFound);
+  PrintHex (b);
+  Print (':');
+  Print (b);
+  return false;
+}
+
+BOL Test (CH2 a, CH2 b) {
+  if (a == b) return true;
+  Print (kStringErrorExpecting);
+  PrintHex (a);
+  Print (':');
+  Print (a);
+  Print (kStringFound);
+  PrintHex (b);
+  Print (':');
+  Print (b);
+  return false;
+}
+
+BOL Test (CH4 a, CH4 b) {
+  if (a == b) return true;
+  Print (kStringErrorExpecting);
+  PrintHex (a);
+  Print (':');
+  Print (a);
+  Print (kStringFound);
+  PrintHex (b);
+  Print (':');
+  Print (b);
+  return false;
+}
+
 BOL Test(const void* a, const void* b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  PrintHex(a);
+  PrintHex (a);
   Print(kStringFound);
-  PrintHex(b);
+  PrintHex (b);
   return false;
 }
 
 BOL Test(UI1 a, UI1 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(SI1 a, SI1 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
@@ -158,71 +207,103 @@ BOL Test(UI2 a, UI2 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
   Print(a);
+  Print ("   ");
+  PrintHex (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(SI2 a, SI2 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(UI4 a, UI4 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(SI4 a, SI4 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(UI8 a, UI8 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(SI8 a, SI8 b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(FLT a, FLT b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
 BOL Test(DBL a, DBL b) {
   if (a == b) return true;
   Print(kStringErrorExpecting);
-  Print(a);
+  PrintHex (a);
+  Print (':');
+  Print (a);
   Print(kStringFound);
-  Print(b);
+  PrintHex (b);
+  Print (':');
+  Print (b);
   return false;
 }
 
@@ -294,4 +375,4 @@ BOL Test(DBL value) {
 
 }  // namespace _
 
-#include "test_release.inl"
+#include "global_release.inl"

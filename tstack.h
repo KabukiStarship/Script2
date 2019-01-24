@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tstack.h
+@file    /script2/tstack.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,18 +13,18 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__05
+#if SEAM >= SCRIPT2_5
 #ifndef SCRIPT2_TSTACK
 #define SCRIPT2_TSTACK 1
 
 #include "csocket.h"
 #include "tobject.h"
-#include "tstr.h"
+#include "tstrand.h"
 
-#if SEAM == _0_0_0__05
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_5
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 namespace _ {
@@ -243,7 +243,6 @@ UIW* StackClone(TCStack<T, Size, Index>* stack,
 /* Returns the first element in the Stack vector. */
 template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 T* TStackStart(TCStack<T, Size, Index>* stack) {
-  ASSERT(stack);
   return reinterpret_cast<T*>(reinterpret_cast<CH1*>(stack) +
                               sizeof(TCStack<T, Size, Index>));
 }
@@ -251,7 +250,6 @@ T* TStackStart(TCStack<T, Size, Index>* stack) {
 /* Returns the first element in the Stack vector. */
 template <typename T = SI4, typename Size = SI4, typename Index = SI4>
 T* StackStop(TCStack<T, Size, Index>* stack) {
-  ASSERT(stack);
   return TStackStart<T, Size, Index>(stack) + stack->count - 1;
 }
 
@@ -459,7 +457,7 @@ BOL TStackGrow(CObject obj) {
   T *source = TStackStart(stack), *destination = TStackStart(new_stack);
   for (; count > 0; count--) *destination++ = *source++;
   AsciiFactory factory = obj.factory;
-  if (factory) factory(socket, 0, 0);
+  if (factory) factory(obj, kFactoryDestroy, nullptr);
   return true;
 }
 
@@ -490,6 +488,11 @@ TUTF<Char>& TPrintStack(TUTF<Char>& utf, TCStack<T, Size, Index>* stack) {
     utf << '\n' << i + 1 << ".) " << elements[i];
   }
   return utf;
+}
+
+template <typename T = SI4, typename Size = SI4, typename Index = SI4>
+BOL TStackInBounds (TCStack<T, Size, Index>* stack, Index index) {
+  return index >= 0 && index < stack->count_max;
 }
 
 /* A stack of data.
@@ -545,20 +548,21 @@ class TStack {
 
   /* Checks if the given index is a valid element.
   @return true if the index is in bounds. */
-  inline BOL InBounds(Index index) { return index >= 0 && index < count_max_; }
+  inline BOL InBounds (Index index) { 
+    return TStackInBounds<T, SI, Index> (obj_.CObj (), index); }
 
   /* Gets the max number_ of elements in an obj with the specific index
   width. */
   inline Index GetElementsMax() { return StackCountMax<T, Size, Index>(); }
 
   /* Gets the size of the entire Stack, including header, in bytes. */
-  inline Size Size() { return CObject()->size; }
+  inline Size SizeBytes() { return CObject()->SizeBytes (); }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
-  inline Size GetSizeMin() { return StackSizeMin<T, Size, Index>(); }
+  inline Size SizeMin() { return StackSizeMin<T, Size, Index>(); }
 
   /* Gets the count of the items on the obj. */
-  inline Index GetCount() { return Header().count; }
+  inline Index GetCount() { return Obj ().count; }
 
   /* Gets a pointer to the first element in the obj. */
   inline T* Start() { return TStackStart<T, Size, Index>(CObject()); }
@@ -585,12 +589,12 @@ class TStack {
   @return The index of the newly stacked item.
   @param  item The item to push onto the obj. */
   inline Index Push(T item) {
-    Index result = TStackPush<T, Size, Index>(Header(), item);
+    Index result = TStackPush<T, Size, Index>(Obj(), item);
     // std::count << "\n  Pushing " << item;
     if (result < 0) {
       // Printf (" and growing.");
       Grow();
-      Index result = TStackPush<T, Size, Index>(Header(), item);
+      Index result = TStackPush<T, Size, Index>(Obj(), item);
       // COUT << this;
       if (result < 0) return -1;
       return result;
@@ -601,7 +605,7 @@ class TStack {
   /* Pops the top item off of the obj.
   @return The item popped off the obj. */
   inline T Pop() {
-    T value = TStackPop<T, Size, Index>(Header());
+    T value = TStackPop<T, Size, Index>(Obj());
     PRINT("\n  Popping ");
     PRINT(value);
     return value;
@@ -632,31 +636,32 @@ class TStack {
 
   /* Doubles the size of the obj.
   @return False upon failure. */
-  inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.CObject()); }
-
-  /* Gets this TObject. */
-  inline TObject<Index>& CObject() { return obj_; }
-
-  /* Gets this TObject. */
-  inline CObject& CObject() { return obj_.CObject(); }
-
-  /* Returns the TCStack Object. */
-  inline TCStack<T, Size, Index>* Header() {
-    return reinterpret_cast<TCStack<T, Size, Index>*>(obj_.Begin());
-  }
+  inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.CObj()); }
 
   /* Prints this object to the given UTF. */
   template <typename Char = CH1>
   inline TUTF<Char>& Print(TUTF<Char>& utf) {
-    return TPrintStack<T, Size, Index, Char>(utf, Header());
+    return TPrintStack<T, Size, Index, Char>(utf, Obj());
   }
 
   /* Prints this object to the SIO. */
-  template <typename Char = CH1, SIW size = kObjSizeDefault>
-  inline void Print(AsciiFactory factory = TCOutHeap<UI4, Char>) {
-    TStrand<UI4, CH1> utf(factory);  //< The UTF.
-    Print<Char>(utf);
+  template <typename Char = CH1, SIW size = kObjSizeDefault, 
+    AsciiFactory kFactory_ = TCOutHeap<Char>>
+  inline void Print() {
+    TStrand<CH1, kStrandCountMax, kFactory_> strand;
+    this->Print<Char>(strand.Star ());
   }
+
+  /* Gets the ASCII Object. */
+  inline TCStack<T, Size, Index>* Obj () {
+    return reinterpret_cast<TCStack<T, Size, Index>*> (obj_.CObj ().begin);
+  }
+
+  /* Gets this TObject. */
+  inline CObject& CObj () { return obj_.CObj (); }
+
+  /* Gets this TObject. */
+  inline TObject<Index>& TObj () { return obj_; }
 
   /* Clones the other object. */
   inline TStack<T, Size, Index>& operator[](
@@ -684,11 +689,11 @@ class TStack {
   /* Sets the socket to the new pointer. */
   inline void SetBuffer(TCStack<T, Size, Index>* stack) {
     ASSERT(stack);
-    obj_->begin = reinterpret_cast<UIW*>(stack);
+    CObj ().begin = reinterpret_cast<UIW*>(stack);
   }
 };
 
 }  // namespace _
 
 #endif  //< SCRIPT2_TSTACK
-#endif  //< #if SEAM >= _0_0_0__05
+#endif  //< #if SEAM >= SCRIPT2_6

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_exceptions.cc
+@file    /script2/script2_exceptions.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__14
+#if SEAM >= SCRIPT2_14
 // Dependencies:
 #include "cinterrupts.h"
 // End dependencies.
@@ -29,4 +29,4 @@ const CH1* RoomCrashException::what() const throw() {
 
 }  //< namespace _
 #endif  //< USING_CRABS_INTERRUPTS
-#endif  ///< #if SEAM >= _0_0_0__14
+#endif  ///< #if SEAM >= SCRIPT2_14

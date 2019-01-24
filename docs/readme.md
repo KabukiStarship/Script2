@@ -1,4 +1,4 @@
-# Script2 Documents
+# script.docs
 
 This folder contains:
 
@@ -34,3 +34,9 @@ This folder contains:
 
 * How do I use Script2 in my app?
   * Script2 is a Nanoframework intended to make Microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit) harness.
+
+# The License
+
+Copyright 2014-19 (C) Cale Jamison McCollough <<cale@astartup.net>>. All rights reserved (R).
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0). Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

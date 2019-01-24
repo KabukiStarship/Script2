@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /seam_tree.cc
+@file    /script2/05_stack.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,14 +14,39 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef INCLUDED_SEAM_TREE
-#define INCLUDED_SEAM_TREE 1
-#include "0_0_0.script2.h"
+#include "tstack.h"
+
+#if SEAM == SCRIPT2_6
+#include "global_debug.inl"
+#else
+#include "global_release.inl"
+#endif
 
 using namespace _;
-SI4 main(SI4 arg_count, CH1** args) {
-  enum { kSize = 1024 };
-  CH1 seam_log[kSize];
-  return TTestTree<_0_0_0_Script2>(arg_count, args, seam_log, kSize);
-}
+
+namespace script2 {
+static const CH1* _06_Stack(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_6
+  TEST_BEGIN;
+
+  PRINT("\n\nPushing items on to the Stack...\n");
+
+  TStack<SI4> stack(8);
+  stack.Print ();
+  stack.Push (0);
+  PRINT_SOCKET_TOBJ (stack.TObj ());
+
+  for (SI4 i = 1; i <= 10; ++i) ;
+
+  PRINT_TOBJ(stack);
+
+  PRINT("\nPopping items off the Stack...\n");
+
+  for (SI4 i = 10; i > 0; --i) AVOW(i, stack.Pop());
+
+  PRINT_TOBJ(stack);
+
 #endif
+  return nullptr;
+}
+} //< namespace script2

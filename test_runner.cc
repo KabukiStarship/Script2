@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cstr.h
+@file    /script2/test_tree.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,25 +14,13 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__03
-#ifndef INCLUDED_SCRIPTUTF
-#define INCLUDED_SCRIPTUTF
-
-#include "csocket.h"
-
-#ifndef USING_UTF8
-#define USING_UTF8 YES
+#ifndef INCLUDED_SEAM_TREE
+#define INCLUDED_SEAM_TREE 1
+#include "test_tree.h"
+ 
+SI4 main(SI4 arg_count, CH1** args) {
+  enum { kSize = 1024 };
+  CH1 seam_log[kSize];
+  return _::TTestTree<script2::TestNode>(arg_count, args, seam_log, kSize);
+}
 #endif
-
-#if USING_UTF8 == YES
-#include "cstr1.h"
-#endif
-#if USING_UTF16 == YES
-#include "cstr2.h"
-#endif
-#if USING_UTF32 == YES
-#include "cstr4.h"
-#endif
-
-#endif  //< #if INCLUDED_SCRIPTUTF
-#endif  //< #if SEAM >= _0_0_0__03

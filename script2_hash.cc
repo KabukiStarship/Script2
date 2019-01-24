@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_hash.cc
+@file    /script2/script2_hash.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__06
+#if SEAM >= SCRIPT2_9
 #include "thash.h"
 
 namespace _ {
@@ -82,4 +82,4 @@ UI2 Hash16UI8(UI8 value, UI2 hash) {
 }
 
 }  // namespace _
-#endif  //> #if SEAM >= _0_0_0__06
+#endif  //> #if SEAM >= SCRIPT2_9

@@ -51,16 +51,16 @@ SDK BOL TestAssert(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
-SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
+SDK SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
                  TestCase* tests, SI4 test_count);
 
 /* Tests an array of TestCase(s).
 @return Nil upon success or an error string_ upon failure. */
-const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
+SDK const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
                     TestCase* seams, SI4 node_count);
 
 /* Prints a message when a TestCase completes without failure. */
-BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
+SDK BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
@@ -127,6 +127,24 @@ SDK BOL Test(const void* value);
 @param  a Parameter a.
 @param  b Parameter b. */
 SDK BOL Test(const CH1* a, const CH1* b);
+
+/* Tests if the given arguments are equal.
+@return false if the condition is false.
+@param  a Parameter a.
+@param  b Parameter b. */
+SDK BOL Test (CH1 a, CH1 b);
+
+/* Tests if the given arguments are equal.
+@return false if the condition is false.
+@param  a Parameter a.
+@param  b Parameter b. */
+SDK BOL Test (CH2 a, CH2 b);
+
+/* Tests if the given arguments are equal.
+@return false if the condition is false.
+@param  a Parameter a.
+@param  b Parameter b. */
+SDK BOL Test (CH4 a, CH4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.

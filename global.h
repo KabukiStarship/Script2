@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /global.h
+@file    /script2/global.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -17,47 +17,47 @@ specific language governing permissions and limitations under the License. */
 #ifndef INCLUDED_SCRIPTGLOBAL
 #define INCLUDED_SCRIPTGLOBAL 1
 
-#if SEAM == _0_0_0__00
+#if SEAM == SCRIPT2_0
 #include "cconsole.h"
 #include "crng.h"
 #endif
-#if SEAM == _0_0_0__01
+#if SEAM == SCRIPT2_1
 #include "cconsole.h"
 #include "crng.h"
 #endif
-#if SEAM == _0_0_0__02
+#if SEAM == SCRIPT2_2
 #include "cconsole.h"
 #include "crng.h"
 #include "tbinary.h"
 #include "tsocket.h"
 #endif
-#if SEAM == _0_0_0__03 || SEAM == _0_0_0__04
+#if SEAM == SCRIPT2_3 || SEAM == SCRIPT2_4
 #include "cconsole.h"
 #include "crng.h"
 #include "tbinary.h"
 #endif
-#if SEAM == _0_0_0__05
+#if SEAM == SCRIPT2_5
 #include "cconsole.h"
 #include "crng.h"
 #include "tclock.h"
 #endif
-#if SEAM == _0_0_0__06
+#if SEAM == SCRIPT2_6
 #endif
-#if SEAM == _0_0_0__07
+#if SEAM == SCRIPT2_7
 #endif
-#if SEAM == _0_0_0__08
+#if SEAM == SCRIPT2_8
 #endif
-#if SEAM == _0_0_0__09
+#if SEAM == SCRIPT2_9
 #endif
-#if SEAM == _0_0_0__10
+#if SEAM == SCRIPT2_10
 #endif
-#if SEAM == _0_0_0__11
+#if SEAM == SCRIPT2_11
 #endif
-#if SEAM == _0_0_0__12
+#if SEAM == SCRIPT2_12
 #endif
-#if SEAM == _0_0_0__13
+#if SEAM == SCRIPT2_13
 #endif
-#if SEAM == _0_0_0__14
+#if SEAM == SCRIPT2_14
 #endif
 
 #endif  //< #ifndef INCLUDED_SCRIPTGLOBAL

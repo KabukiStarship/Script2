@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2_binary.cc
+@file    /script2/script2_binary.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -25,8 +25,25 @@ CH1 HexNibbleToUpperCase(UI1 b) {
 }
 }  // namespace _
 
-#if SEAM >= _0_0_0__01
+#if SEAM >= SCRIPT2_1
 namespace _ {
+
+const CH1* StringSocketHeader () {
+  return "\n|0       8       16      24      32      40      48      52      |";
+}
+
+const CH1* StringSocketBorder () {
+  return "\n|+-------+-------+-------+-------+-------+-------+-------+-------| ";
+}
+
+const CH1* StringSocketHexHeader () {
+  return "\n|0               8               16              24              |";
+}
+
+const CH1* StringSocketHexBorder () {
+  return "\n|+---------------+---------------+---------------+---------------| ";
+}
+
 /*
 SI4 TStringLength(UI8 value) {
   if (value < 10) return 1;
@@ -127,7 +144,7 @@ static const UI2 kDigits00To99[100] = {
     0x3939};
 #endif
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
@@ -292,44 +309,152 @@ CH1* Print(CH1* cursor, CH1* stop, CH1 c) {
   return cursor;
 }
 
+#if SEAM == SCRIPT2_3
+#include "test_debug.inl"
+#else
+#include "test_release.inl"
+#endif
+
 CH1* Print(CH1* cursor, CH1* stop, CH4 c) {
+  if (!cursor || cursor >= stop) return nullptr;
+
   // | Byte 1   | Byte 2   | Byte 3   | Byte 4   | UTF-32 Result         |
   // |:--------:|:--------:|:--------:|:--------:|:---------------------:|
   // | 0aaaaaaa |          |          |          | 00000000000000aaaaaaa |
   // | 110aaaaa | 10bbbbbb |          |          | 0000000000aaaaabbbbbb |
   // | 1110aaaa | 10bbbbbb | 10cccccc |          | 00000aaaabbbbbbcccccc |
   // | 11110aaa | 10bbbbbb | 10cccccc | 10dddddd | aaabbbbbbccccccdddddd |
-  if (!cursor) return nullptr;
   if (!(c >> 7)) {  // 1 ASCII char.
     if (cursor + 1 >= stop) return nullptr;
     *cursor++ = (CH1)c;
-    *cursor = 0;
-    return cursor;
   }
   CH2 lsb_mask = 0x3f, msb_mask = 0x80;
-  if (!(c >> 12)) {  // 2 bytes.
+  if ((c >> 11) == 0) {  // 2 bytes.
     if (cursor + 2 >= stop) return nullptr;
-    *cursor++ = (CH1)(0xC0 | c >> 6);
-    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    *cursor = 0;
-    return cursor;
-  }
-  if (!(c >> 18)) {  // 3 bytes.
+    CH1 byte = (CH1)(0xC0 | (c >> 6));
+    //PRINT ("\nPrinting 2:");
+    //PRINT_HEX (c);
+    //PRINT (" UTF8:");
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+  } else if ((c >> 16) == 0) {  // 3 bytes.
     if (cursor + 3 >= stop) return nullptr;
-    *cursor++ = (CH1)(0xE0 | c >> 12);
-    *cursor++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
-    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    *cursor = 0;
-    return cursor;
-  } else {  // 4 bytes.
-    if (c >= (1 << 20) || cursor + 4 >= stop) return nullptr;
-    *cursor++ = (CH1)(0xF0 | c >> 18);
-    *cursor++ = (CH1)(msb_mask | ((c >> 18) & lsb_mask));
-    *cursor++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
-    *cursor++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    *cursor = 0;
-    return cursor;
+    CH1 byte = (CH1)(0xE0 | (c >> 12));
+    //PRINT ("\nPrinting 3:");
+    //PRINT_HEX (c);
+    //PRINT (" UTF8:");
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+  } else if ((c >> 21) == 0) {  // 4 bytes.
+    if (cursor + 4 >= stop) return nullptr;
+    CH1 byte = (CH1)(0xF0 | (c >> 18));
+    //PRINT ("\nPrinting 4:");
+    //PRINT_HEX (c);
+    //PRINT (" UTF8:");
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    //PRINT_HEX (byte);
+    *cursor++ = byte;
+  } else {
+    PRINT ("\nUTF8 print Error:CH4 is out of range:");
+    PRINT_HEX (c);
+    PRINT (':');
+    PRINT ((UI4)c);
+    return nullptr;
   }
+  *cursor = 0;
+  return cursor;
+}
+
+CH1* Print (CH1* cursor, SIW size, CH4 c) {
+  return Print (cursor, cursor + size - 1, c);
+}
+
+CH4 ToCH4 (CH1 c) {
+#if CHAR_MIN == 0
+  return (CH4)c;
+#else
+  return (CH4)(UI1)c;
+#endif
+}
+
+const CH1* Scan (const CH1* string, CH4& result) {
+  if (!string) return nullptr;
+  CH4 c = ToCH4 (*string++),
+    lsb_mask = 0x3f,
+    msb = 0x80;
+  CH4 r = 0;
+
+  if (!(c >> 7)) {
+    r = (CH4)c;
+  } else if ((c >> 5) == 0x6) {
+    //PRINT ("  Scanning 2:");
+    //PRINT_HEX ((CH1)c);
+    r = (c & 31) << 6;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & (CH4)63;
+    //PRINT ("  Result:");
+    //PRINT_HEX (r);
+  } else if ((c >> 4) == 0xE) {
+    //PRINT ("  Scanning 3:");
+    //PRINT_HEX ((CH1)c);
+    r = ((CH4)(c & 15)) << 12;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & 63) << 6;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & lsb_mask;
+    //PRINT ("  Result:");
+    //PRINT_HEX (r);
+  }
+  else if ((c >> 3) == 0x1E) {
+    //PRINT ("  Scanning 4:");
+    //PRINT_HEX ((CH1)c);
+    r = ((CH4)(c & 7)) << 18;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & lsb_mask) << 12;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & lsb_mask) << 6;
+    c = ToCH4(*string++);
+    //PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & lsb_mask;
+    //PRINT ("  Result:");
+    //PRINT_HEX (r);
+  }
+  else {
+    PRINT ("\nUTF8 scan error:");
+    PRINT_HEX ((CH1)c);
+    PRINT ((SI4)c);
+    return nullptr;
+  }
+  result = r;
+  return string;
 }
 
 CH1* Print(CH1* cursor, CH1* stop, CH2 c) {
@@ -381,6 +506,7 @@ CH2* Print(CH2* cursor, CH2* stop, CH2 c) {
 CH2* Print(CH2* cursor, CH2* stop, CH4 c) {
   // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
   // |:-----------------:|:---------------------:|:--------------------:|
+  // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
   // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
   if (!cursor || cursor + 1 >= stop) return nullptr;
   CH4 lsb_mask = 0x3f, lsb = c & lsb_mask, msb = c >> 10;
@@ -399,6 +525,30 @@ CH2* Print(CH2* cursor, CH2* stop, CH4 c) {
     return cursor;
   }
 }
+
+CH2* Print (CH2* cursor, SIW size, CH4 c) {
+  return Print (cursor, cursor + size - 1, c);
+}
+
+const CH2* Scan (const CH2* string, CH4& result) {
+  if (!string) return nullptr;
+  // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
+  // |:-----------------:|:---------------------:|:--------------------:|
+  // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
+  // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
+  CH2 c = *string++;
+  CH2 lsb_mask = (1 << 10) - 1;
+  if (c <= lsb_mask) {
+    result = (CH4)c;
+  }
+  if (c >> 10 != 30) return nullptr;
+  CH4 r = ((CH4)c) & lsb_mask;
+  c = *string++;
+  if (c >> 10 != 55) return nullptr;
+  r |= ((CH4)(c & lsb_mask)) << 10;
+  return string;
+}
+
 #endif
 #if USING_UTF32 == YES
 CH4* Print(CH4* cursor, CH4* stop, CH1 c) {
@@ -421,17 +571,18 @@ CH4* Print(CH4* cursor, CH4* stop, CH4 c) {
   *cursor = 0;
   return cursor;
 }
+
 #endif
 }  // namespace _
 #endif
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 //#include <cmath>
 
-#if SEAM == _0_0_0__04
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_4
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 #include <cstdio>
@@ -687,4 +838,4 @@ CH4* Print(CH4* cursor, CH4* stop, DBL value) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= _0_0_0__04
+#endif  //< #if SEAM >= SCRIPT2_4

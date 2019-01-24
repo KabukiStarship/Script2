@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cstr2.h
+@file    /script2/cstr2.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,7 +12,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__03
+#if SEAM >= SCRIPT2_3
 #ifndef INCLUDED_SCRIPTPRINT_UTF16
 #define INCLUDED_SCRIPTPRINT_UTF16
 
@@ -22,9 +22,12 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-/* UTF-8 printing utilities
-@ingroup Utf
+/* UTF-16 printing utilities
+@ingroup ASCII CH1*
 */
+
+/* Strand Factory that prints the string upon destruction. */
+SI4 COutHeap4 (CObject& obj, SIW function, void* arg);
 
 /* Checks if the given character is whitespace.
  */
@@ -118,7 +121,7 @@ upon success.
 @param value The value to utf. */
 SDK CH2* Print(CH2* start, CH2* stop, SI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the give CH2 to the given socket.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -185,7 +188,7 @@ upon success.
 @param value The value to utf. */
 SDK CH2* PrintCenter(CH2* start, CH2* stop, SI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -252,7 +255,7 @@ upon success.
 @param value The value to utf. */
 SDK CH2* PrintRight(CH2* start, CH2* stop, SI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the give CH2 to the given socket center.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -342,7 +345,7 @@ upon success.
 @param value The value to utf. */
 SDK CH2* PrintHex(CH2* start, CH2* stop, SI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the give CH2 to the given socket in hex form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -432,7 +435,7 @@ upon success.
 @param value The value to utf. */
 SDK CH2* TPrintBinary(CH2* start, CH2* stop, SI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the give CH2 to the given socket in binary form.
 @return Returns nil upon socket overflow and a pointer to the nil-term CH2
 upon success.
@@ -556,7 +559,7 @@ SDK const CH2* Scan(const CH2* text, SI8& result);
 of the read number_ or nil upon failure. */
 SDK const CH2* Scan(const CH2* text, UI8& result);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Converts the given string_ to a 32-bit floating-point number_.
 @param  text  A nil-terminated string_ in ROM.
 @param  result The result of the conversion.
@@ -626,7 +629,7 @@ struct SDK UTF2 {
   /* Prints the given value as hex. */
   inline UTF2& Hex(UI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
   /* Prints the given value as hex. */
   inline UTF2& Hex(FLT value);
 
@@ -661,7 +664,7 @@ struct SDK UTF2 {
   /* Prints the given value as binary. */
   inline UTF2& Binary(UI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
   /* Prints the given value as binary. */
   inline UTF2& Binary(FLT value);
 
@@ -694,7 +697,7 @@ class Text2 {
   /* Prints the value to the text socket. */
   Text2(UI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
   /* Prints the value to the text socket. */
   Text2(FLT value);
 
@@ -729,7 +732,7 @@ class Utf16Center {
   /* Prints the value to the text socket. */
   Utf16Center(UI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
   /* Prints the value to the text socket. */
   Utf16Center(FLT value, SI4 column_count);
 
@@ -767,7 +770,7 @@ class Utf16Right {
   /* Prints the value to the text socket. */
   Utf16Right(UI8 value, SI4 column_count);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
   /* Prints the value to the text socket. */
   Utf16Right(FLT value, SI4 column_count);
 
@@ -844,7 +847,7 @@ SDK ::_::UTF2& operator<<(::_::UTF2& printer, SI8 value);
 @param  value The value to write to the utf. */
 SDK ::_::UTF2& operator<<(::_::UTF2& printer, UI8 value);
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 /* Writes the given value to the utf.
 @return The printer.
 @desc
@@ -873,4 +876,4 @@ SDK ::_::UTF2& operator<<(::_::UTF2& printer, ::_::Utf16Right item);
 
 #endif  //< #if USING_UTF16
 #endif  //< #if INCLUDED_SCRIPTPRINT_UTF16
-#endif  //< #if SEAM >= _0_0_0__03
+#endif  //< #if SEAM >= SCRIPT2_3

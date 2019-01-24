@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \script2_str.cc
+@file    /script2/script2_str.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -12,46 +12,26 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= _0_0_0__03
+#if SEAM >= SCRIPT2_3
 #include <cstdio>
 
-#include "tstr.h"
+#include "tstrand.h"
 
-#include "cascii.h"
-#include "csocket.h"
-#include "tbinary.h"
-
-#if SEAM == _0_0_0__03
-#include "test_release.inl"
+#if SEAM == SCRIPT2_3
+#include "global_release.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 #if USING_UTF
 
-namespace _ {
-
-SI4 Console(CObject& obj, SIW function, void* arg) {
-  return TCOut<CH1>(obj, function, arg);
-}
-
-SI4 COutHeap(CObject& obj, SIW function, void* arg) {
-  return TCOutHeap<CH1>(obj, function, arg);
-}
-
-void UTFAlignCenterSTR1(SI4 column_count, void* item, void* destination) {
-  ASSERT(item);
-  ASSERT(destination);
-  ASSERT(column_count >= 0);
-}
-
-}  // namespace _
-
-#endif  // #if USING_UTF
-
 #if USING_UTF8 == YES
 #include "cstr1.h"
 namespace _ {
+
+SI4 COutHeap1 (CObject& obj, SIW function, void* arg) {
+  return TCOutHeap<CH1> (obj, function, arg);
+}
 
 const CH1* TStringEmpty() { return TStringEmpty<CH1>(); }
 
@@ -146,7 +126,7 @@ CH1* Print(CH1* cursor, CH1* stop, SI4 value) {
 }
 #endif
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 
 CH1* PrintCenter(CH1* cursor, CH1* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH1>(cursor, stop, Utf8Text(value).String(), column_count);
@@ -252,7 +232,7 @@ CH1* PrintHex(CH1* cursor, CH1* stop, SI8 value) {
   return TPrintHex<CH1>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH1* PrintHex(CH1* cursor, CH1* stop, FLT value) {
   return TPrintHex<CH1>(cursor, stop, value);
 }
@@ -395,7 +375,7 @@ UTF1& UTF1::Hex(UI8 value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
 UTF1& UTF1::Hex(SI8 value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF1& UTF1::Hex(FLT value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
 
 UTF1& UTF1::Hex(DBL value) { return Set(TPrintHex<CH1>(begin, stop, value)); }
@@ -437,7 +417,7 @@ UTF1& UTF1::Binary(SI8 value) {
   return Set(TPrintBinary<CH1>(begin, stop, value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF1& UTF1::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return Set(TPrintBinary<CH1>(begin, stop, ui));
@@ -477,12 +457,12 @@ Utf8Text::Utf8Text(UI8 value) {
   TPrintUnsigned<UI8, CH1>(string_, string_ + kSize - 1, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf8Text::Utf8Text(FLT value) { Print(string_, string_ + kSize - 1, value); }
 
 Utf8Text::Utf8Text(DBL value) { Print(string_, string_ + kSize - 1, value); }
 
-#endif  //< #if SEAM == _0_0_0__04
+#endif  //< #if SEAM == SCRIPT2_4
 
 const CH1* Utf8Text::String() { return string_; }
 
@@ -501,7 +481,7 @@ Utf8Center::Utf8Center(SI8 value, SI4 column_count)
 Utf8Center::Utf8Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM == _0_0_0__04
+#if SEAM == SCRIPT2_4
 Utf8Center::Utf8Center(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -530,7 +510,7 @@ Utf8Right::Utf8Right(SI8 value, SI4 column_count)
 Utf8Right::Utf8Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf8Right::Utf8Right(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -602,7 +582,7 @@ _::UTF1& operator<<(::_::UTF1& utf, UI8 value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-#if SEAM == _0_0_0__04
+#if SEAM == SCRIPT2_4
 _::UTF1& operator<<(::_::UTF1& utf, FLT value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
@@ -637,6 +617,10 @@ _::UTF1& operator<<(::_::UTF1& utf, ::_::Utf8LineString line) {
 #if USING_UTF16 == YES
 #include "cstr2.h"
 namespace _ {
+
+  SI4 COutHeap2 (CObject& obj, SIW function, void* arg) {
+    return TCOutHeap<CH2> (obj, function, arg);
+  }
 
 const CH2* Empty() { return TStringEmpty<CH2>(); }
 
@@ -741,7 +725,7 @@ CH2* PrintCenter(CH2* cursor, CH2* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH2* PrintCenter(CH2* cursor, CH2* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
@@ -776,7 +760,7 @@ CH2* PrintRight(CH2* cursor, CH2* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH2* PrintRight(CH2* cursor, CH2* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH2>(cursor, stop, Text2(value).GetString(), column_count);
 }
@@ -822,7 +806,7 @@ CH2* PrintHex(CH2* cursor, CH2* stop, SI8 value) {
   return TPrintHex<CH2>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH2* PrintHex(CH2* cursor, CH2* stop, FLT value) {
   return TPrintHex<CH2>(cursor, stop, value);
 }
@@ -868,7 +852,7 @@ CH2* TPrintBinary(CH2* cursor, CH2* stop, SI8 value) {
   return TPrintBinary<CH2>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH2* TPrintBinary(CH2* cursor, CH2* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return Print(cursor, stop, ui);
@@ -922,7 +906,7 @@ const CH2* Scan(const CH2* cursor, UI8& result) {
 }
 
 /*
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 const CH2* Scan(const CH2* cursor, FLT& result) {
   return TScanFloat<FLT, UI4, CH2>(cursor, result);
 }
@@ -973,7 +957,7 @@ UTF2& UTF2::Hex(UI8 value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
 UTF2& UTF2::Hex(SI8 value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF2& UTF2::Hex(FLT value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
 
 UTF2& UTF2::Hex(DBL value) { return Set(TPrintHex<CH2>(begin, stop, value)); }
@@ -1015,7 +999,7 @@ UTF2& UTF2::Binary(SI8 value) {
   return Set(TPrintBinary<CH2>(begin, stop, value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF2& UTF2::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return Set(TPrintBinary<CH2>(begin, stop, ui));
@@ -1055,7 +1039,7 @@ Text2::Text2(UI8 value) {
   TPrintUnsigned<UI8, CH2>(string_, string_ + kSize - 1, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Text2::Text2(FLT value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
 
 Text2::Text2(DBL value) { TPrint<CH2>(string_, string_ + kSize - 1, value); }
@@ -1078,7 +1062,7 @@ Utf16Center::Utf16Center(SI8 value, SI4 column_count)
 Utf16Center::Utf16Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf16Center::Utf16Center(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -1108,7 +1092,7 @@ Utf16Right::Utf16Right(SI8 value, SI4 column_count)
 Utf16Right::Utf16Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf16Right::Utf16Right(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -1161,7 +1145,7 @@ _::UTF2& operator<<(::_::UTF2& utf, UI8 value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 _::UTF2& operator<<(::_::UTF2& utf, FLT value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
@@ -1186,6 +1170,10 @@ _::UTF2& operator<<(::_::UTF2& utf, ::_::Utf16Right item) {
 #if USING_UTF32 == YES
 #include "cstr4.h"
 namespace _ {
+
+  SI4 COutHeap4 (CObject& obj, SIW function, void* arg) {
+    return TCOutHeap<CH4> (obj, function, arg);
+  }
 
 const CH4* EmptyCH4() { return TStringEmpty<CH4>(); }
 
@@ -1297,7 +1285,7 @@ CH4* PrintCenter(CH4* cursor, CH4* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH4* PrintCenter(CH4* cursor, CH4* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
@@ -1332,7 +1320,7 @@ CH4* PrintRight(CH4* cursor, CH4* stop, SI8 value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH4* PrintRight(CH4* cursor, CH4* stop, FLT value, SI4 column_count) {
   return TPrintRight<CH4>(cursor, stop, Text4(value).GetString(), column_count);
 }
@@ -1378,7 +1366,7 @@ CH4* PrintHex(CH4* cursor, CH4* stop, SI8 value) {
   return TPrintHex<CH4>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH4* PrintHex(CH4* cursor, CH4* stop, FLT value) {
   return TPrintHex<CH4>(cursor, stop, value);
 }
@@ -1424,7 +1412,7 @@ CH4* TPrintBinary(CH4* cursor, CH4* stop, SI8 value) {
   return TPrintBinary<CH4>(cursor, stop, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 CH4* TPrintBinary(CH4* cursor, CH4* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return TPrintBinary<CH4, UI8>(cursor, stop, ui);
@@ -1478,7 +1466,7 @@ const CH4* Scan(const CH4* cursor, UI8& result) {
 }
 
 /*
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 const CH4* Scan(const CH4* cursor, FLT& result) {
   return TScanFloat<CH4>(cursor, result);
 }
@@ -1535,7 +1523,7 @@ UTF4& UTF4::Hex(SI8 value) {
   return Set(TPrintHex<CH4>(begin, stop, (UI8)value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF4& UTF4::Hex(FLT value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
 
 UTF4& UTF4::Hex(DBL value) { return Set(TPrintHex<CH4>(begin, stop, value)); }
@@ -1577,7 +1565,7 @@ UTF4& UTF4::Binary(SI8 value) {
   return Set(TPrintBinary<CH4>(begin, stop, value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 UTF4& UTF4::Binary(FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return Set(TPrintBinary<CH4>(begin, stop, ui));
@@ -1617,7 +1605,7 @@ Text4::Text4(UI8 value) {
   TPrintUnsigned<UI8, CH4>(string_, string_ + kSize - 1, value);
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Text4::Text4(FLT value) { TPrint<CH4>(string_, string_ + kSize - 1, value); }
 
 Text4::Text4(DBL value) { TPrint<CH4>(string_, string_ + kSize - 1, value); }
@@ -1640,7 +1628,7 @@ Utf32Center::Utf32Center(SI8 value, SI4 column_count)
 Utf32Center::Utf32Center(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf32Center::Utf32Center(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -1670,7 +1658,7 @@ Utf32Right::Utf32Right(SI8 value, SI4 column_count)
 Utf32Right::Utf32Right(UI8 value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 Utf32Right::Utf32Right(FLT value, SI4 column_count)
     : string_(nullptr), number_(value), column_count(column_count) {}
 
@@ -1723,7 +1711,7 @@ _::UTF4& operator<<(::_::UTF4& utf, UI8 value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
 
-#if SEAM >= _0_0_0__04
+#if SEAM >= SCRIPT2_4
 _::UTF4& operator<<(::_::UTF4& utf, FLT value) {
   return utf.Set(::_::Print(utf.begin, utf.stop, value));
 }
@@ -1744,4 +1732,5 @@ _::UTF4& operator<<(::_::UTF4& utf, ::_::Utf32Right item) {
 }
 
 #endif  //< #if USING_UTF32
-#endif  //< #if SEAM >= _0_0_0__03
+#endif  // #if USING_UTF
+#endif  //< #if SEAM >= SCRIPT2_3

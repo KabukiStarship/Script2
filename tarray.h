@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tarray.cc
+@file    /script2/tarray.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,9 +14,9 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__07
-#ifndef INCLUDED_SCRIPT2_ARRAY
-#define INCLUDED_SCRIPT2_ARRAY
+#if SEAM >= SCRIPT2_7
+#ifndef INCLUDEDSCRIPT2_ARRAY
+#define INCLUDEDSCRIPT2_ARRAY
 
 #include "tstack.h"
 
@@ -246,5 +246,5 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
   return ::_::PrintArray<T, Size, Index>(printer, stack);
 }
 
-#endif  //< INCLUDED_SCRIPT2_ARRAY
-#endif  //< #if SEAM >= _0_0_0__07
+#endif  //< INCLUDEDSCRIPT2_ARRAY
+#endif  //< #if SEAM >= SCRIPT2_7

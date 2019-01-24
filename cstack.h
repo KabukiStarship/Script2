@@ -1,6 +1,6 @@
 /* Script @version 0.x
 @link    https://github.com/kabuki-starship/script.git
-@file    /tstack.h
+@file    /script2/tstack.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2018 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__05
+#if SEAM >= SCRIPT2_5
 #ifndef INCLUDED_SCRIPTTSTACK
 #define INCLUDED_SCRIPTTSTACK 1
 
@@ -21,10 +21,10 @@ specific language governing permissions and limitations under the License. */
 #include "cutf8.h"
 #include "tobject.h"
 
-#if SEAM == _0_0_0__05
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_5
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 namespace _ {
@@ -509,7 +509,7 @@ class TStack {
   inline UI Size() { return CObject()->size; }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
-  inline UI GetSizeMin() { return StackSizeMin<T, UI, SI>(); }
+  inline UI SizeMin() { return StackSizeMin<T, UI, SI>(); }
 
   /* Gets a pointer to the first element in the stack. */
   inline T* Elements() { return StackBegin<T, UI, SI>(CObject()); }
@@ -601,6 +601,6 @@ class TStack {
 
 }  // namespace _
 
-#include "test_footer.inl"
+#include "global_footer.inl"
 #endif  //< INCLUDED_SCRIPTTSTACK
-#endif  //< #if SEAM >= _0_0_0__05
+#endif  //< #if SEAM >= SCRIPT2_5

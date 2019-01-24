@@ -19,24 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="0_0_0.00_rng.h" />
-    <ClInclude Include="0_0_0.01_itos_and_stoi.h" />
-    <ClInclude Include="0_0_0.02_socket.h" />
-    <ClInclude Include="0_0_0.03_utf_and_strand.h" />
-    <ClInclude Include="0_0_0.04_ftos_and_stof.h" />
-    <ClInclude Include="0_0_0.05_clock.h" />
-    <ClInclude Include="0_0_0.06_stack.h" />
-    <ClInclude Include="0_0_0.07_array.h" />
-    <ClInclude Include="0_0_0.08_loom.h" />
-    <ClInclude Include="0_0_0.09_table.h" />
-    <ClInclude Include="0_0_0.10_list.h" />
-    <ClInclude Include="0_0_0.11_map.h" />
-    <ClInclude Include="0_0_0.12_book.h" />
-    <ClInclude Include="0_0_0.13_dictionary.h" />
-    <ClInclude Include="0_0_0.14_expr.h" />
-    <ClInclude Include="0_0_0.15_door.h" />
-    <ClInclude Include="0_0_0.16_room_and_wall.h" />
-    <ClInclude Include="0_0_0.script2.h" />
+    <ClInclude Include="00_rng.h" />
+    <ClInclude Include="01_itos_and_stoi.h" />
+    <ClInclude Include="02_socket.h" />
+    <ClInclude Include="03_utf_and_strand.h" />
+    <ClInclude Include="04_ftos_and_stof.h" />
+    <ClInclude Include="05_clock.h" />
+    <ClInclude Include="06_stack.h" />
+    <ClInclude Include="07_array.h" />
+    <ClInclude Include="08_loom.h" />
+    <ClInclude Include="09_table.h" />
+    <ClInclude Include="10_list.h" />
+    <ClInclude Include="11_map.h" />
+    <ClInclude Include="12_book.h" />
+    <ClInclude Include="13_dictionary.h" />
+    <ClInclude Include="14_expr.h" />
+    <ClInclude Include="15_door.h" />
+    <ClInclude Include="16_room_and_wall.h" />
+    <ClInclude Include="test_tree.h" />
     <ClInclude Include="caddress.h" />
     <ClInclude Include="cargs.h" />
     <ClInclude Include="cascii.h" />
@@ -67,7 +67,7 @@
     <ClInclude Include="cslot.h" />
     <ClInclude Include="csocket.h" />
     <ClInclude Include="cstack.h" />
-    <ClInclude Include="cstr.h" />
+    <ClInclude Include="cstrand.h" />
     <ClInclude Include="cstr1.h" />
     <ClInclude Include="cstr2.h" />
     <ClInclude Include="cstr4.h" />
@@ -77,7 +77,6 @@
     <ClInclude Include="cwall.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="global_config.h" />
-    <ClInclude Include="header.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="public.h" />
     <ClInclude Include="tarray.h" />
@@ -97,20 +96,19 @@
     <ClInclude Include="tset.h" />
     <ClInclude Include="tsocket.h" />
     <ClInclude Include="tstack.h" />
-    <ClInclude Include="tstr.h" />
     <ClInclude Include="tstrand.h" />
     <ClInclude Include="ttable.h" />
     <ClInclude Include="ttest.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="0_0_0.16_seam.s2" />
-    <None Include="0_0_0.debug.inl" />
-    <None Include="0_0_0.footer.inl" />
-    <None Include="0_0_0.release.inl" />
-    <None Include="global_config.inl" />
+    <None Include="16_seam.s2" />
     <None Include="test_debug.inl" />
     <None Include="test_footer.inl" />
     <None Include="test_release.inl" />
+    <None Include="global_config.inl" />
+    <None Include="global_debug.inl" />
+    <None Include="global_footer.inl" />
+    <None Include="global_release.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc" />
@@ -136,11 +134,11 @@
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_str.cc" />
+    <ClCompile Include="script2_strand.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_vk.cc" />
     <ClCompile Include="script2_wall.cc" />
-    <ClCompile Include="seam_tree.cc" />
+    <ClCompile Include="test_runner.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

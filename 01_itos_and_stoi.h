@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /0_0_0__01_itos_and_stoi.h
+@file    /script2/01_itos_and_stoi.h
 @author  Cale McCollough <calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -19,17 +19,18 @@ specific language governing permissions and limitations under the License. */
 
 #include "tbinary.h"
 
-#if SEAM == _0_0_0__01
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_1
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 using namespace _;
 
-inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
-                                           const CH1* args) {
-#if SEAM >= _0_0_0__01
+namespace script2 {
+inline const CH1* _01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end, 
+  const CH1* args) {
+#if SEAM >= SCRIPT2_1
   TEST_BEGIN;
 
   static const UI8 k10ToThe[20] = {
@@ -204,3 +205,4 @@ inline const CH1* _0_0_0__01_ItoS_and_StoI(CH1* seam_log, CH1* seam_end,
 #endif
   return 0;
 }
+} //< namespace script2

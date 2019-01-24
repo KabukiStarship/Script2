@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /casciidata.h
+@file    /script2/casciidata.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,6 +13,8 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
+
+#include "cascii.h"
 
 namespace _ {
 /* List of the 32 ASCII Data Types.
@@ -54,12 +56,12 @@ typedef enum AsciiTypes {
 } AsciiType;
 }  // namespace _
 
-#if SEAM >= _0_0_0__13
+#if SEAM >= SCRIPT2_13
 #ifndef SCRIPT2_CASCIIDATA
 #define SCRIPT2_CASCIIDATA
 
 #include "csocket.h"
-#include "tstr.h"
+#include "tstrand.h"
 
 namespace _ {
 /* A type-value tuple. */
@@ -178,4 +180,4 @@ SDK ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
 #endif
 
 #endif  //< SCRIPT2_CASCIIDATA
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= SCRIPT2_13

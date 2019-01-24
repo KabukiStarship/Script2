@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tascii_data.cc
+@file    /script2/tascii_data.cc
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,17 +13,17 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__13
+#if SEAM >= SCRIPT2_13
 #ifndef INCLUDED_SCRIPTTYPES
 #define INCLUDED_SCRIPTTYPES
 
 #include "csocket.h"
-#include "tstr.h"
+#include "tstrand.h"
 
-#if SEAM == _0_0_0__13
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_13
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 /* @tag Comment may be wrapped around
@@ -296,4 +296,4 @@ SDK ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTYPES
-#endif  //< #if SEAM >= _0_0_0__13
+#endif  //< #if SEAM >= SCRIPT2_13

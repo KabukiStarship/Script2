@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /kabuki/features/crabs/config.h
+@file    /script2/kabuki/features/crabs/config.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -201,14 +201,16 @@ enum {
 #undef CRABS_BUFFER_SIZE_RX
 #undef CRABS_BUFFER_SIZE_TX
 
-typedef UI4 word_t;
-
 // Pre-compiled headers: comment out those you're not using.
 
 typedef SI4 TM4;  //< A 32-bit seconds since epoch timestamp.
 typedef SI8 TM8;  //< A 64-bit seconds since epoch timestamp.
 
-typedef UI4 SI4;  //< ASCII Data Type UI1.
+#if WORD_SIZE == 32
+typedef FLT FPW;
+#elif WORD_SIZE == 64
+typedef DBL FPW;
+#endif
 
 #if MAX_NUM_SLOTS <= 255
 typedef UI1 SI4;
@@ -219,6 +221,10 @@ enum { kMaxNumSlots = 0xffff };
 #else
 typedef UI4 SI4;
 enum { kMaxNumSlots = 0xffffffff };
+#endif#if WORD_SIZE == 32
+typedef FLT FPW;
+#elif WORD_SIZE == 64
+typedef DBL FPW;
 #endif
 
 /* Below are representations of not-a-numbers.

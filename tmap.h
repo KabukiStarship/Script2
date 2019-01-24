@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /tmap.h
+@file    /script2/tmap.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -13,17 +13,17 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= _0_0_0__11
+#if SEAM >= SCRIPT2_11
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
 #include "casciidata.h"
 #include "csocket.h"
 
-#if SEAM == _0_0_0__11
-#include "test_debug.inl"
+#if SEAM == SCRIPT2_11
+#include "global_debug.inl"
 #else
-#include "test_release.inl"
+#include "global_release.inl"
 #endif
 
 namespace _ {
@@ -667,4 +667,4 @@ class Map {
 }  // namespace _
 
 #endif  //< INCLUDED_CRAPS_TMAP
-#endif  //< #if SEAM >= _0_0_0__11
+#endif  //< #if SEAM >= SCRIPT2_11

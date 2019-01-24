@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /cobject.h
+@file    /script2/cobject.h
 @author  Cale McCollough <cale.mccollough@gmail.com>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_0__03
+#if SEAM >= SCRIPT2_3
 #ifndef SCRIPT2_COBJECT
 #define SCRIPT2_COBJECT
 
@@ -42,7 +42,7 @@ struct CObject {
 };
 
 enum AsciiFactoryFunctions {
-  kFactoryDelete = 0,  //< ASCII Factory function deletes an OBJ.
+  kFactoryDestroy = 0,  //< ASCII Factory function deletes an OBJ.
   kFactoryNew = 1,     //< ASCII Factory function creates a new OBJ.
   kFactoryClone = 2,   //< ASCII Factory function clones the OBJ.
   kFactoryGrow = 3,    //< ASCII Factory function double OBJ size in bytes.
@@ -98,4 +98,4 @@ inline SDK BOL IsOBJFactoryFunction(SIW function);
 
 }  // namespace _
 #endif  //< SCRIPT2_COBJECT
-#endif  //< #if SEAM >= _0_0_0__03
+#endif  //< #if SEAM >= SCRIPT2_3
