@@ -372,10 +372,10 @@ CH1* Print(CH1* cursor, CH1* stop, CH4 c) {
     //PRINT_HEX (byte);
     *cursor++ = byte;
   } else {
-    PRINT ("\nUTF8 print Error:CH4 is out of range:");
-    PRINT_HEX (c);
-    PRINT (':');
-    PRINT ((UI4)c);
+    //PRINT ("\nUTF8 print Error:CH4 is out of range:");
+    //PRINT_HEX (c);
+    //PRINT (':');
+    //PRINT ((UI4)c);
     return nullptr;
   }
   *cursor = 0;
@@ -448,9 +448,9 @@ const CH1* Scan (const CH1* string, CH4& result) {
     //PRINT_HEX (r);
   }
   else {
-    PRINT ("\nUTF8 scan error:");
-    PRINT_HEX ((CH1)c);
-    PRINT ((SI4)c);
+    //PRINT ("\nUTF8 scan error:");
+    //PRINT_HEX ((CH1)c);
+    //PRINT ((SI4)c);
     return nullptr;
   }
   result = r;
@@ -510,17 +510,24 @@ CH2* Print(CH2* cursor, CH2* stop, CH4 c) {
   // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
   if (!cursor || cursor + 1 >= stop) return nullptr;
   CH4 lsb_mask = 0x3f, lsb = c & lsb_mask, msb = c >> 10;
-  if (msb) {
-    CH4 msb_mask = 0xDC00;
-    if (msb >> 10) return nullptr;  // Non-Unicode value.
-    if (cursor + 2 >= stop) return nullptr;
-    *cursor++ = (CH2)(lsb & msb_mask);
-    *cursor++ = (CH2)(msb & msb_mask);
+  if (!msb) {
+    if (cursor + 1 >= stop) return nullptr;
+    *cursor++ = (CH2)c;
+    //PRINT ("\nPrinting 1:");
+    //PRINT_HEX ((CH2)c);
     *cursor = 0;
     return cursor;
   } else {
-    if (cursor + 1 >= stop) return nullptr;
-    *cursor++ = (CH2)c;
+    CH4 msb_mask = 0xDC00;
+    if (msb >> 10) return nullptr;  // Non-Unicode value.
+    if (cursor + 2 >= stop) return nullptr;
+    CH2 nibble = (CH2)(lsb & msb_mask);
+    //PRINT ("\nPrinting 2:");
+    //PRINT_HEX ((CH2)nibble);
+    *cursor++ = nibble;
+    nibble = (CH2)(msb & msb_mask);
+    //PRINT_HEX ((CH2)nibble);
+    *cursor++ = nibble;
     *cursor = 0;
     return cursor;
   }
@@ -539,13 +546,21 @@ const CH2* Scan (const CH2* string, CH4& result) {
   CH2 c = *string++;
   CH2 lsb_mask = (1 << 10) - 1;
   if (c <= lsb_mask) {
+    //PRINT (" Scanning 1:");
+    //PRINT_HEX (c);
     result = (CH4)c;
+  } else if ((c >> 10) == 30) {
+    //PRINT (" Scanning 1:");
+    //PRINT_HEX (c);
+    CH4 r = ((CH4)c) & lsb_mask;
+    c = *string++;
+    if (c >> 10 != 55) return nullptr;
+    r |= ((CH4)(c & lsb_mask)) << 10;
+  } else {
+    //PRINT (" Scan error:");
+    //PRINT_HEX (c);
+    return nullptr;
   }
-  if (c >> 10 != 30) return nullptr;
-  CH4 r = ((CH4)c) & lsb_mask;
-  c = *string++;
-  if (c >> 10 != 55) return nullptr;
-  r |= ((CH4)(c & lsb_mask)) << 10;
   return string;
 }
 
