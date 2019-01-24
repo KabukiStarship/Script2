@@ -48,7 +48,7 @@ static const CH1* _03_UTF_and_Strand() {
   PRINTF("\nTesting TStrand<%s,%s>", char_type_string, size_type_string);
   enum {
     kCompareStringsCount = 5,
-    kSize = 127,
+    kSize = 511,
   };
 
   static const Char* kTestStrings[kCompareStringsCount][2] = {
