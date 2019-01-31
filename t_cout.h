@@ -192,7 +192,7 @@ void TPrintChars(const Char* start, const Char* stop) {
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
-      Print(c);
+      PrintChar(c);
     }
     Print('|', ' ');
     PrintHex(start);

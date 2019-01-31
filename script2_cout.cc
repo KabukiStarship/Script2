@@ -55,12 +55,28 @@ inline void Print(CH1 c) {
   putchar(c);
 }
 
+inline void PrintChar (CH1 c) {
+  return Print (c);
+}
+
 inline void Print (CH4 c) {
-  std::wcout << c;
+  wprintf_s (L"%c", c);
+  //std::wcout << c;
+}
+
+inline void PrintChar (CH4 c) {
+  wprintf_s (L"%c", c);
+  //std::wcout << c;
 }
 
 inline void Print (CH2 c) {
-  Print ((CH4)c);
+  wprintf_s (L"%c", c);
+  //std::wcout << c;
+}
+
+inline void PrintChar (CH2 c) {
+  wprintf_s (L"%c", c);
+  //std::wcout << c;
 }
 
 inline void Print(CH1 first, CH1 second) {

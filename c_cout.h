@@ -37,10 +37,19 @@ SDK const CH1* ArgsToStrand(SI4 arg_count, CH1** args);
 SDK inline void Print(CH1 c);
 
 /* Prints a single CH1 to the console. */
+SDK inline void PrintChar (CH1 c);
+
+/* Prints a single CH1 to the console. */
 SDK inline void Print (CH4 c);
 
 /* Prints a single CH1 to the console. */
+SDK inline void PrintChar (CH4 c);
+
+/* Prints a single CH1 to the console. */
 SDK inline void Print (CH2 c);
+
+/* Prints a single CH1 to the console. */
+SDK inline void PrintChar (CH2 c);
 
 /* Prints a single CH1 to the console. */
 SDK void Print(CH1 first, CH1 second);

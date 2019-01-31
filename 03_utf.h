@@ -32,7 +32,7 @@ using namespace _;
 namespace script2 {
 template <typename Char, typename Size>
 static const Char* _03_UTF () {
-  PRINTF ("\n\nTesting UTF<CH%c,SI%c>", '0' + sizeof (Char), 
+  PRINTF ("\n\n\nTesting UTF<CH%c,SI%c>\n\n", '0' + sizeof (Char), 
     '0' + sizeof (Size));
 
   enum {
