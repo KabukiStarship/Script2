@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_errors.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
 // Dependencies:
-#include "cerror.h"
+#include "c_error.h"
 // End dependencies.
 
 namespace _ {
 
-const CH1** ErrorStrings() {
+const CH1** ErrorStrands() {
   static const CH1* kErrors[] = {
       "Not an error",             //<  0
       "Input nil",                //<  1
@@ -55,11 +55,11 @@ const CH1** ErrorStrings() {
   return kErrors;
 }
 
-const CH1* ErrorString(Error error) {
+const CH1* ErrorStrand(Error error) {
   if (error >= kErrorImplementation) {
-    return ErrorStrings()[kErrorImplementation];
+    return ErrorStrands()[kErrorImplementation];
   }
-  return ErrorStrings()[error];
+  return ErrorStrands()[error];
 }
 
 }  // namespace _

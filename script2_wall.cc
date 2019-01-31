@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_wall.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ specific language governing permissions and limitations under the License. */
 #include "global_release.inl"
 #endif
 
-#include "cwall.h"
+#include "c_wall.h"
 
-#include "csocket.h"
-#include "cstack.h"
+#include "c_socket.h"
+#include "c_stack.h"
 
 namespace _ {
 

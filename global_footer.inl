@@ -8,7 +8,7 @@
 #undef PRINT_LINE
 #undef PRINT_TIME
 #undef PRINT_TYPE
-#undef PRINT_BYTES
+#undef PRINT_CHARS
 #undef PRINT_SOCKET_TOBJ
 #undef PRINT_HEX
 #undef PRINT_HEXS

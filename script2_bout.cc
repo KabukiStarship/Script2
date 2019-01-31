@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bout.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "cargs.h"
-#include "casciidata.h"
-#include "cbinary.h"
-#include "cbout.h"
-#include "cbsq.h"
-#include "chash.h"
-#include "csocket.h"
-#include "ctest.h"
+#include "c_args.h"
+#include "c_asciidata.h"
+#include "c_binary.h"
+#include "c_bout.h"
+#include "c_bsq.h"
+#include "c_hash.h"
+#include "c_socket.h"
+#include "c_test.h"
 #include "slot.h"
 
 #if SEAM == SCRIPT2_14
@@ -39,7 +39,7 @@ namespace _ {
     @param error The error type.
     @return Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -51,7 +51,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -64,7 +64,7 @@ inline const Op* BOutError(BOut* bout, Error error, const SI4* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
                            SI4 offset) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -77,11 +77,11 @@ inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
                            SI4 offset, CH1* address) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
-const CH1** BOutStateStrings() {
+const CH1** BOutStateStrands() {
   static const CH1* strings[] = {"WritingState", "kBInStateLocked"};
   return strings;
 }
@@ -218,7 +218,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeString(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -230,7 +230,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
-          // nil string_.
+          // nil .
           length = params[++index];  //< Load the max CH1 length.
           ++num_params;
         } else {
@@ -408,7 +408,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         goto WriteVarint4;
       } break;
 #endif
-      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case kint:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case kUI4:
       case kFLT:
       case kTM4:
@@ -707,12 +707,12 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     if (socket >= buffer_end) {
         return nullptr;
     }
-    socket = PrintLine ('_', 80, socket, buffer_end);
+    socket = TPrintLine('_', 80, socket, buffer_end);
     if (!bout) {
         return nullptr;
     }
     SI4 size = bout->size;
-    Utf& utf (socket, buffer_end);
+    UTF& utf (socket, buffer_end);
     utf << "\nBOut:" << Hex<UIW> (bout)
           << " size:" << size
           << " begin:" << bout->begin << " stop:" << bout->stop
@@ -728,7 +728,7 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
       << " start:" << bout->begin << " stop:" << bout->stop
       << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
-  Printf("\n!| cursor:%p", utf.begin);
+  Printf("\n!| cursor:%p", utf.start);
   return utf;
 }
 #endif

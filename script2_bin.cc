@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bin.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,27 +13,23 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "cbin.h"
+#include "c_bin.h"
 
 #include "bout.h"
-#include "casciidata.h"
-#include "cbsq.h"
-#include "chash.h"
-#include "csocket.h"
+#include "c_asciidata.h"
+#include "c_bsq.h"
+#include "c_hash.h"
+#include "c_socket.h"
 #include "hex.h"
 #include "line.h"
 #include "slot.h"
 
-#if SEAM_MAJOR == 0 && SEAM_MINOR == 4
-#define PRINTF(format, ...) Printf(format, __VA_ARGS__)
-#define PRINT(c) Print(c)
+#if SEAM == SCRIPT2_14
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
 #define PRINT_BSQ(header, bsq) Console<>().Out() << header << '\n' << Bsq(bsq);
 #define PRINT_BIN(header, bin) Console<>().Out() << header << '\n' << bin;
 #else
-#define PRINTF(x, ...)
-#define PRINT(c)
 #define CLEAR(begin, stop)
 #define PRINT_BSQ(header, bsq)
 #define PRINT_BIN(header, bout)
@@ -73,8 +69,8 @@ SI4 BinBufferLength(BIn* bin) {
 }
 
 #if USING_CRABS_TEXT
-const CH1** BInStateStrings() {
-  static const CH1* kStateStrings[] = {
+const CH1** BInStateStrands() {
+  static const CH1* kStateStrands[] = {
       "Address",       //< 0
       "Args",          //< 1
       "UTF-8",         //< 2
@@ -89,7 +85,7 @@ const CH1** BInStateStrings() {
       "Locked",        //< 11
       "POD"            //< 12
   };
-  return kStateStrings;
+  return kStateStrands;
 }
 #endif
 
@@ -97,7 +93,7 @@ const CH1** BInStateStrings() {
 @param error The error type.
 @return Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error) {
-  PRINTF("\nBIn %s error!", ErrorString(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -109,7 +105,7 @@ inline const Op* BInError(BIn* bin, Error error) {
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
-  PRINTF("\nBIn %s error!", ErrorString(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -122,7 +118,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header,
                           SI4 offset) {
-  PRINTF("\nBIn %s error!", ErrorString(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -135,7 +131,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header, SI4 offset,
                           CH1* address) {
-  PRINTF("\nBIn %s error!", ErrorString(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -225,7 +221,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam:%u type:%s start:%i stop:%i length:%u", arg_index + 1,
-           TypeString(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            length)
     switch (type) {
       case kNIL:
@@ -380,7 +376,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         *ui4_ptr = ui4;
         break;
 #endif
-      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
+      case kint:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
       case kUI4:
       case kFLT:
       case kTM4:

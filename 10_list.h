@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/09_list.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   const SI4 list_test_count = 12;
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(kSI4, &test_ints[i++]);
+    list.Push(kint, &test_ints[i++]);
     COUT << '\n'
          << list << '\n'
          << "\n\n"

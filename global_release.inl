@@ -1,4 +1,4 @@
-#include "ctest.h"
+#include "c_test.h"
 #include "global_footer.inl"
 #define TEST_BEGIN \
   if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
@@ -11,7 +11,7 @@
 #define PRINT_LINE(c)
 #define PRINT_TIME(date)
 #define PRINT_TYPE(type, value)
-#define PRINT_BYTES(begin, end_or_size)
+#define PRINT_CHARS(begin, end_or_size)
 #define PRINT_HEX(item) 
 #define PRINT_HEXS(begin, end_or_size)
 #define PRINT_SOCKET_TOBJ(obj)

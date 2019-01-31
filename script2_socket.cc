@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 #if SEAM >= SCRIPT2_2
 
-#include "tbinary.h"
-#include "tsocket.h"
+#include "t_binary.h"
+#include "t_socket.h"
 
 #if SEAM == SCRIPT2_2
 #include "global_debug.inl"
@@ -94,7 +94,7 @@ SIW SizeOf(const void* start, const void* stop) {
 }
 
 inline UIW FillWord(CH1 fill_char) {
-  UIW value = fill_char;
+  UIW value = (UIW)(UI1)fill_char;
 #if CPU_WORD_SIze == 32
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
@@ -103,20 +103,20 @@ inline UIW FillWord(CH1 fill_char) {
 #endif
 }
 
-CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
+CH1* SocketFill(CH1* cursor, CH1* stop, SIW count, CH1 fill_char) {
   ASSERT(cursor);
-  PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (SI4)byte_count);
-  ASSERT(byte_count >= 0);
+  PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (SI4)count);
+  ASSERT(count >= 0);
 
-  if ((stop - cursor) < byte_count) {
+  if ((stop - cursor) < count) {
     PRINT("\nBuffer overflow!");
     return nullptr;
   }
-  stop = cursor + byte_count;
+  stop = cursor + count;
 
-  PRINTF("\nFilling %i bytes from %p", (SI4)byte_count, cursor);
+  PRINTF("\nFilling %i bytes from %p", (SI4)count, cursor);
 
-  if (byte_count < (2 * sizeof(void*) + 1)) {
+  if (count < (2 * sizeof(void*) + 1)) {
     while (cursor < stop) *cursor++ = fill_char;
     return cursor;
   }
@@ -153,6 +153,13 @@ CH1* SocketFill(void* cursor, SIW count, CH1 fill_char) {
 BOL SocketWipe(void* cursor, void* stop, SIW count) {
   return SocketFill(reinterpret_cast<CH1*>(cursor),
                     reinterpret_cast<CH1*>(stop), count) != nullptr;
+}
+
+CH2* SocketFill (CH2* cursor, SIW count, CH2 fill_char) {
+  CH2* stop = cursor + count;
+  for (; cursor < stop; --stop)
+    *stop = fill_char;
+  return cursor;
 }
 
 CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {

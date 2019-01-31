@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_clock.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ specific language governing permissions and limitations under the License. */
 
 #include <ctime>
 
-#include "tbinary.h"
-#include "tclock.h"
+#include "t_binary.h"
+#include "t_clock.h"
 
 #if SEAM == SCRIPT2_5
 #include "global_debug.inl"
@@ -353,7 +353,7 @@ void PrintTime(TM8 t) {
   Print(socket, socket + kSize - 1, t);
 }
 
-const CH1* StringScanTime(const CH1* string, SI4& hour, SI4& minute,
+const CH1* StrandScanTime(const CH1* string, SI4& hour, SI4& minute,
                           SI4& second) {
   return TScanTime<CH1>(string, hour, minute, second);
 }

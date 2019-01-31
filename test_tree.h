@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/test_tree.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@file    /script2/t_est_tree.h
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -18,22 +18,22 @@ specific language governing permissions and limitations under the License. */
 #include "00_rng.h"
 #endif
 #if SEAM >= SCRIPT2_1
-#include "01_itos_and_stoi.h"
+#include "01_itos_stoi.h"
 #endif
 #if SEAM >= SCRIPT2_2
 #include "02_socket.h"
 #endif
 #if SEAM >= SCRIPT2_3
-#include "03_utf_and_strand.h"
+#include "03_utf.h"
 #endif
 #if SEAM >= SCRIPT2_4
-#include "04_ftos_and_stof.h"
+#include "04_ftos_stof.h"
 #endif
 #if SEAM >= SCRIPT2_5
 #include "05_clock.h"
 #endif
 #if SEAM >= SCRIPT2_6
-#include "06_stack.h"
+#include "06_strand_stack.h"
 #endif
 #if SEAM >= SCRIPT2_7
 #include "07_array.h"
@@ -74,7 +74,7 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
 #if SEAM >= SCRIPT2_1
                    ,
-                   _01_ItoS_and_StoI
+                   _01_ItoS_StoI
 #endif
 #if SEAM >= SCRIPT2_2
                    ,
@@ -82,11 +82,11 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= SCRIPT2_3
                    ,
-                   _03_UTF_and_Strand
+                   _03_UTF
 #endif
 #if SEAM >= SCRIPT2_4
                    ,
-                   _04_FtoS_and_StoF
+                   _04_FtoS_StoF
 #endif
 #if SEAM >= SCRIPT2_5
                    ,
@@ -94,7 +94,7 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= SCRIPT2_6
                    ,
-                   _06_Stack
+                   _06_Strand_Stack
 #endif
 #if SEAM >= SCRIPT2_7
                    ,

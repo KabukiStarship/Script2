@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_object.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_3
 
-#include "cobject.h"
-#include "csocket.h"
-#include "tobject.h"
+#include "c_object.h"
+#include "c_socket.h"
+#include "t_object.h"
 
 #if SEAM == SCRIPT2_3
 #include "global_debug.inl"
@@ -78,7 +78,7 @@ void SocketHeap(UIW* socket) {
 
 void SocketStack(UIW* socket) {}
 
-void ObjException(const char* what) {
+void ObjException(const CH1* what) {
   //PRINTF("\nERROR:%s\n", exception.what());
 }
 

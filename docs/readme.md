@@ -33,7 +33,7 @@ This folder contains:
   * Stupid questions are asked repeatedly and assist in saving time when answered quickly. Please submit any questions you think should be on this FAQ using an issue ticket using the format `FAQ:<insert stupid question here>?`.
 
 * How do I use Script2 in my app?
-  * Script2 is a Nanoframework intended to make Microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit) harness.
+  * Script2 is a Nanoframework intended to make microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit) harness.
 
 # The License
 

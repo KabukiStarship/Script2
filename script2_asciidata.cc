@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_asciidata.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_13
 
-#include "tasciidata.h"
+#include "t_asciidata.h"
 
-#include "tsocket.h"
+#include "t_socket.h"
 
 #if SEAM == SCRIPT2_13
 #include "global_debug.inl"
@@ -47,7 +47,7 @@ SI4 TypeFixedSize(SI4 type) {
       2,   //< kUI2: 4
       2,   //< kHLF: 5
       4,   //< kBOL: 6
-      4,   //< kSI4: 7
+      4,   //< kint: 7
       4,   //< kUI4: 8
       4,   //< kFLT: 9
       4,   //< kTM4: 10
@@ -66,11 +66,11 @@ SI4 TypeFixedSize(SI4 type) {
   return kWidths[type];
 }
 
-const CH1** TypeStrings() { return TTypeStrings<CH1>(); }
+const CH1** TypeStrands() { return TTypeStrands<CH1>(); }
 
-const CH1* TypeString(SI4 type) { return TypeStrings()[type & 0x1f]; }
+const CH1* TypeStrand(SI4 type) { return TypeStrands()[type & 0x1f]; }
 
-const CH1* TypeString(SI4 type) { return TypeString((UI1)type); }
+const CH1* TypeStrand(SI4 type) { return TypeStrand((UI1)type); }
 
 UI1 TypeMask(UI1 value) { return value & 0x1f; }
 
@@ -108,11 +108,11 @@ void* TypeAlign(SI4 type, void* value) {
 }
 /*
 template <typename Char, typename UI>
-inline CH1* WriteString(CH1* begin, CH1* stop, const void* value) {
+inline CH1* WriteStrand(CH1* begin, CH1* stop, const void* value) {
   begin = AlignUpPointer<CH1>(begin);
   if (stop - begin < 2 * sizeof(UI)) return nullptr;
   const Char* source = reinterpret_cast<const Char*>(value);
-  UI length = TStringLength<UI, Char>(source);
+  UI length = TStrandLength<UI, Char>(source);
   UI* target = reinterpret_cast<UI*>(begin);
   *target++ = length;
   return SocketCopy(target, stop, value, length + sizeof(Char));
@@ -162,7 +162,7 @@ CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
     }
     return reinterpret_cast<CH1*>(target_8);
   }
-  if (TypeIsString(type)) {
+  if (TypeIsStrand(type)) {
     switch (type >> 6) {
       case 0:
         return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
@@ -207,13 +207,13 @@ BOL TypeIsObj(SI4 type) {
   return true;
 }
 
-BOL TypeIsString(SI4 type) {
+BOL TypeIsStrand(SI4 type) {
   type &= 0x1f;
   if (type >= kADR && type <= kTKN) return true;
   return false;
 }
 
-BOL TypeIsUtf16(SI4 type) { return (BOL)(type & 0x20); }
+BOL TypeIsUTF16(SI4 type) { return (BOL)(type & 0x20); }
 
 inline SI4 TypeSizeWidthCode(SI4 type) { return type >> 6; }
 
@@ -225,7 +225,7 @@ CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value) {
   return TPrint<CH1>(begin, stop, type, value);
 }
 _::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
-  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
+  return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 }  // namespace _
 #endif
@@ -236,7 +236,7 @@ CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value) {
 }
 }  // namespace _
 _::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
-  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
+  return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif
 #if USING_UTF32
@@ -246,7 +246,7 @@ CH4* Print(CH4* begin, CH4* stop, SI4 type, const void* value) {
 }
 }  // namespace _
 _::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
-  return utf.Set(::_::Print(utf.begin, utf.stop, item.type, item.value));
+  return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif
 

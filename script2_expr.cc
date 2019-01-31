@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_crabs.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "ccrabs.h"
+#include "c_crabs.h"
 
-#include "cbsq.h"
-#include "chash.h"
-#include "clock.h"
-#include "ctest.h"
+#include "c_bsq.h"
+#include "c_hash.h"
+#include "c_lock.h"
+#include "c_test.h"
 
 #if SEAM == SCRIPT2_14
 #include "global_debug.inl"
@@ -32,7 +32,7 @@ namespace _ {
 @return Returns a Static Error Op Result.
 @param error The error type. */
 inline const Op* CrabsError(CCrabs* crabs, Error error) {
-  PRINTF("\nCrabs %s Error!", ErrorString(error))
+  PRINTF("\nCrabs %s Error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -44,7 +44,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error) {
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
 inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header) {
-  PRINTF("\nCrabs %s Error!", ErrorString(error))
+  PRINTF("\nCrabs %s Error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -57,7 +57,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header) {
 @param  address The address of the UI1 in error. */
 inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
                             UI1 offset) {
-  PRINTF("\nCrabs %s Error!", ErrorString(error))
+  PRINTF("\nCrabs %s Error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -70,7 +70,7 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
 @param  address The address of the UI1 in error. */
 inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
                             UI1 offset, CH1* address) {
-  PRINTF("\nCrabs %s Error!", ErrorString(error))
+  PRINTF("\nCrabs %s Error!", ErrorStrand(error))
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -336,7 +336,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
         // When verifying an address, there is guaranteed to be an
         // crabs->op set. We are just looking for nil return values
         // from the Do (UI1, Stack*): const Operand* function,
-        // pushing Star(string_) on to the Star stack, and looking for
+        // pushing Star() on to the Star stack, and looking for
         // the first procedure call.
         //
         if (b == op->pop) {
@@ -404,7 +404,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           type = *(++crabs->header);  //< Setup to read first type.
 #if DEBUG_CRABS_EXPR
           PRINTF("\nNext AsciiType to scan:\'"
-                 << TypeString(type) << "\' with alignment "
+                 << TypeStrand(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
           slot_start = TypeAlignUpPointer<CH1>(slot_start, (SI4)type);
@@ -446,13 +446,13 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                       bin_state = kBInStateAddress;
                       break;
 
-                    } else if (type == kSTR) {  // UTF-8/ASCII string_ type.
+                    } else if (type == kSTR) {  // UTF-8/ASCII  type.
                       // Read the max number_ of chars off the header.
                       bytes_left = *(++crabs->header);
                       PRINTF("\nScanning kSTR with max length %u",
                              (uint)bytes_left);
-                      CrabsEnterState(crabs, kBInStatePackedUtf8);
-                      bin_state = kBInStatePackedUtf8;
+                      CrabsEnterState(crabs, kBInStatePackedUTF8);
+                      bin_state = kBInStatePackedUTF8;
                       break;
                     } else if (type < kDBL) {  // Plain-old-data type.
                       bytes_left = TypeFixedSize(type);
@@ -464,12 +464,12 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                         PRINTF(
                             "\nDone scanning without state change "
                             "for \"%s\"",
-                            TypeString(type))
+                            TypeStrand(type))
                         // Setup to read the next type.
                         type = *(++crabs->header);
 #if DEBUG_CRABS_EXPR
                         PRINTF("\nNext AsciiType to scan:\'"
-                               << TypeString(type) << "\' with alignment "
+                               << TypeStrand(type) << "\' with alignment "
                                << TypeAlign(slot_start, type) << '.');
 #endif
                         slot_start =
@@ -488,7 +488,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                       bin_state = kBInStatePackedVarint;
                       break;
                       /*
-                      } else if (type == ST2) { // UTF-16 string_ type.
+                      } else if (type == ST2) { // UTF-16  type.
                           #if DEBUG_CRABS_EXPR
                           Write ("\nScanning ST2.");
                           #endif
@@ -499,18 +499,18 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                           // Read the max number_ of chars off the header.
                           bytes_left = *crabs->header++ * 2;
                           CrabsEnterState (crabs,
-                                          BIn::Utf16State);
-                          bin_state = BIn::Utf16State;
+                                          BIn::UTF16State);
+                          bin_state = BIn::UTF16State;
                           break;
                       }
-                      else if (type == ST4) { // UTF-32 string_ type.
+                      else if (type == ST4) { // UTF-32  type.
                           #if DEBUG_CRABS_EXPR
                           Write ("\nScanning ST4.");
                           #endif
                           // Read the max number_ of chars off the header.
                           bytes_left = *crabs->header++ * 4;
-                          CrabsEnterState (crabs, BIn::Utf32State);
-                          bin_state = BIn::Utf32State;*/
+                          CrabsEnterState (crabs, BIn::UTF32State);
+                          bin_state = BIn::UTF32State;*/
                     } else {  // It's not a POD type.
 #if DEBUG_CRABS_EXPR
                       Write("\nScanning TObject.");
@@ -546,7 +546,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
                     }
                     break;
       }
-      case kBInStatePackedUtf8: {
+      case kBInStatePackedUTF8: {
         if (bytes_left == 0) {
           CrabsError(crabs, kErrorTextOverflow,
                      const_cast<const SI4*>(crabs->header), 0, bin_start);
@@ -572,7 +572,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           }
 #if DEBUG_CRABS_EXPR
           PRINTF("\nNext AsciiType to scan:\'"
-                 << TypeString(type) << "\' with alignment "
+                 << TypeStrand(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
           slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
@@ -581,7 +581,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
         --bytes_left;
         break;
       }
-      case kBInStatePackedUtf16: {
+      case kBInStatePackedUTF16: {
         hash = Hash16(b, hash);
 #if DEBUG_CRABS_EXPR
         Write("\nhash:" << PrintHex(hash));
@@ -589,7 +589,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
         CrabsExitState(crabs);
         break;
       }
-      case kBInStatePackedUtf32: {
+      case kBInStatePackedUTF32: {
         hash = Hash16(b, hash);
 #if DEBUG_CRABS_EXPR
         Write("\nhash:" << PrintHex(hash));
@@ -638,7 +638,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           type = *(++header);
 #if DEBUG_CRABS_EXPR
           PRINTF("\nNext AsciiType to scan:\'"
-                 << TypeString(type) << "\' with alignment "
+                 << TypeStrand(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
           slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
@@ -745,7 +745,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
           type = *(++header);
 #if DEBUG_CRABS_EXPR
           PRINTF("\nNext AsciiType to scan:\'"
-                 << TypeString(type) << "\' with alignment "
+                 << TypeStrand(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
 #endif
           slot_start = TypeAlignUpPointer<>(slot_start, (SI4)type);
@@ -926,8 +926,8 @@ UTF1& PrintCrabs(UTF1& utf, CCrabs* crabs) {
       << "\nheader_size: " << crabs->header_size
       << "\nstack_count: " << crabs->stack_count
       << "\nstack_size : " << crabs->stack_size
-      << "\nbin_state  : " << BInStateStrings()[crabs->bin_state]
-      << "\nbout_state : " << BOutStateStrings()[crabs->bout_state]
+      << "\nbin_state  : " << BInStateStrands()[crabs->bin_state]
+      << "\nbout_state : " << BOutStateStrands()[crabs->bout_state]
       << "\nnum_states : " << crabs->num_states
       << "\nheader_size: " << crabs->header_size << Line('-', 80)
       << crabs->operand << "\nheader     : " << Bsq(crabs->header_start)

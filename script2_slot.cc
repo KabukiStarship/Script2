@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_slot.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "cslot.h"
+#include "c_slot.h"
 
-#include "casciidata.h"
-#include "csocket.h"
-#include "tstrand.h"
+#include "c_asciidata.h"
+#include "c_socket.h"
+#include "t_strand.h"
 
 #if SEAM == SCRIPT2_14
 #include "global_debug.inl"
@@ -28,23 +28,23 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 const Op* ReturnError(Slot* slot, Error error) {
-  PRINTF("\n%s", ErrorStrings()[error])
+  PRINTF("\n%s", ErrorStrands()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header) {
-  PRINTF("\n%s", ErrorStrings()[error])
+  PRINTF("\n%s", ErrorStrands()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, UI1 offset) {
-  PRINTF("\n%s", ErrorStrings()[error])
+  PRINTF("\n%s", ErrorStrands()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, SI4 offset,
                       CH1* address) {
-  PRINTF("\n%s", ErrorStrings()[error])
+  PRINTF("\n%s", ErrorStrands()[error])
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -193,7 +193,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
     type = (UI1)*param;
     ++param;
     PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (uint)index,
-           TypeString(type), (SI4)Size(l_begin, l_start),
+           TypeStrand(type), (SI4)Size(l_begin, l_start),
            (SI4)Size(l_begin, l_stop));
 
     switch (type) {
@@ -313,7 +313,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case SVI:
       case UVI:
 #endif
-      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
+      case kint:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
       case kUI4:
       case kFLT:
       case kTM4:

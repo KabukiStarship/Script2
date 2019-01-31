@@ -1,4 +1,4 @@
-#include "ttest.h"
+#include "t_test.h"
 #include "global_footer.inl"
 
 #define TEST_BEGIN \
@@ -10,12 +10,12 @@
 #define PAUSE(message) ::_::Pause(message)
 #define PAUSEF(format, ...) ::_::Pausef(format, __VA_ARGS__)
 #define PRINT_HEADING(message) ::_::PrintHeading(message, 5)
-#define PRINT_LINE(c) ::_::PrintLine(c)
+#define PRINT_LINE(c) ::_::TPrintLine(c)
 #define PRINT_TYPE(type, value) ::_::Console<>().Out() << TypeValue(type, value)
-#define PRINT_BYTES(begin, end_or_size) ::_::PrintSocket(begin, end_or_size)
+#define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj) ::_::PrintSocket(obj.Begin (), obj.SizeBytes ())
+#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin (), obj.SizeBytes ())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << '\n' << Bsq(bsq)
 #define PRINT_OBJ(stack) stack->Print()
 #define PRINT_TOBJ(stack) stack.Print()

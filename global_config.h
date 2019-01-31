@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/kabuki/features/crabs/config.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@file    /script2/c_onfig.h
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#ifndef HEADER_FOR_CRABS_CONFIG
-#define HEADER_FOR_CRABS_CONFIG
+#ifndef CRABS_CONFIG
+#define CRABS_CONFIG
 
-#define ASSERT_FREEZE 0  //< Flag to trigger a crash upon failed assert.
-#define ASSERT_LOG 0  //< Flag for if to log the failed assert but do not crash.
-#define ASSERT_DNC 1  //< Flag for Do Not Care (DNC) upon failed assert.
+#define ASSERT_FREEZE 0  //< Flag to trigger a crash upon failed DASSERT.
+#define ASSERT_LOG 0  //< Flag for if to log the failed DASSERT but do not crash.
+#define ASSERT_DNC 1  //< Flag for Do Not Care (DNC) upon failed DASSERT.
 
 #define BARE_METAL 1       //< Bare metal (i.e. No OS) OS type macro.
 #define BARE_METAL_MBED 2  //< mbed bare-metal OS type macro.
@@ -67,9 +67,7 @@ specific language governing permissions and limitations under the License. */
 
 #define LARGEST_INT 2147483647  //< Use this for 32-bit CPUs
 
-#if DEBUG == NO
-#include <assembly.inl>  //< Inline config stuff for your project.
-#endif
+#include <global_config.inl>
 
 #if USING_CRABS_TEXT == UTF1
 #if USING_UTF8 == 0
@@ -157,7 +155,7 @@ enum {
   kAddressLengthMax = CRABS_MAX_ADDRESS_LENGTH,  //< Max address (kADR) length.
   kMinStackSize = 1,                             //< Min CCrabs stack size.
   kOpNameLengthMax = CRABS_OP_MAX_NAME_LENGTH,
-  // Max length of a Op description string_.
+  // Max length of a Op description .
   kOpDescriptionLengthMax = CRABS_OP_MAX_DECRABSION_LENGTH,
   // Max length of a Text.
   kCharCount = CRABS_TEXT_LENGTH,
@@ -212,6 +210,7 @@ typedef FLT FPW;
 typedef DBL FPW;
 #endif
 
+/* This isn't right anymore.
 #if MAX_NUM_SLOTS <= 255
 typedef UI1 SI4;
 enum { kMaxNumSlots = 0xff };
@@ -226,6 +225,7 @@ typedef FLT FPW;
 #elif WORD_SIZE == 64
 typedef DBL FPW;
 #endif
+*/
 
 /* Below are representations of not-a-numbers.
 With signed integers, there is one additional negative number_ than positive
@@ -235,9 +235,9 @@ space, it will not harm anything to comment them out.
 
 @code
 #include <iostream>
-#define NaN_SI4 0xFFFFFFF
+#define NaN_int 0xFFFFFFF
 void BlowUp () { PRINTF ("The sky is falling!");
-if (-1 == NaN_SI4)
+if (-1 == NaN_int)
     BlowUp ();
 @endcode
 */
@@ -301,4 +301,4 @@ typedef UI8 data_t;    //< Default TData size.
   void operator=(const ClassName&) = delete;
 // ClassName () = default //< Saw this once on the net but do we need it?
 
-#endif  //< HEADER_FOR_CRABS_CONFIG
+#endif  //< CRABS_CONFIG

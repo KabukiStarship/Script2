@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_benchmark.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= SCRIPT2_13
-#include "tbenchmark.h"
+#include "t_benchmark.h"
 
 #include "rng.h"
-#include "tbinary.h"
-#include "ttest.h"
+#include "t_binary.h"
+#include "t_test.h"
 
 #include <chrono>
 #include <fstream>

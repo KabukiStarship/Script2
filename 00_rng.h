@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "cconsole.h"
-#include "crng.h"
+#include "c_cout.h"
+#include "c_rng.h"
 
 #if SEAM == SCRIPT2_0
 #include "global_debug.inl"
@@ -30,7 +30,7 @@ inline const CH1* _00_RNG (CH1* seam_log, CH1* seam_end, const CH1* args) {
 #if SEAM >= SCRIPT2_0
   TEST_BEGIN;
 
-  PRINT_HEADING ("Testing ArgsToString");
+  PRINT_HEADING ("Testing ArgsToStrand");
 
   CH1 arg_string[] = "C:\\Windows\0Foo\0\0Bar    \0\0\0   420    \0";
   CH1* test_args[] = { arg_string, arg_string + 11, arg_string + 16,
@@ -47,13 +47,13 @@ inline const CH1* _00_RNG (CH1* seam_log, CH1* seam_end, const CH1* args) {
       PRINT ("\nNil arg.");
     }
   }
-  PRINT ("\n\nRunning ArgsToString...\n");
-  ASSERT (ArgsToString (kArgCount, test_args));
+  PRINT ("\n\nRunning ArgsToStrand...\n");
+  ASSERT (ArgsToStrand (kArgCount, test_args));
 
   PRINT ("\n\nPrinting argument string...\n");
   PRINT (test_args[1]);
 
-  PRINT ("\n\nDone testing const CH1* ArgsToString(SI4, CH1**);");
+  PRINT ("\n\nDone testing const CH1* ArgsToStrand(SI4, CH1**);");
 
   PRINT_HEADING ("Testing RNG");
 

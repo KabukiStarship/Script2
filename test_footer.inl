@@ -1,4 +1,2 @@
-
-#undef PRINT_PRINTED
-#undef BEGIN_ITOS_ALGORITHM
+#include "global_footer.inl"
 #undef PRINT_ARGS
