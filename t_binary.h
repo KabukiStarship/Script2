@@ -205,8 +205,8 @@ inline I TStrandLength(Char* start) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, SIW count, CH1 item) {
-  return TPrint<Char> (start, start + count - 1, item);
+Char* TPrint(Char* start, SIW count, CH1 item) {
+  return TPrint<Char>(start, start + count - 1, item);
 }
 
 /* Prints a Unicode Char to the given socket.
@@ -217,8 +217,8 @@ Char* TPrint (Char* start, SIW count, CH1 item) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, SIW count, CH2 item) {
-  return TPrint<Char> (start, start + count - 1, item);
+Char* TPrint(Char* start, SIW count, CH2 item) {
+  return TPrint<Char>(start, start + count - 1, item);
 }
 
 /* Prints a Unicode Char to the given socket.
@@ -229,8 +229,8 @@ Char* TPrint (Char* start, SIW count, CH2 item) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, SIW count, CH4 item) {
-  return TPrint<Char> (start, start + count - 1, item);
+Char* TPrint(Char* start, SIW count, CH4 item) {
+  return TPrint<Char>(start, start + count - 1, item);
 }
 
 /* Prints a Unicode item to the given socket.
@@ -242,19 +242,20 @@ Char* TPrint (Char* start, SIW count, CH4 item) {
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
-  DASSERT (stop);
+Char* TPrint(Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
+  DASSERT(stop);
   if (!start) return start;
-  DASSERT (item);
+  DASSERT(item);
 
   if (start >= stop) return nullptr;
 
   CH1 c = *item++;
   while (c) {
-    start = Print (start, stop, c);
+    start = Print(start, stop, c);
     if (start >= stop) return nullptr;
     c = *item++;
   }
+  *start = delimiter;
   return start;
 }
 
@@ -267,20 +268,20 @@ Char* TPrint (Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
-  DASSERT (stop);
+Char* TPrint(Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
+  DASSERT(stop);
   if (!start) return start;
-  DASSERT (item);
+  if (!item) return nullptr;
 
   if (start >= stop) return nullptr;
 
   CH2 c = *item++;
   while (c) {
-    start = Print (start, stop, c);
+    start = Print(start, stop, c);
     if (start >= stop) return nullptr;
     c = *item++;
   }
-  return Print (start, stop, delimiter);
+  return Print(start, stop, delimiter);
 }
 
 /* Prints a Unicode item to the given socket.
@@ -293,7 +294,7 @@ Char* TPrint (Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
-  DASSERT (stop);
+  DASSERT(stop);
   if (!start) return start;
   DASSERT(item);
 
@@ -301,11 +302,11 @@ Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
 
   CH4 c = *item++;
   while (c) {
-    start = Print (start, stop, c);
+    start = Print(start, stop, c);
     if (start >= stop) return nullptr;
     c = *item++;
   }
-  return start;
+  return Print(start, stop, delimiter);
 }
 
 /* Prints a Unicode string to the given socket.
@@ -317,8 +318,8 @@ Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
-  return TPrint<Char> (start, start + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
+  return TPrint<Char>(start, start + size - 1, item, delimiter);
 }
 
 /* Prints a Unicode string to the given socket.
@@ -330,8 +331,8 @@ Char* TPrint (Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* start, SIW size, const CH2* item, CH2 delimiter = 0) {
-  return TPrint<Char> (start, start + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH2* item, CH2 delimiter = 0) {
+  return TPrint<Char>(start, start + size - 1, item, delimiter);
 }
 
 /* Prints a Unicode string to the given socket.
@@ -549,11 +550,11 @@ inline Char* TPrintChar(Char* socket, Char value) {
 }
 
 /* Utility function for printing a char with any Unicode conversion. */
-inline CH1* PrintChar (CH1* cursor, CH1 c) { return TPrintChar<CH1> (cursor, c); }
+inline CH1* PrintChar(CH1* cursor, CH1 c) { return TPrintChar<CH1>(cursor, c); }
 
-inline CH2* PrintChar (CH2* cursor, CH2 c) { return TPrintChar<CH2> (cursor, c); }
+inline CH2* PrintChar(CH2* cursor, CH2 c) { return TPrintChar<CH2>(cursor, c); }
 
-inline CH4* PrintChar (CH4* cursor, CH4 c) { return TPrintChar<CH4> (cursor, c); }
+inline CH4* PrintChar(CH4* cursor, CH4 c) { return TPrintChar<CH4>(cursor, c); }
 
 /* Checks if the given CH1 is a digit of a number_.
 @return True if it is a digit. */
@@ -1568,7 +1569,7 @@ Char* TPrint(Char* begin, Char* stop, FLT value) {
 }
 
 template <typename Char = CH1>
-Char* TPrintFloat(Char* begin, SIW size, FLT value) {
+Char* TPrint(Char* begin, SIW size, FLT value) {
   return TPrint<Char>(begin, begin + size - 1, value);
 }
 
@@ -1580,6 +1581,16 @@ Char* TPrint(Char* begin, Char* stop, DBL value) {
 template <typename Char = CH1>
 Char* TPrint(Char* begin, SIW size, DBL value) {
   return TPrint<Char>(begin, begin + size - 1, value);
+}
+
+template <typename Char = CH1>
+Char* TScan(const Char* start, FLT& result) {
+  return nullptr;
+}
+
+template <typename Char = CH1>
+Char* TScan(const Char* start, DBL& result) {
+  return nullptr;
 }
 
 }  // namespace _

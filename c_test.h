@@ -47,7 +47,7 @@ SDK BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file,
 @param  line    The line the program failed at.
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
-SDK BOL TestAssert(SI4 line, const CH1* funciton, const CH1* file);
+SDK BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */

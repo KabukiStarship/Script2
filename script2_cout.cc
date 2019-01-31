@@ -51,32 +51,28 @@ const CH1* ArgsToStrand(SI4 arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-inline void Print(CH1 c) {
-  putchar(c);
+inline void Print(CH1 c) { putchar(c); }
+
+inline void PrintChar(CH1 c) { return Print(c); }
+
+inline void Print(CH4 c) {
+  wprintf_s(L"%c", (int)c);
+  // std::wcout << c;
 }
 
-inline void PrintChar (CH1 c) {
-  return Print (c);
+inline void PrintChar(CH4 c) {
+  wprintf_s(L"%c", (int)c);
+  // std::wcout << c;
 }
 
-inline void Print (CH4 c) {
-  wprintf_s (L"%c", c);
-  //std::wcout << c;
+inline void Print(CH2 c) {
+  wprintf_s(L"%c", (int)c);
+  // std::wcout << c;
 }
 
-inline void PrintChar (CH4 c) {
-  wprintf_s (L"%c", c);
-  //std::wcout << c;
-}
-
-inline void Print (CH2 c) {
-  wprintf_s (L"%c", c);
-  //std::wcout << c;
-}
-
-inline void PrintChar (CH2 c) {
-  wprintf_s (L"%c", c);
-  //std::wcout << c;
+inline void PrintChar(CH2 c) {
+  wprintf_s(L"%c", (int)c);
+  // std::wcout << c;
 }
 
 inline void Print(CH1 first, CH1 second) {
@@ -209,30 +205,28 @@ void PrintIndent(SI4 count) {
   while (--count > 0) Print(' ');
 }
 
-void PrintRepeat (CH1 item, SI4 count) {
-  TPrintRepeat<CH1> (item, count);
-}
+void PrintRepeat(CH1 item, SI4 count) { TPrintRepeat<CH1>(item, count); }
 
-void PrintRepeat (const CH1* item, SI4 count, CH1 delimiter) {
-  TPrintRepeat<CH1> (item, count, delimiter);
+void PrintRepeat(const CH1* item, SI4 count, CH1 delimiter) {
+  TPrintRepeat<CH1>(item, count, delimiter);
 }
 
 void PrintLine(CH1 item, SI4 count, CH1 first_token) {
-  TPrintLine<CH1> (item, count, first_token);
+  TPrintLine<CH1>(item, count, first_token);
 }
 
-SDK void PrintLine (const CH1* item, SI4 count, CH1 first_token) {
-  TPrintLine<CH1> (item, count, first_token);
+SDK void PrintLine(const CH1* item, SI4 count, CH1 first_token) {
+  TPrintLine<CH1>(item, count, first_token);
 }
 
 void PrintHeading(const CH1* heading_a, const CH1* heading_b, SI4 row_count,
                   SI4 column_count, CH1 token, CH1 first_token) {
-  TPrintHeading<CH1> (heading_a, heading_b, row_count, column_count, token, 
-                      first_token);
+  TPrintHeading<CH1>(heading_a, heading_b, row_count, column_count, token,
+                     first_token);
 }
 
-void PrintHeading(const CH1* heading, SI4 row_count, SI4 column_count, CH1 token,
-                  CH1 first_token) {
+void PrintHeading(const CH1* heading, SI4 row_count, SI4 column_count,
+                  CH1 token, CH1 first_token) {
   if (row_count < 1 || column_count < 1) return;
   while (row_count-- > 0) Print('\n');
   PrintLine(token, column_count, '+');
@@ -244,19 +238,19 @@ void PrintHeading(const CH1* heading, SI4 row_count, SI4 column_count, CH1 token
 
 void PrintBinary(UI1 value) { return TPrintBinary<UI1>(value); }
 
-void PrintBinary(SI1 value) { return TPrintBinary<UI1> ((UI1)value); }
+void PrintBinary(SI1 value) { return TPrintBinary<UI1>((UI1)value); }
 
 void PrintBinary(UI2 value) { return TPrintBinary<UI2>(value); }
 
-void PrintBinary(SI2 value) { return TPrintBinary<UI2> ((UI2)value); }
+void PrintBinary(SI2 value) { return TPrintBinary<UI2>((UI2)value); }
 
 void PrintBinary(UI4 value) { return TPrintBinary<UI4>(value); }
 
-void PrintBinary(SI4 value) { return TPrintBinary<UI4> (value); }
+void PrintBinary(SI4 value) { return TPrintBinary<UI4>(value); }
 
 void PrintBinary(UI8 value) { return TPrintBinary<UI8>(value); }
 
-void PrintBinary(SI8 value) { return TPrintBinary<UI8> (value); }
+void PrintBinary(SI8 value) { return TPrintBinary<UI8>(value); }
 
 void PrintBinary(FLT value) {
   return TPrintBinary<UI4>(*reinterpret_cast<UI4*>(&value));
@@ -270,11 +264,11 @@ void PrintBinary(const void* ptr) {
   return TPrintBinary<UIW>(*reinterpret_cast<UIW*>(&ptr));
 }
 
-void PrintHex (CH1 value) { TPrintHexConsole<UI1> (value); }
+void PrintHex(CH1 value) { TPrintHexConsole<UI1>(value); }
 
-void PrintHex (CH2 value) { TPrintHexConsole<UI2> (value); }
+void PrintHex(CH2 value) { TPrintHexConsole<UI2>(value); }
 
-void PrintHex (CH4 value) { TPrintHexConsole<UI4> (value); }
+void PrintHex(CH4 value) { TPrintHexConsole<UI4>(value); }
 
 void PrintHex(UI1 value) { TPrintHexConsole<UI1>(value); }
 
@@ -307,41 +301,41 @@ void PrintHex(const void* ptr) {
   TPrintHexConsole<UIW>(value);
 }
 
-void PrintHex (const void* begin, const void* end) {
+void PrintHex(const void* begin, const void* end) {
   if (!begin || begin >= end) return;
 
   const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
-    *address_end_ptr = reinterpret_cast<const CH1*>(end);
+            *address_end_ptr = reinterpret_cast<const CH1*>(end);
   size_t size = address_end_ptr - address_ptr,
-    num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+         num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
   SIW num_bytes = 81 * (num_rows + 2);
   size += num_bytes;
-  Print (StrandSocketHexHeader ());
-  Print (StrandSocketHexBorder ());
-  PrintHex (address_ptr);
+  Print(StrandSocketHexHeader());
+  Print(StrandSocketHexBorder());
+  PrintHex(address_ptr);
 
   CH1 c;
   while (address_ptr < address_end_ptr) {
-    Print ('\n', '|');
+    Print('\n', '|');
     for (SI4 i = 0; i < 32; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
         c = 'x';
       else if (c < ' ')
         c += kPrintC0Offset;
-      PrintHex (c);
+      PrintHex(c);
     }
-    Print ('|', ' ');
-    PrintHex (address_ptr);
+    Print('|', ' ');
+    PrintHex(address_ptr);
   }
-  Print (StrandSocketHexBorder ());
-  PrintHex (address_ptr + size);
+  Print(StrandSocketHexBorder());
+  PrintHex(address_ptr + size);
 }
 
-void PrintHex (const void* begin, SIW size) {
+void PrintHex(const void* begin, SIW size) {
   const CH1* begin_char = reinterpret_cast<const CH1*>(begin);
-  return PrintHex (begin_char, begin_char + size);
+  return PrintHex(begin_char, begin_char + size);
 }
 
 SI4 CInKey() { return _getch(); }
@@ -381,226 +375,208 @@ void Pausef(const CH1* format, ...) {
 
 namespace _ {
 
-void PrintChars (const void* begin, const void* end) {
-  TPrintChars<CH1> (reinterpret_cast<const CH1*> (begin),
-                    reinterpret_cast<const CH1*> (end));
+void PrintChars(const void* begin, const void* end) {
+  TPrintChars<CH1>(reinterpret_cast<const CH1*>(begin),
+                   reinterpret_cast<const CH1*>(end));
 }
 
-void PrintChars (const void* start, SIW count) {
-  const CH1* ptr = reinterpret_cast<const CH1*> (start);
-  return PrintChars (ptr, ptr + count - 1);
+void PrintChars(const void* start, SIW count) {
+  const CH1* ptr = reinterpret_cast<const CH1*>(start);
+  return PrintChars(ptr, ptr + count);
 }
 
 #if USING_UTF16 == YES
-void PrintChars (const CH2* start, SIW count) {
-  TPrintChars<CH2> (start, start + count - 1);
+void PrintChars(const CH2* start, SIW count) {
+  TPrintChars<CH2>(start, start + count - 1);
 }
 #endif
 #if USING_UTF32 == YES
-void PrintChars (const CH4* start, SIW count) {
-  TPrintChars<CH4> (start, start + count - 1);
+void PrintChars(const CH4* start, SIW count) {
+  TPrintChars<CH4>(start, start + count);
 }
 #endif
 
-void PrintRight (const CH1* item, SI4 count) {
-  ::_::TPrintRight<CH1> (item, count);
+void PrintRight(const CH1* item, SI4 count) {
+  ::_::TPrintRight<CH1>(item, count);
 }
 
-void PrintCenter (const CH1* item, SI4 count) {
-  ::_::TPrintCenter<CH1> (item, count);
+void PrintCenter(const CH1* item, SI4 count) {
+  ::_::TPrintCenter<CH1>(item, count);
 }
 
-COut::COut (const CH1* item) {
-  ::_::Print (item);
-}
+COut::COut(const CH1* item) { ::_::Print(item); }
 
-COut::COut (const CH2* item) {
-  ::_::Print (item);
-}
+COut::COut(const CH2* item) { ::_::Print(item); }
 
-COut::COut (const CH4* item) {
-  ::_::Print (item);
-}
+COut::COut(const CH4* item) { ::_::Print(item); }
 
-COut::COut (SI1 item) {
-  ::_::Print (item);
-}
+COut::COut(SI1 item) { ::_::Print(item); }
 
-COut::COut (UI1 item) {
-  ::_::Print (item);
-}
+COut::COut(UI1 item) { ::_::Print(item); }
 
-COut::COut (SI2 item) {
-  ::_::Print (item);
-}
+COut::COut(SI2 item) { ::_::Print(item); }
 
-COut::COut (UI2 item) {
-  ::_::Print (item);
-}
+COut::COut(UI2 item) { ::_::Print(item); }
 
-COut::COut (SI4 item) {
-  ::_::Print (item);
-}
+COut::COut(SI4 item) { ::_::Print(item); }
 
-COut::COut (UI4 item) {
-  ::_::Print (item);
-}
+COut::COut(UI4 item) { ::_::Print(item); }
 
-COut::COut (SI8 item) {
-  ::_::Print (item);
-}
+COut::COut(SI8 item) { ::_::Print(item); }
 
-COut::COut (UI8 item) {
-  ::_::Print (item);
-}
+COut::COut(UI8 item) { ::_::Print(item); }
 
 #if SEAM >= SCRIPT2_4
 
-COut::COut (FLT item) {
-  ::_::Print (item);
-}
+COut::COut(FLT item) { ::_::Print(item); }
 
-COut::COut (DBL item) {
-  ::_::Print (item);
-}
+COut::COut(DBL item) { ::_::Print(item); }
 #endif
 
-COut& COut::Star () { return *this; }
+COut& COut::Star() { return *this; }
 
-COut& COut::Print (CH1 item) {
-  ::_::Print (item);
+COut& COut::Print(CH1 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (CH2 item) {
-  ::_::Print (item);
+COut& COut::Print(CH2 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (CH4 item) {
-  ::_::Print (item);
+COut& COut::Print(CH4 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (const CH1* item) {
-  ::_::Print (item);
+COut& COut::Print(const CH1* item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (const CH2* item) {
-  ::_::Print (item);
+COut& COut::Print(const CH2* item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (const CH4* item) {
-  ::_::Print (item);
+COut& COut::Print(const CH4* item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (SI4 item) {
-  ::_::Print (item);
+COut& COut::Print(SI4 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (UI4 item) {
-  ::_::Print (item);
+COut& COut::Print(UI4 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (SI8 item) {
-  ::_::Print (item);
+COut& COut::Print(SI8 item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (UI8 item) {
-  ::_::Print (item);
+COut& COut::Print(UI8 item) {
+  ::_::Print(item);
   return *this;
 }
 
 #if SEAM >= SCRIPT2_4
 
-COut& COut::Print (FLT item) {
-  ::_::Print (item);
+COut& COut::Print(FLT item) {
+  ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print (DBL item) {
-  ::_::Print (item);
+COut& COut::Print(DBL item) {
+  ::_::Print(item);
   return *this;
 }
 #endif
 
 #if SCRIPT2_CHAR_SIZE == UTF8
 
-COut& COut::Print (Right1 item) {
-  ::_::PrintRight (item.token.String (), item.token.Count ());
+COut& COut::Print(Right1 item) {
+  ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
 }
 
-COut& COut::Print (Center1 item) {
-  ::_::PrintCenter (item.token.String (), item.token.Count ());
+COut& COut::Print(Center1 item) {
+  ::_::PrintCenter(item.token.String(), item.token.Count());
   return *this;
 }
 
-COut& COut::Print (Line1 item) {
-  PrintLine (item.token.String (), item.token.Count ());
+COut& COut::Print(Line1 item) {
+  PrintLine(item.token.String(), item.token.Count());
   return *this;
 }
 
-COut& COut::Print (Repeat1 item) {
-  PrintRepeat (item.token.String (), item.token.Count ());
+COut& COut::Print(Repeat1 item) {
+  PrintRepeat(item.token.String(), item.token.Count());
   return *this;
 }
 
 #elif SCRIPT2_CHAR_SIZE == UTF16
 
-COut& COut::Print (Right2 item) {
-  Print (item.token.String ());
+COut& COut::Print(Right2 item) {
+  Print(item.token.String());
   return *this;
 }
 
-COut& COut::Print (Center2 item) {
-  Print (item.token.String ());
+COut& COut::Print(Center2 item) {
+  Print(item.token.String());
   return *this;
 }
 
-COut& COut::Print (Line2 item) {
-  auto string = item.token.String ();
-  if (string) PrintLine (string, item.token. Count ());
-  else        PrintLine (item.token, item.token. Count ());
+COut& COut::Print(Line2 item) {
+  auto string = item.token.String();
+  if (string)
+    PrintLine(string, item.token.Count());
+  else
+    PrintLine(item.token, item.token.Count());
   return *this;
 }
 
-COut& COut::Print (Repeat2 item) {
-  auto string = item.token.String ();
-  if (string) PrintRepeat (string);
-  else        PrintRepeat (item.token);
+COut& COut::Print(Repeat2 item) {
+  auto string = item.token.String();
+  if (string)
+    PrintRepeat(string);
+  else
+    PrintRepeat(item.token);
   return *this;
 }
 
 #lif SCRIPT2_CHAR_SIZE == UTF32
 
-COut& COut::Print (Right4 item) {
-  Print (item.token.String ());
+COut& COut::Print(Right4 item) {
+  Print(item.token.String());
   return *this;
 }
 
-COut& COut::Print (Center4 item) {
-  Print (item.token.String ());
+COut& COut::Print(Center4 item) {
+  Print(item.token.String());
   return *this;
 }
 
-COut& COut::Print (Line4 item) {
-  auto string = item.token.String ();
-  if (string) PrintLine (string);
-  else        PrintLine (item.token);
+COut& COut::Print(Line4 item) {
+  auto string = item.token.String();
+  if (string)
+    PrintLine(string);
+  else
+    PrintLine(item.token);
   return *this;
 }
 
-COut& COut::Print (Repeat4 item) {
-  const CH4* string = item.token.String ();
-  if (string) PrintRepeat (string);
-  else        PrintRepeat (item.token);
+COut& COut::Print(Repeat4 item) {
+  const CH4* string = item.token.String();
+  if (string)
+    PrintRepeat(string);
+  else
+    PrintRepeat(item.token);
   return *this;
 }
 
@@ -609,121 +585,96 @@ COut& COut::Print (Repeat4 item) {
 }  // namespace _
 
 ::_::COut& operator<<(::_::COut& cout, const CH1* string) {
-  return cout.Print (string);
+  return cout.Print(string);
 }
 
 ::_::COut& operator<<(::_::COut& cout, const CH2* string) {
-  return cout.Print (string);
+  return cout.Print(string);
 }
 
 ::_::COut& operator<<(::_::COut& cout, const CH4* string) {
-  return cout.Print (string);
+  return cout.Print(string);
 }
 
-::_::COut& operator<<(::_::COut& cout, CH1 c) {
-  return cout.Print (c);
-}
+::_::COut& operator<<(::_::COut& cout, CH1 c) { return cout.Print(c); }
 
-::_::COut& operator<<(::_::COut& cout, CH2 c) {
-  return cout.Print (c);
-}
+::_::COut& operator<<(::_::COut& cout, CH2 c) { return cout.Print(c); }
 
-::_::COut& operator<<(::_::COut& cout, CH4 c) {
-  return cout.Print (c);
-}
+::_::COut& operator<<(::_::COut& cout, CH4 c) { return cout.Print(c); }
 
-::_::COut& operator<<(::_::COut& cout, UI1 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, UI1 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, SI2 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, SI2 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, UI2 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, UI2 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, SI4 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, SI4 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, UI4 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, UI4 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, SI8 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, SI8 value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, UI8 value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, UI8 value) { return cout.Print(value); }
 
 #if SEAM >= SCRIPT2_4
 
-::_::COut& operator<<(::_::COut& cout, FLT value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, FLT value) { return cout.Print(value); }
 
-::_::COut& operator<<(::_::COut& cout, DBL value) {
-  return cout.Print (value);
-}
+::_::COut& operator<<(::_::COut& cout, DBL value) { return cout.Print(value); }
 #endif
 
 #if SCRIPT2_CHAR_SIZE == UTF8
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Line1 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Repeat1 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 #elif SCRIPT2_CHAR_SIZE == UTF16
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Line2 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Repeat2 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 #lif SCRIPT2_CHAR_SIZE == UTF32
 
-
 ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Line4 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Repeat4 item) {
-  return cout.Print (item);
+  return cout.Print(item);
 }
 
 #endif

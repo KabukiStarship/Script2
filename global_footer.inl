@@ -19,6 +19,8 @@
 #undef PRINTLN
 #undef PRINT_FUNCTION_LINE
 #undef SOCKET_SAVE
+#undef SOCKET_FILL
+#undef SOCKET_WIPE
 #undef CHECK
 #undef DCHECK
 #undef RCHECK

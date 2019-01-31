@@ -129,10 +129,16 @@ SDK inline const void* ConstVoidPtr(UIW value);
 SDK inline SIW SizeOf(const void* begin, const void* stop);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-SDK CH1* SocketFill(CH1* begin, CH1* stop, SIW size, CH1 fill_char = 0);
+SDK CH1* SocketFill(void* begin, void* end, CH1 fill_char);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-SDK CH1* SocketFill(void* begin, SIW size, CH1 fill_char = 0);
+SDK CH1* SocketFill(void* begin, SIW size, CH1 fill_char);
+
+/* Overwrites the memory with fill_char; functionally identical to memset. */
+SDK CH1* SocketWipe(void* begin, void* end);
+
+/* Overwrites the memory with fill_char; functionally identical to memset. */
+SDK CH1* SocketWipe(void* begin, SIW size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin     The begin of the write socket.

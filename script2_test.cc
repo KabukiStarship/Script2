@@ -35,7 +35,7 @@ BOL TestWarn(SI4 line, const CH1* function, const CH1* file,
   return true;
 }
 
-BOL TestAssert(SI4 line, const CH1* function, const CH1* file) {
+BOL TestFail(SI4 line, const CH1* function, const CH1* file) {
   BOL result = TestWarn(line, function, file);
   return result;
 }
@@ -75,7 +75,7 @@ const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
     const CH1* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
-    Print ('\n');
+    Print('\n');
   }
   Print("\n\nUnit test finished successfully! (:-)+==<\n");
   return nullptr;
@@ -121,8 +121,8 @@ BOL Test(const CH4* a, const CH4* b) {
   if (!result) return true;
   Print(kStrandErrorExpecting);
   Print(a);
-  Print ("   ");
-  PrintHex (a);
+  Print("   ");
+  PrintHex(a);
   Print(kStrandFound);
   Print(b);
   Print(kStrandDifference);
@@ -130,77 +130,77 @@ BOL Test(const CH4* a, const CH4* b) {
   return false;
 }
 
-BOL Test (CH1 a, CH1 b) {
+BOL Test(CH1 a, CH1 b) {
   if (a == b) return true;
-  Print (kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
-  Print (kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  Print(kStrandErrorExpecting);
+  PrintHex(a);
+  Print(':');
+  Print(a);
+  Print(kStrandFound);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
-BOL Test (CH2 a, CH2 b) {
+BOL Test(CH2 a, CH2 b) {
   if (a == b) return true;
-  Print (kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
-  Print (kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  Print(kStrandErrorExpecting);
+  PrintHex(a);
+  Print(':');
+  Print(a);
+  Print(kStrandFound);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
-BOL Test (CH4 a, CH4 b) {
+BOL Test(CH4 a, CH4 b) {
   if (a == b) return true;
-  Print (kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
-  Print (kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  Print(kStrandErrorExpecting);
+  PrintHex(a);
+  Print(':');
+  Print(a);
+  Print(kStrandFound);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(const void* a, const void* b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
+  PrintHex(a);
   Print(kStrandFound);
-  PrintHex (b);
+  PrintHex(b);
   return false;
 }
 
 BOL Test(UI1 a, UI1 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(SI1 a, SI1 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
@@ -208,103 +208,103 @@ BOL Test(UI2 a, UI2 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
   Print(a);
-  Print ("   ");
-  PrintHex (a);
+  Print("   ");
+  PrintHex(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(SI2 a, SI2 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(UI4 a, UI4 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(SI4 a, SI4 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(UI8 a, UI8 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(SI8 a, SI8 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(FLT a, FLT b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
 BOL Test(DBL a, DBL b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
-  PrintHex (a);
-  Print (':');
-  Print (a);
+  PrintHex(a);
+  Print(':');
+  Print(a);
   Print(kStrandFound);
-  PrintHex (b);
-  Print (':');
-  Print (b);
+  PrintHex(b);
+  Print(':');
+  Print(b);
   return false;
 }
 
