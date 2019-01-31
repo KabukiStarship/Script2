@@ -123,17 +123,17 @@ SIW TPrintAndCount(const Char* string) {
 }
 
 template <typename Char>
-Char* TPuffItoSBegin(Char* cursor = nullptr) {
+Char* TPuffItoSBegin(Char* start = nullptr) {
   static Char* buffer_begin = 0;
-  if (cursor) {
-    buffer_begin = cursor;
-    return cursor;
+  if (start) {
+    buffer_begin = start;
+    return start;
   }
   return buffer_begin;
 }
 
 template <typename Char>
-void TPrintPrinted(Char* cursor) {
+void TPrintPrinted(Char* start) {
   Print("\n    Printed \"");
   SIW print_count = TPrintAndCount<Char>(TPuffItoSBegin<Char>());
   Print('\"', ':');
@@ -162,20 +162,20 @@ inline SI TSignedNaN() {
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1>
-inline const Char* TStrandEnd(const Char* cursor, Char delimiter = 0) {
-  DASSERT(cursor);
-  while (*cursor++ != delimiter)
+inline const Char* TStrandEnd(const Char* start, Char delimiter = 0) {
+  DASSERT(start);
+  while (*start++ != delimiter)
     ;
-  return cursor - 1;
+  return start - 1;
 }
 
 /* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1>
-inline Char* TStrandEnd(Char* cursor, Char delimiter = 0) {
+inline Char* TStrandEnd(Char* start, Char delimiter = 0) {
   return const_cast<Char*>(
-      TStrandEnd(reinterpret_cast<const Char*>(cursor), delimiter));
+      TStrandEnd(reinterpret_cast<const Char*>(start), delimiter));
 }
 
 /* Gets the length of the given CH1.
@@ -183,9 +183,9 @@ inline Char* TStrandEnd(Char* cursor, Char delimiter = 0) {
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1, typename I = SI4>
-I TStrandLength(const Char* cursor) {
-  DASSERT(cursor);
-  return (I)(TStrandEnd<Char>(cursor) - cursor);
+I TStrandLength(const Char* start) {
+  DASSERT(start);
+  return (I)(TStrandEnd<Char>(start) - start);
 }
 
 /* Gets the length of the given CH1.
@@ -193,165 +193,158 @@ I TStrandLength(const Char* cursor) {
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1, typename I = SI4>
-inline I TStrandLength(Char* cursor) {
-  return TStrandLength<Char>(reinterpret_cast<const Char*>(cursor));
+inline I TStrandLength(Char* start) {
+  return TStrandLength<Char>(reinterpret_cast<const Char*>(start));
 }
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
+@param   start The beginning of the socket.
 @param   count  The element count.
 @param   item   The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, SIW count, CH1 item) {
-  return TPrint<Char> (cursor, cursor + count - 1, item);
+Char* TPrint (Char* start, SIW count, CH1 item) {
+  return TPrint<Char> (start, start + count - 1, item);
 }
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
+@param   start The beginning of the socket.
 @param   count  The element count.
 @param   item   The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, SIW count, CH2 item) {
-  return TPrint<Char> (cursor, cursor + count - 1, item);
+Char* TPrint (Char* start, SIW count, CH2 item) {
+  return TPrint<Char> (start, start + count - 1, item);
 }
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   count  The element count.
-@param   item   The string to print.
+@param   start The beginning of the socket.
+@param   count The element count.
+@param   item  The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, SIW count, CH4 item) {
-  return TPrint<Char> (cursor, cursor + count - 1, item);
-}
-
-/* Prints a raw character after checking for a buffer overflow. */
-template<typename Char>
-Char* TPrintDelimiter (Char* cursor, Char delimiter) {
-  if (cursor) *cursor = delimiter;
-  return cursor;
+Char* TPrint (Char* start, SIW count, CH4 item) {
+  return TPrint<Char> (start, start + count - 1, item);
 }
 
 /* Prints a Unicode item to the given socket.
  @return  Nil upon failure or a pointer to the nil-term Char upon success.
- @param   cursor  The beginning of the socket.
- @param   stop    The last Char in the socket.
- @param   item    The item to print.
+ @param   start  The beginning of the socket.
+ @param   stop   The last Char in the socket.
+ @param   item   The item to print.
  @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, Char* stop, const CH1* item, CH1 delimiter = 0) {
+Char* TPrint (Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
   DASSERT (stop);
-  if (!cursor) return cursor;
+  if (!start) return start;
   DASSERT (item);
 
-  if (cursor >= stop) return nullptr;
+  if (start >= stop) return nullptr;
 
   CH1 c = *item++;
   while (c) {
-    cursor = Print (cursor, stop, c);
-    if (cursor >= stop) return nullptr;
+    start = Print (start, stop, c);
+    if (start >= stop) return nullptr;
     c = *item++;
   }
-  return TPrintDelimiter<Char> (cursor, delimiter);
+  return start;
 }
 
 /* Prints a Unicode item to the given socket.
  @return  Nil upon failure or a pointer to the nil-term Char upon success.
- @param   cursor  The beginning of the socket.
+ @param   start  The beginning of the socket.
  @param   stop    The last Char in the socket.
  @param   item    The item to print.
  @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, Char* stop, const CH2* item, CH2 delimiter = 0) {
+Char* TPrint (Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
   DASSERT (stop);
-  if (!cursor) return cursor;
+  if (!start) return start;
   DASSERT (item);
 
-  if (cursor >= stop) return nullptr;
+  if (start >= stop) return nullptr;
 
   CH2 c = *item++;
   while (c) {
-    cursor = Print (cursor, stop, c);
-    if (cursor >= stop) return nullptr;
+    start = Print (start, stop, c);
+    if (start >= stop) return nullptr;
     c = *item++;
   }
-  return TPrintDelimiter<Char> (cursor, delimiter);
+  return Print (start, stop, delimiter);
 }
 
 /* Prints a Unicode item to the given socket.
  @return  Nil upon failure or a pointer to the nil-term Char upon success.
- @param   cursor  The beginning of the socket.
+ @param   start  The beginning of the socket.
  @param   stop    The last Char in the socket.
  @param   item    The item to print.
  @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* cursor, Char* stop, const CH4* item, CH4 delimiter = 0) {
+Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
   DASSERT (stop);
-  if (!cursor) return cursor;
+  if (!start) return start;
   DASSERT(item);
 
-  if (cursor >= stop) return nullptr;
+  if (start >= stop) return nullptr;
 
   CH4 c = *item++;
   while (c) {
-    cursor = Print (cursor, stop, c);
-    if (cursor >= stop) return nullptr;
+    start = Print (start, stop, c);
+    if (start >= stop) return nullptr;
     c = *item++;
   }
-  return TPrintDelimiter<Char> (cursor, delimiter);
+  return start;
 }
 
 /* Prints a Unicode string to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor    The beginning of the socket.
+@param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
 @param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, SIW size, const CH1* item, CH1 delimiter = 0) {
-  return TPrint<Char> (cursor, cursor + size - 1, item, delimiter);
+Char* TPrint (Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
+  return TPrint<Char> (start, start + size - 1, item, delimiter);
 }
 
 /* Prints a Unicode string to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor    The beginning of the socket.
+@param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
 @param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint (Char* cursor, SIW size, const CH2* item, CH2 delimiter = 0) {
-  return TPrint<Char> (cursor, cursor + size - 1, item, delimiter);
+Char* TPrint (Char* start, SIW size, const CH2* item, CH2 delimiter = 0) {
+  return TPrint<Char> (start, start + size - 1, item, delimiter);
 }
 
 /* Prints a Unicode string to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor    The beginning of the socket.
+@param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
 @param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* cursor, SIW size, const CH4* item, CH4 delimiter = 0) {
-  return TPrint<Char>(cursor, cursor + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH4* item, CH4 delimiter = 0) {
+  return TPrint<Char>(start, start + size - 1, item, delimiter);
 }
 
 inline UI1 ShiftRight(UI1 value, UI1 count) { return value >> count; }
@@ -361,174 +354,174 @@ inline UI8 ShiftRight(UI8 value, UI8 count) { return value >> count; }
 
 /* Prints a hex value to the Console. */
 template <typename Char, typename UI>
-Char* TPrintHexTest(Char* cursor, Char* stop, UI value) {
+Char* TPrintHexTest(Char* start, Char* stop, UI value) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
-  DASSERT(cursor);
-  if (cursor + kHexStrandLengthSizeMax >= stop) return nullptr;
+  DASSERT(start);
+  if (start + kHexStrandLengthSizeMax >= stop) return nullptr;
 
-  *cursor++ = '0';
-  *cursor++ = 'x';
+  *start++ = '0';
+  *start++ = 'x';
   for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
     UI shifted_value = ShiftRight(value, num_bits_shift);
-    *cursor++ = HexNibbleToUpperCase((UI1)shifted_value);
+    *start++ = HexNibbleToUpperCase((UI1)shifted_value);
   }
-  *cursor = 0;
-  return cursor;
+  *start = 0;
+  return start;
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, SI1 value) {
-  return TPrintHexTest<Char, UI1>(cursor, stop, (UI1)value);
+inline Char* TPrintHex(Char* start, Char* stop, SI1 value) {
+  return TPrintHexTest<Char, UI1>(start, stop, (UI1)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, UI1 value) {
-  return TPrintHexTest<Char, UI1>(cursor, stop, value);
+inline Char* TPrintHex(Char* start, Char* stop, UI1 value) {
+  return TPrintHexTest<Char, UI1>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, SI2 value) {
-  return TPrintHexTest<Char, UI2>(cursor, stop, (UI2)value);
+inline Char* TPrintHex(Char* start, Char* stop, SI2 value) {
+  return TPrintHexTest<Char, UI2>(start, stop, (UI2)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, UI2 value) {
-  return TPrintHexTest<Char, UI2>(cursor, stop, value);
+inline Char* TPrintHex(Char* start, Char* stop, UI2 value) {
+  return TPrintHexTest<Char, UI2>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, SI4 value) {
-  return TPrintHexTest<Char, UI4>(cursor, stop, (UI4)value);
+inline Char* TPrintHex(Char* start, Char* stop, SI4 value) {
+  return TPrintHexTest<Char, UI4>(start, stop, (UI4)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, UI4 value) {
-  return TPrintHexTest<Char, UI4>(cursor, stop, value);
+inline Char* TPrintHex(Char* start, Char* stop, UI4 value) {
+  return TPrintHexTest<Char, UI4>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, SI8 value) {
-  return TPrintHexTest<Char, UI8>(cursor, stop, (UI8)value);
+inline Char* TPrintHex(Char* start, Char* stop, SI8 value) {
+  return TPrintHexTest<Char, UI8>(start, stop, (UI8)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, UI8 value) {
-  return TPrintHexTest<Char, UI8>(cursor, stop, value);
+inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
+  return TPrintHexTest<Char, UI8>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, FLT value) {
+inline Char* TPrintHex(Char* start, Char* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHexTest<Char, UI8>(cursor, stop, ui);
+  return TPrintHexTest<Char, UI8>(start, stop, ui);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, DBL value) {
+inline Char* TPrintHex(Char* start, Char* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHexTest<Char, UI8>(cursor, stop, ui);
+  return TPrintHexTest<Char, UI8>(start, stop, ui);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* cursor, Char* stop, const void* ptr) {
+inline Char* TPrintHex(Char* start, Char* stop, const void* ptr) {
   UIW address = reinterpret_cast<UIW>(ptr);
-  return TPrintHexTest<Char, UIW>(cursor, stop, address);
+  return TPrintHexTest<Char, UIW>(start, stop, address);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1, typename UI>
-Char* TPrintBinary(Char* cursor, Char* stop, UI value) {
-  if (cursor + sizeof(UI8) * 8 >= stop) {
+Char* TPrintBinary(Char* start, Char* stop, UI value) {
+  if (start + sizeof(UI8) * 8 >= stop) {
     return nullptr;
   }
 
   for (SI4 i = 0; i < sizeof(UI) * 8; ++i) {
-    *cursor++ = (Char)('0' + (value >> (sizeof(UI) * 8 - 1)));
+    *start++ = (Char)('0' + (value >> (sizeof(UI) * 8 - 1)));
     value = value << 1;
   }
-  *cursor = 0;
-  return cursor;
+  *start = 0;
+  return start;
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, SI1 value) {
-  return TPrintBinary<Char, UI1>(cursor, stop, (UI1)value);
+inline Char* TPrintBinary(Char* start, Char* stop, SI1 value) {
+  return TPrintBinary<Char, UI1>(start, stop, (UI1)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, UI1 value) {
-  return TPrintBinary<Char, UI1>(cursor, stop, value);
+inline Char* TPrintBinary(Char* start, Char* stop, UI1 value) {
+  return TPrintBinary<Char, UI1>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, SI2 value) {
-  return TPrintBinary<Char, UI2>(cursor, stop, (UI2)value);
+inline Char* TPrintBinary(Char* start, Char* stop, SI2 value) {
+  return TPrintBinary<Char, UI2>(start, stop, (UI2)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, UI2 value) {
-  return TPrintBinary<Char, UI2>(cursor, stop, value);
+inline Char* TPrintBinary(Char* start, Char* stop, UI2 value) {
+  return TPrintBinary<Char, UI2>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, SI4 value) {
-  return TPrintBinary<Char, UI4>(cursor, stop, (UI4)value);
+inline Char* TPrintBinary(Char* start, Char* stop, SI4 value) {
+  return TPrintBinary<Char, UI4>(start, stop, (UI4)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, UI4 value) {
-  return TPrintBinary<Char, UI4>(cursor, stop, value);
+inline Char* TPrintBinary(Char* start, Char* stop, UI4 value) {
+  return TPrintBinary<Char, UI4>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, SI8 value) {
-  return TPrintBinary<Char, UI8>(cursor, stop, (UI8)value);
+inline Char* TPrintBinary(Char* start, Char* stop, SI8 value) {
+  return TPrintBinary<Char, UI8>(start, stop, (UI8)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-inline Char* TPrintBinary(Char* cursor, Char* stop, UI8 value) {
-  return TPrintBinary<Char, UI8>(cursor, stop, value);
+inline Char* TPrintBinary(Char* start, Char* stop, UI8 value) {
+  return TPrintBinary<Char, UI8>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-Char* TPrintBinary(Char* cursor, Char* stop, FLT value) {
+Char* TPrintBinary(Char* start, Char* stop, FLT value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintBinary<Char, UI4>(cursor, stop, ui);
+  return TPrintBinary<Char, UI4>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-Char* TPrintBinary(Char* cursor, Char* stop, DBL value) {
+Char* TPrintBinary(Char* start, Char* stop, DBL value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintBinary<Char, UI8>(cursor, stop, ui);
+  return TPrintBinary<Char, UI8>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-Char* TPrintBinary(Char* cursor, Char* stop, const void* ptr) {
+Char* TPrintBinary(Char* start, Char* stop, const void* ptr) {
   UIW address = *reinterpret_cast<UIW*>(&ptr);
-  return TPrintBinary<Char, UIW>(cursor, stop, address);
+  return TPrintBinary<Char, UIW>(start, stop, address);
 }
 
 /* Checks if the given character is whitespace. */
@@ -538,8 +531,7 @@ inline BOL TIsWhitespace(Char character) {
 }
 
 /* Prints a single decimal to the socket.
-@warning This function DOES NOT do any error checking and if the SEAM ==
-_0_0_0 (1), then this function will utf debug data. */
+@warning This function DOES NOT do any error checking!  */
 template <typename Char = CH1>
 inline Char* TPrintDecimal(Char* socket, Char value) {
   *reinterpret_cast<Char*>(socket) = '0' + value;
@@ -548,7 +540,6 @@ inline Char* TPrintDecimal(Char* socket, Char value) {
 }
 
 /* Prints a single decimal to the socket.
-If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = CH1>
 inline Char* TPrintChar(Char* socket, Char value) {
@@ -557,12 +548,12 @@ inline Char* TPrintChar(Char* socket, Char value) {
   return socket;
 }
 
-/* Utility function for printing a CH1 with any Unicode conversion. */
-inline CH1* PrintChar(CH1* cursor, CH1 c) { return TPrintChar<CH1>(cursor, c); }
+/* Utility function for printing a char with any Unicode conversion. */
+inline CH1* PrintChar (CH1* cursor, CH1 c) { return TPrintChar<CH1> (cursor, c); }
 
-inline CH2* PrintChar(CH2* cursor, CH2 c) { return TPrintChar<CH2>(cursor, c); }
+inline CH2* PrintChar (CH2* cursor, CH2 c) { return TPrintChar<CH2> (cursor, c); }
 
-inline CH4* PrintChar(CH4* cursor, CH4 c) { return TPrintChar<CH4>(cursor, c); }
+inline CH4* PrintChar (CH4* cursor, CH4 c) { return TPrintChar<CH4> (cursor, c); }
 
 /* Checks if the given CH1 is a digit of a number_.
 @return True if it is a digit. */
@@ -613,16 +604,16 @@ const Char* TScanUnsigned(const Char* start, UI& result) {
 @param socket The beginning of the socket.
 @param result The UI to write the scanned UI. */
 template <typename UI, typename Char = CH1>
-Char* TScanUnsigned(Char* cursor, UI& result) {
-  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+Char* TScanUnsigned(Char* start, UI& result) {
+  const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TScanUnsigned<UI, Char>(ptr, result));
 }
 /* Prints two chars to the console.
 @warning This function DOES NOT do any error checking! */
 template <typename Char = CH1>
-inline Char* TPrintNil(Char* cursor) {
-  *cursor = 0;
-  return cursor;
+inline Char* TPrintNil(Char* start) {
+  *start = 0;
+  return start;
 }
 
 /* Prints a two decimals to the socket.
@@ -1009,8 +1000,8 @@ const Char* TScanSigned(const Char* start, SI& result) {
 @param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
 template <typename SI = SIW, typename UI = UIW, typename Char>
-Char* TScanSigned(Char* cursor, SI& result) {
-  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+Char* TScanSigned(Char* start, SI& result) {
+  const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TScanSigned<SI, UI, Char>(ptr));
 }
 }  // namespace _
@@ -1024,26 +1015,26 @@ Char* TScanSigned(Char* cursor, SI& result) {
 #endif
 namespace _ {
 
-/* Finds the end of a decimal number starting at the given cursor.
+/* Finds the end of a decimal number of the given string.
 @return Nil if the string doesn't contain a decimal or is nil.
-@param  cursor The start of the string to search. */
+@param  start The start of the string to search. */
 template <typename Char = const CH1>
-const Char* TStrandDecimalEnd(const Char* cursor) {
-  if (!cursor) return cursor;
-  Char c = *cursor++;
-  if (c == '-') c = *cursor++;
+const Char* TStrandDecimalEnd(const Char* start) {
+  if (!start) return start;
+  Char c = *start++;
+  if (c == '-') c = *start++;
   if (c < '0' || c > '9') return nullptr;
-  c = *cursor++;
+  c = *start++;
   while (TIsDigit<Char>(c)) {
-    c = *cursor++;
-    if (c <= 0) return cursor - 1;
+    c = *start++;
+    if (c <= 0) return start - 1;
   }
-  return cursor - 1;
+  return start - 1;
 }
 
 template <typename Char = const CH1>
-Char* TStrandDecimalEnd(Char* cursor) {
-  const Char* ptr = reinterpret_cast<const Char*>(cursor);
+Char* TStrandDecimalEnd(Char* start) {
+  const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TStrandDecimalEnd<Char>(ptr));
 }
 }  // namespace _

@@ -62,7 +62,7 @@ const CH1* StrandDecimalStop(const CH1* start) {
   return TStrandDecimalEnd<CH1>(start);
 }
 
-const CH1* TStrandSkipChar(const CH1* start, CH1 skip_char) {
+const CH1* StrandSkipChar(const CH1* start, CH1 skip_char) {
   return TStrandSkipChar<CH1>(start, skip_char);
 }
 
@@ -98,6 +98,18 @@ const CH1* StrandFind(const CH1* start, const CH1* query) {
 CH1* Print(CH1* start, CH1* stop, const CH1* item) {
   return TPrint<CH1>(start, stop, item);
 }
+
+#if USING_UTF16 == YES
+CH1* Print (CH1* start, CH1* stop, const CH2* item) {
+  return TPrint<CH1> (start, stop, item);
+}
+#endif
+
+#if USING_UTF32 == YES
+CH1* Print (CH1* start, CH1* stop, const CH4* item) {
+  return TPrint<CH1> (start, stop, item);
+}
+#endif
 
 CH1* Print(CH1* start, CH1* stop, UI8 item) {
   return TPrintUnsigned<UI8, CH1>(start, stop, item);
@@ -287,13 +299,13 @@ CH1* PrintBinary(CH1* start, CH1* stop, DBL item) {
   return TPrintBinary<CH1, UI8>(start, stop, ui);
 }
 
-CH1* PrintChars(CH1* start, CH1* stop, const void* begin, size_t size) {
-  return TPrintSocket<CH1>(start, stop, begin,
-                           reinterpret_cast<const CH1*>(begin) + size);
-}
-
 CH1* PrintChars(CH1* start, CH1* stop, const void* begin, const void* end) {
   return TPrintSocket<CH1>(start, stop, begin, end);
+}
+
+CH1* PrintChars (CH1* start, CH1* stop, const void* begin, SIW size) {
+  const CH1* ptr = reinterpret_cast<const CH1*>(begin);
+  return PrintChars (start, stop, begin, ptr + size - 1);
 }
 
 CH1* PrintLine(CH1* start, CH1* stop, CH1 token, SI4 count) {
@@ -365,6 +377,78 @@ UTF1::UTF1(const UTF1& other) : start (other.start), stop(other.stop) {
 UTF1& UTF1::Set(CH1* new_cursor) {
   start = new_cursor;
   return *this;
+}
+
+UTF1& UTF1::Print (CH1 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (CH2 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (CH4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (const CH1* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (const CH2* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (const CH4* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (SI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (UI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (SI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF1& UTF1::Print (UI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+#if SEAM >= SCRIPT2_4
+@return A UTF. */
+UTF1& UTF1::Print (FLT item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+@return A UTF. */
+UTF1& UTF1::Print (DBL item) {
+  return Set (::_::Print (start, stop, item));
+}
+#endif
+
+UTF1& UTF1::Print (Right1 item) {
+  return Set (::_::PrintRight (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF1& UTF1::Print (Center1 item) {
+  return Set (::_::PrintCenter (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF1& UTF1::Print (Line1 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF1& UTF1::Print (Repeat1 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
 }
 
 UTF1& UTF1::Hex(UI1 item) { return Set(TPrintHex<CH1>(start, stop, item)); }
@@ -459,34 +543,36 @@ Token1::Token1 (const CH1* item, SI4 count)
 
 Token1::Token1(SI4 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token1::Token1(UI4 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token1::Token1(SI8 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token1::Token1(UI8 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
 }
 
 #if SEAM >= SCRIPT2_4
 Token1::Token1(FLT item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
  }
 Token1::Token1(DBL item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print(strand_, kTokenCount, item);
+  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
 }
 #endif
+
+SI4 Token1::Count () { return count_; }
 
 const CH1* Token1::String () { return string_; }
 
@@ -539,10 +625,10 @@ Right1::Right1(DBL item, SI4 count)
   : token (item, count) {}
 #endif
 
-TokenLine1::TokenLine1(CH1 item, SI4 count)
+Line1::Line1(CH1 item, SI4 count)
   : token (item, count) {}
 
-TokenLine1::TokenLine1(const CH1* item, SI4 count)
+Line1::Line1(const CH1* item, SI4 count)
   : token (item, count) {}
 
 Repeat1::Repeat1 (CH1 item, SI4 count)
@@ -618,7 +704,7 @@ _::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item) {
                                  item.token.Count()));
 }
 
-_::UTF1& operator<<(::_::UTF1& utf, ::_::TokenLine1 item) {
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Line1 item) {
   return utf.Set(
       ::_::PrintLine(utf.start, utf.stop, item.token.String (), item.token.Count ()));
 }
@@ -696,9 +782,21 @@ const CH2* StrandFind(const CH2* start, const CH2* query) {
   return TStrandFind<CH2>(start, query);
 }
 
+#if USING_UTF8 == YES
+CH2* Print (CH2* start, CH2* stop, const CH1* item) {
+  return TPrint<CH2> (start, stop, item);
+}
+#endif
+
 CH2* Print(CH2* start, CH2* stop, const CH2* item) {
   return TPrint<CH2>(start, stop, item);
 }
+
+#if USING_UTF32 == YES
+CH2* Print (CH2* start, CH2* stop, const CH4* item) {
+  return TPrint<CH2> (start, stop, item);
+}
+#endif
 
 CH2* Print(CH2* start, CH2* stop, UI4 item) {
   return TPrintUnsigned<UI4, CH2>(start, stop, item);
@@ -880,11 +978,6 @@ CH2* PrintBinary(CH2* start, CH2* stop, DBL item) {
 }
 #endif
 
-CH2* PrintChars(CH2* start, CH2* stop, const void* begin, size_t size) {
-  return TPrintSocket<CH2>(start, stop, begin,
-                           reinterpret_cast<const CH2*>(begin) + size);
-}
-
 CH2* PrintChars(CH2* start, CH2* stop, const void* begin, const void* end) {
   return TPrintSocket<CH2>(start, stop, begin, end);
 }
@@ -978,6 +1071,78 @@ UTF2& UTF2::Set(CH2* new_cursor) {
   return *this;
 }
 
+UTF2& UTF2::Print (CH1 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (CH2 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (CH4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (const CH1* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (const CH2* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (const CH4* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (SI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (UI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (SI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF2& UTF2::Print (UI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+#if SEAM >= SCRIPT2_4
+@return A UTF. * /
+UTF2 & UTF2::Print (FLT item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+@return A UTF. * /
+UTF2 & UTF2::Print (DBL item) {
+  return Set (::_::Print (start, stop, item));
+}
+#endif
+
+UTF2& UTF2::Print (Right2 item) {
+  return Set (::_::PrintRight (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF2& UTF2::Print (Center2 item) {
+  return Set (::_::PrintCenter (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF2& UTF2::Print (Line2 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF2& UTF2::Print (Repeat2 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
 UTF2& UTF2::Hex(UI1 item) { return Set(TPrintHex<CH2>(start, stop, item)); }
 
 UTF2& UTF2::Hex(SI1 item) { return Set(TPrintHex<CH2>(start, stop, item)); }
@@ -1067,33 +1232,33 @@ Token2::Token2 (const CH2* item, SI4 count)
 
 Token2::Token2(SI4 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print(strand_, kTokenCount, item);
+  Print(strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token2::Token2(UI4 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print (strand_, kTokenCount, item);
+  Print (strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token2::Token2(SI8 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print (strand_, kTokenCount, item);
+  Print (strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token2::Token2(UI8 item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print (strand_, kTokenCount, item);
+  Print (strand_, strand_ + kTokenCount - 1, item);
 }
 
 #if SEAM >= SCRIPT2_4
 Token2::Token2(FLT item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print (strand_, kTokenCount, item);
+  Print (strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token2::Token2(DBL item, SI4 count)
   : string_ (strand_), count_ (count) {
-  Print (strand_, kTokenCount, item);
+  Print (strand_, strand_ + kTokenCount - 1, item);
 }
 #endif
 
@@ -1150,10 +1315,10 @@ Right2::Right2(DBL item, SI4 count)
   : token (item, count) {}
 #endif
 
-TokenLine2::TokenLine2 (CH2 item, SI4 count)
+Line2::Line2 (CH2 item, SI4 count)
   : token (item, count) {}
 
-TokenLine2::TokenLine2 (const CH2* item, SI4 count)
+Line2::Line2 (const CH2* item, SI4 count)
   : token (item, count) {}
 
 Repeat2::Repeat2 (CH2 item, SI4 count)
@@ -1220,7 +1385,7 @@ _::UTF2& operator<<(::_::UTF2& utf, ::_::Right2 item) {
                                  item.token.Count()));
 }
 
-_::UTF2& operator<<(::_::UTF2& utf, ::_::TokenLine2 item) {
+_::UTF2& operator<<(::_::UTF2& utf, ::_::Line2 item) {
   return utf.Set (
     ::_::PrintLine(utf.start, utf.stop, item.token.String (), item.token.Count ()));
 }
@@ -1300,9 +1465,21 @@ SI4 StrandCompare(const CH4* text_a, const CH4* text_b) {
   return TStrandCompare<CH4>(text_a, text_b);
 }
 
-const CH4* StrandFind(const CH4* start, const CH4* query) {
-  return TStrandFind<CH4>(start, query);
+const CH4* StrandFind(const CH4* start, const CH4* item) {
+  return TStrandFind<CH4>(start, item);
 }
+
+#if USING_UTF8 == YES
+CH4* Print (CH4* start, CH4* stop, const CH1* item) {
+  return TPrint<CH4> (start, stop, item);
+}
+#endif
+
+#if USING_UTF16 == YES
+CH4* Print (CH4* start, CH4* stop, const CH2* item) {
+  return TPrint<CH4> (start, stop, item);
+}
+#endif
 
 CH4* Print(CH4* start, CH4* stop, const CH4* item) {
   return TPrint<CH4>(start, stop, item);
@@ -1492,13 +1669,13 @@ CH4* PrintBinary(CH4* start, CH4* stop, DBL item) {
 }
 #endif
 
-CH4* PrintChars(CH4* start, CH4* stop, const void* begin, size_t size) {
-  return TPrintSocket<CH4>(start, stop, begin,
-                           reinterpret_cast<const CH4*>(begin) + size);
-}
-
 CH4* PrintChars(CH4* start, CH4* stop, const void* begin, const void* end) {
   return TPrintSocket<CH4>(start, stop, begin, end);
+}
+
+CH4* PrintChars (CH4* start, CH4* stop, const void* begin, SIW size) {
+  const CH4* ptr = reinterpret_cast<const CH4*>(begin);
+  return PrintChars (start, stop, begin, ptr + size - 1);
 }
 
 CH4* PrintLine (CH4* start, CH4* stop, CH4 item, SI4 count) {
@@ -1583,6 +1760,78 @@ UTF4::UTF4(const UTF4& other) : start(other.start), stop(other.stop) {
 UTF4& UTF4::Set(CH4* new_cursor) {
   start = new_cursor;
   return *this;
+}
+
+UTF4& UTF4::Print (CH1 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (CH2 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (CH4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (const CH1* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (const CH2* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (const CH4* item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (SI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (UI4 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (SI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+UTF4& UTF4::Print (UI8 item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+#if SEAM >= SCRIPT2_4
+@return A UTF. * /
+UTF4 & UTF4::Print (FLT item) {
+  return Set (::_::Print (start, stop, item));
+}
+
+@return A UTF. * /
+UTF4 & UTF4::Print (DBL item) {
+  return Set (::_::Print (start, stop, item));
+}
+#endif
+
+UTF4& UTF4::Print (Right4 item) {
+  return Set (::_::PrintRight (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF4& UTF4::Print (Center4 item) {
+  return Set (::_::PrintCenter (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF4& UTF4::Print (Line4 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
+}
+
+UTF4& UTF4::Print (Repeat4 item) {
+  return Set (::_::PrintLine (start, stop, item.token.String (),
+    item.token.Count ()));
 }
 
 UTF4& UTF4::Hex(UI1 item) { return Set(TPrintHex<CH4>(start, stop, item)); }
@@ -1701,12 +1950,12 @@ Token4::Token4(UI8 item, SI4 count)
 #if SEAM >= SCRIPT2_4
 Token4::Token4(FLT item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print (strand_, kTokenCount, item);
+  ::_::Print (strand_, strand_ + kTokenCount - 1, item);
 }
 
 Token4::Token4(DBL item, SI4 count)
   : string_ (strand_), count_ (count) {
-  ::_::Print (strand_, kTokenCount, item);
+  ::_::Print (strand_, strand_ + kTokenCount - 1, item);
  }
 #endif
 
@@ -1760,10 +2009,10 @@ Right4::Right4(DBL item, SI4 count)
   : token (item, count) {}
 #endif
 
-TokenLine4::TokenLine4 (CH4 item, SI4 count)
+Line4::Line4 (CH4 item, SI4 count)
   : token (item, count) {}
 
-TokenLine4::TokenLine4 (const CH4* item, SI4 count)
+Line4::Line4 (const CH4* item, SI4 count)
   : token (item, count) {}
 
 Repeat4::Repeat4 (CH4 item, SI4 count)
@@ -1830,13 +2079,13 @@ _::UTF4& operator<<(::_::UTF4& utf, ::_::Right4 item) {
                                  item.token.Count()));
 }
 
-_::UTF4& operator<<(::_::UTF4& utf, ::_::TokenLine4 item) {
+_::UTF4& operator<<(::_::UTF4& utf, ::_::Line4 item) {
   return utf.Set (
     ::_::PrintLine(utf.start, utf.stop, item.token.String (), item.token.Count ()));
 }
 
 _::UTF4& operator<<(::_::UTF4& utf, ::_::Repeat4 item) {
-  return utf.Set (::_::PrintRepeat (utf.start, utf.stop, item.token.String,
+  return utf.Set (::_::PrintRepeat (utf.start, utf.stop, item.token.String (),
                                     item.token.Count ()));
 }
 

@@ -189,8 +189,7 @@ static const Char* _03_UTF () {
   AVOW(&kCentered[3][0], str_a);
   SI4 i = 0;  //< Shared looping variable.
 
-  PRINT_HEADING("Testing Socket");
-  PRINT_HEADING("Testing PrintChars (void*, SI4 size)");
+  PRINT_HEADING("Testing TPrintSocket<Char>");
 
   for (SI4 i = 0; i < kCount; ++i) str_b[i] = '0' + i % 10;
   str_b[kCount - 1] = 0;

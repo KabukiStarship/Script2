@@ -124,11 +124,11 @@ SDK void PrintLine(CH1 token = '-', SI4 count = 80, CH1 first_token = '-');
 /* Prints the given string a specified count of characters. */
 SDK void PrintLine (const CH1* string, SI4 count = 80, CH1 first_token = '-');
 
-/* Prints the given token a specified count. */
-SDK void PrintRepeat (CH1 token = '\n', SI4 count = 80);
+/* Prints the given item a specified count of characters. */
+SDK void PrintRepeat (CH1 item = '\n', SI4 count = 80);
 
-/* Prints the given string a specified count of characters. */
-SDK void PrintRepeat (const CH1* string, SI4 count = 80, CH1 delimiter = '\n');
+/* Prints the given item a specified count of characters. */
+SDK void PrintRepeat (const CH1* item, SI4 count = 80, CH1 delimiter = '\n');
 
 /* Prints a the given line_count of new lines followed by a PrintLine, the
 heading, followed by another PrintLine.
@@ -236,17 +236,20 @@ SDK void PrintChars(const void* begin, const void* end);
 /* Prints the given socket to the stdout. */
 SDK void PrintChars(const void* begin, SIW size);
 
+#if USING_UTF16 == YES
 /* Prints the given CH2 buffer including nil-term chars. */
-SDK inline void PrintChars (const CH2* start, SIW count);
-
+void PrintChars (const CH2* start, SIW count);
+#endif
+#if USING_UTF32 == YES
 /* Prints the given CH4 buffer including nil-term chars. */
-SDK inline void PrintChars (const CH4* start, SIW count);
+void PrintChars (const CH4* start, SIW count);
+#endif
 
-/* Prints the given CH4 buffer including nil-term chars. */
-SDK inline void PrintRight (const CH1* start, SIW count);
+/* Prints the given item right aligned the given count to the stdout. */
+SDK inline void PrintRight (const CH1* item, SI4 count = 80);
 
-/* Prints the given CH4 buffer including nil-term chars. */
-SDK inline void PrintCenter (const CH1* start, SIW count);
+/* Prints the given item center aligned the given count to the stdout. */
+SDK inline void PrintCenter (const CH1* item, SI4 count = 80);
 
 /* Wrapper class for the stdout. */
 class COut {
@@ -317,7 +320,7 @@ class COut {
       
   COut& Print (Center1 item);
 
-  COut& Print (TokenLine1 item);
+  COut& Print (Line1 item);
 
   COut& Print (Repeat1 item);
 
@@ -327,7 +330,7 @@ class COut {
 
   COut& Print (Center2 item);
 
-  COut& Print (TokenLine2 item);
+  COut& Print (Line2 item);
 
   COut& Print (Repeat2 item);
 
@@ -337,7 +340,7 @@ class COut {
 
   COut& Print (Center4 item);
 
-  COut& Print (TokenLine4 item);
+  COut& Print (Line4 item);
 
   COut& Print (Repeat4 item);
 
@@ -374,21 +377,21 @@ inline ::_::COut& operator<<(::_::COut& cout, DBL value);
 
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::TokenLine1 item);
+inline ::_::COut& operator<<(::_::COut& cout, ::_::Line1 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Repeat1 item);
 
 #elif SCRIPT2_CHAR_SIZE == UTF16
 
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::TokenLine2 item);
+inline ::_::COut& operator<<(::_::COut& cout, ::_::Line2 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Repeat2 item);
 
 #elif SCRIPT2_CHAR_SIZE == UTF32
 
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::TokenLine4 item);
+inline ::_::COut& operator<<(::_::COut& cout, ::_::Line4 item);
 inline ::_::COut& operator<<(::_::COut& cout, ::_::Repeat4 item);
 
 #endif

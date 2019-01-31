@@ -476,15 +476,13 @@ CH1* Print(CH1* start, CH1* stop, CH2 c) {
     *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
     *start = 0;
     return start;
-  } else {  // 3 bytes.
-    if (start + 3 >= stop) return nullptr;
-    *start++ = (CH1)(0xE0 | c >> 12);
-    *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    *start++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
-    *start = 0;
-    return start;
-  }
-}
+  } // else 3 bytes.
+  if (start + 3 >= stop) return nullptr;
+  *start++ = (CH1)(0xE0 | c >> 12);
+  *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+  *start++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+  *start = 0;
+  return start;
 #endif
 }
 #endif

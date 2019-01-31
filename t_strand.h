@@ -60,14 +60,14 @@ const Char* TSTRError() {
   return kStrand;
 }
 
-/* Converts the given value to a printable CH1 if it's non-printable. */
+/* Converts the given item to a printable CH1 if it's non-printable. */
 template <typename Char = CH1>
-inline Char TPrintableChar(Char value) {
-  if (value < 32 || value == 127) return ' ';
-  return value;
+inline Char TPrintableChar(Char item) {
+  if (item < 32 || item == 127) return ' ';
+  return item;
 }
 
-/* Sets the s to either the given value or empty s if input
+/* Sets the s to either the given item or empty s if input
 is nil. */
 template <typename Char = CH1>
 inline Char* TStrandSet(Char* string) {
@@ -624,15 +624,15 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
 
 /* Prints a line of the given column_count the given start. */
 template <typename Char = CH1>
-Char* TPrintLine(Char* start, const Char* stop, Char item, SI4 count = 80,
+Char* TPrintLine(Char* start, Char* stop, Char item, SI4 count = 80,
                  const Char* header = TSTRNL<Char> (), 
                  const Char* footer = nullptr) {
-  if (header) start = TPrint<Char> (start, stop, header);
+  if (header) start = Print (start, stop, header);
   if (!start || start + count <= stop) return nullptr;
 
   while (count-- > 0) *start++ = item;
   
-  if (footer) return TPrint<Char> (start, stop, footer);
+  if (footer) return Print (start, stop, footer);
   else *start = 0;
   return start;
 }
@@ -640,20 +640,21 @@ Char* TPrintLine(Char* start, const Char* stop, Char item, SI4 count = 80,
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
 Char* TPrintLine (Char* start, Char* stop, const Char* string, SI4 count = 80,
-                  const Char* header = TSTRNL<Char> (), const Char* footer = nullptr) {
-  if (header) start = TPrint<Char> (start, stop, header);
+                  const Char* header = TSTRNL<Char> (),
+                  const Char* footer = nullptr) {
+  if (header) start = Print (start, stop, header);
   if (!start || start <= stop || (start + count >= stop)) return nullptr;
 
   const Char* cursor = string;
   while (count-- > 0) {
-    CH1 c = *cursor++;
+    Char c = *cursor++;
     if (!c) {
       cursor = string;
       c = *cursor++;
     }
     *start++ = c;
   }
-  if (footer) return TPrint<Char> (start, stop, footer);
+  if (footer) return Print (start, stop, footer);
   else *start = 0;
   return start;
 }
@@ -661,13 +662,13 @@ Char* TPrintLine (Char* start, Char* stop, const Char* string, SI4 count = 80,
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
 Char* TPrintRepeat (Char* start, Char* stop, Char item, SI4 count = 80) {
-  return TPrintLine (start, item, count, nullptr, nullptr);
+  return TPrintLine<Char> (start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
 Char* TPrintRepeat (Char* start, Char* stop, const Char* item, SI4 count = 80) {
-  return TPrintLine (start, item, count, nullptr, nullptr);
+  return TPrintLine<Char> (start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints a cursor to the given buffer without */
@@ -752,188 +753,12 @@ Char TLowercase(Char c) {
   return c;
 }
 
-/* Universal Text Formatter (UTF).
-The UTF only stores the start and stop pointers allowing the length to be
-storred on the stack or hard-coded using instructions. If you want an normal 
-string-like class please use the TStrand, which auto-grows from stack to heap.
-*/
-template <typename Char = CH1, typename Size = SI4>
-struct TUTF {
-  Char *start,  //< Start address. @todo rename start.
-      *stop;    //< Stop address.
-
-  /* Initializes the UTF& from the given begin pointers.
-  @param start The beginning of the begin.
-  @param count The number of Char(s) in the buffer. */
-  TUTF(Char* start, Size count)
-      : start (start), stop(TPtr<Char>(start, count - 1)) {
-    DASSERT(start);
-  }
-
-  /* Initializes the UTF& from the given begin pointers.
-  @param begin The beginning address of a word-aligned socket.
-  @param count The size in bytes. */
-  TUTF(UIW* begin, Size size)
-      : start (reinterpret_cast<Char*>(start)),
-        stop (TPtr<Char> (begin, size - 1)) {
-    DASSERT(start);
-  }
-
-  /* Initializes the array pointers from the given start and stop pointers.
-  @param start The start of the array.
-  @param stop   The stop of the array. */
-  TUTF(Char* start, Char* stop) : start (start), stop(stop) {
-    DASSERT (start);
-    DASSERT (start < stop);
-  }
-
-  /* Clones the other utf. */
-  TUTF(const TUTF& other)
-      : start(other.start), stop(other.stop) {  // Nothing to do here!.
-  }
-
-  /* Writes a nil-term CH1 at the start of the strand. */
-  inline Char* Init () {
-    *start = 0;
-    return start;
-  }
-
-  /* Sets the start pointer to the new_pointer. */
-  inline TUTF& Set(Char* new_pointer) {
-    if (!new_pointer) {
-      PRINT ("\nError printing:");
-      return *this;
-    }
-    start = new_pointer;
-    return *this;
-  }
-
-  /* Sets the start pointer to the new_pointer. */
-  inline TUTF& Set(UIW* new_pointer) {
-    return Set(reinterpret_cast<Char*>(new_pointer));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(SI1 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(UI1 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(SI2 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(UI2 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(SI4 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(UI4 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(SI8 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(UI8 value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(FLT value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as hex. */
-  inline TUTF& Hex(DBL value) {
-    return Set(TPrintHex<Char>(start, stop, value));
-  }
-#endif
-
-  /* Prints the given pointer as hex. */
-  inline TUTF& Hex(const void* ptr) {
-    return Set(TPrintHex<Char>(start, stop, ptr));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(SI1 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(UI1 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(SI2 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(UI2 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(SI4 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(UI4 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(SI8 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(UI8 value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(FLT value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-
-  /* Prints the given value as binary. */
-  inline TUTF& Binary(DBL value) {
-    return Set(Binary<Char>(start, stop, value));
-  }
-#endif
-  /* Prints the given pointer as binary. */
-  inline TUTF& Binary(const void* ptr) {
-    UIW address = reinterpret_cast<UIW>(ptr);
-    return Set(Binary<Char>(start, stop, address));
-  }
-};
-
 /* ASCII TKN (Token). */
 template <typename Char = CH1>
 class TToken {
 public:
 
-  /* Prints the value to the . */
+  /* Prints the item to the . */
   TToken (Char item = 0, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
     Char* cursor = strand_;
@@ -950,38 +775,38 @@ public:
   /* Prints the item to the token_. */
   TToken (SI4 item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
   /* Prints the item to the token_. */
   TToken (UI4 item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
   /* Prints the item to the token_. */
   TToken (SI8 item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
   /* Prints the item to the token_. */
   TToken (UI8 item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
   TToken (FLT item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
   /* Prints the item to the token_. */
   TToken (DBL item, SI4 count = kTokenCount)
     : string_ (string_), count_ (count) {
-    Print (strand_, kTokenCount, item);
+    Print (strand_, strand_ + kTokenCount - 1, item);
   }
 
 #endif
@@ -996,7 +821,7 @@ public:
 
 private:
   // Pointer to a token too big to fit in the strand_.
-  const CH1* string_;
+  const Char* string_;
   SI4 count_;                 //< The count.
   Char strand_[kTokenCount];  //< Strand buffer for the token.
 };
@@ -1004,27 +829,27 @@ private:
 /* Utility class for printing hex with operator<<. */
 template <typename Char = CH1>
 struct TCenter {
-  TToken<Char> token_;  //< Pointer to a pointer to utf.
+  TToken<Char> token;  //< Pointer to a pointer to utf.
 
-  /* Prints the value to the . */
+  /* Prints the item to the . */
   TCenter(const Char* item, SI4 count = 80)
-      : token_ (item, count) {}
+      : token (item, count) {}
 
   /* Prints the item to the token_. */
   TCenter(SI4 item, SI4 count = 80)
-      : token_ (item, count) {}
+      : token (item, count) {}
 
   /* Prints the item to the token_. */
   TCenter(UI4 item, SI4 count = 80)
-      : token_ (item, count) {}
+      : token (item, count) {}
 
   /* Prints the item to the token_. */
   TCenter(SI8 item, SI4 count = 80)
-      : token_ (item, count) {}
+      : token (item, count) {}
 
   /* Prints the item to the token_. */
   TCenter(UI8 item, SI4 count = 80)
-      : token_ (item, count) {}
+      : token (item, count) {}
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
@@ -1076,27 +901,291 @@ struct TRight {
 
 /* Utility class for printing a string line with operator<<. */
 template <typename Char = CH1>
-struct TTokenLine {
+struct TLine {
   TToken<Char> token;
 
-  TTokenLine(Char item, SI4 count = 80)
+  TLine(Char item, SI4 count = 80)
     : token (item, count) {}
 
-  TTokenLine (const Char* item, SI4 count = 80)
+  TLine (const Char* item, SI4 count = 80)
     : token (item, count) {}
 };
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = CH1>
-struct TTokenRows {
+struct TRepeat {
 
   TToken<Char> token;
 
-  TTokenRows (Char item, SI4 count = 80)
+  TRepeat (Char item, SI4 count = 80)
     : token (item, count) {}
 
-  TTokenRows (const Char* item, SI4 count = 80)
+  TRepeat (const Char* item, SI4 count = 80)
     : token (item, count) {}
+};
+
+/* Universal Text Formatter (UTF).
+The UTF only stores the start and stop pointers allowing the length to be
+storred on the stack or hard-coded using instructions. If you want an normal
+string-like class please use the TStrand, which auto-grows from stack to heap.
+*/
+template <typename Char = CH1, typename Size = SI4>
+struct TUTF {
+  Char *start,  //< Start address. @todo rename start.
+    *stop;    //< Stop address.
+
+/* Initializes the UTF& from the given begin pointers.
+@param start The beginning of the begin.
+@param count The number of Char(s) in the buffer. */
+  TUTF (Char* start, Size count)
+    : start (start), stop (TPtr<Char> (start, count - 1)) {
+    DASSERT (start);
+  }
+
+  /* Initializes the UTF& from the given begin pointers.
+  @param begin The beginning address of a word-aligned socket.
+  @param count The size in bytes. */
+  TUTF (UIW* begin, Size size)
+    : start (reinterpret_cast<Char*>(start)),
+    stop (TPtr<Char> (begin, size - 1)) {
+    DASSERT (start);
+  }
+
+  /* Initializes the array pointers from the given start and stop pointers.
+  @param start The start of the array.
+  @param stop   The stop of the array. */
+  TUTF (Char* start, Char* stop) : start (start), stop (stop) {
+    DASSERT (start);
+    DASSERT (start < stop);
+  }
+
+  /* Clones the other utf. */
+  TUTF (const TUTF& other)
+    : start (other.start), stop (other.stop) {  // Nothing to do here!.
+  }
+
+  /* Writes a nil-term CH1 at the start of the strand. */
+  inline Char* Init () {
+    *start = 0;
+    return start;
+  }
+
+  /* Sets the start pointer to the new_pointer. */
+  inline TUTF& Set (Char* new_pointer) {
+    if (!new_pointer) {
+      PRINT ("\nError printing:");
+      return *this;
+    }
+    start = new_pointer;
+    return *this;
+  }
+
+  /* Sets the start pointer to the new_pointer. */
+  inline TUTF& Set (UIW* new_pointer) {
+    return Set (reinterpret_cast<Char*>(new_pointer));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (CH1 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (CH2 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (CH4 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (const CH1* item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (const CH2* item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints a CH1 to the strand. */
+  inline TUTF& Print (const CH4* item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (SI4 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (UI4 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (SI8 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (UI8 item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item.
+  @return A UTF. */
+  inline TUTF& Print (FLT item) {
+    return Set (::_::Print (start, stop, item));
+  }
+
+  /* Prints the given item.
+  @return A UTF. */
+  inline TUTF& Print (DBL item) {
+    return Set (::_::Print (start, stop, item));
+  }
+#endif
+
+  /* Prints the given item. */
+  inline TUTF& Print (TRight<Char> item) {
+    return Set (::_::TPrintRight<Char> (start, stop, item.token.String (),
+      item.token.Count ()));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (TCenter<Char> item) {
+    return Set (::_::TPrintCenter<Char> (start, stop, item.token.String (),
+                                         item.token.Count ()));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (TLine<Char> item) {
+    return Set (::_::TPrintLine<Char> (start, stop, item.token.String (),
+      item.token.Count ()));
+  }
+
+  /* Prints the given item. */
+  inline TUTF& Print (TRepeat<Char> item) {
+    return Set (::_::TPrintLine<Char> (start, stop, item.token.String (),
+      item.token.Count ()));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (SI1 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (UI1 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (SI2 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (UI2 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (SI4 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (UI4 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (SI8 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (UI8 item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (FLT item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as hex. */
+  inline TUTF& Hex (DBL item) {
+    return Set (TPrintHex<Char> (start, stop, item));
+  }
+#endif
+
+  /* Prints the given pointer as hex. */
+  inline TUTF& Hex (const void* ptr) {
+    return Set (TPrintHex<Char> (start, stop, ptr));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (SI1 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (UI1 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (SI2 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (UI2 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (SI4 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (UI4 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (SI8 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (UI8 item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (FLT item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+
+  /* Prints the given item as binary. */
+  inline TUTF& Binary (DBL item) {
+    return Set (Binary<Char> (start, stop, item));
+  }
+#endif
+  /* Prints the given pointer as binary. */
+  inline TUTF& Binary (const void* ptr) {
+    UIW address = reinterpret_cast<UIW>(ptr);
+    return Set (Binary<Char> (start, stop, address));
+  }
 };
 
 /* Returns the first CH1 in the cursor socket. */
@@ -1223,193 +1312,188 @@ TUTF<Char> TCOut() {
 /* Writes a nil-terminated UTF-8 or ASCII s to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value   The value to utf. */
+@param  item   The item to utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH1* ) {
-  return utf.Set (::_::TPrint<Char> (utf.start, utf.stop, ));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH1* item) {
+  return utf.Print (item);
 }
 
 /* Writes a nil-terminated UTF-8 or ASCII s to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value   The value to utf. */
+@param  item   The item to utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH2* ) {
-  return utf.Set (::_::TPrint<Char> (utf.start, utf.stop, ));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH2* item) {
+  return utf.Print (item);
 }
 
 /* Writes a nil-terminated UTF-8 or ASCII s to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value   The value to utf. */
+@param  item   The item to utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH4* ) {
-  return utf.Set(::_::TPrint<Char>(utf.start, utf.stop, ));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH4* item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value   The value to utf.
+@param  item   The item to utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 c) {
-  return utf.Set(::_::Print(utf.start, utf.stop, c));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value   The value to utf.
+@param  item   The item to utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 c) {
-  return utf.Set(::_::Print(utf.start, utf.stop, c));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value   The value to utf.
+@param  item   The item to utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 c) {
-  return utf.Set(::_::Print(utf.start, utf.stop, c));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value The value to write to the utf.
+@param  item The item to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI1 value) {
-  return utf.Set(
-      ::_::TPrintSigned<SIW, UIW, Char>(utf.start, utf.stop, (SIW)value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI1 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value The value to write to the utf.
+@param  item The item to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 value) {
-  return utf.Set(
-      ::_::TPrintUnsigned<UIW, Char>(utf.start, utf.stop, (UIW)value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value The value to write to the utf.
+@param  item The item to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 value) {
-  return utf.Set(
-      ::_::TPrintSigned<SIW, UIW, Char>(utf.start, utf.stop, (SIW)value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @param  utf The utf.
-@param  value The value to write to the utf.
+@param  item The item to write to the utf.
 @return The utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 value) {
-  return utf.Set(
-      ::_::TPrintUnsigned<UIW, Char>(utf.start, utf.stop, (UIW)value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 value) {
-  return utf.Set(
-      ::_::TPrintSigned<SI4, UI4, Char>(utf.start, utf.stop, (SIW)value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 value) {
-  return utf.Set(::_::TPrintUnsigned<UI4, Char>(utf.start, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 value) {
-  return utf.Set(::_::TPrintSigned<SI8, UI8, Char>(utf.start, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 item) {
+  return utf.Print (item);
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 value) {
-  return utf.Set(::_::TPrintUnsigned<UI8, Char>(utf.start, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
+  return utf.Set (::_::TPrintUnsigned<UI8, Char> (utf.start, utf.stop, item));
 }
 
 #if SEAM >= SCRIPT2_4
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT value) {
-  return utf.Set(::_::TPrint<Char>(utf.start, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT item) {
+  return utf.Set (::_::TPrintUnsigned<UI8, Char> (utf.start, utf.stop, item));
 }
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
-@param  value The value to write to the utf. */
+@param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL value) {
-  return utf.Set(::_::TPrint<Char>(utf.start, utf.stop, value));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL item) {
+  return utf.Set (::_::TPrintUnsigned<UI8, Char> (utf.start, utf.stop, item));
 }
 #endif
 
-/* Writes the given value to the utf.
+/* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
 @param  item The item to write to utf. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TCenter<Char> item) {
-  return item.Print(utf);
+  return utf.Print(item);
 }
 
-/* Writes the given value to the utf justified right.
+/* Writes the given item to the utf justified right.
 @return The utf.
 @param  utf The utf.
 @param  item The item to utf. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TRight<Char> item) {
-  return item.Print(utf);
+  return utf.Print(item);
+}
+
+/* Prints a TLine<Char> to the UTF. */
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
+                                   ::_::TLine<Char> item) {
+  return utf.Print(item);
 }
 
 /* Prints a TLineChar<Char> to the UTF. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TTokenRows<Char> line) {
-  return line.Print(utf);
+                                   ::_::TRepeat<Char> item) {
+  return utf.Print(item);
 }
 
-/* Prints a TTokenLine<Char> to the UTF. */
+/* Prints a TLine<Char> to the UTF. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TTokenLine<Char> line) {
-  return line.Print(utf);
-}
-
-/* Prints a TTokenLine<Char> to the UTF. */
-template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TToken<Char> token) {
-  return token.Print(utf);
+                                   ::_::TToken<Char> item) {
+  return utf.Print(item);
 }
 #endif  //< #if SEAM >= SCRIPT2_3
 
@@ -1929,7 +2013,7 @@ SI4 TStrandFactory (CObject& obj, SIW function, void* arg) {
 /* Writes a nil-terminated UTF-8 to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value   The value to strand. */
+@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH1* string) {
@@ -1939,7 +2023,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 /* Writes a nil-terminated UTF-8 to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value   The value to strand. */
+@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH2* string) {
@@ -1949,116 +2033,116 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 /* Writes a nil-terminated UTF-8 to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value   The value to strand. */
+@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH4* string) {
   return strand.Print (string);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value   The value to strand. */
+@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   ::_::TStrand<Char, kCount_, kFactory_>& strand, Char c) {
   return strand.Print (c);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @param  strand The strand.
-@param  value The value to write to the strand.
+@param  item The item to write to the strand.
 @return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI1 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI1 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @param  strand The strand.
-@param  value The value to write to the strand.
+@param  item The item to write to the strand.
 @return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI2 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI2 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @param  strand The strand.
-@param  value The value to write to the strand.
+@param  item The item to write to the strand.
 @return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI2 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI2 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI4 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI4 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI4 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI4 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI8 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, SI8 item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI8 value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, UI8 item) {
+  return strand.Print (item);
 }
 
 #if SEAM >= SCRIPT2_4
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, FLT value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, FLT item) {
+  return strand.Print (item);
 }
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
-@param  value The value to write to the strand. */
+@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-  ::_::TStrand<Char, kCount_, kFactory_>& strand, DBL value) {
-  return strand.Print (value);
+  ::_::TStrand<Char, kCount_, kFactory_>& strand, DBL item) {
+  return strand.Print (item);
 }
 #endif
 
-/* Writes the given value to the strand.
+/* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
 @param  item The item to write to strand. */
@@ -2069,7 +2153,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   return strand.Print (item);
 }
 
-/* Writes the given value to the strand justified right.
+/* Writes the given item to the strand justified right.
 @return The strand.
 @param  strand The strand.
 @param  item The item to strand. */
@@ -2092,7 +2176,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   ::_::TStrand<Char, kCount_, kFactory_>& strand,
-  ::_::TTokenLine<Char> item) {
+  ::_::TLine<Char> item) {
   return strand.Print (item);
 }
 

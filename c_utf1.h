@@ -105,6 +105,24 @@ SDK const CH1* StrandFind(const CH1* string, const CH1* query);
 @param  string The potentially unsafe string to write. */
 SDK CH1* Print(CH1* start, CH1* stop, const CH1* string);
 
+#if USING_UTF16 == YES
+/* Prints the given string to the utf socket.
+@return Nil upon failure or a pointer to the terminator upon success.
+@param  start  The beginning address of the socket.
+@param  stop    The stop address of the socket.
+@param  string The potentially unsafe string to write. */
+SDK CH1* Print (CH1* start, CH1* stop, const CH2* string);
+#endif
+
+#if USING_UTF32 == YES
+/* Prints the given string to the utf socket.
+@return Nil upon failure or a pointer to the terminator upon success.
+@param  start  The beginning address of the socket.
+@param  stop    The stop address of the socket.
+@param  string The potentially unsafe string to write. */
+SDK CH1* Print (CH1* start, CH1* stop, const CH4* string);
+#endif
+
 /* Writes the give CH1 to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
@@ -532,102 +550,6 @@ UIW* COutUTF8(UIW* socket, SIW function, void* arg); */
 /* Prints the socket to the console as a UTF-8 string.
 UIW* COutAutoUTF8(UIW* socket, SIW function, void* arg); */
 
-/* Utility class for printing strings.
-This class only stores the stop of socket pointer and a pointer to the write
-start. It is up the user to store start of socket pointer and if they would
-like to replace the start with the beginning of socket pointer when they
-are done printing. */
-struct SDK UTF1 {
-  CH1 *start,  //< Start of the array.
-      *stop;   //< Stop of the array.
-
-  /* Initializes the UTF& from the given socket pointers.
-  @param start The beginning of the socket.
-  @param stop   The stop of the socket. */
-  UTF1(CH1* start, size_t size);
-
-  /* Initializes the UTF& from the given socket pointers.
-  @param start The beginning of the socket.
-  @param stop   The stop of the socket. */
-  UTF1(CH1* start, CH1* stop);
-
-  /* Clones the other utf. */
-  UTF1(const UTF1& other);
-
-  /* Sets the start pointer to the new_pointer. */
-  inline UTF1& Set(CH1* new_pointer);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(SI1 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(UI1 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(SI2 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(UI2 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(SI4 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(UI4 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(SI8 item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(FLT item);
-
-  /* Prints the given item as hex. */
-  inline UTF1& Hex(DBL item);
-#endif
-
-  /* Prints the given pointer as hex. */
-  inline UTF1& Hex(const void* pointer);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(SI1 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(UI1 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(SI2 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(UI2 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(SI4 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(UI4 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(SI8 item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(FLT item);
-
-  /* Prints the given item as binary. */
-  inline UTF1& Binary(DBL item);
-#endif
-
-  /* Prints the given pointer as binary. */
-  inline UTF1& Binary(const void* pointer);
-};
-
 /* Utility class for printing numbers. */
 class Token1 {
  public:
@@ -738,15 +660,15 @@ struct Right1 {
 };
 
 /* Utility class for printing a horizontal line with operator<<. */
-struct SDK TokenLine1 {
+struct SDK Line1 {
 
   Token1 token;  //< Pointer to a pointer to utf.
 
   /* Constructors a horizontal line of token. */
-  TokenLine1(CH1 token, SI4 count = kTokenCount);
+  Line1(CH1 token, SI4 count = kTokenCount);
 
   /* Constructors a horizontal line of the given string. */
-  TokenLine1 (const CH1* string, SI4 count = kTokenCount);
+  Line1 (const CH1* string, SI4 count = kTokenCount);
 
 };
 
@@ -762,11 +684,159 @@ struct SDK Repeat1 {
   Repeat1 (const CH1* string, SI4 count = kTokenCount);
 };
 
+/* Utility class for printing strings.
+This class only stores the stop of socket pointer and a pointer to the write
+start. It is up the user to store start of socket pointer and if they would
+like to replace the start with the beginning of socket pointer when they
+are done printing. */
+struct SDK UTF1 {
+  CH1 *start,  //< Start of the array.
+    *stop;   //< Stop of the array.
+
+/* Initializes the UTF& from the given socket pointers.
+@param start The beginning of the socket.
+@param stop   The stop of the socket. */
+  UTF1 (CH1* start, size_t size);
+
+  /* Initializes the UTF& from the given socket pointers.
+  @param start The beginning of the socket.
+  @param stop   The stop of the socket. */
+  UTF1 (CH1* start, CH1* stop);
+
+  /* Clones the other utf. */
+  UTF1 (const UTF1& other);
+
+  /* Sets the start pointer to the new_pointer. */
+  inline UTF1& Set (CH1* new_start);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (CH1 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (CH2 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (CH4 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (const CH1* item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (const CH2* item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF1& Print (const CH4* item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (SI4 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (UI4 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (SI8 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item.
+  @return A UTF. */
+  inline UTF1& Print (FLT item);
+
+  /* Prints the given item.
+  @return A UTF. */
+  inline UTF1& Print (DBL item);
+#endif
+
+  /* Prints the given item. */
+  inline UTF1& Print (Right1 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (Center1 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (Line1 item);
+
+  /* Prints the given item. */
+  inline UTF1& Print (Repeat1 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (SI1 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (UI1 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (SI2 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (UI2 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (SI4 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (UI4 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (SI8 item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (FLT item);
+
+  /* Prints the given item as hex. */
+  inline UTF1& Hex (DBL item);
+#endif
+
+  /* Prints the given pointer as hex. */
+  inline UTF1& Hex (const void* pointer);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (SI1 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (UI1 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (SI2 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (UI2 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (SI4 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (UI4 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (SI8 item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (FLT item);
+
+  /* Prints the given item as binary. */
+  inline UTF1& Binary (DBL item);
+#endif
+
+  /* Prints the given pointer as binary. */
+  inline UTF1& Binary (const void* pointer);
+};
+
 #if SCRIPT2_CHAR_SIZE == UTF8
 using Token = Token1;
 using Right = Right1;
 using Center = Center1;
-using Columns= TokenLine1;
+using Columns= Line1;
 using Rows = Repeat1;
 //using Hex = Hex1;
 #endif
@@ -791,8 +861,8 @@ SDK ::_::UTF1& operator<<(::_::UTF1& utf, DBL item);
 
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::TokenLine1 item);
-SDK::_::UTF1& operator<<(::_::UTF1& utf, ::_::TokenLine1 item);
+SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Line1 item);
+SDK::_::UTF1& operator<<(::_::UTF1& utf, ::_::Line1 item);
 
 #endif  //< #if USING_UTF8
 #endif  //< #if INCLUDED_SCRIPT2_UTF8

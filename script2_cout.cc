@@ -193,16 +193,20 @@ void PrintIndent(SI4 count) {
   while (--count > 0) Print(' ');
 }
 
-void PrintRepeat (const CH1* string, SI4 count, CH1 delimiter) {
-  TPrintRepeat<CH1> (string, count, delimiter);
+void PrintRepeat (CH1 item, SI4 count) {
+  TPrintRepeat<CH1> (item, count);
 }
 
-void PrintLine(CH1 token, SI4 count, CH1 first_token) {
-  TPrintLine<CH1> (token, count, first_token);
+void PrintRepeat (const CH1* item, SI4 count, CH1 delimiter) {
+  TPrintRepeat<CH1> (item, count, delimiter);
 }
 
-SDK void PrintLine (const CH1* string, SI4 count, CH1 first_token) {
-  TPrintLine<CH1> (string, count, first_token);
+void PrintLine(CH1 item, SI4 count, CH1 first_token) {
+  TPrintLine<CH1> (item, count, first_token);
+}
+
+SDK void PrintLine (const CH1* item, SI4 count, CH1 first_token) {
+  TPrintLine<CH1> (item, count, first_token);
 }
 
 void PrintHeading(const CH1* heading_a, const CH1* heading_b, SI4 row_count,
@@ -362,23 +366,32 @@ void Pausef(const CH1* format, ...) {
 namespace _ {
 
 void PrintChars (const void* begin, const void* end) {
-
+  TPrintChars<CH1> (reinterpret_cast<const CH1*> (begin),
+                    reinterpret_cast<const CH1*> (end));
 }
 
-void PrintChars (const CH1* start, SIW count) {
-  TPrintChars<CH1> (start, start + count - 1);
+void PrintChars (const void* start, SIW count) {
+  const CH1* ptr = reinterpret_cast<const CH1*> (start);
+  return PrintChars (ptr, ptr + count - 1);
 }
 
-void PrintChars (const void* start, SIW size) {
-  return PrintChars (reinterpret_cast<const CH1*> (start), size);
-}
-
+#if USING_UTF16 == YES
 void PrintChars (const CH2* start, SIW count) {
   TPrintChars<CH2> (start, start + count - 1);
 }
-
+#endif
+#if USING_UTF32 == YES
 void PrintChars (const CH4* start, SIW count) {
   TPrintChars<CH4> (start, start + count - 1);
+}
+#endif
+
+void PrintRight (const CH1* item, SI4 count) {
+  ::_::TPrintRight<CH1> (item, count);
+}
+
+void PrintCenter (const CH1* item, SI4 count) {
+  ::_::TPrintCenter<CH1> (item, count);
 }
 
 COut::COut (const CH1* item) {
@@ -513,7 +526,7 @@ COut& COut::Print (Center1 item) {
   return *this;
 }
 
-COut& COut::Print (TokenLine1 item) {
+COut& COut::Print (Line1 item) {
   PrintLine (item.token.String (), item.token.Count ());
   return *this;
 }
@@ -535,7 +548,7 @@ COut& COut::Print (Center2 item) {
   return *this;
 }
 
-COut& COut::Print (TokenLine2 item) {
+COut& COut::Print (Line2 item) {
   auto string = item.token.String ();
   if (string) PrintLine (string, item.token. Count ());
   else        PrintLine (item.token, item.token. Count ());
@@ -561,7 +574,7 @@ COut& COut::Print (Center4 item) {
   return *this;
 }
 
-COut& COut::Print (TokenLine4 item) {
+COut& COut::Print (Line4 item) {
   auto string = item.token.String ();
   if (string) PrintLine (string);
   else        PrintLine (item.token);
@@ -652,7 +665,7 @@ COut& COut::Print (Repeat4 item) {
   return cout.Print (item);
 }
 
-::_::COut& operator<<(::_::COut& cout, ::_::TokenLine1 item) {
+::_::COut& operator<<(::_::COut& cout, ::_::Line1 item) {
   return cout.Print (item);
 }
 
@@ -670,7 +683,7 @@ COut& COut::Print (Repeat4 item) {
   return cout.Print (item);
 }
 
-::_::COut& operator<<(::_::COut& cout, ::_::TokenLine2 item) {
+::_::COut& operator<<(::_::COut& cout, ::_::Line2 item) {
   return cout.Print (item);
 }
 
@@ -689,7 +702,7 @@ COut& COut::Print (Repeat4 item) {
   return cout.Print (item);
 }
 
-::_::COut& operator<<(::_::COut& cout, ::_::TokenLine4 item) {
+::_::COut& operator<<(::_::COut& cout, ::_::Line4 item) {
   return cout.Print (item);
 }
 

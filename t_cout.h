@@ -57,18 +57,18 @@ pointer to the nil-term CH1 upon success.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Char = CH1>
-void TPrintRight (const Char* token, SI4 column_count = 80) {
-  if (!token || column_count < 1)
+void TPrintRight (const Char* item, SI4 column_count = 80) {
+  if (!item || column_count < 1)
     return;
 
-  auto token_end = StrandEnd (token);
-  if (token == token_end) return token;
-  SIW length = token_end - token,
+  auto token_end = StrandEnd (item);
+  if (item == token_end) return;
+  SIW length = token_end - item,
     space_count = column_count - length;
-  Char c;
+  
   if (space_count > 0) {
     while (space_count-- > 0) Print (' ');
-    Print (token);
+    Print (item);
     return;
   }
   length = (-length) - 3;
@@ -77,7 +77,41 @@ void TPrintRight (const Char* token, SI4 column_count = 80) {
     else if (length == 2) TPrintRepeat ('.', 2);
     else if (length == 3) TPrintRepeat ('.', 3);
   } else {
-    while (length > 0) Print (*token++);
+    while (length > 0) Print (*item++);
+    TPrintRepeat<Char> ('.', 3);
+  }
+}
+
+/* Prints the given token aligned center the given column_count.
+@return Nil if any of the pointers are nil or if column_count < 1, and a
+pointer to the nil-term CH1 upon success.
+@param  token  The token to utf.
+@param  column_count The number_ of columns to align right to. */
+template <typename Char = CH1>
+void TPrintCenter (const Char* item, SI4 column_count = 80) {
+  if (!item || column_count < 1)
+    return;
+
+  auto token_end = StrandEnd (item);
+  if (item == token_end) return;
+  SIW length = token_end - item,
+    space_count = column_count - length;
+  
+  if (space_count > 0) {
+    SIW half_count = space_count >> 1;
+    space_count -= half_count;
+    while (half_count-- > 0) Print (' ');
+    Print (item);
+    while (space_count-- > 0) Print (' ');
+    return;
+  }
+  length = (-length) - 3;
+  if (length < 0) {
+    if (length == 1) Print ('.');
+    else if (length == 2) TPrintRepeat ('.', 2);
+    else if (length == 3) TPrintRepeat ('.', 3);
+  } else {
+    while (length > 0) Print (*item++);
     TPrintRepeat<Char> ('.', 3);
   }
 }

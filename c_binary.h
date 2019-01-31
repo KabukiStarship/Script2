@@ -188,14 +188,6 @@ SDK const CH1* Scan (const CH1* string, CH4& result);
 #endif
 
 #if USING_UTF16 == YES
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-SDK CH2* Print(CH2* cursor, CH2* stop, CH1 c);
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -204,7 +196,16 @@ SDK CH2* Print(CH2* cursor, CH2* stop, CH1 c);
 @param   c      The CH12 to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
-SDK CH2* Print(CH2* cursor, CH2* stop, CH2 c);
+SDK CH2* Print (CH2* cursor, CH2* stop, CH2 c);
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+SDK CH2* Print(CH2* cursor, CH2* stop, CH1 c);
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -231,7 +232,7 @@ SDK const CH2* Scan (const CH2* string, CH4& result);
 @param   c      The CH1 to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
-SDK CH4* Print(CH4* cursor, CH4* stop, CH1 c);
+CH4* Print(CH4* cursor, CH4* stop, CH1 c);
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -240,7 +241,7 @@ SDK CH4* Print(CH4* cursor, CH4* stop, CH1 c);
 @param   c      The CH12 to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
-SDK CH4* Print(CH4* cursor, CH4* stop, CH2 c);
+SDK inline CH4* Print(CH4* cursor, CH4* stop, CH2 c);
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -249,7 +250,7 @@ SDK CH4* Print(CH4* cursor, CH4* stop, CH2 c);
 @param   c      The CH4 to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
-SDK CH4* Print(CH4* cursor, CH4* stop, CH4 c);
+CH4* Print(CH4* cursor, CH4* stop, CH4 c);
 
 #endif
 

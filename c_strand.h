@@ -20,10 +20,6 @@ specific language governing permissions and limitations under the License. */
 
 #include "c_socket.h"
 
-#ifndef USING_UTF8
-#define USING_UTF8 YES
-#endif
-
 #if USING_UTF8 == YES
 #include "c_utf1.h"
 #endif

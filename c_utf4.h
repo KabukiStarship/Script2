@@ -26,52 +26,52 @@ namespace _ {
 @ingroup ASCII CH1*
 */
 
-/* Strand Factory that prints the string upon destruction. */
-SI4 COutHeap4 (CObject& obj, SIW function, void* arg);
+/* Strand Factory that prints the string upon destruction.
+SI4 COutHeap4 (CObject& obj, SIW function, void* arg); */
 
 /* Checks if the given character is whitespace.
  */
-SDK BOL IsWhitespace(CH4 character);
+SDK inline BOL IsWhitespace(CH4 character);
 
 /* Converts the given item to a printable CH4 if it's non-printable. */
-SDK CH4 PrintableChar(CH4 item);
+SDK inline CH4 PrintableChar(CH4 item);
 
 /* Scrolls over to the next DBL quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH4. */
-SDK const CH4* StrandEnd(const CH4* start);
+SDK inline const CH4* StrandEnd(const CH4* start);
 
 /* Gets the length of the given CH4.
 @return  Returns -1 if the text CH4 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH4. */
-SDK SI4 StrandLength(const CH4* start);
+SDK inline SI4 StrandLength(const CH4* start);
 
 /* Returns a pointer to the CH4 at the stop of the line. */
-SDK const CH4* StrandLineEnd(const CH4* start, SI4 count = kTokenCount);
+SDK inline const CH4* StrandLineEnd(const CH4* start, SI4 count = kTokenCount);
 
 /* Returns the pointer to the next CH4 in the CH4 that is not an ASCII
 token_.
 @return A pointer to the next non-token_ in the text CH4. */
-SDK const CH4* StrandDecimalEnd(const CH4* start);
+SDK inline const CH4* StrandDecimalEnd(const CH4* start);
 
 /* Skips the leading zeros of a token_ if there are any. */
-SDK const CH4* StrandSkipChar(const CH4* start, CH4 skip_char);
+SDK inline const CH4* StrandSkipChar(const CH4* start, CH4 skip_char);
 
 /* Skips all the spaces at the start of the CH4. */
-SDK const CH4* StrandSkipSpaces(const CH4* start);
+SDK inline const CH4* StrandSkipSpaces(const CH4* start);
 
 /* Skips all the spaces at the start of the CH4.
 @param  start Beginning address of the read socket.
 @param  stop   The stop address of the input socket.
 @return A pointer to the stop of the text read or if no text read. */
-SDK const CH4* StrandSkipSpaces(const CH4* start, const CH4* text_end);
+SDK inline const CH4* StrandSkipSpaces(const CH4* start, const CH4* text_end);
 
 /* Compares the source and query CH4 as nil-terminated strings. */
-SDK const CH4* StrandEquals(const CH4* text_a, const CH4* text_b);
+SDK inline const CH4* StrandEquals(const CH4* text_a, const CH4* text_b);
 
 /* Compares the source and query CH4 as nil-terminated strings. */
-SDK const CH4* StrandEquals(const CH4* start, const CH4* stop,
+SDK inline const CH4* StrandEquals(const CH4* start, const CH4* stop,
                             const CH4* query);
 
 /* Searches the given item for the given string.
@@ -79,42 +79,60 @@ SDK const CH4* StrandEquals(const CH4* start, const CH4* stop,
 @param  query The CH4 to search for.
 @return Returns nil if the parsing failed and a pointer to the first CH4
 after the stop of the text upon success. */
-SDK const CH4* StrandFind(const CH4* string, const CH4* item);
+SDK inline const CH4* StrandFind(const CH4* string, const CH4* item);
+
+#if USING_UTF8 == YES
+/* Prints the given string to the utf socket.
+@return Nil upon failure or a pointer to the terminator upon success.
+@param  start  The beginning address of the socket.
+@param  stop    The stop address of the socket.
+@param  item The potentially unsafe string to write. */
+CH4* Print (CH4* start, CH4* stop, const CH1* item);
+#endif
+
+#if USING_UTF16 == YES
+/* Prints the given string to the utf socket.
+@return Nil upon failure or a pointer to the terminator upon success.
+@param  start  The beginning address of the socket.
+@param  stop    The stop address of the socket.
+@param  item The potentially unsafe string to write. */
+SDK inline CH4* Print (CH4* start, CH4* stop, const CH2* item);
+#endif
 
 /* Prints the given item to the utf socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param  start  The beginning address of the socket.
 @param  stop    The stop address of the socket.
-@param   The potentially unsafe  to write. */
-SDK CH4* Print(CH4* start, CH4* stop, const CH4* );
+@param  item The potentially unsafe  to write. */
+CH4* Print(CH4* start, CH4* stop, const CH4* item);
 
 /* Writes the give item to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, UI4 item);
+SDK inline CH4* Print(CH4* start, CH4* stop, UI4 item);
 
 /* Writes the give item to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, SI4 item);
+SDK inline CH4* Print(CH4* start, CH4* stop, SI4 item);
 
 /* Writes the give CH4 to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, UI8 item);
+SDK inline CH4* Print(CH4* start, CH4* stop, UI8 item);
 
 /* Writes the give CH4 to the given socket
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, SI8 item);
+SDK inline CH4* Print(CH4* start, CH4* stop, SI8 item);
 
 #if SEAM >= SCRIPT2_4
 /* Writes the give CH4 to the given socket.
@@ -122,14 +140,14 @@ SDK CH4* Print(CH4* start, CH4* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, FLT item);
+SDK inline CH4* Print(CH4* start, CH4* stop, FLT item);
 
 /* Writes the give CH4 to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* Print(CH4* start, CH4* stop, DBL item);
+SDK inline CH4* Print(CH4* start, CH4* stop, DBL item);
 #endif
 
 /* Prints the given  to the utf socket.
@@ -137,7 +155,7 @@ SDK CH4* Print(CH4* start, CH4* stop, DBL item);
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param  The potentially unsafe  to write. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, const CH4* ,
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, const CH4* ,
                      SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
@@ -145,35 +163,36 @@ SDK CH4* PrintCenter(CH4* start, CH4* stop, const CH4* ,
 @param start Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The item to write. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, CH4 character, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, CH4 character,
+                     SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, UI4 valu, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, UI4 valu, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, SI4 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, SI4 item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, UI8 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, UI8 item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
 
 #if SEAM >= SCRIPT2_4
 /* Writes the give CH4 to the given socket center.
@@ -181,14 +200,14 @@ SDK CH4* PrintCenter(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, FLT item, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, FLT item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintCenter(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
+SDK inline CH4* PrintCenter(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
 #endif
 
 /* Prints the given  to the utf socket.
@@ -196,7 +215,7 @@ SDK CH4* PrintCenter(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param  The potentially unsafe  to write. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, const CH4* ,
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, const CH4* ,
                     SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
@@ -204,35 +223,35 @@ SDK CH4* PrintRight(CH4* start, CH4* stop, const CH4* ,
 @param start     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The item to write. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, CH4 character, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, CH4 character, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, UI4 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, UI4 item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, SI4 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, SI4 item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, UI8 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, UI8 item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
 
 #if SEAM >= SCRIPT2_4
 /* Writes the give CH4 to the given socket center.
@@ -240,14 +259,14 @@ SDK CH4* PrintRight(CH4* start, CH4* stop, SI8 item, SI4 count = kTokenCount);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, FLT item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, FLT item, SI4 count = kTokenCount);
 
 /* Writes the give CH4 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintRight(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
+SDK inline CH4* PrintRight(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
 #endif
 
 /* Prints the given  to the utf socket.
@@ -255,35 +274,35 @@ SDK CH4* PrintRight(CH4* start, CH4* stop, DBL item, SI4 count = kTokenCount);
 @param start   The beginning address of the socket.
 @param stop     The stop address of the socket.
 @param pointer The pointer to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, const void* begin);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, const void* begin);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, UI1 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, UI1 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, SI1 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, SI1 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, UI2 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, UI2 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, SI2 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, SI2 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -291,28 +310,28 @@ upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, UI4 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, UI4 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, SI4 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, SI4 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, UI8 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, UI8 item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, SI8 item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, SI8 item);
 
 #if SEAM >= SCRIPT2_4
 /* Writes the give CH4 to the given socket in hex form.
@@ -320,14 +339,14 @@ SDK CH4* PrintHex(CH4* start, CH4* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, FLT item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, FLT item);
 
 /* Writes the give CH4 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintHex(CH4* start, CH4* stop, DBL item);
+SDK inline CH4* PrintHex(CH4* start, CH4* stop, DBL item);
 #endif
 
 /* Prints the given  to the utf socket.
@@ -335,42 +354,42 @@ SDK CH4* PrintHex(CH4* start, CH4* stop, DBL item);
 @param start  The beginning address of the socket.
 @param stop    The stop address of the socket.
 @param begin   The begin address to print to hex. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, const void* begin);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, const void* begin);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, UI1 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, UI1 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, SI1 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, SI1 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, UI2 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, UI2 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, SI2 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, SI2 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, UI4 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, UI4 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -378,21 +397,21 @@ upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, SI4 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, SI4 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, UI8 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, UI8 item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, SI8 item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, SI8 item);
 
 #if SEAM >= SCRIPT2_4
 /* Writes the give CH4 to the given socket in binary form.
@@ -400,80 +419,76 @@ SDK CH4* PrintBinary(CH4* start, CH4* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, FLT item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, FLT item);
 
 /* Writes the give CH4 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to print. */
-SDK CH4* PrintBinary(CH4* start, CH4* stop, DBL item);
+SDK inline CH4* PrintBinary(CH4* start, CH4* stop, DBL item);
 #endif
-
-/* Prints the given memory socket to the token_.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The begin address of the write socket.
-@param stop   The stop of the write socket.
-@param begin The begin address of the read socket.
-@param size  The size of the socket in bytes. */
-SDK CH4* PrintChars(CH4* start, CH4* stop, const void* begin, size_t size);
 
 /* Prints out the contents of the address to the printer socket.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start The begin address of the write socket.
+@param start The start address of the buffer.
 @param stop   The stop of the write socket.
 @param start The begin address of the read socket.
 @param end  The stop of the read socket. */
-SDK CH4* PrintChars(CH4* start, CH4* stop, const void* begin, const void* end);
+SDK inline CH4* PrintChars(CH4* start, CH4* stop, const void* begin, 
+                          const void* end);
 
-/* Prints out the contents of the address to the printer socket.
+/* Prints the given memory socket to the token_.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start The begin address of the write socket.
-@param stop   The stop of the write socket.
-@param start The begin address of the read socket.
-@param size  The size of the read socket. */
-SDK CH4* PrintChars(CH4* start, CH4* stop, const void* begin, size_t size);
+@param start The start address of the buffer.
+@param stop  The stop of the write socket.
+@param begin The begin address of the read socket.
+@param size  The size of the socket in bytes. */
+SDK inline CH4* PrintChars (CH4* start, CH4* stop, const void* begin,
+  SIW size);
 
 /* Prints th given type or type-item.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param printer The printer to print to.
 @param type    The type to print.
 @param item    The item to print or nil. */
-SDK CH4* Print(CH4* start, CH4* stop, SI4 type, const void* item);
+SDK inline CH4* Print(CH4* start, CH4* stop, SI4 type, const void* item);
 
 /* Prints a horizontal line of the given character count.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start The begin address of the write socket.
+@param start The start address of the buffer.
 @param stop  The stop of the write socket.
-@param token The token to print.
+@param item The token to print.
 @param count The token_ of tokens to print. */
-SDK CH4* PrintLine(CH4* cursor, CH4* stop, CH4 token, SI4 count = kTokenCount);
+SDK inline CH4* PrintLine(CH4* cursor, CH4* stop, CH4 item,
+                         SI4 count = kTokenCount);
 
 /* Prints a horizontal line of the given character count.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start  The begin address of the write socket.
+@param start  The start address of the buffer.
 @param stop   The stop of the write socket.
-@param  The  to print.
+@param  item The  to print.
 @param count The token_ of columns. */
-SDK CH4* PrintLine(CH4* cursor, CH4* stop, const CH4* ,
+SDK inline CH4* PrintLine(CH4* cursor, CH4* stop, const CH4* item,
                           SI4 count = kTokenCount);
 
 /* Prints a vertical lines of the given character count.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start The begin address of the write socket.
+@param start The start address of the buffer.
 @param stop  The stop of the write socket.
-@param token The token to print.
+@param item  The token to print.
 @param count The token_ of tokens to print. */
-SDK CH4* PrintRepeat (CH4* cursor, CH4* stop, CH4 token, SI4 count = kTokenCount);
+SDK inline CH4* PrintRepeat (CH4* cursor, CH4* stop, CH4 item,
+                            SI4 count = kTokenCount);
 
 /* Prints a vertical line of the given character count.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param start  The begin address of the write socket.
+@param start  The start address of the buffer.
 @param stop   The stop of the write socket.
 @param  The  to print.
 @param count The token_ of columns. */
-SDK CH4* PrintRepeat (CH4* cursor, CH4* stop, const CH4* ,
-  SI4 count = kTokenCount);
+SDK inline CH4* PrintRepeat (CH4* cursor, CH4* stop, const CH4* ,
+                            SI4 count = kTokenCount);
 
 /* Prints the socket to the console as a UTF-8 .
 void COut4(UIW* socket); */
@@ -486,56 +501,56 @@ void COutAuto4(UIW* socket); */
 @param  result  The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, SI1& result);
+SDK inline  const CH4* Scan(const CH4* start, SI1& result);
 
 /* Converts the given  to a 8-bit unsigned integer.
 @param  start   A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, UI1& result);
+SDK inline const CH4* Scan(const CH4* start, UI1& result);
 
 /* Converts the given  to a 16-bit signed integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, SI2& result);
+SDK inline const CH4* Scan(const CH4* start, SI2& result);
 
 /* Converts the given  to a 16-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, UI2& result);
+SDK inline const CH4* Scan(const CH4* start, UI2& result);
 
 /* Converts the given  to a 32-bit signed integer.
 @param  start A nil-terminated  in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, SI4& result);
+SDK inline const CH4* Scan(const CH4* start, SI4& result);
 
 /* Converts the given  to a 32-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, UI4& result);
+SDK inline const CH4* Scan(const CH4* start, UI4& result);
 
 /* Converts the given  to a 64-bit signed integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, SI8& result);
+SDK inline const CH4* Scan(const CH4* start, SI8& result);
 
 /* Converts the given  to a 64-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, UI8& result);
+SDK inline const CH4* Scan(const CH4* start, UI8& result);
 
 #if SEAM >= SCRIPT2_4
 /* Converts the given  to a 32-bit floating-point token_.
@@ -543,14 +558,14 @@ SDK const CH4* Scan(const CH4* start, UI8& result);
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, FLT& result);
+SDK inline const CH4* Scan(const CH4* start, FLT& result);
 
 /* Converts the given  to a 64-bit floating-point token_.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* start, DBL& result);
+SDK inline const CH4* Scan(const CH4* start, DBL& result);
 #endif
 
 /* Converts the given  to a 8-bit signed integer.
@@ -558,56 +573,56 @@ SDK const CH4* Scan(const CH4* start, DBL& result);
 @param  result  The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, SI1& result);
+SDK inline const CH4* Scan(const CH4* text, SI1& result);
 
 /* Converts the given  to a 8-bit unsigned integer.
 @param  start A nil-terminated  in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, UI1& result);
+SDK inline const CH4* Scan(const CH4* text, UI1& result);
 
 /* Converts the given  to a 16-bit signed integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, SI2& result);
+SDK inline const CH4* Scan(const CH4* text, SI2& result);
 
 /* Converts the given  to a 16-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, UI2& result);
+SDK inline const CH4* Scan(const CH4* text, UI2& result);
 
 /* Converts the given  to a 32-bit signed integer.
 @param  start A nil-terminated  in ROM.
 @param  result  The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, SI4& result);
+SDK inline const CH4* Scan(const CH4* text, SI4& result);
 
 /* Converts the given  to a 32-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, UI4& result);
+SDK inline const CH4* Scan(const CH4* text, UI4& result);
 
 /* Converts the given  to a 64-bit signed integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, SI8& result);
+SDK inline const CH4* Scan(const CH4* text, SI8& result);
 
 /* Converts the given  to a 64-bit unsigned integer.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, UI8& result);
+SDK inline const CH4* Scan(const CH4* text, UI8& result);
 
 #if SEAM >= SCRIPT2_4
 /* Converts the given  to a 32-bit floating-point token_.
@@ -615,113 +630,15 @@ SDK const CH4* Scan(const CH4* text, UI8& result);
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, FLT& result);
+SDK inline const CH4* Scan(const CH4* text, FLT& result);
 
 /* Converts the given  to a 64-bit floating-point token_.
 @param  start  A nil-terminated  in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH4 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH4* Scan(const CH4* text, DBL& result);
+SDK inline const CH4* Scan(const CH4* text, DBL& result);
 #endif
-
-/* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
-strings.
-This class only stores the stop of socket pointer and a pointer to the
-write start. It is up the user to store start of socket pointer and if they
-would like to replace the start with the beginning of socket pointer when they
-are done printing.
-*/
-struct SDK UTF4 {
-  CH4 *start,  //< Start of the array.
-      *stop;   //< Stop fo the array.
-
-  /* Initializes the UTF& from the given socket pointers.
-  @param start The begin address of the socket.
-  @param stop   The stop of the socket. */
-  UTF4(CH4* start, size_t size);
-
-  /* Initializes the UTF& from the given socket pointers.
-  @param start The begin address of the socket.
-  @param stop   The stop of the socket. */
-  UTF4(CH4* start, CH4* stop);
-
-  /* Clones the other utf. */
-  UTF4(const UTF4& other);
-
-  /* Sets the start pointer to the new_pointer. */
-  inline UTF4& Set(CH4* new_pointer);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(SI1 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(UI1 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(SI2 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(UI2 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(SI4 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(UI4 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(SI8 item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(FLT item);
-
-  /* Prints the given item as hex. */
-  inline UTF4& Hex(DBL item);
-#endif
-
-  /* Prints the given pointer as hex. */
-  inline UTF4& Hex(const void* pointer);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(SI1 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(UI1 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(SI2 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(UI2 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(SI4 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(UI4 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(SI8 item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(FLT item);
-
-  /* Prints the given item as binary. */
-  inline UTF4& Binary(DBL item);
-#endif
-
-  /* Prints the given pointer as binary. */
-  inline UTF4& Binary(const void* pointer);
-};
 
 /* Utility class for printing numbers. */
 class Token4 {
@@ -824,14 +741,14 @@ struct Center4 {
 };
 
 /* Utility class for printing a horizontal line with operator<<. */
-struct SDK TokenLine4 {
+struct SDK Line4 {
   Token4 token;
 
   /* Constructors a horizontal line of token. */
-  TokenLine4 (CH4 item, SI4 count = kTokenCount);
+  Line4 (CH4 item, SI4 count = kTokenCount);
 
   /* Constructors a horizontal line of the given string. */
-  TokenLine4 (const CH4* string, SI4 count = kTokenCount);
+  Line4 (const CH4* string, SI4 count = kTokenCount);
 };
 
 /* Utility class for printing a vertical line with operator<<. */
@@ -845,36 +762,184 @@ struct SDK Repeat4 {
   Repeat4 (const CH4* item, SI4 count = kTokenCount);
 };
 
+/* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
+strings.
+This class only stores the stop of socket pointer and a pointer to the
+write start. It is up the user to store start of socket pointer and if they
+would like to replace the start with the beginning of socket pointer when they
+are done printing.
+*/
+struct SDK UTF4 {
+  CH4 *start,  //< Start of the array.
+    *stop;   //< Stop fo the array.
+
+/* Initializes the UTF& from the given socket pointers.
+@param start The begin address of the socket.
+@param stop   The stop of the socket. */
+  UTF4 (CH4* start, size_t size);
+
+  /* Initializes the UTF& from the given socket pointers.
+  @param start The begin address of the socket.
+  @param stop   The stop of the socket. */
+  UTF4 (CH4* start, CH4* stop);
+
+  /* Clones the other utf. */
+  UTF4 (const UTF4& other);
+
+  /* Sets the start pointer to the new_pointer. */
+  inline UTF4& Set (CH4* new_pointer);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (CH1 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (CH2 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (CH4 item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (const CH1* item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (const CH2* item);
+
+  /* Prints a CH1 to the strand. */
+  inline UTF4& Print (const CH4* item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (SI4 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (UI4 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (SI8 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item. */
+  inline UTF4& Print (FLT item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (DBL item);
+#endif
+
+  /* Prints the given item. */
+  inline UTF4& Print (Right4 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (Center4 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (Line4 item);
+
+  /* Prints the given item. */
+  inline UTF4& Print (Repeat4 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (SI1 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (UI1 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (SI2 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (UI2 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (SI4 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (UI4 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (SI8 item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (FLT item);
+
+  /* Prints the given item as hex. */
+  inline UTF4& Hex (DBL item);
+#endif
+
+  /* Prints the given pointer as hex. */
+  inline UTF4& Hex (const void* pointer);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (SI1 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (UI1 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (SI2 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (UI2 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (SI4 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (UI4 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (SI8 item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (UI8 item);
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (FLT item);
+
+  /* Prints the given item as binary. */
+  inline UTF4& Binary (DBL item);
+#endif
+
+  /* Prints the given pointer as binary. */
+  inline UTF4& Binary (const void* pointer);
+};
+
 #if SCRIPT2_CHAR_SIZE == UTF32
 using Token = Token4;
 using Right = Right4;
 using Center = Center4;
-using Columns= TokenLine4;
+using Columns= Line4;
 using Rows = Repeat4;
 using Hex = Hex4;
 #endif
 
 }  // namespace _
 
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, const CH4* );
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, CH4 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, UI1 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, SI2 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, UI2 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, SI4 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, UI4 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, SI8 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, UI8 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, const CH4* );
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, CH4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI1 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI2 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI2 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI8 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI8 item);
 
 #if SEAM >= SCRIPT2_4
 
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, FLT item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, DBL item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, FLT item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, DBL item);
 #endif
 
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Center4 item);
-SDK ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Right4 item);
-SDK::_::UTF4& operator<<(::_::UTF4& printer, ::_::TokenLine4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Center4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Right4 item);
+SDK::_::UTF4& operator<<(::_::UTF4& printer, ::_::Line4 item);
 SDK::_::UTF4& operator<<(::_::UTF4& printer, ::_::Repeat4 item);
 
 #endif  //< #if USING_UTF32 == YES
