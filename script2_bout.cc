@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bout.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "cargs.h"
-#include "casciidata.h"
-#include "cbinary.h"
-#include "cbout.h"
-#include "cbsq.h"
-#include "chash.h"
-#include "csocket.h"
-#include "ctest.h"
+#include "c_args.h"
+#include "c_asciidata.h"
+#include "c_binary.h"
+#include "c_bout.h"
+#include "c_bsq.h"
+#include "c_hash.h"
+#include "c_socket.h"
+#include "c_test.h"
 #include "slot.h"
 
 #if SEAM == SCRIPT2_14
@@ -39,7 +39,7 @@ namespace _ {
     @param error The error type.
     @return Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -51,7 +51,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -64,7 +64,7 @@ inline const Op* BOutError(BOut* bout, Error error, const SI4* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
                            SI4 offset) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -77,11 +77,11 @@ inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
                            SI4 offset, CH1* address) {
-  std::cerr << "\nBOut " << ErrorString(error) << " Error!";
+  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
-const CH1** BOutStateStrings() {
+const CH1** BOutStateStrands() {
   static const CH1* strings[] = {"WritingState", "kBInStateLocked"};
   return strings;
 }
@@ -162,13 +162,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1  // type,
       ui1;
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
   UI2 ui2;
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
   UI4 ui4;
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
   UI8 ui8;
 #endif
 
@@ -195,13 +195,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
   const CH1* ui1_ptr;                     //< Pointer to a 1-UI1 type.
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
   const UI2* ui2_ptr;  //< Pointer to a 2-UI1 type.
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
   const UI4* ui4_ptr;  //< Pointer to a 4-UI1 type.
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
   const UI8* ui8_ptr;  //< Pointer to a 8-UI1 type.
 #endif
   UI2 hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
@@ -218,7 +218,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeString(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -230,7 +230,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           return BOutError(bout, kErrorBufferOverflow, params, index, begin);
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
-          // nil string_.
+          // nil .
           length = params[++index];  //< Load the max CH1 length.
           ++num_params;
         } else {
@@ -263,7 +263,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
       case kUI1:
       case kBOL:
-#if USING_CRABS_1_BYTE_TYPES
+#if USING_SCRIPT2_1_BYTE_TYPES
         // Check if the socket has enough room.
         if (space-- == 0)
           return BOutError(bout, kErrorBufferOverflow, params, index, begin);
@@ -283,7 +283,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
       case kUI2:
       case kHLF:
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
         // Align the socket to a word boundary and check if the
         // socket has enough room.
         if (space < sizeof(UI2))
@@ -310,8 +310,8 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         break;
 #else
         return BOutError(bout, kErrorInvalidType);
-#endif  // USING_CRABS_2_BYTE_TYPES
-#if WORD_SIZE <= 16
+#endif  // USING_SCRIPT2_2_BYTE_TYPES
+#if ALU_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
@@ -408,11 +408,11 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         goto WriteVarint4;
       } break;
 #endif
-      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case kint:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case kUI4:
       case kFLT:
       case kTM4:
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
 
@@ -432,12 +432,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           if (++stop >= stop) stop -= size;
         }
         break;
-#endif            //< USING_CRABS_4_BYTE_TYPES
+#endif            //< USING_SCRIPT2_4_BYTE_TYPES
       case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case kUI8:
       case kDBL:
       case kTM8:
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
         if (space < sizeof(UI8))
@@ -519,7 +519,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
           }
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
           case 1: {
             ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
@@ -530,7 +530,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             ui1_ptr = reinterpret_cast<const CH1*>(ui2_ptr);
           }
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
           case 2: {
             ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
@@ -541,7 +541,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             ui1_ptr = reinterpret_cast<const CH1*>(ui4_ptr);
           }
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
           case 3: {
             ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
@@ -551,7 +551,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             length = static_cast<SI4>(ui8);
             ui1_ptr = reinterpret_cast<const CH1*>(ui8_ptr);
           }
-#endif  //< USING_CRABS_8_BYTE_TYPES
+#endif  //< USING_SCRIPT2_8_BYTE_TYPES
           default: {
             // This wont happen due to the & 0x3 bit mask
             // but it stops the compiler from barking.
@@ -697,7 +697,7 @@ void BInKeyStrokes() {
   }
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /*
 CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     BOL print_now = !socket;
@@ -707,12 +707,12 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     if (socket >= buffer_end) {
         return nullptr;
     }
-    socket = PrintLine ('_', 80, socket, buffer_end);
+    socket = TPrintLinef('_', 80, socket, buffer_end);
     if (!bout) {
         return nullptr;
     }
     SI4 size = bout->size;
-    Utf& utf (socket, buffer_end);
+    UTF& utf (socket, buffer_end);
     utf << "\nBOut:" << Hex<UIW> (bout)
           << " size:" << size
           << " begin:" << bout->begin << " stop:" << bout->stop
@@ -728,7 +728,7 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
       << " start:" << bout->begin << " stop:" << bout->stop
       << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
-  Printf("\n!| cursor:%p", utf.begin);
+  Printf("\n!| cursor:%p", utf.start);
   return utf;
 }
 #endif

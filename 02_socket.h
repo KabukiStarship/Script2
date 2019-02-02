@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    \02_ascii_strings_and_socket.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "tsocket.h"
-#include "tstrand.h"
-#include "ttest.h"
+#include "t_socket.h"
+#include "t_strand.h"
+#include "t_test.h"
 
-#include "cconsole.h"
+#include "c_cout.h"
 
 #if SEAM == SCRIPT2_2
 #include "global_debug.inl"

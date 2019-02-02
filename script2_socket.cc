@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 #if SEAM >= SCRIPT2_2
 
-#include "tbinary.h"
-#include "tsocket.h"
+#include "t_binary.h"
+#include "t_socket.h"
 
 #if SEAM == SCRIPT2_2
 #include "global_debug.inl"
@@ -94,7 +94,7 @@ SIW SizeOf(const void* start, const void* stop) {
 }
 
 inline UIW FillWord(CH1 fill_char) {
-  UIW value = fill_char;
+  UIW value = (UIW)(UI1)fill_char;
 #if CPU_WORD_SIze == 32
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
@@ -103,23 +103,13 @@ inline UIW FillWord(CH1 fill_char) {
 #endif
 }
 
-CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
-  ASSERT(cursor);
-  PRINTF("\ncursor:%p\nbyte_count:%d", cursor, (SI4)byte_count);
-  ASSERT(byte_count >= 0);
+CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
+  CH1 *start = reinterpret_cast<CH1*>(begin),
+      *stop = reinterpret_cast<CH1*>(end);
+  ASSERT(start);
+  PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
 
-  if ((stop - cursor) < byte_count) {
-    PRINT("\nBuffer overflow!");
-    return nullptr;
-  }
-  stop = cursor + byte_count;
-
-  PRINTF("\nFilling %i bytes from %p", (SI4)byte_count, cursor);
-
-  if (byte_count < (2 * sizeof(void*) + 1)) {
-    while (cursor < stop) *cursor++ = fill_char;
-    return cursor;
-  }
+  PRINTF("\nFilling %i bytes from %p", (SI4)count, start);
 
   UIW fill_word = FillWord(fill_char);
 
@@ -132,12 +122,12 @@ CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
   // bytes in the
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
-  CH1 *success = stop, *aligned_pointer = TAlignUp<>(cursor);
-  while (cursor < aligned_pointer) *cursor++ = fill_char;
+  CH1 *success = stop, *aligned_pointer = TAlignUp<>(start);
+  while (start < aligned_pointer) *start++ = fill_char;
   aligned_pointer = TAlignDown<CH1*>(stop);
   while (stop > aligned_pointer) *stop-- = fill_char;
 
-  UIW *words = reinterpret_cast<UIW*>(cursor),
+  UIW *words = reinterpret_cast<UIW*>(start),
       *words_end = reinterpret_cast<UIW*>(stop);
 
   while (words < words_end) *words++ = fill_word;
@@ -145,15 +135,14 @@ CH1* SocketFill(CH1* cursor, CH1* stop, SIW byte_count, CH1 fill_char) {
   return success;
 }
 
-CH1* SocketFill(void* cursor, SIW count, CH1 fill_char) {
-  return SocketFill(reinterpret_cast<CH1*>(cursor),
-                    reinterpret_cast<CH1*>(cursor) + count, count, fill_char);
+CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
+  return SocketFill(reinterpret_cast<CH1*>(begin),
+                    reinterpret_cast<CH1*>(begin) + count - 1, fill_char);
 }
 
-BOL SocketWipe(void* cursor, void* stop, SIW count) {
-  return SocketFill(reinterpret_cast<CH1*>(cursor),
-                    reinterpret_cast<CH1*>(stop), count) != nullptr;
-}
+CH1* SocketWipe(void* begin, void* end) { return SocketFill(begin, end, 0); }
+
+CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
 
 CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
   ASSERT(begin);

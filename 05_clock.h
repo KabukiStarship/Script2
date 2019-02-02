@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/04_clock.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@file    /script2/05_uts_and_clock.h
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include <cclock.h>
+#include <c_clock.h>
 
 #if SEAM == SCRIPT2_5
 #include "global_debug.inl"
@@ -58,7 +58,7 @@ static const CH1* _05_Clock(CH1* seam_log, CH1* seam_end, const CH1* args) {
   };
 
   for (SI4 i = 0; i < 18; ++i) {
-    PRINT_LINE('-');
+    PRINT_LINEF('-');
     PRINTF("\n    %i", i);
     TM4 t = 0;
     result = ScanTime(strings[i], t);
@@ -71,24 +71,24 @@ static const CH1* _05_Clock(CH1* seam_log, CH1* seam_end, const CH1* args) {
   CH1 socket[kSize];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
-  PrintTime (socket, socket + kSize, t);
+  PrintTime(socket, socket + kSize, t);
   result = ScanTime(socket, t_found);
   ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  PrintTime (socket, socket + kSize, t);
+  PrintTime(socket, socket + kSize, t);
   result = ScanTime(socket, t_found);
   ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
   PrintTime(socket, socket + kSize, t);
-  PRINT ("\n  Before:\"");
-  PRINT (socket);
-  PRINT ('\"');
+  PRINT("\n  Before:\"");
+  PRINT(socket);
+  PRINT('\"');
   result = Scan(socket, t_found);
-  PRINT ("\n\n\nresult:\"");
-  PRINT_TIME (t_found);
-  PRINT ("\"\"");
+  PRINT("\n\n\nresult:\"");
+  PRINT_TIME(t_found);
+  PRINT("\"\"");
   ASSERT(ClockCompare(t, t_found));
 
   PRINT_HEADING("Testing invalid input");
@@ -100,4 +100,4 @@ static const CH1* _05_Clock(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

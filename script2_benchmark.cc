@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_benchmark.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= SCRIPT2_13
-#include "tbenchmark.h"
+#include "t_benchmark.h"
 
 #include "rng.h"
-#include "tbinary.h"
-#include "ttest.h"
+#include "t_binary.h"
+#include "t_test.h"
 
 #include <chrono>
 #include <fstream>
@@ -41,7 +41,7 @@ BenchmarkCase::BenchmarkCase(const CH1* name, TestCase* cases, SI4 count)
 
 const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
   /*
-  DBL nil_reading;
+  FP8 nil_reading;
   SI4 i;
   SI4 columns_max;
   ASSERT(TScan<>(args, columns_max));
@@ -80,7 +80,7 @@ const CH1* Benchmark::Run(CH1* cursor, CH1* stop, const CH1* args) {
   auto* coutbuf = std::cout.rdbuf();
   std::cout.rdbuf(out.rdbuf());
 
-  for (size_t i = 0; i < count; ++i) {
+  for (SIW i = 0; i < count; ++i) {
     BenchmarkCase group = groups[i];
     const CH1* result = group.Run(cursor, stop, args);
     ASSERT(result);

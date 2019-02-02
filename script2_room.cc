@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_room.h
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "croom.h"
+#include "c_room.h"
 
-#include "cbsq.h"
-#include "cdoor.h"
-#include "cstack.h"
-#include "tstrand.h"
+#include "c_bsq.h"
+#include "c_door.h"
+#include "c_stack.h"
+#include "t_strand.h"
 
 #if SEAM == SCRIPT2_14
 #include "global_debug.inl"
@@ -80,7 +80,7 @@ BOL Room::SetRoomName(const CH1* name) {
     return false;
   }
   delete name_;
-  name_ = StringClone(name);
+  name_ = StrandClone(name);
   return true;
 }
 
@@ -109,27 +109,27 @@ const Op* Room::Init(CCrabs* crabs) {
 }
 
 void Room::ShutDown() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nShutting down...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Sleep() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nGoing to sleep...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Wake() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nWaking up...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Crash() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nRoom crash!";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 const Op* Room::Loop() { return 0; }
@@ -202,7 +202,7 @@ UIW Room::GetSizeBytes() {
   return count;
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 #endif
 

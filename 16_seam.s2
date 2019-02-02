@@ -14,8 +14,8 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, kSTR:32, kSI1, kSI2, kSI4>:<kNIL>
-   Bar <1, kSTR:32>:<3, kSI1, kSI2, kSI4>
+   Foo <4, kSTR:32, kSI1, kSI2, kint>:<kNIL>
+   Bar <1, kSTR:32>:<3, kSI1, kSI2, kint>
    FooBar <DIC2, kUI1>:<kNIL>
             ^     ^
             |     |
@@ -34,7 +34,7 @@ Parent Child1 Foo "Hello world!" 1 2 3    //< There is no pop instruction here
 Parent {
     Child1 {
         Foo ("Hello world!", 1, 2, 3)
-        Foo ("Hello world!", 1, 2, 3)    //< String operations together!
+        Foo ("Hello world!", 1, 2, 3)    //< Strand operations together!
         Bar ("Lets go!")
     }
     Child2 {
@@ -97,7 +97,7 @@ root :=DIC_4 (2048, 3) {
           v       v */
         +=kSI1 item1 1
         +=kSI2 (item2, 2)
-        +=kSI4 item3 1
+        +=kint item3 1
         -=Index 2                    //< Removes index 2:"item3".
         +=kSI2 item3 -1
         +=kUI2 item4 1
@@ -109,7 +109,7 @@ root :=DIC_4 (2048, 3) {
     }
 }
 
-/** Return Address (kADR) Example.
+/* Return Address (kADR) Example.
 
     @fn =
 	@param <kNIL>:<kBSQ>
@@ -127,7 +127,7 @@ Parant.Child1.Foo ($abc123 "Number conversion Example" root.nested.item1,
 
 FooBar (stuff, 1);
 
-/** Inter-process LISP Example.
+/* Inter-process LISP Example.
     Functions 
     
 */

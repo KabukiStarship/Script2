@@ -13,10 +13,10 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#include "cbsq.h"
+#include "c_bsq.h"
 
-#include "ctest.h"
-#include "cstr1.h"
+#include "c_test.h"
+#include "c_utf1.h"
 
 namespace _ {
 
@@ -58,14 +58,14 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    utf << TypeString((SI4)value) << ", ";
+    utf << TypeStrand((SI4)value) << ", ";
     if (type >= kSTR) {
       if (value) {
         utf << "\nError: arrays may only be created from POD "
                "types.";
         return utf;
       }
-      // Print out the max length of the string_.
+      // Print out the max length of the .
       ++i;
       value = *params++;
       utf << value;
@@ -149,7 +149,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
   }
   // Do the last set without a comma.
   value = *params++;
-  utf << TypeString(value) << ", ";
+  utf << TypeStrand(value) << ", ";
   if (value == kSTR) {
     ++i;
     value = *params++;

@@ -1,7 +1,7 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_hash.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -13,41 +13,41 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_9
-#include "thash.h"
+#include "t_hash.h"
 
 namespace _ {
 
 hash16_t Hash16(CH1 value, hash16_t hash) { return hash + hash * value; }
 
-hash16_t Hash16(const CH1* string_, hash16_t hash) {
-  UI1 c = *string_;
+hash16_t Hash16(const CH1* , hash16_t hash) {
+  UI1 c = *;
   while (c) {
     hash = Hash16(c, hash);
-    ++string_;
-    c = *string_;
+    ++;
+    c = *;
   }
   return hash;
 }
 
 hash32_t Hash32(CH2 value, hash32_t hash) { return hash + hash * value; }
 
-hash32_t Hash32(const CH1* string_, hash32_t hash) {
-  UI1 c = *string_;
+hash32_t Hash32(const CH1* , hash32_t hash) {
+  UI1 c = *;
   while (c) {
     hash = Hash32(c, hash);
-    ++string_;
-    c = *string_;
+    ++;
+    c = *;
   }
   return hash;
 }
 hash64_t Hash64(CH4 value, hash64_t hash) { return hash + hash * value; }
 
-hash64_t Hash64(const CH1* string_, hash64_t hash) {
-  UI1 c = *string_;
+hash64_t Hash64(const CH1* , hash64_t hash) {
+  UI1 c = *;
   while (c) {
     hash = Hash64(c, hash);
-    ++string_;
-    c = *string_;
+    ++;
+    c = *;
   }
   return hash;
 }

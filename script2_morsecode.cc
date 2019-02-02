@@ -1,7 +1,7 @@
-/** Script @version 0.x
+/* Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_morsecode.cc
-@author  Cale McCollough <cale.mccollough@gmail.com>
+@author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance with the License.
@@ -16,102 +16,100 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 const CH1* ToMorseCode(CH1 code) {
-  static const CH1* space = " ";  //<
+  static const CH1 space[] = { '0', NIL };  //<
 
-  static const CH1* cypher[] = {
-      ".-.-.",      //< ASCII: NUL, Morse code: End of message.
-      0,            //< ASCII: SOH.
-      "-.-.-",      //< ASCII: STX, Morse code: Start copying.
-      "-.-..-..",   //< ASCII: ETX, Morse code: Going off the air("clear").
-      "...-.-",     //< ASCII: EOT, Morse code: End of transmission.
-      "-.--.",      //< ASCII: ENQ, Morse code: Invite a specific station to
-                    // transmit.
-      "...-.",      //< ASCII: ACK, Morse code: Understood.
-      "...---...",  //< ASCII: BEL, Morse code: SOS distress signal.
-      "........",   //< ASCII: BS,  Morse code: Prosign error.
-      space,        //< ASCII: HT,  Morse code: non-standard space.
-      ".-.-",       //< ASCII: LF,  Morse code: TNew Line
-      "-...-",      //< ASCII: VT,  Morse code: TNew paragraph.
-      ".-.-.",      //< ASCII: FF,  Morse code: TNew Page
-      0,            //< ASCII: CR
-      "-..---",     //< ASCII: SO,  Morse code: Change to Wabun Mores code.
-      ".--...",     //< ASCII: SI,  Morse code: Non-standard return to Western
-                    // Mores code
-      0,            //< ASCII: DLE
-      0,            //< ASCII: DC1
-      0,            //< ASCII: DC2
-      0,            //< ASCII: DC3
-      0,            //< ASCII: DC4
-      0,            //< ASCII: NAK
-      ".-...",      //< ASCII: SYN, Morse code: AS, Wait.
-      0,            //< ASCII: ETB
-      0,            //< ASCII: CAN
-      "-...-.-",    //< ASCII: EM,  Morse code: Break/BRB.
-      0,            //< ASCII: SUB
-      0,            //< ASCII: ESC
-      0,            //< ASCII: FS
-      0,            //< ASCII: GS
-      0,            //< ASCII: RS
-      0,            //< ASCII: US
-      space,        //< ASCII: ' '
-      ".-..-.",     //< ASCII: '!'
-      ".-..-.",     //< ASCII: '\"'
-      0,            //< ASCII: '#'
-      "..._.-..",   //< ASCII: '$'
-      "....._..",   //< ASCII: '%'
-      "._...",      //< ASCII: '&'
-      ".----.",     //< ASCII: '\''
-      "-.--.-",     //< ASCII: '('
-      ".-..-.",     //< ASCII: ')', Nonstandard, inverse of '('
-      0,            //< ASCII: '*'
-      0,            //< ASCII: '+'
-      "--..--",     //< ASCII: ','
-      "-....-",     //< ASCII: '-'
-      ".-.-.-",     //< ASCII: '.'
-      "-..-.",      //< ASCII: '/'
-      "-----",      //< ASCII: '0'
-      ".---",       //< ASCII: '1'
-      "..---",      //< ASCII: '2'
-      "...--",      //< ASCII: '3'
-      "....-",      //< ASCII: '4'
-      ".....",      //< ASCII: '5'
-      "-...",       //< ASCII: '6'
-      "--...",      //< ASCII: '7'
-      "---..",      //< ASCII: '8'
-      "----.",      //< ASCII: '9'
-      "---...",     //< ASCII: ':'
-      0,            //< ASCII: ','
-      0,            //< ASCII: '<'
-      "-...-",      //< ASCII: '='
-      0,            //< ASCII: '>'
-      "..--..",     //< ASCII: '?'
-      ".--.-.",     //< ASCII: '@'
-      ".-",         //< ASCII: 'A'
-      "-...",       //< ASCII: 'B'
-      "-.-.",       //< ASCII: 'C'
-      "-..",        //< ASCII: 'D'
-      ".",          //< ASCII: 'E'
-      "..-.",       //< ASCII: 'F'
-      "--.",        //< ASCII: 'G'
-      "....",       //< ASCII: 'H'
-      "..",         //< ASCII: 'I'
-      ".---",       //< ASCII: 'J'
-      "-.-",        //< ASCII: 'K'
-      ".-..",       //< ASCII: 'L'
-      "--",         //< ASCII: 'M'
-      "-.",         //< ASCII: 'N'
-      "---",        //< ASCII: 'O'
-      ".--.",       //< ASCII: 'P'
-      "--.-",       //< ASCII: 'Q'
-      ".-.",        //< ASCII: 'R'
-      "...",        //< ASCII: 'S'
-      "-",          //< ASCII: 'T'
-      "..-",        //< ASCII: 'u'
-      "...-",       //< ASCII: 'V'
-      ".--",        //< ASCII: 'W'
-      "-..-",       //< ASCII: 'X'
-      "-.--",       //< ASCII: 'Y'
-      "--.."        //< ASCII: 'Z'
+  static const CH1 cypher[91][10] = {
+      {'.', '-', '.', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII , Morse code: End of message.
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII SOH.
+      {'-', '.', '-', '.', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII STX, Morse code: Start copying.
+      {'-', '.', '-', '.', '.', '-', '.', '.', NIL, NIL}, //< ASCII ETX, Morse code: Going off the air("clear").
+      {'.', '.', '.', '-', '.', '-', NIL, NIL, NIL, NIL}, //< ASCII EOT, Morse code: End of transmission.
+      {'-', '.', '-', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII ENQ, Morse code: Invite a specific station to transmit.
+      {'.', '.', '.', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII ACK, Morse code: Understood.
+      {'.', '.', '.', '-', '-', '-', '.', '.', '.', NIL}, //< ASCII BEL, Morse code: SOS distress signal.
+      {'.', '.', '.', '.', '.', '.', '.', '.', NIL, NIL}, //< ASCII BS,  Morse code: Prosign error.
+      {'0', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII HT/Morse code:Space.
+      {'.', '-', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII LF,  Morse code: TNew Line
+      {'-', '.', '.', '.', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII VT,  Morse code: TNew paragraph.
+      {'.', '-', '.', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII FF,  Morse code: TNew Page
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII CR
+      {'-', '.', '.', '-', '-', '-', NIL, NIL, NIL, NIL}, //< ASCII SO,  Morse code: Change to Wabun Mores code.
+      {'.', '-', '-', '.', '.', '.', NIL, NIL, NIL, NIL}, //< ASCII SI,  Morse code: Non-standard return to Western Mores code
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII DLE
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII DC1
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII DC2
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII DC3
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII DC4
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII NAK
+      {'.', '-', '.', '.', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII SYN, Morse code: AS, Wait.
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII ETB
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII CAN
+      {'-', '.', '.', '.', '-', '.', '-', NIL, NIL, NIL}, //< ASCII EM,  Morse code: Break/BRB.
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII SUB
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII ESC
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII FS
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII GS
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII RS
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII US
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII ' '
+      {'.', '-', '.', '.', '-', '.', NIL, NIL, NIL, NIL}, //< ASCII '!'
+      {'.', '-', '.', '.', '-', '.', NIL, NIL, NIL, NIL}, //< ASCII '\"'
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '#'
+      {'.', '.', '.', '_', '.', '-', '.', '.', NIL, NIL}, //< ASCII '$'
+      {'.', '.', '.', '.', '.', '_', '.', '.', NIL, NIL}, //< ASCII '%'
+      {'.', '_', '.', '.', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '&'
+      {'.', '-', '-', '-', '-', '.', NIL, NIL, NIL, NIL}, //< ASCII '\''
+      {'-', '.', '-', '-', '.', '-', NIL, NIL, NIL, NIL}, //< ASCII '('
+      {'.', '-', '.', '.', '-', '.', NIL, NIL, NIL, NIL}, //< ASCII ')', Nonstandard, inverse of '('
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '*'
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '+'
+      {'-', '-', '.', '.', '-', '-', NIL, NIL, NIL, NIL}, //< ASCII ','
+      {'-', '.', '.', '.', '.', '-', NIL, NIL, NIL, NIL}, //< ASCII '-'
+      {'.', '-', '.', '-', '.', '-', NIL, NIL, NIL, NIL}, //< ASCII '.'
+      {'-', '.', '.', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '/'
+      {'-', '-', '-', '-', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII '0'
+      {'.', '-', '-', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '1'
+      {'.', '.', '-', '-', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII '2'
+      {'.', '.', '.', '-', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII '3'
+      {'.', '.', '.', '.', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII '4'
+      {'.', '.', '.', '.', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '5'
+      {'-', '.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '6'
+      {'-', '-', '.', '.', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '7'
+      {'-', '-', '-', '.', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '8'
+      {'-', '-', '-', '-', '.', NIL, NIL, NIL, NIL, NIL}, //< ASCII '9'
+      {'-', '-', '-', '.', '.', '.', NIL, NIL, NIL, NIL}, //< ASCII ':'
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII ','
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '<'
+      {'-', '.', '.', '.', '-', NIL, NIL, NIL, NIL, NIL}, //< ASCII '='
+      {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII '>'
+      {'.', '.', '-', '-', '.', '.', NIL, NIL, NIL, NIL}, //< ASCII '?'
+      {'.', '-', '-', '.', '-', '.', NIL, NIL, NIL, NIL}, //< ASCII '@'
+      {'.', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'A'
+      {'-', '.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'B'
+      {'-', '.', '-', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'C'
+      {'-', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'D'
+      {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'E'
+      {'.', '.', '-', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'F'
+      {'-', '-', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'G'
+      {'.', '.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'H'
+      {'.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'I'
+      {'.', '-', '-', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'J'
+      {'-', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'K'
+      {'.', '-', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'L'
+      {'-', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'M'
+      {'-', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'N'
+      {'-', '-', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'O'
+      {'.', '-', '-', '.', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'P'
+      {'-', '-', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'Q'
+      {'.', '-', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'R'
+      {'.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'S'
+      {'-', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'T'
+      {'.', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'u'
+      {'.', '.', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'V'
+      {'.', '-', '-', NIL, NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'W'
+      {'-', '.', '.', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'X'
+      {'-', '.', '-', '-', NIL, NIL, NIL, NIL, NIL, NIL}, //< ASCII 'Y'
+      {'-', '-', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL}  //< ASCII 'Z'
   };
 
   if (code < 0) return 0;
@@ -137,7 +135,7 @@ const CH1* ToMorseCode(CH1 code) {
         return 0;
     }
   }
-  return cypher[code];
+  return &cypher[code][0];
 }
 
 }  // namespace _

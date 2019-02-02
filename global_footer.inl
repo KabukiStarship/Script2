@@ -4,11 +4,16 @@
 #undef PRINTF
 #undef PAUSE
 #undef PAUSEF
+#undef PRINT_LINEF
+#undef PRINT_LINEF_COUNT
 #undef PRINT_HEADING
-#undef PRINT_LINE
+#undef PRINT_HEADINGF
+#undef PRINT_HEADINGF_COUNT
+#undef PRINT_HEADINGF_2
+#undef PRINT_HEADINGF_3
 #undef PRINT_TIME
 #undef PRINT_TYPE
-#undef PRINT_BYTES
+#undef PRINT_CHARS
 #undef PRINT_SOCKET_TOBJ
 #undef PRINT_HEX
 #undef PRINT_HEXS
@@ -19,6 +24,8 @@
 #undef PRINTLN
 #undef PRINT_FUNCTION_LINE
 #undef SOCKET_SAVE
+#undef SOCKET_FILL
+#undef SOCKET_WIPE
 #undef CHECK
 #undef DCHECK
 #undef RCHECK
