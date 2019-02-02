@@ -25,11 +25,18 @@ specific language governing permissions and limitations under the License. */
 #include "global_release.inl"
 #endif
 
+#if COMPILER == VISUAL_CPP
+#define FORMAT_SI8 "%I64i"
+#define FORMAT_UI8 "%I64u"
+#else
+#define FORMAT_SI8 "%lld"
+#define FORMAT_UI8 "%llu"
+#endif
+
 using namespace _;
 
 namespace script2 {
-inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, 
-  const CH1* args) {
+inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #if SEAM >= SCRIPT2_1
   TEST_BEGIN;
 
@@ -143,7 +150,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end,
   PRINT("\n\nTesting problem children...\n\n");
 
   for (SI4 i = 0; i < kNumProblemChildren; ++i) {
-    PRINT_LINE('-');
+    PRINT_LINEF('-');
     PRINT('\n');
     expected_ui8 = problem_children[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
@@ -164,7 +171,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end,
 
   PRINT("\n\nTesting edge conditions...\n\n");
   for (SI4 i = 0; i < 28; ++i) {
-    PRINT_LINE('-');
+    PRINT_LINEF('-');
     PRINT('\n');
     expected_ui8 = test_value[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
@@ -185,7 +192,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end,
   PRINTF("\n\nTesting random numbers...\n\n");
 
   for (SI4 i = 0; i < 0x0000ffff; ++i) {
-    PRINT_LINE('-');
+    PRINT_LINEF('-');
     PRINT('\n');
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
@@ -205,4 +212,4 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end,
 #endif
   return 0;
 }
-} //< namespace script2
+}  // namespace script2

@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_CRABS_BSQ
-#define INCLUDED_CRABS_BSQ
+#ifndef INCLUDED_SCRIPT2_BSQ
+#define INCLUDED_SCRIPT2_BSQ
 
 #include "c_asciidata.h"
 #include "c_utf1.h"
@@ -31,7 +31,7 @@ struct Bsq {
   }
 };
 
-#if WORD_SIZE == 16
+#if ALU_SIZE == 16
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);
@@ -172,5 +172,5 @@ inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
 }
 #endif  //< USING_UTF8 == YES
 
-#endif  //< INCLUDED_CRABS_BSQ
+#endif  //< INCLUDED_SCRIPT2_BSQ
 #endif  //< #if SEAM >= SCRIPT2_14

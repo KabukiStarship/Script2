@@ -72,7 +72,7 @@ SDK UIW OperandCount(Operand* op);
             Contain the given key. */
 SDK CHW OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /* Queries the given Operand Op Header.
     @param  crabs The expression to write the query to. Set to nil to return
                  op.
@@ -92,7 +92,7 @@ SDK UTF1& PrintOperand(UTF1& slot, Operand* operand);
 
 }  // namespace _
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /* Overloaded operator<< prints the given operand to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Operand* operand) {
   return ::_::PrintOperand(printer, operand);

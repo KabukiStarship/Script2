@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License. */
 #endif
 namespace _ {
 
-#if USING_UTF
+#if USING_STR
 
 template <typename Char = CH1>
 Char* TPrint(Char* cursor, Char* stop, const CClock& clock) {
@@ -498,7 +498,7 @@ const Char* TScan(const Char* begin, TME& result) {
   }
   return TScanUnsigned<UI4, Char>(begin, result.ticks);
 }
-#endif  // #if USING_UTF
+#endif  // #if USING_STR
 
 template <typename SI>
 SI TClockSet(CClock* clock, SI t) {

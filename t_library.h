@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "c_onfig.h"
 
 namespace _ {
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 template <typename TIndex, typename TKey, typename TData, SI4 MaxStackHeight>
 class Library : public Operand {
  public:
@@ -95,13 +95,13 @@ class Library : public Operand {
   @return Returns a pointer to one of the ChineseRoom error strings upon
   failure. */
   void* GetDataAddress(TIndex index) {
-#if CRABS_MEMORY_PROFILE >= 64
+#if SCRIPT2_MEMORY_PROFILE >= 64
     Index64* UI8_ptr = (Index64*)address;
-#elif CRABS_MEMORY_PROFILE >= 32
+#elif SCRIPT2_MEMORY_PROFILE >= 32
     Index32* UI4_ptr = (Index32*)address;
-#elif CRABS_MEMORY_PROFILE >= 16
+#elif SCRIPT2_MEMORY_PROFILE >= 16
     Index16* UI2_ptr = (Index16*)address;
-#elif CRABS_MEMORY_PROFILE != 8
+#elif SCRIPT2_MEMORY_PROFILE != 8
 #error Index_t invalid size!
 #endif
 
@@ -113,7 +113,7 @@ class Library : public Operand {
 
     switch (array_type) {
       case 0:
-#if CRABS_MEMORY_PROFILE >= 16
+#if SCRIPT2_MEMORY_PROFILE >= 16
         /// Library format: { kUI1, kUI1, kUI2, kUI2 }
         return size + sizeof(Library) + *(address + 1) * sizeof(UI1) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
@@ -121,7 +121,7 @@ class Library : public Operand {
         return 0;
 #endif
       case 1:
-#if CRABS_MEMORY_PROFILE >= 32
+#if SCRIPT2_MEMORY_PROFILE >= 32
         /// Library format: { kUI1, kUI1, kUI2, kUI4 }
         return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
@@ -129,7 +129,7 @@ class Library : public Operand {
         return 0;
 #endif
       case 2:
-#if CRABS_MEMORY_PROFILE >= 64
+#if SCRIPT2_MEMORY_PROFILE >= 64
         /// Library format: { kUI2, kUI2, kUI4, kUI8 }
         return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
@@ -195,7 +195,7 @@ SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CH1*>(r);
 }
-#endif  //< CRABS_MEMORY_PROFILE > 2
+#endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _
 #endif  //< INCLUDED_SCRIPT2_TLIBRARY
 #endif  //< #if SEAM >= SCRIPT2_14

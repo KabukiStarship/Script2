@@ -86,7 +86,7 @@ void* TypeAlign(SI4 type, void* value) {
   SI4 size = TypeFixedSize(type);
   if (type <= kUI1) return value;
   SI4* value_ptr = reinterpret_cast<SI4*>(value);
-#if WORD_SIZE == 2
+#if ALU_SIZE == 2
   if (type <= kHLF) return AlignUpPointer2<>(value);
 #else
   if (type <= kBOL) return TAlignUp2<>(value);

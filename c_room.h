@@ -132,10 +132,10 @@ class Room : public Operand {
   } State;
 
   enum {
-#ifndef CRABS_MAX_WALLS
+#ifndef SCRIPT2_MAX_WALLS
     kRoomFloorSize = 1024,
 #else
-    kRoomFloorSize = CRABS_MAX_WALLS,
+    kRoomFloorSize = SCRIPT2_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
     kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
@@ -230,7 +230,7 @@ class Room : public Operand {
   /* Script2 operations. */
   virtual const Op* Star(CHW index, CCrabs* crabs);
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
   /* Prints the Room to the stdout. */
   virtual UTF1& Print(UTF1& utf);
 #endif
@@ -257,5 +257,5 @@ class Room : public Operand {
 // SDK Room* ChineseRoom (Room* room = nullptr);
 
 }  // namespace _
-#endif  //< CRABS_ROOM_HDi
+#endif  //< SCRIPT2_ROOM_HDi
 #endif  //< #if SEAM >= SCRIPT2_14

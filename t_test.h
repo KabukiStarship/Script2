@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "c_test.h"
 
+#include "c_cin.h"
 #include "c_cout.h"
 #include "t_binary.h"
 

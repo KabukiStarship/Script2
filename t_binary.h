@@ -43,7 +43,7 @@ namespace _ {
 @param  delimiter The delimiter.*/
 template <typename Char = const CH1>
 SI4 TStrandCompare(const Char* string_a, const Char* string_b,
-                   Char delimiter = 0) {
+                   CH1 delimiter = 0) {
   SI4 a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
@@ -158,18 +158,18 @@ inline SI TSignedNaN() {
   return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
 }
 
-/* Scrolls over to the next DBL quote mark.
+/* Scrolls over to the next FP8 quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1>
-inline const Char* TStrandEnd(const Char* start, Char delimiter = 0) {
+inline const Char* TStrandEnd(const Char* start, CH1 delimiter = 0) {
   DASSERT(start);
   while (*start++ != delimiter)
     ;
   return start - 1;
 }
 
-/* Scrolls over to the next DBL quote mark.
+/* Scrolls over to the next FP8 quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1>
@@ -238,11 +238,10 @@ Char* TPrint(Char* start, SIW count, CH4 item) {
  @param   start  The beginning of the socket.
  @param   stop   The last Char in the socket.
  @param   item   The item to print.
- @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
+Char* TPrint(Char* start, Char* stop, const CH1* item) {
   DASSERT(stop);
   if (!start) return start;
   DASSERT(item);
@@ -255,7 +254,7 @@ Char* TPrint(Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
     if (start >= stop) return nullptr;
     c = *item++;
   }
-  *start = delimiter;
+  if (start) *start = 0;
   return start;
 }
 
@@ -264,16 +263,12 @@ Char* TPrint(Char* start, Char* stop, const CH1* item, CH1 delimiter = 0) {
  @param   start  The beginning of the socket.
  @param   stop    The last Char in the socket.
  @param   item    The item to print.
- @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
+Char* TPrint(Char* start, Char* stop, const CH2* item) {
   DASSERT(stop);
-  if (!start) return start;
-  if (!item) return nullptr;
-
-  if (start >= stop) return nullptr;
+  if (!start || !item || start >= stop) return nullptr;
 
   CH2 c = *item++;
   while (c) {
@@ -281,7 +276,8 @@ Char* TPrint(Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
     if (start >= stop) return nullptr;
     c = *item++;
   }
-  return Print(start, stop, delimiter);
+  if (start) *start = 0;
+  return start;
 }
 
 /* Prints a Unicode item to the given socket.
@@ -289,11 +285,10 @@ Char* TPrint(Char* start, Char* stop, const CH2* item, CH2 delimiter = 0) {
  @param   start  The beginning of the socket.
  @param   stop    The last Char in the socket.
  @param   item    The item to print.
- @param   delimiter The delimiter to utf (usually nil).
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
+Char* TPrint(Char* start, Char* stop, const CH4* item) {
   DASSERT(stop);
   if (!start) return start;
   DASSERT(item);
@@ -306,7 +301,8 @@ Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
     if (start >= stop) return nullptr;
     c = *item++;
   }
-  return Print(start, stop, delimiter);
+  if (start) *start = 0;
+  return start;
 }
 
 /* Prints a Unicode string to the given socket.
@@ -314,12 +310,11 @@ Char* TPrint(Char* start, Char* stop, const CH4* item, CH4 delimiter = 0) {
 @param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
-@param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
-  return TPrint<Char>(start, start + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH1* item) {
+  return TPrint<Char>(start, start + size - 1, item);
 }
 
 /* Prints a Unicode string to the given socket.
@@ -327,12 +322,11 @@ Char* TPrint(Char* start, SIW size, const CH1* item, CH1 delimiter = 0) {
 @param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
-@param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, SIW size, const CH2* item, CH2 delimiter = 0) {
-  return TPrint<Char>(start, start + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH2* item) {
+  return TPrint<Char>(start, start + size - 1, item);
 }
 
 /* Prints a Unicode string to the given socket.
@@ -340,12 +334,11 @@ Char* TPrint(Char* start, SIW size, const CH2* item, CH2 delimiter = 0) {
 @param   start    The beginning of the socket.
 @param   size      The size of the socket in Char(s).
 @param   item      The string to print.
-@param   delimiter The delimiter to utf (usually nil).
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename Char = CH1>
-Char* TPrint(Char* start, SIW size, const CH4* item, CH4 delimiter = 0) {
-  return TPrint<Char>(start, start + size - 1, item, delimiter);
+Char* TPrint(Char* start, SIW size, const CH4* item) {
+  return TPrint<Char>(start, start + size - 1, item);
 }
 
 inline UI1 ShiftRight(UI1 value, UI1 count) { return value >> count; }
@@ -422,14 +415,14 @@ inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* start, Char* stop, FLT value) {
+inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return TPrintHexTest<Char, UI8>(start, stop, ui);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
-inline Char* TPrintHex(Char* start, Char* stop, DBL value) {
+inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
   return TPrintHexTest<Char, UI8>(start, stop, ui);
 }
@@ -506,14 +499,14 @@ inline Char* TPrintBinary(Char* start, Char* stop, UI8 value) {
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-Char* TPrintBinary(Char* start, Char* stop, FLT value) {
+Char* TPrintBinary(Char* start, Char* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return TPrintBinary<Char, UI4>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1>
-Char* TPrintBinary(Char* start, Char* stop, DBL value) {
+Char* TPrintBinary(Char* start, Char* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
   return TPrintBinary<Char, UI8>(start, stop, ui);
 }
@@ -593,9 +586,9 @@ const Char* TScanUnsigned(const Char* start, UI& result) {
     UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
-    PRINTF("\nvalue:%u", (uint)value);
+    PRINTF("\nvalue:%u", (UIN)value);
   }
-  PRINTF("\nvalue:%u", (uint)value);
+  PRINTF("\nvalue:%u", (UIN)value);
   result = value;
   return stop;
 }
@@ -990,7 +983,7 @@ const Char* TScanSigned(const Char* start, SI& result) {
     UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
-    PRINTF("\nvalue:%u", (uint)value);
+    PRINTF("\nvalue:%u", (UIN)value);
   }
   result = sign * value;
   return stop;
@@ -1254,7 +1247,7 @@ class TBinary {
     return reinterpret_cast<const UI*>(ptr);
   }
 
-  static void AlignLUT(CH1* begin, size_t size) {
+  static void AlignLUT(CH1* begin, SIW size) {
     DASSERT(size);
     SIW lut_count = LUTCount();
     if (size != ((100 + lut_count) * 2 + lut_count * 8)) return;
@@ -1560,36 +1553,36 @@ class TBinary {
   }
 };  // namespace _
 
-using Binary32 = TBinary<FLT, SI4, UI4>;
-using Binary64 = TBinary<DBL, SI4, UI8>;
+using Binary32 = TBinary<FP4, SI4, UI4>;
+using Binary64 = TBinary<FP8, SI4, UI8>;
 
 template <typename Char = CH1>
-Char* TPrint(Char* begin, Char* stop, FLT value) {
-  return TBinary<FLT, SI4, UI4>::template Print<Char>(begin, stop, value);
+Char* TPrint(Char* begin, Char* stop, FP4 value) {
+  return TBinary<FP4, SI4, UI4>::template Print<Char>(begin, stop, value);
 }
 
 template <typename Char = CH1>
-Char* TPrint(Char* begin, SIW size, FLT value) {
+Char* TPrint(Char* begin, SIW size, FP4 value) {
   return TPrint<Char>(begin, begin + size - 1, value);
 }
 
 template <typename Char = CH1>
-Char* TPrint(Char* begin, Char* stop, DBL value) {
-  return TBinary<DBL, SI8, UI8>::template Print<Char>(begin, stop, value);
+Char* TPrint(Char* begin, Char* stop, FP8 value) {
+  return TBinary<FP8, SI8, UI8>::template Print<Char>(begin, stop, value);
 }
 
 template <typename Char = CH1>
-Char* TPrint(Char* begin, SIW size, DBL value) {
+Char* TPrint(Char* begin, SIW size, FP8 value) {
   return TPrint<Char>(begin, begin + size - 1, value);
 }
 
 template <typename Char = CH1>
-Char* TScan(const Char* start, FLT& result) {
+Char* TScan(const Char* start, FP4& result) {
   return nullptr;
 }
 
 template <typename Char = CH1>
-Char* TScan(const Char* start, DBL& result) {
+Char* TScan(const Char* start, FP8& result) {
   return nullptr;
 }
 

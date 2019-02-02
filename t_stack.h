@@ -678,10 +678,10 @@ public:
   }
 
   /* Gets a reference to the given element index. */
-  inline T& operator[](size_t index) { return Start ()[index]; }
+  inline T& operator[](SIW index) { return Start ()[index]; }
 
   /* Gets a const reference to the given element index. */
-  const T& operator[](size_t index) const { return Start ()[index]; }
+  const T& operator[](SIW index) const { return Start ()[index]; }
 
 private:
   TObject<Index> obj_;  //< ASCII Object.
@@ -695,7 +695,7 @@ private:
 
 }  // namespace _
 
-#if USING_UTF
+#if USING_STR
 
 #endif
 

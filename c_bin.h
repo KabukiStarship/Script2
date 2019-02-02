@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_CRABS_CBIN
-#define INCLUDED_CRABS_CBIN 1
+#ifndef INCLUDED_SCRIPT2_CBIN
+#define INCLUDED_SCRIPT2_CBIN 1
 #include "c_bout.h"
 #include "c_op.h"
 
@@ -70,7 +70,7 @@ inline SI4 BInSpace(BIn* bin);
 
 inline SI4 BinBufferLength(BIn* bin);
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 /* Gets a a CH1 for printing out the bin_state. */
 SDK const CH1** BInStateStrands();
 
@@ -127,12 +127,12 @@ SDK UTF4& Print(UTF4& printer, BIn* bin);
 
 }  // namespace _
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 /* Prints out the bin to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BIn* bin) {
   return Print(utf, bin);
 }
 #endif
 
-#endif  //< INCLUDED_CRABS_CBIN
+#endif  //< INCLUDED_SCRIPT2_CBIN
 #endif  //> #if SEAM >= SCRIPT2_14

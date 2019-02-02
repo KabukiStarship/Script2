@@ -62,7 +62,7 @@ BOL ObjCountIsValid(SI8 index, SI8 count_min) {
   return TObjCountIsValid<SI8>(index, count_min);
 }
 
-UIW* ObjNew(SI2 size, size_t header_size) {
+UIW* ObjNew(SI2 size, SIW header_size) {
   ASSERT(size >= 8);
 
   if (ObjSizeIsValid(size)) return nullptr;

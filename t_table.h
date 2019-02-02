@@ -135,7 +135,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
   ASSERT(table)
   ASSERT(keys)
 
-  // TPrintLine(key);
+  // TPrintLinef(key);
 
   UI1 count = table->count, count_max = table->count_max, temp;
 
@@ -148,8 +148,8 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
                                        sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   CH1 *indexes = reinterpret_cast<CH1*>(key_offsets + count_max),
-       *unsorted_indexes = indexes + count_max,
-       *collission_list = unsorted_indexes + count_max;
+      *unsorted_indexes = indexes + count_max,
+      *collission_list = unsorted_indexes + count_max;
   CH1 *keys = reinterpret_cast<CH1*>(table) + size - 1, *destination;
 
   // Calculate space left.
@@ -162,16 +162,16 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
       key, (uint)key_length, "hashes", hashes, "key_offsets", key_offsets,
       "keys", keys, "indexes", indexes, "value", value, "hashes", hashes,
       "key_offsets", key_offsets, "keys", keys, "indexes", indexes, "value",
-      value)
+      value);
 
   UI2 hash = Hash16(key), current_hash;
 
   if (key_length > value) {
-    PRINTF("\nBuffer overflow!")
+    PRINTF("\nBuffer overflow!");
     return ~(UI1)0;
   }
 
-  PRINT_TABLE
+  PRINT_TABLE;
 
   if (count == 0) {
     table->count = 1;
@@ -183,18 +183,18 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
     SlotWrite(destination, key);
     PRINTF("\nInserted key \"%s\" at GetAddress 0x%p", key, destination);
-    PRINT_TABLE
+    PRINT_TABLE;
     return 0;
   }
 
   // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
-    PRINTF("\nNot enough room in buffer!\n")
+    PRINTF("\nNot enough room in buffer!\n");
     return 0;  //< There isn't enough room left in the socket.
   }
 
-  PRINTF("\nFinding insert location...")
+  PRINTF("\nFinding insert location...");
 
   Index low = 0, mid, high = count, index;
 
@@ -204,7 +204,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
 
     current_hash = hashes[mid];
-    PRINTF("high:%i mid:%i low:%i hash:0x%x", high, mid, low, current_hash)
+    PRINTF("high:%i mid:%i low:%i hash:0x%x", high, mid, low, current_hash);
 
     if (current_hash > hash) {
       high = mid - 1;
@@ -212,16 +212,16 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
       low = mid + 1;
     } else  // Duplicate hash detected.
     {
-      PRINTF("hash detected, ")
+      PRINTF("hash detected, ");
 
       // Check for other collisions.
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%i", (SI4)index)
+      PRINTF("index:%i", (SI4)index);
 
       if (index != kInvalidIndex) {  //< There are other collisions.
-        PRINTF("with collisions, ")
+        PRINTF("with collisions, ");
         // There was a collision so check the table.
 
         // The collisionsList is a sequence of indexes terminated
@@ -232,19 +232,19 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
         temp_ptr = collission_list + temp;
         index = *temp_ptr;  //< Load the index in the collision table.
         while (index < kInvalidIndex) {
-          PRINTF("comparing to \"%s\" ", keys - key_offsets[index])
+          PRINTF("comparing to \"%s\" ", keys - key_offsets[index]);
           if (SlotEquals(key, keys - key_offsets[index])) {
             PRINTF(
                 "but table already contains key at "
                 "offset:%i",
-                (SI4)index)
+                (SI4)index);
             return index;
           }
           ++temp_ptr;
           index = *temp_ptr;
         }
 
-        PRINTF("\nNew collision detected.\n")
+        PRINTF("\nNew collision detected.\n");
 
         // Copy the key
         value = key_offsets[count - 1] + key_length + 1;
@@ -265,7 +265,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
         *temp_ptr = count;
 
         table->size_pile = size_pile + 1;
-        PRINTF("\ncollision index:%i", (SI4)temp)
+        PRINTF("\ncollision index:%i", (SI4)temp);
         // Store the collision index.
         indexes[count] = temp;  //< Store the collision index
         table->count = count + 1;
@@ -277,8 +277,8 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
         //< Add the newest CH1 to the stop.
         indexes[count] = count;
 
-        PRINT_TABLE
-        PRINTF("Done inserting.\n")
+        PRINT_TABLE;
+        PRINTF("Done inserting.\n");
         return count;
       }
 
@@ -286,13 +286,13 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
       index = unsorted_indexes[mid];
 
-      PRINTF("\nChecking if %i is a collision...", (SI4)index)
+      PRINTF("\nChecking if %i is a collision...", (SI4)index);
       if (!SlotEquals(key, keys - key_offsets[index])) {
         // It's a new collision!
-        PRINTF("\nIt's a new collision!")
+        PRINTF("\nIt's a new collision!");
 
         if (value < 3) {
-          PRINTF("\nBuffer overflow!")
+          PRINTF("\nBuffer overflow!");
           return kInvalidIndex;
         }
 
@@ -304,7 +304,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
         PRINTF(
             "Inserting value: into index:%i count:%u with "
             "other collision_index:%i",
-            value, index, count, collision_index)
+            value, index, count, collision_index);
         key_offsets[count] = value;
 
         size_pile = table->size_pile;
@@ -331,12 +331,12 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
         table->count = count + 1;
 
-        PRINT_TABLE
-        PRINTF("\nDone inserting.")
+        PRINT_TABLE;
+        PRINTF("\nDone inserting.");
         // Then it was a collision so the table doesn't contain .
         return count;
       }
-      PRINTF("\nTable already contains the key")
+      PRINTF("\nTable already contains the key");
       return index;
     }
   }
@@ -350,7 +350,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
       "\nThe hash 0x%x was not in the table so inserting \"%s\""
       "into mid:%i at index 0x%p before hash 0x%x",
       hash, key, (SI4)mid, destination - reinterpret_cast<CH1*>(table),
-      hashes[mid])
+      hashes[mid]);
 
   // First copy the CH1 and set the key offset.
   SlotWrite(destination, key);
@@ -364,7 +364,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
          hash_ptr - reinterpret_cast<UI2*>(table),
          hashes + mid - reinterpret_cast<UI2*>(table));
   hashes += mid;
-  PRINT_TABLE
+  PRINT_TABLE;
   while (hash_ptr > hashes) {
     *hash_ptr = *(hash_ptr - 1);
     --hash_ptr;
@@ -387,9 +387,9 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
 
   table->count = count + 1;
 
-  PRINT_TABLE
-  PRINTF("Done inserting.\n")
-  PRINT_LINE('-')
+  PRINT_TABLE;
+  PRINTF("Done inserting.\n");
+  PRINT_LINEF('-');
 
   return count;
 }
@@ -401,7 +401,7 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
   ASSERT(table)
   Index index, count = table->count, count_max = table->count_max, temp;
 
-  PRINT_HEADING("Finding record...")
+  PRINT_HEADING("Finding record...");
 
   if (key == nullptr || count == 0) return kInvalidIndex;
 
@@ -411,25 +411,25 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
       reinterpret_cast<const CH1*>(table) + sizeof(Table<Size, Index>));
   const UI2* key_offsets = reinterpret_cast<const UI2*>(hashes + count_max);
   const CH1 *indexes = reinterpret_cast<const CH1*>(key_offsets + count_max),
-             *unsorted_indexes = indexes + count_max,
-             *collission_list = unsorted_indexes + count_max;
+            *unsorted_indexes = indexes + count_max,
+            *collission_list = unsorted_indexes + count_max;
   const CH1* keys = reinterpret_cast<const CH1*>(table) + size - 1;
   const CH1 *collisions, *temp_ptr;
 
   UI2 hash = Hash16(key);
 
-  PRINTF("\nSearching for key \"%s\" with hash 0x%x\n", key, hash)
+  PRINTF("\nSearching for key \"%s\" with hash 0x%x\n", key, hash);
 
   if (count == 1) {
     PRINTF("Comparing keys - key_offsets[0] - this %u\n%s\n",
            (keys - key_offsets[0]) - reinterpret_cast<const CH1*>(table),
-           keys - key_offsets[0])
+           keys - key_offsets[0]);
     if (!SlotEquals(key, keys - key_offsets[0])) {
       PRINTF("Did not find key %s\n", key)
       return kInvalidIndex;
     }
-    PRINTF("Found key %s\n", key)
-    PRINT_LINE('-')
+    PRINTF("Found key %s\n", key);
+    PRINT_LINEF('-');
     return 0;
   }
 
@@ -443,7 +443,7 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
 
     UI2 current_hash = hashes[mid];
     PRINTF("low: %i mid: %i high %i hashes[mid]:%x\n", low, mid, high,
-           hashes[mid])
+           hashes[mid]);
 
     if (current_hash > hash) {
       high = mid - 1;
@@ -454,7 +454,7 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
       PRINTF(
           "\nFound same hash at mid:%i hash:%x offset for key: "
           "%s\n",
-          mid, hashes[mid], key)
+          mid, hashes[mid], key);
 
       // Check for collisions
 
@@ -476,18 +476,18 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
         temp_ptr = collission_list + temp;
         index = *temp_ptr;
         while (index != kInvalidIndex) {
-          PRINTF("comparing to \"%s\"", keys - key_offsets[index])
+          PRINTF("comparing to \"%s\"", keys - key_offsets[index]);
           if (SlotEquals(key, keys - key_offsets[index])) {
             PRINTF(
                 "Table already contains key at offset:"
                 "%u.\n",
-                index)
+                index);
             return index;
           }
           ++temp_ptr;
           index = *temp_ptr;
         }
-        PRINTF("\nDid not find \"%s\"", key)
+        PRINTF("\nDid not find \"%s\"", key);
         return kInvalidIndex;
       }
 
@@ -501,25 +501,25 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
 
       PRINTF("\nmid:%i-%u unsorted_indexes:%Index key:\"%s\" hash:0x%x",
              (SI4)mid, (uint)hashes[mid], index, keys - key_offsets[index],
-             Hash16(keys - key_offsets[index]))
+             Hash16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index])) {
         //< It was a collision so the table doesn't contain .
-        PRINTF(" but it was a collision and did not find key.")
+        PRINTF(" but it was a collision and did not find key.");
         return kInvalidIndex;
       }
 
-      PRINTF("\nFound key at mid:%i", mid)
+      PRINTF("\nFound key at mid:%i", mid);
       return index;
     }
   }
-  PRINTF("\nDidn't find a hash for key \"%s\"", key)
-  PRINT_LINE('-')
+  PRINTF("\nDidn't find a hash for key \"%s\"", key);
+  PRINT_LINEF('-');
 
   return kInvalidIndex;
 }
 
-#if USING_UTF
+#if USING_STR
 /* Prints this object out to the console. */
 template <typename Size, typename Index>
 UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
@@ -538,8 +538,8 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
                                        sizeof(Table<Size, Index>));
   UI2* key_offsets = reinterpret_cast<UI2*>(hashes + count_max);
   CH1 *indexes = reinterpret_cast<CH1*>(key_offsets + count_max),
-       *unsorted_indexes = indexes + count_max,
-       *collission_list = unsorted_indexes + count_max, *begin;
+      *unsorted_indexes = indexes + count_max,
+      *collission_list = unsorted_indexes + count_max, *begin;
   CH1* keys = reinterpret_cast<CH1*>(table) + size - 1;
 
   utf << '\n'

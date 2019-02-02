@@ -2,9 +2,9 @@
 
 ## [ASCII Data Specification](readme.md)
 
-### Addresses, Strings, and Tokens
+### Text
 
-Script supports UTF-8, UTF-16, and UTF-32 strings (STR), and UTF-8 Addresses (ADR) and Tokens (TKN). TKN and ADR shall contain no whitespace or non-printable characters, i.e. no characters with index less than 33. A Script implementation may enforce strict Unicode compliance. Packed Messages shall use nil-terminated strings and Unpacked Script shall use double-quote-terminated strings with C-style escape sequences. Implementation that support Script^2 shall provide a delimiter char.
+ASCII Text consists of the Strand (STR), the Address (ADR), and Token (TKN) which may be formatted in UTF-8, UTF-16, and UTF-32 strings using the STR. The difference between a string and a strand is that a string is exactly one string, but a strand is a socket that may contain one or more strings.
 
 ```C++
 TKN key                 //< No quotes needed for a TKN.

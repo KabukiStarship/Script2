@@ -16,17 +16,17 @@ specific language governing permissions and limitations under the License. */
 // Dependencies:
 #include "c_interrupts.h"
 // End dependencies.
-#if USING_CRABS_INTERRUPTS
+#if USING_SCRIPT2_INTERRUPTS
 #include <cassert>
 
 namespace _ {
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 const CH1* RoomCrashException::what() const throw() {
   return "External crash";
 }
 #endif
 
 }  //< namespace _
-#endif  //< USING_CRABS_INTERRUPTS
+#endif  //< USING_SCRIPT2_INTERRUPTS
 #endif  ///< #if SEAM >= SCRIPT2_14

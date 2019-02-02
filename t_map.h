@@ -236,7 +236,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   ASSERT(map);
   ASSERT(value);
 
-  PRINT_LINE(id);
+  PRINT_LINEF(id, 80);
 
   Index count = map->count, count = map->stack->count, temp;
 
@@ -260,7 +260,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   Size value = table_size - count * MapOverheadPerIndex<Size, Index, I>(),
        key_length = static_cast<UI2>(strlen(id)), size_pile;
 
-  PRINT_LINE('-');
+  PRINT_LINEF('-');
   PRINTF(
       "\nAdding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p"
       "%20s: %p\n%20s: %u\n",
@@ -492,7 +492,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
 
   MapPrint(map);
   PRINT("\nDone inserting.");
-  PRINT_LINE('-');
+  PRINT_LINEF('-');
 
   return count;
 }

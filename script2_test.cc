@@ -71,7 +71,7 @@ const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
       Print(" missing!");
       return "";
     }
-    PrintHeading("Testing ", seam, 1);
+    PrintHeadingf("Testing ", "\n\n\n+---\n| \0+---\n\n", 80, seam);
     const CH1* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
@@ -282,7 +282,7 @@ BOL Test(SI8 a, SI8 b) {
   return false;
 }
 
-BOL Test(FLT a, FLT b) {
+BOL Test(FP4 a, FP4 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
   PrintHex(a);
@@ -295,7 +295,7 @@ BOL Test(FLT a, FLT b) {
   return false;
 }
 
-BOL Test(DBL a, DBL b) {
+BOL Test(FP8 a, FP8 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
   PrintHex(a);
@@ -362,13 +362,13 @@ BOL Test(SI8 value) {
   return false;
 }
 
-BOL Test(FLT value) {
+BOL Test(FP4 value) {
   if (value) return true;
   Print(kStrandErrorNil);
   return false;
 }
 
-BOL Test(DBL value) {
+BOL Test(FP8 value) {
   if (value) return true;
   Print(kStrandErrorNil);
   return false;

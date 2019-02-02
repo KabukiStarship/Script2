@@ -14,12 +14,12 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_CRABS_EXCEPTIONS
-#define INCLUDED_CRABS_EXCEPTIONS YES
+#ifndef INCLUDED_SCRIPT2_EXCEPTIONS
+#define INCLUDED_SCRIPT2_EXCEPTIONS YES
 // Dependencies:
 #include "c_onfig.h"
 // End dependencies.
-#if USING_CRABS_INTERRUPTS == YES
+#if USING_SCRIPT2_INTERRUPTS == YES
 
 namespace _ {
 
@@ -30,6 +30,6 @@ struct SDK RoomCrashException : public std::exception {
 };
 #endif
 }  // namespace _
-#endif  //< #if USING_CRABS_INTERRUPTS == YES
-#endif  //< #if INCLUDED_CRABS_EXCEPTIONS == YES
+#endif  //< #if USING_SCRIPT2_INTERRUPTS == YES
+#endif  //< #if INCLUDED_SCRIPT2_EXCEPTIONS == YES
 #endif  //< #if SEAM >= SCRIPT2_14

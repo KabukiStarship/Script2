@@ -228,12 +228,12 @@ Index DictionaryCountUpperBounds() {
 /* Adds a key-value pair to the stop of the dictionary. */
 template <typename Size, typename Offset, typename Index, typename T,
           AsciiType type>
-Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
-                    const CH1* key, T data) {
+Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
+                    T data) {
   if (dictionary == nullptr) return 0;
   if (key == nullptr) return 0;
 
-  TPrintLine(key);
+  TPrintLinef(key);
 
   Index item_count = dictionary->item_count, count = dictionary->count, temp;
 
@@ -243,7 +243,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
   //< We're out of buffered indexes.
 
   CH1* states = reinterpret_cast<CH1*>(dictionary) +
-                 sizeof(Dictionary<Size, Offset, Index>);
+                sizeof(Dictionary<Size, Offset, Index>);
   Offset* key_offsets = reinterpret_cast<Offset*>(states + count);
   Size* data_offsets =
       reinterpret_cast<Size*>(states + count * (sizeof(Offset)));
@@ -254,15 +254,14 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
             states + count * (sizeof(Offset) + sizeof(Size) + sizeof(Index))),
         *unsorted_indexes = indexes + count,
         *collission_list = unsorted_indexes + count;
-  CH1 *keys = reinterpret_cast<CH1*>(dictionary) + table_size - 1,
-       *destination;
+  CH1 *keys = reinterpret_cast<CH1*>(dictionary) + table_size - 1, *destination;
 
   // Calculate space left.
   Offset value =
              table_size - count * DicOverheadPerIndex<Index, Offset, Size>(),
          key_length = static_cast<UI2>(SlotLength(key)), size_pile;
 
-  TPrintLine();
+  TPrintLinef();
   PRINTF(
       "Adding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p\n"
       "%20s: %p\n%20s: %u\n",
@@ -493,7 +492,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary,
 
   DicPrint(dictionary);
   PRINTF("Done inserting.\n")
-  TPrintLine();
+  TPrintLinef();
 
   return item_count;
 }
@@ -537,7 +536,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
       return ~((Index)0);
     }
     PRINTF("\nFound key \"%s\"", key)
-    TPrintLine();
+    TPrintLinef();
     return 0;
   }
 
@@ -619,7 +618,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
     }
   }
   PRINTF("\nDid not find a hash for key \"%s\"", key);
-  TPrintLine();
+  TPrintLinef();
 
   return ~((Index)0);
 }
@@ -634,7 +633,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
         collision_index, temp;
   Offset table_size = dictionary->table_size, size_pile = dictionary->size_pile;
 
-  PRINT_LINE('_');
+  PRINT_LINEF('_', 80);
 
   PRINTF((sizeof(Size) == 2)
              ? "\nDic2:\n"
@@ -643,11 +642,11 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
                    : (sizeof(Size) == 8) ? "\nDic8:0x%p\n" : "\nError:");
   PRINTF("\n0x%p %u stack_height: %u size_pile: %u  size: %u\n|", dictionary,
          item_count, stack_height, size_pile, table_size);
-  PRINT_LINE('_');
+  PRINT_LINEF('_', 80);
   PRINTF('\n');
 
   const CH1* states = reinterpret_cast<const CH1*>(dictionary) +
-                       sizeof(Dictionary<Size, Offset, Index>);
+                      sizeof(Dictionary<Size, Offset, Index>);
   const Offset* key_offsets = reinterpret_cast<const Offset*>(states + count);
   // const Size* data_offsets = reinterpret_cast<const Size*>
   //                            (states + stack_height *(sizeof (Offset)));
@@ -691,11 +690,11 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
 
     PRINT('\n');
   }
-  TPrintLine('_');
+  TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(dictionary) +
-                  sizeof(Dictionary<Size, Offset, Index>),
-              dictionary->size);
+                 sizeof(Dictionary<Size, Offset, Index>),
+             dictionary->size);
   PRINT('\n');
 }
 
@@ -732,7 +731,7 @@ void* DicContains(Dictionary<Size, Offset, Index>* dictionary, void* data) {
 /* Removes that object from the dictionary and copies it to the destination. */
 template <typename Size, typename Offset, typename Index>
 BOL DicRemoveCopy(Dictionary<Size, Offset, Index>* dictionary,
-                  void* destination, size_t buffer_size, void* data) {
+                  void* destination, SIW buffer_size, void* data) {
   ASSERT(dictionary);
 
   return false;

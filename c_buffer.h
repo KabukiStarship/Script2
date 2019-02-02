@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 /* Creates/Gets a static socket of the specified size. */
-template <size_t kBufferSize = kBufferSizeDefault>
+template <SIW kBufferSize = kBufferSizeDefault>
 inline CH1* Buffer() {
   enum {
     kBufferSizeWords =

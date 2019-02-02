@@ -13,9 +13,19 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_3
 #ifndef SCRIPT2_TUTF
 #define SCRIPT2_TUTF 1
+
+namespace _ {
+template <typename Char>
+const Char* THeadingfDefault() {
+  static const Char kString[] = {'\n', '+',  '-', '-', '-', '\n', '|', ' ',
+                                 NIL,  '\n', '+', '-', '-', '-',  NIL};
+  return kString;
+}
+}  // namespace _
+
+#if SEAM >= SCRIPT2_3
 
 #include "c_strand.h"
 
@@ -626,9 +636,9 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
 
 /* Prints a line of the given column_count the given start. */
 template <typename Char = CH1>
-Char* TPrintLine(Char* start, Char* stop, Char item, SI4 count = 80,
-                 const Char* header = TSTRNL<Char>(),
-                 const Char* footer = nullptr) {
+Char* TPrintLinef(Char* start, Char* stop, Char item, SI4 count = 80,
+                  const Char* header = TSTRNL<Char>(),
+                  const Char* footer = nullptr) {
   if (header) start = Print(start, stop, header);
   if (!start || start + count <= stop) return nullptr;
 
@@ -643,17 +653,17 @@ Char* TPrintLine(Char* start, Char* stop, Char item, SI4 count = 80,
 
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
-Char* TPrintLine(Char* start, Char* stop, const Char* string, SI4 count = 80,
-                 const Char* header = TSTRNL<Char>(),
-                 const Char* footer = nullptr) {
+Char* TPrintLinef(Char* start, Char* stop, const Char* item, SI4 count = 80,
+                  const Char* header = TSTRNL<Char>(),
+                  const Char* footer = nullptr) {
   if (header) start = Print(start, stop, header);
   if (!start || start <= stop || (start + count >= stop)) return nullptr;
 
-  const Char* cursor = string;
+  const Char* cursor = item;
   while (count-- > 0) {
     Char c = *cursor++;
     if (!c) {
-      cursor = string;
+      cursor = item;
       c = *cursor++;
     }
     *start++ = c;
@@ -667,14 +677,15 @@ Char* TPrintLine(Char* start, Char* stop, const Char* string, SI4 count = 80,
 
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
-Char* TPrintRepeat(Char* start, Char* stop, Char item, SI4 count = 80) {
-  return TPrintLine<Char>(start, stop, item, count, nullptr, nullptr);
+Char* TPrintHeadingf(Char* start, Char* stop, Char item, SI4 count = 80) {
+  return TPrintLinef<Char>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints the given cursor repeated to make a line. */
 template <typename Char = CH1>
-Char* TPrintRepeat(Char* start, Char* stop, const Char* item, SI4 count = 80) {
-  return TPrintLine<Char>(start, stop, item, count, nullptr, nullptr);
+Char* TPrintHeadingf(Char* start, Char* stop, const Char* item,
+                     SI4 count = 80) {
+  return TPrintLinef<Char>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints a cursor to the given buffer without */
@@ -715,8 +726,8 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   Char* buffer_begin = cursor;
   const Char *address_ptr = reinterpret_cast<const Char*>(begin),
              *address_end_ptr = reinterpret_cast<const Char*>(end);
-  size_t size = address_end_ptr - address_ptr,
-         num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+  SIW size = address_end_ptr - address_ptr,
+      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
   SIW num_bytes = 81 * (num_rows + 2);
   if ((stop - cursor) <= num_bytes) {
@@ -763,21 +774,37 @@ Char TLowercase(Char c) {
 template <typename Char = CH1>
 class TToken {
  public:
-  /* Prints the item to the . */
-  TToken(Char item = 0, SI4 count = kTokenCount)
+  TToken(CH1 item = 0, SI4 count = kTokenCount)
       : string_(string_), count_(count) {
-    Char* cursor = strand_;
+    auto cursor = strand_;
     *cursor = item;
     *cursor = 0;
   }
 
-  /* Prints the item to the token_. */
+  TToken(const CH1* item, SI4 count = kTokenCount)
+      : string_(item), count_(count) {
+    if (!item) *strand_ = 0;
+  }
+
+  TToken(CH2 item = 0, SI4 count = kTokenCount)
+      : string_(string_), count_(count) {
+    auto cursor = strand_;
+    *cursor = item;
+    *cursor = 0;
+  }
+
+  TToken(CH4 item = 0, SI4 count = kTokenCount)
+      : string_(string_), count_(count) {
+    auto cursor = strand_;
+    *cursor = item;
+    *cursor = 0;
+  }
+
   TToken(const Char* item, SI4 count = kTokenCount)
       : string_(item), count_(count) {
     if (!item) *strand_ = 0;
   }
 
-  /* Prints the item to the token_. */
   TToken(SI4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
     Print(strand_, strand_ + kTokenCount - 1, item);
   }
@@ -799,24 +826,151 @@ class TToken {
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
-  TToken(FLT item, SI4 count = kTokenCount) : string_(string_), count_(count) {
+  TToken(FP4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
     Print(strand_, strand_ + kTokenCount - 1, item);
   }
 
   /* Prints the item to the token_. */
-  TToken(DBL item, SI4 count = kTokenCount) : string_(string_), count_(count) {
+  TToken(FP8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenCount - 1, item);
+  }
+#endif
+
+#if SEAM >= SCRIPT2_4
+  /* Prints the item to the token_. */
+  TToken(FP4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
     Print(strand_, strand_ + kTokenCount - 1, item);
   }
 
+  /* Prints the item to the token_. */
+  TToken(FP8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenCount - 1, item);
+  }
 #endif
+
+  /* Gets the string_. */
+  const Char* String() { return string_; }
+
+  /* Gets the strand_. */
+  Char* Strand() { return strand_; }
+
   /* Gets the string_ or the strand_ if the string_ is nil. */
-  const Char* String() {
-    const Char* string = string_;
-    return string ? string : strand_;
+  const Char* Get() {
+    const Char* ptr = string_;
+    return ptr ? ptr : strand_;
+  }
+
+  /* Sets the string_ to the new string.
+  @return Nil upon failure or the string upon success. */
+  const CH1* Set(const CH1* string) {
+    if (!string) return string;
   }
 
   /* Gets the count. */
   SI4 Count() { return count_; }
+
+  /* Sets the string_ to the new string.
+  @return Nil upon failure or the string upon success. */
+  const CH1* Set(const CH1* string);
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(CH1 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(const CH1* item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(CH2 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(const CH2* item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(CH4 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(const CH4* item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(SI4 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(UI4 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(SI8 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+  /* Prints the given item to the strand_. */
+  inline Char* Print(UI8 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+
+#if USING_FP4 == YES
+  /* Prints the given item to the strand_. */
+  inline Char* Print(FP4 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+#endif
+#if USING_FP8 == YES
+  /* Prints the given item to the strand_. */
+  inline Char* Print(FP8 item) {
+    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    if (!cursor) return cursor;
+    string_ = nullptr;
+    return cursor;
+  }
+#endif
 
  private:
   // Pointer to a token too big to fit in the strand_.
@@ -831,7 +985,22 @@ struct TCenter {
   TToken<Char> token;  //< Pointer to a pointer to utf.
 
   /* Prints the item to the . */
-  TCenter(const Char* item, SI4 count = 80) : token(item, count) {}
+  TCenter(CH1 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the . */
+  TCenter(const CH1* item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the . */
+  TCenter(CH2 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the . */
+  TCenter(const CH2* item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the . */
+  TCenter(CH4 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the . */
+  TCenter(const CH4* item, SI4 count = 80) : token(item, count) {}
 
   /* Prints the item to the token_. */
   TCenter(SI4 item, SI4 count = 80) : token(item, count) {}
@@ -847,10 +1016,10 @@ struct TCenter {
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
-  TCenter(FLT item, SI4 count = 80) : token(item, count) {}
+  TCenter(FP4 item, SI4 count = 80) : token(item, count) {}
 
   /* Prints the item to the token_. */
-  TCenter(DBL item, SI4 count = 80) : token(item, count) {}
+  TCenter(FP8 item, SI4 count = 80) : token(item, count) {}
 #endif
 };
 
@@ -860,7 +1029,22 @@ struct TRight {
   TToken<Char> token;  //< Pointer to a pointer to utf.
 
   /* Prints the item to the token_. */
-  TRight(const Char* item, SI4 count = 80) : token(item, count) {}
+  TRight(CH1 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the token_. */
+  TRight(const CH1* item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the token_. */
+  TRight(CH2 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the token_. */
+  TRight(const CH2* item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the token_. */
+  TRight(CH4 item, SI4 count = 80) : token(item, count) {}
+
+  /* Prints the item to the token_. */
+  TRight(const CH4* item, SI4 count = 80) : token(item, count) {}
 
   /* Prints the item to the token_. */
   TRight(SI4 item, SI4 count = 80) : token(item, count) {}
@@ -876,31 +1060,54 @@ struct TRight {
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
-  TRight(FLT item, SI4 count = 80) : token(item, count) {}
+  TRight(FP4 item, SI4 count = 80) : token(item, count) {}
 
   /* Prints the item to the token_. */
-  TRight(DBL item, SI4 count = 80) : token(item, count) {}
+  TRight(FP8 item, SI4 count = 80) : token(item, count) {}
 #endif
 };
 
 /* Utility class for printing a string line with operator<<. */
 template <typename Char = CH1>
-struct TLine {
+struct TLinef {
   TToken<Char> token;
 
-  TLine(Char item, SI4 count = 80) : token(item, count) {}
+  TLinef(CH1 item, SI4 count = 80) : token(item, count) {}
 
-  TLine(const Char* item, SI4 count = 80) : token(item, count) {}
+  TLinef(const CH1* item, SI4 count = 80) : token(item, count) {}
+
+  TLinef(CH2 item, SI4 count = 80) : token(item, count) {}
+
+  TLinef(const CH2* item, SI4 count = 80) : token(item, count) {}
+
+  TLinef(CH4 item, SI4 count = 80) : token(item, count) {}
+
+  TLinef(const CH4* item, SI4 count = 80) : token(item, count) {}
 };
 
 /* Utility class for printing a single Char token line with operator<<. */
 template <typename Char = CH1>
-struct TRepeat {
+struct THeadingf {
   TToken<Char> token;
+  const Char *style, *caption2, *caption3;
 
-  TRepeat(Char item, SI4 count = 80) : token(item, count) {}
+  THeadingf(const CH1* caption, const CH1* style = HeadingfDefaultCH1(),
+            SI4 count = kTokenCount, const CH1* caption2 = nullptr,
+            const CH1* caption3 = nullptr) {
+    TPrintHeadingf<CH1>(caption, style, column_count, caption2, caption3);
+  }
 
-  TRepeat(const Char* item, SI4 count = 80) : token(item, count) {}
+  THeadingf(const CH2* caption, const CH2* style = HeadingfDefaultCH2(),
+            SI4 count = kTokenCount, const CH2* caption2 = nullptr,
+            const CH2* caption3 = nullptr) {
+    TPrintHeadingf<CH2>(caption, style, column_count, caption2, caption3);
+  }
+
+  THeadingf(const CH4* caption, const CH4* style = HeadingfDefaultCH4(),
+            SI4 count = kTokenCount, const CH4* caption2 = nullptr,
+            const CH4* caption3 = nullptr) {
+    TPrintHeadingf<CH4>(caption, style, column_count, caption2, caption3);
+  }
 };
 
 /* Universal Text Formatter (UTF).
@@ -1003,11 +1210,11 @@ struct TUTF {
 #if SEAM >= SCRIPT2_4
   /* Prints the given item.
   @return A UTF. */
-  inline TUTF& Print(FLT item) { return Set(::_::Print(start, stop, item)); }
+  inline TUTF& Print(FP4 item) { return Set(::_::Print(start, stop, item)); }
 
   /* Prints the given item.
   @return A UTF. */
-  inline TUTF& Print(DBL item) { return Set(::_::Print(start, stop, item)); }
+  inline TUTF& Print(FP8 item) { return Set(::_::Print(start, stop, item)); }
 #endif
 
   /* Prints the given item. */
@@ -1023,15 +1230,15 @@ struct TUTF {
   }
 
   /* Prints the given item. */
-  inline TUTF& Print(TLine<Char> item) {
-    return Set(::_::TPrintLine<Char>(start, stop, item.token.String(),
-                                     item.token.Count()));
+  inline TUTF& Print(TLinef<Char> item) {
+    return Set(::_::TPrintLinef<Char>(start, stop, item.token.String(),
+                                      item.token.Count()));
   }
 
   /* Prints the given item. */
-  inline TUTF& Print(TRepeat<Char> item) {
-    return Set(::_::TPrintLine<Char>(start, stop, item.token.String(),
-                                     item.token.Count()));
+  inline TUTF& Print(THeadingf<Char> item) {
+    return Set(::_::TPrintLinef<Char>(start, stop, item.token.String(),
+                                      item.token.Count()));
   }
 
   /* Prints the given item as hex. */
@@ -1060,10 +1267,10 @@ struct TUTF {
 
 #if SEAM >= SCRIPT2_4
   /* Prints the given item as hex. */
-  inline TUTF& Hex(FLT item) { return Set(TPrintHex<Char>(start, stop, item)); }
+  inline TUTF& Hex(FP4 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 
   /* Prints the given item as hex. */
-  inline TUTF& Hex(DBL item) { return Set(TPrintHex<Char>(start, stop, item)); }
+  inline TUTF& Hex(FP8 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 #endif
 
   /* Prints the given pointer as hex. */
@@ -1097,10 +1304,10 @@ struct TUTF {
 
 #if SEAM >= SCRIPT2_4
   /* Prints the given item as binary. */
-  inline TUTF& Binary(FLT item) { return Set(Binary<Char>(start, stop, item)); }
+  inline TUTF& Binary(FP4 item) { return Set(Binary<Char>(start, stop, item)); }
 
   /* Prints the given item as binary. */
-  inline TUTF& Binary(DBL item) { return Set(Binary<Char>(start, stop, item)); }
+  inline TUTF& Binary(FP8 item) { return Set(Binary<Char>(start, stop, item)); }
 #endif
   /* Prints the given pointer as binary. */
   inline TUTF& Binary(const void* ptr) {
@@ -1353,7 +1560,7 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 item) {
 @param  item The item to write to the utf. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
-  return utf.Set(::_::TPrintUnsigned<UI8, Char>(utf.start, utf.stop, item));
+  return utf.Print(item);
 }
 
 #if SEAM >= SCRIPT2_4
@@ -1362,8 +1569,8 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
 @param  utf The utf.
 @param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT item) {
-  return utf.Set(::_::TPrintUnsigned<UI8, Char>(utf.start, utf.stop, item));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP4 item) {
+  return utf.Print(item);
 }
 
 /* Writes the given item to the utf.
@@ -1371,8 +1578,8 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FLT item) {
 @param  utf The utf.
 @param  item The item to write to the utf. */
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, DBL item) {
-  return utf.Set(::_::TPrintUnsigned<UI8, Char>(utf.start, utf.stop, item));
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP8 item) {
+  return utf.Print(item);
 }
 #endif
 
@@ -1396,26 +1603,41 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
   return utf.Print(item);
 }
 
-/* Prints a TLine<Char> to the UTF. */
+/* Prints a TLinef<Char> to the UTF. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TLine<Char> item) {
+                                   ::_::TLinef<Char> item) {
   return utf.Print(item);
 }
 
 /* Prints a TLineChar<Char> to the UTF. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TRepeat<Char> item) {
+                                   ::_::THeadingf<Char> item) {
   return utf.Print(item);
 }
 
-/* Prints a TLine<Char> to the UTF. */
+/* Prints a TLinef<Char> to the UTF. */
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
                                    ::_::TToken<Char> item) {
   return utf.Print(item);
 }
+
+template <typename Char>
+void TPrint1(Char* start, Char token) {
+  *start++ = token;
+  *start++ = 0;
+}
+
+template <typename Char>
+void TPrint3(Char* start, Char token) {
+  *start++ = token;
+  *start++ = token;
+  *start++ = token;
+  *start++ = 0;
+}
+
 #endif  //< #if SEAM >= SCRIPT2_3
 
 #if SEAM >= SCRIPT2_6
@@ -1571,14 +1793,14 @@ class TStrand {
 
 #if SEAM >= SCRIPT2_4
   /* Constructs a Strand and prints the given item. */
-  TStrand(FLT item)
+  TStrand(FP4 item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  TStrand(DBL item)
+  TStrand(FP8 item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     Print(item);
@@ -1705,7 +1927,7 @@ class TStrand {
 #if SEAM >= SCRIPT2_4
   /* Prints the given item.
   @return A UTF. */
-  TStrand& Print(FLT item) {
+  TStrand& Print(FP4 item) {
     Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
     cursor = ::_::Print(cursor, stop, item);
     if (!cursor) {
@@ -1724,7 +1946,7 @@ class TStrand {
 
   /* Prints the given item.
   @return A UTF. */
-  TStrand& Print(DBL item) {
+  TStrand& Print(FP8 item) {
     Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
     cursor = ::_::Print(cursor, stop, item);
     if (!cursor) {
@@ -2028,7 +2250,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 @param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, FLT item) {
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, FP4 item) {
   return strand.Print(item);
 }
 
@@ -2038,7 +2260,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 @param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, DBL item) {
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, FP8 item) {
   return strand.Print(item);
 }
 #endif
@@ -2073,7 +2295,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 /* Prints a line strand of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TLine<Char> item) {
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TLinef<Char> item) {
   return strand.Print(item);
 }
 

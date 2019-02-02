@@ -34,10 +34,10 @@ Wall::~Wall() {
   }
 }
 
-Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
+Wall::Wall(SIW size_bytes) : is_dynamic_(true) {
   size_bytes = size_bytes < kMinSizeBytes ? (SI4)kMinSizeBytes : size_bytes;
-  size_bytes = TAlignUpUnsigned<SI8, size_t>(size_bytes);
-  size_t size_words = (size_bytes >> sizeof(void*)) + 3;
+  size_bytes = TAlignUpUnsigned<SI8, SIW>(size_bytes);
+  SIW size_words = (size_bytes >> sizeof(void*)) + 3;
   UIW *socket = new UIW[size_words],
       *aligned_buffer = AlignUpPointer8<UIW>(socket);
   //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
@@ -48,7 +48,7 @@ Wall::Wall(size_t size_bytes) : is_dynamic_(true) {
   StackInit(socket, size_bytes >> sizeof(UIW));
 }
 
-Wall::Wall(UIW* socket, size_t size_bytes) {
+Wall::Wall(UIW* socket, SIW size_bytes) {
   // CH1* ptr     = reinterpret_cast<CH1*> (socket);//,
   //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
   //    * end_ptr = ptr + size_bytes;

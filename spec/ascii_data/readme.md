@@ -8,7 +8,7 @@ There are 32 Automaton Standard Code for Information Interchange (ASCII) Data Ty
 |:---------:|:--------:|:---------:|
 | bit_width | is_stack | type 0-31 |
 
-#### ASCII Data Types 0-31
+### ASCII Data Types Table
 
 | ID | Type |  Alt Name  | Width  | Description         |
 |:--:|:----:|:----------:|:------:|:--------------------|
@@ -18,19 +18,19 @@ There are 32 Automaton Standard Code for Information Interchange (ASCII) Data Ty
 |  3 | BOL  |    bool    |    4   | Non-zero false Boolean variable. |
 |  4 | SI2  |   int16_t  |   -2   | 16-bit signed varint. |
 |  5 | UI2  |  uint16_t  |    2   | 16-bit unsigned integer. |
-|  6 | HLF  |    half    |    2   | 16-bit floating-point number. |
+|  6 | FP2  |    half    |    2   | 16-bit floating-point number. |
 |  7 | SI4  |   int32_t  |   -4   | 32-bit signed varint. |
 |  8 | UI4  |  uint32_t  |    4   | 32-bit unsigned integer. |
-|  9 | FLT  |    float   |    4   | 32-bit floating-point number. |
+|  9 | FP4  |    float   |    4   | 32-bit floating-point number. |
 | 10 | TM4  |   int32_t  |   -4   | 32-bit signed integer second since epoch timestamp. |
 | 11 | TME  |   int64_t  |   -8   | Dual-SI4 seconds since epoch timestamp and sub-second ticker. |
 | 12 | TM8  |   int64_t  |   -8   | 64-bit microsecond since epoch timestamp. |
 | 13 | SI8  |   int64_t  |   -8   | 64-bit signed integer. |
 | 14 | UI8  |  uint64_t  |    8   | 64-bit unsigned integer. |
-| 15 | DBL  |   double   |    8   | 64-bit floating-point number. |
+| 15 | FP8  |   double   |    8   | 64-bit floating-point number. |
 | 16 | SIH  |  int128_t  |  -16   | 128-bit signed integer. |
 | 17 | UIH  | uint128_t  |   16   | 128-bit unsigned integer. |
-| 18 | DEC  |   Decimal  |   16   | 128-bit floating-point number. |
+| 18 | FPH  |   Decimal  |   16   | 128-bit floating-point number. |
 | 19 | UIX  |  Unsigned  | 32-4KB | Unsigned integer between 32 and 2^12 bits wide. |
 | 20 | ADR  |   Address  |  <=N   | Stack Operation Address. |
 | 21 | STR  |   String   |  <=N   | UTF-8 _::TStrand<>. |
@@ -66,16 +66,14 @@ Abstract ASCII Types do not have a pre-defined size.
 |    | SIW  |  intptr_t  |    0   | Signed integer of the size of the host CPU's ALU. |
 |    | UIW  | uintptr_t  |    0   | Unsigned integer of the size of the host CPU's ALU. |
 |    | FLW  |            |    0   | Floating-point number the size of the size of the host CPU's FPU. |
+|    | CHR  |   char_t   | 1,2,4  | Default Unicode char type for the console. |
+|    | CHN  |   char_t   | 1,2,4  | Unicode character at least 16 bits wide. |
 
 ##### Examples of Arrays with Errors
 
 ```Script2
 [UI2#3<2: 1 x 0>]               // Array type must be 2, 4, or 8!
 [UI#2<2: 1 x 70,000>]           // Too many members to fit in an Array2!
-[HLF#2<2: 1 x 2> 0.1, 0.0, 0.3] // Too many members!
+[FP2#2<2: 1 x 2> 0.1, 0.0, 0.3] // Too many members!
 [MAP#4<1>]                      // Can't contain Hierarchical data types!
 ```
-
-
-
-[<< Previous](script_specification_rfc.md) **|** [Next >>](universal_addressing_specification_rfc.md)

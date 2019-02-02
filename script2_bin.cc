@@ -68,7 +68,7 @@ SI4 BinBufferLength(BIn* bin) {
   return (SI4)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 const CH1** BInStateStrands() {
   static const CH1* kStateStrands[] = {
       "Address",       //< 0
@@ -145,7 +145,7 @@ BIn* BInInit(UIW* socket, SI4 size) {
   bin->stop = 0;
   bin->read = 0;
 
-#if CRABS_DEBUG == 1
+#if SCRIPT2_DEBUG == 1
   MemoryClear(BInBegin(bin), size);
 #endif
   return bin;
@@ -263,7 +263,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
       case kUI1:
       case kBOL:
-#if USING_CRABS_1_BYTE_TYPES
+#if USING_SCRIPT2_1_BYTE_TYPES
         if (length-- == 0)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
 
@@ -286,7 +286,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
       case kUI2:
       case kHLF:
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
         if (length < 2)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
         length -= 2;
@@ -314,7 +314,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #endif
       case SVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
       case UVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
-#if WORD_SIZE <= 16
+#if ALU_SIZE <= 16
                  // Load next pointer and increment args.
         ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
@@ -380,7 +380,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kUI4:
       case kFLT:
       case kTM4:
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
         if (length < 4)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
         length -= 4;
@@ -405,7 +405,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kSI8:
       case kUI8:
       case kDBL:
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
         if (length < 8)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
         length -= 8;
@@ -474,7 +474,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #endif
       default: {  //< It's an Array
         PRINTF("\nIt's an array!\n")
-#if USING_CRABS_ARRAY
+#if USING_SCRIPT2_ARRAY
         switch (type & 0x60) {
           case 0: {
             if ((type < kLST) && (type < kMAP))
@@ -591,7 +591,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           ++ui1_ptr;
         }
         break;
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
       }
     }
     ++arg_index;
@@ -618,7 +618,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   return 0;
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 UTF1& Print(UTF1& utf, BIn* bin) {
   ASSERT(bin);
 

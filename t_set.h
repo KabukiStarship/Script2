@@ -99,10 +99,10 @@ struct Collection {
   /* Returns true if this Set contains this given Type-Value. */
   virtual UIW FindIndex(AsciiType type, void* value) = 0;
 
-  /* Gets the size_t of the object being stored. */
+  /* Gets the SIW of the object being stored. */
   virtual UIW Size() = 0;
 
-  /* Gets the size_t of the object being stored. */
+  /* Gets the SIW of the object being stored. */
   virtual UIW GetSizeWidth() = 0;
 
   /*  */

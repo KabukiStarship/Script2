@@ -162,7 +162,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   if (multimap == nullptr) return 0;
   if (key == nullptr) return 0;
 
-  TPrintLine(key);
+  TPrintLinef(key);
 
   I item_count = multimap->item_count, count_max = multimap->count_max, temp;
 
@@ -188,7 +188,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   Index value = table_size - count_max * MultimapOverheadPerIndex<Index, I>(),
         key_length = static_cast<UI2>(strlen(key)), size_pile;
 
-  TPrintLine();
+  TPrintLinef();
   PRINTF(
       "Adding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p\n"
       "%20s: %p\n%20s: %u\n",
@@ -424,7 +424,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
 
   SetPrint(multimap);
   PRINTF("Done inserting.\n");
-  TPrintLine();
+  TPrintLinef();
 
   return item_count;
 }
@@ -466,7 +466,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
       return ~((I)0);
     }
     PRINTF("Found key %s\n", key);
-    TPrintLine();
+    TPrintLinef();
     return 0;
   }
 
@@ -553,7 +553,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
     }
   }
   PRINTF("Did not find a hash for key \"%s\"\n", key);
-  TPrintLine();
+  TPrintLinef();
 
   return ~((I)0);
 }
@@ -569,7 +569,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   I item_count = multimap->item_count, count_max = multimap->count_max,
     collision_index, temp;
   Index table_size = multimap->table_size, size_pile = multimap->size_pile;
-  TPrintLine('_');
+  TPrintLinef('_');
 
   if (sizeof(Size) == 2)
     PRINTF("\nSet2: %p\n", multimap);
@@ -632,7 +632,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
 
     PRINT('\n');
   }
-  TPrintLine('_');
+  TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>),
               multimap->size);
@@ -667,7 +667,7 @@ BOL MultimapContains(TMap<Index, I>* multimap, void* data) {
 /* Removes that object from the multimap and copies it to the destination. */
 template <typename Size, typename Index, typename I>
 BOL MultimapRemoveCopy(TMap<Index, I>* multimap, void* destination,
-                       size_t buffer_size, void* data) {
+                       SIW buffer_size, void* data) {
   if (multimap == nullptr) return false;
 
   return false;
@@ -757,7 +757,7 @@ class Multimap {
   }
 
   /* Removes that object from the multimap and copies it to the destination. */
-  inline BOL MultimapRemoveCopy(void* destination, size_t buffer_size,
+  inline BOL MultimapRemoveCopy(void* destination, SIW buffer_size,
                                 void* data) {
     auto multimap = reinterpret_cast<Multimap<Index, I>>(begin);
     return;

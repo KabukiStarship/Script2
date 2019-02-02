@@ -109,27 +109,27 @@ const Op* Room::Init(CCrabs* crabs) {
 }
 
 void Room::ShutDown() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nShutting down...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Sleep() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nGoing to sleep...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Wake() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nWaking up...";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 void Room::Crash() {
-#if CRABS_DEBUG
+#if SCRIPT2_DEBUG
     PRINTF ("\nRoom crash!";
-#endif  //< CRABS_DEBUG
+#endif  //< SCRIPT2_DEBUG
 }
 
 const Op* Room::Loop() { return 0; }
@@ -202,7 +202,7 @@ UIW Room::GetSizeBytes() {
   return count;
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 #endif
 

@@ -53,7 +53,7 @@ CHW OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
   return 0;
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /*
 UTF& Print (UTF& utf, const Operand* op) {
     utf << "\n Op:\n" << op->name << "\nparams_in:"

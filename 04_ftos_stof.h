@@ -45,14 +45,14 @@ const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
   CH1 socket[kSize + 1];
 
   UI8 value;
-  DBL dbl_expected, dbl_found;
+  FP8 dbl_expected, dbl_found;
 
   PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<DBL>(value);
+      dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
     dbl_found = ceil(dbl_expected);
     dbl_expected = Ceiling(dbl_expected);
@@ -60,13 +60,13 @@ const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
   }
 
   PRINT(
-      "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FLT&) "
+      "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FP4&) "
       "functions...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<DBL>(value);
+      dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
     sprintf_s(socket, kSize, "%lf", dbl_expected);
     ASSERT(Scan(socket, dbl_found));
@@ -78,7 +78,7 @@ const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
       value = RandomUI8();
-      dbl_expected = static_cast<DBL>(value);
+      dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
     Print(socket, socket + kSize, dbl_expected);
     SI4 r = sscanf_s(socket, "%lf", &dbl_found);

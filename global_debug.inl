@@ -10,8 +10,16 @@
 #define PRINTF(format, ...) ::_::Printf(format, __VA_ARGS__)
 #define PAUSE(message) ::_::Pause(message)
 #define PAUSEF(format, ...) ::_::Pausef(format, __VA_ARGS__)
-#define PRINT_HEADING(message) ::_::PrintHeading(message, 5)
-#define PRINT_LINE(c) ::_::TPrintLine(c)
+#define PRINT_LINEF(style) ::_::PrintLinef(style)
+#define PRINT_LINEF_COUNT(style, count) ::_::PrintLinef(style, count)
+#define PRINT_HEADING(message) ::_::PrintHeading(message)
+#define PRINT_HEADINGF(caption, style) ::_::PrintHeadingf(caption, style)
+#define PRINT_HEADINGF_COUNT(caption, style, column_count) \
+  ::_::PrintHeadingf(caption, style, column_count)
+#define PRINT_HEADINGF_2(caption, style, column_count, caption2) \
+  ::_::PrintHeadingf(caption, style, column_count, caption2)
+#define PRINT_HEADINGF_3(caption, style, column_count, caption2, caption3) \
+  ::_::PrintHeadingf(caption, style, column_count, caption2, caption3)
 #define PRINT_TYPE(type, value) ::_::Console<>().Out() << TypeValue(type, value)
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)

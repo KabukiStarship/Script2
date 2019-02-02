@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_CRABS_EXPR
-#define INCLUDED_CRABS_EXPR
+#ifndef INCLUDED_SCRIPT2_EXPR
+#define INCLUDED_SCRIPT2_EXPR
 #include "c_args.h"
 #include "c_bin.h"
 #include "c_bout.h"
@@ -272,7 +272,7 @@ SDK const Op* CrabsQuery(CCrabs* crabs, const Op& header);
 @return Returns the header if crabs is nil. */
 SDK const Op* CrabsQuery(CCrabs* crabs, const Op* op);
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 
 /* Prints the CCrabs stack to the Text socket */
 SDK UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
@@ -283,7 +283,7 @@ SDK UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
 
 }  // namespace _
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 
 /* Prints the given CCrabs to the Text socket. */
 inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
@@ -291,5 +291,5 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
 }
 #endif
 
-#endif  //< INCLUDED_CRABS_EXPR
+#endif  //< INCLUDED_SCRIPT2_EXPR
 #endif  //< #if SEAM >= SCRIPT2_14

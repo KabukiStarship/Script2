@@ -59,10 +59,10 @@ SDK void* MirrorContains(Mirror* mirror, void* address);
 SDK void MirrorWipe(Mirror* mirror);
 
 /* Copies a block from a ring-socket to the given destination. */
-// SDK CH1* MirrorWrite (Mirror* mirror, void* source, size_t size);
+// SDK CH1* MirrorWrite (Mirror* mirror, void* source, SIW size);
 
 /* Copies a block from a ring-socket to the given destination. */
-// SDK CH1* MirrorRead (Mirror* mirror, void* source, size_t size);
+// SDK CH1* MirrorRead (Mirror* mirror, void* source, SIW size);
 
 /* Gets the args from the b-sequence. */
 SDK const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);

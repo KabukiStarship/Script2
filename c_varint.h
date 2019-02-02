@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-#if WORD_SIZE == 16
+#if ALU_SIZE == 16
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);

@@ -12,9 +12,10 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_3
 #ifndef INCLUDED_SCRIPTPRINT_UTF16
 #define INCLUDED_SCRIPTPRINT_UTF16
+
+#if SEAM >= SCRIPT2_3
 
 #include "c_object.h"
 
@@ -40,7 +41,7 @@ SDK BOL IsWhitespace(CH2 character);
 /* Converts the given item to a printable CH2 if it's non-printable. */
 SDK CH2 PrintableChar(CH2 item);
 
-/* Scrolls over to the next DBL quote mark.
+/* Scrolls over to the next FP8 quote mark.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH2. */
 SDK const CH2* StrandEnd(const CH2* text);
@@ -91,7 +92,7 @@ SDK const CH2* StrandFind(const CH2* start, const CH2* query);
 @param  start  The beginning address of the socket.
 @param  stop    The stop address of the socket.
 @param  string The potentially unsafe string to write. */
-SDK CH2* Print (CH2* start, CH2* stop, const CH1* string);
+SDK CH2* Print(CH2* start, CH2* stop, const CH1* string);
 #endif
 
 /* Prints the given string to the utf socket.
@@ -107,7 +108,7 @@ SDK CH2* Print(CH2* start, CH2* stop, const CH2* string);
 @param  start  The beginning address of the socket.
 @param  stop    The stop address of the socket.
 @param  string The potentially unsafe string to write. */
-SDK CH2* Print (CH2* start, CH2* stop, const CH4* string);
+SDK CH2* Print(CH2* start, CH2* stop, const CH4* string);
 #endif
 
 /* Writes the give CH2 to the given socket.
@@ -144,14 +145,14 @@ SDK CH2* Print(CH2* start, CH2* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* Print(CH2* start, CH2* stop, FLT item);
+SDK CH2* Print(CH2* start, CH2* stop, FP4 item);
 
 /* Writes the give CH2 to the given socket.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* Print(CH2* start, CH2* stop, DBL item);
+SDK CH2* Print(CH2* start, CH2* stop, FP8 item);
 #endif
 
 /* Prints the given string to the utf socket.
@@ -167,7 +168,8 @@ SDK CH2* PrintCenter(CH2* start, CH2* stop, const CH2* string,
 @param start Beginning address of the socket.
 @param stop The stop address of the socket.
 @param character The item to write. */
-SDK CH2* PrintCenter(CH2* start, CH2* stop, CH2 character, SI4 count = kTokenCount);
+SDK CH2* PrintCenter(CH2* start, CH2* stop, CH2 character,
+                     SI4 count = kTokenCount);
 
 /* Writes the give CH2 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -203,14 +205,14 @@ SDK CH2* PrintCenter(CH2* start, CH2* stop, SI8 item, SI4 count = kTokenCount);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintCenter(CH2* start, CH2* stop, FLT item, SI4 count = kTokenCount);
+SDK CH2* PrintCenter(CH2* start, CH2* stop, FP4 item, SI4 count = kTokenCount);
 
 /* Writes the give CH2 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintCenter(CH2* start, CH2* stop, DBL item, SI4 count = kTokenCount);
+SDK CH2* PrintCenter(CH2* start, CH2* stop, FP8 item, SI4 count = kTokenCount);
 #endif
 
 /* Prints the given string to the utf socket.
@@ -226,7 +228,8 @@ SDK CH2* PrintRight(CH2* start, CH2* stop, const CH2* string,
 @param start     Beginning address of the socket.
 @param stop       The stop address of the socket.
 @param character The item to write. */
-SDK CH2* PrintRight(CH2* start, CH2* stop, CH2 character, SI4 count = kTokenCount);
+SDK CH2* PrintRight(CH2* start, CH2* stop, CH2 character,
+                    SI4 count = kTokenCount);
 
 /* Writes the give CH2 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -262,14 +265,14 @@ SDK CH2* PrintRight(CH2* start, CH2* stop, SI8 item, SI4 count = kTokenCount);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintRight(CH2* start, CH2* stop, FLT item, SI4 count = kTokenCount);
+SDK CH2* PrintRight(CH2* start, CH2* stop, FP4 item, SI4 count = kTokenCount);
 
 /* Writes the give CH2 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintRight(CH2* start, CH2* stop, DBL item, SI4 count = kTokenCount);
+SDK CH2* PrintRight(CH2* start, CH2* stop, FP8 item, SI4 count = kTokenCount);
 #endif
 
 /* Prints the given string to the utf socket.
@@ -341,14 +344,14 @@ SDK CH2* PrintHex(CH2* start, CH2* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintHex(CH2* start, CH2* stop, FLT item);
+SDK CH2* PrintHex(CH2* start, CH2* stop, FP4 item);
 
 /* Writes the give CH2 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintHex(CH2* start, CH2* stop, DBL item);
+SDK CH2* PrintHex(CH2* start, CH2* stop, FP8 item);
 #endif
 
 /* Prints the given string to the utf socket.
@@ -420,14 +423,14 @@ SDK CH2* PrintBinary(CH2* start, CH2* stop, SI8 item);
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintBinary(CH2* start, CH2* stop, FLT item);
+SDK CH2* PrintBinary(CH2* start, CH2* stop, FP4 item);
 
 /* Writes the give CH2 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
-SDK CH2* PrintBinary(CH2* start, CH2* stop, DBL item);
+SDK CH2* PrintBinary(CH2* start, CH2* stop, FP8 item);
 #endif
 
 /* Prints out the contents of the address to the printer socket.
@@ -452,7 +455,7 @@ SDK CH2* PrintChars(CH2* start, CH2* stop, const void* begin, SIW size);
 @param stop  The stop of the write socket.
 @param token The token to utf.
 @param count The token_ of tokens to utf. */
-SDK CH2* PrintLine(CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount);
+SDK CH2* PrintLinef(CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount);
 
 /* Prints a line of the given count.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -460,7 +463,8 @@ SDK CH2* PrintLine(CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount);
 @param stop   The stop of the write socket.
 @param string The string to utf.
 @param count  The token_ of columns. */
-SDK CH2* PrintLine(CH2* start, CH2* stop, const CH2* string, SI4 count = kTokenCount);
+SDK CH2* PrintLinef(CH2* start, CH2* stop, const CH2* string,
+                    SI4 count = kTokenCount);
 
 /* Prints a item repeated the given count.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -468,7 +472,7 @@ SDK CH2* PrintLine(CH2* start, CH2* stop, const CH2* string, SI4 count = kTokenC
 @param stop  The stop of the write socket.
 @param token The token to utf.
 @param count The token_ of tokens to utf. */
-SDK CH2* PrintRepeat (CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount);
+SDK CH2* PrintRepeat(CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount);
 
 /* Prints a item repeated the given count.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -476,7 +480,8 @@ SDK CH2* PrintRepeat (CH2* start, CH2* stop, CH2 token, SI4 count = kTokenCount)
 @param stop   The stop of the write socket.
 @param string The string to utf.
 @param count  The token_ of columns. */
-SDK CH2* PrintRepeat (CH2* start, CH2* stop, const CH2* string, SI4 count = kTokenCount);
+SDK CH2* PrintRepeat(CH2* start, CH2* stop, const CH2* string,
+                     SI4 count = kTokenCount);
 
 /* Prints the socket to the console as a UTF-8 string.
 void COut2(UIW* socket); */
@@ -553,67 +558,147 @@ SDK const CH2* Scan(const CH2* text, UI8& result);
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH2 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH2* Scan(const CH2* text, FLT& result);
+SDK const CH2* Scan(const CH2* text, FP4& result);
 
 /* Converts the given string to a 64-bit floating-point token_.
 @param  text  A nil-terminated string in ROM.
 @param  result The result of the conversion.
 @return Returns a pointer to the next CH2 after the stop
 of the read token_ or nil upon failure. */
-SDK const CH2* Scan(const CH2* text, DBL& result);
+SDK const CH2* Scan(const CH2* text, FP8& result);
 #endif
 
 /* Utility class for printing numbers. */
 class Token2 {
-public:
+ public:
+  /* Constructs a Token1 from the given item. */
+  Token2(const CH1* item = nullptr, SI4 count = kTokenCount);
+
+  /* Constructs a Token1 from the given item. */
+  Token2(CH1 item, SI4 count = kTokenCount);
 
   /* Prints the item to the strand_. */
-  Token2 (CH2 item = 0, SI4 count = kTokenCount);
+  Token2(CH2 item, SI4 count = kTokenCount);
 
   /* Prints the item to the strand_. */
-  Token2 (const CH2* item, SI4 count = kTokenCount);
+  Token2(const CH2* item, SI4 count = kTokenCount);
 
-  /* Prints the item to the strand_. */
-  Token2 (SI4 item, SI4 count = kTokenCount);
+#if USING_UTF32
+  /* Constructs a Token1 from the given item. */
+  Token2(CH4 item, SI4 count = kTokenCount);
 
-  /* Prints the item to the strand_. */
-  Token2 (UI4 item, SI4 count = kTokenCount);
-
-  /* Prints the item to the strand_. */
-  Token2 (SI8 item, SI4 count = kTokenCount);
-
-  /* Prints the item to the strand_. */
-  Token2 (UI8 item, SI4 count = kTokenCount);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the item to the strand_. */
-  Token2 (FLT item, SI4 count = kTokenCount);
-
-  /* Prints the item to the strand_. */
-  Token2 (DBL item, SI4 count = kTokenCount);
+  /* Constructs a Token1 from the given item. */
+  Token2(const CH4* item, SI4 count = kTokenCount);
 #endif
 
-  /* Gets the number string or the strand_. */
-  const CH2* String ();
+  /* Prints the item to the strand_. */
+  Token2(SI4 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the strand_. */
+  Token2(UI4 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the strand_. */
+  Token2(SI8 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the strand_. */
+  Token2(UI8 item, SI4 count = kTokenCount);
+
+#if USING_FP4 == YES
+  /* Prints the item to the strand_. */
+  Token2(FP4 item, SI4 count = kTokenCount);
+#endif
+#if USING_FP8 == YES
+  /* Prints the item to the strand_. */
+  Token2(FP8 item, SI4 count = kTokenCount);
+#endif
+
+  /* Gets the string_. */
+  const CH2* String();
+
+  /* Gets the strand_. */
+  CH2* Strand();
+
+  /* Gets the number string_ or the strand_ if the string_ is nil. */
+  const CH2* Get();
+
+  /* Sets the string_ to the new string.
+  @return Nil upon failure or the string upon success. */
+  const CH2* Set(const CH2* string);
 
   /* Gets the count. */
-  SI4 Count ();
+  SI4 Count();
 
-private:
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(CH1 item);
 
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(const CH1* item);
+
+#if USING_UTF16 == YES
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(CH2 item);
+
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(const CH2* item);
+#endif
+#if USING_UTF32 == YES
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(const CH4* item);
+
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(CH4 item);
+#endif
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(SI4 item);
+
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(UI4 item);
+
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(SI8 item);
+
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(UI8 item);
+
+#if USING_FP4 == YES
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(FP4 item);
+#endif
+#if USING_FP8 == YES
+  /* Prints the given item to the strand_. */
+  inline CH2* Print(FP8 item);
+#endif
+
+ private:
   // A String too long to fit in the strand.
   const CH2* string_;
-  SI4 count_;                 //< Either kTokenCount or an abstract variable.
+  SI4 count_;                //< Either kTokenCount or an abstract variable.
   CH2 strand_[kTokenCount];  //< Strand socket.
 };
 
 /* Utility class for printing hex with operator<<. */
 struct Right2 {
-
   Token2 token;
 
   /* Prints the item to the token_. */
-  Right2(const CH2* string, SI4 count = kTokenCount);
+  Right2(CH1 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Right2(const CH1* item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Right2(CH2 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Right2(const CH2* item, SI4 count = kTokenCount);
+
+#if USING_UTF32
+  /* Prints the item to the token_. */
+  Right2(CH4 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Right2(const CH4* item, SI4 count = kTokenCount);
+#endif
 
   /* Prints the item to the token_. */
   Right2(SI4 item, SI4 count = kTokenCount);
@@ -627,71 +712,97 @@ struct Right2 {
   /* Prints the item to the token_. */
   Right2(UI8 item, SI4 count = kTokenCount);
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the item to the token_. */
-  Right2(FLT item, SI4 count = kTokenCount);
-
+  Right2(FP4 item, SI4 count = kTokenCount);
+#endif
+#if USING_FP8 == YES
   /* Prints the item to the token_. */
-  Right2(DBL item, SI4 count = kTokenCount);
+  Right2(FP8 item, SI4 count = kTokenCount);
 #endif
 };
 
 /* Utility class for printing hex with operator<<. */
 struct Center2 {
-
   Token2 token;
 
+#if USING_UTF8
   /* Prints the item to the token_. */
-  Center2 (const CH2* string, SI4 count = kTokenCount);
+  Center2(CH1 item, SI4 count = kTokenCount);
 
   /* Prints the item to the token_. */
-  Center2 (SI4 item, SI4 count = kTokenCount);
+  Center2(const CH1* item, SI4 count = kTokenCount);
+#endif
+  /* Prints the item to the token_. */
+  Center2(CH2 item, SI4 count = kTokenCount);
 
   /* Prints the item to the token_. */
-  Center2 (UI4 item, SI4 count = kTokenCount);
+  Center2(const CH2* item, SI4 count = kTokenCount);
+
+#if USING_UTF32
+  /* Prints the item to the token_. */
+  Center2(CH4 item, SI4 count = kTokenCount);
 
   /* Prints the item to the token_. */
-  Center2 (SI8 item, SI4 count = kTokenCount);
-
-  /* Prints the item to the token_. */
-  Center2 (UI8 item, SI4 count = kTokenCount);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the item to the token_. */
-  Center2 (FLT item, SI4 count = kTokenCount);
-
-  /* Prints the item to the token_. */
-  Center2 (DBL item, SI4 count = kTokenCount);
+  Center2(const CH4* item, SI4 count = kTokenCount);
 #endif
 
-private:
-  const CH2* string_; //< Pointer to the string.
-  SI4 count_;         //< Number of columns to center.
-  Token2 token_;    
+  /* Prints the item to the token_. */
+  Center2(SI4 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Center2(UI4 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Center2(SI8 item, SI4 count = kTokenCount);
+
+  /* Prints the item to the token_. */
+  Center2(UI8 item, SI4 count = kTokenCount);
+
+#if USING_FP4 == YES
+  /* Prints the item to the token_. */
+  Center2(FP4 item, SI4 count = kTokenCount);
+#endif
+#if USING_FP8 == YES
+  /* Prints the item to the token_. */
+  Center2(FP8 item, SI4 count = kTokenCount);
+#endif
+
+ private:
+  const CH2* string_;  //< Pointer to the string.
+  SI4 count_;          //< Number of columns to center.
+  Token2 token_;
 };
 
 /* Utility class for printing a horizontal line with operator<<. */
-struct SDK Line2 {
-
+struct SDK Linef2 {
   Token2 token;
 
-  /* Constructors a horizontal line of token. */
-  Line2 (CH2 token, SI4 count = kTokenCount);
+  /* Constructors a horizontal line of the given string. */
+  Linef2(CH1 item, SI4 count = kTokenCount);
 
   /* Constructors a horizontal line of the given string. */
-  Line2 (const CH2* string, SI4 count = kTokenCount);
+  Linef2(const CH1* string, SI4 count = kTokenCount);
+
+  /* Constructors a horizontal line of the given string. */
+  Linef2(CH2 item, SI4 count = kTokenCount);
+
+  /* Constructors a horizontal line of the given string. */
+  Linef2(const CH2* string, SI4 count = kTokenCount);
 };
 
-/* Utility class for printing a vertical line with operator<<. */
-struct SDK Repeat2 {
+/* Gets the default Headingf style string. */
+SDK const CH2* HeadingfDefaultCH2();
 
-  Token2 token;
-
-  /* Constructors a horizontal line of token. */
-  Repeat2 (CH2 token, SI4 count = kTokenCount);
+/* Utility class for printing a Headingf with operator<<. */
+struct SDK Headingf2 {
+  Token2 caption;
+  const CH2 *style, *caption2, *caption3;
 
   /* Constructors a horizontal line of the given string. */
-  Repeat2 (const CH2* string, SI4 count = kTokenCount);
+  Headingf2(const CH2* caption, const CH2* style = HeadingfDefaultCH2(),
+            SI4 count = kTokenCount, const CH2* caption2 = nullptr,
+            const CH2* caption3 = nullptr);
 };
 
 /* Utility class for printing strings.
@@ -702,151 +813,144 @@ are done printing.
 */
 struct SDK UTF2 {
   CH2 *start,  //< Start of the array.
-    *stop;   //< Stop of the array.
-
-/* Initializes the UTF& from the given socket pointers.
-@param start The beginning of the socket.
-@param stop   The stop of the socket. */
-  UTF2 (CH2* start, size_t size);
+      *stop;   //< Stop of the array.
 
   /* Initializes the UTF& from the given socket pointers.
   @param start The beginning of the socket.
   @param stop   The stop of the socket. */
-  UTF2 (CH2* start, CH2* stop);
+  UTF2(CH2* start, SIW size);
+
+  /* Initializes the UTF& from the given socket pointers.
+  @param start The beginning of the socket.
+  @param stop   The stop of the socket. */
+  UTF2(CH2* start, CH2* stop);
 
   /* Clones the other utf. */
-  UTF2 (const UTF2& other);
+  UTF2(const UTF2& other);
 
   /* Sets the start pointer to the new_pointer. */
-  inline UTF2& Set (CH2* new_start);
+  inline UTF2& Set(CH2* new_start);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (CH1 item);
+  inline UTF2& Print(CH1 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (CH2 item);
+  inline UTF2& Print(const CH1* item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (CH4 item);
+  inline UTF2& Print(CH2 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (const CH1* item);
+  inline UTF2& Print(const CH2* item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (const CH2* item);
+  inline UTF2& Print(CH4 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF2& Print (const CH4* item);
+  inline UTF2& Print(const CH4* item);
 
   /* Prints the given item. */
-  inline UTF2& Print (SI4 item);
+  inline UTF2& Print(SI4 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (UI4 item);
+  inline UTF2& Print(UI4 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (SI8 item);
+  inline UTF2& Print(SI8 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item. */
-  inline UTF2& Print (FLT item);
+  inline UTF2& Print(UI8 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (DBL item);
-#endif
+  inline UTF2& Print(Right2 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (Right2 item);
+  inline UTF2& Print(Center2 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (Center2 item);
+  inline UTF2& Print(Linef2 item);
 
   /* Prints the given item. */
-  inline UTF2& Print (Line2 item);
-
-  /* Prints the given item. */
-  inline UTF2& Print (Repeat2 item);
+  inline UTF2& Print(Headingf2 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (SI1 item);
+  inline UTF2& Hex(SI1 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (UI1 item);
+  inline UTF2& Hex(UI1 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (SI2 item);
+  inline UTF2& Hex(SI2 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (UI2 item);
+  inline UTF2& Hex(UI2 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (SI4 item);
+  inline UTF2& Hex(SI4 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (UI4 item);
+  inline UTF2& Hex(UI4 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (SI8 item);
+  inline UTF2& Hex(SI8 item);
 
   /* Prints the given item as hex. */
-  inline UTF2& Hex (UI8 item);
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the given item as hex. */
-  inline UTF2& Hex (FLT item);
-
-  /* Prints the given item as hex. */
-  inline UTF2& Hex (DBL item);
-#endif
+  inline UTF2& Hex(UI8 item);
 
   /* Prints the given pointer as hex. */
-  inline UTF2& Hex (const void* pointer);
+  inline UTF2& Hex(const void* pointer);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (SI1 item);
+  inline UTF2& Binary(SI1 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (UI1 item);
+  inline UTF2& Binary(UI1 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (SI2 item);
+  inline UTF2& Binary(SI2 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (UI2 item);
+  inline UTF2& Binary(UI2 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (SI4 item);
+  inline UTF2& Binary(SI4 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (UI4 item);
+  inline UTF2& Binary(UI4 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (SI8 item);
+  inline UTF2& Binary(SI8 item);
 
   /* Prints the given item as binary. */
-  inline UTF2& Binary (UI8 item);
+  inline UTF2& Binary(UI8 item);
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
+  /* Prints the given item. */
+  inline UTF2& Print(FP4 item);
+  /* Prints the given item as hex. */
+  inline UTF2& Hex(FP4 item);
   /* Prints the given item as binary. */
-  inline UTF2& Binary (FLT item);
-
+  inline UTF2& Binary(FP4 item);
+#endif
+#if USING_FP8 == YES
+  /* Prints the given item. */
+  inline UTF2& Print(FP8 item);
+  /* Prints the given item as hex. */
+  inline UTF2& Hex(FP8 item);
   /* Prints the given item as binary. */
-  inline UTF2& Binary (DBL item);
+  inline UTF2& Binary(FP8 item);
 #endif
 
   /* Prints the given pointer as binary. */
-  inline UTF2& Binary (const void* pointer);
+  inline UTF2& Binary(const void* pointer);
 };
 
-#if SCRIPT2_CHAR_SIZE == UTF16
+#if USING_STR == UTF16
 using Token = Token2;
 using Right = Right2;
 using Center = Center2;
-using Columns= Line2;
-using Rows = Repeat2;
+using Columns = Linef2;
+using Rows = Headingf2;
 using Hex = Hex2;
 #endif
 
@@ -862,17 +966,18 @@ SDK inline ::_::UTF2& operator<<(::_::UTF2& o, UI4 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, SI8 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, UI8 item);
 
-#if SEAM >= SCRIPT2_4
-
-SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FLT item);
-SDK inline ::_::UTF2& operator<<(::_::UTF2& o, DBL item);
+#if USING_FP4 == YES
+SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP4 item);
+#endif
+#if USING_FP8 == YES
+SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP8 item);
 #endif
 
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Center2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Right2 item);
-SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Line2 item);
-SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Repeat2 item);
+SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
+SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
 
 #endif  //< #if USING_UTF16
-#endif  //< #if INCLUDED_SCRIPTPRINT_UTF16
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif
+#endif

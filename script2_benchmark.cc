@@ -41,7 +41,7 @@ BenchmarkCase::BenchmarkCase(const CH1* name, TestCase* cases, SI4 count)
 
 const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
   /*
-  DBL nil_reading;
+  FP8 nil_reading;
   SI4 i;
   SI4 columns_max;
   ASSERT(TScan<>(args, columns_max));
@@ -80,7 +80,7 @@ const CH1* Benchmark::Run(CH1* cursor, CH1* stop, const CH1* args) {
   auto* coutbuf = std::cout.rdbuf();
   std::cout.rdbuf(out.rdbuf());
 
-  for (size_t i = 0; i < count; ++i) {
+  for (SIW i = 0; i < count; ++i) {
     BenchmarkCase group = groups[i];
     const CH1* result = group.Run(cursor, stop, args);
     ASSERT(result);

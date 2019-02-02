@@ -123,7 +123,7 @@ BOL Slot::IsReadable() { return begin != stop; }
 
 /*CH1* SlotRead (Slot* slot, CH1* write, void* write_end, CH1* const begin,
                     CH1* const begin, CH1* const stop , CH1* const stop,
-                    size_t size) {
+                    SIW size) {
     if (!slot) {
         return nullptr;
     }
@@ -136,7 +136,7 @@ BOL Slot::IsReadable() { return begin != stop; }
 
     if ((begin > stop) && (begin + size >= stop)) {
         // Calculate upper chunk size.
-        size_t top_chunk = stop - stop;
+        SIW top_chunk = stop - stop;
         size -= top_chunk;
 
         SocketCopy (target, target_end, begin, top_chunk);
@@ -153,10 +153,10 @@ const Op* Slot::Read(const SI4* params, void** args) {
   ASSERT(args);
   UI1 ui1;  //< Temp variable to load most types.
   UI2 ui2;  //< Temp variable for working with kUI2 types.
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
   UI4 ui4;
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
   UI8 ui8;  //< Temp kUI8 variable.
 #endif
   CH1* ui1_ptr;              //< Pointer to a kUI1.
@@ -241,7 +241,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
       case kUI1:
       case kBOL:
-#if USING_CRABS_1_BYTE_TYPES
+#if USING_SCRIPT2_1_BYTE_TYPES
         if (length == 0) {
           return ReturnError(this, kErrorBufferUnderflow, params, index,
                              l_start);
@@ -269,11 +269,11 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case kUI2:
       case kHLF:
-#if WORD_SIZE <= 16
+#if ALU_SIZE <= 16
       case SVI:
       case UVI:
 #endif
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
         // Read2ByteType:{
         // Word-align
         offset = AlignUpOffset2(l_start);
@@ -304,12 +304,12 @@ const Op* Slot::Read(const SI4* params, void** args) {
 #else
         return ReturnError(this, kErrorInvalidType);
 #endif
-#if USING_CRABS_VARINT2
+#if USING_SCRIPT2_VARINT2
         goto Read2ByteType;
 #else
         return ReturnError(this, kErrorInvalidType);
 #endif
-#if WORD_SIZE > 16
+#if ALU_SIZE > 16
       case SVI:
       case UVI:
 #endif
@@ -317,7 +317,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kUI4:
       case kFLT:
       case kTM4:
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
         // Read4ByteType:{
         // Word-align
         offset = AlignUpOffset4(l_start);
@@ -352,7 +352,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kUI8:
       case kDBL:
       case kTM8:
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
         offset = AlignUpOffset8(l_start);
@@ -382,7 +382,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
         return ReturnError(this, kErrorInvalidType);
 #endif
       default: {
-#if USING_CRABS_OBJ
+#if USING_SCRIPT2_OBJ
         count = type >> 5;  //< count is now the array type bits.
         type &= 0x1f;       //< Now type is the type 0-31
         if (count && (type >= kOBJ)) {
@@ -511,7 +511,7 @@ const Op* Slot::Write(Slot& other) { return nullptr; }
 
 const Op* Slot::Write(const CH1* message) { return nullptr; }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 UTF1& Slot::Print(UTF1& utf) {
   CH1 *l_begin = begin, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: begin:" << Hex<>(l_begin)

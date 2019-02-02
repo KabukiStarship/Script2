@@ -43,7 +43,7 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
          << "\n\n"
          << Socket(list.This(), list.This()->size);
   }
-  const FLT test_floats[] = {9.0, 10.0, 11.0, 12.0};
+  const FP4 test_floats[] = {9.0, 10.0, 11.0, 12.0};
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kFLT, &test_floats[i++]);

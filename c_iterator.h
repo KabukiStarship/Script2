@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef CRABS_ITERATOR_H
-#define CRABS_ITERATOR_H
+#ifndef SCRIPT2_ITERATOR_H
+#define SCRIPT2_ITERATOR_H
 // Dependencies:
 #include "c_onfig.h"
 // End dependencies.
@@ -38,5 +38,5 @@ struct SDK Iterator {
 };
 
 }  //< namespace _
-#endif  //< CRABS_ITERATOR_H
+#endif  //< SCRIPT2_ITERATOR_H
 #endif  //< #if SEAM >= SCRIPT2_14

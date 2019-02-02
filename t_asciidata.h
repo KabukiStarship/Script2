@@ -187,7 +187,7 @@ Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
     case kUI4:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
     case kFLT:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FLT*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FP4*>(value));
     case kTM4:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
     case kTM8:
@@ -198,7 +198,7 @@ Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
     case kUI8:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI8*>(value));
     case kDBL:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const DBL*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FP8*>(value));
       // case SV8:
       //  return TPrint<Char> (cursor, stop, *reinterpret_cast<const
       //  SI8*>(value));

@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_14
 
-#ifndef INCLUDED_CRABS_BOUT
-#define INCLUDED_CRABS_BOUT
+#ifndef INCLUDED_SCRIPT2_BOUT
+#define INCLUDED_SCRIPT2_BOUT
 
 #include "c_utf1.h"
 
@@ -43,7 +43,7 @@ struct SDK BOut {
 /* Get's the B-Output's socket.*/
 SDK CH1* BOutBuffer(BOut* bout);
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 
 /* Gets a a CH1 for printing out the bout_state. */
 SDK const CH1** BOutStateStrands();
@@ -85,7 +85,7 @@ SDK void BOutAckBack(BOut* bout, const CH1* address);
 /* . */
 SDK void BInKeyStrokes();
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 /* Prints the BIn to the Text.
     @param  bout The bout to utf.
     @param  text The Text to utf to the bout.
@@ -95,13 +95,13 @@ SDK UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 }  // namespace _
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 /* Prints out the bin to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
   return ::_::PrintBOut(utf, bout);
 }
 #endif
 
-#endif  //< INCLUDED_CRABS_BOUT
-#undef DEBUG_CRABS_BOUT
+#endif  //< INCLUDED_SCRIPT2_BOUT
+#undef DEBUG_SCRIPT2_BOUT
 #endif  //< #if SEAM >= SCRIPT2_14

@@ -33,8 +33,12 @@ namespace script2 {
 
 template <typename Char, typename Size>
 static const Char* _03_UTF() {
+  PRINT_LINEF('-');
+  PRINT_LINEF('-');
   PRINTF("\n\n\nTesting UTF<CH%c,SI%c>\n\n", '0' + sizeof(Char),
          '0' + sizeof(Size));
+  PRINT_LINEF('-');
+  PRINT_LINEF('-');
 
   enum {
     kCount = 512,
@@ -85,8 +89,6 @@ static const Char* _03_UTF() {
 
   utf.Set(str_a).Print(kTestingSpace);
   utf.Print(1);
-  if (sizeof(Char) == 2)  //
-    Print("\nBreak");
   utf.Print(kCommaSpace);
   utf.Print(2);
   utf.Print(", ");
@@ -94,7 +96,7 @@ static const Char* _03_UTF() {
   utf.Print('.');
 
   utf.Set(str_a) << kTestingSpace << 1 << kCommaSpace << 2 << ", " << 3 << '.';
-  PRINT_CHARS(str_a, kCount);
+  PRINT_CHARS(str_a, 64);
   AVOW(kTesting123, str_a);
 
   PRINTF("\n\nTesting TStrandEquals<Char>");

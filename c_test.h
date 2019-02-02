@@ -110,12 +110,12 @@ SDK BOL Test(UI8 value);
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-SDK BOL Test(FLT value);
+SDK BOL Test(FP4 value);
 
 /* Test function to assist in casting boolean types.
 @return false if the condition is false.
 @param  value The value to test. */
-SDK BOL Test(DBL value);
+SDK BOL Test(FP8 value);
 
 /* Tests if the pointer is nil.
 @return false if the condition is false.
@@ -222,13 +222,13 @@ SDK BOL Test(UI8 a, UI8 b);
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test(FLT a, FLT b);
+SDK BOL Test(FP4 a, FP4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test(DBL a, DBL b);
+SDK BOL Test(FP8 a, FP8 b);
 
 }  // namespace _
 

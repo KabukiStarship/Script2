@@ -40,7 +40,7 @@ struct TCLoom {
 };
 
 template <typename T>
-size_t TBitCount() {
+SIW TBitCount() {
   enum {
     kBitCount =
         (sizeof(Size) == 1)

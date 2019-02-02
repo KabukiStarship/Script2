@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 UTF1& Print(UTF1& utf, const Op* op) {
   if (!op) {
     return utf << "\nOp: nil";
@@ -39,7 +39,7 @@ UTF1& Print(UTF1& utf, const Op* op) {
 }
 #endif
 /*
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 Op OpInit (UIW* socket, SI4 buffer_size) {
     BOut* bout = BOutInit (socket, buffer_size);
     Op log;
@@ -60,8 +60,8 @@ void Print (Op& log) {
     UI2 si2;
     UI4 si4;
     UI8 si8;
-    FLT    flt;
-    DBL   dbl;
+    FP4    flt;
+    FP8   dbl;
     CH1   index;
     //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
     //    return;

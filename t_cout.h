@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 template <typename Char>
-void TPrintStrand(const Char* string) {
+void TPrintString(const Char* string) {
   if (!string) return;
   Char c = *string;
   while (c) {
@@ -31,24 +31,100 @@ void TPrintStrand(const Char* string) {
 }
 
 template <typename Char>
-void TPrintRepeat(Char token, SI4 count) {
-  while (count-- > 0) Print(token);
+const Char* TPrintLineffDefault() {
+  static const Char kString[] = {'\n', '-', '-', '-', NIL};
+  return kString;
+}
+
+/* Prints a formatted lines.
+
+The first two chars of the string are going to be the corner and margin chars.
+It's easiest to show with the examples below. Like their names implies, the
+corner char is for the edges and the margin is for inside of a header block.
+
+@code
+TPrintBreak<CH1> ("\n+---\n\n| Foo\n\n+---\n", 10);
+
+TPrintBreak<CH1> ("\n+---\n\n| Foo\n\n+---\n", 10);
+//>>>
+//>>> +----------
+//>>> | Foo *****
+//>>> +----------
+//>>>
+
+TPrintBreak<CH1> ("- \n---\n---\n\n   Foo\n\n---\n---", 10);
+//>>> -----------
+//>>> -----------
+//>>>
+//>>>    Foo
+//>>>
+//>>> -----------
+//>>> -----------
+@endcode
+*/
+template <typename Char>
+const Char* TPrintLinef(const Char* style = TPrintLineffDefault<Char>(),
+                        SI4 column_count = 80) {
+  enum {
+    kBreakCount = 3,
+  };
+  if (!style || column_count < kBreakCount) return nullptr;
+
+  Char c = *style++,  //< Current.
+      p = ~c;         //< Previous.
+  SI4 hit_count = 0, column_cursor = 0;
+  while (c) {
+    while (c == '\n') {
+      Print(c);
+      p = c;
+      c = *style++;
+    }
+    if (c == p) {
+      ++hit_count;
+      if (hit_count >= kBreakCount) {
+        hit_count = 0;
+        for (SI4 i = column_count - column_cursor; i > 0; --i) Print(c);
+        column_cursor = 0;
+      }
+    } else {
+      Print(c);
+      ++column_cursor;
+    }
+    p = c;
+    c = *style++;
+  }
+  return ++style;
 }
 
 template <typename Char>
-void TPrintRepeat(const CH1* string, SI4 count, CH1 delimiter) {
-  const CH1* cursor = string;
-  CH1 c = *cursor++;
-  if (!c) return;
-  Print(c);
-  do {
-    CH1 c = *cursor++;
-    if (!c) {
-      cursor = string;
-      c = *cursor++;
-    }
-    if (delimiter) Print(delimiter);
-  } while (--count > 0);
+const Char* TPrintLine(Char token = '-', SI4 column_count = 80) {
+  Char style[4];
+  Char* cursor = style;
+  *cursor++ = token;
+  *cursor++ = token;
+  *cursor++ = token;
+  *cursor++ = 0;
+  return TPrintLinef(style, column_count);
+}
+
+/* Prints an easy-to-read text heading with a formatting options.
+@code
+TPrintHeadingf<CH1> ("\n+---\0\n+---", 80, "Foo ", "Bar ",
+                     TToken<CH1> (420).String ());
+@endcode
+*/
+template <typename Char>
+void TPrintHeadingf(const Char* caption,
+                    const Char* style = THeadingfDefault<Char>(),
+                    SI4 column_count = 80, const Char* caption2 = nullptr,
+                    const Char* caption3 = nullptr) {
+  if (!caption || !style) return;
+  style = TPrintLinef(style, column_count);
+  if (!style) return;
+  Print(caption);
+  if (!caption2) Print(caption2);
+  if (!caption3) Print(caption3);
+  return TPrintLinef(style, column_count);
 }
 
 /* Prints the given token aligned right the given column_count.
@@ -71,15 +147,17 @@ void TPrintRight(const Char* item, SI4 column_count = 80) {
   }
   length = (-length) - 3;
   if (length < 0) {
-    if (length == 1)
-      Print('.');
-    else if (length == 2)
-      TPrintRepeat('.', 2);
-    else if (length == 3)
-      TPrintRepeat('.', 3);
+    switch (length) {
+      case 1:
+        Print('.');
+      case 2:
+        Print('.', '.');
+      case 3:
+        Print('.', '.', '.');
+    }
   } else {
     while (length > 0) Print(*item++);
-    TPrintRepeat<Char>('.', 3);
+    Print('.', '.', '.');
   }
 }
 
@@ -109,40 +187,13 @@ void TPrintCenter(const Char* item, SI4 column_count = 80) {
     if (length == 1)
       Print('.');
     else if (length == 2)
-      TPrintRepeat('.', 2);
+      Print('.', '.');
     else if (length == 3)
-      TPrintRepeat('.', 3);
+      Print('.', '.', '.');
   } else {
     while (length > 0) Print(*item++);
-    TPrintRepeat<Char>('.', 3);
+    TPrintHeadingf<Char>('.', 3);
   }
-}
-
-template <typename Char>
-void TPrintLine(Char token, SI4 column_count, Char first_token) {
-  Print('\n');
-  if (column_count > 1) Print(first_token);
-  while (column_count-- > 0) Print(token);
-}
-
-template <typename Char>
-void TPrintLine(const Char* token, SI4 column_count, Char first_token) {
-  Print('\n');
-  if (column_count > 1) Print(first_token);
-  while (column_count-- > 0) Print(token);
-}
-
-template <typename Char>
-void TPrintHeading(const Char* heading_a, const Char* heading_b, SI4 row_count,
-                   SI4 column_count, Char token, Char first_token) {
-  if (row_count < 1 || column_count < 1)
-    while (row_count-- > 0) Print('\n');
-  PrintLine(token, column_count, '+');
-  Print("\n| ");
-  Print(heading_a);
-  Print(heading_b);
-  PrintLine(token, column_count, '+');
-  Print('\n');
 }
 
 template <typename UI>
@@ -200,6 +251,11 @@ void TPrintChars(const Char* start, const Char* stop) {
   }
   Print(StrandSocketBorder());
   PrintHex(start + size);
+}
+
+template <typename Char>
+void TPrintChars(const Char* start, SIW count) {
+  return TPrintChars(start, start + count);
 }
 
 }  // namespace _

@@ -162,13 +162,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1  // type,
       ui1;
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
   UI2 ui2;
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
   UI4 ui4;
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
   UI8 ui8;
 #endif
 
@@ -195,13 +195,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
   const CH1* ui1_ptr;                     //< Pointer to a 1-UI1 type.
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
   const UI2* ui2_ptr;  //< Pointer to a 2-UI1 type.
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
   const UI4* ui4_ptr;  //< Pointer to a 4-UI1 type.
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
   const UI8* ui8_ptr;  //< Pointer to a 8-UI1 type.
 #endif
   UI2 hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
@@ -263,7 +263,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
       case kUI1:
       case kBOL:
-#if USING_CRABS_1_BYTE_TYPES
+#if USING_SCRIPT2_1_BYTE_TYPES
         // Check if the socket has enough room.
         if (space-- == 0)
           return BOutError(bout, kErrorBufferOverflow, params, index, begin);
@@ -283,7 +283,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
       case kUI2:
       case kHLF:
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
         // Align the socket to a word boundary and check if the
         // socket has enough room.
         if (space < sizeof(UI2))
@@ -310,8 +310,8 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         break;
 #else
         return BOutError(bout, kErrorInvalidType);
-#endif  // USING_CRABS_2_BYTE_TYPES
-#if WORD_SIZE <= 16
+#endif  // USING_SCRIPT2_2_BYTE_TYPES
+#if ALU_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
@@ -412,7 +412,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       case kUI4:
       case kFLT:
       case kTM4:
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
 
@@ -432,12 +432,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           if (++stop >= stop) stop -= size;
         }
         break;
-#endif            //< USING_CRABS_4_BYTE_TYPES
+#endif            //< USING_SCRIPT2_4_BYTE_TYPES
       case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case kUI8:
       case kDBL:
       case kTM8:
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
         if (space < sizeof(UI8))
@@ -519,7 +519,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
               return BOutError(bout, kErrorImplementation, params, index,
                                begin);
           }
-#if USING_CRABS_2_BYTE_TYPES
+#if USING_SCRIPT2_2_BYTE_TYPES
           case 1: {
             ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
@@ -530,7 +530,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             ui1_ptr = reinterpret_cast<const CH1*>(ui2_ptr);
           }
 #endif
-#if USING_CRABS_4_BYTE_TYPES
+#if USING_SCRIPT2_4_BYTE_TYPES
           case 2: {
             ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
@@ -541,7 +541,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             ui1_ptr = reinterpret_cast<const CH1*>(ui4_ptr);
           }
 #endif
-#if USING_CRABS_8_BYTE_TYPES
+#if USING_SCRIPT2_8_BYTE_TYPES
           case 3: {
             ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
@@ -551,7 +551,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
             length = static_cast<SI4>(ui8);
             ui1_ptr = reinterpret_cast<const CH1*>(ui8_ptr);
           }
-#endif  //< USING_CRABS_8_BYTE_TYPES
+#endif  //< USING_SCRIPT2_8_BYTE_TYPES
           default: {
             // This wont happen due to the & 0x3 bit mask
             // but it stops the compiler from barking.
@@ -697,7 +697,7 @@ void BInKeyStrokes() {
   }
 }
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /*
 CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     BOL print_now = !socket;
@@ -707,7 +707,7 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
     if (socket >= buffer_end) {
         return nullptr;
     }
-    socket = TPrintLine('_', 80, socket, buffer_end);
+    socket = TPrintLinef('_', 80, socket, buffer_end);
     if (!bout) {
         return nullptr;
     }

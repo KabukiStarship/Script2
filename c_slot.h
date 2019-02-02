@@ -115,7 +115,7 @@ struct Slot {
   /* Copies the contents of the other slot into the slot. */
   const Op* Write(Slot& other);
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
   /* Prints a  rep of this object to the printer. */
   UTF1& Print(UTF1& printer);
 #endif
@@ -123,7 +123,7 @@ struct Slot {
 
 }  // namespace _
 
-#if USING_CRABS_TEXT
+#if USING_SCRIPT2_TEXT
 /* Prints out the bin to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Slot& slot) {
   return slot.Print(printer);

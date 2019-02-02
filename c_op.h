@@ -15,8 +15,8 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM >= _0_0_01__13
-#ifndef INCLUDED_CRABS_OP
-#define INCLUDED_CRABS_OP 1
+#ifndef INCLUDED_SCRIPT2_OP
+#define INCLUDED_SCRIPT2_OP 1
 
 #include "t_strand.h"
 
@@ -80,7 +80,7 @@ inline CHW OpLast(const Op* op) {
   return (CHW) reinterpret_cast<UIW>(op->out);
 }
 
-#if USING_CRABS_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES
 template <typename Char>
 TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
 #endif
@@ -92,5 +92,5 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const ::_::Op* op) {
   return ::_::Print(utf, op);
 }
 
-#endif  //< #if INCLUDED_CRABS_OP 1
+#endif  //< #if INCLUDED_SCRIPT2_OP 1
 #endif  //< #if SEAM >= SCRIPT2_14

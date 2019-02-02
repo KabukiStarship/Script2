@@ -75,7 +75,7 @@ The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
 template <typename Size = UI4, typename Index = SI2,
-          size_t largest_expected_type = sizeof(SIW)>
+          SIW largest_expected_type = sizeof(SIW)>
 constexpr Size ListSizeMin(Index count_max) {
   return (Size)sizeof(CList<Size, Index>) +
          (Size)(count_max * (largest_expected_type + sizeof(Size) + 1));
@@ -141,7 +141,7 @@ UIW* ListNew(Index count_max, Size size) {
 
 /* Creates a list from dynamic memory. */
 template <typename Size = UI4, typename Index = SI2,
-          size_t largest_expected_type = sizeof(SIW)>
+          SIW largest_expected_type = sizeof(SIW)>
 inline UIW* ListNew(Index count_max) {
   count_max = AlignUp<Index>(count_max);
   Size size = ListSizeMin<Size, Index, largest_expected_type>(count_max);
