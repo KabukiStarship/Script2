@@ -104,7 +104,7 @@ struct CCrabs {
       bin_state,       //< Slot streaming state.
       last_bin_state,  //< Last BIn state.
       last_byte;       //< Last UI1 read.
-  CHW current_char;    //< Current Unicode CH1 being scanned.
+  CHN current_char;    //< Current Unicode CH1 being scanned.
   hash16_t hash;       //< Packed BSQ hash.
   UI4 timeout_us;      //< Timeout time in microseconds.
   TM8 last_time;       //< Last time the Stack was scanned.

@@ -56,7 +56,7 @@ struct SDK Operand {
       @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(CHW index, CCrabs* crabs) = 0;
+  virtual const Op* Star(CHN index, CCrabs* crabs) = 0;
 };
 
 /* Returns the name of the given Operand. */
@@ -70,7 +70,7 @@ SDK UIW OperandCount(Operand* op);
     @param  key_end   End of the key slot socket.
     @return A value printable Unicode CH1 or invalid if the Operand doesn't
             Contain the given key. */
-SDK CHW OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
+SDK CHN OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
 
 #if USING_SCRIPT2_TEXT
 /* Queries the given Operand Op Header.

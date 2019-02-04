@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 #define INCLUDED_SCRIPTVARINT
 
 #if SEAM == SCRIPT2_8
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -130,7 +130,7 @@ TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
   Size* offsets = TLoomOffsets<Size, Index, Char>(loom);
   UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
   for (Index i = 0; i < count; ++i) {
-    utf << '\n' << i << ".) \"";
+    utf << kLF << i << ".) \"";
   }
   return utf;
 }

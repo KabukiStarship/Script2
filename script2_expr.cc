@@ -21,9 +21,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_test.h"
 
 #if SEAM == SCRIPT2_14
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -319,7 +319,7 @@ const Op* CrabsUnpack(CCrabs* crabs) {
     b = *bin_start;
     *slot_start++ = b;
 #if DEBUG_SCRIPT2_EXPR
-            PRINTF (out.Line ('=') << '\n' << length
+            PRINTF (out.Line ('=') << kLF << length
                     << ":\'"
                     << ((b < 32 || b == 127) ? (PRINTF (AsciiText ((AsciiCode)b))
                     : (PRINTF (b))
@@ -921,7 +921,7 @@ UTF1& PrintCrabsStack(UTF1& utf, CCrabs* crabs) {
 UTF1& PrintCrabs(UTF1& utf, CCrabs* crabs) {
   ASSERT(crabs);
 
-  utf << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << '\n'
+  utf << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << kLF
       << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left
       << "\nheader_size: " << crabs->header_size
       << "\nstack_count: " << crabs->stack_count

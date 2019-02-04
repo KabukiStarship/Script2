@@ -17,66 +17,59 @@ specific language governing permissions and limitations under the License. */
 #include "t_stack.h"
 
 #if SEAM == SCRIPT2_6
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
 
-namespace script2 {
 #if SEAM >= SCRIPT2_6
 namespace script2 {
 template <typename Char>
-static const CH1* _06_Strand () {
+void _06_Strand() {
+  PRINTF("\n\nTesting UTF<CH%c>", '0' + sizeof(Char));
 
-  PRINTF ("\n\nTesting UTF<CH%c>", '0' + sizeof (Char));
-
-  static const Char kStringTesting123[] = "Testing 1, 2, 3\0";
+  static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+                                     'g', ' ', '1', ',', ' ', '2',
+                                     ',', ' ', '3', '.', NIL};
 
   enum {
     kStrandLoopCount = 3,
-    kCharSizeChar = '0' + sizeof (Char),
+    kCharSizeChar = '0' + sizeof(Char),
   };
 
-  TStrand<Char> strand ("Testing ");
-  strand.Print ();
+  TStrand<Char> strand("Testing ");
+  strand.Print();
 
-  PRINTF ("\n\nExpecting \"%s\"\n", kStringTesting123);
-  strand << 1  //<
-    << ", "    //<
-    << 2       //<
-    << ", "    //<
-    << 3;
-  PRINT_CHARS (strand.CObj ().Start<> (), strand.CObj ().SizeBytes ());
-  const Char* cursor = strand.Find (kStringTesting123);
-  ASSERT (cursor);
-
-  return nullptr;
+  PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
+  strand << 1 << ", " << 2 << ", " << 3;
+  PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
+  const Char* cursor = strand.Find(kTesting123);
+  ASSERT(cursor);
 }
 #endif  //< #if SEAM >= SCRIPT2_6
 
-static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end, const CH1* args) {
+static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end,
+                                   const CH1* args) {
 #if SEAM >= SCRIPT2_6
   TEST_BEGIN;
 
-  PRINT ("\n\nTesting TStrand...\n");
+  PRINT("\n\nTesting TStrand...\n");
 
-  const CH1* result = _06_Strand<CH1> ();
-  if (result) return result;
-  const CH1* result = _06_Strand<CH2> ();
-  if (result) return result;
-  const CH1* result = _06_Strand<CH4> ();
-  if (result) return result;
+  _06_Strand<CH1>();
+  _06_Strand<CH2>();
+  _06_Strand<CH4>();
 
   PRINT("\n\nPushing items on to the Stack...\n");
 
   TStack<SI4> stack(8);
-  stack.Print ();
-  stack.Push (0);
-  PRINT_SOCKET_TOBJ (stack.TObj ());
+  stack.Print();
+  stack.Push(0);
+  PRINT_SOCKET_TOBJ(stack.TObj());
 
-  for (SI4 i = 1; i <= 10; ++i) ;
+  for (SI4 i = 1; i <= 10; ++i)
+    ;
 
   PRINT_TOBJ(stack);
 
@@ -89,4 +82,4 @@ static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end, const CH1* args
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  //< namespace script2

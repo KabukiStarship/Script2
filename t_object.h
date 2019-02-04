@@ -23,9 +23,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_socket.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -46,7 +46,7 @@ inline Size SizeWords(Size size) {
 required. */
 template <typename Size>
 inline UIW* TObjInit(UIW* socket, Size size) {
-  PRINT ('\n');
+  PRINT(kLF);
   PRINT_FUNCTION;
   PRINTF(" socket:0x%p size:%i", socket, (SI4)size);
   size = TAlignDownI<Size>(size);
@@ -89,7 +89,7 @@ inline Size TObjSize(CObject obj, Size size) {
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
 template <typename SI>
-inline SI TObjSizeMax () {
+inline SI TObjSizeMax() {
   SI count_max = 0;
   return (~count_max) - 15;
 }
@@ -97,24 +97,23 @@ inline SI TObjSizeMax () {
 /* Checks if the given object count is in the min max bounds of an ASCII
 Object. */
 template <typename SI>
-inline BOL TObjCountIsValid (SI index, SI count_min) {
-  return (index >= count_min) && (index < TObjSizeMax<SI> ());
+inline BOL TObjCountIsValid(SI index, SI count_min) {
+  return (index >= count_min) && (index < TObjSizeMax<SI>());
 }
 
 /* Clones the other ASCII CObject including possibly unused object space.
 @return Nil upon failure or a pointer to the cloned object upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
-UIW* TObjClone (UIW* socket, Size size) {
+UIW* TObjClone(UIW* socket, Size size) {
   UIW* clone;
   try {
-    clone = new UIW[SizeWords<Size> (size)];
-  }
-  catch (const std::bad_alloc& exception) {
-    ObjException (exception.what ());
+    clone = new UIW[SizeWords<Size>(size)];
+  } catch (const std::bad_alloc& exception) {
+    ObjException(exception.what());
     return nullptr;
   }
-  SocketCopy (clone, size, socket, size);
+  SocketCopy(clone, size, socket, size);
   *reinterpret_cast<Size*>(socket) = size;
   return clone;
 }
@@ -122,16 +121,16 @@ UIW* TObjClone (UIW* socket, Size size) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-SI4 TObjCanGrow (Size size) {
-  return (SI4)(size >> (sizeof (Size) * 8 - 2));
+SI4 TObjCanGrow(Size size) {
+  return (SI4)(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Checks if the size is in the min max bounds of an ASCII Object.
 @return 0 If the size is valid. */
 template <typename Size = SIW>
-inline SI4 TObjCanGrow (Size size, Size size_min) {
+inline SI4 TObjCanGrow(Size size, Size size_min) {
   if (size < size_min) return kFactorySizeInvalid;
-  size = size >> (sizeof (Size) * 8 - 2);
+  size = size >> (sizeof(Size) * 8 - 2);
   return (SI4)size;
 }
 
@@ -139,13 +138,13 @@ inline SI4 TObjCanGrow (Size size, Size size_min) {
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-SI4 TObjGrow (CObject& obj, Size new_size) {
+SI4 TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size> (size)) return kFactorySizeInvalid;
+  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
   size = size << 1;  // size *= 2;
-  obj.begin = TObjClone<Size> (begin, size);
+  obj.begin = TObjClone<Size>(begin, size);
   return kFactorySuccess;
 }
 
@@ -153,20 +152,20 @@ SI4 TObjGrow (CObject& obj, Size new_size) {
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size, BOL kHeap_>
-SI4 TObjGrow (CObject& obj, Size new_size) {
+SI4 TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size> (size)) return kFactorySizeInvalid;
+  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
   size = size << 1;  // size *= 2;
-  obj.begin = TObjClone<Size> (begin, size);
+  obj.begin = TObjClone<Size>(begin, size);
   if (kHeap_) delete[] begin;
   return kFactorySuccess;
 }
 
 template <typename Size>
-inline SI4 TObjCanGrow (CObject& obj) {
-  return TObjGrow (obj, TObjSize<Size> (obj) * 2);
+inline SI4 TObjCanGrow(CObject& obj) {
+  return TObjGrow(obj, TObjSize<Size>(obj) * 2);
 }
 
 /* Gets the last UI1 in the ASCII Object.
@@ -302,7 +301,7 @@ class TObject {
   /* Prints this object to the COut. */
   void Print() {
     ::_::Print("\nTObject<SI");
-    ::_::Print((CH1)('0' + sizeof (Size)));
+    ::_::Print((CH1)('0' + sizeof(Size)));
     ::_::Print(">");
     UIW* begin = obj_.begin;
     if (begin) {

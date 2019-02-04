@@ -24,11 +24,11 @@ specific language governing permissions and limitations under the License. */
 #include "slot.h"
 
 #if SEAM == SCRIPT2_14
-#include "global_debug.inl"
+#include "module_debug.inl"
 #define PRINT_BOUT(header, bout) \
-  Console<>().Out() << "\n" << header << '\n' << bout;
+  Console<>().Out() << "\n" << header << kLF << bout;
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #define PRINT_BOUT(header, bout)
 #endif
 

@@ -21,11 +21,6 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-enum {
-  kCpuCacheLineSize = 64,
-  kWordBitCount = sizeof(void*) == 8 ? 3 : sizeof(void*) == 4 ? 2 : 0
-};
-
 /* Aligns the given pointer down to the given mask. */
 SDK CH1* AlignDown(CH1* pointer, UIW mask = kWordLSbMask);
 

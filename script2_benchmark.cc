@@ -29,9 +29,9 @@ using namespace std;
 using namespace std::chrono;
 
 #if SEAM == SCRIPT2_13
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -52,12 +52,12 @@ const CH1* BenchmarkCase::Run(CH1* cursor, CH1* stop, const CH1* args) {
     if (i < count) Print(',', ' ');
   }
   for (; i < columns_max; ++i) Print(',');
-  PrintLn();
+  PrintNL();
   for (i = 0; i < count; ++i) {
     const CH1* result = (*cases[i])(nullptr, nullptr, nullptr);
     if (i < count) Print(',', ' ');
   }
-  PrintLn();
+  PrintNL();
   */
   return nullptr;
 }

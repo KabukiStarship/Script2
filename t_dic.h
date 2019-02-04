@@ -23,9 +23,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_socket.h"
 
 #if SEAM >= SCRIPT2_13
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -643,7 +643,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
   PRINTF("\n0x%p %u stack_height: %u size_pile: %u  size: %u\n|", dictionary,
          item_count, stack_height, size_pile, table_size);
   PRINT_LINEF('_', 80);
-  PRINTF('\n');
+  PRINTF(kLF);
 
   const CH1* states = reinterpret_cast<const CH1*>(dictionary) +
                       sizeof(Dictionary<Size, Offset, Index>);
@@ -663,7 +663,7 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
          "hash_u", "hash_s", "index_u", "collisions");
   PRINT('|');
   for (SI4 i = 0; i < 79; ++i) PRINT('_');
-  PRINT('\n');
+  PRINT(kLF);
 
   for (Index i = 0; i < count; ++i) {
     // Print each record as a row.
@@ -688,14 +688,14 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
       }
     }
 
-    PRINT('\n');
+    PRINT(kLF);
   }
   TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(dictionary) +
                  sizeof(Dictionary<Size, Offset, Index>),
              dictionary->size);
-  PRINT('\n');
+  PRINT(kLF);
 }
 
 /* Deletes the dictionary contents without wiping the contents. */

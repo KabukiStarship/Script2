@@ -158,7 +158,7 @@ TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
     if (element_count > ArrayElementCountMax<T, Size, Index>())
       return utf << "Max element count exceeded";
     if (dimensions == dimensions_end)
-      utf << dimension << '\n';
+      utf << dimension << kLF;
     else
       utf << dimension << ", ";
   }

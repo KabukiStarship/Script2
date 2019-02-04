@@ -34,7 +34,7 @@ enum {
 
 */
 struct Language {
-  CHW uppercase_begin,  //< First uppercase Unicode CH1 index.
+  CHN uppercase_begin,  //< First uppercase Unicode CH1 index.
       uppercase_end,        //< Last uppercase Unicode CH1 index.
       lowercase_begin,      //< First lowercase Unicode CH1 index.
       lowercase_end;        //< Last lowercase Unicode CH1 index.

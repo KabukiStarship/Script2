@@ -5,6 +5,7 @@
 #define TEST_BEGIN \
   if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
 #define TEST_END Print("\n\nDone testing ", __FUNCTION__)
+#define PRINTNL ::_::PrintNL()
 #define PRINT(item) ::_::Print(item)
 #define PRINT_TIME(t) ::_::PrintTime(t)
 #define PRINTF(format, ...) ::_::Printf(format, __VA_ARGS__)
@@ -12,7 +13,7 @@
 #define PAUSEF(format, ...) ::_::Pausef(format, __VA_ARGS__)
 #define PRINT_LINEF(style) ::_::PrintLinef(style)
 #define PRINT_LINEF_COUNT(style, count) ::_::PrintLinef(style, count)
-#define PRINT_HEADING(message) ::_::PrintHeading(message)
+#define PRINT_HEADING(caption) ::_::PrintHeadingf(caption)
 #define PRINT_HEADINGF(caption, style) ::_::PrintHeadingf(caption, style)
 #define PRINT_HEADINGF_COUNT(caption, style, column_count) \
   ::_::PrintHeadingf(caption, style, column_count)
@@ -25,13 +26,13 @@
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
 #define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
-#define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << '\n' << Bsq(bsq)
+#define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(stack) stack->Print()
 #define PRINT_TOBJ(stack) stack.Print()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
-#define PRINTLN ::_::Print('\n')
+#define PRINTLN ::_::PrintNL()
 #define PRINT_FUNCTION_LINE \
-  ::_::Print('\n');         \
+  ::_::PrintNL();           \
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
 #define SOCKET_SAVE(cursor, end_a) Socket socket_to_print(cursor, end_a)
 #define SOCKET_FILL(begin, end_or_size, c) \

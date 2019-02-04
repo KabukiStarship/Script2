@@ -17,8 +17,16 @@ specific language governing permissions and limitations under the License. */
 
 #include "c_binary.h"
 #include "c_cout.h"
+#include "t_string.h"
 
 namespace _ {
+
+#ifndef SCRIPT2
+enum {
+  NIL = 0,
+  kLF = '\n',
+};
+#endif
 
 template <typename Char>
 void TPrintString(const Char* string) {
@@ -29,10 +37,14 @@ void TPrintString(const Char* string) {
     c = *(++string);
   }
 }
+template <typename Char>
+void TPrintRepeat(Char c, SI4 count) {
+  for (; count > 0; --count) Print(c);
+}
 
 template <typename Char>
-const Char* TPrintLineffDefault() {
-  static const Char kString[] = {'\n', '-', '-', '-', NIL};
+const Char* TSTRLinef() {
+  static const Char kString[] = {kLF, kLF, '-', '-', '-', kLF, NIL};
   return kString;
 }
 
@@ -63,48 +75,52 @@ TPrintBreak<CH1> ("- \n---\n---\n\n   Foo\n\n---\n---", 10);
 @endcode
 */
 template <typename Char>
-const Char* TPrintLinef(const Char* style = TPrintLineffDefault<Char>(),
-                        SI4 column_count = 80) {
+const Char* TPrintLinef(const Char* style = nullptr, SI4 column_count = 80) {
   enum {
     kBreakCount = 3,
   };
-  if (!style || column_count < kBreakCount) return nullptr;
+  if (!style) style = TSTRLinef<Char>();
+  if (column_count < kBreakCount) return nullptr;
 
   Char c = *style++,  //< Current.
       p = ~c;         //< Previous.
-  SI4 hit_count = 0, column_cursor = 0;
+  SI4 hit_count = 0, column_index = 0;
   while (c) {
-    while (c == '\n') {
-      Print(c);
+    Print(c);
+    ++column_index;
+    if (c == kLF) {
       p = c;
-      c = *style++;
+      do {
+        c = *style++;
+        Print(c);
+      } while (c == kLF);
+      column_index = 0;
     }
-    if (c == p) {
+    if (c == p && !TIsWhitespace<Char>(c)) {
       ++hit_count;
-      if (hit_count >= kBreakCount) {
-        hit_count = 0;
-        for (SI4 i = column_count - column_cursor; i > 0; --i) Print(c);
-        column_cursor = 0;
+      if (hit_count >= kBreakCount - 1) {
+        TPrintRepeat<Char>(c, column_count - column_index);
+        column_index = hit_count = 0;
       }
-    } else {
-      Print(c);
-      ++column_cursor;
     }
     p = c;
     c = *style++;
   }
-  return ++style;
+  return style;
 }
 
 template <typename Char>
-const Char* TPrintLine(Char token = '-', SI4 column_count = 80) {
-  Char style[4];
-  Char* cursor = style;
-  *cursor++ = token;
-  *cursor++ = token;
-  *cursor++ = token;
-  *cursor++ = 0;
-  return TPrintLinef(style, column_count);
+void TPrintLinef(Char token = '-', SI4 column_count = 80) {
+  PrintChar(kLF);
+  TPrintRepeat<Char>(token, column_count);
+  PrintChar(kLF);
+}
+
+template <typename Char>
+const Char* TSTRHeadingf() {
+  static const Char kStrand[] = {kLF, kLF, '+', '-', '-', '-', kLF, '|', ' ',
+                                 NIL, kLF, '+', '-', '-', '-', kLF, NIL};
+  return kStrand;
 }
 
 /* Prints an easy-to-read text heading with a formatting options.
@@ -114,17 +130,16 @@ TPrintHeadingf<CH1> ("\n+---\0\n+---", 80, "Foo ", "Bar ",
 @endcode
 */
 template <typename Char>
-void TPrintHeadingf(const Char* caption,
-                    const Char* style = THeadingfDefault<Char>(),
+void TPrintHeadingf(const Char* caption, const Char* style = nullptr,
                     SI4 column_count = 80, const Char* caption2 = nullptr,
                     const Char* caption3 = nullptr) {
-  if (!caption || !style) return;
-  style = TPrintLinef(style, column_count);
+  if (!style) style = TSTRHeadingf<Char>();
+  style = TPrintLinef<Char>(style, column_count);
   if (!style) return;
   Print(caption);
-  if (!caption2) Print(caption2);
-  if (!caption3) Print(caption3);
-  return TPrintLinef(style, column_count);
+  if (caption2) Print(caption2);
+  if (caption3) Print(caption3);
+  TPrintLinef<Char>(style, column_count);
 }
 
 /* Prints the given token aligned right the given column_count.
@@ -136,7 +151,7 @@ template <typename Char = CH1>
 void TPrintRight(const Char* item, SI4 column_count = 80) {
   if (!item || column_count < 1) return;
 
-  auto token_end = StrandEnd(item);
+  const Char* token_end = TSTREnd<Char>(item);
   if (item == token_end) return;
   SIW length = token_end - item, space_count = column_count - length;
 
@@ -170,7 +185,7 @@ template <typename Char = CH1>
 void TPrintCenter(const Char* item, SI4 column_count = 80) {
   if (!item || column_count < 1) return;
 
-  auto token_end = StrandEnd(item);
+  const Char* token_end = TSTREnd<Char>(item);
   if (item == token_end) return;
   SIW length = token_end - item, space_count = column_count - length;
 
@@ -192,7 +207,7 @@ void TPrintCenter(const Char* item, SI4 column_count = 80) {
       Print('.', '.', '.');
   } else {
     while (length > 0) Print(*item++);
-    TPrintHeadingf<Char>('.', 3);
+    Print('.', '.', '.');
   }
 }
 
@@ -236,7 +251,7 @@ void TPrintChars(const Char* start, const Char* stop) {
 
   Char c;
   while (start < stop) {
-    Print('\n');
+    PrintNL();
     Print('|');
     for (SI4 i = 0; i < 64; ++i) {
       c = *start++;

@@ -228,7 +228,7 @@ class Room : public Operand {
   virtual CH1 CommandNext();
 
   /* Script2 operations. */
-  virtual const Op* Star(CHW index, CCrabs* crabs);
+  virtual const Op* Star(CHN index, CCrabs* crabs);
 
 #if USING_SCRIPT2_TEXT
   /* Prints the Room to the stdout. */

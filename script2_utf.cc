@@ -13,29 +13,23 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#include "t_strand.h"
-
-namespace _ {
-const CH1* HeadingfDefaultCH1() { return THeadingfDefault<CH1>(); }
-}  // namespace _
-
 #if SEAM >= SCRIPT2_3
-#include <cstdio>
-
 #if SEAM == SCRIPT2_3
-#include "global_release.inl"
+#include "module_release.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
+#include "t_strand.h"
+
 #if USING_UTF8 == YES
-#include "c_utf1.h"
 
 namespace _ {
 
+/*
 SI4 COutHeap1(CObject& obj, SIW function, void* arg) {
   return TCOutHeap<CH1>(obj, function, arg);
-}
+}*/
 
 const CH1* StringEmpty() { return TSTREmpty<CH1>(); }
 
@@ -47,57 +41,57 @@ BOL IsWhitespace(CH1 item) { return TIsWhitespace<CH1>(item); }
 
 CH1 PrintableChar(CH1 item) { return TPrintableChar<CH1>(item); }
 
-const CH1* StrandEnd(const CH1* start) { return TStrandEnd<CH1>(start); }
+const CH1* STREnd(const CH1* start) { return TSTREnd<CH1>(start); }
 
 SI4 StrandLength(const CH1* start) { return TStrandLength<CH1, SI4>(start); }
 
 const CH1* StrandLineEnd(const CH1* start, SI4 count) {
-  return TStrandLineEnd<CH1>(start, count);
+  return TSTRLineEnd<CH1>(start, count);
 }
 
 const CH1* StrandLineEnd(const CH1* start, const CH1* stop, SI4 count) {
-  return TStrandLineEnd<CH1>(start, stop, count);
+  return TSTRLineEnd<CH1>(start, stop, count);
 }
 
 const CH1* StrandDecimalStop(const CH1* start, const CH1* stop) {
-  return TStrandDecimalEnd<CH1>(start);
+  return TSTRDecimalEnd<CH1>(start);
 }
 
 const CH1* StrandDecimalStop(const CH1* start) {
-  return TStrandDecimalEnd<CH1>(start);
+  return TSTRDecimalEnd<CH1>(start);
 }
 
-const CH1* StrandSkipChar(const CH1* start, CH1 skip_char) {
-  return TStrandSkipChar<CH1>(start, skip_char);
+const CH1* STRSkipChar(const CH1* start, CH1 skip_char) {
+  return TSTRSkipChar<CH1>(start, skip_char);
 }
 
-const CH1* StrandSkipSpaces(const CH1* start) {
-  return TStrandSkipSpaces<CH1>(start);
+const CH1* STRSkipSpaces(const CH1* start) {
+  return TSTRSkipSpaces<CH1>(start);
 }
 
-const CH1* StrandSkipSpaces(const CH1* start, const CH1* stop) {
-  return TStrandSkipSpaces<CH1>(start, stop);
+const CH1* STRSkipSpaces(const CH1* start, const CH1* stop) {
+  return TSTRSkipSpaces<CH1>(start, stop);
 }
 
-const CH1* StrandEquals(const CH1* text_a, const CH1* text_b) {
-  return TStrandEquals<CH1>(text_a, text_b);
+const CH1* STREquals(const CH1* text_a, const CH1* text_b) {
+  return TSTREquals<CH1>(text_a, text_b);
 }
 
-const CH1* StrandEquals(const CH1* start, const CH1* stop, const CH1* query) {
-  return TStrandEquals<CH1>(start, stop, query);
+const CH1* STREquals(const CH1* start, const CH1* stop, const CH1* query) {
+  return TSTREquals<CH1>(start, stop, query);
 }
 
-SI4 StrandCompare(const CH1* text_a, const CH1* text_b) {
-  return TStrandCompare<CH1>(text_a, text_b);
+SI4 STRCompare(const CH1* text_a, const CH1* text_b) {
+  return TSTRCompare<CH1>(text_a, text_b);
 }
 /*
-SI4 StrandCompare(const CH1* text_a, const CH1* stop,
+SI4 STRCompare(const CH1* text_a, const CH1* stop,
                   const CH1* text_b) {
-  return TStrandCompare<CH1>(text_a, stop, text_b);
+  return TSTRCompare<CH1>(text_a, stop, text_b);
 }*/
 
-const CH1* StrandFind(const CH1* start, const CH1* query) {
-  return TStrandFind<CH1>(start, query);
+const CH1* STRFind(const CH1* start, const CH1* query) {
+  return TSTRFind<CH1>(start, query);
 }
 
 CH1* Print(CH1* start, CH1* stop, const CH1* item) {
@@ -362,6 +356,227 @@ const CH1* Scan(const CH1* start, UI8& result) {
   return TScanUnsigned<UI8, CH1>(start, result);
 }
 
+Token1::Token1(const CH1* item, SI4 count) : string_(item), count_(count) {
+  Print(item);
+}
+
+#if USING_UTF16 == YES
+Token1::Token1(CH2 item, SI4 count) : string_(strand_), count_(count) {
+  Print(item);
+}
+
+Token1::Token1(const CH2* item, SI4 count) : string_(strand_), count_(count) {}
+#endif
+
+#if USING_UTF32 == YES
+Token1::Token1(CH4 item, SI4 count) : string_(strand_), count_(count) {
+  Print(item);
+}
+
+Token1::Token1(const CH4* item, SI4 count) : count_(count) { Print(item); }
+#endif
+
+Token1::Token1(SI4 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+
+Token1::Token1(UI4 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+
+Token1::Token1(SI8 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+
+Token1::Token1(UI8 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+
+#if USING_FP4 == YES
+Token1::Token1(FP4 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+#endif
+#if USING_FP8 == YES
+Token1::Token1(FP8 item, SI4 count) : string_(strand_), count_(count) {
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+#endif
+
+const CH1* Token1::String() { return string_; }
+
+CH1* Token1::Strand() { return strand_; }
+
+const CH1* Token1::Set(const CH1* string) {
+  if (!string) return string;
+  string_ = string;
+  return string;
+}
+
+const CH1* Token1::Get() {
+  const CH1* string = string_;
+  return string ? string : strand_;
+}
+
+SI4 Token1::Count() { return count_; }
+
+CH1* Token1::Print(CH1 item) {
+  return ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
+
+CH1* Token1::Print(const CH1* item) {
+  CH1* cursor = ::_::TPrint<CH1>(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+#if USING_UTF16 == YES
+CH1* Token1::Print(CH2 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+CH1* Token1::Print(const CH2* item) {
+  CH1* cursor = ::_::TPrint<CH1>(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+#endif
+#if USING_UTF32 == YES
+CH1* Token1::Print(CH4 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+CH1* Token1::Print(const CH4* item) {
+  CH1* cursor = ::_::TPrint<CH1>(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+#endif
+
+CH1* Token1::Print(SI4 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+CH1* Token1::Print(UI4 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+CH1* Token1::Print(SI8 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+CH1* Token1::Print(UI8 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+#if USING_FP4 == YES
+CH1* Token1::Print(FP4 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+
+#endif
+#if USING_FP8 == YES
+CH1* Token1::Print(FP8 item) {
+  CH1* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
+  if (!cursor) return cursor;
+  string_ = nullptr;
+  return cursor;
+}
+#endif
+
+Center1::Center1(CH1 item, SI4 count) : token(item, count) {}
+
+Center1::Center1(const CH1* item, SI4 count) : token(item, count) {}
+
+#if USING_UTF16 == YES
+Center1::Center1(const CH2* item, SI4 count) : token(item, count) {}
+#endif
+
+#if USING_UTF32 == YES
+Center1::Center1(const CH4* item, SI4 count) : token(item, count) {}
+#endif
+
+Center1::Center1(SI4 item, SI4 count) : token(item, count) {}
+
+Center1::Center1(UI4 item, SI4 count) : token(item, count) {}
+
+Center1::Center1(SI8 item, SI4 count) : token(item, count) {}
+
+#if USING_FP4 == YES
+Center1::Center1(FP4 item, SI4 count) : token(item, count) {}
+#endif
+#if USING_FP8 == YES
+Center1::Center1(FP8 item, SI4 count) : token(item, count) {}
+#endif
+
+Center1::Center1(UI8 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(CH1 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(const CH1* item, SI4 count) : token(item, count) {}
+
+#if USING_UTF16 == YES
+Right1::Right1(CH2 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(const CH2* item, SI4 count) : token(item, count) {}
+#endif
+#if USING_UTF32 == YES
+Right1::Right1(CH4 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(const CH4* item, SI4 count) : token(item, count) {}
+#endif
+
+Right1::Right1(SI4 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(UI4 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(SI8 item, SI4 count) : token(item, count) {}
+
+Right1::Right1(UI8 item, SI4 count) : token(item, count) {}
+
+#if USING_FP4 == YES
+Right1::Right1(FP4 item, SI4 count) : token(item, count) {}
+#endif
+#if USING_FP8 == YES
+Right1::Right1(FP8 item, SI4 count) : token(item, count) {}
+#endif
+
+Linef1::Linef1(CH1 item, SI4 count) : token(token.Strand(), count) {
+  CH1* strand = token.Strand();
+  TPrint<CH1>(strand, strand + kTokenLongest, item);
+}
+
+Headingf1::Headingf1(const CH1* caption1, const CH1* style, SI4 count,
+                     const CH1* caption2, const CH1* caption3)
+    : caption(caption1, count),
+      style(style),
+      caption2(caption2),
+      caption3(caption3) {}
+
 UTF1::UTF1(CH1* start, SIW buffer_size)
     : start(start), stop(start + buffer_size - 1) {
   DASSERT(start);
@@ -516,224 +731,6 @@ Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
   TPrint1<CH1>(strand_, item);
 }
 
-Token1::Token1(const CH1* item, SI4 count) : string_(item), count_(count) {
-  Print(item);
-}
-
-#if USING_UTF16 == YES
-Token1::Token1(CH2 item, SI4 count) : string_(strand_), count_(count) {
-  Print(item);
-}
-
-Token1::Token1(const CH2* item, SI4 count) : string_(strand_), count_(count) {}
-#endif
-
-#if USING_UTF32 == YES
-Token1::Token1(CH4 item, SI4 count) : string_(strand_), count_(count) {
-  Print(item);
-}
-
-Token1::Token1(const CH4* item, SI4 count) : count_(count) { Print(item); }
-#endif
-
-Token1::Token1(SI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-
-Token1::Token1(UI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-
-Token1::Token1(SI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-
-Token1::Token1(UI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-
-#if USING_FP4 == YES
-Token1::Token1(FP4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-#endif
-#if USING_FP8 == YES
-Token1::Token1(FP8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
-}
-#endif
-
-const CH1* Token1::String() { return string_; }
-
-CH1* Token1::Strand() { return strand_; }
-
-const CH1* Token1::Set(const CH1* string) {
-  if (!string) return string;
-  string_ = string;
-  return string;
-}
-
-const CH1* Token1::Get() {
-  const CH1* string = string_;
-  return string ? string : strand_;
-}
-
-SI4 Token1::Count() { return count_; }
-
-CH1* Token1::Print(CH1 item) { return ::_::Print(strand_, kTokenCount, item); }
-
-CH1* Token1::Print(const CH1* item) {
-  auto cursor = ::_::TPrint<CH1>(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-#if USING_UTF16 == YES
-CH1* Token1::Print(CH2 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-CH1* Token1::Print(const CH2* item) {
-  auto cursor = ::_::TPrint<CH1>(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-#endif
-#if USING_UTF32 == YES
-CH1* Token1::Print(CH4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-CH1* Token1::Print(const CH4* item) {
-  auto cursor = ::_::TPrint<CH1>(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-#endif
-
-CH1* Token1::Print(SI4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-CH1* Token1::Print(UI4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-CH1* Token1::Print(SI8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-CH1* Token1::Print(UI8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-#if USING_FP4 == YES
-CH1* Token1::Print(FP4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-
-#endif
-#if USING_FP8 == YES
-CH1* Token1::Print(FP8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
-  if (!cursor) return cursor;
-  string_ = nullptr;
-  return cursor;
-}
-#endif
-
-Center1::Center1(const CH1* item, SI4 count) : token(item, count) {}
-
-#if USING_UTF16 == YES
-Center1::Center1(const CH2* item, SI4 count) : token(item, count) {}
-#endif
-
-#if USING_UTF32 == YES
-Center1::Center1(const CH4* item, SI4 count) : token(item, count) {}
-#endif
-
-Center1::Center1(SI4 item, SI4 count) : token(item, count) {}
-
-Center1::Center1(UI4 item, SI4 count) : token(item, count) {}
-
-Center1::Center1(SI8 item, SI4 count) : token(item, count) {}
-
-#if USING_FP4 == YES
-Center1::Center1(FP4 item, SI4 count) : token(item, count) {}
-#endif
-#if USING_FP8 == YES
-Center1::Center1(FP8 item, SI4 count) : token(item, count) {}
-#endif
-
-Center1::Center1(UI8 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(CH1 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(const CH1* item, SI4 count) : token(item, count) {}
-
-#if USING_UTF16 == YES
-Right1::Right1(CH2 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(const CH2* item, SI4 count) : token(item, count) {}
-#endif
-#if USING_UTF32 == YES
-Right1::Right1(CH4 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(const CH4* item, SI4 count) : token(item, count) {}
-#endif
-
-Right1::Right1(SI4 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(UI4 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(SI8 item, SI4 count) : token(item, count) {}
-
-Right1::Right1(UI8 item, SI4 count) : token(item, count) {}
-
-#if USING_FP4 == YES
-Right1::Right1(FP4 item, SI4 count) : token(item, count) {}
-#endif
-#if USING_FP8 == YES
-Right1::Right1(FP8 item, SI4 count) : token(item, count) {}
-#endif
-
-Linef1::Linef1(CH1 item, SI4 count) : token(token.Strand(), count) {
-  TPrint3<CH1>(token.Strand(), item);
-}
-
-Linef1::Linef1(const CH1* item, SI4 count) : token(item, count) {}
-
-Headingf1::Headingf1(const CH1* caption1, const CH1* style, SI4 count,
-                     const CH1* caption2, const CH1* caption3)
-    : caption(caption1, count),
-      style(style),
-      caption2(caption2),
-      caption3(caption3) {}
-
 /*
 UIW* COut1(UIW* begin, SIW function, void* arg) {
   return TCOut<CH1>(begin, function, arg);
@@ -789,7 +786,6 @@ _::UTF1& operator<<(::_::UTF1& utf, ::_::Headingf1 item) {
 #endif  //< #if USING_UTF8
 
 #if USING_UTF16 == YES
-#include "c_utf2.h"
 namespace _ {
 
 SI4 COutHeap2(CObject& obj, SIW function, void* arg) {
@@ -806,52 +802,52 @@ BOL IsWhitespace(CH2 item) { return TIsWhitespace<CH2>(item); }
 
 CH2 PrintableChar(CH2 item) { return TPrintableChar<CH2>(item); }
 
-const CH2* StrandEnd(const CH2* start) { return TStrandEnd<CH2>(start); }
+const CH2* STREnd(const CH2* start) { return TSTREnd<CH2>(start); }
 
 SI4 StrandLength(const CH2* start) { return TStrandLength<CH2, SI4>(start); }
 
 const CH2* StrandLineEnd(const CH2* start, SI4 count) {
-  return TStrandLineEnd<CH2>(start, count);
+  return TSTRLineEnd<CH2>(start, count);
 }
 
 const CH2* StrandLineEnd(const CH2* start, const CH2* stop, SI4 count) {
-  return TStrandLineEnd<CH2>(start, stop, count);
+  return TSTRLineEnd<CH2>(start, stop, count);
 }
 
 const CH2* StrandDecimalEnd(const CH2* start, const CH2* stop) {
-  return TStrandDecimalEnd<CH2>(start, stop);
+  return TSTRDecimalEnd<CH2>(start, stop);
 }
 
 const CH2* StrandDecimalEnd(const CH2* start) {
-  return TStrandDecimalEnd<CH2>(start);
+  return TSTRDecimalEnd<CH2>(start);
 }
 
-const CH2* StrandSkipChar(const CH2* start, CH2 skip_char) {
-  return TStrandSkipChar<CH2>(start, skip_char);
+const CH2* STRSkipChar(const CH2* start, CH2 skip_char) {
+  return TSTRSkipChar<CH2>(start, skip_char);
 }
 
-const CH2* StrandSkipSpaces(const CH2* start) {
-  return TStrandSkipSpaces<CH2>(start);
+const CH2* STRSkipSpaces(const CH2* start) {
+  return TSTRSkipSpaces<CH2>(start);
 }
 
-const CH2* StrandSkipSpaces(const CH2* start, const CH2* stop) {
-  return TStrandSkipSpaces<CH2>(start, stop);
+const CH2* STRSkipSpaces(const CH2* start, const CH2* stop) {
+  return TSTRSkipSpaces<CH2>(start, stop);
 }
 
-const CH2* StrandEquals(const CH2* text_a, const CH2* text_b) {
-  return TStrandEquals<CH2>(text_a, text_b);
+const CH2* STREquals(const CH2* text_a, const CH2* text_b) {
+  return TSTREquals<CH2>(text_a, text_b);
 }
 
-const CH2* StrandEquals(const CH2* start, const CH2* stop, const CH2* query) {
-  return TStrandEquals<CH2>(start, stop, query);
+const CH2* STREquals(const CH2* start, const CH2* stop, const CH2* query) {
+  return TSTREquals<CH2>(start, stop, query);
 }
 
-SI4 StrandCompare(const CH2* text_a, const CH2* text_b) {
-  return TStrandCompare<CH2>(text_a, text_b);
+SI4 STRCompare(const CH2* text_a, const CH2* text_b) {
+  return TSTRCompare<CH2>(text_a, text_b);
 }
 
-const CH2* StrandFind(const CH2* start, const CH2* query) {
-  return TStrandFind<CH2>(start, query);
+const CH2* STRFind(const CH2* start, const CH2* query) {
+  return TSTRFind<CH2>(start, query);
 }
 
 #if USING_UTF8 == YES
@@ -1060,11 +1056,11 @@ CH2* PrintLinef(CH2* start, CH2* stop, const CH2* token, SI4 count) {
   return TPrintLinef<CH2>(start, stop, token, count);
 }
 
-CH2* PrintRepeat(CH2* start, CH2* stop, CH2 token, SI4 count) {
+CH2* PrintHeadingf(CH2* start, CH2* stop, CH2 token, SI4 count) {
   return TPrintHeadingf<CH2>(start, stop, token, count);
 }
 
-CH2* PrintRepeat(CH2* start, CH2* stop, const CH2* token, SI4 count) {
+CH2* PrintHeadingf(CH2* start, CH2* stop, const CH2* token, SI4 count) {
   return TPrintHeadingf<CH2>(start, stop, token, count);
 }
 
@@ -1273,29 +1269,29 @@ Token2::Token2(const CH4* item, SI4 count) : string_(item), count_(count) {
 #endif
 
 Token2::Token2(SI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token2::Token2(UI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token2::Token2(SI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token2::Token2(UI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 #if USING_FP4 == YES
 Token2::Token2(FP4 item, SI4 count) : string_(strand_), count_(count) {
-  Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 #endif
 #if USING_FP8 == YES
 Token2::Token2(FP8 item, SI4 count) : string_(strand_), count_(count) {
-  Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 #endif
 
@@ -1316,24 +1312,26 @@ const CH2* Token2::Set(const CH2* string) {
 
 SI4 Token2::Count() { return count_; }
 
-CH2* Token2::Print(CH1 item) { return ::_::Print(strand_, kTokenCount, item); }
+CH2* Token2::Print(CH1 item) {
+  return ::_::Print(strand_, strand_ + kTokenLongest, item);
+}
 
 CH2* Token2::Print(const CH1* item) {
-  auto cursor = ::_::TPrint<CH2>(strand_, kTokenCount, item);
+  CH2* cursor = ::_::TPrint<CH2>(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 #if USING_UTF16 == YES
 CH2* Token2::Print(CH2 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH2* Token2::Print(const CH2* item) {
-  auto cursor = ::_::TPrint<CH2>(strand_, kTokenCount, item);
+  CH2* cursor = ::_::TPrint<CH2>(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -1342,14 +1340,14 @@ CH2* Token2::Print(const CH2* item) {
 #endif
 #if USING_UTF32 == YES
 CH2* Token2::Print(CH4 item) {
-  auto cursor = ::_::TPrint<CH2>(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH2* Token2::Print(const CH4* item) {
-  auto cursor = ::_::TPrint<CH2>(strand_, kTokenCount, item);
+  CH2* cursor = ::_::TPrint<CH2>(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -1357,28 +1355,28 @@ CH2* Token2::Print(const CH4* item) {
 #endif
 
 CH2* Token2::Print(SI4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH2* Token2::Print(UI4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH2* Token2::Print(SI8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH2* Token2::Print(UI8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -1386,7 +1384,7 @@ CH2* Token2::Print(UI8 item) {
 
 #if USING_FP4 == YES
 CH2* Token2::Print(FP4 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -1395,14 +1393,20 @@ CH2* Token2::Print(FP4 item) {
 #endif
 #if USING_FP8 == YES
 CH2* Token2::Print(FP8 item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH2* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 #endif
 
+Center2::Center2(const CH1* item, SI4 count) : token(item, count) {}
+
+Center2::Center2(CH1 item, SI4 count) : token(item, count) {}
+
 Center2::Center2(const CH2* item, SI4 count) : token(item, count) {}
+
+Center2::Center2(CH2 item, SI4 count) : token(item, count) {}
 
 Center2::Center2(SI4 item, SI4 count) : token(item, count) {}
 
@@ -1449,12 +1453,11 @@ Right2::Right2(FP8 item, SI4 count) : token(item, count) {}
 #endif
 
 Linef2::Linef2(CH2 item, SI4 count) : token(token.Strand(), count) {
-  TPrint3<CH2>(token.Strand(), item);
+  CH2* strand = token.Strand();
+  ::_::Print(strand, strand + kTokenLongest, item);
 }
 
 Linef2::Linef2(const CH2* item, SI4 count) : token(item, count) {}
-
-const CH2* HeadingfDefaultCH2() { return THeadingfDefault<CH2>(); }
 
 Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
                      const CH2* caption2, const CH2* caption3)
@@ -1508,7 +1511,6 @@ _::UTF2& operator<<(::_::UTF2& utf, ::_::Headingf2 item) {
 #endif  //< #if USING_UTF16
 
 #if USING_UTF32 == YES
-#include "c_utf4.h"
 namespace _ {
 /*
 SI4 COutHeap4 (CObject& obj, SIW function, void* arg) {
@@ -1525,44 +1527,44 @@ BOL IsWhitespace(CH4 item) { return TIsWhitespace<CH4>(item); }
 
 CH4 PrintableChar(CH4 item) { return TPrintableChar<CH4>(item); }
 
-const CH4* StrandEnd(const CH4* start) { return TStrandEnd<CH4>(start); }
+const CH4* STREnd(const CH4* start) { return TSTREnd<CH4>(start); }
 
 SI4 StrandLength(const CH4* start) { return TStrandLength<CH4, SI4>(start); }
 
 const CH4* StrandLineEnd(const CH4* start, SI4 count) {
-  return TStrandLineEnd<CH4>(start, count);
+  return TSTRLineEnd<CH4>(start, count);
 }
 
 const CH4* StrandLineEnd(const CH4* start, const CH4* stop, SI4 count) {
-  return TStrandLineEnd<CH4>(start, stop, count);
+  return TSTRLineEnd<CH4>(start, stop, count);
 }
 
 const CH4* StrandDecimalEnd(const CH4* start, const CH4* stop) {
-  return TStrandDecimalEnd<CH4>(start, stop);
+  return TSTRDecimalEnd<CH4>(start, stop);
 }
 
 const CH4* StrandDecimalEnd(const CH4* start) {
-  return TStrandDecimalEnd<CH4>(start);
+  return TSTRDecimalEnd<CH4>(start);
 }
 
-const CH4* StrandSkipChar(const CH4* start, CH4 skip_char) {
-  return TStrandSkipChar<CH4>(start, skip_char);
+const CH4* STRSkipChar(const CH4* start, CH4 skip_char) {
+  return TSTRSkipChar<CH4>(start, skip_char);
 }
 
-const CH4* StrandSkipSpaces(const CH4* start) {
-  return TStrandSkipSpaces<CH4>(start);
+const CH4* STRSkipSpaces(const CH4* start) {
+  return TSTRSkipSpaces<CH4>(start);
 }
 
-const CH4* StrandSkipSpaces(const CH4* start, const CH4* stop) {
-  return TStrandSkipSpaces<CH4>(start, stop);
+const CH4* STRSkipSpaces(const CH4* start, const CH4* stop) {
+  return TSTRSkipSpaces<CH4>(start, stop);
 }
 
-const CH4* StrandEquals(const CH4* text_a, const CH4* text_b) {
-  return TStrandEquals<CH4>(text_a, text_b);
+const CH4* STREquals(const CH4* text_a, const CH4* text_b) {
+  return TSTREquals<CH4>(text_a, text_b);
 }
 
-const CH4* StrandEquals(const CH4* start, const CH4* stop, const CH4* text_b) {
-  return TStrandEquals<CH4>(start, stop, text_b);
+const CH4* STREquals(const CH4* start, const CH4* stop, const CH4* text_b) {
+  return TSTREquals<CH4>(start, stop, text_b);
 }
 
 /*
@@ -1572,12 +1574,12 @@ BOL TTextQualifies(const CH4* start, const CH4* stop) {
   return TTextQualifies<CH4>(start, stop);
 }*/
 
-SI4 StrandCompare(const CH4* text_a, const CH4* text_b) {
-  return TStrandCompare<CH4>(text_a, text_b);
+SI4 STRCompare(const CH4* text_a, const CH4* text_b) {
+  return TSTRCompare<CH4>(text_a, text_b);
 }
 
-const CH4* StrandFind(const CH4* start, const CH4* item) {
-  return TStrandFind<CH4>(start, item);
+const CH4* STRFind(const CH4* start, const CH4* item) {
+  return TSTRFind<CH4>(start, item);
 }
 
 #if USING_UTF8 == YES
@@ -1991,29 +1993,29 @@ Token4::Token4(const CH4* item, SI4 count) : string_(item), count_(count) {
 }
 
 Token4::Token4(SI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token4::Token4(UI4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token4::Token4(SI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 Token4::Token4(UI8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 
 #if USING_FP4 == YES
 Token4::Token4(FP4 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 #endif
 #if USING_FP8 == YES
 Token4::Token4(FP8 item, SI4 count) : string_(strand_), count_(count) {
-  ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  ::_::Print(strand_, strand_ + kTokenLongest, item);
 }
 #endif
 
@@ -2029,25 +2031,25 @@ const CH4* Token4::Get() {
 SI4 Token4::Count() { return count_; }
 
 CH4* Token4::Print(CH1 item) {
-  return ::_::TPrint<CH4>(strand_, kTokenCount, item);
+  return ::_::TPrint<CH4>(strand_, strand_ + kTokenLongest, item);
 }
 
 CH4* Token4::Print(const CH1* item) {
-  auto cursor = ::_::TPrint<CH4>(strand_, kTokenCount, item);
+  CH4* cursor = ::_::TPrint<CH4>(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 #if USING_UTF16 == YES
 CH4* Token4::Print(CH2 item) {
-  auto cursor = ::_::TPrint<CH4>(strand_, kTokenCount, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH4* Token4::Print(const CH2* item) {
-  auto cursor = ::_::TPrint<CH4>(strand_, kTokenCount, item);
+  CH4* cursor = ::_::TPrint<CH4>(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -2056,14 +2058,14 @@ CH4* Token4::Print(const CH2* item) {
 #endif
 #if USING_UTF32 == YES
 CH4* Token4::Print(CH4 item) {
-  auto cursor = ::_::TPrint<CH4>(strand_, kTokenCount, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH4* Token4::Print(const CH4* item) {
-  auto cursor = ::_::Print(strand_, kTokenCount, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -2071,28 +2073,28 @@ CH4* Token4::Print(const CH4* item) {
 #endif
 
 CH4* Token4::Print(SI4 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH4* Token4::Print(UI4 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH4* Token4::Print(SI8 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
 }
 
 CH4* Token4::Print(UI8 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -2100,7 +2102,7 @@ CH4* Token4::Print(UI8 item) {
 
 #if USING_FP4 == YES
 CH4* Token4::Print(FP4 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -2109,7 +2111,7 @@ CH4* Token4::Print(FP4 item) {
 #endif
 #if USING_FP8 == YES
 CH4* Token4::Print(FP8 item) {
-  auto cursor = ::_::Print(strand_, strand_ + kTokenCount - 1, item);
+  CH4* cursor = ::_::Print(strand_, strand_ + kTokenLongest, item);
   if (!cursor) return cursor;
   string_ = nullptr;
   return cursor;
@@ -2150,12 +2152,11 @@ Right4::Right4(FP8 item, SI4 count) : token(item, count) {}
 #endif
 
 Linef4::Linef4(CH4 item, SI4 count) : token(token.Strand(), count) {
-  TPrint3<CH4>(token.Strand(), item);
+  CH4* strand = token.Strand();
+  ::_::Print(strand, strand + kTokenLongest, item);
 }
 
 Linef4::Linef4(const CH4* item, SI4 count) : token(item, count) {}
-
-const CH4* HeadingfDefaultCH4() { return THeadingfDefault<CH4>(); }
 
 Headingf4::Headingf4(const CH4* caption, const CH4* style, SI4 count,
                      const CH4* caption2, const CH4* caption3)

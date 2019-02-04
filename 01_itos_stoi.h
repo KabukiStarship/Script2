@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_binary.h"
 
 #if SEAM == SCRIPT2_1
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 #if COMPILER == VISUAL_CPP
@@ -120,7 +120,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
   num_bits);
       }
   }
-  PRINT ('\n');
+  PRINTNL;
   system ("PAUSE");*/
 
   static const UI8 problem_children[] = {
@@ -151,7 +151,6 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   for (SI4 i = 0; i < kNumProblemChildren; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = problem_children[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
@@ -162,7 +161,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
       break;
     }
     *result = 0;
-    if (TStrandCompare<>(expecting, text)) {
+    if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
              expecting, TStrandLength<>(expecting), text,
              TStrandLength<>(text));
@@ -172,7 +171,6 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
   PRINT("\n\nTesting edge conditions...\n\n");
   for (SI4 i = 0; i < 28; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = test_value[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) ", i + 1);
@@ -193,7 +191,6 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   for (SI4 i = 0; i < 0x0000ffff; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
@@ -202,7 +199,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
       break;
     }
     *result = 0;
-    if (TStrandCompare<>(expecting, text)) {
+    if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
              expecting, TStrandLength<>(expecting), text,
              TStrandLength<>(text));

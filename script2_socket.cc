@@ -18,9 +18,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_socket.h"
 
 #if SEAM == SCRIPT2_2
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -107,6 +107,7 @@ CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
   CH1 *start = reinterpret_cast<CH1*>(begin),
       *stop = reinterpret_cast<CH1*>(end);
   ASSERT(start);
+  SIW count = stop - start;
   PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
 
   PRINTF("\nFilling %i bytes from %p", (SI4)count, start);

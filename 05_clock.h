@@ -17,9 +17,9 @@ specific language governing permissions and limitations under the License. */
 #include <c_clock.h>
 
 #if SEAM == SCRIPT2_5
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;

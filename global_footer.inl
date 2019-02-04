@@ -4,6 +4,7 @@
 #undef PRINTF
 #undef PAUSE
 #undef PAUSEF
+#undef PRINTNL
 #undef PRINT_LINEF
 #undef PRINT_LINEF_COUNT
 #undef PRINT_HEADING

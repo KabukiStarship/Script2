@@ -21,9 +21,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_socket.h"
 
 #if SEAM == SCRIPT2_11
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -550,7 +550,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
       << "size_pile:" << size_pile << " size:" << map->size;
   utf << "\n|";
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   const CH1* states =
       reinterpret_cast<const CH1*>(map) + sizeof(TMap<Size, Index, I>);
@@ -570,7 +570,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
       << Right<>("index_u", 10) << Right<>("collisions", 11);
   utf << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   for (Index i = 0; i < count; ++i) {
     // Print each record as a row.
@@ -602,7 +602,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
   }
 
   return utf << '_' << Socket(reinterpret_cast<const CH1*>(map), map->size)
-             << '\n';
+             << kLF;
 }
 
 /* C++ Wrapper for the AsciiMap that uses dynamic memory and auto-grows.

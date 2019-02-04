@@ -16,15 +16,6 @@ specific language governing permissions and limitations under the License. */
 #ifndef SCRIPT2_TUTF
 #define SCRIPT2_TUTF 1
 
-namespace _ {
-template <typename Char>
-const Char* THeadingfDefault() {
-  static const Char kString[] = {'\n', '+',  '-', '-', '-', '\n', '|', ' ',
-                                 NIL,  '\n', '+', '-', '-', '-',  NIL};
-  return kString;
-}
-}  // namespace _
-
 #if SEAM >= SCRIPT2_3
 
 #include "c_strand.h"
@@ -35,9 +26,9 @@ const Char* THeadingfDefault() {
 #include "t_object.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -59,14 +50,14 @@ const Char* TSTREmpty() {
 /* The new-line s. */
 template <typename Char = CH1>
 const Char* TSTRNL() {
-  static const Char kStrand[] = {'\n'};
+  static const Char kStrand[] = {kLF};
   return kStrand;
 }
 
 /* Strand the reads "Error:". */
 template <typename Char = CH1>
 const Char* TSTRError() {
-  static const Char kStrand[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
+  static const Char kStrand[] = {kLF, 'E', 'r', 'r', 'o', 'r', ':', NIL};
   return kStrand;
 }
 
@@ -88,7 +79,7 @@ inline Char* TStrandSet(Char* string) {
 /* Searches fro the s line stop.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-const Char* TStrandLineEnd(const Char* cursor, SI4 column_count = 80) {
+const Char* TSTRLineEnd(const Char* cursor, SI4 column_count = 80) {
   Char c;
   // Scroll to the stop of the line.
   c = *cursor++;
@@ -110,9 +101,9 @@ const Char* TStrandLineEnd(const Char* cursor, SI4 column_count = 80) {
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
 template <typename Char = CH1>
-Char* TStrandLineEnd(Char* cursor, SI4 column_count = 80) {
+Char* TSTRLineEnd(Char* cursor, SI4 column_count = 80) {
   return const_cast<Char*>(
-      TStrandLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
+      TSTRLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
@@ -120,8 +111,8 @@ Char* TStrandLineEnd(Char* cursor, SI4 column_count = 80) {
 @param  stop    The last Char in the buffer.
 @param column_coun In characters. */
 template <typename Char = CH1>
-const Char* TStrandLineEnd(const Char* cursor, const Char* stop,
-                           SI4 column_count = 80) {
+const Char* TSTRLineEnd(const Char* cursor, const Char* stop,
+                        SI4 column_count = 80) {
   if (!cursor) {
     PRINTF("\nText buffer overflow!");
     return nullptr;
@@ -150,17 +141,17 @@ const Char* TStrandLineEnd(const Char* cursor, const Char* stop,
 @param  stop    The last Char in the buffer.
 @param column_coun In characters. */
 template <typename Char = CH1>
-inline Char* TStrandLineEnd(Char* cursor, Char* stop, SI4 column_count = 80) {
+inline Char* TSTRLineEnd(Char* cursor, Char* stop, SI4 column_count = 80) {
   return const_cast<const Char*>(
-      TStrandLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
-                           reinterpret_cast<const Char*>(stop), column_count));
+      TSTRLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
+                        reinterpret_cast<const Char*>(stop), column_count));
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
 template <typename Char = CH1>
-const Char* TStrandDecimalEnd(const Char* cursor, const Char* stop) {
+const Char* TSTRDecimalEnd(const Char* cursor, const Char* stop) {
   ASSERT(cursor);
   ASSERT(cursor <= stop);
   Char c = *cursor++;
@@ -182,16 +173,16 @@ const Char* TStrandDecimalEnd(const Char* cursor, const Char* stop) {
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
 template <typename Char = CH1>
-inline Char* TStrandDecimalEnd(Char* cursor, Char* stop) {
+inline Char* TSTRDecimalEnd(Char* cursor, Char* stop) {
   return const_cast<Char*>(
-      TStrandDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
-                              reinterpret_cast<const Char*>(stop)));
+      TSTRDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
+                           reinterpret_cast<const Char*>(stop)));
 }
 
 /* Skips the given Char in a s if there are any.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-const Char* TStrandSkipChar(const Char* cursor, Char skip_char) {
+const Char* TSTRSkipChar(const Char* cursor, Char skip_char) {
   if (cursor == nullptr) return nullptr;
   Char c = *cursor, d;
   if (c != skip_char) return cursor;
@@ -208,15 +199,15 @@ const Char* TStrandSkipChar(const Char* cursor, Char skip_char) {
 /* Skips the given Char in a s if there are any.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-inline Char* TStrandSkipChar(Char* cursor, Char skip_char) {
+inline Char* TSTRSkipChar(Char* cursor, Char skip_char) {
   return const_cast<const Char*>(
-      TStrandSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
+      TSTRSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
 }
 
 /* Scrolls over any whitespace.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-const Char* TStrandSkipSpaces(const Char* cursor) {
+const Char* TSTRSkipSpaces(const Char* cursor) {
   if (!cursor) return nullptr;
   Char c = *cursor;
   while (TIsWhitespace<Char>(c)) {
@@ -231,8 +222,8 @@ const Char* TStrandSkipSpaces(const Char* cursor) {
 /* Scrolls over any whitespace.
 @param  cursor  The first Char in the buffer. */
 template <typename Char = CH1>
-Char* TStrandSkipSpaces(Char* cursor) {
-  return const_cast<Char*>(TStrandSkipSpaces<Char>(cursor));
+Char* TSTRSkipSpaces(Char* cursor) {
+  return const_cast<Char*>(TSTRSkipSpaces<Char>(cursor));
 }
 
 /* Attempts to find the given query.
@@ -240,7 +231,7 @@ Char* TStrandSkipSpaces(Char* cursor) {
 @param  cursor  The first Char in the buffer.
 @param  query   A query string.  */
 template <typename Char = CH1>
-const Char* TStrandFind(const Char* start, const Char* query) {
+const Char* TSTRFind(const Char* start, const Char* query) {
   ASSERT(start);
   ASSERT(query);
 
@@ -250,7 +241,7 @@ const Char* TStrandFind(const Char* start, const Char* query) {
   if (!c)           //< We're not allowing empty queries.
     return nullptr;
   const Char *start_of_query, *cursor = start;
-  query = TStrandSkipSpaces<Char>(query);
+  query = TSTRSkipSpaces<Char>(query);
 
   // Scroll through each Char and match it to the query Char.
   while (s) {
@@ -280,16 +271,16 @@ const Char* TStrandFind(const Char* start, const Char* query) {
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the . */
 template <typename Char = CH1>
-inline Char* TStrandFind(Char* string, const Char* query) {
+inline Char* TSTRFind(Char* string, const Char* query) {
   return const_cast<Char*>(
-      TStrandFind<Char>(reinterpret_cast<const Char*>(string),
-                        reinterpret_cast<const Char*>(query)));
+      TSTRFind<Char>(reinterpret_cast<const Char*>(string),
+                     reinterpret_cast<const Char*>(query)));
 }
 
 /* Strand skip spaces.
 @return Nil if there are no spaces to skip. */
 template <typename Char = CH1>
-const Char* TStrandSkipSpaces(const Char* cursor, const Char* stop) {
+const Char* TSTRSkipSpaces(const Char* cursor, const Char* stop) {
   if (!cursor) return nullptr;
   if (cursor > stop) return nullptr;
   PRINTF("\nSkipping spaces: ");
@@ -308,10 +299,10 @@ const Char* TStrandSkipSpaces(const Char* cursor, const Char* stop) {
 @param  cursor  The first Char in the buffer.
 @param  stop    The last Char in the buffer. */
 template <typename Char = CH1>
-inline Char* TStrandSkipSpaces(Char* cursor, Char* stop) {
+inline Char* TSTRSkipSpaces(Char* cursor, Char* stop) {
   return const_cast<Char*>(
-      TStrandSkipSpaces<Char>(reinterpret_cast<const Char*>(cursor),
-                              reinterpret_cast<const Char*>(stop)));
+      TSTRSkipSpaces<Char>(reinterpret_cast<const Char*>(cursor),
+                           reinterpret_cast<const Char*>(stop)));
 }
 
 /* Checks if the two strings are the same.
@@ -320,7 +311,7 @@ equivalent s upon success.
 @param  string_a  A cursor to compare to string_b.
 @param  string_b  A cursor to compare to string_a. */
 template <typename Char = CH1>
-const Char* TStrandEquals(const Char* string_a, const Char* string_b) {
+const Char* TSTREquals(const Char* string_a, const Char* string_b) {
   ASSERT(string_a);
   ASSERT(string_b);
   PRINTF("\nComparing \"%s\" to \"%s\"", string_a, string_b);
@@ -354,18 +345,18 @@ equivalent s upon success.
 @param  string_b  A cursor to compare to string_a.
 */
 template <typename Char = CH1>
-inline Char* TStrandEquals(Char* string_a, const Char* string_b) {
+inline Char* TSTREquals(Char* string_a, const Char* string_b) {
   return const_cast<Char*>(
-      TStrandEquals<Char>(reinterpret_cast<const Char*>(string_a),
-                          reinterpret_cast<const Char*>(string_b)));
+      TSTREquals<Char>(reinterpret_cast<const Char*>(string_a),
+                       reinterpret_cast<const Char*>(string_b)));
 }
 
 /* Compares the two strings to see if the are equal.
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
 template <typename Char = CH1>
-const Char* TStrandEquals(const Char* cursor, const Char* stop,
-                          const Char* query) {
+const Char* TSTREquals(const Char* cursor, const Char* stop,
+                       const Char* query) {
   if (!cursor) return nullptr;
   ASSERT(cursor < stop);
   if (!query) return nullptr;
@@ -401,10 +392,10 @@ const Char* TStrandEquals(const Char* cursor, const Char* stop,
 @return Nil of the two strings aren't equal or a pointer to the stop of the
 s upon success. */
 template <typename Char = CH1>
-Char* TStrandEquals(Char* cursor, Char* stop, const Char* query) {
-  return const_cast<Char*>(TStrandEquals(reinterpret_cast<const Char*>(cursor),
-                                         reinterpret_cast<const Char*>(stop),
-                                         query));
+Char* TSTREquals(Char* cursor, Char* stop, const Char* query) {
+  return const_cast<Char*>(TSTREquals(reinterpret_cast<const Char*>(cursor),
+                                      reinterpret_cast<const Char*>(stop),
+                                      query));
 }
 
 /* Checks if the given s isn't empty.
@@ -473,8 +464,8 @@ given range.
 @param  lower_bounds
 @param  upper bounds*/
 template <typename Char = CH1>
-const Char* TStrandSkipCharsInRange(const Char* cursor, Char lower_bounds,
-                                    Char upper_bounds) {
+const Char* TSTRSkipCharsInRange(const Char* cursor, Char lower_bounds,
+                                 Char upper_bounds) {
   ASSERT(cursor);
   ASSERT(lower_bounds < upper_bounds);
   Char c = *cursor;
@@ -489,16 +480,15 @@ given range.
 @param  lower_bounds
 @param  upper bounds*/
 template <typename Char = CH1>
-Char* TStrandSkipCharsInRange(Char* cursor, Char lower_bounds,
-                              Char upper_bounds) {
-  return const_cast<Char*>(TStrandSkipCharsInRange(
+Char* TSTRSkipCharsInRange(Char* cursor, Char lower_bounds, Char upper_bounds) {
+  return const_cast<Char*>(TSTRSkipCharsInRange(
       reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
 }
 
 /* Skips the numbers in the given range. */
 template <typename Char = CH1>
 inline const Char* TStrandSkipNumbers(const Char* cursor) {
-  return const_cast<Char*>(TStrandSkipCharsInRange<Char>(
+  return const_cast<Char*>(TSTRSkipCharsInRange<Char>(
       reinterpret_cast<const Char*>(cursor), '0', '9'));
 }
 /* Skips the numbers in the given range. */
@@ -528,7 +518,7 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* item,
     return nullptr;
   }
 
-  auto item_end = TStrandEnd<Char>(item);
+  auto item_end = TSTREnd<Char>(item);
   Char c;  //< Temp variable.
   if (item == item_end) return cursor;
   SIW length = item_end - item;
@@ -708,7 +698,7 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
         return cursor;
       }
     }
-    *cursor++ = '\n';
+    *cursor++ = kLF;
     if (!c) {
       *cursor = c;
       return cursor;
@@ -743,16 +733,16 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
   Char c;
   while (address_ptr < address_end_ptr) {
-    *cursor++ = '\n';
+    *cursor++ = kLF;
     *cursor++ = '|';
     for (SI4 i = 0; i < 64; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
         c = 'x';
-      else if (!c || c == TAB)
+      else if (!c || c == kTAB)
         c = ' ';
       else if (c < ' ')
-        c = DEL;
+        c = kDEL;
       *cursor++ = c;
     }
     *cursor++ = '|';
@@ -774,77 +764,71 @@ Char TLowercase(Char c) {
 template <typename Char = CH1>
 class TToken {
  public:
-  TToken(CH1 item = 0, SI4 count = kTokenCount)
+  TToken(CH1 item = 0, SI4 count = kTokenLongest)
       : string_(string_), count_(count) {
     auto cursor = strand_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TToken(const CH1* item, SI4 count = kTokenCount)
+  TToken(const CH1* item, SI4 count = kTokenLongest)
       : string_(item), count_(count) {
     if (!item) *strand_ = 0;
   }
 
-  TToken(CH2 item = 0, SI4 count = kTokenCount)
+  TToken(CH2 item = 0, SI4 count = kTokenLongest)
       : string_(string_), count_(count) {
     auto cursor = strand_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TToken(CH4 item = 0, SI4 count = kTokenCount)
+  TToken(CH4 item = 0, SI4 count = kTokenLongest)
       : string_(string_), count_(count) {
     auto cursor = strand_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TToken(const Char* item, SI4 count = kTokenCount)
+  TToken(const CH4* item, SI4 count = kTokenLongest)
       : string_(item), count_(count) {
     if (!item) *strand_ = 0;
   }
 
-  TToken(SI4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(SI4 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 
   /* Prints the item to the token_. */
-  TToken(UI4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(UI4 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 
   /* Prints the item to the token_. */
-  TToken(SI8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(SI8 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 
   /* Prints the item to the token_. */
-  TToken(UI8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(UI8 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 
 #if SEAM >= SCRIPT2_4
   /* Prints the item to the token_. */
-  TToken(FP4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(FP4 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 
   /* Prints the item to the token_. */
-  TToken(FP8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
-  }
-#endif
-
-#if SEAM >= SCRIPT2_4
-  /* Prints the item to the token_. */
-  TToken(FP4 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
-  }
-
-  /* Prints the item to the token_. */
-  TToken(FP8 item, SI4 count = kTokenCount) : string_(string_), count_(count) {
-    Print(strand_, strand_ + kTokenCount - 1, item);
+  TToken(FP8 item, SI4 count = kTokenLongest)
+      : string_(string_), count_(count) {
+    Print(strand_, strand_ + kTokenLongest, item);
   }
 #endif
 
@@ -869,13 +853,9 @@ class TToken {
   /* Gets the count. */
   SI4 Count() { return count_; }
 
-  /* Sets the string_ to the new string.
-  @return Nil upon failure or the string upon success. */
-  const CH1* Set(const CH1* string);
-
   /* Prints the given item to the strand_. */
   inline Char* Print(CH1 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -883,7 +863,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH1* item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -891,7 +871,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(CH2 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -899,7 +879,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH2* item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -907,7 +887,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(CH4 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -915,7 +895,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH4* item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -923,7 +903,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(SI4 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -931,7 +911,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(UI4 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -939,7 +919,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(SI8 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -947,7 +927,7 @@ class TToken {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(UI8 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -956,7 +936,7 @@ class TToken {
 #if USING_FP4 == YES
   /* Prints the given item to the strand_. */
   inline Char* Print(FP4 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -965,7 +945,7 @@ class TToken {
 #if USING_FP8 == YES
   /* Prints the given item to the strand_. */
   inline Char* Print(FP8 item) {
-    auto cursor = ::_::Print(strand_, kTokenCount, item);
+    auto cursor = ::_::Print(strand_, kTokenLongest, item);
     if (!cursor) return cursor;
     string_ = nullptr;
     return cursor;
@@ -975,8 +955,8 @@ class TToken {
  private:
   // Pointer to a token too big to fit in the strand_.
   const Char* string_;
-  SI4 count_;                 //< The count.
-  Char strand_[kTokenCount];  //< Strand buffer for the token.
+  SI4 count_;                       //< The count.
+  Char strand_[kTokenLongest + 1];  //< Strand buffer for the token.
 };
 
 /* Utility class for printing hex with operator<<. */
@@ -1014,10 +994,11 @@ struct TCenter {
   /* Prints the item to the token_. */
   TCenter(UI8 item, SI4 count = 80) : token(item, count) {}
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the item to the token_. */
   TCenter(FP4 item, SI4 count = 80) : token(item, count) {}
-
+#endif
+#if USING_FP8 == YES
   /* Prints the item to the token_. */
   TCenter(FP8 item, SI4 count = 80) : token(item, count) {}
 #endif
@@ -1058,10 +1039,11 @@ struct TRight {
   /* Prints the item to the token_. */
   TRight(UI8 item, SI4 count = 80) : token(item, count) {}
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the item to the token_. */
   TRight(FP4 item, SI4 count = 80) : token(item, count) {}
-
+#endif
+#if USING_FP8 == YES
   /* Prints the item to the token_. */
   TRight(FP8 item, SI4 count = 80) : token(item, count) {}
 #endif
@@ -1091,20 +1073,20 @@ struct THeadingf {
   TToken<Char> token;
   const Char *style, *caption2, *caption3;
 
-  THeadingf(const CH1* caption, const CH1* style = HeadingfDefaultCH1(),
-            SI4 count = kTokenCount, const CH1* caption2 = nullptr,
+  THeadingf(const CH1* caption, const CH1* style = nullptr,
+            SI4 column_count = kTokenLongest, const CH1* caption2 = nullptr,
             const CH1* caption3 = nullptr) {
     TPrintHeadingf<CH1>(caption, style, column_count, caption2, caption3);
   }
 
-  THeadingf(const CH2* caption, const CH2* style = HeadingfDefaultCH2(),
-            SI4 count = kTokenCount, const CH2* caption2 = nullptr,
+  THeadingf(const CH2* caption, const CH2* style = nullptr,
+            SI4 column_count = kTokenLongest, const CH2* caption2 = nullptr,
             const CH2* caption3 = nullptr) {
     TPrintHeadingf<CH2>(caption, style, column_count, caption2, caption3);
   }
 
-  THeadingf(const CH4* caption, const CH4* style = HeadingfDefaultCH4(),
-            SI4 count = kTokenCount, const CH4* caption2 = nullptr,
+  THeadingf(const CH4* caption, const CH4* style = nullptr,
+            SI4 column_count = kTokenLongest, const CH4* caption2 = nullptr,
             const CH4* caption3 = nullptr) {
     TPrintHeadingf<CH4>(caption, style, column_count, caption2, caption3);
   }
@@ -1207,11 +1189,12 @@ struct TUTF {
   /* Prints the given item. */
   inline TUTF& Print(UI8 item) { return Set(::_::Print(start, stop, item)); }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP4 item) { return Set(::_::Print(start, stop, item)); }
-
+#endif
+#if USING_FP8 == YES
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP8 item) { return Set(::_::Print(start, stop, item)); }
@@ -1265,10 +1248,11 @@ struct TUTF {
   /* Prints the given item as hex. */
   inline TUTF& Hex(UI8 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the given item as hex. */
   inline TUTF& Hex(FP4 item) { return Set(TPrintHex<Char>(start, stop, item)); }
-
+#endif
+#if USING_FP8 == YES
   /* Prints the given item as hex. */
   inline TUTF& Hex(FP8 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 #endif
@@ -1302,10 +1286,11 @@ struct TUTF {
   /* Prints the given item as binary. */
   inline TUTF& Binary(UI8 item) { return Set(Binary<Char>(start, stop, item)); }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the given item as binary. */
   inline TUTF& Binary(FP4 item) { return Set(Binary<Char>(start, stop, item)); }
-
+#endif
+#if USING_FP8 == YES
   /* Prints the given item as binary. */
   inline TUTF& Binary(FP8 item) { return Set(Binary<Char>(start, stop, item)); }
 #endif
@@ -1563,7 +1548,7 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
   return utf.Print(item);
 }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
 /* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
@@ -1572,7 +1557,8 @@ template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP4 item) {
   return utf.Print(item);
 }
-
+#endif
+#if USING_FP8 == YES
 /* Writes the given item to the utf.
 @return The utf.
 @param  utf The utf.
@@ -1638,9 +1624,12 @@ void TPrint3(Char* start, Char token) {
   *start++ = 0;
 }
 
-#endif  //< #if SEAM >= SCRIPT2_3
-
 #if SEAM >= SCRIPT2_6
+#if SEAM == SCRIPT2_6
+#include "module_debug.inl"
+#else
+#include "module_release.inl"
+#endif
 namespace _ {
 
 template <typename Char, BOL kHeap_>
@@ -1680,7 +1669,7 @@ class TStrand {
   enum {
     kSizeMax = 0x7ffffff8,                            //< Max size in bytes.
     kLengthUpperLimit = kSizeMax / sizeof(Char) - 1,  //< Max element of chars.
-    kCountMin = (sizeof(Char) == 1) ? 3 : 1,          //< Min element count.
+    kCountMin = (sizeof(Char) == 1) ? 4 : 1,          //< Min element count.
     kCountLB =
         (kCount_ < kCountMin) ? kCountMin : kCount_,  //< Temp lower-buonds.
     // kCount_ bounded inside the min and max range.
@@ -1714,7 +1703,25 @@ class TStrand {
   }
 
   /* Constructs a Strand and prints the given item. */
+  TStrand(CH1 item)
+      : obj_(socket_.Words(), socket_.SizeBytes()),
+        utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
+    PrintConstants();
+    Print(item);
+  }
+
+  /* Constructs a Strand and prints the given item. */
   TStrand(const CH1* item)
+      : obj_(socket_.Words(), socket_.SizeBytes()),
+        utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
+    PrintConstants();
+    Print(item);
+    ;
+  }
+
+#if USING_UTF16 == YES
+  /* Constructs a Strand and prints the given item. */
+  TStrand(CH2 item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     PrintConstants();
@@ -1727,7 +1734,17 @@ class TStrand {
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     Print(item);
   }
+#endif
 
+#if USING_UTF32 == YES
+  /* Constructs a Strand and prints the given item. */
+  TStrand(CH4 item)
+      : obj_(socket_.Words(), socket_.SizeBytes()),
+        utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
+    PrintConstants();
+    Print(item);
+  }
+#endif
   /* Constructs a Strand and prints the given item. */
   TStrand(const CH4* item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
@@ -1791,14 +1808,15 @@ class TStrand {
     Print(item);
   }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Constructs a Strand and prints the given item. */
   TStrand(FP4 item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     Print(item);
   }
-
+#endif
+#if USING_FP8 == YES
   /* Constructs a Strand and prints the given item. */
   TStrand(FP8 item)
       : obj_(socket_.Words(), socket_.SizeBytes()),
@@ -1812,154 +1830,244 @@ class TStrand {
 
   /* Prints a CH1 to the strand.
   @return A UTF. */
-  TStrand& Print(Char item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+  TStrand& Print(CH1 item) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 
   /* Prints a CH1 to the strand.
   @return A UTF. */
-  TStrand& Print(const Char* item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+  TStrand& Print(const CH1* item) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    PRINTF("\nsize:%i", (SIN)(stop - start));
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
+    return *this;
+  }
+
+  /* Prints a CH2 to the strand.
+  @return A UTF. */
+  TStrand& Print(CH2 item) {
+    CH2 *start = utf_.start,  //
+        *stop = TStrandStop<CH2>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
+      do {
+        SI4 result = TObjCanGrow<SI4>(obj_.CObj());
+        if (result) {
+          *utf_.start = 0;
+          return *this;
+        }
+        start = ::_::Print(start, stop, item);
+      } while (!start);
+    }
+    utf_.start = start;
+    return *this;
+  }
+
+  /* Prints a CH2 to the strand.
+  @return A UTF. */
+  TStrand& Print(const CH2* item) {
+    CH2 *start = utf_.start,  //
+        *stop = TStrandStop<CH2>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
+      do {
+        SI4 result = TObjCanGrow<SI4>(obj_.CObj());
+        if (result) {
+          *utf_.start = 0;
+          return *this;
+        }
+        start = ::_::Print(start, stop, item);
+      } while (!start);
+    }
+    utf_.start = start;
+    return *this;
+  }
+
+  /* Prints a CH4 to the strand.
+  @return A UTF. */
+  TStrand& Print(CH4 item) {
+    CH4 *start = utf_.start,  //
+        *stop = TStrandStop<CH4>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
+      do {
+        SI4 result = TObjCanGrow<SI4>(obj_.CObj());
+        if (result) {
+          *utf_.start = 0;
+          return *this;
+        }
+        start = ::_::Print(start, stop, item);
+      } while (!start);
+    }
+    utf_.start = start;
+    return *this;
+  }
+
+  /* Prints a CH4 to the strand.
+  @return A UTF. */
+  TStrand& Print(const CH4* item) {
+    CH4 *start = utf_.start,  //
+        *stop = TStrandStop<CH4>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
+      do {
+        SI4 result = TObjCanGrow<SI4>(obj_.CObj());
+        if (result) {
+          *utf_.start = 0;
+          return *this;
+        }
+        start = ::_::Print(start, stop, item);
+      } while (!start);
+    }
+    utf_.start = start;
     return *this;
   }
 
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(SI4 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(UI4 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(SI8 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(UI8 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(FP4 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
-
+#endif
+#if USING_FP8 == YES
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(FP8 item) {
-    Char *cursor = utf_.start, *stop = TStrandStop<Char>(obj_.Begin());
-    cursor = ::_::Print(cursor, stop, item);
-    if (!cursor) {
+    Char *start = utf_.start,  //
+        *stop = TStrandStop<Char>(obj_.Begin());
+    start = ::_::Print(start, stop, item);
+    if (!start) {
       do {
         SI4 result = TObjCanGrow<SI4>(obj_.CObj());
         if (result) {
           *utf_.start = 0;
           return *this;
         }
-        cursor = ::_::Print(cursor, stop, item);
-      } while (!cursor);
+        start = ::_::Print(start, stop, item);
+      } while (!start);
     }
-    utf_.start = cursor;
+    utf_.start = start;
     return *this;
   }
 #endif
@@ -1974,12 +2082,12 @@ class TStrand {
   inline CH1* End() { return TObjEnd<SI4>(obj_); }
 
   /*  */
-  inline Char* Find(const Char* querry) { return TStrandFind(Start(), querry); }
+  inline Char* Find(const Char* querry) { return TSTRFind(Start(), querry); }
 
   /* Checks if this Strand to the other string are equivalent.
   @return Nil if they strings are not equivalent and a pointer to the next CH1
   after the end of the equivalent part of this strand upon success. */
-  inline Char Equals(const Char* other) { return TStrandFind(Start(), other); }
+  inline Char Equals(const Char* other) { return TSTRFind(Start(), other); }
 
   /* Checks to see if the utf_ is using static memory. */
   inline BOL IsStatic() { return socket_.Contains(utf_.cursor); }
@@ -2043,9 +2151,10 @@ class TStrand {
   void PrintConstants() {
     PRINTF(
         "\n\nutf_.start:0x%p utf_.stop:0x%p"
-        "\nkSizeMax:%i kLengthMax:%i kCountMin:%i kCount:%i kSize:%i\n\n",
-        utf_.start, utf_.stop, kSizeMax, kLengthUpperLimit, kCountMin, kCountLB,
-        kCount, kSize);
+        "\nkCount_:%i kSizeMax:%i kLengthUpperLimit:%i kCountMin:%i "
+        "kLengthMax:%i kCountLB:%i kCount:%i kSize:%i\n\n",
+        utf_.start, utf_.stop, kCount_, kSizeMax, kLengthUpperLimit, kLengthMax,
+        kCountMin, kCountLB, kCount, kSize);
   }
 };
 
@@ -2097,7 +2206,7 @@ SI4 TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
       if (!TObjCanGrow<SI4>(size)) return kFactorySizeInvalid;
       size = size << 1;  ///<< 1 to * 2
       temp = obj.begin;
-      obj.begin = TObjNew<SI4>(size, TStrand<Char>::template SizeMin());
+      obj.begin = TObjNew<SI4>(size, TStrand<Char>::kCountMin);
       if (using_heap)
         delete[] temp;
       else
@@ -2129,7 +2238,7 @@ SI4 TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
 
 template <typename Char, BOL kUsingHeap_ = false>
 SI4 TStrandFactory(CObject& obj, SIW function, void* arg) {
-  return TStrandFactory<Char, kUsingHeap_>(obj, function, arg, kUsingHeap_);
+  return TStrandFactory<Char>(obj, function, arg, kUsingHeap_);
 }
 }  // namespace _
 
@@ -2243,7 +2352,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   return strand.Print(item);
 }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
 /* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
@@ -2253,7 +2362,8 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, FP4 item) {
   return strand.Print(item);
 }
-
+#endif
+#if USING_FP8 == YES
 /* Writes the given item to the strand.
 @return The strand.
 @param  strand The strand.
@@ -2285,13 +2395,6 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   return strand.Print(item);
 }
 
-/* Prints a line of the given column_count to the strand. */
-template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
-inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TLineChar<Char> item) {
-  return strand.Print(item);
-}
-
 /* Prints a line strand of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
@@ -2299,43 +2402,13 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
   return strand.Print(item);
 }
 
+/* Prints a line of the given column_count to the strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THeadingf<Char> item) {
+  return strand.Print(item);
+}
+
 #endif  //< #if SEAM >= SCRIPT2_6
 #endif  //< #if SEAM >= SCRIPT2_3
-
-/* Script operations.
-@return      Returns nil upon success, a Set header upon query, and an
-error_t ticket upon Read-Write failure.
-@param index The index of the expression.
-@param expr  The Expr to read and write from.
-virtual const Op* Star (wchar_t index, Expr* expr) {
-    static const Op kThis = { "Text",
-        OpFirst ('A'), OpFirst ('B'),
-        "ASCII Strand.", '(', ')', nullptr
-    };
-    void* args[1];
-
-    switch (index) {
-        case '?': return ExprQuery (expr, kThis);
-        case 'A': {
-            static const Op kOpA = { "Read",
-                _::Params<1, STR, kSize> (), _::Params<0> (),
-                "Gets the string.", '(', ')', nullptr
-            };
-            if (!expr) return &kOpA;
-            return ExprArgs (expr, kOpA,
-                             Args (args, buffer_));
-        }
-        case 'B': {
-            static const Op kOpB = { "Write",
-                _::Params<1, ADR, kAddressLengthMax> (), _::Params<0> (),
-                "Writes the string to the given ADR.", '(', ')', ' ', nullptr
-            };
-            CH1 address[kAddressLengthMax];
-
-            if (!expr) return &kOpB;
-            return ExprArgs (expr, kOpB,
-                             Args (args, buffer_));
-        }
-    }
-    return nullptr;
-} */
+#endif

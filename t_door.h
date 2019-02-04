@@ -133,7 +133,7 @@ class TDoor : public Operand {
   }
 
   /* Script2 operations. */
-  virtual const Op* Star(CHW index, CCrabs* crabs) {
+  virtual const Op* Star(CHN index, CCrabs* crabs) {
     static const Op kThis = {
         "Door",
         OpFirst('A'),

@@ -18,9 +18,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_utf1.h"
 
 #if SEAM == SCRIPT2_14
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -39,14 +39,14 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CHW OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
+CHN OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
-  CHW index = OpFirst(op), last = OpLast(op);
+  CHN index = OpFirst(op), last = OpLast(op);
   ASSERT(index);
   for (; index <= last; ++index) {
-    if (StrandEquals(begin, stop, operand->Star(index, nullptr)->name)) {
+    if (STREquals(begin, stop, operand->Star(index, nullptr)->name)) {
       return index;
     }
   }
@@ -81,7 +81,7 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
   }
   utf << "\nOperand         :" << op->name << Line('-', 80);
   for (; op_num <= last_op; ++op_num) {
-    op = operand->Star((CHW)op_num, nullptr);
+    op = operand->Star((CHN)op_num, nullptr);
     utf << "\nOp \'" << op_num << "\':" << op_num << ' ' << op << Line('-', 80);
   }
   return utf;

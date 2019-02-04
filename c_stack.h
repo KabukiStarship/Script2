@@ -22,9 +22,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_object.h"
 
 #if SEAM == SCRIPT2_5
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -448,7 +448,7 @@ UTF8& TPrintStack(UTF8& utf, CStack<T, UI, SI>* stack) {
   if (stack->size_array != 0) utf << " size_array:invalid";
   T* elements = TStackStart(stack);
   for (SI4 i = 0; i < count; ++i) {
-    utf << '\n' << i + 1 << ".) " << elements[i];
+    utf << kLF << i + 1 << ".) " << elements[i];
   }
   return utf;
 }
