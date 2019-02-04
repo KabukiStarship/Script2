@@ -46,7 +46,7 @@ struct SDK Op {
   const SI4 *in,             //< Input kBSQ params or OpFirst.
       *out;                  //< Output kBSQ params or OpLast.
   const CH1* description;   //< Op description.
-  CHW pop,                   //< Index of the Pop Operation.
+  CHN pop,                   //< Index of the Pop Operation.
       close,                 //< Index of the Close Operation.
       default_op;            //< Index of the Default Operation.
   BOL using_numbers;         //< Flag for if tokens may use numbers.
@@ -59,25 +59,25 @@ struct SDK Op {
 inline SIW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpFirst(CHW index) {
+inline const SI4* OpFirst(CHN index) {
   return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CHW OpFirst(const Op* op) {
+inline CHN OpFirst(const Op* op) {
   ASSERT(op);
-  return (CHW) reinterpret_cast<UIW>(op->in);
+  return (CHN) reinterpret_cast<UIW>(op->in);
 }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpLast(CHW index) {
+inline const SI4* OpLast(CHN index) {
   return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CHW OpLast(const Op* op) {
+inline CHN OpLast(const Op* op) {
   ASSERT(op);
-  return (CHW) reinterpret_cast<UIW>(op->out);
+  return (CHN) reinterpret_cast<UIW>(op->out);
 }
 
 #if USING_SCRIPT2_TEXT == YES

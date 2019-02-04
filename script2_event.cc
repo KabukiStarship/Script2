@@ -12,12 +12,12 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
-#if SEAM >= KABUKI_TOOLKIT_AV_1
-#include "t_event.h"
+#if SEAM >= SCRIPT2_14
+#include "c_event.h"
 
 namespace _ {
 
-Event::Event() : timestamp_ (0, 0) {}
+Event::Event() : timestamp_(0, 0) {}
 
 Event::~Event() {}
 

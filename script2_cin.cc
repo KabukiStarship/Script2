@@ -19,9 +19,9 @@ specific language governing permissions and limitations under the License. */
 #include <cstdio>
 
 #if SEAM == SCRIPT2_0
-#include "test_debug.inl"
+#include "module_debug.inl"
 #else
-#include "test_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -48,7 +48,7 @@ void Pause(const CH1* message) {
 
 void Pausef(const CH1* format, ...) {
   if (!format) return;
-  PrintLn();
+  PrintNL();
   va_list arg;
   va_start(arg, format);
   vfprintf(stdout, format, arg);

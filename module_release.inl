@@ -1,5 +1,6 @@
 #include "global_release.inl"
-#include "test_footer.inl"
+
+#include "module_footer.inl"
 
 #define PRINT_ARGS
 

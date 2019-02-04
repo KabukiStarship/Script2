@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_socket.h"
 
 #if SEAM == SCRIPT2_11
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -532,7 +532,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       << " count_max:" << count_max << " size_pile:" << size_pile
       << " size:" << size << "\n|";
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<CH1*>(table) +
                                        sizeof(Table<Size, Index>));
@@ -542,12 +542,12 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       *collission_list = unsorted_indexes + count_max, *begin;
   CH1* keys = reinterpret_cast<CH1*>(table) + size - 1;
 
-  utf << '\n'
+  utf << kLF
       << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_u", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   for (SI4 i = 0; i < count; ++i) {
     // Print each record as a row.
@@ -574,11 +574,11 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       }
     }
 
-    utf << '\n';
+    utf << kLF;
   }
   utf << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n' << Memory(table, table->size) << '\n';
+  utf << kLF << Memory(table, table->size) << kLF;
 }
 #endif
 

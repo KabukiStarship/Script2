@@ -27,8 +27,8 @@ specific language governing permissions and limitations under the License. */
 #if SEAM == SCRIPT2_14
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
-#define PRINT_BSQ(header, bsq) Console<>().Out() << header << '\n' << Bsq(bsq);
-#define PRINT_BIN(header, bin) Console<>().Out() << header << '\n' << bin;
+#define PRINT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);
+#define PRINT_BIN(header, bin) Console<>().Out() << header << kLF << bin;
 #else
 #define CLEAR(begin, stop)
 #define PRINT_BSQ(header, bsq)

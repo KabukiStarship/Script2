@@ -14,8 +14,6 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
-#include "c_ascii.h"
-
 namespace _ {
 /* List of the 32 ASCII Data Types.
 Types are organized with types that are allowed in text B-Sequences first,

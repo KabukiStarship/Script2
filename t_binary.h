@@ -13,24 +13,20 @@ specific language governing permissions and limitations under the License. */
 
 #pragma once
 #include <pch.h>
-
 #ifndef INCLUDED_SCRIPTTBINARY
 #define INCLUDED_SCRIPTTBINARY 1
-
-#if defined(_MSC_VER) && defined(_M_AMD64)
-#include <intrin.h>
-#endif
 
 #include "c_binary.h"
 
 #include "c_cout.h"
 #include "t_socket.h"
+#include "t_string.h"
 
 #if SEAM >= SCRIPT2_0
 #if SEAM == SCRIPT2_0
-#include "test_debug.inl"
+#include "module_debug.inl"
 #else
-#include "test_release.inl"
+#include "module_release.inl"
 #endif
 
 /* Prints the given string. */
@@ -41,9 +37,8 @@ namespace _ {
 @param  string_a Strand A.
 @param  string_b Strand B.
 @param  delimiter The delimiter.*/
-template <typename Char = const CH1>
-SI4 TStrandCompare(const Char* string_a, const Char* string_b,
-                   CH1 delimiter = 0) {
+template <typename Char = CH1>
+SI4 TSTRCompare(const Char* string_a, const Char* string_b, CH1 delimiter = 0) {
   SI4 a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
@@ -90,7 +85,8 @@ SI4 TStrandCompare(const Char* string_a, const Char* string_b,
 
 #if SEAM >= SCRIPT2_1
 #if SEAM == SCRIPT2_1
-#include "global_debug.inl"
+#include <cstdio>
+#include "module_debug.inl"
 #define BEGIN_ITOS_ALGORITHM                                         \
   static const CH1* ui_format = sizeof(UI) == 8 ? FORMAT_UI8 : "%u"; \
   TPuffItoSBegin<Char>(cursor);                                      \
@@ -102,7 +98,7 @@ SI4 TStrandCompare(const Char* string_a, const Char* string_b,
   Printf(" Expecting %s:%i ", socket, TStrandLength<Char>(socket))
 #define PRINT_PRINTED TPrintPrinted<Char>(TPuffItoSBegin<Char>())
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #define BEGIN_ITOS_ALGORITHM
 #define PRINT_PRINTED
 #endif
@@ -158,26 +154,6 @@ inline SI TSignedNaN() {
   return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
 }
 
-/* Scrolls over to the next FP8 quote mark.
-@warning This function is only safe to use on ROM strings with a nil-term
-CH1. */
-template <typename Char = CH1>
-inline const Char* TStrandEnd(const Char* start, CH1 delimiter = 0) {
-  DASSERT(start);
-  while (*start++ != delimiter)
-    ;
-  return start - 1;
-}
-
-/* Scrolls over to the next FP8 quote mark.
-@warning This function is only safe to use on ROM strings with a nil-term
-CH1. */
-template <typename Char = CH1>
-inline Char* TStrandEnd(Char* start, Char delimiter = 0) {
-  return const_cast<Char*>(
-      TStrandEnd(reinterpret_cast<const Char*>(start), delimiter));
-}
-
 /* Gets the length of the given CH1.
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
@@ -185,7 +161,7 @@ CH1. */
 template <typename Char = CH1, typename I = SI4>
 I TStrandLength(const Char* start) {
   DASSERT(start);
-  return (I)(TStrandEnd<Char>(start) - start);
+  return (I)(TSTREnd<Char>(start) - start);
 }
 
 /* Gets the length of the given CH1.
@@ -201,21 +177,26 @@ inline I TStrandLength(Char* start) {
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   start The beginning of the socket.
 @param   count  The element count.
-@param   item   The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
+@param   item   The string to print. */
+template <typename Char = CH1>
+Char* TPrint(Char* start, Char* stop, CH1 item) {
+  return Print(start, stop, item);
+}
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   start The beginning of the socket.
+@param   count  The element count.
+@param   item   The string to print. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, SIW count, CH1 item) {
-  return TPrint<Char>(start, start + count - 1, item);
+  return Print(start, start + count - 1, item);
 }
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   start The beginning of the socket.
 @param   count  The element count.
-@param   item   The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
+@param   item   The string to print. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, SIW count, CH2 item) {
   return TPrint<Char>(start, start + count - 1, item);
@@ -225,9 +206,7 @@ Char* TPrint(Char* start, SIW count, CH2 item) {
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   start The beginning of the socket.
 @param   count The element count.
-@param   item  The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
+@param   item  The string to print. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, SIW count, CH4 item) {
   return TPrint<Char>(start, start + count - 1, item);
@@ -237,24 +216,20 @@ Char* TPrint(Char* start, SIW count, CH4 item) {
  @return  Nil upon failure or a pointer to the nil-term Char upon success.
  @param   start  The beginning of the socket.
  @param   stop   The last Char in the socket.
- @param   item   The item to print.
- @warning This algorithm is designed to fail if the socket is not a valid socket
- with one or more bytes in it, or if item is nil. */
+ @param   item   The item to print. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, Char* stop, const CH1* item) {
-  DASSERT(stop);
-  if (!start) return start;
-  DASSERT(item);
+  if (!start || start >= stop || !item) return nullptr;
 
   if (start >= stop) return nullptr;
 
   CH1 c = *item++;
   while (c) {
     start = Print(start, stop, c);
-    if (start >= stop) return nullptr;
+    if (!start || start >= stop) return nullptr;
     c = *item++;
   }
-  if (start) *start = 0;
+  *start = 0;
   return start;
 }
 
@@ -267,13 +242,12 @@ Char* TPrint(Char* start, Char* stop, const CH1* item) {
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, Char* stop, const CH2* item) {
-  DASSERT(stop);
-  if (!start || !item || start >= stop) return nullptr;
+  if (!start || start >= stop || !item) return nullptr;
 
   CH2 c = *item++;
   while (c) {
     start = Print(start, stop, c);
-    if (start >= stop) return nullptr;
+    if (!start || start >= stop) return nullptr;
     c = *item++;
   }
   if (start) *start = 0;
@@ -289,19 +263,17 @@ Char* TPrint(Char* start, Char* stop, const CH2* item) {
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CH1>
 Char* TPrint(Char* start, Char* stop, const CH4* item) {
-  DASSERT(stop);
-  if (!start) return start;
-  DASSERT(item);
+  if (!start || start >= stop || !item) return nullptr;
 
   if (start >= stop) return nullptr;
 
   CH4 c = *item++;
   while (c) {
     start = Print(start, stop, c);
-    if (start >= stop) return nullptr;
+    if (!start || start >= stop) return nullptr;
     c = *item++;
   }
-  if (start) *start = 0;
+  *start = 0;
   return start;
 }
 
@@ -518,12 +490,6 @@ Char* TPrintBinary(Char* start, Char* stop, const void* ptr) {
   return TPrintBinary<Char, UIW>(start, stop, address);
 }
 
-/* Checks if the given character is whitespace. */
-template <typename Char = CH1>
-inline BOL TIsWhitespace(Char character) {
-  return character <= ' ';
-}
-
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking!  */
 template <typename Char = CH1>
@@ -535,19 +501,27 @@ inline Char* TPrintDecimal(Char* socket, Char value) {
 
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking! */
+template <typename T = CH1>
+inline T* TWrite(T* socket, T value) {
+  *socket++ = value;
+  return socket;
+}
+
+/* Prints a single decimal to the socket.
+@warning This function DOES NOT do any error checking! */
 template <typename Char = CH1>
-inline Char* TPrintChar(Char* socket, Char value) {
+inline Char* TWriteChar(Char* socket, Char value) {
   *socket++ = value;
   PRINT_PRINTED;
   return socket;
 }
 
 /* Utility function for printing a char with any Unicode conversion. */
-inline CH1* PrintChar(CH1* cursor, CH1 c) { return TPrintChar<CH1>(cursor, c); }
+inline CH1* Write(CH1* cursor, CH1 c) { return TWriteChar<CH1>(cursor, c); }
 
-inline CH2* PrintChar(CH2* cursor, CH2 c) { return TPrintChar<CH2>(cursor, c); }
+inline CH2* Write(CH2* cursor, CH2 c) { return TWriteChar<CH2>(cursor, c); }
 
-inline CH4* PrintChar(CH4* cursor, CH4 c) { return TPrintChar<CH4>(cursor, c); }
+inline CH4* Write(CH4* cursor, CH4 c) { return TWriteChar<CH4>(cursor, c); }
 
 /* Checks if the given CH1 is a digit of a number_.
 @return True if it is a digit. */
@@ -623,7 +597,7 @@ inline Char* TPrint2Decimals(Char* socket, UI2 decimal_pair) {
   return socket;
 }
 
-inline CH1* PrintCharPair(CH1* socket, UI2 value) {
+inline void PrintCharPair(CH1* socket, UI2 value) {
 #if ALIGN_MEMORY
   socket[0] = (CH1)(value >> 8);
   socket[1] = (CH1)(value);
@@ -632,15 +606,14 @@ inline CH1* PrintCharPair(CH1* socket, UI2 value) {
 #endif
   using Char = CH1;
   PRINT_PRINTED;
-  return socket;
 }
 
-inline CH2* PrintCharPair(CH2* cursor, UI2 decimal_pair) {
-  return TPrint2Decimals<CH2>(cursor, decimal_pair);
+inline void PrintCharPair(CH2* cursor, UI2 decimal_pair) {
+  TPrint2Decimals<CH2>(cursor, decimal_pair);
 }
 
-inline CH4* PrintCharPair(CH4* cursor, UI2 decimal_pair) {
-  return TPrint2Decimals<CH4>(cursor, decimal_pair);
+inline void PrintCharPair(CH4* cursor, UI2 decimal_pair) {
+  TPrint2Decimals<CH4>(cursor, decimal_pair);
 }
 
 /* Prints 8 decimals to the given socket with given LUT.*/
@@ -751,7 +724,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
         PRINT("\n    Range:[10000, 16383] length:5");
         nil_ptr = cursor + delta + 5;
         if (nil_ptr >= stop) return nullptr;
-        cursor = TPrintChar<Char>(cursor, '1');
+        cursor = TWriteChar<Char>(cursor, '1');
         value -= pow_10_ui2;
       } else {
       Print4:
@@ -780,7 +753,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
       pow_10_ui2 = 10000;
       Char digit6 = (UI1)(value_ui4 / pow_10_ui2);
       value_ui4 -= pow_10_ui2 * digit6;
-      cursor = TPrintChar<Char>(cursor, '0' + digit6);
+      cursor = TWriteChar<Char>(cursor, '0' + digit6);
       pow_10_ui2 = 100;
       UI2 digits4and3 = ((UI2)value_ui4) / pow_10_ui2,
           digits2and1 = (UI2)(value_ui4 - digits4and3 * pow_10_ui2);
@@ -794,7 +767,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
         PRINT("\n    Range:[100000, 1048575] length:7");
         nil_ptr = cursor + delta + 7;
         if (nil_ptr >= stop) return nullptr;
-        cursor = PrintChar(cursor, '1');
+        cursor = TWriteChar<Char>(cursor, '1');
         value -= pow_10_ui4;
       } else {
       Print6:
@@ -998,22 +971,12 @@ Char* TScanSigned(Char* start, SI& result) {
   const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TScanSigned<SI, UI, Char>(ptr));
 }
-}  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_1
-
-#if SEAM >= SCRIPT2_2
-#if SEAM == SCRIPT2_2
-#include "global_debug.inl"
-#else
-#include "global_release.inl"
-#endif
-namespace _ {
 
 /* Finds the end of a decimal number of the given string.
 @return Nil if the string doesn't contain a decimal or is nil.
 @param  start The start of the string to search. */
 template <typename Char = const CH1>
-const Char* TStrandDecimalEnd(const Char* start) {
+const Char* TSTRDecimalEnd(const Char* start) {
   if (!start) return start;
   Char c = *start++;
   if (c == '-') c = *start++;
@@ -1027,22 +990,22 @@ const Char* TStrandDecimalEnd(const Char* start) {
 }
 
 template <typename Char = const CH1>
-Char* TStrandDecimalEnd(Char* start) {
+Char* TSTRDecimalEnd(Char* start) {
   const Char* ptr = reinterpret_cast<const Char*>(start);
-  return const_cast<Char*>(TStrandDecimalEnd<Char>(ptr));
+  return const_cast<Char*>(TSTRDecimalEnd<Char>(ptr));
 }
 }  // namespace _
 #endif
 
 #if SEAM >= SCRIPT2_4
 #if SEAM == SCRIPT2_4
-#include "global_debug.inl"
+#include "module_debug.inl"
 #define PRINT_FLOAT_BINARY(integer, decimals, decimal_count) \
   Print("\nBinary:\"");                                      \
   TPrintBinary(value);                                       \
-  Print('\n')
+  PrintNL()
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #define PRINT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 namespace _ {
@@ -1590,4 +1553,4 @@ Char* TScan(const Char* start, FP8& result) {
 #undef PRINT_FLOAT_BINARY
 #endif
 
-#endif  //< #if INCLUDED_SCRIPTTBINARY
+#endif

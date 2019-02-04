@@ -15,7 +15,6 @@ specific language governing permissions and limitations under the License. */
 
 #include "t_cout.h"
 
-#include "c_ascii.h"
 #include "t_strand.h"
 #include "t_test.h"
 
@@ -23,14 +22,14 @@ specific language governing permissions and limitations under the License. */
 #include <iostream>
 
 #if SEAM == SCRIPT2_0
-#include "test_debug.inl"
+#include "module_debug.inl"
 #else
-#include "test_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
 
-const CH1* ArgsToStrand(SI4 arg_count, CH1** args) {
+const CH1* ArgsToSring(SI4 arg_count, CH1** args) {
   if (!args || arg_count <= 1) {
     PRINT("\n!args || arg_count <= 1");
     return "";
@@ -50,29 +49,36 @@ const CH1* ArgsToStrand(SI4 arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-inline void Print(CH1 c) { putchar(c); }
-
-inline void PrintChar(CH1 c) { return Print(c); }
-
-inline void Print(CH4 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
+void PrintChar(CH1 c) {
+  putchar(c);
+  /// std::cout << c;
 }
 
-inline void PrintChar(CH4 c) {
+void Print(CH1 c) { PrintChar(c); }
+
+void Print(const CH1* item) { std::cout << item; }
+
+void PrintChar(CH4 c) {
   wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
+  // std::wcout << (CHN)c; //< @todo This isn't working
 }
 
-inline void Print(CH2 c) {
+void Print(const CH4* item) { TPrintString<CH4>(item); }
+
+void Print(CH4 c) { PrintChar(c); }
+
+void Print(const CH2* item) { TPrintString<CH2>(item); }
+
+void PrintChar(CH2 c) {
+#if USING_UTF32 == YES
+  Print((CH4)c);
+#else
   wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
+  // std::wcout << (CHN)c; //< @todo This isn't working
+#endif
 }
 
-inline void PrintChar(CH2 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
-}
+void Print(CH2 c) { PrintChar(c); }
 
 inline void Print(CH1 first, CH1 second) {
   Print(first);
@@ -85,9 +91,11 @@ inline void Print(CH1 first, CH1 second, CH1 third) {
   Print(third);
 }
 
-void PrintLn(CH1 c) { Print('\n', c); }
+void PrintNL() { PrintChar('\n'); }
 
-void PrintLn(CH1 first, CH1 second) { return Print('\n', first, second); }
+void PrintNL(CH1 c) { Print(kLF, c); }
+
+void PrintNL(CH1 first, CH1 second) { return Print(kLF, first, second); }
 
 void Printf(const CH1* format, ...) {
   if (!format) return;
@@ -99,18 +107,12 @@ void Printf(const CH1* format, ...) {
 
 void PrintfLn(const CH1* format, ...) {
   if (!format) return;
-  PrintLn();
+  PrintNL();
   va_list arg;
   va_start(arg, format);
   vfprintf(stdout, format, arg);
   va_end(arg);
 }
-
-void Print(const CH1* item) { std::cout << item; }
-
-void Print(const CH2* item) { TPrintString<CH2>(item); }
-
-void Print(const CH4* item) { TPrintString<CH4>(item); }
 
 void Print(const CH1* item, CH1 c) {
   Print(item);
@@ -194,24 +196,24 @@ void Print(FP8 value) {
 #endif
 }
 
-void PrintLn(const CH1* item) {
-  Print('\n');
+void PrintNL(const CH1* item) {
+  PrintNL();
   Print(item);
 }
 
 void PrintIndent(SI4 count) {
-  Print('\n');
+  PrintNL();
   while (--count > 0) Print(' ');
 }
 
-const CH1* PrintLinefCH1() { return TPrintLineffDefault<CH1>(); }
+const CH1* PrintLinefCH1() { return TSTRLinef<CH1>(); }
 
-const CH1* PrintLinef(const CH1* style, SI4 count) {
-  return TPrintLinef<CH1>(style, count);
+const CH1* PrintLinef(const CH1* style, SI4 column_count) {
+  return TPrintLinef<CH1>(style, column_count);
 }
 
-const CH1* PrintLinef(CH1 token, SI4 count) {
-  return TPrintLine<CH1>(token, count);
+void PrintLinef(CH1 token, SI4 column_count) {
+  TPrintLinef<CH1>(token, column_count);
 }
 
 void PrintHeadingf(const CH1* caption, const CH1* style, SI4 column_count,
@@ -300,7 +302,7 @@ void PrintHex(const void* begin, const void* end) {
 
   CH1 c;
   while (address_ptr < address_end_ptr) {
-    Print('\n', '|');
+    Print(kLF, '|');
     for (SI4 i = 0; i < 32; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
@@ -347,17 +349,13 @@ void PrintRight(const CH2* start, SI4 count) { TPrintRight<CH2>(start, count); }
 
 void PrintCenter(const CH2* item, SI4 count) { TPrintCenter<CH2>(item, count); }
 
-const CH2* PrintLinefCH2() { return TPrintLineffDefault<CH2>(); }
+const CH2* PrintLinefCH2() { return TSTRLinef<CH2>(); }
 
 const CH2* PrintLinef(const CH2* style, SI4 count) {
   return TPrintLinef<CH2>(style, count);
 }
 
-const CH2* PrintLinef(CH2 token, SI4 count) {
-  return TPrintLine<CH2>(token, count);
-}
-
-const CH2* HeadingfDefaultCH2() { return THeadingfDefault<CH2>(); }
+void PrintLinef(CH2 token, SI4 count) { TPrintLinef<CH2>(token, count); }
 
 void PrintHeadingf(const CH2* caption, const CH2* style, SI4 column_count,
                    const CH2* caption2, const CH2* caption3) {
@@ -381,17 +379,13 @@ void PrintRight(const CH4* start, SI4 count) { TPrintRight<CH4>(start, count); }
 
 void PrintCenter(const CH4* item, SI4 count) { TPrintCenter<CH4>(item, count); }
 
-const CH4* PrintLinefCH4() { return TPrintLineffDefault<CH4>(); }
+const CH4* PrintLinefCH4() { return TSTRLinef<CH4>(); }
 
 const CH4* PrintLinef(const CH4* style, SI4 count) {
   return TPrintLinef<CH4>(style, count);
 }
 
-const CH4* PrintLinef(CH4 token, SI4 count) {
-  return TPrintLine<CH4>(token, count);
-}
-
-const CH4* HeadingfDefaultCH4() { return THeadingfDefault<CH4>(); }
+void PrintLinef(CH4 token, SI4 count) { TPrintLinef<CH4>(token, count); }
 
 void PrintHeadingf(const CH4* caption, const CH4* style, SI4 column_count,
                    const CH4* caption2, const CH4* caption3) {

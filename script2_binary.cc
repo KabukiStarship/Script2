@@ -313,9 +313,9 @@ CH1* Print(CH1* start, CH1* stop, CH1 c) {
 }
 
 #if SEAM == SCRIPT2_3
-#include "test_debug.inl"
+#include "module_debug.inl"
 #else
-#include "test_release.inl"
+#include "module_release.inl"
 #endif
 
 CH1* Print(CH1* start, CH1* stop, CH4 c) {
@@ -588,9 +588,9 @@ CH4* Print(CH4* start, CH4* stop, CH4 c) {
 //#include <cmath>
 
 #if SEAM == SCRIPT2_4
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 #include <cstdio>
@@ -619,16 +619,16 @@ CH1* Print(CH1* start, CH1* stop, FP8 value) {
 
 template <typename Char>
 const Char* TStrandFloatStop(const Char* start) {
-  const CH1* stop = TStrandDecimalEnd<CH1>(start);
+  const CH1* stop = TSTRDecimalEnd<CH1>(start);
   if (!stop) return stop;
   CH1 c = *stop++;
   if (c == '.') {
-    stop = TStrandDecimalEnd<CH1>(start);
+    stop = TSTRDecimalEnd<CH1>(start);
     c = *stop++;
   }
   if (c == 'e' || c != 'E') {
     if (c == '-') c = *stop++;
-    return TStrandDecimalEnd<CH1>(start);
+    return TSTRDecimalEnd<CH1>(start);
   }
   return stop;
 }

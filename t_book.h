@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_dic.h"
 
 #if SEAM == SCRIPT2_12
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -583,10 +583,10 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       "\n;: %u count_max: %u  "
       "size_pile: %u  size: %u",
       item_count, count_max, size_pile, table_size);
-  PRINT('\n');
+  PRINT(kLF);
   PRINT('|');
   for (SI4 i = 0; i < 79; ++i) PRINT('_');
-  PRINT('\n');
+  PRINT(kLF);
 
   const CH1* states =
       reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>);
@@ -605,7 +605,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
          "hash_u", "hash_s", "index_u", "collisions");
   PRINT('|');
   for (SI4 i = 0; i < 79; ++i) Print('_');
-  PRINT('\n');
+  PRINT(kLF);
 
   for (I i = 0; i < count_max; ++i) {
     // Print each record as a row.
@@ -630,13 +630,13 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       }
     }
 
-    PRINT('\n');
+    PRINT(kLF);
   }
   TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>),
               multimap->size);
-  PRINT('\n');
+  PRINT(kLF);
 }
 
 /* Deletes the multimap contents without wiping the contents. */

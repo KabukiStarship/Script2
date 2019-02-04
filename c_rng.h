@@ -26,25 +26,25 @@ SDK UI4 RandomSeed();
 SDK void RandomizeSeed();
 
 /* Gets a random 16-bit/2-UI1 unsigned integer. */
-SDK UI2 RandomNumber(UI2 min, UI2 max);
+SDK UI2 Random(UI2 min, UI2 max);
 
 /* Gets a random 8-bit/1-UI1 unsigned integer. */
-SDK UI1 RandomNumber(UI1 min, UI1 max);
+SDK UI1 Random(UI1 min, UI1 max);
 
 /* Gets a random 8-bit/1-UI1 signed integer. */
-SDK UI1 RandomNumber(SI1 min, SI1 max);
+SDK UI1 Random(SI1 min, SI1 max);
 
 /* Gets a random 16-bit/2-UI1 signed integer. */
-SDK UI2 RandomNumber(SI2 min, SI2 max);
+SDK UI2 Random(SI2 min, SI2 max);
 
 /* Gets a random 32-bit/4-UI1 unsigned integer. */
-SDK UI4 RandomNumber(UI4 min, UI4 max);
+SDK UI4 Random(UI4 min, UI4 max);
 
 /* Gets a random 64-bit/8-UI1 unsigned integer. */
-SDK UI8 RandomNumber(UI8 min, UI8 max);
+SDK UI8 Random(UI8 min, UI8 max);
 
 /* Gets a random 64-bit/8-UI1 signed integer. */
-SDK UI8 RandomNumber(SI8 min, SI8 max);
+SDK UI8 Random(SI8 min, SI8 max);
 
 /* Gets a random 8-bit/1-UI1 unsigned integer. */
 SDK UI1 RandomUI1();

@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM == SCRIPT2_9
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
@@ -31,7 +31,7 @@ namespace script2 {
 
   Print("\n  - Running TableTest...\n");
 
-  CHW index;
+  CHN index;
   UIW socket[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
 

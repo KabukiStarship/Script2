@@ -24,9 +24,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_strand.h"
 
 #if SEAM == SCRIPT2_5
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 namespace _ {
 
@@ -261,7 +261,7 @@ const Char* TScan(const Char* string, CClock& clock) {
   DASSERT(string);
   PRINTF("\n    Scanning CClock: %s\n    Scanning: ", string);
 
-  string = TStrandSkipChar<Char>(string, '0');
+  string = TSTRSkipChar<Char>(string, '0');
   Char c = *string,  //< The current Char.
       delimiter;     //< The delimiter.
   const Char* stop;  //< Might not need
@@ -304,7 +304,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     PRINT("Dates can't be negative.");
     return nullptr;
   }
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   if (!string) return nullptr;
   delimiter = *string++;
   PRINTF("%i%c", value1);
@@ -320,7 +320,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     return string + 1;
   }
   // Scan value2.
-  string = TStrandSkipChar<Char>(string, '0');
+  string = TSTRSkipChar<Char>(string, '0');
   if (!TScanSigned<SI4, UI4, Char>(string, value2)) {
     PRINT("\n    Failed scanning value2 of date.");
     return nullptr;
@@ -330,7 +330,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     return nullptr;  //< Invalid month and day.
   }
   PRINTF("%i", value2);
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   c = *string;
   if (c != delimiter) {
     PRINT("\n    Cases MM/DD and MM/YYyy");
@@ -399,14 +399,14 @@ const Char* TScan(const Char* string, CClock& clock) {
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
 
-  string = TStrandSkipChar<Char>(++string, '0');
+  string = TSTRSkipChar<Char>(++string, '0');
   c = *string;
   // Then there are 3 values and 2 delimiters.
   if (!TIsDigit<Char>(c) || !TScanSigned<SI4, UI4, Char>(string, value3)) {
     PRINTF("\n    SlotRead error reading value3 of date. %c: ", c);
     return nullptr;  //< Invalid format!
   }
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   PRINTF("%c%i", c, value3);
   // Now we need to check what format it is in.
 

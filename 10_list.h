@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM == SCRIPT2_10
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
@@ -38,8 +38,8 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kint, &test_ints[i++]);
-    COUT << '\n'
-         << list << '\n'
+    COUT << kLF
+         << list << kLF
          << "\n\n"
          << Socket(list.This(), list.This()->size);
   }
@@ -47,9 +47,9 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kFLT, &test_floats[i++]);
-    PRINT('\n');
+    PRINT(kLF);
     PRINT(list);
-    PRINT ('\n'');
+    PRINT (kLF');
     PRINT ("\n\n"');
     PRINT (Socket (list.This (), list.This ()->size));
   }
@@ -58,9 +58,9 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
     list.Push(kSTR, test_strings[i++]);
-    PRINT('\n');
+    PRINT(kLF);
     PRINT(list);
-    PRINT('\n');
+    PRINT(kLF);
     PRINT("\n\n");
     PRINT(Socket(list.This(), list.This()->size));
   }

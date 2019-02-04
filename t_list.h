@@ -23,9 +23,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_stack.h"
 
 #if SEAM == SCRIPT2_10
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -405,7 +405,7 @@ UTF1& PrintList(UTF1& printer, CList<Size, Index>* list) {
   printer << "\n\nList: size:" << list->size << " count:" << count
           << " count_max:" << list->count_max;
   for (Index index = 0; index < count; ++index) {
-    printer << '\n'
+    printer << kLF
             << index << ".) "
             << TypeValue(ListTypes<Size, Index>(list)[index],
                          ListValue<Size, Index>(list, index));

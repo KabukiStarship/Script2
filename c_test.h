@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \ctest.h
+@file    /script2/c_test.h
 @author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -51,13 +51,13 @@ SDK BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
-SDK SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
-                 TestCase* tests, SI4 test_count);
+SDK SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log,
+                     SI4 seam_log_size, TestCase* tests, SI4 test_count);
 
 /* Tests an array of TestCase(s).
 @return Nil upon success or an error  upon failure. */
 SDK const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
-                    TestCase* seams, SI4 node_count);
+                        TestCase* seams, SI4 node_count);
 
 /* Prints a message when a TestCase completes without failure. */
 SDK BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
@@ -132,19 +132,19 @@ SDK BOL Test(const CH1* a, const CH1* b);
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH1 a, CH1 b);
+SDK BOL Test(CH1 a, CH1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH2 a, CH2 b);
+SDK BOL Test(CH2 a, CH2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH4 a, CH4 b);
+SDK BOL Test(CH4 a, CH4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.

@@ -21,9 +21,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_cout.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
@@ -74,7 +74,7 @@ static const Char* _03_UTF() {
     cursor = TPrint<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
     PRINT_CHARS(str_a, 64);
     Test(cursor);
-    cursor = TStrandEquals<Char>(str_a, kTestStrands[i][0]);
+    cursor = TSTREquals<Char>(str_a, kTestStrands[i][0]);
     Test(cursor);
   }
 
@@ -99,7 +99,7 @@ static const Char* _03_UTF() {
   PRINT_CHARS(str_a, 64);
   AVOW(kTesting123, str_a);
 
-  PRINTF("\n\nTesting TStrandEquals<Char>");
+  PRINTF("\n\nTesting TSTREquals<Char>");
 
   const Char kCompareStrands[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
@@ -108,21 +108,21 @@ static const Char* _03_UTF() {
       {'T', 'e', 'x', 't', 'i', 'n', 'g', '@', NIL},
   };
 
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[1]));
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[3]));
-  ASSERT(TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[0]));
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[2], kCompareStrands[3]));
-  ASSERT(TStrandEquals<Char>(kCompareStrands[2], kCompareStrands[2]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[1]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[3]));
+  ASSERT(TSTREquals<Char>(kCompareStrands[0], kCompareStrands[0]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[2], kCompareStrands[3]));
+  ASSERT(TSTREquals<Char>(kCompareStrands[2], kCompareStrands[2]));
 
   const Char k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
   AVOW(9, TStrandLength<Char>(k1to9));
 
-  PRINTF("\n\nTesting TStrandFind<Char>");
+  PRINTF("\n\nTesting TSTRFind<Char>");
 
   const Char kOne[] = {'1', ',', NIL};
   const Char kThreePeriod[] = {'3', '.', NIL};
-  ASSERT(TStrandFind<Char>(kTesting123, kOne));
-  ASSERT(TStrandFind<Char>(kTesting123, kThreePeriod));
+  ASSERT(TSTRFind<Char>(kTesting123, kOne));
+  ASSERT(TSTRFind<Char>(kTesting123, kThreePeriod));
 
   PRINT_HEADING("Testing TPrintRight<Char>");
 

@@ -31,16 +31,13 @@ namespace _ {
 @return nil if there are no arguments or the args string upon success.
 @param arg_count The number_ of arguments.
 @param args      The arguments. */
-SDK const CH1* ArgsToStrand(SI4 arg_count, CH1** args);
+SDK const CH1* ArgsToSring(SI4 arg_count, CH1** args);
+
+/* Prints a single CH1 to the console. */
+SDK inline void PrintChar(CH1 c);
 
 /* Prints a single CH1 to the console. */
 SDK inline void Print(CH1 c);
-
-/* Prints a single CH1 to the console. */
-SDK inline void Print(CH4 c);
-
-/* Prints a single CH1 to the console. */
-SDK inline void Print(CH2 c);
 
 /* Prints a single CH1 to the console. */
 SDK void Print(CH1 first, CH1 second);
@@ -51,8 +48,20 @@ SDK void Print(CH1 first, CH1 second, CH1 third);
 /* Prints a single string to the console. */
 SDK void Print(const CH1* string);
 
+/* Prints a single CH1 to the console. */
+SDK inline void PrintChar(CH2 c);
+
+/* Prints a single CH1 to the console. */
+SDK inline void Print(CH2 c);
+
 /* Prints a single string to the console. */
 SDK void Print(const CH2* string);
+
+/* Prints a single CH1 to the console. */
+SDK inline void PrintChar(CH4 c);
+
+/* Prints a single CH1 to the console. */
+SDK inline void Print(CH4 c);
 
 /* Prints a single string to the console. */
 SDK void Print(const CH4* string);
@@ -100,13 +109,16 @@ upon success.
 SDK void Print(FP8 value);
 
 /* Prints a new line followed by a single CH1 to the console. */
-SDK inline void PrintLn(CH1 c = '\n');
+SDK inline void PrintNL();
 
 /* Prints a new line followed by a single CH1 to the console. */
-SDK inline void PrintLn(CH1 first, CH1 second);
+SDK inline void PrintNL(CH1 c);
+
+/* Prints a new line followed by a single CH1 to the console. */
+SDK inline void PrintNL(CH1 first, CH1 second);
 
 /* Prints a new line followed by a single string to the console. */
-SDK inline void PrintLn(const CH1* string);
+SDK inline void PrintNL(const CH1* string);
 
 /* Prints a formatted string to the console. */
 SDK void Printf(const CH1* format, ...);
@@ -221,8 +233,7 @@ heading, followed by another PrintLinef.
 @return Nil upon success or a pointer to the
 @param style       The line format string.
 @param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH1* caption,
-                       const CH1* style = HeadingfDefaultCH1(),
+SDK void PrintHeadingf(const CH1* caption, const CH1* style = nullptr,
                        SI4 column_count = 80, const CH1* caption2 = nullptr,
                        const CH1* caption3 = nullptr);
 
@@ -246,14 +257,11 @@ SDK const CH2* PrintLinefCH2();
 SDK const CH2* PrintLinef(const CH2* style = PrintLinefCH2(),
                           SI4 column_count = 80);
 
-SDK const CH2* HeadingfDefaultCH2();
-
 /* Prints a the given line_count of new lines followed by a PrintLinef, the
 heading, followed by another PrintLinef.
 @param style       The line format string.
 @param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH2* caption,
-                       const CH2* style = HeadingfDefaultCH2(),
+SDK void PrintHeadingf(const CH2* caption, const CH2* style = nullptr,
                        SI4 column_count = 80, const CH2* caption2 = nullptr,
                        const CH2* caption3 = nullptr);
 #endif
@@ -277,16 +285,13 @@ SDK const CH4* PrintLinefCH4();
 SDK const CH4* PrintLinef(const CH4* style, SI4 column_count = 80);
 
 /* Prints the given token a specified count. */
-SDK const CH4* PrintLinef(CH4 token, SI4 column_count = 80);
-
-SDK const CH4* HeadingfDefaultCH4();
+SDK void PrintLinef(CH4 token, SI4 column_count = 80);
 
 /* Prints a the given line_count of new lines followed by a PrintLinef, the
 heading, followed by another PrintLinef.
 @param style       The line format string.
 @param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH4* caption,
-                       const CH4* style = HeadingfDefaultCH4(),
+SDK void PrintHeadingf(const CH4* caption, const CH4* style = nullptr,
                        SI4 column_count = 80, const CH4* caption2 = nullptr,
                        const CH4* caption3 = nullptr);
 #endif
@@ -353,7 +358,7 @@ class COut {
 
 #endif
 
-#if SEAM > SCRIPT2_3
+#if SEAM >= SCRIPT2_3
 #if USING_STR == UTF8
 
   COut& Print(Right1 item);

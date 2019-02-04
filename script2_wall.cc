@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 
 #if SEAM == SCRIPT2_14
-#include "global_release.inl"
+#include "module_release.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 #include "c_wall.h"

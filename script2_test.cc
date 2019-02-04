@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "t_binary.h"
 
-#include "global_debug.inl"
+#include "module_debug.inl"
 
 namespace _ {
 
@@ -29,7 +29,7 @@ void TestFunctionLine(SI4 line, const CH1* function, const CH1* file) {
 
 BOL TestWarn(SI4 line, const CH1* function, const CH1* file,
              const CH1* header) {
-  Print('\n');
+  PrintNL();
   Print(header);
   TestFunctionLine(line, function, file);
   return true;
@@ -43,9 +43,8 @@ BOL TestFail(SI4 line, const CH1* function, const CH1* file) {
 SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
                  TestCase* tests, SI4 test_count) {
   if (seam_log_size < 0) return APP_EXIT_FAILURE;
-  const CH1* result =
-      TestTree(seam_log, seam_log + seam_log_size - 1,
-               ArgsToStrand(arg_count, args), tests, test_count);
+  const CH1* result = TestTree(seam_log, seam_log + seam_log_size - 1,
+                               ArgsToSring(arg_count, args), tests, test_count);
   if (result) {
     Print("\nERROR: ", result);
     return APP_EXIT_FAILURE;
@@ -71,11 +70,11 @@ const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
       Print(" missing!");
       return "";
     }
-    PrintHeadingf("Testing ", "\n\n\n+---\n| \0+---\n\n", 80, seam);
+    PrintHeadingf("Testing ", nullptr, 80, seam);
     const CH1* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
-    Print('\n');
+    PrintNL();
   }
   Print("\n\nUnit test finished successfully! (:-)+==<\n");
   return nullptr;
@@ -93,7 +92,7 @@ static const CH1 kStrandDifference[] = "\n      Difference:\0";
 static const CH1 kStrandErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL Test(const CH1* a, const CH1* b) {
-  SI4 result = ::_::TStrandCompare<const CH1>(a, b);
+  SI4 result = ::_::TSTRCompare<const CH1>(a, b);
   if (!result) return true;
   Print(kStrandErrorExpecting);
   Print(a);
@@ -105,7 +104,7 @@ BOL Test(const CH1* a, const CH1* b) {
 }
 
 BOL Test(const CH2* a, const CH2* b) {
-  SI4 result = ::_::TStrandCompare<const CH2>(a, b);
+  SI4 result = ::_::TSTRCompare<const CH2>(a, b);
   if (!result) return true;
   Print(kStrandErrorExpecting);
   Print(a);
@@ -117,7 +116,7 @@ BOL Test(const CH2* a, const CH2* b) {
 }
 
 BOL Test(const CH4* a, const CH4* b) {
-  SI4 result = ::_::TStrandCompare<const CH4>(a, b);
+  SI4 result = ::_::TSTRCompare<const CH4>(a, b);
   if (!result) return true;
   Print(kStrandErrorExpecting);
   Print(a);
@@ -376,4 +375,4 @@ BOL Test(FP8 value) {
 
 }  // namespace _
 
-#include "global_release.inl"
+#include "module_release.inl"

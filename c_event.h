@@ -16,18 +16,12 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_EVENT_C
 #define SCRIPT2_EVENT_C
-// Dependencies:
+
 #include "operand.h"
-// End dependencies.
 
 namespace _ {
 
-/* Interface for an abstract event
-@code
-struct SDK Example: public CEvent {
-virtual void Trigger () { /* ... */ }
-};
-@endcode
+/* Interface for an abstract event.
 */
 struct CEvent {
   /* Virtual destructor. */

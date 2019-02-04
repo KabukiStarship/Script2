@@ -15,9 +15,9 @@ specific language governing permissions and limitations under the License. */
 #include <pch.h>
 
 #if SEAM == SCRIPT2_12
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
@@ -28,7 +28,7 @@ static const CH1* _12_Book(CH1* seam_log, CH1* seam_end,
 #if SEAM >= SCRIPT2_12
   TEST_BEGIN;
 
-  CHW index;
+  CHN index;
   UIW socket[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
 

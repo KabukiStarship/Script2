@@ -33,7 +33,7 @@ ASCII Data Types provide:
   
 ## Quick Start Guide
 
-Please **@see** [Kabuki Toolkit}(https://github.com/kabuki-starship/kabuki-toolkit) (KT) for Quick Start Guide. KT contains all of the demo apps and Visual Studio projects.
+Please **@see** [Kabuki Toolkit}(https://github.com/kabuki-starship/kabuki_toolkit) (KT) for Quick Start Guide. KT contains all of the demo apps and Visual Studio projects.
 
 ## Quick Links
 
@@ -41,7 +41,7 @@ Please **@see** [Kabuki Toolkit}(https://github.com/kabuki-starship/kabuki-toolk
   - *Frequently asked questions.*
 * [Script Specification RFC](https://github.com/kabuki-starship/script2/blob/master/spec/readme.md)
   - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit)
+* [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit)
   - *A cross-platform Modern Embedded-C++ toolkit for making intelligent connected technologies, plugins, games, servers, firmware, and art with Script2. This is where you'll find the visual studio projects.*
 * [Kabuki Starship Website](https://kabuki-starship.github.io/)
   - *Official Kabuki Starship website. #WorkInProgress*

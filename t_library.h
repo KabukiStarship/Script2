@@ -151,7 +151,7 @@ class Library : public Operand {
   error_t ticket upon Read-Write failure.
   @param index The index of the expression.
   @param crabs  The CCrabs to read and write from. */
-  virtual const Op* Star(CHW index, CCrabs* crabs) {
+  virtual const Op* Star(CHN index, CCrabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 

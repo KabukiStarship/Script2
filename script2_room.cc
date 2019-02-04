@@ -21,9 +21,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_strand.h"
 
 #if SEAM == SCRIPT2_14
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -142,7 +142,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
   for (SI4 i = 0; i < args_count; ++i) {
     PRINTF("\n%i:\"%s\"", i, args[i])
   }
-  PRINT('\n')
+  PRINT(kLF)
   while (IsOn()) {
     try {
       result = Init(nullptr);
@@ -162,7 +162,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
 
 CH1 Room::CommandNext() { return 0; }
 
-const Op* Room::Star(CHW index, CCrabs* crabs) {
+const Op* Room::Star(CHN index, CCrabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 

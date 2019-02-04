@@ -16,8 +16,8 @@ specific language governing permissions and limitations under the License. */
 
 #ifndef INCLUDED_SEAM_TREE
 #define INCLUDED_SEAM_TREE 1
-#include "test_tree.h"
- 
+#include "module_tests.h"
+
 SI4 main(SI4 arg_count, CH1** args) {
   enum { kSize = 1024 };
   CH1 seam_log[kSize];
