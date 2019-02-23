@@ -28,23 +28,23 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 const Op* ReturnError(Slot* slot, Error error) {
-  PRINTF("\n%s", ErrorStrands()[error])
+  PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header) {
-  PRINTF("\n%s", ErrorStrands()[error])
+  PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, UI1 offset) {
-  PRINTF("\n%s", ErrorStrands()[error])
+  PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, SI4 offset,
                       CH1* address) {
-  PRINTF("\n%s", ErrorStrands()[error])
+  PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -185,15 +185,15 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
   length = SlotLength(l_start, l_stop, size);
 
-  PRINTF("\n\nReading %i bytes.", (SI4)length)
+  PRINTF("\n\nReading %i bytes.", (SI4)length);
   // PRINT_BSQ (params)
   // When we scan, we are reading from the beginning of the BIn socket.
 
   for (index = 0; index < num_params; ++index) {
     type = (UI1)*param;
     ++param;
-    PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (uint)index,
-           TypeStrand(type), (SI4)Size(l_begin, l_start),
+    PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (UIN)index,
+           STRType(type), (SI4)Size(l_begin, l_start),
            (SI4)Size(l_begin, l_stop));
 
     switch (type) {
@@ -268,7 +268,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 #endif
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case kUI2:
-      case kHLF:
+      case kFP2:
 #if ALU_SIZE <= 16
       case SVI:
       case UVI:
@@ -313,9 +313,9 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case SVI:
       case UVI:
 #endif
-      case kint:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
+      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
       case kUI4:
-      case kFLT:
+      case kFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Read4ByteType:{
@@ -350,7 +350,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 #endif
       case kSI8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
       case kUI8:
-      case kDBL:
+      case kFP8:
       case kTM8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Read8ByteType:{

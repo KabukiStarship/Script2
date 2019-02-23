@@ -22,7 +22,7 @@ Front Doors are known entrances to the Room.
 
 ##### Backdoor Door
 
-Backdoors are unknown entrances to the Room.
+Back-doors are unknown entrances to the Room.
 
 #### Mirrors and Windows
 

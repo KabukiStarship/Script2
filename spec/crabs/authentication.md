@@ -2,6 +2,6 @@
 
 ## [Crabs](readme.md)
 
-#### Authentication
+### Authentication
 
 Authentication in Script shall be done using a sequence of Script Operations.

@@ -43,16 +43,16 @@ struct BOut;
     @endcode */
 struct SDK Op {
   const CH1* name;          //< Op name.
-  const SI4 *in,             //< Input kBSQ params or OpFirst.
-      *out;                  //< Output kBSQ params or OpLast.
+  const SI4 *in,            //< Input kBSQ params or OpFirst.
+      *out;                 //< Output kBSQ params or OpLast.
   const CH1* description;   //< Op description.
-  CHN pop,                   //< Index of the Pop Operation.
-      close,                 //< Index of the Close Operation.
-      default_op;            //< Index of the Default Operation.
-  BOL using_numbers;         //< Flag for if tokens may use numbers.
+  CHN pop,                  //< Index of the Pop Operation.
+      close,                //< Index of the Close Operation.
+      default_op;           //< Index of the Default Operation.
+  BOL using_numbers;        //< Flag for if tokens may use numbers.
   const CH1 *ignore_chars,  //< Strand of chars to ignore.
-      *allowed_chars;        //< Strand of allowed symbols.
-  const BOut* evaluation;    //< Evaluated expression Slot.
+      *allowed_chars;       //< Strand of allowed symbols.
+  const BOut* evaluation;   //< Evaluated expression Slot.
 };
 
 /* Converts the given value to a pointer. */

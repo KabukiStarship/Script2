@@ -26,10 +26,11 @@ An AsciiFactory is essentially switch statement jump table with an index for a f
 
 ```C++
 enum AsciiFactoryFunctions {
-  kFactoryDelete = 0,  //< ASCII Factory function deletes an OBJ.
-  kFactoryNew = 1,     //< ASCII Factory function creates a new OBJ.
-  kFactoryClone = 2,   //< ASCII Factory function clones the OBJ.
-  kFactoryGrow = 3,    //< ASCII Factory function double OBJ size in bytes.
-  kFactoryInfo = 4,    //< Returns an info _::TStrand<> about the data type.
+  kFactoryCanGrow = 0, //< AsciiFactory function checks if the size can double.
+  kFactoryDelete = 1,  //< AsciiFactory function deletes an OBJ.
+  kFactoryNew = 2,     //< AsciiFactory function creates a new OBJ.
+  kFactoryClone = 3,   //< AsciiFactory function clones the OBJ.
+  kFactoryGrow = 4,    //< AsciiFactory function double OBJ size in bytes.
+  kFactoryInfo = 5     //< Returns an info _::TStrand<> about the data type.
 };
 ```

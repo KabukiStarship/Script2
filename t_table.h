@@ -159,7 +159,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
   PRINTF(
       "\nAdding key \"%s\":%u\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x"
       "\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x",
-      key, (uint)key_length, "hashes", hashes, "key_offsets", key_offsets,
+      key, (UIN)key_length, "hashes", hashes, "key_offsets", key_offsets,
       "keys", keys, "indexes", indexes, "value", value, "hashes", hashes,
       "key_offsets", key_offsets, "keys", keys, "indexes", indexes, "value",
       value);
@@ -500,7 +500,7 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
       index = unsorted_indexes[mid];
 
       PRINTF("\nmid:%i-%u unsorted_indexes:%Index key:\"%s\" hash:0x%x",
-             (SI4)mid, (uint)hashes[mid], index, keys - key_offsets[index],
+             (SI4)mid, (UIN)hashes[mid], index, keys - key_offsets[index],
              Hash16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index])) {

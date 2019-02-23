@@ -11,6 +11,8 @@ under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. */
 
+/* @link */
+
 #pragma once
 #include <pch.h>
 
@@ -33,14 +35,14 @@ void _06_Strand() {
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
-
   enum {
     kStrandLoopCount = 3,
     kCharSizeChar = '0' + sizeof(Char),
   };
 
   TStrand<Char> strand("Testing ");
-  strand.Print();
+  COut cout;
+  strand.PrintTo<COut>(cout);
 
   PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
   strand << 1 << ", " << 2 << ", " << 3;
@@ -68,8 +70,7 @@ static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end,
   stack.Push(0);
   PRINT_SOCKET_TOBJ(stack.TObj());
 
-  for (SI4 i = 1; i <= 10; ++i)
-    ;
+  for (SI4 i = 1; i <= 10; ++i) stack.Push(i);
 
   PRINT_TOBJ(stack);
 

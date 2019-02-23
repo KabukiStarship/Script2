@@ -58,7 +58,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    utf << TypeStrand((SI4)value) << ", ";
+    utf << STRType((SI4)value) << ", ";
     if (type >= kSTR) {
       if (value) {
         utf << "\nError: arrays may only be created from POD "
@@ -149,7 +149,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
   }
   // Do the last set without a comma.
   value = *params++;
-  utf << TypeStrand(value) << ", ";
+  utf << STRType(value) << ", ";
   if (value == kSTR) {
     ++i;
     value = *params++;

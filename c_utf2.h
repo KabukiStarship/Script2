@@ -17,6 +17,7 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_3
 
+#include "c_asciidata.h"
 #include "c_object.h"
 
 #if USING_UTF16 == YES
@@ -966,6 +967,8 @@ SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Center2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Right2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
+SDK inline ::_::UTF2& operator<<(::_::UTF2& utf,
+                                 const ::_::AsciiValue& type_value);
 
 #endif  //< #if USING_UTF16
 #endif

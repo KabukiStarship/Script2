@@ -13,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_13
+#if SEAM >= SCRIPT2_3
 
 #include "t_asciidata.h"
 
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_13
+#if SEAM == SCRIPT2_3
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -27,16 +27,82 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-BOL TypeIsValid(SI4 type) {
-  if (type >= kLST && type <= kDIC ||
-      (type >= (kADR + 32) && type <= (kTKN + 32)))
-    return false;
-  return true;
+const CH1* STRType() {
+  static const CH1 kStrings[33][4] = {{'N', 'I', 'L', NIL},   //< ASCII 0.
+                                      {'S', 'I', '1', NIL},   //< ASCII 1.
+                                      {'U', 'I', '1', NIL},   //< ASCII 2.
+                                      {'C', 'H', '1', NIL},   //< ASCII 3.
+                                      {'S', 'I', '2', NIL},   //< ASCII 4.
+                                      {'U', 'I', '2', NIL},   //< ASCII 5.
+                                      {'F', 'P', '2', NIL},   //< ASCII 6.
+                                      {'C', 'H', '2', NIL},   //< ASCII 7.
+                                      {'B', 'O', 'L', NIL},   //< ASCII 8.
+                                      {'S', 'I', '4', NIL},   //< ASCII 9.
+                                      {'U', 'I', '4', NIL},   //< ASCII 10.
+                                      {'F', 'L', 'T', NIL},   //< ASCII 11.
+                                      {'T', 'M', '4', NIL},   //< ASCII 12.
+                                      {'T', 'M', '8', NIL},   //< ASCII 13.
+                                      {'S', 'I', '8', NIL},   //< ASCII 14.
+                                      {'U', 'I', '8', NIL},   //< ASCII 15.
+                                      {'F', 'P', '8', NIL},   //< ASCII 16.
+                                      {'S', 'V', '8', NIL},   //< ASCII 17.
+                                      {'F', 'P', 'H', NIL},   //< ASCII 19.
+                                      {'U', 'I', 'X', NIL},   //< ASCII 20.
+                                      {'O', 'B', 'J', NIL},   //< ASCII 21.
+                                      {'L', 'O', 'M', NIL},   //< ASCII 25.
+                                      {'B', 'S', 'Q', NIL},   //< ASCII 26.
+                                      {'E', 'S', 'C', NIL},   //< ASCII 27.
+                                      {'L', 'S', 'T', NIL},   //< ASCII 28.
+                                      {'B', 'O', 'K', NIL},   //< ASCII 29.
+                                      {'D', 'I', 'C', NIL},   //< ASCII 30.
+                                      {'M', 'A', 'P', NIL},   //< ASCII 31.
+                                      {NIL, NIL, NIL, NIL},   //< ASCII 31.
+                                      {'A', 'D', 'R', NIL},   //< ASCII 25.
+                                      {'S', 'T', 'R', NIL},   //< ASCII 24.
+                                      {'T', 'K', 'N', NIL}};  //< ASCII 25.
+  return &kStrings[0][0];
 }
 
-TypeValue::TypeValue(SI4 type, const void* value) : type(type), value(value) {
-  // Nothing to do here! (:-)-+=<
+const CH1* STRType(SI4 index) {
+  if (index < 0 || index >= 31) index = 32;
+  const CH1* strings = STRType();
+  return strings + (index << 2);
 }
+
+BOL TypeIsValid(SI4 type) { return (type >> 7) == 0; }
+
+AsciiValue::AsciiValue(CH1* item) : type(kCH1), value(item) {}
+
+#if USING_UTF16 == YES
+AsciiValue::AsciiValue(CH2* item) : type(type), value(item) {}
+#endif
+
+#if USING_UTF32 == YES
+AsciiValue::AsciiValue(CH4* item) : type(type), value(item) {}
+#endif
+
+AsciiValue::AsciiValue(SI1* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(UI1* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(SI2* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(UI2* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(SI4* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(UI4* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(SI8* item) : type(type), value(item) {}
+
+AsciiValue::AsciiValue(UI8* item) : type(type), value(item) {}
+
+#if USING_FP4 == YES
+AsciiValue::AsciiValue(FP4* item) : type(type), value(item) {}
+#endif
+#if USING_FP8 == YES
+AsciiValue::AsciiValue(FP8* item) : type(type), value(item) {}
+#endif
 
 SI4 TypeFixedSize(SI4 type) {
   static const SI1 kWidths[] = {
@@ -45,32 +111,26 @@ SI4 TypeFixedSize(SI4 type) {
       1,   //< kUI1: 2
       2,   //< kSI2: 3
       2,   //< kUI2: 4
-      2,   //< kHLF: 5
+      2,   //< kFP2: 5
       4,   //< kBOL: 6
-      4,   //< kint: 7
+      4,   //< kSI4: 7
       4,   //< kUI4: 8
-      4,   //< kFLT: 9
+      4,   //< kFP4: 9
       4,   //< kTM4: 10
       8,   //< kTM8: 11
       8,   //< kSI8: 12
       8,   //< kUI8: 13
-      8,   //< kDBL: 14
+      8,   //< kFP8: 14
       16,  //< kSIH: 15
       16,  //< kUIH: 16
-      16,  //< kDEC: 17
+      16,  //< kFPH: 17
   };
   SI4 type_upper_bits = type >> 3;
   type &= 0x1f;
-  if (type == kUIX) return ((SI4)2) << type_upper_bits;
+  if (type == kBNM) return ((SI4)2) << type_upper_bits;
   if (type > kOBJ) return -1;
   return kWidths[type];
 }
-
-const CH1** TypeStrands() { return TTypeStrands<CH1>(); }
-
-const CH1* TypeStrand(SI4 type) { return TypeStrands()[type & 0x1f]; }
-
-const CH1* TypeStrand(SI4 type) { return TypeStrand((UI1)type); }
 
 UI1 TypeMask(UI1 value) { return value & 0x1f; }
 
@@ -87,12 +147,12 @@ void* TypeAlign(SI4 type, void* value) {
   if (type <= kUI1) return value;
   SI4* value_ptr = reinterpret_cast<SI4*>(value);
 #if ALU_SIZE == 2
-  if (type <= kHLF) return AlignUpPointer2<>(value);
+  if (type <= kFP2) return AlignUpPointer2<>(value);
 #else
   if (type <= kBOL) return TAlignUp2<>(value);
 #endif
-  if (type <= kTM4) return AlignUp<>(value, 3);
-  if (type <= kDEC) return AlignUp<>(value, 7);
+  if (type <= kTM4) return TAlignUp<>(value, 3);
+  if (type <= kFPH) return TAlignUp<>(value, 7);
 
   switch (type >> 6) {
     case 0:
@@ -100,9 +160,9 @@ void* TypeAlign(SI4 type, void* value) {
     case 1:
       return TAlignUp2<>(value);
     case 2:
-      return AlignUp<>(value, 3);
+      return TAlignUp<>(value, 3);
     case 3:
-      return AlignUp<>(value, 7);
+      return TAlignUp<>(value, 7);
   }
   return 0;
 }
@@ -118,14 +178,14 @@ inline CH1* WriteStrand(CH1* begin, CH1* stop, const void* value) {
   return SocketCopy(target, stop, value, length + sizeof(Char));
 }*/
 
-template <typename UI>
-inline CH1* WriteObj(CH1* begin, CH1* stop, const void* value) {
-  UI* target = AlignUpPointer<UI>(begin);
-  const UI* source = reinterpret_cast<const UI*>(value);
-  UI size = *source++;
-  if (size < sizeof(UI) || size >=) return nullptr;
+template <typename SI>
+inline CH1* TWriteObj(CH1* begin, CH1* stop, const void* value) {
+  SI* target = TAlignUp<SI>(begin);
+  const SI* source = reinterpret_cast<const SI*>(value);
+  SI size = *source++;
+  if (!TSizeIsValid<SI>(size)) return nullptr;
   *target++ = size;
-  return SocketCopy(target, stop, value, size - sizeof(UI));
+  return SocketCopy(target, stop, value, size - sizeof(SI));
 }
 
 CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
@@ -148,15 +208,15 @@ CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
     return reinterpret_cast<CH1*>(target_2);
   }
   if (type <= kTM4) {
-    CH4* target_4 = AlignUp<CH4>(begin, 3);
+    CH4* target_4 = TAlignUp<CH4>(begin, 3);
     *target_4++ = *reinterpret_cast<const CH4*>(value);
     return reinterpret_cast<CH1*>(target_4);
   }
-  if (type <= kDEC) {
-    UI8* target_8 = AlignUp<UI8>(begin, 7);
+  if (type <= kFPH) {
+    UI8* target_8 = TAlignUp<UI8>(begin, 7);
     const UI8* source_8 = reinterpret_cast<const UI8*>(value);
     *target_8++ = *source_8++;
-    if (type == kDEC) {
+    if (type == kFPH) {
       *target_8++ = *source_8;
       return reinterpret_cast<CH1*>(target_8);
     }
@@ -172,32 +232,32 @@ CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
         return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 3:
         return reinterpret_cast<CH1*>(TPrint<CH2>(
-            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
-            reinterpret_cast<const UI2*>(value)));
+            reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
+            reinterpret_cast<const CH2*>(value)));
       case 4:
         return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 5:
         return reinterpret_cast<CH1*>(TPrint<CH2>(
-            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
-            reinterpret_cast<const UI2*>(value)));
+            reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
+            reinterpret_cast<const CH2*>(value)));
       case 6:
         return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 7:
         return reinterpret_cast<CH1*>(TPrint<CH2>(
-            reinterpret_cast<UI2*>(begin), reinterpret_cast<UI2*>(stop),
-            reinterpret_cast<const UI2*>(value)));
+            reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
+            reinterpret_cast<const CH2*>(value)));
     }
   }
   CH1 array_type = type >> 6;
   switch (array_type) {
     case 0:
-      return WriteObj<UI1>(begin, stop, value);
+      return TWriteObj<UI1>(begin, stop, value);
     case 1:
-      return WriteObj<UI2>(begin, stop, value);
+      return TWriteObj<UI2>(begin, stop, value);
     case 2:
-      return WriteObj<UI4>(begin, stop, value);
+      return TWriteObj<UI4>(begin, stop, value);
     case 3:
-      return WriteObj<UI8>(begin, stop, value);
+      return TWriteObj<UI8>(begin, stop, value);
   }
   return nullptr;
 }

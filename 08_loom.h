@@ -29,58 +29,58 @@ static const CH1* _08_Loom(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   UIW socket[kBufferSizeWords];
 
-  Multimap2* multimap = Multimap2Init(socket, 8, kBufferSize, 128);
+  Loom2* loom = Loom2Init(socket, 8, kBufferSize, 128);
 
-  Assert(multimap != nullptr);
+  Assert(loom != nullptr);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "D", (UI1)0xFF);
+  index = Loom2Add<UI1, kUI1>(loom, "D", (UI1)0xFF);
 
-  Compare(0, index) Multimap2Print(multimap);
-  Compare(0, index) index = Multimap2Find(multimap, "D");
+  Compare(0, index) Loom2Print(loom);
+  Compare(0, index) index = Loom2Find(loom, "D");
   Compare(0, index) PAUSE("\n");
-  index = Multimap2Add<UI1, kUI1>(multimap, "C", (UI1)0xFF);
-  Compare(1, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
+  index = Loom2Add<UI1, kUI1>(loom, "C", (UI1)0xFF);
+  Compare(1, index) index = Loom2Find(loom, "D");
+  Compare(0, index) index = Loom2Find(loom, "C");
   Compare(1, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "BIn", (UI1)0xFF);
-  Compare(2, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
-  Compare(1, index) index = Multimap2Find(multimap, "BIn");
+  index = Loom2Add<UI1, kUI1>(loom, "BIn", (UI1)0xFF);
+  Compare(2, index) index = Loom2Find(loom, "D");
+  Compare(0, index) index = Loom2Find(loom, "C");
+  Compare(1, index) index = Loom2Find(loom, "BIn");
   Compare(2, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "A", (UI1)0xFF);
-  Compare(3, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
-  Compare(1, index) index = Multimap2Find(multimap, "BIn");
-  Compare(2, index) index = Multimap2Find(multimap, "A");
+  index = Loom2Add<UI1, kUI1>(loom, "A", (UI1)0xFF);
+  Compare(3, index) index = Loom2Find(loom, "D");
+  Compare(0, index) index = Loom2Find(loom, "C");
+  Compare(1, index) index = Loom2Find(loom, "BIn");
+  Compare(2, index) index = Loom2Find(loom, "A");
   Compare(3, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "abc", (UI1)0xFF);
-  Compare(4, index) index = Multimap2Find(multimap, "abc");
+  index = Loom2Add<UI1, kUI1>(loom, "abc", (UI1)0xFF);
+  Compare(4, index) index = Loom2Find(loom, "abc");
   Compare(4, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "bac", (UI1)0xFF);
-  Compare(5, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
+  index = Loom2Add<UI1, kUI1>(loom, "bac", (UI1)0xFF);
+  Compare(5, index) index = Loom2Find(loom, "abc");
+  Compare(4, index) index = Loom2Find(loom, "bac");
   Compare(5, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "cba", (UI1)0xFF);
-  Compare(6, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
-  Compare(5, index) index = Multimap2Find(multimap, "cba");
+  index = Loom2Add<UI1, kUI1>(loom, "cba", (UI1)0xFF);
+  Compare(6, index) index = Loom2Find(loom, "abc");
+  Compare(4, index) index = Loom2Find(loom, "bac");
+  Compare(5, index) index = Loom2Find(loom, "cba");
   Compare(6, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "cab", (UI1)0xFF);
-  Compare(7, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
-  Compare(5, index) index = Multimap2Find(multimap, "cba");
-  Compare(6, index) index = Multimap2Find(multimap, "cab");
+  index = Loom2Add<UI1, kUI1>(loom, "cab", (UI1)0xFF);
+  Compare(7, index) index = Loom2Find(loom, "abc");
+  Compare(4, index) index = Loom2Find(loom, "bac");
+  Compare(5, index) index = Loom2Find(loom, "cba");
+  Compare(6, index) index = Loom2Find(loom, "cab");
   Compare(7, index);
 
-  index = Multimap2Add<UI1, kUI1>(multimap, "test", (UI1)0xFF);
+  index = Loom2Add<UI1, kUI1>(loom, "test", (UI1)0xFF);
   Compare(index, -1);
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

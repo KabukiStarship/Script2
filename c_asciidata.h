@@ -14,65 +14,153 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 
+#if SEAM >= SCRIPT2_3
+#ifndef SCRIPT2_ASCIIDATA_C
+#define SCRIPT2_ASCIIDATA_C
+
 namespace _ {
+
 /* List of the 32 ASCII Data Types.
+
+# ASCII Data
+
 Types are organized with types that are allowed in text B-Sequences first,
-followed by objects which get created in text using Script Operations. */
+followed by objects which get created in text using Script Operations.
+
+## Parsing Rules
+
+ASCII Data Types are setup so they are easy to parse. In order to parse the data
+we need a bit pattern that facilitates the transition from scanning one data
+type to another.
+
+### 16-bit ASCII Type Bit Pattern
+
+|   b9:b8   |  b15:b10  |  b7:b6   | b5:b0 |
+|:---------:|:---------:|:--------:|:-----:|
+| Bit-depth | Map class | Map type | Class |
+*/
 typedef enum AsciiTypes {
-  kNIL = 0,  //< 0.  kNIL/nil/void type.
-  kSI1,      //< 1.  8-bit signed integer.
-  kUI1,      //< 2.  8-bit unsigned integer.
-  kSI2,      //< 3.  16-bit signed integer.
-  kUI2,      //< 4.  16-bit unsigned integer.
-  kHLF,      //< 5.  16-bit floating-point number.
-  kBOL,      //< 6.  32-bit non-zero true boolean as signed integer.
-  kint,      //< 7.  32-bit signed integer.
-  kUI4,      //< 8.  32-bit unsigned integer.
-  kFLT,      //< 9.  32-bit floating-point number.
-  kTM4,      //< 10. 32-bit second since epoch timestamp.
-  kTME,      //< 11. 64-bit sub-second timestamp with kTM4 and an kUI4 tick.
-  kTM8,      //< 12. 64-bit second since epoch timestamp.
-  kSI8,      //< 13. 64-bit signed integer.
-  kUI8,      //< 14. 64-bit unsigned integer.
-  kDBL,      //< 15. 64-bit floating-point number.
-  kSIH,      //< 16. 128-bit (Hexadeca-UI1) signed integer.
-  kUIH,      //< 17. 128-bit (Hexadeca-UI1) unsigned integer.
-  kDEC,      //< 18. 128-bit (Hexadeca-UI1) floating-point number.
-  kUIX,      //< 19. 2^(6+X)-bit unsigned integer, where 0 <= X <= 7.
-  kOBJ,      //< 20. N-UI1 object.
-  kADR,      //< 21. UTF-8 Operand stack address.
-  kSTR,      //< 22. A UTF-8 .
-  kTKN,      //< 23. A UTF-8  token without whitespace.
-  kBSQ,      //< 24. B-Sequence.
-  kLOM,      //< 25. A loom of UTF-8, UTF-16, or UTF-32 strings.
-  kTBL,      //< 26. A hash table.
-  kEXP,      //< 27. Script^2 Expression.
-  kLST,      //< 28. Set or multiset of Type-Value tuples.
-  kMAP,      //< 29. One-to-one map of Integer-{Type-Value} records.
-  kBOK,      //< 30. Many-to-one multimap of Key-{Type-Value} records.
-  kDIC,      //< 31. One-to-one map of Key-{Type-Value} records.
+  kNIL = 0,   //< 0.  kNIL/nil/void type.
+  kSI1,       //< 1.  8-bit signed integer.
+  kUI1,       //< 2.  8-bit unsigned integer.
+  kCH1,       //< 3.  UTF-8 character (CH1), string (ST1), or token (TK1).
+  kSI2,       //< 4.  16-bit signed integer.
+  kUI2,       //< 5.  16-bit unsigned integer.
+  kCH2,       //< 6.  UTF-16 character (CH2), string (ST2), or token (TK2).
+  kFP2,       //< 7.  16-bit floating-point number.
+  kBOL,       //< 8.  32-bit non-zero true boolean.
+  kSI4,       //< 9.  32-bit signed integer.
+  kUI4,       //< 10. 32-bit unsigned integer.
+  kCH4,       //< 11. 32-bit character (CH2), string (ST2), or token (TK2).
+  kFP4,       //< 12. 32-bit floating-point number.
+  kTM4,       //< 13. 32-bit second since epoch timestamp.
+  kTME,       //< 14. 64-bit sub-second timestamp with TM4 and an UI4 tick.
+  kTM8,       //< 15. 64-bit second since epoch timestamp.
+  kSI8,       //< 16. 64-bit signed integer.
+  kUI8,       //< 17. 64-bit unsigned integer.
+  kFP8,       //< 18. 64-bit floating-point number.
+  kSIH,       //< 19. 128-bit (Hexadeca-UI1) signed integer.
+  kUIH,       //< 20. 128-bit (Hexadeca-UI1) unsigned integer.
+  kFPH,       //< 21. 128-bit (Hexadeca-UI1) floating-point number.
+  kOB1,       //< 22. 8-bit ASCII Object
+  kBNM,       //< 23. 1 to 64-byte Signed or Unsigned Integer.
+  kTKN,       //< 24. An ASCII Strand without any Whitespace.
+  kADR,       //< 25. An ASCII Strand Abstract Stack Address.
+  kREC,       //< 26. An ASCII Strand-Wildcard tuple.
+  kOBJ,       //< 27. ASCII object that begins with a signed integer type.
+  kLST,       //< 28. Set or multiset of Type-Value tuples.
+  kSLT,       //< 29. An interprocess ring-buffer.
+  kBSQ,       //< 24. B-Sequence or address (ADR) based on MSb.
+  kEXP,       //< 31. Script^2 Expression.
+  kINV,       //< 32. Invalid type.
+  kLM1,       //< 33. An associative array of strings with SI4 size_bytes.
+  kLM2,       //< 34. An associative array of strings with SI4 size_bytes.
+  kLM4,       //< 35. An associative array of strings with SI4 size_bytes.
+  kPT2 = 54,  //< 54. 16-bit pointer. |
+  kPC2 = 55,  //< 56. 16-bit const pointer. |
+  kPT4 = 56,  //< 57. 32-bit pointer. |
+  kPC4 = 57,  //< 58. 32-bit const pointer. |
+  kPT8 = 58,  //< 59. 64-bit pointer. |
+  kPC8 = 59,  //< 59. 64-bit const pointer. |
+  kOA2 = 60,  //< 60. A 16-bit AsciiFactory and pointer to an object.
+  kOA4 = 61,  //< 61. A 32-bit AsciiFactory and pointer to an object.
+  kOA8 = 62,  //< 62. A 64-bit AsciiFactory and pointer to an object.
+  kWLD = 63,  //< 63. A one-byte-type-value tuple.
 } AsciiType;
-}  // namespace _
 
-#if SEAM >= SCRIPT2_13
-#ifndef SCRIPT2_CASCIIDATA
-#define SCRIPT2_CASCIIDATA
+enum {
+  kCOP = 0,  //< 0. Class or POD type.
+  kOB2 = 1,  //< 1. size_width of size_bytes is 16-bits wide.
+  kOB4 = 2,  //< 2. size_width of size_bytes is 32-bits wide.
+  kOB8 = 3,  //< 3. size_width of size_bytes is 64-bits wide.
+};
 
-#include "c_socket.h"
-#include "t_strand.h"
+enum {
+  kARY = 0,  //< Array of POD types.
+  kVEC = 1,  //< Vector of POD types.
+  kMAT = 2,  //< Matrix of POD types.
+  kMAP = 3,  //< Map of one of the types to another.
+};
 
-namespace _ {
-/* A type-value tuple. */
-struct SDK TypeValue {
-  SI4 type;           //< ASCII Type.
-  const void* value;  //< Pointer to the value data.
+/* Gets the string representations of the given ASCII Data Type 0-31. */
+inline const CH1* STRType();
 
-  /* Stores the type and value. */
-  TypeValue(SI4 type, const void* value = nullptr);
+/* Gets a string representation of the given ASCII Data Type 0-31. */
+inline const CH1* STRType(SI4 index);
+
+struct SDK AsciiValue {
+  const void* value;  //< Start character address.
+  SI4 type;           //< ASCII Data Type.
+
+  /* Prints the item to the token. */
+  AsciiValue(CH1* item);
+
+#if USING_UTF16 == YES
+  /* Prints the item to the token. */
+  AsciiValue(CH2* item);
+#endif
+
+#if USING_UTF32 == YES
+  /* Prints the item to the token. */
+  AsciiValue(CH4* item);
+#endif
+
+  /* Prints the item to the token. */
+  AsciiValue(SI1* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(UI1* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(SI2* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(UI2* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(SI4* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(UI4* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(SI8* item);
+
+  /* Prints the item to the token. */
+  AsciiValue(UI8* item);
+
+#if USING_FP4 == YES
+  /* Prints the item to the token. */
+  AsciiValue(FP4* item);
+#endif
+#if USING_FP8 == YES
+  /* Prints the item to the token. */
+  AsciiValue(FP8* item);
+#endif
 };
 
 /* Checks if the given type is valid.
-    @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
+@return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
 inline BOL TypeIsValid(SI4 type);
 
 /* Aligns the given pointer to the correct word boundary for the type. */
@@ -81,15 +169,6 @@ SDK void* TypeAlign(SI4 type, void* value);
 enum {
   kTypeCount = 32,  //< The starting index of invalid types.
 };
-
-/* Returns a pointer to an array of pointers to the type names.*/
-SDK const CH1** TypeStrands();
-
-/* Returns the name of the given type. */
-SDK inline const CH1* TypeStrand(SI4 type);
-
-/* Returns the name of the given type. */
-SDK inline const CH1* TypeStrand(SI4 type);
 
 /* Masks off the lower 5-LSb to get the type. */
 SDK inline UI1 TypeMask(UI1 value);
@@ -116,8 +195,8 @@ SDK inline BOL TypeIsObj(SI4 type);
 SDK inline BOL TypeIsStrand(SI4 type);
 
 /* Checks if the given type is UTF-16.
-    @param  type The type to check.
-    @return True if the given type is UTF-16. */
+@param  type The type to check.
+@return True if the given type is UTF-16. */
 SDK inline BOL TypeIsUTF16(SI4 type);
 
 SDK inline SI4 TypeSizeWidthCode(SI4 type);
@@ -128,17 +207,12 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next CH1 after the stop of the read number or
 nil upon failure.
-@param utf The utf to utf to.
-@param type    The type to utf.
-@param value   The value to utf or nil. */
+@param utf   The utf to utf to.
+@param type  The type to utf.
+@param value The value to utf or nil. */
 SDK CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value);
 }  // namespace _
 
-/* Writes the given value to the utf justified right.
-@return The utf.
-@param  utf The utf.
-@param  item The item to utf. */
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& type_value);
 #endif
 
 #if USING_UTF16 == YES
@@ -146,17 +220,11 @@ namespace _ {
 /* Prints th given type or type-value.
 @return Returns a pointer to the next CH1 after the stop of the read number or
 nil upon failure.
-@param utf The utf to utf to.
-@param type    The type to utf.
-@param value   The value to utf or nil. */
-SDK CH2* Print(CH2* begin, CH2* stop, SI4 type,
-                    const void* value);
+@param utf   The utf to utf to.
+@param type  The type to utf.
+@param value The value to utf or nil. */
+SDK CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value);
 }  // namespace _
-/* Writes the given value to the utf justified right.
-@return The utf.
-@param  utf The utf.
-@param  item The item to utf. */
-SDK ::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& type_value);
 #endif
 #if USING_UTF32 == YES
 
@@ -167,15 +235,9 @@ of the read number or nil upon failure.
 @param printer The printer to utf to.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
-SDK CH2* Print(CH2* begin, CH2* stop, SI4 type,
-                    const void* value);
+SDK CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value);
 }  // namespace _
-/* Writes the given value to the utf justified right.
-@return The utf.
-@param  utf The utf.
-@param  item The item to utf. */
-SDK ::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& type_value);
 #endif
 
-#endif  //< SCRIPT2_CASCIIDATA
-#endif  //< #if SEAM >= SCRIPT2_13
+#endif
+#endif

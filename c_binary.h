@@ -29,10 +29,10 @@ SDK const CH1* StrandSocketHeader();
 SDK const CH1* StrandSocketBorder();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-SDK const CH1* StrandSocketHexHeader();
+SDK const CH1* STRSocketHexHeader();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-SDK const CH1* StrandSocketHexBorder();
+SDK const CH1* STRSocketHexBorder();
 
 #if SEAM >= SCRIPT2_1
 

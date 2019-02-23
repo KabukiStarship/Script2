@@ -37,7 +37,7 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   const SI4 list_test_count = 12;
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(kint, &test_ints[i++]);
+    list.Push(kSI4, &test_ints[i++]);
     COUT << kLF
          << list << kLF
          << "\n\n"
@@ -46,7 +46,7 @@ static const CH1* _10_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   const FP4 test_floats[] = {9.0, 10.0, 11.0, 12.0};
   for (SI4 i = 0; i < 4;) {
     PRINTF("\ni%i:", i);
-    list.Push(kFLT, &test_floats[i++]);
+    list.Push(kFP4, &test_floats[i++]);
     PRINT(kLF);
     PRINT(list);
     PRINT (kLF');

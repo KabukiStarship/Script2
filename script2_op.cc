@@ -100,8 +100,8 @@ void Print (Op& log) {
                     return;
                 Write (si1);
             }
-            case kint: {
-                if (BinRead (bin, Params<2, kADR, kint> (),
+            case kSI4: {
+                if (BinRead (bin, Params<2, kADR, kSI4> (),
                              Args (args, &si4, socket)))
                     return;
                 Write (si1;
@@ -131,12 +131,12 @@ void Print (Op& log) {
                     return;
                 ClockPrintTimestamp (ui8);
             }
-            case kFLT: {
-                if (BinRead (bin, Params<2, kADR, kFLT> (), Args (args, &flt)))
+            case kFP4: {
+                if (BinRead (bin, Params<2, kADR, kFP4> (), Args (args, &flt)))
                     return;
                 Write (si1;
             }
-            case kDBL: {
+            case kFP8: {
                 if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;

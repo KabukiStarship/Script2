@@ -16,9 +16,7 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_OPERAND
 #define SCRIPT2_OPERAND
-// Dependencies:
-#include "slot.h"
-// End dependencies.
+#include "cslot.h"
 
 namespace _ {
 

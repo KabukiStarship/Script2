@@ -59,7 +59,6 @@ inline UIW* TObjInit(UIW* socket, Size size) {
 /* Gets the ASCII CObject size. */
 template <typename Size>
 inline Size TObjSize(UIW* object) {
-  ASSERT(object);
   return *reinterpret_cast<Size*>(object);
 }
 
@@ -121,24 +120,23 @@ UIW* TObjClone(UIW* socket, Size size) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-SI4 TObjCanGrow(Size size) {
-  return (SI4)(size >> (sizeof(Size) * 8 - 2));
+SIN TObjCanGrow(Size size) {
+  return !(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Checks if the size is in the min max bounds of an ASCII Object.
 @return 0 If the size is valid. */
 template <typename Size = SIW>
-inline SI4 TObjCanGrow(Size size, Size size_min) {
+inline SIN TObjCanGrow(Size size, Size size_min) {
   if (size < size_min) return kFactorySizeInvalid;
-  size = size >> (sizeof(Size) * 8 - 2);
-  return (SI4)size;
+  return TObjCanGrow<Size>(size);
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-SI4 TObjGrow(CObject& obj, Size new_size) {
+SIN TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
@@ -152,7 +150,7 @@ SI4 TObjGrow(CObject& obj, Size new_size) {
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size, BOL kHeap_>
-SI4 TObjGrow(CObject& obj, Size new_size) {
+SIN TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
@@ -186,7 +184,6 @@ inline CH1* TObjEnd(CObject stack) {
 template <typename Size>
 inline const CH1* TObjEnd(const CObject stack) {
   UIW* socket = stack.begin;
-  ASSERT(socket);
   Size size = *reinterpret_cast<Size*>(socket);
   return reinterpret_cast<const CH1*>(socket) + size;
 }
@@ -290,6 +287,12 @@ class TObject {
 
   /* Gets the AsciiFactory. */
   inline AsciiFactory Factory() { return obj_.factory; }
+
+  inline SI4 Do(SIW function, void* arg = nullptr) {
+    AsciiFactory factory = obj_.factory;
+    if (factory) return factory(obj_, function, arg);
+    return kFactoryNil;
+  }
 
   /* Gets the CObject. */
   inline CObject& CObj() { return obj_; }

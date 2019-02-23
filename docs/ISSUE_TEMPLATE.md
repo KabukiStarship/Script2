@@ -4,6 +4,6 @@
 
 ### Pull Request Template
 
-#### Title: module_id.Add feature ABC.
+#### Title: module_id.Add/Remove/Fix feature ABC.
 
 #### Body: Foo

@@ -18,6 +18,7 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_3
 
+#include "c_asciidata.h"
 #include "c_object.h"
 
 #ifndef USING_UTF8
@@ -151,8 +152,7 @@ SDK CH1* Print(CH1* start, CH1* stop, UI8 item);
 @param item The item to utf. */
 SDK CH1* Print(CH1* start, CH1* stop, SI8 item);
 
-#if SEAM >= SCRIPT2_4
-
+#if USING_FP4 == YES
 /* Writes the give CH1 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
@@ -160,7 +160,8 @@ SDK CH1* Print(CH1* start, CH1* stop, SI8 item);
 @param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, FP4 item,
                      SI4 count = kTokenLongest);
-
+#endif
+#if USING_FP8 == YES
 /* Writes the give CH1 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
@@ -168,6 +169,7 @@ SDK CH1* PrintCenter(CH1* start, CH1* stop, FP4 item,
 @param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, FP8 item,
                      SI4 count = kTokenLongest);
+#endif
 
 /* Writes the give CH1 to the given socket center.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -333,7 +335,7 @@ SDK CH1* PrintHex(CH1* start, CH1* stop, UI8 item);
 @param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, SI8 item);
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
 /* Writes the give CH1 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
@@ -341,13 +343,14 @@ SDK CH1* PrintHex(CH1* start, CH1* stop, SI8 item);
 @param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, FP4 item);
 #endif
-
+#if USING_FP8 == YES
 /* Writes the give CH1 to the given socket in hex form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop The stop address of the socket.
 @param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, FP8 item);
+#endif
 
 /* Prints the given item to the utf socket.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -412,7 +415,7 @@ SDK CH1* PrintBinary(CH1* start, CH1* stop, UI8 item);
 @param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, SI8 item);
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
 /* Writes the give CH1 to the given socket in binary form.
 @return Nil upon failure or a pointer to the nil - term char upon success.
 @param start The beginning address of the socket.
@@ -420,13 +423,14 @@ SDK CH1* PrintBinary(CH1* start, CH1* stop, SI8 item);
 @param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, FP4 item);
 #endif
-
+#if USING_FP8 == YES
 /* Writes the give CH1 to the given socket in binary form.
 @return Nil upon failure or a pointer to the terminator upon success.
 @param start The beginning address of the socket.
 @param stop  The stop address of the socket.
 @param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, FP8 item);
+#endif
 
 /* Prints the given memory socket to the item socket. */
 SDK CH1* PrintChars(CH1* start, CH1* stop, const void* begin, SIW size);
@@ -546,7 +550,6 @@ SDK const CH1* Scan(const CH1* start, UI8& result);
 of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, FP4& result);
 #endif
-
 #if USING_FP8 == YES
 /* Converts the given string to a 64-bit floating-point number.
 @param  string A nil-terminated string in ROM.
@@ -769,10 +772,10 @@ struct SDK Linef1 {
   Token1 token;  //< Pointer to a pointer to utf.
 
   /* Constructors a horizontal line of the given string. */
-  Linef1(const CH1* start = nullptr, SI4 count = kTokenLongest);
+  Linef1(CH1 item, SI4 count = kTokenLongest);
 
   /* Constructors a horizontal line of the given string. */
-  Linef1(CH1 item, SI4 count = kTokenLongest);
+  Linef1(const CH1* start = nullptr, SI4 count = kTokenLongest);
 };
 
 /* Utility class for printing a vertical line with operator<<. */
@@ -784,7 +787,20 @@ struct SDK Headingf1 {
   Headingf1(const CH1* caption, const CH1* style = nullptr,
             SI4 count = kTokenLongest, const CH1* caption2 = nullptr,
             const CH1* caption3 = nullptr);
-#endif
+};
+
+struct SDK Chars1 {
+  const CH1 *start,  //< Start character address.
+      *stop;         //< Stop character address.
+
+  Chars1(const CH1* start, const CH1* stop);
+};
+
+struct SDK Hexs1 {
+  const CH1 *begin,  //< Begin byte address.
+      *end;          //< End byte address.
+
+  Hexs1(const CH1* start, const CH1* stop);
 };
 
 /* Utility class for printing strings.
@@ -926,6 +942,12 @@ struct SDK UTF1 {
   /* Prints the given item as binary. */
   inline UTF1& Binary(FP8 item);
 #endif
+
+  /* Prints the give socket in Hex.*/
+  UTF1& Print(Hexs1 hexs);
+
+  /* Prints the given socket as CH1. */
+  UTF1& Print(Chars1 chars);
 };
 
 #if USING_STR == UTF8
@@ -934,20 +956,19 @@ using CRight = Right1;
 using CCenter = Center1;
 using CColumns = Linef1;
 using CRows = Headingf1;
-// using Hex = Hex1;
 #endif
 
 }  // namespace _
 
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, SI2 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, UI2 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, SI4 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, UI4 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, SI8 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, UI8 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI2 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI2 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI4 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI4 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI8 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI8 item);
 
 #if USING_FP4 == YES
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
@@ -956,10 +977,13 @@ SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP8 item);
 #endif
 
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
-SDK ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-SDK::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hexs1 item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
+// SDK inline ::_::UTF1& operator<<(::_::UTF1& utf,
+//                                 const ::_::AsciiValue& type_value);
 #endif
 #endif

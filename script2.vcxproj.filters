@@ -329,9 +329,6 @@
     <ClCompile Include="script2_event.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_expr.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_floor.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -381,6 +378,9 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="module_tester.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_crabs.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>

@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_SCRIPT2_TLIBRARY
-#define INCLUDED_SCRIPT2_TLIBRARY
+#ifndef INCLUDED_SCRIPT2_LIBRARY_T
+#define INCLUDED_SCRIPT2_LIBRARY_T
 #include "c_onfig.h"
 
 namespace _ {
@@ -109,7 +109,7 @@ class Library : public Operand {
 
     UI1 type = (*address) & 0x1f;
 
-    uint array_type = type >> 5;
+    UIN array_type = type >> 5;
 
     switch (array_type) {
       case 0:
@@ -159,9 +159,8 @@ class Library : public Operand {
       case '?':
         return ExprEnquiry(crabs, kThis);
       case 'A': {
-        static const Op This = {
-            "Foo", Params<0>(), Params<0>(), "Foo is getting old I know.",
-            '(',   ')',         nullptr};
+        static const Op This = {"Foo", Params<0>(), Params<0>(), "Foo.",
+                                '(',   ')',         nullptr};
         return 0;
       }
       default:
@@ -190,12 +189,12 @@ class Library : public Operand {
 };
 
 /* Destructs the given bag. */
-template <typename TIndex, typename TKey, typename TData, uint MaxStackSize>
+template <typename TIndex, typename TKey, typename TData, UIN MaxStackSize>
 SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CH1*>(r);
 }
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _
-#endif  //< INCLUDED_SCRIPT2_TLIBRARY
+#endif  //< INCLUDED_SCRIPT2_LIBRARY_T
 #endif  //< #if SEAM >= SCRIPT2_14
