@@ -299,6 +299,8 @@ SDK void PrintHeadingf(const CH4* caption, const CH4* style = nullptr,
 /* Wrapper class for the stdout. */
 class COut {
  public:
+  COut();
+
   COut(const CH1* item);
 
   COut(const CH2* item);

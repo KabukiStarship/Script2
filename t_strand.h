@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License. */
 #include "c_strand.h"
 
 #include "c_asciidata.h"
-#include "c_test.h"
 #include "t_binary.h"
 #include "t_object.h"
 
@@ -1632,6 +1631,64 @@ void TPrint3(Char* start, Char token) {
 #endif
 namespace _ {
 
+/* Utility class for printing a Hex POD type. */
+template <typename T>
+struct THex {
+  T item;
+
+  THex(T item) : item(item) {}
+};
+
+/* Utility class for printing blocks of Unicode characters. */
+template <typename Char = CH1>
+struct TChars {
+  Char *start,  //< Start character adddress.
+      *stop;    //< Stop character address.
+
+  /* Foo: Masters of Bar. */
+  TChars(Char* start, Char*) : start(start), stop(stop) {}
+};
+
+/* Utility class for printing blocks of hex values. */
+template <typename Char = CH1, SI4 kC0Offset_ = 176>
+struct THexs {
+  enum { kC0Offset = };
+  const void *begin,  //< Begin adddress.
+      *end;           //< End address.
+
+  /* Foo: Masters of Bar. */
+  THexs(void* begin, void* end) : begin(begin), end(end) {}
+
+  template <typename Printer>
+  Printer& PrintHex(Printer& o) {
+    if (!begin || begin >= end) return;
+
+    const CH1 *start = reinterpret_cast<const CH1*>(begin),
+              *stop = reinterpret_cast<const CH1*>(end);
+    SIW size = stop - start, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+
+    SIW num_bytes = 81 * (num_rows + 2);
+    size += num_bytes;
+    o << STRSocketHexHeader() << STRSocketHexBorder()
+      << THex<const void*>(start);
+
+    CH1 c;
+    while (start < stop) {
+      o << (Char)kLF << '|';
+      for (SI4 i = 0; i < 32; ++i) {
+        c = *start++;
+        if (start > stop)
+          c = 'x';
+        else if (c < ' ')
+          c += kPrintC0Offset;
+        o << THex<CH1>(c);
+      }
+      o << '|' << ' ' << THex<const void*>(start);
+    }
+    o << STRSocketHexBorder() << THex<const void*>(start + size);
+  }
+};
+
 template <typename Char, BOL kHeap_>
 SI4 TStrandFactory(CObject& obj, SIW function, void* arg);
 
@@ -1669,14 +1726,18 @@ class TStrand {
   enum {
     kSizeMax = 0x7ffffff8,                            //< Max size in bytes.
     kLengthUpperLimit = kSizeMax / sizeof(Char) - 1,  //< Max element of chars.
-    kCountMin = (sizeof(Char) == 1) ? 4 : 1,          //< Min element count.
+    kCountMin = (sizeof(Char) == 1)
+                    ? 4
+                    : (sizeof(Char) == 2)
+                          ? 2
+                          : (sizeof(Char) == 4) ? 1 : 0,  //< Min element count.
     kCountLB =
         (kCount_ < kCountMin) ? kCountMin : kCount_,  //< Temp lower-buonds.
     // kCount_ bounded inside the min and max range.
     kCount = (kCountLB >= kLengthUpperLimit) ? kLengthUpperLimit - 1 : kCountLB,
     kLengthMax = kCount - 1,
     // OBJ size in bytes.
-    kSize = sizeof(SI4) + (kCount + 1) * sizeof(Char),
+    kSize = sizeof(SI4) + kCount * sizeof(Char),
   };
 
   /* Constructs a Strand that auto-grows from stack to heap.
@@ -1716,7 +1777,6 @@ class TStrand {
         utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
     PrintConstants();
     Print(item);
-    ;
   }
 
 #if USING_UTF16 == YES
@@ -1825,6 +1885,15 @@ class TStrand {
   }
 #endif
 
+  void PrintConstants() {
+    PRINTF(
+        "\n\nutf_.start:0x%p utf_.stop:0x%p"
+        "\nkCount_:%i kSizeMax:%i kLengthUpperLimit:%i kCountMin:%i "
+        "kLengthMax:%i kCountLB:%i kCount:%i kSize:%i\n\n",
+        utf_.start, utf_.stop, kCount_, kSizeMax, kLengthUpperLimit, kCountMin,
+        kLengthMax, kCountLB, kCount, kSize);
+  }
+
   /* Gets the UTF. */
   TUTF<Char>& Star() { return utf_; }
 
@@ -1853,15 +1922,14 @@ class TStrand {
   TStrand& Print(const CH1* item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
-    PRINTF("\nsize:%i", (SIN)(stop - start));
+    PRINTF("\nLongest string length:%i", (SIN)(stop - start));
     start = ::_::Print(start, stop, item);
     if (!start) {
+      *utf_.start = 0;
       do {
-        SI4 result = TObjCanGrow<SI4>(obj_.CObj());
-        if (result) {
-          *utf_.start = 0;
-          return *this;
-        }
+        SI4 result = obj_.Do(kFactoryGrow);
+        if (result) return *this;
+
         start = ::_::Print(start, stop, item);
       } while (!start);
     }
@@ -1869,6 +1937,7 @@ class TStrand {
     return *this;
   }
 
+#if USING_UTF16
   /* Prints a CH2 to the strand.
   @return A UTF. */
   TStrand& Print(CH2 item) {
@@ -1908,7 +1977,8 @@ class TStrand {
     utf_.start = start;
     return *this;
   }
-
+#endif
+#if USING_UTF32
   /* Prints a CH4 to the strand.
   @return A UTF. */
   TStrand& Print(CH4 item) {
@@ -1948,7 +2018,7 @@ class TStrand {
     utf_.start = start;
     return *this;
   }
-
+#endif
   /* Prints the given item.
   @return A UTF. */
   TStrand& Print(SI4 item) {
@@ -2095,67 +2165,19 @@ class TStrand {
   /* Gets the obj of the Console obj. */
   inline TObject<SI4>& CObj() { return obj_; }
 
-  /* Prints to the given . */
-  void Print() {
-    ::_::Print("\nTStrand<CH");
-    ::_::Print((Char)('0' + sizeof(Char)));
-    ::_::Print('>');
-    obj_.Print();
-    ::_::Printf("TUTF<CH%C>{0x%p, 0x%p}", sizeof(Char), utf_.start, utf_.stop);
-    ::_::PrintChars(socket_.Begin(), socket_.End());
+  /* Prints to the given printer. */
+  template <typename Printer>
+  Printer& PrintTo(Printer& o) {
+    Char char_size_char = (Char)('0' + sizeof(Char));
+    return o << "\nTStrand<CH" << char_size_char << '>' << obj_ << "TUTF<CH"
+             << char_size_char << ">{0x" << THex<void*>(utf_.start) << ", "
+             << utf_.stop << '}' << Chars1(socket_.Begin(), socket_.End());
   }
-
-  /* Script Ops.
-      @param index The index of the expression.
-      @param expr  The Expr to read and write from.
-      @return      Returns nil upon success, a Set header upon query, and an
-                   error_t ticket upon Read-Write failure.
-  virtual const Op* Star (wchar_t index, Expr* expr) {
-    static const Op kThis = { "Text",
-        OpFirst ('A'), OpFirst ('B'),
-        "ASCII Strand.", '(', ')', nullptr
-    };
-    void* args[1];
-
-    switch (index) {
-    case '?': return ExprQuery (expr, kThis);
-    case 'A': {
-      static const Op kOpA = { "Read",
-          _::Params<1, STR, kSize> (), _::Params<0> (),
-          "Gets the string.", '(', ')', nullptr
-      };
-      if (!expr) return &kOpA;
-      return ExprArgs (expr, kOpA,
-        Args (args, buffer_));
-    }
-    case 'B': {
-      static const Op kOpB = { "Write",
-          _::Params<1, ADR, kAddressLengthMax> (), _::Params<0> (),
-          "Writes the string to the given ADR.", '(', ')', ' ', nullptr
-      };
-      CH1 address[kAddressLengthMax];
-
-      if (!expr) return &kOpB;
-      return ExprArgs (expr, kOpB,
-        Args (args, buffer_));
-    }
-    }
-    return nullptr;
-  } */
 
  private:
   TObject<SI4> obj_;            //< ASCII CObject.
   TUTF<Char> utf_;              //< UTF for the strand.
   TSocket<SI4, kSize> socket_;  //< A socket on the stack.
-
-  void PrintConstants() {
-    PRINTF(
-        "\n\nutf_.start:0x%p utf_.stop:0x%p"
-        "\nkCount_:%i kSizeMax:%i kLengthUpperLimit:%i kCountMin:%i "
-        "kLengthMax:%i kCountLB:%i kCount:%i kSize:%i\n\n",
-        utf_.start, utf_.stop, kCount_, kSizeMax, kLengthUpperLimit, kLengthMax,
-        kCountMin, kCountLB, kCount, kSize);
-  }
 };
 
 /*
@@ -2229,7 +2251,7 @@ SI4 TStrandFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
       PRINT("\nkFactoryInfo:");
       // 1. Load the pointer to store the string to.
       const CH1** ptr = reinterpret_cast<const CH1**>(arg);
-      *ptr = __FUNCTION__;
+      *ptr = "Strand";
       return 0;
     }
   }
@@ -2406,6 +2428,27 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THeadingf<Char> item) {
+  return strand.Print(item);
+}
+
+/* Prints a line of the given column_count to the strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THex<Char> item) {
+  return strand.Print(item);
+}
+
+/* Prints a line of the given column_count to the strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THexs<Char> item) {
+  return strand.Print(item);
+}
+
+/* Prints a line of the given column_count to the strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TChars<Char> item) {
   return strand.Print(item);
 }
 

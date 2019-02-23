@@ -100,7 +100,7 @@ CList<Size, Index>* ListInit(UIW* socket, Size size, Index count_max) {
                 // failed.
     return nullptr;
   PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
-         (uint)size, (SI4)count_max)
+         (UIN)size, (SI4)count_max)
   Index count_max_bounds_lower = ListCountMaxBoundsLower<Size, Index>();
   if (count_max < count_max_bounds_lower) {
     PRINTF("\n count_max == 0 and is now %i", (SI4)count_max_bounds_lower)
@@ -250,7 +250,7 @@ Index ListInsert(CList<Size, Index>* list, SI4 type, const void* value,
 
   Index count = list->count, count_max = list->count_max;
   if (count >= count_max || index > count || !TypeIsValid(type) || index < 0) {
-    PRINTF("\nError inserting type:%s into index %i", TypeStrand(type),
+    PRINTF("\nError inserting type:%s into index %i", STRType(type),
            (SI4)index);
     return -1;
   }

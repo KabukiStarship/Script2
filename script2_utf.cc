@@ -513,10 +513,14 @@ Center1::Center1(CH1 item, SI4 count) : token(item, count) {}
 Center1::Center1(const CH1* item, SI4 count) : token(item, count) {}
 
 #if USING_UTF16 == YES
+Center1::Center1(CH2 item, SI4 count) : token(item, count) {}
+
 Center1::Center1(const CH2* item, SI4 count) : token(item, count) {}
 #endif
 
 #if USING_UTF32 == YES
+Center1::Center1(CH4 item, SI4 count) : token(item, count) {}
+
 Center1::Center1(const CH4* item, SI4 count) : token(item, count) {}
 #endif
 
@@ -570,12 +574,21 @@ Linef1::Linef1(CH1 item, SI4 count) : token(token.Strand(), count) {
   TPrint<CH1>(strand, strand + kTokenLongest, item);
 }
 
+Linef1::Linef1(const CH1* item, SI4 count) : token(token.Strand(), count) {
+  CH1* strand = token.Strand();
+  TPrint<CH1>(strand, strand + kTokenLongest, item);
+}
+
 Headingf1::Headingf1(const CH1* caption1, const CH1* style, SI4 count,
                      const CH1* caption2, const CH1* caption3)
     : caption(caption1, count),
       style(style),
       caption2(caption2),
       caption3(caption3) {}
+
+Chars1::Chars1(const CH1* start, const CH1* stop) : start(start), stop(stop) {}
+
+Hexs1::Hexs1(const CH1* begin, const CH1* end) : begin(begin), end(end) {}
 
 UTF1::UTF1(CH1* start, SIW buffer_size)
     : start(start), stop(start + buffer_size - 1) {
@@ -727,6 +740,13 @@ UTF1& UTF1::Binary(const void* pointer) {
   return Set(TPrintBinary<CH1>(start, stop, ptr));
 }
 
+UTF1& UTF1::Print(Hexs1 hexs) {
+  // return TPrintHexs<CH1>(hexs);
+  return *this;
+}
+
+UTF1& UTF1::Print(Chars1 chars) { return *this; }
+
 Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
   TPrint1<CH1>(strand_, item);
 }
@@ -780,6 +800,12 @@ _::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item) {
 }
 
 _::UTF1& operator<<(::_::UTF1& utf, ::_::Headingf1 item) {
+  return utf.Print(item);
+}
+
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Hexs1 item) { return utf.Print(item); }
+
+_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item) {
   return utf.Print(item);
 }
 

@@ -129,7 +129,7 @@
     <ClCompile Include="script2_cout.cc" />
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_event.cc" />
-    <ClCompile Include="script2_expr.cc" />
+    <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />

@@ -113,7 +113,7 @@ SI4 BOutSpace(BOut* bout) {
     return 0;
   }
   CH1* txb_ptr = reinterpret_cast<CH1*>(bout);
-  return (uint)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
+  return (UIN)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
                          bout->size);
 }
 
@@ -122,7 +122,7 @@ SI4 BOutBufferLength(BOut* bout) {
     return 0;
   }
   CH1* begin = BOutBuffer(bout);
-  return (uint)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
+  return (UIN)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
 }
 
 CH1* BOutEndAddress(BOut* bout) {
@@ -218,7 +218,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -282,7 +282,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #endif
       case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
       case kUI2:
-      case kHLF:
+      case kFP2:
 #if USING_SCRIPT2_2_BYTE_TYPES
         // Align the socket to a word boundary and check if the
         // socket has enough room.
@@ -408,9 +408,9 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         goto WriteVarint4;
       } break;
 #endif
-      case kint:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case kUI4:
-      case kFLT:
+      case kFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
@@ -435,7 +435,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #endif            //< USING_SCRIPT2_4_BYTE_TYPES
       case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case kUI8:
-      case kDBL:
+      case kFP8:
       case kTM8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket

@@ -16,7 +16,6 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_FLOOR
 #define SCRIPT2_FLOOR
-#include "c_onfig.h"
 
 namespace _ {
 
@@ -32,7 +31,7 @@ struct SDK Floor {
 /* Returns the the global Floor. */
 SDK inline Floor* Global();
 
-}  //< namespace _
+}  // namespace _
 
 #endif  // #if SCRIPT2_FLOOR
 #endif  // #if SEAM >= SCRIPT2_14

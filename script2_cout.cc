@@ -296,8 +296,8 @@ void PrintHex(const void* begin, const void* end) {
 
   SIW num_bytes = 81 * (num_rows + 2);
   size += num_bytes;
-  Print(StrandSocketHexHeader());
-  Print(StrandSocketHexBorder());
+  Print(STRSocketHexHeader());
+  Print(STRSocketHexBorder());
   PrintHex(address_ptr);
 
   CH1 c;
@@ -314,7 +314,7 @@ void PrintHex(const void* begin, const void* end) {
     Print('|', ' ');
     PrintHex(address_ptr);
   }
-  Print(StrandSocketHexBorder());
+  Print(STRSocketHexBorder());
   PrintHex(address_ptr + size);
 }
 
@@ -400,6 +400,8 @@ void PrintRight(const CH1* item, SI4 count) {
 void PrintCenter(const CH1* item, SI4 count) {
   ::_::TPrintCenter<CH1>(item, count);
 }
+
+COut::COut() {}
 
 COut::COut(const CH1* item) { ::_::Print(item); }
 

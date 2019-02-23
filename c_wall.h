@@ -1,6 +1,6 @@
-/* Script
-@version 0.x
-@file    /script2/wall.h
+/* Script^2 @version 0.x
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2/c_wall.h
 @author  Cale McCollough <cale@astartup.net>
 @license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
 All right reserved (R). Licensed under the Apache License, Version 2.0 (the
@@ -16,8 +16,9 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_WALL
 #define SCRIPT2_WALL
-#include "door.h"
+#include "c_door.h"
 #include "c_op.h"
+#incude "c_array.h"
 
 namespace _ {
 
@@ -79,7 +80,7 @@ class Wall {
 
  private:
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
-  SIW size_bytes_;      //< Size of the Wall in bytes.
+  SIW size_bytes_;         //< Size of the Wall in bytes.
   UIW* begin;              //< The Wall's socket.
   TCArray<Door*>* doors_;  //< The doors in the room.
 };

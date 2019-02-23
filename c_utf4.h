@@ -16,6 +16,7 @@ specific language governing permissions and limitations under the License. */
 #ifndef INCLUDED_SCRIPTPRINT_UTF32
 #define INCLUDED_SCRIPTPRINT_UTF32
 
+#include "c_asciidata.h"
 #include "c_object.h"
 
 #if USING_UTF32 == YES
@@ -989,27 +990,28 @@ using Hex = Hex4;
 
 }  // namespace _
 
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, const CH4*);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, CH4 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI1 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI2 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI2 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI4 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI4 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, SI8 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, UI8 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, const CH4*);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, CH4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, UI1 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, SI2 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, UI2 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, SI4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, UI4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, SI8 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, UI8 item);
 
 #if USING_FP4 == YES
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, FP4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, FP4 item);
 #endif
 #if USING_FP8 == YES
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, FP8 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, FP8 item);
 #endif
 
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Center4 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Right4 item);
-SDK::_::UTF4& operator<<(::_::UTF4& printer, ::_::Linef4 item);
-SDK::_::UTF4& operator<<(::_::UTF4& printer, ::_::Headingf4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Center4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Right4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Linef4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item);
+SDK inline ::_::UTF4& operator<<(::_::UTF4& o, const ::_::AsciiValue& value);
 
 #endif  //< #if USING_UTF32 == YES
 #endif

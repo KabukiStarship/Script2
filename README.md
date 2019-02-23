@@ -18,17 +18,18 @@ ASCII Data Types provide:
 * Year 2038-safe 32-bit, 64- bit and dual-32-bit with 32-year epoch and sub-second tick timestamps.
 * All data types are 64-bit aligned so they may be rapidly copied from one system to another on homo-endian system.
 * Optional MSB variant encoding provides fast data compression similar to UTF-8.
+* 
 * Convenient and easy-to-read-and-type 3-letter all-caps abbreviations that POP out around lower_snake_case.
 * Contiguous Objects
   * UTF-8, UTF-16, and UTF-32 strings.
-  * Stack - A stack of POD types in the form of a bounded-sized array.
   * Array - A multidimensional array with Stack of dimensions.
+  * Vector - A stack of POD types in the form of a bounded-sized array.
   * Loom - A homogeneous array of UTF-8, UTF-16, or UTF-32 strings.
-  * Table - A hash table of contiguous mappings.
-  * Map - A sparse map of unsigned integers to ASCII Data Types.
-  * Book - A multidictionary (i.e. unordered map) without hash table.
-  * Dictionary - A dictionary of ASCII Data Types with hash table.
   * B-Sequence - Describes the order and maximum sizes of a Byte-Sequence of ASCII Data.
+  * Maps - Maps can be created of any of the POD, String, or Loom to any type, including nested Maps.
+	  * Table - A hash table of contiguous mappings (Loom-to-ContiguousMap).
+	  * Book - A multidictionary (i.e. unordered map) of Loom-to-Wildcard without hash table.
+	  * Dictionary - A dictionary of ASCII Data Types with hash table.
   * Expression - Asynchronous Chinese Room Script Expressions capable of concurrently executing scripts in multiple languages in real-time.
   
 ## Quick Start Guide
@@ -48,7 +49,7 @@ Please **@see** [Kabuki Toolkit}(https://github.com/kabuki-starship/kabuki_toolk
 
 ## Author
 
-* Cale Jamison McCollough <<cale@astartup.net>> <[cale@astartup.net](mailto:cale@astartup.net)>
+* Cale Jamison McCollough <<calemccollough.github.io>> <<cale@astartup.net>>
 
 ## License
 

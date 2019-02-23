@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
-#include "interrupts.h"
+#include "c_interrupts.h"
 #include "t_wall.h"
 
 namespace _ {

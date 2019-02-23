@@ -37,24 +37,26 @@ namespace _ {
 
 /* ASCII OBJ and AsciiFactory. */
 struct CObject {
-  UIW* begin;            //< Pointer to the contiguous ASCII CObject.
   AsciiFactory factory;  //< ASCII CObject Factory function pointer.
+  UIW* begin;            //< Pointer to the contiguous ASCII CObject.
 };
 
 enum AsciiFactoryFunctions {
-  kFactoryDestroy = 0,  //< ASCII Factory function deletes an OBJ.
-  kFactoryNew = 1,     //< ASCII Factory function creates a new OBJ.
-  kFactoryClone = 2,   //< ASCII Factory function clones the OBJ.
-  kFactoryGrow = 3,    //< ASCII Factory function double OBJ size in bytes.
-  kFactoryInfo = 4,    //< The last ASCII Factory function.
+  kFactoryCanGrow = 0,  //< AsciiFactory function checks if the size can double.
+  kFactoryDestroy = 1,  //< AsciiFactory function deletes an OBJ.
+  kFactoryNew = 2,      //< AsciiFactory function creates a new OBJ.
+  kFactoryClone = 3,    //< AsciiFactory function clones the OBJ.
+  kFactoryGrow = 4,     //< AsciiFactory function double OBJ size in bytes.
+  kFactoryInfo = 5,     //< AsciiFactory function gets the info string.
 };
 
 enum AsciiFactoryErrors {
-  kFactorySuccess = 0,      //< Factory operation completed successfully.
-  kFactoryNilOBJ = 1,       //< Factory found nil obj.begin pointer.
-  kFactoryNilArg = 2,       //< Factory arg nil.
-  kFactoryOutOfRAM = 3,     //< Factory out of memory.
-  kFactorySizeInvalid = 4,  //< Factory ASCII Type Size limit reached.
+  kFactorySuccess = 0,      //< Factory operation completed successfully error.
+  kFactoryNil = 1,          //< Factory missing error.
+  kFactoryNilOBJ = 1,       //< Factory found nil obj.begin pointer error.
+  kFactoryNilArg = 2,       //< Factory arg nil error.
+  kFactoryOutOfRAM = 3,     //< Factory out of memory error.
+  kFactorySizeInvalid = 4,  //< Factory ASCII Type Size limit reached error.
 };
 
 /* Checks if the value is a valid object index, that it's 7 less than the max

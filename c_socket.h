@@ -149,8 +149,7 @@ SDK CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 @param  begin The begin of the read socket.
 @param  size      Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
-SDK inline CH1* SocketCopy(void* start, void* stop, const void* begin,
-                           SIW read_size);
+SDK CH1* SocketCopy(void* start, void* stop, const void* begin, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
     @param  begin The begin of the write socket.

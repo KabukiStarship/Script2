@@ -33,11 +33,11 @@ const CH1* StrandSocketBorder() {
          " ";
 }
 
-const CH1* StrandSocketHexHeader() {
+const CH1* STRSocketHexHeader() {
   return "\n|0               8               16              24              |";
 }
 
-const CH1* StrandSocketHexBorder() {
+const CH1* STRSocketHexBorder() {
   return "\n|+---------------+---------------+---------------+---------------|"
          " ";
 }

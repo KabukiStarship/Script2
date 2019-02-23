@@ -17,20 +17,20 @@ specific language governing permissions and limitations under the License. */
 #ifndef SCRIPT2_EVENT_C
 #define SCRIPT2_EVENT_C
 
-#include "operand.h"
+#include "c_op.h"
 
 namespace _ {
 
 /* Interface for an abstract event.
-*/
+ */
 struct CEvent {
   /* Virtual destructor. */
-  virtual ~Event() = 0;
+  virtual ~CEvent() = 0;
 
   /* Triggers the event. */
   virtual void Trigger() = 0;
 };
 
-}  //< namespace _
+}  // namespace _
 #endif
 #endif

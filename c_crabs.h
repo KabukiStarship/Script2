@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License. */
 #include "c_args.h"
 #include "c_bin.h"
 #include "c_bout.h"
-#include "c_cbsq.h"
+#include "c_bsq.h"
 #include "c_error.h"
 #include "c_operand.h"
 
@@ -46,16 +46,10 @@ BIn   |>-Buffer->|>-Async Portal Tx->|>-Sync User Writes->|>-Buffer->|
       |__________|___________________|____________________|__________|
 @endcode
 
-
-
 Almost all block of memory in Script has something that grows up and another
 that grows down.
 
-
-
 # Stack Memory Layout
-
-
 
 @code
     |=========================|
@@ -105,7 +99,7 @@ struct CCrabs {
       last_bin_state,  //< Last BIn state.
       last_byte;       //< Last UI1 read.
   CHN current_char;    //< Current Unicode CH1 being scanned.
-  hash16_t hash;       //< Packed BSQ hash.
+  UI2 hash;            //< Packed BSQ hash.
   UI4 timeout_us;      //< Timeout time in microseconds.
   TM8 last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
@@ -174,9 +168,9 @@ SDK const Op* CrabsEnterState(CCrabs* crabs, BInState state);
 /* Streams a B-Output UI1. */
 SDK UI1 CrabsStreamBOut(CCrabs* crabs);
 
-/* Scans the BOut socket and marks the data as being ready to execute.
+/* Scans the BIn socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
-SDK const Op* CrabsUnpack(CCrabs* crabs);  // , Portal* io);
+SDK const Op* CrabsScanBIn(CCrabs* crabs);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
 SDK BOL CrabsContains(CCrabs* crabs, void* address);

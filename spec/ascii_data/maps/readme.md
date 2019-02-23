@@ -18,4 +18,4 @@ ASCII Objects shall be composed of contiguous memory and begin with an 8, 16, 32
 |   Dictionary    |       Set      |
 |      Map        |       Set      |
 
-**Caption:** ***Object Type Table***
+*Caption: Object Type Table*

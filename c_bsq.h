@@ -14,8 +14,8 @@ specific language governing permissions and limitations under the License. */
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
-#ifndef INCLUDED_SCRIPT2_BSQ
-#define INCLUDED_SCRIPT2_BSQ
+#ifndef SCRIPT2_BSQ_C
+#define SCRIPT2_BSQ_C
 
 #include "c_asciidata.h"
 #include "c_utf1.h"
@@ -172,5 +172,5 @@ inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
 }
 #endif  //< USING_UTF8 == YES
 
-#endif  //< INCLUDED_SCRIPT2_BSQ
+#endif  //< SCRIPT2_BSQ_C
 #endif  //< #if SEAM >= SCRIPT2_14

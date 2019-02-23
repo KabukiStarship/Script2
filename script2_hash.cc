@@ -17,9 +17,9 @@ specific language governing permissions and limitations under the License. */
 
 namespace _ {
 
-hash16_t Hash16(CH1 value, hash16_t hash) { return hash + hash * value; }
+UI2 Hash16(CH1 value, UI2 hash) { return hash + hash * value; }
 
-hash16_t Hash16(const CH1* , hash16_t hash) {
+UI2 Hash16(const CH1* , UI2 hash) {
   UI1 c = *;
   while (c) {
     hash = Hash16(c, hash);
@@ -29,9 +29,9 @@ hash16_t Hash16(const CH1* , hash16_t hash) {
   return hash;
 }
 
-hash32_t Hash32(CH2 value, hash32_t hash) { return hash + hash * value; }
+UI4 Hash32(CH2 value, UI4 hash) { return hash + hash * value; }
 
-hash32_t Hash32(const CH1* , hash32_t hash) {
+UI4 Hash32(const CH1* , UI4 hash) {
   UI1 c = *;
   while (c) {
     hash = Hash32(c, hash);
@@ -40,9 +40,9 @@ hash32_t Hash32(const CH1* , hash32_t hash) {
   }
   return hash;
 }
-hash64_t Hash64(CH4 value, hash64_t hash) { return hash + hash * value; }
+UI8 Hash64(CH4 value, UI8 hash) { return hash + hash * value; }
 
-hash64_t Hash64(const CH1* , hash64_t hash) {
+UI8 Hash64(const CH1* , UI8 hash) {
   UI1 c = *;
   while (c) {
     hash = Hash64(c, hash);

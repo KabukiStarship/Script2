@@ -16,9 +16,6 @@ specific language governing permissions and limitations under the License. */
 #if SEAM >= SCRIPT2_14
 #ifndef INCLUDED_SCRIPT2_EXCEPTIONS
 #define INCLUDED_SCRIPT2_EXCEPTIONS YES
-// Dependencies:
-#include "c_onfig.h"
-// End dependencies.
 #if USING_SCRIPT2_INTERRUPTS == YES
 
 namespace _ {
