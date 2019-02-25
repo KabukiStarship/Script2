@@ -946,6 +946,7 @@ using Hex = Hex2;
 
 }  // namespace _
 
+SDK inline ::_::UTF2& operator<<(::_::UTF2& utf, ::_::UTF2& o);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, const CH2* string);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, CH2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, UI1 item);
@@ -963,12 +964,13 @@ SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP4 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP8 item);
 #endif
 
+SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex& item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Center2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Right2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
-SDK inline ::_::UTF2& operator<<(::_::UTF2& utf,
-                                 const ::_::AsciiValue& type_value);
+// SDK inline ::_::UTF2& operator<<(::_::UTF2& utf,
+//                                 const ::_::AsciiValue& type_value);
 
 #endif  //< #if USING_UTF16
 #endif

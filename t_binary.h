@@ -320,7 +320,7 @@ inline UI8 ShiftRight(UI8 value, UI8 count) { return value >> count; }
 
 /* Prints a hex value to the Console. */
 template <typename Char, typename UI>
-Char* TPrintHexTest(Char* start, Char* stop, UI value) {
+Char* TPrintHexPOD(Char* start, Char* stop, UI value) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
   DASSERT(start);
@@ -340,70 +340,70 @@ Char* TPrintHexTest(Char* start, Char* stop, UI value) {
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI1 value) {
-  return TPrintHexTest<Char, UI1>(start, stop, (UI1)value);
+  return TPrintHexPOD<Char, UI1>(start, stop, (UI1)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI1 value) {
-  return TPrintHexTest<Char, UI1>(start, stop, value);
+  return TPrintHexPOD<Char, UI1>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI2 value) {
-  return TPrintHexTest<Char, UI2>(start, stop, (UI2)value);
+  return TPrintHexPOD<Char, UI2>(start, stop, (UI2)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI2 value) {
-  return TPrintHexTest<Char, UI2>(start, stop, value);
+  return TPrintHexPOD<Char, UI2>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI4 value) {
-  return TPrintHexTest<Char, UI4>(start, stop, (UI4)value);
+  return TPrintHexPOD<Char, UI4>(start, stop, (UI4)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI4 value) {
-  return TPrintHexTest<Char, UI4>(start, stop, value);
+  return TPrintHexPOD<Char, UI4>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI8 value) {
-  return TPrintHexTest<Char, UI8>(start, stop, (UI8)value);
+  return TPrintHexPOD<Char, UI8>(start, stop, (UI8)value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
-  return TPrintHexTest<Char, UI8>(start, stop, value);
+  return TPrintHexPOD<Char, UI8>(start, stop, value);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHexTest<Char, UI8>(start, stop, ui);
+  return TPrintHexPOD<Char, UI8>(start, stop, ui);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHexTest<Char, UI8>(start, stop, ui);
+  return TPrintHexPOD<Char, UI8>(start, stop, ui);
 }
 
 /* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, const void* ptr) {
   UIW address = reinterpret_cast<UIW>(ptr);
-  return TPrintHexTest<Char, UIW>(start, stop, address);
+  return TPrintHexPOD<Char, UIW>(start, stop, address);
 }
 
 /* Prints the given value to Binary. */
@@ -1548,6 +1548,25 @@ template <typename Char = CH1>
 Char* TScan(const Char* start, FP8& result) {
   return nullptr;
 }
+
+/* Utility class for printing a Hex POD type. */
+template <typename T>
+struct THex {
+  T item;     //<
+  SI4 width;  //< Width of the item in bytes.
+
+  THex(T item) : item(item) {}
+
+  template <typename Printer>
+  Printer& Print(Printer& o) {
+    switch (width) {
+      case 0:
+        return o;
+      case 1:
+        return o << ()
+    }
+  }
+};
 
 }  // namespace _
 #undef PRINT_FLOAT_BINARY

@@ -586,6 +586,8 @@ COut& COut::Print(Headingf4 item) {
 
 }  // namespace _
 
+::_::COut& operator<<(::_::COut& cout, ::_::COut& o) { return o; }
+
 ::_::COut& operator<<(::_::COut& cout, const CH1* string) {
   return cout.Print(string);
 }

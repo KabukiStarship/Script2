@@ -1631,14 +1631,6 @@ void TPrint3(Char* start, Char token) {
 #endif
 namespace _ {
 
-/* Utility class for printing a Hex POD type. */
-template <typename T>
-struct THex {
-  T item;
-
-  THex(T item) : item(item) {}
-};
-
 /* Utility class for printing blocks of Unicode characters. */
 template <typename Char = CH1>
 struct TChars {
@@ -1884,6 +1876,13 @@ class TStrand {
     Print(item);
   }
 #endif
+
+  /* Constructs a Strand and prints the given item. */
+  TStrand(Hex item)
+      : obj_(socket_.Words(), socket_.SizeBytes()),
+        utf_(socket_.Start<SI4, Char>(), socket_.Stop<SI4, Char, SI4>(kCount)) {
+    Print(item);
+  }
 
   void PrintConstants() {
     PRINTF(
@@ -2169,9 +2168,10 @@ class TStrand {
   template <typename Printer>
   Printer& PrintTo(Printer& o) {
     Char char_size_char = (Char)('0' + sizeof(Char));
-    return o << "\nTStrand<CH" << char_size_char << '>' << obj_ << "TUTF<CH"
-             << char_size_char << ">{0x" << THex<void*>(utf_.start) << ", "
-             << utf_.stop << '}' << Chars1(socket_.Begin(), socket_.End());
+    return o << "\nTStrand<CH" << char_size_char << '>'
+             << /*obj_.Print<Printer>(o) <<*/ "TUTF<CH" << char_size_char
+             << ">{0x" << Hex(utf_.start); /* << ", " << utf_.stop << '}'
+                    << Chars1(socket_.Begin(), socket_.End());*/
   }
 
  private:
@@ -2264,110 +2264,73 @@ SI4 TStrandFactory(CObject& obj, SIW function, void* arg) {
 }
 }  // namespace _
 
-/* Writes a nil-terminated UTF-8 to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item   The item to strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand,
+    ::_::TStrand<Char, kCount_, kFactory_>& o) {
+  return o;
+}
+
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH1* string) {
   return strand.Print(string);
 }
 
-/* Writes a nil-terminated UTF-8 to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH2* string) {
   return strand.Print(string);
 }
 
-/* Writes a nil-terminated UTF-8 to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, const CH4* string) {
   return strand.Print(string);
 }
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item   The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, Char c) {
   return strand.Print(c);
 }
 
-/* Writes the given item to the strand.
-@param  strand The strand.
-@param  item The item to write to the strand.
-@return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, UI1 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@param  strand The strand.
-@param  item The item to write to the strand.
-@return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, SI2 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@param  strand The strand.
-@param  item The item to write to the strand.
-@return The strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, UI2 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, SI4 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, UI4 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, SI8 item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, UI8 item) {
@@ -2375,10 +2338,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 }
 
 #if USING_FP4 == YES
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
+
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, FP4 item) {
@@ -2386,10 +2346,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 }
 #endif
 #if USING_FP8 == YES
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to the strand. */
+
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, FP8 item) {
@@ -2397,61 +2354,54 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 }
 #endif
 
-/* Writes the given item to the strand.
-@return The strand.
-@param  strand The strand.
-@param  item The item to write to strand. */
+template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
+inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::Hex item) {
+  return strand.Print(item);
+}
+
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TCenter<Char> item) {
   return strand.Print(item);
 }
 
-/* Writes the given item to the strand justified right.
-@return The strand.
-@param  strand The strand.
-@param  item The item to strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TRight<Char> item) {
   return strand.Print(item);
 }
 
-/* Prints a line strand of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TLinef<Char> item) {
   return strand.Print(item);
 }
 
-/* Prints a line of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THeadingf<Char> item) {
   return strand.Print(item);
 }
 
-/* Prints a line of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THex<Char> item) {
   return strand.Print(item);
 }
 
-/* Prints a line of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THexs<Char> item) {
   return strand.Print(item);
 }
 
-/* Prints a line of the given column_count to the strand. */
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::TChars<Char> item) {
   return strand.Print(item);
 }
 
-#endif  //< #if SEAM >= SCRIPT2_6
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif
+#endif
 #endif

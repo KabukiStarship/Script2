@@ -897,6 +897,9 @@ struct SDK UTF1 {
   /* Prints the given pointer as hex. */
   inline UTF1& Hex(const void* pointer);
 
+  /* Prints the given item. */
+  inline UTF1& Print(Hex item);
+
   /* Prints the given item as binary. */
   inline UTF1& Binary(SI1 item);
 
@@ -960,6 +963,7 @@ using CRows = Headingf1;
 
 }  // namespace _
 
+SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
@@ -977,6 +981,7 @@ SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP8 item);
 #endif
 
+SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex& item);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
 SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);

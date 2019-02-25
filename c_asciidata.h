@@ -53,15 +53,15 @@ typedef enum AsciiTypes {
   kUI4,       //< 10. 32-bit unsigned integer.
   kCH4,       //< 11. 32-bit character (CH2), string (ST2), or token (TK2).
   kFP4,       //< 12. 32-bit floating-point number.
-  kTM4,       //< 13. 32-bit second since epoch timestamp.
-  kTME,       //< 14. 64-bit sub-second timestamp with TM4 and an UI4 tick.
-  kTM8,       //< 15. 64-bit second since epoch timestamp.
   kSI8,       //< 16. 64-bit signed integer.
   kUI8,       //< 17. 64-bit unsigned integer.
   kFP8,       //< 18. 64-bit floating-point number.
   kSIH,       //< 19. 128-bit (Hexadeca-UI1) signed integer.
   kUIH,       //< 20. 128-bit (Hexadeca-UI1) unsigned integer.
   kFPH,       //< 21. 128-bit (Hexadeca-UI1) floating-point number.
+  kTM4,       //< 13. 32-bit second since epoch timestamp.
+  kTME,       //< 14. 64-bit sub-second timestamp with TM4 and an UI4 tick.
+  kTM8,       //< 15. 64-bit second since epoch timestamp.
   kOB1,       //< 22. 8-bit ASCII Object
   kBNM,       //< 23. 1 to 64-byte Signed or Unsigned Integer.
   kTKN,       //< 24. An ASCII Strand without any Whitespace.
@@ -104,6 +104,12 @@ enum {
 
 /* Gets the string representations of the given ASCII Data Type 0-31. */
 inline const CH1* STRType();
+
+/* Array of bytes of the sizes of POD types. */
+inline const SI1* TypePODSizes();
+
+/* Gets one of the */
+inline SI1 TypePODSize(SIN index);
 
 /* Gets a string representation of the given ASCII Data Type 0-31. */
 inline const CH1* STRType(SI4 index);

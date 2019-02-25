@@ -145,56 +145,56 @@ SDK CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin The begin of the write socket.
-@param  stop   The stop of the write socket.
+@param  stop  The stop of the write socket.
 @param  begin The begin of the read socket.
-@param  size      Number of bytes to copy.
+@param  size  Number of bytes to copy.
 @return Pointer to the last UI1 written or nil upon failure. */
 SDK CH1* SocketCopy(void* start, void* stop, const void* begin, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
-    @param  begin The begin of the write socket.
-    @param  stop   The stop of the write socket.
+    @param  start The start of the write socket.
+    @param  stop  The stop of the write socket.
     @param  begin The begin of the read socket.
-    @param  stop  The stop of the read socket.
+    @param  edn   The end of the read socket.
     @return Pointer to the last UI1 written or nil upon failure. */
 SDK inline CH1* SocketCopy(void* start, void* stop, const void* begin,
                            const void* end);
 
 /* Compares the two memory sockets.
-    @param  begin_a The beginning of Socket A.
-    @param  end_a   The stop of Socket A.
-    @param  begin_b The begin of Socket B.
-    @param  stop_b  The stop of Socket B.
-    @return True if they are the same and false if they are not. */
+@param  start  The beginning of Socket A.
+@param  stop   The stop of Socket A.
+@param  begin  The begin of Socket B.
+@param  stop_b The stop of Socket B.
+@return True if they are the same and false if they are not. */
 SDK BOL SocketCompare(const void* start, const void* stop, const void* begin,
                       const void* end);
 
 /* Compares the two memory sockets.
-@param  begin_a The beginning of Socket A.
-@param  end_a   The stop of Socket A.
-@param  begin_a The begin of Socket B.
-@param  size_b  The size of Socket B.
+@param  start The beginning of Socket A.
+@param  stop  The stop of Socket A.
+@param  begin The begin of Socket B.
+@param  size  The size of Socket B.
 @return True if they are the same and false if they are not. */
-SDK inline BOL SocketCompare(const void* begin_a, void* end_a,
-                             const void* begin_b, SIW read_size);
+SDK inline BOL SocketCompare(const void* start, void* stop, const void* begin,
+                             SIW size);
 
 /* Compares the two memory sockets.
-@param  begin_a The beginning of socket a.
-@param  size_a  The size of Socket A .
-@param  begin_a The begin of socket b.
-@param  size_b  The size of Socket B.
+@param  start The beginning of socket a.
+@param  size_a The size of Socket A .
+@param  start  The begin of socket b.
+@param  size_b The size of Socket B.
 @return True if they are the same and false if they are not. */
-SDK inline BOL SocketCompare(const void* begin_a, SIW size_a,
-                             const void* begin_b, SIW size_b);
+SDK inline BOL SocketCompare(const void* start, SIW size_a, const void* begin,
+                             SIW size_b);
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param  begin The begin UI1.
+@param  start The begin UI1.
 @param  stop   The stop UI1.
 @param  count The UI1 count to shift up. */
-SIW SocketShiftUp(void* begin, void* stop, SIW count);
+SIW SocketShiftUp(void* start, void* stop, SIW count);
 
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPTKABUKI_SOCKET
-#endif  //< #if SEAM >= SCRIPT2_2
+#endif
+#endif
