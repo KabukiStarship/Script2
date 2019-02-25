@@ -844,6 +844,24 @@ CH4* Print(CH4* start, CH4* stop, FP8 value) {
 }
 #endif
 
+Hex::Hex(SI1& item) : item(&item), width_bytes(1) {}
+Hex::Hex(UI1& item) : item(&item), width_bytes(1) {}
+Hex::Hex(SI2& item) : item(&item), width_bytes(2) {}
+Hex::Hex(UI2& item) : item(&item), width_bytes(2) {}
+Hex::Hex(SI4& item) : item(&item), width_bytes(4) {}
+Hex::Hex(UI4& item) : item(&item), width_bytes(4) {}
+Hex::Hex(SI8& item) : item(&item), width_bytes(8) {}
+Hex::Hex(UI8& item) : item(&item), width_bytes(8) {}
+
+Hex::Hex(const void* item) : item(&item), width_bytes(sizeof(const void*)) {}
+
+#if USING_FP8 == YES
+Hex::Hex(FP4& item) : item(&item), width_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(FP8& item) : item(&item), width_bytes(8) {}
+#endif
+
 }  // namespace _
 
 #endif  //< #if SEAM >= SCRIPT2_4

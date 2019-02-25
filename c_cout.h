@@ -397,24 +397,26 @@ class COut {
 
 }  // namespace _
 
-inline ::_::COut& operator<<(::_::COut& cout, const CH1* string);
-inline ::_::COut& operator<<(::_::COut& cout, const CH2* string);
-inline ::_::COut& operator<<(::_::COut& cout, const CH4* string);
-inline ::_::COut& operator<<(::_::COut& cout, CH1 c);
-inline ::_::COut& operator<<(::_::COut& cout, CH2 c);
-inline ::_::COut& operator<<(::_::COut& cout, CH4 c);
-inline ::_::COut& operator<<(::_::COut& cout, UI1 value);
-inline ::_::COut& operator<<(::_::COut& cout, SI2 value);
-inline ::_::COut& operator<<(::_::COut& cout, UI2 value);
-inline ::_::COut& operator<<(::_::COut& cout, SI4 value);
-inline ::_::COut& operator<<(::_::COut& cout, UI4 value);
-inline ::_::COut& operator<<(::_::COut& cout, SI8 value);
-inline ::_::COut& operator<<(::_::COut& cout, UI8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::COut& o);
+
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH1* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH4* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH1 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH2 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH4 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI1 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI2 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI2 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI8 value);
 
 #if SEAM >= SCRIPT2_4
 
-inline ::_::COut& operator<<(::_::COut& cout, FP4 value);
-inline ::_::COut& operator<<(::_::COut& cout, FP8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP8 value);
 
 #endif
 
@@ -422,24 +424,25 @@ inline ::_::COut& operator<<(::_::COut& cout, FP8 value);
 
 #if USING_STR == UTF8
 
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex& item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
 
 #elif USING_STR == UTF16
 
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item);
 
 #elif USING_STR == UTF32
 
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);
-inline ::_::COut& operator<<(::_::COut& cout, ::_::Headingf4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf4 item);
 
 #endif
 #endif

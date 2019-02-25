@@ -209,16 +209,7 @@ struct OBJ {
 
 /* A 64-bit word-aligned ASCII CObject.
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
-size. The minimum and maximum bounds of size of ASCII objects are defined by the
-minimum size required to store the header with minimum item count, and the
-highest positive integer multiple of 8. The fastest way to covert the upper
-bounds is to invert the bits and subtract 7 as follows:
-
-@code
-SI2 upper_bounds_si2 = (~(SI2)0) - 7;
-SI4 upper_bounds_si4 = (~(SI4)0) - 7;
-SI8 upper_bounds_si8 = (~(SI8)0) - 7;
-@endcode
+size.
 */
 template <typename Size>
 class TObject {
@@ -249,10 +240,10 @@ class TObject {
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
   TObject(UIW* socket, Size size, AsciiFactory factory = nullptr)
-      : obj_({TObjInit<Size>(socket, size), factory}) {}
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   TObject(UIW* socket, AsciiFactory factory = nullptr)
-      : obj_({socket, factory}) {}
+      : obj_({factory, socket}) {}
 
   /* Destructor calls the AsciiFactory factory. */
   ~TObject() { Delete(obj_); }
@@ -302,32 +293,31 @@ class TObject {
   inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
   /* Prints this object to the COut. */
-  void Print() {
-    ::_::Print("\nTObject<SI");
-    ::_::Print((CH1)('0' + sizeof(Size)));
-    ::_::Print(">");
+  template <typename Printer>
+  Printer& Print(Printer& o) {
+    o << "\nTObject<SI" << (CH1)('0' + sizeof(Size)) << '>';
     UIW* begin = obj_.begin;
     if (begin) {
       Size size = *reinterpret_cast<Size*>(begin);
-      ::_::Print(" size:");
-      ::_::Print(size);
+      o << " size:" << size;
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {
-      ::_::Print(" factory:\"");
+      o << " factory:\"";
       CH1* info_string = 0;
       if (factory(obj_, kFactoryInfo, &info_string)) {
-        ::_::Print(info_string);
+        o << info_string;
       }
-      ::_::Print('\"');
+      o << '\"';
     }
+    return o;
   }
 
  private:
   CObject obj_;  //< ASCII CObject harness.
-};               //< namespace _
+};
 
 }  // namespace _
 
-#endif  //< SCRIPT2_TOBJECT
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif
+#endif

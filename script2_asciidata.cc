@@ -28,41 +28,99 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 const CH1* STRType() {
-  static const CH1 kStrings[33][4] = {{'N', 'I', 'L', NIL},   //< ASCII 0.
-                                      {'S', 'I', '1', NIL},   //< ASCII 1.
-                                      {'U', 'I', '1', NIL},   //< ASCII 2.
-                                      {'C', 'H', '1', NIL},   //< ASCII 3.
-                                      {'S', 'I', '2', NIL},   //< ASCII 4.
-                                      {'U', 'I', '2', NIL},   //< ASCII 5.
-                                      {'F', 'P', '2', NIL},   //< ASCII 6.
-                                      {'C', 'H', '2', NIL},   //< ASCII 7.
-                                      {'B', 'O', 'L', NIL},   //< ASCII 8.
-                                      {'S', 'I', '4', NIL},   //< ASCII 9.
-                                      {'U', 'I', '4', NIL},   //< ASCII 10.
-                                      {'F', 'L', 'T', NIL},   //< ASCII 11.
-                                      {'T', 'M', '4', NIL},   //< ASCII 12.
-                                      {'T', 'M', '8', NIL},   //< ASCII 13.
-                                      {'S', 'I', '8', NIL},   //< ASCII 14.
-                                      {'U', 'I', '8', NIL},   //< ASCII 15.
-                                      {'F', 'P', '8', NIL},   //< ASCII 16.
-                                      {'S', 'V', '8', NIL},   //< ASCII 17.
-                                      {'F', 'P', 'H', NIL},   //< ASCII 19.
-                                      {'U', 'I', 'X', NIL},   //< ASCII 20.
-                                      {'O', 'B', 'J', NIL},   //< ASCII 21.
-                                      {'L', 'O', 'M', NIL},   //< ASCII 25.
-                                      {'B', 'S', 'Q', NIL},   //< ASCII 26.
-                                      {'E', 'S', 'C', NIL},   //< ASCII 27.
-                                      {'L', 'S', 'T', NIL},   //< ASCII 28.
-                                      {'B', 'O', 'K', NIL},   //< ASCII 29.
-                                      {'D', 'I', 'C', NIL},   //< ASCII 30.
-                                      {'M', 'A', 'P', NIL},   //< ASCII 31.
-                                      {NIL, NIL, NIL, NIL},   //< ASCII 31.
-                                      {'A', 'D', 'R', NIL},   //< ASCII 25.
-                                      {'S', 'T', 'R', NIL},   //< ASCII 24.
-                                      {'T', 'K', 'N', NIL}};  //< ASCII 25.
+  static const CH1 kStrings[33][4] = {{'N', 'I', 'L', NIL},   //< 0.
+                                      {'S', 'I', '1', NIL},   //< 1.
+                                      {'U', 'I', '1', NIL},   //< 2.
+                                      {'C', 'H', '1', NIL},   //< 3.
+                                      {'S', 'I', '2', NIL},   //< 4.
+                                      {'U', 'I', '2', NIL},   //< 5.
+                                      {'F', 'P', '2', NIL},   //< 6.
+                                      {'C', 'H', '2', NIL},   //< 7.
+                                      {'B', 'O', 'L', NIL},   //< 8.
+                                      {'S', 'I', '4', NIL},   //< 9.
+                                      {'U', 'I', '4', NIL},   //< 10.
+                                      {'F', 'L', 'T', NIL},   //< 11.
+                                      {'T', 'M', '4', NIL},   //< 12.
+                                      {'T', 'M', '8', NIL},   //< 13.
+                                      {'S', 'I', '8', NIL},   //< 14.
+                                      {'U', 'I', '8', NIL},   //< 15.
+                                      {'F', 'P', '8', NIL},   //< 16.
+                                      {'S', 'V', '8', NIL},   //< 17.
+                                      {'F', 'P', 'H', NIL},   //< 19.
+                                      {'U', 'I', 'X', NIL},   //< 20.
+                                      {'O', 'B', 'J', NIL},   //< 21.
+                                      {'L', 'O', 'M', NIL},   //< 25.
+                                      {'B', 'S', 'Q', NIL},   //< 26.
+                                      {'E', 'S', 'C', NIL},   //< 27.
+                                      {'L', 'S', 'T', NIL},   //< 28.
+                                      {'B', 'O', 'K', NIL},   //< 29.
+                                      {'D', 'I', 'C', NIL},   //< 30.
+                                      {'M', 'A', 'P', NIL},   //< 31.
+                                      {NIL, NIL, NIL, NIL},   //< 31.
+                                      {'A', 'D', 'R', NIL},   //< 25.
+                                      {'S', 'T', 'R', NIL},   //< 24.
+                                      {'T', 'K', 'N', NIL}};  //< 25.
   return &kStrings[0][0];
 }
 
+const SI1* TypePODSizes() {
+  static const SI1 kSizes[] = {
+      0,   //< 0.
+      1,   //< 1.
+      1,   //< 2.
+      2,   //< 3.
+      2,   //< 4.
+      2,   //< 5.
+      4,   //< 6.
+      4,   //< 7.
+      4,   //< 8.
+      4,   //< 9.
+      8,   //< 10.
+      8,   //< 11.
+      8,   //< 12.
+      16,  //< 13.
+      16,  //< 14.
+      16,  //< 15.
+      16,  //< 16.
+      2,   //< 17.
+      2,   //< 18.
+      4,   //< 19.
+      4,   //< 20.
+      4,   //< 21.
+      8,   //< 22.
+      8,   //< 23.
+      8,   //< 24.
+      8,   //< 25.
+      16,  //< 26.
+      16,  //< 27.
+      16,  //< 28.
+      32,  //< 29.
+      32,  //< 30.
+      32,  //< 31.
+      1,   //< 32. CH1
+      2,   //< 33.
+      4,   //< 34.
+      4,   //< 35.
+      8,   //< 36.
+      8,   //< 37.
+      2,   //< 38.
+      2,   //< 39.
+      4,   //< 40.
+      4,   //< 41.
+      8,   //< 42.
+      8,   //< 43.
+      8,   //< 44.
+      16,  //< 45.
+      32,  //< 46.
+      -1,  //< 47. INV
+  };
+  return kSizes;
+}
+
+SI1 TypePODSize(SIN index) {
+  if (index < 0 || index >= kINV) return -1;
+  return TypePODSizes()[index];
+}
 const CH1* STRType(SI4 index) {
   if (index < 0 || index >= 31) index = 32;
   const CH1* strings = STRType();

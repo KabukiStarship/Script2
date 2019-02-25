@@ -364,6 +364,30 @@ SDK CH4* Print(CH4* cursor, CH4* stop, FP4 value);
 SDK CH4* Print(CH4* cursor, CH4* stop, FP8 value);
 #endif
 
+/* Utility class for printing a POD type in hex. */
+struct Hex {
+  void* item;       //< Pointer to the POD instance.
+  SI4 width_bytes;  //< Width of the item in bytes.
+
+  Hex(SI1& item);
+  Hex(UI1& item);
+  Hex(SI2& item);
+  Hex(UI2& item);
+  Hex(SI4& item);
+  Hex(UI4& item);
+  Hex(SI8& item);
+  Hex(UI8& item);
+
+  Hex(const void* item);
+
+#if USING_FP4 == YES
+  Hex(FP4& item);
+#endif
+#if USING_FP8 == YES
+  Hex(FP8& item);
+#endif
+};
+
 #endif  //< #if SEAM >= SCRIPT2_3
 }  // namespace _
 #endif  //< #ifndef SCRIPT2_CBINARY

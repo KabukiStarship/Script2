@@ -990,6 +990,7 @@ using Hex = Hex4;
 
 }  // namespace _
 
+SDK inline ::_::UTF4& operator<<(::_::UTF4& utf, ::_::UTF4& o);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, const CH4*);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, CH4 item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, UI1 item);
@@ -1007,11 +1008,12 @@ SDK inline ::_::UTF4& operator<<(::_::UTF4& o, FP4 item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, FP8 item);
 #endif
 
+SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex& item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Center4 item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Right4 item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Linef4 item);
 SDK inline ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item);
-SDK inline ::_::UTF4& operator<<(::_::UTF4& o, const ::_::AsciiValue& value);
+// SDK inline ::_::UTF4& operator<<(::_::UTF4& o, const ::_::AsciiValue& value);
 
 #endif  //< #if USING_UTF32 == YES
 #endif
