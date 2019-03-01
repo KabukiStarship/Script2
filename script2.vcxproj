@@ -38,7 +38,7 @@
     <ClInclude Include="16_room_wall.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
-    <ClInclude Include="c_asciidata.h" />
+    <ClInclude Include="c_ascii.h" />
     <ClInclude Include="c_benchmark.h" />
     <ClInclude Include="c_bin.h" />
     <ClInclude Include="c_binary.h" />
@@ -79,7 +79,7 @@
     <ClInclude Include="public.h" />
     <ClInclude Include="module_tests.h" />
     <ClInclude Include="t_array.h" />
-    <ClInclude Include="t_asciidata.h" />
+    <ClInclude Include="t_ascii.h" />
     <ClInclude Include="t_benchmark.h" />
     <ClInclude Include="t_binary.h" />
     <ClInclude Include="t_book.h" />
@@ -118,7 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_asciidata.cc" />
+    <ClCompile Include="script2_ascii.cc" />
     <ClCompile Include="script2_benchmark.cc" />
     <ClCompile Include="script2_bin.cc" />
     <ClCompile Include="script2_binary.cc" />

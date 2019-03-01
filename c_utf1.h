@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_utf1.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -18,7 +14,7 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_3
 
-#include "c_asciidata.h"
+#include "c_ascii.h"
 #include "c_object.h"
 
 #ifndef USING_UTF8
@@ -627,44 +623,44 @@ class Token1 {
   const CH1* Set(const CH1* start);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(CH1 item);
+  /*inline*/ CH1* Print(CH1 item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(const CH1* item);
+  /*inline*/ CH1* Print(const CH1* item);
 
 #if USING_UTF16 == YES
   /* Prints the given item to the strand_. */
-  inline CH1* Print(CH2 item);
+  /*inline*/ CH1* Print(CH2 item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(const CH2* item);
+  /*inline*/ CH1* Print(const CH2* item);
 #endif
 #if USING_UTF32 == YES
   /* Prints the given item to the strand_. */
-  inline CH1* Print(const CH4* item);
+  /*inline*/ CH1* Print(const CH4* item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(CH4 item);
+  /*inline*/ CH1* Print(CH4 item);
 #endif
   /* Prints the given item to the strand_. */
-  inline CH1* Print(SI4 item);
+  /*inline*/ CH1* Print(SI4 item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(UI4 item);
+  /*inline*/ CH1* Print(UI4 item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(SI8 item);
+  /*inline*/ CH1* Print(SI8 item);
 
   /* Prints the given item to the strand_. */
-  inline CH1* Print(UI8 item);
+  /*inline*/ CH1* Print(UI8 item);
 
 #if USING_FP4 == YES
   /* Prints the given item to the strand_. */
-  inline CH1* Print(FP4 item);
+  /*inline*/ CH1* Print(FP4 item);
 #endif
 #if USING_FP8 == YES
   /* Prints the given item to the strand_. */
-  inline CH1* Print(FP8 item);
+  /*inline*/ CH1* Print(FP8 item);
 #endif
 
  private:
@@ -826,124 +822,124 @@ struct SDK UTF1 {
   UTF1(const UTF1& other);
 
   /* Sets the start pointer to the new_pointer. */
-  inline UTF1& Set(CH1* new_start);
+  /*inline*/ UTF1& Set(CH1* new_start);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(CH1 item);
+  /*inline*/ UTF1& Print(CH1 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(CH2 item);
+  /*inline*/ UTF1& Print(CH2 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(CH4 item);
+  /*inline*/ UTF1& Print(CH4 item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(const CH1* item);
+  /*inline*/ UTF1& Print(const CH1* item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(const CH2* item);
+  /*inline*/ UTF1& Print(const CH2* item);
 
   /* Prints a CH1 to the strand. */
-  inline UTF1& Print(const CH4* item);
+  /*inline*/ UTF1& Print(const CH4* item);
 
   /* Prints the given item. */
-  inline UTF1& Print(SI4 item);
+  /*inline*/ UTF1& Print(SI4 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(UI4 item);
+  /*inline*/ UTF1& Print(UI4 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(SI8 item);
+  /*inline*/ UTF1& Print(SI8 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(UI8 item);
+  /*inline*/ UTF1& Print(UI8 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(Right1 item);
+  /*inline*/ UTF1& Print(Right1 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(Center1 item);
+  /*inline*/ UTF1& Print(Center1 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(Linef1 item);
+  /*inline*/ UTF1& Print(Linef1 item);
 
   /* Prints the given item. */
-  inline UTF1& Print(Headingf1 item);
+  /*inline*/ UTF1& Print(Headingf1 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(SI1 item);
+  /*inline*/ UTF1& Hex(SI1 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(UI1 item);
+  /*inline*/ UTF1& Hex(UI1 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(SI2 item);
+  /*inline*/ UTF1& Hex(SI2 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(UI2 item);
+  /*inline*/ UTF1& Hex(UI2 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(SI4 item);
+  /*inline*/ UTF1& Hex(SI4 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(UI4 item);
+  /*inline*/ UTF1& Hex(UI4 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(SI8 item);
+  /*inline*/ UTF1& Hex(SI8 item);
 
   /* Prints the given item as hex. */
-  inline UTF1& Hex(UI8 item);
+  /*inline*/ UTF1& Hex(UI8 item);
 
   /* Prints the given pointer as hex. */
-  inline UTF1& Hex(const void* pointer);
+  /*inline*/ UTF1& Hex(const void* pointer);
 
   /* Prints the given item. */
-  inline UTF1& Print(Hex item);
+  /*inline*/ UTF1& Print(Hex item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(SI1 item);
+  /*inline*/ UTF1& Binary(SI1 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(UI1 item);
+  /*inline*/ UTF1& Binary(UI1 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(SI2 item);
+  /*inline*/ UTF1& Binary(SI2 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(UI2 item);
+  /*inline*/ UTF1& Binary(UI2 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(SI4 item);
+  /*inline*/ UTF1& Binary(SI4 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(UI4 item);
+  /*inline*/ UTF1& Binary(UI4 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(SI8 item);
+  /*inline*/ UTF1& Binary(SI8 item);
 
   /* Prints the given item as binary. */
-  inline UTF1& Binary(UI8 item);
+  /*inline*/ UTF1& Binary(UI8 item);
 
   /* Prints the given pointer as binary. */
-  inline UTF1& Binary(const void* pointer);
+  /*inline*/ UTF1& Binary(const void* pointer);
 
 #if USING_FP4 == YES
   /* Prints the given item.
   @return A UTF. */
-  inline UTF1& Print(FP4 item);
+  /*inline*/ UTF1& Print(FP4 item);
   /* Prints the given item as hex. */
-  inline UTF1& Hex(FP4 item);
+  /*inline*/ UTF1& Hex(FP4 item);
   /* Prints the given item as binary. */
-  inline UTF1& Binary(FP4 item);
+  /*inline*/ UTF1& Binary(FP4 item);
 #endif
 #if USING_FP8 == YES
   /* Prints the given item.
   @return A UTF. */
-  inline UTF1& Print(FP8 item);
+  /*inline*/ UTF1& Print(FP8 item);
   /* Prints the given item as hex. */
-  inline UTF1& Hex(FP8 item);
+  /*inline*/ UTF1& Hex(FP8 item);
   /* Prints the given item as binary. */
-  inline UTF1& Binary(FP8 item);
+  /*inline*/ UTF1& Binary(FP8 item);
 #endif
 
   /* Prints the give socket in Hex.*/
@@ -963,16 +959,16 @@ using CRows = Headingf1;
 
 }  // namespace _
 
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI2 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI2 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI4 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI4 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, SI8 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, UI8 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI2 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI2 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI4 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI4 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI8 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI8 item);
 
 #if USING_FP4 == YES
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
@@ -981,14 +977,14 @@ SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP8 item);
 #endif
 
-SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex& item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hexs1 item);
-SDK inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
-// SDK inline ::_::UTF1& operator<<(::_::UTF1& utf,
-//                                 const ::_::AsciiValue& type_value);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hexs1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
+// SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf,
+//                                 const ::_::Wildcard& type_value);
 #endif
 #endif

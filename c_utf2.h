@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_utf2.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #ifndef INCLUDED_SCRIPTPRINT_UTF16
@@ -17,7 +13,7 @@ specific language governing permissions and limitations under the License. */
 
 #if SEAM >= SCRIPT2_3
 
-#include "c_asciidata.h"
+#include "c_ascii.h"
 #include "c_object.h"
 
 #if USING_UTF16 == YES
@@ -941,7 +937,6 @@ using Right = Right2;
 using Center = Center2;
 using Columns = Linef2;
 using Rows = Headingf2;
-using Hex = Hex2;
 #endif
 
 }  // namespace _
@@ -964,13 +959,13 @@ SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP4 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, FP8 item);
 #endif
 
-SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex& item);
+SDK inline ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Center2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Right2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
 SDK inline ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
 // SDK inline ::_::UTF2& operator<<(::_::UTF2& utf,
-//                                 const ::_::AsciiValue& type_value);
+//                                 const ::_::Wildcard& type_value);
 
 #endif  //< #if USING_UTF16
 #endif

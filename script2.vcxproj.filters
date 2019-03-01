@@ -47,9 +47,6 @@
     <ClInclude Include="c_args.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_asciidata.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_benchmark.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -167,9 +164,6 @@
     <ClInclude Include="t_array.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_asciidata.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="t_benchmark.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -254,6 +248,12 @@
     <ClInclude Include="t_string.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="c_ascii.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="t_ascii.h">
+      <Filter>script2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="16_seam.s2">
@@ -294,9 +294,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_asciidata.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_benchmark.cc">
@@ -381,6 +378,9 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_crabs.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_ascii.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>

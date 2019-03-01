@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_strand.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
@@ -20,7 +16,7 @@ specific language governing permissions and limitations under the License. */
 
 #include "c_strand.h"
 
-#include "c_asciidata.h"
+#include "c_ascii.h"
 #include "t_binary.h"
 #include "t_object.h"
 
@@ -1661,8 +1657,7 @@ struct THexs {
 
     SIW num_bytes = 81 * (num_rows + 2);
     size += num_bytes;
-    o << STRSocketHexHeader() << STRSocketHexBorder()
-      << THex<const void*>(start);
+    o << STRSocketHexHeader() << STRSocketHexBorder() << Hex(start);
 
     CH1 c;
     while (start < stop) {
@@ -2386,7 +2381,7 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THex<Char> item) {
+    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::Hex item) {
   return strand.Print(item);
 }
 

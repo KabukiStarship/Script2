@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](readme.md)
 
-The Automaton Standard Code for Information Interchange (ASCII) Data Types composed of 25 Plain-Old-Data (POD) Types from which may be created Arrays, Vectors, Matrices, Books of Plain-old-data, Dictionaries of Plain-old-data, and Dictionaries of Keys. Types are identified using three letter capitol abbreviations and acronyms with an additional subscript for the word width in bytes. The convention is that the number right after the 3 letter type is the size of the array in elements, and after the number after the underscore represents the byte pattern. For example, UIX160 is a 160-byte unsigned integer or hash and DIC_4 is a 32-bit Dictionary.
+There are 64K Automaton Standard Code for Information Interchange (ASCII) Data Types composed of 25 Plain-Old-Data (POD) Types from which may be created Arrays, Vectors, Matrices, Books of Plain-old-data, Dictionaries of Plain-old-data, and Dictionaries of Keys. Types are identified using three letter capitol abbreviations and acronyms with an additional subscript for the word width in bytes. The convention is that the number right after the 3 letter type is the size of the array in elements, and after the number after the underscore represents the byte pattern. For example, UIX160 is a 160-byte unsigned integer or hash and DIC_4 is a 32-bit Dictionary.
 
 ### Abstract POD Types
 
@@ -25,16 +25,16 @@ Abstract Plain-Old-Data Types do not have a pre-defined size. These types are ba
 |:---------:|:---------:|:--------:|:-----:|
 | Bit-depth | Map class | Map type | Class |
 
-#### Bit-depth b15:b14
+#### Format Bit Pattern b15:b14
 
 Bit-depths of 8-bit types are restricted to situation where they can be memory aligned on 8/16-bit, 32-bit, and 64-bit processors. In order to create an Object (OBJ) that is half the sizes listed by setting the Map type to OBH (Object Half-sized).
 
 | Value | Type | Description |
 |:-----:|:-----|:------------|
 |   0   | TYP  | ASCII Data Type 0-63. |
-|   1   | FM2  | size_width of size_bytes is 16-bit wide or is UTF-8 type. |
-|   2   | FM4  | size_width of size_bytes is 32-bit wide or is UTF-16 type. |
-|   3   | FM8  | size_width of size_bytes is 64-bit wide or is UTF-32 type. |
+|   1   | FM2  | size_bytes is 16-bit wide or is UTF-8 type. |
+|   2   | FM4  | size_bytes is 32-bit wide or is UTF-16 type. |
+|   3   | FM8  | size_bytes is 64-bit wide or is UTF-32 type. |
 
 #### Map Types  b13:b12
 
@@ -67,7 +67,7 @@ Maps can be created of most of the types to most of the types.
 |  13 |   SIH    |    int128_t     |    16    | 128-bit signed integer. |
 |  14 |   UIH    |    uint128_t    |    16    | 128-bit unsigned integer. |
 |  15 |   FPH    |   float128_t    |    16    | 128-bit floating-point number. |
-|  16 |   P16    |      POD        |    16    | 16-byte wide Plain-old-data or 8-byte complex POD. |
+|  16 |   POD    |      POD        | 1,2,4,8  | 1, 2, 4, or 8-byte wide Plain-Old-Data. |
 | ... |   ...    |      ...        |   2-32   | Assert bit 4 to create a complex number of types 1-15. |
 |  32 |   CH1    |      char       |     1    | 8-bit character (CH1). |
 |  33 |   CH2    |    char16_t     |     2    | 16-bit character (CH2). |
@@ -83,20 +83,19 @@ Maps can be created of most of the types to most of the types.
 |  43 |   PC8    |     Pointer     |     8    | 64-bit const pointer. |
 |  44 |   OA4    |   Auto Object   |     8    | A 32-bit AsciiFactory and pointer an instance of an OBJ. |
 |  45 |   OA8    |   Auto Object   |    16    | A 64-bit AsciiFactory and pointer an instance of an OBJ. |
-|  46 |   P32    |      POD        |    32    | Complex 128-bit Plain-old-data Object or 32-byte BigNum. |
-|  47 |   INV    |    Invalid      |    -1    | Invalid type. |
-|  48 |   POD    |      POD        | 1,2,4,8  | 1, 2, 4, or 8-byte wide Plain-Old-Data. |
+|  46 |   P16    |      POD        |    16    | 16-byte wide Plain-old-data or 8-byte complex POD. |
+|  47 |   P32    |      POD        |    32    | Complex 128-bit Plain-old-data. |
 |  49 |   BNM    |     BigNum      |   1-64   | Unsigned or signed integer between 1 and 64-bytes wide. |
 |  50 |   VIN    |     Varint      |    >0    | MSb-encoded variable-length integer (Varint) or OBJ. |
-|  51 |          |                 |          | Reserved. |
-|  52 |   STR    |     Strand      |  (SI4)N  | A UTF-8, UTF-16, or UTF-32 string with SI4 size_width or SI2 if Map type is OBH. |
-|  53 |   TKN    |     Token       |  (SI4)N  | A Strand without whitespace. |
-|  54 |   ADR    |     Address     |  (SI4)N  | A UTF-8 abstract stack operation address. |
-|  55 |   REC    |     Record      | (SI4)N+W | A Strand followed by a Wildcard. |
-|  56 |   LOM    |     Loom        |  (SI4)N  | An "array" of UTF-8, UTF-16, or UTF-32 strings with SI4 size_bytes. |
-|  57 |   OBH    | HalfSizedObject |   1/2    | Types cuts in half the bit-depth of the b15:b14. |
-|  58 |   OBJ    |     Object      |    N     | A object beginning with a 16, 32, or 64-bit wide size_bytes. |
-|  59 |   LST    |      List       |    N     | A Vector of type-value tuples. |
+|  51 |   ST1    |     Strand      |  (SI4)N  | A UTF-8, UTF-16, or UTF-32 string with SI4 size_width. |
+|  52 |   ST2    |     Strand      |  (SI4)N  | A UTF-8, UTF-16, or UTF-32 string with SI4 size_width. |
+|  53 |   ST4    |     Strand      |  (SI4)N  | A UTF-8, UTF-16, or UTF-32 string with SI4 size_width. |
+|  54 |   TKN    |     Token       |  (SI4)N  | A Strand without whitespace. |
+|  55 |   ADR    |     Address     |  (SI4)N  | A Strand abstract stack operation address. |
+|  56 |   REC    |     Record      | (SI4)N+W | A Strand followed by a Wildcard. |
+|  57 |   LOM    |     Loom        |  (SI4)N  | An "array" of UTF-8, UTF-16, or UTF-32 strings with SI4 or SI2 size_bytes. |
+|  58 |   OB1    |     Object      |   1/2    | Types cuts in half the bit-depth of the b15:b14. |
+|  59 |   OBJ    |     Object      |    N     | A object beginning with a 16, 32, or 64-bit wide size_bytes. |
 |  60 |   SLT    |      Slot       |    N     | An interprocess ring buffer. |
 |  61 |   BSQ    |   B-Sequence    |    N     | An OBJ that represent the order of types in a byte-sequence. |
 |  62 |   EXP    |   Expression    |    N     | Strand abstract stack machine Expression of BSQ. |

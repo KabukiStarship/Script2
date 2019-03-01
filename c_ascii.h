@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_asciidata.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/c_ascii.h
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -89,6 +85,11 @@ typedef enum AsciiTypes {
 } AsciiType;
 
 enum {
+  kAsciiPODCount = 48
+
+};
+
+enum {
   kCOP = 0,  //< 0. Class or POD type.
   kOB2 = 1,  //< 1. size_width of size_bytes is 16-bits wide.
   kOB4 = 2,  //< 2. size_width of size_bytes is 32-bits wide.
@@ -114,55 +115,8 @@ inline SI1 TypePODSize(SIN index);
 /* Gets a string representation of the given ASCII Data Type 0-31. */
 inline const CH1* STRType(SI4 index);
 
-struct SDK AsciiValue {
-  const void* value;  //< Start character address.
-  SI4 type;           //< ASCII Data Type.
-
-  /* Prints the item to the token. */
-  AsciiValue(CH1* item);
-
-#if USING_UTF16 == YES
-  /* Prints the item to the token. */
-  AsciiValue(CH2* item);
-#endif
-
-#if USING_UTF32 == YES
-  /* Prints the item to the token. */
-  AsciiValue(CH4* item);
-#endif
-
-  /* Prints the item to the token. */
-  AsciiValue(SI1* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(UI1* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(SI2* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(UI2* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(SI4* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(UI4* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(SI8* item);
-
-  /* Prints the item to the token. */
-  AsciiValue(UI8* item);
-
-#if USING_FP4 == YES
-  /* Prints the item to the token. */
-  AsciiValue(FP4* item);
-#endif
-#if USING_FP8 == YES
-  /* Prints the item to the token. */
-  AsciiValue(FP8* item);
-#endif
+struct SDK AWildcard {
+  Wildcard* obj;
 };
 
 /* Checks if the given type is valid.
