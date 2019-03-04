@@ -17,6 +17,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 SI4 main(SI4 arg_count, CH1** args) {
   enum { kSize = 1024 };
   CH1 seam_log[kSize];
-  return _::TTestTree<script2::TestNode>(arg_count, args, seam_log, kSize);
+  return ::_::TTestTree<script2::TestNode>(arg_count, args, seam_log, kSize);
 }
 #endif

@@ -21,6 +21,8 @@ Abstract Plain-Old-Data Types do not have a pre-defined size. These types are ba
 
 ### 16-bit ASCII Type Bit Pattern
 
+ASCII Data Types are created from a combination of two types. For mono-types TYPE (Type which is 0) is used for the Map Type.
+
 |  b15:b14  |  b13:b12  |  b7:b6   | b5:b0 |
 |:---------:|:---------:|:--------:|:-----:|
 | Bit-depth | Map class | Map type | Class |
@@ -107,9 +109,9 @@ Maps can be created of most of the types to most of the types.
 |:--------:|:------------|
 |   >0     | Requires at least one byte. |
 |    N     | Has pre-specified Object size less than 2^N, where N is a natural number.|
-|   1-16   | POD types are typically 16, 32, or 64-bit wide and 8-bit types are created with PO1 and 16-bit POD types with POH. |
+|   1-16   | POD types are typically 16, 32, or 64-bit wide and 8-bit types are created with OB1 and 16-bit POD types with OB1. |
 |   1-32   | A complex type consisting of two contiguous POD types. |
-|   1-64   | Create 1-64 byte unsigned integer by Map type to BGN or a signed by setting the POD or Class to BGN. |
+|   1-64   | 1-64 byte integer by Map type to BNM. |
 |   1/2    | Type cuts in half the Bit-depth b15:b14 when used as Map type. |
 |  (SI4)N  | Strand and Loom type uses SI4-wide size_bytes or POD1 Map type to create 16-bit size_bytes. |
 | (SI4)N+W | Begins with an n-element array followed by a Wildcard. |

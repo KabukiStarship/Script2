@@ -3,8 +3,8 @@
 @file    /script2/script2_ascii.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
@@ -155,7 +155,9 @@ const CH1* STRType(SI4 index) {
 }
 
 template <typename T, SI1 kAlignment_>
-int AsciiType(void* begin, void* end, UI2 type, T item) {}
+int TAsciiType(void* begin, void* end, UI2 type, T item) {
+  return 0;
+}
 
 BOL TypeIsValid(SI4 type) { return (type >> 7) == 0; }
 
@@ -405,7 +407,7 @@ namespace _ {
 CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value) {
   return TPrint<CH1>(begin, stop, type, value);
 }
-_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
+::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 }  // namespace _
@@ -416,7 +418,7 @@ CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value) {
   return TPrint<CH2>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
+::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif
@@ -426,7 +428,7 @@ CH4* Print(CH4* begin, CH4* stop, SI4 type, const void* value) {
   return TPrint<CH4>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
+::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif

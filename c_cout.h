@@ -3,8 +3,8 @@
 @file    /script2/c_cout.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -328,6 +328,7 @@ class COut {
 
   COut& Star();
 
+  /* Prints the given item to the stdout. */
   COut& Print(CH1 item);
 
   COut& Print(CH2 item);
@@ -348,13 +349,16 @@ class COut {
 
   COut& Print(UI8 item);
 
-#if SEAM >= SCRIPT2_4
-
+#if USING_FP4 == YES
   COut& Print(FP4 item);
-
-  COut& Print(FP8 item);
-
 #endif
+#if USING_FP8 == YES
+  COut& Print(FP8 item);
+#endif
+
+  COut& Print(const void* begin, SIW size_bytes);
+
+  COut& Print(Hex item);
 
 #if SEAM >= SCRIPT2_3
 #if USING_STR == UTF8
@@ -408,33 +412,24 @@ class COut {
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, UI4 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, SI8 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, UI8 value);
-
 #if SEAM >= SCRIPT2_4
-
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, FP4 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, FP8 value);
-
 #endif
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex item);
 
 #if SEAM >= SCRIPT2_3
-
 #if USING_STR == UTF8
-
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex& item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
-
 #elif USING_STR == UTF16
-
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item);
-
 #elif USING_STR == UTF32
-
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);

@@ -3,8 +3,8 @@
 @file    /script2/t_binary.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -314,6 +314,17 @@ inline UI2 ShiftRight(UI2 value, UI2 count) { return value >> count; }
 inline UI4 ShiftRight(UI4 value, UI4 count) { return value >> count; }
 inline UI8 ShiftRight(UI8 value, UI8 count) { return value >> count; }
 
+/* Prints the given hex using opeator<<. */
+template <typename Printer>
+Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
+  const UI1* cursor = reinterpret_cast<const UI1*>(begin);
+  while (byte_count-- > 0) {
+    UI1 byte = *cursor++;
+    o << HexNibbleToUpperCase(byte & 0xf) << HexNibbleToUpperCase(byte >> 4);
+  }
+  return o;
+}
+
 /* Prints a hex value to the Console. */
 template <typename Char, typename UI>
 Char* TPrintHexPOD(Char* start, Char* stop, UI value) {
@@ -333,69 +344,59 @@ Char* TPrintHexPOD(Char* start, Char* stop, UI value) {
   return start;
 }
 
-/* Prints a hex value to the Console. */
+/* Prints a hex value to a socket fater than using a Printer. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI1 value) {
   return TPrintHexPOD<Char, UI1>(start, stop, (UI1)value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI1 value) {
   return TPrintHexPOD<Char, UI1>(start, stop, value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI2 value) {
   return TPrintHexPOD<Char, UI2>(start, stop, (UI2)value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI2 value) {
   return TPrintHexPOD<Char, UI2>(start, stop, value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI4 value) {
   return TPrintHexPOD<Char, UI4>(start, stop, (UI4)value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI4 value) {
   return TPrintHexPOD<Char, UI4>(start, stop, value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI8 value) {
   return TPrintHexPOD<Char, UI8>(start, stop, (UI8)value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
   return TPrintHexPOD<Char, UI8>(start, stop, value);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
   return TPrintHexPOD<Char, UI8>(start, stop, ui);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
   return TPrintHexPOD<Char, UI8>(start, stop, ui);
 }
 
-/* Prints a hex value to the Console. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, const void* ptr) {
   UIW address = reinterpret_cast<UIW>(ptr);

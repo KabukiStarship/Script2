@@ -3,8 +3,8 @@
 @file    /script2/script2_cout.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
@@ -314,14 +314,10 @@ void PrintHex(const void* begin, const void* end) {
   PrintHex(address_ptr + size);
 }
 
-void PrintHex(const void* begin, SIW size) {
-  const CH1* begin_char = reinterpret_cast<const CH1*>(begin);
-  return PrintHex(begin_char, begin_char + size);
+void PrintHex(const void* begin, SIW size_bytes) {
+  COut cout;
+  TPrintHex<COut>(cout, begin, size_bytes);
 }
-
-}  // namespace _
-
-namespace _ {
 
 void PrintChars(const void* begin, const void* end) {
   TPrintChars<CH1>(reinterpret_cast<const CH1*>(begin),
@@ -480,22 +476,29 @@ COut& COut::Print(UI8 item) {
   return *this;
 }
 
-#if SEAM >= SCRIPT2_4
-
+#if USING_FP4 == YES
 COut& COut::Print(FP4 item) {
   ::_::Print(item);
   return *this;
 }
-
+#endif
+#if USING_FP8 == YES
 COut& COut::Print(FP8 item) {
   ::_::Print(item);
   return *this;
 }
 #endif
 
+COut& COut::Print(const void* begin, SIW size_bytes) {
+  return TPrintHex<COut>(*this, begin, size_bytes);
+}
+
+COut& COut::Print(Hex item) {
+  return TPrintHex<COut>(*this, item.begin, item.size_bytes);
+}
+
 #if SEAM >= SCRIPT2_3
 #if USING_STR == UTF8
-
 COut& COut::Print(Right1 item) {
   ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
@@ -623,7 +626,12 @@ COut& COut::Print(Headingf4 item) {
 ::_::COut& operator<<(::_::COut& cout, FP8 value) { return cout.Print(value); }
 #endif
 
+::_::COut& operator<<(::_::COut& cout, ::_::Hex item) {
+  return cout.Print(item);
+}
+
 #if SEAM >= SCRIPT2_3
+
 #if USING_STR == UTF8
 
 ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item) {

@@ -3,8 +3,8 @@
 @file    /script2/t_strand.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
@@ -1640,7 +1640,7 @@ struct TChars {
 /* Utility class for printing blocks of hex values. */
 template <typename Char = CH1, SI4 kC0Offset_ = 176>
 struct THexs {
-  enum { kC0Offset = };
+  enum { kC0Offset = 0 };
   const void *begin,  //< Begin adddress.
       *end;           //< End address.
 
@@ -1649,6 +1649,7 @@ struct THexs {
 
   template <typename Printer>
   Printer& PrintHex(Printer& o) {
+    /*
     if (!begin || begin >= end) return;
 
     const CH1 *start = reinterpret_cast<const CH1*>(begin),
@@ -1668,11 +1669,12 @@ struct THexs {
           c = 'x';
         else if (c < ' ')
           c += kPrintC0Offset;
-        o << THex<CH1>(c);
+        o << Hex(c);
       }
-      o << '|' << ' ' << THex<const void*>(start);
+      o << '|' << ' ' << Hex(start);
     }
-    o << STRSocketHexBorder() << THex<const void*>(start + size);
+    return o << STRSocketHexBorder() << Hex(start + size);*/
+    return o;
   }
 };
 
@@ -1911,8 +1913,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH1 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH1* item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -1923,7 +1923,6 @@ class TStrand {
       do {
         SI4 result = obj_.Do(kFactoryGrow);
         if (result) return *this;
-
         start = ::_::Print(start, stop, item);
       } while (!start);
     }
@@ -1932,8 +1931,6 @@ class TStrand {
   }
 
 #if USING_UTF16
-  /* Prints a CH2 to the strand.
-  @return A UTF. */
   TStrand& Print(CH2 item) {
     CH2 *start = utf_.start,  //
         *stop = TStrandStop<CH2>(obj_.Begin());
@@ -1952,8 +1949,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH2 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH2* item) {
     CH2 *start = utf_.start,  //
         *stop = TStrandStop<CH2>(obj_.Begin());
@@ -1973,8 +1968,6 @@ class TStrand {
   }
 #endif
 #if USING_UTF32
-  /* Prints a CH4 to the strand.
-  @return A UTF. */
   TStrand& Print(CH4 item) {
     CH4 *start = utf_.start,  //
         *stop = TStrandStop<CH4>(obj_.Begin());
@@ -1993,8 +1986,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH4 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH4* item) {
     CH4 *start = utf_.start,  //
         *stop = TStrandStop<CH4>(obj_.Begin());
@@ -2013,8 +2004,6 @@ class TStrand {
     return *this;
   }
 #endif
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(SI4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2033,8 +2022,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(UI4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2053,8 +2040,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(SI8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2073,8 +2058,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(UI8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2094,8 +2077,6 @@ class TStrand {
   }
 
 #if USING_FP4 == YES
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(FP4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2115,8 +2096,6 @@ class TStrand {
   }
 #endif
 #if USING_FP8 == YES
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(FP8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2376,12 +2355,6 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THeadingf<Char> item) {
-  return strand.Print(item);
-}
-
-template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
-inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::Hex item) {
   return strand.Print(item);
 }
 

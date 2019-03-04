@@ -3,8 +3,8 @@
 @file    /script2/c_test.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -67,50 +67,14 @@ SDK BOL Test(BOL condition);
 @return false if the condition is false.
 @param  value The value to test. */
 SDK BOL Test(SI1 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI1 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI2 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI2 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI8 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI8 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(FP4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(FP8 value);
 
 /* Tests if the pointer is nil.

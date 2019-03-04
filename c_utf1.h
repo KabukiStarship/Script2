@@ -3,8 +3,8 @@
 @file    /script2/c_utf1.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -15,6 +15,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if SEAM >= SCRIPT2_3
 
 #include "c_ascii.h"
+#include "c_binary.h"
 #include "c_object.h"
 
 #ifndef USING_UTF8
@@ -84,15 +85,15 @@ SDK const CH1* STRSkipSpaces(const CH1* start);
 SDK const CH1* STRSkipSpaces(const CH1* start, const CH1* stop);
 
 /* Compares the source and query CH1 as nil-terminated strings. */
-SDK const CH1* STREquals(const CH1* text_a, const CH1* text_b);
+SDK const CH1* STREquals(const CH1* start, const CH1* begin);
 
 /* Compares the source and query CH1 as nil-terminated strings. */
 SDK const CH1* STREquals(const CH1* start, const CH1* stop, const CH1* query);
 
 /* Searches the given CH1 for the given CH1.
 @return Nil upon failure or a pointer to the terminator upon success.
-@param  string      The CH1 to search.
-@param  query      The CH1 to search for. */
+@param  string The CH1 to search.
+@param  query  The CH1 to search for. */
 SDK const CH1* STRFind(const CH1* start, const CH1* query);
 
 /* Prints the given string to the utf socket.
@@ -103,82 +104,26 @@ SDK const CH1* STRFind(const CH1* start, const CH1* query);
 SDK CH1* Print(CH1* start, CH1* stop, const CH1* item);
 
 #if USING_UTF16 == YES
-/* Prints the given string to the utf socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param  start  The beginning address of the socket.
-@param  stop    The stop address of the socket.
-@param  string The potentially unsafe string to write. */
 SDK CH1* Print(CH1* start, CH1* stop, const CH2* item);
 #endif
 
 #if USING_UTF32 == YES
-/* Prints the given string to the utf socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param  start  The beginning address of the socket.
-@param  stop    The stop address of the socket.
-@param  string The potentially unsafe string to write. */
 SDK CH1* Print(CH1* start, CH1* stop, const CH4* item);
 #endif
-
-/* Writes the give CH1 to the given socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* Print(CH1* start, CH1* stop, UI4 item);
-
-/* Writes the give CH1 to the given socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* Print(CH1* start, CH1* stop, SI4 item);
-
-/* Writes the give CH1 to the given socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* Print(CH1* start, CH1* stop, UI8 item);
-
-/* Writes the give CH1 to the given socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* Print(CH1* start, CH1* stop, SI8 item);
 
 #if USING_FP4 == YES
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, FP4 item,
                      SI4 count = kTokenLongest);
 #endif
 #if USING_FP8 == YES
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, FP8 item,
                      SI4 count = kTokenLongest);
 #endif
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, FP4 item, SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, FP8 item, SI4 count = kTokenLongest);
 
 #endif  //< SCRIPT2_1
@@ -190,89 +135,23 @@ SDK CH1* PrintRight(CH1* start, CH1* stop, FP8 item, SI4 count = kTokenLongest);
 @param item The potentially unsafe item to write. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, const CH1* item,
                      SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start Beginning address of the socket.
-@param stop The stop address of the socket.
-@param character The item to write. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, CH1 character,
                      SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, UI4 item,
                      SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, SI4 item,
                      SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, UI8 item,
                      SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintCenter(CH1* start, CH1* stop, SI8 item,
                      SI4 count = kTokenLongest);
-
-/* Prints the given item to the utf socket.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop  The stop address of the socket.
-@param item  The potentially unsafe item to write. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, const CH1* item,
                     SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start     Beginning address of the socket.
-@param stop       The stop address of the socket.
-@param character The item to write. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, CH1 character,
                     SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, UI4 item, SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, SI4 item, SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, UI8 item, SI4 count = kTokenLongest);
-
-/* Writes the give CH1 to the given socket center.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintRight(CH1* start, CH1* stop, SI8 item, SI4 count = kTokenLongest);
 
 /* Prints the given item to the utf socket.
@@ -281,70 +160,17 @@ SDK CH1* PrintRight(CH1* start, CH1* stop, SI8 item, SI4 count = kTokenLongest);
 @param stop    The stop address of the socket.
 @param item The potentially unsafe item to write. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, const void* pointer);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, SI1 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, UI2 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, SI2 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, UI4 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, SI4 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, UI8 item);
-
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, SI8 item);
-
 #if USING_FP4 == YES
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, FP4 item);
 #endif
 #if USING_FP8 == YES
-/* Writes the give CH1 to the given socket in hex form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintHex(CH1* start, CH1* stop, FP8 item);
 #endif
 
@@ -354,77 +180,18 @@ SDK CH1* PrintHex(CH1* start, CH1* stop, FP8 item);
 @param stop    The stop address of the socket.
 @param pointer The pointer to utf to hex. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, const void* pointer);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, UI1 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, SI1 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, UI2 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the nil - term char upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, SI2 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, UI4 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, SI4 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the nil - term char upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, UI8 item);
-
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the nil - term char upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, SI8 item);
-
 #if USING_FP4 == YES
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the nil - term char upon success.
-@param start The beginning address of the socket.
-@param stop The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, FP4 item);
 #endif
 #if USING_FP8 == YES
-/* Writes the give CH1 to the given socket in binary form.
-@return Nil upon failure or a pointer to the terminator upon success.
-@param start The beginning address of the socket.
-@param stop  The stop address of the socket.
-@param item The item to utf. */
 SDK CH1* PrintBinary(CH1* start, CH1* stop, FP8 item);
 #endif
 
@@ -481,77 +248,18 @@ UI1 written.
 @param  string A nil-terminated string in ROM.
 @param  result The result of the conversion. */
 SDK const CH1* Scan(const CH1* start, SI1& result);
-
-/* Converts the given string to a 8-bit signed integer.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion. */
 SDK const CH1* Scan(const CH1* start, SI1& result);
-
-/* Converts the given string to a 8-bit unsigned integer.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion. */
 SDK const CH1* Scan(const CH1* start, UI1& result);
-
-/* Converts the given string to a 16-bit signed integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, SI2& result);
-
-/* Converts the given string to a 16-bit unsigned integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, UI2& result);
-
-/* Converts the given string to a 32-bit signed integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, SI4& result);
-
-/* Converts the given string to a 32-bit unsigned integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, UI4& result);
-
-/* Converts the given string to a 64-bit signed integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, SI8& result);
-
-/* Converts the given string to a 64-bit unsigned integer.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, UI8& result);
-
 #if USING_FP4 == YES
-/* Converts the given string to a 32-bit floating-point token_.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, FP4& result);
 #endif
 #if USING_FP8 == YES
-/* Converts the given string to a 64-bit floating-point number.
-@param  string A nil-terminated string in ROM.
-@param  result The result of the conversion.
-@return Returns a pointer to the next CH1 after the stop
-of the read token_ or nil upon failure. */
 SDK const CH1* Scan(const CH1* start, FP8& result);
 #endif
 
@@ -566,43 +274,23 @@ class Token1 {
  public:
   /* Constructs a Token1 from the given item. */
   Token1(const CH1* item = nullptr, SI4 count = kTokenLongest);
-
-  /* Constructs a Token1 from the given item. */
   Token1(CH1 item, SI4 count = kTokenLongest);
-
 #if USING_UTF16 == YES
-  /* Constructs a Token1 from the given item. */
   Token1(CH2 item, SI4 count = kTokenLongest);
-
-  /* Constructs a Token1 from the given item. */
   Token1(const CH2* item, SI4 count = kTokenLongest);
 #endif
 #if USING_UTF32 == YES
-  /* Constructs a Token1 from the given item. */
   Token1(CH4 item, SI4 count = kTokenLongest);
-
-  /* Constructs a Token1 from the given item. */
   Token1(const CH4* item, SI4 count = kTokenLongest);
 #endif
-
-  /* Constructs a Token1 from the given item. */
   Token1(SI4 item, SI4 count = kTokenLongest);
-
-  /* Constructs a Token1 from the given item. */
   Token1(UI4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the strand_. */
   Token1(SI8 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the strand_. */
   Token1(UI8 item, SI4 count = kTokenLongest);
-
 #if USING_FP4 == YES
-  /* Prints the item to the strand_. */
   Token1(FP4 item, SI4 count = kTokenLongest);
 #endif
 #if USING_FP8 == YES
-  /* Prints the item to the strand_. */
   Token1(FP8 item, SI4 count = kTokenLongest);
 #endif
 
@@ -624,42 +312,23 @@ class Token1 {
 
   /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(CH1 item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(const CH1* item);
-
 #if USING_UTF16 == YES
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(CH2 item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(const CH2* item);
 #endif
 #if USING_UTF32 == YES
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(const CH4* item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(CH4 item);
 #endif
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(SI4 item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(UI4 item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(SI8 item);
-
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(UI8 item);
-
 #if USING_FP4 == YES
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(FP4 item);
 #endif
 #if USING_FP8 == YES
-  /* Prints the given item to the strand_. */
   /*inline*/ CH1* Print(FP8 item);
 #endif
 
@@ -673,45 +342,28 @@ class Token1 {
 /* Utility class for printing hex with operator<<. */
 struct Center1 {
   Token1 token;  //< Pointer to a pointer to utf.
+
   /* Prints the item to the token. */
   Center1(CH1 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Center1(const CH1* start, SI4 count = kTokenLongest);
-
 #if USING_UTF16 == YES
-  /* Prints the item to the token. */
   Center1(CH2 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Center1(const CH2* item, SI4 count = kTokenLongest);
 #endif
 #if USING_UTF32 == YES
-  /* Prints the item to the token. */
   Center1(CH4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Center1(const CH4* item, SI4 count = kTokenLongest);
 #endif
-
-  /* Prints the item to the token. */
   Center1(SI4 item, SI4 count = kTokenLongest);
 
-  /* Prints the item to the token. */
   Center1(UI4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Center1(SI8 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Center1(UI8 item, SI4 count = kTokenLongest);
 
 #if USING_FP4 == YES
-  /* Prints the item to the token. */
   Center1(FP4 item, SI4 count = kTokenLongest);
 #endif
 #if USING_FP8 == YES
-  /* Prints the item to the token. */
   Center1(FP8 item, SI4 count = kTokenLongest);
 #endif
 };
@@ -722,43 +374,24 @@ struct Right1 {
 
   /* Prints the item to the token. */
   Right1(CH1 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(const CH1* item, SI4 count = kTokenLongest);
-
 #if USING_UTF16 == YES
-  /* Prints the item to the token. */
   Right1(CH2 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(const CH2* item, SI4 count = kTokenLongest);
 #endif
 #if USING_UTF32 == YES
-  /* Prints the item to the token. */
   Right1(CH4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(const CH4* item, SI4 count = kTokenLongest);
 #endif
-
-  /* Prints the item to the token. */
   Right1(SI4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(UI4 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(SI8 item, SI4 count = kTokenLongest);
-
-  /* Prints the item to the token. */
   Right1(UI8 item, SI4 count = kTokenLongest);
 
 #if USING_FP4 == YES
-  /* Prints the item to the token. */
   Right1(FP4 item, SI4 count = kTokenLongest);
 #endif
 #if USING_FP8 == YES
-  /* Prints the item to the token. */
   Right1(FP8 item, SI4 count = kTokenLongest);
 #endif
 };
@@ -818,134 +451,58 @@ struct SDK UTF1 {
   @param stop   The stop of the socket. */
   UTF1(CH1* start, CH1* stop);
 
-  /* Clones the other utf. */
   UTF1(const UTF1& other);
-
-  /* Sets the start pointer to the new_pointer. */
   /*inline*/ UTF1& Set(CH1* new_start);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(CH1 item);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(CH2 item);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(CH4 item);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(const CH1* item);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(const CH2* item);
-
-  /* Prints a CH1 to the strand. */
   /*inline*/ UTF1& Print(const CH4* item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(SI4 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(UI4 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(SI8 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(UI8 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(Right1 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(Center1 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(Linef1 item);
-
-  /* Prints the given item. */
   /*inline*/ UTF1& Print(Headingf1 item);
+  /*inline*/ UTF1& Print(::_::Hex item);
 
   /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(SI1 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(UI1 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(SI2 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(UI2 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(SI4 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(UI4 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(SI8 item);
-
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(UI8 item);
-
-  /* Prints the given pointer as hex. */
   /*inline*/ UTF1& Hex(const void* pointer);
-
-  /* Prints the given item. */
-  /*inline*/ UTF1& Print(Hex item);
 
   /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(SI1 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(UI1 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(SI2 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(UI2 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(SI4 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(UI4 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(SI8 item);
-
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(UI8 item);
-
-  /* Prints the given pointer as binary. */
   /*inline*/ UTF1& Binary(const void* pointer);
 
 #if USING_FP4 == YES
-  /* Prints the given item.
-  @return A UTF. */
   /*inline*/ UTF1& Print(FP4 item);
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(FP4 item);
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(FP4 item);
 #endif
 #if USING_FP8 == YES
-  /* Prints the given item.
-  @return A UTF. */
   /*inline*/ UTF1& Print(FP8 item);
-  /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(FP8 item);
-  /* Prints the given item as binary. */
   /*inline*/ UTF1& Binary(FP8 item);
 #endif
 
-  /* Prints the give socket in Hex.*/
   UTF1& Print(Hexs1 hexs);
-
-  /* Prints the given socket as CH1. */
   UTF1& Print(Chars1 chars);
 };
 
@@ -977,7 +534,7 @@ SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP8 item);
 #endif
 
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& cout, ::_::Hex item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hex item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);

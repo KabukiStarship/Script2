@@ -3,8 +3,8 @@
 @file    /script2/script2_binary.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
@@ -787,16 +787,13 @@ inline UI CreateMaskLSb(UI msb_zero_count) {
   return (~mask) >> msb_zero_count;
 }
 
-/* Masks off the lower bits.
-@param msb_zero_count The number_ of zeros in the Most Significant bits. */
+/* Masks off the lower bits. */
 template <typename UI>
 inline UI MaskLSb(UI value, UI msb_zero_count) {
   return value & CreateMaskLSb<UI>(msb_zero_count);
 }
 
-/* Returns 2^n.
-@brief Function forces the compiler to create the mask without a LDR
-instruction. */
+/* Returns 2^n. */
 template <typename I>
 inline I PowerOf2(I n) {
   I value = 1;
@@ -840,24 +837,58 @@ CH4* Print(CH4* start, CH4* stop, FP8 value) {
 }
 #endif
 
-Hex::Hex(SI1& item) : item(&item), width_bytes(1) {}
-Hex::Hex(UI1& item) : item(&item), width_bytes(1) {}
-Hex::Hex(SI2& item) : item(&item), width_bytes(2) {}
-Hex::Hex(UI2& item) : item(&item), width_bytes(2) {}
-Hex::Hex(SI4& item) : item(&item), width_bytes(4) {}
-Hex::Hex(UI4& item) : item(&item), width_bytes(4) {}
-Hex::Hex(SI8& item) : item(&item), width_bytes(8) {}
-Hex::Hex(UI8& item) : item(&item), width_bytes(8) {}
-
-Hex::Hex(const void* item) : item(&item), width_bytes(sizeof(const void*)) {}
+Hex::Hex(const void* ptr)
+    : begin(reinterpret_cast<const UI1*>(&begin)),
+      size_bytes(sizeof(const void*)) {}
+Hex::Hex(SI1& item)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(UI1& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(SI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(UI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(SI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(UI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(SI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Hex::Hex(UI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
 
 #if USING_FP8 == YES
-Hex::Hex(FP4& item) : item(&item), width_bytes(4) {}
+Hex::Hex(FP4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
 #endif
 #if USING_FP8 == YES
-Hex::Hex(FP8& item) : item(&item), width_bytes(8) {}
+Hex::Hex(FP8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#endif
+Hex::Hex(const SI1* item)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
+Hex::Hex(const SI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const UI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const SI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const UI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const SI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Hex::Hex(const UI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Hex::Hex(const FP4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(const FP8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
 #endif
 
 }  // namespace _
 
-#endif  //< #if SEAM >= SCRIPT2_4
+#endif

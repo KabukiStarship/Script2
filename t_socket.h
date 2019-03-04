@@ -3,8 +3,8 @@
 @file    /script2/t_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -234,8 +234,8 @@ class TSocket {
 
   /* Returns the first byte of the ASCII Object. */
   template <typename Size, typename T, typename Index>
-  inline T* Stop (Index index) {
-    return Start<Size, T> () + index - 1;
+  inline T* Stop(Index index) {
+    return Start<Size, T>() + index - 1;
   }
 
   /* Gets the begin of the socket. */
@@ -286,7 +286,13 @@ UIW* TNew(SIW size) {
   return new UIW[size >> kWordBitCount];
 }
 
+/* Meta-data function for checking for unsigned loop-around. */
+template <typename T>
+BOL LoopAround(T* start, T* stop) {
+  return start <= stop;
+}
+
 }  // namespace _
 
-#endif  //< SCRIPT2_KABUKI_TSOCKET
-#endif  //< #if SEAM >= SCRIPT2_2
+#endif
+#endif
