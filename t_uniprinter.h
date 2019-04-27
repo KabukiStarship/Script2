@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_binary.h
+@file    /script2/t_uniprinter.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -9,12 +9,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#ifndef INCLUDED_SCRIPTTBINARY
-#define INCLUDED_SCRIPTTBINARY 1
 
-#include "c_binary.h"
+#ifndef SCRIPT2_UNIPRINTER_T
+#define SCRIPT2_UNIPRINTER_T 1
 
-#include "c_cout.h"
+#include "c_sout.h"
+#include "c_uniprinter.h"
 #include "t_socket.h"
 #include "t_string.h"
 
@@ -25,16 +25,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "module_release.inl"
 #endif
 
-/* Prints the given string. */
 namespace _ {
 
 /* Compares the two strings up to the given delimiter.
-@return SI4 0 if the strings are equal or a non-zero delta upon failure.
-@param  string_a Strand A.
-@param  string_b Strand B.
-@param  delimiter The delimiter.*/
+@param delimiter Delimiters in Script2 are equal to or less than.
+@return 0 if the strings are equal or a non-zero delta upon failure. */
 template <typename Char = CH1>
-SI4 TSTRCompare(const Char* string_a, const Char* string_b, CH1 delimiter = 0) {
+SI4 TSTRCompare(const Char* string_a, const Char* string_b,
+                Char delimiter = 0) {
   SI4 a, b, result;
   if (!string_a) {
     if (!string_b) return 0;
@@ -50,7 +48,7 @@ SI4 TSTRCompare(const Char* string_a, const Char* string_b, CH1 delimiter = 0) {
     return b;
   }
   if (!b) {
-    if (!a) return 0;  //< I like !t code rather than !c code. :-)
+    if (!a) return 0;
     return 0 - a;
   }
   // string_b SHOULD be a nil-terminated string without whitespace.
@@ -82,6 +80,7 @@ SI4 TSTRCompare(const Char* string_a, const Char* string_b, CH1 delimiter = 0) {
 #if SEAM >= SCRIPT2_1
 #if SEAM == SCRIPT2_1
 #include <cstdio>
+
 #include "module_debug.inl"
 #define BEGIN_ITOS_ALGORITHM                                         \
   static const CH1* ui_format = sizeof(UI) == 8 ? FORMAT_UI8 : "%u"; \
@@ -101,7 +100,7 @@ SI4 TSTRCompare(const Char* string_a, const Char* string_b, CH1 delimiter = 0) {
 
 namespace _ {
 
-template <typename Char>
+template <typename Char = CH1>
 SIW TPrintAndCount(const Char* string) {
   if (!string) return 0;
   SI4 print_count = 0;
@@ -114,7 +113,7 @@ SIW TPrintAndCount(const Char* string) {
   return print_count;
 }
 
-template <typename Char>
+template <typename Char = CH1>
 Char* TPuffItoSBegin(Char* start = nullptr) {
   static Char* buffer_begin = 0;
   if (start) {
@@ -124,7 +123,7 @@ Char* TPuffItoSBegin(Char* start = nullptr) {
   return buffer_begin;
 }
 
-template <typename Char>
+template <typename Char = CH1>
 void TPrintPrinted(Char* start) {
   Print("\n    Printed \"");
   SIW print_count = TPrintAndCount<Char>(TPuffItoSBegin<Char>());
@@ -327,7 +326,7 @@ Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
 
 /* Prints a hex value to the Console. */
 template <typename Char, typename UI>
-Char* TPrintHexPOD(Char* start, Char* stop, UI value) {
+Char* TPrintHex(Char* start, Char* stop, UI value) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
   DASSERT(start);
@@ -347,66 +346,66 @@ Char* TPrintHexPOD(Char* start, Char* stop, UI value) {
 /* Prints a hex value to a socket fater than using a Printer. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI1 value) {
-  return TPrintHexPOD<Char, UI1>(start, stop, (UI1)value);
+  return TPrintHex<Char, UI1>(start, stop, (UI1)value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI1 value) {
-  return TPrintHexPOD<Char, UI1>(start, stop, value);
+  return TPrintHex<Char, UI1>(start, stop, value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI2 value) {
-  return TPrintHexPOD<Char, UI2>(start, stop, (UI2)value);
+  return TPrintHex<Char, UI2>(start, stop, (UI2)value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI2 value) {
-  return TPrintHexPOD<Char, UI2>(start, stop, value);
+  return TPrintHex<Char, UI2>(start, stop, value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI4 value) {
-  return TPrintHexPOD<Char, UI4>(start, stop, (UI4)value);
+  return TPrintHex<Char, UI4>(start, stop, (UI4)value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI4 value) {
-  return TPrintHexPOD<Char, UI4>(start, stop, value);
+  return TPrintHex<Char, UI4>(start, stop, value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI8 value) {
-  return TPrintHexPOD<Char, UI8>(start, stop, (UI8)value);
+  return TPrintHex<Char, UI8>(start, stop, (UI8)value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
-  return TPrintHexPOD<Char, UI8>(start, stop, value);
+  return TPrintHex<Char, UI8>(start, stop, value);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHexPOD<Char, UI8>(start, stop, ui);
+  return TPrintHex<Char, UI8>(start, stop, ui);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHexPOD<Char, UI8>(start, stop, ui);
+  return TPrintHex<Char, UI8>(start, stop, ui);
 }
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, const void* ptr) {
   UIW address = reinterpret_cast<UIW>(ptr);
-  return TPrintHexPOD<Char, UIW>(start, stop, address);
+  return TPrintHex<Char, UIW>(start, stop, address);
 }
 
 /* Prints the given value to Binary. */
 template <typename Char = CH1, typename UI>
 Char* TPrintBinary(Char* start, Char* stop, UI value) {
-  if (start + sizeof(UI8) * 8 >= stop) {
+  if (start + sizeof(UI) * 8 >= stop) {
     return nullptr;
   }
 
@@ -416,6 +415,21 @@ Char* TPrintBinary(Char* start, Char* stop, UI value) {
   }
   *start = 0;
   return start;
+}
+
+/* Prints the given value to Binary. */
+template <typename Printer, typename SI>
+Printer& TPrintBinary(Printer& o, const void* begin, SI byte_count) {
+  if (!begin || byte_count <= 0) return o;
+  const UI1* cursor = begin;
+  while (--byte_count >= 0) {
+    for (SI1 i = 8; i > 0; ++i) {
+      UI1 c = *cursor++;
+      o << (CHN)('0' + (c >> 7));
+      c = c << 1;
+    }
+  }
+  return o;
 }
 
 /* Prints the given value to Binary. */
@@ -534,7 +548,7 @@ BOL TIsDigit(Char c) {
 template <typename UI, typename Char = CH1>
 const Char* TScanUnsigned(const Char* start, UI& result) {
   DASSERT(start);
-  PRINTF("\nScanning unsigned value:%s", start);
+  PRINTF("\n\nScanning unsigned value:%s", start);
   const Char* cursor = start;
   Char c = *cursor++;
   if (!TIsDigit<Char>(c)) return nullptr;
@@ -919,7 +933,7 @@ inline Char* TPrintSigned(Char* socket, SI4 size, SI value) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename Char>
+template <typename SI = SIW, typename UI = UIW, typename Char = CH1>
 const Char* TScanSigned(const Char* start, SI& result) {
   DASSERT(start);
   SI sign;
@@ -963,7 +977,7 @@ const Char* TScanSigned(const Char* start, SI& result) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param result The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename Char>
+template <typename SI = SIW, typename UI = UIW, typename Char = CH1>
 Char* TScanSigned(Char* start, SI& result) {
   const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TScanSigned<SI, UI, Char>(ptr));
@@ -991,6 +1005,7 @@ Char* TSTRDecimalEnd(Char* start) {
   const Char* ptr = reinterpret_cast<const Char*>(start);
   return const_cast<Char*>(TSTRDecimalEnd<Char>(ptr));
 }
+
 }  // namespace _
 #endif
 
@@ -1016,7 +1031,7 @@ SI4 TMSbAssertedReverse(UI value) {
   return -1;
 }
 
-template <typename Char>
+template <typename Char = CH1>
 Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
   if (!socket || socket + 3 >= stop) return nullptr;
   *socket++ = a;
@@ -1228,7 +1243,7 @@ class TBinary {
     for (SI4 i = 0; i < 87; ++i) *ui8_ptr = f_lut[i];
   }
 
-  template <typename Char>
+  template <typename Char = CH1>
   static Char* Print(Char* socket, Char* stop, Float value, SI& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
@@ -1391,7 +1406,7 @@ class TBinary {
 
   /* Prints the integer portion of the floating-point number_.
   @return Nil upon failure or a pointer to the nil-term Char upon success. */
-  template <typename Char>
+  template <typename Char = CH1>
   static Char* DigitGen(Char* cursor, Char* stop, const TBinary& w,
                         const TBinary& m_plus, UI delta, SI& k) {
     TBinary one(((UI)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
@@ -1511,7 +1526,7 @@ class TBinary {
     *socket++ = 'e';
     return TPrintSigned<SIW, UIW, Char>(socket + length + 2, stop, kk - 1);
   }
-};  // namespace _
+};
 
 using Binary32 = TBinary<FP4, SI4, UI4>;
 using Binary64 = TBinary<FP8, SI4, UI8>;
@@ -1546,8 +1561,268 @@ Char* TScan(const Char* start, FP8& result) {
   return nullptr;
 }
 
-}  // namespace _
-#undef PRINT_FLOAT_BINARY
+#ifndef SCRIPT2
+enum {
+  NIL = 0,
+  kLF = '\n',
+};
 #endif
+}  // namespace _
+#endif
+
+namespace _ {
+
+template <typename Printer, typename Char = CH1>
+Printer& TPrintString(Printer& o, const Char* string) {
+  if (!string) return o;
+  Char c = *string;
+  while (c) {
+    o << c;
+    c = *(++string);
+  }
+  return o;
+}
+
+template <typename Printer, typename Char = CH1>
+Printer& TPrintRepeat(Printer& o, Char c, SI4 count) {
+  for (; count > 0; --count) o << ::_::Char(c);
+  return o;
+}
+
+template <typename Char = CH1>
+const Char* TSTRLinef() {
+  static const Char kString[] = {kLF, kLF, '-', '-', '-', kLF, NIL};
+  return kString;
+}
+
+/* Prints a formatted lines.
+
+The first two chars of the string are going to be the corner and margin chars.
+It's easiest to show with the examples below. Like their names implies, the
+corner char is for the edges and the margin is for inside of a header block.
+
+@code
+TPrintBreak<CH1> ("\n+---\n\n| Foo\n\n+---\n", 10);
+
+TPrintBreak<CH1> ("\n+---\n\n| Foo\n\n+---\n", 10);
+//>>>
+//>>> +----------
+//>>> | Foo *****
+//>>> +----------
+//>>>
+
+TPrintBreak<CH1> ("- \n---\n---\n\n   Foo\n\n---\n---", 10);
+//>>> -----------
+//>>> -----------
+//>>>
+//>>>    Foo
+//>>>
+//>>> -----------
+//>>> -----------
+@endcode
+*/
+template <typename Printer, typename Char = CH1>
+const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
+                        SI4 column_count = 80) {
+  enum {
+    kBreakCount = 3,
+  };
+  if (!style) style = TSTRLinef<Char>();
+  if (column_count < kBreakCount) return nullptr;
+
+  Char c = *style++,  //< Current.
+      p = ~c;         //< Previous.
+  SI4 hit_count = 0, column_index = 0;
+  while (c) {
+    o << ::_::Char(c);
+    ++column_index;
+    if (c == kLF) {
+      p = c;
+      do {
+        c = *style++;
+        o << ::_::Char(c);
+      } while (c == kLF);
+      column_index = 0;
+    }
+    if (c == p && !TIsWhitespace<Char>(c)) {
+      ++hit_count;
+      if (hit_count >= kBreakCount - 1) {
+        TPrintRepeat<Printer, Char>(o, c, column_count - column_index);
+        column_index = hit_count = 0;
+      }
+    }
+    p = c;
+    c = *style++;
+  }
+  return style;
+}
+
+template <typename Printer, typename Char = CH1>
+Printer& TPrintLinef(Printer& o, Char token = '-', SI4 column_count = 80) {
+  o << '\n';
+  TPrintRepeat<Printer, Char>(o, token, column_count);
+  return o << '\n';
+}
+
+template <typename Char = CH1>
+const Char* TSTRHeadingf() {
+  static const Char kStrand[] = {kLF, kLF, '+', '-', '-', '-', kLF, '|', ' ',
+                                 NIL, kLF, '+', '-', '-', '-', kLF, NIL};
+  return kStrand;
+}
+
+/* Prints an easy-to-read text heading with a formatting options.
+@code
+TPrintHeadingf<CH1> ("\n+---\0\n+---", 80, "Foo ", "Bar ",
+                     TToken<CH1> (420).String ());
+@endcode
+*/
+template <typename Printer, typename Char = CH1>
+Printer& TPrintHeadingf(Printer& o, const Char* caption,
+                        const Char* style = nullptr, SI4 column_count = 80,
+                        const Char* caption2 = nullptr,
+                        const Char* caption3 = nullptr) {
+  if (!style) style = TSTRHeadingf<Char>();
+  style = TPrintLinef<Printer, Char>(o, style, column_count);
+  if (!style) return o;
+  o << caption;
+  if (caption2) o << caption2;
+  if (caption3) o << caption3;
+  TPrintLinef<Printer, Char>(o, style, column_count);
+  return o;
+}
+
+/* Prints the given token aligned right the given column_count.
+@return Nil if any of the pointers are nil or if column_count < 1, and a
+pointer to the nil-term CH1 upon success.
+@param  token  The token to utf.
+@param  column_count The number_ of columns to align right to. */
+template <typename Printer, typename Char = CH1>
+Printer& TPrintRight(Printer& o, const Char* item, SI4 column_count = 80) {
+  if (!item || column_count < 1) return o;
+
+  const Char* token_end = TSTREnd<Char>(item);
+  if (item == token_end) return o;
+  SIW length = token_end - item, space_count = column_count - length;
+
+  if (space_count > 0) {
+    while (space_count-- > 0) o << ' ';
+    o << item;
+    return o;
+  }
+  length = (-length) - 3;
+  if (length < 0) {
+    switch (length) {
+      case 1:
+        o << '.';
+      case 2:
+        o << '.' << '.';
+      case 3:
+        o << '.' << '.' << '.';
+    }
+  } else {
+    while (length > 0) o << *item++;
+    o << '.' << '.' << '.';
+  }
+  return o;
+}
+
+/* Prints the given token aligned center the given column_count.
+@return Nil if any of the pointers are nil or if column_count < 1, and a
+pointer to the nil-term CH1 upon success.
+@param  token  The token to utf.
+@param  column_count The number_ of columns to align right to. */
+template <typename Printer, typename Char = CH1>
+Printer& TPrintCenter(Printer& o, const Char* item, SI4 column_count = 80) {
+  if (!item || column_count < 1) return o;
+
+  const Char* token_end = TSTREnd<Char>(item);
+  if (item == token_end) return o;
+  SIW length = token_end - item, space_count = column_count - length;
+
+  if (space_count > 0) {
+    SIW half_count = space_count >> 1;
+    space_count -= half_count;
+    while (half_count-- > 0) o << ' ';
+    o << item;
+    while (space_count-- > 0) o << ' ';
+    return o;
+  }
+  length = (-length) - 3;
+  if (length < 0) {
+    if (length == 1)
+      o << '.';
+    else if (length == 2)
+      o << '.' << '.';
+    else if (length == 3)
+      o << '.' << '.' << '.';
+  } else {
+    while (length > 0) o << *item++;
+    o << '.' << '.' << '.';
+  }
+  return o;
+}
+
+template <typename Printer, typename UI>
+Printer& TPrintBinary(Printer& o, UI value) {
+  enum { kSize = sizeof(UI) * 8 };
+  for (SI4 i = kSize; i > 0; --i) {
+    CH1 c = (CH1)('0' + (value >> (kSize - 1)));
+    o << c;
+    value = value << 1;
+  }
+  return o;
+}
+
+template <typename Printer, typename SI, typename UI>
+Printer& TPrintBinarySigned(Printer& o, SI value) {
+  return TPrintBinary<Printer, UI>(o, (UI)value);
+}
+
+/* Prints the following value to the console in Hex. */
+template <typename Printer, typename UI>
+Printer& TPrintHex(Printer& o, UI value) {
+  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+       num_bits_shift -= 4) {
+    o << HexNibbleToUpperCase((UI1)(value >> num_bits_shift));
+  }
+  return o;
+}
+
+template <typename Printer, typename Char = CH1>
+Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
+  if (!start || start >= stop) return o;
+
+  SIW size = stop - start, extra_row = ((size & 63) != 0) ? 1 : 0,
+      row_count = (size >> 6) + extra_row;
+
+  SIW num_bytes = 81 * (row_count + 2);
+  size += num_bytes;
+
+  o << STRSocketHeader() << STRSocketBorder() << Hex(start);
+
+  Char c;
+  while (start < stop) {
+    o << '\n' << '|';
+    for (SI4 i = 0; i < 64; ++i) {
+      c = *start++;
+      if (start > stop)
+        c = 'x';
+      else if (c < ' ')
+        c = c + kPrintC0Offset;
+      o << ::_::Char(c);
+    }
+    o << '|' << ' ' << Hex(start);
+  }
+  return o << STRSocketBorder() << Hex(start + size);
+}
+
+template <typename Printer, typename Char = CH1>
+Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
+  return TPrintChars<Printer, Char>(o, start, start + count);
+}
+
+}  // namespace _
 
 #endif

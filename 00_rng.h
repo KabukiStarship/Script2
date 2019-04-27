@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#include "c_cout.h"
+#include "c_sout.h"
 #include "c_rng.h"
 
 #if SEAM == SCRIPT2_0

@@ -10,7 +10,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_3
 #ifndef SCRIPT2_ASCIIDATA_C
 #define SCRIPT2_ASCIIDATA_C
 
@@ -102,6 +101,10 @@ enum {
   kMAT = 2,  //< Matrix of POD types.
   kMAP = 3,  //< Map of one of the types to another.
 };
+}  // namespace _
+
+#if SEAM >= SCRIPT2_3
+namespace _ {
 
 /* Gets the string representations of the given ASCII Data Type 0-31. */
 inline const CH1* STRType();
@@ -192,6 +195,7 @@ of the read number or nil upon failure.
 @param type    The type to utf.
 @param value   The value to utf or nil. */
 SDK CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value);
+
 }  // namespace _
 #endif
 

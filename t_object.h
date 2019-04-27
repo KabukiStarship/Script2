@@ -288,7 +288,7 @@ class TObject {
   @return false if the grow op failed. */
   inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
-  /* Prints this object to the COut. */
+  /* Prints this object to the SOut. */
   template <typename Printer>
   Printer& Print(Printer& o) {
     o << "\nTObject<SI" << (CH1)('0' + sizeof(Size)) << '>';

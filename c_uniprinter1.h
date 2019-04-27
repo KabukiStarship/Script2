@@ -12,10 +12,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef INCLUDED_SCRIPT2_UTF8
 #define INCLUDED_SCRIPT2_UTF8
 
+#include "c_uniprinter.h"
+
 #if SEAM >= SCRIPT2_3
 
 #include "c_ascii.h"
-#include "c_binary.h"
 #include "c_object.h"
 
 #ifndef USING_UTF8
@@ -452,7 +453,12 @@ struct SDK UTF1 {
   UTF1(CH1* start, CH1* stop);
 
   UTF1(const UTF1& other);
+
+  /* Sets the start to the new_start.
+  @return *this. */
   /*inline*/ UTF1& Set(CH1* new_start);
+
+  /* Prints the given item. */
   /*inline*/ UTF1& Print(CH1 item);
   /*inline*/ UTF1& Print(CH2 item);
   /*inline*/ UTF1& Print(CH4 item);

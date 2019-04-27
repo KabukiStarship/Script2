@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_binary.h
+@file    /script2/c_uniprinter.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -19,10 +19,10 @@ namespace _ {
 SDK CH1 HexNibbleToUpperCase(UI1 b);
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-SDK const CH1* StrandSocketHeader();
+SDK const CH1* STRSocketHeader();
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-SDK const CH1* StrandSocketBorder();
+SDK const CH1* STRSocketBorder();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
 SDK const CH1* STRSocketHexHeader();
@@ -281,10 +281,11 @@ SDK CH4* Print(CH4* cursor, CH4* stop, FP8 value);
 /* Utility class for printing a POD type in hex. */
 struct Hex {
   const UI1* begin;  //< Pointer to the POD instance.
-  SIN size_bytes;    //< Width of the item in bytes.
+  SIW size_bytes;    //< Width of the item in bytes.
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
   Hex(const void* item);
+  Hex(const void* begin, SIW size_bytes);
   Hex(SI1& item);
   Hex(UI1& item);
   Hex(SI2& item);
@@ -315,5 +316,51 @@ struct Hex {
   Hex(const FP8* item);
 #endif
 };
+
+/* Utility class for printing a POD type in binary. */
+struct Binary {
+  const UI1* begin;  //< Pointer to the POD instance.
+  SIN size_bytes;    //< Width of the item in bytes.
+
+  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  Binary(const void* item);
+  Binary(SI1& item);
+  Binary(UI1& item);
+  Binary(SI2& item);
+  Binary(UI2& item);
+  Binary(SI4& item);
+  Binary(UI4& item);
+  Binary(SI8& item);
+  Binary(UI8& item);
+#if USING_FP4 == YES
+  Binary(FP4& item);
+#endif
+#if USING_FP8 == YES
+  Binary(FP8& item);
+#endif
+
+  /* Stores the pointer to the item and it's byte_count. */
+  Binary(const SI1* item);
+  Binary(const SI2* item);
+  Binary(const UI2* item);
+  Binary(const SI4* item);
+  Binary(const UI4* item);
+  Binary(const SI8* item);
+  Binary(const UI8* item);
+#if USING_FP4 == YES
+  Binary(const FP4* item);
+#endif
+#if USING_FP8 == YES
+  Binary(const FP8* item);
+#endif
+};
+
+/* Utility class for force printing characters. */
+struct Char {
+  CHN ch;  //< The character to print.
+
+  Char(CHN ch);
+};
+
 }  // namespace _
 #endif

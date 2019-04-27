@@ -3,15 +3,15 @@
 @file    /script2/script2_socket.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_2
 
-#include "t_binary.h"
 #include "t_socket.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_2
 #include "module_debug.inl"
@@ -91,11 +91,17 @@ SIW SizeOf(const void* start, const void* stop) {
 
 inline UIW FillWord(CH1 fill_char) {
   UIW value = (UIW)(UI1)fill_char;
-#if CPU_WORD_SIze == 32
-  return value | (value << 8) | (value << 16) | (value << 24);
-#else
+#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_WORD_SIZE == 64
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
          (value << 48) | (value << 56);
+#elif CPU_WORD_SIZE == 32
+  return value | (value << 8) | (value << 16) | (value << 24);
+#else
+  return value | (value << 8);
+#endif
+#else
+#error You're CPU is in poopy mode. Change to Litle endian mode or fix me.
 #endif
 }
 

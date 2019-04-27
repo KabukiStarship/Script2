@@ -23,7 +23,7 @@ Abstract Plain-Old-Data Types do not have a pre-defined size. These types are ba
 
 ASCII Data Types are created from a combination of two types. For mono-types TYPE (Type which is 0) is used for the Map Type.
 
-|  b15:b14  |  b13:b12  |  b7:b6   | b5:b0 |
+|  b15:b14  |  b13:b8   |  b7:b6   | b5:b0 |
 |:---------:|:---------:|:--------:|:-----:|
 | Bit-depth | Map class | Map type | Class |
 
@@ -34,11 +34,11 @@ Bit-depths of 8-bit types are restricted to situation where they can be memory a
 | Value | Type | Description |
 |:-----:|:-----|:------------|
 |   0   | TYP  | ASCII Data Type 0-63. |
-|   1   | FM2  | size_bytes is 16-bit wide or is UTF-8 type. |
-|   2   | FM4  | size_bytes is 32-bit wide or is UTF-16 type. |
-|   3   | FM8  | size_bytes is 64-bit wide or is UTF-32 type. |
+|   1   | TY2  | size_bytes is 16-bit wide or is UTF-8 type. |
+|   2   | TY4  | size_bytes is 32-bit wide or is UTF-16 type. |
+|   3   | TY8  | size_bytes is 64-bit wide or is UTF-32 type. |
 
-#### Map Types  b13:b12
+#### Map Types b13:b12
 
 Maps can be created of most of the types to most of the types.
 

@@ -8,9 +8,13 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_3
+
 #ifndef INCLUDED_SCRIPTPRINT_UTF32
 #define INCLUDED_SCRIPTPRINT_UTF32
+
+#include "c_uniprinter.h"
+
+#if SEAM >= SCRIPT2_3
 
 #include "c_ascii.h"
 #include "c_object.h"

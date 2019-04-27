@@ -14,7 +14,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "t_strand.h"
 #include "t_test.h"
 
-#include "c_cout.h"
+#include "c_sout.h"
 
 #if SEAM == SCRIPT2_2
 #include "module_debug.inl"

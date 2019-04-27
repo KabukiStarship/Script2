@@ -3,16 +3,16 @@
 @file    /script2/c_clock.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
 #if SEAM >= SCRIPT2_5
-#ifndef INCLUDED_SCRIPTCCLOCK
-#define INCLUDED_SCRIPTCCLOCK
+#ifndef SCRIPT2_CLOCK_C
+#define SCRIPT2_CLOCK_C
 
 namespace _ {
 
@@ -96,7 +96,7 @@ SDK CClock* ClockInit(CClock& clock);
 SDK inline TM8 ClockNow();
 
 /* Creates a timestamp from the given seconds Clock. */
-SDK TM4 ClockSeconds (CClock& clock);
+SDK TM4 ClockSeconds(CClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
@@ -210,23 +210,22 @@ SDK void PrintTime(TM8 t);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-SDK const CH1* ScanTime(const CH1* , SI4& hour, SI4& minute,
-                               SI4& second);
+SDK const CH1* ScanTime(const CH1*, SI4& hour, SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
 @return Nil upon socket failure or CH1 directly after the stop of the
 timestamp upon success.
 */
-SDK const CH1* Scan(const CH1* , CClock& clock);
+SDK const CH1* Scan(const CH1*, CClock& clock);
 
 /* Converts a keyboard input to a TME. */
-SDK const CH1* Scan(const CH1* , TME& result);
+SDK const CH1* Scan(const CH1*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
-SDK const CH1* ScanTime(const CH1* , TM4& result);
+SDK const CH1* ScanTime(const CH1*, TM4& result);
 
 /* Converts a keyboard input to a TM8. */
-SDK const CH1* ScanTime(const CH1* , TM8& result);
+SDK const CH1* ScanTime(const CH1*, TM8& result);
 
 #endif  //< #if USING_UTF8 == YES
 
@@ -285,23 +284,22 @@ SDK CH2* Print(CH2* begin, CH2* stop, TM8 time);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-SDK const CH2* ScanTime(const CH2* , SI4& hour, SI4& minute,
-                               SI4& second);
+SDK const CH2* ScanTime(const CH2*, SI4& hour, SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH2 and deletes the CH2.
 @return Nil upon socket failure or CH2 directly after the stop of the
 timestamp upon success.
 */
-SDK const CH2* Scan(const CH2* , CClock& result);
+SDK const CH2* Scan(const CH2*, CClock& result);
 
 /* Converts a keyboard input to a TME. */
-SDK const CH2* Scan(const CH2* , TME& result);
+SDK const CH2* Scan(const CH2*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
-SDK const CH2* ScanTime(const CH2* , TM4& result);
+SDK const CH2* ScanTime(const CH2*, TM4& result);
 
 /* Converts a keyboard input to a TM8. */
-SDK const CH2* ScanTime(const CH2* , TM8& result);
+SDK const CH2* ScanTime(const CH2*, TM8& result);
 
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
@@ -357,8 +355,7 @@ SDK CH4* PrintTime(CH4* begin, CH4* stop, TM8 time);
 @16:20:00
 @endcode
 */
-SDK const CH4* ScanTime(const CH4* input, SI4& hour, SI4& minute,
-                               SI4& second);
+SDK const CH4* ScanTime(const CH4* input, SI4& hour, SI4& minute, SI4& second);
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
  */
@@ -378,5 +375,5 @@ SDK const CH4* ScanTime(const CH4* input, TM8& result);
 
 #undef PRINT
 #undef PRINTF
-#endif  //< #ifndef INCLUDED_SCRIPTCCLOCK
+#endif  //< #ifndef SCRIPT2_CLOCK_C
 #endif  //< #if SEAM >= SCRIPT2_5

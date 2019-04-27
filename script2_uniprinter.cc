@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "t_binary.h"
+#include "t_uniprinter.h"
 
 #include <cmath>
 
@@ -20,11 +20,11 @@ CH1 HexNibbleToUpperCase(UI1 b) {
   return b + '0';
 }
 
-const CH1* StrandSocketHeader() {
+const CH1* STRSocketHeader() {
   return "\n|0       8       16      24      32      40      48      52      |";
 }
 
-const CH1* StrandSocketBorder() {
+const CH1* STRSocketBorder() {
   return "\n|+-------+-------+-------+-------+-------+-------+-------+-------|"
          " ";
 }
@@ -577,6 +577,114 @@ CH4* Print(CH4* start, CH4* stop, CH4 c) {
 }
 
 #endif
+
+Hex::Hex(const void* ptr)
+    : begin(reinterpret_cast<const UI1*>(&begin)),
+      size_bytes(sizeof(const void*)) {}
+Hex::Hex(const void* begin, SIW size_bytes)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(size_bytes) {}
+Hex::Hex(SI1& item)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(UI1& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(SI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(UI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(SI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(UI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(SI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Hex::Hex(UI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Hex::Hex(FP4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(FP8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#endif
+Hex::Hex(const SI1* item)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
+Hex::Hex(const SI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const UI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const SI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const UI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const SI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Hex::Hex(const UI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Hex::Hex(const FP4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(const FP8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+#endif
+
+Binary::Binary(const void* ptr)
+    : begin(reinterpret_cast<const UI1*>(&begin)),
+      size_bytes(sizeof(const void*)) {}
+Binary::Binary(SI1& item)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Binary::Binary(UI1& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Binary::Binary(SI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Binary::Binary(UI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Binary::Binary(SI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Binary::Binary(UI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Binary::Binary(SI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Binary::Binary(UI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#if USING_FP8 == YES
+Binary::Binary(FP4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Binary::Binary(FP8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#endif
+Binary::Binary(const SI1* item)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
+Binary::Binary(const SI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Binary::Binary(const UI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Binary::Binary(const SI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Binary::Binary(const UI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Binary::Binary(const SI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Binary::Binary(const UI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Binary::Binary(const FP4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Binary::Binary(const FP8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+#endif
+
+Char::Char(CHN ch) : ch(ch) {}
+
 }  // namespace _
 #endif
 
@@ -835,58 +943,6 @@ CH4* Print(CH4* start, CH4* stop, FP4 value) {
 CH4* Print(CH4* start, CH4* stop, FP8 value) {
   return TBinary<FP8, SI8, UI8>::template Print<CH4>(start, stop, value);
 }
-#endif
-
-Hex::Hex(const void* ptr)
-    : begin(reinterpret_cast<const UI1*>(&begin)),
-      size_bytes(sizeof(const void*)) {}
-Hex::Hex(SI1& item)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
-Hex::Hex(UI1& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
-Hex::Hex(SI2& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
-Hex::Hex(UI2& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
-Hex::Hex(SI4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
-Hex::Hex(UI4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
-Hex::Hex(SI8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
-Hex::Hex(UI8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
-
-#if USING_FP8 == YES
-Hex::Hex(FP4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
-#endif
-#if USING_FP8 == YES
-Hex::Hex(FP8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
-#endif
-Hex::Hex(const SI1* item)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
-Hex::Hex(const SI2* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
-Hex::Hex(const UI2* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
-Hex::Hex(const SI4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-Hex::Hex(const UI4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-Hex::Hex(const SI8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
-Hex::Hex(const UI8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
-
-#if USING_FP8 == YES
-Hex::Hex(const FP4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-#endif
-#if USING_FP8 == YES
-Hex::Hex(const FP8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
 #endif
 
 }  // namespace _

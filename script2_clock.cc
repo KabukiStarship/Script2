@@ -3,8 +3,8 @@
 @file    /script2/script2_clock.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
@@ -13,8 +13,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <ctime>
 
-#include "t_binary.h"
 #include "t_clock.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_5
 #include "module_debug.inl"
@@ -106,10 +106,10 @@ TM8 ClockNow() {
   return (TM8)t;
 }
 
-TM4 ClockSeconds (CClock& clock) {
+TM4 ClockSeconds(CClock& clock) {
   return (clock.year - kClockEpochInit) * kSecondsPerYear +
-    (clock.day - 1) * kSecondsPerDay + clock.hour * kSecondsPerHour +
-    clock.minute * kSecondsPerMinute + clock.second;
+         (clock.day - 1) * kSecondsPerDay + clock.hour * kSecondsPerHour +
+         clock.minute * kSecondsPerMinute + clock.second;
 }
 
 TM4 ClockTM4(CClock& clock) { return ClockSeconds(clock); }
@@ -197,7 +197,8 @@ SI4 ClockCompare(TM4 time_a, TM4 time_b) {
   ClockInit(a, time_a);
   ClockInit(b, time_b);
   SI4 result = ClockCompare(a, b);
-  PRINTF ("\n  Comparing time_a:%i to time_b:%i with result:%i", time_a, time_b, result);
+  PRINTF("\n  Comparing time_a:%i to time_b:%i with result:%i", time_a, time_b,
+         result);
   return result;
 }
 
@@ -358,9 +359,7 @@ const CH1* Scan(const CH1* string, CClock& clock) {
   return TScan<CH1>(string, clock);
 }
 
-const CH1* Scan(const CH1* string, TME& t) {
-  return TScan<CH1>(string, t);
-}
+const CH1* Scan(const CH1* string, TME& t) { return TScan<CH1>(string, t); }
 
 const CH1* ScanTime(const CH1* string, TM4& t) {
   return TScanTime<CH1, TM4>(string, t);
@@ -393,8 +392,7 @@ const CH2* ScanTime(const CH2* string, CClock& clock) {
   return TScan<CH2>(string, clock);
 }
 
-const CH2* ScanTime(const CH2* string, SI4& hour, SI4& minute,
-                           SI4& second) {
+const CH2* ScanTime(const CH2* string, SI4& hour, SI4& minute, SI4& second) {
   return TScanTime<CH2>(string, hour, minute, second);
 }
 
@@ -429,8 +427,7 @@ CH4* PrintTime(CH4* begin, CH4* stop, TM8 t) {
   return TPrint<CH4, TM8>(begin, stop, t);
 }
 
-const CH4* ScanTime(const CH4* string, SI4& hour, SI4& minute,
-                           SI4& second) {
+const CH4* ScanTime(const CH4* string, SI4& hour, SI4& minute, SI4& second) {
   return TScanTime<CH4>(string, hour, minute, second);
 }
 

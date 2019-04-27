@@ -17,8 +17,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_strand.h"
 
 #include "c_ascii.h"
-#include "t_binary.h"
 #include "t_object.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_3
 #include "module_debug.inl"
@@ -702,7 +702,7 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
   return cursor;
 }
 
-/* Prints the given socket to the COut. */
+/* Prints the given socket to the SOut. */
 template <typename Char = CH1>
 Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                    const void* end) {
@@ -721,8 +721,8 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     return nullptr;
   }
   size += num_bytes;
-  cursor = TPrint<Char>(cursor, stop, StrandSocketHeader());
-  cursor = TPrint<Char>(cursor, stop, StrandSocketBorder());
+  cursor = TPrint<Char>(cursor, stop, STRSocketHeader());
+  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
   cursor = TPrintHex<Char>(cursor, stop, address_ptr);
 
   PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
@@ -744,7 +744,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     *cursor++ = ' ';
     cursor = TPrintHex<Char>(cursor, stop, address_ptr);
   }
-  cursor = TPrint<Char>(cursor, stop, StrandSocketBorder());
+  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
   return TPrintHex<Char>(cursor, stop, address_ptr + size);
 }
 
@@ -1893,6 +1893,10 @@ class TStrand {
   /* Gets the UTF. */
   TUTF<Char>& Star() { return utf_; }
 
+  /* @todo I had the auto-grow code in a template but I could not figure out
+  which function wasn't working so I had to copy paste. This needs to get
+  changed back to a template as soon as it's fixed thanks. */
+
   /* Prints a CH1 to the strand.
   @return A UTF. */
   TStrand& Print(CH1 item) {
@@ -2144,8 +2148,8 @@ class TStrand {
     Char char_size_char = (Char)('0' + sizeof(Char));
     return o << "\nTStrand<CH" << char_size_char << '>'
              << /*obj_.Print<Printer>(o) <<*/ "TUTF<CH" << char_size_char
-             << ">{0x" << Hex(utf_.start); /* << ", " << utf_.stop << '}'
-                    << Chars1(socket_.Begin(), socket_.End());*/
+             << ">{0x" << Hex(utf_.start) << ", " << utf_.stop << '}'
+             << Chars1(socket_.Begin(), socket_.End());
   }
 
  private:

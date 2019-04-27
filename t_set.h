@@ -14,7 +14,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define INCLUDED_F2_SET 1
 
 #include "c_ascii.h"
-#include "c_binary.h"
+#include "c_uniprinter.h"
 
 namespace _ {
 /*

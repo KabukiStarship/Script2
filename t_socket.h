@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "c_socket.h"
 
-#include "c_binary.h"
+#include "c_uniprinter.h"
 
 namespace _ {
 

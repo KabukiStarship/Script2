@@ -18,7 +18,6 @@ ASCII Data Types provide:
 * Year 2038-safe 32-bit, 64- bit and dual-32-bit with 32-year epoch and sub-second tick timestamps.
 * All data types are 64-bit aligned so they may be rapidly copied from one system to another on homo-endian system.
 * Optional MSB variant encoding provides fast data compression similar to UTF-8.
-* 
 * Convenient and easy-to-read-and-type 3-letter all-caps abbreviations that POP out around lower_snake_case.
 * Contiguous Objects
   * UTF-8, UTF-16, and UTF-32 strings.

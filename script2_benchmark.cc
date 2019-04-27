@@ -13,7 +13,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "t_benchmark.h"
 
 #include "rng.h"
-#include "t_binary.h"
+#include "t_uniprinter.h"
 #include "t_test.h"
 
 #include <chrono>

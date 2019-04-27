@@ -3,8 +3,8 @@
 @file    /script2/script2\03_ftos_and_stof.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -13,8 +13,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <cmath>
 #include <cstdio>
 
-#include "c_binary.h"
 #include "c_rng.h"
+#include "c_uniprinter.h"
 
 using namespace std;
 
@@ -86,4 +86,4 @@ const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

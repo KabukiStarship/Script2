@@ -11,10 +11,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef INCLUDED_SCRIPTPRINT_UTF16
 #define INCLUDED_SCRIPTPRINT_UTF16
 
+#include "c_uniprinter.h"
+
 #if SEAM >= SCRIPT2_3
 
 #include "c_ascii.h"
-#include "c_binary.h"
 #include "c_object.h"
 
 #if USING_UTF16 == YES

@@ -641,7 +641,7 @@ class TStack {
     return TPrintStack<T, Size, Index, Printer>(utf, Obj());
   }
 
-  /* Prints this object to the COut. */
+  /* Prints this object to the SOut. */
   template <typename Char = CH1>
   inline void Print() {
     TStrand<Char> strand;

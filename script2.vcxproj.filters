@@ -11,18 +11,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="07_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="08_loom.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="09_table.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="10_list.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="11_map.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -47,13 +35,13 @@
     <ClInclude Include="c_args.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="c_ascii.h">
+      <Filter>script2</Filter>
+    </ClInclude>
     <ClInclude Include="c_benchmark.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_bin.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_binary.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_bout.h">
@@ -65,13 +53,7 @@
     <ClInclude Include="c_buffer.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_cin.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_clock.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_crabs.h">
@@ -125,6 +107,9 @@
     <ClInclude Include="c_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="c_sout.h">
+      <Filter>script2</Filter>
+    </ClInclude>
     <ClInclude Include="c_stack.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -134,13 +119,7 @@
     <ClInclude Include="c_test.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_utf1.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_utf2.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_utf4.h">
+    <ClInclude Include="c_uniprinter.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_varint.h">
@@ -155,6 +134,9 @@
     <ClInclude Include="global.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="module_tests.h">
+      <Filter>script2</Filter>
+    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -164,19 +146,16 @@
     <ClInclude Include="t_array.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_benchmark.h">
+    <ClInclude Include="t_ascii.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_binary.h">
+    <ClInclude Include="t_benchmark.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_book.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_clock.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="t_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_dic.h">
@@ -215,10 +194,16 @@
     <ClInclude Include="t_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="t_string.h">
+      <Filter>script2</Filter>
+    </ClInclude>
     <ClInclude Include="t_table.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_test.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="t_uniprinter.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="00_rng.h">
@@ -242,16 +227,28 @@
     <ClInclude Include="06_strand_stack.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="module_tests.h">
+    <ClInclude Include="07_array.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_string.h">
+    <ClInclude Include="08_loom.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_ascii.h">
+    <ClInclude Include="09_table.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_ascii.h">
+    <ClInclude Include="10_list.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_sin.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_uniprinter1.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_uniprinter2.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_uniprinter4.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>
@@ -293,7 +290,13 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="module_tester.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
     <ClCompile Include="pch.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_ascii.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_benchmark.cc">
@@ -302,22 +305,16 @@
     <ClCompile Include="script2_bin.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_binary.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_bout.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_bsq.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_cin.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_clock.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_cout.cc">
+    <ClCompile Include="script2_crabs.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_error.cc">
@@ -362,7 +359,13 @@
     <ClCompile Include="script2_socket.cc">
       <Filter>script2</Filter>
     </ClCompile>
+    <ClCompile Include="script2_sout.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
     <ClCompile Include="script2_test.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_uniprinter.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_utf.cc">
@@ -374,13 +377,7 @@
     <ClCompile Include="script2_wall.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="module_tester.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_crabs.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_ascii.cc">
+    <ClCompile Include="script2_sin.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>

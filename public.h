@@ -13,8 +13,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_PUBLIC
 #define SCRIPT2_PUBLIC
 
-#include "c_cout.h"
+#include "c_sout.h"
 #include "c_test.h"
-#include "t_binary.h"
+#include "t_uniprinter.h"
 
 #endif  //< SCRIPT2_PUBLIC
