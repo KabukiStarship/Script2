@@ -39,7 +39,7 @@
   ::_::SocketFill(cursor, end_or_size, c)
 #define SOCKET_WIPE(begin, end_or_size) ::_::SocketWipe(begin, end_or_size)
 #define CHECK(condition) \
-  if (!_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+  if (!::_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)                                \
   if (!::_::Test(a, b)) {                            \
     ::_::Print("\n\nExpecting:");                    \
@@ -58,9 +58,9 @@
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__);                  \
   }
 #define ASSERT(condition) \
-  if (!_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
+  if (!::_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
 #define DASSERT(condition) \
-  if (!_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
+  if (!::_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
 #define RASSERT(condition)
 #define AVOW(a, b)                                   \
   if (!::_::Test(a, b)) {                            \

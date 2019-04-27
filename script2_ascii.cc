@@ -1,21 +1,17 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/script2_asciidata.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/script2_ascii.cc
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
 #if SEAM >= SCRIPT2_3
 
-#include "t_asciidata.h"
+#include "t_ascii.h"
 
 #include "t_socket.h"
 
@@ -28,38 +24,67 @@ specific language governing permissions and limitations under the License. */
 namespace _ {
 
 const CH1* STRType() {
-  static const CH1 kStrings[33][4] = {{'N', 'I', 'L', NIL},   //< 0.
-                                      {'S', 'I', '1', NIL},   //< 1.
-                                      {'U', 'I', '1', NIL},   //< 2.
-                                      {'C', 'H', '1', NIL},   //< 3.
-                                      {'S', 'I', '2', NIL},   //< 4.
-                                      {'U', 'I', '2', NIL},   //< 5.
-                                      {'F', 'P', '2', NIL},   //< 6.
-                                      {'C', 'H', '2', NIL},   //< 7.
-                                      {'B', 'O', 'L', NIL},   //< 8.
-                                      {'S', 'I', '4', NIL},   //< 9.
-                                      {'U', 'I', '4', NIL},   //< 10.
-                                      {'F', 'L', 'T', NIL},   //< 11.
-                                      {'T', 'M', '4', NIL},   //< 12.
-                                      {'T', 'M', '8', NIL},   //< 13.
-                                      {'S', 'I', '8', NIL},   //< 14.
-                                      {'U', 'I', '8', NIL},   //< 15.
-                                      {'F', 'P', '8', NIL},   //< 16.
-                                      {'S', 'V', '8', NIL},   //< 17.
-                                      {'F', 'P', 'H', NIL},   //< 19.
-                                      {'U', 'I', 'X', NIL},   //< 20.
-                                      {'O', 'B', 'J', NIL},   //< 21.
-                                      {'L', 'O', 'M', NIL},   //< 25.
-                                      {'B', 'S', 'Q', NIL},   //< 26.
-                                      {'E', 'S', 'C', NIL},   //< 27.
-                                      {'L', 'S', 'T', NIL},   //< 28.
-                                      {'B', 'O', 'K', NIL},   //< 29.
-                                      {'D', 'I', 'C', NIL},   //< 30.
-                                      {'M', 'A', 'P', NIL},   //< 31.
-                                      {NIL, NIL, NIL, NIL},   //< 31.
-                                      {'A', 'D', 'R', NIL},   //< 25.
-                                      {'S', 'T', 'R', NIL},   //< 24.
-                                      {'T', 'K', 'N', NIL}};  //< 25.
+  static const CH1 kStrings[64][4] = {
+      {'N', 'I', 'L', NIL},  //
+      {'S', 'I', '1', NIL},  //
+      {'U', 'I', '1', NIL},  //
+      {'S', 'I', '2', NIL},  //
+      {'U', 'I', '2', NIL},  //
+      {'F', 'P', '2', NIL},  //
+      {'B', 'O', 'L', NIL},  //
+      {'S', 'I', '4', NIL},  //
+      {'U', 'I', '4', NIL},  //
+      {'F', 'P', '4', NIL},  //
+      {'S', 'I', '8', NIL},  //
+      {'U', 'I', '8', NIL},  //
+      {'F', 'P', '8', NIL},  //
+      {'F', 'P', 'H', NIL},  //
+      {'S', 'I', '1', NIL},  //
+      {'U', 'I', '1', NIL},  //
+      {'S', 'I', '2', NIL},  //
+      {'U', 'I', '2', NIL},  //
+      {'F', 'P', '2', NIL},  //
+      {'B', 'O', 'L', NIL},  //
+      {'S', 'I', '4', NIL},  //
+      {'U', 'I', '4', NIL},  //
+      {'F', 'P', '4', NIL},  //
+      {'S', 'I', '8', NIL},  //
+      {'U', 'I', '8', NIL},  //
+      {'F', 'P', '8', NIL},  //
+      {'F', 'P', 'H', NIL},  //
+      {'C', 'H', '1', NIL},  //
+      {'C', 'H', '2', NIL},  //
+      {'C', 'H', '4', NIL},  //
+      {'T', 'M', '4', NIL},  //
+      {'T', 'M', '8', NIL},  //
+      {'T', 'M', '8', NIL},  //
+      {'P', 'T', '2', NIL},  //
+      {'P', 'C', '2', NIL},  //
+      {'P', 'T', '4', NIL},  //
+      {'P', 'C', '4', NIL},  //
+      {'P', 'T', '8', NIL},  //
+      {'P', 'C', '8', NIL},  //
+      {'O', 'A', '4', NIL},  //
+      {'O', 'A', '8', NIL},  //
+      {'P', '1', '6', NIL},  //
+      {'P', '3', '2', NIL},  //
+      {'O', 'B', 'J', NIL},  //
+      {'B', 'N', 'M', NIL},  //
+      {'V', 'I', 'N', NIL},  //
+      {'S', 'T', '1', NIL},  //
+      {'S', 'T', '2', NIL},  //
+      {'S', 'T', '4', NIL},  //
+      {'T', 'K', 'N', NIL},  //
+      {'A', 'D', 'R', NIL},  //
+      {'R', 'E', 'C', NIL},  //
+      {'L', 'O', 'M', NIL},  //
+      {'O', 'B', '1', NIL},  //
+      {'O', 'B', 'J', NIL},  //
+      {'S', 'L', 'T', NIL},  //
+      {'B', 'S', 'Q', NIL},  //
+      {'E', 'X', 'P', NIL},  //
+      {'W', 'L', 'D', NIL},  //
+  };
   return &kStrings[0][0];
 }
 
@@ -118,49 +143,89 @@ const SI1* TypePODSizes() {
 }
 
 SI1 TypePODSize(SIN index) {
-  if (index < 0 || index >= kINV) return -1;
+  SIN invalid = kINV;
+  if (index < 0 || index > invalid) return -1;
   return TypePODSizes()[index];
 }
+
 const CH1* STRType(SI4 index) {
-  if (index < 0 || index >= 31) index = 32;
+  if (index < 0 || index >= kINV) index = 32;
   const CH1* strings = STRType();
   return strings + (index << 2);
 }
 
+template <typename T, SI1 kAlignment_>
+int TAsciiType(void* begin, void* end, UI2 type, T item) {
+  return 0;
+}
+
 BOL TypeIsValid(SI4 type) { return (type >> 7) == 0; }
 
-AsciiValue::AsciiValue(CH1* item) : type(kCH1), value(item) {}
+/* This might be junk. I don't know how the bounds checking works yet.
+
+struct SDK Wildcard {
+  UI2 type;
+
+  Wildcard (CH1* item);
 
 #if USING_UTF16 == YES
-AsciiValue::AsciiValue(CH2* item) : type(type), value(item) {}
+  Wildcard (CH2* item);
 #endif
 
 #if USING_UTF32 == YES
-AsciiValue::AsciiValue(CH4* item) : type(type), value(item) {}
+  Wildcard (CH4* item);
 #endif
 
-AsciiValue::AsciiValue(SI1* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(UI1* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(SI2* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(UI2* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(SI4* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(UI4* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(SI8* item) : type(type), value(item) {}
-
-AsciiValue::AsciiValue(UI8* item) : type(type), value(item) {}
+  Wildcard (SI1* item);
+  Wildcard (UI1* item);
+  Wildcard (SI2* item);
+  Wildcard (UI2* item);
+  Wildcard (SI4* item);
+  Wildcard (UI4* item);
+  Wildcard (SI8* item);
+  Wildcard (UI8* item);
 
 #if USING_FP4 == YES
-AsciiValue::AsciiValue(FP4* item) : type(type), value(item) {}
+  Wildcard (FP4* item);
 #endif
 #if USING_FP8 == YES
-AsciiValue::AsciiValue(FP8* item) : type(type), value(item) {}
+  Wildcard (FP8* item);
 #endif
+};
+
+Wildcard::Wildcard(CH1* item) : type(kCH1) {
+}
+
+#if USING_UTF16 == YES
+Wildcard::Wildcard(CH2* item) : type(kCH2) {}
+#endif
+
+#if USING_UTF32 == YES
+Wildcard::Wildcard(CH4* item) : type(kCH4) {}
+#endif
+
+Wildcard::Wildcard(SI1* item) : type(kSI1) {}
+
+Wildcard::Wildcard(UI1* item) : type(kUI1) {}
+
+Wildcard::Wildcard(SI2* item) : type(kSI2) {}
+
+Wildcard::Wildcard(UI2* item) : type(kUI2) {}
+
+Wildcard::Wildcard(SI4* item) : type(kSI4) {}
+
+Wildcard::Wildcard(UI4* item) : type(kUI4) {}
+
+Wildcard::Wildcard(SI8* item) : type(kSI8) {}
+
+Wildcard::Wildcard(UI8* item) : type(type) {}
+
+#if USING_FP4 == YES
+Wildcard::Wildcard(FP4* item) : type(type) {}
+#endif
+#if USING_FP8 == YES
+Wildcard::Wildcard(FP8* item) : type(type) {}
+#endif*/
 
 SI4 TypeFixedSize(SI4 type) {
   static const SI1 kWidths[] = {
@@ -342,7 +407,7 @@ namespace _ {
 CH1* Print(CH1* begin, CH1* stop, SI4 type, const void* value) {
   return TPrint<CH1>(begin, stop, type, value);
 }
-_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
+::_::UTF1& operator<<(::_::UTF1& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 }  // namespace _
@@ -353,7 +418,7 @@ CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value) {
   return TPrint<CH2>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
+::_::UTF2& operator<<(::_::UTF2& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif
@@ -363,7 +428,7 @@ CH4* Print(CH4* begin, CH4* stop, SI4 type, const void* value) {
   return TPrint<CH4>(begin, stop, type, value);
 }
 }  // namespace _
-_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
+::_::UTF4& operator<<(::_::UTF4& utf, const ::_::TypeValue& item) {
   return utf.Set(::_::Print(utf.start, utf.stop, item.type, item.value));
 }
 #endif

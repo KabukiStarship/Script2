@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Script2|Win32">
+      <Configuration>Debug Script2</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug Script2|x64">
+      <Configuration>Debug Script2</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -38,16 +46,14 @@
     <ClInclude Include="16_room_wall.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
-    <ClInclude Include="c_asciidata.h" />
+    <ClInclude Include="c_ascii.h" />
     <ClInclude Include="c_benchmark.h" />
     <ClInclude Include="c_bin.h" />
-    <ClInclude Include="c_binary.h" />
     <ClInclude Include="c_bout.h" />
     <ClInclude Include="c_bsq.h" />
     <ClInclude Include="c_buffer.h" />
-    <ClInclude Include="c_cin.h" />
+    <ClInclude Include="c_sin.h" />
     <ClInclude Include="c_clock.h" />
-    <ClInclude Include="c_cout.h" />
     <ClInclude Include="c_crabs.h" />
     <ClInclude Include="c_error.h" />
     <ClInclude Include="c_event.h" />
@@ -65,26 +71,26 @@
     <ClInclude Include="c_room.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
+    <ClInclude Include="c_sout.h" />
     <ClInclude Include="c_stack.h" />
     <ClInclude Include="c_strand.h" />
     <ClInclude Include="c_test.h" />
-    <ClInclude Include="c_utf1.h" />
-    <ClInclude Include="c_utf2.h" />
-    <ClInclude Include="c_utf4.h" />
+    <ClInclude Include="c_uniprinter.h" />
+    <ClInclude Include="c_uniprinter1.h" />
+    <ClInclude Include="c_uniprinter2.h" />
+    <ClInclude Include="c_uniprinter4.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
     <ClInclude Include="c_wall.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="module_tests.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="public.h" />
-    <ClInclude Include="module_tests.h" />
     <ClInclude Include="t_array.h" />
-    <ClInclude Include="t_asciidata.h" />
+    <ClInclude Include="t_ascii.h" />
     <ClInclude Include="t_benchmark.h" />
-    <ClInclude Include="t_binary.h" />
     <ClInclude Include="t_book.h" />
     <ClInclude Include="t_clock.h" />
-    <ClInclude Include="t_cout.h" />
     <ClInclude Include="t_dic.h" />
     <ClInclude Include="t_door.h" />
     <ClInclude Include="t_hash.h" />
@@ -92,14 +98,15 @@
     <ClInclude Include="t_list.h" />
     <ClInclude Include="t_loom.h" />
     <ClInclude Include="t_map.h" />
-    <ClInclude Include="t_string.h" />
     <ClInclude Include="t_object.h" />
     <ClInclude Include="t_set.h" />
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
+    <ClInclude Include="t_string.h" />
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
+    <ClInclude Include="t_uniprinter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="16_seam.s2" />
@@ -117,19 +124,18 @@
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="module_tester.cc" />
     <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_asciidata.cc" />
+    <ClCompile Include="script2_ascii.cc" />
     <ClCompile Include="script2_benchmark.cc" />
     <ClCompile Include="script2_bin.cc" />
-    <ClCompile Include="script2_binary.cc" />
     <ClCompile Include="script2_bout.cc" />
     <ClCompile Include="script2_bsq.cc" />
-    <ClCompile Include="script2_cin.cc" />
+    <ClCompile Include="script2_sin.cc" />
     <ClCompile Include="script2_clock.cc" />
-    <ClCompile Include="script2_cout.cc" />
+    <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_event.cc" />
-    <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
@@ -142,11 +148,12 @@
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_sout.cc" />
     <ClCompile Include="script2_test.cc" />
+    <ClCompile Include="script2_uniprinter.cc" />
     <ClCompile Include="script2_utf.cc" />
     <ClCompile Include="script2_vk.cc" />
     <ClCompile Include="script2_wall.cc" />
-    <ClCompile Include="module_tester.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -182,6 +189,12 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|Win32'">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -282,6 +295,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjctDir)./;</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

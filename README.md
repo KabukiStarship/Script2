@@ -18,7 +18,6 @@ ASCII Data Types provide:
 * Year 2038-safe 32-bit, 64- bit and dual-32-bit with 32-year epoch and sub-second tick timestamps.
 * All data types are 64-bit aligned so they may be rapidly copied from one system to another on homo-endian system.
 * Optional MSB variant encoding provides fast data compression similar to UTF-8.
-* 
 * Convenient and easy-to-read-and-type 3-letter all-caps abbreviations that POP out around lower_snake_case.
 * Contiguous Objects
   * UTF-8, UTF-16, and UTF-32 strings.
@@ -55,6 +54,4 @@ Please **@see** [Kabuki Toolkit}(https://github.com/kabuki-starship/kabuki_toolk
 
 Copyright 2014-18 (C) Cale Jamison McCollough <<cale@astartup.net>> and contributors. All rights reserved (R).
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License [here](http://www.apache.org/licenses/LICENSE-2.0).
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.

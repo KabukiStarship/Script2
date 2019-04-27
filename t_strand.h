@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_strand.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
@@ -20,9 +16,9 @@ specific language governing permissions and limitations under the License. */
 
 #include "c_strand.h"
 
-#include "c_asciidata.h"
-#include "t_binary.h"
+#include "c_ascii.h"
 #include "t_object.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_3
 #include "module_debug.inl"
@@ -706,7 +702,7 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
   return cursor;
 }
 
-/* Prints the given socket to the COut. */
+/* Prints the given socket to the SOut. */
 template <typename Char = CH1>
 Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                    const void* end) {
@@ -725,8 +721,8 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     return nullptr;
   }
   size += num_bytes;
-  cursor = TPrint<Char>(cursor, stop, StrandSocketHeader());
-  cursor = TPrint<Char>(cursor, stop, StrandSocketBorder());
+  cursor = TPrint<Char>(cursor, stop, STRSocketHeader());
+  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
   cursor = TPrintHex<Char>(cursor, stop, address_ptr);
 
   PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
@@ -748,7 +744,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     *cursor++ = ' ';
     cursor = TPrintHex<Char>(cursor, stop, address_ptr);
   }
-  cursor = TPrint<Char>(cursor, stop, StrandSocketBorder());
+  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
   return TPrintHex<Char>(cursor, stop, address_ptr + size);
 }
 
@@ -1644,7 +1640,7 @@ struct TChars {
 /* Utility class for printing blocks of hex values. */
 template <typename Char = CH1, SI4 kC0Offset_ = 176>
 struct THexs {
-  enum { kC0Offset = };
+  enum { kC0Offset = 0 };
   const void *begin,  //< Begin adddress.
       *end;           //< End address.
 
@@ -1653,6 +1649,7 @@ struct THexs {
 
   template <typename Printer>
   Printer& PrintHex(Printer& o) {
+    /*
     if (!begin || begin >= end) return;
 
     const CH1 *start = reinterpret_cast<const CH1*>(begin),
@@ -1661,8 +1658,7 @@ struct THexs {
 
     SIW num_bytes = 81 * (num_rows + 2);
     size += num_bytes;
-    o << STRSocketHexHeader() << STRSocketHexBorder()
-      << THex<const void*>(start);
+    o << STRSocketHexHeader() << STRSocketHexBorder() << Hex(start);
 
     CH1 c;
     while (start < stop) {
@@ -1673,11 +1669,12 @@ struct THexs {
           c = 'x';
         else if (c < ' ')
           c += kPrintC0Offset;
-        o << THex<CH1>(c);
+        o << Hex(c);
       }
-      o << '|' << ' ' << THex<const void*>(start);
+      o << '|' << ' ' << Hex(start);
     }
-    o << STRSocketHexBorder() << THex<const void*>(start + size);
+    return o << STRSocketHexBorder() << Hex(start + size);*/
+    return o;
   }
 };
 
@@ -1896,6 +1893,10 @@ class TStrand {
   /* Gets the UTF. */
   TUTF<Char>& Star() { return utf_; }
 
+  /* @todo I had the auto-grow code in a template but I could not figure out
+  which function wasn't working so I had to copy paste. This needs to get
+  changed back to a template as soon as it's fixed thanks. */
+
   /* Prints a CH1 to the strand.
   @return A UTF. */
   TStrand& Print(CH1 item) {
@@ -1916,8 +1917,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH1 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH1* item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -1928,7 +1927,6 @@ class TStrand {
       do {
         SI4 result = obj_.Do(kFactoryGrow);
         if (result) return *this;
-
         start = ::_::Print(start, stop, item);
       } while (!start);
     }
@@ -1937,8 +1935,6 @@ class TStrand {
   }
 
 #if USING_UTF16
-  /* Prints a CH2 to the strand.
-  @return A UTF. */
   TStrand& Print(CH2 item) {
     CH2 *start = utf_.start,  //
         *stop = TStrandStop<CH2>(obj_.Begin());
@@ -1957,8 +1953,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH2 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH2* item) {
     CH2 *start = utf_.start,  //
         *stop = TStrandStop<CH2>(obj_.Begin());
@@ -1978,8 +1972,6 @@ class TStrand {
   }
 #endif
 #if USING_UTF32
-  /* Prints a CH4 to the strand.
-  @return A UTF. */
   TStrand& Print(CH4 item) {
     CH4 *start = utf_.start,  //
         *stop = TStrandStop<CH4>(obj_.Begin());
@@ -1998,8 +1990,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints a CH4 to the strand.
-  @return A UTF. */
   TStrand& Print(const CH4* item) {
     CH4 *start = utf_.start,  //
         *stop = TStrandStop<CH4>(obj_.Begin());
@@ -2018,8 +2008,6 @@ class TStrand {
     return *this;
   }
 #endif
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(SI4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2038,8 +2026,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(UI4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2058,8 +2044,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(SI8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2078,8 +2062,6 @@ class TStrand {
     return *this;
   }
 
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(UI8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2099,8 +2081,6 @@ class TStrand {
   }
 
 #if USING_FP4 == YES
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(FP4 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2120,8 +2100,6 @@ class TStrand {
   }
 #endif
 #if USING_FP8 == YES
-  /* Prints the given item.
-  @return A UTF. */
   TStrand& Print(FP8 item) {
     Char *start = utf_.start,  //
         *stop = TStrandStop<Char>(obj_.Begin());
@@ -2170,8 +2148,8 @@ class TStrand {
     Char char_size_char = (Char)('0' + sizeof(Char));
     return o << "\nTStrand<CH" << char_size_char << '>'
              << /*obj_.Print<Printer>(o) <<*/ "TUTF<CH" << char_size_char
-             << ">{0x" << Hex(utf_.start); /* << ", " << utf_.stop << '}'
-                    << Chars1(socket_.Begin(), socket_.End());*/
+             << ">{0x" << Hex(utf_.start) << ", " << utf_.stop << '}'
+             << Chars1(socket_.Begin(), socket_.End());
   }
 
  private:
@@ -2381,12 +2359,6 @@ inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
 template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
 inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
     ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THeadingf<Char> item) {
-  return strand.Print(item);
-}
-
-template <typename Char, SI4 kCount_, AsciiFactory kFactory_>
-inline ::_::TStrand<Char, kCount_, kFactory_>& operator<<(
-    ::_::TStrand<Char, kCount_, kFactory_>& strand, ::_::THex<Char> item) {
   return strand.Print(item);
 }
 

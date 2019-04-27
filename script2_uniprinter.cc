@@ -1,19 +1,15 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_binary.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "t_binary.h"
+#include "t_uniprinter.h"
 
 #include <cmath>
 
@@ -24,11 +20,11 @@ CH1 HexNibbleToUpperCase(UI1 b) {
   return b + '0';
 }
 
-const CH1* StrandSocketHeader() {
+const CH1* STRSocketHeader() {
   return "\n|0       8       16      24      32      40      48      52      |";
 }
 
-const CH1* StrandSocketBorder() {
+const CH1* STRSocketBorder() {
   return "\n|+-------+-------+-------+-------+-------+-------+-------+-------|"
          " ";
 }
@@ -581,6 +577,114 @@ CH4* Print(CH4* start, CH4* stop, CH4 c) {
 }
 
 #endif
+
+Hex::Hex(const void* ptr)
+    : begin(reinterpret_cast<const UI1*>(&begin)),
+      size_bytes(sizeof(const void*)) {}
+Hex::Hex(const void* begin, SIW size_bytes)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(size_bytes) {}
+Hex::Hex(SI1& item)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(UI1& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Hex::Hex(SI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(UI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Hex::Hex(SI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(UI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Hex::Hex(SI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Hex::Hex(UI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Hex::Hex(FP4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(FP8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#endif
+Hex::Hex(const SI1* item)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
+Hex::Hex(const SI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const UI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Hex::Hex(const SI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const UI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Hex::Hex(const SI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Hex::Hex(const UI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Hex::Hex(const FP4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Hex::Hex(const FP8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+#endif
+
+Binary::Binary(const void* ptr)
+    : begin(reinterpret_cast<const UI1*>(&begin)),
+      size_bytes(sizeof(const void*)) {}
+Binary::Binary(SI1& item)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Binary::Binary(UI1& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
+Binary::Binary(SI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Binary::Binary(UI2& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
+Binary::Binary(SI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Binary::Binary(UI4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Binary::Binary(SI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Binary::Binary(UI8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#if USING_FP8 == YES
+Binary::Binary(FP4& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Binary::Binary(FP8& begin)
+    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+#endif
+Binary::Binary(const SI1* item)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
+Binary::Binary(const SI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Binary::Binary(const UI2* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
+Binary::Binary(const SI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Binary::Binary(const UI4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+Binary::Binary(const SI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Binary::Binary(const UI8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+
+#if USING_FP8 == YES
+Binary::Binary(const FP4* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
+#endif
+#if USING_FP8 == YES
+Binary::Binary(const FP8* begin)
+    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+#endif
+
+Char::Char(CHN ch) : ch(ch) {}
+
 }  // namespace _
 #endif
 
@@ -791,16 +895,13 @@ inline UI CreateMaskLSb(UI msb_zero_count) {
   return (~mask) >> msb_zero_count;
 }
 
-/* Masks off the lower bits.
-@param msb_zero_count The number_ of zeros in the Most Significant bits. */
+/* Masks off the lower bits. */
 template <typename UI>
 inline UI MaskLSb(UI value, UI msb_zero_count) {
   return value & CreateMaskLSb<UI>(msb_zero_count);
 }
 
-/* Returns 2^n.
-@brief Function forces the compiler to create the mask without a LDR
-instruction. */
+/* Returns 2^n. */
 template <typename I>
 inline I PowerOf2(I n) {
   I value = 1;
@@ -844,24 +945,6 @@ CH4* Print(CH4* start, CH4* stop, FP8 value) {
 }
 #endif
 
-Hex::Hex(SI1& item) : item(&item), width_bytes(1) {}
-Hex::Hex(UI1& item) : item(&item), width_bytes(1) {}
-Hex::Hex(SI2& item) : item(&item), width_bytes(2) {}
-Hex::Hex(UI2& item) : item(&item), width_bytes(2) {}
-Hex::Hex(SI4& item) : item(&item), width_bytes(4) {}
-Hex::Hex(UI4& item) : item(&item), width_bytes(4) {}
-Hex::Hex(SI8& item) : item(&item), width_bytes(8) {}
-Hex::Hex(UI8& item) : item(&item), width_bytes(8) {}
-
-Hex::Hex(const void* item) : item(&item), width_bytes(sizeof(const void*)) {}
-
-#if USING_FP8 == YES
-Hex::Hex(FP4& item) : item(&item), width_bytes(4) {}
-#endif
-#if USING_FP8 == YES
-Hex::Hex(FP8& item) : item(&item), width_bytes(8) {}
-#endif
-
 }  // namespace _
 
-#endif  //< #if SEAM >= SCRIPT2_4
+#endif

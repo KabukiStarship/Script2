@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_binary.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/c_uniprinter.h
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -23,10 +19,10 @@ namespace _ {
 SDK CH1 HexNibbleToUpperCase(UI1 b);
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-SDK const CH1* StrandSocketHeader();
+SDK const CH1* STRSocketHeader();
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-SDK const CH1* StrandSocketBorder();
+SDK const CH1* STRSocketBorder();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
 SDK const CH1* STRSocketHexHeader();
@@ -40,14 +36,14 @@ SDK const CH1* STRSocketHexBorder();
 SDK const UI2* BinaryLUTDecimals();
 
 /* IEEE754 Powers of 10 integral portions LUT. */
-SDK inline const void* Binary32Pow10IntegralPortions();
+SDK /*inline*/ const void* Binary32Pow10IntegralPortions();
 
 /* IEEE754 Powers of 10 integral portions LUT. */
-SDK inline const void* Binary64Pow10IntegralPortions();
+SDK /*inline*/ const void* Binary64Pow10IntegralPortions();
 
 /* Lookup table of the IEEE754 integral portion of pre-computed powers of 10.
  */
-SDK inline const void* BinaryPow10Exponents();
+SDK /*inline*/ const void* BinaryPow10Exponents();
 
 /* Checks if the given value is Not-a-Number.
 @param  value The value to check.
@@ -150,6 +146,10 @@ SDK CH1* Print(CH1* cursor, CH1* stop, SI4 value);
 SDK CH1* Print(CH1* cursor, CH1* stop, UI4 value);
 
 #if USING_UTF8 == YES
+
+/* Converts a signed or unsigned CH1 to a (unsigned) cH4. */
+/*inline*/ SDK CH4 ToCH4(CH1 c);
+
 /* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor The beginning of the socket.
@@ -158,26 +158,7 @@ SDK CH1* Print(CH1* cursor, CH1* stop, UI4 value);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH1 c);
-
-/* Prints a CH2 to the CH1* by converting it to a CH4.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH2 c);
-
-/* Converts a signed or unsigned CH1 to a (unsigned) cH4. */
-inline SDK CH4 ToCH4(CH1 c);
-
-/* Prints a CH2 to the CH1* by converting it to a CH4.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
 SDK CH1* Print(CH1* cursor, CH1* stop, CH4 c);
 SDK CH1* Print(CH1* cursor, SIW size, CH4 c);
 
@@ -197,23 +178,7 @@ SDK const CH1* Scan(const CH1* string, CH4& result);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 SDK CH2* Print(CH2* cursor, CH2* stop, CH2 c);
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
 SDK CH2* Print(CH2* cursor, CH2* stop, CH1 c);
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
 SDK CH2* Print(CH2* cursor, CH2* stop, CH4 c);
 
 SDK CH2* Print(CH2* cursor, SIW size, CH4 c);
@@ -233,23 +198,7 @@ SDK const CH2* Scan(const CH2* string, CH4& result);
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 CH4* Print(CH4* cursor, CH4* stop, CH1 c);
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-SDK inline CH4* Print(CH4* cursor, CH4* stop, CH2 c);
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH4 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
+SDK /*inline*/ CH4* Print(CH4* cursor, CH4* stop, CH2 c);
 CH4* Print(CH4* cursor, CH4* stop, CH4 c);
 
 #endif
@@ -265,64 +214,31 @@ SDK SI4 FloatDigitsMax();
 ASCII. */
 SDK SI4 DoubleDigitsMax();
 
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
+/* Checks if the given value is Not-a-Number. */
 SDK BOL IsNaN(FP4 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
 SDK BOL IsNaN(FP8 value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 SDK BOL IsFinite(FP4 value);
-
-/* Checks if the given value is not NaN or +/- Infinity. */
 SDK BOL IsFinite(FP8 value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 SDK BOL IsInfinite(FP4 value);
-
-/* Checks if the given value is not NaN or +/- Infinity. */
 SDK BOL IsInfinite(FP8 value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
 SDK FP4 Ceiling(FP4 value);
-
-/* Returns the ceiling of the given value to the next highest up integer. */
 SDK FP8 Ceiling(FP8 value);
 
 /* Gets the Most Significant Asserted Bit (MSbAsserted).
 @return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(UI1 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(SI1 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(UI2 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(SI2 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(UI4 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(SI4 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(UI8 value);
-
-/* Gets the Most Significant Asserted Bit (MSbAsserted).
-@return A negative number_ if value is zero and the highest bit. */
 SDK SI4 MSbAsserted(SI8 value);
 
 /* Returns the last UI1 in the given CH1, which is c in this case. */
@@ -346,29 +262,30 @@ const CH1* Scan(const CH1* cursor, FP8& value);
 /* Returns the last UI1 in the given CH2. */
 SDK CH1* LastByte(CH2* c);
 
-/* Prints the given FP4 to the socket. */
-SDK CH2* Print(CH2* cursor, CH2* stop, FP4 value);
-
-/* Prints the given FP4 to the socket. */
-SDK CH2* Print(CH2* cursor, CH2* stop, FP8 value);
+/* Prints the given item to the socket. */
+SDK CH2* Print(CH2* cursor, CH2* stop, FP4 item);
+SDK CH2* Print(CH2* cursor, CH2* stop, FP8 item);
 #endif
 
 #if USING_UTF32 == YES
 /* Returns the last UI1 in the given CH4. */
 SDK CH1* LastByte(CH4* c);
 
-/* Prints the given FP4 to the socket. */
+/* Prints the given item to the socket. */
 SDK CH4* Print(CH4* cursor, CH4* stop, FP4 value);
-
-/* Prints the given FP4 to the socket. */
 SDK CH4* Print(CH4* cursor, CH4* stop, FP8 value);
+#endif
+
 #endif
 
 /* Utility class for printing a POD type in hex. */
 struct Hex {
-  void* item;       //< Pointer to the POD instance.
-  SI4 width_bytes;  //< Width of the item in bytes.
+  const UI1* begin;  //< Pointer to the POD instance.
+  SIW size_bytes;    //< Width of the item in bytes.
 
+  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  Hex(const void* item);
+  Hex(const void* begin, SIW size_bytes);
   Hex(SI1& item);
   Hex(UI1& item);
   Hex(SI2& item);
@@ -377,17 +294,73 @@ struct Hex {
   Hex(UI4& item);
   Hex(SI8& item);
   Hex(UI8& item);
-
-  Hex(const void* item);
-
 #if USING_FP4 == YES
   Hex(FP4& item);
 #endif
 #if USING_FP8 == YES
   Hex(FP8& item);
 #endif
+
+  /* Stores the pointer to the item and it's byte_count. */
+  Hex(const SI1* item);
+  Hex(const SI2* item);
+  Hex(const UI2* item);
+  Hex(const SI4* item);
+  Hex(const UI4* item);
+  Hex(const SI8* item);
+  Hex(const UI8* item);
+#if USING_FP4 == YES
+  Hex(const FP4* item);
+#endif
+#if USING_FP8 == YES
+  Hex(const FP8* item);
+#endif
 };
 
-#endif  //< #if SEAM >= SCRIPT2_3
+/* Utility class for printing a POD type in binary. */
+struct Binary {
+  const UI1* begin;  //< Pointer to the POD instance.
+  SIN size_bytes;    //< Width of the item in bytes.
+
+  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  Binary(const void* item);
+  Binary(SI1& item);
+  Binary(UI1& item);
+  Binary(SI2& item);
+  Binary(UI2& item);
+  Binary(SI4& item);
+  Binary(UI4& item);
+  Binary(SI8& item);
+  Binary(UI8& item);
+#if USING_FP4 == YES
+  Binary(FP4& item);
+#endif
+#if USING_FP8 == YES
+  Binary(FP8& item);
+#endif
+
+  /* Stores the pointer to the item and it's byte_count. */
+  Binary(const SI1* item);
+  Binary(const SI2* item);
+  Binary(const UI2* item);
+  Binary(const SI4* item);
+  Binary(const UI4* item);
+  Binary(const SI8* item);
+  Binary(const UI8* item);
+#if USING_FP4 == YES
+  Binary(const FP4* item);
+#endif
+#if USING_FP8 == YES
+  Binary(const FP8* item);
+#endif
+};
+
+/* Utility class for force printing characters. */
+struct Char {
+  CHN ch;  //< The character to print.
+
+  Char(CHN ch);
+};
+
 }  // namespace _
-#endif  //< #ifndef SCRIPT2_CBINARY
+#endif

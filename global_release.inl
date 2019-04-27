@@ -38,7 +38,7 @@
 #define CHECK(condition)
 #define DCHECK(condition)
 #define RCHECK(condition) \
-  if (!_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+  if (!::_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)
 #define DCOMPARE(a, b)
 #define RCOMPARE(a, b)                              \
