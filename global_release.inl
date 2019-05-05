@@ -1,6 +1,7 @@
 #include "c_test.h"
-
 #include "global_footer.inl"
+
+#define DEBUG_SEAM 0
 #define TEST_BEGIN \
   if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
 #define PRINT(item)

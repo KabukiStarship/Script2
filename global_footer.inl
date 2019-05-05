@@ -1,3 +1,4 @@
+#undef DEBUG_SEAM
 #undef TEST_BEGIN
 #undef TEST_END
 #undef PRINT

@@ -150,7 +150,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     expected_ui8 = problem_children[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
-           TStrandLength<>(expecting));
+           TSTRLength<>(expecting));
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
@@ -159,8 +159,8 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 
@@ -178,8 +178,8 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (strcmp(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 
@@ -197,8 +197,8 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 

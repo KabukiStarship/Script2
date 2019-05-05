@@ -16,11 +16,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if USING_STR == UTF8
 #include "c_uniprinter1.h"
 #endif
-
 #if USING_STR == UTF16
 #include "c_uniprinter2.h"
 #endif
-
 #if USING_STR == UTF32
 #include "c_uniprinter4.h"
 #endif
@@ -215,6 +213,9 @@ class SOut {
   SOut();
 
   /* Prints the given item to the SOut stream. */
+  SOut(CH1 item);
+  SOut(CH2 item);
+  SOut(CH4 item);
   SOut(const CH1* item);
   SOut(const CH2* item);
   SOut(const CH4* item);
@@ -260,21 +261,18 @@ class SOut {
   SOut& Print(Linef1 item);
   SOut& Print(Headingf1 item);
   SOut& Print(Chars1 item);
-  SOut& Print(Hexs1 item);
 #elif USING_STR == UTF16
   SOut& Print(Right2 item);
   SOut& Print(Center2 item);
   SOut& Print(Linef2 item);
   SOut& Print(Headingf2 item);
-  // SOut& Print(Chars2 item);
-  // SOut& Print(Hexs2 item);
+  SOut& Print(Chars2 item);
 #lif USING_STR == UTF32
   SOut& Print(Right4 item);
   SOut& Print(Center4 item);
   SOut& Print(Linef4 item);
   SOut& Print(Headingf4 item);
-  // SOut& Print(Chars4 item);
-  // SOut& Print(Hexs4 item);
+  SOut& Print(Chars4 item);
 #endif
 #endif
 };
@@ -306,22 +304,22 @@ class SOut {
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right1 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef1 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf1 item);
+/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char1 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars1 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Hexs1 item);
 #elif USING_STR == UTF16
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center2 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right2 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef2 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf2 item);
+/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char2 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars2 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Hexs2 item);
 #elif USING_STR == UTF32
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center4 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right4 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef4 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf4 item);
+/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char4 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars4 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Hexs4 item);
 #endif
 
 #endif

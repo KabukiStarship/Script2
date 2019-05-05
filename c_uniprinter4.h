@@ -452,6 +452,19 @@ struct SDK Headingf4 {
             const CH4* caption3 = nullptr);
 };
 
+struct SDK Char4 {
+  CH4 value;  //< A Unicode value.
+
+  Char4(CH4 value);  //< Stores value.
+};
+
+struct SDK Chars4 {
+  const CH4 *start,  //< Start character address.
+      *stop;         //< Stop character address.
+
+  Chars4(const CH4* start, const CH4* stop);
+};
+
 /* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
 strings.
 This class only stores the stop of socket pointer and a pointer to the
@@ -544,6 +557,7 @@ using Rows = Headingf4;
 
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH4* item);
+
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, CH4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, UI1 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, SI2 item);
@@ -561,12 +575,13 @@ SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, FP8 item);
 #endif
 
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Hex item);
+
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Center4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Right4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Linef4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item);
-// SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const ::_::Wildcard&
-// value);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Chars4 item);
 
 #endif  //< #if USING_UTF32 == YES
 #endif

@@ -3,19 +3,16 @@
 @file    /script2/script2_test.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "c_test.h"
-
 #include "c_sout.h"
-
-#include "t_uniprinter.h"
-
+#include "c_test.h"
 #include "module_debug.inl"
+#include "t_uniprinter.h"
 
 namespace _ {
 
@@ -43,8 +40,10 @@ SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
                                ArgsToSring(arg_count, args), tests, test_count);
   if (result) {
     Print("\nERROR: ", result);
+    PAUSE("");
     return APP_EXIT_FAILURE;
   }
+  PAUSE("");
   return APP_EXIT_SUCCESS;
 }
 

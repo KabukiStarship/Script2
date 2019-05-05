@@ -90,7 +90,7 @@ SI4 TSTRCompare(const Char* string_a, const Char* string_b,
   enum { kSize = 256 };                                              \
   CH1 socket[kSize];                                                 \
   sprintf_s(socket, kSize, ui_format, value);                        \
-  Printf(" Expecting %s:%i ", socket, TStrandLength<Char>(socket))
+  Printf(" Expecting %s:%i ", socket, TSTRLength<Char>(socket))
 #define PRINT_PRINTED TPrintPrinted<Char>(TPuffItoSBegin<Char>())
 #else
 #include "module_release.inl"
@@ -154,7 +154,7 @@ inline SI TSignedNaN() {
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1, typename I = SI4>
-I TStrandLength(const Char* start) {
+I TSTRLength(const Char* start) {
   DASSERT(start);
   return (I)(TSTREnd<Char>(start) - start);
 }
@@ -164,8 +164,8 @@ I TStrandLength(const Char* start) {
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
 template <typename Char = CH1, typename I = SI4>
-inline I TStrandLength(Char* start) {
-  return TStrandLength<Char>(reinterpret_cast<const Char*>(start));
+inline I TSTRLength(Char* start) {
+  return TSTRLength<Char>(reinterpret_cast<const Char*>(start));
 }
 
 /* Prints a Unicode Char to the given socket.
@@ -308,11 +308,6 @@ Char* TPrint(Char* start, SIW size, const CH4* item) {
   return TPrint<Char>(start, start + size - 1, item);
 }
 
-inline UI1 ShiftRight(UI1 value, UI1 count) { return value >> count; }
-inline UI2 ShiftRight(UI2 value, UI2 count) { return value >> count; }
-inline UI4 ShiftRight(UI4 value, UI4 count) { return value >> count; }
-inline UI8 ShiftRight(UI8 value, UI8 count) { return value >> count; }
-
 /* Prints the given hex using opeator<<. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
@@ -334,10 +329,10 @@ Char* TPrintHex(Char* start, Char* stop, UI value) {
 
   *start++ = '0';
   *start++ = 'x';
+  auto v = ToUnsigned(value);
   for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
-    UI shifted_value = ShiftRight(value, num_bits_shift);
-    *start++ = HexNibbleToUpperCase((UI1)shifted_value);
+    *start++ = HexNibbleToUpperCase((UI1)(v >> num_bits_shift));
   }
   *start = 0;
   return start;
@@ -384,22 +379,23 @@ inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
   return TPrintHex<Char, UI8>(start, stop, value);
 }
 
+#if USING_FP4 == YES
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintHex<Char, UI8>(start, stop, ui);
+  return TPrintHex<Char, UI4>(start, stop, ToUnsigned(value));
 }
+#endif
 
+#if USING_FP8 == YES
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintHex<Char, UI8>(start, stop, ui);
+  return TPrintHex<Char, UI8>(start, stop, ToUnsigned(value));
 }
+#endif
 
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, const void* ptr) {
-  UIW address = reinterpret_cast<UIW>(ptr);
-  return TPrintHex<Char, UIW>(start, stop, address);
+  return TPrintHex<Char, UIW>(start, stop, ToUnsigned(ptr));
 }
 
 /* Prints the given value to Binary. */
@@ -1585,7 +1581,7 @@ Printer& TPrintString(Printer& o, const Char* string) {
 
 template <typename Printer, typename Char = CH1>
 Printer& TPrintRepeat(Printer& o, Char c, SI4 count) {
-  for (; count > 0; --count) o << ::_::Char(c);
+  for (; count > 0; --count) o << ::_::ToCharStruct(c);
   return o;
 }
 
@@ -1634,13 +1630,13 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
       p = ~c;         //< Previous.
   SI4 hit_count = 0, column_index = 0;
   while (c) {
-    o << ::_::Char(c);
+    o << ::_::ToCharStruct(c);
     ++column_index;
     if (c == kLF) {
       p = c;
       do {
         c = *style++;
-        o << ::_::Char(c);
+        o << ::_::ToCharStruct(c);
       } while (c == kLF);
       column_index = 0;
     }
@@ -1779,15 +1775,57 @@ Printer& TPrintBinarySigned(Printer& o, SI value) {
   return TPrintBinary<Printer, UI>(o, (UI)value);
 }
 
-/* Prints the following value to the console in Hex. */
+/* Prints the following item to the console in Hex. */
 template <typename Printer, typename UI>
-Printer& TPrintHex(Printer& o, UI value) {
+Printer& TPrintHex(Printer& o, UI item) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+  auto ui = ToUnsigned(item);
   for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
-    o << HexNibbleToUpperCase((UI1)(value >> num_bits_shift));
+    o << HexNibbleToUpperCase((UI1)(ui >> num_bits_shift));
   }
   return o;
+}
+/* Prints the following item to the console in Hex. */
+template <typename Printer>
+Printer& TPrintHex(Printer& o, const void* item) {
+  UIW ptr = reinterpret_cast<UIW>(item);
+  return TPrintHex<Printer, UIW>(o, ptr);
+}
+
+template <typename Char = CH1>
+Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
+  if (!start || start >= stop || !end || end >= begin) return nullptr;
+
+  SIW size = stop - start, extra_row = ((size & 63) != 0) ? 1 : 0,
+      row_count = (size >> 6) + extra_row;
+
+  SIW num_bytes = 81 * (row_count + 2);
+  size += num_bytes;
+
+  begin = Print(begin, end, STRSocketHeader());
+  begin = Print(begin, end, STRSocketBorder());
+  begin = PrintHex(begin, end, start);
+
+  Char c;
+  while (start < stop) {
+    *begin++ = '\n';
+    *begin++ = '|';
+    for (SI4 i = 0; i < 64; ++i) {
+      c = *start++;
+      if (start > stop)
+        c = 'x';
+      else if (c < ' ')
+        c = c + kPrintC0Offset;
+      begin = Print(begin, end, c);
+    }
+    *begin++ = '|';
+    *begin++ = ' ';
+    begin = PrintHex(begin, end, start);
+  }
+  begin = Print(begin, end, STRSocketBorder());
+  begin = PrintHex(begin, end, start + size);
+  return begin;
 }
 
 template <typename Printer, typename Char = CH1>
@@ -1811,7 +1849,8 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
-      o << ::_::Char(c);
+      o << c;
+      //::_::ToCharStruct(c);
     }
     o << '|' << ' ' << Hex(start);
   }

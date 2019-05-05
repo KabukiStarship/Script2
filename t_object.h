@@ -3,8 +3,8 @@
 @file    /script2/t_object.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -15,7 +15,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define SCRIPT2_TOBJECT 1
 
 #include "c_object.h"
-
 #include "t_socket.h"
 
 #if SEAM == SCRIPT2_3
@@ -100,15 +99,25 @@ inline BOL TObjCountIsValid(SI index, SI count_min) {
 @return Nil upon failure or a pointer to the cloned object upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
-UIW* TObjClone(UIW* socket, Size size) {
-  UIW* clone;
+UIW* TObjNew(Size size) {
+  UIW* obj_begin;
   try {
-    clone = new UIW[SizeWords<Size>(size)];
+    obj_begin = new UIW[size];
   } catch (const std::bad_alloc& exception) {
     ObjException(exception.what());
     return nullptr;
   }
-  SocketCopy(clone, size, socket, size);
+  *reinterpret_cast<Size*>(obj_begin) = size;
+  return obj_begin;
+}
+
+/* Clones the other ASCII CObject including possibly unused object space.
+@return Nil upon failure or a pointer to the cloned object upon success.
+@param socket A raw ASCII Socket to clone. */
+template <typename Size = SI4>
+UIW* TObjClone(UIW* socket, Size size) {
+  UIW* clone = TObjNew<Size>(SizeWords<Size>(size));
+  if (!SocketCopy(clone, size, socket, size)) return nullptr;
   *reinterpret_cast<Size*>(socket) = size;
   return clone;
 }
@@ -275,10 +284,13 @@ class TObject {
   /* Gets the AsciiFactory. */
   inline AsciiFactory Factory() { return obj_.factory; }
 
+  inline AsciiFactory SetFactory(AsciiFactory factory) {
+    obj_.factory = factory;
+    return factory;
+  }
+
   inline SI4 Do(SIW function, void* arg = nullptr) {
-    AsciiFactory factory = obj_.factory;
-    if (factory) return factory(obj_, function, arg);
-    return kFactoryNil;
+    return ObjDo(obj_, function, arg);
   }
 
   /* Gets the CObject. */
@@ -290,12 +302,12 @@ class TObject {
 
   /* Prints this object to the SOut. */
   template <typename Printer>
-  Printer& Print(Printer& o) {
+  Printer& PrintTo(Printer& o) {
     o << "\nTObject<SI" << (CH1)('0' + sizeof(Size)) << '>';
     UIW* begin = obj_.begin;
     if (begin) {
       Size size = *reinterpret_cast<Size*>(begin);
-      o << " size:" << size;
+      o << " size:" << (SIW)size;
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {

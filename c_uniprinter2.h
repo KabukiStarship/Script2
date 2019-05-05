@@ -396,6 +396,19 @@ struct SDK Headingf2 {
             const CH2* caption2 = nullptr, const CH2* caption3 = nullptr);
 };
 
+struct SDK Char2 {
+  CH2 value;  //< A Unicode value.
+
+  Char2(CH2 ch);  //< Stores the value.
+};
+
+struct SDK Chars2 {
+  const CH2 *start,  //< Start character address.
+      *stop;         //< Stop character address.
+
+  Chars2(const CH2* start, const CH2* stop);
+};
+
 /* Utility class for printing strings.
 This class only stores the stop of socket pointer and a pointer to the write
 start. It is up the user to store start of socket pointer and if they would
@@ -436,6 +449,8 @@ struct SDK UTF2 {
   /*inline*/ UTF2& Print(Center2 item);
   /*inline*/ UTF2& Print(Linef2 item);
   /*inline*/ UTF2& Print(Headingf2 item);
+  /*inline*/ UTF2& Print(Chars2 item);
+
   /*inline*/ UTF2& Print(::_::Hex item);
 
   /* Prints the given item as hex. */
@@ -448,6 +463,7 @@ struct SDK UTF2 {
   /*inline*/ UTF2& Hex(SI8 item);
   /*inline*/ UTF2& Hex(UI8 item);
   /*inline*/ UTF2& Hex(const void* item);
+  /*inline*/ UTF2& Hex(const void* item, SIW size_bytes);
 
   /* Prints the given item as binary. */
   /*inline*/ UTF2& Binary(SI1 item);
@@ -495,8 +511,10 @@ using Rows = Headingf2;
 }  // namespace _
 
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& utf, ::_::UTF2& o);
-SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, const CH2* string);
+
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, CH2 item);
+SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, const CH2* string);
+
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, UI1 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, SI2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, UI2 item);
@@ -504,7 +522,6 @@ SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, SI4 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, UI4 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, SI8 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, UI8 item);
-
 #if USING_FP4 == YES
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, FP4 item);
 #endif
@@ -517,8 +534,8 @@ SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Center2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Right2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
-// SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& utf,
-//                                 const ::_::Wildcard& type_value);
+SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Char2 item);
+SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Chars2 item);
 
 #endif  //< #if USING_UTF16
 #endif

@@ -1,7 +1,7 @@
+#include "global_footer.inl"
 #include "t_test.h"
 
-#include "global_footer.inl"
-
+#define DEBUG_SEAM 1
 #define TEST_BEGIN \
   if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
 #define TEST_END Print("\n\nDone testing ", __FUNCTION__)

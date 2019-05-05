@@ -7,8 +7,6 @@ All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/* @link */
-
 #pragma once
 #include <pch.h>
 
@@ -26,7 +24,7 @@ using namespace _;
 namespace script2 {
 template <typename Char>
 void _06_Strand() {
-  PRINTF("\n\nTesting UTF<CH%c>", '0' + sizeof(Char));
+  PRINTF("\n\nTesting TStrand<CH%c>\n\n", '0' + sizeof(Char));
 
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
@@ -36,21 +34,13 @@ void _06_Strand() {
     kCharSizeChar = '0' + sizeof(Char),
   };
 
-  TStrand<Char> strand("Testing ");
-  SOut cout;
-  strand.PrintTo<SOut>(cout);
-
   PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
+  TStrand<Char> strand("Testing ");
   strand << 1;
-  strand.PrintTo<SOut>(cout);
   strand << ", ";
-  strand.PrintTo<SOut>(cout);
   strand << 2;
-  strand.PrintTo<SOut>(cout);
   strand << ", ";
-  strand.PrintTo<SOut>(cout);
   strand << 3;
-  strand.PrintTo<SOut>(cout);
   PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
   const Char* cursor = strand.Find(kTesting123);
   ASSERT(cursor);
@@ -62,16 +52,18 @@ static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end,
 #if SEAM >= SCRIPT2_6
   TEST_BEGIN;
 
-  PRINT("\n\nTesting TStrand...\n");
+  PRINT("\n\nTesting TStrand<>...\n");
 
   _06_Strand<CH1>();
   _06_Strand<CH2>();
   _06_Strand<CH4>();
 
-  PRINT("\n\nPushing items on to the Stack...\n");
+  PRINT("\n\nTesting TStack<SI4>...\n\nPrinting empty stack...\n");
 
   TStack<SI4> stack(8);
   stack.Print();
+
+  PRINT("\n\nPushing items on to the Stack...\n");
   stack.Push(0);
   PRINT_SOCKET_TOBJ(stack.TObj());
 

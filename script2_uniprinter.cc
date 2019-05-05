@@ -9,9 +9,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "t_uniprinter.h"
-
 #include <cmath>
+
+#include "t_uniprinter.h"
 
 namespace _ {
 CH1 HexNibbleToUpperCase(UI1 b) {
@@ -44,7 +44,7 @@ const CH1* STRSocketHexBorder() {
 namespace _ {
 
 /*
-SI4 TStrandLength(UI8 value) {
+SI4 TSTRLength(UI8 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
@@ -578,6 +578,46 @@ CH4* Print(CH4* start, CH4* stop, CH4 c) {
 
 #endif
 
+UI1 ToUnsigned(CH1 value) { return (UI1)value; }
+UI2 ToUnsigned(CH2 value) { return (UI2)value; }
+UI4 ToUnsigned(CH4 value) { return (UI4)value; }
+UIN ToUnsigned(CHN value) { return (UIN)value; }
+UI1 ToUnsigned(SI1 value) { return (UI1)value; }
+UI2 ToUnsigned(SI2 value) { return (UI2)value; }
+UI4 ToUnsigned(SI4 value) { return (UI4)value; }
+UI8 ToUnsigned(SI8 value) { return (UI4)value; }
+UI1 ToUnsigned(UI1 value) { return (UI1)value; }
+UI2 ToUnsigned(UI2 value) { return (UI2)value; }
+UI4 ToUnsigned(UI4 value) { return (UI4)value; }
+UI8 ToUnsigned(UI8 value) { return (UI8)value; }
+UIW ToUnsigned(const void* value) { return reinterpret_cast<UIW>(value); }
+#if USING_FP4 == YES
+UI4 ToUnsigned(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
+#endif
+#if USING_FP8 == YES
+UI8 ToUnsigned(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
+#endif
+
+SI1 ToSigned(CH1 value) { return (SI1)value; }
+SI2 ToSigned(CH2 value) { return (SI2)value; }
+SI4 ToSigned(CH4 value) { return (SI4)value; }
+SIN ToSigned(CHN value) { return (SIN)value; }
+SI1 ToSigned(UI1 value) { return (SI1)value; }
+SI2 ToSigned(UI2 value) { return (SI2)value; }
+SI4 ToSigned(UI4 value) { return (SI4)value; }
+SI8 ToSigned(UI8 value) { return (SI8)value; }
+SI1 ToSigned(SI1 value) { return (SI1)value; }
+SI2 ToSigned(SI2 value) { return (SI2)value; }
+SI4 ToSigned(SI4 value) { return (SI4)value; }
+SI8 ToSigned(SI8 value) { return (SI8)value; }
+SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
+#if USING_FP4 == YES
+SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
+#endif
+#if USING_FP8 == YES
+SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
+#endif
+
 Hex::Hex(const void* ptr)
     : begin(reinterpret_cast<const UI1*>(&begin)),
       size_bytes(sizeof(const void*)) {}
@@ -673,7 +713,6 @@ Binary::Binary(const SI8* begin)
     : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
 Binary::Binary(const UI8* begin)
     : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
-
 #if USING_FP8 == YES
 Binary::Binary(const FP4* begin)
     : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
@@ -682,8 +721,6 @@ Binary::Binary(const FP4* begin)
 Binary::Binary(const FP8* begin)
     : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
 #endif
-
-Char::Char(CHN ch) : ch(ch) {}
 
 }  // namespace _
 #endif

@@ -27,6 +27,50 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="16_seam.s2" />
+    <None Include="global.inl" />
+    <None Include="global_config.inl" />
+    <None Include="global_debug.inl" />
+    <None Include="global_footer.inl" />
+    <None Include="global_release.inl" />
+    <None Include="global_seams.inl" />
+    <None Include="module_debug.inl" />
+    <None Include="module_footer.inl" />
+    <None Include="module_release.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="module_tester.cc" />
+    <ClCompile Include="pch.cc" />
+    <ClCompile Include="script2_ascii.cc" />
+    <ClCompile Include="script2_benchmark.cc" />
+    <ClCompile Include="script2_bin.cc" />
+    <ClCompile Include="script2_bout.cc" />
+    <ClCompile Include="script2_bsq.cc" />
+    <ClCompile Include="script2_clock.cc" />
+    <ClCompile Include="script2_crabs.cc" />
+    <ClCompile Include="script2_error.cc" />
+    <ClCompile Include="script2_event.cc" />
+    <ClCompile Include="script2_floor.cc" />
+    <ClCompile Include="script2_hash.cc" />
+    <ClCompile Include="script2_interrupts.cc" />
+    <ClCompile Include="script2_lock.cc" />
+    <ClCompile Include="script2_morsecode.cc" />
+    <ClCompile Include="script2_object.cc" />
+    <ClCompile Include="script2_op.cc" />
+    <ClCompile Include="script2_operand.cc" />
+    <ClCompile Include="script2_rng.cc" />
+    <ClCompile Include="script2_room.cc" />
+    <ClCompile Include="script2_sin.cc" />
+    <ClCompile Include="script2_slot.cc" />
+    <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_sout.cc" />
+    <ClCompile Include="script2_test.cc" />
+    <ClCompile Include="script2_uniprinter.cc" />
+    <ClCompile Include="script2_utf.cc" />
+    <ClCompile Include="script2_vk.cc" />
+    <ClCompile Include="script2_wall.cc" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="00_rng.h" />
     <ClInclude Include="01_itos_stoi.h" />
     <ClInclude Include="02_socket.h" />
@@ -52,7 +96,6 @@
     <ClInclude Include="c_bout.h" />
     <ClInclude Include="c_bsq.h" />
     <ClInclude Include="c_buffer.h" />
-    <ClInclude Include="c_sin.h" />
     <ClInclude Include="c_clock.h" />
     <ClInclude Include="c_crabs.h" />
     <ClInclude Include="c_error.h" />
@@ -69,6 +112,7 @@
     <ClInclude Include="c_operand.h" />
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
+    <ClInclude Include="c_sin.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
     <ClInclude Include="c_sout.h" />
@@ -109,51 +153,7 @@
     <ClInclude Include="t_uniprinter.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="16_seam.s2" />
-    <None Include="global.inl" />
-    <None Include="global_config.inl" />
-    <None Include="global_debug.inl" />
-    <None Include="global_footer.inl" />
-    <None Include="global_release.inl" />
-    <None Include="global_seams.inl" />
-    <None Include="module_debug.inl" />
-    <None Include="module_footer.inl" />
-    <None Include="module_release.inl" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="module_tester.cc" />
-    <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_ascii.cc" />
-    <ClCompile Include="script2_benchmark.cc" />
-    <ClCompile Include="script2_bin.cc" />
-    <ClCompile Include="script2_bout.cc" />
-    <ClCompile Include="script2_bsq.cc" />
-    <ClCompile Include="script2_sin.cc" />
-    <ClCompile Include="script2_clock.cc" />
-    <ClCompile Include="script2_crabs.cc" />
-    <ClCompile Include="script2_error.cc" />
-    <ClCompile Include="script2_event.cc" />
-    <ClCompile Include="script2_floor.cc" />
-    <ClCompile Include="script2_hash.cc" />
-    <ClCompile Include="script2_interrupts.cc" />
-    <ClCompile Include="script2_lock.cc" />
-    <ClCompile Include="script2_morsecode.cc" />
-    <ClCompile Include="script2_object.cc" />
-    <ClCompile Include="script2_op.cc" />
-    <ClCompile Include="script2_operand.cc" />
-    <ClCompile Include="script2_rng.cc" />
-    <ClCompile Include="script2_room.cc" />
-    <ClCompile Include="script2_slot.cc" />
-    <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_sout.cc" />
-    <ClCompile Include="script2_test.cc" />
-    <ClCompile Include="script2_uniprinter.cc" />
-    <ClCompile Include="script2_utf.cc" />
-    <ClCompile Include="script2_vk.cc" />
-    <ClCompile Include="script2_wall.cc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

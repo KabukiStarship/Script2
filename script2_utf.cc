@@ -39,7 +39,7 @@ CH1 PrintableChar(CH1 item) { return TPrintableChar<CH1>(item); }
 
 const CH1* STREnd(const CH1* start) { return TSTREnd<CH1>(start); }
 
-SI4 StrandLength(const CH1* start) { return TStrandLength<CH1, SI4>(start); }
+SI4 StrandLength(const CH1* start) { return TSTRLength<CH1, SI4>(start); }
 
 const CH1* StrandLineEnd(const CH1* start, SI4 count) {
   return TSTRLineEnd<CH1>(start, count);
@@ -584,8 +584,6 @@ Headingf1::Headingf1(const CH1* caption1, const CH1* style, SI4 count,
 
 Chars1::Chars1(const CH1* start, const CH1* stop) : start(start), stop(stop) {}
 
-Hexs1::Hexs1(const CH1* begin, const CH1* end) : begin(begin), end(end) {}
-
 UTF1::UTF1(CH1* start, SIW buffer_size)
     : start(start), stop(start + buffer_size - 1) {
   DASSERT(start);
@@ -755,12 +753,9 @@ UTF1& UTF1::Binary(const void* pointer) {
   return Set(TPrintBinary<CH1>(start, stop, ptr));
 }
 
-UTF1& UTF1::Print(Hexs1 hexs) {
-  // return TPrintHexs<CH1>(hexs);
-  return *this;
+UTF1& UTF1::Print(Chars1 chars) {
+  return Set(TPrintChars<CH1>(start, stop, chars.start, chars.stop));
 }
-
-UTF1& UTF1::Print(Chars1 chars) { return *this; }
 
 Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
   TPrint1<CH1>(strand_, item);
@@ -774,6 +769,10 @@ UIW* COut1(UIW* begin, SIW function, void* arg) {
 UIW* COut1Auto(UIW* begin, SIW function, void* arg) {
   return TCOut<CH1, kHeap>(begin, function, arg);
 }*/
+
+Char1::Char1(CH1 ch) : value(ch) {}
+
+Char1 ToCharStruct(CH1 value) { return Char1(value); }
 
 }  // namespace _
 
@@ -816,7 +815,9 @@ UIW* COut1Auto(UIW* begin, SIW function, void* arg) {
   return o.Print(item);
 }
 
-::_::UTF1& operator<<(::_::UTF1& o, ::_::Hexs1 item) { return o.Print(item); }
+::_::UTF1& operator<<(::_::UTF1& o, ::_::Char1 item) {
+  return o.Print(item.value);
+}
 
 ::_::UTF1& operator<<(::_::UTF1& o, ::_::Chars1 item) { return o.Print(item); }
 
@@ -841,7 +842,7 @@ CH2 PrintableChar(CH2 item) { return TPrintableChar<CH2>(item); }
 
 const CH2* STREnd(const CH2* start) { return TSTREnd<CH2>(start); }
 
-SI4 StrandLength(const CH2* start) { return TStrandLength<CH2, SI4>(start); }
+SI4 StrandLength(const CH2* start) { return TSTRLength<CH2, SI4>(start); }
 
 const CH2* StrandLineEnd(const CH2* start, SI4 count) {
   return TSTRLineEnd<CH2>(start, count);
@@ -1230,6 +1231,10 @@ UTF2& UTF2::Print(Headingf2 item) {
                              item.caption.Count()));
 }
 
+UTF2& UTF2::Print(Chars2 item) {
+  return Set(::_::PrintChars(start, stop, item.start, item.stop));
+}
+
 UTF2& UTF2::Print(::_::Hex item) {
   return Set(::_::TPrintHex<CH2>(start, stop, item.begin, item.size_bytes));
 }
@@ -1250,8 +1255,12 @@ UTF2& UTF2::Hex(UI8 item) { return Set(TPrintHex<CH2>(start, stop, item)); }
 
 UTF2& UTF2::Hex(SI8 item) { return Set(TPrintHex<CH2>(start, stop, item)); }
 
-UTF2& UTF2::Hex(const void* ptr) {
-  return Set(TPrintHex<CH2>(start, stop, ptr));
+UTF2& UTF2::Hex(const void* item) {
+  return Set(TPrintHex<CH2>(start, stop, item));
+}
+
+UTF2& UTF2::Hex(const void* item, SIW size_bytes) {
+  return Set(TPrintHex<CH2>(start, stop, item, size_bytes));
 }
 
 UTF2& UTF2::Binary(UI1 item) {
@@ -1530,6 +1539,10 @@ Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
       caption2(caption2),
       caption3(caption3) {}
 
+Char2::Char2(CH2 ch) : value(ch) {}
+
+Char2 ToCharStruct(CH2 value) { return Char2(value); }
+
 }  // namespace _
 
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::UTF2& p) { return o; }
@@ -1570,6 +1583,12 @@ Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item) {
   return o.Print(item);
 }
+
+::_::UTF2& operator<<(::_::UTF2& o, ::_::Char2 item) {
+  return o.Print(item.value);
+}
+
+::_::UTF2& operator<<(::_::UTF2& o, ::_::Chars2 item) { return o.Print(item); }
 #endif  //< #if USING_UTF16
 
 #if USING_UTF32 == YES
@@ -1591,7 +1610,7 @@ CH4 PrintableChar(CH4 item) { return TPrintableChar<CH4>(item); }
 
 const CH4* STREnd(const CH4* start) { return TSTREnd<CH4>(start); }
 
-SI4 StrandLength(const CH4* start) { return TStrandLength<CH4, SI4>(start); }
+SI4 StrandLength(const CH4* start) { return TSTRLength<CH4, SI4>(start); }
 
 const CH4* StrandLineEnd(const CH4* start, SI4 count) {
   return TSTRLineEnd<CH4>(start, count);
@@ -1984,7 +2003,7 @@ UTF4& UTF4::Print(Headingf4 item) {
 }
 
 UTF4& UTF4::Print(::_::Hex item) {
-  return Set(::_::TPrintHex<CH2>(start, stop, item.begin, item.size_bytes));
+  return Set(::_::TPrintHex<CH4>(start, stop, item.begin, item.size_bytes));
 }
 
 UTF4& UTF4::Hex(UI1 item) { return Set(TPrintHex<CH4>(start, stop, item)); }
@@ -2236,13 +2255,17 @@ Headingf4::Headingf4(const CH4* caption, const CH4* style, SI4 count,
       caption2(caption2),
       caption3(caption3) {}
 
+Char4::Char4(CH4 value) : value(value) {}
+
+Chars4::Chars4(const CH4* start, const CH4* stop) : start(start), stop(stop) {}
+
 }  // namespace _
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& p) { return o; }
 
-::_::UTF4& operator<<(::_::UTF4& o, const CH4* item) { return o.Print(item); }
-
 ::_::UTF4& operator<<(::_::UTF4& o, CH4 item) { return o.Print(item); }
+
+::_::UTF4& operator<<(::_::UTF4& o, const CH4* item) { return o.Print(item); }
 
 ::_::UTF4& operator<<(::_::UTF4& o, UI1 item) { return o.Print(item); }
 
@@ -2275,6 +2298,14 @@ Headingf4::Headingf4(const CH4* caption, const CH4* style, SI4 count,
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item) {
   return o.Print(item);
+}
+
+::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item) {
+  return o.Print(item.value);
+}
+
+::_::UTF4& operator<<(::_::UTF4& o, ::_::Chars4 item) {
+  return ::_::TPrintChars<::_::UTF4>(o, item.start, item.stop);
 }
 
 #endif
