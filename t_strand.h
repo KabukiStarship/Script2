@@ -1937,10 +1937,10 @@ class TStrand {
     PRINT(item);
     PRINT('\"');
     PrintTo<SOut>(SOut().Star());
-
-    start = ::_::Print(start, stop, item);
-    if (!start) {
+    auto cursor = ::_::Print(start, stop, item);
+    if (!cursor) {
       *utf_.start = 0;  //< Replace the delimiter so we can copy the string.
+      SIW count = stop - start;
       do {
         PRINT("\nPrint failed, attempting to auto-grow from ");
         AsciiFactory af = obj_.Factory(), af2 = FactoryStack;
@@ -1958,14 +1958,19 @@ class TStrand {
                  STRAsciiFactoryError(result));
           return *this;
         }
-        start = ::_::Print(start, stop, item);
-        PRINTF("\nRe-printed:\"%s\"\n", utf_.start);
-        if (!start) PRINT(" Print failed again.");
-      } while (!start);
+        start = TSTRStart<Char>(obj_.Begin()),
+        stop = start + ((count + 1) << 1);
+        utf_.stop = stop;
+
+        // Reset the
+        cursor = ::_::Print(start, stop, item);
+        PRINTF("\nRe-printed:\"%s\"\n", start);
+        if (!cursor) PRINT(" Print failed again.");
+      } while (!cursor);
     } else {
       PRINTF("\nPrinted:\"%s\"\n", utf_.start);
     }
-    utf_.start = start;
+    utf_.start = cursor;
     return *this;
   }
 
