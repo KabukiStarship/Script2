@@ -23,11 +23,21 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
+const CH1* STRAsciiFactoryFunction(SIN index) {
+  static const CH1 kStrings[7][8] = {"CanGrow", "Destroy", "New",    "Clone",
+                                     "Grow",    "Info",    "Invalid"};
+  if (index < 0 || index >= kFactoryFunctionCount)
+    return &kStrings[kFactoryFunctionCount][0];
+  return &kStrings[index][0];
+}
+
 const CH1* STRAsciiFactoryError(SIN index) {
-  static const CH1 kStrings[6][22] = {
-      "Factory Success\0", "Factory nil\0",        "Factory nil OBJ\0",
-      "Factory nil arg\0", "Factory out of RAM\0", "Factory size invalid\0"};
-  if (index < 0 || index >= 5) return &kStrings[6][0];
+  static const CH1 kStrings[7][21] = {
+      "Factory Success", "Factory nil",        "Factory nil OBJ",
+      "Factory nil arg", "Factory out of RAM", "Factory size invalid",
+      "Invalid"};
+  if (index < 0 || index >= kFactoryErrorCount)
+    return &kStrings[kFactoryErrorCount][0];
   return &kStrings[index][0];
 }
 

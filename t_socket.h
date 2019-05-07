@@ -15,7 +15,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define SCRIPT2_KABUKI_TSOCKET
 
 #include "c_socket.h"
-
 #include "c_uniprinter.h"
 
 namespace _ {
@@ -166,7 +165,7 @@ inline T* TAlignUp2(const void* pointer) {
 }
 
 /* Returns the N in 2^N for the sizeof (I). */
-template <typename I>
+template <typename I = SIW>
 inline SI4 TBitShiftCount() {
   return (sizeof(I) == 1)
              ? 0

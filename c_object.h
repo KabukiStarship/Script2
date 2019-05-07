@@ -38,12 +38,13 @@ struct CObject {
 };
 
 enum AsciiFactoryFunctions {
-  kFactoryCanGrow = 0,  //< AsciiFactory function checks if the size can double.
-  kFactoryDestroy = 1,  //< AsciiFactory function deletes an OBJ.
-  kFactoryNew = 2,      //< AsciiFactory function creates a new OBJ.
-  kFactoryClone = 3,    //< AsciiFactory function clones the OBJ.
-  kFactoryGrow = 4,     //< AsciiFactory function double OBJ size in bytes.
-  kFactoryInfo = 5,     //< AsciiFactory function gets the info string.
+  kFactoryCanGrow = 0,  //< Factory function checks if the size can double.
+  kFactoryDestroy = 1,  //< Factory function deletes an OBJ.
+  kFactoryNew = 2,      //< Factory function creates a new OBJ.
+  kFactoryClone = 3,    //< Factory function clones the OBJ.
+  kFactoryGrow = 4,     //< Factory function double OBJ size in bytes.
+  kFactoryInfo = 5,     //< Factory function gets the info string.
+  kFactoryFunctionCount = 6,  //< Factory function count.
 };
 
 enum AsciiFactoryErrors {
@@ -51,9 +52,13 @@ enum AsciiFactoryErrors {
   kFactoryNil = 1,          //< Factory missing error.
   kFactoryNilOBJ = 2,       //< Factory found nil obj.begin pointer error.
   kFactoryNilArg = 3,       //< Factory arg nil error.
-  kFactoryOutOfRAM = 4,     //< Factory out of memory error.
-  kFactorySizeInvalid = 5,  //< Factory ASCII Type Size limit reached error.
+  kFactoryCantGrow = 4,     //< Factory can't grow.
+  kFactorySizeInvalid = 5,  //< Factory size invalid.
+  kFactoryErrorCount = 6,   //< Factory function count.
 };
+
+/* An array of strings corresponding to the AsciiFactoryFunctions. */
+SDK const CH1* STRAsciiFactoryFunction(SIN function);
 
 /* Gets an AsciiFactoryErrors string by index. */
 SDK const CH1* STRAsciiFactoryError(SIN index);

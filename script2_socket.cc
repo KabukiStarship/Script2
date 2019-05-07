@@ -145,6 +145,14 @@ CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
 
 CH1* SocketWipe(void* begin, void* end) { return SocketFill(begin, end, 0); }
 
+CH1* SocketWipe(CH2* begin, CH2* end) {
+  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 1, 0);
+}
+
+CH1* SocketWipe(CH2* begin, CH4* end) {
+  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 3, 0);
+}
+
 CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
 
 CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {

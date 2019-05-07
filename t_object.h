@@ -79,6 +79,11 @@ inline Size TObjSize(CObject obj, Size size) {
   return TObjSize<Size>(obj.begin, size);
 }
 
+template <typename Size>
+inline void TObjSizeSet(UIW* begin, Size size) {
+  *reinterpret_cast<Size*>(object) = size;
+}
+
 /* The maximum object size.
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
@@ -100,15 +105,15 @@ inline BOL TObjCountIsValid(SI index, SI count_min) {
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
 UIW* TObjNew(Size size) {
-  UIW* obj_begin;
+  UIW* begin;
   try {
-    obj_begin = new UIW[size];
+    begin = new UIW[size >> TBitShiftCount<>()];
   } catch (const std::bad_alloc& exception) {
     ObjException(exception.what());
     return nullptr;
   }
-  *reinterpret_cast<Size*>(obj_begin) = size;
-  return obj_begin;
+  *reinterpret_cast<Size*>(begin) = size;
+  return begin;
 }
 
 /* Clones the other ASCII CObject including possibly unused object space.
@@ -145,7 +150,7 @@ SIN TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
+  if (!TObjCanGrow<Size>(new_size)) return kFactorySizeInvalid;
   size = size << 1;  // size *= 2;
   obj.begin = TObjClone<Size>(begin, size);
   return kFactorySuccess;
@@ -154,21 +159,17 @@ SIN TObjGrow(CObject& obj, Size new_size) {
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
-template <typename Size, BOL kHeap_>
-SIN TObjGrow(CObject& obj, Size new_size) {
-  UIW* begin = obj.begin;
-  if (!begin) return kFactoryNilOBJ;
-  Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size>(size)) return kFactorySizeInvalid;
-  size = size << 1;  // size *= 2;
-  obj.begin = TObjClone<Size>(begin, size);
-  if (kHeap_) delete[] begin;
-  return kFactorySuccess;
+template <typename Size>
+UIW* TObjGrowDouble(UIW* begin) {
+  if (!begin) return nullptr;
+  Size size = TObjSize<Size>(begin) << 1;
+  if (!TObjCanGrow<Size>(size)) return nullptr;
+  return TObjNew<Size>(size);
 }
 
 template <typename Size>
 inline SI4 TObjCanGrow(CObject& obj) {
-  return TObjGrow(obj, TObjSize<Size>(obj) * 2);
+  return TObjGrow(obj, TObjSize<Size>(obj) << 1);
 }
 
 /* Gets the last UI1 in the ASCII Object.
@@ -240,7 +241,7 @@ class TObject {
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
   TObject(Size size, UIW* socket = nullptr, AsciiFactory factory = nullptr)
-      : obj_({TObjInit<Size>(socket, size), factory}) {}
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */

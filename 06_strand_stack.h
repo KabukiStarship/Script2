@@ -35,13 +35,18 @@ void _06_Strand() {
   };
 
   PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
-  TStrand<Char> strand("Testing ");
+  TStrand<Char, 8> strand;
+  strand.Wipe();
+  strand.PrintConstants();
+  strand << "Testing ";
   strand << 1;
   strand << ", ";
   strand << 2;
   strand << ", ";
   strand << 3;
+  PRINT("\nResult:");
   PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
+
   const Char* cursor = strand.Find(kTesting123);
   ASSERT(cursor);
 }
