@@ -3,18 +3,17 @@
 @file    \02_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
+#include "c_sout.h"
 #include "t_socket.h"
 #include "t_strand.h"
 #include "t_test.h"
-
-#include "c_sout.h"
 
 #if SEAM == SCRIPT2_2
 #include "module_debug.inl"
@@ -52,4 +51,4 @@ static const CH1* _02_Socket(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

@@ -92,7 +92,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
     PRINTF("\nInvalid hour:%i", h);
     return nullptr;
   }
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   if (h < 0) {
     PRINTF("\nHours:%i can't be negative.", h);
     return nullptr;
@@ -145,7 +145,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
       "HH:MM:SSpm");
 
   if (!TScanSigned<SI4, UI4, Char>(string, m)) return nullptr;
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   if (m < 0) {
     PRINTF("\nMinutes:%i can't be negative!", m);
     return nullptr;
@@ -156,7 +156,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
   }
   PRINTF(":%i", m);
 
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   c = *string++;
   if (!c || TIsWhitespace<Char>(c)) {
     PRINT(" HH:MM ");
@@ -207,7 +207,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
     return nullptr;
   }
   PRINTF(":%i", s);
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   c = TLowercase<Char>(*string);
   if (!c || TIsWhitespace<Char>(c)) {
     PRINTF(" HH:MM:SS ");

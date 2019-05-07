@@ -419,18 +419,20 @@ struct SDK Headingf1 {
             const CH1* caption3 = nullptr);
 };
 
+struct SDK Char1 {
+  CH1 value;  //< A Unicode value.
+
+  Char1(CH1 ch);  //< Stores the value.
+};
+
+// Utility function for force printing a CH1 using operator overloads.
+SDK Char1 ToCharStruct(CH1 value);
+
 struct SDK Chars1 {
   const CH1 *start,  //< Start character address.
       *stop;         //< Stop character address.
 
   Chars1(const CH1* start, const CH1* stop);
-};
-
-struct SDK Hexs1 {
-  const CH1 *begin,  //< Begin byte address.
-      *end;          //< End byte address.
-
-  Hexs1(const CH1* start, const CH1* stop);
 };
 
 /* Utility class for printing strings.
@@ -469,11 +471,14 @@ struct SDK UTF1 {
   /*inline*/ UTF1& Print(UI4 item);
   /*inline*/ UTF1& Print(SI8 item);
   /*inline*/ UTF1& Print(UI8 item);
+
+  /*inline*/ UTF1& Print(::_::Hex item);
+
   /*inline*/ UTF1& Print(Right1 item);
   /*inline*/ UTF1& Print(Center1 item);
   /*inline*/ UTF1& Print(Linef1 item);
   /*inline*/ UTF1& Print(Headingf1 item);
-  /*inline*/ UTF1& Print(::_::Hex item);
+  /*inline*/ UTF1& Print(Chars1 chars);
 
   /* Prints the given item as hex. */
   /*inline*/ UTF1& Hex(SI1 item);
@@ -507,9 +512,6 @@ struct SDK UTF1 {
   /*inline*/ UTF1& Hex(FP8 item);
   /*inline*/ UTF1& Binary(FP8 item);
 #endif
-
-  UTF1& Print(Hexs1 hexs);
-  UTF1& Print(Chars1 chars);
 };
 
 #if USING_STR == UTF8
@@ -523,8 +525,9 @@ using CRows = Headingf1;
 }  // namespace _
 
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
+
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI2 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI2 item);
@@ -532,20 +535,18 @@ SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI4 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI4 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, SI8 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI8 item);
-
 #if USING_FP4 == YES
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP4 item);
 #endif
 #if USING_FP8 == YES
 SDK ::_::UTF1& operator<<(::_::UTF1& utf, FP8 item);
 #endif
-
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hex item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Hexs1 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
 // SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf,
 //                                 const ::_::Wildcard& type_value);

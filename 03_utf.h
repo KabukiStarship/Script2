@@ -3,18 +3,17 @@
 @file    \03_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
+#include "c_sout.h"
 #include "t_socket.h"
 #include "t_strand.h"
 #include "t_test.h"
-
-#include "c_sout.h"
 
 #if SEAM == SCRIPT2_3
 #include "module_debug.inl"
@@ -111,7 +110,7 @@ static const Char* _03_UTF() {
   ASSERT(TSTREquals<Char>(kCompareStrands[2], kCompareStrands[2]));
 
   const Char k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
-  AVOW(9, TStrandLength<Char>(k1to9));
+  AVOW(9, TSTRLength<Char>(k1to9));
 
   PRINTF("\n\nTesting TSTRFind<Char>");
 
@@ -142,7 +141,7 @@ static const Char* _03_UTF() {
     cursor = TPrintRight<Char>(str_a, str_a + kCount - 1, kTestingSpace, i + 1);
     PRINT_CHARS(str_a, 64);
     ASSERT_INDEX(cursor, i);
-    PRINTF("\n    Wrote:\"%s\":%i", str_a, TStrandLength<Char>(str_a));
+    PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
     AVOW_INDEX(&kRightAligned[i][0], str_a, i);
   }
   PRINT_HEADING("Testing TPrintCenter<Char>");
@@ -170,7 +169,7 @@ static const Char* _03_UTF() {
     cursor = TPrintCenter<Char>(str_a, str_a + kCount - 1, kNumbers, i + 1);
     PRINT_CHARS(str_a, 64);
     ASSERT_INDEX(cursor, i);
-    PRINTF("\n    Wrote:\"%s\":%i", str_a, TStrandLength<Char>(str_a));
+    PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
     AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 

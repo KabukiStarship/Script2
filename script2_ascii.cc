@@ -295,7 +295,7 @@ inline CH1* WriteStrand(CH1* begin, CH1* stop, const void* value) {
   begin = AlignUpPointer<CH1>(begin);
   if (stop - begin < 2 * sizeof(UI)) return nullptr;
   const Char* source = reinterpret_cast<const Char*>(value);
-  UI length = TStrandLength<UI, Char>(source);
+  UI length = TSTRLength<UI, Char>(source);
   UI* target = reinterpret_cast<UI*>(begin);
   *target++ = length;
   return SocketCopy(target, stop, value, length + sizeof(Char));

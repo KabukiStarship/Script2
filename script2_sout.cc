@@ -57,15 +57,11 @@ void PrintChar(CH4 c) {
   std::wcout << c;  //< @todo This isn't working???
 }
 
-void Print(const CH4* item) {
-  TPrintString<std::wostream, CH4>(std::wcout, item);
-}
+void Print(const CH4* item) { TPrintString<SOut, CH4>(SOut().Star(), item); }
 
 void Print(CH4 c) { PrintChar(c); }
 
-void Print(const CH2* item) {
-  TPrintString<std::wostream, CH2>(std::wcout, item);
-}
+void Print(const CH2* item) { TPrintString<SOut, CH2>(SOut().Star(), item); }
 
 void PrintChar(CH2 c) {
 #if USING_UTF32 == YES
@@ -207,106 +203,86 @@ void PrintIndent(SI4 count) {
 const CH1* PrintLinefCH1() { return TSTRLinef<CH1>(); }
 
 const CH1* PrintLinef(const CH1* style, SI4 column_count) {
-  return TPrintLinef<std::wostream, CH1>(std::wcout, style, column_count);
+  return TPrintLinef<SOut, CH1>(SOut().Star(), style, column_count);
 }
 
 void PrintLinef(CH1 token, SI4 column_count) {
-  TPrintLinef<std::wostream, CH1>(std::wcout, token, column_count);
+  TPrintLinef<SOut, CH1>(SOut().Star(), token, column_count);
 }
 
 void PrintHeadingf(const CH1* caption, const CH1* style, SI4 column_count,
                    const CH1* caption2, const CH1* caption3) {
-  TPrintHeadingf<std::wostream, CH1>(std::wcout, caption, style, column_count,
-                                     caption2, caption3);
+  TPrintHeadingf<SOut, CH1>(SOut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 
-void PrintBinary(UI1 value) {
-  TPrintBinary<std::wostream, UI1>(std::wcout, value);
-}
+void PrintBinary(UI1 value) { TPrintBinary<SOut, UI1>(SOut().Star(), value); }
 
 void PrintBinary(SI1 value) {
-  TPrintBinary<std::wostream, UI1>(std::wcout, (UI1)value);
+  TPrintBinary<SOut, UI1>(SOut().Star(), (UI1)value);
 }
 
-void PrintBinary(UI2 value) {
-  TPrintBinary<std::wostream, UI2>(std::wcout, value);
-}
+void PrintBinary(UI2 value) { TPrintBinary<SOut, UI2>(SOut().Star(), value); }
 
 void PrintBinary(SI2 value) {
-  TPrintBinary<std::wostream, UI2>(std::wcout, (UI2)value);
+  TPrintBinary<SOut, UI2>(SOut().Star(), (UI2)value);
 }
 
-void PrintBinary(UI4 value) {
-  TPrintBinary<std::wostream, UI4>(std::wcout, value);
-}
+void PrintBinary(UI4 value) { TPrintBinary<SOut, UI4>(SOut().Star(), value); }
 
-void PrintBinary(SI4 value) {
-  TPrintBinary<std::wostream, UI4>(std::wcout, value);
-}
+void PrintBinary(SI4 value) { TPrintBinary<SOut, UI4>(SOut().Star(), value); }
 
-void PrintBinary(UI8 value) {
-  TPrintBinary<std::wostream, UI8>(std::wcout, value);
-}
+void PrintBinary(UI8 value) { TPrintBinary<SOut, UI8>(SOut().Star(), value); }
 
-void PrintBinary(SI8 value) {
-  TPrintBinary<std::wostream, UI8>(std::wcout, value);
-}
+void PrintBinary(SI8 value) { TPrintBinary<SOut, UI8>(SOut().Star(), value); }
 
 void PrintBinary(FP4 value) {
-  TPrintBinary<std::wostream, UI4>(std::wcout, *reinterpret_cast<UI4*>(&value));
+  TPrintBinary<SOut, UI4>(SOut().Star(), *reinterpret_cast<UI4*>(&value));
 }
 
 void PrintBinary(FP8 value) {
-  TPrintBinary<std::wostream, UI8>(std::wcout, *reinterpret_cast<UI8*>(&value));
+  TPrintBinary<SOut, UI8>(SOut().Star(), *reinterpret_cast<UI8*>(&value));
 }
 
 void PrintBinary(const void* ptr) {
-  TPrintBinary<std::wostream, UIW>(std::wcout, *reinterpret_cast<UIW*>(&ptr));
+  TPrintBinary<SOut, UIW>(SOut().Star(), *reinterpret_cast<UIW*>(&ptr));
 }
 
-void PrintHex(CH1 value) { TPrintHex<std::wostream, UI1>(std::wcout, value); }
+void PrintHex(CH1 value) { TPrintHex<SOut, UI1>(SOut().Star(), value); }
 
-void PrintHex(CH2 value) { TPrintHex<std::wostream, UI2>(std::wcout, value); }
+void PrintHex(CH2 value) { TPrintHex<SOut, UI2>(SOut().Star(), value); }
 
-void PrintHex(CH4 value) { TPrintHex<std::wostream, UI4>(std::wcout, value); }
+void PrintHex(CH4 value) { TPrintHex<SOut, UI4>(SOut().Star(), value); }
 
-void PrintHex(UI1 value) { TPrintHex<std::wostream, UI1>(std::wcout, value); }
+void PrintHex(UI1 value) { TPrintHex<SOut, UI1>(SOut().Star(), value); }
 
-void PrintHex(SI1 value) {
-  TPrintHex<std::wostream, UI1>(std::wcout, (UI1)value);
-}
+void PrintHex(SI1 value) { TPrintHex<SOut, UI1>(SOut().Star(), (UI1)value); }
 
-void PrintHex(UI2 value) { TPrintHex<std::wostream, UI2>(std::wcout, value); }
+void PrintHex(UI2 value) { TPrintHex<SOut, UI2>(SOut().Star(), value); }
 
-void PrintHex(SI2 value) {
-  TPrintHex<std::wostream, UI2>(std::wcout, (UI2)value);
-}
+void PrintHex(SI2 value) { TPrintHex<SOut, UI2>(SOut().Star(), (UI2)value); }
 
-void PrintHex(UI4 value) { TPrintHex<std::wostream, UI4>(std::wcout, value); }
+void PrintHex(UI4 value) { TPrintHex<SOut, UI4>(SOut().Star(), value); }
 
-void PrintHex(SI4 value) {
-  TPrintHex<std::wostream, UI4>(std::wcout, (UI4)value);
-}
+void PrintHex(SI4 value) { TPrintHex<SOut, UI4>(SOut().Star(), (UI4)value); }
 
-void PrintHex(UI8 value) { TPrintHex<std::wostream, UI8>(std::wcout, value); }
+void PrintHex(UI8 value) { TPrintHex<SOut, UI8>(SOut().Star(), value); }
 
-void PrintHex(SI8 value) {
-  TPrintHex<std::wostream, UI8>(std::wcout, (UI8)value);
-}
+void PrintHex(SI8 value) { TPrintHex<SOut, UI8>(SOut().Star(), (UI8)value); }
 
 void PrintHex(FP4 value) {
   UI4 f = *reinterpret_cast<UI4*>(&value);
-  TPrintHex<std::wostream, UI4>(std::wcout, f);
+  TPrintHex<SOut, UI4>(SOut().Star(), f);
 }
 
 void PrintHex(FP8 value) {
   UI8 f = *reinterpret_cast<UI8*>(&value);
-  TPrintHex<std::wostream, UI8>(std::wcout, f);
+  TPrintHex<SOut, UI8>(SOut().Star(), f);
 }
 
 void PrintHex(const void* ptr) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  TPrintHex<std::wostream, UIW>(std::wcout, value);
+  TPrintHex<SOut, UIW>(SOut().Star(), value);
 }
 
 void PrintHex(const void* begin, const void* end) {
@@ -342,23 +318,12 @@ void PrintHex(const void* begin, const void* end) {
 }
 
 void PrintHex(const void* begin, SIW size_bytes) {
-  TPrintHex<std::wostream>(std::wcout, begin, size_bytes);
+  TPrintHex<SOut>(SOut().Star(), begin, size_bytes);
 }
-
-}  // namespace _
-
-std::wostream& operator<<(std::wostream& o, ::_::Char c) { return o << c.ch; }
-
-std::wostream& operator<<(std::wostream& o, ::_::Hex hex) {
-  return ::_::TPrintHex<std::wostream>(o, hex.begin, hex.size_bytes);
-}
-
-namespace _ {
 
 void PrintChars(const void* begin, const void* end) {
-  TPrintChars<std::wostream, CH1>(std::wcout,
-                                  reinterpret_cast<const CH1*>(begin),
-                                  reinterpret_cast<const CH1*>(end));
+  TPrintChars<SOut, CH1>(SOut().Star(), reinterpret_cast<const CH1*>(begin),
+                         reinterpret_cast<const CH1*>(end));
 }
 
 void PrintChars(const void* start, SIW count) {
@@ -369,91 +334,94 @@ void PrintChars(const void* start, SIW count) {
 #if USING_UTF16 == YES
 
 void PrintChars(const CH2* start, const CH2* stop) {
-  TPrintChars<std::wostream, CH2>(std::wcout, start, stop);
+  TPrintChars<SOut, CH2>(SOut().Star(), start, stop);
 }
 
 void PrintChars(const CH2* start, SI4 count) {
-  TPrintChars<std::wostream, CH2>(std::wcout, start, count);
+  TPrintChars<SOut, CH2>(SOut().Star(), start, count);
 }
 
 void PrintRight(const CH2* start, SI4 count) {
-  TPrintRight<std::wostream, CH2>(std::wcout, start, count);
+  TPrintRight<SOut, CH2>(SOut().Star(), start, count);
 }
 
 void PrintCenter(const CH2* item, SI4 count) {
-  TPrintCenter<std::wostream, CH2>(std::wcout, item, count);
+  TPrintCenter<SOut, CH2>(SOut().Star(), item, count);
 }
 
 const CH2* PrintLinefCH2() { return TSTRLinef<CH2>(); }
 
 const CH2* PrintLinef(const CH2* style, SI4 count) {
-  return TPrintLinef<std::wostream, CH2>(std::wcout, style, count);
+  return TPrintLinef<SOut, CH2>(SOut().Star(), style, count);
 }
 
 void PrintLinef(CH2 token, SI4 count) {
-  TPrintLinef<std::wostream, CH2>(std::wcout, token, count);
+  TPrintLinef<SOut, CH2>(SOut().Star(), token, count);
 }
 
 void PrintHeadingf(const CH2* caption, const CH2* style, SI4 column_count,
                    const CH2* caption2, const CH2* caption3) {
-  TPrintHeadingf<std::wostream, CH2>(std::wcout, caption, style, column_count,
-                                     caption2, caption3);
+  TPrintHeadingf<SOut, CH2>(SOut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 
 #endif
 
 #if USING_UTF32 == YES
 void PrintChars(const CH4* start, SIW count) {
-  TPrintChars<std::wostream, CH4>(std::wcout, start, start + count);
+  TPrintChars<SOut, CH4>(SOut().Star(), start, start + count);
 }
 
 void PrintChars(const CH4* start, const CH4* stop) {
-  TPrintChars<std::wostream, CH4>(std::wcout, start, stop);
+  TPrintChars<SOut, CH4>(SOut().Star(), start, stop);
 }
 
 void PrintChars(const CH4* start, SI4 count) {
-  TPrintChars<std::wostream, CH4>(std::wcout, start, count);
+  TPrintChars<SOut, CH4>(SOut().Star(), start, count);
 }
 
 void PrintRight(const CH4* start, SI4 count) {
-  TPrintRight<std::wostream, CH4>(std::wcout, start, count);
+  TPrintRight<SOut, CH4>(SOut().Star(), start, count);
 }
 
 void PrintCenter(const CH4* item, SI4 count) {
-  TPrintCenter<std::wostream, CH4>(std::wcout, item, count);
+  TPrintCenter<SOut, CH4>(SOut().Star(), item, count);
 }
 
 const CH4* PrintLinefCH4() { return TSTRLinef<CH4>(); }
 
 const CH4* PrintLinef(const CH4* style, SI4 count) {
-  return TPrintLinef<std::wostream, CH4>(std::wcout, style, count);
+  return TPrintLinef<SOut, CH4>(SOut().Star(), style, count);
 }
 
 void PrintLinef(CH4 token, SI4 count) {
-  TPrintLinef<std::wostream, CH4>(std::wcout, token, count);
+  TPrintLinef<SOut, CH4>(SOut().Star(), token, count);
 }
 
 void PrintHeadingf(const CH4* caption, const CH4* style, SI4 column_count,
                    const CH4* caption2, const CH4* caption3) {
-  TPrintHeadingf<std::wostream, CH4>(std::wcout, caption, style, column_count,
-                                     caption2, caption3);
+  TPrintHeadingf<SOut, CH4>(SOut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 #endif
 
 void PrintRight(const CH1* item, SI4 count) {
-  ::_::TPrintRight<std::wostream, CH1>(std::wcout, item, count);
+  ::_::TPrintRight<SOut, CH1>(SOut().Star(), item, count);
 }
 
 void PrintCenter(const CH1* item, SI4 count) {
-  ::_::TPrintCenter<std::wostream, CH1>(std::wcout, item, count);
+  ::_::TPrintCenter<SOut, CH1>(SOut().Star(), item, count);
 }
 
 SOut::SOut() {}
 
+SOut::SOut(CH1 item) { ::_::Print(item); }
 SOut::SOut(const CH1* item) { ::_::Print(item); }
 
+SOut::SOut(CH2 item) { ::_::Print(item); }
 SOut::SOut(const CH2* item) { ::_::Print(item); }
 
+SOut::SOut(CH4 item) { ::_::Print(item); }
 SOut::SOut(const CH4* item) { ::_::Print(item); }
 
 SOut::SOut(SI1 item) { ::_::Print(item); }
@@ -545,12 +513,12 @@ SOut& SOut::Print(FP8 item) {
 #endif
 
 SOut& SOut::Print(const void* begin, SIW size_bytes) {
-  TPrintHex<std::wostream>(std::wcout, begin, size_bytes);
+  TPrintHex<SOut>(SOut().Star(), begin, size_bytes);
   return *this;
 }
 
 SOut& SOut::Print(Hex item) {
-  TPrintHex<std::wostream>(std::wcout, item.begin, item.size_bytes);
+  TPrintHex<SOut>(SOut().Star(), item.begin, item.size_bytes);
   return *this;
 }
 
@@ -572,22 +540,13 @@ SOut& SOut::Print(Linef1 item) {
 }
 
 SOut& SOut::Print(Headingf1 item) {
-  TPrintHeadingf<std::wostream, CH1>(std::wcout, item.caption.String(),
-                                     item.style, item.caption.Count(),
-                                     item.caption2, item.caption3);
+  TPrintHeadingf<SOut, CH1>(SOut().Star(), item.caption.String(), item.style,
+                            item.caption.Count(), item.caption2, item.caption3);
   return *this;
 }
 
 SOut& SOut::Print(Chars1 item) { return *this; }
 
-}  // namespace _
-std::wostream& operator<<(std::wostream& o, ::_::Chars1 chars) {
-  return ::_::TPrintChars<std::wostream>(o, chars.start, chars.stop);
-}
-
-namespace _ {
-
-SOut& SOut::Print(Hexs1 item) { return *this; }
 #endif
 
 #elif USING_STR == UTF16
@@ -682,10 +641,11 @@ SOut& SOut::Print(Headingf4 item) {
 
 ::_::SOut& operator<<(::_::SOut& o, UI8 item) { return o.Print(item); }
 
-#if SEAM >= SCRIPT2_4
-
+#if USING_FP4 == YES
 ::_::SOut& operator<<(::_::SOut& o, FP4 item) { return o.Print(item); }
+#endif
 
+#if USING_FP8 == YES
 ::_::SOut& operator<<(::_::SOut& o, FP8 item) { return o.Print(item); }
 #endif
 
@@ -705,9 +665,11 @@ SOut& SOut::Print(Headingf4 item) {
   return o.Print(item);
 }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Chars1 item) { return o.Print(item); }
+::_::SOut& operator<<(::_::SOut& o, ::_::Char1 item) {
+  return o.Print(item.value);
+}
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Hexs1 item) { return o.Print(item); }
+::_::SOut& operator<<(::_::SOut& o, ::_::Chars1 item) { return o.Print(item); }
 #endif
 
 #elif USING_STR == UTF16

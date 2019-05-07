@@ -278,6 +278,50 @@ SDK CH4* Print(CH4* cursor, CH4* stop, FP8 value);
 
 #endif
 
+/* Utility function for use in templates to convert the given value to it's
+unsigned equivalent. */
+/*inline*/ UI1 ToUnsigned(CH1 value);
+/*inline*/ UI2 ToUnsigned(CH2 value);
+/*inline*/ UI4 ToUnsigned(CH4 value);
+/*inline*/ UIN ToUnsigned(CHN value);
+/*inline*/ UI1 ToUnsigned(SI1 value);
+/*inline*/ UI2 ToUnsigned(SI2 value);
+/*inline*/ UI4 ToUnsigned(SI4 value);
+/*inline*/ UI8 ToUnsigned(SI8 value);
+/*inline*/ UI1 ToUnsigned(UI1 value);
+/*inline*/ UI2 ToUnsigned(UI2 value);
+/*inline*/ UI4 ToUnsigned(UI4 value);
+/*inline*/ UI8 ToUnsigned(UI8 value);
+/*inline*/ UIW ToUnsigned(const void* value);
+#if USING_FP4 == YES
+/*inline*/ UI4 ToUnsigned(FP4 value);
+#endif
+#if USING_FP8 == YES
+/*inline*/ UI8 ToUnsigned(FP8 value);
+#endif
+
+/* Utility function for use in templates to convert the given value to it's
+signed equivalent. */
+/*inline*/ SI1 ToSigned(CH1 value);
+/*inline*/ SI2 ToSigned(CH2 value);
+/*inline*/ SI4 ToSigned(CH4 value);
+/*inline*/ SIN ToSigned(CHN value);
+/*inline*/ SI1 ToSigned(UI1 value);
+/*inline*/ SI2 ToSigned(UI2 value);
+/*inline*/ SI4 ToSigned(UI4 value);
+/*inline*/ SI8 ToSigned(UI8 value);
+/*inline*/ SI1 ToSigned(SI1 value);
+/*inline*/ SI2 ToSigned(SI2 value);
+/*inline*/ SI4 ToSigned(SI4 value);
+/*inline*/ SI8 ToSigned(SI8 value);
+/*inline*/ SIW ToSigned(const void* value);
+#if USING_FP4 == YES
+/*inline*/ SI4 ToSigned(FP4 value);
+#endif
+#if USING_FP8 == YES
+/*inline*/ SI8 ToSigned(FP8 value);
+#endif
+
 /* Utility class for printing a POD type in hex. */
 struct Hex {
   const UI1* begin;  //< Pointer to the POD instance.
@@ -285,7 +329,7 @@ struct Hex {
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
   Hex(const void* item);
-  Hex(const void* begin, SIW size_bytes);
+  Hex(const void* item, SIW size_bytes);
   Hex(SI1& item);
   Hex(UI1& item);
   Hex(SI2& item);
@@ -353,13 +397,6 @@ struct Binary {
 #if USING_FP8 == YES
   Binary(const FP8* item);
 #endif
-};
-
-/* Utility class for force printing characters. */
-struct Char {
-  CHN ch;  //< The character to print.
-
-  Char(CHN ch);
 };
 
 }  // namespace _
