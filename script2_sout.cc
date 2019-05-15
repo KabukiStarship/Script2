@@ -43,18 +43,15 @@ const CH1* ArgsToSring(SI4 arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-void PrintChar(CH1 c) {
-  // putchar(c); This wasn't working for some reason???
-  std::wcout << c;
-}
+void PrintChar(CH1 c) { std::wcout << c; }
 
 void Print(CH1 c) { PrintChar(c); }
 
 void Print(const CH1* item) { std::cout << item; }
 
 void PrintChar(CH4 c) {
-  // wprintf_s(L"%c", (int)c);
-  std::wcout << c;  //< @todo This isn't working???
+  // wprintf_s(L"%c", c);
+  std::wcout << (CHN)c;  //< @todo This isn't working???
 }
 
 void Print(const CH4* item) { TPrintString<SOut, CH4>(SOut().Star(), item); }
@@ -67,8 +64,7 @@ void PrintChar(CH2 c) {
 #if USING_UTF32 == YES
   Print((CH4)c);
 #else
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << (CHN)c; //< @todo This isn't working
+  std::wcout << (CHN)c;  //< @todo This isn't working
 #endif
 }
 
