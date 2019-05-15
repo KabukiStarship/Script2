@@ -703,32 +703,34 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
 
 /* Prints the given socket to the SOut. */
 template <typename Char = CH1>
-Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
+Char* TPrintSocket(Char* start, Char* stop, const void* begin,
                    const void* end) {
-  ASSERT(begin || cursor || cursor < stop);
+  DASSERT(start && start < stop && begin && end);
+  if (!start || stop < start || !begin || end <= begin) return nullptr;
 
-  Char* buffer_begin = cursor;
-  const Char *address_ptr = reinterpret_cast<const Char*>(begin),
-             *address_end_ptr = reinterpret_cast<const Char*>(end);
+  Char* buffer_begin = start;
+  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
+            *address_end_ptr = reinterpret_cast<const CH1*>(end);
   SIW size = address_end_ptr - address_ptr,
       num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
   SIW num_bytes = 81 * (num_rows + 2);
-  if ((stop - cursor) <= num_bytes) {
-    PRINTF("\n    ERROR: buffer overflow trying to fit %i in %i bytes!",
-           (SI4)num_bytes, (SI4)(stop - cursor));
+  if ((stop - start) <= num_bytes) {
+    PRINTF("\nERROR: Buffer overflow trying to fit %i in %i bytes!",
+           (SIN)num_bytes, (SIN)(stop - start));
     return nullptr;
   }
-  size += num_bytes;
-  cursor = TPrint<Char>(cursor, stop, STRSocketHeader());
-  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
-  cursor = TPrintHex<Char>(cursor, stop, address_ptr);
 
-  PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
-  Char c;
+  size += num_bytes;
+  start = TPrint<Char>(start, stop, STRSocketHeader());
+  start = TPrint<Char>(start, stop, STRSocketBorder());
+  start = TPrintHex<Char>(start, stop, address_ptr);
+
+  PRINTF("\nBuffer space left:%i", (SIN)(stop - start));
+  CH1 c;
   while (address_ptr < address_end_ptr) {
-    *cursor++ = kLF;
-    *cursor++ = '|';
+    *start++ = kLF;
+    *start++ = '|';
     for (SI4 i = 0; i < 64; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
@@ -737,14 +739,48 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
         c = ' ';
       else if (c < ' ')
         c = kDEL;
-      *cursor++ = c;
+      *start++ = c;
     }
-    *cursor++ = '|';
-    *cursor++ = ' ';
-    cursor = TPrintHex<Char>(cursor, stop, address_ptr);
+    *start++ = '|';
+    *start++ = ' ';
+    start = TPrintHex<Char>(start, stop, address_ptr);
   }
-  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
-  return TPrintHex<Char>(cursor, stop, address_ptr + size);
+  start = TPrint<Char>(start, stop, STRSocketBorder());
+  return TPrintHex<Char>(start, stop, address_ptr + size);
+}
+
+/* Prints the given socket to the SOut. */
+template <typename Printer>
+Printer& TPrintSocket(Printer& o, const void* begin, const void* end) {
+  ASSERT(begin || end || begin <= end);
+
+  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
+            *address_end_ptr = reinterpret_cast<const CH1*>(end);
+  SIW size = address_end_ptr - address_ptr,
+      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+
+  SIW num_bytes = 81 * (num_rows + 2);
+  size += num_bytes;
+  o << STRSocketHeader() << STRSocketBorder();
+  TPrintHex<Printer>(o, address_ptr);
+  CH1 c;
+  while (address_ptr < address_end_ptr) {
+    o << kLF << '|';
+    for (SI4 i = 0; i < 64; ++i) {
+      c = *address_ptr++;
+      if (address_ptr > address_end_ptr)
+        c = 'x';
+      else if (!c || c == kTAB)
+        c = ' ';
+      else if (c < ' ')
+        c = kDEL;
+      o << (CHN)c;
+    }
+    o << '|' << ' ';
+    TPrintHex<Printer>(o, address_ptr);
+  }
+  o << STRSocketBorder();
+  return TPrintHex<Printer>(o, address_ptr + size);
 }
 
 /* Converts the given Char to lowercase. */
@@ -1346,6 +1382,7 @@ struct TUTF {
     o << " stop:";
     TPrintHex<Printer>(o, stop);
     o << " }\n";
+    TPrintSocket<Printer>(o, start, End());
     return TPrintChars<Printer, Char>(o, start, stop);
   }
 };
@@ -1471,7 +1508,7 @@ SI4 TStrandQuery(const Char* cursor, const Char* stop, const Char* query) {
 /* Returns the static default printer that doesn't work in multi-threaded or
 interrupt situations.
 If you are using more than one thread or interrupts, the*/
-template <typename Char = CH1, typename Size = intptr_t>
+template <typename Char = CH1, typename Size = SIW>
 TUTF<Char> TCOut() {
   static TUTF<Char> serial_out(TCOut<Char>);
   return serial_out;
@@ -1484,7 +1521,18 @@ TUTF<Char> TCOut() {
 @param  utf The utf.
 @param  item   The item to utf. */
 template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 item) {
+  return utf.Print(item);
+}
+
+template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH1* item) {
+  return utf.Print(item);
+}
+
+#if USING_UTF16 == YES
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 item) {
   return utf.Print(item);
 }
 
@@ -1492,26 +1540,18 @@ template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH2* item) {
   return utf.Print(item);
 }
+#endif
+#if USING_UTF32 == YES
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 item) {
+  return utf.Print(item);
+}
 
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH4* item) {
   return utf.Print(item);
 }
-
-template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 item) {
-  return utf.Print(item);
-}
-
-template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 item) {
-  return utf.Print(item);
-}
-
-template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 item) {
-  return utf.Print(item);
-}
+#endif
 
 template <typename Char = CH1>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI1 item) {
@@ -1602,13 +1642,23 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Hex& item) {
 }
 
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Char1& item) {
-  return utf.PrintChar(item.ch);
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Chars1& item) {
+  return TPrintChars<Printer>(utf, item.start, item.stop);
 }
 
 template <typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Chars1& item) {
-  return TPrintChars<Printer>(utf, item.start, item.stop);
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Char1& item) {
+  return utf.PrintChar(item);
+}
+
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Char2& item) {
+  return utf.PrintChar(item);
+}
+
+template <typename Char = CH1>
+inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Char4& item) {
+  return utf.PrintChar(item);
 }
 
 template <typename Char>
@@ -1998,7 +2048,7 @@ class TStrand {
     if (!begin) return kFactoryNilOBJ;
     switch (function) {
       case kFactoryDestroy: {
-        PRINT("FactoryDestroy:");
+        PRINT("Destroy:");
         begin = obj.begin;
         if (!begin) return kFactoryNilOBJ;
         if (using_heap)
@@ -2088,17 +2138,21 @@ inline ::_::TStrand<Char, kCount_>& operator<<(
   return strand.Print(string);
 }
 
+#if USING_UTF16 == YES
 template <typename Char, SI4 kCount_>
-inline ::_::TStrand<Char, kCount_>& operator<<(
+inline ::_::TStrand<Char, kCount_>& operator*(
     ::_::TStrand<Char, kCount_>& strand, const CH2* string) {
   return strand.Print(string);
 }
+#endif
 
+#if USING_UTF32 == YES
 template <typename Char, SI4 kCount_>
-inline ::_::TStrand<Char, kCount_>& operator<<(
+inline ::_::TStrand<Char, kCount_>& operator*(
     ::_::TStrand<Char, kCount_>& strand, const CH4* string) {
   return strand.Print(string);
 }
+#endif
 
 template <typename Char, SI4 kCount_>
 inline ::_::TStrand<Char, kCount_>& operator<<(

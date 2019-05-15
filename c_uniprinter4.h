@@ -443,19 +443,12 @@ struct SDK Linef4 {
 /* Utility class for printing a vertical line with operator<<. */
 struct SDK Headingf4 {
   Token4 caption;
-  Linef4 style;
-  const CH4 *caption2, *caption3;
+  const CH4 *style, *caption2, *caption3;
 
   /* Constructors a horizontal line of the given string. */
   Headingf4(const CH4* caption, const CH4* style = nullptr,
             SI4 count = kTokenLongest, const CH4* caption2 = nullptr,
             const CH4* caption3 = nullptr);
-};
-
-struct SDK Char4 {
-  CH4 value;  //< A Unicode value.
-
-  Char4(CH4 value);  //< Stores value.
 };
 
 struct SDK Chars4 {
@@ -484,17 +477,19 @@ struct SDK UTF4 {
   /*inline*/ UTF4& Set(CH4* new_pointer);
 
   /* Prints a item to the strand. */
+  /*inline*/ UTF4& PrintChar(CH1 item);
   /*inline*/ UTF4& Print(CH1 item);
-  /*inline*/ UTF4& Print(CH2 item);
-  /*inline*/ UTF4& Print(CH4 item);
   /*inline*/ UTF4& Print(const CH1* item);
+  /*inline*/ UTF4& PrintChar(CH2 item);
+  /*inline*/ UTF4& Print(CH2 item);
   /*inline*/ UTF4& Print(const CH2* item);
+  /*inline*/ UTF4& PrintChar(CH4 item);
+  /*inline*/ UTF4& Print(CH4 item);
   /*inline*/ UTF4& Print(const CH4* item);
   /*inline*/ UTF4& Print(SI4 item);
   /*inline*/ UTF4& Print(UI4 item);
   /*inline*/ UTF4& Print(SI8 item);
   /*inline*/ UTF4& Print(UI8 item);
-
 #if SEAM >= SCRIPT2_4
   /*inline*/ UTF4& Print(FP4 item);
   /*inline*/ UTF4& Print(FP8 item);
@@ -555,10 +550,11 @@ using Rows = Headingf4;
 
 }  // namespace _
 
-SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& item);
-SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH4* item);
-
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, CH4 item);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH1* item);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH2* item);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH4* item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, UI1 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, SI2 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, UI2 item);
@@ -580,8 +576,8 @@ SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Center4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Right4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Linef4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item);
-SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Chars4 item);
+SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& item);
 
 #endif  //< #if USING_UTF32 == YES
 #endif

@@ -324,8 +324,7 @@ template <typename Char, typename UI>
 Char* TPrintHex(Char* start, Char* stop, UI value) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
-  DASSERT(start);
-  if (start + kHexStrandLengthSizeMax >= stop) return nullptr;
+  if (!start || start + kHexStrandLengthSizeMax >= stop) return nullptr;
 
   *start++ = '0';
   *start++ = 'x';
@@ -1581,7 +1580,7 @@ Printer& TPrintString(Printer& o, const Char* string) {
 
 template <typename Printer, typename Char = CH1>
 Printer& TPrintRepeat(Printer& o, Char c, SI4 count) {
-  for (; count > 0; --count) o << ::_::ToCharStruct(c);
+  for (; count > 0; --count) o << Char(c);
   return o;
 }
 
@@ -1630,13 +1629,13 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
       p = ~c;         //< Previous.
   SI4 hit_count = 0, column_index = 0;
   while (c) {
-    o << ::_::ToCharStruct(c);
+    o << Char(c);
     ++column_index;
     if (c == kLF) {
       p = c;
       do {
         c = *style++;
-        o << ::_::ToCharStruct(c);
+        o << Char(c);
       } while (c == kLF);
       column_index = 0;
     }
@@ -1775,6 +1774,7 @@ Printer& TPrintBinarySigned(Printer& o, SI value) {
   return TPrintBinary<Printer, UI>(o, (UI)value);
 }
 
+#if SEAM >= SCRIPT2_1
 /* Prints the following item to the console in Hex. */
 template <typename Printer, typename UI>
 Printer& TPrintHex(Printer& o, UI item) {
@@ -1839,7 +1839,7 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
   size += num_bytes;
 
   o << STRSocketHeader() << STRSocketBorder() << Hex(start);
-
+  int i = 0;
   Char c;
   while (start < stop) {
     o << '\n' << '|';
@@ -1849,8 +1849,7 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
-      o << c;
-      //::_::ToCharStruct(c);
+      o << Char(c);
     }
     o << '|' << ' ' << Hex(start);
   }
@@ -1861,7 +1860,7 @@ template <typename Printer, typename Char = CH1>
 Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
   return TPrintChars<Printer, Char>(o, start, start + count);
 }
-
+#endif
 }  // namespace _
 
 #endif

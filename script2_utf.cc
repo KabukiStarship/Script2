@@ -605,11 +605,17 @@ UTF1& UTF1::Set(CH1* new_cursor) {
   return *this;
 }
 
-UTF1& UTF1::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF1& UTF1::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF1& UTF1::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
+UTF1& UTF1::Print(CH1 item) { return PrintChar(item); }
 
-UTF1& UTF1::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
+UTF1& UTF1::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF1& UTF1::Print(CH2 item) { return PrintChar(item); }
+
+UTF1& UTF1::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF1& UTF1::Print(CH4 item) { return PrintChar(item); }
 
 UTF1& UTF1::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -772,15 +778,19 @@ UIW* COut1Auto(UIW* begin, SIW function, void* arg) {
 
 Char1::Char1(CH1 ch) : value(ch) {}
 
-Char1 ToCharStruct(CH1 value) { return Char1(value); }
+Char1 Char(CH1 value) { return Char1(value); }
 
 }  // namespace _
+
+::_::UTF1& operator<<(::_::UTF1& o, CH1 item) { return o.PrintChar(item); }
+
+::_::UTF1& operator<<(::_::UTF1& o, ::_::Char1 item) {
+  return o.PrintChar(item.value);
+}
 
 ::_::UTF1& operator<<(::_::UTF1& o, ::_::UTF1& p) { return o; }
 
 ::_::UTF1& operator<<(::_::UTF1& o, const CH1* item) { return o.Print(item); }
-
-::_::UTF1& operator<<(::_::UTF1& o, CH1 item) { return o.Print(item); }
 
 ::_::UTF1& operator<<(::_::UTF1& o, UI1 item) { return o.Print(item); }
 
@@ -815,11 +825,20 @@ Char1 ToCharStruct(CH1 value) { return Char1(value); }
   return o.Print(item);
 }
 
-::_::UTF1& operator<<(::_::UTF1& o, ::_::Char1 item) {
-  return o.Print(item.value);
-}
-
 ::_::UTF1& operator<<(::_::UTF1& o, ::_::Chars1 item) { return o.Print(item); }
+
+#if USING_UTF16 == YES
+::_::UTF1& operator*(::_::UTF1& o, CH2 item) { return o.Print(item); }
+::_::UTF1& operator*=(::_::UTF1& o, CH2 item) { return o.Print(item); }
+::_::UTF1& operator*(::_::UTF1& o, const CH2* item) { return o.Print(item); }
+#endif
+#if USING_UTF32 == YES
+::_::UTF1& operator<<(::_::UTF1& o, CH4 item) { return o.PrintChar(item); }
+::_::UTF1& operator<<(::_::UTF1& o, ::_::Char4 item) {
+  return o.PrintChar(item.value);
+}
+::_::UTF1& operator*(::_::UTF1& o, const CH4* item) { return o.Print(item); }
+#endif
 
 #endif  //< #if USING_UTF8
 
@@ -1168,11 +1187,17 @@ UTF2& UTF2::Set(CH2* new_cursor) {
   return *this;
 }
 
-UTF2& UTF2::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF2& UTF2::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF2& UTF2::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
+UTF2& UTF2::Print(CH1 item) { return PrintChar(item); }
 
-UTF2& UTF2::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
+UTF2& UTF2::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF2& UTF2::Print(CH2 item) { return PrintChar(item); }
+
+UTF2& UTF2::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF2& UTF2::Print(CH4 item) { return PrintChar(item); }
 
 UTF2& UTF2::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -1541,15 +1566,23 @@ Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
 
 Char2::Char2(CH2 ch) : value(ch) {}
 
-Char2 ToCharStruct(CH2 value) { return Char2(value); }
+Char2 Char(CH2 value) { return Char2(value); }
 
 }  // namespace _
 
+::_::UTF2& operator<<(::_::UTF2& o, CH4 item) { return o.PrintChar(item); }
+
+::_::UTF2& operator<<(::_::UTF2& o, ::_::Char4 item) {
+  return o.PrintChar(item.value);
+}
+
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::UTF2& p) { return o; }
+
+::_::UTF2& operator<<(::_::UTF2& o, const CH1* item) { return o.Print(item); }
 
 ::_::UTF2& operator<<(::_::UTF2& o, const CH2* item) { return o.Print(item); }
 
-::_::UTF2& operator<<(::_::UTF2& o, CH2 item) { return o.Print(item); }
+::_::UTF2& operator<<(::_::UTF2& o, const CH4* item) { return o.Print(item); }
 
 ::_::UTF2& operator<<(::_::UTF2& o, UI1 item) { return o.Print(item); }
 
@@ -1582,10 +1615,6 @@ Char2 ToCharStruct(CH2 value) { return Char2(value); }
 
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item) {
   return o.Print(item);
-}
-
-::_::UTF2& operator<<(::_::UTF2& o, ::_::Char2 item) {
-  return o.Print(item.value);
 }
 
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::Chars2 item) { return o.Print(item); }
@@ -1939,11 +1968,17 @@ UTF4& UTF4::Set(CH4* new_cursor) {
   return *this;
 }
 
-UTF4& UTF4::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF4& UTF4::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF4& UTF4::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
+UTF4& UTF4::Print(CH1 item) { return PrintChar(item); }
 
-UTF4& UTF4::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
+UTF4& UTF4::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF4& UTF4::Print(CH2 item) { return PrintChar(item); }
+
+UTF4& UTF4::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
+
+UTF4& UTF4::Print(CH4 item) { return PrintChar(item); }
 
 UTF4& UTF4::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -2259,11 +2294,21 @@ Char4::Char4(CH4 value) : value(value) {}
 
 Chars4::Chars4(const CH4* start, const CH4* stop) : start(start), stop(stop) {}
 
+Char4 Char(CH4 value) { return Char4(value); }
+
 }  // namespace _
+
+::_::UTF4& operator<<(::_::UTF4& o, CH4 item) { return o.PrintChar(item); }
+
+::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item) {
+  return o.PrintChar(item.value);
+}
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& p) { return o; }
 
-::_::UTF4& operator<<(::_::UTF4& o, CH4 item) { return o.Print(item); }
+::_::UTF4& operator<<(::_::UTF4& o, const CH1* item) { return o.Print(item); }
+
+::_::UTF4& operator<<(::_::UTF4& o, const CH2* item) { return o.Print(item); }
 
 ::_::UTF4& operator<<(::_::UTF4& o, const CH4* item) { return o.Print(item); }
 
@@ -2298,10 +2343,6 @@ Chars4::Chars4(const CH4* start, const CH4* stop) : start(start), stop(stop) {}
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item) {
   return o.Print(item);
-}
-
-::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item) {
-  return o.Print(item.value);
 }
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::Chars4 item) {

@@ -110,6 +110,7 @@ BOL Test(const CH2* a, const CH2* b) {
   return false;
 }
 
+#if SEAM >= SCRIPT2_1
 BOL Test(const CH4* a, const CH4* b) {
   SI4 result = ::_::TSTRCompare<const CH4>(a, b);
   if (!result) return true;
@@ -301,6 +302,7 @@ BOL Test(FP8 a, FP8 b) {
   Print(b);
   return false;
 }
+#endif
 
 BOL Test(const void* value) {
   if (value) return true;

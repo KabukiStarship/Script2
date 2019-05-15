@@ -399,5 +399,23 @@ struct Binary {
 #endif
 };
 
+struct SDK Char1 {
+  CH1 value;  //< A Unicode value.
+
+  Char1(CH1 ch);  //< Stores the value.
+};
+
+struct SDK Char2 {
+  CH2 value;  //< A Unicode value.
+
+  Char2(CH2 ch);  //< Stores the value.
+};
+
+struct SDK Char4 {
+  CH4 value;  //< A Unicode value.
+
+  Char4(CH4 value);  //< Stores value.
+};
+
 }  // namespace _
 #endif

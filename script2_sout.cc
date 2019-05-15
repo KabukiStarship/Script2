@@ -248,6 +248,7 @@ void PrintBinary(const void* ptr) {
   TPrintBinary<SOut, UIW>(SOut().Star(), *reinterpret_cast<UIW*>(&ptr));
 }
 
+#if SEAM >= SCRIPT2_1
 void PrintHex(CH1 value) { TPrintHex<SOut, UI1>(SOut().Star(), value); }
 
 void PrintHex(CH2 value) { TPrintHex<SOut, UI2>(SOut().Star(), value); }
@@ -330,6 +331,7 @@ void PrintChars(const void* start, SIW count) {
   const CH1* ptr = reinterpret_cast<const CH1*>(start);
   PrintChars(ptr, ptr + count);
 }
+#endif
 
 #if USING_UTF16 == YES
 
@@ -449,32 +451,14 @@ SOut::SOut(FP8 item) { ::_::Print(item); }
 
 SOut& SOut::Star() { return *this; }
 
-SOut& SOut::Print(CH1 item) {
+SOut& SOut::PrintChar(CH1 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(CH2 item) {
-  ::_::Print(item);
-  return *this;
-}
-
-SOut& SOut::Print(CH4 item) {
-  ::_::Print(item);
-  return *this;
-}
+SOut& SOut::Print(CH1 item) { return PrintChar(item); }
 
 SOut& SOut::Print(const CH1* item) {
-  ::_::Print(item);
-  return *this;
-}
-
-SOut& SOut::Print(const CH2* item) {
-  ::_::Print(item);
-  return *this;
-}
-
-SOut& SOut::Print(const CH4* item) {
   ::_::Print(item);
   return *this;
 }
@@ -512,6 +496,7 @@ SOut& SOut::Print(FP8 item) {
 }
 #endif
 
+#if SEAM >= SCRIPT2_1
 SOut& SOut::Print(const void* begin, SIW size_bytes) {
   TPrintHex<SOut>(SOut().Star(), begin, size_bytes);
   return *this;
@@ -521,9 +506,9 @@ SOut& SOut::Print(Hex item) {
   TPrintHex<SOut>(SOut().Star(), item.begin, item.size_bytes);
   return *this;
 }
+#endif
 
 #if SEAM >= SCRIPT2_3
-#if USING_STR == UTF8
 SOut& SOut::Print(Right1 item) {
   ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
@@ -535,21 +520,33 @@ SOut& SOut::Print(Center1 item) {
 }
 
 SOut& SOut::Print(Linef1 item) {
-  PrintLinef(item.token.String(), item.token.Count());
+  TPrintLinef<SOut, CH1>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 SOut& SOut::Print(Headingf1 item) {
-  TPrintHeadingf<SOut, CH1>(SOut().Star(), item.caption.String(), item.style,
-                            item.caption.Count(), item.caption2, item.caption3);
+  PrintHeadingf(item.caption.String(), item.style, item.caption.Count(),
+                item.caption2, item.caption3);
   return *this;
 }
 
-SOut& SOut::Print(Chars1 item) { return *this; }
+SOut& SOut::Print(Chars1 item) {
+  return TPrintChars<SOut, CH1>(*this, item.start, item.stop);
+}
 
 #endif
 
-#elif USING_STR == UTF16
+#if USING_UTF16 == YES
+SOut& SOut::PrintChar(CH2 item) {
+  ::_::Print(item);
+  return *this;
+}
+SOut& SOut::Print(CH2 item) { return PrintChar(item); }
+
+SOut& SOut::Print(const CH2* item) {
+  ::_::Print(item);
+  return *this;
+}
 
 SOut& SOut::Print(Right2 item) {
   Print(item.token.String());
@@ -562,24 +559,33 @@ SOut& SOut::Print(Center2 item) {
 }
 
 SOut& SOut::Print(Linef2 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintLinef(string, item.token.Count());
-  else
-    PrintLinef(item.token, item.token.Count());
+  TPrintLinef<SOut, CH2>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 SOut& SOut::Print(Headingf2 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintRepeat(string);
-  else
-    PrintRepeat(item.token);
+  return TPrintHeadingf<SOut, CH2>(*this, item.caption.String(), item.style,
+                                   item.caption.Count(), item.caption2,
+                                   item.caption3);
+}
+
+SOut& SOut::Print(Chars2 item) {
+  return TPrintChars<SOut, CH2>(*this, item.start, item.stop);
+}
+#endif
+#if USING_UTF32 == YES
+
+SOut& SOut::PrintChar(CH4 item) {
+  ::_::Print(item);
   return *this;
 }
 
-#lif USING_STR == UTF32
+SOut& SOut::Print(CH4 item) { return PrintChar(item); }
+
+SOut& SOut::Print(const CH4* item) {
+  ::_::Print(item);
+  return *this;
+}
 
 SOut& SOut::Print(Right4 item) {
   Print(item.token.String());
@@ -592,21 +598,18 @@ SOut& SOut::Print(Center4 item) {
 }
 
 SOut& SOut::Print(Linef4 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintLinef(string);
-  else
-    PrintLinef(item.token);
+  TPrintLinef<SOut, CH4>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 SOut& SOut::Print(Headingf4 item) {
-  const CH4* string = item.token.String();
-  if (string)
-    PrintRepeat(string);
-  else
-    PrintRepeat(item.token);
-  return *this;
+  return TPrintHeadingf<SOut, CH4>(*this, item.caption.String(), item.style,
+                                   item.caption.Count(), item.caption2,
+                                   item.caption3);
+}
+
+SOut& SOut::Print(Chars4 item) {
+  return TPrintChars<SOut, CH4>(*this, item.start, item.stop);
 }
 
 #endif
@@ -615,17 +618,13 @@ SOut& SOut::Print(Headingf4 item) {
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::SOut& p) { return o; }
 
+::_::SOut& operator<<(::_::SOut& o, ::_::Char1 item) {
+  return o.PrintChar(item.value);
+}
+
+::_::SOut& operator<<(::_::SOut& o, CH1 item) { return o.PrintChar(item); }
+
 ::_::SOut& operator<<(::_::SOut& o, const CH1* item) { return o.Print(item); }
-
-::_::SOut& operator<<(::_::SOut& o, const CH2* item) { return o.Print(item); }
-
-::_::SOut& operator<<(::_::SOut& o, const CH4* item) { return o.Print(item); }
-
-::_::SOut& operator<<(::_::SOut& o, CH1 c) { return o.Print(c); }
-
-::_::SOut& operator<<(::_::SOut& o, CH2 c) { return o.Print(c); }
-
-::_::SOut& operator<<(::_::SOut& o, CH4 c) { return o.Print(c); }
 
 ::_::SOut& operator<<(::_::SOut& o, UI1 item) { return o.Print(item); }
 
@@ -649,12 +648,11 @@ SOut& SOut::Print(Headingf4 item) {
 ::_::SOut& operator<<(::_::SOut& o, FP8 item) { return o.Print(item); }
 #endif
 
+#if SEAM >= SCRIPT2_1
 ::_::SOut& operator<<(::_::SOut& o, ::_::Hex item) { return o.Print(item); }
+#endif
 
 #if SEAM >= SCRIPT2_3
-
-#if USING_STR == UTF8
-
 ::_::SOut& operator<<(::_::SOut& o, ::_::Center1 item) { return o.Print(item); }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Right1 item) { return o.Print(item); }
@@ -665,14 +663,17 @@ SOut& SOut::Print(Headingf4 item) {
   return o.Print(item);
 }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Char1 item) {
-  return o.Print(item.value);
-}
-
 ::_::SOut& operator<<(::_::SOut& o, ::_::Chars1 item) { return o.Print(item); }
 #endif
 
-#elif USING_STR == UTF16
+#if USING_UTF16 == YES
+::_::SOut& operator<<(::_::SOut& o, CH2 item) { return o.PrintChar(item); }
+
+::_::SOut& operator<<(::_::SOut& o, ::_::Char2 item) {
+  return o.PrintChar(item.value);
+}
+
+::_::SOut& operator<<(::_::SOut& o, const CH2* item) { return o.Print(item); }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Center2 item) { return o.Print(item); }
 
@@ -685,10 +686,17 @@ SOut& SOut::Print(Headingf4 item) {
 }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Chars2 item) { return o.Print(item); }
+#endif
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Hexs2 item) { return o.Print(item); }
+#if USING_UTF32 == YES
 
-#lif USING_STR == UTF32
+::_::SOut& operator<<(::_::SOut& o, CH4 item) { return o.PrintChar(item); }
+
+::_::SOut& operator<<(::_::SOut& o, ::_::Char4 item) {
+  return o.PrintChar(item.value);
+}
+
+::_::SOut& operator<<(::_::SOut& o, const CH4* item) { return o.Print(item); }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Center4 item) { return o.Print(item); }
 
@@ -701,7 +709,4 @@ SOut& SOut::Print(Headingf4 item) {
 }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Chars4 item) { return o.Print(item); }
-
-::_::SOut& operator<<(::_::SOut& o, ::_::Hexs4 item) { return o.Print(item); }
-
 #endif

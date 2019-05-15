@@ -21,7 +21,7 @@ CH1 HexNibbleToUpperCase(UI1 b) {
 }
 
 const CH1* STRSocketHeader() {
-  return "\n|0       8       16      24      32      40      48      52      |";
+  return "\n|0       8       16      24      32      40      48      56      |";
 }
 
 const CH1* STRSocketBorder() {

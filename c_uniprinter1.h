@@ -401,7 +401,7 @@ struct Right1 {
 struct SDK Linef1 {
   Token1 token;  //< Pointer to a pointer to utf.
 
-  /* Constructors a horizontal line of the given string. */
+  /* Constructors a horizontal line of the character. */
   Linef1(CH1 item, SI4 count = kTokenLongest);
 
   /* Constructors a horizontal line of the given string. */
@@ -419,14 +419,8 @@ struct SDK Headingf1 {
             const CH1* caption3 = nullptr);
 };
 
-struct SDK Char1 {
-  CH1 value;  //< A Unicode value.
-
-  Char1(CH1 ch);  //< Stores the value.
-};
-
 // Utility function for force printing a CH1 using operator overloads.
-SDK Char1 ToCharStruct(CH1 value);
+SDK Char1 Char(CH1 value);
 
 struct SDK Chars1 {
   const CH1 *start,  //< Start character address.
@@ -461,12 +455,19 @@ struct SDK UTF1 {
   /*inline*/ UTF1& Set(CH1* new_start);
 
   /* Prints the given item. */
+  /*inline*/ UTF1& PrintChar(CH1 item);
   /*inline*/ UTF1& Print(CH1 item);
-  /*inline*/ UTF1& Print(CH2 item);
-  /*inline*/ UTF1& Print(CH4 item);
   /*inline*/ UTF1& Print(const CH1* item);
+#if USING_UTF16 == YES
+  /*inline*/ UTF1& PrintChar(CH2 item);
+  /*inline*/ UTF1& Print(CH2 item);
   /*inline*/ UTF1& Print(const CH2* item);
+#endif
+#if USING_UTF32 == YES
+  /*inline*/ UTF1& PrintChar(CH4 item);
+  /*inline*/ UTF1& Print(CH4 item);
   /*inline*/ UTF1& Print(const CH4* item);
+#endif
   /*inline*/ UTF1& Print(SI4 item);
   /*inline*/ UTF1& Print(UI4 item);
   /*inline*/ UTF1& Print(SI8 item);
@@ -526,6 +527,7 @@ using CRows = Headingf1;
 
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
 
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
@@ -548,7 +550,15 @@ SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
-// SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf,
-//                                 const ::_::Wildcard& type_value);
+#if USING_UTF16 == YES
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char2 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH2 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH2* item);
+#endif
+#if USING_UTF32 == YES
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char4 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH4 item);
+SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH4* item);
+#endif
 #endif
 #endif
