@@ -507,7 +507,6 @@ using Rows = Headingf2;
 
 }  // namespace _
 
-SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Char4 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, CH4 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::UTF2& p);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, const CH1* string);

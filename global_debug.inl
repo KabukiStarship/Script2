@@ -11,6 +11,9 @@
 #define PRINTF(format, ...) ::_::Printf(format, __VA_ARGS__)
 #define PAUSE(message) ::_::Pause(message)
 #define PAUSEF(format, ...) ::_::Pausef(format, __VA_ARGS__)
+#define PRINT_ERROR(message)            \
+  ::_::Printf("\nERROR: %s.", message); \
+  ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define PRINT_LINEF(style) ::_::PrintLinef(style)
 #define PRINT_LINEF_COUNT(style, count) ::_::PrintLinef(style, count)
 #define PRINT_HEADING(caption) ::_::PrintHeadingf(caption)

@@ -550,7 +550,6 @@ using Rows = Headingf4;
 
 }  // namespace _
 
-SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Char4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, CH4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH1* item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, const CH2* item);

@@ -419,9 +419,6 @@ struct SDK Headingf1 {
             const CH1* caption3 = nullptr);
 };
 
-// Utility function for force printing a CH1 using operator overloads.
-SDK Char1 Char(CH1 value);
-
 struct SDK Chars1 {
   const CH1 *start,  //< Start character address.
       *stop;         //< Stop character address.
@@ -527,7 +524,6 @@ using CRows = Headingf1;
 
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::UTF1& o);
 
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH1* item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, UI1 item);
@@ -548,15 +544,12 @@ SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Center1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Right1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Linef1 item);
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char1 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Chars1 item);
 #if USING_UTF16 == YES
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char2 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH2 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH2* item);
 #endif
 #if USING_UTF32 == YES
-SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, ::_::Char4 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH4 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH4* item);
 #endif

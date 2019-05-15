@@ -9,6 +9,7 @@
 #define PAUSE(message)
 #define PAUSEF(format, ...)
 #define PRINTNL
+#define PRINT_ERROR(message)
 #define PRINT_LINEF(style)
 #define PRINT_LINEF_COUNT(style, count)
 #define PRINT_HEADING(message)

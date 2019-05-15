@@ -295,7 +295,6 @@ class SOut {
 }  // namespace _
 
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH1 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char1 c);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH1* string);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, UI1 value);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, SI2 value);
@@ -322,7 +321,6 @@ class SOut {
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars1 item);
 #if USING_UTF16 == YES
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH2 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char2 c);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH2* string);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center2 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right2 item);
@@ -332,7 +330,6 @@ class SOut {
 #endif
 #if USING_UTF32 == YES
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH4 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Char4 c);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH4* string);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center4 item);
 /*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right4 item);

@@ -499,7 +499,7 @@ SOut& SOut::Print(const void* begin, SIW size_bytes) {
 }
 
 SOut& SOut::Print(Hex item) {
-  TPrintHex<SOut>(SOut().Star(), item.begin, item.size_bytes);
+  TPrintHex<SOut>(SOut().Star(), item.buffer, item.byte_count);
   return *this;
 }
 #endif
@@ -537,6 +537,7 @@ SOut& SOut::PrintChar(CH2 item) {
   ::_::Print(item);
   return *this;
 }
+
 SOut& SOut::Print(CH2 item) { return PrintChar(item); }
 
 SOut& SOut::Print(const CH2* item) {
@@ -614,10 +615,6 @@ SOut& SOut::Print(Chars4 item) {
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::SOut& p) { return o; }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Char1 item) {
-  return o.PrintChar(item.value);
-}
-
 ::_::SOut& operator<<(::_::SOut& o, CH1 item) { return o.PrintChar(item); }
 
 ::_::SOut& operator<<(::_::SOut& o, const CH1* item) { return o.Print(item); }
@@ -665,10 +662,6 @@ SOut& SOut::Print(Chars4 item) {
 #if USING_UTF16 == YES
 ::_::SOut& operator<<(::_::SOut& o, CH2 item) { return o.PrintChar(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Char2 item) {
-  return o.PrintChar(item.value);
-}
-
 ::_::SOut& operator<<(::_::SOut& o, const CH2* item) { return o.Print(item); }
 
 ::_::SOut& operator<<(::_::SOut& o, ::_::Center2 item) { return o.Print(item); }
@@ -687,10 +680,6 @@ SOut& SOut::Print(Chars4 item) {
 #if USING_UTF32 == YES
 
 ::_::SOut& operator<<(::_::SOut& o, CH4 item) { return o.PrintChar(item); }
-
-::_::SOut& operator<<(::_::SOut& o, ::_::Char4 item) {
-  return o.PrintChar(item.value);
-}
 
 ::_::SOut& operator<<(::_::SOut& o, const CH4* item) { return o.Print(item); }
 

@@ -324,40 +324,26 @@ signed equivalent. */
 
 /* Utility class for printing a POD type in hex. */
 struct Hex {
-  const UI1* begin;  //< Pointer to the POD instance.
-  SIW size_bytes;    //< Width of the item in bytes.
+  enum { k };
+  UIW buffer[2];
+  SIW byte_count;  //< Width of the item in bytes.
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
   Hex(const void* item);
   Hex(const void* item, SIW size_bytes);
-  Hex(SI1& item);
-  Hex(UI1& item);
-  Hex(SI2& item);
-  Hex(UI2& item);
-  Hex(SI4& item);
-  Hex(UI4& item);
-  Hex(SI8& item);
-  Hex(UI8& item);
+  Hex(SI1 item);
+  Hex(UI1 item);
+  Hex(SI2 item);
+  Hex(UI2 item);
+  Hex(SI4 item);
+  Hex(UI4 item);
+  Hex(SI8 item);
+  Hex(UI8 item);
 #if USING_FP4 == YES
-  Hex(FP4& item);
+  Hex(FP4 item);
 #endif
 #if USING_FP8 == YES
-  Hex(FP8& item);
-#endif
-
-  /* Stores the pointer to the item and it's byte_count. */
-  Hex(const SI1* item);
-  Hex(const SI2* item);
-  Hex(const UI2* item);
-  Hex(const SI4* item);
-  Hex(const UI4* item);
-  Hex(const SI8* item);
-  Hex(const UI8* item);
-#if USING_FP4 == YES
-  Hex(const FP4* item);
-#endif
-#if USING_FP8 == YES
-  Hex(const FP8* item);
+  Hex(FP8 item);
 #endif
 };
 
@@ -397,24 +383,6 @@ struct Binary {
 #if USING_FP8 == YES
   Binary(const FP8* item);
 #endif
-};
-
-struct SDK Char1 {
-  CH1 value;  //< A Unicode value.
-
-  Char1(CH1 ch);  //< Stores the value.
-};
-
-struct SDK Char2 {
-  CH2 value;  //< A Unicode value.
-
-  Char2(CH2 ch);  //< Stores the value.
-};
-
-struct SDK Char4 {
-  CH4 value;  //< A Unicode value.
-
-  Char4(CH4 value);  //< Stores value.
 };
 
 }  // namespace _
