@@ -634,7 +634,6 @@ Hex::Hex(SI4 item) : byte_count(-4) { *reinterpret_cast<SI4*>(buffer) = item; }
 Hex::Hex(UI4 item) : byte_count(-4) { *reinterpret_cast<UI4*>(buffer) = item; }
 Hex::Hex(SI8 item) : byte_count(-8) { *reinterpret_cast<SI8*>(buffer) = item; }
 Hex::Hex(UI8 item) : byte_count(-8) { *reinterpret_cast<UI8*>(buffer) = item; }
-
 #if USING_FP8 == YES
 Hex::Hex(FP4 item) : byte_count(-4) { *reinterpret_cast<FP4*>(buffer) = item; }
 #endif
@@ -642,54 +641,45 @@ Hex::Hex(FP4 item) : byte_count(-4) { *reinterpret_cast<FP4*>(buffer) = item; }
 Hex::Hex(FP8 item) : byte_count(-8) { *reinterpret_cast<FP8*>(buffer) = item; }
 #endif
 
-Binary::Binary(const void* ptr)
-    : begin(reinterpret_cast<const UI1*>(&begin)),
-      size_bytes(sizeof(const void*)) {}
-Binary::Binary(SI1& item)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
-Binary::Binary(UI1& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(1) {}
-Binary::Binary(SI2& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
-Binary::Binary(UI2& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(2) {}
-Binary::Binary(SI4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
-Binary::Binary(UI4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
-Binary::Binary(SI8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
-Binary::Binary(UI8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
+Binary::Binary(const void* item) : byte_count(-sizeof(const void*)) {
+  *reinterpret_cast<const void**>(buffer) = item;
+}
+Binary::Binary(const void* item, SIW byte_count) : byte_count(byte_count) {
+  *reinterpret_cast<const void**>(buffer) = item;
+}
+Binary::Binary(SI1 item) : byte_count(-1) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(UI1 item) : byte_count(-1) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(SI2 item) : byte_count(-2) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(UI2 item) : byte_count(-2) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(SI4 item) : byte_count(-4) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(UI4 item) : byte_count(-4) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(SI8 item) : byte_count(-8) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
+Binary::Binary(UI8 item) : byte_count(-8) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
 #if USING_FP8 == YES
-Binary::Binary(FP4& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(4) {}
+Binary::Binary(FP4 item) : byte_count(-4) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
 #endif
 #if USING_FP8 == YES
-Binary::Binary(FP8& begin)
-    : begin(reinterpret_cast<const UI1*>(&begin)), size_bytes(8) {}
-#endif
-Binary::Binary(const SI1* item)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(1) {}
-Binary::Binary(const SI2* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
-Binary::Binary(const UI2* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(2) {}
-Binary::Binary(const SI4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-Binary::Binary(const UI4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-Binary::Binary(const SI8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
-Binary::Binary(const UI8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
-#if USING_FP8 == YES
-Binary::Binary(const FP4* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(4) {}
-#endif
-#if USING_FP8 == YES
-Binary::Binary(const FP8* begin)
-    : begin(reinterpret_cast<const UI1*>(begin)), size_bytes(8) {}
+Binary::Binary(FP8 item) : byte_count(-8) {
+  *reinterpret_cast<UI8*>(buffer) = item;
+}
 #endif
 
 }  // namespace _

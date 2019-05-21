@@ -35,19 +35,19 @@ void _06_Strand() {
   };
 
   PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
-  TStrand<Char, 8> strand;
-  strand.Wipe();
-  strand.PrintConstants();
-  strand << "Testing ";
-  strand << 1;
-  strand << ", ";
-  strand << 2;
-  strand << ", ";
-  strand << 3;
-  PRINT("\nResult:");
-  PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
+  TStrand<Char, 8> s;
+  s.Wipe();
+  s.PrintConstants();
+  s << "Testing ";  //
+  s << 1;           //
+  s << ", ";        //
+  s << 2;           //
+  s << ", ";        //
+  s << 3;           //
+  s << '.';         //
+  PRINTF("\n\nEnd result:\"%s\"", s.Start());
 
-  const Char* cursor = strand.Find(kTesting123);
+  const Char* cursor = s.Find(kTesting123);
   ASSERT(cursor);
 }
 #endif  //< #if SEAM >= SCRIPT2_6

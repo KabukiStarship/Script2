@@ -296,7 +296,8 @@ CH1* PrintBinary(CH1* start, CH1* stop, FP8 item) {
 }
 #endif
 CH1* PrintChars(CH1* start, CH1* stop, const void* begin, const void* end) {
-  return TPrintSocket<CH1>(start, stop, begin, end);
+  return TPrintChars<CH1>(start, stop, reinterpret_cast<const CH1*>(begin),
+                          reinterpret_cast<const CH1*>(end));
 }
 
 CH1* PrintChars(CH1* start, CH1* stop, const void* begin, SIW size) {
@@ -583,6 +584,8 @@ Headingf1::Headingf1(const CH1* caption1, const CH1* style, SI4 count,
       caption3(caption3) {}
 
 Chars1::Chars1(const CH1* start, const CH1* stop) : start(start), stop(stop) {}
+
+Chars1 Chars(const CH1* start, const CH1* stop) { return Chars1(start, stop); }
 
 UTF1::UTF1(CH1* start, SIW buffer_size)
     : start(start), stop(start + buffer_size - 1) {
@@ -1087,7 +1090,8 @@ CH2* PrintBinary(CH2* start, CH2* stop, SI8 item) {
 }
 
 CH2* PrintChars(CH2* start, CH2* stop, const void* begin, const void* end) {
-  return TPrintSocket<CH2>(start, stop, begin, end);
+  return TPrintChars<CH2>(start, stop, reinterpret_cast<const CH2*>(begin),
+                          reinterpret_cast<const CH2*>(end));
 }
 
 CH2* PrintChars(CH2* start, CH2* stop, const void* begin, SIW size) {
@@ -1245,6 +1249,10 @@ UTF2& UTF2::Print(Headingf2 item) {
   return Set(::_::PrintLinef(start, stop, item.caption.String(),
                              item.caption.Count()));
 }
+
+Chars2::Chars2(const CH2* start, const CH2* stop) : start(start), stop(stop) {}
+
+Chars2 Chars(const CH2* start, const CH2* stop) { return Chars2(start, stop); }
 
 UTF2& UTF2::Print(Chars2 item) {
   return Set(::_::PrintChars(start, stop, item.start, item.stop));
@@ -1868,7 +1876,8 @@ CH4* PrintBinary(CH4* start, CH4* stop, SI8 item) {
 }
 
 CH4* PrintChars(CH4* start, CH4* stop, const void* begin, const void* end) {
-  return TPrintSocket<CH4>(start, stop, begin, end);
+  return TPrintChars<CH4>(start, stop, reinterpret_cast<const CH4*>(begin),
+                          reinterpret_cast<const CH4*>(end));
 }
 
 CH4* PrintChars(CH4* start, CH4* stop, const void* begin, SIW size) {
@@ -2273,6 +2282,8 @@ Headingf4::Headingf4(const CH4* caption, const CH4* style, SI4 count,
       caption3(caption3) {}
 
 Chars4::Chars4(const CH4* start, const CH4* stop) : start(start), stop(stop) {}
+
+Chars4 Chars(const CH4* start, const CH4* stop) { return Chars4(start, stop); }
 
 }  // namespace _
 

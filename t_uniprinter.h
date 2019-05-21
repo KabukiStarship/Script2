@@ -13,7 +13,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_UNIPRINTER_T
 #define SCRIPT2_UNIPRINTER_T 1
 
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_uniprinter.h"
 #include "t_socket.h"
 #include "t_string.h"
@@ -327,9 +327,28 @@ Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
   while (byte_count-- > 0) {
     UI1 byte = *cursor;
     cursor += delta;
-    o << HexNibbleToUpperCase(byte & 0xf) << HexNibbleToUpperCase(byte >> 4);
+    o << HexNibbleToUpperCase(byte >> 4) << HexNibbleToUpperCase(byte & 0xf);
   }
   return o;
+}
+
+/* Prints the following item to the console in Hex. */
+template <typename Printer, typename UI>
+Printer& TPrintHex(Printer& o, UI item) {
+  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+  auto ui = ToUnsigned(item);
+  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+       num_bits_shift -= 4) {
+    o << HexNibbleToUpperCase((UI1)(ui >> num_bits_shift));
+  }
+  return o;
+}
+
+/* Prints the following item to the console in Hex. */
+template <typename Printer>
+Printer& TPrintHex(Printer& o, const void* item) {
+  UIW ptr = reinterpret_cast<UIW>(item);
+  return TPrintHex<Printer, UIW>(o, ptr);
 }
 
 /* Prints a hex value to the Console. */
@@ -1793,27 +1812,12 @@ Printer& TPrintBinarySigned(Printer& o, SI value) {
   return TPrintBinary<Printer, UI>(o, (UI)value);
 }
 
-/* Prints the following item to the console in Hex. */
-template <typename Printer, typename UI>
-Printer& TPrintHex(Printer& o, UI item) {
-  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
-  auto ui = ToUnsigned(item);
-  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
-       num_bits_shift -= 4) {
-    o << HexNibbleToUpperCase((UI1)(ui >> num_bits_shift));
-  }
-  return o;
-}
-/* Prints the following item to the console in Hex. */
-template <typename Printer>
-Printer& TPrintHex(Printer& o, const void* item) {
-  UIW ptr = reinterpret_cast<UIW>(item);
-  return TPrintHex<Printer, UIW>(o, ptr);
-}
-
 template <typename Char = CH1>
 Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
-  if (!start || start >= stop || !end || end >= begin) return nullptr;
+  if (!start || stop <= start || !begin || end <= begin) {
+    PRINT("\nPointers invalid.");
+    return nullptr;
+  }
 
   SIW size = stop - start, extra_row = ((size & 63) != 0) ? 1 : 0,
       row_count = (size >> 6) + extra_row;
@@ -1821,9 +1825,9 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
   SIW num_bytes = 81 * (row_count + 2);
   size += num_bytes;
 
-  begin = Print(begin, end, STRSocketHeader());
-  begin = Print(begin, end, STRSocketBorder());
-  begin = PrintHex(begin, end, start);
+  begin = TPrint<Char>(begin, end, STRSocketHeader());
+  begin = TPrint<Char>(begin, end, STRSocketBorder());
+  begin = TPrintHex<Char>(begin, end, start);
 
   Char c;
   while (start < stop) {
@@ -1839,10 +1843,10 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
     }
     *begin++ = '|';
     *begin++ = ' ';
-    begin = PrintHex(begin, end, start);
+    begin = TPrintHex<Char>(begin, end, start);
   }
-  begin = Print(begin, end, STRSocketBorder());
-  begin = PrintHex(begin, end, start + size);
+  begin = TPrint<Char>(begin, end, STRSocketBorder());
+  begin = TPrintHex<Char>(begin, end, start + size);
   return begin;
 }
 
@@ -1867,7 +1871,10 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
-      o << Char(c);
+      if (sizeof(Char) == 4)
+        o << Char(c);
+      else
+        o << Char(c);
     }
     o << '|' << ' '  //
       << Hex(start);
@@ -1878,87 +1885,6 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
 template <typename Printer, typename Char = CH1>
 Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
   return TPrintChars<Printer, Char>(o, start, start + count);
-}
-
-/* Prints the given socket to the SOut. */
-template <typename Char = CH1>
-Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
-                   const void* end) {
-  ASSERT(begin || cursor || cursor < stop);
-
-  Char* buffer_begin = cursor;
-  const Char *address_ptr = reinterpret_cast<const Char*>(begin),
-             *address_end_ptr = reinterpret_cast<const Char*>(end);
-  SIW size = address_end_ptr - address_ptr,
-      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
-
-  SIW num_bytes = 81 * (num_rows + 2);
-  if ((stop - cursor) <= num_bytes) {
-    PRINTF("\n    ERROR: buffer overflow trying to fit %i in %i bytes!",
-           (SI4)num_bytes, (SI4)(stop - cursor));
-    return nullptr;
-  }
-  size += num_bytes;
-  cursor = TPrint<Char>(cursor, stop, STRSocketHeader());
-  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
-  cursor = TPrintHex<Char>(cursor, stop, address_ptr);
-
-  PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
-  Char c;
-  while (address_ptr < address_end_ptr) {
-    *cursor++ = kLF;
-    *cursor++ = '|';
-    for (SI4 i = 0; i < 64; ++i) {
-      c = *address_ptr++;
-      if (address_ptr > address_end_ptr)
-        c = 'x';
-      else if (!c || c == kTAB)
-        c = ' ';
-      else if (c < ' ')
-        c = kDEL;
-      *cursor++ = c;
-    }
-    *cursor++ = '|';
-    *cursor++ = ' ';
-    cursor = TPrintHex<Char>(cursor, stop, address_ptr);
-  }
-  cursor = TPrint<Char>(cursor, stop, STRSocketBorder());
-  return TPrintHex<Char>(cursor, stop, address_ptr + size);
-}
-
-/* Prints the given socket to the SOut.
-@todo I think we only need TPRintChars. */
-template <typename Printer>
-Printer& TPrintSocket(Printer& o, const void* begin, const void* end) {
-  ASSERT(begin || end || begin <= end);
-
-  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
-            *address_end_ptr = reinterpret_cast<const CH1*>(end);
-  SIW size = address_end_ptr - address_ptr,
-      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
-
-  SIW num_bytes = 81 * (num_rows + 2);
-  size += num_bytes;
-  o << STRSocketHeader() << STRSocketBorder();
-  TPrintHex<Printer>(o, address_ptr);
-  CH1 c;
-  while (address_ptr < address_end_ptr) {
-    o << kLF << '|';
-    for (SI4 i = 0; i < 64; ++i) {
-      c = *address_ptr++;
-      if (address_ptr > address_end_ptr)
-        c = 'x';
-      else if (!c || c == kTAB)
-        c = ' ';
-      else if (c < ' ')
-        c = kDEL;
-      o << (CHN)c;
-    }
-    o << '|' << ' ';
-    TPrintHex<Printer>(o, address_ptr);
-  }
-  o << STRSocketBorder();
-  return TPrintHex<Printer>(o, address_ptr + size);
 }
 
 }  // namespace _

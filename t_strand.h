@@ -1295,13 +1295,10 @@ struct TUTF {
 
   template <typename Printer>
   Printer& PrintTo(Printer& o) {
-    o << "\nTUTF<CH" << sizeof(Char) << ", SI" << sizeof(Size) << ">{ start:";
-    TPrintHex<Printer>(o, start);
-    o << " stop:";
-    TPrintHex<Printer>(o, stop);
-    o << " }\n";
-    TPrintSocket<Printer>(o, start, End());
-    return TPrintChars<Printer, Char>(o, start, stop);
+    return o << "\nTUTF<CH" << sizeof(Char) << ", SI" << sizeof(Size)
+             << ">{ start:" << ::_::Hex(start) << " stop:" << ::_::Hex(stop)
+             << " }\n"
+             << Chars(start, stop);
   }
 };
 
@@ -1335,7 +1332,7 @@ inline Char* TSTRStop(CObject obj) {
   return TSTRStop<Char, Size>(obj);
 }
 
-/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 cursor.*/
+/* An ASCII Object composed of a UTF-8/ASCII, UTF-16, or UTF-32 cursor. */
 template <typename Size, typename Char>
 struct TCSTR {
   Size size;  //< Size of the ASCII Object.
@@ -1803,7 +1800,7 @@ class TStrand {
   void PrintConstants() {
     PRINTF(
         "\nTStrand constants: kCount_:%i kSizeMax:%i kLengthUpperLimit:%i "
-        "kCountMin:%i kLengthMax:%i kCountLB:%i kCount:%i kSize:%i\n\n",
+        "\n  kCountMin:%i kLengthMax:%i kCountLB:%i kCount:%i kSize:%i\n\n",
         kCount_, kSizeMax, kLengthUpperLimit, kCountMin, kLengthMax, kCountLB,
         kCount, kSize);
   }
@@ -1890,7 +1887,7 @@ class TStrand {
     PRINTF("\n\nAttempting to print:\"");
     PRINT(item);
     PRINT('\"');
-    PrintTo<SOut>(SOut().Star());
+    PrintTo<COut>(COut().Star());
     auto cursor = ::_::Print(start, stop, item);
     if (!cursor) {
       *utf_.start = 0;  //< Replace the delimiter so we can copy the string.
@@ -1929,12 +1926,10 @@ class TStrand {
   }
 
   static SI4 FactoryStack(CObject& obj, SIW function, void* arg) {
-    PRINT("\n\nEntering TStack FactoryStack");
     return Factory(obj, function, arg, kStack);
   }
 
   static SI4 FactoryHeap(CObject& obj, SIW function, void* arg) {
-    PRINT("\n\nEntering TStack FactoryHeap");
     return Factory(obj, function, arg, kHeap);
   }
 
@@ -1943,26 +1938,25 @@ class TStrand {
   TUTF<Char> utf_;              //< UTF for the strand.
   TSocket<SI4, kSize> socket_;  //< A socket on the stack.
 
-  /* Strand factory.
-   */
+  /* Strand factory. */
   static SI4 Factory(CObject& obj, SIW function, void* arg, BOL using_heap) {
-    PRINT("\nEntering Strand.Factory.");
     SI4 size;
     UIW *begin = obj.begin, *temp;
     if (!begin) return kFactoryNilOBJ;
     switch (function) {
       case kFactoryDestroy: {
-        PRINT("Destroy:");
+        PRINT("\nEntering Strand.Factory.Destroy:");
         begin = obj.begin;
         if (!begin) return kFactoryNilOBJ;
         if (using_heap)
           delete[] begin;
         else
           obj.factory = FactoryStack;
+        PRINT("\nSuccess!");
         break;
       }
       case kFactoryNew: {
-        PRINT("New:");
+        PRINT("\nEntering Strand.Factory.New:");
         if (!arg) return kFactoryNilArg;
         size = TAlignUpSigned<SI4>(*reinterpret_cast<SI4*>(arg));
         if ((~size) == 0) return kFactorySizeInvalid;
@@ -1976,24 +1970,27 @@ class TStrand {
         *reinterpret_cast<SI4*>(begin) = size;
         obj.begin = begin;
         obj.factory = FactoryStack;
+        PRINT("\nSuccess!");
         break;
       }
       case kFactoryGrow: {
-        PRINT("Grow:");
+        Char* str_start = TSTRStart<Char>(begin);
+        PRINTF("\nEntering Strand.Factory.Grow with string:\"%s\":", str_start);
         UIW* new_begin = TObjGrowDouble<SI4>(begin);
         if (!new_begin) return kFactoryCantGrow;
         TUTF<Char> utf(new_begin);
-        PRINTF(" new count:%i utf.LengthMax():%i", TObjSize<SI4>(new_begin),
-               utf.LengthMax());
-        utf << TSTRStart<Char>(begin);
-        PRINTF("\nCopying \"%s\" with result:\"%s\"", TSTRStart<Char>(begin),
-               TSTRStart<Char>(new_begin));
+        PRINTF(" new count:%i", TObjSize<SI4>(new_begin));
+        utf << str_start;
+        PRINTF("\nCopying \"%s\":%i with result:\"%s\":%i",
+               TSTRStart<Char>(begin), TObjSize<SI4>(begin), str_start,
+               TObjSize<SI4>(new_begin));
         if (using_heap) delete[] begin;
         obj.begin = new_begin;
+        PRINT("\nSuccess!");
         break;
       }
       case kFactoryClone: {
-        PRINT("Clone:");
+        PRINT("\nEntering Strand.Factory.Clone:");
         if (!arg) return kFactoryNilArg;
         CObject* other = reinterpret_cast<CObject*>(arg);
         begin = obj.begin;
@@ -2002,17 +1999,19 @@ class TStrand {
         if (!obj) return kFactoryCantGrow;
         other->begin = obj;
         other->factory = other->factory;
+        PRINT("\nSuccess!");
         break;
       }
       case kFactoryInfo: {
-        PRINT("Info:");
         // 1. Load the pointer to store the string to.
         const CH1** ptr = reinterpret_cast<const CH1**>(arg);
-        *ptr = "Strand";
+        *ptr = using_heap ? "Strand.Heap" : "Strand.Stack";
         break;
       }
+      default: {
+        PRINT("\nERROR: Invalid factory funeciton!");
+      }
     }
-    PRINT("\nSuccess!");
     return 0;
   }
 };
