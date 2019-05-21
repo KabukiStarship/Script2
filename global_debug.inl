@@ -11,6 +11,9 @@
 #define PRINTF(format, ...) ::_::Printf(format, __VA_ARGS__)
 #define PAUSE(message) ::_::Pause(message)
 #define PAUSEF(format, ...) ::_::Pausef(format, __VA_ARGS__)
+#define PRINT_ERROR(message)            \
+  ::_::Printf("\nERROR: %s.", message); \
+  ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define PRINT_LINEF(style) ::_::PrintLinef(style)
 #define PRINT_LINEF_COUNT(style, count) ::_::PrintLinef(style, count)
 #define PRINT_HEADING(caption) ::_::PrintHeadingf(caption)
@@ -25,7 +28,7 @@
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
+#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.Size())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(stack) stack->Print()
 #define PRINT_TOBJ(stack) stack.Print()

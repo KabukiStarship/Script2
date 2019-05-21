@@ -44,7 +44,7 @@ const CH1* STRAsciiFactoryError(SIN index) {
 SI4 ObjDo(CObject& obj, SIW function, void* arg) {
   AsciiFactory factory = obj.factory;
   if (factory) return factory(obj, function, arg);
-  PRINTF("\nNil factory.", result);
+  PRINT("\nNil factory.");
   return kFactoryNil;
 }
 

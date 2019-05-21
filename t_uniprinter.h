@@ -13,7 +13,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_UNIPRINTER_T
 #define SCRIPT2_UNIPRINTER_T 1
 
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_uniprinter.h"
 #include "t_socket.h"
 #include "t_string.h"
@@ -311,12 +311,44 @@ Char* TPrint(Char* start, SIW size, const CH4* item) {
 /* Prints the given hex using opeator<<. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
+  if (!begin) {
+    PRINT_ERROR("!begin");
+    return o;
+  }
+  SIW address, delta;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
+  if (byte_count < 0) {
+    delta = -1;
+    byte_count = -byte_count;
+    cursor += byte_count - 1;
+  } else {
+    delta = 1;
+  }
   while (byte_count-- > 0) {
-    UI1 byte = *cursor++;
-    o << HexNibbleToUpperCase(byte & 0xf) << HexNibbleToUpperCase(byte >> 4);
+    UI1 byte = *cursor;
+    cursor += delta;
+    o << HexNibbleToUpperCase(byte >> 4) << HexNibbleToUpperCase(byte & 0xf);
   }
   return o;
+}
+
+/* Prints the following item to the console in Hex. */
+template <typename Printer, typename UI>
+Printer& TPrintHex(Printer& o, UI item) {
+  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+  auto ui = ToUnsigned(item);
+  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+       num_bits_shift -= 4) {
+    o << HexNibbleToUpperCase((UI1)(ui >> num_bits_shift));
+  }
+  return o;
+}
+
+/* Prints the following item to the console in Hex. */
+template <typename Printer>
+Printer& TPrintHex(Printer& o, const void* item) {
+  UIW ptr = reinterpret_cast<UIW>(item);
+  return TPrintHex<Printer, UIW>(o, ptr);
 }
 
 /* Prints a hex value to the Console. */
@@ -324,8 +356,7 @@ template <typename Char, typename UI>
 Char* TPrintHex(Char* start, Char* stop, UI value) {
   enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
-  DASSERT(start);
-  if (start + kHexStrandLengthSizeMax >= stop) return nullptr;
+  if (!start || start + kHexStrandLengthSizeMax >= stop) return nullptr;
 
   *start++ = '0';
   *start++ = 'x';
@@ -1566,6 +1597,12 @@ enum {
 }  // namespace _
 #endif
 
+#if SEAM >= SCRIPT2_3
+#if SEAM == SCRIPT2_3
+#include "module_debug.inl"
+#else
+#include "module_release.inl"
+#endif
 namespace _ {
 
 template <typename Printer, typename Char = CH1>
@@ -1581,7 +1618,7 @@ Printer& TPrintString(Printer& o, const Char* string) {
 
 template <typename Printer, typename Char = CH1>
 Printer& TPrintRepeat(Printer& o, Char c, SI4 count) {
-  for (; count > 0; --count) o << ::_::ToCharStruct(c);
+  for (; count > 0; --count) o << Char(c);
   return o;
 }
 
@@ -1630,13 +1667,13 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
       p = ~c;         //< Previous.
   SI4 hit_count = 0, column_index = 0;
   while (c) {
-    o << ::_::ToCharStruct(c);
+    o << Char(c);
     ++column_index;
     if (c == kLF) {
       p = c;
       do {
         c = *style++;
-        o << ::_::ToCharStruct(c);
+        o << Char(c);
       } while (c == kLF);
       column_index = 0;
     }
@@ -1775,27 +1812,12 @@ Printer& TPrintBinarySigned(Printer& o, SI value) {
   return TPrintBinary<Printer, UI>(o, (UI)value);
 }
 
-/* Prints the following item to the console in Hex. */
-template <typename Printer, typename UI>
-Printer& TPrintHex(Printer& o, UI item) {
-  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
-  auto ui = ToUnsigned(item);
-  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
-       num_bits_shift -= 4) {
-    o << HexNibbleToUpperCase((UI1)(ui >> num_bits_shift));
-  }
-  return o;
-}
-/* Prints the following item to the console in Hex. */
-template <typename Printer>
-Printer& TPrintHex(Printer& o, const void* item) {
-  UIW ptr = reinterpret_cast<UIW>(item);
-  return TPrintHex<Printer, UIW>(o, ptr);
-}
-
 template <typename Char = CH1>
 Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
-  if (!start || start >= stop || !end || end >= begin) return nullptr;
+  if (!start || stop <= start || !begin || end <= begin) {
+    PRINT("\nPointers invalid.");
+    return nullptr;
+  }
 
   SIW size = stop - start, extra_row = ((size & 63) != 0) ? 1 : 0,
       row_count = (size >> 6) + extra_row;
@@ -1803,9 +1825,9 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
   SIW num_bytes = 81 * (row_count + 2);
   size += num_bytes;
 
-  begin = Print(begin, end, STRSocketHeader());
-  begin = Print(begin, end, STRSocketBorder());
-  begin = PrintHex(begin, end, start);
+  begin = TPrint<Char>(begin, end, STRSocketHeader());
+  begin = TPrint<Char>(begin, end, STRSocketBorder());
+  begin = TPrintHex<Char>(begin, end, start);
 
   Char c;
   while (start < stop) {
@@ -1821,10 +1843,10 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
     }
     *begin++ = '|';
     *begin++ = ' ';
-    begin = PrintHex(begin, end, start);
+    begin = TPrintHex<Char>(begin, end, start);
   }
-  begin = Print(begin, end, STRSocketBorder());
-  begin = PrintHex(begin, end, start + size);
+  begin = TPrint<Char>(begin, end, STRSocketBorder());
+  begin = TPrintHex<Char>(begin, end, start + size);
   return begin;
 }
 
@@ -1837,9 +1859,9 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
 
   SIW num_bytes = 81 * (row_count + 2);
   size += num_bytes;
-
+  PRINTF("\n\nExpecting start:0x%llx\n", start);
   o << STRSocketHeader() << STRSocketBorder() << Hex(start);
-
+  int i = 0;
   Char c;
   while (start < stop) {
     o << '\n' << '|';
@@ -1849,10 +1871,13 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
-      o << c;
-      //::_::ToCharStruct(c);
+      if (sizeof(Char) == 4)
+        o << Char(c);
+      else
+        o << Char(c);
     }
-    o << '|' << ' ' << Hex(start);
+    o << '|' << ' '  //
+      << Hex(start);
   }
   return o << STRSocketBorder() << Hex(start + size);
 }
@@ -1863,5 +1888,5 @@ Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
 }
 
 }  // namespace _
-
+#endif
 #endif

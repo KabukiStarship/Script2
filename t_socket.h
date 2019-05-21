@@ -271,8 +271,8 @@ inline T* TPtr(const void* ptr) {
 /* Utility function for syntactical sugar creating a pointer from a base plus
 offset.
 @return Pointer of the type specified by template parameter T.
-@param base The base address.
-@param offset The offset. */
+@param  base The base address.
+@param  offset The offset. */
 template <typename T>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
