@@ -636,10 +636,10 @@ Hex::Hex(SI8 item) : byte_count(-8) { *reinterpret_cast<SI8*>(buffer) = item; }
 Hex::Hex(UI8 item) : byte_count(-8) { *reinterpret_cast<UI8*>(buffer) = item; }
 
 #if USING_FP8 == YES
-Hex::Hex(FP4 item) : size_bytes(-4) { *reinterpret_cast<FP4*>(buffer) = item; }
+Hex::Hex(FP4 item) : byte_count(-4) { *reinterpret_cast<FP4*>(buffer) = item; }
 #endif
 #if USING_FP8 == YES
-Hex::Hex(FP8 item) : size_bytes(-8) { *reinterpret_cast<FP8*>(buffer) = item; }
+Hex::Hex(FP8 item) : byte_count(-8) { *reinterpret_cast<FP8*>(buffer) = item; }
 #endif
 
 Binary::Binary(const void* ptr)
