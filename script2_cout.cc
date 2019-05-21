@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <cstdio>
 #include <iostream>
 
-#include "c_sout.h"
+#include "c_cout.h"
 #include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_6
@@ -54,11 +54,11 @@ void PrintChar(CH4 c) {
   std::wcout << (CHN)c;  //< @todo This isn't working???
 }
 
-void Print(const CH4* item) { TPrintString<SOut, CH4>(SOut().Star(), item); }
+void Print(const CH4* item) { TPrintString<COut, CH4>(COut().Star(), item); }
 
 void Print(CH4 c) { PrintChar(c); }
 
-void Print(const CH2* item) { TPrintString<SOut, CH2>(SOut().Star(), item); }
+void Print(const CH2* item) { TPrintString<COut, CH2>(COut().Star(), item); }
 
 void PrintChar(CH2 c) {
 #if USING_UTF32 == YES
@@ -199,87 +199,87 @@ void PrintIndent(SI4 count) {
 const CH1* PrintLinefCH1() { return TSTRLinef<CH1>(); }
 
 const CH1* PrintLinef(const CH1* style, SI4 column_count) {
-  return TPrintLinef<SOut, CH1>(SOut().Star(), style, column_count);
+  return TPrintLinef<COut, CH1>(COut().Star(), style, column_count);
 }
 
 void PrintLinef(CH1 token, SI4 column_count) {
-  TPrintLinef<SOut, CH1>(SOut().Star(), token, column_count);
+  TPrintLinef<COut, CH1>(COut().Star(), token, column_count);
 }
 
 void PrintHeadingf(const CH1* caption, const CH1* style, SI4 column_count,
                    const CH1* caption2, const CH1* caption3) {
-  TPrintHeadingf<SOut, CH1>(SOut().Star(), caption, style, column_count,
+  TPrintHeadingf<COut, CH1>(COut().Star(), caption, style, column_count,
                             caption2, caption3);
 }
 
-void PrintBinary(UI1 value) { TPrintBinary<SOut, UI1>(SOut().Star(), value); }
+void PrintBinary(UI1 value) { TPrintBinary<COut, UI1>(COut().Star(), value); }
 
 void PrintBinary(SI1 value) {
-  TPrintBinary<SOut, UI1>(SOut().Star(), (UI1)value);
+  TPrintBinary<COut, UI1>(COut().Star(), (UI1)value);
 }
 
-void PrintBinary(UI2 value) { TPrintBinary<SOut, UI2>(SOut().Star(), value); }
+void PrintBinary(UI2 value) { TPrintBinary<COut, UI2>(COut().Star(), value); }
 
 void PrintBinary(SI2 value) {
-  TPrintBinary<SOut, UI2>(SOut().Star(), (UI2)value);
+  TPrintBinary<COut, UI2>(COut().Star(), (UI2)value);
 }
 
-void PrintBinary(UI4 value) { TPrintBinary<SOut, UI4>(SOut().Star(), value); }
+void PrintBinary(UI4 value) { TPrintBinary<COut, UI4>(COut().Star(), value); }
 
-void PrintBinary(SI4 value) { TPrintBinary<SOut, UI4>(SOut().Star(), value); }
+void PrintBinary(SI4 value) { TPrintBinary<COut, UI4>(COut().Star(), value); }
 
-void PrintBinary(UI8 value) { TPrintBinary<SOut, UI8>(SOut().Star(), value); }
+void PrintBinary(UI8 value) { TPrintBinary<COut, UI8>(COut().Star(), value); }
 
-void PrintBinary(SI8 value) { TPrintBinary<SOut, UI8>(SOut().Star(), value); }
+void PrintBinary(SI8 value) { TPrintBinary<COut, UI8>(COut().Star(), value); }
 
 void PrintBinary(FP4 value) {
-  TPrintBinary<SOut, UI4>(SOut().Star(), *reinterpret_cast<UI4*>(&value));
+  TPrintBinary<COut, UI4>(COut().Star(), *reinterpret_cast<UI4*>(&value));
 }
 
 void PrintBinary(FP8 value) {
-  TPrintBinary<SOut, UI8>(SOut().Star(), *reinterpret_cast<UI8*>(&value));
+  TPrintBinary<COut, UI8>(COut().Star(), *reinterpret_cast<UI8*>(&value));
 }
 
 void PrintBinary(const void* ptr) {
-  TPrintBinary<SOut, UIW>(SOut().Star(), *reinterpret_cast<UIW*>(&ptr));
+  TPrintBinary<COut, UIW>(COut().Star(), *reinterpret_cast<UIW*>(&ptr));
 }
 
 #if SEAM >= SCRIPT2_1
-void PrintHex(CH1 value) { TPrintHex<SOut, UI1>(SOut().Star(), value); }
+void PrintHex(CH1 value) { TPrintHex<COut, UI1>(COut().Star(), value); }
 
-void PrintHex(CH2 value) { TPrintHex<SOut, UI2>(SOut().Star(), value); }
+void PrintHex(CH2 value) { TPrintHex<COut, UI2>(COut().Star(), value); }
 
-void PrintHex(CH4 value) { TPrintHex<SOut, UI4>(SOut().Star(), value); }
+void PrintHex(CH4 value) { TPrintHex<COut, UI4>(COut().Star(), value); }
 
-void PrintHex(UI1 value) { TPrintHex<SOut, UI1>(SOut().Star(), value); }
+void PrintHex(UI1 value) { TPrintHex<COut, UI1>(COut().Star(), value); }
 
-void PrintHex(SI1 value) { TPrintHex<SOut, UI1>(SOut().Star(), (UI1)value); }
+void PrintHex(SI1 value) { TPrintHex<COut, UI1>(COut().Star(), (UI1)value); }
 
-void PrintHex(UI2 value) { TPrintHex<SOut, UI2>(SOut().Star(), value); }
+void PrintHex(UI2 value) { TPrintHex<COut, UI2>(COut().Star(), value); }
 
-void PrintHex(SI2 value) { TPrintHex<SOut, UI2>(SOut().Star(), (UI2)value); }
+void PrintHex(SI2 value) { TPrintHex<COut, UI2>(COut().Star(), (UI2)value); }
 
-void PrintHex(UI4 value) { TPrintHex<SOut, UI4>(SOut().Star(), value); }
+void PrintHex(UI4 value) { TPrintHex<COut, UI4>(COut().Star(), value); }
 
-void PrintHex(SI4 value) { TPrintHex<SOut, UI4>(SOut().Star(), (UI4)value); }
+void PrintHex(SI4 value) { TPrintHex<COut, UI4>(COut().Star(), (UI4)value); }
 
-void PrintHex(UI8 value) { TPrintHex<SOut, UI8>(SOut().Star(), value); }
+void PrintHex(UI8 value) { TPrintHex<COut, UI8>(COut().Star(), value); }
 
-void PrintHex(SI8 value) { TPrintHex<SOut, UI8>(SOut().Star(), (UI8)value); }
+void PrintHex(SI8 value) { TPrintHex<COut, UI8>(COut().Star(), (UI8)value); }
 
 void PrintHex(FP4 value) {
   UI4 f = *reinterpret_cast<UI4*>(&value);
-  TPrintHex<SOut, UI4>(SOut().Star(), f);
+  TPrintHex<COut, UI4>(COut().Star(), f);
 }
 
 void PrintHex(FP8 value) {
   UI8 f = *reinterpret_cast<UI8*>(&value);
-  TPrintHex<SOut, UI8>(SOut().Star(), f);
+  TPrintHex<COut, UI8>(COut().Star(), f);
 }
 
 void PrintHex(const void* ptr) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  TPrintHex<SOut, UIW>(SOut().Star(), value);
+  TPrintHex<COut, UIW>(COut().Star(), value);
 }
 
 void PrintHex(const void* begin, const void* end) {
@@ -315,11 +315,11 @@ void PrintHex(const void* begin, const void* end) {
 }
 
 void PrintHex(const void* begin, SIW size_bytes) {
-  TPrintHex<SOut>(SOut().Star(), begin, size_bytes);
+  TPrintHex<COut>(COut().Star(), begin, size_bytes);
 }
 
 void PrintChars(const void* begin, const void* end) {
-  TPrintChars<SOut, CH1>(SOut().Star(), reinterpret_cast<const CH1*>(begin),
+  TPrintChars<COut, CH1>(COut().Star(), reinterpret_cast<const CH1*>(begin),
                          reinterpret_cast<const CH1*>(end));
 }
 
@@ -332,34 +332,34 @@ void PrintChars(const void* start, SIW count) {
 #if USING_UTF16 == YES
 
 void PrintChars(const CH2* start, const CH2* stop) {
-  TPrintChars<SOut, CH2>(SOut().Star(), start, stop);
+  TPrintChars<COut, CH2>(COut().Star(), start, stop);
 }
 
 void PrintChars(const CH2* start, SI4 count) {
-  TPrintChars<SOut, CH2>(SOut().Star(), start, count);
+  TPrintChars<COut, CH2>(COut().Star(), start, count);
 }
 
 void PrintRight(const CH2* start, SI4 count) {
-  TPrintRight<SOut, CH2>(SOut().Star(), start, count);
+  TPrintRight<COut, CH2>(COut().Star(), start, count);
 }
 
 void PrintCenter(const CH2* item, SI4 count) {
-  TPrintCenter<SOut, CH2>(SOut().Star(), item, count);
+  TPrintCenter<COut, CH2>(COut().Star(), item, count);
 }
 
 const CH2* PrintLinefCH2() { return TSTRLinef<CH2>(); }
 
 const CH2* PrintLinef(const CH2* style, SI4 count) {
-  return TPrintLinef<SOut, CH2>(SOut().Star(), style, count);
+  return TPrintLinef<COut, CH2>(COut().Star(), style, count);
 }
 
 void PrintLinef(CH2 token, SI4 count) {
-  TPrintLinef<SOut, CH2>(SOut().Star(), token, count);
+  TPrintLinef<COut, CH2>(COut().Star(), token, count);
 }
 
 void PrintHeadingf(const CH2* caption, const CH2* style, SI4 column_count,
                    const CH2* caption2, const CH2* caption3) {
-  TPrintHeadingf<SOut, CH2>(SOut().Star(), caption, style, column_count,
+  TPrintHeadingf<COut, CH2>(COut().Star(), caption, style, column_count,
                             caption2, caption3);
 }
 
@@ -367,331 +367,331 @@ void PrintHeadingf(const CH2* caption, const CH2* style, SI4 column_count,
 
 #if USING_UTF32 == YES
 void PrintChars(const CH4* start, SIW count) {
-  TPrintChars<SOut, CH4>(SOut().Star(), start, start + count);
+  TPrintChars<COut, CH4>(COut().Star(), start, start + count);
 }
 
 void PrintChars(const CH4* start, const CH4* stop) {
-  TPrintChars<SOut, CH4>(SOut().Star(), start, stop);
+  TPrintChars<COut, CH4>(COut().Star(), start, stop);
 }
 
 void PrintChars(const CH4* start, SI4 count) {
-  TPrintChars<SOut, CH4>(SOut().Star(), start, count);
+  TPrintChars<COut, CH4>(COut().Star(), start, count);
 }
 
 void PrintRight(const CH4* start, SI4 count) {
-  TPrintRight<SOut, CH4>(SOut().Star(), start, count);
+  TPrintRight<COut, CH4>(COut().Star(), start, count);
 }
 
 void PrintCenter(const CH4* item, SI4 count) {
-  TPrintCenter<SOut, CH4>(SOut().Star(), item, count);
+  TPrintCenter<COut, CH4>(COut().Star(), item, count);
 }
 
 const CH4* PrintLinefCH4() { return TSTRLinef<CH4>(); }
 
 const CH4* PrintLinef(const CH4* style, SI4 count) {
-  return TPrintLinef<SOut, CH4>(SOut().Star(), style, count);
+  return TPrintLinef<COut, CH4>(COut().Star(), style, count);
 }
 
 void PrintLinef(CH4 token, SI4 count) {
-  TPrintLinef<SOut, CH4>(SOut().Star(), token, count);
+  TPrintLinef<COut, CH4>(COut().Star(), token, count);
 }
 
 void PrintHeadingf(const CH4* caption, const CH4* style, SI4 column_count,
                    const CH4* caption2, const CH4* caption3) {
-  TPrintHeadingf<SOut, CH4>(SOut().Star(), caption, style, column_count,
+  TPrintHeadingf<COut, CH4>(COut().Star(), caption, style, column_count,
                             caption2, caption3);
 }
 #endif
 
 void PrintRight(const CH1* item, SI4 count) {
-  ::_::TPrintRight<SOut, CH1>(SOut().Star(), item, count);
+  ::_::TPrintRight<COut, CH1>(COut().Star(), item, count);
 }
 
 void PrintCenter(const CH1* item, SI4 count) {
-  ::_::TPrintCenter<SOut, CH1>(SOut().Star(), item, count);
+  ::_::TPrintCenter<COut, CH1>(COut().Star(), item, count);
 }
 
-SOut::SOut() {}
+COut::COut() {}
 
-SOut::SOut(CH1 item) { ::_::Print(item); }
-SOut::SOut(const CH1* item) { ::_::Print(item); }
+COut::COut(CH1 item) { ::_::Print(item); }
+COut::COut(const CH1* item) { ::_::Print(item); }
 
-SOut::SOut(CH2 item) { ::_::Print(item); }
-SOut::SOut(const CH2* item) { ::_::Print(item); }
+COut::COut(CH2 item) { ::_::Print(item); }
+COut::COut(const CH2* item) { ::_::Print(item); }
 
-SOut::SOut(CH4 item) { ::_::Print(item); }
-SOut::SOut(const CH4* item) { ::_::Print(item); }
+COut::COut(CH4 item) { ::_::Print(item); }
+COut::COut(const CH4* item) { ::_::Print(item); }
 
-SOut::SOut(SI1 item) { ::_::Print(item); }
+COut::COut(SI1 item) { ::_::Print(item); }
 
-SOut::SOut(UI1 item) { ::_::Print(item); }
+COut::COut(UI1 item) { ::_::Print(item); }
 
-SOut::SOut(SI2 item) { ::_::Print(item); }
+COut::COut(SI2 item) { ::_::Print(item); }
 
-SOut::SOut(UI2 item) { ::_::Print(item); }
+COut::COut(UI2 item) { ::_::Print(item); }
 
-SOut::SOut(SI4 item) { ::_::Print(item); }
+COut::COut(SI4 item) { ::_::Print(item); }
 
-SOut::SOut(UI4 item) { ::_::Print(item); }
+COut::COut(UI4 item) { ::_::Print(item); }
 
-SOut::SOut(SI8 item) { ::_::Print(item); }
+COut::COut(SI8 item) { ::_::Print(item); }
 
-SOut::SOut(UI8 item) { ::_::Print(item); }
+COut::COut(UI8 item) { ::_::Print(item); }
 
 #if SEAM >= SCRIPT2_4
 
-SOut::SOut(FP4 item) { ::_::Print(item); }
+COut::COut(FP4 item) { ::_::Print(item); }
 
-SOut::SOut(FP8 item) { ::_::Print(item); }
+COut::COut(FP8 item) { ::_::Print(item); }
 #endif
 
-SOut& SOut::Star() { return *this; }
+COut& COut::Star() { return *this; }
 
-SOut& SOut::PrintChar(CH1 item) {
+COut& COut::PrintChar(CH1 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(CH1 item) { return PrintChar(item); }
+COut& COut::Print(CH1 item) { return PrintChar(item); }
 
-SOut& SOut::Print(const CH1* item) {
+COut& COut::Print(const CH1* item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(SI4 item) {
+COut& COut::Print(SI4 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(UI4 item) {
+COut& COut::Print(UI4 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(SI8 item) {
+COut& COut::Print(SI8 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(UI8 item) {
+COut& COut::Print(UI8 item) {
   ::_::Print(item);
   return *this;
 }
 
 #if USING_FP4 == YES
-SOut& SOut::Print(FP4 item) {
+COut& COut::Print(FP4 item) {
   ::_::Print(item);
   return *this;
 }
 #endif
 #if USING_FP8 == YES
-SOut& SOut::Print(FP8 item) {
+COut& COut::Print(FP8 item) {
   ::_::Print(item);
   return *this;
 }
 #endif
 
 #if SEAM >= SCRIPT2_1
-SOut& SOut::Print(const void* begin, SIW size_bytes) {
-  TPrintHex<SOut>(SOut().Star(), begin, size_bytes);
+COut& COut::Print(const void* begin, SIW size_bytes) {
+  TPrintHex<COut>(COut().Star(), begin, size_bytes);
   return *this;
 }
 
-SOut& SOut::Print(Hex item) {
-  TPrintHex<SOut>(SOut().Star(), item.buffer, item.byte_count);
+COut& COut::Print(Hex item) {
+  TPrintHex<COut>(COut().Star(), item.buffer, item.size);
   return *this;
 }
 #endif
 
 #if SEAM >= SCRIPT2_3
-SOut& SOut::Print(Right1 item) {
+COut& COut::Print(Right1 item) {
   ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
 }
 
-SOut& SOut::Print(Center1 item) {
+COut& COut::Print(Center1 item) {
   ::_::PrintCenter(item.token.String(), item.token.Count());
   return *this;
 }
 
-SOut& SOut::Print(Linef1 item) {
-  TPrintLinef<SOut, CH1>(*this, item.token.String(), item.token.Count());
+COut& COut::Print(Linef1 item) {
+  TPrintLinef<COut, CH1>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
-SOut& SOut::Print(Headingf1 item) {
+COut& COut::Print(Headingf1 item) {
   PrintHeadingf(item.caption.String(), item.style, item.caption.Count(),
                 item.caption2, item.caption3);
   return *this;
 }
 
-SOut& SOut::Print(Chars1 item) {
-  return TPrintChars<SOut, CH1>(*this, item.start, item.stop);
+COut& COut::Print(Chars1 item) {
+  return TPrintChars<COut, CH1>(*this, item.start, item.stop);
 }
 
 #endif
 
 #if USING_UTF16 == YES
-SOut& SOut::PrintChar(CH2 item) {
+COut& COut::PrintChar(CH2 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(CH2 item) { return PrintChar(item); }
+COut& COut::Print(CH2 item) { return PrintChar(item); }
 
-SOut& SOut::Print(const CH2* item) {
+COut& COut::Print(const CH2* item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(Right2 item) {
+COut& COut::Print(Right2 item) {
   Print(item.token.String());
   return *this;
 }
 
-SOut& SOut::Print(Center2 item) {
+COut& COut::Print(Center2 item) {
   Print(item.token.String());
   return *this;
 }
 
-SOut& SOut::Print(Linef2 item) {
-  TPrintLinef<SOut, CH2>(*this, item.token.String(), item.token.Count());
+COut& COut::Print(Linef2 item) {
+  TPrintLinef<COut, CH2>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
-SOut& SOut::Print(Headingf2 item) {
-  return TPrintHeadingf<SOut, CH2>(*this, item.caption.String(), item.style,
+COut& COut::Print(Headingf2 item) {
+  return TPrintHeadingf<COut, CH2>(*this, item.caption.String(), item.style,
                                    item.caption.Count(), item.caption2,
                                    item.caption3);
 }
 
-SOut& SOut::Print(Chars2 item) {
-  return TPrintChars<SOut, CH2>(*this, item.start, item.stop);
+COut& COut::Print(Chars2 item) {
+  return TPrintChars<COut, CH2>(*this, item.start, item.stop);
 }
 #endif
 #if USING_UTF32 == YES
 
-SOut& SOut::PrintChar(CH4 item) {
+COut& COut::PrintChar(CH4 item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(CH4 item) { return PrintChar(item); }
+COut& COut::Print(CH4 item) { return PrintChar(item); }
 
-SOut& SOut::Print(const CH4* item) {
+COut& COut::Print(const CH4* item) {
   ::_::Print(item);
   return *this;
 }
 
-SOut& SOut::Print(Right4 item) {
+COut& COut::Print(Right4 item) {
   Print(item.token.String());
   return *this;
 }
 
-SOut& SOut::Print(Center4 item) {
+COut& COut::Print(Center4 item) {
   Print(item.token.String());
   return *this;
 }
 
-SOut& SOut::Print(Linef4 item) {
-  TPrintLinef<SOut, CH4>(*this, item.token.String(), item.token.Count());
+COut& COut::Print(Linef4 item) {
+  TPrintLinef<COut, CH4>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
-SOut& SOut::Print(Headingf4 item) {
-  return TPrintHeadingf<SOut, CH4>(*this, item.caption.String(), item.style,
+COut& COut::Print(Headingf4 item) {
+  return TPrintHeadingf<COut, CH4>(*this, item.caption.String(), item.style,
                                    item.caption.Count(), item.caption2,
                                    item.caption3);
 }
 
-SOut& SOut::Print(Chars4 item) {
-  return TPrintChars<SOut, CH4>(*this, item.start, item.stop);
+COut& COut::Print(Chars4 item) {
+  return TPrintChars<COut, CH4>(*this, item.start, item.stop);
 }
 
 #endif
 
 }  // namespace _
 
-::_::SOut& operator<<(::_::SOut& o, ::_::SOut& p) { return o; }
+::_::COut& operator<<(::_::COut& o, ::_::COut& p) { return o; }
 
-::_::SOut& operator<<(::_::SOut& o, CH1 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH1 item) { return o.PrintChar(item); }
 
-::_::SOut& operator<<(::_::SOut& o, const CH1* item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, UI1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, UI1 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, SI2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, SI2 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, UI2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, UI2 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, SI4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, SI4 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, UI4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, UI4 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, SI8 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, SI8 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, UI8 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, UI8 item) { return o.Print(item); }
 
 #if USING_FP4 == YES
-::_::SOut& operator<<(::_::SOut& o, FP4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, FP4 item) { return o.Print(item); }
 #endif
 
 #if USING_FP8 == YES
-::_::SOut& operator<<(::_::SOut& o, FP8 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, FP8 item) { return o.Print(item); }
 #endif
 
 #if SEAM >= SCRIPT2_1
-::_::SOut& operator<<(::_::SOut& o, ::_::Hex item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Hex item) { return o.Print(item); }
 #endif
 
 #if SEAM >= SCRIPT2_3
-::_::SOut& operator<<(::_::SOut& o, ::_::Center1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Center1 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Right1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Right1 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Linef1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Linef1 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Headingf1 item) {
+::_::COut& operator<<(::_::COut& o, ::_::Headingf1 item) {
   return o.Print(item);
 }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Chars1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Chars1 item) { return o.Print(item); }
 #endif
 
 #if USING_UTF16 == YES
-::_::SOut& operator<<(::_::SOut& o, CH2 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH2 item) { return o.PrintChar(item); }
 
-::_::SOut& operator<<(::_::SOut& o, const CH2* item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Center2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Center2 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Right2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Right2 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Linef2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Linef2 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Headingf2 item) {
+::_::COut& operator<<(::_::COut& o, ::_::Headingf2 item) {
   return o.Print(item);
 }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Chars2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Chars2 item) { return o.Print(item); }
 #endif
 
 #if USING_UTF32 == YES
 
-::_::SOut& operator<<(::_::SOut& o, CH4 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH4 item) { return o.PrintChar(item); }
 
-::_::SOut& operator<<(::_::SOut& o, const CH4* item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Center4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Center4 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Right4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Right4 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Linef4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Linef4 item) { return o.Print(item); }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Headingf4 item) {
+::_::COut& operator<<(::_::COut& o, ::_::Headingf4 item) {
   return o.Print(item);
 }
 
-::_::SOut& operator<<(::_::SOut& o, ::_::Chars4 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, ::_::Chars4 item) { return o.Print(item); }
 #endif

@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_sout.h
+@file    /script2/c_cout.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -45,10 +45,10 @@ SDK void Print(CH1 first, CH1 second, CH1 third);
 /* Prints a single string to the console followed by the given delimiter. */
 SDK void Print(const CH1* string, CH1 delimiter);
 
-/* Prints two strings to the SOut. */
+/* Prints two strings to the COut. */
 SDK void Print(const CH1* a, const CH1* b);
 
-/* Prints the give item to the SOut. */
+/* Prints the give item to the COut. */
 SDK /*inline*/ void Print(CH1 c);
 SDK /*inline*/ void Print(CH2 c);
 SDK /*inline*/ void Print(CH4 c);
@@ -84,7 +84,7 @@ SDK void PrintfLn(const CH1* format, ...);
 @param The number_ of spaces to indent. */
 SDK void PrintIndent(SI4 count = 1);
 
-/* Prints a item to the SOut. */
+/* Prints a item to the COut. */
 SDK void PrintBinary(UI1 item);
 SDK void PrintBinary(SI1 item);
 SDK void PrintBinary(UI2 item);
@@ -216,127 +216,127 @@ SDK void PrintHeadingf(const CH4* caption, const CH4* style = nullptr,
 #endif
 
 /* Utility class for printing to the stdout. */
-class SOut {
+class COut {
  public:
   /* Does nothing. */
-  SOut();
+  COut();
 
-  /* Prints the given item to the SOut stream. */
-  SOut(CH1 item);
-  SOut(CH2 item);
-  SOut(CH4 item);
-  SOut(const CH1* item);
-  SOut(const CH2* item);
-  SOut(const CH4* item);
-  SOut(SI1 item);
-  SOut(UI1 item);
-  SOut(SI2 item);
-  SOut(UI2 item);
-  SOut(SI4 item);
-  SOut(UI4 item);
-  SOut(SI8 item);
-  SOut(UI8 item);
+  /* Prints the given item to the COut stream. */
+  COut(CH1 item);
+  COut(CH2 item);
+  COut(CH4 item);
+  COut(const CH1* item);
+  COut(const CH2* item);
+  COut(const CH4* item);
+  COut(SI1 item);
+  COut(UI1 item);
+  COut(SI2 item);
+  COut(UI2 item);
+  COut(SI4 item);
+  COut(UI4 item);
+  COut(SI8 item);
+  COut(UI8 item);
 #if SEAM >= SCRIPT2_4
-  SOut(FP4 item);
-  SOut(FP8 item);
+  COut(FP4 item);
+  COut(FP8 item);
 #endif
 
   /* Returns reference to this. */
-  SOut& Star();
+  COut& Star();
 
   /* Prints the given item to the stdout. */
-  SOut& PrintChar(CH1 item);
-  SOut& Print(CH1 item);
-  SOut& Print(const CH1* item);
-  SOut& Print(SI4 item);
-  SOut& Print(UI4 item);
-  SOut& Print(SI8 item);
-  SOut& Print(UI8 item);
+  COut& PrintChar(CH1 item);
+  COut& Print(CH1 item);
+  COut& Print(const CH1* item);
+  COut& Print(SI4 item);
+  COut& Print(UI4 item);
+  COut& Print(SI8 item);
+  COut& Print(UI8 item);
 #if USING_FP4 == YES
-  SOut& Print(FP4 item);
+  COut& Print(FP4 item);
 #endif
 #if USING_FP8 == YES
-  SOut& Print(FP8 item);
+  COut& Print(FP8 item);
 #endif
 #if SEAM >= SCRIPT2_1
-  SOut& Print(const void* begin, SIW size_bytes);
-  SOut& Print(Hex item);
+  COut& Print(const void* begin, SIW size_bytes);
+  COut& Print(Hex item);
 #endif
 
 #if SEAM >= SCRIPT2_3
-  SOut& Print(Right1 item);
-  SOut& Print(Center1 item);
-  SOut& Print(Linef1 item);
-  SOut& Print(Headingf1 item);
-  SOut& Print(Chars1 item);
+  COut& Print(Right1 item);
+  COut& Print(Center1 item);
+  COut& Print(Linef1 item);
+  COut& Print(Headingf1 item);
+  COut& Print(Chars1 item);
 #endif
 #if USING_UTF16 == YES
-  SOut& PrintChar(CH2 item);
-  SOut& Print(CH2 item);
-  SOut& Print(const CH2* item);
-  SOut& Print(Right2 item);
-  SOut& Print(Center2 item);
-  SOut& Print(Linef2 item);
-  SOut& Print(Headingf2 item);
-  SOut& Print(Chars2 item);
+  COut& PrintChar(CH2 item);
+  COut& Print(CH2 item);
+  COut& Print(const CH2* item);
+  COut& Print(Right2 item);
+  COut& Print(Center2 item);
+  COut& Print(Linef2 item);
+  COut& Print(Headingf2 item);
+  COut& Print(Chars2 item);
 #endif
 #if USING_UTF32 == YES
-  SOut& PrintChar(CH4 item);
-  SOut& Print(CH4 item);
-  SOut& Print(const CH4* item);
-  SOut& Print(Right4 item);
-  SOut& Print(Center4 item);
-  SOut& Print(Linef4 item);
-  SOut& Print(Headingf4 item);
-  SOut& Print(Chars4 item);
+  COut& PrintChar(CH4 item);
+  COut& Print(CH4 item);
+  COut& Print(const CH4* item);
+  COut& Print(Right4 item);
+  COut& Print(Center4 item);
+  COut& Print(Linef4 item);
+  COut& Print(Headingf4 item);
+  COut& Print(Chars4 item);
 #endif
 };
 
 }  // namespace _
 
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH1 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH1* string);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, UI1 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, SI2 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, UI2 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, SI4 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, UI4 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, SI8 value);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, UI8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH1 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH1* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI1 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI2 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI2 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI8 value);
 #if USING_FP4 == YES
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, FP4 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP4 value);
 #endif
 #if USING_FP8 == YES
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, FP8 value);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP8 value);
 #endif
 #if SEAM >= SCRIPT2_1
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Hex item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex item);
 #endif
 
 #if SEAM >= SCRIPT2_3
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center1 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right1 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef1 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf1 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars1 item);
 #if USING_UTF16 == YES
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH2 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH2* string);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center2 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right2 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef2 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf2 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH2 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars2 item);
 #endif
 #if USING_UTF32 == YES
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, CH4 c);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, const CH4* string);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Center4 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Right4 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Linef4 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Headingf4 item);
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::Chars4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH4 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH4* string);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf4 item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars4 item);
 #endif
 #endif
-/*inline*/ ::_::SOut& operator<<(::_::SOut& cout, ::_::SOut& o);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::COut& o);
 #endif

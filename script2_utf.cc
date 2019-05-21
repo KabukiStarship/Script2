@@ -706,7 +706,7 @@ UTF1& UTF1::Hex(const void* ptr) {
 }
 
 UTF1& UTF1::Print(::_::Hex item) {
-  return Set(TPrintHex<CH1>(start, stop, item.buffer, item.byte_count));
+  return Set(TPrintHex<CH1>(start, stop, item.Begin(), item.Size()));
 }
 
 UTF1& UTF1::Binary(UI1 item) {
@@ -1251,7 +1251,7 @@ UTF2& UTF2::Print(Chars2 item) {
 }
 
 UTF2& UTF2::Print(::_::Hex item) {
-  return Set(::_::TPrintHex<CH2>(start, stop, item.buffer, item.byte_count));
+  return Set(::_::TPrintHex<CH2>(start, stop, item.Begin(), item.Size()));
 }
 
 UTF2& UTF2::Hex(UI1 item) { return Set(TPrintHex<CH2>(start, stop, item)); }
@@ -2020,7 +2020,7 @@ UTF4& UTF4::Print(Headingf4 item) {
 }
 
 UTF4& UTF4::Print(::_::Hex item) {
-  return Set(::_::TPrintHex<CH4>(start, stop, item.buffer, item.byte_count));
+  return Set(::_::TPrintHex<CH4>(start, stop, item.Begin(), item.Size()));
 }
 
 UTF4& UTF4::Hex(UI1 item) { return Set(TPrintHex<CH4>(start, stop, item)); }

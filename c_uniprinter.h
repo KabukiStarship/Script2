@@ -326,7 +326,7 @@ signed equivalent. */
 struct Hex {
   enum { k };
   UIW buffer[2];
-  SIW byte_count;  //< Width of the item in bytes.
+  SIW size;  //< Width of the item in bytes.
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
   Hex(const void* item);
@@ -345,6 +345,12 @@ struct Hex {
 #if USING_FP8 == YES
   Hex(FP8 item);
 #endif
+
+  /* Gets the begin of the socket. */
+  UIW* Begin();
+
+  /* Gets the size of the socket. */
+  SIW Size();
 };
 
 /* Utility class for printing a POD type in binary. */

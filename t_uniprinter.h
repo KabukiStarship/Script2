@@ -13,7 +13,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_UNIPRINTER_T
 #define SCRIPT2_UNIPRINTER_T 1
 
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_uniprinter.h"
 #include "t_socket.h"
 #include "t_string.h"
@@ -1880,7 +1880,7 @@ Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
   return TPrintChars<Printer, Char>(o, start, start + count);
 }
 
-/* Prints the given socket to the SOut. */
+/* Prints the given socket to the COut. */
 template <typename Char = CH1>
 Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
                    const void* end) {
@@ -1926,7 +1926,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
   return TPrintHex<Char>(cursor, stop, address_ptr + size);
 }
 
-/* Prints the given socket to the SOut.
+/* Prints the given socket to the COut.
 @todo I think we only need TPRintChars. */
 template <typename Printer>
 Printer& TPrintSocket(Printer& o, const void* begin, const void* end) {

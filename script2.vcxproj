@@ -63,7 +63,7 @@
     <ClCompile Include="script2_sin.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_sout.cc" />
+    <ClCompile Include="script2_cout.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_uniprinter.cc" />
     <ClCompile Include="script2_utf.cc" />
@@ -112,10 +112,10 @@
     <ClInclude Include="c_operand.h" />
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
-    <ClInclude Include="c_sin.h" />
+    <ClInclude Include="c_cin.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
-    <ClInclude Include="c_sout.h" />
+    <ClInclude Include="c_cout.h" />
     <ClInclude Include="c_stack.h" />
     <ClInclude Include="c_strand.h" />
     <ClInclude Include="c_test.h" />

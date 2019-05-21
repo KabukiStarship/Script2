@@ -13,10 +13,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_TTEST
 #define SCRIPT2_TTEST 1
 
+#include "c_cin.h"
+#include "c_cout.h"
 #include "c_test.h"
-
-#include "c_sin.h"
-#include "c_sout.h"
 #include "t_uniprinter.h"
 
 namespace _ {

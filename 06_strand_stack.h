@@ -34,17 +34,29 @@ void _06_Strand() {
     kCharSizeChar = '0' + sizeof(Char),
   };
 
-  PRINTF("\n\nExpecting \"%s\"\n", kTesting123);
+  PRINT("\n\nExpecting \"");
+  PRINT(kTesting123);
+  PRINT("\"\n");
   TStrand<Char, 8> strand;
-  strand.Wipe();
   strand.PrintConstants();
+  strand.Wipe();
+  PRINT("\n\nPrinting:\"Testing \"");
   strand << "Testing ";
+  PRINT("\n\nPrinting:\"1\"");
   strand << 1;
+  PRINT("\n\nPrinting:\", \"");
   strand << ", ";
+  PRINT("\n\nPrinting:\"2\"");
   strand << 2;
+  PRINT("\n\nPrinting:\", \"");
   strand << ", ";
+  PRINT("\n\nPrinting:\"3\"");
   strand << 3;
-  PRINT("\nResult:");
+  PRINT("\n\nPrinting:\".\"");
+  strand << '.';
+  PRINTF("\n\nResult:\"");
+  PRINT(strand.Start());
+  PRINT("\"\n");
   PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
 
   const Char* cursor = strand.Find(kTesting123);

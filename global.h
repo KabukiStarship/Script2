@@ -14,26 +14,26 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define INCLUDED_SCRIPTGLOBAL 1
 
 #if SEAM == SCRIPT2_0
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_rng.h"
 #endif
 #if SEAM == SCRIPT2_1
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_rng.h"
 #endif
 #if SEAM == SCRIPT2_2
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_rng.h"
 #include "t_uniprinter.h"
 #include "t_socket.h"
 #endif
 #if SEAM == SCRIPT2_3 || SEAM == SCRIPT2_4
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_rng.h"
 #include "t_uniprinter.h"
 #endif
 #if SEAM == SCRIPT2_5
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_rng.h"
 #include "t_clock.h"
 #endif

@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "c_sout.h"
+#include "c_cout.h"
 #include "c_test.h"
 #include "module_debug.inl"
 #include "t_uniprinter.h"
