@@ -170,15 +170,15 @@ static const Char* _03_UTF() {
     AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 
-  PRINT_HEADING("Testing TPrintSocket<Char>");
+  PRINT_HEADING("Testing TPrintChars<Char>");
 
   for (SI4 i = 0; i < kCount / 4; ++i) str_b[i] = '0' + i % 10;
 
   SOCKET_WIPE(str_a, (kCount * sizeof(Char)) / 4);
 
   str_b[kCount - 1] = 0;
-  ASSERT(TPrintSocket<Char>(str_a, str_a + kCount, str_b, str_b + kCount / 4));
-  PRINT_CHARS(str_b, kCount / 2);
+  ASSERT(TPrintChars<Char>(str_a, str_a + kCount, str_b, str_b + kCount / 4));
+  PRINT(str_a);
 
   return nullptr;
 }

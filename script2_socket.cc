@@ -65,6 +65,38 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
+void WritePOD(void* begin, SI1 value) {
+  *reinterpret_cast<SI1*>(begin) = value;
+}
+
+void WritePOD(void* begin, UI1 value) {
+  *reinterpret_cast<UI1*>(begin) = value;
+}
+
+void WritePOD(void* begin, SI2 value) {
+  *reinterpret_cast<SI2*>(begin) = value;
+}
+
+void WritePOD(void* begin, UI2 value) {
+  *reinterpret_cast<UI2*>(begin) = value;
+}
+
+void WritePOD(void* begin, SI4 value) {
+  *reinterpret_cast<SI2*>(begin) = value;
+}
+
+void WritePOD(void* begin, UI4 value) {
+  *reinterpret_cast<UI4*>(begin) = value;
+}
+
+void WritePOD(void* begin, SI8 value) {
+  *reinterpret_cast<SI8*>(begin) = value;
+}
+
+void WritePOD(void* begin, UI8 value) {
+  *reinterpret_cast<UI8*>(begin) = value;
+}
+
 UIW* New(SIW size) { return new UIW[size]; }
 
 void Delete(UIW* socket) {

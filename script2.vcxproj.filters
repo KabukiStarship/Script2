@@ -106,16 +106,10 @@
     <ClCompile Include="script2_room.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_sin.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_slot.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_socket.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_sout.cc">
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_test.cc">
@@ -131,6 +125,12 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_wall.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_cout.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_cin.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>
@@ -330,16 +330,10 @@
     <ClInclude Include="c_room.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_sin.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_slot.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_socket.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_sout.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_stack.h">
@@ -373,6 +367,12 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_cout.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_cin.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

@@ -403,6 +403,9 @@ struct SDK Chars2 {
   Chars2(const CH2* start, const CH2* stop);
 };
 
+/* Utility function for printing Chars1 in templates. */
+Chars2 Chars(const CH2* start, const CH2* stop);
+
 /* Utility class for printing strings.
 This class only stores the stop of socket pointer and a pointer to the write
 start. It is up the user to store start of socket pointer and if they would

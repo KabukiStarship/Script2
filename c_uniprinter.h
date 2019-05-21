@@ -324,8 +324,8 @@ signed equivalent. */
 
 /* Utility class for printing a POD type in hex. */
 struct Hex {
-  enum { k };
-  UIW buffer[2];
+  enum { kBufferCount = 2 };
+  UIW buffer[kBufferCount];
   SIW byte_count;  //< Width of the item in bytes.
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
@@ -349,39 +349,26 @@ struct Hex {
 
 /* Utility class for printing a POD type in binary. */
 struct Binary {
-  const UI1* begin;  //< Pointer to the POD instance.
-  SIN size_bytes;    //< Width of the item in bytes.
+  enum { kBufferCount = 2 };
+  UIW buffer[kBufferCount];  //< Pointer to the POD instance.
+  SIN byte_count;            //< Width of the item in bytes.
 
   /* Pushes the referenced item out to RAM and stores the byte_count. */
   Binary(const void* item);
-  Binary(SI1& item);
-  Binary(UI1& item);
-  Binary(SI2& item);
-  Binary(UI2& item);
-  Binary(SI4& item);
-  Binary(UI4& item);
-  Binary(SI8& item);
-  Binary(UI8& item);
+  Binary(const void* item, SIW byte_count);
+  Binary(SI1 item);
+  Binary(UI1 item);
+  Binary(SI2 item);
+  Binary(UI2 item);
+  Binary(SI4 item);
+  Binary(UI4 item);
+  Binary(SI8 item);
+  Binary(UI8 item);
 #if USING_FP4 == YES
-  Binary(FP4& item);
+  Binary(FP4 item);
 #endif
 #if USING_FP8 == YES
-  Binary(FP8& item);
-#endif
-
-  /* Stores the pointer to the item and it's byte_count. */
-  Binary(const SI1* item);
-  Binary(const SI2* item);
-  Binary(const UI2* item);
-  Binary(const SI4* item);
-  Binary(const UI4* item);
-  Binary(const SI8* item);
-  Binary(const UI8* item);
-#if USING_FP4 == YES
-  Binary(const FP4* item);
-#endif
-#if USING_FP8 == YES
-  Binary(const FP8* item);
+  Binary(FP8 item);
 #endif
 };
 

@@ -15,8 +15,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "c_test.h"
 
-#include "c_sin.h"
-#include "c_sout.h"
+#include "c_cin.h"
+#include "c_cout.h"
 #include "t_uniprinter.h"
 
 namespace _ {
