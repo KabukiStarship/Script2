@@ -1592,7 +1592,6 @@ void TPrint3(Char* start, Char token) {
 #else
 #include "module_release.inl"
 #endif
-
 namespace _ {
 
 /* Utility class for printing blocks of Unicode characters. */
