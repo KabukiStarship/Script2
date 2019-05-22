@@ -26,7 +26,6 @@
 #define PRINT_SOCKET_TOBJ(obj)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
-#define PRINT_TOBJ(stack)
 #define PRINT_FUNCTION
 #define PRINTLN
 #define PRINT_FUNCTION_LINE

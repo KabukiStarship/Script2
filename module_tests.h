@@ -3,8 +3,8 @@
 @file    /script2/test_tree.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -29,10 +29,10 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "05_clock.h"
 #endif
 #if SEAM >= SCRIPT2_6
-#include "06_strand_stack.h"
+#include "06_strand.h"
 #endif
 #if SEAM >= SCRIPT2_7
-#include "07_array.h"
+#include "07_stack_array.h"
 #endif
 #if SEAM >= SCRIPT2_8
 #include "08_loom.h"
@@ -90,11 +90,11 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= SCRIPT2_6
                    ,
-                   _06_Strand_Stack
+                   _06_Strand
 #endif
 #if SEAM >= SCRIPT2_7
                    ,
-                   _07_Array
+                   _07_Stack_Array
 #endif
 #if SEAM >= SCRIPT2_8
                    ,
@@ -134,4 +134,4 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
                    >(seam_log, seam_end, args);
 }
-} //< namespace script2
+}  // namespace script2

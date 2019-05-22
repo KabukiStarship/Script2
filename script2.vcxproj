@@ -77,8 +77,8 @@
     <ClInclude Include="03_utf.h" />
     <ClInclude Include="04_ftos_stof.h" />
     <ClInclude Include="05_clock.h" />
-    <ClInclude Include="06_strand_stack.h" />
-    <ClInclude Include="07_array.h" />
+    <ClInclude Include="06_strand.h" />
+    <ClInclude Include="07_stack_array.h" />
     <ClInclude Include="08_loom.h" />
     <ClInclude Include="09_table.h" />
     <ClInclude Include="10_list.h" />

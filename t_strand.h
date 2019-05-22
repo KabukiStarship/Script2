@@ -768,13 +768,15 @@ class TToken {
     Print(strand_, strand_ + kTokenLongest_, item);
   }
 
-#if SEAM >= SCRIPT2_4
+#if USING_FP4 == YES
   /* Prints the item to the token_. */
   TToken(FP4 item, SI4 count = kTokenLongest_)
       : string_(string_), count_(count) {
     Print(strand_, strand_ + kTokenLongest_, item);
   }
+#endif
 
+#if USING_FP8 == YES
   /* Prints the item to the token_. */
   TToken(FP8 item, SI4 count = kTokenLongest_)
       : string_(string_), count_(count) {
@@ -1959,7 +1961,6 @@ class TStrand {
           delete[] begin;
         else
           obj.factory = FactoryStack;
-        PRINT("\nSuccess!");
         return 0;
       }
       case kFactoryNew: {
@@ -1977,7 +1978,6 @@ class TStrand {
         *reinterpret_cast<SI4*>(begin) = size;
         obj.begin = begin;
         obj.factory = FactoryStack;
-        PRINT("\nSuccess!");
         return 0;
       }
       case kFactoryGrow: {
@@ -1994,7 +1994,6 @@ class TStrand {
         PRINTF("\nCopying \"%s\" with result:\"%s\"", start, new_start);
         if (using_heap) delete[] begin;
         obj.begin = new_begin;
-        PRINT("\nSuccess!");
         return 0;
       }
       case kFactoryClone: {
@@ -2007,7 +2006,6 @@ class TStrand {
         if (!obj) return kFactoryCantGrow;
         other->begin = obj;
         other->factory = other->factory;
-        PRINT("\nSuccess!");
         return 0;
       }
       case kFactoryInfo: {

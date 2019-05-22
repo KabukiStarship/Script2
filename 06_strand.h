@@ -23,7 +23,7 @@ using namespace _;
 #if SEAM >= SCRIPT2_6
 namespace script2 {
 template <typename Char>
-void _06_Strand() {
+void _06_StrandN() {
   PRINTF("\n\nTesting TStrand<CH%c>\n\n", '0' + sizeof(Char));
 
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
@@ -64,35 +64,15 @@ void _06_Strand() {
 }
 #endif  //< #if SEAM >= SCRIPT2_6
 
-static const CH1* _06_Strand_Stack(CH1* seam_log, CH1* seam_end,
-                                   const CH1* args) {
+static const CH1* _06_Strand(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #if SEAM >= SCRIPT2_6
   TEST_BEGIN;
 
   PRINT("\n\nTesting TStrand<>...\n");
 
-  _06_Strand<CH1>();
-  _06_Strand<CH2>();
-  _06_Strand<CH4>();
-
-  PRINT("\n\nTesting TStack<SI4>...\n\nPrinting empty stack...\n");
-
-  TStack<SI4> stack(8);
-  stack.Print();
-
-  PRINT("\n\nPushing items on to the Stack...\n");
-  stack.Push(0);
-  PRINT_SOCKET_TOBJ(stack.TObj());
-
-  for (SI4 i = 1; i <= 10; ++i) stack.Push(i);
-
-  PRINT_TOBJ(stack);
-
-  PRINT("\nPopping items off the Stack...\n");
-
-  for (SI4 i = 10; i > 0; --i) AVOW(i, stack.Pop());
-
-  PRINT_TOBJ(stack);
+  _06_StrandN<CH1>();
+  _06_StrandN<CH2>();
+  _06_StrandN<CH4>();
 
 #endif
   return nullptr;

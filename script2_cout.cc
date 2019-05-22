@@ -499,7 +499,7 @@ COut& COut::Print(const void* begin, SIW size_bytes) {
 }
 
 COut& COut::Print(Hex item) {
-  TPrintHex<COut>(COut().Star(), item.buffer, item.size);
+  TPrintHex<COut>(COut().Star(), item.Begin(), item.Size());
   return *this;
 }
 #endif

@@ -3,13 +3,13 @@
 @file    /script2/t_stack.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_5
+#if SEAM >= SCRIPT2_7
 #ifndef SCRIPT2_TSTACK
 #define SCRIPT2_TSTACK 1
 
@@ -17,7 +17,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "t_object.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_5
+#if SEAM == SCRIPT2_7
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -470,20 +470,21 @@ BOL TStackResize(CObject obj, Index new_count) {
 /* Prints the given obj to the console. */
 template <typename T = SI4, typename Size = SI4, typename Index = SI4,
           typename Printer = TStrand<CH1>>
-Printer& TPrintStack(Printer& print, TCStack<T, Size, Index>* stack) {
+Printer& TPrintStack(Printer& o, TCStack<T, Size, Index>* stack) {
   DASSERT(stack);
 
   Size size_array = stack->size_array;
   Index count = stack->count;
-  if (size_array != 0) return print << "\n\nStack: Invalid size_array";
-  print << "\n\nStack: count: " << count << " count_max:" << stack->count_max
-        << " size_stack:" << stack->size_stack;
-  if (stack->size_array != 0) print << " size_array:invalid";
+  if (size_array != 0) return o << "\n\nStack: Invalid size_array";
+  o << "\n\nStack: count: " << count << " count_max:" << stack->count_max
+    << " size_stack:" << stack->size_stack;
+
+  if (stack->size_array != 0) o << " size_array:invalid";
+
   T* elements = TStackStart(stack);
-  for (SI4 i = 0; i < count; ++i) {
-    print << kLF << i + 1 << ".) " << elements[i];
-  }
-  return print;
+  for (SI4 i = 0; i < count; ++i) o << kLF << i + 1 << ", " << elements[i];
+
+  return o;
 }
 
 template <typename T = SI4, typename Size = SI4, typename Index = SI4>
@@ -635,18 +636,14 @@ class TStack {
   @return False upon failure. */
   inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.CObj()); }
 
-  /* Prints this object to the given UTF. */
+  /* Prints this object to a Printer. */
   template <typename Printer>
-  inline Printer& Print(Printer& utf) {
+  inline Printer& PrintTo(Printer& utf) {
     return TPrintStack<T, Size, Index, Printer>(utf, Obj());
   }
 
-  /* Prints this object to the COut. */
-  template <typename Char = CH1>
-  inline void Print() {
-    TStrand<Char> strand;
-    Print<TStrand<Char>>(strand);
-  }
+  /* Prints this object to the given UTF. */
+  inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
 
   /* Gets the ASCII Object. */
   inline TCStack<T, Size, Index>* Obj() {

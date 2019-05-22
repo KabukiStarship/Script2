@@ -35,4 +35,4 @@ SI4 TTestTree(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size) {
 
 }  // namespace _
 
-#endif  //< SCRIPT2_TTEST
+#endif

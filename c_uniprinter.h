@@ -323,14 +323,13 @@ signed equivalent. */
 #endif
 
 /* Utility class for printing a POD type in hex. */
-struct Hex {
-  enum { k };
-  UIW buffer[2];
-  SIW size;  //< Width of the item in bytes.
+class Hex {
+ public:
+  enum { kBufferSizeWords = 2 };
 
-  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  /* Stores the given item to the buffer and store the size. */
   Hex(const void* item);
-  Hex(const void* item, SIW size_bytes);
+  Hex(const void* item, SIW size);
   Hex(SI1 item);
   Hex(UI1 item);
   Hex(SI2 item);
@@ -347,48 +346,48 @@ struct Hex {
 #endif
 
   /* Gets the begin of the socket. */
-  UIW* Begin();
+  const CH1* Begin();
 
   /* Gets the size of the socket. */
   SIW Size();
+
+ private:
+  UIW buffer_[kBufferSizeWords];  // The buffer with kSizeWords elements.
+  SIW size_;                      //< Width of the item in bytes.
 };
 
 /* Utility class for printing a POD type in binary. */
-struct Binary {
-  const UI1* begin;  //< Pointer to the POD instance.
-  SIN size_bytes;    //< Width of the item in bytes.
+class Binary {
+ public:
+  enum { kBufferSizeWords = 2 };
 
-  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  /* Pushes the item out to RAM and stores the byte_count. */
   Binary(const void* item);
-  Binary(SI1& item);
-  Binary(UI1& item);
-  Binary(SI2& item);
-  Binary(UI2& item);
-  Binary(SI4& item);
-  Binary(UI4& item);
-  Binary(SI8& item);
-  Binary(UI8& item);
+  Binary(const void* item, SIW size);
+  Binary(SI1 item);
+  Binary(UI1 item);
+  Binary(SI2 item);
+  Binary(UI2 item);
+  Binary(SI4 item);
+  Binary(UI4 item);
+  Binary(SI8 item);
+  Binary(UI8 item);
 #if USING_FP4 == YES
-  Binary(FP4& item);
+  Binary(FP4 item);
 #endif
 #if USING_FP8 == YES
-  Binary(FP8& item);
+  Binary(FP8 item);
 #endif
 
-  /* Stores the pointer to the item and it's byte_count. */
-  Binary(const SI1* item);
-  Binary(const SI2* item);
-  Binary(const UI2* item);
-  Binary(const SI4* item);
-  Binary(const UI4* item);
-  Binary(const SI8* item);
-  Binary(const UI8* item);
-#if USING_FP4 == YES
-  Binary(const FP4* item);
-#endif
-#if USING_FP8 == YES
-  Binary(const FP8* item);
-#endif
+  /* Gets the begin of the socket. */
+  const CH1* Begin();
+
+  /* Gets the size of the socket. */
+  SIW Size();
+
+ private:
+  UIW buffer_[kBufferSizeWords];
+  SIW size_;  //< Width of the item in bytes.
 };
 
 }  // namespace _

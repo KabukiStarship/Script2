@@ -1,5 +1,7 @@
-#include "global_footer.inl"
+
 #include "t_test.h"
+//
+#include "global_footer.inl"
 
 #define DEBUG_SEAM 1
 #define TEST_BEGIN \
@@ -30,8 +32,7 @@
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
 #define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
-#define PRINT_OBJ(stack) stack->Print()
-#define PRINT_TOBJ(stack) stack.Print()
+#define PRINT_OBJ(obj) obj.COut()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
 #define PRINTLN ::_::PrintNL()
 #define PRINT_FUNCTION_LINE \
@@ -101,10 +102,10 @@
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
-    ::_::Print("\nAt index :0x");                    \
+    ::_::Print("\nAt index :");                      \
     ::_::PrintHex(index);                            \
-    ::_::Print(index);                               \
     ::_::Print(':');                                 \
+    ::_::Print(index);                               \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
   }
 //
