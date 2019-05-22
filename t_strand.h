@@ -1581,6 +1581,7 @@ void TPrint3(Char* start, Char token) {
 #else
 #include "module_release.inl"
 #endif
+
 namespace _ {
 
 /* Utility class for printing blocks of Unicode characters. */
@@ -2124,7 +2125,7 @@ inline ::_::TStrand<Char, kCount_>& operator<<(
 template <typename Char, SI4 kCount_>
 inline ::_::TStrand<Char, kCount_>& operator<<(
     ::_::TStrand<Char, kCount_>& strand, ::_::Hex item) {
-  return strand.Hex(item);
+  return strand.Print(item);
 }
 
 template <typename Char, SI4 kCount_>
