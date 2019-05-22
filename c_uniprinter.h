@@ -323,14 +323,13 @@ signed equivalent. */
 #endif
 
 /* Utility class for printing a POD type in hex. */
-struct Hex {
-  enum { kBufferCount = 2 };
-  UIW buffer[kBufferCount];
-  SIW byte_count;  //< Width of the item in bytes.
+class Hex {
+ public:
+  enum { kBufferSizeWords = 2 };
 
-  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  /* Stores the given item to the buffer and store the size. */
   Hex(const void* item);
-  Hex(const void* item, SIW size_bytes);
+  Hex(const void* item, SIW size);
   Hex(SI1 item);
   Hex(UI1 item);
   Hex(SI2 item);
@@ -345,17 +344,26 @@ struct Hex {
 #if USING_FP8 == YES
   Hex(FP8 item);
 #endif
+
+  /* Gets the begin of the socket. */
+  const CH1* Begin();
+
+  /* Gets the size of the socket. */
+  SIW Size();
+
+ private:
+  UIW buffer_[kBufferSizeWords];  // The buffer with kSizeWords elements.
+  SIW size_;                      //< Width of the item in bytes.
 };
 
 /* Utility class for printing a POD type in binary. */
-struct Binary {
-  enum { kBufferCount = 2 };
-  UIW buffer[kBufferCount];  //< Pointer to the POD instance.
-  SIN byte_count;            //< Width of the item in bytes.
+class Binary {
+ public:
+  enum { kBufferSizeWords = 2 };
 
-  /* Pushes the referenced item out to RAM and stores the byte_count. */
+  /* Pushes the item out to RAM and stores the byte_count. */
   Binary(const void* item);
-  Binary(const void* item, SIW byte_count);
+  Binary(const void* item, SIW size);
   Binary(SI1 item);
   Binary(UI1 item);
   Binary(SI2 item);
@@ -370,6 +378,16 @@ struct Binary {
 #if USING_FP8 == YES
   Binary(FP8 item);
 #endif
+
+  /* Gets the begin of the socket. */
+  const CH1* Begin();
+
+  /* Gets the size of the socket. */
+  SIW Size();
+
+ private:
+  UIW buffer_[kBufferSizeWords];
+  SIW size_;  //< Width of the item in bytes.
 };
 
 }  // namespace _

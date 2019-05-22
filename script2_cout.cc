@@ -49,7 +49,10 @@ void Print(CH1 c) { PrintChar(c); }
 
 void Print(const CH1* item) { std::cout << item; }
 
-void PrintChar(CH4 c) { std::wcout << (CHN)c; }
+void PrintChar(CH4 c) {
+  // wprintf_s(L"%c", c);
+  std::wcout << (CHN)c;  //< @todo This isn't working???
+}
 
 void Print(const CH4* item) { TPrintString<COut, CH4>(COut().Star(), item); }
 
@@ -57,7 +60,13 @@ void Print(CH4 c) { PrintChar(c); }
 
 void Print(const CH2* item) { TPrintString<COut, CH2>(COut().Star(), item); }
 
-void PrintChar(CH2 c) { std::wcout << (CHN)c; }
+void PrintChar(CH2 c) {
+#if USING_UTF32 == YES
+  Print((CH4)c);
+#else
+  std::wcout << (CHN)c;  //< @todo This isn't working
+#endif
+}
 
 void Print(CH2 c) { PrintChar(c); }
 
@@ -438,10 +447,12 @@ COut::COut(FP8 item) { ::_::Print(item); }
 
 COut& COut::Star() { return *this; }
 
-COut& COut::Print(CH1 item) {
-  ::_::PrintChar(item);
+COut& COut::PrintChar(CH1 item) {
+  ::_::Print(item);
   return *this;
 }
+
+COut& COut::Print(CH1 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH1* item) {
   ::_::Print(item);
@@ -488,7 +499,7 @@ COut& COut::Print(const void* begin, SIW size_bytes) {
 }
 
 COut& COut::Print(Hex item) {
-  TPrintHex<COut>(COut().Star(), item.buffer, item.byte_count);
+  TPrintHex<COut>(COut().Star(), item.Begin(), item.Size());
   return *this;
 }
 #endif
@@ -510,9 +521,9 @@ COut& COut::Print(Linef1 item) {
 }
 
 COut& COut::Print(Headingf1 item) {
-  return TPrintHeadingf<COut, CH1>(COut().Star(), item.caption.String(),
-                                   item.style, item.caption.Count(),
-                                   item.caption2, item.caption3);
+  PrintHeadingf(item.caption.String(), item.style, item.caption.Count(),
+                item.caption2, item.caption3);
+  return *this;
 }
 
 COut& COut::Print(Chars1 item) {
@@ -522,11 +533,12 @@ COut& COut::Print(Chars1 item) {
 #endif
 
 #if USING_UTF16 == YES
-
-COut& COut::Print(CH2 item) {
+COut& COut::PrintChar(CH2 item) {
   ::_::Print(item);
   return *this;
 }
+
+COut& COut::Print(CH2 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH2* item) {
   ::_::Print(item);
@@ -560,10 +572,12 @@ COut& COut::Print(Chars2 item) {
 #endif
 #if USING_UTF32 == YES
 
-COut& COut::Print(CH4 item) {
-  ::_::PrintChar(item);
+COut& COut::PrintChar(CH4 item) {
+  ::_::Print(item);
   return *this;
 }
+
+COut& COut::Print(CH4 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH4* item) {
   ::_::Print(item);
@@ -601,7 +615,7 @@ COut& COut::Print(Chars4 item) {
 
 ::_::COut& operator<<(::_::COut& o, ::_::COut& p) { return o; }
 
-::_::COut& operator<<(::_::COut& o, CH1 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, CH1 item) { return o.PrintChar(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
 
@@ -646,7 +660,7 @@ COut& COut::Print(Chars4 item) {
 #endif
 
 #if USING_UTF16 == YES
-::_::COut& operator<<(::_::COut& o, CH2 item) { return o.Print(item); }
+::_::COut& operator<<(::_::COut& o, CH2 item) { return o.PrintChar(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
 
@@ -664,7 +678,8 @@ COut& COut::Print(Chars4 item) {
 #endif
 
 #if USING_UTF32 == YES
-::_::COut& operator<<(::_::COut& o, CH4 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, CH4 item) { return o.PrintChar(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
 

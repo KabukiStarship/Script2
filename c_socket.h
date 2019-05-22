@@ -19,35 +19,67 @@ namespace _ {
 
 /* Aligns the given pointer down to the given mask. */
 SDK CH1* AlignDown(CH1* pointer, UIW mask = kWordLSbMask);
-SDK /*inline*/ const CH1* AlignDown(const CH1* pointer,
-                                    UIW mask = kWordLSbMask);
-SDK /*inline*/ UIW* AlignDown(UIW* pointer, UIW mask = kWordLSbMask);
-SDK /*inline*/ const UIW* AlignDown(const UIW* pointer,
-                                    UIW mask = kWordLSbMask);
+
+/* Aligns the given pointer down to the given mask. */
+SDK const CH1* AlignDown(const CH1* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given pointer down to the given mask. */
+SDK UIW* AlignDown(UIW* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given pointer down to the given mask. */
+SDK const UIW* AlignDown(const UIW* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
 SDK /*inline*/ SI1 AlignDown(SI1 value, SI1 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
 SDK /*inline*/ SI2 AlignDown(SI2 value, SI2 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
 SDK /*inline*/ SI4 AlignDown(SI4 value, SI4 mask = kWordLSbMask);
+
+/* Aligns the given value down to the given mask. */
 SDK /*inline*/ SI8 AlignDown(SI8 value, SI8 mask = kWordLSbMask);
 
 /* Aligns the given pointer up to the given mask. */
-SDK /*inline*/ const CH1* AlignUp(const CH1* pointer, UIW mask = kWordLSbMask);
+SDK const CH1* AlignUp(const CH1* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given socket pointer up to a cache line boundary (64 bytes). */
 SDK /*inline*/ UIW* AlignUp(UIW* socket, UIW mask = kWordLSbMask);
-SDK /*inline*/ CH1* AlignUp(CH1* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given pointer up to the given mask. */
+SDK CH1* AlignUp(CH1* pointer, UIW mask = kWordLSbMask);
+
+/* Aligns the given value up to an 8-UI1 boundary. */
 SDK /*inline*/ UI1 AlignUp(UI1 value, UI1 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 8-UI1 boundary. */
 SDK /*inline*/ SI1 AlignUp(SI1 value, SI1 mask = kWordLSbMask);
-SDK /*inline*/ UI2 AlignUp(UI2 value, UI2 mask = kWordLSbMask);
-SDK /*inline*/ SI2 AlignUp(SI2 value, SI2 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 16-UI1 boundary. */
+SDK UI2 AlignUp(UI2 value, UI2 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 16-UI1 boundary. */
+SDK SI2 AlignUp(SI2 value, SI2 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 32-UI1 boundary. */
 SDK /*inline*/ UI4 AlignUp(UI4 value, UI4 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 32-UI1 boundary. */
 SDK /*inline*/ SI4 AlignUp(SI4 value, SI4 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 64-UI1 boundary. */
 SDK /*inline*/ UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
+
+/* Aligns the given value up to an 64-UI1 boundary. */
 SDK /*inline*/ SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
 
 /* A managed general purpose (i.e. not just for networking) memory socket.
-A socket is just a hole in something for fitting something in, like a
-light or electric socket. A socket of memory is just a block of memory
-you fit something in. A network socket is a socket for interprocess
-communication, which is usually implemented with a ring socket
-(@see ~/kabuki-toolkit/slot.h).
+    A socket is just a hole in something for fitting something in, like a light
+    or electric socket. A socket of memory is just a block of memory you fit
+    something in. A network socket is a socket for interprocess communication,
+    which is usually implemented with a ring socket
+    (@see ~/kabuki-toolkit/slot.h).
 */
 struct Socket {
   CH1 *begin,  //< Beginning of the socket.

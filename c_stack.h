@@ -3,8 +3,8 @@
 @file    /script2/t_stack.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -14,7 +14,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define INCLUDED_SCRIPTTSTACK 1
 
 #include "c_socket.h"
-#include "c_utf8.h"
 #include "t_object.h"
 
 #if SEAM == SCRIPT2_5
@@ -29,12 +28,6 @@ namespace _ {
 Stack is an ASCII Data Type designed to use a C-style templated struct in C++
 using no dynamic memory and with dynamic memory as a templated C++ warper class
 and cross-language bindings and deterministic CPU cache optimizations. */
-
-/* Returns the maximum value of the given signed type. */
-constexpr uint32_t NaNSignedUI4();
-
-/* Returns the maximum value of the given unsigned type. */
-constexpr uint32_t UnsignedMaxUI4();
 
 /* An array of 8, 16, 32, or 64 bit plain-old-data (POD) types.
 

@@ -245,6 +245,7 @@ class COut {
   COut& Star();
 
   /* Prints the given item to the stdout. */
+  COut& PrintChar(CH1 item);
   COut& Print(CH1 item);
   COut& Print(const CH1* item);
   COut& Print(SI4 item);
@@ -270,6 +271,7 @@ class COut {
   COut& Print(Chars1 item);
 #endif
 #if USING_UTF16 == YES
+  COut& PrintChar(CH2 item);
   COut& Print(CH2 item);
   COut& Print(const CH2* item);
   COut& Print(Right2 item);
@@ -279,6 +281,7 @@ class COut {
   COut& Print(Chars2 item);
 #endif
 #if USING_UTF32 == YES
+  COut& PrintChar(CH4 item);
   COut& Print(CH4 item);
   COut& Print(const CH4* item);
   COut& Print(Right4 item);
@@ -317,8 +320,8 @@ class COut {
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars1 item);
 #if USING_UTF16 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH2 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH2 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* string);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
@@ -326,8 +329,8 @@ class COut {
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars2 item);
 #endif
 #if USING_UTF32 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH4 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH4* item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH4 c);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH4* string);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);
@@ -335,5 +338,5 @@ class COut {
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars4 item);
 #endif
 #endif
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::COut& item);
+/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::COut& o);
 #endif

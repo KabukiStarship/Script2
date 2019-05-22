@@ -26,9 +26,6 @@
     <None Include="module_release.inl">
       <Filter>script2</Filter>
     </None>
-    <None Include="16_seam.s2">
-      <Filter>script2</Filter>
-    </None>
     <None Include="global.inl">
       <Filter>script2</Filter>
     </None>
@@ -39,6 +36,9 @@
       <Filter>script2</Filter>
     </None>
     <None Include="global_footer.inl">
+      <Filter>script2</Filter>
+    </None>
+    <None Include="16_seam.s2">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>
@@ -106,6 +106,9 @@
     <ClCompile Include="script2_room.cc">
       <Filter>script2</Filter>
     </ClCompile>
+    <ClCompile Include="script2_sin.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
     <ClCompile Include="script2_slot.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -128,9 +131,6 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_cout.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_cin.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>
@@ -223,39 +223,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="05_clock.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="06_strand_stack.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="07_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="08_loom.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="09_table.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="10_list.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="11_map.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="12_book.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="13_dictionary.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="14_expr.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="15_door.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="16_room_wall.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_address.h">
@@ -369,10 +336,43 @@
     <ClInclude Include="global.h">
       <Filter>script2</Filter>
     </ClInclude>
+    <ClInclude Include="c_cin.h">
+      <Filter>script2</Filter>
+    </ClInclude>
     <ClInclude Include="c_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_cin.h">
+    <ClInclude Include="07_stack_array.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="06_strand.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="08_loom.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="09_table.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="10_list.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="11_map.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="12_book.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="13_dictionary.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="14_expr.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="15_door.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="16_room_wall.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

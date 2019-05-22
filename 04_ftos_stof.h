@@ -10,11 +10,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
+//#include "c_rng.h"
+//#include "c_uniprinter.h"
+
 #include <cmath>
 #include <cstdio>
-
-#include "c_rng.h"
-#include "c_uniprinter.h"
 
 using namespace std;
 

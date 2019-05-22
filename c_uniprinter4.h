@@ -458,9 +458,6 @@ struct SDK Chars4 {
   Chars4(const CH4* start, const CH4* stop);
 };
 
-/* Utility function for printing Chars1 in templates.*/
-Chars4 Chars(const CH4* start, const CH4* stop);
-
 /* Universal Text Formatter (UTF) 8 is a utility class for printing UTF-8
 strings.
 This class only stores the stop of socket pointer and a pointer to the

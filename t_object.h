@@ -217,7 +217,7 @@ struct OBJ {
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size.
 */
-template <typename SIZ>
+template <typename Size>
 class TObject {
  public:
   /* Constructs a object with dynamically allocated memory based on if object is
@@ -235,18 +235,18 @@ class TObject {
 
   /* Constructs a object with either statically or dynamically allocated memory
   based on if object is nil. */
-  TObject(SIZ size, AsciiFactory factory = nullptr)
+  TObject(Size size, AsciiFactory factory = nullptr)
       : obj_({Buffer(size), factory}) {}
 
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
-  TObject(SIZ size, UIW* socket = nullptr, AsciiFactory factory = nullptr)
-      : obj_({factory, TObjInit<SIZ>(socket, size)}) {}
+  TObject(Size size, UIW* socket = nullptr, AsciiFactory factory = nullptr)
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
-  TObject(UIW* socket, SIZ size, AsciiFactory factory = nullptr)
-      : obj_({factory, TObjInit<SIZ>(socket, size)}) {}
+  TObject(UIW* socket, Size size, AsciiFactory factory = nullptr)
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   TObject(UIW* socket, AsciiFactory factory = nullptr)
       : obj_({factory, socket}) {}
@@ -269,18 +269,18 @@ class TObject {
   template <typename T = CH1>
   inline T* Start() {
     UIW ptr = reinterpret_cast<UIW>(obj_.begin);
-    return reinterpret_cast<T*>(ptr + sizeof(SIZ));
+    return reinterpret_cast<T*>(ptr + sizeof(Size));
   }
 
   /* Gets the stopping address of the object, AKA the address of the last
   element. */
   inline CH1* Stop() {
-    SIZ size = TObjSize<SIZ>(obj_.begin);
+    Size size = TObjSize<Size>(obj_.begin);
     return reinterpret_cast<CH1*>(obj_.begin) + size - 1;
   }
 
   /* Gets the ASCII Object size. */
-  inline SIZ Size() { return TObjSize<SIZ>(obj_); }
+  inline Size SizeBytes() { return TObjSize<Size>(obj_); }
 
   /* Gets the AsciiFactory. */
   inline AsciiFactory Factory() { return obj_.factory; }
@@ -299,24 +299,25 @@ class TObject {
 
   /* Attempts to grow the this object.
   @return false if the grow op failed. */
-  inline BOL Grow() { return TObjCanGrow<SIZ>(obj_); }
+  inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
   /* Prints this object to the COut. */
   template <typename Printer>
   Printer& PrintTo(Printer& o) {
-    o << "\nTObject<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
+    o << "\nTObject<SI" << (CH1)('0' + sizeof(Size)) << '>';
     UIW* begin = obj_.begin;
     if (begin) {
-      SIZ size = *reinterpret_cast<SIZ*>(begin);
+      Size size = *reinterpret_cast<Size*>(begin);
       o << " size:" << (SIW)size;
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {
-      o << ".";
+      o << " factory:\"";
       CH1* info_string = 0;
-      if (!factory(obj_, kFactoryInfo, &info_string)) {
+      if (factory(obj_, kFactoryInfo, &info_string)) {
         o << info_string;
       }
+      o << '\"';
     }
     return o;
   }
