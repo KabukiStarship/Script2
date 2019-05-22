@@ -1,9 +1,9 @@
-# script2
+# Pull Request Template
 
-## Contributing
+Reminders:
 
-### Pull Request Template
+1. Increment SEAM macro to the current SEAM.
 
-#### Title: module_id.Fix/Add/Remove/Update feature ABC.
+## Title: module_id.Fix/Add/Remove/Update feature ABC.
 
-#### Body: Foo
+## Body: Foo
