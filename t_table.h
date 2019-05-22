@@ -1,14 +1,10 @@
 /* Script^2 @version 0.x
 @file    /script2/t_able.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -20,9 +16,9 @@ specific language governing permissions and limitations under the License. */
 #include "c_socket.h"
 
 #if SEAM == SCRIPT2_11
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -159,7 +155,7 @@ UI1 TableAdd(Table<Size, Index>* table, const CH1* key) {
   PRINTF(
       "\nAdding key \"%s\":%u\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x"
       "\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x\n%20s:%x",
-      key, (uint)key_length, "hashes", hashes, "key_offsets", key_offsets,
+      key, (UIN)key_length, "hashes", hashes, "key_offsets", key_offsets,
       "keys", keys, "indexes", indexes, "value", value, "hashes", hashes,
       "key_offsets", key_offsets, "keys", keys, "indexes", indexes, "value",
       value);
@@ -500,7 +496,7 @@ SDK UI1 TableFind(const Table<Size, Index>* table, const CH1* key) {
       index = unsorted_indexes[mid];
 
       PRINTF("\nmid:%i-%u unsorted_indexes:%Index key:\"%s\" hash:0x%x",
-             (SI4)mid, (uint)hashes[mid], index, keys - key_offsets[index],
+             (SI4)mid, (UIN)hashes[mid], index, keys - key_offsets[index],
              Hash16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index])) {
@@ -532,7 +528,7 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       << " count_max:" << count_max << " size_pile:" << size_pile
       << " size:" << size << "\n|";
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   UI2* hashes = reinterpret_cast<UI2*>(reinterpret_cast<CH1*>(table) +
                                        sizeof(Table<Size, Index>));
@@ -542,12 +538,12 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       *collission_list = unsorted_indexes + count_max, *begin;
   CH1* keys = reinterpret_cast<CH1*>(table) + size - 1;
 
-  utf << '\n'
+  utf << kLF
       << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
       << Right<>("hash_e", 10) << Right<>("hash_u", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   for (SI4 i = 0; i < count; ++i) {
     // Print each record as a row.
@@ -574,11 +570,11 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       }
     }
 
-    utf << '\n';
+    utf << kLF;
   }
   utf << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n' << Memory(table, table->size) << '\n';
+  utf << kLF << Memory(table, table->size) << kLF;
 }
 #endif
 

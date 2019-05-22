@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \ctest.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/c_test.h
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -51,13 +47,13 @@ SDK BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
-SDK SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size,
-                 TestCase* tests, SI4 test_count);
+SDK SI4 SeamTreeTest(SI4 arg_count, CH1** args, CH1* seam_log,
+                     SI4 seam_log_size, TestCase* tests, SI4 test_count);
 
 /* Tests an array of TestCase(s).
 @return Nil upon success or an error  upon failure. */
 SDK const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
-                    TestCase* seams, SI4 node_count);
+                        TestCase* seams, SI4 node_count);
 
 /* Prints a message when a TestCase completes without failure. */
 SDK BOL TestBegin(CH1* seam_log, CH1* seam_end, const CH1* args);
@@ -71,50 +67,14 @@ SDK BOL Test(BOL condition);
 @return false if the condition is false.
 @param  value The value to test. */
 SDK BOL Test(SI1 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI1 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI2 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI2 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(SI8 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(UI8 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(FP4 value);
-
-/* Test function to assist in casting boolean types.
-@return false if the condition is false.
-@param  value The value to test. */
 SDK BOL Test(FP8 value);
 
 /* Tests if the pointer is nil.
@@ -132,19 +92,19 @@ SDK BOL Test(const CH1* a, const CH1* b);
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH1 a, CH1 b);
+SDK BOL Test(CH1 a, CH1 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH2 a, CH2 b);
+SDK BOL Test(CH2 a, CH2 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
 @param  a Parameter a.
 @param  b Parameter b. */
-SDK BOL Test (CH4 a, CH4 b);
+SDK BOL Test(CH4 a, CH4 b);
 
 /* Tests if the given arguments are equal.
 @return false if the condition is false.
@@ -232,4 +192,4 @@ SDK BOL Test(FP8 a, FP8 b);
 
 }  // namespace _
 
-#endif  //< #ifndef SCRIPT2_CTEST
+#endif

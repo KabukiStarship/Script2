@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_object.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
@@ -20,12 +16,41 @@ specific language governing permissions and limitations under the License. */
 #include "t_object.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
+
+const CH1* STRAsciiFactoryFunction(SIN index) {
+  static const CH1 kStrings[7][8] = {"CanGrow", "Destroy", "New",    "Clone",
+                                     "Grow",    "Info",    "Invalid"};
+  if (index < 0 || index >= kFactoryFunctionCount)
+    return &kStrings[kFactoryFunctionCount][0];
+  return &kStrings[index][0];
+}
+
+const CH1* STRAsciiFactoryError(SIN index) {
+  static const CH1 kStrings[7][21] = {
+      "Factory Success", "Factory nil",        "Factory nil OBJ",
+      "Factory nil arg", "Factory out of RAM", "Factory size invalid",
+      "Invalid"};
+  if (index < 0 || index >= kFactoryErrorCount)
+    return &kStrings[kFactoryErrorCount][0];
+  return &kStrings[index][0];
+}
+
+SI4 ObjDo(CObject& obj, SIW function, void* arg) {
+  AsciiFactory factory = obj.factory;
+  if (factory) return factory(obj, function, arg);
+  PRINT("\nNil factory.");
+  return kFactoryNil;
+}
+
+BOL ObjCountIsValid(SI1 index, SI1 count_min) {
+  return TObjCountIsValid<SI1>(index, count_min);
+}
 
 void Delete(CObject& obj) {
   AsciiFactory factory = obj.factory;
@@ -44,10 +69,6 @@ BOL ObjSizeIsValid(SI4 size, SI4 size_min) {
 
 BOL ObjSizeIsValid(SI8 size, SI8 size_min) {
   return TObjCanGrow<SI8>(size, size_min);
-}
-
-BOL ObjCountIsValid(SI1 index, SI1 count_min) {
-  return TObjCountIsValid<SI1>(index, count_min);
 }
 
 BOL ObjCountIsValid(SI2 index, SI2 count_min) {
@@ -79,8 +100,8 @@ void SocketHeap(UIW* socket) {
 void SocketStack(UIW* socket) {}
 
 void ObjException(const CH1* what) {
-  //PRINTF("\nERROR:%s\n", exception.what());
+  // PRINTF("\nERROR:%s\n", exception.what());
 }
 
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif

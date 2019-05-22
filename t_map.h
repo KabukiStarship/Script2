@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_map.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -17,13 +13,13 @@ specific language governing permissions and limitations under the License. */
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
-#include "c_asciidata.h"
+#include "c_ascii.h"
 #include "c_socket.h"
 
 #if SEAM == SCRIPT2_11
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -550,7 +546,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
       << "size_pile:" << size_pile << " size:" << map->size;
   utf << "\n|";
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   const CH1* states =
       reinterpret_cast<const CH1*>(map) + sizeof(TMap<Size, Index, I>);
@@ -570,7 +566,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
       << Right<>("index_u", 10) << Right<>("collisions", 11);
   utf << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << '\n';
+  utf << kLF;
 
   for (Index i = 0; i < count; ++i) {
     // Print each record as a row.
@@ -602,7 +598,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
   }
 
   return utf << '_' << Socket(reinterpret_cast<const CH1*>(map), map->size)
-             << '\n';
+             << kLF;
 }
 
 /* C++ Wrapper for the AsciiMap that uses dynamic memory and auto-grows.

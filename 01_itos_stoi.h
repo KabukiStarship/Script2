@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/01_itos_and_stoi.h
-@author  Cale McCollough <calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/01_itos_stoi.h
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -17,12 +13,12 @@ specific language governing permissions and limitations under the License. */
 #include <cstdio>
 #include <cstring>
 
-#include "t_binary.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_1
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 #if COMPILER == VISUAL_CPP
@@ -120,7 +116,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
   num_bits);
       }
   }
-  PRINT ('\n');
+  PRINTNL;
   system ("PAUSE");*/
 
   static const UI8 problem_children[] = {
@@ -151,28 +147,26 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   for (SI4 i = 0; i < kNumProblemChildren; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = problem_children[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
-           TStrandLength<>(expecting));
+           TSTRLength<>(expecting));
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       PAUSE("An error occurred :-(");
       break;
     }
     *result = 0;
-    if (TStrandCompare<>(expecting, text)) {
+    if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 
   PRINT("\n\nTesting edge conditions...\n\n");
   for (SI4 i = 0; i < 28; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = test_value[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     PRINTF("\n%i.) ", i + 1);
@@ -184,8 +178,8 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (strcmp(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 
@@ -193,7 +187,6 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   for (SI4 i = 0; i < 0x0000ffff; ++i) {
     PRINT_LINEF('-');
-    PRINT('\n');
     expected_ui8 = RandomUI8();
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
@@ -202,10 +195,10 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
       break;
     }
     *result = 0;
-    if (TStrandCompare<>(expecting, text)) {
+    if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TStrandLength<>(expecting), text,
-             TStrandLength<>(text));
+             expecting, TSTRLength<>(expecting), text,
+             TSTRLength<>(text));
     }
   }
 

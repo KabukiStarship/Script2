@@ -2,14 +2,10 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bsq.cc
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
@@ -58,7 +54,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    utf << TypeStrand((SI4)value) << ", ";
+    utf << STRType((SI4)value) << ", ";
     if (type >= kSTR) {
       if (value) {
         utf << "\nError: arrays may only be created from POD "
@@ -149,7 +145,7 @@ UTF1& PrintBsq(UTF1& utf, const SI4* params) {
   }
   // Do the last set without a comma.
   value = *params++;
-  utf << TypeStrand(value) << ", ";
+  utf << STRType(value) << ", ";
   if (value == kSTR) {
     ++i;
     value = *params++;

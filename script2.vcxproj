@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug Script2|Win32">
+      <Configuration>Debug Script2</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug Script2|x64">
+      <Configuration>Debug Script2</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="16_seam.s2" />
+    <None Include="global.inl" />
+    <None Include="global_config.inl" />
+    <None Include="global_debug.inl" />
+    <None Include="global_footer.inl" />
+    <None Include="global_release.inl" />
+    <None Include="global_seams.inl" />
+    <None Include="module_debug.inl" />
+    <None Include="module_footer.inl" />
+    <None Include="module_release.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="module_tester.cc" />
+    <ClCompile Include="pch.cc" />
+    <ClCompile Include="script2_ascii.cc" />
+    <ClCompile Include="script2_benchmark.cc" />
+    <ClCompile Include="script2_bin.cc" />
+    <ClCompile Include="script2_bout.cc" />
+    <ClCompile Include="script2_bsq.cc" />
+    <ClCompile Include="script2_clock.cc" />
+    <ClCompile Include="script2_crabs.cc" />
+    <ClCompile Include="script2_error.cc" />
+    <ClCompile Include="script2_event.cc" />
+    <ClCompile Include="script2_floor.cc" />
+    <ClCompile Include="script2_hash.cc" />
+    <ClCompile Include="script2_interrupts.cc" />
+    <ClCompile Include="script2_lock.cc" />
+    <ClCompile Include="script2_morsecode.cc" />
+    <ClCompile Include="script2_object.cc" />
+    <ClCompile Include="script2_op.cc" />
+    <ClCompile Include="script2_operand.cc" />
+    <ClCompile Include="script2_rng.cc" />
+    <ClCompile Include="script2_room.cc" />
+    <ClCompile Include="script2_sin.cc" />
+    <ClCompile Include="script2_slot.cc" />
+    <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_cout.cc" />
+    <ClCompile Include="script2_test.cc" />
+    <ClCompile Include="script2_uniprinter.cc" />
+    <ClCompile Include="script2_utf.cc" />
+    <ClCompile Include="script2_vk.cc" />
+    <ClCompile Include="script2_wall.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="00_rng.h" />
+    <ClInclude Include="01_itos_stoi.h" />
+    <ClInclude Include="02_socket.h" />
+    <ClInclude Include="03_utf.h" />
+    <ClInclude Include="04_ftos_stof.h" />
+    <ClInclude Include="05_clock.h" />
+    <ClInclude Include="06_strand.h" />
+    <ClInclude Include="07_stack_array.h" />
+    <ClInclude Include="08_loom.h" />
+    <ClInclude Include="09_table.h" />
+    <ClInclude Include="10_list.h" />
+    <ClInclude Include="11_map.h" />
+    <ClInclude Include="12_book.h" />
+    <ClInclude Include="13_dictionary.h" />
+    <ClInclude Include="14_expr.h" />
+    <ClInclude Include="15_door.h" />
+    <ClInclude Include="16_room_wall.h" />
+    <ClInclude Include="c_address.h" />
+    <ClInclude Include="c_args.h" />
+    <ClInclude Include="c_ascii.h" />
+    <ClInclude Include="c_benchmark.h" />
+    <ClInclude Include="c_bin.h" />
+    <ClInclude Include="c_bout.h" />
+    <ClInclude Include="c_bsq.h" />
+    <ClInclude Include="c_buffer.h" />
+    <ClInclude Include="c_clock.h" />
+    <ClInclude Include="c_crabs.h" />
+    <ClInclude Include="c_error.h" />
+    <ClInclude Include="c_event.h" />
+    <ClInclude Include="c_floor.h" />
+    <ClInclude Include="c_hash.h" />
+    <ClInclude Include="c_interrupts.h" />
+    <ClInclude Include="c_iterator.h" />
+    <ClInclude Include="c_language.h" />
+    <ClInclude Include="c_lock.h" />
+    <ClInclude Include="c_mirror.h" />
+    <ClInclude Include="c_object.h" />
+    <ClInclude Include="c_op.h" />
+    <ClInclude Include="c_operand.h" />
+    <ClInclude Include="c_rng.h" />
+    <ClInclude Include="c_room.h" />
+    <ClInclude Include="c_cin.h" />
+    <ClInclude Include="c_slot.h" />
+    <ClInclude Include="c_socket.h" />
+    <ClInclude Include="c_cout.h" />
+    <ClInclude Include="c_stack.h" />
+    <ClInclude Include="c_strand.h" />
+    <ClInclude Include="c_test.h" />
+    <ClInclude Include="c_uniprinter.h" />
+    <ClInclude Include="c_uniprinter1.h" />
+    <ClInclude Include="c_uniprinter2.h" />
+    <ClInclude Include="c_uniprinter4.h" />
+    <ClInclude Include="c_varint.h" />
+    <ClInclude Include="c_vk.h" />
+    <ClInclude Include="c_wall.h" />
+    <ClInclude Include="global.h" />
+    <ClInclude Include="module_tests.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="public.h" />
+    <ClInclude Include="t_array.h" />
+    <ClInclude Include="t_ascii.h" />
+    <ClInclude Include="t_benchmark.h" />
+    <ClInclude Include="t_book.h" />
+    <ClInclude Include="t_clock.h" />
+    <ClInclude Include="t_dic.h" />
+    <ClInclude Include="t_door.h" />
+    <ClInclude Include="t_hash.h" />
+    <ClInclude Include="t_library.h" />
+    <ClInclude Include="t_list.h" />
+    <ClInclude Include="t_loom.h" />
+    <ClInclude Include="t_map.h" />
+    <ClInclude Include="t_object.h" />
+    <ClInclude Include="t_set.h" />
+    <ClInclude Include="t_socket.h" />
+    <ClInclude Include="t_stack.h" />
+    <ClInclude Include="t_strand.h" />
+    <ClInclude Include="t_string.h" />
+    <ClInclude Include="t_table.h" />
+    <ClInclude Include="t_test.h" />
+    <ClInclude Include="t_uniprinter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{E38DB956-F3D9-4F16-9503-2FE5BD337B39}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>kabukisdkdata</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>script2</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|Win32'">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir).\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir).\..\..\..\;$(ProjectDir).\..\..\..\script2\;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjctDir)./;</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

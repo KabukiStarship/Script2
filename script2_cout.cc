@@ -1,36 +1,29 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_cout.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-
-#include "t_cout.h"
-
-#include "c_ascii.h"
-#include "t_strand.h"
-#include "t_test.h"
 
 #include <cstdio>
 #include <iostream>
 
-#if SEAM == SCRIPT2_0
-#include "test_debug.inl"
+#include "c_cout.h"
+#include "t_uniprinter.h"
+
+#if SEAM == SCRIPT2_6
+#include "module_debug.inl"
 #else
-#include "test_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
 
-const CH1* ArgsToStrand(SI4 arg_count, CH1** args) {
+const CH1* ArgsToSring(SI4 arg_count, CH1** args) {
   if (!args || arg_count <= 1) {
     PRINT("\n!args || arg_count <= 1");
     return "";
@@ -50,31 +43,34 @@ const CH1* ArgsToStrand(SI4 arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-inline void Print(CH1 c) { putchar(c); }
+void PrintChar(CH1 c) { std::wcout << c; }
 
-inline void PrintChar(CH1 c) { return Print(c); }
+void Print(CH1 c) { PrintChar(c); }
 
-inline void Print(CH4 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
+void Print(const CH1* item) { std::cout << item; }
+
+void PrintChar(CH4 c) {
+  // wprintf_s(L"%c", c);
+  std::wcout << (CHN)c;  //< @todo This isn't working???
 }
 
-inline void PrintChar(CH4 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
+void Print(const CH4* item) { TPrintString<COut, CH4>(COut().Star(), item); }
+
+void Print(CH4 c) { PrintChar(c); }
+
+void Print(const CH2* item) { TPrintString<COut, CH2>(COut().Star(), item); }
+
+void PrintChar(CH2 c) {
+#if USING_UTF32 == YES
+  Print((CH4)c);
+#else
+  std::wcout << (CHN)c;  //< @todo This isn't working
+#endif
 }
 
-inline void Print(CH2 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
-}
+void Print(CH2 c) { PrintChar(c); }
 
-inline void PrintChar(CH2 c) {
-  wprintf_s(L"%c", (int)c);
-  // std::wcout << c;
-}
-
-inline void Print(CH1 first, CH1 second) {
+/*inline*/ void Print(CH1 first, CH1 second) {
   Print(first);
   Print(second);
 }
@@ -85,9 +81,11 @@ inline void Print(CH1 first, CH1 second, CH1 third) {
   Print(third);
 }
 
-void PrintLn(CH1 c) { Print('\n', c); }
+void PrintNL() { PrintChar('\n'); }
 
-void PrintLn(CH1 first, CH1 second) { return Print('\n', first, second); }
+void PrintNL(CH1 c) { Print(kLF, c); }
+
+void PrintNL(CH1 first, CH1 second) { return Print(kLF, first, second); }
 
 void Printf(const CH1* format, ...) {
   if (!format) return;
@@ -99,18 +97,12 @@ void Printf(const CH1* format, ...) {
 
 void PrintfLn(const CH1* format, ...) {
   if (!format) return;
-  PrintLn();
+  PrintNL();
   va_list arg;
   va_start(arg, format);
   vfprintf(stdout, format, arg);
   va_end(arg);
 }
-
-void Print(const CH1* item) { std::cout << item; }
-
-void Print(const CH2* item) { TPrintString<CH2>(item); }
-
-void Print(const CH4* item) { TPrintString<CH4>(item); }
 
 void Print(const CH1* item, CH1 c) {
   Print(item);
@@ -194,94 +186,100 @@ void Print(FP8 value) {
 #endif
 }
 
-void PrintLn(const CH1* item) {
-  Print('\n');
+void PrintNL(const CH1* item) {
+  PrintNL();
   Print(item);
 }
 
 void PrintIndent(SI4 count) {
-  Print('\n');
+  PrintNL();
   while (--count > 0) Print(' ');
 }
 
-const CH1* PrintLinefCH1() { return TPrintLineffDefault<CH1>(); }
+const CH1* PrintLinefCH1() { return TSTRLinef<CH1>(); }
 
-const CH1* PrintLinef(const CH1* style, SI4 count) {
-  return TPrintLinef<CH1>(style, count);
+const CH1* PrintLinef(const CH1* style, SI4 column_count) {
+  return TPrintLinef<COut, CH1>(COut().Star(), style, column_count);
 }
 
-const CH1* PrintLinef(CH1 token, SI4 count) {
-  return TPrintLine<CH1>(token, count);
+void PrintLinef(CH1 token, SI4 column_count) {
+  TPrintLinef<COut, CH1>(COut().Star(), token, column_count);
 }
 
 void PrintHeadingf(const CH1* caption, const CH1* style, SI4 column_count,
                    const CH1* caption2, const CH1* caption3) {
-  TPrintHeadingf<CH1>(caption, style, column_count, caption2, caption3);
+  TPrintHeadingf<COut, CH1>(COut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 
-void PrintBinary(UI1 value) { return TPrintBinary<UI1>(value); }
+void PrintBinary(UI1 value) { TPrintBinary<COut, UI1>(COut().Star(), value); }
 
-void PrintBinary(SI1 value) { return TPrintBinary<UI1>((UI1)value); }
+void PrintBinary(SI1 value) {
+  TPrintBinary<COut, UI1>(COut().Star(), (UI1)value);
+}
 
-void PrintBinary(UI2 value) { return TPrintBinary<UI2>(value); }
+void PrintBinary(UI2 value) { TPrintBinary<COut, UI2>(COut().Star(), value); }
 
-void PrintBinary(SI2 value) { return TPrintBinary<UI2>((UI2)value); }
+void PrintBinary(SI2 value) {
+  TPrintBinary<COut, UI2>(COut().Star(), (UI2)value);
+}
 
-void PrintBinary(UI4 value) { return TPrintBinary<UI4>(value); }
+void PrintBinary(UI4 value) { TPrintBinary<COut, UI4>(COut().Star(), value); }
 
-void PrintBinary(SI4 value) { return TPrintBinary<UI4>(value); }
+void PrintBinary(SI4 value) { TPrintBinary<COut, UI4>(COut().Star(), value); }
 
-void PrintBinary(UI8 value) { return TPrintBinary<UI8>(value); }
+void PrintBinary(UI8 value) { TPrintBinary<COut, UI8>(COut().Star(), value); }
 
-void PrintBinary(SI8 value) { return TPrintBinary<UI8>(value); }
+void PrintBinary(SI8 value) { TPrintBinary<COut, UI8>(COut().Star(), value); }
 
 void PrintBinary(FP4 value) {
-  return TPrintBinary<UI4>(*reinterpret_cast<UI4*>(&value));
+  TPrintBinary<COut, UI4>(COut().Star(), *reinterpret_cast<UI4*>(&value));
 }
 
 void PrintBinary(FP8 value) {
-  return TPrintBinary<UI8>(*reinterpret_cast<UI8*>(&value));
+  TPrintBinary<COut, UI8>(COut().Star(), *reinterpret_cast<UI8*>(&value));
 }
 
 void PrintBinary(const void* ptr) {
-  return TPrintBinary<UIW>(*reinterpret_cast<UIW*>(&ptr));
+  TPrintBinary<COut, UIW>(COut().Star(), *reinterpret_cast<UIW*>(&ptr));
 }
 
-void PrintHex(CH1 value) { TPrintHexConsole<UI1>(value); }
+#if SEAM >= SCRIPT2_1
+void PrintHex(CH1 value) { TPrintHex<COut, UI1>(COut().Star(), value); }
 
-void PrintHex(CH2 value) { TPrintHexConsole<UI2>(value); }
+void PrintHex(CH2 value) { TPrintHex<COut, UI2>(COut().Star(), value); }
 
-void PrintHex(CH4 value) { TPrintHexConsole<UI4>(value); }
+void PrintHex(CH4 value) { TPrintHex<COut, UI4>(COut().Star(), value); }
 
-void PrintHex(UI1 value) { TPrintHexConsole<UI1>(value); }
+void PrintHex(UI1 value) { TPrintHex<COut, UI1>(COut().Star(), value); }
 
-void PrintHex(SI1 value) { TPrintHexConsole<UI1>((UI1)value); }
+void PrintHex(SI1 value) { TPrintHex<COut, UI1>(COut().Star(), (UI1)value); }
 
-void PrintHex(UI2 value) { TPrintHexConsole<UI2>(value); }
+void PrintHex(UI2 value) { TPrintHex<COut, UI2>(COut().Star(), value); }
 
-void PrintHex(SI2 value) { TPrintHexConsole<UI2>((UI2)value); }
+void PrintHex(SI2 value) { TPrintHex<COut, UI2>(COut().Star(), (UI2)value); }
 
-void PrintHex(UI4 value) { TPrintHexConsole<UI4>(value); }
+void PrintHex(UI4 value) { TPrintHex<COut, UI4>(COut().Star(), value); }
 
-void PrintHex(SI4 value) { TPrintHexConsole<UI4>((UI4)value); }
+void PrintHex(SI4 value) { TPrintHex<COut, UI4>(COut().Star(), (UI4)value); }
 
-void PrintHex(UI8 value) { TPrintHexConsole<UI8>(value); }
+void PrintHex(UI8 value) { TPrintHex<COut, UI8>(COut().Star(), value); }
 
-void PrintHex(SI8 value) { TPrintHexConsole<UI8>((UI8)value); }
+void PrintHex(SI8 value) { TPrintHex<COut, UI8>(COut().Star(), (UI8)value); }
 
 void PrintHex(FP4 value) {
   UI4 f = *reinterpret_cast<UI4*>(&value);
-  TPrintHexConsole<UI4>(f);
+  TPrintHex<COut, UI4>(COut().Star(), f);
 }
 
 void PrintHex(FP8 value) {
   UI8 f = *reinterpret_cast<UI8*>(&value);
-  TPrintHexConsole<UI8>(f);
+  TPrintHex<COut, UI8>(COut().Star(), f);
 }
 
 void PrintHex(const void* ptr) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  TPrintHexConsole<UIW>(value);
+  TPrintHex<COut, UIW>(COut().Star(), value);
 }
 
 void PrintHex(const void* begin, const void* end) {
@@ -294,13 +292,13 @@ void PrintHex(const void* begin, const void* end) {
 
   SIW num_bytes = 81 * (num_rows + 2);
   size += num_bytes;
-  Print(StrandSocketHexHeader());
-  Print(StrandSocketHexBorder());
+  Print(STRSocketHexHeader());
+  Print(STRSocketHexBorder());
   PrintHex(address_ptr);
 
   CH1 c;
   while (address_ptr < address_end_ptr) {
-    Print('\n', '|');
+    Print(kLF, '|');
     for (SI4 i = 0; i < 32; ++i) {
       c = *address_ptr++;
       if (address_ptr > address_end_ptr)
@@ -312,105 +310,116 @@ void PrintHex(const void* begin, const void* end) {
     Print('|', ' ');
     PrintHex(address_ptr);
   }
-  Print(StrandSocketHexBorder());
+  Print(STRSocketHexBorder());
   PrintHex(address_ptr + size);
 }
 
-void PrintHex(const void* begin, SIW size) {
-  const CH1* begin_char = reinterpret_cast<const CH1*>(begin);
-  return PrintHex(begin_char, begin_char + size);
+void PrintHex(const void* begin, SIW size_bytes) {
+  TPrintHex<COut>(COut().Star(), begin, size_bytes);
 }
 
-}  // namespace _
-
-namespace _ {
-
 void PrintChars(const void* begin, const void* end) {
-  TPrintChars<CH1>(reinterpret_cast<const CH1*>(begin),
-                   reinterpret_cast<const CH1*>(end));
+  TPrintChars<COut, CH1>(COut().Star(), reinterpret_cast<const CH1*>(begin),
+                         reinterpret_cast<const CH1*>(end));
 }
 
 void PrintChars(const void* start, SIW count) {
   const CH1* ptr = reinterpret_cast<const CH1*>(start);
-  return PrintChars(ptr, ptr + count);
+  PrintChars(ptr, ptr + count);
 }
+#endif
 
 #if USING_UTF16 == YES
 
 void PrintChars(const CH2* start, const CH2* stop) {
-  TPrintChars<CH2>(start, stop);
+  TPrintChars<COut, CH2>(COut().Star(), start, stop);
 }
 
-void PrintChars(const CH2* start, SI4 count) { TPrintChars<CH2>(start, count); }
+void PrintChars(const CH2* start, SI4 count) {
+  TPrintChars<COut, CH2>(COut().Star(), start, count);
+}
 
-void PrintRight(const CH2* start, SI4 count) { TPrintRight<CH2>(start, count); }
+void PrintRight(const CH2* start, SI4 count) {
+  TPrintRight<COut, CH2>(COut().Star(), start, count);
+}
 
-void PrintCenter(const CH2* item, SI4 count) { TPrintCenter<CH2>(item, count); }
+void PrintCenter(const CH2* item, SI4 count) {
+  TPrintCenter<COut, CH2>(COut().Star(), item, count);
+}
 
-const CH2* PrintLinefCH2() { return TPrintLineffDefault<CH2>(); }
+const CH2* PrintLinefCH2() { return TSTRLinef<CH2>(); }
 
 const CH2* PrintLinef(const CH2* style, SI4 count) {
-  return TPrintLinef<CH2>(style, count);
+  return TPrintLinef<COut, CH2>(COut().Star(), style, count);
 }
 
-const CH2* PrintLinef(CH2 token, SI4 count) {
-  return TPrintLine<CH2>(token, count);
+void PrintLinef(CH2 token, SI4 count) {
+  TPrintLinef<COut, CH2>(COut().Star(), token, count);
 }
-
-const CH2* HeadingfDefaultCH2() { return THeadingfDefault<CH2>(); }
 
 void PrintHeadingf(const CH2* caption, const CH2* style, SI4 column_count,
                    const CH2* caption2, const CH2* caption3) {
-  TPrintHeadingf<CH2>(caption, style, column_count, caption2, caption3);
+  TPrintHeadingf<COut, CH2>(COut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 
 #endif
 
 #if USING_UTF32 == YES
 void PrintChars(const CH4* start, SIW count) {
-  TPrintChars<CH4>(start, start + count);
+  TPrintChars<COut, CH4>(COut().Star(), start, start + count);
 }
 
 void PrintChars(const CH4* start, const CH4* stop) {
-  TPrintChars<CH4>(start, stop);
+  TPrintChars<COut, CH4>(COut().Star(), start, stop);
 }
 
-void PrintChars(const CH4* start, SI4 count) { TPrintChars<CH4>(start, count); }
+void PrintChars(const CH4* start, SI4 count) {
+  TPrintChars<COut, CH4>(COut().Star(), start, count);
+}
 
-void PrintRight(const CH4* start, SI4 count) { TPrintRight<CH4>(start, count); }
+void PrintRight(const CH4* start, SI4 count) {
+  TPrintRight<COut, CH4>(COut().Star(), start, count);
+}
 
-void PrintCenter(const CH4* item, SI4 count) { TPrintCenter<CH4>(item, count); }
+void PrintCenter(const CH4* item, SI4 count) {
+  TPrintCenter<COut, CH4>(COut().Star(), item, count);
+}
 
-const CH4* PrintLinefCH4() { return TPrintLineffDefault<CH4>(); }
+const CH4* PrintLinefCH4() { return TSTRLinef<CH4>(); }
 
 const CH4* PrintLinef(const CH4* style, SI4 count) {
-  return TPrintLinef<CH4>(style, count);
+  return TPrintLinef<COut, CH4>(COut().Star(), style, count);
 }
 
-const CH4* PrintLinef(CH4 token, SI4 count) {
-  return TPrintLine<CH4>(token, count);
+void PrintLinef(CH4 token, SI4 count) {
+  TPrintLinef<COut, CH4>(COut().Star(), token, count);
 }
-
-const CH4* HeadingfDefaultCH4() { return THeadingfDefault<CH4>(); }
 
 void PrintHeadingf(const CH4* caption, const CH4* style, SI4 column_count,
                    const CH4* caption2, const CH4* caption3) {
-  TPrintHeadingf<CH4>(caption, style, column_count, caption2, caption3);
+  TPrintHeadingf<COut, CH4>(COut().Star(), caption, style, column_count,
+                            caption2, caption3);
 }
 #endif
 
 void PrintRight(const CH1* item, SI4 count) {
-  ::_::TPrintRight<CH1>(item, count);
+  ::_::TPrintRight<COut, CH1>(COut().Star(), item, count);
 }
 
 void PrintCenter(const CH1* item, SI4 count) {
-  ::_::TPrintCenter<CH1>(item, count);
+  ::_::TPrintCenter<COut, CH1>(COut().Star(), item, count);
 }
 
+COut::COut() {}
+
+COut::COut(CH1 item) { ::_::Print(item); }
 COut::COut(const CH1* item) { ::_::Print(item); }
 
+COut::COut(CH2 item) { ::_::Print(item); }
 COut::COut(const CH2* item) { ::_::Print(item); }
 
+COut::COut(CH4 item) { ::_::Print(item); }
 COut::COut(const CH4* item) { ::_::Print(item); }
 
 COut::COut(SI1 item) { ::_::Print(item); }
@@ -438,32 +447,14 @@ COut::COut(FP8 item) { ::_::Print(item); }
 
 COut& COut::Star() { return *this; }
 
-COut& COut::Print(CH1 item) {
+COut& COut::PrintChar(CH1 item) {
   ::_::Print(item);
   return *this;
 }
 
-COut& COut::Print(CH2 item) {
-  ::_::Print(item);
-  return *this;
-}
-
-COut& COut::Print(CH4 item) {
-  ::_::Print(item);
-  return *this;
-}
+COut& COut::Print(CH1 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH1* item) {
-  ::_::Print(item);
-  return *this;
-}
-
-COut& COut::Print(const CH2* item) {
-  ::_::Print(item);
-  return *this;
-}
-
-COut& COut::Print(const CH4* item) {
   ::_::Print(item);
   return *this;
 }
@@ -488,22 +479,32 @@ COut& COut::Print(UI8 item) {
   return *this;
 }
 
-#if SEAM >= SCRIPT2_4
-
+#if USING_FP4 == YES
 COut& COut::Print(FP4 item) {
   ::_::Print(item);
   return *this;
 }
-
+#endif
+#if USING_FP8 == YES
 COut& COut::Print(FP8 item) {
   ::_::Print(item);
   return *this;
 }
 #endif
 
-#if SEAM >= SCRIPT2_3
-#if USING_STR == UTF8
+#if SEAM >= SCRIPT2_1
+COut& COut::Print(const void* begin, SIW size_bytes) {
+  TPrintHex<COut>(COut().Star(), begin, size_bytes);
+  return *this;
+}
 
+COut& COut::Print(Hex item) {
+  TPrintHex<COut>(COut().Star(), item.Begin(), item.Size());
+  return *this;
+}
+#endif
+
+#if SEAM >= SCRIPT2_3
 COut& COut::Print(Right1 item) {
   ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
@@ -515,18 +516,34 @@ COut& COut::Print(Center1 item) {
 }
 
 COut& COut::Print(Linef1 item) {
-  PrintLinef(item.token.String(), item.token.Count());
+  TPrintLinef<COut, CH1>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 COut& COut::Print(Headingf1 item) {
-  TPrintHeadingf<CH1>(item.caption.String(), item.style, item.caption.Count(),
-                      item.caption2, item.caption3);
+  PrintHeadingf(item.caption.String(), item.style, item.caption.Count(),
+                item.caption2, item.caption3);
   return *this;
 }
+
+COut& COut::Print(Chars1 item) {
+  return TPrintChars<COut, CH1>(*this, item.start, item.stop);
+}
+
 #endif
 
-#elif USING_STR == UTF16
+#if USING_UTF16 == YES
+COut& COut::PrintChar(CH2 item) {
+  ::_::Print(item);
+  return *this;
+}
+
+COut& COut::Print(CH2 item) { return PrintChar(item); }
+
+COut& COut::Print(const CH2* item) {
+  ::_::Print(item);
+  return *this;
+}
 
 COut& COut::Print(Right2 item) {
   Print(item.token.String());
@@ -539,24 +556,33 @@ COut& COut::Print(Center2 item) {
 }
 
 COut& COut::Print(Linef2 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintLinef(string, item.token.Count());
-  else
-    PrintLinef(item.token, item.token.Count());
+  TPrintLinef<COut, CH2>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 COut& COut::Print(Headingf2 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintRepeat(string);
-  else
-    PrintRepeat(item.token);
+  return TPrintHeadingf<COut, CH2>(*this, item.caption.String(), item.style,
+                                   item.caption.Count(), item.caption2,
+                                   item.caption3);
+}
+
+COut& COut::Print(Chars2 item) {
+  return TPrintChars<COut, CH2>(*this, item.start, item.stop);
+}
+#endif
+#if USING_UTF32 == YES
+
+COut& COut::PrintChar(CH4 item) {
+  ::_::Print(item);
   return *this;
 }
 
-#lif USING_STR == UTF32
+COut& COut::Print(CH4 item) { return PrintChar(item); }
+
+COut& COut::Print(const CH4* item) {
+  ::_::Print(item);
+  return *this;
+}
 
 COut& COut::Print(Right4 item) {
   Print(item.token.String());
@@ -569,122 +595,103 @@ COut& COut::Print(Center4 item) {
 }
 
 COut& COut::Print(Linef4 item) {
-  auto string = item.token.String();
-  if (string)
-    PrintLinef(string);
-  else
-    PrintLinef(item.token);
+  TPrintLinef<COut, CH4>(*this, item.token.String(), item.token.Count());
   return *this;
 }
 
 COut& COut::Print(Headingf4 item) {
-  const CH4* string = item.token.String();
-  if (string)
-    PrintRepeat(string);
-  else
-    PrintRepeat(item.token);
-  return *this;
+  return TPrintHeadingf<COut, CH4>(*this, item.caption.String(), item.style,
+                                   item.caption.Count(), item.caption2,
+                                   item.caption3);
+}
+
+COut& COut::Print(Chars4 item) {
+  return TPrintChars<COut, CH4>(*this, item.start, item.stop);
 }
 
 #endif
 
 }  // namespace _
 
-::_::COut& operator<<(::_::COut& cout, const CH1* string) {
-  return cout.Print(string);
-}
+::_::COut& operator<<(::_::COut& o, ::_::COut& p) { return o; }
 
-::_::COut& operator<<(::_::COut& cout, const CH2* string) {
-  return cout.Print(string);
-}
+::_::COut& operator<<(::_::COut& o, CH1 item) { return o.PrintChar(item); }
 
-::_::COut& operator<<(::_::COut& cout, const CH4* string) {
-  return cout.Print(string);
-}
+::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, CH1 c) { return cout.Print(c); }
+::_::COut& operator<<(::_::COut& o, UI1 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, CH2 c) { return cout.Print(c); }
+::_::COut& operator<<(::_::COut& o, SI2 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, CH4 c) { return cout.Print(c); }
+::_::COut& operator<<(::_::COut& o, UI2 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, UI1 value) { return cout.Print(value); }
+::_::COut& operator<<(::_::COut& o, SI4 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, SI2 value) { return cout.Print(value); }
+::_::COut& operator<<(::_::COut& o, UI4 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, UI2 value) { return cout.Print(value); }
+::_::COut& operator<<(::_::COut& o, SI8 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, SI4 value) { return cout.Print(value); }
+::_::COut& operator<<(::_::COut& o, UI8 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, UI4 value) { return cout.Print(value); }
+#if USING_FP4 == YES
+::_::COut& operator<<(::_::COut& o, FP4 item) { return o.Print(item); }
+#endif
 
-::_::COut& operator<<(::_::COut& cout, SI8 value) { return cout.Print(value); }
+#if USING_FP8 == YES
+::_::COut& operator<<(::_::COut& o, FP8 item) { return o.Print(item); }
+#endif
 
-::_::COut& operator<<(::_::COut& cout, UI8 value) { return cout.Print(value); }
-
-#if SEAM >= SCRIPT2_4
-
-::_::COut& operator<<(::_::COut& cout, FP4 value) { return cout.Print(value); }
-
-::_::COut& operator<<(::_::COut& cout, FP8 value) { return cout.Print(value); }
+#if SEAM >= SCRIPT2_1
+::_::COut& operator<<(::_::COut& o, ::_::Hex item) { return o.Print(item); }
 #endif
 
 #if SEAM >= SCRIPT2_3
-#if USING_STR == UTF8
+::_::COut& operator<<(::_::COut& o, ::_::Center1 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& cout, ::_::Center1 item) {
-  return cout.Print(item);
+::_::COut& operator<<(::_::COut& o, ::_::Right1 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Linef1 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Headingf1 item) {
+  return o.Print(item);
 }
 
-::_::COut& operator<<(::_::COut& cout, ::_::Right1 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item) {
-  return cout.Print(item);
-}
+::_::COut& operator<<(::_::COut& o, ::_::Chars1 item) { return o.Print(item); }
 #endif
 
-#elif USING_STR == UTF16
+#if USING_UTF16 == YES
+::_::COut& operator<<(::_::COut& o, CH2 item) { return o.PrintChar(item); }
 
-::_::COut& operator<<(::_::COut& cout, ::_::Center2 item) {
-  return cout.Print(item);
+::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Center2 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Right2 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Linef2 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Headingf2 item) {
+  return o.Print(item);
 }
 
-::_::COut& operator<<(::_::COut& cout, ::_::Right2 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item) {
-  return cout.Print(item);
-}
-
-#lif USING_STR == UTF32
-
-::_::COut& operator<<(::_::COut& cout, ::_::Center4 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Right4 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item) {
-  return cout.Print(item);
-}
-
-::_::COut& operator<<(::_::COut& cout, ::_::Headingf4 item) {
-  return cout.Print(item);
-}
-
+::_::COut& operator<<(::_::COut& o, ::_::Chars2 item) { return o.Print(item); }
 #endif
 
-#undef PRINT_ARGS
+#if USING_UTF32 == YES
+
+::_::COut& operator<<(::_::COut& o, CH4 item) { return o.PrintChar(item); }
+
+::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Center4 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Right4 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Linef4 item) { return o.Print(item); }
+
+::_::COut& operator<<(::_::COut& o, ::_::Headingf4 item) {
+  return o.Print(item);
+}
+
+::_::COut& operator<<(::_::COut& o, ::_::Chars4 item) { return o.Print(item); }
+#endif

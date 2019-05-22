@@ -1,34 +1,27 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bin.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
 #include "c_bin.h"
 
-#include "bout.h"
-#include "c_asciidata.h"
+#include "c_ascii.h"
+#include "c_bout.h"
 #include "c_bsq.h"
 #include "c_hash.h"
 #include "c_socket.h"
-#include "hex.h"
-#include "line.h"
-#include "slot.h"
 
 #if SEAM == SCRIPT2_14
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
-#define PRINT_BSQ(header, bsq) Console<>().Out() << header << '\n' << Bsq(bsq);
-#define PRINT_BIN(header, bin) Console<>().Out() << header << '\n' << bin;
+#define PRINT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);
+#define PRINT_BIN(header, bin) Console<>().Out() << header << kLF << bin;
 #else
 #define CLEAR(begin, stop)
 #define PRINT_BSQ(header, bsq)
@@ -42,34 +35,34 @@ inline CH1* BInBegin(BIn* bin) {
 }
 
 CH1* BInEnd(BIn* bin) {
-  ASSERT(bin)
+  ASSERT(bin);
   return reinterpret_cast<CH1*>(bin) + bin->size;
 }
 
 SIW SlotLength(CH1* begin, CH1* stop, UIW size) {
-  ASSERT(begin < stop)
+  ASSERT(begin < stop);
   return stop - begin;
 }
 
 SIW SlotSpace(CH1* begin, CH1* stop, UIW size) {
-  ASSERT(begin < stop)
+  ASSERT(begin < stop);
   return size - (stop - begin);
 }
 
 SI4 BInSpace(BIn* bin) {
-  ASSERT(bin)
+  ASSERT(bin);
   CH1* txb_ptr = reinterpret_cast<CH1*>(bin);
   return (SI4)SlotSpace(txb_ptr + bin->begin, txb_ptr + bin->stop, bin->size);
 }
 
 SI4 BinBufferLength(BIn* bin) {
-  ASSERT(bin)
+  ASSERT(bin);
   CH1* begin = BInBegin(bin);
   return (SI4)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
-#if USING_SCRIPT2_TEXT
-const CH1** BInStateStrands() {
+#if USING_SCRIPT2_TEXT == YES
+const CH1** STRBInStates() {
   static const CH1* kStateStrands[] = {
       "Address",       //< 0
       "Args",          //< 1
@@ -77,7 +70,7 @@ const CH1** BInStateStrands() {
       "UTF-16",        //< 3
       "UTF-32",        //< 4
       "Varint",        //< 5
-      "CObj",           //< 6
+      "CObj",          //< 6
       "Hash",          //< 7
       "Error",         //< 8
       "Disconnected",  //< 9
@@ -93,7 +86,7 @@ const CH1** BInStateStrands() {
 @param error The error type.
 @return Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error) {
-  PRINTF("\nBIn %s error!", ErrorStrand(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -105,7 +98,7 @@ inline const Op* BInError(BIn* bin, Error error) {
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
-  PRINTF("\nBIn %s error!", ErrorStrand(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -118,7 +111,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header,
                           SI4 offset) {
-  PRINTF("\nBIn %s error!", ErrorStrand(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -131,12 +124,11 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header, SI4 offset,
                           CH1* address) {
-  PRINTF("\nBIn %s error!", ErrorStrand(error))
+  PRINTF("\nBIn %s error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(error);
 }
 
 BIn* BInInit(UIW* socket, SI4 size) {
-  ASSERT(socket);
   ASSERT(size >= kSlotSizeMin);
 
   BIn* bin = reinterpret_cast<BIn*>(socket);
@@ -172,8 +164,8 @@ SI4 BInStreamByte(BIn* bin) {
 BOL BInIsReadable(BIn* bin) { return BinBufferLength(bin) > 0; }
 
 const Op* BInRead(BIn* bin, const SI4* params, void** args) {
-  PRINT_BSQ("\nReading ", params)
-  PRINT_BIN(" from B-Input:", bin)
+  PRINT_BSQ("\nReading ", params);
+  PRINT_BIN(" from B-Input:", bin);
 
   if (!bin) {
     return BInError(bin, kErrorImplementation);
@@ -200,7 +192,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       arg_index = 0,         //< Index in the args.
       value,                 //< Temp variable.
       num_params = *params;  //< Number of params.
-  hash16_t hash;             //< Hash of the incoming data.
+  UI2 hash;                  //< Hash of the incoming data.
 
   if (num_params == 0) return 0;  //< Nothing to do.
 
@@ -221,9 +213,10 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam:%u type:%s start:%i stop:%i length:%u", arg_index + 1,
-           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
-           length)
+           STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           length);
     switch (type) {
+      ;
       case kNIL:
         return BInError(bin, kErrorInvalidType, params, index, begin);
       case kADR:
@@ -243,7 +236,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         if (++begin >= stop) begin -= size;
         *ui1_ptr = ui1;
         ++ui1_ptr;
-        PRINT(ui1)
+        PRINT(ui1);
         while ((ui1 != 0) && (count != 0)) {
           --count;
           if (count == 0)  //< Reached count:0 before nil-term CH1.
@@ -252,9 +245,9 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           hash = Hash16(ui1, hash);
           if (++begin >= stop) begin -= size;
           *ui1_ptr++ = ui1;  // Write UI1 to destination.
-          PRINT(ui1)
+          PRINT(ui1);
         }
-        PRINTF("\" success!\n")
+        PRINTF("\" success!\n");
         if (type != kADR) {
           *ui1_ptr = 0;
           // No need to hash 0.
@@ -275,7 +268,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 
         // Byte 1
         ui1 = *begin;  //< Read
-        PRINTF(" \'%u\', ", ui1)
+        PRINTF(" \'%u\', ", ui1);
         hash = Hash16(ui1, hash);            //< Hash
         if (++begin >= stop) begin -= size;  //< Increment
         *ui1_ptr = ui1;                      //< Write
@@ -285,7 +278,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #endif
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
       case kUI2:
-      case kHLF:
+      case kFP2:
 #if USING_SCRIPT2_2_BYTE_TYPES
         if (length < 2)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
@@ -376,9 +369,9 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         *ui4_ptr = ui4;
         break;
 #endif
-      case kint:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
+      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
       case kUI4:
-      case kFLT:
+      case kFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         if (length < 4)
@@ -404,7 +397,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       case kTM8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
       case kSI8:
       case kUI8:
-      case kDBL:
+      case kFP8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         if (length < 8)
           return BInError(bin, kErrorBufferUnderflow, params, index, begin);
@@ -473,7 +466,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         ui1 = *begin;
 #endif
       default: {  //< It's an Array
-        PRINTF("\nIt's an array!\n")
+        PRINTF("\nIt's an array!\n");
 #if USING_SCRIPT2_ARRAY
         switch (type & 0x60) {
           case 0: {
@@ -595,9 +588,9 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
       }
     }
     ++arg_index;
-    PRINTF(" |")
+    PRINTF(" |");
   }
-  PRINTF("\nHash expected:0x%x", hash)
+  PRINTF("\nHash expected:0x%x", hash);
   if (length < 2)
     return BInError(bin, kErrorBufferUnderflow, params, index, begin);
   ui2 = *begin;
@@ -605,11 +598,11 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   ui1 = *begin;
   if (++begin >= stop) begin -= size;
   ui2 |= (((UI2)ui1) << 8);
-  PRINTF("found:0x%x", ui2)
+  PRINTF("found:0x%x", ui2);
   if (hash != ui2)
     return BInError(bin, kErrorInvalidHash, params, index, begin);
 
-  PRINTF("\nDone reading\n")
+  PRINTF("\nDone reading\n");
   CLEAR(begin, stop)
 
   // Convert pointer back to offset
@@ -632,10 +625,4 @@ UTF1& Print(UTF1& utf, BIn* bin) {
 
 }  // namespace _
 
-#undef PRINTF
-#undef PRINT
-#undef CLEAR
-#undef PRINT_BSQ
-#undef PRINT_BIN
-#undef DEBUG
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif

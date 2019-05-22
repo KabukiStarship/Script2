@@ -1,13 +1,15 @@
 #include "c_test.h"
-
 #include "global_footer.inl"
+
+#define DEBUG_SEAM 0
 #define TEST_BEGIN \
   if (!::_::TestBegin(seam_log, seam_end, args)) return __FUNCTION__
-#define TEST_END Print("\n\nDone testing ", __FUNCTION__)
 #define PRINT(item)
 #define PRINTF(format, ...)
 #define PAUSE(message)
 #define PAUSEF(format, ...)
+#define PRINTNL
+#define PRINT_ERROR(message)
 #define PRINT_LINEF(style)
 #define PRINT_LINEF_COUNT(style, count)
 #define PRINT_HEADING(message)
@@ -24,7 +26,6 @@
 #define PRINT_SOCKET_TOBJ(obj)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
-#define PRINT_TOBJ(stack)
 #define PRINT_FUNCTION
 #define PRINTLN
 #define PRINT_FUNCTION_LINE
@@ -38,7 +39,7 @@
 #define CHECK(condition)
 #define DCHECK(condition)
 #define RCHECK(condition) \
-  if (!_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+  if (!::_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)
 #define DCOMPARE(a, b)
 #define RCOMPARE(a, b)                              \

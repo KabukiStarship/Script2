@@ -1,9 +1,12 @@
+#undef DEBUG_SEAM
 #undef TEST_BEGIN
 #undef TEST_END
 #undef PRINT
 #undef PRINTF
 #undef PAUSE
 #undef PAUSEF
+#undef PRINTNL
+#undef PRINT_ERROR
 #undef PRINT_LINEF
 #undef PRINT_LINEF_COUNT
 #undef PRINT_HEADING
@@ -19,7 +22,6 @@
 #undef PRINT_HEXS
 #undef PRINT_BSQ
 #undef PRINT_OBJ
-#undef PRINT_TOBJ
 #undef PRINT_FUNCTION
 #undef PRINTLN
 #undef PRINT_FUNCTION_LINE

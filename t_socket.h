@@ -2,14 +2,10 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -19,8 +15,7 @@ specific language governing permissions and limitations under the License. */
 #define SCRIPT2_KABUKI_TSOCKET
 
 #include "c_socket.h"
-
-#include "c_binary.h"
+#include "c_uniprinter.h"
 
 namespace _ {
 
@@ -170,7 +165,7 @@ inline T* TAlignUp2(const void* pointer) {
 }
 
 /* Returns the N in 2^N for the sizeof (I). */
-template <typename I>
+template <typename I = SIW>
 inline SI4 TBitShiftCount() {
   return (sizeof(I) == 1)
              ? 0
@@ -238,8 +233,8 @@ class TSocket {
 
   /* Returns the first byte of the ASCII Object. */
   template <typename Size, typename T, typename Index>
-  inline T* Stop (Index index) {
-    return Start<Size, T> () + index - 1;
+  inline T* Stop(Index index) {
+    return Start<Size, T>() + index - 1;
   }
 
   /* Gets the begin of the socket. */
@@ -276,8 +271,8 @@ inline T* TPtr(const void* ptr) {
 /* Utility function for syntactical sugar creating a pointer from a base plus
 offset.
 @return Pointer of the type specified by template parameter T.
-@param base The base address.
-@param offset The offset. */
+@param  base The base address.
+@param  offset The offset. */
 template <typename T>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
@@ -290,7 +285,13 @@ UIW* TNew(SIW size) {
   return new UIW[size >> kWordBitCount];
 }
 
+/* Meta-data function for checking for unsigned loop-around. */
+template <typename T>
+BOL LoopAround(T* start, T* stop) {
+  return start <= stop;
+}
+
 }  // namespace _
 
-#endif  //< SCRIPT2_KABUKI_TSOCKET
-#endif  //< #if SEAM >= SCRIPT2_2
+#endif
+#endif

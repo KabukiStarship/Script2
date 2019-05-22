@@ -1,34 +1,30 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bout.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
 #include "c_args.h"
-#include "c_asciidata.h"
-#include "c_binary.h"
+#include "c_ascii.h"
 #include "c_bout.h"
 #include "c_bsq.h"
 #include "c_hash.h"
 #include "c_socket.h"
 #include "c_test.h"
+#include "c_uniprinter.h"
 #include "slot.h"
 
 #if SEAM == SCRIPT2_14
-#include "global_debug.inl"
+#include "module_debug.inl"
 #define PRINT_BOUT(header, bout) \
-  Console<>().Out() << "\n" << header << '\n' << bout;
+  Console<>().Out() << "\n" << header << kLF << bout;
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #define PRINT_BOUT(header, bout)
 #endif
 
@@ -113,8 +109,8 @@ SI4 BOutSpace(BOut* bout) {
     return 0;
   }
   CH1* txb_ptr = reinterpret_cast<CH1*>(bout);
-  return (uint)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
-                         bout->size);
+  return (UIN)SlotSpace(txb_ptr + bout->begin, txb_ptr + bout->stop,
+                        bout->size);
 }
 
 SI4 BOutBufferLength(BOut* bout) {
@@ -122,7 +118,7 @@ SI4 BOutBufferLength(BOut* bout) {
     return 0;
   }
   CH1* begin = BOutBuffer(bout);
-  return (uint)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
+  return (UIN)SlotLength(begin + bout->begin, begin + bout->stop, bout->size);
 }
 
 CH1* BOutEndAddress(BOut* bout) {
@@ -132,7 +128,7 @@ CH1* BOutEndAddress(BOut* bout) {
 SI4 BOutStreamByte(BOut* bout) {
   CH1 *begin = BOutBuffer(bout), *stop = begin + bout->size;
   CH1 *open = (CH1*)begin + bout->read, *begin = begin + bout->begin,
-       *begin = begin;
+      *begin = begin;
 
   SIW length = (SI4)(begin < open) ? open - begin + 1
                                    : (stop - begin) + (open - begin) + 2;
@@ -190,11 +186,11 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       params;  //< Pointer to the current param.
                //* bsc_param;          //< Pointer to the current kBSQ param.
   // Convert the socket offsets to pointers.
-  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),           //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
-  const CH1* ui1_ptr;                     //< Pointer to a 1-UI1 type.
+  const CH1* ui1_ptr;                      //< Pointer to a 1-UI1 type.
 #if USING_SCRIPT2_2_BYTE_TYPES
   const UI2* ui2_ptr;  //< Pointer to a 2-UI1 type.
 #endif
@@ -218,7 +214,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           TypeStrand(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+           STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
       case kNIL:
@@ -282,7 +278,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #endif
       case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
       case kUI2:
-      case kHLF:
+      case kFP2:
 #if USING_SCRIPT2_2_BYTE_TYPES
         // Align the socket to a word boundary and check if the
         // socket has enough room.
@@ -408,9 +404,9 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         goto WriteVarint4;
       } break;
 #endif
-      case kint:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case kUI4:
-      case kFLT:
+      case kFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
@@ -435,7 +431,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #endif            //< USING_SCRIPT2_4_BYTE_TYPES
       case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case kUI8:
-      case kDBL:
+      case kFP8:
       case kTM8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
@@ -617,7 +613,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
   SI4 size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),           //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.
@@ -658,7 +654,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   SI4 size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  CH1 *begin = BOutBuffer(bout),          //< Beginning of the socket.
+  CH1 *begin = BOutBuffer(bout),           //< Beginning of the socket.
       *stop = begin + size,                //< End of the socket.
           *begin = begin + bout->begin,    //< Start of the data.
               *stop = begin + bout->stop;  //< Stop of the data.

@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_object.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -19,13 +15,12 @@ specific language governing permissions and limitations under the License. */
 #define SCRIPT2_TOBJECT 1
 
 #include "c_object.h"
-
 #include "t_socket.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -46,7 +41,7 @@ inline Size SizeWords(Size size) {
 required. */
 template <typename Size>
 inline UIW* TObjInit(UIW* socket, Size size) {
-  PRINT ('\n');
+  PRINT(kLF);
   PRINT_FUNCTION;
   PRINTF(" socket:0x%p size:%i", socket, (SI4)size);
   size = TAlignDownI<Size>(size);
@@ -59,7 +54,6 @@ inline UIW* TObjInit(UIW* socket, Size size) {
 /* Gets the ASCII CObject size. */
 template <typename Size>
 inline Size TObjSize(UIW* object) {
-  ASSERT(object);
   return *reinterpret_cast<Size*>(object);
 }
 
@@ -85,11 +79,16 @@ inline Size TObjSize(CObject obj, Size size) {
   return TObjSize<Size>(obj.begin, size);
 }
 
+template <typename Size>
+inline void TObjSizeSet(UIW* begin, Size size) {
+  *reinterpret_cast<Size*>(object) = size;
+}
+
 /* The maximum object size.
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
 template <typename SI>
-inline SI TObjSizeMax () {
+inline SI TObjSizeMax() {
   SI count_max = 0;
   return (~count_max) - 15;
 }
@@ -97,24 +96,33 @@ inline SI TObjSizeMax () {
 /* Checks if the given object count is in the min max bounds of an ASCII
 Object. */
 template <typename SI>
-inline BOL TObjCountIsValid (SI index, SI count_min) {
-  return (index >= count_min) && (index < TObjSizeMax<SI> ());
+inline BOL TObjCountIsValid(SI index, SI count_min) {
+  return (index >= count_min) && (index < TObjSizeMax<SI>());
 }
 
 /* Clones the other ASCII CObject including possibly unused object space.
 @return Nil upon failure or a pointer to the cloned object upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename Size = SI4>
-UIW* TObjClone (UIW* socket, Size size) {
-  UIW* clone;
+UIW* TObjNew(Size size) {
+  UIW* begin;
   try {
-    clone = new UIW[SizeWords<Size> (size)];
-  }
-  catch (const std::bad_alloc& exception) {
-    ObjException (exception.what ());
+    begin = new UIW[size >> TBitShiftCount<>()];
+  } catch (const std::bad_alloc& exception) {
+    ObjException(exception.what());
     return nullptr;
   }
-  SocketCopy (clone, size, socket, size);
+  *reinterpret_cast<Size*>(begin) = size;
+  return begin;
+}
+
+/* Clones the other ASCII CObject including possibly unused object space.
+@return Nil upon failure or a pointer to the cloned object upon success.
+@param socket A raw ASCII Socket to clone. */
+template <typename Size = SI4>
+UIW* TObjClone(UIW* socket, Size size) {
+  UIW* clone = TObjNew<Size>(SizeWords<Size>(size));
+  if (!SocketCopy(clone, size, socket, size)) return nullptr;
   *reinterpret_cast<Size*>(socket) = size;
   return clone;
 }
@@ -122,51 +130,46 @@ UIW* TObjClone (UIW* socket, Size size) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename Size>
-SI4 TObjCanGrow (Size size) {
-  return (SI4)(size >> (sizeof (Size) * 8 - 2));
+SIN TObjCanGrow(Size size) {
+  return !(size >> (sizeof(Size) * 8 - 2));
 }
 
 /* Checks if the size is in the min max bounds of an ASCII Object.
 @return 0 If the size is valid. */
 template <typename Size = SIW>
-inline SI4 TObjCanGrow (Size size, Size size_min) {
+inline SIN TObjCanGrow(Size size, Size size_min) {
   if (size < size_min) return kFactorySizeInvalid;
-  size = size >> (sizeof (Size) * 8 - 2);
-  return (SI4)size;
+  return TObjCanGrow<Size>(size);
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
 template <typename Size>
-SI4 TObjGrow (CObject& obj, Size new_size) {
+SIN TObjGrow(CObject& obj, Size new_size) {
   UIW* begin = obj.begin;
   if (!begin) return kFactoryNilOBJ;
   Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size> (size)) return kFactorySizeInvalid;
+  if (!TObjCanGrow<Size>(new_size)) return kFactorySizeInvalid;
   size = size << 1;  // size *= 2;
-  obj.begin = TObjClone<Size> (begin, size);
+  obj.begin = TObjClone<Size>(begin, size);
   return kFactorySuccess;
 }
 
 /* Grows the given CObject to the new_size.
 It is not possible to shrink a raw ASCII object because one must call the
 specific factory function for that type of Object. */
-template <typename Size, BOL kHeap_>
-SI4 TObjGrow (CObject& obj, Size new_size) {
-  UIW* begin = obj.begin;
-  if (!begin) return kFactoryNilOBJ;
-  Size size = *reinterpret_cast<Size*>(begin);
-  if (!TObjCanGrow<Size> (size)) return kFactorySizeInvalid;
-  size = size << 1;  // size *= 2;
-  obj.begin = TObjClone<Size> (begin, size);
-  if (kHeap_) delete[] begin;
-  return kFactorySuccess;
+template <typename Size>
+UIW* TObjGrowDouble(UIW* begin) {
+  if (!begin) return nullptr;
+  Size size = TObjSize<Size>(begin) << 1;
+  if (!TObjCanGrow<Size>(size)) return nullptr;
+  return TObjNew<Size>(size);
 }
 
 template <typename Size>
-inline SI4 TObjCanGrow (CObject& obj) {
-  return TObjGrow (obj, TObjSize<Size> (obj) * 2);
+inline SI4 TObjCanGrow(CObject& obj) {
+  return TObjGrow(obj, TObjSize<Size>(obj) << 1);
 }
 
 /* Gets the last UI1 in the ASCII Object.
@@ -187,7 +190,6 @@ inline CH1* TObjEnd(CObject stack) {
 template <typename Size>
 inline const CH1* TObjEnd(const CObject stack) {
   UIW* socket = stack.begin;
-  ASSERT(socket);
   Size size = *reinterpret_cast<Size*>(socket);
   return reinterpret_cast<const CH1*>(socket) + size;
 }
@@ -213,16 +215,7 @@ struct OBJ {
 
 /* A 64-bit word-aligned ASCII CObject.
 ASCII Objects may only use 16-bit, 32-bit, and 64-bit signed integers for their
-size. The minimum and maximum bounds of size of ASCII objects are defined by the
-minimum size required to store the header with minimum item count, and the
-highest positive integer multiple of 8. The fastest way to covert the upper
-bounds is to invert the bits and subtract 7 as follows:
-
-@code
-SI2 upper_bounds_si2 = (~(SI2)0) - 7;
-SI4 upper_bounds_si4 = (~(SI4)0) - 7;
-SI8 upper_bounds_si8 = (~(SI8)0) - 7;
-@endcode
+size.
 */
 template <typename Size>
 class TObject {
@@ -248,15 +241,15 @@ class TObject {
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
   TObject(Size size, UIW* socket = nullptr, AsciiFactory factory = nullptr)
-      : obj_({TObjInit<Size>(socket, size), factory}) {}
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   /* Constructs a object with either statically or dynamically allocated
   memory based on if object is nil. */
   TObject(UIW* socket, Size size, AsciiFactory factory = nullptr)
-      : obj_({TObjInit<Size>(socket, size), factory}) {}
+      : obj_({factory, TObjInit<Size>(socket, size)}) {}
 
   TObject(UIW* socket, AsciiFactory factory = nullptr)
-      : obj_({socket, factory}) {}
+      : obj_({factory, socket}) {}
 
   /* Destructor calls the AsciiFactory factory. */
   ~TObject() { Delete(obj_); }
@@ -292,6 +285,15 @@ class TObject {
   /* Gets the AsciiFactory. */
   inline AsciiFactory Factory() { return obj_.factory; }
 
+  inline AsciiFactory SetFactory(AsciiFactory factory) {
+    obj_.factory = factory;
+    return factory;
+  }
+
+  inline SI4 Do(SIW function, void* arg = nullptr) {
+    return ObjDo(obj_, function, arg);
+  }
+
   /* Gets the CObject. */
   inline CObject& CObj() { return obj_; }
 
@@ -300,32 +302,31 @@ class TObject {
   inline BOL Grow() { return TObjCanGrow<Size>(obj_); }
 
   /* Prints this object to the COut. */
-  void Print() {
-    ::_::Print("\nTObject<SI");
-    ::_::Print((CH1)('0' + sizeof (Size)));
-    ::_::Print(">");
+  template <typename Printer>
+  Printer& PrintTo(Printer& o) {
+    o << "\nTObject<SI" << (CH1)('0' + sizeof(Size)) << '>';
     UIW* begin = obj_.begin;
     if (begin) {
       Size size = *reinterpret_cast<Size*>(begin);
-      ::_::Print(" size:");
-      ::_::Print(size);
+      o << " size:" << (SIW)size;
     }
     AsciiFactory factory = obj_.factory;
     if (factory) {
-      ::_::Print(" factory:\"");
+      o << " factory:\"";
       CH1* info_string = 0;
       if (factory(obj_, kFactoryInfo, &info_string)) {
-        ::_::Print(info_string);
+        o << info_string;
       }
-      ::_::Print('\"');
+      o << '\"';
     }
+    return o;
   }
 
  private:
   CObject obj_;  //< ASCII CObject harness.
-};               //< namespace _
+};
 
 }  // namespace _
 
-#endif  //< SCRIPT2_TOBJECT
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif
+#endif

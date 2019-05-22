@@ -1,23 +1,20 @@
-/* Script
-@version 0.x
-@file    /script2/wall.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+/* Script^2 @version 0.x
+@link    https://github.com/kabuki-starship/script2.git
+@file    /script2/c_wall.h
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 #if SEAM >= SCRIPT2_14
 #ifndef SCRIPT2_WALL
 #define SCRIPT2_WALL
-#include "door.h"
+#include "c_door.h"
 #include "c_op.h"
+#incude "c_array.h"
 
 namespace _ {
 
@@ -79,11 +76,11 @@ class Wall {
 
  private:
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
-  SIW size_bytes_;      //< Size of the Wall in bytes.
+  SIW size_bytes_;         //< Size of the Wall in bytes.
   UIW* begin;              //< The Wall's socket.
   TCArray<Door*>* doors_;  //< The doors in the room.
 };
 
 }  // namespace _
-#endif  //< SCRIPT2_WALL
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif
+#endif

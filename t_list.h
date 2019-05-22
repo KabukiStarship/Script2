@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/list.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -23,9 +19,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_stack.h"
 
 #if SEAM == SCRIPT2_10
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -100,7 +96,7 @@ CList<Size, Index>* ListInit(UIW* socket, Size size, Index count_max) {
                 // failed.
     return nullptr;
   PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
-         (uint)size, (SI4)count_max)
+         (UIN)size, (SI4)count_max)
   Index count_max_bounds_lower = ListCountMaxBoundsLower<Size, Index>();
   if (count_max < count_max_bounds_lower) {
     PRINTF("\n count_max == 0 and is now %i", (SI4)count_max_bounds_lower)
@@ -250,7 +246,7 @@ Index ListInsert(CList<Size, Index>* list, SI4 type, const void* value,
 
   Index count = list->count, count_max = list->count_max;
   if (count >= count_max || index > count || !TypeIsValid(type) || index < 0) {
-    PRINTF("\nError inserting type:%s into index %i", TypeStrand(type),
+    PRINTF("\nError inserting type:%s into index %i", STRType(type),
            (SI4)index);
     return -1;
   }
@@ -405,7 +401,7 @@ UTF1& PrintList(UTF1& printer, CList<Size, Index>* list) {
   printer << "\n\nList: size:" << list->size << " count:" << count
           << " count_max:" << list->count_max;
   for (Index index = 0; index < count; ++index) {
-    printer << '\n'
+    printer << kLF
             << index << ".) "
             << TypeValue(ListTypes<Size, Index>(list)[index],
                          ListValue<Size, Index>(list, index));

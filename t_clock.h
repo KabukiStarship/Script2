@@ -1,16 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_lock.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-8 Cale McCollough <calemccollough@gmail.com>;
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -24,9 +19,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_strand.h"
 
 #if SEAM == SCRIPT2_5
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 namespace _ {
 
@@ -97,7 +92,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
     PRINTF("\nInvalid hour:%i", h);
     return nullptr;
   }
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   if (h < 0) {
     PRINTF("\nHours:%i can't be negative.", h);
     return nullptr;
@@ -150,7 +145,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
       "HH:MM:SSpm");
 
   if (!TScanSigned<SI4, UI4, Char>(string, m)) return nullptr;
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   if (m < 0) {
     PRINTF("\nMinutes:%i can't be negative!", m);
     return nullptr;
@@ -161,7 +156,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
   }
   PRINTF(":%i", m);
 
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   c = *string++;
   if (!c || TIsWhitespace<Char>(c)) {
     PRINT(" HH:MM ");
@@ -212,7 +207,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
     return nullptr;
   }
   PRINTF(":%i", s);
-  string = TStrandSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<Char>(string);
   c = TLowercase<Char>(*string);
   if (!c || TIsWhitespace<Char>(c)) {
     PRINTF(" HH:MM:SS ");
@@ -261,7 +256,7 @@ const Char* TScan(const Char* string, CClock& clock) {
   DASSERT(string);
   PRINTF("\n    Scanning CClock: %s\n    Scanning: ", string);
 
-  string = TStrandSkipChar<Char>(string, '0');
+  string = TSTRSkipChar<Char>(string, '0');
   Char c = *string,  //< The current Char.
       delimiter;     //< The delimiter.
   const Char* stop;  //< Might not need
@@ -304,7 +299,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     PRINT("Dates can't be negative.");
     return nullptr;
   }
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   if (!string) return nullptr;
   delimiter = *string++;
   PRINTF("%i%c", value1);
@@ -320,7 +315,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     return string + 1;
   }
   // Scan value2.
-  string = TStrandSkipChar<Char>(string, '0');
+  string = TSTRSkipChar<Char>(string, '0');
   if (!TScanSigned<SI4, UI4, Char>(string, value2)) {
     PRINT("\n    Failed scanning value2 of date.");
     return nullptr;
@@ -330,7 +325,7 @@ const Char* TScan(const Char* string, CClock& clock) {
     return nullptr;  //< Invalid month and day.
   }
   PRINTF("%i", value2);
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   c = *string;
   if (c != delimiter) {
     PRINT("\n    Cases MM/DD and MM/YYyy");
@@ -399,14 +394,14 @@ const Char* TScan(const Char* string, CClock& clock) {
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
 
-  string = TStrandSkipChar<Char>(++string, '0');
+  string = TSTRSkipChar<Char>(++string, '0');
   c = *string;
   // Then there are 3 values and 2 delimiters.
   if (!TIsDigit<Char>(c) || !TScanSigned<SI4, UI4, Char>(string, value3)) {
     PRINTF("\n    SlotRead error reading value3 of date. %c: ", c);
     return nullptr;  //< Invalid format!
   }
-  string = TStrandDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<Char>(string);
   PRINTF("%c%i", c, value3);
   // Now we need to check what format it is in.
 

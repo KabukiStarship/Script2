@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/script2_console.cc
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@file    /script2/script2_bin.cc
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -49,30 +45,30 @@ struct SDK BIn {
 };
 
 /* Get's the B-Input's socket. */
-inline CH1* BInBegin(BIn* bin);
+SDK inline CH1* BInBegin(BIn* bin);
 
-inline CH1* BInEnd(BIn* bin);
+SDK inline CH1* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
+SDK inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
+SDK inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
 
 /* Gets the rx socket length. */
-inline SI4 BInSpace(BIn* bin);
+SDK inline SI4 BInSpace(BIn* bin);
 
-inline SI4 BinBufferLength(BIn* bin);
+SDK inline SI4 BinBufferLength(BIn* bin);
 
 #if USING_SCRIPT2_TEXT == YES
 /* Gets a a CH1 for printing out the bin_state. */
-SDK const CH1** BInStateStrands();
+SDK const CH1** STRBInStates();
 
 /* Pulls the keyboard input into the ring socket. */
 // SDK void BInKeyboard ()
@@ -109,20 +105,25 @@ inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
 @param  text The Text to utf the bin to.
 @return The text. */
 SDK UTF1& Print(UTF1& printer, BIn* bin);
+
 #endif  //< #if USING_UTF8 == YES
 #if USING_UTF16 == YES
+
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 SDK UTF2& Print(UTF2& printer, BIn* bin);
+
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
+
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 SDK UTF4& Print(UTF4& printer, BIn* bin);
+
 #endif  //< #if USING_UTF32 == YES
 
 }  // namespace _

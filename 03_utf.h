@@ -1,29 +1,21 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    \03_utf.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#include "t_socket.h"
 #include "t_strand.h"
-#include "t_test.h"
-
-#include "c_cout.h"
 
 #if SEAM == SCRIPT2_3
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 using namespace _;
@@ -74,7 +66,7 @@ static const Char* _03_UTF() {
     cursor = TPrint<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
     PRINT_CHARS(str_a, 64);
     Test(cursor);
-    cursor = TStrandEquals<Char>(str_a, kTestStrands[i][0]);
+    cursor = TSTREquals<Char>(str_a, kTestStrands[i][0]);
     Test(cursor);
   }
 
@@ -99,7 +91,7 @@ static const Char* _03_UTF() {
   PRINT_CHARS(str_a, 64);
   AVOW(kTesting123, str_a);
 
-  PRINTF("\n\nTesting TStrandEquals<Char>");
+  PRINTF("\n\nTesting TSTREquals<Char>");
 
   const Char kCompareStrands[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
@@ -108,21 +100,21 @@ static const Char* _03_UTF() {
       {'T', 'e', 'x', 't', 'i', 'n', 'g', '@', NIL},
   };
 
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[1]));
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[3]));
-  ASSERT(TStrandEquals<Char>(kCompareStrands[0], kCompareStrands[0]));
-  ASSERT(!TStrandEquals<Char>(kCompareStrands[2], kCompareStrands[3]));
-  ASSERT(TStrandEquals<Char>(kCompareStrands[2], kCompareStrands[2]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[1]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[3]));
+  ASSERT(TSTREquals<Char>(kCompareStrands[0], kCompareStrands[0]));
+  ASSERT(!TSTREquals<Char>(kCompareStrands[2], kCompareStrands[3]));
+  ASSERT(TSTREquals<Char>(kCompareStrands[2], kCompareStrands[2]));
 
   const Char k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
-  AVOW(9, TStrandLength<Char>(k1to9));
+  AVOW(9, TSTRLength<Char>(k1to9));
 
-  PRINTF("\n\nTesting TStrandFind<Char>");
+  PRINTF("\n\nTesting TSTRFind<Char>");
 
   const Char kOne[] = {'1', ',', NIL};
   const Char kThreePeriod[] = {'3', '.', NIL};
-  ASSERT(TStrandFind<Char>(kTesting123, kOne));
-  ASSERT(TStrandFind<Char>(kTesting123, kThreePeriod));
+  ASSERT(TSTRFind<Char>(kTesting123, kOne));
+  ASSERT(TSTRFind<Char>(kTesting123, kThreePeriod));
 
   PRINT_HEADING("Testing TPrintRight<Char>");
 
@@ -146,7 +138,7 @@ static const Char* _03_UTF() {
     cursor = TPrintRight<Char>(str_a, str_a + kCount - 1, kTestingSpace, i + 1);
     PRINT_CHARS(str_a, 64);
     ASSERT_INDEX(cursor, i);
-    PRINTF("\n    Wrote:\"%s\":%i", str_a, TStrandLength<Char>(str_a));
+    PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
     AVOW_INDEX(&kRightAligned[i][0], str_a, i);
   }
   PRINT_HEADING("Testing TPrintCenter<Char>");
@@ -174,7 +166,7 @@ static const Char* _03_UTF() {
     cursor = TPrintCenter<Char>(str_a, str_a + kCount - 1, kNumbers, i + 1);
     PRINT_CHARS(str_a, 64);
     ASSERT_INDEX(cursor, i);
-    PRINTF("\n    Wrote:\"%s\":%i", str_a, TStrandLength<Char>(str_a));
+    PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
     AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 

@@ -1,7 +1,15 @@
-# script.docs
+# script2
 
-This folder contains:
+## docs
 
+* [Contributing](./CONTRIBUTING.md]
+* [Secure Coding Standards](./secure_coding_standards.md)
+* Templates
+  * [Bug Report Template](./BUG_REPORT_TEMPLATE.md)
+  * [Feature Request Template](./FEATURE_REQUST_TEMPLATE.md)
+  * [Issue Template](./ISSUE_TEMPLATE.md)
+  * Pull Request Template](./PULL_REQUEST_TEMPLATE.md)
+  
 * [The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification Release for Comment (RFC)](https://github.com/kabuki-starship/script2/blob/master/docs/script_specification_rfc.md);
 * Some Script2 Quick References;
 * The Doxygen config file;
@@ -33,7 +41,7 @@ This folder contains:
   * Stupid questions are asked repeatedly and assist in saving time when answered quickly. Please submit any questions you think should be on this FAQ using an issue ticket using the format `FAQ:<insert stupid question here>?`.
 
 * How do I use Script2 in my app?
-  * Script2 is a Nanoframework intended to make microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki-toolkit) harness.
+  * Script2 is a Nanoframework intended to make microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit) harness.
 
 # The License
 

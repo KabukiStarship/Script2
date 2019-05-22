@@ -1,15 +1,11 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_book.h
-@author  Cale McCollough <cale@astartup.net>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@author  Cale McCollough <https://calemccollough.github.io>
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the 
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
@@ -20,9 +16,9 @@ specific language governing permissions and limitations under the License. */
 #include "t_dic.h"
 
 #if SEAM == SCRIPT2_12
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -583,10 +579,10 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       "\n;: %u count_max: %u  "
       "size_pile: %u  size: %u",
       item_count, count_max, size_pile, table_size);
-  PRINT('\n');
+  PRINT(kLF);
   PRINT('|');
   for (SI4 i = 0; i < 79; ++i) PRINT('_');
-  PRINT('\n');
+  PRINT(kLF);
 
   const CH1* states =
       reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>);
@@ -605,7 +601,7 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
          "hash_u", "hash_s", "index_u", "collisions");
   PRINT('|');
   for (SI4 i = 0; i < 79; ++i) Print('_');
-  PRINT('\n');
+  PRINT(kLF);
 
   for (I i = 0; i < count_max; ++i) {
     // Print each record as a row.
@@ -630,13 +626,13 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       }
     }
 
-    PRINT('\n');
+    PRINT(kLF);
   }
   TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>),
               multimap->size);
-  PRINT('\n');
+  PRINT(kLF);
 }
 
 /* Deletes the multimap contents without wiping the contents. */

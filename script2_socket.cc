@@ -2,25 +2,21 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_socket.cc
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <calemccollough.github.io>;
-All right reserved (R). Licensed under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance with the License.
-You may obtain a copy of the License at www.apache.org/licenses/LICENSE-2.0.
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License. */
+@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 #if SEAM >= SCRIPT2_2
 
-#include "t_binary.h"
 #include "t_socket.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_2
-#include "global_debug.inl"
+#include "module_debug.inl"
 #else
-#include "global_release.inl"
+#include "module_release.inl"
 #endif
 
 namespace _ {
@@ -95,11 +91,17 @@ SIW SizeOf(const void* start, const void* stop) {
 
 inline UIW FillWord(CH1 fill_char) {
   UIW value = (UIW)(UI1)fill_char;
-#if CPU_WORD_SIze == 32
-  return value | (value << 8) | (value << 16) | (value << 24);
-#else
+#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_WORD_SIZE == 64
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
          (value << 48) | (value << 56);
+#elif CPU_WORD_SIZE == 32
+  return value | (value << 8) | (value << 16) | (value << 24);
+#else
+  return value | (value << 8);
+#endif
+#else
+#error You're CPU is in poopy mode. Change to Litle endian mode or fix me.
 #endif
 }
 
@@ -107,6 +109,7 @@ CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
   CH1 *start = reinterpret_cast<CH1*>(begin),
       *stop = reinterpret_cast<CH1*>(end);
   ASSERT(start);
+  SIW count = stop - start;
   PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
 
   PRINTF("\nFilling %i bytes from %p", (SI4)count, start);
@@ -141,6 +144,14 @@ CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
 }
 
 CH1* SocketWipe(void* begin, void* end) { return SocketFill(begin, end, 0); }
+
+CH1* SocketWipe(CH2* begin, CH2* end) {
+  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 1, 0);
+}
+
+CH1* SocketWipe(CH2* begin, CH4* end) {
+  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 3, 0);
+}
 
 CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
 
