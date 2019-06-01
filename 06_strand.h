@@ -57,7 +57,7 @@ void _06_StrandN() {
   PRINTF("\n\nResult:\"");
   PRINT(strand.Start());
   PRINT("\"\n");
-  PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
+  PRINT_CHARS(strand.AObj().Begin(), strand.AObj().Size());
 
   const Char* cursor = strand.Find(kTesting123);
   ASSERT(cursor);

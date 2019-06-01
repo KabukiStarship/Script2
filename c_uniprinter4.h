@@ -28,7 +28,7 @@ namespace _ {
 */
 
 /* Strand Factory that prints the string upon destruction.
-SI4 COutHeap4 (CObject& obj, SIW function, void* arg); */
+SI4 COutHeap4 (AObject& obj, SIW function, void* arg); */
 
 /* Checks if the given character is whitespace.
  */

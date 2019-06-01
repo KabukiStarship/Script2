@@ -3,8 +3,8 @@
 @file    /script2/t_ascii.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -24,9 +24,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-template <typename Size>
-inline BOL TSizeIsValid(Size size) {
-  return (size & (sizeof(Size) - 1)) == 0;
+template <typename SIZ>
+inline BOL TSizeIsValid(SIZ size) {
+  return (size & (sizeof(SIZ) - 1)) == 0;
 }
 
 /* An ROM  for one of the 32 types.
@@ -47,7 +47,7 @@ T* TypeAlignUpPointer(void* pointer, SI4 type) {
     return TAlignUp<T>(pointer, 3);
   else if (type <= kFPH)
     return TAlignUp<T>(pointer, 7);
-  // else it's an ASCII CObject.
+  // else it's an ASCII AObject.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |

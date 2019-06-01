@@ -25,37 +25,37 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* @ingroup ASCIIStack
+/* @ingroup AsciiStack
 Stack is an ASCII Data Type designed to use a C-style templated struct in C++
 using no dynamic memory and with dynamic memory as a templated C++ warper class
 and cross-language bindings and deterministic CPU cache optimizations. */
 
 /* Returns the maximum value of the given signed type. */
-template <typename Index>
-constexpr Index NaNSigned() {
+template <typename SIZ>
+constexpr SIZ NaNSigned() {
   enum {
-    kMax = (sizeof(Index) == 1)
+    kMax = (sizeof(SIZ) == 1)
                ? 0x78
-               : (sizeof(Index) == 2)
+               : (sizeof(SIZ) == 2)
                      ? 0x7ff8
-                     : (sizeof(Index) == 4)
+                     : (sizeof(SIZ) == 4)
                            ? 0x7ffffff8
-                           : (sizeof(Index) == 8) ? 0x7ffffffffffffff8 : 0,
+                           : (sizeof(SIZ) == 8) ? 0x7ffffffffffffff8 : 0,
   };
   return kMax;
 }
 
 /* Returns the maximum value of the given unsigned type. */
-template <typename Size>
-constexpr Size UnsignedMax() {
+template <typename SIZ>
+constexpr SIZ UnsignedMax() {
   enum {
-    kMax = (sizeof(Size) == 1)
+    kMax = (sizeof(SIZ) == 1)
                ? 0xf8
-               : (sizeof(Size) == 2)
+               : (sizeof(SIZ) == 2)
                      ? 0xfff8
-                     : (sizeof(Size) == 4)
+                     : (sizeof(SIZ) == 4)
                            ? 0xfffffff8
-                           : (sizeof(Size) == 8) ? 0xfffffffffffffff8 : 0,
+                           : (sizeof(SIZ) == 8) ? 0xfffffffffffffff8 : 0,
   };
   return kMax;
 }
@@ -77,7 +77,7 @@ that the size_array variable gets set to 0.
     |----------------|
     | Stack Elements |
  ^  |----------------|
- |  | TCStack Header |
+ |  | SStack Header  |
 0xN +----------------+
 @endcode
 
@@ -89,76 +89,71 @@ that the size_array variable gets set to 0.
     |-----------------|
     | Dimension Stack |
  ^  |-----------------|
- |  |  TCStack Header |
+ |  |  SStack Header  |
 0xN +-----------------+
 @endcode
 */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-struct TCStack {
-  Size size_array,  //< Used for multi-dimensional array.
-      size_stack;   //< Total size of the Stack in 64-bit aligned bytes.
-  Index count_max,  //< Max element count.
-      count;        //< Element count.
+template <typename SIZ = SI4>
+struct SStack {
+  SIZ size,   //< SIZ of the Stack in bytes.
+      count;  //< Element count.
 };
 
 /* Gets the size of a Stack with the given count_max. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size StackSize(Index count_max) {
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackSize(SIZ count_max) {
   enum { kCountMaxMin = sizeof(UI8) / sizeof(T) };
   if (count_max < kCountMaxMin) count_max = kCountMaxMin;
-  return sizeof(TCStack<T, Size, Index>) + sizeof(T) * count_max;
+  return sizeof(SStack<SIZ>) + sizeof(T) * count_max;
 }
 
-/* Gets the min size of a Stack. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size StackSizeMin() {
+/* Gets the min size of a Stack with zero elements. */
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackSizeMin() {
   enum {
     kStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
-    kStackCountMaxMin =
-        sizeof(TCStack<T, Size, Index>) + sizeof(T) * kStackCountMin,
+    kStackCountMaxMin = sizeof(SStack<SIZ>) + sizeof(T) * kStackCountMin,
   };
   return kStackCountMaxMin;
 }
 
 /*
-template<typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size StackSize (Index count) {
-  Size size = sizeof (TCStack<T, Size, Index>) + (sizeof (T) * 8) * count;
-  return MemoryAlign8<Size> (size);
+template<typename T = SI4, typename SIZ = SI4>
+inline SIZ StackSize (SIZ count) {
+  SIZ size = sizeof (SStack<SIZ>) + (sizeof (T) * 8) * count;
+  return MemoryAlign8<SIZ> (size);
 }*/
 
 /* Gets the max number_ of elements in an obj with the specific index
 width. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Index StackCountMax() {
-  return (Index)((((~(Size)0) - 7) - (Size)sizeof(TCStack<T, Size, Index>)) /
-                 (Size)sizeof(T));
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackCountMax() {
+  return (SIZ)((((~(SIZ)0) - 7) - (SIZ)sizeof(SStack<SIZ>)) / (SIZ)sizeof(T));
 }
 
 /*
-template<typename T = SI4, typename Size = SI4, typename Index = SI4>
-Index StackCountMax () {
-    return (Index)((UnsignedMax<Size> () - (Size)sizeof (TCStack<T, Size,
-Index>)) / (Size)sizeof (T));
+template<typename T = SI4, typename SIZ = SI4>
+SIZ StackCountMax () {
+    return (SIZ)((UnsignedMax<SIZ> () - (SIZ)sizeof (SStack<T, SIZ,
+SIZ>)) / (SIZ)sizeof (T));
 }*/
 
 /* The minimum obj size. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size StackSizeMin(Index count_max) {
-  Index count_upper_bounds = StackCountMax<T, Size, Index>();
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackSizeMin(SIZ count_max) {
+  SIZ count_upper_bounds = TStackCountMax<T, SIZ>();
   if (count_max > count_upper_bounds) count_max = count_upper_bounds;
-  return (Size)(sizeof(TCStack<T, Size, Index>) + count_max * sizeof(T));
+  return (SIZ)(sizeof(SStack<SIZ>) + count_max * sizeof(T));
 }
 
 /* Rounds up the count to the 64-bit align the value. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size StackCountMax(Index count_max) {
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackCountMax(SIZ count_max) {
   enum {
     kStackCountMax =
-        (UnsignedMax<Size>() - (Size)sizeof(TCStack<T, Size, Index>)) /
-        (Size)sizeof(T),
+        (UnsignedMax<SIZ>() - (SIZ)sizeof(SStack<SIZ>)) / (SIZ)sizeof(T),
   };
-  count_max = TAlignUpSigned<Index, Size, Index>(count_max);
+  count_max = TAlignUpSigned<SIZ, SIZ, SIZ>(count_max);
   if (count_max > kStackCountMax) count_max = kStackCountMax;
   return count_max;
 }
@@ -167,69 +162,59 @@ inline Size StackCountMax(Index count_max) {
 8 bytes.
 @param socket An obj of bytes large enough to fit the obj.
 @return A dynamically allocated socket. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-UIW* StackInit(UIW* socket, Size size) {
-  ASSERT(socket);
-
-  TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
-  stack->size_array = 0;
-  stack->size_stack = size;
-  Index count_max =
-      (Index)((size - sizeof(TCStack<T, Size, Index>)) >> kWordBitCount);
-  stack->count_max = count_max;
+template <typename T = SI4, typename SIZ = SI4>
+SStack<SIZ>* TStackInit(SStack<SIZ>* stack, SIZ size) {
+  if (!stack || size < sizeof(SStack<SIZ>)) return nullptr;
+  stack->size = size;
   stack->count = 0;
-  return socket;
+  return stack;
 }
 
 /* Initializes an obj from a preallocated socket who's size is a multiple of
 8 bytes.
 @param socket An obj of bytes large enough to fit the obj.
 @return A dynamically allocated socket. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-UIW* StackInit(UIW* socket, Size size, Index count_max) {
-  ASSERT(socket);
+template <typename T = SI4, typename SIZ = SI4>
+UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
+  DASSERT(socket);
+  if (!items || count < 0) return nullptr;
 
-  TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
-  stack->size_array = 0;
+  SStack<SIZ>* stack = reinterpret_cast<SStack<SIZ>*>(socket);
   stack->size_stack = size;
-  stack->count_max = (size - sizeof(TCStack<T, Size, Index>)) >> kWordBitCount;
+  stack->count_max = (size - sizeof(SStack<SIZ>)) >> kWordBitCount;
   stack->count = 0;
   return socket;
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-UIW* StackClone(TCStack<T, Size, Index>* stack) {
+template <typename T = SI4, typename SIZ = SI4>
+UIW* TStackClone(SStack<SIZ>* stack) {
   ASSERT(stack);
-  Size size = stack->size_stack >> kWordBitCount;
+  SIZ size = stack->size_stack >> kWordBitCount;
   UIW other_buffer = new UIW[size];
   UIW *source = reinterpret_cast<UIW*>(stack), *destination = other_buffer;
-  Size data_amount =
-      (stack->count * sizeof(T) + sizeof(TCStack<T, Size, Index>)) >>
-      kWordBitCount;
+  SIZ data_amount =
+      (stack->count * sizeof(T) + sizeof(SStack<SIZ>)) >> kWordBitCount;
   size -= data_amount;
   while (data_amount-- > 0) *destination++ = *source++;
   return destination;
 }
 
 /* Clones the given obj. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-UIW* StackClone(TCStack<T, Size, Index>* stack,
-                TCStack<T, Size, Index>* other) {
+template <typename T = SI4, typename SIZ = SI4>
+UIW* TStackClone(SStack<SIZ>* stack, SStack<SIZ>* other) {
   ASSERT(stack);
   ASSERT(other);
 
-  Size this_size = stack->size_stack, other_size = other->size_stack;
+  SIZ this_size = stack->size_stack, other_size = other->size_stack;
 
-  if (this_size < other_size) return StackClone(other);
+  if (this_size < other_size) return TStackClone(other);
 
   // We've got enough room in the obj's memory.
 
   UIW *read = reinterpret_cast<UIW*>(TStackStart(stack)),
       *write = reinterpret_cast<UIW*>(TStackStart(other));
 
-  Index count = other->count;
+  SIZ count = other->count;
   stack->count = count;
   UIW* write_end = write + ((count * sizeof(T)) >> kWordBitCount);
   while (write < write_end) *write++ = *read++;
@@ -237,27 +222,27 @@ UIW* StackClone(TCStack<T, Size, Index>* stack,
 }
 
 /* Returns the first element in the Stack TArray. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-T* TStackStart(TCStack<T, Size, Index>* stack) {
-  return reinterpret_cast<T*>(reinterpret_cast<CH1*>(stack) +
-                              sizeof(TCStack<T, Size, Index>));
+template <typename T = SI4, typename SIZ = SI4>
+T* TStackStart(SStack<SIZ>* stack) {
+  return reinterpret_cast<T*>(reinterpret_cast<UIW>(stack) +
+                              sizeof(SStack<SIZ>));
 }
 
 /* Returns the first element in the Stack TArray. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-T* StackStop(TCStack<T, Size, Index>* stack) {
-  return TStackStart<T, Size, Index>(stack) + stack->count - 1;
+template <typename T = SI4, typename SIZ = SI4>
+T* TStackStop(SStack<SIZ>* stack) {
+  return TStackStart<T, SIZ>(stack) + stack->count - 1;
 }
 
 /* Inserts the item into the obj at the given index.
 @warning Function does not check for bounds and pushing to the top
-if the Stack (@see Index StackInsert<Size, Index> (T*, Index, T, Index)).
+if the Stack (@see SIZ TStackInsert<SIZ, SIZ> (T*, SIZ, T, SIZ)).
 @param items Pointer to element 0 of the array.
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename Index = SI4>
-inline Index StackInsert(T* items, Index count, T item, Index index) {
+template <typename T = SIW, typename SIZ = SI4>
+inline SIZ TStackInsert(T* items, SIZ count, T item, SIZ index) {
   T *target = items + index, *stop = items + count;
   // Shift the elements up.
   while (target < stop) *stop-- = *stop;
@@ -270,8 +255,8 @@ inline Index StackInsert(T* items, Index count, T item, Index index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename Index = SI4>
-inline Index StackAdd(T* items, Index count, T item, Index index) {
+template <typename T = SIW, typename SIZ = SI4>
+inline SIZ TStackAdd(T* items, SIZ count, T item, SIZ index) {
   ASSERT(items);
   if (index < 0 || index > count) return -1;
   if (index == count) {
@@ -283,7 +268,7 @@ inline Index StackAdd(T* items, Index count, T item, Index index) {
     items[0] = item;
     return 1;
   }
-  return StackInsert<T, Index>(T, count, item, index);
+  return TStackInsert<T, SIZ>(T, count, item, index);
 }
 
 /* Inserts the item into the obj at the given index.
@@ -291,20 +276,20 @@ inline Index StackAdd(T* items, Index count, T item, Index index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full.
-template<typename T = SI4, typename Size = SI4, typename Index = SI4>
-T StackAdd (TCStack<T, Size, Index>* obj, T item, T index) {
+template<typename T = SI4, typename SIZ = SI4>
+T TStackAdd (SStack<SIZ>* obj, T item, T index) {
   ASSERT (obj);
-  Index count_max  = obj->count_max,
+  SIZ count_max  = obj->count_max,
       count = obj->count;
   if (count >= count_max)
       return -1;
-  T* items = TStackStart<T, Size, Index> (This ());
-  return StackAdd<T, Index> (items, count, item, index);
+  T* items = TStackStart<T, SIZ> (This ());
+  return TStackAdd<T, SIZ> (items, count, item, index);
 } */
 
 /* Removes an element from the given array. */
-template <typename T = SIW, typename Index = SIW>
-inline Index TStackRemove(T* elements, Index size, Index index) {
+template <typename T = SIW, typename SIZ = SIW>
+inline SIZ TStackRemove(T* elements, SIZ size, SIZ index) {
   ASSERT(elements);
   if (index < 0) return index;
   if (size < 0) return size;
@@ -317,29 +302,29 @@ inline Index TStackRemove(T* elements, Index size, Index index) {
 }
 
 /* Removes the given index from the obj.
-@param  a     The obj.
+@param  stack The Ascii Object base poiner.
 @param  index The index the item to remove.
 @return True if the index is out of bounds. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-Index TStackRemove(TCStack<T, Size, Index>* stack, Index index) {
+template <typename T = SI4, typename SIZ = SI4>
+SIZ TStackRemove(SStack<SIZ>* stack, SIZ index) {
   ASSERT(stack);
-  Index result = TStackRemove<T, Index>(TStackStart<T, Size, Index>(stack),
-                                        stack->count, index);
+  SIZ result =
+      TStackRemove<T, SIZ>(TStackStart<T, SIZ>(stack), stack->count, index);
   if (result < 0) return result;
   stack->count = result;
   return result;
 }
 
 /* Adds the given item to the stop of the obj.
-@param  a    The obj.
-@param  item The item to push onto the obj.
+@param  stack The Ascii Object base poiner.
+@param  item  The item to push onto the obj.
 @return The index of the newly stacked item. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-Index TStackPush(TCStack<T, Size, Index>* stack, T item) {
+template <typename T = SI4, typename SIZ = SI4>
+SIZ TStackPush(SStack<SIZ>* stack, T item) {
   ASSERT(stack);
-  Index count_max = stack->count_max, count = stack->count;
-  if (count >= count_max) return -1;
-  T* items = TStackStart<T, Size, Index>(stack);
+  SIZ size = stack->size, count = stack->count;
+  if (count >= size) return -1;
+  T* items = TStackStart<T, SIZ>(stack);
   items[count] = item;
   stack->count = count + 1;
   return count;
@@ -349,26 +334,26 @@ Index TStackPush(TCStack<T, Size, Index>* stack, T item) {
 @note We do not delete the item at the
 @param  a The obj.
 @return The item popped off the obj. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-T TStackPop(TCStack<T, Size, Index>* stack) {
+template <typename T = SI4, typename SIZ = SI4>
+T TStackPop(SStack<SIZ>* stack) {
   ASSERT(stack);
-  Index count = stack->count;
+  SIZ count = stack->count;
   if (count == 0) return 0;
-  T* items = TStackStart<T, Size, Index>(stack);
+  T* items = TStackStart<T, SIZ>(stack);
   stack->count = count - 1;
   T item = items[count - 1];
   return item;
 }
 
 /* Peeks at the top item on the stack without popping it off.
-@param  a The obj.
+@param  stack The base address of the stack.
 @return The item popped off the obj. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-T TStackPeek(TCStack<T, Size, Index>* stack) {
+template <typename T = SI4, typename SIZ = SI4>
+T TStackPeek(SStack<SIZ>* stack) {
   ASSERT(stack);
-  Index count = stack->count;
+  SIZ count = stack->count;
   if (count == 0) return 0;
-  T* items = TStackStart<T, Size, Index>(stack);
+  T* items = TStackStart<T, SIZ>(stack);
   T item = items[stack->count - 1];
   return item;
 }
@@ -377,19 +362,18 @@ T TStackPeek(TCStack<T, Size, Index>* stack) {
 @param  obj    The obj.
 @param  index The index of the element to get.
 @return -1 if a is nil and -2 if the index is out of bounds. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-T TStackGet(TCStack<T, Size, Index>* stack, Index index) {
+template <typename T = SI4, typename SIZ = SI4>
+T TStackGet(SStack<SIZ>* stack, SIZ index) {
   ASSERT(stack);
   if (index >= stack->count) return 0;
-  CH1* address =
-      reinterpret_cast<CH1*>(stack) + sizeof(TCStack<T, Size, Index>);
+  CH1* address = reinterpret_cast<CH1*>(stack) + sizeof(SStack<SIZ>);
   return reinterpret_cast<T*>(address)[index];
 }
 
 /* Returns true if the given obj contains the given address.
 @return false upon failure. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-BOL TStackContains(TCStack<T, Size, Index>* stack, void* address) {
+template <typename T = SI4, typename SIZ = SI4>
+BOL TStackContains(SStack<SIZ>* stack, void* address) {
   ASSERT(stack);
   CH1 *ptr = reinterpret_cast<CH1*>(stack),
       *adr = reinterpret_cast<CH1*>(address);
@@ -399,87 +383,81 @@ BOL TStackContains(TCStack<T, Size, Index>* stack, void* address) {
 }
 
 /* The obj size in words. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Size TStackSizeWords(Index count) {
-  return StackSizeMin<T, Size, Index>(count) / sizeof(UIW);
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackSizeWords(SIZ count) {
+  return TStackSizeMin<T, SIZ>(count) / sizeof(UIW);
 }
 
 /* The upper bounds defines exactly how many elements can fit into a space
 in memory.
 @warning Anything above this threshold may cause a critical error; AND
 sizeof (T) must be 1, 2, 4, or 8. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-inline Index TStackCountUpperBounds() {
+template <typename T = SI4, typename SIZ = SI4>
+inline SIZ TStackCountUpperBounds() {
   enum {
     kShift = (sizeof(T) == 8) ? 3 :             //< Used to divide by 8.
                  (sizeof(T) == 4) ? 2 :         //< Used to divide by 4.
                      (sizeof(T) == 2) ? 1 : 0,  //< Used to divide by 2.
   };
-  return (Index)((((~(Size)0) - 7) - (Size)sizeof(TCStack<T, Size, Index>)) /
-                 (Size)sizeof(T));
+  return (SIZ)((((~(SIZ)0) - 7) - (SIZ)sizeof(SStack<SIZ>)) / (SIZ)sizeof(T));
 }
 
 /* Doubles the size of the array until the max count is reached.
 @return Returns nil if the count_max is greater than the amount of memory that
-can fit in type Size, the unaltered socket pointer if the Stack has grown to the
+can fit in type SIZ, the unaltered socket pointer if the Stack has grown to the
 count_max upper bounds, or a new dynamically allocated socket upon failure. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-BOL TStackGrow(CObject obj) {
-  static Index count_max_auto_size_init = kStackCountMaxDefault;
+template <typename T = SI4, typename SIZ = SI4>
+BOL TStackGrow(CObject& obj) {
+  static SIZ count_max_auto_size_init = kStackCountMaxDefault;
 
   UIW* socket = obj.begin;
 
   ASSERT(socket);
 
-  TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
-  Index count_max = stack->count_max,
-        count_uppoer_bounds = TStackCountUpperBounds<T, Size, Index>();
+  SStack<SIZ>* stack = reinterpret_cast<SStack<SIZ>*>(socket);
+  SIZ count_max = stack->count_max,
+      count_uppoer_bounds = TStackCountUpperBounds<T, SIZ>();
   if (count_max > count_uppoer_bounds || count_max >= count_uppoer_bounds)
     return false;
   count_max += count_max;
   if (count_max > count_uppoer_bounds) count_max = count_uppoer_bounds;
-  Size new_size = sizeof(TCStack<T, Size, Index>) + count_max * sizeof(T);
-  new_size = TAlignUpSigned<Size>(new_size, 7);
+  SIZ new_size = sizeof(SStack<SIZ>) + count_max * sizeof(T);
+  new_size = TAlignUpSigned<SIZ>(new_size, 7);
   UIW* new_buffer = new UIW[new_size >> kWordBitCount];
-  TCStack<T, Size, Index>* new_stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(new_buffer);
+  SStack<SIZ>* new_stack = reinterpret_cast<SStack<SIZ>*>(new_buffer);
   new_stack->size_array = 0;
   new_stack->size_stack = new_size;
-  Index count = stack->count;
+  SIZ count = stack->count;
   new_stack->count = count;
   new_stack->count_max = count_max;
 
   T *source = TStackStart(stack), *destination = TStackStart(new_stack);
   for (; count > 0; count--) *destination++ = *source++;
   AsciiFactory factory = obj.factory;
-  if (factory) factory(obj, kFactoryDestroy, nullptr);
+  if (factory) factory(obj, kFactoryDelete, nullptr);
   return true;
 }
 
 /* Attempts to resize the given CObject to the new_count.
 @return Nil upon failure. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-BOL TStackResize(CObject obj, Index new_count) {
-  TCStack<T, Size, Index> stack =
-      *reinterpret_cast<TCStack<T, Size, Index>*>(obj.begin);
-  Index count = obj.count, count_max = StackCountMax<T, Size, Index>();
+template <typename T = SI4, typename SIZ = SI4>
+BOL TStackResize(CObject& obj, SIZ new_count) {
+  SStack<SIZ> stack = *reinterpret_cast<SStack<SIZ>*>(obj.begin);
+  SIZ count = obj.count, count_max = TStackCountMax<T, SIZ>();
   if (count > count_max || count == new_count) return false;
 }
 
+template <typename T = SI4, typename SIZ = SI4>
+BOL TStackInBounds(SStack<SIZ>* stack, SIZ index) {
+  return index >= 0 && index < stack->count_max;
+}
+
 /* Prints the given obj to the console. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Printer = TStrand<CH1>>
-Printer& TPrintStack(Printer& o, TCStack<T, Size, Index>* stack) {
+template <typename Printer, typename T = SI4, typename SIZ = SI4>
+Printer& TStackPrint(Printer& o, SStack<SIZ>* stack) {
   DASSERT(stack);
-
-  Size size_array = stack->size_array;
-  Index count = stack->count;
-  if (size_array != 0) return o << "\n\nStack: Invalid size_array";
-  o << "\n\nStack: count: " << count << " count_max:" << stack->count_max
-    << " size_stack:" << stack->size_stack;
-
-  if (stack->size_array != 0) o << " size_array:invalid";
+  SIZ size = stack->size, count = stack->count;
+  o << "\n\nStack: count: " << count << " size:" << size;
 
   T* elements = TStackStart(stack);
   for (SI4 i = 0; i < count; ++i) o << kLF << i + 1 << ", " << elements[i];
@@ -487,12 +465,52 @@ Printer& TPrintStack(Printer& o, TCStack<T, Size, Index>* stack) {
   return o;
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-BOL TStackInBounds(TCStack<T, Size, Index>* stack, Index index) {
-  return index >= 0 && index < stack->count_max;
+template <typename T, typename SIZ>
+SIN TStackFactory(CObject& obj, SIW function, void* arg, BOL using_heap) {
+  SI4 size;
+  switch (function) {
+    case kFactoryDelete: {
+      PRINT("\nEntering Strand.Factory.Delete:");
+      return Delete(obj, using_heap);
+    }
+    case kFactoryGrow: {
+      PRINT("\nEntering Strand.Factory.Grow:");
+      if (!arg) return kFactoryNilArg;
+      UIW *begin = obj.begin, *new_begin = TObjGrowDouble<SI4>(begin);
+      if (!new_begin) return kFactoryCantGrow;
+
+      TUTF<Char> new_utf(new_begin);
+      PRINTF(" new size:%i", TObjSize<SI4>(new_begin));
+      Char* start = TSTRStart<Char>(begin);
+      new_utf << start;
+      reinterpret_cast<TUTF<Char>*>(arg)->Set(new_utf);
+      Char* new_start = TSTRStart<Char>(new_begin);
+      PRINTF("\nCopying \"%s\" with result:\"%s\"", start, new_start);
+
+      if (using_heap) delete[] begin;
+      obj.begin = new_begin;
+      return 0;
+    }
+    case kFactoryClone: {
+      PRINT("\nEntering Strand.Factory.Clone:");
+      if (!arg) return kFactoryNilArg;
+      CObject* other = reinterpret_cast<CObject*>(arg);
+      UIW* begin = obj.begin;
+      UIW* obj = TObjClone<SI4>(obj);
+      if (!obj) return kFactoryCantGrow;
+      other->begin = obj;
+      other->factory = other->factory;
+      return 0;
+    }
+    case kFactoryInfo: {
+      *reinterpret_cast<const CH1**>(arg) = "Strand";
+      return 0;
+    }
+  }
+  return 0;
 }
 
-/* A stack of data.
+/* A SStack of data with an AsciiFactory.
 
 This is a wrapper class for the
 
@@ -511,161 +529,129 @@ This is a wrapper class for the
 +----------------+ 0x0
 @endcode
 */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-class TStack {
+template <typename T = SI4, typename SIZ = SI4, typename BUF = Nil>
+class AStack {
  public:
   /* Initializes a stack of n elements of the given type.
-  @param count_max The max number_ of elements that can fit in memory in this
-  Stack. */
-  TStack(Index count_max = 0) {
-    // Align the count_max to a 64-bit word boundary.
-    if (count_max == 0) {
-      count_max = 32;
-    }
-    Size size = StackSize<T, Size, Index>(count_max);
-    UIW* socket = new UIW[size >> kWordBitCount];
-    obj_.SetBegin(socket);
-    StackInit(socket, size, count_max);
-  }
+  @param size The max element count. */
+  AStack(SIZ size = 0) {}
+
+  AStack(SIZ size, const T* items) {}
 
   /* Copy constructor. */
-  TStack(const TStack& other) : obj_(other.CObject()) {}
+  AStack(const AStack& other) : obj_(other.CObj()) {}
 
-  /* Destructs nothing.
-  @see ~TObject<Index> */
-  ~TStack() {}
+  /* Destructs nothing. */
+  ~AStack() {}
 
   /* Returns a clone from dynamic memory. */
-  TStack<T, Size, Index>& Clone() { StackClone<T, Size, Index>(CObject()); }
+  AStack<T, SIZ>& Clone() { TStackClone<T, SIZ>(AObj()); }
 
   /* Clones the other object. */
-  TStack<T, Size, Index>& Clone(TStack<T, Size, Index>& other) {
-    StackClone<T, Size, Index>(CObject(), *other);
+  AStack<T, SIZ>& Clone(AStack<T, SIZ>& other) {
+    TStackClone<T, SIZ>(AObj(), *other);
   }
 
   /* Checks if the given index is a valid element.
   @return true if the index is in bounds. */
-  inline BOL InBounds(Index index) {
-    return TStackInBounds<T, Size, Index>(obj_.CObj(), index);
+  inline BOL InBounds(SIZ index) {
+    return TStackInBounds<T, SIZ>(obj_.CObj(), index);
   }
 
   /* Gets the max number_ of elements in an obj with the specific index
   width. */
-  inline Index GetElementsMax() { return StackCountMax<T, Size, Index>(); }
+  inline SIZ ElementsMax() { return TStackCountMax<T, SIZ>(); }
 
   /* Gets the size of the entire Stack, including header, in bytes. */
-  inline Size SizeBytes() { return CObject()->SizeBytes(); }
+  inline SIZ SizeBytes() { return AObj()->SizeBytes(); }
 
   /* Gets the min size of the entire Stack, including header, in bytes. */
-  inline Size SizeMin() { return StackSizeMin<T, Size, Index>(); }
+  inline SIZ SizeMin() { return TStackSizeMin<T, SIZ>(); }
 
   /* Gets the count of the items on the obj. */
-  inline Index GetCount() { return Obj().count; }
+  inline SIZ Count() { return Obj().count; }
 
   /* Gets a pointer to the first element in the obj. */
-  inline T* Start() { return TStackStart<T, Size, Index>(CObject()); }
+  inline T* Start() { return TStackStart<T, SIZ>(AObj()); }
 
   /* Gets a pointer to the first element in the obj. */
-  inline T* Stop() { return Start() + GetCount(); }
+  inline T* Stop() { return Start() + Count(); }
 
   /* Inserts the item into the obj at the given index.
   @return -1 if a is nil and -2 if the obj is full.
   @param item  The item to insert.
   @param index The index to insert at. */
   inline T Insert(T item, T index) {
-    return TStack<T, Size, Index>(CObject(), item, index);
+    return AStack<T, SIZ>(AObj(), item, index);
   }
 
   /* Removes the given index from the obj.
   @return True if the index is out of bounds.
   @param  index The index the item to remove. */
-  inline BOL Remove(Index index) {
-    return TStackRemove<T, Size, Index>(CObject(), index);
-  }
+  inline BOL Remove(SIZ index) { return TStackRemove<T, SIZ>(AObj(), index); }
 
   /* Adds the given item to the stop of the obj.
   @return The index of the newly stacked item.
   @param  item The item to push onto the obj. */
-  inline Index Push(T item) {
-    Index result = TStackPush<T, Size, Index>(Obj(), item);
-    // std::count << "\n  Pushing " << item;
-    if (result < 0) {
-      // Printf (" and growing.");
-      Grow();
-      Index result = TStackPush<T, Size, Index>(Obj(), item);
-      // COUT << this;
-      if (result < 0) return -1;
-      return result;
-    }
-    return result;
-  }
+  inline SIZ Push(T item) { return TStackPush<T, SIZ>(Obj(), item); }
 
   /* Pops the top item off of the obj.
   @return The item popped off the obj. */
-  inline T Pop() {
-    T value = TStackPop<T, Size, Index>(Obj());
-    PRINT("\n  Popping ");
-    PRINT(value);
-    return value;
-  }
+  inline T Pop() { return TStackPop<T, SIZ>(Obj()); }
 
   /* Peeks the top item off of the obj without popping it.
   @return The item popped off the obj. */
-  inline T Peek() { return TStackPeek<T, Size, Index>(CObject()); }
+  inline T Peek() { return TStackPeek<T, SIZ>(AObj()); }
 
   /* Gets the element at the given index.
   @return -1 if a is nil and -2 if the index is out of bounds.
   @param  index The index of the element to get. */
-  inline T Get(Index index) {
-    return TStackGet<T, Size, Index>(CObject(), index);
-  }
+  inline T Get(SIZ index) { return TStackGet<T, SIZ>(AObj(), index); }
 
   /* Returns true if the given obj contains the given address.
   @return false upon failure. */
   inline BOL Contains(void* address) {
-    return TStackContains<T, Size, Index>(CObject(), address);
+    return TStackContains<T, SIZ>(AObj(), address);
   }
 
   /* Resizes the obj to the new_count.
   @return False upon failure. */
-  inline BOL Resize(Index new_count) {
-    return TStackResize<T, Size, Index>(obj_, new_count);
+  inline BOL Resize(SIZ new_count) {
+    return TStackResize<T, SIZ>(obj_, new_count);
   }
 
   /* Doubles the size of the obj.
   @return False upon failure. */
-  inline BOL Grow() { return TStackGrow<T, Size, Index>(obj_.CObj()); }
+  inline BOL Grow() { return TStackGrow<T, SIZ>(obj_.CObj()); }
+
+  /* Gets the ASCII Object. */
+  inline SStack<SIZ>* Obj() {
+    return reinterpret_cast<SStack<SIZ>*>(obj_.Begin());
+  }
+
+  /* Gets this AObject. */
+  inline CObject& CObj() { return obj_.CObj(); }
+
+  /* Gets this AObject. */
+  inline AObject<SIZ, BUF>& AObj() { return obj_; }
 
   /* Prints this object to a Printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& utf) {
-    return TPrintStack<T, Size, Index, Printer>(utf, Obj());
+    return TStackPrint<Printer, T, SIZ>(utf, Obj());
   }
 
   /* Prints this object to the given UTF. */
   inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
 
-  /* Gets the ASCII Object. */
-  inline TCStack<T, Size, Index>* Obj() {
-    return reinterpret_cast<TCStack<T, Size, Index>*>(obj_.CObj().begin);
-  }
-
-  /* Gets this TObject. */
-  inline CObject& CObj() { return obj_.CObj(); }
-
-  /* Gets this TObject. */
-  inline TObject<Index>& TObj() { return obj_; }
-
   /* Clones the other object. */
-  inline TStack<T, Size, Index>& operator[](
-      const TStack<T, Size, Index>& other) {
+  inline AStack<T, SIZ>& operator[](const AStack<T, SIZ>& other) {
     Clone(other);
     return *this;
   }
 
   /* Clones the other object. */
-  inline TStack<T, Size, Index>& operator=(
-      const TStack<T, Size, Index>& other) {
+  inline AStack<T, SIZ>& operator=(const AStack<T, SIZ>& other) {
     Clone(other);
     return *this;
   }
@@ -674,23 +660,26 @@ class TStack {
   inline T& operator[](SIW index) { return Start()[index]; }
 
   /* Gets a const reference to the given element index. */
-  const T& operator[](SIW index) const { return Start()[index]; }
+  inline const T& operator[](SIW index) const { return Start()[index]; }
 
  private:
-  TObject<Index> obj_;  //< ASCII Object.
+  AObject<SIZ, BUF> obj_;  //< ASCII Object.
 
-  /* Sets the socket to the new pointer. */
-  inline void SetBuffer(TCStack<T, Size, Index>* stack) {
-    ASSERT(stack);
-    CObj().begin = reinterpret_cast<UIW*>(stack);
+  static SI4 FactoryStack(CObject& obj, SIW function, void* arg) {
+    return Factory(obj, function, arg, kStack);
+  }
+
+  static SI4 FactoryHeap(CObject& obj, SIW function, void* arg) {
+    return Factory(obj, function, arg, kHeap);
+  }
+
+  /* Stack factory. */
+  static SIN Factory(CObject& obj, SIW function, void* arg, BOL using_heap) {
+    return TStackFactory<T, SIZ>(obj, function, arg, using_heap);
   }
 };
 
 }  // namespace _
 
-#if USING_STR
-
 #endif
-
-#endif  //< SCRIPT2_TSTACK
-#endif  //< #if SEAM >= SCRIPT2_6
+#endif

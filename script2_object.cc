@@ -48,13 +48,29 @@ SI4 ObjDo(CObject& obj, SIW function, void* arg) {
   return kFactoryNil;
 }
 
+UIW* ObjBeginSet(CObject& obj, void* buffer) {
+  UIW* ptr = reinterpret_cast<UIW*>(buffer);
+  if (!ptr) return ptr;
+  obj.begin = ptr;
+  return ptr;
+}
+
 BOL ObjCountIsValid(SI1 index, SI1 count_min) {
   return TObjCountIsValid<SI1>(index, count_min);
 }
 
-void Delete(CObject& obj) {
-  AsciiFactory factory = obj.factory;
-  if (factory) factory(obj, kFactoryDestroy, nullptr);
+SIN Delete(CObject& obj, BOL using_heap) {
+  UIW* begin = obj.begin;
+
+  DASSERT(begin);
+  DASSERT(obj.factory);
+
+  if (!using_heap) return 0;
+  delete[] begin;
+  obj.begin = nullptr;
+  obj.factory = nullptr;
+
+  return 0;
 }
 
 BOL IsOBJFactoryFunction(SIW function) { return function <= kFactoryInfo; }

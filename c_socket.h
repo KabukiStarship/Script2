@@ -75,15 +75,16 @@ SDK /*inline*/ UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
 SDK /*inline*/ SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
 
 /* A managed general purpose (i.e. not just for networking) memory socket.
-    A socket is just a hole in something for fitting something in, like a light
-    or electric socket. A socket of memory is just a block of memory you fit
-    something in. A network socket is a socket for interprocess communication,
-    which is usually implemented with a ring socket
-    (@see ~/kabuki-toolkit/slot.h).
+A socket is just a hole in something for fitting something in, like a light
+or electric socket. A socket of memory is just a block of memory you fit
+something in. A network socket is a socket for interprocess communication,
+which is usually implemented with a ring socket
+(@see ~/kabuki-toolkit/slot.h).
 */
-struct Socket {
+class Socket {
+ public:
   CH1 *begin,  //< Beginning of the socket.
-      *stop;   //< End of the socket.
+      *end;    //< End of the socket.
 
   /* Constructs an uninitialized socket. */
   Socket();
@@ -97,8 +98,26 @@ struct Socket {
   /* Clones the other memory. */
   Socket(const Socket& other);
 
+  /* Gets the size of the socket. */
+  SIW Size();
+
   /* C++ operator= overload. */
   Socket& operator=(const Socket& other);
+};
+
+class Nil {
+ public:
+  /* Constructures nothing. */
+  Nil();
+
+  /* Gets the size of the socket. */
+  SIW Size();
+
+  /* Gets the nil begin word address. */
+  UIW* BeginWord();
+
+  /* Gets the nil end word address. */
+  UIW* EndWord();
 };
 
 /* Creates a block of dynamic memory. */

@@ -37,7 +37,7 @@ tables bellow.
 
 @code
 // The convention KT uses is that the unsigned size always comes first
-// because it's the first UI1 of an ASCII CObject.
+// because it's the first UI1 of an ASCII AObject.
 SI4 signed_example = 7;
 signed_example = AlignUp<SI8, UI4, SI4> (signed_example);
 
@@ -177,30 +177,30 @@ inline SI4 TBitShiftCount() {
 }
 
 /* Aligns the given size to a word-sized boundary. */
-template <typename Size>
-constexpr Size SizeAlign(Size size) {
-  Size lsb_mask = sizeof(UIW) - 1;
+template <typename SIZ>
+constexpr SIZ SizeAlign(SIZ size) {
+  SIZ lsb_mask = sizeof(UIW) - 1;
   if (size < sizeof(UIW)) return sizeof(UIW);
-  Size size_max = ~lsb_mask;
+  SIZ size_max = ~lsb_mask;
   if (size > size_max) return size;
   return size + (-size) & lsb_mask;
 }
 
 /* A contiguous memory socket. */
-template <typename Size, Size kSize_>
+template <typename SIZ = SIW, SIZ kSize_ = sizeof(SIW)>
 class TSocket {
  public:
   /* Default destructor does nothing. */
   TSocket() {}
 
   /* The size of the Size type. */
-  static constexpr Size SizeSize() { return (Size)sizeof(Size); }
+  static constexpr SIZ SizeSize() { return (SIZ)sizeof(SIZ); }
 
   /* The min size in bytes. */
-  static constexpr Size SizeMin() { return SizeSize(); }
+  static constexpr SIZ SizeMin() { return SizeSize(); }
 
   /* The size in bytes. */
-  static constexpr Size SizeBytes() {
+  static constexpr SIZ SizeBytes() {
     // static_assert(kSize_ >= SizeMin(), "kSize_ < SizeMin ()");
     if (kSize_ < SizeMin()) return SizeMin();
     return kSize_;
@@ -208,12 +208,15 @@ class TSocket {
 
   /* The size in words rounded down. */
   static constexpr UIW SizeWords() {
-    UIW size_words = (UIW)(SizeBytes() / (Size)sizeof(UIW));
+    UIW size_words = (UIW)(SizeBytes() / (SIZ)sizeof(UIW));
     return (size_words <= 0) ? 1 : size_words;
   }
 
   /* Returns the socket as a UIW*. */
-  inline UIW* Words() { return socket_; }
+  inline UIW* BeginWord() { return socket_; }
+
+  /* Gets the begin UI1 of the socket. */
+  inline UIW* EndWord() { return &socket_[SizeWords()]; }
 
   /* Gets the begin UI1 of the socket. */
   template <typename T = CH1>
@@ -225,30 +228,30 @@ class TSocket {
   inline CH1* End() { return reinterpret_cast<CH1*>(socket_) + kSize_; }
 
   /* Returns the first byte of the ASCII Object. */
-  template <typename Size, typename T>
+  template <typename SIZ, typename T>
   inline T* Start() {
     UIW ptr = reinterpret_cast<UIW>(socket_);
-    return reinterpret_cast<T*>(ptr + sizeof(Size));
+    return reinterpret_cast<T*>(ptr + sizeof(SIZ));
   }
 
   /* Returns the first byte of the ASCII Object. */
-  template <typename Size, typename T, typename Index>
+  template <typename SIZ, typename T, typename Index>
   inline T* Stop(Index index) {
-    return Start<Size, T>() + index - 1;
+    return Start<SIZ, T>() + index - 1;
   }
 
   /* Gets the begin of the socket. */
-  template <typename T = CH1, typename I = Size>
+  template <typename T = CH1, typename I = SIZ>
   inline T* Element(I index) {
     if (!InRange(index)) return nullptr;
     return Start()[index];
   }
 
   /* Sets the size to the new value. */
-  template <typename Size>
-  inline UIW* SetSize(Size size) {
+  template <typename SIZ>
+  inline UIW* SetSize(SIZ size) {
     ASSERT((size & kAlignMask) == 0)
-    *reinterpret_cast<Size*>(socket_) = size;
+    *reinterpret_cast<SIZ*>(socket_) = size;
     return socket_;
   }
 
@@ -279,7 +282,7 @@ inline T* TPtr(const void* begin, SIW offset) {
 }
 
 /* Creates a new socket of the given size or deletes it. */
-template <typename Size = SI4>
+template <typename SIZ = SI4>
 UIW* TNew(SIW size) {
   size = AlignUp(size);
   return new UIW[size >> kWordBitCount];

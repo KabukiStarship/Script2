@@ -42,6 +42,9 @@
 #undef DAVOW
 #undef RAVOW
 #undef AVOW_INDEX
+#undef WARN
+#undef DWARN
+#undef RWARN
 #undef RETURN
 #undef DRETURN
 #undef RRETURN

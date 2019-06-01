@@ -44,7 +44,7 @@ class Library : public Operand {
   /* Gets the data size in bytes. */
   SI4 GetDataSize() { return data_size_; }
 
-  /* Attempts to add the Page data into the CObject at the given BaseAddress.
+  /* Attempts to add the Page data into the AObject at the given BaseAddress.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Add(UI1 type, const CH1* key, void* data) {
     TIndex size_of_type = GetSizeOfType(type);
@@ -54,7 +54,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to insert the Page data into the CObject at the given index.
+  /* Attempts to insert the Page data into the AObject at the given index.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Insert(UI1 type, const CH1* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
@@ -63,7 +63,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to remove the Page data into the CObject at the given index.
+  /* Attempts to remove the Page data into the AObject at the given index.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 

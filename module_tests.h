@@ -32,34 +32,37 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "06_strand.h"
 #endif
 #if SEAM >= SCRIPT2_7
-#include "07_stack_array.h"
+#include "07_stack.h"
 #endif
 #if SEAM >= SCRIPT2_8
-#include "08_loom.h"
+#include "08_stack.h"
 #endif
 #if SEAM >= SCRIPT2_9
-#include "09_table.h"
+#include "09_loom.h"
 #endif
 #if SEAM >= SCRIPT2_10
-#include "10_list.h"
+#include "10_table.h"
 #endif
 #if SEAM >= SCRIPT2_11
-#include "11_map.h"
+#include "11_list.h"
 #endif
 #if SEAM >= SCRIPT2_12
-#include "12_book.h"
+#include "12_map.h"
 #endif
 #if SEAM >= SCRIPT2_13
-#include "14_dictionary.h"
+#include "13_book.h"
 #endif
 #if SEAM >= SCRIPT2_14
-#include "14_expr.h"
+#include "14_dictionary.h"
 #endif
 #if SEAM >= SCRIPT2_15
-#include "15_door.h"
+#include "15_expr.h"
 #endif
 #if SEAM >= SCRIPT2_16
-#include "16_room_and_wall.h"
+#include "16_door.h"
+#endif
+#if SEAM >= SCRIPT2_17
+#include "17_room_wall.h"
 #endif
 
 using namespace _;
@@ -67,7 +70,6 @@ using namespace _;
 namespace script2 {
 static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
   return TTestTree<_00_RNG
-
 #if SEAM >= SCRIPT2_1
                    ,
                    _01_ItoS_StoI
@@ -94,43 +96,47 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #endif
 #if SEAM >= SCRIPT2_7
                    ,
-                   _07_Stack_Array
+                   _07_Stack
 #endif
 #if SEAM >= SCRIPT2_8
                    ,
-                   _08_Loom
+                   _08_Array
 #endif
 #if SEAM >= SCRIPT2_9
                    ,
-                   _09_Table
+                   _09_Loom
 #endif
 #if SEAM >= SCRIPT2_10
                    ,
-                   _10_List
+                   _10_Table
 #endif
 #if SEAM >= SCRIPT2_11
                    ,
-                   _11_Map
+                   _11_List
 #endif
 #if SEAM >= SCRIPT2_12
                    ,
-                   _12_Book
+                   _12_Map
 #endif
 #if SEAM >= SCRIPT2_13
                    ,
-                   _13_Dictionary
+                   _13_Book
 #endif
 #if SEAM >= SCRIPT2_14
                    ,
-                   _14_Expr
+                   _14_Dictionary
 #endif
 #if SEAM >= SCRIPT2_15
                    ,
-                   _15_Door
+                   _15_Expr
 #endif
 #if SEAM >= SCRIPT2_16
                    ,
-                   _16_Room
+                   _16_Door
+#endif
+#if SEAM >= SCRIPT2_17
+                   ,
+                   _17_Room_Wall
 #endif
                    >(seam_log, seam_end, args);
 }

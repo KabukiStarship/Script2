@@ -124,7 +124,7 @@ pair, so we need a 64-bit map.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 struct TMap {
-  Size size;        //< ASCII CObject size.
+  Size size;        //< ASCII AObject size.
   Index table_size, /*< Size of the key strings in bytes.
                      Set to 0 for ASCII Map. */
       size_pile;    /*< Size of the collisions pile in bytes.
@@ -624,39 +624,39 @@ class Map {
   ~Map() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(CObject(), adress);
+    return MapRemove<Size, Index, I>(AObject(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(CObject(), value);
+    return MapContains<Size, Index, I>(AObject(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(CObject()); }
+  inline void Wipe() { MapWipe<Size, Index, I>(AObject()); }
 
   static inline Index CountUpperBounds() {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SI4 type) {
-    return MapInsert<Size, Index, I>(CObject(), value, type, index);
+    return MapInsert<Size, Index, I>(AObject(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(CObject()); }
+  inline void Clear() { MapClear<Size, Index, I>(AObject()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, CObject());
+    return MapPrint<Size, Index, I>(utf, AObject());
   }
 
  private:
   UIW* socket;
 
   /* Returns the socket casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* CObject() {
+  inline TMap<Size, Index, I>* AObject() {
     return reinterpret_cast<TMap<Size, Index, I>*>(socket);
   }
 };  //< class Map

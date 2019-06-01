@@ -38,7 +38,7 @@
     <None Include="global_footer.inl">
       <Filter>script2</Filter>
     </None>
-    <None Include="16_seam.s2">
+    <None Include="17_seam.s2">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>
@@ -303,9 +303,6 @@
     <ClInclude Include="c_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_stack.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -342,37 +339,40 @@
     <ClInclude Include="c_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="07_stack_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="06_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="08_loom.h">
+    <ClInclude Include="17_room_wall.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="09_table.h">
+    <ClInclude Include="16_door.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="10_list.h">
+    <ClInclude Include="15_expr.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="11_map.h">
+    <ClInclude Include="14_dictionary.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="12_book.h">
+    <ClInclude Include="13_book.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="13_dictionary.h">
+    <ClInclude Include="12_map.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="14_expr.h">
+    <ClInclude Include="11_list.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="15_door.h">
+    <ClInclude Include="10_table.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="16_room_wall.h">
+    <ClInclude Include="09_loom.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="07_stack.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="08_array.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

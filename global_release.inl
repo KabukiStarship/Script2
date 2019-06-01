@@ -81,6 +81,11 @@
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__) \
   }
 #define AVOW_INDEX(a, b, index)
+#define WARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define DWARN(condition)
+#define RWARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define RETURN(value) return;
 #define DRETURN(value)
 #define RRETURN(value) \

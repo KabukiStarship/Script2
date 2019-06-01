@@ -23,12 +23,12 @@ using namespace _;
 #if SEAM >= SCRIPT2_3
 namespace script2 {
 
-template <typename Char, typename Size>
+template <typename Char, typename SIZ>
 static const Char* _03_UTF() {
   PRINT_LINEF('-');
   PRINT_LINEF('-');
   PRINTF("\n\n\nTesting UTF<CH%c,SI%c>\n\n", '0' + sizeof(Char),
-         '0' + sizeof(Size));
+         '0' + sizeof(SIZ));
   PRINT_LINEF('-');
   PRINT_LINEF('-');
 

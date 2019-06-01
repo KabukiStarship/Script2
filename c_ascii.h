@@ -147,7 +147,7 @@ SDK void* TypeAlign(SI4 type, void* value);
 /* Writes the given value to the socket. */
 SDK CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* source);
 
-/* Returns true if the given type is an ASCII CObject. */
+/* Returns true if the given type is an ASCII AObject. */
 SDK inline BOL TypeIsObj(SI4 type);
 
 /* Returns true if the given type is a  type. */

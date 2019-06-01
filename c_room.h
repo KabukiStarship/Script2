@@ -3,13 +3,13 @@
 @file    /script2/room.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_17
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
 #include "c_interrupts.h"
@@ -232,17 +232,17 @@ class Room : public Operand {
 #endif
 
  protected:
-  SI4 state_count_,                    //< Number of FSM states.
-      state_;                          //< Room state.
-  const CH1* name_;                    //< Room Name.
-  TCArray<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
-  CCrabs* expr_;                       //< Current CCrabs being executed.
-                                       //< DC1: this.
-  Door* this_;                         //< DC2: The Door to this room.
-  Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
-      *device_,                        //< DC4: the current device control.
-      *devices_;               //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];  //< Room Floor socket.
+  SI4 state_count_,                   //< Number of FSM states.
+      state_;                         //< Room state.
+  const CH1* name_;                   //< Room Name.
+  TArray<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
+  CCrabs* expr_;                      //< Current CCrabs being executed.
+                                      //< DC1: this.
+  Door* this_;                        //< DC2: The Door to this room.
+  Operand *xoff_,                     //< DC3: XOFF - XOFF handling device.
+      *device_,                       //< DC4: the current device control.
+      *devices_;                      //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];         //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */
@@ -253,5 +253,5 @@ class Room : public Operand {
 // SDK Room* ChineseRoom (Room* room = nullptr);
 
 }  // namespace _
-#endif  //< SCRIPT2_ROOM_HDi
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif
+#endif

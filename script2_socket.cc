@@ -245,7 +245,7 @@ Socket::Socket() {
 }
 
 Socket::Socket(void* begin, void* end)
-    : begin(reinterpret_cast<CH1*>(begin)), stop(reinterpret_cast<CH1*>(end)) {
+    : begin(reinterpret_cast<CH1*>(begin)), end(reinterpret_cast<CH1*>(end)) {
   if (!begin || !end || begin > end) {
     begin = end = 0;
     return;
@@ -254,22 +254,32 @@ Socket::Socket(void* begin, void* end)
 
 Socket::Socket(void* begin, SIW size)
     : begin(reinterpret_cast<CH1*>(begin)),
-      stop(reinterpret_cast<CH1*>(begin) + size) {
+      end(reinterpret_cast<CH1*>(begin) + size) {
   if (!begin || size < 0) {
-    stop = reinterpret_cast<CH1*>(begin);
+    end = reinterpret_cast<CH1*>(begin);
     return;
   }
 }
 
-Socket::Socket(const Socket& other) : begin(other.begin), stop(other.stop) {
+Socket::Socket(const Socket& other) : begin(other.begin), end(other.end) {
   // Nothing to do here! (:-)-+=<
 }
 
+SIW Socket::Size() { return end - begin; }
+
 Socket& Socket::operator=(const Socket& other) {
   begin = other.begin;
-  stop = other.stop;
+  end = other.end;
   return *this;
 }
+
+Nil::Nil() {}
+
+SIW Nil::Size() { return 0; }
+
+UIW* Nil::BeginWord() { return nullptr; }
+
+UIW* Nil::EndWord() { return nullptr; }
 
 void DestructorNoOp(UIW* socket) {
   // Nothing to do here! (:-)+==<
@@ -300,4 +310,4 @@ SIW SocketShiftUp(void* begin, void* end, SIW count) {
 
 }  // namespace _
 
-#endif  //<  #if SEAM >= SCRIPT2_2
+#endif

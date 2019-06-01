@@ -252,7 +252,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
       bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Number of bytes left to scan.
-      bytes_shift;   //< Number of bits to shift to scan the current CObject.
+      bytes_shift;   //< Number of bits to shift to scan the current AObject.
   UI1 bin_state,     //< Current bin FSM state.
       b;             //< Current UI1 being verified.
   UI2 hash,          //< Expected hash of the B-Sequence.
@@ -478,7 +478,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
               CrabsEnterState (crabs, BIn::UTF32State);
               bin_state = BIn::UTF32State;*/
         } else {  // It's not a POD type.
-          PRINT("\nScanning TObject.");
+          PRINT("\nScanning AObject.");
           // Multi-dimension arrays are parsed just like any other
           // kOBJ.
           array_type &= 0x3;

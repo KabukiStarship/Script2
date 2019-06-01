@@ -3,14 +3,14 @@
 @file    /script2/t_array.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_7
+#if SEAM >= SCRIPT2_8
 #ifndef INCLUDED_SCRIPT2_ARRAY
 #define INCLUDED_SCRIPT2_ARRAY
 
@@ -18,67 +18,93 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* A multi-dimensional array.
-ASCII Array uses the same data structure as the ASCII Stack, the
-difference being that the size_array of the Stack is set to 0 for the Stack and
-the Array has a packed multi-dimensional array after the stack of dimensions. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-struct TCArray {
-  TCStack<T, Size, Index> stack;
+/* An array obj of homogeneous-sized plain-old-data (POD) types.
+
+An array may use two different memory layouts, one for a 1D obj of a
+given types, and another for a multi-dimensional array that uses the 1D
+array in order to store the dimensions. The only different between them is
+that the size_array variable gets set to 0.
+
+# Stack Memory Layout
+
+@code
+    +-----------------+
+    |   Packed Stack  | <-- Only if header_size = 0
+    |-----------------|
+    |      Buffer     |
+    |-----------------|
+    | Stack Elements  |
+ ^  |-----------------|
+ |  |  SStack Header  |
+0xN +-----------------+
+@endcode
+
+# Multi-dimensional Array Memory Layout
+
+@code
+    +-----------------+
+    |  C-Style Array  | <-- Only if header_size > 0
+    |-----------------|
+    | Dimension Stack |
+ ^  |-----------------|
+ |  |  SStack Header  |
+0xN +-----------------+
+@endcode
+*/
+template <typename SIZ = SI4>
+struct TArray {
+  SIZ size;                //< SIZ of the array in bytes.
+  SStack<SIZ> dimensions;  //< The stack of dimensions.
 };
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Index ArrayCountUpperLimit(Index dimension_count,
-                                     Index element_count) {
-  Size header_size =
-      (Size)(sizeof(TCStack<T, Size, Index>) +
-             TAlignUpSigned<Index>(dimension_count * sizeof(Index)));
-  return (Index)(((~(Size)0) - 7) - header_size) / (Size)sizeof(T);
+template <typename T = SI4, typename SIZ = SI4>
+constexpr SIZ TArrayCountUpperLimit(SIZ dimension_count, SIZ element_count) {
+  SIZ header_size = (SIZ)(sizeof(SStack<SIZ>) +
+                          TAlignUpSigned<SIZ>(dimension_count * sizeof(SIZ)));
+  return (SIZ)(((~(SIZ)0) - 7) - header_size) / (SIZ)sizeof(T);
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Index ArrayElementCount(const Index* dimensions) {
-  ASSERT(dimensions);
-  Index dimension_count = *dimensions++, element_count = *dimensions++;
-  if (--dimension_count < 0 || element_count < 0) return -1;
-  Size size = dimension_count * sizeof(Index);
+template <typename T = SI4, typename SIZ = SI4>
+constexpr SIZ TArrayElementCount(const SIZ* dimensions) {
+  DASSERT(dimensions);
+  SIZ dimension_count = *dimensions++;
+  SIZ size = sizeof(SStack<SIZ>) + sizeof(SIZ);
   while (dimension_count-- > 0) {
-    Index current_dimension = *dimensions++;
+    SIZ current_dimension = *dimensions++;
     if (current_dimension < 1) return -1;
     element_count *= current_dimension;
   }
-  if (element_count > ArrayCountUpperLimit<T, Size, Index>()) return -1;
+  if (element_count > TArrayCountUpperLimit<T, SIZ>()) return -1;
   return element_count * sizeof(T);
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Size ArraySize(const Index* dimensions) {
-  Index dimension_count = *dimensions++, element_count = *dimensions++;
-  Size header_size = sizeof(TCStack<T, Size, Index>);
-  if (--dimension_count < 0) return 0;
+template <typename T = SI4, typename SIZ = SI4>
+constexpr SIZ TArraySize(const SIZ* dimensions) {
+  DASSERT(dimensions);
+  SIZ dimension_count = *dimensions++;
+  if (dimension_count-- <= 0) return 0;
+  SIZ element_count = *dimensions++;
   while (dimension_count-- > 0) {
-    Index current_dimension = *dimensions++;
-    if (current_dimension < 1) return 0;
-    element_count *= current_dimension;
+    SIZ dimension = *dimensions++;
+    if (dimension <= 0) return -1;
+    element_count *= dimension;
   }
-  if (element_count > ArrayCountUpperLimit<T, Size, Index>()) return 0;
-  return element_count * sizeof(T);
+  if (element_count > TArrayCountUpperLimit<T, SIZ>()) return -1;
+  return sizeof(SStack<SIZ>) + element_count * sizeof(T);
 }
 
 /* Initializes an stack of n elements of the given type.
 @param socket An stack of bytes large enough to fit the stack. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
+template <typename T = SI4, typename SIZ = SI4>
+SStack<SIZ>* TArrayInit(const SIZ* dimensions) {
   ASSERT(dimensions);
-  Index dimension_count = *dimension;
+  SIZ dimension_count = *dimension;
   if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
-  Size size =
-      (Size)sizeof(TCStack<T, Size, Index>) + dimension_count * sizeof(T);
+  SIZ size = (SIZ)sizeof(SStack<SIZ>) + dimension_count * sizeof(T);
   UIW* socket = new UIW[size >> kWordBitCount];
-  TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
+  SStack<SIZ>* stack = reinterpret_cast<SStack<SIZ>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   stack->count_max = dimension_count;
@@ -86,161 +112,184 @@ TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
   return stack;
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-Index ArrayElementCountMax() {
-  return (UnsignedMax<Size>() - (Size)sizeof(TCStack<T, Size, Index>)) /
-         sizeof(T);
+template <typename T = SI4, typename SIZ = SI4>
+SIZ TArrayElementCountMax() {
+  return (UnsignedMax<SIZ>() - (SIZ)sizeof(SStack<SIZ>)) / sizeof(T);
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
-  ASSERT(dimensions);
-  const Index* begin = dimensions;
-  Index count = (*begin++) - 1, element_count = *begin++, index = count;
+/* Creates a dynamically allocated ARY. */
+template <typename T = SI4, typename SIZ = SI4>
+SStack<SIZ>* TArrayNew(SIZ x) {
+  SIZ size = sizeof(SStack<SIZ>) + sizeof(T) * x;
+  size = TAlignUpSigned<SIZ>(size);
+}
+
+template <typename T = SI4, typename SIZ = SI4>
+SStack<SIZ>* TArrayNew(const SIZ* dimensions) {
+  DASSERT(dimensions);
+  const SIZ* begin = dimensions;
+  SIZ count = (*begin++) - 1,    //
+      element_count = *begin++,  //
+      index = count;
   while (index-- > 0) element_count *= *begin++;
-  Size size = ((Size)element_count * (Size)sizeof(T));
+  SIZ size = ((SIZ)element_count * (SIZ)sizeof(T));
 }
 
 /* Gets the address of the packed array.
-@param ary ASCII Array data structure.
+@param obj ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-T* ArrayElements(TCStack<T, Size, Index>* ary) {
-  CH1* elements = reinterpret_cast<CH1*>(ary) + ary->size_stack;
+template <typename T, typename SIZ = SI4>
+T* TArrayElements(SStack<SIZ>* obj) {
+  CH1* elements = reinterpret_cast<CH1*>(obj) + obj->size_stack;
   return reinterpret_cast<T*>(elements);
 }
 
-/* Gets the address of the packed Index dimensions.
-@param ary ASCII Array data structure.
+/* Gets the address of the packed SIZ dimensions.
+@param obj ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
-  CH1* elements = reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
-  return reinterpret_cast<Index*>(elements);
+template <typename T, typename SIZ = SI4>
+SIZ* TArrayDimensions(SStack<SIZ>* obj) {
+  CH1* elements = reinterpret_cast<CH1*>(obj) + sizeof(SStack<SIZ>);
+  return reinterpret_cast<SIZ*>(elements);
 }
 
-/* Gets the stop address of the packed Index dimensions.
-@param ary ASCII Array data structure.
+/* Gets the stop address of the packed SIZ dimensions.
+@param obj ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-Index* ArrayDimensionsEnd(TCStack<T, Size, Index>* ary) {
-  ASSERT(ary);
-  return ArrayDimensions<T, Size, Index>(ary) + ary->count - 1;
+template <typename T, typename SIZ = SI4>
+SIZ* TArrayDimensionsEnd(SStack<SIZ>* obj) {
+  ASSERT(obj);
+  return TArrayDimensions<T, SIZ>(obj) + obj->count - 1;
 }
 
-/* Prints the TCArray to the UTF. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
-  ASSERT(ary);
-  Size size_array = ary->size_array;
-  Index count = ary->count;
+/* Prints the TArray to the UTF. */
+template <typename Printer, typename T = SI4, typename SIZ = SI4>
+Printer& TPrintArray(Printer& o, SStack<SIZ>* obj) {
+  ASSERT(obj);
+  SIZ size_array = obj->size_array;
+  SIZ count = obj->count;
   if (size_array == 0) {
-    return TPrintStack<T, Size, Index>(utf, ary);
+    return TStackPrint<T, SIZ>(o, obj);
   }
-  if (count <= 0) utf << "Array: Error! Dimension count must be positive!";
+  if (count <= 0) o << "Array: Error! Dimension count must be positive!";
 
-  utf << "\n\nArray: dimension_count: " << count
-      << " count_max:" << ary->count_max << " size_stack:" << ary->size_stack
-      << " size_array:" << ary->size_array << "\nDimensions:\n";
+  o << "\n\nArray: dimension_count: " << count
+    << " count_max:" << obj->count_max << " size_stack:" << obj->size_stack
+    << " size_array:" << obj->size_array << "\nDimensions:\n";
 
-  Index *dimensions = ArrayDimensions<T, Size, Index>(ary),
-        *dimensions_end = dimensions + count - 1;
-  Index element_count = *dimensions++;
+  SIZ *dimensions = TArrayDimensions<T, SIZ>(obj),
+      *dimensions_end = dimensions + count - 1;
+  SIZ element_count = *dimensions++;
 
   while (dimensions < dimensions_end) {
-    Index dimension = *dimensions++;
+    SIZ dimension = *dimensions++;
     element_count *= dimension;
-    if (element_count > ArrayElementCountMax<T, Size, Index>())
-      return utf << "Max element count exceeded";
+    if (element_count > TArrayElementCountMax<T, SIZ>())
+      return o << "Max element count exceeded";
     if (dimensions == dimensions_end)
-      utf << dimension << kLF;
+      o << dimension << kLF;
     else
-      utf << dimension << ", ";
+      o << dimension << ", ";
   }
-  return utf;
+  return o;
 }
 
 /* Creates a immutable array of dimensions. */
+template <typename SI, const SI... N>
+inline const SI* TDim() {
+  static const SI kCount = (SI)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &kCount;
+}
+
+/* Creates a immutable array of SI2 dimensions. */
+template <const SI2... N>
+inline const SI2* TDim2() {
+  static const SI2 kCount = (SI2)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &kCount;
+}
+
+/* Creates a immutable array of SI4 dimensions. */
 template <const SI4... N>
-inline const SI4* Dimensions() {
+inline const SI4* TStack4() {
   static const SI4 kCount = (SI4)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &kCount;
 }
 
-/* A multi-dimensional array that uses dynamic memory that can auto-grow.
+/* Creates a immutable array of SI8 dimensions. */
+template <const SI8... N>
+inline const SI8* TDim8() {
+  static const SI8 kCount = (SI8)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &kCount;
+}
 
-An ASCII Stack struct is identical to an Array
+/* A multi-dimensional array Ascii Object.
 
-@todo This is an older data structure that needs to be replace this with
-Array.
-This class is used to save a little bit of ROM space over the Array.
-To use this class with anything other than POD types the class T must have
-a overloaded operator= and operator==. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-class TArray {
+*/
+template <typename T = SI4, typename SIZ = SI4, typename BUF = Nil>
+class AArray {
  public:
   /* Initializes an array of n elements of the given type.
-      @param max_elements The max number_ of elements in the array socket. */
-  TArray(Index demension_count = 1) : begin(ArrayNew<T, Size, Index>(1)) {}
+  @param max_elements The max number_ of elements in the array socket. */
+  AArray(SIZ x, const T* elements = nullptr) : obj_(TArrayNew<T, SIZ>(x)) {}
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
-  TArray(const Array& other)
-      : size_array(other.size_array),
-        size_stack(other.size_stack),
-        count_max(other.count_max),
-        count(other.count) {
-    Index *elements_other = TStackStart<Index, Size, Index>(other.stack),
-          *element = TStackStart<Index, Size, Index>(stack),
-          *elements_end = StackStop<Index, Size, Index>(stack);
-    while (element < elements_end) *element++ = *elements_other++;
-  }
+  AArray(SIZ x, SIZ y, const T* elements = nullptr)
+      : obj_(TArrayNew<T, SIZ>(x, y)) {}
 
-  /* Deletes the dynamically allocated Array. */
-  ~TArray() { delete[] begin; }
+  /* Initializes an array of n elements of the given type.
+  @param max_elements The max number_ of elements in the array socket. */
+  AArray(SIZ x, SIZ y, SIZ z, const T* elements = nullptr)
+      : obj_(TArrayNew<T, SIZ>(x, y, z)) {}
+
+  /* Initializes an array of n elements of the given type.
+  @param max_elements The max number_ of elements in the array socket. */
+  AArray(SIZ w, SIZ x, SIZ y, SIZ z, const T* elements = nullptr)
+      : obj_(TArrayNew<T, SIZ>(w, x, y, z)) {}
+
+  /* Initializes an array of n elements of the given type.
+  @param max_elements The max number_ of elements in the array socket. */
+  AArray(const AArray& other) : obj_(other.Obj()) {}
+
+  /* Destructs nothing. */
+  ~AArray() {}
 
   /* Clones the other object; up-sizing the socket only if required. */
-  void Clone(Array<T, Size, Index>& other) {}
+  inline AArray<T, SIZ>* Clone(AArray<T, SIZ>& other) {
+    TArrayClone<T, SIZ>(obj_.Obj(), other);
+    return this;
+  }
 
   /* Gets the number_ of dimensions. */
-  Index DimensionCount() { return stack->count; }
+  inline SIZ DimensionCount() { return stack->count; }
 
   /* Gets the dimensions array. */
-  T* Dimension() { return TStackStart<T, Size, Index>(stack); }
+  inline T* Dimension() { return TStackStart<T, SIZ>(AObj()); }
 
   /* Gets the underlying array. */
-  T* Elements() { return ArrayElements<T, Size, Index>(stack); }
+  inline T* Elements() { return TArrayElements<T, SIZ>(AObj()); }
 
   /* Operator= overload. */
-  inline TArray<T, Size, Index>& operator=(TArray<T, Size, Index>& other) {
+  inline AArray<T, SIZ>& operator=(AArray<T, SIZ>& other) {
     Clone(other);
     return *this;
   }
 
-  inline TCArray<T, Size, Index>* stack {
-    return reinterpret_cast<TCArray<T, Size, Index>*>(begin);
+  /* Gets the CObject. */
+  inline CObject& CObj() {
+    return reinterpret_cast<AArray<SIZ>*>(obj_.Begin());
+  }
+
+  /* Gets the S-Object. */
+  inline AObject<SIZ, BUF> AObj() {
+    return reinterpret_cast<AArray<SIZ>*>(obj_.Begin());
   }
 
  private:
-  UIW* begin;             //< OBJ base address.
-  AsciiFactory factory_;  //< AsciiFactory.
+  AObject<SIZ> obj_;  //< The Ascii Object.
 };
+
 }  // namespace _
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
-                                 ::_::TCArray<T, Size, Index>* stack) {
-  return ::_::PrintArray<T, Size, Index>(printer, stack);
-}
-
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
-                                 ::_::TCArray<T, Size, Index>& stack) {
-  return ::_::PrintArray<T, Size, Index>(printer, stack);
-}
-
-#endif  //< INCLUDED_SCRIPT2_ARRAY
-#endif  //< #if SEAM >= SCRIPT2_7
+#endif
+#endif

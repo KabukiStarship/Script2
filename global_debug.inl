@@ -30,7 +30,7 @@
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
+#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.Size())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(obj) obj.COut()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
@@ -108,7 +108,11 @@
     ::_::Print(index);                               \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
   }
-//
+#define WARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define DWARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define RWARN(condition)
 #define RETURN(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return value; }
 #define DRETURN(value) \

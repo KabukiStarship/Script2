@@ -27,7 +27,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII CObject Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII AObject Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -276,7 +276,7 @@ Index ListInsert(CList<Size, Index>* list, SI4 type, const void* value,
   }
 
   // 2. Shift up the types.
-  StackInsert<SI4, Index>(types, count, type, index);
+  TStackInsert<SI4, Index>(types, count, type, index);
 
   // 3. Calculate the offset to insert at.
   CH1* aligned_begin = ListDataStop<Size, Index>(list, index);
@@ -287,7 +287,7 @@ Index ListInsert(CList<Size, Index>* list, SI4 type, const void* value,
 
   // 4. Insert the offset.
   PRINTF("\nInserting into ")
-  StackInsert<Size, Index>(ListOffsets<Size, Index>(list), count, type, index);
+  TStackInsert<Size, Index>(ListOffsets<Size, Index>(list), count, type, index);
 
   Size space_needed = ObjSize<Size>(value, type);
 
@@ -432,12 +432,12 @@ class List {
   ~List() { delete[] begin; }
 
   inline Index Push(SI4 type, const void* value) {
-    return ListPush<Size, Index>(CObject(), type, value);
+    return ListPush<Size, Index>(AObject(), type, value);
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
   inline Index Insert(UI1 type, void* value, Index index) {
-    return ListInsert<Size, Index>(CObject(), type, value, index);
+    return ListInsert<Size, Index>(AObject(), type, value, index);
   }
 
   /* Returns the maximum count of the give list in the current memory
@@ -445,10 +445,10 @@ class List {
   inline Index CountMax() { return ListCountMax<Size, Index>(); }
 
   /* Clears the list without overwriting the contents. */
-  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(CObject()); }
+  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(AObject()); }
 
   /* Deletes the list contents by overwriting it with zeros. */
-  inline void Wipe() { ListWipe<Size, Index>(CObject()); }
+  inline void Wipe() { ListWipe<Size, Index>(AObject()); }
 
   /* Returns true if this crabs contains only the given address.
       @warning This function assumes that the member you're checking for came
@@ -456,34 +456,34 @@ class List {
                are required to ensure the value came from a ASCII List.
       @return  True if the data lies in the list's memory socket. */
   inline BOL Contains(void* value) {
-    return ListContains<Size, Index>(CObject(), value);
+    return ListContains<Size, Index>(AObject(), value);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(void* adress) {
-    return ListRemove<Size, Index>(CObject(), adress);
+    return ListRemove<Size, Index>(AObject(), adress);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(Index index) {
-    return ListRemove<Size, Index>(CObject(), index);
+    return ListRemove<Size, Index>(AObject(), index);
   }
 
   /* Removes the last item from the list. */
-  inline Index Pop() { return ListPop<Size, Index>(CObject()); }
+  inline Index Pop() { return ListPop<Size, Index>(AObject()); }
 
   /* Prints the given AsciiList to the console. */
   inline UTF1& Print(UTF1& printer) {
-    return PrintList<Size, Index>(printer, CObject());
+    return PrintList<Size, Index>(printer, AObject());
   }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline CList<Size, Index>* CObject() {
+  inline CList<Size, Index>* AObject() {
     return reinterpret_cast<CList<Size, Index>*>(begin);
   }
 
  private:
-  CObject obj_;  //< Dynamically allocated word-aligned socket.
+  AObject obj_;  //< Dynamically allocated word-aligned socket.
 };
 
 }  // namespace _

@@ -767,15 +767,6 @@ Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
   TPrint1<CH1>(strand_, item);
 }
 
-/*
-UIW* COut1(UIW* begin, SIW function, void* arg) {
-  return TCOut<CH1>(begin, function, arg);
-}
-
-UIW* COut1Auto(UIW* begin, SIW function, void* arg) {
-  return TCOut<CH1, kHeap>(begin, function, arg);
-}*/
-
 }  // namespace _
 
 ::_::UTF1& operator<<(::_::UTF1& o, CH1 item) { return o.PrintChar(item); }
@@ -834,10 +825,6 @@ UIW* COut1Auto(UIW* begin, SIW function, void* arg) {
 
 #if USING_UTF16 == YES
 namespace _ {
-
-SI4 COutHeap2(CObject& obj, SIW function, void* arg) {
-  return TCOutHeap<CH2>(obj, function, arg);
-}
 
 const CH2* Empty() { return TSTREmpty<CH2>(); }
 

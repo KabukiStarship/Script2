@@ -27,7 +27,7 @@ word-aligned socket upon success.
 @param obj      The ASCII Object and AsciiFactory.
 @param function A jump table function index.
 @param arg      Pointer to the ASCII Factory argument. */
-typedef SI4 (*AsciiFactory)(::_::CObject& obj, SIW function, void* arg);
+typedef SIN (*AsciiFactory)(::_::CObject& obj, SIW function, void* arg);
 
 namespace _ {
 
@@ -39,12 +39,11 @@ struct CObject {
 
 enum AsciiFactoryFunctions {
   kFactoryCanGrow = 0,  //< Factory function checks if the size can double.
-  kFactoryDestroy = 1,  //< Factory function deletes an OBJ.
-  kFactoryNew = 2,      //< Factory function creates a new OBJ.
-  kFactoryClone = 3,    //< Factory function clones the OBJ.
-  kFactoryGrow = 4,     //< Factory function double OBJ size in bytes.
-  kFactoryInfo = 5,     //< Factory function gets the info string.
-  kFactoryFunctionCount = 6,  //< Factory function count.
+  kFactoryDelete = 1,   //< Factory function deletes an OBJ.
+  kFactoryClone = 2,    //< Factory function clones the OBJ.
+  kFactoryGrow = 3,     //< Factory function double OBJ size in bytes.
+  kFactoryInfo = 4,     //< Factory function gets the info string.
+  kFactoryFunctionCount = 5,  //< Factory function count.
 };
 
 enum AsciiFactoryErrors {
@@ -64,6 +63,8 @@ SDK const CH1* STRAsciiFactoryFunction(SIN function);
 SDK const CH1* STRAsciiFactoryError(SIN index);
 
 SDK /*inline*/ SI4 ObjDo(CObject& obj, SIW function, void* arg = nullptr);
+
+SDK /*inline*/ UIW* ObjBeginSet(CObject& obj, void* buffer);
 
 /* Checks if the value is a valid object index, that it's 7 less than the max
 value or less. */
@@ -94,7 +95,7 @@ SDK /*inline*/ BOL ObjSizeIsValid(SI4 value, SI4 count_min = 1);
 SDK /*inline*/ BOL ObjSizeIsValid(SI8 value, SI8 count_min = 1);
 
 /* Destructs the given ASCII CObject Factory. */
-SDK void Delete(CObject& object);
+SDK SIN Delete(CObject& obj, BOL using_heap = true);
 
 /* Utility function to statasfy compiler warning for unused exception. */
 SDK void ObjException(const CH1* what);

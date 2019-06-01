@@ -31,9 +31,6 @@ namespace _ {
 @ingroup ASCII STR and TKN
 */
 
-/* Strand Factory that prints the string upon destruction.
-SI4 COutHeap1(CObject& obj, SIW function, void* arg); */
-
 /* Checks if the given character is whitespace. */
 SDK BOL IsWhitespace(CH1 character);
 

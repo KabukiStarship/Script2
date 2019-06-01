@@ -46,7 +46,7 @@ class Wall {
 
   virtual ~Wall();
 
-  Wall(TCArray<Door*>* doors);
+  Wall(TArray<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
   Wall(SIW size_bytes = kMinSizeBytes);
@@ -58,7 +58,7 @@ class Wall {
   SIW GetSizeBytes();
 
   /* Gets a pointer to the array of pointers to Door(). */
-  TCArray<Door*>* Doors();
+  TArray<Door*>* Doors();
 
   /* Gets the Door from the Door at the given index. */
   Door* GetDoor(SI4 index);
@@ -78,7 +78,7 @@ class Wall {
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
   SIW size_bytes_;         //< Size of the Wall in bytes.
   UIW* begin;              //< The Wall's socket.
-  TCArray<Door*>* doors_;  //< The doors in the room.
+  TArray<Door*>* doors_;  //< The doors in the room.
 };
 
 }  // namespace _
