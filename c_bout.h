@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 
 #ifndef INCLUDED_SCRIPT2_BOUT
 #define INCLUDED_SCRIPT2_BOUT
@@ -100,4 +100,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
 
 #endif  //< INCLUDED_SCRIPT2_BOUT
 #undef DEBUG_SCRIPT2_BOUT
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

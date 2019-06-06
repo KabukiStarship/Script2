@@ -10,12 +10,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_8
+#if SEAM >= SCRIPT2_SEAM_ARRAY
 
 #ifndef INCLUDED_SCRIPTVARINT
 #define INCLUDED_SCRIPTVARINT
 
-#if SEAM == SCRIPT2_8
+#if SEAM == SCRIPT2_SEAM_ARRAY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -134,4 +134,4 @@ TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTVARINT
-#endif  //< #if SEAM >= SCRIPT2_8
+#endif  //< #if SEAM >= SCRIPT2_SEAM_ARRAY

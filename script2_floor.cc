@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_floor.h"
 
 #include "c_lock.h"
@@ -29,4 +29,4 @@ inline Floor* Global() {
 }
 
 }  // namespace _
-#endif  // #if SEAM >= SCRIPT2_14
+#endif  // #if SEAM >= SCRIPT2_SEAM_DIC

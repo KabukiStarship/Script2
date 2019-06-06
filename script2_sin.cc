@@ -7,17 +7,19 @@ All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+#include <conio.h>
 #include <pch.h>
 
-#include "t_uniprinter.h"
-
-#include <conio.h>
 #include <cstdio>
 
-#if SEAM == SCRIPT2_0
+#include "t_utf.h"
+
+#if SEAM == SCRIPT2_SEAM_RNG
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
+//
+#include "c_cout.h"
 #endif
 
 namespace _ {

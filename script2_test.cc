@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_cout.h"
 #include "c_test.h"
 #include "module_debug.inl"
-#include "t_uniprinter.h"
+#include "t_utf.h"
 
 namespace _ {
 
@@ -69,7 +69,6 @@ const CH1* TestTree(CH1* seam_log, CH1* seam_end, const CH1* args,
     const CH1* error = test(seam_log, seam_end, args);
     if (error) return error;
     Print("\nDone testing ", seam);
-    PrintNL();
   }
   Print("\n\nUnit test finished successfully! (:-)+==<\n");
   return nullptr;
@@ -110,7 +109,7 @@ BOL Test(const CH2* a, const CH2* b) {
   return false;
 }
 
-#if SEAM >= SCRIPT2_1
+#if SEAM >= SCRIPT2_SEAM_ITOS
 BOL Test(const CH4* a, const CH4* b) {
   SI4 result = ::_::TSTRCompare<const CH4>(a, b);
   if (!result) return true;
@@ -277,6 +276,7 @@ BOL Test(SI8 a, SI8 b) {
   return false;
 }
 
+#if USING_FP4 == YES
 BOL Test(FP4 a, FP4 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
@@ -289,7 +289,8 @@ BOL Test(FP4 a, FP4 b) {
   Print(b);
   return false;
 }
-
+#endif
+#if USING_FP8 == YES
 BOL Test(FP8 a, FP8 b) {
   if (a == b) return true;
   Print(kStrandErrorExpecting);
@@ -302,6 +303,8 @@ BOL Test(FP8 a, FP8 b) {
   Print(b);
   return false;
 }
+#endif
+
 #endif
 
 BOL Test(const void* value) {

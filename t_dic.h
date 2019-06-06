@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_13
+#if SEAM >= SCRIPT2_SEAM_BOOK
 
 #ifndef SCRIPT2_TDIC
 #define SCRIPT2_TDIC 1
@@ -18,7 +18,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_ascii.h"
 #include "c_socket.h"
 
-#if SEAM >= SCRIPT2_13
+#if SEAM >= SCRIPT2_SEAM_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -751,4 +751,4 @@ UTF1& DicPrint(UTF1& utf, Dictionary<Size, Offset, Index>* dictionary) {
 }  // namespace _
 
 #endif  //< SCRIPT2_TDIC
-#endif  //< #if SEAM >= SCRIPT2_13
+#endif  //< #if SEAM >= SCRIPT2_SEAM_BOOK

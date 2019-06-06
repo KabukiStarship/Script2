@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_5
+#if SEAM >= SCRIPT2_SEAM_CLOCK
 
 #include <ctime>
 
 #include "t_clock.h"
-#include "t_uniprinter.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_5
+#if SEAM == SCRIPT2_SEAM_CLOCK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -451,4 +451,4 @@ const CH4* ScanTime(const CH4* string, TM8& result) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= SCRIPT2_5
+#endif  //< #if SEAM >= SCRIPT2_SEAM_CLOCK

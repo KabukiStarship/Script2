@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_bin.h"
 
 #include "c_ascii.h"
@@ -17,7 +17,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_hash.h"
 #include "c_socket.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
 #define PRINT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);

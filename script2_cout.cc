@@ -13,9 +13,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <iostream>
 
 #include "c_cout.h"
-#include "t_uniprinter.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_6
+#if SEAM == SCRIPT2_SEAM_RNG
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -43,32 +43,17 @@ const CH1* ArgsToSring(SI4 arg_count, CH1** args) {
 }
 #undef PRINT_ARGS
 
-void PrintChar(CH1 c) { std::wcout << c; }
+void Print(CH1 c) { std::wcout << c; }
 
-void Print(CH1 c) { PrintChar(c); }
+void Print(const CH1* item) { std::wcout << item; }
 
-void Print(const CH1* item) { std::cout << item; }
-
-void PrintChar(CH4 c) {
-  // wprintf_s(L"%c", c);
-  std::wcout << (CHN)c;  //< @todo This isn't working???
-}
-
-void Print(const CH4* item) { TPrintString<COut, CH4>(COut().Star(), item); }
-
-void Print(CH4 c) { PrintChar(c); }
+void Print(CH2 c) { std::wcout << (CHN)c; }
 
 void Print(const CH2* item) { TPrintString<COut, CH2>(COut().Star(), item); }
 
-void PrintChar(CH2 c) {
-#if USING_UTF32 == YES
-  Print((CH4)c);
-#else
-  std::wcout << (CHN)c;  //< @todo This isn't working
-#endif
-}
+void Print(CH4 c) { std::wcout << (CHN)c; }
 
-void Print(CH2 c) { PrintChar(c); }
+void Print(const CH4* item) { TPrintString<COut, CH4>(COut().Star(), item); }
 
 /*inline*/ void Print(CH1 first, CH1 second) {
   Print(first);
@@ -81,7 +66,7 @@ inline void Print(CH1 first, CH1 second, CH1 third) {
   Print(third);
 }
 
-void PrintNL() { PrintChar('\n'); }
+void PrintNL() { Print('\n'); }
 
 void PrintNL(CH1 c) { Print(kLF, c); }
 
@@ -123,7 +108,7 @@ void Print(const CH1* a, const CH1* b, const CH1* c) {
 }
 
 void Print(UI8 value) {
-#if SEAM <= SCRIPT2_1
+#if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf(FORMAT_UI8, value);
 #else
   enum { kSize = 24 };
@@ -134,7 +119,7 @@ void Print(UI8 value) {
 }
 
 void Print(UI4 value) {
-#if SEAM <= SCRIPT2_1
+#if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf("%u", value);
 #else
   enum { kSize = 24 };
@@ -144,7 +129,7 @@ void Print(UI4 value) {
 }
 
 void Print(SI8 value) {
-#if SEAM <= SCRIPT2_1
+#if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf(FORMAT_SI8, value);
 #else
   enum { kSize = 24 };
@@ -155,7 +140,7 @@ void Print(SI8 value) {
 }
 
 void Print(SI4 value) {
-#if SEAM <= SCRIPT2_1
+#if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf("%i", value);
 #else
   enum { kSize = 24 };
@@ -165,7 +150,7 @@ void Print(SI4 value) {
 }
 
 void Print(FP4 value) {
-#if SEAM <= SCRIPT2_13
+#if SEAM <= SCRIPT2_SEAM_BOOK
   return Printf("%f", value);
 #else
   enum { kSize = 16 };
@@ -176,7 +161,7 @@ void Print(FP4 value) {
 }
 
 void Print(FP8 value) {
-#if SEAM <= SCRIPT2_13
+#if SEAM <= SCRIPT2_SEAM_BOOK
   return Printf("%f", value);
 #else
   enum { kSize = 24 };
@@ -195,7 +180,6 @@ void PrintIndent(SI4 count) {
   PrintNL();
   while (--count > 0) Print(' ');
 }
-
 const CH1* PrintLinefCH1() { return TSTRLinef<CH1>(); }
 
 const CH1* PrintLinef(const CH1* style, SI4 column_count) {
@@ -244,7 +228,6 @@ void PrintBinary(const void* ptr) {
   TPrintBinary<COut, UIW>(COut().Star(), *reinterpret_cast<UIW*>(&ptr));
 }
 
-#if SEAM >= SCRIPT2_1
 void PrintHex(CH1 value) { TPrintHex<COut, UI1>(COut().Star(), value); }
 
 void PrintHex(CH2 value) { TPrintHex<COut, UI2>(COut().Star(), value); }
@@ -327,7 +310,6 @@ void PrintChars(const void* start, SIW count) {
   const CH1* ptr = reinterpret_cast<const CH1*>(start);
   PrintChars(ptr, ptr + count);
 }
-#endif
 
 #if USING_UTF16 == YES
 
@@ -401,7 +383,6 @@ void PrintHeadingf(const CH4* caption, const CH4* style, SI4 column_count,
   TPrintHeadingf<COut, CH4>(COut().Star(), caption, style, column_count,
                             caption2, caption3);
 }
-#endif
 
 void PrintRight(const CH1* item, SI4 count) {
   ::_::TPrintRight<COut, CH1>(COut().Star(), item, count);
@@ -410,13 +391,13 @@ void PrintRight(const CH1* item, SI4 count) {
 void PrintCenter(const CH1* item, SI4 count) {
   ::_::TPrintCenter<COut, CH1>(COut().Star(), item, count);
 }
+#endif
 
 COut::COut() {}
 
 COut::COut(CH1 item) { ::_::Print(item); }
 COut::COut(const CH1* item) { ::_::Print(item); }
 
-COut::COut(CH2 item) { ::_::Print(item); }
 COut::COut(const CH2* item) { ::_::Print(item); }
 
 COut::COut(CH4 item) { ::_::Print(item); }
@@ -438,7 +419,7 @@ COut::COut(SI8 item) { ::_::Print(item); }
 
 COut::COut(UI8 item) { ::_::Print(item); }
 
-#if SEAM >= SCRIPT2_4
+#if SEAM >= SCRIPT2_SEAM_FTOS
 
 COut::COut(FP4 item) { ::_::Print(item); }
 
@@ -447,12 +428,10 @@ COut::COut(FP8 item) { ::_::Print(item); }
 
 COut& COut::Star() { return *this; }
 
-COut& COut::PrintChar(CH1 item) {
+COut& COut::Print(CH1 item) {
   ::_::Print(item);
   return *this;
 }
-
-COut& COut::Print(CH1 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH1* item) {
   ::_::Print(item);
@@ -492,19 +471,23 @@ COut& COut::Print(FP8 item) {
 }
 #endif
 
-#if SEAM >= SCRIPT2_1
-COut& COut::Print(const void* begin, SIW size_bytes) {
+COut& COut::PrintHex(const void* begin, SIW size_bytes) {
   TPrintHex<COut>(COut().Star(), begin, size_bytes);
   return *this;
 }
 
-COut& COut::Print(Hex item) {
-  TPrintHex<COut>(COut().Star(), item.Begin(), item.Size());
+COut& COut::Print(Hex item) { return PrintHex(item.Begin(), item.Size()); }
+
+COut& COut::PrintBinary(const void* begin, SIW size_bytes) {
+  TPrintBinary<COut>(COut().Star(), begin, size_bytes);
   return *this;
 }
-#endif
 
-#if SEAM >= SCRIPT2_3
+COut& COut::Print(Binary item) {
+  return PrintBinary(item.Begin(), item.Size());
+}
+
+#if SEAM >= SCRIPT2_SEAM_UTF
 COut& COut::Print(Right1 item) {
   ::_::PrintRight(item.token.String(), item.token.Count());
   return *this;
@@ -533,12 +516,10 @@ COut& COut::Print(Chars1 item) {
 #endif
 
 #if USING_UTF16 == YES
-COut& COut::PrintChar(CH2 item) {
+COut& COut::Print(CH2 item) {
   ::_::Print(item);
   return *this;
 }
-
-COut& COut::Print(CH2 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH2* item) {
   ::_::Print(item);
@@ -572,12 +553,10 @@ COut& COut::Print(Chars2 item) {
 #endif
 #if USING_UTF32 == YES
 
-COut& COut::PrintChar(CH4 item) {
+COut& COut::Print(CH4 item) {
   ::_::Print(item);
   return *this;
 }
-
-COut& COut::Print(CH4 item) { return PrintChar(item); }
 
 COut& COut::Print(const CH4* item) {
   ::_::Print(item);
@@ -615,15 +594,9 @@ COut& COut::Print(Chars4 item) {
 
 ::_::COut& operator<<(::_::COut& o, ::_::COut& p) { return o; }
 
-::_::COut& operator<<(::_::COut& o, CH1 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH1 item) { return o.Print(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
-
-::_::COut& operator<<(::_::COut& o, UI1 item) { return o.Print(item); }
-
-::_::COut& operator<<(::_::COut& o, SI2 item) { return o.Print(item); }
-
-::_::COut& operator<<(::_::COut& o, UI2 item) { return o.Print(item); }
 
 ::_::COut& operator<<(::_::COut& o, SI4 item) { return o.Print(item); }
 
@@ -641,11 +614,11 @@ COut& COut::Print(Chars4 item) {
 ::_::COut& operator<<(::_::COut& o, FP8 item) { return o.Print(item); }
 #endif
 
-#if SEAM >= SCRIPT2_1
 ::_::COut& operator<<(::_::COut& o, ::_::Hex item) { return o.Print(item); }
-#endif
 
-#if SEAM >= SCRIPT2_3
+::_::COut& operator<<(::_::COut& o, ::_::Binary item) { return o.Print(item); }
+
+#if SEAM >= SCRIPT2_SEAM_UTF
 ::_::COut& operator<<(::_::COut& o, ::_::Center1 item) { return o.Print(item); }
 
 ::_::COut& operator<<(::_::COut& o, ::_::Right1 item) { return o.Print(item); }
@@ -660,7 +633,7 @@ COut& COut::Print(Chars4 item) {
 #endif
 
 #if USING_UTF16 == YES
-::_::COut& operator<<(::_::COut& o, CH2 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH2 item) { return o.Print(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
 
@@ -678,8 +651,7 @@ COut& COut::Print(Chars4 item) {
 #endif
 
 #if USING_UTF32 == YES
-
-::_::COut& operator<<(::_::COut& o, CH4 item) { return o.PrintChar(item); }
+::_::COut& operator<<(::_::COut& o, CH4 item) { return o.Print(item); }
 
 ::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
 

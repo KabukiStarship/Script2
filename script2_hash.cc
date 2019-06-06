@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_9
+#if SEAM >= SCRIPT2_SEAM_LOOM
 #include "t_hash.h"
 
 namespace _ {
@@ -78,4 +78,4 @@ UI2 Hash16UI8(UI8 value, UI2 hash) {
 }
 
 }  // namespace _
-#endif  //> #if SEAM >= SCRIPT2_9
+#endif  //> #if SEAM >= SCRIPT2_SEAM_LOOM

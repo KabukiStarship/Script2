@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_array.h"
 
-#if SEAM == SCRIPT2_8
+#if SEAM == SCRIPT2_SEAM_ARRAY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _08_Array(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_8
+#if SEAM >= SCRIPT2_SEAM_ARRAY
   TEST_BEGIN;
 
   PRINT("\n\nTesting AStack<SI4>...\n\nPrinting empty stack...\n");
@@ -30,7 +30,7 @@ static const CH1* _08_Array(CH1* seam_log, CH1* seam_end, const CH1* args) {
   static const SI4 array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
   const SI4* dimensions = TStack4<2, 2, 2>();
-  TArray<SI4> test_array(2, 2, 2, &array_3d_exected[0][0][0]);
+  TMatrix<SI4> test_array(2, 2, 2, &array_3d_exected[0][0][0]);
 
   SI4 w = 0;
   SI4* array_base = test_array.Elements();

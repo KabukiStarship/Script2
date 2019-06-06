@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_15
+#if SEAM >= SCRIPT2_SEAM_EXPR
 #ifndef SCRIPT2_DOOR
 #define SCRIPT2_DOOR
 #include "c_crabs.h"
@@ -115,7 +115,7 @@ class TDoor : public Operand {
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(CCrabs* crabs) {
-    TArray<SI4, SI4, SI4>* slots = slots_;
+    TMatrix<SI4, SI4, SI4>* slots = slots_;
     SI4 scan_count_max = scan_count_max_;
     for (SI4 i = 0; i < slots->Count(); ++i) {
       BIn* bin = Slot(i);
@@ -129,7 +129,7 @@ class TDoor : public Operand {
   }
 
   /* Script2 operations. */
-  virtual const Op* Star(CHN index, CCrabs* crabs) {
+  virtual const Op* Star(CH4 index, CCrabs* crabs) {
     static const Op kThis = {
         "Door",
         OpFirst('A'),
@@ -156,7 +156,7 @@ class TDoor : public Operand {
   SI4 size_bytes_,                //< Door size in bytes.
       scan_count_max_;            //< Max bytes to pull throught the slot.
   UIW* begin_;                    //< Pointer to dynamic socket.
-  TArray<SI4, SI4, SI4>* slots_;  //< Slots in the door.
+  TMatrix<SI4, SI4, SI4>* slots_;  //< Slots in the door.
   CBIn* OffsetToBIn(SI4 offset) {
     return reinterpret_cast<CBIn*>(reinterpret_cast<UIW>(this) + offset);
   }
@@ -174,5 +174,5 @@ static Door* DoorInit (SI4* socket, SI4 slot_size) {
 }*/
 
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_15
+#endif  //< #if SEAM >= SCRIPT2_SEAM_EXPR
 #endif  //< SCRIPT2_DOOR

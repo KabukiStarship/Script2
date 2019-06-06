@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_args.h"
 #include "c_ascii.h"
 #include "c_bout.h"
@@ -16,10 +16,10 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_hash.h"
 #include "c_socket.h"
 #include "c_test.h"
-#include "c_uniprinter.h"
+#include "c_utf.h"
 #include "slot.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #define PRINT_BOUT(header, bout) \
   Console<>().Out() << "\n" << header << kLF << bout;
@@ -731,4 +731,4 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_14
+#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC

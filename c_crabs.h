@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
 #include "c_args.h"
@@ -94,7 +94,7 @@ struct CCrabs {
       bin_state,       //< Slot streaming state.
       last_bin_state,  //< Last BIn state.
       last_byte;       //< Last UI1 read.
-  CHN current_char;    //< Current Unicode CH1 being scanned.
+  CH4 current_char;    //< Current Unicode CH1 being scanned.
   UI2 hash;            //< Packed BSQ hash.
   UI4 timeout_us;      //< Timeout time in microseconds.
   TM8 last_time;       //< Last time the Stack was scanned.
@@ -282,4 +282,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_EXPR
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_op.h"
 
 #include "c_bsq.h"
@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_utf1.h"
 #include "c_test.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -144,4 +144,4 @@ void Print (Op& log) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_14
+#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC

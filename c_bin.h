@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
 #include "c_bout.h"
@@ -136,4 +136,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BIn* bin) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_CBIN
-#endif  //> #if SEAM >= SCRIPT2_14
+#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC

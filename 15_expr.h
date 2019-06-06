@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_15
+#if SEAM == SCRIPT2_SEAM_EXPR
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _15_Expr(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM == SCRIPT2_15
+#if SEAM == SCRIPT2_SEAM_EXPR
   TEST_BEGIN;
 
   enum {

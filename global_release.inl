@@ -1,5 +1,6 @@
-#include "c_test.h"
 #include "global_footer.inl"
+//
+#include "c_test.h"
 
 #define DEBUG_SEAM 0
 #define TEST_BEGIN \
@@ -23,7 +24,7 @@
 #define PRINT_CHARS(begin, end_or_size)
 #define PRINT_HEX(item)
 #define PRINT_HEXS(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj)
+#define PRINT_SOCKET_OBJ(obj)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
 #define PRINT_FUNCTION

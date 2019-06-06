@@ -100,7 +100,7 @@ Maps can be created of most of the types to most of the types.
 |  59 |   OBJ    |     Object      |    N     | A object beginning with a 16, 32, or 64-bit wide size_bytes. |
 |  60 |   SLT    |      Slot       |    N     | An interprocess ring buffer. |
 |  61 |   BSQ    |   B-Sequence    |    N     | An OBJ that represent the order of types in a byte-sequence. |
-|  62 |   EXP    |   Expression    |    N     | Strand abstract stack machine Expression of BSQ. |
+|  62 |   EXP    |   Expression    |    N     | An Script2 Expression. |
 |  63 |   WLD    |    WildCard     |    W     | A type-value tuple. |
 
 #### List of Types Key

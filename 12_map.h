@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM == SCRIPT2_12
+#if SEAM == SCRIPT2_SEAM_MAP
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -19,7 +19,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _12_Map(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_12
+#if SEAM >= SCRIPT2_SEAM_MAP
   TEST_BEGIN;
 
   PrintLineBreak("\n  + Running MultimapTests\n", 10);

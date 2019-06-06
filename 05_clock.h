@@ -3,16 +3,15 @@
 @file    /script2/05_uts_and_clock.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
+#include <c_clock.h>
 #include <pch.h>
 
-#include <c_clock.h>
-
-#if SEAM == SCRIPT2_5
+#if SEAM == SCRIPT2_SEAM_CLOCK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +21,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _05_Clock(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_5
+#if SEAM >= SCRIPT2_SEAM_CLOCK
   TEST_BEGIN;
 
   PRINT_HEADING("\n\nTesting TScanTime...");

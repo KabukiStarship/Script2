@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_11
+#if SEAM == SCRIPT2_SEAM_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,7 +20,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _11_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_11
+#if SEAM >= SCRIPT2_SEAM_LIST
   TEST_BEGIN;
 
   List<> list(36, 960);

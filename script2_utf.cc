@@ -9,21 +9,821 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_3
-#if SEAM == SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_UTF
+#if SEAM == SCRIPT2_SEAM_UTF
 #include "module_release.inl"
 #else
 #include "module_release.inl"
 #endif
 
-#include "t_strand.h"
+#include "t_utf.h"
 
 #if USING_UTF8 == YES
 
 namespace _ {
+CH1 HexNibbleToUpperCase(UI1 b) {
+  b = b & 0xf;
+  if (b > 9) return b + ('A' - 10);
+  return b + '0';
+}
+
+const CH1* STRSocketHeader() {
+  return "\n|0       8       16      24      32      40      48      56      |";
+}
+
+const CH1* STRSocketBorder() {
+  return "\n|+-------+-------+-------+-------+-------+-------+-------+-------|"
+         " ";
+}
+
+const CH1* STRSocketHexHeader() {
+  return "\n|0               8               16              24              |";
+}
+
+const CH1* STRSocketHexBorder() {
+  return "\n|+---------------+---------------+---------------+---------------|"
+         " ";
+}
+
+UI1 ToUnsigned(CH1 value) { return (UI1)value; }
+UI2 ToUnsigned(CH2 value) { return (UI2)value; }
+UI4 ToUnsigned(CH4 value) { return (UI4)value; }
+UIN ToUnsigned(CHN value) { return (UIN)value; }
+UI1 ToUnsigned(SI1 value) { return (UI1)value; }
+UI2 ToUnsigned(SI2 value) { return (UI2)value; }
+UI4 ToUnsigned(SI4 value) { return (UI4)value; }
+UI8 ToUnsigned(SI8 value) { return (UI4)value; }
+UI1 ToUnsigned(UI1 value) { return (UI1)value; }
+UI2 ToUnsigned(UI2 value) { return (UI2)value; }
+UI4 ToUnsigned(UI4 value) { return (UI4)value; }
+UI8 ToUnsigned(UI8 value) { return (UI8)value; }
+UIW ToUnsigned(const void* value) { return reinterpret_cast<UIW>(value); }
+#if USING_FP4 == YES
+UI4 ToUnsigned(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
+#endif
+#if USING_FP8 == YES
+UI8 ToUnsigned(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
+#endif
+
+SI1 ToSigned(CH1 value) { return (SI1)value; }
+SI2 ToSigned(CH2 value) { return (SI2)value; }
+SI4 ToSigned(CH4 value) { return (SI4)value; }
+SIN ToSigned(CHN value) { return (SIN)value; }
+SI1 ToSigned(UI1 value) { return (SI1)value; }
+SI2 ToSigned(UI2 value) { return (SI2)value; }
+SI4 ToSigned(UI4 value) { return (SI4)value; }
+SI8 ToSigned(UI8 value) { return (SI8)value; }
+SI1 ToSigned(SI1 value) { return (SI1)value; }
+SI2 ToSigned(SI2 value) { return (SI2)value; }
+SI4 ToSigned(SI4 value) { return (SI4)value; }
+SI8 ToSigned(SI8 value) { return (SI8)value; }
+SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
+#if USING_FP4 == YES
+SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
+#endif
+#if USING_FP8 == YES
+SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
+#endif
+
+Hex::Hex(const void* begin) : size_(-sizeof(UIW)) {
+  *buffer_ = reinterpret_cast<UIW>(begin);
+}
+Hex::Hex(const void* begin, SIW size) : size_(size) {
+  buffer_[0] = reinterpret_cast<UIW>(begin);
+}
+Hex::Hex(SI1 item) : size_(1) { *reinterpret_cast<SI1*>(buffer_) = item; }
+Hex::Hex(UI1 item) : size_(1) { *reinterpret_cast<UI1*>(buffer_) = item; }
+Hex::Hex(SI2 item) : size_(2) { *reinterpret_cast<SI2*>(buffer_) = item; }
+Hex::Hex(UI2 item) : size_(2) { *reinterpret_cast<UI2*>(buffer_) = item; }
+Hex::Hex(SI4 item) : size_(4) { *reinterpret_cast<SI4*>(buffer_) = item; }
+Hex::Hex(UI4 item) : size_(4) { *reinterpret_cast<UI4*>(buffer_) = item; }
+Hex::Hex(SI8 item) : size_(8) { *reinterpret_cast<SI8*>(buffer_) = item; }
+Hex::Hex(UI8 item) : size_(8) { *reinterpret_cast<UI8*>(buffer_) = item; }
+#if USING_FP8 == YES
+Hex::Hex(FP4 item) : size_(4) { *reinterpret_cast<FP4*>(buffer_) = item; }
+#endif
+#if USING_FP8 == YES
+Hex::Hex(FP8 item) : size_(8) { *reinterpret_cast<FP8*>(buffer_) = item; }
+#endif
+
+const CH1* Hex::Begin() {
+  if (size_ < 0) return reinterpret_cast<const CH1*>(buffer_[0]);
+  return reinterpret_cast<const CH1*>(&buffer_[0]);
+}
+
+SIW Hex::Size() {
+  SIW l_size = size_;
+  return l_size < 0 ? -l_size : l_size;
+}
+
+Binary::Binary(const void* begin) : size_(sizeof(UIW)) {
+  *buffer_ = reinterpret_cast<UIW>(begin);
+}
+Binary::Binary(const void* begin, SIW size) : size_(-size) {
+  *buffer_ = reinterpret_cast<UIW>(begin);
+}
+Binary::Binary(SI1 item) : size_(1) { *reinterpret_cast<SI1*>(buffer_) = item; }
+Binary::Binary(UI1 item) : size_(1) { *reinterpret_cast<UI1*>(buffer_) = item; }
+Binary::Binary(SI2 item) : size_(2) { *reinterpret_cast<SI2*>(buffer_) = item; }
+Binary::Binary(UI2 item) : size_(2) { *reinterpret_cast<UI2*>(buffer_) = item; }
+Binary::Binary(SI4 item) : size_(4) { *reinterpret_cast<SI4*>(buffer_) = item; }
+Binary::Binary(UI4 item) : size_(4) { *reinterpret_cast<UI4*>(buffer_) = item; }
+Binary::Binary(SI8 item) : size_(8) { *reinterpret_cast<SI8*>(buffer_) = item; }
+Binary::Binary(UI8 item) : size_(8) { *reinterpret_cast<UI8*>(buffer_) = item; }
+
+#if USING_FP8 == YES
+Binary::Binary(FP4 item) : size_(4) { *reinterpret_cast<FP4*>(buffer_) = item; }
+#endif
+#if USING_FP8 == YES
+Binary::Binary(FP8 item) : size_(8) { *reinterpret_cast<FP8*>(buffer_) = item; }
+#endif
+
+const CH1* Binary::Begin() {
+  if (size_ < 0) return reinterpret_cast<const CH1*>(buffer_[0]);
+  return reinterpret_cast<const CH1*>(&buffer_[0]);
+}
+
+SIW Binary::Size() {
+  SIW l_size = size_;
+  return l_size < 0 ? -l_size : l_size;
+}
+
+}  // namespace _
+
+#if SEAM >= SCRIPT2_SEAM_ITOS
+namespace _ {
 
 /*
-SI4 COutHeap1(CObject& obj, SIW function, void* arg) {
+SI4 TSTRLength(UI8 value) {
+  if (value < 10) return 1;
+  if (value < 100) return 2;
+  if (value < 1000) return 3;
+  if (value < 10000) return 4;
+  if (value < 100000) return 5;
+  if (value < 1000000) return 6;
+  if (value < 10000000) return 7;
+  if (value < 100000000) return 8;
+  if (value < 1000000000) return 9;
+  if (value < 10000000000) return 10;
+  if (value < 100000000000) return 11;
+  if (value < 1000000000000) return 12;
+  if (value < 10000000000000) return 13;
+  if (value < 100000000000000) return 14;
+  if (value < 1000000000000000) return 15;
+  if (value < 10000000000000000) return 16;
+  if (value < 100000000000000000) return 17;
+  if (value < 1000000000000000000) return 18;
+  if (value < 10000000000000000000) return 19;
+  return 20;
+}
+
+template <typename Char>
+Char* PrintMod10(Char* start, Char* stop, UI4 value) {
+  if (!start || start >= stop) return nullptr;
+
+  UI4 length;
+  if (value < 10) {
+    if (start + 1 >= stop) return nullptr;
+    *start = '0' + value;
+    *(start + 1) = 0;
+    return start + 1;
+  } else if (value < 100) {
+    UI4 ten = 10;
+    length = value / 10;
+
+  } else if (value < 1000)
+    length = 3;
+  else if (value < 10000)
+    length = 4;
+  else if (value < 100000)
+    length = 5;
+  else if (value < 1000000)
+    length = 6;
+  else if (value < 10000000)
+    length = 7;
+  else if (value < 100000000)
+    length = 8;
+  else if (value < 1000000000)
+    length = 9;
+  else if (value < 10000000000)
+    length = 10;
+  else if (value < 100000000000)
+    length = 11;
+  else
+    length = 12;
+  Char* stop = start + length - 1;
+  if (stop >= stop) return nullptr;
+  UI4 ten = 10;
+  while (length > 0) {
+    UI4 scalar = value / ten;
+  }
+}
+*/
+
+// CH1* PrintMod10(CH1* start, CH1* stop, UI8 value);
+
+UI1 Unsigned(SI1 value) { return (UI1)(value); }
+
+UI2 Unsigned(SI2 value) { return (UI2)(value); }
+
+UI4 Unsigned(SI4 value) { return (UI4)(value); }
+
+UI8 Unsigned(SI8 value) { return (UI8)(value); }
+
+CH1 HexNibbleToLowerCase(UI1 b) {
+  b = b & 0xf;
+  if (b > 9) return b + ('a' - 10);
+  return b + '0';
+}
+
+UI2 HexByteToLowerCase(UI1 b) {
+  UI2 value = HexNibbleToLowerCase(b & 0xf);
+  value = value << 8;
+  value |= HexNibbleToLowerCase(b >> 4);
+  return value;
+}
+
+UI2 HexByteToUpperCase(UI1 b) {
+  UI2 value = HexNibbleToUpperCase(b & 0xf);
+  value = value << 8;
+  UI2 second_nibble = HexNibbleToUpperCase(b >> 4);
+  value |= second_nibble;
+  return value;
+}
+
+SI4 HexToByte(CH1 c) {
+  if (c < '0') {
+    return -1;
+  }
+  if (c >= 'a') {
+    if (c > 'f') return -1;
+    return c - ('a' - 10);
+  }
+  if (c >= 'A') {
+    if (c > 'F') return -1;
+    return c - ('A' - 10);
+  }
+  if (c > '9') return -1;
+  return c - '0';
+}
+
+SI4 HexToByte(UI2 h) {
+  SI4 lowerValue = HexToByte((CH1)(h >> 8));
+
+  if (lowerValue < 0) return -1;
+
+  SI4 upper_value = HexToByte((CH1)h);
+  if (upper_value < 0) return -1;
+
+  return lowerValue | (upper_value << 4);
+}
+
+CH1* Print(CH1* start, CH1* stop, CH1 c) {
+  if (!start || start + 1 >= stop) return nullptr;
+  *start++ = c;
+  *start = 0;
+  return start;
+}
+
+#if SEAM == SCRIPT2_SEAM_UTF
+#include "module_debug.inl"
+#else
+#include "module_release.inl"
+#endif
+
+CH1* Print(CH1* start, CH1* stop, CH4 c) {
+  if (!start || start >= stop) return nullptr;
+
+  // | Byte 1   | Byte 2   | Byte 3   | Byte 4   | UTF-32 Result         |
+  // |:--------:|:--------:|:--------:|:--------:|:---------------------:|
+  // | 0aaaaaaa |          |          |          | 00000000000000aaaaaaa |
+  // | 110aaaaa | 10bbbbbb |          |          | 0000000000aaaaabbbbbb |
+  // | 1110aaaa | 10bbbbbb | 10cccccc |          | 00000aaaabbbbbbcccccc |
+  // | 11110aaa | 10bbbbbb | 10cccccc | 10dddddd | aaabbbbbbccccccdddddd |
+  if (!(c >> 7)) {  // 1 ASCII CH1.
+    if (start + 1 >= stop) return nullptr;
+    *start++ = (CH1)c;
+  }
+  CH2 lsb_mask = 0x3f, msb_mask = 0x80;
+  if ((c >> 11) == 0) {  // 2 bytes.
+    if (start + 2 >= stop) return nullptr;
+    CH1 byte = (CH1)(0xC0 | (c >> 6));
+    // PRINT ("\nPrinting 2:");
+    // PRINT_HEX (c);
+    // PRINT (" UTF8:");
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+  } else if ((c >> 16) == 0) {  // 3 bytes.
+    if (start + 3 >= stop) return nullptr;
+    CH1 byte = (CH1)(0xE0 | (c >> 12));
+    // PRINT ("\nPrinting 3:");
+    // PRINT_HEX (c);
+    // PRINT (" UTF8:");
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+  } else if ((c >> 21) == 0) {  // 4 bytes.
+    if (start + 4 >= stop) return nullptr;
+    CH1 byte = (CH1)(0xF0 | (c >> 18));
+    // PRINT ("\nPrinting 4:");
+    // PRINT_HEX (c);
+    // PRINT (" UTF8:");
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+    byte = (CH1)(msb_mask | (c & lsb_mask));
+    // PRINT_HEX (byte);
+    *start++ = byte;
+  } else {
+    // PRINT ("\nUTF8 print Error:CH4 is out of range:");
+    // PRINT_HEX (c);
+    // PRINT (':');
+    // PRINT ((UI4)c);
+    return nullptr;
+  }
+  *start = 0;
+  return start;
+}
+
+CH1* Print(CH1* start, SIW size, CH4 c) {
+  return Print(start, start + size - 1, c);
+}
+
+CH4 ToCH4(CH1 c) {
+#if CHAR_MIN == 0
+  return (CH4)c;
+#else
+  return (CH4)(UI1)c;
+#endif
+}
+
+const CH1* Scan(const CH1* string, CH4& result) {
+  if (!string) return nullptr;
+  CH4 c = ToCH4(*string++), lsb_mask = 0x3f, msb = 0x80;
+  CH4 r = 0;
+
+  if (!(c >> 7)) {
+    r = (CH4)c;
+  } else if ((c >> 5) == 0x6) {
+    // PRINT ("  Scanning 2:");
+    // PRINT_HEX ((CH1)c);
+    r = (c & 31) << 6;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & (CH4)63;
+    // PRINT ("  Result:");
+    // PRINT_HEX (r);
+  } else if ((c >> 4) == 0xE) {
+    // PRINT ("  Scanning 3:");
+    // PRINT_HEX ((CH1)c);
+    r = ((CH4)(c & 15)) << 12;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & 63) << 6;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & lsb_mask;
+    // PRINT ("  Result:");
+    // PRINT_HEX (r);
+  } else if ((c >> 3) == 0x1E) {
+    // PRINT ("  Scanning 4:");
+    // PRINT_HEX ((CH1)c);
+    r = ((CH4)(c & 7)) << 18;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & lsb_mask) << 12;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= (c & lsb_mask) << 6;
+    c = ToCH4(*string++);
+    // PRINT_HEX ((CH1)c);
+    if (!(c & msb)) return nullptr;
+    r |= c & lsb_mask;
+    // PRINT ("  Result:");
+    // PRINT_HEX (r);
+  } else {
+    // PRINT ("\nUTF8 scan error:");
+    // PRINT_HEX ((CH1)c);
+    // PRINT ((SI4)c);
+    return nullptr;
+  }
+  result = r;
+  return string;
+}
+
+CH1* Print(CH1* start, CH1* stop, CH2 c) {
+#if USING_UTF32 == YES
+  return Print(start, stop, (CH4)c);
+#else
+  enum { k2ByteMSbMask = 0xC0, k3ByteMSbMask = 0xE0, k4ByteMSbMask = 0xF0 };
+  if (!start) return nullptr;
+  if (!(c >> 7)) {  // 1 byte.
+    if (start + 1 >= stop) return nullptr;
+    *start++ = (CH1)c;
+    *start = 0;
+    return start;
+  }
+  CH2 lsb_mask = 0x3f, msb_mask = 0x80;
+  if (!(c >> 12)) {  // 2 bytes.
+    if (start + 2 >= stop) return nullptr;
+    *start++ = (CH1)(0xC0 | c >> 6);
+    *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *start = 0;
+    return start;
+  }  // else 3 bytes.
+  if (start + 3 >= stop) return nullptr;
+  *start++ = (CH1)(0xE0 | c >> 12);
+  *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+  *start++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+  *start = 0;
+  return start;
+#endif
+}
+#endif
+#if USING_UTF16 == YES
+
+CH2* Print(CH2* start, CH2* stop, CH2 c) {
+  if (!start || start + 1 >= stop) return nullptr;
+  *start++ = c;
+  *start = 0;
+  return start;
+}
+
+CH2* Print(CH2* start, CH2* stop, CH1 c) { return Print(start, stop, (CH2)c); }
+
+CH2* Print(CH2* start, CH2* stop, CH4 c) {
+  // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
+  // |:-----------------:|:---------------------:|:--------------------:|
+  // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
+  // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
+  if (!start || start + 1 >= stop) return nullptr;
+  CH4 lsb_mask = 0x3f, lsb = c & lsb_mask, msb = c >> 10;
+  if (!msb) {
+    if (start + 1 >= stop) return nullptr;
+    *start++ = (CH2)c;
+    // PRINT ("\nPrinting 1:");
+    // PRINT_HEX ((CH2)c);
+    *start = 0;
+    return start;
+  } else {
+    CH4 msb_mask = 0xDC00;
+    if (msb >> 10) return nullptr;  // Non-Unicode value.
+    if (start + 2 >= stop) return nullptr;
+    CH2 nibble = (CH2)(lsb & msb_mask);
+    // PRINT ("\nPrinting 2:");
+    // PRINT_HEX ((CH2)nibble);
+    *start++ = nibble;
+    nibble = (CH2)(msb & msb_mask);
+    // PRINT_HEX ((CH2)nibble);
+    *start++ = nibble;
+    *start = 0;
+    return start;
+  }
+}
+
+CH2* Print(CH2* start, SIW size, CH4 c) {
+  return Print(start, start + size - 1, c);
+}
+
+const CH2* Scan(const CH2* string, CH4& result) {
+  if (!string) return nullptr;
+  // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
+  // |:-----------------:|:---------------------:|:--------------------:|
+  // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
+  // | 110110aaaaaaaaaa  | 110111bbbbbbbbbb      | aaaaaaaaaabbbbbbbbbb |
+  CH2 c = *string++;
+  CH2 lsb_mask = (1 << 10) - 1;
+  if (c <= lsb_mask) {
+    // PRINT (" Scanning 1:");
+    // PRINT_HEX (c);
+    result = (CH4)c;
+  } else if ((c >> 10) == 30) {
+    // PRINT (" Scanning 1:");
+    // PRINT_HEX (c);
+    CH4 r = ((CH4)c) & lsb_mask;
+    c = *string++;
+    if (c >> 10 != 55) return nullptr;
+    r |= ((CH4)(c & lsb_mask)) << 10;
+  } else {
+    // PRINT (" Scan error:");
+    // PRINT_HEX (c);
+    return nullptr;
+  }
+  return string;
+}
+
+#endif
+#if USING_UTF32 == YES
+CH4* Print(CH4* start, CH4* stop, CH1 c) {
+  if (!start || start + 1 >= stop) return nullptr;
+  *start++ = (CH4)c;
+  *start = 0;
+  return start;
+}
+
+CH4* Print(CH4* start, CH4* stop, CH2 c) {
+  if (!start || start + 1 >= stop) return nullptr;
+  *start++ = (CH4)c;
+  *start = 0;
+  return start;
+}
+
+CH4* Print(CH4* start, CH4* stop, CH4 c) {
+  if (!start || start + 1 >= stop) return nullptr;
+  *start++ = c;
+  *start = 0;
+  return start;
+}
+
+#endif
+
+}  // namespace _
+#endif
+
+#if SEAM >= SCRIPT2_SEAM_FTOS
+//#include <cmath>
+
+#if SEAM == SCRIPT2_SEAM_FTOS
+#include "module_debug.inl"
+#else
+#include "module_release.inl"
+#endif
+
+#include <cstdio>
+
+namespace _ {
+
+CH1* Print(CH1* start, CH1* stop, FP4 value) {
+  if (!start || start >= stop) return nullptr;
+  SIW size = stop - start;
+  PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", start, stop, (SI4)size,
+         value);
+  SI4 count = sprintf_s(start, stop - start, "%f", value);
+  if (count <= 0) return nullptr;
+  return start + count;
+  // return TBinary<FP4, UI4>::TPrint<CH1>(start, stop, value);
+}
+
+CH1* Print(CH1* start, CH1* stop, FP8 value) {
+  if (!start || start >= stop) return nullptr;
+  SIW size = stop - start;
+  SI4 count = sprintf_s(start, size, "%lf", value);
+  if (count <= 0) return nullptr;
+  return start + count;
+  // return TBinary<FP8, UI8>::TPrint<CH1>(start, stop, value);
+}
+
+template <typename Char>
+const Char* TStrandFloatStop(const Char* start) {
+  const CH1* stop = TSTRDecimalEnd<CH1>(start);
+  if (!stop) return stop;
+  CH1 c = *stop++;
+  if (c == '.') {
+    stop = TSTRDecimalEnd<CH1>(start);
+    c = *stop++;
+  }
+  if (c == 'e' || c != 'E') {
+    if (c == '-') c = *stop++;
+    return TSTRDecimalEnd<CH1>(start);
+  }
+  return stop;
+}
+
+const CH1* Scan(const CH1* start, FP4& value) {
+  SI4 count = sscanf_s(start, "%f", &value);
+  return TStrandFloatStop<CH1>(start);
+}
+
+const CH1* Scan(const CH1* start, FP8& value) {
+  SI4 count = sscanf_s(start, "%lf", &value);
+  return TStrandFloatStop<CH1>(start);
+}
+
+#if USING_FP4 == YES
+SI4 FloatDigitsMax() { return 15; }
+#endif
+#if USING_FP8 == YES
+SI4 DoubleDigitsMax() { return 31; }
+#endif
+
+SI4 MSbAsserted(UI1 value) { return TMSbAssertedReverse<UI1>(value); }
+
+SI4 MSbAsserted(SI1 value) { return TMSbAssertedReverse<UI1>((UI8)value); }
+
+SI4 MSbAsserted(UI2 value) { return TMSbAssertedReverse<UI2>(value); }
+
+SI4 MSbAsserted(SI2 value) { return TMSbAssertedReverse<UI2>((UI8)value); }
+
+SI4 MSbAsserted(UI4 value) { return TMSbAssertedReverse<UI4>(value); }
+
+SI4 MSbAsserted(SI4 value) { return TMSbAssertedReverse<UI4>((UI8)value); }
+
+SI4 MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
+
+SI4 MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
+
+void FloatBytes(FP4 value, CH1& byte_0, CH1& byte_1, CH1& byte_2, CH1& byte_3) {
+  UI4 ui_value = *reinterpret_cast<UI4*>(&value);
+  byte_0 = (CH1)(ui_value);
+  byte_1 = (CH1)(ui_value >> 8);
+  byte_2 = (CH1)(ui_value >> 16);
+  byte_3 = (CH1)(ui_value >> 24);
+}
+
+CH1* Print(CH1* begin, UI2 chars) {
+#if ALIGN_MEMORY
+  *reinterpret_cast<UI2*>(chars);
+  return begin + 2;
+#else
+  *reinterpret_cast<UI2*>(chars);
+  return begin + 2;
+#endif
+}
+
+CH1* Print(CH1* begin, CH1 byte_0, CH1 byte_1) {
+#if ALIGN_MEMORY
+  if (reinterpret_cast<UIW>(begin) & 1) {
+    begin[0] = byte_1;
+    begin[1] = NIL;
+  }
+  if (align == 0) begin[0] = byte_0;
+  begin[0] = byte_0;
+  begin[1] = NIL;
+#else
+  *reinterpret_cast<UI2*>(begin) = byte_0 | (((UI2)byte_1) << 8);
+#endif
+  return &begin[2];
+}
+
+CH1* Print(CH1* begin, CH1* stop, CH1 byte_0, CH1 byte_1, CH1 byte_2) {
+#if ALIGN_MEMORY
+  switch (reinterpret_cast<UIW>(begin) & 3) {
+    case 0: {
+      *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+                                       ((UI4)byte_1) << 16 |
+                                       ((UI4)byte_1) << 24;
+      return &begin[4];
+    }
+    case 1: {
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
+      *ptr = word;
+      begin[3] = 0;
+      return &begin[4];
+    }
+    case 2: {
+      UI2 ptr = *reinterpret_cast<UI2*>(begin);
+      *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
+      *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
+      return reinterpret_cast<CH1*>(ptr);
+    }
+    case 3: {
+      *begin = byte_0;
+      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
+      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
+      word |= ((UI4)byte_0) | ((UI4)byte_0) << 8 |
+              ((UI4)byte_0) << 16;  //< OR together three.
+      begin[3] = 0
+    }
+  }
+#else
+  *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
+                                   ((UI4)byte_1) << 16 | ((UI4)byte_1) << 24;
+#endif
+  return &begin[4];
+}
+
+// CH1 puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
+
+constexpr SIW IEEE754LutElementCount() { return 87; }
+
+const UI2* DigitsLut(const CH1* puff_lut) {
+  return reinterpret_cast<const UI2*>(puff_lut);
+}
+
+const UI2* PuffLutExponents(CH1* puff_lut) {
+  return reinterpret_cast<const UI2*>(puff_lut + 200);
+}
+
+const UI8* PufLutPow10(CH1* puff_lut) {
+  return reinterpret_cast<const UI8*>(puff_lut + 374);
+}
+
+UI4 Value(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
+
+UI8 Value(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
+
+BOL IsNaNPositive(SI1 value) { return value > TUnsignedNaN<SI1>(); }
+
+BOL IsNaNNegative(SI1 value) { return value > TUnsignedNaN<SI1>(); }
+
+BOL IsNaN(FP4 value) { return isnan(value); }
+
+BOL IsNaN(FP8 value) { return isnan(value); }
+
+BOL IsFinite(FP4 value) { return isfinite(value); }
+
+BOL IsFinite(FP8 value) { return isfinite(value); }
+
+BOL IsInfinite(FP4 value) { return isinf(value); }
+
+BOL IsInfinite(FP8 value) { return isinf(value); }
+
+/* Masks the lower bits using faster bit shifting.
+@brief The algorithm has you enter the highest bit rather than bit count because
+it would introduce an extra instruction and you should do that manually if you
+wish to do so.
+@param value The value to mask.
+@param left_bits Number of bits to shift left.
+@param right_bits Number of bits to shift right. */
+template <typename UI>
+inline UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
+  value = value << left_bits;
+  return value >> right_bits;
+}
+
+/* Creates a mask with the given number_ of zeros in the MSb(s).
+@param msb_zero_count The number_ of zeros in the Most Significant bits. */
+template <typename UI>
+inline UI CreateMaskLSb(UI msb_zero_count) {
+  UI mask = 0;
+  return (~mask) >> msb_zero_count;
+}
+
+/* Masks off the lower bits. */
+template <typename UI>
+inline UI MaskLSb(UI value, UI msb_zero_count) {
+  return value & CreateMaskLSb<UI>(msb_zero_count);
+}
+
+/* Returns 2^n. */
+template <typename I>
+inline I PowerOf2(I n) {
+  I value = 1;
+  return value << n;
+}
+
+UI8 ComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
+  FP8 pow_10 = 0.30102999566398114,  //< 1/lg(10)
+      alpha_minus_e_plus_63 = static_cast<FP8>(alpha - e + 63),
+      ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
+  return *reinterpret_cast<UI8*>(&pow_10);
+}
+
+FP8 Ceiling(FP8 value) { return ceil(value); }
+
+FP4 Ceiling(FP4 value) { return ceil(value); }
+
+CH1* LastByte(CH1* c) { return c; }
+
+#if USING_UTF16 == YES
+CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*>(c) + 1; }
+
+CH2* Print(CH2* start, CH2* stop, FP4 value) {
+  return TBinary<FP4, SI4, UI4>::template Print<CH2>(start, stop, value);
+}
+
+CH2* Print(CH2* start, CH2* stop, FP8 value) {
+  return TBinary<FP8, SI8, UI8>::template Print<CH2>(start, stop, value);
+}
+#endif
+
+#if USING_UTF32 == YES
+CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*>(c) + 3; }
+
+CH4* Print(CH4* start, CH4* stop, FP4 value) {
+  return TBinary<FP4, SI4, UI4>::template Print<CH4>(start, stop, value);
+}
+
+CH4* Print(CH4* start, CH4* stop, FP8 value) {
+  return TBinary<FP8, SI8, UI8>::template Print<CH4>(start, stop, value);
+}
+#endif
+
+//-----------------------------------------------------------------------------
+// UTF implmementations.
+//-----------------------------------------------------------------------------
+
+/*
+SI4 COutHeap1(Autoject& obj, SIW function, void* arg) {
   return TCOutHeap<CH1>(obj, function, arg);
 }*/
 
@@ -35,7 +835,7 @@ const CH1* StringError() { return TSTRError<CH1>(); }
 
 BOL IsWhitespace(CH1 item) { return TIsWhitespace<CH1>(item); }
 
-CH1 PrintableChar(CH1 item) { return TPrintableChar<CH1>(item); }
+CH1 PrintableChar(CH1 item) { return TCharPrintable<CH1>(item); }
 
 const CH1* STREnd(const CH1* start) { return TSTREnd<CH1>(start); }
 
@@ -605,17 +1405,11 @@ UTF1& UTF1::Set(CH1* new_cursor) {
   return *this;
 }
 
-UTF1& UTF1::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF1& UTF1::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF1& UTF1::Print(CH1 item) { return PrintChar(item); }
+UTF1& UTF1::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF1& UTF1::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF1& UTF1::Print(CH2 item) { return PrintChar(item); }
-
-UTF1& UTF1::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF1& UTF1::Print(CH4 item) { return PrintChar(item); }
+UTF1& UTF1::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
 
 UTF1& UTF1::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -690,7 +1484,7 @@ UTF1& UTF1::Hex(FP8 item) { return Set(TPrintHex<CH1>(start, stop, item)); }
 template <typename T, typename Char = CH1>
 Char* TPrintHex(Char* start, Char* stop, const void* begin, SIW size_bytes) {
   Char* end = start + (size_bytes * 2);
-  if (!start || size_bytes <= 0 || LoopAround(end, start)) return nullptr;
+  if (!start || size_bytes <= 0 || end < start) return nullptr;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
   while (size_bytes-- > 0) {
     UI1 byte = *cursor++;
@@ -769,7 +1563,7 @@ Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
 
 }  // namespace _
 
-::_::UTF1& operator<<(::_::UTF1& o, CH1 item) { return o.PrintChar(item); }
+::_::UTF1& operator<<(::_::UTF1& o, CH1 item) { return o.Print(item); }
 
 ::_::UTF1& operator<<(::_::UTF1& o, ::_::UTF1& p) { return o; }
 
@@ -816,7 +1610,7 @@ Token1::Token1(CH1 item, SI4 count) : string_(strand_), count_(count) {
 ::_::UTF1& operator*(::_::UTF1& o, const CH2* item) { return o.Print(item); }
 #endif
 #if USING_UTF32 == YES
-::_::UTF1& operator<<(::_::UTF1& o, CH4 item) { return o.PrintChar(item); }
+::_::UTF1& operator<<(::_::UTF1& o, CH4 item) { return o.Print(item); }
 
 ::_::UTF1& operator*(::_::UTF1& o, const CH4* item) { return o.Print(item); }
 #endif
@@ -834,7 +1628,7 @@ const CH2* ErrorHeader() { return TSTRError<CH2>(); }
 
 BOL IsWhitespace(CH2 item) { return TIsWhitespace<CH2>(item); }
 
-CH2 PrintableChar(CH2 item) { return TPrintableChar<CH2>(item); }
+CH2 PrintableChar(CH2 item) { return TCharPrintable<CH2>(item); }
 
 const CH2* STREnd(const CH2* start) { return TSTREnd<CH2>(start); }
 
@@ -1164,17 +1958,11 @@ UTF2& UTF2::Set(CH2* new_cursor) {
   return *this;
 }
 
-UTF2& UTF2::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF2& UTF2::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF2& UTF2::Print(CH1 item) { return PrintChar(item); }
+UTF2& UTF2::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF2& UTF2::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF2& UTF2::Print(CH2 item) { return PrintChar(item); }
-
-UTF2& UTF2::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF2& UTF2::Print(CH4 item) { return PrintChar(item); }
+UTF2& UTF2::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
 
 UTF2& UTF2::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -1232,6 +2020,8 @@ UTF2& UTF2::Print(Headingf2 item) {
   return Set(::_::PrintLinef(start, stop, item.caption.String(),
                              item.caption.Count()));
 }
+
+Chars2::Chars2(const CH2* start, const CH2* stop) : start(start), stop(stop) {}
 
 UTF2& UTF2::Print(Chars2 item) {
   return Set(::_::PrintChars(start, stop, item.start, item.stop));
@@ -1543,7 +2333,7 @@ Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
 
 }  // namespace _
 
-::_::UTF2& operator<<(::_::UTF2& o, CH4 item) { return o.PrintChar(item); }
+::_::UTF2& operator<<(::_::UTF2& o, CH4 item) { return o.Print(item); }
 
 ::_::UTF2& operator<<(::_::UTF2& o, ::_::UTF2& p) { return o; }
 
@@ -1592,7 +2382,7 @@ Headingf2::Headingf2(const CH2* caption, const CH2* style, SI4 count,
 #if USING_UTF32 == YES
 namespace _ {
 /*
-SI4 COutHeap4 (CObject& obj, SIW function, void* arg) {
+SI4 COutHeap4 (Autoject& obj, SIW function, void* arg) {
   return TCOutHeap<CH4> (obj, function, arg);
 }*/
 
@@ -1604,7 +2394,7 @@ const CH4* ErrorHeaderCH4() { return TSTRError<CH4>(); }
 
 BOL IsWhitespace(CH4 item) { return TIsWhitespace<CH4>(item); }
 
-CH4 PrintableChar(CH4 item) { return TPrintableChar<CH4>(item); }
+CH4 PrintableChar(CH4 item) { return TCharPrintable<CH4>(item); }
 
 const CH4* STREnd(const CH4* start) { return TSTREnd<CH4>(start); }
 
@@ -1937,17 +2727,11 @@ UTF4& UTF4::Set(CH4* new_cursor) {
   return *this;
 }
 
-UTF4& UTF4::PrintChar(CH1 item) { return Set(::_::Print(start, stop, item)); }
+UTF4& UTF4::Print(CH1 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF4& UTF4::Print(CH1 item) { return PrintChar(item); }
+UTF4& UTF4::Print(CH2 item) { return Set(::_::Print(start, stop, item)); }
 
-UTF4& UTF4::PrintChar(CH2 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF4& UTF4::Print(CH2 item) { return PrintChar(item); }
-
-UTF4& UTF4::PrintChar(CH4 item) { return Set(::_::Print(start, stop, item)); }
-
-UTF4& UTF4::Print(CH4 item) { return PrintChar(item); }
+UTF4& UTF4::Print(CH4 item) { return Set(::_::Print(start, stop, item)); }
 
 UTF4& UTF4::Print(const CH1* item) {
   return Set(::_::Print(start, stop, item));
@@ -2239,7 +3023,7 @@ Right4::Right4(SI8 item, SI4 count) : token(item, count) {}
 
 Right4::Right4(UI8 item, SI4 count) : token(item, count) {}
 
-#if SEAM >= SCRIPT2_4
+#if SEAM >= SCRIPT2_SEAM_FTOS
 Right4::Right4(FP4 item, SI4 count) : token(item, count) {}
 
 Right4::Right4(FP8 item, SI4 count) : token(item, count) {}
@@ -2263,7 +3047,7 @@ Chars4::Chars4(const CH4* start, const CH4* stop) : start(start), stop(stop) {}
 
 }  // namespace _
 
-::_::UTF4& operator<<(::_::UTF4& o, CH4 item) { return o.PrintChar(item); }
+::_::UTF4& operator<<(::_::UTF4& o, CH4 item) { return o.Print(item); }
 
 ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& p) { return o; }
 

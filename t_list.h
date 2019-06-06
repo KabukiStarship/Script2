@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_10
+#if SEAM >= SCRIPT2_SEAM_TABLE
 #ifndef INCLUDED_SCRIPTTLIST
 #define INCLUDED_SCRIPTTLIST
 
@@ -18,7 +18,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "t_socket.h"
 #include "t_stack.h"
 
-#if SEAM == SCRIPT2_10
+#if SEAM == SCRIPT2_SEAM_TABLE
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -27,7 +27,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 /* An ASCII List header.
-Like most ASCII AObject Types, the size may only be 16-bit, 32-bit, or
+Like most ASCII AArray Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
 @code
@@ -432,12 +432,12 @@ class List {
   ~List() { delete[] begin; }
 
   inline Index Push(SI4 type, const void* value) {
-    return ListPush<Size, Index>(AObject(), type, value);
+    return ListPush<Size, Index>(AArray(), type, value);
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
   inline Index Insert(UI1 type, void* value, Index index) {
-    return ListInsert<Size, Index>(AObject(), type, value, index);
+    return ListInsert<Size, Index>(AArray(), type, value, index);
   }
 
   /* Returns the maximum count of the give list in the current memory
@@ -445,10 +445,10 @@ class List {
   inline Index CountMax() { return ListCountMax<Size, Index>(); }
 
   /* Clears the list without overwriting the contents. */
-  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(AObject()); }
+  void Clear(CList<Size, Index>* list) { ListClear<Size, Index>(AArray()); }
 
   /* Deletes the list contents by overwriting it with zeros. */
-  inline void Wipe() { ListWipe<Size, Index>(AObject()); }
+  inline void Wipe() { ListWipe<Size, Index>(AArray()); }
 
   /* Returns true if this crabs contains only the given address.
       @warning This function assumes that the member you're checking for came
@@ -456,34 +456,34 @@ class List {
                are required to ensure the value came from a ASCII List.
       @return  True if the data lies in the list's memory socket. */
   inline BOL Contains(void* value) {
-    return ListContains<Size, Index>(AObject(), value);
+    return ListContains<Size, Index>(AArray(), value);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(void* adress) {
-    return ListRemove<Size, Index>(AObject(), adress);
+    return ListRemove<Size, Index>(AArray(), adress);
   }
 
   /* Removes the item at the given address from the list. */
   inline BOL Remove(Index index) {
-    return ListRemove<Size, Index>(AObject(), index);
+    return ListRemove<Size, Index>(AArray(), index);
   }
 
   /* Removes the last item from the list. */
-  inline Index Pop() { return ListPop<Size, Index>(AObject()); }
+  inline Index Pop() { return ListPop<Size, Index>(AArray()); }
 
   /* Prints the given AsciiList to the console. */
   inline UTF1& Print(UTF1& printer) {
-    return PrintList<Size, Index>(printer, AObject());
+    return PrintList<Size, Index>(printer, AArray());
   }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline CList<Size, Index>* AObject() {
+  inline CList<Size, Index>* AArray() {
     return reinterpret_cast<CList<Size, Index>*>(begin);
   }
 
  private:
-  AObject obj_;  //< Dynamically allocated word-aligned socket.
+  AArray obj_;  //< Dynamically allocated word-aligned socket.
 };
 
 }  // namespace _
@@ -501,4 +501,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CList<Size, Index>* list) 
 }
 
 #endif  //< INCLUDED_SCRIPTTLIST
-#endif  //< #if SEAM >= SCRIPT2_10
+#endif  //< #if SEAM >= SCRIPT2_SEAM_TABLE

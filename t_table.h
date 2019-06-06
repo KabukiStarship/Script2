@@ -9,13 +9,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_11
+#if SEAM >= SCRIPT2_SEAM_LIST
 #ifndef INCLUDED_SCRIPTT2_TTABLE
 #define INCLUDED_SCRIPTT2_TTABLE
 
 #include "c_socket.h"
 
-#if SEAM == SCRIPT2_11
+#if SEAM == SCRIPT2_SEAM_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -581,4 +581,4 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTT2_TTABLE
-#endif  //< #if SEAM >= SCRIPT2_11
+#endif  //< #if SEAM >= SCRIPT2_SEAM_LIST

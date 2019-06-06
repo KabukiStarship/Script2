@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_stack.h"
 
-#if SEAM == SCRIPT2_7
+#if SEAM == SCRIPT2_SEAM_STACK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -28,12 +28,12 @@ void TestTStack(CH1* seam_log, CH1* seam_end, const CH1* args) {
   PRINT(sizeof(SIZ));
   PRINT(">...\n\nPrinting empty stack...\n");
 
-  AStack<SI4, SIZ, TSocket<SIW, 64>> stack(8);
+  AStack<SI4, SIZ, TSocket<64>> stack(8);
   stack.COut();
 
   PRINT("\n\nPushing items on to the Stack...\n");
   stack.Push(0);
-  PRINT_SOCKET_TOBJ(stack.AObj());
+  PRINT_SOCKET_OBJ(stack.OBJ());
 
   for (SI4 i = 1; i <= 10; ++i) stack.Push(i);
 
@@ -47,7 +47,7 @@ void TestTStack(CH1* seam_log, CH1* seam_end, const CH1* args) {
 }
 
 static const CH1* _07_Stack(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_7
+#if SEAM >= SCRIPT2_SEAM_STACK
   TEST_BEGIN;
 
   const CH1* result = 0;

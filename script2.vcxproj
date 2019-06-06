@@ -39,6 +39,7 @@
     <None Include="module_release.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="c_puff.h" />
     <ClCompile Include="module_tester.cc" />
     <ClCompile Include="pch.cc" />
     <ClCompile Include="script2_ascii.cc" />
@@ -55,9 +56,10 @@
     <ClCompile Include="script2_interrupts.cc" />
     <ClCompile Include="script2_lock.cc" />
     <ClCompile Include="script2_morsecode.cc" />
-    <ClCompile Include="script2_object.cc" />
+    <ClCompile Include="script2_autoject.cc" />
     <ClCompile Include="script2_op.cc" />
     <ClCompile Include="script2_operand.cc" />
+    <ClCompile Include="script2_puff.cc" />
     <ClCompile Include="script2_rng.cc" />
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_sin.cc" />
@@ -65,17 +67,17 @@
     <ClCompile Include="script2_socket.cc" />
     <ClCompile Include="script2_cout.cc" />
     <ClCompile Include="script2_test.cc" />
-    <ClCompile Include="script2_uniprinter.cc" />
     <ClCompile Include="script2_utf.cc" />
     <ClCompile Include="script2_vk.cc" />
     <ClCompile Include="script2_wall.cc" />
+    <ClCompile Include="t_puff.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="00_rng.h" />
-    <ClInclude Include="01_itos_stoi.h" />
+    <ClInclude Include="01_itos.h" />
     <ClInclude Include="02_socket.h" />
-    <ClInclude Include="03_utf.h" />
-    <ClInclude Include="04_ftos_stof.h" />
+    <ClInclude Include="04_utf.h" />
+    <ClInclude Include="03_ftos.h" />
     <ClInclude Include="05_clock.h" />
     <ClInclude Include="06_strand.h" />
     <ClInclude Include="07_stack.h" />
@@ -88,7 +90,7 @@
     <ClInclude Include="14_dictionary.h" />
     <ClInclude Include="15_expr.h" />
     <ClInclude Include="16_door.h" />
-    <ClInclude Include="17_room_wall.h" />
+    <ClInclude Include="17_room.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
     <ClInclude Include="c_ascii.h" />
@@ -108,7 +110,7 @@
     <ClInclude Include="c_language.h" />
     <ClInclude Include="c_lock.h" />
     <ClInclude Include="c_mirror.h" />
-    <ClInclude Include="c_object.h" />
+    <ClInclude Include="c_autoject.h" />
     <ClInclude Include="c_op.h" />
     <ClInclude Include="c_operand.h" />
     <ClInclude Include="c_rng.h" />
@@ -119,10 +121,10 @@
     <ClInclude Include="c_cout.h" />
     <ClInclude Include="c_strand.h" />
     <ClInclude Include="c_test.h" />
-    <ClInclude Include="c_uniprinter.h" />
-    <ClInclude Include="c_uniprinter1.h" />
-    <ClInclude Include="c_uniprinter2.h" />
-    <ClInclude Include="c_uniprinter4.h" />
+    <ClInclude Include="c_utf.h" />
+    <ClInclude Include="c_utf1.h" />
+    <ClInclude Include="c_utf2.h" />
+    <ClInclude Include="c_utf4.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
     <ClInclude Include="c_wall.h" />
@@ -130,7 +132,7 @@
     <ClInclude Include="module_tests.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="public.h" />
-    <ClInclude Include="t_array.h" />
+    <ClInclude Include="t_matrix.h" />
     <ClInclude Include="t_ascii.h" />
     <ClInclude Include="t_benchmark.h" />
     <ClInclude Include="t_book.h" />
@@ -142,15 +144,14 @@
     <ClInclude Include="t_list.h" />
     <ClInclude Include="t_loom.h" />
     <ClInclude Include="t_map.h" />
-    <ClInclude Include="t_object.h" />
+    <ClInclude Include="t_array.h" />
     <ClInclude Include="t_set.h" />
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
-    <ClInclude Include="t_string.h" />
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
-    <ClInclude Include="t_uniprinter.h" />
+    <ClInclude Include="t_utf.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

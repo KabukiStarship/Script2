@@ -11,14 +11,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <pch.h>
 
 //#include "c_rng.h"
-//#include "c_uniprinter.h"
+//#include "c_utf.h"
 
 #include <cmath>
 #include <cstdio>
 
 using namespace std;
 
-#if SEAM == SCRIPT2_4
+#if SEAM == SCRIPT2_SEAM_FTOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -27,11 +27,11 @@ using namespace std;
 using namespace _;
 
 namespace script2 {
-const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_4
+const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_SEAM_FTOS
   TEST_BEGIN;
 
-#if SEAM == SCRIPT2_4
+#if SEAM == SCRIPT2_SEAM_FTOS
   enum { kTestCount = 1 << 20 };
 #else
   enum { kTestCount = 1 << 15 };
@@ -81,8 +81,8 @@ const CH1* _04_FtoS_StoF(CH1* seam_log, CH1* seam_end, const CH1* args) {
     ASSERT(r);
     AVOW(dbl_expected, dbl_found);
   }
-  */
   TBinary<>::PrintDebugInfo();
+  */
 #endif
   return nullptr;
 }

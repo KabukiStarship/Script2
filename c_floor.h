@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_FLOOR
 #define SCRIPT2_FLOOR
 
@@ -30,4 +30,4 @@ SDK inline Floor* Global();
 }  // namespace _
 
 #endif  // #if SCRIPT2_FLOOR
-#endif  // #if SEAM >= SCRIPT2_14
+#endif  // #if SEAM >= SCRIPT2_SEAM_DIC

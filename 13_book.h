@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_13
+#if SEAM == SCRIPT2_SEAM_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,10 +20,10 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _13_Book(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_13
+#if SEAM >= SCRIPT2_SEAM_BOOK
   TEST_BEGIN;
 
-  CHN index;
+  CH4 index;
   UIW socket[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
 

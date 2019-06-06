@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_crabs.h"
 
 #include "c_bsq.h"
@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_hash.h"
 #include "c_test.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -252,7 +252,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
       bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Number of bytes left to scan.
-      bytes_shift;   //< Number of bits to shift to scan the current AObject.
+      bytes_shift;   //< Number of bits to shift to scan the current AArray.
   UI1 bin_state,     //< Current bin FSM state.
       b;             //< Current UI1 being verified.
   UI2 hash,          //< Expected hash of the B-Sequence.
@@ -478,7 +478,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
               CrabsEnterState (crabs, BIn::UTF32State);
               bin_state = BIn::UTF32State;*/
         } else {  // It's not a POD type.
-          PRINT("\nScanning AObject.");
+          PRINT("\nScanning AArray.");
           // Multi-dimension arrays are parsed just like any other
           // kOBJ.
           array_type &= 0x3;

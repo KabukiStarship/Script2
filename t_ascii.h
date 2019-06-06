@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #ifndef INCLUDED_ASCIIDATA_T
 #define INCLUDED_ASCIIDATA_T
 
 #include "t_socket.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_13
+#if SEAM == SCRIPT2_SEAM_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -47,7 +47,7 @@ T* TypeAlignUpPointer(void* pointer, SI4 type) {
     return TAlignUp<T>(pointer, 3);
   else if (type <= kFPH)
     return TAlignUp<T>(pointer, 7);
-  // else it's an ASCII AObject.
+  // else it's an ASCII AArray.
   // | Code | Binary | Mask needed |
   // |:----:|:------:|:-----------:|
   // |  0   | 0b'00  |   0b'000    |

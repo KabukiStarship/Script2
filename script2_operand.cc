@@ -8,12 +8,12 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_op.h"
 #include "c_operand.h"
 #include "c_utf1.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -35,11 +35,11 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CHN OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
+CH4 OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
   ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   ASSERT(op);
-  CHN index = OpFirst(op), last = OpLast(op);
+  CH4 index = OpFirst(op), last = OpLast(op);
   ASSERT(index);
   for (; index <= last; ++index) {
     if (STREquals(begin, stop, operand->Star(index, nullptr)->name)) {
@@ -77,7 +77,7 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
   }
   utf << "\nOperand         :" << op->name << Line('-', 80);
   for (; op_num <= last_op; ++op_num) {
-    op = operand->Star((CHN)op_num, nullptr);
+    op = operand->Star((CH4)op_num, nullptr);
     utf << "\nOp \'" << op_num << "\':" << op_num << ' ' << op << Line('-', 80);
   }
   return utf;
@@ -104,4 +104,4 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
 #endif
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_14
+#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC

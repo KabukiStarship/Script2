@@ -8,14 +8,14 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_17
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #include "c_bsq.h"
 #include "c_door.h"
 #include "c_room.h"
 #include "c_stack.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_17
+#if SEAM == SCRIPT2_SEAM_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -157,7 +157,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
 
 CH1 Room::CommandNext() { return 0; }
 
-const Op* Room::Star(CHN index, CCrabs* crabs) {
+const Op* Room::Star(CH4 index, CCrabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 

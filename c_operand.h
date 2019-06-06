@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_OPERAND
 #define SCRIPT2_OPERAND
 #include "cslot.h"
@@ -50,7 +50,7 @@ struct SDK Operand {
       @param crabs  The CCrabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(CHN index, CCrabs* crabs) = 0;
+  virtual const Op* Star(CH4 index, CCrabs* crabs) = 0;
 };
 
 /* Returns the name of the given Operand. */
@@ -64,7 +64,7 @@ SDK UIW OperandCount(Operand* op);
     @param  key_end   End of the key slot socket.
     @return A value printable Unicode CH1 or invalid if the Operand doesn't
             Contain the given key. */
-SDK CHN OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
+SDK CH4 OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
 
 #if USING_SCRIPT2_TEXT
 /* Queries the given Operand Op Header.
@@ -94,4 +94,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Operand* operand) {
 
 #endif
 #endif  //< SCRIPT2_OPERAND
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

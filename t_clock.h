@@ -3,22 +3,21 @@
 @file    /script2/c_lock.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_5
+#if SEAM >= SCRIPT2_SEAM_CLOCK
 #ifndef INCLUDED_SCRIPT2_TCLOCK
 #define INCLUDED_SCRIPT2_TCLOCK
 
 #include "c_clock.h"
-
 #include "c_test.h"
-#include "t_strand.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_5
+#if SEAM == SCRIPT2_SEAM_CLOCK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -79,8 +78,7 @@ Char* TPrint(Char* cursor, Char* stop, TME& t) {
 
 /* Scans a time in seconds from the given string. */
 template <typename Char = CH1>
-const Char* TScanTime(const Char* string, SI4& hour, SI4& minute,
-                            SI4& second) {
+const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (string == nullptr) return nullptr;
 
   PRINTF("\n\n    Scanning time:%s", string);
@@ -476,10 +474,10 @@ const Char* TScanTime(const Char* begin, TM4& result) {
 }
 
 template <typename Char, typename SI>
-const Char* TScanTime (const Char* begin, TM8& result) {
+const Char* TScanTime(const Char* begin, TM8& result) {
   CClock clock;
-  const Char* stop = TScan<Char> (begin, clock);
-  result = (TM8)ClockSeconds (clock);
+  const Char* stop = TScan<Char>(begin, clock);
+  result = (TM8)ClockSeconds(clock);
   return stop;
 }
 
@@ -549,4 +547,4 @@ class SDK TClock {
 }  // namespace _
 
 #endif  //< #ifndef INCLUDED_SCRIPT2_TCLOCK
-#endif  //< #if SEAM >= SCRIPT2_5
+#endif  //< #if SEAM >= SCRIPT2_SEAM_CLOCK

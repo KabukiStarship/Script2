@@ -17,7 +17,7 @@
 #undef PRINT_TIME
 #undef PRINT_TYPE
 #undef PRINT_CHARS
-#undef PRINT_SOCKET_TOBJ
+#undef PRINT_SOCKET_OBJ
 #undef PRINT_HEX
 #undef PRINT_HEXS
 #undef PRINT_BSQ

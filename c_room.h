@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_17
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
 #include "c_interrupts.h"
@@ -224,7 +224,7 @@ class Room : public Operand {
   virtual CH1 CommandNext();
 
   /* Script2 operations. */
-  virtual const Op* Star(CHN index, CCrabs* crabs);
+  virtual const Op* Star(CH4 index, CCrabs* crabs);
 
 #if USING_SCRIPT2_TEXT
   /* Prints the Room to the stdout. */
@@ -232,17 +232,17 @@ class Room : public Operand {
 #endif
 
  protected:
-  SI4 state_count_,                   //< Number of FSM states.
-      state_;                         //< Room state.
-  const CH1* name_;                   //< Room Name.
-  TArray<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
-  CCrabs* expr_;                      //< Current CCrabs being executed.
-                                      //< DC1: this.
-  Door* this_;                        //< DC2: The Door to this room.
-  Operand *xoff_,                     //< DC3: XOFF - XOFF handling device.
-      *device_,                       //< DC4: the current device control.
-      *devices_;                      //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];         //< Room Floor socket.
+  SI4 state_count_,                    //< Number of FSM states.
+      state_;                          //< Room state.
+  const CH1* name_;                    //< Room Name.
+  TMatrix<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
+  CCrabs* expr_;                       //< Current CCrabs being executed.
+                                       //< DC1: this.
+  Door* this_;                         //< DC2: The Door to this room.
+  Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
+      *device_,                        //< DC4: the current device control.
+      *devices_;               //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];  //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

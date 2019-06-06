@@ -9,13 +9,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_12
+#if SEAM >= SCRIPT2_SEAM_MAP
 #ifndef INCLUDED_SCRIPTTBOOK
 #define INCLUDED_SCRIPTTBOOK
 
 #include "t_dic.h"
 
-#if SEAM == SCRIPT2_12
+#if SEAM == SCRIPT2_SEAM_MAP
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -790,4 +790,4 @@ using Multimap8 = TMap<UI4, UI4, UI8>;
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTBOOK
-#endif  //< #if SEAM >= SCRIPT2_12
+#endif  //< #if SEAM >= SCRIPT2_SEAM_MAP

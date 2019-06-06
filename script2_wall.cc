@@ -8,9 +8,9 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_release.inl"
 #else
 #include "module_release.inl"
@@ -40,7 +40,7 @@ Wall::Wall(SIW size_bytes) : is_dynamic_(true) {
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
   begin = socket;
-  doors_ = reinterpret_cast<TArray<Door*>*>(aligned_buffer);
+  doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
   TStackInit(socket, size_bytes >> sizeof(UIW));
 }
 
@@ -59,15 +59,15 @@ Wall::Wall(UIW* socket, SIW size_bytes) {
   //< on 16 and 32-bit systems.
   size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
   begin = socket;
-  doors_ = reinterpret_cast<TArray<Door*>*>(aligned_buffer);
+  doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
   TStackInit(socket, size_bytes >> sizeof(UIW));
 }
 
-Wall::Wall(TArray<Door*>* doors) {}
+Wall::Wall(TMatrix<Door*>* doors) {}
 
 UIW Wall::GetSizeBytes() { return size_bytes_; }
 
-TArray<Door*>* Wall::Doors() { return doors_; }
+TMatrix<Door*>* Wall::Doors() { return doors_; }
 
 Door* Wall::GetDoor(SI4 index) { return 0; }
 
@@ -83,4 +83,4 @@ Slot& Wall::Print(Slot& slot) {
 
 }  // namespace _
 #include "global_footer.inl"
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

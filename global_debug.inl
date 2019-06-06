@@ -30,7 +30,7 @@
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.Size())
+#define PRINT_SOCKET_OBJ(obj) ::_::PrintChars(obj.Begin(), obj.Size())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(obj) obj.COut()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
