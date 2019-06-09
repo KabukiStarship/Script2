@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_STRAND
+#if SEAM >= SCRIPT2_SEAM_STACK
 #ifndef SCRIPT2_COBJECT
 #define SCRIPT2_COBJECT
 
@@ -42,7 +42,7 @@ enum AsciiFactoryFunction {
   kFactoryNew = 1,     //< Factory function checks if the size can double.
   kFactoryGrow = 2,    //< Factory function double OBJ size.
   kFactoryClone = 3,   //< Factory function clones the OBJ.
-  kFactoryInfo = 4,    //< Factory function gets the info string.
+  kFactoryName = 4,    //< Factory function gets the info string.
   kFactoryFunctionCount = 5,  //< Factory function count.
 };
 
@@ -72,8 +72,8 @@ SDK /*inline*/ SIW IsError(void* factory_result);
 SDK void ObjException(const CH1* what);
 
 /* Checks if the given function is an ASCII OBJ function.
-@return True if the function is less than or equal to kFactoryInfo.
-@desc   ASCII Object functions are 0 through kFactoryInfo.
+@return True if the function is less than or equal to kFactoryName.
+@desc   ASCII Object functions are 0 through kFactoryName.
 SDK BOL IsFactoryFunction(SIW function); */
 
 SDK /*inline*/ SIW Do(Autoject& obj, SIW function, SIW* arg = nullptr);

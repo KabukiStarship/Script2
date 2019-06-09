@@ -122,9 +122,14 @@ void Print(UI4 value) {
 #if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf("%u", value);
 #else
+#if CPU_WORD_SIZE == 64
+  Print((UI8)value)
+#else
   enum { kSize = 24 };
   CH1 socket[kSize];
   TPrintUnsigned<UI4, CH1>(socket, kSize - 1, value);
+  Print(socket);
+#endif
 #endif
 }
 
@@ -143,9 +148,14 @@ void Print(SI4 value) {
 #if SEAM <= SCRIPT2_SEAM_ITOS
   return Printf("%i", value);
 #else
+#if CPU_WORD_SIZE == 64
+  Print((SI8)value);
+#else
   enum { kSize = 24 };
   CH1 socket[kSize];
   TPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
+  Print(socket);
+#endif
 #endif
 }
 

@@ -87,52 +87,48 @@ SIW TStrandFactory(Autoject& obj, SIW function, SIW arg, BOL using_heap) {
   SI4 size;
   UIW *begin = obj.begin, *new_begin;
   if (!begin) return kFactoryNilOBJ;
+  PRINT_FACTORY_FUNCTION("Strand", function, using_heap);
   switch (function) {
     case kFactoryDelete: {
-      PRINTF("\nEntering Strand.Factory.%s.Delete:",
-             using_heap ? "Heap" : "Stack");
       Delete(obj.begin, using_heap);
-      PRINT(" Success.");
       return 0;
     }
     case kFactoryNew: {
-      PRINTF("\nEntering Strand.Factory.%s.New: size:%i",
-             using_heap ? "Heap" : "Stack", (SIN)arg);
-      return reinterpret_cast<SIW>(New(arg));
+      return reinterpret_cast<SIW>(TArrayNew<Char, SIW, TStrand<SIN>>(arg));
     }
     case kFactoryGrow: {
-      PRINTF("\nEntering Strand.Factory.%s.Grow:",
-             using_heap ? "Heap" : "Stack");
       if (!arg) return kFactoryNilArg;
-      UIW* new_begin = TArrayGrowDouble<SI4>(begin);
+      SIN size = TSize<SIN>(begin);
+      if (!TArrayCanGrow<SIN>(size)) return kFactorySizeInvalid;
+      size = size << 1;
+
+      UIW* new_begin = TArrayNew<Char, SIN, TStrand<Char>>(size);
       if (!new_begin) return kFactoryCantGrow;
-      PRINTF(" new size:%i", TSize<SI4>(new_begin));
+      PRINTF(" new size:%i", TSize<SIN>(new_begin));
 
       TUTF<Char> new_utf(new_begin);
       Char* start = TSTRStart<Char>(begin);
       new_utf << start;
       reinterpret_cast<TUTF<Char>*>(arg)->Set(new_utf);
-      Char* new_start = TSTRStart<Char>(new_begin);
-      PRINTF("\nCopying \"%s\" with result:\"%s\"", start, new_start);
+      PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+             TSTRStart<Char>(new_begin));
 
-      if (using_heap) delete[] begin;
+      Delete(begin, using_heap);
       obj.begin = new_begin;
       return 0;
     }
     case kFactoryClone: {
-      PRINTF("\nEntering Strand.Factory.%s.Clone:",
-             using_heap ? "Heap" : "Stack");
-      if (!arg) return kFactoryNilArg;
-      Autoject* other = reinterpret_cast<Autoject*>(arg);
-      begin = obj.begin;
-      size = *reinterpret_cast<SI4*>(begin);
-      new_begin = TArrayClone<SI4>(begin, size);
-      if (!new_begin) return kFactoryCantGrow;
-      other->begin = new_begin;
-      other->factory = other->factory;
+      UIW* new_begin = TArrayNew<Char, SIN, TStrand<Char>>(TSize<SIN>(begin));
+      PRINTF(" new size:%i", TSize<SIN>(new_begin));
+      TUTF<Char> new_utf(new_begin);
+      Char* start = TSTRStart<Char>(begin);
+      new_utf << start;
+      PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+             TSTRStart<Char>(new_begin));
+
       return reinterpret_cast<SIW>(new_begin);
     }
-    case kFactoryInfo: {
+    case kFactoryName: {
       return reinterpret_cast<SIW>("Strand");
     }
   }
@@ -298,7 +294,7 @@ class AStrand {
   }
 
   /* Resets the utf_ to the given word-aligned buffer. */
-  inline void Reset() { utf_.Set(obj_.BeginWord()); }
+  inline void Reset() { utf_.Set(obj_.Begin()); }
 
   /* Wipes the given */
   inline void WipeFreeSpace() { utf_.Wipe(); }
@@ -348,13 +344,13 @@ class AStrand {
 #endif
 
   /* Returns the begin of the obj. */
-  inline Char* Start() { return TSTRStart<Char, SI4>(obj_.BeginWord()); }
+  inline Char* Start() { return TSTRStart<Char, SIN>(obj_.Begin()); }
 
   /* Returns the stop of the obj. */
-  inline Char* Stop() { return TSTRStop<Char, SI4>(obj_.BeginWord()); }
+  inline Char* Stop() { return TSTRStop<Char, SIN>(obj_.Begin()); }
 
   /* Returns the stop of the obj. */
-  inline CH1* End() { return TArrayEnd<SI4>(obj_); }
+  inline CH1* End() { return TArrayEnd<SIN>(obj_); }
 
   /* Calculates the space left in the buffer based on the utf_ pointers. */
   inline SIN SpaceLeft() { return utf_.SpaceLeft(); }
@@ -381,9 +377,8 @@ class AStrand {
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
 #if DEBUG_SEAM
-    o << "\nTStrand<CH" << (CH1)('0' + sizeof(Char))
-      << "> size:" << (SIW)obj_.Size() << " space_left:" << (SIW)SpaceLeft()
-      << " contents:\"" << Start() << '\"';
+    o << "\nTStrand<CH" << (CH1)('0' + sizeof(Char)) << "> size:" << obj_.Size()
+      << " space_left:" << SpaceLeft() << " contents:\"" << Start() << '\"';
     return o;
 #else
     return o << Start();

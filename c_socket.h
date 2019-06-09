@@ -142,7 +142,7 @@ class Nil {
 };
 
 /* Creates a block of dynamic memory. */
-SDK /*inline*/ UIW* New(SIW size, SIW size_header = 0);
+SDK /*inline*/ UIW* New(SIW size);
 
 /* AsciiFactory deletes the socket. */
 SDK /*inline*/ void Delete(UIW* socket, BOL using_heap = true);

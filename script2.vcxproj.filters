@@ -309,9 +309,6 @@
     <ClInclude Include="c_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="06_strand.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="16_door.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -334,9 +331,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="09_loom.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="07_stack.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="08_array.h">
@@ -376,6 +370,12 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_autoject.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="07_strand.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="06_stack.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

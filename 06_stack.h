@@ -23,26 +23,30 @@ using namespace _;
 namespace script2 {
 
 template <typename SIZ>
-void TestTStack(CH1* seam_log, CH1* seam_end, const CH1* args) {
+void TestStack(CH1* seam_log, CH1* seam_end, const CH1* args) {
   PRINT("\n\nTesting AStack<SI");
   PRINT(sizeof(SIZ));
   PRINT(">...\n\nPrinting empty stack...\n");
 
-  AStack<SI4, SIZ, TSocket<64>> stack(8);
+  AStack<SI8, SIZ, TSocket<8, SI8, TStack<SIZ>>> stack;
+#if DEBUG_SEAM
   stack.COut();
+#endif
 
   PRINT("\n\nPushing items on to the Stack...\n");
-  stack.Push(0);
-  PRINT_SOCKET_OBJ(stack.OBJ());
 
-  for (SI4 i = 1; i <= 10; ++i) stack.Push(i);
+  SI8 test_count = 32, count_init = 0;
+  for (SI8 i = count_init; i <= test_count; ++i) stack.Push(i);
 
   PRINT_OBJ(stack);
 
   PRINT("\nPopping items off the Stack...\n");
 
-  for (SI4 i = 10; i > 0; --i) AVOW_INDEX(i, stack.Pop(), i);
-
+  for (SI8 i = test_count; i >= count_init; --i) AVOW_INDEX(i, stack.Pop(), i);
+#if DEBUG_SEAM
+  stack.COut();
+#endif
+  ASSERT(stack.Count() == 0);
   PRINT_OBJ(stack);
 }
 
@@ -51,9 +55,9 @@ static const CH1* _07_Stack(CH1* seam_log, CH1* seam_end, const CH1* args) {
   TEST_BEGIN;
 
   const CH1* result = 0;
-  TestTStack<SI2>(seam_log, seam_end, args);
-  TestTStack<SI4>(seam_log, seam_end, args);
-  TestTStack<SI8>(seam_log, seam_end, args);
+  TestStack<SI2>(seam_log, seam_end, args);
+  TestStack<SI4>(seam_log, seam_end, args);
+  TestStack<SI8>(seam_log, seam_end, args);
 #endif
   return nullptr;
 }

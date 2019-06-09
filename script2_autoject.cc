@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_STRAND
+#if SEAM >= SCRIPT2_SEAM_STACK
 
 #include "c_autoject.h"
 
@@ -34,17 +34,16 @@ SIW IsError(void* factory_result) {
 }
 
 const CH1* AsciiFactoryFunction(SIW index) {
-  static const CH1 kStrings[7][8] = {"CanGrow", "Destroy", "New",    "Clone",
-                                     "Grow",    "Info",    "Invalid"};
+  static const CH1 kStrings[7][8] = {"Delete", "New",  "Grow",
+                                     "Clone",  "Name", "Invalid"};
   if (!IsError(index)) return &kStrings[kFactoryFunctionCount][0];
   return &kStrings[index][0];
 }
 
 const CH1* AsciiFactoryError(SIW index) {
   static const CH1 kStrings[7][21] = {
-      "Factory Success", "Factory nil",        "Factory nil OBJ",
-      "Factory nil arg", "Factory out of RAM", "Factory size invalid",
-      "Invalid"};
+      "success",    "nil",          "nil OBJ",         "nil arg",
+      "out of RAM", "size invalid", "invalid function"};
   if (!IsError(index)) return &kStrings[kFactoryErrorCount][0];
   return &kStrings[index][0];
 }

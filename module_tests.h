@@ -28,14 +28,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if SEAM >= SCRIPT2_SEAM_CLOCK
 #include "05_clock.h"
 #endif
-#if SEAM >= SCRIPT2_SEAM_STRAND
-#include "06_strand.h"
-#endif
 #if SEAM >= SCRIPT2_SEAM_STACK
-#include "07_stack.h"
+#include "06_stack.h"
 #endif
-#if SEAM >= SCRIPT2_SEAM_ARRAY
-#include "08_stack.h"
+#if SEAM >= SCRIPT2_SEAM_STRAND
+#include "07_strand.h"
 #endif
 #if SEAM >= SCRIPT2_SEAM_LOOM
 #include "09_loom.h"
@@ -90,13 +87,13 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
                    ,
                    _05_Clock
 #endif
-#if SEAM >= SCRIPT2_SEAM_STRAND
-                   ,
-                   _06_Strand
-#endif
 #if SEAM >= SCRIPT2_SEAM_STACK
                    ,
                    _07_Stack
+#endif
+#if SEAM >= SCRIPT2_SEAM_STRAND
+                   ,
+                   _06_Strand
 #endif
 #if SEAM >= SCRIPT2_SEAM_ARRAY
                    ,

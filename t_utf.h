@@ -308,6 +308,46 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
   return o << STRSocketBorder() << Hex(start + size);
 }
 
+template <typename Printer, typename Char = CH1>
+Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
+  return TPrintChars<Printer, Char>(o, start, start + count);
+}
+
+/* Prints the given socket to the COut.
+@todo I think we only need TPRintChars. */
+template <typename Printer>
+Printer& TPrintSocket(Printer& o, const void* begin, const void* end) {
+  ASSERT(begin || end || begin <= end);
+
+  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
+            *address_end_ptr = reinterpret_cast<const CH1*>(end);
+  SIW size = address_end_ptr - address_ptr,
+      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+
+  SIW num_bytes = 81 * (num_rows + 2);
+  size += num_bytes;
+  o << STRSocketHeader() << STRSocketBorder();
+  TPrintHex<Printer>(o, address_ptr);
+  CH1 c;
+  while (address_ptr < address_end_ptr) {
+    o << kLF << '|';
+    for (SI4 i = 0; i < 64; ++i) {
+      c = *address_ptr++;
+      if (address_ptr > address_end_ptr)
+        c = 'x';
+      else if (!c || c == kTAB)
+        c = ' ';
+      else if (c < ' ')
+        c = kDEL;
+      o << (CH4)c;
+    }
+    o << '|' << ' ';
+    TPrintHex<Printer>(o, address_ptr);
+  }
+  o << STRSocketBorder();
+  return TPrintHex<Printer>(o, address_ptr + size);
+}
+
 }  // namespace _
 
 #if SEAM >= SCRIPT2_SEAM_ITOS
@@ -608,7 +648,7 @@ Char* TPrintHex(Char* start, Char* stop, UI value) {
   return start;
 }
 
-/* Prints a hex value to a socket fater than using a Printer. */
+/* Prints a hex value to a text socket. */
 template <typename Char = CH1>
 inline Char* TPrintHex(Char* start, Char* stop, SI1 value) {
   return TPrintHex<Char, UI1>(start, stop, (UI1)value);
@@ -857,46 +897,6 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
   begin = Print(begin, end, STRSocketBorder());
   begin = PrintHex(begin, end, start + size);
   return begin;
-}
-
-template <typename Printer, typename Char = CH1>
-Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
-  return TPrintChars<Printer, Char>(o, start, start + count);
-}
-
-/* Prints the given socket to the COut.
-@todo I think we only need TPRintChars. */
-template <typename Printer>
-Printer& TPrintSocket(Printer& o, const void* begin, const void* end) {
-  ASSERT(begin || end || begin <= end);
-
-  const CH1 *address_ptr = reinterpret_cast<const CH1*>(begin),
-            *address_end_ptr = reinterpret_cast<const CH1*>(end);
-  SIW size = address_end_ptr - address_ptr,
-      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
-
-  SIW num_bytes = 81 * (num_rows + 2);
-  size += num_bytes;
-  o << STRSocketHeader() << STRSocketBorder();
-  TPrintHex<Printer>(o, address_ptr);
-  CH1 c;
-  while (address_ptr < address_end_ptr) {
-    o << kLF << '|';
-    for (SI4 i = 0; i < 64; ++i) {
-      c = *address_ptr++;
-      if (address_ptr > address_end_ptr)
-        c = 'x';
-      else if (!c || c == kTAB)
-        c = ' ';
-      else if (c < ' ')
-        c = kDEL;
-      o << (CH4)c;
-    }
-    o << '|' << ' ';
-    TPrintHex<Printer>(o, address_ptr);
-  }
-  o << STRSocketBorder();
-  return TPrintHex<Printer>(o, address_ptr + size);
 }
 
 template <typename Char = CH1>

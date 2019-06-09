@@ -42,6 +42,8 @@
 #undef DAVOW
 #undef RAVOW
 #undef AVOW_INDEX
+#undef RAVOW_INDEX
+#undef DAVOW_INDEX
 #undef WARN
 #undef DWARN
 #undef RWARN
@@ -51,3 +53,4 @@
 #undef RETURN_VALUE
 #undef DRETURN_VALUE
 #undef RRETURN_VALUE
+#undef PRINT_FACTORY_FUNCTION

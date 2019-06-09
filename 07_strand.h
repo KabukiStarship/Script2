@@ -40,7 +40,9 @@ void _06_StrandN() {
   PRINT("\"\n");
   AStrand<Char, 8> strand;
   PRINT("\nPrinting newly constructed strand:\n");
+#if SEAM_DEBUG
   strand.PrintTo<COut>(COut().Star());
+#endif
   PRINT("\n\nPrinting:\"Testing \"");
   strand << "Testing ";
   PRINT("\n\nPrinting:\"1\"");

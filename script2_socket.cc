@@ -80,19 +80,20 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
-UIW* New(SIW size, SIW size_header) {
+UIW* New(SIW size) {
   // try {
   //  begin = new UIW[size >> TBitShiftCount<>()];
   //} catch (const std::bad_alloc& exception) {
   //  ObjException(exception.what());
   //  return nullptr;
   //}
-  UIW* buffer = new UIW[TWordCount<>(size + size_header)];
-  return buffer;
+  size = TAlignUpSigned<SIW>(size);
+  DASSERT(!(size & (sizeof(SIW) - 1)));
+  return new UIW[TWordCount<SIW>(size)];
 }
 
 void Delete(UIW* buffer, BOL using_heap) {
-  if (buffer && using_heap) delete[] buffer;
+  if (using_heap) delete[] buffer;
 }
 
 UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }

@@ -59,9 +59,9 @@ inline SIZ TSizeWords(SIZ size) {
 /* Converts the given size into CPU word count. */
 template <typename SIZ, SIZ kHeaderSize = sizeof(SIW)>
 inline SIZ TWordCount(SIZ size) {
-  SIZ align_offset = (-size) & (kHeaderSize - 1);
-  SIZ size_aligned = size + align_offset;
-  return size_aligned >> TBitShiftCount<SIW>();
+  // SIZ align_offset = (-size) & (kHeaderSize - 1); // Why did I do this???
+  // SIZ size_aligned = size + align_offset;
+  return size >> TBitShiftCount<SIW>();
 }
 
 /* Aligns the given pointer up to a sizeof (T) boundary.
@@ -203,9 +203,9 @@ constexpr SIZ SizeAlign(SIZ size) {
   return size + (-size) & lsb_mask;
 }
 
-/* A contiguous memory socket. */
+/* A contiguous memory socket of kSize_ elements of T including a Header. */
 template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1,
-          typename Header = Nil>
+          typename Class = Nil>
 class TSocket {
  public:
   /* Default destructor does nothing. */
@@ -213,13 +213,20 @@ class TSocket {
 
   /* The size in elements. */
   static constexpr SIW Size() {
-    if (kSize_ < sizeof(Header)) return sizeof(Header);
+    if (kSize_ < sizeof(Class)) return sizeof(Class);
     return kSize_;
+  }
+
+  /* The size in bytes including the header. */
+  static constexpr SIW SizeBytes() {
+    SIW size = Size() * sizeof(T) + sizeof(Class),
+        size_aligned = size + (-size & (sizeof(SIW) - 1));
+    return size_aligned / (SIW)sizeof(SIW);
   }
 
   /* The size in words rounded down. */
   static constexpr SIW SizeWords() {
-    SIW size = Size() * sizeof(T) + sizeof(Header),
+    SIW size = Size() * sizeof(T) + sizeof(Class),
         size_aligned = size + (-size & (sizeof(SIW) - 1));
     return size_aligned / (SIW)sizeof(SIW);
   }
@@ -230,20 +237,20 @@ class TSocket {
   /* Gets the begin UI1 of the socket. */
   inline UIW* BufferEnd() { return &socket_[SizeWords()]; }
 
-  /* Gets the begin UI1 of the socket. */
+  /* Gets the begin element of the socket. */
   template <typename T = CH1>
   inline T* Begin() {
     return reinterpret_cast<T*>(socket_);
   }
 
-  /* Gets the begin UI1 of the socket. */
-  inline CH1* End() { return reinterpret_cast<CH1*>(socket_) + kSize_; }
+  /* Gets the end element of the socket. */
+  inline T* End() { return Begin() + kSize_; }
 
   /* Returns the first element of the ASCII Object data section. */
-  template <typename T, UIW kHeaderSize_>
+  template <typename T>
   inline T* Start() {
     UIW ptr = reinterpret_cast<UIW>(socket_);
-    return reinterpret_cast<T*>(ptr + kHeaderSize_);
+    return reinterpret_cast<T*>(ptr + sizeof(Class));
   }
 
   /* Returns the last element of the ASCII Object data section. */
@@ -291,16 +298,6 @@ offset.
 template <typename T>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
-}
-
-/* Creates a new AsciiObject of the given size.
-AsciiObject(s) are contiguous objects defined in the SCRIPT Spec (@see
-./spec/data)
-*/
-template <typename AsciiObject, typename SIZ = SI4>
-UIW* TNew(SIW size) {
-  size = AlignUp(size) & (sizeof(UIW) - 1);
-  return new UIW[size >> kWordBitCount];
 }
 
 }  // namespace _

@@ -81,7 +81,39 @@
     ::_::Print(b);                                  \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__) \
   }
-#define AVOW_INDEX(a, b, index)
+#define AVOW_INDEX(a, b, index)                      \
+  if (!::_::Test(a, b)) {                            \
+    ::_::Print("\n\nExpecting:");                    \
+    ::_::PrintHex(a);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(a);                                   \
+    ::_::Print("\nFound    :");                      \
+    ::_::PrintHex(b);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(b);                                   \
+    ::_::Print("\nAt index :");                      \
+    ::_::PrintHex(index);                            \
+    ::_::Print(':');                                 \
+    ::_::Print(index);                               \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define RAVOW_INDEX(a, b, index)                     \
+  if (!::_::Test(a, b)) {                            \
+    ::_::Print("\n\nExpecting:");                    \
+    ::_::PrintHex(a);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(a);                                   \
+    ::_::Print("\nFound    :");                      \
+    ::_::PrintHex(b);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(b);                                   \
+    ::_::Print("\nAt index :");                      \
+    ::_::PrintHex(index);                            \
+    ::_::Print(':');                                 \
+    ::_::Print(index);                               \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define DAVOW_INDEX(a, b, index)
 #define WARN(condition) \
   if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define DWARN(condition)
@@ -95,3 +127,4 @@
 #define DRETURN_VALUE(value)
 #define RRETURN_VALUE(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return; }
+#define PRINT_FACTORY_FUNCTION(obj, function, using_heap)
