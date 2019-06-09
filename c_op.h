@@ -42,7 +42,7 @@ struct SDK Op {
   const SI4 *in,            //< Input kBSQ params or OpFirst.
       *out;                 //< Output kBSQ params or OpLast.
   const CH1* description;   //< Op description.
-  CHN pop,                  //< Index of the Pop Operation.
+  CH4 pop,                  //< Index of the Pop Operation.
       close,                //< Index of the Close Operation.
       default_op;           //< Index of the Default Operation.
   BOL using_numbers;        //< Flag for if tokens may use numbers.
@@ -55,25 +55,25 @@ struct SDK Op {
 inline SIW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpFirst(CHN index) {
+inline const SI4* OpFirst(CH4 index) {
   return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CHN OpFirst(const Op* op) {
+inline CH4 OpFirst(const Op* op) {
   ASSERT(op);
-  return (CHN) reinterpret_cast<UIW>(op->in);
+  return (CH4) reinterpret_cast<UIW>(op->in);
 }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpLast(CHN index) {
+inline const SI4* OpLast(CH4 index) {
   return reinterpret_cast<const SI4*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CHN OpLast(const Op* op) {
+inline CH4 OpLast(const Op* op) {
   ASSERT(op);
-  return (CHN) reinterpret_cast<UIW>(op->out);
+  return (CH4) reinterpret_cast<UIW>(op->out);
 }
 
 #if USING_SCRIPT2_TEXT == YES
@@ -89,4 +89,4 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const ::_::Op* op) {
 }
 
 #endif  //< #if INCLUDED_SCRIPT2_OP 1
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

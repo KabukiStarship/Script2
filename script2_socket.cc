@@ -8,18 +8,33 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_2
+#if SEAM >= SCRIPT2_SEAM_SOCKET
 
 #include "t_socket.h"
-#include "t_uniprinter.h"
 
-#if SEAM == SCRIPT2_2
+#if SEAM == SCRIPT2_SEAM_SOCKET
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
 
 namespace _ {
+
+UI1 Negative(SI1 value) { return (UI1)(-value); }
+
+UI1 Negative(UI1 value) { return (UI1)(-(SI1)value); }
+
+UI2 Negative(SI2 value) { return (UI2)(-value); }
+
+UI2 Negative(UI2 value) { return (UI2)(-(SI2)value); }
+
+UI4 Negative(SI4 value) { return (UI4)(-value); }
+
+UI4 Negative(UI4 value) { return (UI4)(-(SI4)value); }
+
+UI8 Negative(SI8 value) { return (UI8)(-value); }
+
+UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
 CH1* AlignDown(CH1* pointer, UIW mask) { return TAlignDown<CH1*>(pointer); }
 
@@ -65,11 +80,20 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
-UIW* New(SIW size) { return new UIW[size]; }
+UIW* New(SIW size) {
+  // try {
+  //  begin = new UIW[size >> TBitShiftCount<>()];
+  //} catch (const std::bad_alloc& exception) {
+  //  ObjException(exception.what());
+  //  return nullptr;
+  //}
+  size = TAlignUpSigned<SIW>(size);
+  DASSERT(!(size & (sizeof(SIW) - 1)));
+  return new UIW[TWordCount<SIW>(size)];
+}
 
-void Delete(UIW* socket) {
-  ASSERT(socket);
-  delete[] socket;
+void Delete(UIW* buffer, BOL using_heap) {
+  if (using_heap) delete[] buffer;
 }
 
 UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }
@@ -245,7 +269,7 @@ Socket::Socket() {
 }
 
 Socket::Socket(void* begin, void* end)
-    : begin(reinterpret_cast<CH1*>(begin)), stop(reinterpret_cast<CH1*>(end)) {
+    : begin(reinterpret_cast<CH1*>(begin)), end(reinterpret_cast<CH1*>(end)) {
   if (!begin || !end || begin > end) {
     begin = end = 0;
     return;
@@ -254,22 +278,30 @@ Socket::Socket(void* begin, void* end)
 
 Socket::Socket(void* begin, SIW size)
     : begin(reinterpret_cast<CH1*>(begin)),
-      stop(reinterpret_cast<CH1*>(begin) + size) {
+      end(reinterpret_cast<CH1*>(begin) + size) {
   if (!begin || size < 0) {
-    stop = reinterpret_cast<CH1*>(begin);
+    end = reinterpret_cast<CH1*>(begin);
     return;
   }
 }
 
-Socket::Socket(const Socket& other) : begin(other.begin), stop(other.stop) {
+Socket::Socket(const Socket& other) : begin(other.begin), end(other.end) {
   // Nothing to do here! (:-)-+=<
 }
 
+SIW Socket::Size() { return end - begin; }
+
 Socket& Socket::operator=(const Socket& other) {
   begin = other.begin;
-  stop = other.stop;
+  end = other.end;
   return *this;
 }
+
+Nil::Nil() {}
+
+constexpr SIW Nil::Size() { return 0; }
+
+UIW* Nil::Buffer() { return nullptr; }
 
 void DestructorNoOp(UIW* socket) {
   // Nothing to do here! (:-)+==<
@@ -288,11 +320,23 @@ SIW SocketShiftUp(void* begin, void* end, SIW count) {
     for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
-  CH1* pivot = TAlignDown<CH1*>(stop);
+  UIW mask = sizeof(UIW) - 1;
+  // Align the pointer down.
+  UIW value = reinterpret_cast<UIW>(stop);
+  CH1* pivot = reinterpret_cast<CH1*>(value - (value & mask));
+
+  // Shift up the top portion.
   for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop--;
-  UIW *stop_word = reinterpret_cast<UIW*>(stop),
-      *start_word = reinterpret_cast<UIW*>(TAlignUp<UIW*>(start));
+  UIW* stop_word = reinterpret_cast<UIW*>(stop);
+
+  // Align the pointer up.
+  value = reinterpret_cast<UIW>(start);
+  UIW* start_word = reinterpret_cast<UIW*>(value + ((-(SIW)value) & mask));
+
+  // Shift up the moddle portion.
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
+
+  // Shift up the bottom portion.
   pivot = reinterpret_cast<CH1*>(stop_word + 1);
   while (pivot >= start) *(pivot + count) = *pivot--;
   return count;
@@ -300,4 +344,4 @@ SIW SocketShiftUp(void* begin, void* end, SIW count) {
 
 }  // namespace _
 
-#endif  //<  #if SEAM >= SCRIPT2_2
+#endif

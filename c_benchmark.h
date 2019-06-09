@@ -3,14 +3,14 @@
 @file    /script2/c_benchmark.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_13
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #ifndef SCRIPT2_BENCHMARK
 #define SCRIPT2_BENCHMARK 1
 
@@ -39,8 +39,8 @@ class BenchmarkCase {
 
  private:
   const CH1* name;  //< Name of this benchmark case.
-  TestCase* cases;   //< Array of pointers of BenchmarkCase(s).
-  SI4 count;         //< Number of test cases.
+  TestCase* cases;  //< Array of pointers of BenchmarkCase(s).
+  SI4 count;        //< Number of test cases.
 };
 
 /* A Benchmark composed of one or more BenchmarkCase(s). */
@@ -55,7 +55,7 @@ class Benchmark {
   const CH1* Run(CH1* cursor, CH1* stop, const CH1* args);
 
  private:
-  const CH1 *name,       //< Name of the benchmark.
+  const CH1 *name,        //< Name of the benchmark.
       *filename;          //< Filename including .csv file extention.
   BenchmarkCase* groups;  //< Array of pointers of BenchmarkCase(s).
   SI4 count,              //< Number of test cases.

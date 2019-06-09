@@ -30,7 +30,7 @@
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
+#define PRINT_SOCKET_OBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(obj) obj.COut()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
@@ -92,6 +92,23 @@
   }
 #define RAVOW(a, b)
 #define RASSERT(condition)
+#define RAVOW_INDEX(a, b, index)
+#define DAVOW_INDEX(a, b, index)                     \
+  if (!::_::Test(a, b)) {                            \
+    ::_::Print("\n\nExpecting:");                    \
+    ::_::PrintHex(a);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(a);                                   \
+    ::_::Print("\nFound    :");                      \
+    ::_::PrintHex(b);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(b);                                   \
+    ::_::Print("\nAt index :");                      \
+    ::_::PrintHex(index);                            \
+    ::_::Print(':');                                 \
+    ::_::Print(index);                               \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
 #define AVOW_INDEX(a, b, index)                      \
   if (!::_::Test(a, b)) {                            \
     ::_::Print("\n\nExpecting:");                    \
@@ -108,7 +125,11 @@
     ::_::Print(index);                               \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
   }
-//
+#define WARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define DWARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define RWARN(condition)
 #define RETURN(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return value; }
 #define DRETURN(value) \
@@ -119,3 +140,7 @@
 #define DRETURN_VALUE(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return value; }
 #define RRETURN_VALUE(value)
+#define PRINT_FACTORY_FUNCTION(obj, function, using_heap)                      \
+  if (function >= 0 && function < kFactoryName)                                \
+    Printf("\nEntering %s.Factory.%s.%s:", obj, using_heap ? "Heap" : "Stack", \
+           AsciiFactoryFunction(function));

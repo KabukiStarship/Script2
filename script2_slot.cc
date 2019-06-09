@@ -8,14 +8,14 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #include "c_slot.h"
 
 #include "c_ascii.h"
 #include "c_socket.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"

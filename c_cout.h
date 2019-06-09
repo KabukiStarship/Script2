@@ -14,13 +14,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define SCRIPT2_COUT_C 1
 
 #if USING_UTF8 == YES
-#include "c_uniprinter1.h"
+#include "c_utf1.h"
 #endif
 #if USING_UTF16 == YES
-#include "c_uniprinter2.h"
+#include "c_utf2.h"
 #endif
 #if USING_UTF32 == YES
-#include "c_uniprinter4.h"
+#include "c_utf4.h"
 #endif
 
 namespace _ {
@@ -31,10 +31,11 @@ namespace _ {
 @param args      The arguments. */
 SDK const CH1* ArgsToSring(SI4 arg_count, CH1** args);
 
-/* Force-prints a single CH1 to the console. */
-SDK /*inline*/ void PrintChar(CH1 c);
-SDK /*inline*/ void PrintChar(CH2 c);
-SDK /*inline*/ void PrintChar(CH4 c);
+/* Force-prints a single CH1 to the console.
+SDK void PrintChar(CH1 c);
+SDK void PrintChar(CH2 c);
+SDK void PrintChar(CH4 c);
+*/
 
 /* Prints a single CH1 to the console. */
 SDK void Print(CH1 first, CH1 second);
@@ -50,7 +51,6 @@ SDK void Print(const CH1* a, const CH1* b);
 
 /* Prints the give item to the COut. */
 SDK /*inline*/ void Print(CH1 c);
-SDK /*inline*/ void Print(CH2 c);
 SDK /*inline*/ void Print(CH4 c);
 SDK void Print(const CH1* string);
 SDK void Print(const CH2* string);
@@ -59,8 +59,12 @@ SDK void Print(SI8 item);
 SDK void Print(UI8 item);
 SDK void Print(SI4 item);
 SDK void Print(UI4 item);
+#if USING_FP4 == YES
 SDK void Print(FP4 item);
+#endif
+#if USING_FP8 == YES
 SDK void Print(FP8 item);
+#endif
 
 /* Prints a new line followed by a single CH1 to the console. */
 SDK /*inline*/ void PrintNL();
@@ -93,11 +97,15 @@ SDK void PrintBinary(UI4 item);
 SDK void PrintBinary(SI4 item);
 SDK void PrintBinary(UI8 item);
 SDK void PrintBinary(SI8 item);
+#if USING_FP4 == YES
 SDK void PrintBinary(FP4 item);
+#endif
+#if USING_FP8 == YES
 SDK void PrintBinary(FP8 item);
+#endif
 SDK void PrintBinary(const void* item);
 
-#if SEAM >= SCRIPT2_1
+#if SEAM >= SCRIPT2_SEAM_ITOS
 /* Prints a item to the console to hex. */
 SDK void PrintHex(CH1 item);
 SDK void PrintHex(CH2 item);
@@ -110,8 +118,12 @@ SDK void PrintHex(UI4 item);
 SDK void PrintHex(SI4 item);
 SDK void PrintHex(UI8 item);
 SDK void PrintHex(SI8 item);
+#if USING_FP4 == YES
 SDK void PrintHex(FP4 item);
+#endif
+#if USING_FP8 == YES
 SDK void PrintHex(FP8 item);
+#endif
 
 /* Prints the given socket to the stdout in hex format. */
 SDK void PrintHex(const void* begin, const void* end);
@@ -222,30 +234,30 @@ class COut {
   COut();
 
   /* Prints the given item to the COut stream. */
-  COut(CH1 item);
-  COut(CH2 item);
-  COut(CH4 item);
-  COut(const CH1* item);
-  COut(const CH2* item);
-  COut(const CH4* item);
-  COut(SI1 item);
-  COut(UI1 item);
-  COut(SI2 item);
-  COut(UI2 item);
-  COut(SI4 item);
-  COut(UI4 item);
-  COut(SI8 item);
-  COut(UI8 item);
-#if SEAM >= SCRIPT2_4
-  COut(FP4 item);
-  COut(FP8 item);
+  explicit COut(CH1 item);
+  explicit COut(CH4 item);
+  explicit COut(const CH1* item);
+  explicit COut(const CH2* item);
+  explicit COut(const CH4* item);
+  explicit COut(SI1 item);
+  explicit COut(UI1 item);
+  explicit COut(SI2 item);
+  explicit COut(UI2 item);
+  explicit COut(SI4 item);
+  explicit COut(UI4 item);
+  explicit COut(SI8 item);
+  explicit COut(UI8 item);
+#if USING_FP4 == YES
+  explicit COut(FP4 item);
+#endif
+#if USING_FP8 == YES
+  explicit COut(FP8 item);
 #endif
 
   /* Returns reference to this. */
   COut& Star();
 
   /* Prints the given item to the stdout. */
-  COut& PrintChar(CH1 item);
   COut& Print(CH1 item);
   COut& Print(const CH1* item);
   COut& Print(SI4 item);
@@ -258,12 +270,14 @@ class COut {
 #if USING_FP8 == YES
   COut& Print(FP8 item);
 #endif
-#if SEAM >= SCRIPT2_1
-  COut& Print(const void* begin, SIW size_bytes);
-  COut& Print(Hex item);
-#endif
 
-#if SEAM >= SCRIPT2_3
+  COut& PrintHex(const void* begin, SIW size_bytes);
+  COut& Print(Hex item);
+
+  COut& PrintBinary(const void* begin, SIW size_bytes);
+  COut& Print(Binary item);
+
+#if SEAM >= SCRIPT2_SEAM_UTF
   COut& Print(Right1 item);
   COut& Print(Center1 item);
   COut& Print(Linef1 item);
@@ -271,7 +285,6 @@ class COut {
   COut& Print(Chars1 item);
 #endif
 #if USING_UTF16 == YES
-  COut& PrintChar(CH2 item);
   COut& Print(CH2 item);
   COut& Print(const CH2* item);
   COut& Print(Right2 item);
@@ -281,7 +294,6 @@ class COut {
   COut& Print(Chars2 item);
 #endif
 #if USING_UTF32 == YES
-  COut& PrintChar(CH4 item);
   COut& Print(CH4 item);
   COut& Print(const CH4* item);
   COut& Print(Right4 item);
@@ -296,9 +308,6 @@ class COut {
 
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, CH1 c);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH1* string);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI1 value);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI2 value);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI2 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, SI4 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, UI4 value);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, SI8 value);
@@ -309,18 +318,15 @@ class COut {
 #if USING_FP8 == YES
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, FP8 value);
 #endif
-#if SEAM >= SCRIPT2_1
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex item);
-#endif
 
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_UTF
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars1 item);
 #if USING_UTF16 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH2 c);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* string);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
 /*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);

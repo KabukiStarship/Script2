@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
@@ -129,4 +129,4 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 
 }  // namespace _
 #endif  //< SCRIPT2_MIRROR
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

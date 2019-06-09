@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \03_utf.h
+@file    \04_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -10,9 +10,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#include "t_strand.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_3
+#if SEAM == SCRIPT2_SEAM_UTF
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,15 +20,15 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using namespace _;
 
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_UTF
 namespace script2 {
 
-template <typename Char, typename Size>
-static const Char* _03_UTF() {
+template <typename Char, typename SIZ>
+static const Char* _04_UTF() {
   PRINT_LINEF('-');
   PRINT_LINEF('-');
   PRINTF("\n\n\nTesting UTF<CH%c,SI%c>\n\n", '0' + sizeof(Char),
-         '0' + sizeof(Size));
+         '0' + sizeof(SIZ));
   PRINT_LINEF('-');
   PRINT_LINEF('-');
 
@@ -182,10 +182,10 @@ static const Char* _03_UTF() {
 
   return nullptr;
 }
-#endif  //< #if SEAM >= SCRIPT2_3
+#endif  //< #if SEAM >= SCRIPT2_SEAM_UTF
 
-static const CH1* _03_UTF(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_3
+static const CH1* _04_UTF(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_SEAM_UTF
   TEST_BEGIN;
 
   PRINT("\n\nTesting PrintHex");
@@ -259,9 +259,9 @@ static const CH1* _03_UTF(CH1* seam_log, CH1* seam_end, const CH1* args) {
     if (ch4_found != ch4_expected) PrintHex(str2, kSTR1Count * 2);
   }
 
-  if (_03_UTF<CH1, SI4>()) return "Error testing UTF-8.";
-  if (_03_UTF<CH2, SI4>()) return "Error testing UTF-16.";
-  if (_03_UTF<CH4, SI4>()) return "Error testing UTF-32.";
+  if (_04_UTF<CH1, SI4>()) return "Error testing UTF-8.";
+  if (_04_UTF<CH2, SI4>()) return "Error testing UTF-16.";
+  if (_04_UTF<CH4, SI4>()) return "Error testing UTF-32.";
 
 #endif
   return nullptr;

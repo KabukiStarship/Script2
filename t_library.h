@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef INCLUDED_SCRIPT2_LIBRARY_T
 #define INCLUDED_SCRIPT2_LIBRARY_T
 #include "c_onfig.h"
@@ -44,7 +44,7 @@ class Library : public Operand {
   /* Gets the data size in bytes. */
   SI4 GetDataSize() { return data_size_; }
 
-  /* Attempts to add the Page data into the CObject at the given BaseAddress.
+  /* Attempts to add the Page data into the AArray at the given BaseAddress.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Add(UI1 type, const CH1* key, void* data) {
     TIndex size_of_type = GetSizeOfType(type);
@@ -54,7 +54,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to insert the Page data into the CObject at the given index.
+  /* Attempts to insert the Page data into the AArray at the given index.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Insert(UI1 type, const CH1* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
@@ -63,7 +63,7 @@ class Library : public Operand {
     return 0;
   }
 
-  /* Attempts to remove the Page data into the CObject at the given index.
+  /* Attempts to remove the Page data into the AArray at the given index.
   @return Returns nil upon success and an error CH1 upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 
@@ -147,7 +147,7 @@ class Library : public Operand {
   error_t ticket upon Read-Write failure.
   @param index The index of the expression.
   @param crabs  The CCrabs to read and write from. */
-  virtual const Op* Star(CHN index, CCrabs* crabs) {
+  virtual const Op* Star(CH4 index, CCrabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
@@ -193,4 +193,4 @@ SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _
 #endif  //< INCLUDED_SCRIPT2_LIBRARY_T
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

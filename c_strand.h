@@ -10,20 +10,20 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_UTF
 #ifndef INCLUDED_SCRIPTUTF
 #define INCLUDED_SCRIPTUTF
 
 #include "c_socket.h"
 
 #if USING_UTF8 == YES
-#include "c_uniprinter1.h"
+#include "c_utf1.h"
 #endif
 #if USING_UTF16 == YES
-#include "c_uniprinter2.h"
+#include "c_utf2.h"
 #endif
 #if USING_UTF32 == YES
-#include "c_uniprinter4.h"
+#include "c_utf4.h"
 #endif
 
 #endif

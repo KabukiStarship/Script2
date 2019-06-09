@@ -10,12 +10,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_2
+#if SEAM >= SCRIPT2_SEAM_SOCKET
 #ifndef SCRIPT2_KABUKI_TSOCKET
 #define SCRIPT2_KABUKI_TSOCKET
 
 #include "c_socket.h"
-#include "c_uniprinter.h"
 
 namespace _ {
 
@@ -25,6 +24,45 @@ enum {
   kStack = 0,  //< Flag for using stack memory.
   kHeap = 1,   //< Flag for using heap memory.
 };
+
+/* Returns the N in 2^N for the sizeof (I) to speed up dividing by powers of 2.
+@code
+SIN size_bytes = 32;
+SIN size_words = size_bytes >> TBitShiftCount<SIN> ()
+@endcode
+*/
+template <typename I = SIW>
+inline SI4 TBitShiftCount() {
+  return (sizeof(I) == 1)
+             ? 0
+             : (sizeof(I) == 2)
+                   ? 1
+                   : (sizeof(I) == 4)
+                         ? 2
+                         : (sizeof(I) == 8) ? 3 : (sizeof(I) == 16) ? 4 : 0;
+}
+
+template <typename SIZ, SIZ kSize_>
+constexpr SIZ TSizeWords() {
+  SIZ align_offset = (-kSize) & (sizeof(SIW) - 1);
+  SIZ size_aligned = kSize_ + align_offset;
+  return size_aligned >> TBitShiftCount<SIZ>();
+}
+
+template <typename SIZ>
+inline SIZ TSizeWords(SIZ size) {
+  SIZ align_offset = (-size) & (sizeof(SIW) - 1);
+  SIZ size_aligned = size + align_offset;
+  return size_aligned >> TBitShiftCount<SIZ>();
+}
+
+/* Converts the given size into CPU word count. */
+template <typename SIZ, SIZ kHeaderSize = sizeof(SIW)>
+inline SIZ TWordCount(SIZ size) {
+  // SIZ align_offset = (-size) & (kHeaderSize - 1); // Why did I do this???
+  // SIZ size_aligned = size + align_offset;
+  return size >> TBitShiftCount<SIW>();
+}
 
 /* Aligns the given pointer up to a sizeof (T) boundary.
 @return The aligned value.
@@ -37,7 +75,7 @@ tables bellow.
 
 @code
 // The convention KT uses is that the unsigned size always comes first
-// because it's the first UI1 of an ASCII CObject.
+// because it's the first UI1 of an ASCII AArray.
 SI4 signed_example = 7;
 signed_example = AlignUp<SI8, UI4, SI4> (signed_example);
 
@@ -111,19 +149,10 @@ inline T* TAlignUp(const void* pointer, UIW mask = kWordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename I = UIW>
-inline I TAlignDownOffset(I value, I mask = kWordLSbMask) {
-  return value & mask;
-}
-
-/* Aligns the given pointer to the sizeof (WordBoundary) down.
-@return The aligned value.
-@param value The value to align.
-@param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = UIW>
 inline T TAlignDown(void* ptr, UIW mask = kWordLSbMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  return reinterpret_cast<T>(value - TAlignDownOffset<>(value, mask));
+  return reinterpret_cast<T>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -133,7 +162,7 @@ inline T TAlignDown(void* ptr, UIW mask = kWordLSbMask) {
 template <typename T = UIW>
 inline T TAlignDown(const void* ptr, UIW mask = kWordLSbMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
-  return reinterpret_cast<const T>(value - TAlignDownOffset<>(value, mask));
+  return reinterpret_cast<const T>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -156,7 +185,7 @@ inline T* TAlignUp2(void* pointer) {
 }
 
 /* Calculates the offset to align the given pointer to a 16-bit word boundary.
-@return A TArray you add to a pointer to align it. */
+@return A TMatrix you add to a pointer to align it. */
 template <typename T = CH1>
 inline T* TAlignUp2(const void* pointer) {
   // Mask off lower bit and add it to the ptr.
@@ -164,91 +193,84 @@ inline T* TAlignUp2(const void* pointer) {
   return reinterpret_cast<T*>(ptr + (ptr & 0x1));
 }
 
-/* Returns the N in 2^N for the sizeof (I). */
-template <typename I = SIW>
-inline SI4 TBitShiftCount() {
-  return (sizeof(I) == 1)
-             ? 0
-             : (sizeof(I) == 2)
-                   ? 1
-                   : (sizeof(I) == 4)
-                         ? 2
-                         : (sizeof(I) == 8) ? 3 : (sizeof(I) == 16) ? 4 : 0;
-}
-
 /* Aligns the given size to a word-sized boundary. */
-template <typename Size>
-constexpr Size SizeAlign(Size size) {
-  Size lsb_mask = sizeof(UIW) - 1;
+template <typename SIZ>
+constexpr SIZ SizeAlign(SIZ size) {
+  SIZ lsb_mask = sizeof(UIW) - 1;
   if (size < sizeof(UIW)) return sizeof(UIW);
-  Size size_max = ~lsb_mask;
+  SIZ size_max = ~lsb_mask;
   if (size > size_max) return size;
   return size + (-size) & lsb_mask;
 }
 
-/* A contiguous memory socket. */
-template <typename Size, Size kSize_>
+/* A contiguous memory socket of kSize_ elements of T including a Header. */
+template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1,
+          typename Class = Nil>
 class TSocket {
  public:
   /* Default destructor does nothing. */
   TSocket() {}
 
-  /* The size of the Size type. */
-  static constexpr Size SizeSize() { return (Size)sizeof(Size); }
-
-  /* The min size in bytes. */
-  static constexpr Size SizeMin() { return SizeSize(); }
-
-  /* The size in bytes. */
-  static constexpr Size SizeBytes() {
-    // static_assert(kSize_ >= SizeMin(), "kSize_ < SizeMin ()");
-    if (kSize_ < SizeMin()) return SizeMin();
+  /* The size in elements. */
+  static constexpr SIW Size() {
+    if (kSize_ < sizeof(Class)) return sizeof(Class);
     return kSize_;
   }
 
+  /* The size in bytes including the header. */
+  static constexpr SIW SizeBytes() {
+    SIW size = Size() * sizeof(T) + sizeof(Class),
+        size_aligned = size + (-size & (sizeof(SIW) - 1));
+    return size_aligned / (SIW)sizeof(SIW);
+  }
+
   /* The size in words rounded down. */
-  static constexpr UIW SizeWords() {
-    UIW size_words = (UIW)(SizeBytes() / (Size)sizeof(UIW));
-    return (size_words <= 0) ? 1 : size_words;
+  static constexpr SIW SizeWords() {
+    SIW size = Size() * sizeof(T) + sizeof(Class),
+        size_aligned = size + (-size & (sizeof(SIW) - 1));
+    return size_aligned / (SIW)sizeof(SIW);
   }
 
   /* Returns the socket as a UIW*. */
-  inline UIW* Words() { return socket_; }
+  inline UIW* Buffer() { return socket_; }
 
   /* Gets the begin UI1 of the socket. */
+  inline UIW* BufferEnd() { return &socket_[SizeWords()]; }
+
+  /* Gets the begin element of the socket. */
   template <typename T = CH1>
   inline T* Begin() {
     return reinterpret_cast<T*>(socket_);
   }
 
-  /* Gets the begin UI1 of the socket. */
-  inline CH1* End() { return reinterpret_cast<CH1*>(socket_) + kSize_; }
+  /* Gets the end element of the socket. */
+  inline T* End() { return Begin() + kSize_; }
 
-  /* Returns the first byte of the ASCII Object. */
-  template <typename Size, typename T>
+  /* Returns the first element of the ASCII Object data section. */
+  template <typename T>
   inline T* Start() {
     UIW ptr = reinterpret_cast<UIW>(socket_);
-    return reinterpret_cast<T*>(ptr + sizeof(Size));
+    return reinterpret_cast<T*>(ptr + sizeof(Class));
   }
 
-  /* Returns the first byte of the ASCII Object. */
-  template <typename Size, typename T, typename Index>
-  inline T* Stop(Index index) {
-    return Start<Size, T>() + index - 1;
+  /* Returns the last element of the ASCII Object data section. */
+  template <typename T, UIW kHeaderSize_>
+  inline T* Stop() {
+    return Start<SIW, T>() + index - 1;
   }
 
   /* Gets the begin of the socket. */
-  template <typename T = CH1, typename I = Size>
+  template <typename T = CH1, typename I = SIW>
   inline T* Element(I index) {
     if (!InRange(index)) return nullptr;
     return Start()[index];
   }
 
   /* Sets the size to the new value. */
-  template <typename Size>
-  inline UIW* SetSize(Size size) {
+  template <typename SIW>
+  inline UIW* SetSize(SIW size) {
     ASSERT((size & kAlignMask) == 0)
-    *reinterpret_cast<Size*>(socket_) = size;
+    *reinterpret_cast<SIW*>(socket_) = size;
     return socket_;
   }
 
@@ -276,19 +298,6 @@ offset.
 template <typename T>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
-}
-
-/* Creates a new socket of the given size or deletes it. */
-template <typename Size = SI4>
-UIW* TNew(SIW size) {
-  size = AlignUp(size);
-  return new UIW[size >> kWordBitCount];
-}
-
-/* Meta-data function for checking for unsigned loop-around. */
-template <typename T>
-BOL LoopAround(T* start, T* stop) {
-  return start <= stop;
 }
 
 }  // namespace _

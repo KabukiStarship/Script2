@@ -3,28 +3,27 @@
 @file    /script2/script2_benchmark.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_13
-#include "t_benchmark.h"
-
-#include "rng.h"
-#include "t_uniprinter.h"
-#include "t_test.h"
-
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #include <chrono>
 #include <fstream>
 #include <iostream>
 #include <random>
 
+#include "rng.h"
+#include "t_benchmark.h"
+#include "t_test.h"
+#include "t_utf.h"
+
 using namespace std;
 using namespace std::chrono;
 
-#if SEAM == SCRIPT2_13
+#if SEAM == SCRIPT2_SEAM_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"

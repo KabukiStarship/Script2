@@ -38,7 +38,7 @@
     <None Include="global_footer.inl">
       <Filter>script2</Filter>
     </None>
-    <None Include="16_seam.s2">
+    <None Include="17_seam.s2">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>
@@ -91,9 +91,6 @@
     <ClCompile Include="script2_morsecode.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_object.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_op.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
     <ClCompile Include="script2_test.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_uniprinter.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_utf.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -133,6 +127,18 @@
     <ClCompile Include="script2_cout.cc">
       <Filter>script2</Filter>
     </ClCompile>
+    <ClCompile Include="script2_puff.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="t_puff.h">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="c_puff.h">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_autoject.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="module_tests.h">
@@ -142,9 +148,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="public.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="t_array.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_ascii.h">
@@ -180,9 +183,6 @@
     <ClInclude Include="t_map.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_object.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="t_set.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -195,31 +195,16 @@
     <ClInclude Include="t_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_string.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="t_table.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_test.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_uniprinter.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="00_rng.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="01_itos_stoi.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="02_socket.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="03_utf.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="04_ftos_stof.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="05_clock.h">
@@ -282,9 +267,6 @@
     <ClInclude Include="c_mirror.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_object.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_op.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -303,25 +285,10 @@
     <ClInclude Include="c_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_stack.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_strand.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_test.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_uniprinter.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_uniprinter1.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_uniprinter2.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_uniprinter4.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_varint.h">
@@ -342,37 +309,73 @@
     <ClInclude Include="c_cout.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="07_stack_array.h">
+    <ClInclude Include="16_door.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="06_strand.h">
+    <ClInclude Include="15_expr.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="08_loom.h">
+    <ClInclude Include="14_dictionary.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="09_table.h">
+    <ClInclude Include="13_book.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="10_list.h">
+    <ClInclude Include="12_map.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="11_map.h">
+    <ClInclude Include="11_list.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="12_book.h">
+    <ClInclude Include="10_table.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="13_dictionary.h">
+    <ClInclude Include="09_loom.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="14_expr.h">
+    <ClInclude Include="08_array.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="15_door.h">
+    <ClInclude Include="t_matrix.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="16_room_wall.h">
+    <ClInclude Include="t_array.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="t_utf.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_utf.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_utf4.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_utf2.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_utf1.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="01_itos.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="17_room.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="04_utf.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="03_ftos.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="c_autoject.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="07_strand.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="06_stack.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

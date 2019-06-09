@@ -10,12 +10,36 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_2
+#if SEAM >= SCRIPT2_SEAM_SOCKET
 
 #ifndef INCLUDED_SCRIPTKABUKI_SOCKET
 #define INCLUDED_SCRIPTKABUKI_SOCKET
 
 namespace _ {
+
+/* Utility function multiplies the given value by -1. */
+UI1 Negative(SI1 value);
+
+/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
+UI1 Negative(UI1 value);
+
+/* Utility function multiplies the given value by -1. */
+UI2 Negative(SI2 value);
+
+/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
+UI2 Negative(UI2 value);
+
+/* Utility function multiplies the given value by -1. */
+UI4 Negative(SI4 value);
+
+/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
+UI4 Negative(UI4 value);
+
+/* Utility function multiplies the given value by -1. */
+UI8 Negative(SI8 value);
+
+/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
+UI8 Negative(UI8 value);
 
 /* Aligns the given pointer down to the given mask. */
 SDK CH1* AlignDown(CH1* pointer, UIW mask = kWordLSbMask);
@@ -75,15 +99,16 @@ SDK /*inline*/ UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
 SDK /*inline*/ SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
 
 /* A managed general purpose (i.e. not just for networking) memory socket.
-    A socket is just a hole in something for fitting something in, like a light
-    or electric socket. A socket of memory is just a block of memory you fit
-    something in. A network socket is a socket for interprocess communication,
-    which is usually implemented with a ring socket
-    (@see ~/kabuki-toolkit/slot.h).
+A socket is just a hole in something for fitting something in, like a light
+or electric socket. A socket of memory is just a block of memory you fit
+something in. A network socket is a socket for interprocess communication,
+which is usually implemented with a ring socket
+(@see ~/kabuki-toolkit/slot.h).
 */
-struct Socket {
+class Socket {
+ public:
   CH1 *begin,  //< Beginning of the socket.
-      *stop;   //< End of the socket.
+      *end;    //< End of the socket.
 
   /* Constructs an uninitialized socket. */
   Socket();
@@ -97,15 +122,30 @@ struct Socket {
   /* Clones the other memory. */
   Socket(const Socket& other);
 
+  /* Gets the size of the socket. */
+  SIW Size();
+
   /* C++ operator= overload. */
   Socket& operator=(const Socket& other);
+};
+
+class Nil {
+ public:
+  /* Constructures nothing. */
+  Nil();
+
+  /* Gets the size of the socket. */
+  static constexpr SIW Size();
+
+  /* Gets the nil begin word address. */
+  UIW* Buffer();
 };
 
 /* Creates a block of dynamic memory. */
 SDK /*inline*/ UIW* New(SIW size);
 
 /* AsciiFactory deletes the socket. */
-SDK /*inline*/ void Delete(UIW* socket);
+SDK /*inline*/ void Delete(UIW* socket, BOL using_heap = true);
 
 /* Converts the pointer to a std::UIW. */
 SDK /*inline*/ UIW UIntPtr(const void* value);
@@ -132,7 +172,7 @@ SDK CH1* SocketWipe(void* begin, void* end);
 SDK CH1* SocketWipe(void* begin, SIW size);
 
 /* Copies the source to the target functionally identical to memcpy.
-@param  begin     The begin of the write socket.
+@param  begin     The start of the write socket.
 @param  size      The stop of the write socket.
 @param  begin     The begin of the read socket.
 @param  read_size Number of bytes to copy.
@@ -140,7 +180,7 @@ SDK CH1* SocketWipe(void* begin, SIW size);
 SDK CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
-@param  begin The begin of the write socket.
+@param  begin The start of the write socket.
 @param  stop  The stop of the write socket.
 @param  begin The begin of the read socket.
 @param  size  Number of bytes to copy.
@@ -148,25 +188,25 @@ SDK CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size);
 SDK CH1* SocketCopy(void* start, void* stop, const void* begin, SIW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
-    @param  start The start of the write socket.
-    @param  stop  The stop of the write socket.
-    @param  begin The begin of the read socket.
-    @param  edn   The end of the read socket.
-    @return Pointer to the last UI1 written or nil upon failure. */
+@param  start The start of the write socket.
+@param  stop  The stop of the write socket.
+@param  begin The begin of the read socket.
+@param  end   The end of the read socket.
+@return Pointer to the last UI1 written or nil upon failure. */
 SDK /*inline*/ CH1* SocketCopy(void* start, void* stop, const void* begin,
                                const void* end);
 
 /* Compares the two memory sockets.
-@param  start  The beginning of Socket A.
+@param  start  The start of Socket A.
 @param  stop   The stop of Socket A.
 @param  begin  The begin of Socket B.
-@param  stop_b The stop of Socket B.
+@param  end    The end of Socket B.
 @return True if they are the same and false if they are not. */
 SDK BOL SocketCompare(const void* start, const void* stop, const void* begin,
                       const void* end);
 
 /* Compares the two memory sockets.
-@param  start The beginning of Socket A.
+@param  start The start of Socket A.
 @param  stop  The stop of Socket A.
 @param  begin The begin of Socket B.
 @param  size  The size of Socket B.
@@ -175,7 +215,7 @@ SDK /*inline*/ BOL SocketCompare(const void* start, void* stop,
                                  const void* begin, SIW size);
 
 /* Compares the two memory sockets.
-@param  start The beginning of socket a.
+@param  start The start of socket a.
 @param  size_a The size of Socket A .
 @param  start  The begin of socket b.
 @param  size_b The size of Socket B.
@@ -185,7 +225,7 @@ SDK /*inline*/ BOL SocketCompare(const void* start, SIW size_a,
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param  start The begin UI1.
+@param  start The start UI1.
 @param  stop   The stop UI1.
 @param  count The UI1 count to shift up. */
 SIW SocketShiftUp(void* start, void* stop, SIW count);

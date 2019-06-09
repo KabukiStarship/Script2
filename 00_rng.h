@@ -13,7 +13,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_cout.h"
 #include "c_rng.h"
 
-#if SEAM == SCRIPT2_0
+#if SEAM == SCRIPT2_SEAM_RNG
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -23,7 +23,7 @@ using namespace _;
 
 namespace script2 {
 inline const CH1* _00_RNG(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_0
+#if SEAM >= SCRIPT2_SEAM_RNG
   TEST_BEGIN;
 
   PRINT_HEADING("Testing ArgsToSring");

@@ -1,246 +1,450 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_array.cc
+@file    /script2/t_array.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_7
-#ifndef INCLUDED_SCRIPT2_ARRAY
-#define INCLUDED_SCRIPT2_ARRAY
+#if SEAM >= SCRIPT2_SEAM_STACK
+#ifndef SCRIPT2_TOBJECT
+#define SCRIPT2_TOBJECT 1
 
-#include "t_stack.h"
+#include "c_autoject.h"
+#include "t_socket.h"
+
+#if SEAM == SCRIPT2_SEAM_STACK
+#include "module_debug.inl"
+#else
+#include "module_release.inl"
+#endif
 
 namespace _ {
 
-/* A multi-dimensional array.
-ASCII Array uses the same data structure as the ASCII Stack, the
-difference being that the size_array of the Stack is set to 0 for the Stack and
-the Array has a packed multi-dimensional array after the stack of dimensions. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-struct TCArray {
-  TCStack<T, Size, Index> stack;
+/* @ingroup AsciiStack
+Stack is an ASCII Data Type designed to use a C-style templated struct in C++
+using no dynamic memory and with dynamic memory as a templated C++ warper class
+and cross-language bindings and deterministic CPU cache optimizations. */
+
+/* Returns the maximum value of the given unsigned type. */
+template <typename UI>
+inline UI TNaNUnsigned() {
+  return ~((UI)0);
+}
+
+/* Returns the maximum value of the given signed type. */
+template <typename SIZ>
+constexpr SIZ TNaNSigned() {
+  return (~ToUnsigned(SIZ)) >> 1;
+}
+
+/* An 1-dimensional array of homogeneous kind and size types in the C format.
+
+# Array Memory Layout
+
+@code
+    +----------------+
+    |  Packed Array  |  <-- Only if header_size = 0
+    |----------------|
+    |     Buffer     |
+    |----------------|
+    | Array Elements |
+ ^  |----------------|
+ |  | TArray Header  |
+0xN +----------------+
+@endcode
+*/
+template <typename SIZ = SI4>
+struct TArray {
+  SIZ size;  //< Size of the Array in elements.
 };
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Index ArrayCountUpperLimit(Index dimension_count,
-                                     Index element_count) {
-  Size header_size =
-      (Size)(sizeof(TCStack<T, Size, Index>) +
-             TAlignUpSigned<Index>(dimension_count * sizeof(Index)));
-  return (Index)(((~(Size)0) - 7) - header_size) / (Size)sizeof(T);
+/* The minimum size of an array with zero elements. */
+template <typename SIZ>
+constexpr SIZ TSizeMin() {
+  return 0;
 }
 
-/* Returns the required size of the given array. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Index ArrayElementCount(const Index* dimensions) {
-  ASSERT(dimensions);
-  Index dimension_count = *dimensions++, element_count = *dimensions++;
-  if (--dimension_count < 0 || element_count < 0) return -1;
-  Size size = dimension_count * sizeof(Index);
-  while (dimension_count-- > 0) {
-    Index current_dimension = *dimensions++;
-    if (current_dimension < 1) return -1;
-    element_count *= current_dimension;
+/* The upper bounds defines exactly how many elements can fit into a space
+in memory. */
+template <typename T = SI4, typename SIZ = SI4, typename Class = TArray<SIZ>>
+constexpr SIZ TArraySizeMax() {
+  return (SIZ)((((~(SIZ)0) - 7) - (SIZ)sizeof(TStack<SIZ>)) / (SIZ)sizeof(T));
+}
+
+/* Gets the ASCII Autoject size. */
+template <typename T, typename SIZ, typename Class = TArray<SIZ>>
+inline SIW TArraySizeOf(SIZ size) {
+  return (SIW)sizeof(Class) + ((SIW)sizeof(T) * (SIW)size);
+}
+
+/* Gets the ASCII Autoject size. */
+template <typename SIZ>
+inline SIZ TSize(UIW* obj) {
+  return *reinterpret_cast<SIZ*>(obj);
+}
+
+/* Gets the ASCII Autoject size. */
+template <typename SIZ>
+inline SIZ TSize(Autoject& object) {
+  return TSize<SIZ>(object.begin);
+}
+
+template <typename SIZ>
+inline void TSizeSet(UIW* obj, SIZ size) {
+  *reinterpret_cast<SIZ*>(obj) = size;
+}
+
+/* Dynamically allocates a new Array of the given size.
+@return Nil upon failure or a pointer to the cloned object upon success.
+@param socket A raw ASCII Socket to clone. */
+template <typename T, typename SIZ = SI4, typename Class = TArray<SIZ>>
+UIW* TArrayNew(SIZ size) {
+  UIW* begin = New(TArraySizeOf<T, SIZ, Class>(size));
+  TSizeSet<SIZ>(begin, size);
+  return begin;
+}
+
+/* Writes the size to the given word-aligned-up socket, making a new one if
+required. */
+template <typename SIZ>
+inline UIW* TArrayInit(UIW* begin, SIZ size) {
+  DASSERT(begin);
+  DASSERT(size >= TSizeMin<SIZ>());
+  TSizeSet<SIZ>(begin, size);
+  return begin;
+}
+
+/* Writes the size to the given word-aligned-down socket, making a new one if
+required. */
+template <typename T, typename SIZ>
+inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
+                       AsciiFactory factory) {
+  DASSERT(factory);
+  DASSERT(size >= TSizeMin<SIZ>());
+  obj.factory = factory;
+  if (!buffer) {
+    SIZ buffer_size =
+        TAlignUpSigned<SIZ>(size * sizeof(T) + sizeof(TArray<SIZ>));
+    buffer = reinterpret_cast<UIW*>(factory(obj, kFactoryNew, buffer_size));
   }
-  if (element_count > ArrayCountUpperLimit<T, Size, Index>()) return -1;
-  return element_count * sizeof(T);
+  SOCKET_WIPE(buffer, size * sizeof(T) + sizeof(TArray<SIZ>));
+  TSizeSet<SIZ>(buffer, size);
+  obj.begin = buffer;
+  return buffer;
 }
 
-/* Returns the required size of the given array. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-constexpr Size ArraySize(const Index* dimensions) {
-  Index dimension_count = *dimensions++, element_count = *dimensions++;
-  Size header_size = sizeof(TCStack<T, Size, Index>);
-  if (--dimension_count < 0) return 0;
-  while (dimension_count-- > 0) {
-    Index current_dimension = *dimensions++;
-    if (current_dimension < 1) return 0;
-    element_count *= current_dimension;
+/* The maximum object size.
+The max ASCII Object size is dictated by the max value allowed that can be
+aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
+template <typename SI>
+inline SI TArraySizeMax() {
+  SI count_max = 0;
+  return (~count_max) - 15;
+}
+
+/* Checks if the given object count is in the min max bounds of an ASCII
+Object. */
+template <typename SI>
+inline BOL TArrayCountIsValid(SI index, SI count_min) {
+  return (index >= count_min) && (index < TArraySizeMax<SI>());
+}
+
+template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
+TArray<SIZ>* TArrayWrite(TArray<SIZ>* destination, TArray<SIZ>* source,
+                         SIZ size) {
+  DASSERT(destination && source);
+
+  SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, Class>(size);
+  if (!SocketCopy(destination, size_bytes, source, size_bytes)) return nullptr;
+  return destination;
+}
+
+template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
+UIW* TArrayWrite(UIW* destination, UIW* source, SIZ size) {
+  TArray<SIZ>* result =
+      TArrayWrite<T, SIZ, Class>(reinterpret_cast<TArray<SIZ>*>(destination),
+                                 reinterpret_cast<TArray<SIZ>*>(source), size);
+  return reinterpret_cast<UIW*>(result);
+}
+
+/* Clones the other ASCII Autoject including possibly unused object space.
+@return Nil upon failure or a pointer to the cloned object upon success.
+@param socket A raw ASCII Socket to clone. */
+template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
+UIW* TArrayClone(Autoject& obj) {
+  AsciiFactory factory = obj.factory;
+  UIW* begin = obj.begin;
+  // if (!factory || !begin) return nullptr;
+
+  TArray<SIZ>* o = reinterpret_cast<TArray<SIZ>*>(begin);
+  SIZ size = o->size;
+  UIW* clone = TArrayNew<T, SIZ, TArray<SIZ>>(size);
+  return TArrayWrite<T, SIZ, Class>(clone, begin, size);
+}
+
+/* Checks of the given size is able to double in size.
+@return True if the object can double in size. */
+template <typename SIZ>
+BOL TArrayCanGrow(SIZ size) {
+  return !(size >> (sizeof(SIZ) * 8 - 2));
+}
+
+/* Resizes the given array. */
+template <typename T, typename SIZ, typename Class = TArray<SIZ>>
+SIW TArrayResize(Autoject& obj, SIZ new_size) {
+  UIW* begin = obj.begin;
+  if (!begin) return kFactoryNilOBJ;
+  SIZ size = TSize<SIZ>(begin);
+  if (size < new_size) {
+    if (size <= 0) return kFactorySizeInvalid;
+    TSizeSet<SIZ>(begin, size);
+    return kFactorySuccess;
   }
-  if (element_count > ArrayCountUpperLimit<T, Size, Index>()) return 0;
-  return element_count * sizeof(T);
+  UIW* new_begin = reinterpret_cast<UIW*>(obj.factory(obj, kFactoryNew, size));
+  TArrayWrite<T, SIZ, Class>(new_begin, begin, new_size);
+  obj.begin = new_begin;
+  return kFactorySuccess;
 }
 
-/* Initializes an stack of n elements of the given type.
-@param socket An stack of bytes large enough to fit the stack. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-TCStack<T, Size, Index>* ArrayInit(const Index* dimensions) {
-  ASSERT(dimensions);
-  Index dimension_count = *dimension;
-  if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
-  Size size =
-      (Size)sizeof(TCStack<T, Size, Index>) + dimension_count * sizeof(T);
-  UIW* socket = new UIW[size >> kWordBitCount];
-  TCStack<T, Size, Index>* stack =
-      reinterpret_cast<TCStack<T, Size, Index>*>(socket);
-  stack->size_array = 0;
-  stack->size_stack = size;
-  stack->count_max = dimension_count;
-  stack->count = 0;
-  return stack;
+/* Resizes the given array to double it's prior capacity.
+@return an AsciiFactoryError code. */
+template <typename T, typename SIZ, typename Class = TArray<SIZ>>
+SIW TArrayGrow(Autoject& obj) {
+  SIZ size = TSize<SIZ>(obj.begin);
+  if (!TArrayCanGrow<SIZ>(size)) return kFactorySizeInvalid;
+  return TArrayResize<T, SIZ, Class>(obj, size << 1);
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-Index ArrayElementCountMax() {
-  return (UnsignedMax<Size>() - (Size)sizeof(TCStack<T, Size, Index>)) /
-         sizeof(T);
+/* Gets the last UI1 in the ASCII Object.
+The object end, unlike the UTF which the stop pointer is at the last CH1 in
+the object, the end of a socket is an out of bounds address. For this reason,
+it is best to cap the object size as the highest possible value that you can
+word-align to produce a valid result, which is 3 bytes on 32-bit systems and
+7 bytes on 64-bit systems. */
+template <typename SIZ>
+inline CH1* TArrayEnd(Autoject stack) {
+  UIW* socket = stack.begin;
+  ASSERT(socket);
+  SIZ size = *reinterpret_cast<SIZ*>(socket);
+  return reinterpret_cast<CH1*>(socket) + size;
 }
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-TCStack<T, Size, Index>* ArrayNew(const Index* dimensions) {
-  ASSERT(dimensions);
-  const Index* begin = dimensions;
-  Index count = (*begin++) - 1, element_count = *begin++, index = count;
-  while (index-- > 0) element_count *= *begin++;
-  Size size = ((Size)element_count * (Size)sizeof(T));
+/* Gets the last UI1 in the ASCII Object. */
+template <typename SIZ>
+inline const CH1* TArrayEnd(const Autoject stack) {
+  UIW* socket = stack.begin;
+  SIZ size = *reinterpret_cast<SIZ*>(socket);
+  return reinterpret_cast<const CH1*>(socket) + size;
 }
 
-/* Gets the address of the packed array.
-@param ary ASCII Array data structure.
-@return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-T* ArrayElements(TCStack<T, Size, Index>* ary) {
-  CH1* elements = reinterpret_cast<CH1*>(ary) + ary->size_stack;
-  return reinterpret_cast<T*>(elements);
+/* Returns the start of the OBJ. */
+template <typename T = CH1, typename SIZ>
+inline T* TArrayStart(TArray<SIZ>* obj) {
+  UIW start = reinterpret_cast<UIW>(obj) + sizeof TArray<SIZ>;
+  return reinterpret_cast<T*>(start);
 }
 
-/* Gets the address of the packed Index dimensions.
-@param ary ASCII Array data structure.
-@return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-Index* ArrayDimensions(TCStack<T, Size, Index>* ary) {
-  CH1* elements = reinterpret_cast<CH1*>(ary) + sizeof(TCStack<T, Size, Index>);
-  return reinterpret_cast<Index*>(elements);
+/* Returns the start of the OBJ. */
+template <typename T = CH1, typename SIZ>
+inline T* TArrayStart(UIW* obj) {
+  return TArrayStart<T, SIZ>(reinterpret_cast<TArray<SIZ>*>(obj));
 }
 
-/* Gets the stop address of the packed Index dimensions.
-@param ary ASCII Array data structure.
-@return Pointer to the first element in the array. */
-template <typename T, typename Size = SI4, typename Index = SI4>
-Index* ArrayDimensionsEnd(TCStack<T, Size, Index>* ary) {
-  ASSERT(ary);
-  return ArrayDimensions<T, Size, Index>(ary) + ary->count - 1;
+/* Gets the stop of the TArray. */
+template <typename T = CH1, typename SIZ>
+inline T* TArrayStop(TArray<SIZ>* ary) {
+  return TArrayStart<T, SIZ>(ary) + ary->size - 1;
 }
 
-/* Prints the TCArray to the UTF. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-TUTF<Char>& PrintArray(TUTF<Char>& utf, TCStack<T, Size, Index>* ary) {
-  ASSERT(ary);
-  Size size_array = ary->size_array;
-  Index count = ary->count;
-  if (size_array == 0) {
-    return TPrintStack<T, Size, Index>(utf, ary);
+/* Returns the stop of the OBJ. */
+template <typename T = CH1, typename SIZ>
+inline T* TArrayStop(UIW* obj) {
+  return TArrayStop<T, SIZ>(reinterpret_cast<TArray<SIZ>*>(obj));
+}
+
+/* Prints this object to the COut. */
+template <typename SIZ, typename Printer>
+Printer& TArrayPrintTo(Printer& o, Autoject& obj) {
+  o << "\nAutoArray<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
+  UIW* begin = obj.begin;
+  if (begin) {
+    SIZ size = *reinterpret_cast<SIZ*>(begin);
+    o << " size:" << (SIW)size;
   }
-  if (count <= 0) utf << "Array: Error! Dimension count must be positive!";
-
-  utf << "\n\nArray: dimension_count: " << count
-      << " count_max:" << ary->count_max << " size_stack:" << ary->size_stack
-      << " size_array:" << ary->size_array << "\nDimensions:\n";
-
-  Index *dimensions = ArrayDimensions<T, Size, Index>(ary),
-        *dimensions_end = dimensions + count - 1;
-  Index element_count = *dimensions++;
-
-  while (dimensions < dimensions_end) {
-    Index dimension = *dimensions++;
-    element_count *= dimension;
-    if (element_count > ArrayElementCountMax<T, Size, Index>())
-      return utf << "Max element count exceeded";
-    if (dimensions == dimensions_end)
-      utf << dimension << kLF;
-    else
-      utf << dimension << ", ";
+  AsciiFactory factory = obj.factory;
+  if (factory) {
+    o << " factory:\"";
+    const CH1* info_string = factory(obj, kFactoryName, nullptr);
+    if (info_string) o << info_string;
+    o << '\"';
   }
-  return utf;
+  return o;
 }
 
-/* Creates a immutable array of dimensions. */
-template <const SI4... N>
-inline const SI4* Dimensions() {
-  static const SI4 kCount = (SI4)sizeof...(N), kList[sizeof...(N)] = {N...};
-  return &kCount;
+template <typename T, typename SIZ>
+SIW TArrayFactory(Autoject& obj, SIW function, SIW arg, BOL using_heap) {
+  PRINT_FACTORY_FUNCTION("Array", function, using_heap);
+  switch (function) {
+    case kFactoryDelete: {
+      Delete(obj.begin, using_heap);
+      return 0;
+    }
+    case kFactoryNew: {
+      return reinterpret_cast<SIW>(TArrayNew<T, SIZ>(arg));
+    }
+    case kFactoryGrow: {
+      return TArrayGrow<T, SIZ>(obj);
+    }
+    case kFactoryClone: {
+      return reinterpret_cast<SIW>(TArrayClone<T, SIZ>(obj));
+    }
+    case kFactoryName: {
+      return reinterpret_cast<SIW>("Array");
+    }
+  }
+  return function;
 }
 
-/* A multi-dimensional array that uses dynamic memory that can auto-grow.
+/* */
+template <typename T, typename SIZ>
+SIW TArrayFactoryStack(Autoject& obj, SIW function, SIW arg) {
+  return TArrayFactory<T, SIZ>(obj, function, arg, kStack);
+}
 
-An ASCII Stack struct is identical to an Array
+/* */
+template <typename T, typename SIZ>
+SIW TArrayFactoryHeap(Autoject& obj, SIW function, SIW arg) {
+  return TArrayFactory<T, SIZ>(obj, function, arg, kHeap);
+}
 
-@todo This is an older data structure that needs to be replace this with
-Array.
-This class is used to save a little bit of ROM space over the Array.
-To use this class with anything other than POD types the class T must have
-a overloaded operator= and operator==. */
-template <typename T = SI4, typename Size = SI4, typename Index = SI4>
-class TArray {
+/* An Autoject Array of type T.
+Arrays may only use 16-bit, 32-bit, and 64-bit signed integers for their
+size. */
+template <typename T, typename SIZ = SIN, typename BUF = Nil>
+class AArray {
  public:
-  /* Initializes an array of n elements of the given type.
-      @param max_elements The max number_ of elements in the array socket. */
-  TArray(Index demension_count = 1) : begin(ArrayNew<T, Size, Index>(1)) {}
-
-  /* Initializes an array of n elements of the given type.
-  @param max_elements The max number_ of elements in the array socket. */
-  TArray(const Array& other)
-      : size_array(other.size_array),
-        size_stack(other.size_stack),
-        count_max(other.count_max),
-        count(other.count) {
-    Index *elements_other = TStackStart<Index, Size, Index>(other.stack),
-          *element = TStackStart<Index, Size, Index>(stack),
-          *elements_end = StackStop<Index, Size, Index>(stack);
-    while (element < elements_end) *element++ = *elements_other++;
+  /* Constructs. */
+  AArray() {
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(), FactoryInit());
   }
 
-  /* Deletes the dynamically allocated Array. */
-  ~TArray() { delete[] begin; }
-
-  /* Clones the other object; up-sizing the socket only if required. */
-  void Clone(Array<T, Size, Index>& other) {}
-
-  /* Gets the number_ of dimensions. */
-  Index DimensionCount() { return stack->count; }
-
-  /* Gets the dimensions array. */
-  T* Dimension() { return TStackStart<T, Size, Index>(stack); }
-
-  /* Gets the underlying array. */
-  T* Elements() { return ArrayElements<T, Size, Index>(stack); }
-
-  /* Operator= overload. */
-  inline TArray<T, Size, Index>& operator=(TArray<T, Size, Index>& other) {
-    Clone(other);
-    return *this;
+  /* Constructs a object with either statically or dynamically allocated memory
+  based on if object is nil. */
+  explicit AArray(AsciiFactory factory) {
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(),
+                       FactoryInit(factory));
   }
 
-  inline TCArray<T, Size, Index>* stack {
-    return reinterpret_cast<TCArray<T, Size, Index>*>(begin);
+  /* Constructs a object with either statically or dynamically allocated memory
+  based on if object is nil. */
+  AArray(SIZ size) {
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, FactoryInit());
+  }
+
+  /* Constructs a object with either statically or dynamically allocated memory
+  based on the size can fit in the buffer_.
+  If the buffer_ is statically allocated but the size can't fit in the buffer a
+  new block of dynamic memory will be created. */
+  AArray(SIZ size, AsciiFactory factory) {
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, FactoryInit(factory));
+  }
+
+  /* Destructor calls the AsciiFactory factory. */
+  ~AArray() { Delete(obj_); }
+
+  /* Gets the buffer_. */
+  inline BUF& Buffer() { return buffer_; }
+
+  /* Returns the buffer_. */
+  inline UIW* Begin() { return obj_.begin; }
+
+  template <typename T = TStack<SIZ>>
+  inline T* BeginAs() {
+    return reinterpret_cast<T*>(Begin());
+  }
+
+  /* Sets the begin to the given pointer.
+  @return Nil if the input is nil. */
+  inline UIW* BeginSet(void* socket) { return AutojectBeginSet(socket); }
+
+  /* Returns the start of the OBJ. */
+  inline T* Start() {
+    UIW ptr = reinterpret_cast<UIW>(obj_.begin) + sizeof(TArray<SIZ>);
+    return reinterpret_cast<T*>(ptr);
+  }
+
+  /* Gets the stop of the OBJ. */
+  inline CH1* Stop() {
+    SIZ size = TSize<SIZ>(obj_.begin);
+    return reinterpret_cast<CH1*>(obj_.begin) + size - 1;
+  }
+
+  /* Gets the ASCII Object size in elements minus the header size. */
+  inline SIZ Size() { return TSize<SIZ>(obj_.begin); }
+
+  /* Gets the ASCII Object size in elements including the header size. */
+  inline SIZ SizeBytes() { return TArraySizeOf<T, SIZ>(Size()); }
+
+  /* Gets the AsciiFactory. */
+  inline AsciiFactory Factory() { return obj_.factory; }
+
+  /* Calls an AsciiFactory function with the given arg. */
+  inline SIW Factory(SIW function, SIW arg) {
+    return obj_.factory(obj_, function, arg);
+  }
+
+  inline AsciiFactory FactorySet(AsciiFactory factory) {
+    obj_.factory = factory;
+    return factory;
+  }
+  /* Gets the Autoject. */
+  inline Autoject& AObj() { return obj_; }
+
+  /* Attempts to grow the this object.
+  @return false if the grow op failed. */
+  inline BOL CanGrow() { return TArrayCanGrow<SIZ>(obj_); }
+
+  template <typename Class = TArray<SIZ>>
+  inline void Grow() {
+    Factory(kFactoryGrow, 0);
+  }
+
+  /* Returns true if the buffer is a Socket and false if it's a Nil. */
+  static constexpr BOL UsesStack() { return sizeof(buffer_) != 0; }
+
+  /* Prints this object to the given printer. */
+  template <typename Printer>
+  inline Printer& PrintTo(Printer& o) {
+    SIZ size = TSize<SIZ>(obj_);
+    o << "\nTArray<SI" << (char)('0' + sizeof(SIZ)) << "> size:" << size;
+    if (size == 0) return o;
+    T* ptr = Start();
+    for (SIZ i = 0; i < size - 1; ++i) o << ptr++ << ", ";
+    return o << ptr;
   }
 
  private:
-  UIW* begin;             //< OBJ base address.
-  AsciiFactory factory_;  //< AsciiFactory.
+  Autoject obj_;  //< Automatic Object.
+  BUF buffer_;    //< Optional socket on the program stack.
+
+  /* Gets the AsciiFactory based on if the BUF is Nil or a TSocket. */
+  inline AsciiFactory FactoryInit() {
+    return buffer_.Size() ? TArrayFactoryStack<T, SIZ>
+                          : TArrayFactoryHeap<T, SIZ>;
+  }
+
+  /* Gets the AsciiFactory based on if the BUF is Nil or a TSocket. */
+  inline AsciiFactory FactoryInit(AsciiFactory factory) {
+    return factory ? factory : FactoryInit();
+  }
 };
+
 }  // namespace _
 
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
-                                 ::_::TCArray<T, Size, Index>* stack) {
-  return ::_::PrintArray<T, Size, Index>(printer, stack);
-}
-
-template <typename T = SI4, typename Size = SI4, typename Index = SI4,
-          typename Char = CH1>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& printer,
-                                 ::_::TCArray<T, Size, Index>& stack) {
-  return ::_::PrintArray<T, Size, Index>(printer, stack);
-}
-
-#endif  //< INCLUDED_SCRIPT2_ARRAY
-#endif  //< #if SEAM >= SCRIPT2_7
+#endif
+#endif

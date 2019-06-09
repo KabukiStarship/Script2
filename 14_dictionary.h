@@ -1,15 +1,16 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/11_map.h
+@file    /script2/14_dictionary.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+#pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_11
+#if SEAM == SCRIPT2_SEAM_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -18,26 +19,10 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _11_Map(CH1* seam_log, CH1* seam_end,
-                                       const CH1* args) {
-#if SEAM >= SCRIPT2_11
+static const CH1* _14_Dictionary(CH1* seam_log, CH1* seam_end,
+                                 const CH1* args) {
+#if SEAM >= SCRIPT2_SEAM_DIC
   TEST_BEGIN;
-
-  PrintLineBreak("\n  + Running MultimapTests\n", 10);
-
-  PrintLineBreak("\n  - Running MultimapInit...\n", 5, ' ');
-  SI1 index;
-
-  enum {
-    kBufferSize = 256,
-    kBufferSizeWords = kBufferSize / sizeof(UIW),
-  };
-
-  slot << 'a' << "b"
-       << "cd" << (SI1)1 << (UI1)2 << (SI2)3 << (UI2)4 << (SI4)5 << (UI4)6
-       << (SI8)7 << (UI8)8;
-
-  Print(slot);
 
   UIW socket[kBufferSizeWords];
 
@@ -95,4 +80,4 @@ static const CH1* _11_Map(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

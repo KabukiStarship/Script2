@@ -9,30 +9,17 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
+#if USING_UTF8 == YES
 #ifndef INCLUDED_SCRIPT2_UTF8
 #define INCLUDED_SCRIPT2_UTF8
 
-#include "c_uniprinter.h"
-
-#if SEAM >= SCRIPT2_3
-
-#include "c_ascii.h"
-#include "c_object.h"
-
-#ifndef USING_UTF8
-#define USING_UTF8 YES
-#endif
-
-#if USING_UTF8 == YES
+#include "c_utf.h"
 
 namespace _ {
 
 /* UTF-8 printing utilities.
 @ingroup ASCII STR and TKN
 */
-
-/* Strand Factory that prints the string upon destruction.
-SI4 COutHeap1(CObject& obj, SIW function, void* arg); */
 
 /* Checks if the given character is whitespace. */
 SDK BOL IsWhitespace(CH1 character);
@@ -127,7 +114,7 @@ SDK CH1* PrintCenter(CH1* start, CH1* stop, FP8 item,
 SDK CH1* PrintRight(CH1* start, CH1* stop, FP4 item, SI4 count = kTokenLongest);
 SDK CH1* PrintRight(CH1* start, CH1* stop, FP8 item, SI4 count = kTokenLongest);
 
-#endif  //< SCRIPT2_1
+#endif  //< SCRIPT2_SEAM_ITOS
 
 /* Prints the given item to the utf socket.
 @return Nil upon failure or a pointer to the terminator upon success.
@@ -452,16 +439,13 @@ struct SDK UTF1 {
   /*inline*/ UTF1& Set(CH1* new_start);
 
   /* Prints the given item. */
-  /*inline*/ UTF1& PrintChar(CH1 item);
   /*inline*/ UTF1& Print(CH1 item);
   /*inline*/ UTF1& Print(const CH1* item);
 #if USING_UTF16 == YES
-  /*inline*/ UTF1& PrintChar(CH2 item);
   /*inline*/ UTF1& Print(CH2 item);
   /*inline*/ UTF1& Print(const CH2* item);
 #endif
 #if USING_UTF32 == YES
-  /*inline*/ UTF1& PrintChar(CH4 item);
   /*inline*/ UTF1& Print(CH4 item);
   /*inline*/ UTF1& Print(const CH4* item);
 #endif
@@ -552,6 +536,5 @@ SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH2* item);
 #if USING_UTF32 == YES
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, CH4 item);
 SDK /*inline*/ ::_::UTF1& operator<<(::_::UTF1& utf, const CH4* item);
-#endif
 #endif
 #endif

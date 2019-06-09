@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_11
+#if SEAM >= SCRIPT2_SEAM_LIST
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
 #include "c_ascii.h"
 #include "c_socket.h"
 
-#if SEAM == SCRIPT2_11
+#if SEAM == SCRIPT2_SEAM_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -124,7 +124,7 @@ pair, so we need a 64-bit map.
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 struct TMap {
-  Size size;        //< ASCII CObject size.
+  Size size;        //< ASCII AArray size.
   Index table_size, /*< Size of the key strings in bytes.
                      Set to 0 for ASCII Map. */
       size_pile;    /*< Size of the collisions pile in bytes.
@@ -624,43 +624,43 @@ class Map {
   ~Map() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(CObject(), adress);
+    return MapRemove<Size, Index, I>(AArray(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(CObject(), value);
+    return MapContains<Size, Index, I>(AArray(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(CObject()); }
+  inline void Wipe() { MapWipe<Size, Index, I>(AArray()); }
 
   static inline Index CountUpperBounds() {
     return MapCountUpperBounds<Size, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SI4 type) {
-    return MapInsert<Size, Index, I>(CObject(), value, type, index);
+    return MapInsert<Size, Index, I>(AArray(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(CObject()); }
+  inline void Clear() { MapClear<Size, Index, I>(AArray()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, CObject());
+    return MapPrint<Size, Index, I>(utf, AArray());
   }
 
  private:
   UIW* socket;
 
   /* Returns the socket casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* CObject() {
+  inline TMap<Size, Index, I>* AArray() {
     return reinterpret_cast<TMap<Size, Index, I>*>(socket);
   }
 };  //< class Map
 }  // namespace _
 
 #endif  //< INCLUDED_CRAPS_TMAP
-#endif  //< #if SEAM >= SCRIPT2_11
+#endif  //< #if SEAM >= SCRIPT2_SEAM_LIST

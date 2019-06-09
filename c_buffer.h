@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_BUFFER
 #define SCRIPT2_BUFFER
 // Dependencies:
@@ -31,4 +31,4 @@ inline CH1* Buffer() {
 
 }  // namespace _
 #endif  //< SCRIPT2_BUFFER
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

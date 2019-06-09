@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_5
+#if SEAM >= SCRIPT2_SEAM_CLOCK
 #ifndef SCRIPT2_CLOCK_C
 #define SCRIPT2_CLOCK_C
 
@@ -376,4 +376,4 @@ SDK const CH4* ScanTime(const CH4* input, TM8& result);
 #undef PRINT
 #undef PRINTF
 #endif  //< #ifndef SCRIPT2_CLOCK_C
-#endif  //< #if SEAM >= SCRIPT2_5
+#endif  //< #if SEAM >= SCRIPT2_SEAM_CLOCK

@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_2
+#if SEAM == SCRIPT2_SEAM_SOCKET
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _02_Socket(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_2
+#if SEAM >= SCRIPT2_SEAM_SOCKET
   TEST_BEGIN;
 
   PRINT_HEADING("Test SocketCopy and MemoryCompare");

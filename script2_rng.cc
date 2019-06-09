@@ -3,15 +3,15 @@
 @file    /script2/script2_random.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#include "c_rng.h"
-
 #include <random>
+
+#include "c_rng.h"
 
 namespace _ {
 
@@ -68,14 +68,20 @@ I Random(I min, I max) {
   return dist(rng);
 }
 
+UI1 Random(UI1 min, UI1 max) { return (UI1)Random<UI2>(min, max); }
+
+SI1 Random(SI1 min, SI1 max) { return (SI1)Random<UI2>(min, max); }
+
 UI2 Random(UI2 min, UI2 max) { return Random<UI2>(min, max); }
 
-UI2 Random(SI2 min, SI2 max) { return Random<SI2>(min, max); }
+SI2 Random(SI2 min, SI2 max) { return (SI2)Random<UI2>(min, max); }
 
 UI4 Random(UI4 min, UI4 max) { return Random<UI4>(min, max); }
 
+SI4 Random(SI4 min, SI4 max) { return (SI4)Random<UI4>(min, max); }
+
 UI8 Random(UI8 min, UI8 max) { return Random<UI8>(min, max); }
 
-UI8 Random(SI8 min, SI8 max) { return Random<SI8>(min, max); }
+SI8 Random(SI8 min, SI8 max) { return (SI8)Random<UI8>(min, max); }
 
 }  // namespace _

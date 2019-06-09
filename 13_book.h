@@ -1,16 +1,16 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/12_book.h
+@file    /script2/13_book.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_12
+#if SEAM == SCRIPT2_SEAM_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -19,12 +19,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _12_Book(CH1* seam_log, CH1* seam_end,
-                                        const CH1* args) {
-#if SEAM >= SCRIPT2_12
+static const CH1* _13_Book(CH1* seam_log, CH1* seam_end, const CH1* args) {
+#if SEAM >= SCRIPT2_SEAM_BOOK
   TEST_BEGIN;
 
-  CHN index;
+  CH4 index;
   UIW socket[128];
   Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
 
@@ -83,4 +82,4 @@ static const CH1* _12_Book(CH1* seam_log, CH1* seam_end,
 #endif
   return nullptr;
 }
-} //< namespace script2
+}  // namespace script2

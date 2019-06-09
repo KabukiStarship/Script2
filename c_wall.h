@@ -9,12 +9,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_WALL
 #define SCRIPT2_WALL
 #include "c_door.h"
 #include "c_op.h"
-#incude "c_array.h"
+#incude "c_autoject.h"
 
 namespace _ {
 
@@ -46,7 +46,7 @@ class Wall {
 
   virtual ~Wall();
 
-  Wall(TCArray<Door*>* doors);
+  Wall(TMatrix<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
   Wall(SIW size_bytes = kMinSizeBytes);
@@ -58,7 +58,7 @@ class Wall {
   SIW GetSizeBytes();
 
   /* Gets a pointer to the array of pointers to Door(). */
-  TCArray<Door*>* Doors();
+  TMatrix<Door*>* Doors();
 
   /* Gets the Door from the Door at the given index. */
   Door* GetDoor(SI4 index);
@@ -78,7 +78,7 @@ class Wall {
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
   SIW size_bytes_;         //< Size of the Wall in bytes.
   UIW* begin;              //< The Wall's socket.
-  TCArray<Door*>* doors_;  //< The doors in the room.
+  TMatrix<Door*>* doors_;  //< The doors in the room.
 };
 
 }  // namespace _

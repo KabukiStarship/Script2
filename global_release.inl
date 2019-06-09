@@ -1,5 +1,6 @@
-#include "c_test.h"
 #include "global_footer.inl"
+//
+#include "c_test.h"
 
 #define DEBUG_SEAM 0
 #define TEST_BEGIN \
@@ -23,7 +24,7 @@
 #define PRINT_CHARS(begin, end_or_size)
 #define PRINT_HEX(item)
 #define PRINT_HEXS(begin, end_or_size)
-#define PRINT_SOCKET_TOBJ(obj)
+#define PRINT_SOCKET_OBJ(obj)
 #define PRINT_BSQ(bsq)
 #define PRINT_OBJ(stack)
 #define PRINT_FUNCTION
@@ -80,7 +81,44 @@
     ::_::Print(b);                                  \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__) \
   }
-#define AVOW_INDEX(a, b, index)
+#define AVOW_INDEX(a, b, index)                      \
+  if (!::_::Test(a, b)) {                            \
+    ::_::Print("\n\nExpecting:");                    \
+    ::_::PrintHex(a);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(a);                                   \
+    ::_::Print("\nFound    :");                      \
+    ::_::PrintHex(b);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(b);                                   \
+    ::_::Print("\nAt index :");                      \
+    ::_::PrintHex(index);                            \
+    ::_::Print(':');                                 \
+    ::_::Print(index);                               \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define RAVOW_INDEX(a, b, index)                     \
+  if (!::_::Test(a, b)) {                            \
+    ::_::Print("\n\nExpecting:");                    \
+    ::_::PrintHex(a);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(a);                                   \
+    ::_::Print("\nFound    :");                      \
+    ::_::PrintHex(b);                                \
+    ::_::Print(':');                                 \
+    ::_::Print(b);                                   \
+    ::_::Print("\nAt index :");                      \
+    ::_::PrintHex(index);                            \
+    ::_::Print(':');                                 \
+    ::_::Print(index);                               \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define DAVOW_INDEX(a, b, index)
+#define WARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define DWARN(condition)
+#define RWARN(condition) \
+  if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define RETURN(value) return;
 #define DRETURN(value)
 #define RRETURN(value) \
@@ -89,3 +127,4 @@
 #define DRETURN_VALUE(value)
 #define RRETURN_VALUE(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return; }
+#define PRINT_FACTORY_FUNCTION(obj, function, using_heap)

@@ -9,13 +9,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_ROOM
 
 #include "t_ascii.h"
 
-#include "t_socket.h"
-
-#if SEAM == SCRIPT2_3
+#if SEAM == SCRIPT2_SEAM_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -301,6 +299,7 @@ inline CH1* WriteStrand(CH1* begin, CH1* stop, const void* value) {
   return SocketCopy(target, stop, value, length + sizeof(Char));
 }*/
 
+/*
 template <typename SI>
 inline CH1* TWriteObj(CH1* begin, CH1* stop, const void* value) {
   SI* target = TAlignUp<SI>(begin);
@@ -383,7 +382,7 @@ CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* value) {
       return TWriteObj<UI8>(begin, stop, value);
   }
   return nullptr;
-}
+}*/
 
 BOL TypeIsObj(SI4 type) {
   if (type < kOBJ) return false;
@@ -433,4 +432,4 @@ CH4* Print(CH4* begin, CH4* stop, SI4 type, const void* value) {
 }
 #endif
 
-#endif  //< #if SEAM >= SCRIPT2_13
+#endif

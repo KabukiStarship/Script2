@@ -8,17 +8,11 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
+#if USING_UTF16 == YES
 #ifndef INCLUDED_SCRIPTPRINT_UTF16
 #define INCLUDED_SCRIPTPRINT_UTF16
 
-#include "c_uniprinter.h"
-
-#if SEAM >= SCRIPT2_3
-
-#include "c_ascii.h"
-#include "c_object.h"
-
-#if USING_UTF16 == YES
+#include "c_utf.h"
 
 namespace _ {
 
@@ -31,7 +25,7 @@ namespace _ {
 */
 
 /* Strand Factory that prints the string upon destruction.
-SI4 COutHeap4 (CObject& obj, SIW function, void* arg); */
+SI4 COutHeap4 (AArray& obj, SIW function, void* arg); */
 
 /* Checks if the given character is whitespace.
  */
@@ -154,7 +148,7 @@ SDK CH2* PrintHex(CH2* start, CH2* stop, SI4 item);
 SDK CH2* PrintHex(CH2* start, CH2* stop, UI8 item);
 SDK CH2* PrintHex(CH2* start, CH2* stop, SI8 item);
 
-#if SEAM >= SCRIPT2_4
+#if SEAM >= SCRIPT2_SEAM_FTOS
 SDK CH2* PrintHex(CH2* start, CH2* stop, FP4 item);
 SDK CH2* PrintHex(CH2* start, CH2* stop, FP8 item);
 #endif
@@ -218,7 +212,7 @@ SDK const CH2* Scan(const CH2* text, SI4& result);
 SDK const CH2* Scan(const CH2* text, UI4& result);
 SDK const CH2* Scan(const CH2* text, SI8& result);
 SDK const CH2* Scan(const CH2* text, UI8& result);
-#if SEAM >= SCRIPT2_4
+#if SEAM >= SCRIPT2_SEAM_FTOS
 SDK const CH2* Scan(const CH2* text, FP4& result);
 SDK const CH2* Scan(const CH2* text, FP8& result);
 #endif
@@ -429,13 +423,10 @@ struct SDK UTF2 {
   /*inline*/ UTF2& Set(CH2* new_start);
 
   /* Prints a item to the strand. */
-  /*inline*/ UTF2& PrintChar(CH1 item);
   /*inline*/ UTF2& Print(CH1 item);
   /*inline*/ UTF2& Print(const CH1* item);
-  /*inline*/ UTF2& PrintChar(CH2 item);
   /*inline*/ UTF2& Print(CH2 item);
   /*inline*/ UTF2& Print(const CH2* item);
-  /*inline*/ UTF2& PrintChar(CH4 item);
   /*inline*/ UTF2& Print(CH4 item);
   /*inline*/ UTF2& Print(const CH4* item);
   /*inline*/ UTF2& Print(SI4 item);
@@ -532,6 +523,5 @@ SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Linef2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Headingf2 item);
 SDK /*inline*/ ::_::UTF2& operator<<(::_::UTF2& o, ::_::Chars2 item);
 
-#endif  //< #if USING_UTF16
 #endif
 #endif

@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 // Dependencies:
 #include "c_interrupts.h"
 // End dependencies.
@@ -25,4 +25,4 @@ const CH1* RoomCrashException::what() const throw() {
 
 }  //< namespace _
 #endif  //< USING_SCRIPT2_INTERRUPTS
-#endif  ///< #if SEAM >= SCRIPT2_14
+#endif  ///< #if SEAM >= SCRIPT2_SEAM_DIC

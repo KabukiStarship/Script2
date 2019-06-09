@@ -17,7 +17,7 @@
 #undef PRINT_TIME
 #undef PRINT_TYPE
 #undef PRINT_CHARS
-#undef PRINT_SOCKET_TOBJ
+#undef PRINT_SOCKET_OBJ
 #undef PRINT_HEX
 #undef PRINT_HEXS
 #undef PRINT_BSQ
@@ -42,9 +42,15 @@
 #undef DAVOW
 #undef RAVOW
 #undef AVOW_INDEX
+#undef RAVOW_INDEX
+#undef DAVOW_INDEX
+#undef WARN
+#undef DWARN
+#undef RWARN
 #undef RETURN
 #undef DRETURN
 #undef RRETURN
 #undef RETURN_VALUE
 #undef DRETURN_VALUE
 #undef RRETURN_VALUE
+#undef PRINT_FACTORY_FUNCTION

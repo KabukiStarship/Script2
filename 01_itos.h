@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/01_itos_stoi.h
+@file    /script2/01_itos.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -13,9 +13,10 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <cstdio>
 #include <cstring>
 
-#include "t_uniprinter.h"
+#include "c_rng.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_1
+#if SEAM == SCRIPT2_SEAM_ITOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -33,7 +34,7 @@ using namespace _;
 
 namespace script2 {
 inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_1
+#if SEAM >= SCRIPT2_SEAM_ITOS
   TEST_BEGIN;
 
   static const UI8 k10ToThe[20] = {
@@ -159,8 +160,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text,
-             TSTRLength<>(text));
+             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
     }
   }
 
@@ -178,8 +178,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (strcmp(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text,
-             TSTRLength<>(text));
+             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
     }
   }
 
@@ -197,8 +196,7 @@ inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
     *result = 0;
     if (TSTRCompare<>(expecting, text)) {
       PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text,
-             TSTRLength<>(text));
+             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
     }
   }
 

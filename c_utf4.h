@@ -8,18 +8,11 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-
+#if USING_UTF32 == YES
 #ifndef INCLUDED_SCRIPTPRINT_UTF32
 #define INCLUDED_SCRIPTPRINT_UTF32
 
-#include "c_uniprinter.h"
-
-#if SEAM >= SCRIPT2_3
-
-#include "c_ascii.h"
-#include "c_object.h"
-
-#if USING_UTF32 == YES
+#include "c_utf.h"
 
 namespace _ {
 
@@ -28,7 +21,7 @@ namespace _ {
 */
 
 /* Strand Factory that prints the string upon destruction.
-SI4 COutHeap4 (CObject& obj, SIW function, void* arg); */
+SI4 COutHeap4 (AArray& obj, SIW function, void* arg); */
 
 /* Checks if the given character is whitespace.
  */
@@ -477,20 +470,17 @@ struct SDK UTF4 {
   /*inline*/ UTF4& Set(CH4* new_pointer);
 
   /* Prints a item to the strand. */
-  /*inline*/ UTF4& PrintChar(CH1 item);
   /*inline*/ UTF4& Print(CH1 item);
   /*inline*/ UTF4& Print(const CH1* item);
-  /*inline*/ UTF4& PrintChar(CH2 item);
   /*inline*/ UTF4& Print(CH2 item);
   /*inline*/ UTF4& Print(const CH2* item);
-  /*inline*/ UTF4& PrintChar(CH4 item);
   /*inline*/ UTF4& Print(CH4 item);
   /*inline*/ UTF4& Print(const CH4* item);
   /*inline*/ UTF4& Print(SI4 item);
   /*inline*/ UTF4& Print(UI4 item);
   /*inline*/ UTF4& Print(SI8 item);
   /*inline*/ UTF4& Print(UI8 item);
-#if SEAM >= SCRIPT2_4
+#if SEAM >= SCRIPT2_SEAM_FTOS
   /*inline*/ UTF4& Print(FP4 item);
   /*inline*/ UTF4& Print(FP8 item);
 #endif
@@ -578,6 +568,5 @@ SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Headingf4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::Chars4 item);
 SDK /*inline*/ ::_::UTF4& operator<<(::_::UTF4& o, ::_::UTF4& item);
 
-#endif  //< #if USING_UTF32 == YES
 #endif
 #endif

@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_ERROR
 #define SCRIPT2_ERROR
 
@@ -40,7 +40,7 @@ typedef enum ScriptError {
   kErrorMalformedUTF8,        //< Script Error 21: Malformed UTF-8.
   kErrorMalformedUTF16,       //< Script Error 22: Malformed UTF-16.
   kErrorMalformedUTF32,       //< Script Error 23: Malformed UTF-32.
-  kErrorObjLocked,            //< Script Error 24: CObject locked.
+  kErrorObjLocked,            //< Script Error 24: AArray locked.
   kErrorInvalidArgs,          //< Script Error 25: Invalid args.
   kErrorAuthenticationError,  //< Script Error 26: Authentication error.
   kErrorRoomNotFound,         //< Script Error 27: Room not found.
@@ -55,4 +55,4 @@ SDK const CH1* ErrorStrand(Error error);
 
 }  // namespace _
 #endif  //< SCRIPT2_ERROR
-#endif  //< #if SEAM >= SCRIPT2_14
+#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC

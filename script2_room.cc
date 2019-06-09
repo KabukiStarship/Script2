@@ -3,20 +3,19 @@
 @file    /script2/script2_room.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
-#include "c_room.h"
-
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #include "c_bsq.h"
 #include "c_door.h"
+#include "c_room.h"
 #include "c_stack.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_14
+#if SEAM == SCRIPT2_SEAM_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -26,13 +25,13 @@ namespace _ {
 
 const CH1** RoomStateTexts() {
   static const CH1* states[] = {"Initializing", "Waking up", "Running",
-                                 "Going to sleep", "Exiting"};
+                                "Going to sleep", "Exiting"};
   return states;
 }
 
 const CH1** RequestTexts() {
   static const CH1* RequestTexts[] = {"Open door", "Close door",
-                                       "Invalid request"};
+                                      "Invalid request"};
 
   return RequestTexts;
 }
@@ -158,7 +157,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
 
 CH1 Room::CommandNext() { return 0; }
 
-const Op* Room::Star(CHN index, CCrabs* crabs) {
+const Op* Room::Star(CH4 index, CCrabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 
@@ -204,4 +203,4 @@ UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_14
+#endif

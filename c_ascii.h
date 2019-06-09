@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-
+#if SEAM >= SCRIPT2_SEAM_ROOM
 #ifndef SCRIPT2_ASCIIDATA_C
 #define SCRIPT2_ASCIIDATA_C
 
@@ -103,7 +103,7 @@ enum {
 };
 }  // namespace _
 
-#if SEAM >= SCRIPT2_3
+#if SEAM >= SCRIPT2_SEAM_UTF
 namespace _ {
 
 /* Gets the string representations of the given ASCII Data Type 0-31. */
@@ -147,7 +147,7 @@ SDK void* TypeAlign(SI4 type, void* value);
 /* Writes the given value to the socket. */
 SDK CH1* Write(CH1* begin, CH1* stop, SI4 type, const void* source);
 
-/* Returns true if the given type is an ASCII CObject. */
+/* Returns true if the given type is an ASCII AArray. */
 SDK inline BOL TypeIsObj(SI4 type);
 
 /* Returns true if the given type is a  type. */
@@ -199,5 +199,6 @@ SDK CH2* Print(CH2* begin, CH2* stop, SI4 type, const void* value);
 }  // namespace _
 #endif
 
+#endif
 #endif
 #endif

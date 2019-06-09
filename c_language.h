@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_14
+#if SEAM >= SCRIPT2_SEAM_DIC
 #ifndef SCRIPT2_LANGUAGE
 #define SCRIPT2_LANGUAGE 1
 #include "c_onfig.h"
@@ -30,7 +30,7 @@ enum {
 
 */
 struct Language {
-  CHN uppercase_begin,  //< First uppercase Unicode CH1 index.
+  CH4 uppercase_begin,  //< First uppercase Unicode CH1 index.
       uppercase_end,        //< Last uppercase Unicode CH1 index.
       lowercase_begin,      //< First lowercase Unicode CH1 index.
       lowercase_end;        //< Last lowercase Unicode CH1 index.

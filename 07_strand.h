@@ -10,9 +10,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#include "t_stack.h"
+#include "t_strand.h"
 
-#if SEAM == SCRIPT2_6
+#if SEAM == SCRIPT2_SEAM_STRAND
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,11 +20,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using namespace _;
 
-#if SEAM >= SCRIPT2_6
+#if SEAM >= SCRIPT2_SEAM_STRAND
 namespace script2 {
 template <typename Char>
 void _06_StrandN() {
-  PRINTF("\n\nTesting TStrand<CH%c>\n\n", '0' + sizeof(Char));
+  PRINT_LINEF('-');
+  PRINTF("Testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
 
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
@@ -37,9 +38,11 @@ void _06_StrandN() {
   PRINT("\n\nExpecting \"");
   PRINT(kTesting123);
   PRINT("\"\n");
-  TStrand<Char, 8> strand;
-  strand.PrintConstants();
-  strand.Wipe();
+  AStrand<Char, 8> strand;
+  PRINT("\nPrinting newly constructed strand:\n");
+#if SEAM_DEBUG
+  strand.PrintTo<COut>(COut().Star());
+#endif
   PRINT("\n\nPrinting:\"Testing \"");
   strand << "Testing ";
   PRINT("\n\nPrinting:\"1\"");
@@ -57,22 +60,21 @@ void _06_StrandN() {
   PRINTF("\n\nResult:\"");
   PRINT(strand.Start());
   PRINT("\"\n");
-  PRINT_CHARS(strand.CObj().Start<>(), strand.CObj().SizeBytes());
+  // PRINT_CHARS(strand.ARY().Begin(), strand.ARY().Size());
 
   const Char* cursor = strand.Find(kTesting123);
   ASSERT(cursor);
+  PRINTF("\nDone testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
 }
-#endif  //< #if SEAM >= SCRIPT2_6
+#endif  //< #if SEAM >= SCRIPT2_SEAM_STRAND
 
 static const CH1* _06_Strand(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_6
+#if SEAM >= SCRIPT2_SEAM_STRAND
   TEST_BEGIN;
 
-  PRINT("\n\nTesting TStrand<>...\n");
-
   _06_StrandN<CH1>();
-  _06_StrandN<CH2>();
-  _06_StrandN<CH4>();
+  //_06_StrandN<CH2>();
+  //_06_StrandN<CH4>();
 
 #endif
   return nullptr;
