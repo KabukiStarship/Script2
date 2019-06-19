@@ -1,6 +1,6 @@
 /* Script^2 @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/07_table.h
+@file    /script2/09_loom.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -9,6 +9,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
+
+#include "t_loom.h"
 
 #if SEAM == SCRIPT2_SEAM_LOOM
 #include "module_debug.inl"
@@ -19,63 +21,130 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
+
+template <typename Char, typename SIZ>
+void TestLoom() {
+  PRINT_LINEF("\n\n---\n\n");
+
+  enum {
+    kSize = 256 * sizeof(Char),
+    kCount = 32,
+  };
+  PRINTF("Testing ALoom<CH%c,SI%c> with kSize:%i and kCount:%i",
+         '0' + sizeof(Char), '0' + sizeof(SIZ), kSize, kCount);
+
+  ALoom<Char, SIZ, kSize, TSocket<kSize>> loom(kCount);
+#if DEBUG_SEAM
+  Print("\nPrinting empty loom:\n");
+  loom.COut();
+#endif
+
+  enum {
+    kLengthMax = kSize << 2 - 1,
+  };
+
+  Char string[kLengthMax + 1];
+  Char* string_end = &string[kLengthMax];
+
+  for (SIN i = 0; i < 32; ++i) {
+    Print(string, string_end, i);
+    AVOW((SIZ)i, loom.Add(string));
+  }
+
+  PRINT("\n\nTesting Factory.Grow...\n");
+
+  Print(string, string_end, 32);
+  AVOW((SIZ)32, loom.Add(string));
+
+  for (SIN i = 33; i < 96; ++i) {
+    Print(string, string_end, i);
+    AVOW((SIZ)(i), loom.Add(string));
+  }
+
+  Print(string, string_end, 96);
+  AVOW((SIZ)96, loom.Add(string));
+
+  PRINT("\n\nAttmpeting to add a very large string...\n");
+
+  for (SIN i = 0; i < kLengthMax; ++i) string[i] = '*';
+
+  string[kLengthMax] = 0;
+
+  SIZ index = loom.Add(string);
+#if DEBUG_SEAM
+  loom.COut();
+#endif
+  AVOW((SIZ)97, index);
+
+#if DEBUG_SEAM
+  PRINT('\n');
+  loom.COut();
+  PRINT('\n');
+#endif
+
+  PRINT("\nTesting TLoomFind...\n");
+
+  static const Char a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
+                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
+                    bac[] = {'b', 'a', 'c', '\0'},
+                    cba[] = {'c', 'b', 'a', '\0'},
+                    cab[] = {'c', 'a', 'b', '\0'},
+                    test[] = {'t', 'e', 's', 't', '\0'};
+
+  AVOW((SIZ)98, loom.Add(d));
+
+  AVOW((SIZ)98, loom.Find(d));
+
+  AVOW((SIZ)99, loom.Add(c));
+  AVOW((SIZ)98, loom.Find(d));
+  AVOW((SIZ)99, loom.Find(c));
+
+  AVOW((SIZ)100, loom.Add(b));
+  AVOW((SIZ)98, loom.Find(d));
+  AVOW((SIZ)99, loom.Find(c));
+  AVOW((SIZ)100, loom.Find(b));
+
+  AVOW((SIZ)101, loom.Add(a));
+  AVOW((SIZ)98, loom.Find(d));
+  AVOW((SIZ)99, loom.Find(c));
+  AVOW((SIZ)100, loom.Find(b));
+  AVOW((SIZ)101, loom.Find(a));
+
+  AVOW((SIZ)102, loom.Add(abc));
+  AVOW((SIZ)102, loom.Find(abc));
+
+  AVOW((SIZ)103, loom.Add(bac));
+  AVOW((SIZ)102, loom.Find(abc));
+  AVOW((SIZ)103, loom.Find(bac));
+
+  AVOW((SIZ)104, loom.Add(cba));
+  AVOW((SIZ)102, loom.Find(abc));
+  AVOW((SIZ)103, loom.Find(bac));
+  AVOW((SIZ)104, loom.Find(cba));
+
+  AVOW((SIZ)105, loom.Add(cab));
+  AVOW((SIZ)102, loom.Find(abc));
+  AVOW((SIZ)103, loom.Find(bac));
+  AVOW((SIZ)104, loom.Find(cba));
+  AVOW((SIZ)105, loom.Find(cab));
+
+#if DEBUG_SEAM
+  PRINT('\n');
+  loom.COut();
+  PRINT('\n');
+#endif
+
+  AVOW((SIZ)-1, loom.Find(test));
+}
+
 static const CH1* _09_Loom(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #if SEAM >= SCRIPT2_SEAM_LOOM
   TEST_BEGIN;
-
-  UIW socket[kBufferSizeWords];
-
-  Loom2* loom = Loom2Init(socket, 8, kBufferSize, 128);
-
-  Assert(loom != nullptr);
-
-  index = Loom2Add<UI1, kUI1>(loom, "D", (UI1)0xFF);
-
-  Compare(0, index) Loom2Print(loom);
-  Compare(0, index) index = Loom2Find(loom, "D");
-  Compare(0, index) PAUSE("\n");
-  index = Loom2Add<UI1, kUI1>(loom, "C", (UI1)0xFF);
-  Compare(1, index) index = Loom2Find(loom, "D");
-  Compare(0, index) index = Loom2Find(loom, "C");
-  Compare(1, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "BIn", (UI1)0xFF);
-  Compare(2, index) index = Loom2Find(loom, "D");
-  Compare(0, index) index = Loom2Find(loom, "C");
-  Compare(1, index) index = Loom2Find(loom, "BIn");
-  Compare(2, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "A", (UI1)0xFF);
-  Compare(3, index) index = Loom2Find(loom, "D");
-  Compare(0, index) index = Loom2Find(loom, "C");
-  Compare(1, index) index = Loom2Find(loom, "BIn");
-  Compare(2, index) index = Loom2Find(loom, "A");
-  Compare(3, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "abc", (UI1)0xFF);
-  Compare(4, index) index = Loom2Find(loom, "abc");
-  Compare(4, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "bac", (UI1)0xFF);
-  Compare(5, index) index = Loom2Find(loom, "abc");
-  Compare(4, index) index = Loom2Find(loom, "bac");
-  Compare(5, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "cba", (UI1)0xFF);
-  Compare(6, index) index = Loom2Find(loom, "abc");
-  Compare(4, index) index = Loom2Find(loom, "bac");
-  Compare(5, index) index = Loom2Find(loom, "cba");
-  Compare(6, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "cab", (UI1)0xFF);
-  Compare(7, index) index = Loom2Find(loom, "abc");
-  Compare(4, index) index = Loom2Find(loom, "bac");
-  Compare(5, index) index = Loom2Find(loom, "cba");
-  Compare(6, index) index = Loom2Find(loom, "cab");
-  Compare(7, index);
-
-  index = Loom2Add<UI1, kUI1>(loom, "test", (UI1)0xFF);
-  Compare(index, -1);
+  TestLoom<CH1, SI2>();
+  TestLoom<CH2, SI2>();
+  TestLoom<CH1, SI4>();
+  TestLoom<CH2, SI4>();
+  TestLoom<CH4, SI4>();
 #endif
   return nullptr;
 }

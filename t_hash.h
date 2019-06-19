@@ -3,8 +3,8 @@
 @file    /script2/t_hash.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -36,14 +36,16 @@ inline SI PrimeMaxSigned() {
 @return 0 if the sizeof (UI) is not 1, 2, 4, or 8. */
 template <typename UI>
 inline UI PrimeMaxUnigned() {
-  UI prime = sizeif(UI) == 1 ? 251
-                             : sizeof(UI) == 2
-                 ? 65535
-                 ? sizeof(UI) == 4 ? 4294967291
-                                   : sizeof(UI) == 8 ? 18446744073709551557 : 0;
+  UI prime = sizeof(UI) == 1
+                 ? 251
+                 : sizeof(UI) == 2
+                       ? 65535
+                       : sizeof(UI) == 4
+                             ? 4294967291
+                             : sizeof(UI) == 8 ? 18446744073709551557 : 0;
   return prime;
 }
 
-}  //< namespace _
+}  // namespace _
 #endif
 #endif

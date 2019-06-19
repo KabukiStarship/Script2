@@ -144,7 +144,7 @@ class Room : public Operand {
                    kMaxRoomSize. */
   Room(const CH1* room_name = "chinese_room", SI4 num_states = 2);
 
-  /* AsciiFactory. */
+  /* RamFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */

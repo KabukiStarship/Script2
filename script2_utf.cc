@@ -85,10 +85,10 @@ SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
 SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
 #endif
 
-Hex::Hex(const void* begin) : size_(-sizeof(UIW)) {
+Hex::Hex(const void* begin) : size_(sizeof(UIW)) {
   *buffer_ = reinterpret_cast<UIW>(begin);
 }
-Hex::Hex(const void* begin, SIW size) : size_(size) {
+Hex::Hex(const void* begin, SIW size) : size_(-size) {
   buffer_[0] = reinterpret_cast<UIW>(begin);
 }
 Hex::Hex(SI1 item) : size_(1) { *reinterpret_cast<SI1*>(buffer_) = item; }

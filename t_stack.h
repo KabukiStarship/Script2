@@ -46,14 +46,14 @@ that the size_array variable gets set to 0.
 0xN +----------------+
 @endcode
 */
-template <typename SIZ = SI4>
+template <typename SIZ = SIN>
 struct TStack {
   SIZ size,   //< Size of the Array in elements.
       count;  //< Element count.
 };
 
 /* Gets the size of a Stack with the given count_max. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSize(SIZ count_max) {
   enum { kCountMaxMin = sizeof(UI8) / sizeof(T) };
   if (count_max < kCountMaxMin) count_max = kCountMaxMin;
@@ -61,7 +61,7 @@ inline SIZ TStackSize(SIZ count_max) {
 }
 
 /* Gets the min size of a Stack with zero elements. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSizeMin() {
   enum {
     kStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
@@ -72,20 +72,20 @@ inline SIZ TStackSizeMin() {
 
 /* Gets the max number_ of elements in an obj with the specific index
 width. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSizeMax() {
   return (SIZ)((((~(SIZ)0) - 7) - (SIZ)sizeof(TStack<SIZ>)) / (SIZ)sizeof(T));
 }
 
 /*
-template<typename T = SI4, typename SIZ = SI4>
+template<typename T = SI4, typename SIZ = SIN>
 SIZ StackCountMax () {
     return (SIZ)((UnsignedMax<SIZ> () - (SIZ)sizeof (TStack<T, SIZ,
 SIZ>)) / (SIZ)sizeof (T));
 }*/
 
 /* The minimum obj size. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSizeMin(SIZ count_max) {
   SIZ count_upper_bounds = TStackSizeMax<T, SIZ>();
   if (count_max > count_upper_bounds) count_max = count_upper_bounds;
@@ -93,7 +93,7 @@ inline SIZ TStackSizeMin(SIZ count_max) {
 }
 
 /* Rounds up the count to the 64-bit align the value. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSizeMax(SIZ count_max) {
   enum {
     kStackCountMax =
@@ -108,7 +108,7 @@ inline SIZ TStackSizeMax(SIZ count_max) {
 8 bytes.
 @param socket An obj of bytes large enough to fit the obj.
 @return A dynamically allocated socket. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 TStack<SIZ>* TStackInit(TStack<SIZ>* stack, SIZ count_max) {
   DASSERT(stack);
   DASSERT(count_max < sizeof(TStack<SIZ>)) return nullptr;
@@ -117,11 +117,18 @@ TStack<SIZ>* TStackInit(TStack<SIZ>* stack, SIZ count_max) {
   return stack;
 }
 
+/* Checks if the given index is a stack element. */
+template <typename SIZ = SIN>
+inline BOL TStackContains(TStack<SIZ>* stack, SIZ index) {
+  if (index < 0 || index >= stack->count) return false;
+  return true;
+}
+
 /* Initializes an obj from a preallocated socket who's size is a multiple of
 8 bytes.
 @param socket An obj of bytes large enough to fit the obj.
 @return A dynamically allocated socket. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
   DASSERT(socket);
   DASSERT(size > sizeof(TStack<SI4>));
@@ -134,12 +141,13 @@ UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
   return socket;
 }
 
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 UIW* TStackClone(TStack<SIZ>* stack) {
   ASSERT(stack);
   SIZ size = stack->size_stack >> kWordBitCount;
-  UIW other_buffer = new UIW[size];
-  UIW *source = reinterpret_cast<UIW*>(stack), *destination = other_buffer;
+  UIW* other_buffer = new UIW[size];
+  UIW *source = reinterpret_cast<UIW*>(stack),  //
+      *destination = other_buffer;
   SIZ data_amount =
       (stack->count * sizeof(T) + sizeof(TStack<SIZ>)) >> kWordBitCount;
   size -= data_amount;
@@ -147,46 +155,106 @@ UIW* TStackClone(TStack<SIZ>* stack) {
   return destination;
 }
 
-/* Clones the given obj. */
-template <typename T = SI4, typename SIZ = SI4>
-UIW* TStackClone(TStack<SIZ>* destination, TStack<SIZ>* source) {
-  ASSERT(destination);
-  ASSERT(source);
-
-  SIZ this_size = destination->size_stack,  //
-      other_size = source->size_stack;
-
-  if (this_size < other_size) return TStackClone(source);
-
-  // We've got enough room in the obj's memory.
-
-  UIW *read = reinterpret_cast<UIW*>(TStackStart(destination)),
-      *write = reinterpret_cast<UIW*>(TStackStart(source));
-
-  SIZ count = source->count;
-  destination->count = count;
-  UIW* write_end = write + ((count * sizeof(T)) >> kWordBitCount);
-  while (write < write_end) *write++ = *read++;
-  return reinterpret_cast<UIW*>(destination);
-}
-
 /* Returns the first element in the Stack TMatrix. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 T* TStackStart(TStack<SIZ>* stack) {
-  return reinterpret_cast<T*>(reinterpret_cast<UIW>(stack) +
-                              sizeof(TStack<SIZ>));
+  return TAsciiData<T, TStack<SIZ>>(stack);
 }
 
 /* Returns the last element of the stack. */
-template <typename T = SI4, typename SIZ = SI4>
-inline T* TStackStop(TStack<SIZ>* stack) {
-  return TStackStart<T, SIZ>(stack) + stack->count - 1;
+template <typename T = SI4, typename SIZ = SIN, typename Type = T>
+inline Type TStackStop(TStack<SIZ>* stack) {
+  return reinterpret_cast<Type>(TStackStart<T, SIZ>(stack) + stack->count);
 }
 
 /* Returns the first empty element of the stack. */
-template <typename T = SI4, typename SIZ = SI4>
-inline T* TStackCursor(TStack<SIZ>* stack) {
-  return TStackStart<T, SIZ>(stack) + stack->count;
+template <typename T = SI4, typename SIZ = SIN>
+inline T* TStackTop(TStack<SIZ>* stack) {
+  return &TStackStart<T, SIZ>(stack)[stack->count];
+}
+
+/* Returns the last element of the stack. */
+template <typename T = SI4, typename SIZ = SIN, typename Type = T>
+inline Type TStackEnd(TStack<SIZ>* stack) {
+  return reinterpret_cast<Type>(&TStackStart<T, SIZ>(stack)[stack->size]);
+}
+
+/* Clones the other ASCII Autoject including possibly unused object space.
+@return Nil upon failure or a pointer to the cloned object upon success.
+@param socket A raw ASCII Socket to clone. */
+template <typename T = UI1, typename SIZ = SIN>
+UIW* TStackClone(Autoject& obj) {
+  RamFactory factory = obj.ram_factory;
+  UIW* begin = obj.begin;
+  if (!factory || !begin) return nullptr;
+
+  TStack<SIZ>* o = reinterpret_cast<TStack<SIZ>*>(begin);
+  SIZ count = o->count;
+  UIW* clone = TArrayNew<T, SIZ, TStack<SIZ>>(count);
+  SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, TStack<SIZ>>(count);
+  if (!SocketCopy(clone, count, begin, size_bytes)) return nullptr;
+  TSizeSet<SIZ>(begin, count);
+  return clone;
+}
+
+/* Prints the given obj to the console. */
+template <typename Printer, typename T = SI4, typename SIZ = SIN>
+Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
+  DASSERT(stack);
+  SIZ count = stack->count;
+  o << "\n\nTStack<SI" << (CH1)('0' + sizeof(SIZ)) << ">: size: " << stack->size
+    << " count:" << count;
+
+  T* elements = TStackStart<T, SIZ>(stack);
+  for (SI4 i = 0; i < count; ++i) o << '\n' << i << ".) " << elements[i];
+
+  return o;
+}
+
+/* Doubles the size of the stack.
+@return Returns nil if the size is greater than the amount of memory that
+can fit in type SIW, the unaltered socket pointer if the Stack has grown to the
+size upper bounds, or a new dynamically allocated socket upon failure. */
+template <typename T = SI4, typename SIZ = SIN>
+BOL TStackGrow(Autoject& obj) {
+  TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(obj.begin);
+  ASSERT(stack);
+#if DEBUG_SEAM
+  PRINT("\nAuto-growing Stack...\nBefore:");
+  TStackPrint<COut, T, SIZ>(COut().Star(), stack);
+#endif
+  SIZ size = stack->size;
+  if (!TCanGrow<SIZ>(size)) return false;
+  SIW size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(stack->count);
+  size = size << 1;
+  SIZ new_size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(size);
+  UIW* new_begin = obj.ram_factory(nullptr, new_size_bytes);
+  TStack<SIZ>* other = reinterpret_cast<TStack<SIZ>*>(new_begin);
+  other->size = size;
+  other->count = stack->count;
+  PRINT(" copying data...");
+  SocketCopy(TStackStart<T, SIZ>(other), size_bytes, TStackStart<T, SIZ>(stack),
+             size_bytes);
+  obj.begin = new_begin;
+#if DEBUG_SEAM
+  PRINT("\nResult:");
+  TStackPrint<COut, T, SIZ>(COut().Star(), other);
+#endif
+  return true;
+}
+
+/* Attempts to resize the given Autoject to the new_count.
+@return Nil upon failure. */
+template <typename T = SI4, typename SIZ = SIN>
+BOL TStackResize(Autoject& obj, SIZ new_count) {
+  TStack<SIZ> stack = *reinterpret_cast<TStack<SIZ>*>(obj.begin);
+  SIZ count = obj.count, count_max = TStackSizeMax<T, SIZ>();
+  if (count > count_max || count == new_count) return false;
+}
+
+template <typename T = SI4, typename SIZ = SIN>
+BOL TStackInBounds(TStack<SIZ>* stack, SIZ index) {
+  return index >= 0 && index < stack->size;
 }
 
 /* Inserts the item into the obj at the given index.
@@ -196,7 +264,7 @@ if the Stack (@see SIZ TStackInsert<SIZ, SIZ> (T*, SIZ, T, SIZ)).
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename SIZ = SI4>
+template <typename T = SIW, typename SIZ = SIN>
 inline SIZ TStackInsert(T* items, SIZ count, T item, SIZ index) {
   T *target = items + index,  //
       *stop = items + count;
@@ -211,7 +279,7 @@ inline SIZ TStackInsert(T* items, SIZ count, T item, SIZ index) {
 @param item  The item to insert.
 @param index The index to insert at.
 @return -1 if a is nil and -2 if the obj is full. */
-template <typename T = SIW, typename SIZ = SI4>
+template <typename T = SIW, typename SIZ = SIN>
 inline SIZ TStackAdd(T* items, SIZ count, T item, SIZ index) {
   ASSERT(items);
   if (index < 0 || index > count) return -1;
@@ -227,41 +295,23 @@ inline SIZ TStackAdd(T* items, SIZ count, T item, SIZ index) {
   return TStackInsert<T, SIZ>(T, count, item, index);
 }
 
-/* Inserts the item into the obj at the given index.
-@param a     The obj.
-@param item  The item to insert.
-@param index The index to insert at.
-@return -1 if a is nil and -2 if the obj is full.
-template<typename T = SI4, typename SIZ = SI4>
-T TStackAdd (TStack<SIZ>* obj, T item, T index) {
-  ASSERT (obj);
-  SIZ count_max  = obj->count_max,
-      count = obj->count;
-  if (count >= count_max)
-      return -1;
-  T* items = TStackStart<T, SIZ> (This ());
-  return TStackAdd<T, SIZ> (items, count, item, index);
-} */
-
-/* Removes an element from the given array. */
+/* Removes an element from the given array.
+@return The new count of the stack. */
 template <typename T = SIW, typename SIZ = SIW>
-inline SIZ TStackRemove(T* elements, SIZ size, SIZ index) {
+inline SIZ TStackRemove(T* elements, SIZ count, SIZ index) {
   ASSERT(elements);
-  if (index < 0) return index;
-  if (size < 0) return size;
-  if (size == 1) return 1;
-  if (index >= size) return index * -1;
+  if (index < 0 || index >= count) return -1;
   elements += index;
-  T* elements_end = elements + --size;
+  T* elements_end = elements + --count;
   while (elements <= elements_end) *elements++ = *elements;
-  return size;
+  return count;
 }
 
 /* Removes the given index from the obj.
 @param  stack The Ascii Object base poiner.
 @param  index The index the item to remove.
 @return True if the index is out of bounds. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackRemove(TStack<SIZ>* stack, SIZ index) {
   ASSERT(stack);
   SIZ result =
@@ -275,8 +325,8 @@ SIZ TStackRemove(TStack<SIZ>* stack, SIZ index) {
 @return The index of the newly stacked item or -1 upon failure.
 @param  stack The Ascii Object base poiner.
 @param  item  The item to push onto the obj. */
-template <typename T = SI4, typename SIZ = SI4>
-SIZ TStackPush(TStack<SIZ>* stack, T item) {
+template <typename T = SI4, typename SIZ = SIN>
+SIZ TStackPush(TStack<SIZ>* stack, const T& item) {
   DASSERT(stack);
   PRINT("\nPushing:");
   PRINT(item);
@@ -287,25 +337,26 @@ SIZ TStackPush(TStack<SIZ>* stack, T item) {
   T* items = TStackStart<T, SIZ>(stack);
   items[count++] = item;
   stack->count = count;
-  return count;
+  return count - 1;
 }
 
 /* Adds the given item to the stop of the obj.
 @return The index of the newly stacked item or -1 upon failure.
 @param  stack The Ascii Object base poiner.
 @param  item  The item to push onto the obj. */
-template <typename T = SI4, typename SIZ = SI4, typename BUF = Nil>
-SIZ TStackPush(AArray<T, SIZ, BUF>& ary, T item) {
+template <typename T = SI4, typename SIZ = SIN, typename BUF = Nil>
+SIZ TStackPush(AArray<T, SIZ, BUF>& ary, const T& item) {
   TStack<SIZ>* stack = ary.BeginAs<TStack<SIZ>>();
   SIZ index = TStackPush<T, SIZ>(stack, item);
   if (index < 0) {
-    ary.Grow<TStack<SIZ>>();
+    PRINT("\nStack overflow! Autogrowing...");
+    TStackGrow<T, SIZ>(ary.Auto());
     stack = ary.BeginAs<TStack<SIZ>>();
     T* items = TStackStart<T, SIZ>(stack);
     SIZ count = stack->count;
     items[count++] = item;
     stack->count = count;
-    return count;
+    return count - 1;
   }
   return index;
 }
@@ -315,7 +366,7 @@ SIZ TStackPush(AArray<T, SIZ, BUF>& ary, T item) {
 @param  stack The Ascii Object base poiner.
 @param  items  The  items to push onto the obj.
 @param  items_count The number of items to push. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
   DASSERT(items);
   DASSERT(count >= 0);
@@ -324,7 +375,7 @@ SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
       size = stack->size;
   if (count >= size) return -1;
   T* cursor = TStackStart<T, SIZ>(stack) + count;
-  while (count-- > 0) *cursor++ = *items++;
+  for (SIN i = 0; i < count; ++i) cursor[i] = cursor[i];
   return 0;
 }
 
@@ -332,7 +383,7 @@ SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
 @note We do not delete the item at the
 @param  a The obj.
 @return The item popped off the obj. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 T TStackPop(TStack<SIZ>* stack) {
   ASSERT(stack);
   SIZ count = stack->count;
@@ -346,7 +397,7 @@ T TStackPop(TStack<SIZ>* stack) {
 /* Peeks at the top item on the stack without popping it off.
 @param  stack The base address of the stack.
 @return The item popped off the obj. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 T TStackPeek(TStack<SIZ>* stack) {
   ASSERT(stack);
   SIZ count = stack->count;
@@ -360,17 +411,16 @@ T TStackPeek(TStack<SIZ>* stack) {
 @param  obj    The obj.
 @param  index The index of the element to get.
 @return -1 if a is nil and -2 if the index is out of bounds. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 T TStackGet(TStack<SIZ>* stack, SIZ index) {
   ASSERT(stack);
-  if (index >= stack->count) return 0;
-  CH1* address = reinterpret_cast<CH1*>(stack) + sizeof(TStack<SIZ>);
-  return reinterpret_cast<T*>(address)[index];
+  if (index < 0 || index >= stack->count) return 0;
+  return TStackStart<T, SIZ>(stack)[index];
 }
 
 /* Returns true if the given obj contains the given address.
 @return false upon failure. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 BOL TStackContains(TStack<SIZ>* stack, void* address) {
   ASSERT(stack);
   CH1 *ptr = reinterpret_cast<CH1*>(stack),
@@ -381,118 +431,12 @@ BOL TStackContains(TStack<SIZ>* stack, void* address) {
 }
 
 /* The obj size in words. */
-template <typename T = SI4, typename SIZ = SI4>
+template <typename T = SI4, typename SIZ = SIN>
 inline SIZ TStackSizeWords(SIZ count) {
   return TStackSizeMin<T, SIZ>(count) / sizeof(UIW);
 }
 
-/* Prints the given obj to the console. */
-template <typename Printer, typename T = SI4, typename SIZ = SI4>
-Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
-  DASSERT(stack);
-  SIZ count = stack->count;
-  o << "\n\nTStack<SI" << (CH1)('0' + sizeof(SIZ)) << ">: size: " << stack->size
-    << " count:" << count;
-
-  T* elements = TStackStart<T, SIZ>(stack);
-  for (SI4 i = 0; i < count; ++i) o << '\n' << i << ".) " << elements[i];
-
-  return o;
-}
-
-/* Doubles the size of the array.
-@return Returns nil if the size is greater than the amount of memory that
-can fit in type SIW, the unaltered socket pointer if the Stack has grown to the
-size upper bounds, or a new dynamically allocated socket upon failure. */
-template <typename T = SI4, typename SIZ = SI4>
-SIW TStackGrow(Autoject& obj) {
-  TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(obj.begin);
-  ASSERT(stack);
-  SIZ size = stack->size;
-  if (!TArrayCanGrow<SIZ>(size)) return kFactorySizeInvalid;
-  SIW size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(size);
-  size = size << 1;
-  SIZ new_size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(size);
-  UIW* new_begin = New(new_size_bytes);
-  TStack<SIZ>* other = reinterpret_cast<TStack<SIZ>*>(new_begin);
-  other->size = size;
-  other->count = stack->count;
-  SocketCopy(TStackStart<T, SIZ>(other), size_bytes, TStackStart<T, SIZ>(stack),
-             size_bytes);
-  obj.begin = new_begin;
-#if DEBUG_SEAM
-  TStackPrint<COut, T, SIZ>(COut().Star(), other);
-#endif
-  return kFactorySuccess;
-}
-
-/* Attempts to resize the given Autoject to the new_count.
-@return Nil upon failure. */
-template <typename T = SI4, typename SIZ = SI4>
-BOL TStackResize(Autoject& obj, SIZ new_count) {
-  TStack<SIZ> stack = *reinterpret_cast<TStack<SIZ>*>(obj.begin);
-  SIZ count = obj.count, count_max = TStackSizeMax<T, SIZ>();
-  if (count > count_max || count == new_count) return false;
-}
-
-template <typename T = SI4, typename SIZ = SI4>
-BOL TStackInBounds(TStack<SIZ>* stack, SIZ index) {
-  return index >= 0 && index < stack->size;
-}
-
-/* Clones the other ASCII Autoject including possibly unused object space.
-@return Nil upon failure or a pointer to the cloned object upon success.
-@param socket A raw ASCII Socket to clone. */
-template <typename T = UI1, typename SIZ = SI4>
-UIW* TStackClone(Autoject& obj) {
-  AsciiFactory factory = obj.factory;
-  UIW* begin = obj.begin;
-  if (!factory || !begin) return nullptr;
-
-  TStack<SIZ>* o = reinterpret_cast<TStack<SIZ>*>(begin);
-  SIZ count = o->count;
-  UIW* clone = TArrayNew<T, SIZ, TStack<SIZ>>(count);
-  SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, TStack<SIZ>>(count);
-  if (!SocketCopy(clone, count, begin, size_bytes)) return nullptr;
-  TSizeSet<SIZ>(begin, count);
-  return clone;
-}
-
-template <typename T, typename SIZ>
-SIW TStackFactory(Autoject& obj, SIW function, SIW arg, BOL using_heap) {
-  PRINT_FACTORY_FUNCTION("Stack", function, using_heap);
-  switch (function) {
-    case kFactoryDelete: {
-      Delete(obj.begin, using_heap);
-    }
-    case kFactoryNew: {
-      return reinterpret_cast<SIW>(TArrayNew<T, SIW, TStack<SIZ>>(arg));
-    }
-    case kFactoryGrow: {
-      return TStackGrow<T, SIZ>(obj);
-    }
-    case kFactoryClone: {
-      return reinterpret_cast<SIW>(TArrayClone<T, SIZ, TStack<SIZ>>(obj));
-    }
-    case kFactoryName: {
-      return reinterpret_cast<SIW>("Strand");
-    }
-  }
-  return 0;
-}
-
-template <typename T, typename SIZ>
-SIW TStackFactoryStack(Autoject& obj, SIW function, SIW arg) {
-  return TStackFactory<T, SIZ>(obj, function, arg, kStack);
-}
-
-/* Heap factory function. */
-template <typename T, typename SIZ>
-SIW TStackFactoryHeap(Autoject& obj, SIW function, SIW arg) {
-  return TStackFactory<T, SIZ>(obj, function, arg, kHeap);
-}
-
-/* An ASCII Stack with an AsciiFactory.
+/* An ASCII Stack with an RamFactory.
 
 This is a wrapper class for the
 
@@ -511,12 +455,12 @@ This is a wrapper class for the
 +----------------+ 0x0
 @endcode
 */
-template <typename T = SI4, typename SIZ = SI4, typename BUF = Nil>
+template <typename T = SI4, typename SIZ = SIN, typename BUF = Nil>
 class AStack {
  public:
   /* Initializes a stack of n elements to whatever can fit in the BUF.
   @param size The number of elements in the Array. */
-  AStack() : obj_(FactoryInit()) { OBJ()->count = 0; }
+  AStack() { OBJ()->count = 0; }
 
   /* Initializes a stack of n elements of the given type.
   @param size The number of elements in the Array. */
@@ -537,7 +481,7 @@ class AStack {
   }
 
   /* Copy constructor. */
-  AStack(const AStack& other) : obj_(other.FactoryInit()) {}
+  AStack(const AStack& other) : obj_(other.RamFactoryInit(buffer_.Size())) {}
 
   /* Destructs nothing. */
   ~AStack() {}
@@ -620,7 +564,7 @@ class AStack {
 
   /* Doubles the size of the obj.
   @return False upon failure. */
-  inline BOL Grow() { return TStackGrow<T, SIZ>(obj_.AObj()); }
+  inline BOL Grow() { return TStackGrow<T, SIZ>(obj_.Auto()); }
 
   /* Gets the ASCII Object. */
   inline TStack<SIZ>* OBJ() {
@@ -640,12 +584,6 @@ class AStack {
   inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
 
   /* Clones the other object. */
-  inline AStack<T, SIZ>& operator[](const AStack<T, SIZ>& other) {
-    Clone(other);
-    return *this;
-  }
-
-  /* Clones the other object. */
   inline AStack<T, SIZ>& operator=(const AStack<T, SIZ>& other) {
     Clone(other);
     return *this;
@@ -659,28 +597,17 @@ class AStack {
 
  private:
   AArray<T, SIZ, BUF> obj_;  //< An Auto-Array.
-
-  /* Stack factory function. */
-  static SIW FactoryInit(Autoject& obj, SIW function, void* arg,
-                         BOL using_heap) {
-    return TStackFactory<T, SIZ>(obj, function, arg, using_heap);
-  }
-
-  static constexpr AsciiFactory FactoryInit() {
-    return AArray<T, SIZ, BUF>::UsesStack() ? TStackFactoryStack<T, SIZ>
-                                            : TStackFactoryHeap<T, SIZ>;
-  }
 };
 
 }  // namespace _
 
-template <typename T = SI4, typename SIZ = SI4, typename BUF = ::_::Nil>
+template <typename T = SI4, typename SIZ = SIN, typename BUF = ::_::Nil>
 ::_::AArray<T, SIZ, BUF>& operator<<(::_::AArray<T, SIZ, BUF>& obj, T item) {
   obj.Push(item);
   return obj;
 }
 
-template <typename T = SI4, typename SIZ = SI4, typename BUF = ::_::Nil>
+template <typename T = SI4, typename SIZ = SIN, typename BUF = ::_::Nil>
 ::_::AArray<T, SIZ, BUF>& operator>>(T& item, ::_::AArray<T, SIZ, BUF>& obj) {
   item = obj.Pop();
   return obj;

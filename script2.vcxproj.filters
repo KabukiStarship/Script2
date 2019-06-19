@@ -333,9 +333,6 @@
     <ClInclude Include="09_loom.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="08_array.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="t_matrix.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -376,6 +373,9 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="06_stack.h">
+      <Filter>script2</Filter>
+    </ClInclude>
+    <ClInclude Include="08_matrix.h">
       <Filter>script2</Filter>
     </ClInclude>
   </ItemGroup>

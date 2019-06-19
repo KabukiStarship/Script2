@@ -94,48 +94,56 @@ inline SIZ TSize(Autoject& object) {
   return TSize<SIZ>(object.begin);
 }
 
+/* Sets the size to the new_size*/
 template <typename SIZ>
-inline void TSizeSet(UIW* obj, SIZ size) {
-  *reinterpret_cast<SIZ*>(obj) = size;
+inline void TSizeSet(UIW* obj, SIZ new_size) {
+  *reinterpret_cast<SIZ*>(obj) = new_size;
 }
 
 /* Dynamically allocates a new Array of the given size.
 @return Nil upon failure or a pointer to the cloned object upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename T, typename SIZ = SI4, typename Class = TArray<SIZ>>
-UIW* TArrayNew(SIZ size) {
-  UIW* begin = New(TArraySizeOf<T, SIZ, Class>(size));
+UIW* TArrayNew(RamFactory factory, SIZ size) {
+  UIW* begin = factory(nullptr, TArraySizeOf<T, SIZ, Class>(size));
   TSizeSet<SIZ>(begin, size);
   return begin;
 }
 
 /* Writes the size to the given word-aligned-up socket, making a new one if
-required. */
+required.
 template <typename SIZ>
 inline UIW* TArrayInit(UIW* begin, SIZ size) {
   DASSERT(begin);
   DASSERT(size >= TSizeMin<SIZ>());
   TSizeSet<SIZ>(begin, size);
   return begin;
-}
+} */
 
 /* Writes the size to the given word-aligned-down socket, making a new one if
 required. */
 template <typename T, typename SIZ>
 inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
-                       AsciiFactory factory) {
+                       RamFactory factory) {
   DASSERT(factory);
   DASSERT(size >= TSizeMin<SIZ>());
-  obj.factory = factory;
+  obj.ram_factory = factory;
   if (!buffer) {
     SIZ buffer_size =
         TAlignUpSigned<SIZ>(size * sizeof(T) + sizeof(TArray<SIZ>));
-    buffer = reinterpret_cast<UIW*>(factory(obj, kFactoryNew, buffer_size));
+    buffer = factory(nullptr, buffer_size);
   }
   SOCKET_WIPE(buffer, size * sizeof(T) + sizeof(TArray<SIZ>));
   TSizeSet<SIZ>(buffer, size);
   obj.begin = buffer;
   return buffer;
+}
+
+/* Gets the first byte of the ASCII Object data section. */
+template <typename T, typename Class>
+inline T* TAsciiData(Class* object) {
+  SIW address = reinterpret_cast<SIW>(object) + sizeof(Class);
+  return reinterpret_cast<T*>(address);
 }
 
 /* The maximum object size.
@@ -154,10 +162,12 @@ inline BOL TArrayCountIsValid(SI index, SI count_min) {
   return (index >= count_min) && (index < TArraySizeMax<SI>());
 }
 
+/* Writes the source TArray to the destination. */
 template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
 TArray<SIZ>* TArrayWrite(TArray<SIZ>* destination, TArray<SIZ>* source,
                          SIZ size) {
-  DASSERT(destination && source);
+  DASSERT(destination);
+  DASSERT(source);
 
   SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, Class>(size);
   if (!SocketCopy(destination, size_bytes, source, size_bytes)) return nullptr;
@@ -177,7 +187,7 @@ UIW* TArrayWrite(UIW* destination, UIW* source, SIZ size) {
 @param socket A raw ASCII Socket to clone. */
 template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
 UIW* TArrayClone(Autoject& obj) {
-  AsciiFactory factory = obj.factory;
+  RamFactory factory = obj.ram_factory;
   UIW* begin = obj.begin;
   // if (!factory || !begin) return nullptr;
 
@@ -190,33 +200,36 @@ UIW* TArrayClone(Autoject& obj) {
 /* Checks of the given size is able to double in size.
 @return True if the object can double in size. */
 template <typename SIZ>
-BOL TArrayCanGrow(SIZ size) {
+BOL TCanGrow(SIZ size) {
   return !(size >> (sizeof(SIZ) * 8 - 2));
 }
 
-/* Resizes the given array. */
+/* Resizes the given array.
+@return True upon success and false upon failure. */
 template <typename T, typename SIZ, typename Class = TArray<SIZ>>
-SIW TArrayResize(Autoject& obj, SIZ new_size) {
+BOL TArrayResize(Autoject& obj, SIZ new_size) {
+  PRINTF("\nResizing Array to new_size:%i", (SIN)new_size);
   UIW* begin = obj.begin;
-  if (!begin) return kFactoryNilOBJ;
+  if (!begin) return false;
   SIZ size = TSize<SIZ>(begin);
   if (size < new_size) {
-    if (size <= 0) return kFactorySizeInvalid;
-    TSizeSet<SIZ>(begin, size);
-    return kFactorySuccess;
+    if (size <= 0) return false;
+    TSizeSet<SIZ>(begin, new_size);
+    return true;
   }
-  UIW* new_begin = reinterpret_cast<UIW*>(obj.factory(obj, kFactoryNew, size));
+  UIW* new_begin = obj.ram_factory(nullptr, new_size);
+  TSizeSet<SIZ>(new_begin, new_size);
   TArrayWrite<T, SIZ, Class>(new_begin, begin, new_size);
   obj.begin = new_begin;
-  return kFactorySuccess;
+  return true;
 }
 
 /* Resizes the given array to double it's prior capacity.
-@return an AsciiFactoryError code. */
+@return True upon success and false upon failure. */
 template <typename T, typename SIZ, typename Class = TArray<SIZ>>
-SIW TArrayGrow(Autoject& obj) {
+BOL TArrayGrow(Autoject& obj) {
   SIZ size = TSize<SIZ>(obj.begin);
-  if (!TArrayCanGrow<SIZ>(size)) return kFactorySizeInvalid;
+  if (!TCanGrow<SIZ>(size)) return false;
   return TArrayResize<T, SIZ, Class>(obj, size << 1);
 }
 
@@ -243,9 +256,9 @@ inline const CH1* TArrayEnd(const Autoject stack) {
 }
 
 /* Returns the start of the OBJ. */
-template <typename T = CH1, typename SIZ>
+template <typename T = CH1, typename SIZ, typename Class = TArray<SIZ>>
 inline T* TArrayStart(TArray<SIZ>* obj) {
-  UIW start = reinterpret_cast<UIW>(obj) + sizeof TArray<SIZ>;
+  UIW start = reinterpret_cast<UIW>(obj) + sizeof(Class);
   return reinterpret_cast<T*>(start);
 }
 
@@ -269,57 +282,27 @@ inline T* TArrayStop(UIW* obj) {
 
 /* Prints this object to the COut. */
 template <typename SIZ, typename Printer>
-Printer& TArrayPrintTo(Printer& o, Autoject& obj) {
+Printer& TArrayPrint(Printer& o, Autoject& obj) {
   o << "\nAutoArray<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
   UIW* begin = obj.begin;
   if (begin) {
     SIZ size = *reinterpret_cast<SIZ*>(begin);
     o << " size:" << (SIW)size;
   }
-  AsciiFactory factory = obj.factory;
-  if (factory) {
-    o << " factory:\"";
-    const CH1* info_string = factory(obj, kFactoryName, nullptr);
-    if (info_string) o << info_string;
-    o << '\"';
-  }
   return o;
 }
 
-template <typename T, typename SIZ>
-SIW TArrayFactory(Autoject& obj, SIW function, SIW arg, BOL using_heap) {
-  PRINT_FACTORY_FUNCTION("Array", function, using_heap);
-  switch (function) {
-    case kFactoryDelete: {
-      Delete(obj.begin, using_heap);
-      return 0;
-    }
-    case kFactoryNew: {
-      return reinterpret_cast<SIW>(TArrayNew<T, SIZ>(arg));
-    }
-    case kFactoryGrow: {
-      return TArrayGrow<T, SIZ>(obj);
-    }
-    case kFactoryClone: {
-      return reinterpret_cast<SIW>(TArrayClone<T, SIZ>(obj));
-    }
-    case kFactoryName: {
-      return reinterpret_cast<SIW>("Array");
-    }
+template <typename T, typename SIZ, typename Printer>
+Printer& TArrayPrint(Printer& o, TArray<SIZ>* ary) {
+  SIZ size = ary->size;
+  o << "\nTArray<SI" << (char)('0' + sizeof(SIZ)) << "> size:" << size;
+  if (size == 0) return o;
+  T* items = TArrayStart<T, SIZ>(ary);
+  SIZ i = 0;
+  for (; i < size; ++i) {
+    o << '\n' << i << ".) " << items[i];
   }
-  return function;
-}
-
-/* */
-template <typename T, typename SIZ>
-SIW TArrayFactoryStack(Autoject& obj, SIW function, SIW arg) {
-  return TArrayFactory<T, SIZ>(obj, function, arg, kStack);
-}
-
-/* */
-template <typename T, typename SIZ>
-SIW TArrayFactoryHeap(Autoject& obj, SIW function, SIW arg) {
-  return TArrayFactory<T, SIZ>(obj, function, arg, kHeap);
+  return o;
 }
 
 /* An Autoject Array of type T.
@@ -330,31 +313,32 @@ class AArray {
  public:
   /* Constructs. */
   AArray() {
-    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(), FactoryInit());
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(),
+                       RamFactoryInit());
   }
 
   /* Constructs a object with either statically or dynamically allocated memory
   based on if object is nil. */
-  explicit AArray(AsciiFactory factory) {
+  explicit AArray(RamFactory factory) {
     TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(),
-                       FactoryInit(factory));
+                       RamFactoryInit(factory));
   }
 
   /* Constructs a object with either statically or dynamically allocated memory
   based on if object is nil. */
   AArray(SIZ size) {
-    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, FactoryInit());
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, RamFactoryInit());
   }
 
   /* Constructs a object with either statically or dynamically allocated memory
   based on the size can fit in the buffer_.
   If the buffer_ is statically allocated but the size can't fit in the buffer a
   new block of dynamic memory will be created. */
-  AArray(SIZ size, AsciiFactory factory) {
-    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, FactoryInit(factory));
+  AArray(SIZ size, RamFactory factory) {
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), size, RamFactoryInit(factory));
   }
 
-  /* Destructor calls the AsciiFactory factory. */
+  /* Destructor calls the RamFactory factory. */
   ~AArray() { Delete(obj_); }
 
   /* Gets the buffer_. */
@@ -390,28 +374,30 @@ class AArray {
   /* Gets the ASCII Object size in elements including the header size. */
   inline SIZ SizeBytes() { return TArraySizeOf<T, SIZ>(Size()); }
 
-  /* Gets the AsciiFactory. */
-  inline AsciiFactory Factory() { return obj_.factory; }
+  /* Gets the RamFactory. */
+  inline RamFactory Factory() { return obj_.ram_factory; }
 
-  /* Calls an AsciiFactory function with the given arg. */
-  inline SIW Factory(SIW function, SIW arg) {
-    return obj_.factory(obj_, function, arg);
+  /* Sets teh obj_.factory to the new_factory. */
+  inline RamFactory FactorySet(RamFactory new_factory) {
+    obj_.ram_factory = new_factory;
+    return new_factory;
   }
 
-  inline AsciiFactory FactorySet(AsciiFactory factory) {
-    obj_.factory = factory;
-    return factory;
-  }
   /* Gets the Autoject. */
-  inline Autoject& AObj() { return obj_; }
+  inline Autoject& Auto() { return obj_; }
+
+  inline TArray<SIZ>* Array() {
+    return reinterpret_cast<TArray<SIZ>*>(obj_.begin);
+  }
 
   /* Attempts to grow the this object.
   @return false if the grow op failed. */
-  inline BOL CanGrow() { return TArrayCanGrow<SIZ>(obj_); }
+  inline BOL CanGrow() { return TCanGrow<SIZ>(obj_); }
 
+  /* Doubles the size of the obj_ array. */
   template <typename Class = TArray<SIZ>>
   inline void Grow() {
-    Factory(kFactoryGrow, 0);
+    TArrayGrow<T, SIZ, Class>(obj_);
   }
 
   /* Returns true if the buffer is a Socket and false if it's a Nil. */
@@ -420,27 +406,22 @@ class AArray {
   /* Prints this object to the given printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    SIZ size = TSize<SIZ>(obj_);
-    o << "\nTArray<SI" << (char)('0' + sizeof(SIZ)) << "> size:" << size;
-    if (size == 0) return o;
-    T* ptr = Start();
-    for (SIZ i = 0; i < size - 1; ++i) o << ptr++ << ", ";
-    return o << ptr;
+    return TArrayPrint<T, SIZ>(o, Array());
   }
+
+  void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
 
  private:
   Autoject obj_;  //< Automatic Object.
   BUF buffer_;    //< Optional socket on the program stack.
 
-  /* Gets the AsciiFactory based on if the BUF is Nil or a TSocket. */
-  inline AsciiFactory FactoryInit() {
-    return buffer_.Size() ? TArrayFactoryStack<T, SIZ>
-                          : TArrayFactoryHeap<T, SIZ>;
+  /* Gets the correct */
+  RamFactory RamFactoryInit() {
+    return sizeof(BUF) == 0 ? RamFactoryHeap : RamFactoryStack;
   }
 
-  /* Gets the AsciiFactory based on if the BUF is Nil or a TSocket. */
-  inline AsciiFactory FactoryInit(AsciiFactory factory) {
-    return factory ? factory : FactoryInit();
+  RamFactory RamFactoryInit(RamFactory factory) {
+    return !factory ? RamFactoryInit() : factory;
   }
 };
 

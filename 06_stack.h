@@ -38,16 +38,10 @@ void TestStack(CH1* seam_log, CH1* seam_end, const CH1* args) {
   SI8 test_count = 32, count_init = 0;
   for (SI8 i = count_init; i <= test_count; ++i) stack.Push(i);
 
-  PRINT_OBJ(stack);
-
   PRINT("\nPopping items off the Stack...\n");
 
   for (SI8 i = test_count; i >= count_init; --i) AVOW_INDEX(i, stack.Pop(), i);
-#if DEBUG_SEAM
-  stack.COut();
-#endif
   ASSERT(stack.Count() == 0);
-  PRINT_OBJ(stack);
 }
 
 static const CH1* _07_Stack(CH1* seam_log, CH1* seam_end, const CH1* args) {

@@ -12,6 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if SEAM >= SCRIPT2_SEAM_STACK
 
 #include "c_autoject.h"
+#include "t_socket.h"
 
 #if SEAM == SCRIPT2_SEAM_STRAND
 #include "module_debug.inl"
@@ -21,38 +22,18 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-void* Error(SIW code) { return reinterpret_cast<void*>(code); }
-
-SIW IsError(SIW factory_result) {
-  BOL is_factory_error =
-      (factory_result >= 0) && (factory_result <= kFactoryErrorCount);
-  return (SIW)is_factory_error;
+UIW* RamFactoryHeap(UIW* obj, SIW size) {
+  if (size > 0) {
+    size = TAlignUpSigned<SIW>(size);
+    DASSERT(!(size & (sizeof(SIW) - 1)));
+    return new UIW[TWordCount<SIW>(size)];
+  }
+  if (obj) delete[] obj;
+  return nullptr;
 }
 
-SIW IsError(void* factory_result) {
-  return IsError(reinterpret_cast<SIW>(factory_result));
-}
-
-const CH1* AsciiFactoryFunction(SIW index) {
-  static const CH1 kStrings[7][8] = {"Delete", "New",  "Grow",
-                                     "Clone",  "Name", "Invalid"};
-  if (!IsError(index)) return &kStrings[kFactoryFunctionCount][0];
-  return &kStrings[index][0];
-}
-
-const CH1* AsciiFactoryError(SIW index) {
-  static const CH1 kStrings[7][21] = {
-      "success",    "nil",          "nil OBJ",         "nil arg",
-      "out of RAM", "size invalid", "invalid function"};
-  if (!IsError(index)) return &kStrings[kFactoryErrorCount][0];
-  return &kStrings[index][0];
-}
-
-SIW Do(Autoject& obj, SIW function, SIW arg) {
-  AsciiFactory factory = obj.factory;
-  if (factory) return factory(obj, function, arg);
-  PRINT("\nNil factory.");
-  return 0;
+UIW* RamFactoryStack(UIW* ptr, SIW size) {
+  return RamFactoryHeap(nullptr, size);
 }
 
 UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
@@ -63,12 +44,8 @@ UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
 }
 
 void Delete(Autoject& obj) {
-  AsciiFactory factory = obj.factory;
-  if (factory) factory(obj, kFactoryDelete, 0);
-}
-
-void ObjException(const CH1* what) {
-  // PRINTF("\nERROR:%s\n", exception.what());
+  RamFactory ram_factory = obj.ram_factory;
+  if (ram_factory) ram_factory(obj.begin, 0);
 }
 
 }  // namespace _
