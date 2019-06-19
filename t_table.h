@@ -2,8 +2,8 @@
 @file    /script2/t_able.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
@@ -538,9 +538,8 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
       *collission_list = unsorted_indexes + count_max, *begin;
   CH1* keys = reinterpret_cast<CH1*>(table) + size - 1;
 
-  utf << kLF
-      << Right<Index>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
-      << Right<>("hash_e", 10) << Right<>("hash_u", 10)
+  utf << kLF << Right<Index>("i", 3) << Right<>("key", 10)
+      << Right<>("offset", 8) << Right<>("hash_e", 10) << Right<>("hash_u", 10)
       << Right<>("index_u", 10) << Right<>("collisions", 11) << '|';
   for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << kLF;
@@ -578,7 +577,53 @@ UTF1& TablePrint(UTF1& utf, Table<Size, Index>* table) {
 }
 #endif
 
+/* An ASCII Table Autoject. */
+template <typename Char = CH1, typename SIZ = SIN, SIZ kCount_ = 512,
+          typename BUF = TSocket<kCount_, Char, TStrand<SIN>>>
+class ATable {
+ public:
+  /* Constructs a Table.
+  @param factory ASCII Factory to call when the Strand overflows. */
+  ATable() : obj_(RamFactoryInit()) {}
+
+  /* Deep copies the given string into the Table.
+  @return The index of the string in the Table. */
+  inline SIZ Add(const Char* string) {
+    return TTableAdd<SIZ, Char>(ARY(), string);
+  }
+
+  /* Removes the string at the given index from the Table. */
+  inline SIZ Remove(SIZ index) { return TTableRemove<SIZ, Char>(OBJ(), index); }
+
+  /* Gets the string at the given index. */
+  inline Char* Get(SIZ index) { return TTableGet<Char, SIZ>(OBJ(), index); }
+
+  inline SIZ Find(const Char* string) { return TTableFind<Char, SIZ>(OBJ()); }
+
+  /* Gets the ASCII Object. */
+  inline TTable<SIZ>* OBJ() { return obj_.BeginAs<TTable<SIZ>>() }
+
+  /* Gets the Auto-Array. */
+  inline AArray<Char, SIZ, BUF>& ARY() { return obj_; }
+
+  template <typename Printer>
+  inline Printer& PrintTo(Printer& o) {
+    TTablePrint<SIZ, Char, Printer>(o, OBJ());
+  }
+
+  inline void COut() { PrintTo<COut>(COut().Star()); }
+
+ private:
+  AArray<Char, SIN, BUF> obj_;  //< Auto-Array of Char(s).
+
+  /* Gets the RamFactory based on if the BUF is Nil or a TSocket. */
+  constexpr RamFactory RamFactoryInit() {
+    return obj_.UsesStack() ? TStrandFactoryStack<Char>
+                            : TStrandFactoryHeap<Char>;
+  }
+};  // namespace _
+
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPTT2_TTABLE
-#endif  //< #if SEAM >= SCRIPT2_SEAM_LIST
+#endif
+#endif

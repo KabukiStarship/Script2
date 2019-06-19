@@ -119,11 +119,11 @@ Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
   }
   SIW address, delta;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
-  if (byte_count < 0) {
+  if (byte_count > 0) {
     delta = -1;
-    byte_count = -byte_count;
     cursor += byte_count - 1;
   } else {
+    byte_count = -byte_count;
     delta = 1;
   }
   while (byte_count-- > 0) {
@@ -289,7 +289,7 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
 
   SIW num_bytes = 81 * (row_count + 2);
   size += num_bytes;
-  o << STRSocketHeader() << STRSocketBorder() << Hex(start);
+  o << STRSocketHeader() << STRSocketBorder() << "0x" << Hex(start);
   int i = 0;
   Char c;
   while (start < stop) {
@@ -302,10 +302,9 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = c + kPrintC0Offset;
       o << Char(c);
     }
-    o << '|' << ' '  //
-      << Hex(start);
+    o << "| 0x" << Hex(start);
   }
-  return o << STRSocketBorder() << Hex(start + size);
+  return o << STRSocketBorder() << "0x" << Hex(start + size);
 }
 
 template <typename Printer, typename Char = CH1>

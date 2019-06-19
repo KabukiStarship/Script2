@@ -78,7 +78,7 @@ class TDoor : public Operand {
     //  aTalkbackSize);
   }
 
-  /* AsciiFactory. */
+  /* RamFactory. */
   virtual ~TDoor() {
     if (begin) delete[] begin;
   }

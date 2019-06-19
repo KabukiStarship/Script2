@@ -22,19 +22,17 @@ struct Autoject;
 }
 
 /* ASCII Factory manages memory for ASCII Objects.
-@return Nil upon failure, an AsciiFactoryErrors, or a pointer to a word-aligned
-socket upon success.
-@param obj      The ASCII Object and AsciiFactory.
-@param function A jump table function index.
-@param arg      A size or pointer to the ASCII Factory argument. */
-typedef SIW (*AsciiFactory)(::_::Autoject& obj, SIW function, SIW arg);
+@return A word-aligned buffer, rounding up if unaligned.
+@param obj  A block of word-aligned heap memory.
+@param size The size of the buffer to create in bytes. */
+typedef UIW* (*RamFactory)(UIW* obj, SIW size);
 
 namespace _ {
 
-/* ASCII OBJ and AsciiFactory. */
+/* ASCII OBJ and RamFactory. */
 struct Autoject {
-  AsciiFactory factory;  //< Autoject Factory function pointer.
-  UIW* begin;            //< Pointer to the Autoject.
+  RamFactory ram_factory;  //< Autoject Factory function pointer.
+  UIW* begin;              //< Pointer to the Autoject.
 };
 
 enum AsciiFactoryFunction {
@@ -56,27 +54,11 @@ enum AsciiFactoryError {
   kFactoryErrorCount = 6,   //< Factory function count.
 };
 
-/* An array of strings corresponding to the AsciiFactoryFunctions. */
-SDK const CH1* AsciiFactoryFunction(SIW function);
+/* Creates or destroys a block of heap memory. */
+SDK UIW* RamFactoryHeap(UIW* obj, SIW size);
 
-/* Gets an AsciiFactoryErrors string by index. */
-SDK const CH1* AsciiFactoryError(SIW index);
-
-/* Checks if the given factory_result is an error code. */
-SDK /*inline*/ SIW IsError(SIW factory_result);
-
-/* Checks if the given factory_result is an error code. */
-SDK /*inline*/ SIW IsError(void* factory_result);
-
-/* Utility function to statasfy compiler warning for unused exception. */
-SDK void ObjException(const CH1* what);
-
-/* Checks if the given function is an ASCII OBJ function.
-@return True if the function is less than or equal to kFactoryName.
-@desc   ASCII Object functions are 0 through kFactoryName.
-SDK BOL IsFactoryFunction(SIW function); */
-
-SDK /*inline*/ SIW Do(Autoject& obj, SIW function, SIW* arg = nullptr);
+/* Creates a block of heap memory. */
+SDK UIW* RamFactoryStack(UIW* ptr, SIW size);
 
 SDK /*inline*/ UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 

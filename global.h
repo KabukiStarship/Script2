@@ -41,7 +41,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #endif
 #if SEAM == SCRIPT2_SEAM_STACK
 #endif
-#if SEAM == SCRIPT2_SEAM_ARRAY
+#if SEAM == SCRIPT2_SEAM_MATRIX
 #endif
 #if SEAM == SCRIPT2_SEAM_LOOM
 #endif

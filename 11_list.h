@@ -24,11 +24,10 @@ static const CH1* _11_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
   TEST_BEGIN;
 
   List<> list(36, 960);
-  Assert(list.This())
 
-      PRINTF("\nPushing items on to the List stack...\n")
+  PRINTF("\nPushing items on to the List stack...\n");
 
-          const SI4 test_ints[] = {'1', '2', '3', '4'};
+  const SI4 test_ints[] = {'1', '2', '3', '4'};
 
   const SI4 list_test_count = 12;
   for (SI4 i = 0; i < 4;) {
@@ -43,9 +42,9 @@ static const CH1* _11_List(CH1* seam_log, CH1* seam_end, const CH1* args) {
     list.Push(kFP4, &test_floats[i++]);
     PRINT(kLF);
     PRINT(list);
-    PRINT (kLF');
-    PRINT ("\n\n"');
-    PRINT (Socket (list.This (), list.This ()->size));
+    PRINT(kLF);
+    PRINT("\n\n");
+    PRINT(Socket(list.This(), list.This()->size));
   }
 
   const CH1* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};

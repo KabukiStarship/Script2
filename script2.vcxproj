@@ -81,7 +81,7 @@
     <ClInclude Include="05_clock.h" />
     <ClInclude Include="07_strand.h" />
     <ClInclude Include="06_stack.h" />
-    <ClInclude Include="08_array.h" />
+    <ClInclude Include="08_matrix.h" />
     <ClInclude Include="09_loom.h" />
     <ClInclude Include="10_table.h" />
     <ClInclude Include="11_list.h" />

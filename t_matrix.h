@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_ARRAY
+#if SEAM >= SCRIPT2_SEAM_MATRIX
 #ifndef INCLUDED_SCRIPT2_ARRAY
 #define INCLUDED_SCRIPT2_ARRAY
 
@@ -93,7 +93,7 @@ TStack<SIZ>* TMatrixInit(const SIZ* dimensions) {
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
-  stack->count_max = dimension_count;
+  stack->size = dimension_count;
   stack->count = 0;
   return stack;
 }
@@ -159,9 +159,9 @@ Printer& TPrintArray(Printer& o, TStack<SIZ>* obj) {
   }
   if (count <= 0) o << "Array: Error! Dimension count must be positive!";
 
-  o << "\n\nArray: dimension_count: " << count
-    << " count_max:" << obj->count_max << " size_stack:" << obj->size_stack
-    << " size_array:" << obj->size_array << "\nDimensions:\n";
+  o << "\n\nArray: dimension_count: " << count << " count_max:" << obj->size
+    << " size_stack:" << obj->size_stack << " size_array:" << obj->size_array
+    << "\nDimensions:\n";
 
   SIZ *dimensions = TMatrixDimensions<T, SIZ>(obj),
       *dimensions_end = dimensions + count - 1;

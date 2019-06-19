@@ -3,19 +3,21 @@
 @file    /script2/t_loom.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_ARRAY
+#if SEAM >= SCRIPT2_SEAM_LOOM
 
-#ifndef INCLUDED_SCRIPTVARINT
-#define INCLUDED_SCRIPTVARINT
+#ifndef SCRIPT2_LOOM_TEMPLATES
+#define SCRIPT2_LOOM_TEMPLATES
 
-#if SEAM == SCRIPT2_SEAM_ARRAY
+#include "t_stack.h"
+
+#if SEAM == SCRIPT2_SEAM_LOOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,114 +26,323 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 /* A ordered collection of either UTF-8 or UTF-16 strands starting at index 0.
-TCLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
+TLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
 5 bits store the type kLOM, b6:b7 stores the size of the Size type and b5 stores
 if it is a UTF-8 (de-asserted) or UTF-16 (asserted).
 */
-template <typename Size, typename Index, typename Char>
-struct TCLoom {
-  Size size;        //< Size of the Loom in bytes.
-  Index count_max,  //< Max number_ of strands in a loom.
-      count;        //< Strand count.
+template <typename SIZ>
+struct TLoom {
+  SIZ size,             //< Size of the Loom in bytes.
+      top;              //< Offset to the top of the String stack.
+  TStack<SIZ> offsets;  //< A Stack of offsets to strands.
 };
 
-template <typename T>
-SIW TBitCount() {
-  enum {
-    kBitCount =
-        (sizeof(Size) == 1)
-            ? 0
-            : (sizeof(Size) == 2)
-                  ? 1
-                  : (sizeof(Size) == 4) ? 2 : (sizeof(Size) == 8) ? 3 : 4,
-  };
-  return kBitCount;
+template <typename Char, typename SIZ>
+constexpr SIZ TLoomCountMin() {
+  return 8 / sizeof(SIZ);
 }
 
-template <typename Size, typename Index, typename Char>
-inline Index TLoomCountMin() {
-  enum { kCountMin = 8 / sizeof(Index) };
-  return kCountMin;
-}
-
-template <typename Size, typename Index, typename Char>
-inline Index TLoomSizeMin() {
+template <typename Char, typename SIZ>
+constexpr SIZ TLoomSizeMin() {
   enum {
-    kCountMin = 8 / sizeof(Index),
-    kSizeMin =
-        sizeof(TCLoom<Size, Index, Char>) + kCountMin * (sizeof(Size) + 2),
+    kCountMin = TLoomCountMin(),
+    kSizeMin = sizeof(TLoom<SIZ>) + kCountMin * (sizeof(SIZ) + 2),
   };
   return kSizeMin;
 }
 
-template <typename Size, typename Index, typename Char>
-TCLoom<Size, Index, Char>* TLoomInit(UIW* socket, Size size, Index count_max) {
-  ASSERT(socket);
-  ASSERT(size);
-  ASSERT(count_max >= 0);
-  Index si = 0;  //< Faster to make from instructions than load from ROM.
-  si = (~si) - 7;
-  if (count_max >= si) count_max = si;
-  si = TLoomCountMin<Size, Index, Char>();
-  if (count_max < si) count_max = si;
-
-  Size ui = 0;
-  ui = (~ui) - 7;  //< Faster to make from instructions than load from ROM.
-  if (size >= ui) count_max = ui;
-  ui = TLoomSizeMin<Size, Index, Char>();
-  if (count_max < ui) count_max = ui;
-
-  TCLoom* loom = reinterpret_cast<TCLoom*>(socket);
-  loom->size = size;
-  loom->count_max = count_max;
-  loom->count = 0;
+template <typename Char, typename SIZ>
+constexpr SIZ TLoomCountDefault() {
+  return 32;
 }
 
-template <typename Size, typename Index, typename Char>
-Size* TLoomOffsets(CLoom<Size, Index, Char>* loom) {
-  ASSERT(loom);
-  return reinterpret_cast<CH1*>(loom) +
-         (loom->count_max << TBitCount<Index>());
+template <typename Char, typename SIZ>
+constexpr SIZ TLoomSizeDefault() {
+  return (32 * TLoomCountDefault<Char, SIZ>() * sizeof(Char)) &
+         (sizeof(SIW) - 1);
 }
 
-template <typename Size, typename Index, typename Char>
-Index TLoomAdd(TCLoom<Size, Index, Char>* loom, const Char* strand) {
-  ASSERT(loom);
-  ASSERT(strand);
-
-  Index count_max = loom->count_max, count = loom->count;
-  if (count >= count_max) return -1;
-  Size* offsets = TLoomOffsets(loom);
-  Size offset = *(offsets + count);
-  Char* begin = 0;
+template <typename Char, typename SIZ>
+inline Char* TLoomStart(TLoom<SIZ>* loom, SIZ count_max) {
+  SIZ* top = &TStackStart<SIZ, SIZ>(&loom->offsets)[count_max];
+  return reinterpret_cast<Char*>(top);
 }
 
-template <typename Size, typename Index, typename Char>
-Char* TLoomStrand(TCLoom<Size, Index, Char>* loom, Index index) {
-  ASSERT(loom);
-  if (index < 0 && index >= count) return nullptr;
-  Size* offsets = TLoomOffsets<Size, Index, Char>(loom);
-  UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
-  return offset;
+template <typename Char, typename SIZ>
+inline Char* TLoomStart(TLoom<SIZ>* loom) {
+  return TLoomStart<Char, SIZ>(loom, loom->offsets.size);
 }
 
-template <typename Size, typename Index, typename Char>
-TUTF<Char>& TLoomPrint(TUTF<Char>& utf, TCLoom<Size, Index, Char>* loom,
-                       const Char* strand) {
+template <typename Char, typename SIZ>
+inline TLoom<SIZ>* TLoomInit(TLoom<SIZ>* loom, SIZ count_max) {
   ASSERT(loom);
-  ASSERT(strand);
-  Index count = loom->count;
-  utf << "\nLoom:" << loom->size << "b count_max:" << loom->count_max
-      << " count:" << count;
-  Size* offsets = TLoomOffsets<Size, Index, Char>(loom);
-  UIW offset = reinterpret_cast<UIW>(loom) + offsets[index];
-  for (Index i = 0; i < count; ++i) {
-    utf << kLF << i << ".) \"";
+  ASSERT((count_max >= TLoomCountMin<Char, SIZ>()));
+
+  SOCKET_WIPE(&loom->top, loom->size - sizeof(SIZ));
+
+  // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
+  loom->top = TDelta<SIZ>(loom, TLoomStart<Char, SIZ>(loom, count_max));
+  loom->offsets.size = count_max;
+  loom->offsets.count = 0;
+  return loom;
+}
+
+template <typename Char, typename SIZ>
+Char* TLoomEnd(TLoom<SIZ>* loom) {
+  SIW address = reinterpret_cast<SIW>(loom) + loom->size;
+  return reinterpret_cast<Char*>(address);
+}
+
+template <typename Char, typename SIZ>
+Char* TLoomStop(TLoom<SIZ>* loom) {
+  SIW address = reinterpret_cast<SIW>(loom) + loom->top;
+  return reinterpret_cast<Char*>(address);
+}
+
+/* Gets the element at the given index. */
+template <typename Char, typename SIZ>
+Char* TLoomGet(TLoom<SIZ>* loom, SIZ index) {
+  DASSERT(loom);
+  if (index < 0 || index >= loom->offsets.count) return nullptr;
+  return TPtr<Char>(loom, TStackStart<SIZ, SIZ>(&loom->offsets)[index]);
+}
+
+template <typename Char, typename SIZ, typename Printer>
+Printer& TLoomPrint(Printer& o, TLoom<SIZ>* loom) {
+  SIZ count = loom->offsets.count;
+  o << "\nLoom<SI" << (CH1)('0' + sizeof(SIZ)) << "> size:" << loom->size
+    << " top:" << loom->top << " stack_size:" << loom->offsets.size
+    << " count:" << count;
+  SIZ* offsets = TStackStart<SIZ, SIZ>(&loom->offsets);
+  for (SIZ i = 0; i < count; ++i)
+    o << '\n'
+      << i << ".) \"" << TLoomGet<Char, SIZ>(loom, i) << "\":" << offsets[i];
+  PRINT("\n\n");
+  PRINT_CHARS(loom, loom->size);
+  return o << '\n';
+}
+
+/* Adds a string to the end of the Loom.
+@return The index upon success or -1 upon failure. */
+template <typename Char, typename SIZ>
+SIZ TLoomAdd(TLoom<SIZ>* loom, const Char* string) {
+  ASSERT(loom);
+  ASSERT(string);
+
+  if (loom->offsets.count >= loom->offsets.size) return -1;
+  Char* cursor = TPtr<Char>(loom, loom->top);
+  cursor = TPrint<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
+  if (!cursor) return -1;
+  SIZ index = TStackPush<SIZ, SIZ>(&loom->offsets, loom->top);
+  loom->top = TDelta<SIZ>(loom, cursor + 1);
+  return index;
+}
+
+template <typename Char, typename SIZ>
+SIZ TLoomCharCount(TLoom<SIZ>* loom) {
+  return (SIZ)(TLoomEnd<Char, SIZ>(loom) - TLoomStart<Char, SIZ>(loom));
+}
+template <typename Char = SI4, typename SIZ = SIN>
+BOL TLoomWrite(TLoom<SIZ>* destination, TLoom<SIZ>* soure) {
+  return true;
+}
+
+/* Doubles the size and count_max of the loom.
+@return Returns nil if the size is greater than the amount of memory that
+can fit in type SIW, the unaltered socket pointer if the Stack has grown to the
+size upper bounds, or a new dynamically allocated socket upon failure. */
+template <typename Char = SI4, typename SIZ = SIN>
+BOL TLoomGrow(Autoject& obj) {
+  PRINT("\n\nGrowing Loom...");
+  TLoom<SIZ>* loom = reinterpret_cast<TLoom<SIZ>*>(obj.begin);
+  ASSERT(loom);
+  SIZ size = loom->size;
+  if (!TCanGrow<SIZ>(size)) return false;
+  SIZ count_max = loom->offsets.size;
+  if (!TCanGrow<SIZ>(count_max)) return false;
+
+  size = size << 1;
+  count_max = count_max << 1;
+
+  PRINTF(" new size:%i count_max:%i ", size, count_max);
+
+#if DEBUG_SEAM
+  Print("\n\nBefore:\n");
+  TLoomPrint<Char, SIZ, COut>(COut().Star(), loom);
+  PRINT_CHARS(loom, loom->size);
+#endif
+
+  UIW* new_begin = obj.ram_factory(nullptr, size);
+  SOCKET_WIPE(new_begin, size);
+  TLoom<SIZ>* other = reinterpret_cast<TLoom<SIZ>*>(new_begin);
+
+  // Copy the offsets and offset them and the loom->top.
+  SIZ extra_header_space = (count_max >> 1) * sizeof(SIZ);
+  SIZ count = loom->offsets.count,  //
+      top = loom->top;
+  other->size = size;
+  other->top = top + extra_header_space;
+  other->offsets.size = count_max;
+  other->offsets.count = count;
+  SIZ *loom_offsets = TStackStart<SIZ, SIZ>(&loom->offsets),
+      *other_offsets = TStackStart<SIZ, SIZ>(&other->offsets);
+  for (SIZ i = 0; i < count; ++i)
+    other_offsets[i] = loom_offsets[i] + extra_header_space;
+
+  // Copy the strings.
+  Char* start = TLoomStart<Char, SIZ>(loom);
+  SIZ strings_size_bytes = TDelta<SIZ>(start, TPtr<>(loom, top));
+  Char* other_start = TLoomStart<Char, SIZ>(other);
+  SocketCopy(other_start, strings_size_bytes, start, strings_size_bytes);
+
+#if DEBUG_SEAM
+  Print("\n\nAfter:\n");
+  TLoomPrint<Char, SIZ, COut>(COut().Star(), other);
+  PRINT_CHARS(other, other->size);
+#endif
+
+  Delete(obj);
+  obj.begin = new_begin;
+  return true;
+}
+
+/* Adds a string to the end of the Loom, auto-growing if neccissary.
+@return The index upon success or -1 if the obj can't grow anymore. */
+template <typename Char, typename SIZ, typename BUF>
+SIZ TLoomAdd(AArray<Char, SIZ, BUF>& obj, const Char* item) {
+  if (!item) return -1;
+  PRINT("\nAdding:\"");
+  PRINT(item);
+  PRINT('\"');
+  SIZ result = TLoomAdd<Char, SIZ>(obj.BeginAs<TLoom<SIZ>>(), item);
+  while (result < 0) {
+    if (!TLoomGrow<Char, SIZ>(obj.Auto())) {
+      PRINT("\n\nFailed to grow.\n\n");
+      return -1;
+    }
+    result = TLoomAdd<Char, SIZ>(obj.BeginAs<TLoom<SIZ>>(), item);
   }
-  return utf;
+  return result;
 }
 
+/* Adds a string to the end of the Loom.
+@return The index upon success or -1 upon failure. */
+template <typename Char, typename SIZ>
+Char* TLoomPop(TLoom<SIZ>* loom) {
+  if (loom->offsets.count == 0) return nullptr;
+  SIZ offset = TStackPop<SIZ, SIZ>(loom->offsets), top = loom->top;
+  loom->top = offset;
+  return reinterpret_cast<Char*>(reinterpret_cast<SIW>(loom) + offset);
+}
+
+/* Adds a string to the end of the Loom.
+@return The index upon success or -1 upon failure. */
+template <typename Char, typename SIZ>
+SIZ TLoomRemove(TLoom<SIZ>* loom, SIZ index) {
+  SIZ count = loom->offsets.count;
+  if (index == count) return TLoomPop<Char, SIZ>(loom);
+  if (index < 0 || index > count) return -1;
+
+  SIZ* offsets = TStackStart<SIZ, SIZ>(loom->offsets);
+  SIZ offset = offsets[index],        //
+      offset_b = offsets[index + 1],  //
+      delta = offset_b - offset;
+
+  TStackRemove<SIZ, SIZ>(loom->offsets, index);
+
+  // SocketShiftDown(reinterpret_cast<CH1*>(loom) + offset, delta);
+  return index;
+}
+
+/* Searches for the given string in the loom.
+@return -1 if the loom doesn't contain the string or the index if it does. */
+template <typename Char, typename SIZ>
+SIZ TLoomFind(TLoom<SIZ>* loom, const Char* string) {
+  DASSERT(loom);
+  DASSERT(string);
+  PRINT("\nLooking for string:\"");
+  PRINT(string);
+  PRINT('\"');
+  SIZ* offsets = TStackStart<SIZ, SIZ>(&loom->offsets);
+  for (SIZ i = 0; i < loom->offsets.count; ++i) {
+    SIZ offset = offsets[i];
+    Char* other = reinterpret_cast<Char*>(reinterpret_cast<UIW>(loom) + offset);
+    PRINT('\n');
+    PRINT("Comparing to:\"");
+    PRINT(other);
+    PRINT('\"');
+    if (!TSTRCompare<Char>(string, other)) {
+      PRINT("... Match found!");
+      return i;
+    }
+  }
+  PRINT("\nNo matches found.");
+  return -1;
+}
+
+/* An ASCII Loom Autoject. */
+template <typename Char = CH1, typename SIZ = SIN, SIZ kSize_ = 512,
+          typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
+class ALoom {
+ public:
+  /* Constructs a Loom. */
+  ALoom(SIZ count_max = kCountDefault) {
+    TLoomInit<Char, SIZ>(OBJ(), count_max);
+  }
+
+  /* Constructs a Loom subclass.
+  @param factory ASCII Factory to call when the Strand overflows. */
+  ALoom(RamFactory ram_factory, SIZ count = kCountDefault) : obj_(ram_factory) {
+    TLoomInit<Char, SIZ>(OBJ(), kCount_);
+  }
+
+  /* Constructs a Loom subclass.
+  @param factory ASCII Factory to call when the Strand overflows. */
+  ALoom(RamFactory ram_factory, SIZ size = TLoomSizeDefault<Char, SIZ>(),
+        SIZ count = TLoomCountDefault<Char, SIZ>())
+      : obj_(ram_factory) {
+    TLoomInit<Char, SIZ>(OBJ(), kCount_);
+  }
+
+  inline SIZ Size() { return obj_.Size(); }
+
+  /* Deep copies the given string into the Loom.
+  @return The index of the string in the Loom. */
+  inline SIZ Add(const Char* string) {
+    return TLoomAdd<Char, SIZ, BUF>(Auto(), string);
+  }
+
+  /* Removes the string at the given index from the Loom. */
+  inline SIZ Remove(SIZ index) { return TLoomRemove<Char, SIZ>(OBJ(), index); }
+
+  /* Gets the string at the given index. */
+  inline Char* Get(SIZ index) { return TLoomGet<Char, SIZ>(OBJ(), index); }
+
+  /* Searches for the given string.
+  @return -1 if the Loom doesn't contain the string or the index if it does.
+*/
+  inline SIZ Find(const Char* string) {
+    return TLoomFind<Char, SIZ>(OBJ(), string);
+  }
+
+  /* Gets the ASCII Object. */
+  inline TLoom<SIZ>* OBJ() { return obj_.BeginAs<TLoom<SIZ>>(); }
+
+  /* Gets the Auto-Array. */
+  inline AArray<Char, SIZ, BUF>& Auto() { return obj_; }
+
+  template <typename Printer>
+  inline Printer& PrintTo(Printer& o) {
+    TLoomPrint<Char, SIZ, Printer>(o, OBJ());
+    return o;
+  }
+
+  inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
+
+ private:
+  AArray<Char, SIZ, BUF> obj_;  //< Auto-Array of Char(s).
+};
 }  // namespace _
 
-#endif  //< INCLUDED_SCRIPTVARINT
-#endif  //< #if SEAM >= SCRIPT2_SEAM_ARRAY
+#endif
+#endif

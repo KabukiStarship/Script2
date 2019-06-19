@@ -278,6 +278,12 @@ class TSocket {
   UIW socket_[SizeWords()];  //< The word-aligned socket.
 };
 
+template <typename SI = SIW>
+inline SI TDelta(const void* begin, const void* end) {
+  SIW delta = reinterpret_cast<SIW>(end) - reinterpret_cast<SIW>(begin);
+  return (SI)delta;
+}
+
 /* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>
 inline T* TPtr(void* ptr) {
@@ -295,9 +301,9 @@ offset.
 @return Pointer of the type specified by template parameter T.
 @param  base The base address.
 @param  offset The offset. */
-template <typename T>
+template <typename T = void>
 inline T* TPtr(const void* begin, SIW offset) {
-  return reinterpret_cast<T*>(reinterpret_cast<UIW>(begin) + offset);
+  return reinterpret_cast<T*>(reinterpret_cast<SIW>(begin) + offset);
 }
 
 }  // namespace _

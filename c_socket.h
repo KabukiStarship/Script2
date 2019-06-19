@@ -141,12 +141,6 @@ class Nil {
   UIW* Buffer();
 };
 
-/* Creates a block of dynamic memory. */
-SDK /*inline*/ UIW* New(SIW size);
-
-/* AsciiFactory deletes the socket. */
-SDK /*inline*/ void Delete(UIW* socket, BOL using_heap = true);
-
 /* Converts the pointer to a std::UIW. */
 SDK /*inline*/ UIW UIntPtr(const void* value);
 
@@ -225,10 +219,17 @@ SDK /*inline*/ BOL SocketCompare(const void* start, SIW size_a,
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param  start The start UI1.
-@param  stop   The stop UI1.
-@param  count The UI1 count to shift up. */
-SIW SocketShiftUp(void* start, void* stop, SIW count);
+@param  begin       The begin UI1.
+@param  end         The end UI1.
+@param  count_bytes The UI1 count to shift up. */
+SIW SocketShiftUp(void* begin, void* end, SIW count_bytes);
+
+/* Shifts the memory down by the given bytes_count.
+@return 0 upon failure and count upon success.
+@param  begin       The start UI1.
+@param  end         The end UI1.
+@param  count_bytes The UI1 count to shift up. */
+SIW SocketShiftDown(void* begin, void* end, SIW bytes_count);
 
 }  // namespace _
 

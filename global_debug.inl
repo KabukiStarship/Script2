@@ -30,7 +30,7 @@
 #define PRINT_CHARS(begin, end_or_size) ::_::PrintChars(begin, end_or_size)
 #define PRINT_HEX(item) ::_::PrintHex(item)
 #define PRINT_HEXS(begin, end_or_size) ::_::PrintHex(begin, end_or_size)
-#define PRINT_SOCKET_OBJ(obj) ::_::PrintChars(obj.Begin(), obj.SizeBytes())
+#define PRINT_SOCKET_OBJ(obj) ::_::PrintChars(obj.Auto().Begin(), obj.Size())
 #define PRINT_BSQ(bsq) ::_::Console<>().Out() << header << kLF << Bsq(bsq)
 #define PRINT_OBJ(obj) obj.COut()
 #define PRINT_FUNCTION ::_::Print("\n", __FUNCTION__)
@@ -46,11 +46,11 @@
   if (!::_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define COMPARE(a, b)                                \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
@@ -68,11 +68,11 @@
 #define RASSERT(condition)
 #define AVOW(a, b)                                   \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
@@ -80,11 +80,11 @@
   }
 #define DAVOW(a, b)                                  \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
@@ -95,11 +95,11 @@
 #define RAVOW_INDEX(a, b, index)
 #define DAVOW_INDEX(a, b, index)                     \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
@@ -111,11 +111,11 @@
   }
 #define AVOW_INDEX(a, b, index)                      \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \

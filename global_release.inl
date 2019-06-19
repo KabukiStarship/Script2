@@ -45,11 +45,11 @@
 #define DCOMPARE(a, b)
 #define RCOMPARE(a, b)                              \
   if (!::_::Test(a, b)) {                           \
-    ::_::Print("\n\nExpecting:");                   \
+    ::_::Print("\n\nExpecting:0x");                 \
     ::_::PrintHex(a);                               \
     ::_::Print(':');                                \
     ::_::Print(a);                                  \
-    ::_::Print("\nFound    :");                     \
+    ::_::Print("\nFound    :0x");                   \
     ::_::PrintHex(b);                               \
     ::_::Print(':');                                \
     ::_::Print(b);                                  \
@@ -59,11 +59,11 @@
 #define DAVOW(a, b)
 #define RAVOW(a, b)                                 \
   if (!::_::Test(a, b)) {                           \
-    ::_::Print("\n\nExpecting:");                   \
+    ::_::Print("\n\nExpecting:0x");                 \
     ::_::PrintHex(a);                               \
     ::_::Print(':');                                \
     ::_::Print(a);                                  \
-    ::_::Print("\nFound    :");                     \
+    ::_::Print("\nFound    :0x");                   \
     ::_::PrintHex(b);                               \
     ::_::Print(':');                                \
     ::_::Print(b);                                  \
@@ -71,11 +71,11 @@
   }
 #define RAVOW(a, b)                                 \
   if (!::_::Test(a, b)) {                           \
-    ::_::Print("\n\nExpecting:");                   \
+    ::_::Print("\n\nExpecting:0x");                 \
     ::_::PrintHex(a);                               \
     ::_::Print(':');                                \
     ::_::Print(a);                                  \
-    ::_::Print("\nFound    :");                     \
+    ::_::Print("\nFound    :0x");                   \
     ::_::PrintHex(b);                               \
     ::_::Print(':');                                \
     ::_::Print(b);                                  \
@@ -83,11 +83,11 @@
   }
 #define AVOW_INDEX(a, b, index)                      \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \
@@ -99,11 +99,11 @@
   }
 #define RAVOW_INDEX(a, b, index)                     \
   if (!::_::Test(a, b)) {                            \
-    ::_::Print("\n\nExpecting:");                    \
+    ::_::Print("\n\nExpecting:0x");                  \
     ::_::PrintHex(a);                                \
     ::_::Print(':');                                 \
     ::_::Print(a);                                   \
-    ::_::Print("\nFound    :");                      \
+    ::_::Print("\nFound    :0x");                    \
     ::_::PrintHex(b);                                \
     ::_::Print(':');                                 \
     ::_::Print(b);                                   \

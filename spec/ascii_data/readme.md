@@ -72,7 +72,7 @@ Maps can be created of most of the types to most of the types.
 |  16 |   POD    |      POD        | 1,2,4,8  | 1, 2, 4, or 8-byte wide Plain-Old-Data. |
 | ... |   ...    |      ...        |   2-32   | Assert bit 4 to create a complex number of types 1-15. |
 |  32 |   CH1    |      char       |     1    | 8-bit character (CH1). |
-|  33 |   CH2    |    char16_t     |     2    | 16-bit character (CH2). |
+|  33 |   CH2    |     char16_t    |     2    | 16-bit character (CH2). |
 |  34 |   CH4    |     char32_t    |     4    | 32-bit character (CH4). |
 |  35 |   TM4    |     int32_t     |     4    | 32-bit signed integer seconds since epoch timestamp. |
 |  36 |   TM8    |     int64_t     |     8    | 64-bit microsecond since epoch timestamp. |

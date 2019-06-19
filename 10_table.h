@@ -19,140 +19,90 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
+
+template <typename Char, typename SIZ>
+void TestTable() {
+  PRINTF("Testing ATable<CH%c,SI%c>\n\n", '0' + sizeof(Char),
+         '0' + sizeof(SIZ));
+
+  ALoom<Char, SIZ> table;
+
+#if DEBUG_SEAM
+  Print("\nPrinting empty table:");
+  table.COut();
+#endif
+
+  static const Char a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
+                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
+                    bac[] = {'b', 'a', 'c', '\0'},
+                    cba[] = {'c', 'b', 'a', '\0'},
+                    cab[] = {'c', 'a', 'b', '\0'},
+                    test[] = {'t', 'e', 's', 't', '\0'};
+
+  AVOW((SIZ)0, table.Add(d));
+
+#if DEBUG_SEAM
+  Print("\nPrinting table with count:1");
+  table.COut();
+#endif
+
+  AVOW((SIZ)0, table.Find(d));
+
+  AVOW((SIZ)1, table.Add(c));
+  AVOW((SIZ)0, table.Find(d));
+  AVOW((SIZ)1, table.Find(c));
+
+  AVOW((SIZ)2, table.Add(b));
+  AVOW((SIZ)0, table.Find(d));
+  AVOW((SIZ)1, table.Find(c));
+  AVOW((SIZ)2, table.Find(b));
+
+  AVOW((SIZ)3, table.Add(a));
+  AVOW((SIZ)0, table.Find(d));
+  AVOW((SIZ)1, table.Find(c));
+  AVOW((SIZ)2, table.Find(b));
+  AVOW((SIZ)3, table.Find(a));
+
+  AVOW((SIZ)4, table.Add(abc));
+  AVOW((SIZ)4, table.Find(abc));
+
+  AVOW((SIZ)5, table.Add(bac));
+  AVOW((SIZ)4, table.Find(abc));
+  AVOW((SIZ)5, table.Find(bac));
+
+  AVOW((SIZ)6, table.Add(cba));
+  AVOW((SIZ)4, table.Find(abc));
+  AVOW((SIZ)5, table.Find(bac));
+  AVOW((SIZ)6, table.Find(cba));
+
+  AVOW((SIZ)7, table.Add(cab));
+  AVOW((SIZ)4, table.Find(abc));
+  AVOW((SIZ)5, table.Find(bac));
+  AVOW((SIZ)6, table.Find(cba));
+  AVOW((SIZ)7, table.Find(cab));
+
+  AVOW((SIZ)1, table.Add(a));
+  AVOW((SIZ)1, table.Add(b));
+  AVOW((SIZ)1, table.Add(c));
+  AVOW((SIZ)1, table.Add(d));
+
+#if DEBUG_SEAM
+  table.COut();
+#endif
+  PAUSE("");
+  AVOW((SIZ)-1, table.Find(test));
+}
+
 static const CH1* _10_Table(CH1* seam_log, CH1* seam_end, const CH1* args) {
 #if SEAM >= SCRIPT2_SEAM_TABLE
   TEST_BEGIN;
 
-  Printf("\n\nTesting ASCII OBJ Types");
-
-  Print("\n  - Running TableTest...\n");
-
-  CH4 index;
-  UIW socket[128];
-  Printf("\n &buffer[0]:%p &buffer[127]:%p\n", &socket[0], &socket[127]);
-
-  Table* table = TableInit(socket, 8, 128);
-
-  Assert(table != nullptr);
-
-  index = TableAdd(table, "D");
-  Compare(0, index) index = TableFind(table, "D");
-  Compare(0, index);
-
-  index = TableAdd(table, "C");
-  Compare(1, index) index = TableFind(table, "D");
-  Compare(0, index) index = TableFind(table, "C");
-  Compare(1, index);
-
-  index = TableAdd(table, "B");
-  Compare(2, index) index = TableFind(table, "D");
-  Compare(0, index) index = TableFind(table, "C");
-  Compare(1, index) index = TableFind(table, "B");
-  Compare(2, index);
-
-  index = TableAdd(table, "A");
-  Compare(3, index) index = TableFind(table, "D");
-  Compare(0, index) index = TableFind(table, "C");
-  Compare(1, index) index = TableFind(table, "B");
-  Compare(2, index) index = TableFind(table, "A");
-  Compare(3, index);
-
-  index = TableAdd(table, "abc");
-  Compare(4, index) index = TableFind(table, "abc");
-  Compare(4, index);
-
-  index = TableAdd(table, "bac");
-  Compare(5, index) index = TableFind(table, "abc");
-  Compare(4, index) index = TableFind(table, "bac");
-  Compare(5, index);
-
-  index = TableAdd(table, "cba");
-  Compare(6, index) index = TableFind(table, "abc");
-  Compare(4, index) index = TableFind(table, "bac");
-  Compare(5, index) index = TableFind(table, "cba");
-  Compare(6, index);
-
-  index = TableAdd(table, "cab");
-  Compare(7, index) index = TableFind(table, "abc");
-  Compare(4, index) index = TableFind(table, "bac");
-  Compare(5, index) index = TableFind(table, "cba");
-  Compare(6, index) index = TableFind(table, "cab");
-  Compare(7, index);
-
-  index = TableAdd(table, "test");
-  Compare(kInvalidIndex, index);
-
-  TablePrint(table);
-
-  PrintLineBreak("\n  + Running MultimapTests\n", 10);
-
-  PrintLineBreak("\n  - Running MultimapInit...\n", 5, ' ');
-  SI1 index;
-
-  enum {
-    kBufferSize = 256,
-    kBufferSizeWords = kBufferSize / sizeof(UIW),
-  };
-
-  slot << 'a' << "b"
-       << "cd" << (SI1)1 << (UI1)2 << (SI2)3 << (UI2)4 << (SI4)5 << (UI4)6
-       << (SI8)7 << (UI8)8;
-
-  Print(slot);
-
-  UIW socket[kBufferSizeWords];
-
-  Multimap2* multimap = Multimap2Init(socket, 8, kBufferSize, 128);
-
-  Assert(multimap != nullptr);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "D", (UI1)0xFF);
-
-  Compare(0, index) Multimap2Print(multimap);
-  Compare(0, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) PAUSE("\n");
-  index = Multimap2Add<UI1, kUI1>(multimap, "C", (UI1)0xFF);
-  Compare(1, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
-  Compare(1, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "BIn", (UI1)0xFF);
-  Compare(2, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
-  Compare(1, index) index = Multimap2Find(multimap, "BIn");
-  Compare(2, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "A", (UI1)0xFF);
-  Compare(3, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) index = Multimap2Find(multimap, "C");
-  Compare(1, index) index = Multimap2Find(multimap, "BIn");
-  Compare(2, index) index = Multimap2Find(multimap, "A");
-  Compare(3, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "abc", (UI1)0xFF);
-  Compare(4, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "bac", (UI1)0xFF);
-  Compare(5, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
-  Compare(5, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "cba", (UI1)0xFF);
-  Compare(6, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
-  Compare(5, index) index = Multimap2Find(multimap, "cba");
-  Compare(6, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "cab", (UI1)0xFF);
-  Compare(7, index) index = Multimap2Find(multimap, "abc");
-  Compare(4, index) index = Multimap2Find(multimap, "bac");
-  Compare(5, index) index = Multimap2Find(multimap, "cba");
-  Compare(6, index) index = Multimap2Find(multimap, "cab");
-  Compare(7, index);
-
-  index = Multimap2Add<UI1, kUI1>(multimap, "test", (UI1)0xFF);
-  Compare(index, -1);
+  TestTable<CH1, SI2>();
+  TestTable<CH2, SI2>();
+  TestTable<CH4, SI2>();
+  TestTable<CH1, SI4>();
+  TestTable<CH2, SI4>();
+  TestTable<CH4, SI4>();
 #endif
   return nullptr;
 }

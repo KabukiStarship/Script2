@@ -42,9 +42,44 @@ struct TChars {
   TChars(Char* start, Char*) : start(start), stop(stop) {}
 };
 
-template <typename Char, typename T>
-void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item,
-                  AsciiFactory factory_heap) {
+template <typename Char, typename SIZ = SIN>
+UIW* TStrandClone(Autoject& obj) {
+  UIW *begin = obj.begin,  //
+      *new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(TSize<SIZ>(begin));
+  PRINTF(" new size:%i", TSize<SIZ>(new_begin));
+  TUTF<Char> new_utf(new_begin);
+  Char* start = TSTRStart<Char>(begin);
+  new_utf << start;
+  PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+         TSTRStart<Char>(new_begin));
+  return new_begin;
+}
+
+template <typename Char, typename SIZ = SIN>
+BOL TStrandGrow(Autoject& obj, TUTF<Char, SIZ>& utf) {
+  UIW* begin = obj.begin;
+  SIZ size = TSize<SIZ>(begin);
+  if (!TCanGrow<SIZ>(size)) return false;
+  size = size << 1;
+
+  UIW* new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(obj.ram_factory, size);
+  if (!new_begin) return false;
+  PRINTF(" new size:%i", TSize<SIZ>(new_begin));
+
+  TUTF<Char, SIZ> new_utf(new_begin);
+  Char* start = TSTRStart<Char>(begin);
+  new_utf << start;
+  utf.Set(new_utf);
+  PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+         TSTRStart<Char>(new_begin));
+
+  Delete(obj);
+  obj.begin = new_begin;
+  return true;
+}
+
+template <typename Char, typename T, typename SIZ = SIN>
+void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item) {
   Char *start = utf.start,  //
       *stop = utf.stop;
   auto cursor = ::_::Print(start, stop, item);
@@ -52,20 +87,17 @@ void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item,
     *utf.start = 0;  //< Replace the delimiter so we can copy the string.
     SIW count = stop - start;
     do {
-      AsciiFactory factory = obj.factory;
+      RamFactory factory = obj.ram_factory,  //
+          factory_heap = RamFactoryHeap;
       DASSERT(factory);
       PRINTF("\nPrint failed, attempting to auto-grow from %s",
              (factory != factory_heap) ? "stack-to-heap." : "heap-to-heap.");
 
-      SIW result = factory(obj, kFactoryGrow, reinterpret_cast<SIW>(&utf));
-      if (result) {
-        PRINTF("\nFactory exited with Error:%i:\"%s\".\n", (SIN)result,
-               AsciiFactoryError(result));
-        return;
-      }
+      if (!TStrandGrow<Char, SIZ>(obj, utf)) return;
+
       if (factory != factory_heap) {
         factory = factory_heap;
-        obj.factory = factory;
+        obj.ram_factory = factory;
       }
 
       cursor = ::_::Print(utf.start, utf.stop, item);
@@ -82,71 +114,6 @@ void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item,
   utf.start = cursor;
 }
 
-template <typename Char>
-SIW TStrandFactory(Autoject& obj, SIW function, SIW arg, BOL using_heap) {
-  SI4 size;
-  UIW *begin = obj.begin, *new_begin;
-  if (!begin) return kFactoryNilOBJ;
-  PRINT_FACTORY_FUNCTION("Strand", function, using_heap);
-  switch (function) {
-    case kFactoryDelete: {
-      Delete(obj.begin, using_heap);
-      return 0;
-    }
-    case kFactoryNew: {
-      return reinterpret_cast<SIW>(TArrayNew<Char, SIW, TStrand<SIN>>(arg));
-    }
-    case kFactoryGrow: {
-      if (!arg) return kFactoryNilArg;
-      SIN size = TSize<SIN>(begin);
-      if (!TArrayCanGrow<SIN>(size)) return kFactorySizeInvalid;
-      size = size << 1;
-
-      UIW* new_begin = TArrayNew<Char, SIN, TStrand<Char>>(size);
-      if (!new_begin) return kFactoryCantGrow;
-      PRINTF(" new size:%i", TSize<SIN>(new_begin));
-
-      TUTF<Char> new_utf(new_begin);
-      Char* start = TSTRStart<Char>(begin);
-      new_utf << start;
-      reinterpret_cast<TUTF<Char>*>(arg)->Set(new_utf);
-      PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
-             TSTRStart<Char>(new_begin));
-
-      Delete(begin, using_heap);
-      obj.begin = new_begin;
-      return 0;
-    }
-    case kFactoryClone: {
-      UIW* new_begin = TArrayNew<Char, SIN, TStrand<Char>>(TSize<SIN>(begin));
-      PRINTF(" new size:%i", TSize<SIN>(new_begin));
-      TUTF<Char> new_utf(new_begin);
-      Char* start = TSTRStart<Char>(begin);
-      new_utf << start;
-      PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
-             TSTRStart<Char>(new_begin));
-
-      return reinterpret_cast<SIW>(new_begin);
-    }
-    case kFactoryName: {
-      return reinterpret_cast<SIW>("Strand");
-    }
-  }
-  return kFactoryErrorCount;
-}
-
-/* */
-template <typename Char>
-static SIW TStrandFactoryStack(Autoject& obj, SIW function, SIW arg) {
-  return TStrandFactory<Char>(obj, function, arg, kStack);
-}
-
-/* */
-template <typename Char>
-static SIW TStrandFactoryHeap(Autoject& obj, SIW function, SIW arg) {
-  return TStrandFactory<Char>(obj, function, arg, kHeap);
-}
-
 /* An ASCII Strand that can auto-grow from stack to heap.
 
 The count of the string is defined as the maximimum chars that can fit in the
@@ -159,7 +126,7 @@ in the opposite order then where called.
 # Initialization
 
 A Strand may be initialed to print to the socket or to a dynamically allocated
-string. This behavior is configured with the constructors. The AsciiFactory can
+string. This behavior is configured with the constructors. The RamFactory can
 either be configured using the class template argument kFactory1_. If the
 obj_.Factory () is nil then it will get replaced with the foo.
 
@@ -177,29 +144,29 @@ Strands that use dynamic memory use the TC:
 TStrand<UI4, TSocket<64>> () << "Hello world!";
 @endcode
 */
-template <typename Char = CH1, SIN kCount_ = kSTRCount,
-          typename BUF = TSocket<kCount_, Char, TStrand<SIN>>>
+template <typename Char = CH1, SIN kSize_ = kSTRCount,
+          typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
 class AStrand {
  public:
   /* Constructs a Strand that auto-grows from stack to heap.
   @param factory ASCII Factory to call when the Strand overflows. */
-  AStrand() : obj_(kCount_, FactoryInit()) { Reset(); }
+  AStrand() : obj_(kSize_) { Reset(); }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH1 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(CH1 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH1* item) : obj_(kCount_, FactoryInit()) {
+  AStrand(const CH1* item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
 #if USING_UTF16 == YES
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH2* item) : obj_(kCount_, FactoryInit()) {
+  AStrand(const CH2* item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
@@ -207,88 +174,88 @@ class AStrand {
 
 #if USING_UTF32 == YES
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH4 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(CH4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 #endif
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH4* item) : obj_(kCount_, FactoryInit()) {
+  AStrand(const CH4* item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI1 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(SI1 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI1 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(UI1 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI2 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(SI2 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI2 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(UI2 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI4 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(SI4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI4 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(UI4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI8 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(SI8 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI8 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(UI8 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
 #if USING_FP4 == YES
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP4 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(FP4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 #endif
 #if USING_FP8 == YES
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP8 item) : obj_(kCount_, FactoryInit()) {
+  AStrand(FP8 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 #endif
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Hex item) : obj_(kCount_, FactoryInit()) {
+  AStrand(Hex item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Binary item) : obj_(kCount_, FactoryInit()) {
+  AStrand(Binary item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
@@ -389,8 +356,8 @@ class AStrand {
   inline AStrand& Print(T item) {
     PRINTF("\nBefore:\"");
     PRINT(Start());
-    PRINT("\"");
-    TStrandPrint<Char, T>(obj_.AObj(), utf_, item, TStrandFactoryHeap<Char>);
+    PRINT('\"');
+    TStrandPrint<Char, T>(obj_.Auto(), utf_, item);
     return *this;
   }
 
@@ -401,12 +368,6 @@ class AStrand {
   TUTF<Char> utf_;  //< UTF for the strand.
   // AutoArray of Char(s).
   AArray<Char, SIN, BUF> obj_;
-
-  /* Gets the AsciiFactory based on if the BUF is Nil or a TSocket. */
-  constexpr AsciiFactory FactoryInit() {
-    return obj_.UsesStack() ? TStrandFactoryStack<Char>
-                            : TStrandFactoryHeap<Char>;
-  }
 };
 
 /*
@@ -422,44 +383,44 @@ using Strand4 = TStrand<CH4>;
 
 }  // namespace _
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj,
-    ::_::AStrand<Char, kCount_, BUF>& item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj,
+    ::_::AStrand<Char, kSize_, BUF>& item) {
   return obj;
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, const CH1* item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, const CH1* item) {
   return obj.Print(item);
 }
 
 #if USING_UTF16 == YES
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, const CH2* item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, const CH2* item) {
   return obj.Print(item);
 }
 #endif
 
 #if USING_UTF32 == YES
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, const CH4* item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, const CH4* item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, CH4 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, CH4 item) {
   return obj.Print(item);
 }
 #endif
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, CH1 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, CH1 item) {
   return obj.Print(item);
 }
 /*
@@ -469,96 +430,96 @@ inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
   return obj.Print(item);
 }*/
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, UI1 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, UI1 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, SI2 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, SI2 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, UI2 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, UI2 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, SI4 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, SI4 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, UI4 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, UI4 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, SI8 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, SI8 item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, UI8 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, UI8 item) {
   return obj.Print(item);
 }
 
 #if USING_FP4 == YES
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, FP4 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, FP4 item) {
   return obj.Print(item);
 }
 #endif
 #if USING_FP8 == YES
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, FP8 item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, FP8 item) {
   return obj.Print(item);
 }
 #endif
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::Hex item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Hex item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::TCenter<Char> item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TCenter<Char> item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::TRight<Char> item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TRight<Char> item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::TLinef<Char> item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TLinef<Char> item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::THeadingf<Char> item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::THeadingf<Char> item) {
   return obj.Print(item);
 }
 
-template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, ::_::TChars<Char> item) {
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TChars<Char> item) {
   return obj.Print(item);
 }
 

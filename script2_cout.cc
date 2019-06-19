@@ -482,11 +482,14 @@ COut& COut::Print(FP8 item) {
 #endif
 
 COut& COut::PrintHex(const void* begin, SIW size_bytes) {
-  TPrintHex<COut>(COut().Star(), begin, size_bytes);
+  TPrintHex<COut>(COut().Star(), begin, -size_bytes);
   return *this;
 }
 
-COut& COut::Print(Hex item) { return PrintHex(item.Begin(), item.Size()); }
+COut& COut::Print(Hex item) {
+  TPrintHex<COut>(COut().Star(), item.Begin(), item.Size());
+  return *this;
+}
 
 COut& COut::PrintBinary(const void* begin, SIW size_bytes) {
   TPrintBinary<COut>(COut().Star(), begin, size_bytes);

@@ -77,9 +77,9 @@ typedef enum AsciiTypes {
   kPC4 = 57,  //< 58. 32-bit const pointer. |
   kPT8 = 58,  //< 59. 64-bit pointer. |
   kPC8 = 59,  //< 59. 64-bit const pointer. |
-  kOA2 = 60,  //< 60. A 16-bit AsciiFactory and pointer to an object.
-  kOA4 = 61,  //< 61. A 32-bit AsciiFactory and pointer to an object.
-  kOA8 = 62,  //< 62. A 64-bit AsciiFactory and pointer to an object.
+  kOA2 = 60,  //< 60. A 16-bit RamFactory and pointer to an object.
+  kOA4 = 61,  //< 61. A 32-bit RamFactory and pointer to an object.
+  kOA8 = 62,  //< 62. A 64-bit RamFactory and pointer to an object.
   kWLD = 63,  //< 63. A one-byte-type-value tuple.
 } AsciiType;
 

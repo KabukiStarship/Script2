@@ -95,10 +95,6 @@ static const CH1* TestNode(CH1* seam_log, CH1* seam_end, const CH1* args) {
                    ,
                    _06_Strand
 #endif
-#if SEAM >= SCRIPT2_SEAM_ARRAY
-                   ,
-                   _08_Array
-#endif
 #if SEAM >= SCRIPT2_SEAM_LOOM
                    ,
                    _09_Loom

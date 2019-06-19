@@ -7,7 +7,7 @@ Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines 
 * Cross-platform Modern `Embedded-C++11` replacement for C++ std library with optional use of dynamic memory.
 * Seam Trees provide low-cost in-order unit tests for Agile, Test, and Issue Driven Development with debug information customized for each tree node.
 * Cross-platform Modern `Embedded-C++11` IoT Nanoframework with Cross-language C Application Binary Interface (ABI) and minimal Doxygen API docs.
-* ASCII Data Types and the ASCII Factory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
+* ASCII Data Types with the assistance of Autojects (Automatic Objects) and the RamFactory operate seamlessly across assembly boundary with optimal RAM usage and CPU cache performance from ROM-able ASCII Contiguous Objects.
 * Rapid compile time using 3-file Translation Units with unique names and separated C++ templates.
 * Modeled after AI philosophy and ASCII mimicry of the Chinese Room Thought Experiment and C0 Control Codes.
 

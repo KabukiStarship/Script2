@@ -80,22 +80,6 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
-UIW* New(SIW size) {
-  // try {
-  //  begin = new UIW[size >> TBitShiftCount<>()];
-  //} catch (const std::bad_alloc& exception) {
-  //  ObjException(exception.what());
-  //  return nullptr;
-  //}
-  size = TAlignUpSigned<SIW>(size);
-  DASSERT(!(size & (sizeof(SIW) - 1)));
-  return new UIW[TWordCount<SIW>(size)];
-}
-
-void Delete(UIW* buffer, BOL using_heap) {
-  if (using_heap) delete[] buffer;
-}
-
 UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }
 
 void* VoidPtr(UIW value) { return reinterpret_cast<void*>(value); }
@@ -179,18 +163,22 @@ CH1* SocketWipe(CH2* begin, CH4* end) {
 
 CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
 
-CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
-  ASSERT(begin);
-  ASSERT(read);
-  ASSERT(size > 0);
-  ASSERT(read_size > 0);
+CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
+                SIW source_size) {
+  ASSERT(destination);
+  ASSERT(source);
+  ASSERT(destination_size > 0);
+  ASSERT(source_size > 0);
 
-  if (size < read_size) return nullptr;
-  CH1 *cursor = reinterpret_cast<CH1*>(begin), *end_ptr = cursor + size;
-  const CH1 *start_ptr = reinterpret_cast<const CH1*>(read),
-            *stop_ptr = start_ptr + read_size;
+  if (destination_size < source_size) return nullptr;
+  CH1 *cursor = reinterpret_cast<CH1*>(destination),
+      *end_ptr = cursor + destination_size;
+  const CH1 *start_ptr = reinterpret_cast<const CH1*>(source),
+            *stop_ptr = start_ptr + source_size;
 
-  if (read_size < (2 * sizeof(void*) + 1)) {
+  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
+  return cursor; /*
+  if (source_size < (2 * sizeof(void*) + 1)) {
     // There is not enough bytes to copy in words.
     while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
     return cursor;
@@ -198,9 +186,6 @@ CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
 
   PRINTF("\nCopying %i bytes from %p and writing to %p",
          (SI4)(stop_ptr - start_ptr), cursor, stop_ptr);
-
-  // Debug stuff.
-  CH1 *begin_debug = cursor, *end_debug = end_ptr;
 
   // Algorithm:
   // 1.) Save return value.
@@ -224,7 +209,7 @@ CH1* SocketCopy(void* begin, SIW size, const void* read, SIW read_size) {
 
   while (words < words_end) *words++ = *read_word++;
 
-  return success;
+  return success;*/
 }
 
 CH1* SocketCopy(void* begin, void* stop, const void* read_begin,
@@ -313,6 +298,36 @@ void DestructorDeleteBuffer(UIW* socket) {
 }
 
 SIW SocketShiftUp(void* begin, void* end, SIW count) {
+  if (!begin || begin <= end || count <= 0) return 0;
+  CH1 *start = reinterpret_cast<CH1*>(begin),
+      *stop = reinterpret_cast<CH1*>(end);
+  if (count < 3 * sizeof(void*)) {
+    for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop;
+    return 0;
+  }
+  UIW mask = sizeof(UIW) - 1;
+  // Align the pointer down.
+  UIW value = reinterpret_cast<UIW>(stop);
+  CH1* pivot = reinterpret_cast<CH1*>(value - (value & mask));
+
+  // Shift up the top portion.
+  for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop--;
+  UIW* stop_word = reinterpret_cast<UIW*>(stop);
+
+  // Align the pointer up.
+  value = reinterpret_cast<UIW>(start);
+  UIW* start_word = reinterpret_cast<UIW*>(value + ((-(SIW)value) & mask));
+
+  // Shift up the moddle portion.
+  while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
+
+  // Shift up the bottom portion.
+  pivot = reinterpret_cast<CH1*>(stop_word + 1);
+  while (pivot >= start) *(pivot + count) = *pivot--;
+  return count;
+}
+
+SIW SocketShiftDown(void* begin, void* end, SIW count) {
   if (!begin || begin <= end || count <= 0) return 0;
   CH1 *start = reinterpret_cast<CH1*>(begin),
       *stop = reinterpret_cast<CH1*>(end);

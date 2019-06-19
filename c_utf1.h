@@ -251,7 +251,7 @@ SDK const CH1* Scan(const CH1* start, FP4& result);
 SDK const CH1* Scan(const CH1* start, FP8& result);
 #endif
 
-/* AsciiFactory Prints the socket to the console as a UTF-8 string.
+/* RamFactory Prints the socket to the console as a UTF-8 string.
 UIW* COutUTF8(UIW* socket, SIW function, void* arg); */
 
 /* Prints the socket to the console as a UTF-8 string.
