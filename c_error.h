@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_ERROR
 #define SCRIPT2_ERROR
 
@@ -48,11 +48,11 @@ typedef enum ScriptError {
 } Error;
 
 /* Returns an array or  pointers for the KabukiError(s). */
-SDK const CH1** ErrorStrands();
+LIB_MEMBER const CH1** ErrorStrands();
 
 /* Returns one of the Errors () strings. */
-SDK const CH1* ErrorStrand(Error error);
+LIB_MEMBER const CH1* ErrorStrand(Error error);
 
 }  // namespace _
 #endif  //< SCRIPT2_ERROR
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

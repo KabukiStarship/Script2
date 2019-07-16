@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_WALL
 #define SCRIPT2_WALL
 #include "c_door.h"

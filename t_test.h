@@ -13,24 +13,20 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_TTEST
 #define SCRIPT2_TTEST 1
 
-#include "c_cin.h"
-#include "c_cout.h"
 #include "c_test.h"
-#include "t_utf.h"
 
 namespace _ {
 
 template <TestCase... N>
-const CH1* TTestTree(CH1* seam_log, CH1* seam_end, const CH1* args) {
+const CH1* TTestTree(const CH1* args) {
   static TestCase nodes[sizeof...(N)] = {N...};
-  return TestTree(seam_log, seam_end, args, nodes, sizeof...(N));
+  return TestTree(args, nodes, sizeof...(N));
 }
 
 template <TestCase... N>
-SI4 TTestTree(SI4 arg_count, CH1** args, CH1* seam_log, SI4 seam_log_size) {
+SI4 TTestTree(SI4 arg_count, CH1** args) {
   static TestCase tests[sizeof...(N)] = {N...};
-  return SeamTreeTest(arg_count, args, seam_log, seam_log_size, tests,
-                      sizeof...(N));
+  return SeamTreeTest(arg_count, args, tests, sizeof...(N));
 }
 
 }  // namespace _

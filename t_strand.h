@@ -12,13 +12,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_T_STRAND
 #define SCRIPT2_T_STRAND 1
 
-#if SEAM >= SCRIPT2_SEAM_STRAND
-#include "c_ascii.h"
+#if SEAM >= SEAM_SCRIPT2_STRAND
+#include "c_avalue.h"
 #include "c_strand.h"
 #include "t_array.h"
 #include "t_utf.h"
 
-#if SEAM == SCRIPT2_SEAM_STRAND
+#if SEAM == SEAM_SCRIPT2_STRAND
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -32,26 +32,16 @@ struct TStrand {
   SIZ size;  //< Size of the ASCII Object.
 };
 
-/* Utility class for printing blocks of Unicode characters. */
-template <typename Char = CH1>
-struct TChars {
-  Char *start,  //< Start character adddress.
-      *stop;    //< Stop character address.
-
-  /* Foo: Masters of Bar. */
-  TChars(Char* start, Char*) : start(start), stop(stop) {}
-};
-
 template <typename Char, typename SIZ = SIN>
 UIW* TStrandClone(Autoject& obj) {
   UIW *begin = obj.begin,  //
       *new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(TSize<SIZ>(begin));
-  PRINTF(" new size:%i", TSize<SIZ>(new_begin));
+  D_PRINTF(" new size:%i", TSize<SIZ>(new_begin));
   TUTF<Char> new_utf(new_begin);
   Char* start = TSTRStart<Char>(begin);
   new_utf << start;
-  PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
-         TSTRStart<Char>(new_begin));
+  D_PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+           TSTRStart<Char>(new_begin));
   return new_begin;
 }
 
@@ -64,14 +54,14 @@ BOL TStrandGrow(Autoject& obj, TUTF<Char, SIZ>& utf) {
 
   UIW* new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(obj.ram_factory, size);
   if (!new_begin) return false;
-  PRINTF(" new size:%i", TSize<SIZ>(new_begin));
+  D_PRINTF(" new size:%i", TSize<SIZ>(new_begin));
 
   TUTF<Char, SIZ> new_utf(new_begin);
   Char* start = TSTRStart<Char>(begin);
   new_utf << start;
   utf.Set(new_utf);
-  PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
-         TSTRStart<Char>(new_begin));
+  D_PRINTF("\nCopying \"%s\" with result:\"%s\"", start,
+           TSTRStart<Char>(new_begin));
 
   Delete(obj);
   obj.begin = new_begin;
@@ -82,16 +72,16 @@ template <typename Char, typename T, typename SIZ = SIN>
 void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item) {
   Char *start = utf.start,  //
       *stop = utf.stop;
-  auto cursor = ::_::Print(start, stop, item);
+  auto cursor = ::_::TPrint<Char>(start, stop, item);
   if (!cursor) {
     *utf.start = 0;  //< Replace the delimiter so we can copy the string.
     SIW count = stop - start;
     do {
       RamFactory factory = obj.ram_factory,  //
           factory_heap = RamFactoryHeap;
-      DASSERT(factory);
-      PRINTF("\nPrint failed, attempting to auto-grow from %s",
-             (factory != factory_heap) ? "stack-to-heap." : "heap-to-heap.");
+      D_ASSERT(factory);
+      D_PRINTF("\nPrint failed, attempting to auto-grow from %s",
+               (factory != factory_heap) ? "stack-to-heap." : "heap-to-heap.");
 
       if (!TStrandGrow<Char, SIZ>(obj, utf)) return;
 
@@ -100,16 +90,16 @@ void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item) {
         obj.ram_factory = factory;
       }
 
-      cursor = ::_::Print(utf.start, utf.stop, item);
-      PRINT("\nRe-printed:\"");
-      PRINT(utf.start);
-      PRINT("\"");
-      DWARN(cursor);
+      cursor = ::_::TPrint<Char>(utf.start, utf.stop, item);
+      D_COUT("\nRe-printed:\"");
+      D_COUT(utf.start);
+      D_COUT("\"");
+      D_WARN(cursor);
     } while (!cursor);
   } else {
-    PRINT("\nPrinted:\"");
-    PRINT(utf.start);
-    PRINT("\"");
+    D_COUT("\nPrinted:\"");
+    D_COUT(utf.start);
+    D_COUT("\"");
   }
   utf.start = cursor;
 }
@@ -144,7 +134,7 @@ Strands that use dynamic memory use the TC:
 TStrand<UI4, TSocket<64>> () << "Hello world!";
 @endcode
 */
-template <typename Char = CH1, SIN kSize_ = kSTRCount,
+template <typename Char = CHR, SIN kSize_ = kSTRCount,
           typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
 class AStrand {
  public:
@@ -249,13 +239,13 @@ class AStrand {
 #endif
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Hex item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(Hexf item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Binary item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(Binaryf item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
@@ -343,7 +333,7 @@ class AStrand {
   /* Prints this object to the given printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-#if DEBUG_SEAM
+#if DEBUG_THIS
     o << "\nTStrand<CH" << (CH1)('0' + sizeof(Char)) << "> size:" << obj_.Size()
       << " space_left:" << SpaceLeft() << " contents:\"" << Start() << '\"';
     return o;
@@ -354,9 +344,9 @@ class AStrand {
 
   template <typename T>
   inline AStrand& Print(T item) {
-    PRINTF("\nBefore:\"");
-    PRINT(Start());
-    PRINT('\"');
+    D_PRINTF("\nBefore:\"");
+    D_COUT(Start());
+    D_COUT('\"');
     TStrandPrint<Char, T>(obj_.Auto(), utf_, item);
     return *this;
   }
@@ -489,37 +479,43 @@ inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Hex item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Hexf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TCenter<Char> item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Binaryf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TRight<Char> item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Centerf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TLinef<Char> item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Rightf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::THeadingf<Char> item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Linef item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::TChars<Char> item) {
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Headingf item) {
+  return obj.Print(item);
+}
+
+template <typename Char, SIN kSize_, typename BUF>
+inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
+    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Charsf item) {
   return obj.Print(item);
 }
 

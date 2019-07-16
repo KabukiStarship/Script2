@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
 #include "c_bin.h"
 #include "c_bout.h"
 #include "c_op.h"
 #include "c_socket.h"
-#include "c_utf1.h"
+#include "t_utf.h"
 
 namespace _ {
 
@@ -126,4 +126,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Slot& slot) {
 #endif
 
 #endif  //< SCRIPT2_SLOT
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

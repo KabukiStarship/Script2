@@ -8,9 +8,9 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #include "module_release.inl"
 #else
 #include "module_release.inl"
@@ -82,5 +82,5 @@ Slot& Wall::Print(Slot& slot) {
 }
 
 }  // namespace _
-#include "global_footer.inl"
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#include "module_footer.inl"
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

@@ -3,18 +3,17 @@
 @file    /script2/c_bsq.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
-#include "c_ascii.h"
-#include "c_utf1.h"
+#include "c_avalue.h"
 
 namespace _ {
 
@@ -27,7 +26,7 @@ struct Bsq {
   }
 };
 
-#if ALU_SIZE == 16
+#if CPU_SIZE == 16
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);
@@ -139,13 +138,13 @@ inline const SI4* Params() {
 }
 
 /* Prints out the kBSQ parameters. */
-SDK UTF1& PrintBsq(UTF1& printer, const SI4* params);
+LIB_MEMBER UTF1& PrintBsq(UTF1& printer, const SI4* params);
 
 /*  Prints out the parameters. */
-// SDK UTF& PrintBsq (const SI4* bsq, UTF& utf);
+// LIB_MEMBER UTF& PrintBsq (const SI4* bsq, UTF& utf);
 
 /*< Returns the requested parameter number_. */
-SDK SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
+LIB_MEMBER SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
 
 }  // namespace _
 
@@ -169,4 +168,4 @@ inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
 #endif  //< USING_UTF8 == YES
 
 #endif  //< SCRIPT2_BSQ_C
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

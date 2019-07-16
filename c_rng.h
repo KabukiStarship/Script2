@@ -16,82 +16,82 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 /* Gets a random generator device seed. */
-SDK UI4 RandomSeed();
+LIB_MEMBER UI4 RandomSeed();
 
 /* Re-seeds the static mersenne twister engine. */
-SDK void RandomizeSeed();
+LIB_MEMBER void RandomizeSeed();
 
 /* Gets a random 8-bit/1-byte unsigned integer. */
-SDK UI1 Random(UI1 min, UI1 max);
+LIB_MEMBER UI1 Random(UI1 min, UI1 max);
 
 /* Gets a random 8-bit/1-byte signed integer. */
-SDK SI1 Random(SI1 min, SI1 max);
+LIB_MEMBER SI1 Random(SI1 min, SI1 max);
 
 /* Gets a random 16-bit/2-byte unsigned integer. */
-SDK UI2 Random(UI2 min, UI2 max);
+LIB_MEMBER UI2 Random(UI2 min, UI2 max);
 
 /* Gets a random 16-bit/2-byte signed integer. */
-SDK SI2 Random(SI2 min, SI2 max);
+LIB_MEMBER SI2 Random(SI2 min, SI2 max);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-SDK UI4 Random(UI4 min, UI4 max);
+LIB_MEMBER UI4 Random(UI4 min, UI4 max);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-SDK SI4 Random(SI4 min, SI4 max);
+LIB_MEMBER SI4 Random(SI4 min, SI4 max);
 
 /* Gets a random 64-bit/8-byte unsigned integer. */
-SDK UI8 Random(UI8 min, UI8 max);
+LIB_MEMBER UI8 Random(UI8 min, UI8 max);
 
 /* Gets a random 64-bit/8-byte signed integer. */
-SDK SI8 Random(SI8 min, SI8 max);
+LIB_MEMBER SI8 Random(SI8 min, SI8 max);
 
 /* Gets a random 8-bit/1-UI1 unsigned integer. */
-SDK UI1 RandomUI1();
+LIB_MEMBER UI1 RandomUI1();
 
 /* Gets a random 8-bit/1-UI1 signed integer. */
-SDK SI1 RandomSI1();
+LIB_MEMBER SI1 RandomSI1();
 
 /* Gets a random 16-bit/2-UI1 unsigned integer. */
-SDK UI2 RandomUI2();
+LIB_MEMBER UI2 RandomUI2();
 
 /* Gets a random 16-bit/2-UI1 signed integer. */
-SDK SI2 RandomSI2();
+LIB_MEMBER SI2 RandomSI2();
 
 /* Gets a random 32-bit/4-UI1 unsigned integer. */
-SDK UI4 RandomUI4();
+LIB_MEMBER UI4 RandomUI4();
 
 /* Gets a random 32-bit/4-UI1 signed integer. */
-SDK SI4 Randomint();
+LIB_MEMBER SI4 Randomint();
 
 /* Gets a random 64-bit/8-UI1 unsigned integer. */
-SDK UI8 RandomUI8();
+LIB_MEMBER UI8 RandomUI8();
 
 /* Gets a random 64-bit/8-UI1 signed integer. */
-SDK SI8 RandomSI8();
+LIB_MEMBER SI8 RandomSI8();
 
 /* Gets a random 8-bit/1-UI1 unsigned integer. */
-SDK void RandomNumber(UI1& result);
+LIB_MEMBER void RandomNumber(UI1& result);
 
 /* Gets a random 8-bit/1-UI1 signed integer. */
-SDK void RandomNumber(SI1& result);
+LIB_MEMBER void RandomNumber(SI1& result);
 
 /* Gets a random 16-bit/2-UI1 unsigned integer. */
-SDK void RandomNumber(UI2& result);
+LIB_MEMBER void RandomNumber(UI2& result);
 
 /* Gets a random 16-bit/2-UI1 signed integer. */
-SDK void RandomNumber(SI2& result);
+LIB_MEMBER void RandomNumber(SI2& result);
 
 /* Gets a random 32-bit/4-UI1 unsigned integer. */
-SDK void RandomNumber(UI4& result);
+LIB_MEMBER void RandomNumber(UI4& result);
 
 /* Gets a random 32-bit/4-UI1 signed integer. */
-SDK void RandomNumber(SI4& result);
+LIB_MEMBER void RandomNumber(SI4& result);
 
 /* Gets a random 64-bit/8-UI1 unsigned integer. */
-SDK void RandomNumber(UI8& result);
+LIB_MEMBER void RandomNumber(UI8& result);
 
 /* Gets a random 64-bit/8-UI1 signed integer. */
-SDK void RandomNumber(SI8& result);
+LIB_MEMBER void RandomNumber(SI8& result);
 
 }  // namespace _
 #endif  //< INCLUDED_SCRIPTCRNG

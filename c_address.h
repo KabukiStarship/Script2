@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_CADDRESS
 #define SCRIPT2_CADDRESS 1
 
@@ -27,7 +27,7 @@ namespace _ {
     @endcode
 */
 template <const CH1... N>
-SDK const CH1* Address() {
+LIB_MEMBER const CH1* Address() {
   static const CH1 path[sizeof...(N)] = {N...};
   static const CH1 term_char = 0;
   return path;
@@ -84,4 +84,4 @@ inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d,
 
 }  // namespace _
 #endif  //< SCRIPT2_CADDRESS
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

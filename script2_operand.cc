@@ -3,17 +3,16 @@
 @file    /script2/script2_operand.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #include "c_op.h"
 #include "c_operand.h"
-#include "c_utf1.h"
 
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,25 +21,25 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 const CH1* OperandName(Operand* operand) {
-  ASSERT(operand);
+  A_ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
-  ASSERT(op);
+  A_ASSERT(op);
 
   return op->name;
 }
 
 UIW OperandCount(Operand* operand) {
-  ASSERT(operand);
+  A_ASSERT(operand);
   const Op* op = operand->Star(0, nullptr);
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
 CH4 OperandIndex(Operand* operand, CH1* begin, CH1* stop) {
-  ASSERT(operand);
+  A_ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
-  ASSERT(op);
+  A_ASSERT(op);
   CH4 index = OpFirst(op), last = OpLast(op);
-  ASSERT(index);
+  A_ASSERT(index);
   for (; index <= last; ++index) {
     if (STREquals(begin, stop, operand->Star(index, nullptr)->name)) {
       return index;
@@ -64,11 +63,11 @@ UTF& Print (UTF& utf, const Operand* op) {
 }*/
 
 UTF1& PrintOperand(UTF1& utf, Operand* operand) {
-  ASSERT(operand);
+  A_ASSERT(operand);
 
   const Op* op = operand->Star('?', nullptr);
 
-  ASSERT(op);
+  A_ASSERT(op);
 
   UIW num_ops = reinterpret_cast<UIW>(op->in),
       op_num = reinterpret_cast<UIW>(op->out), last_op = op_num + num_ops - 1;
@@ -84,18 +83,18 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
 }
 
 Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
-  ASSERT(address);
-  ASSERT(root);
+  A_ASSERT(address);
+  A_ASSERT(root);
 
   SI4 index = *address++;
   const Op* op = root->Star(index, nullptr);
   CH1 socket[1024];
-  PRINTF("%s", op->name)
+  D_PRINTF("%s", op->name)
   index = *address++;
   while (index) {
     op = root->Star(index, nullptr);
-    ASSERT(op);
-    PRINTF(".%s", op->name)
+    A_ASSERT(op);
+    D_PRINTF(".%s", op->name)
     index = *address++;
   }
   slot.Write(socket);
@@ -104,4 +103,4 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
 #endif
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //> #if SEAM >= SEAM_SCRIPT2_DIC

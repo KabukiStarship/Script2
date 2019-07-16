@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_matrix.h"
 
-#if SEAM == SCRIPT2_SEAM_MATRIX
+#if SEAM == SEAM_SCRIPT2_MATRIX
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,11 +21,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _08_Matrix(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_MATRIX
-  TEST_BEGIN;
+static const CH1* _08_Matrix(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_MATRIX
+  A_TEST_BEGIN;
 
-  PRINT("\n\nTesting AStack<SI4>...\n\nPrinting empty stack...\n");
+  D_COUT("\n\nTesting AStack<SI4>...\n\nPrinting empty stack...\n");
 
   static const SI4 array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
@@ -36,7 +36,7 @@ static const CH1* _08_Matrix(CH1* seam_log, CH1* seam_end, const CH1* args) {
   SI4* array_base = test_matrix.Elements();
   for (SI4 x = 0; x < 2; ++x)
     for (SI4 y = 0; y < 2; ++y)
-      for (SI4 z = 0; z < 2; ++z) AVOW(w++, array_3d_exected[x][y][z]);
+      for (SI4 z = 0; z < 2; ++z) A_AVOW(w++, array_3d_exected[x][y][z]);
 #endif
   return nullptr;
 }

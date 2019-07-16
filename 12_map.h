@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_MAP
+#if SEAM == SEAM_SCRIPT2_MAP
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -18,9 +18,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _12_Map(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_MAP
-  TEST_BEGIN;
+static const CH1* _12_Map(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_MAP
+  A_TEST_BEGIN;
 
   PrintLineBreak("\n  + Running MultimapTests\n", 10);
 
@@ -48,7 +48,7 @@ static const CH1* _12_Map(CH1* seam_log, CH1* seam_end, const CH1* args) {
 
   Compare(0, index) Multimap2Print(multimap);
   Compare(0, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) PAUSE("\n");
+  Compare(0, index) D_PAUSE("\n");
   index = Multimap2Add<UI1, kUI1>(multimap, "C", (UI1)0xFF);
   Compare(1, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) index = Multimap2Find(multimap, "C");

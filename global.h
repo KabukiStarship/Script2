@@ -13,53 +13,53 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef INCLUDED_SCRIPTGLOBAL
 #define INCLUDED_SCRIPTGLOBAL 1
 
-#if SEAM == SCRIPT2_SEAM_RNG
+#if SEAM == SEAM_SCRIPT2_CORE
 #include "c_cout.h"
 #include "c_rng.h"
 #endif
-#if SEAM == SCRIPT2_SEAM_ITOS
+#if SEAM == SEAM_SCRIPT2_ITOS
 #include "c_cout.h"
 #include "c_rng.h"
 #endif
-#if SEAM == SCRIPT2_SEAM_SOCKET
+#if SEAM == SEAM_SCRIPT2_SOCKET
 #include "c_cout.h"
 #include "c_rng.h"
 #include "t_socket.h"
 #include "t_utf.h"
 #endif
-#if SEAM == SCRIPT2_SEAM_UTF || SEAM == SCRIPT2_SEAM_FTOS
+#if SEAM == SEAM_SCRIPT2_UTF || SEAM == SEAM_SCRIPT2_FTOS
 #include "c_cout.h"
 #include "c_rng.h"
 #include "t_utf.h"
 #endif
-#if SEAM == SCRIPT2_SEAM_CLOCK
+#if SEAM == SEAM_SCRIPT2_CLOCK
 #include "c_cout.h"
 #include "c_rng.h"
 #include "t_clock.h"
 #endif
-#if SEAM == SCRIPT2_SEAM_STRAND
+#if SEAM == SEAM_SCRIPT2_STRAND
 #endif
-#if SEAM == SCRIPT2_SEAM_STACK
+#if SEAM == SEAM_SCRIPT2_STACK
 #endif
-#if SEAM == SCRIPT2_SEAM_MATRIX
+#if SEAM == SEAM_SCRIPT2_MATRIX
 #endif
-#if SEAM == SCRIPT2_SEAM_LOOM
+#if SEAM == SEAM_SCRIPT2_LOOM
 #endif
-#if SEAM == SCRIPT2_SEAM_TABLE
+#if SEAM == SEAM_SCRIPT2_TABLE
 #endif
-#if SEAM == SCRIPT2_SEAM_LIST
+#if SEAM == SEAM_SCRIPT2_LIST
 #endif
-#if SEAM == SCRIPT2_SEAM_MAP
+#if SEAM == SEAM_SCRIPT2_MAP
 #endif
-#if SEAM == SCRIPT2_SEAM_BOOK
+#if SEAM == SEAM_SCRIPT2_BOOK
 #endif
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #endif
-#if SEAM == SCRIPT2_SEAM_EXPR
+#if SEAM == SEAM_SCRIPT2_EXPR
 #endif
-#if SEAM == SCRIPT2_SEAM_DOOR
+#if SEAM == SEAM_SCRIPT2_DOOR
 #endif
-#if SEAM == SCRIPT2_SEAM_ROOM
+#if SEAM == SEAM_SCRIPT2_ROOM
 #endif
 
 #endif  //< #ifndef INCLUDED_SCRIPTGLOBAL

@@ -12,9 +12,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #define INCLUDED_SCRIPTLOCK
 namespace _ {
 /* Locks the processor. */
-SDK inline void RoomLock();
+LIB_MEMBER inline void RoomLock();
 
 /* Unlocks the processor. */
-SDK inline void RoomUnlock();
+LIB_MEMBER inline void RoomUnlock();
 }  //< namespace _
 #endif  //< #if INCLUDED_SCRIPTLOCK

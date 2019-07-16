@@ -8,33 +8,17 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_SOCKET
+#if SEAM >= SEAM_SCRIPT2_SOCKET
 
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_SEAM_SOCKET
+#if SEAM == SEAM_SCRIPT2_SOCKET
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
 
 namespace _ {
-
-UI1 Negative(SI1 value) { return (UI1)(-value); }
-
-UI1 Negative(UI1 value) { return (UI1)(-(SI1)value); }
-
-UI2 Negative(SI2 value) { return (UI2)(-value); }
-
-UI2 Negative(UI2 value) { return (UI2)(-(SI2)value); }
-
-UI4 Negative(SI4 value) { return (UI4)(-value); }
-
-UI4 Negative(UI4 value) { return (UI4)(-(SI4)value); }
-
-UI8 Negative(SI8 value) { return (UI8)(-value); }
-
-UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
 CH1* AlignDown(CH1* pointer, UIW mask) { return TAlignDown<CH1*>(pointer); }
 
@@ -80,6 +64,39 @@ UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
 
 SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
 
+const void* TypeAlign(SIW type, const void* value) {
+  A_ASSERT(value);
+  if (type == 0) return nullptr;
+  if (!TypeIsSupported(type)) return nullptr;
+
+  SIW size = TypeSizeOf(type);
+  if (type <= kUI1) return value;
+  SIW value_ptr = reinterpret_cast<SIW>(value);
+#if CPU_SIZE == 2
+  if (type <= kFP2) return AlignUpPointer2<>(value);
+#else
+  if (type <= kBOL) return TAlignUp2<>(value);
+#endif
+  if (type <= kTM4) return TAlignUp<>(value, 3);
+  if (type <= kFPH) return TAlignUp<>(value, 7);
+
+  switch (type >> 6) {
+    case 0:
+      return value;
+    case 1:
+      return TAlignUp2<>(value);
+    case 2:
+      return TAlignUp<>(value, 3);
+    case 3:
+      return TAlignUp<>(value, 7);
+  }
+  return 0;
+}
+
+void* TypeAlign(SIW type, void* value) {
+  return const_cast<void*>(TypeAlign(type, (const void*)value));
+}
+
 UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }
 
 void* VoidPtr(UIW value) { return reinterpret_cast<void*>(value); }
@@ -100,27 +117,27 @@ SIW SizeOf(const void* start, const void* stop) {
 inline UIW FillWord(CH1 fill_char) {
   UIW value = (UIW)(UI1)fill_char;
 #if CPU_ENDIAN == LITTLE_ENDIAN
-#if CPU_WORD_SIZE == 64
+#if CPU_SIZE == 64
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
          (value << 48) | (value << 56);
-#elif CPU_WORD_SIZE == 32
+#elif CPU_SIZE == 32
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
   return value | (value << 8);
 #endif
 #else
-#error You're CPU is in poopy mode. Change to Litle endian mode or fix me.
+#error You're CPU is in poopy mode. Change to Litle endian mode.
 #endif
 }
 
 CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
   CH1 *start = reinterpret_cast<CH1*>(begin),
       *stop = reinterpret_cast<CH1*>(end);
-  ASSERT(start);
+  A_ASSERT(start);
   SIW count = stop - start;
-  PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
+  D_PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
 
-  PRINTF("\nFilling %i bytes from %p", (SI4)count, start);
+  D_PRINTF("\nFilling %i bytes from %p", (SI4)count, start);
 
   UIW fill_word = FillWord(fill_char);
 
@@ -165,10 +182,11 @@ CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
 
 CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
                 SIW source_size) {
-  ASSERT(destination);
-  ASSERT(source);
-  ASSERT(destination_size > 0);
-  ASSERT(source_size > 0);
+  if (source_size <= 0 || destination_size <= 0) return nullptr;
+  A_ASSERT(destination);
+  A_ASSERT(source);
+  // A_ASSERT(destination_size > 0);
+  // A_ASSERT(source_size > 0);
 
   if (destination_size < source_size) return nullptr;
   CH1 *cursor = reinterpret_cast<CH1*>(destination),
@@ -184,7 +202,7 @@ CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
     return cursor;
   }
 
-  PRINTF("\nCopying %i bytes from %p and writing to %p",
+  D_PRINTF("\nCopying %i bytes from %p and writing to %p",
          (SI4)(stop_ptr - start_ptr), cursor, stop_ptr);
 
   // Algorithm:
@@ -195,12 +213,12 @@ CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
   CH1 *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
-  PRINTF("\n  AlignUpPointer<> (begin):0x%p", aligned_pointer);
+  D_PRINTF("\n  AlignUpPointer<> (begin):0x%p", aligned_pointer);
   while (cursor < aligned_pointer) *cursor++ = *start_ptr++;
   aligned_pointer = TAlignDown<CH1*>(end_ptr);
-  PRINTF("\n  AlignDownPointer<> (begin):0x%p", aligned_pointer);
+  D_PRINTF("\n  AlignDownPointer<> (begin):0x%p", aligned_pointer);
   while (end_ptr > aligned_pointer) *end_ptr-- = *stop_ptr--;
-  PRINTF("\n  Down-stage pointers are now begin:0x%p end:0x%p", cursor,
+  D_PRINTF("\n  Down-stage pointers are now begin:0x%p end:0x%p", cursor,
          end_ptr);
 
   UIW *words = reinterpret_cast<UIW*>(cursor),
@@ -293,7 +311,7 @@ void DestructorNoOp(UIW* socket) {
 }
 
 void DestructorDeleteBuffer(UIW* socket) {
-  ASSERT(socket);
+  A_ASSERT(socket);
   delete socket;
 }
 

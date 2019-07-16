@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
@@ -20,7 +20,7 @@ namespace _ {
 
 /* A Mirror in a Chinese Room.
 A Mirror */
-struct SDK Mirror {
+struct LIB_MEMBER Mirror {
   SI4 size,   //< The size of the socket.
       begin,  //< The starting index of the ring socket data.
       stop,   //< The stopping index of the ring socket data.
@@ -40,34 +40,34 @@ static const UIW kMaxMirrorSize = ~((UIW)0);
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size The size of the socket. */
-SDK SI4 MirrorLength(CH1* begin, CH1* stop, SI4 size);
+LIB_MEMBER SI4 MirrorLength(CH1* begin, CH1* stop, SI4 size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-SDK SI4 MirrorSpace(CH1* begin, CH1* stop, SI4 size);
+LIB_MEMBER SI4 MirrorSpace(CH1* begin, CH1* stop, SI4 size);
 
 /* Checks if the given slot contains the specified address. */
-SDK void* MirrorContains(Mirror* mirror, void* address);
+LIB_MEMBER void* MirrorContains(Mirror* mirror, void* address);
 
 /* Clears the ring socket by writing zeros to it. */
-SDK void MirrorWipe(Mirror* mirror);
+LIB_MEMBER void MirrorWipe(Mirror* mirror);
 
 /* Copies a block from a ring-socket to the given destination. */
-// SDK CH1* MirrorWrite (Mirror* mirror, void* source, SIW size);
+// LIB_MEMBER CH1* MirrorWrite (Mirror* mirror, void* source, SIW size);
 
 /* Copies a block from a ring-socket to the given destination. */
-// SDK CH1* MirrorRead (Mirror* mirror, void* source, SIW size);
+// LIB_MEMBER CH1* MirrorRead (Mirror* mirror, void* source, SIW size);
 
 /* Gets the args from the b-sequence. */
-SDK const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);
+LIB_MEMBER const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);
 
 /* Posts a evaluated result to the b-sequence. */
-// SDK const Op* MirrorWrite (Mirror* mirror, const SI4* params,
+// LIB_MEMBER const Op* MirrorWrite (Mirror* mirror, const SI4* params,
 //                                   void** args);
 
-SDK BOL MirrorIsReadable(Mirror* mirror);
+LIB_MEMBER BOL MirrorIsReadable(Mirror* mirror);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
@@ -76,7 +76,7 @@ SDK BOL MirrorIsReadable(Mirror* mirror);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
+LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
 @param  error   The error type.
@@ -84,7 +84,7 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
+LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 
 /* Used to return an erroneous result from a B-Input.
 @param  bin     The source Mirror.
@@ -93,7 +93,7 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            UI1 offset);
 
 /* Used to return an erroneous result from a B-Input.
@@ -103,7 +103,7 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-// SDK const Op* MirrorResult (Mirror* mirror, Error error,
+// LIB_MEMBER const Op* MirrorResult (Mirror* mirror, Error error,
 //                                   const SI4* header,
 //                                   SI4 offset);
 
@@ -114,7 +114,7 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);
 
 /* Used to return an erroneous result from a B-Input.
@@ -124,9 +124,9 @@ SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
-SDK const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
+LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);
 
 }  // namespace _
 #endif  //< SCRIPT2_MIRROR
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

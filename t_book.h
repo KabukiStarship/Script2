@@ -9,13 +9,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_MAP
+#if SEAM >= SEAM_SCRIPT2_MAP
 #ifndef INCLUDED_SCRIPTTBOOK
 #define INCLUDED_SCRIPTTBOOK
 
 #include "t_dic.h"
 
-#if SEAM == SCRIPT2_SEAM_MAP
+#if SEAM == SEAM_SCRIPT2_MAP
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -115,7 +115,7 @@ enum {
              will get rounded up to the next higher multiple of 4. */
 template <typename Size, typename Index, typename I>
 UIW* MultimapInit(UIW* socket, UI1 count_max, UI2 size) {
-  ASSERT(socket);
+  A_ASSERT(socket);
   if (table_size <
       sizeof(TMap) +
           count_max * (MultimapOverheadPerIndex<UI1, UI2, UI2, UI2>() + 2))
@@ -185,16 +185,16 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         key_length = static_cast<UI2>(strlen(key)), size_pile;
 
   TPrintLinef();
-  PRINTF(
+  D_PRINTF(
       "Adding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p\n"
       "%20s: %p\n%20s: %u\n",
       key, "hashes", hashes, "key_offsets", key_offsets, "keys", keys,
       "indexes", indexes, "value", value);
 
-  Size hash = Hash16(key), current_hash;
+  Size hash = HashPrime16(key), current_hash;
 
   if (key_length > value) {
-    PRINTF("Buffer overflow\n");
+    D_PRINTF("Buffer overflow\n");
     return ~((I)0);
   }
 
@@ -209,7 +209,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
     destination = keys - key_length;
 
     SlotWrite(destination, key);
-    PRINTF("Inserted key %s at GetAddress 0x%p\n", key, destination);
+    D_PRINTF("Inserted key %s at GetAddress 0x%p\n", key, destination);
     SetPrint(multimap);
     return 0;
   }
@@ -217,11 +217,11 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
-    PRINTF("Not enough room in buffer!\n");
+    D_PRINTF("Not enough room in buffer!\n");
     return 0;  //< There isn't enough room left in the socket.
   }
 
-  PRINTF("Finding insert location... \n");
+  D_PRINTF("Finding insert location... \n");
 
   SI4 low = 0, mid, high = item_count, index;
 
@@ -231,7 +231,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
 
     current_hash = hashes[mid];
-    PRINTF("high: %i mid: %i low %i hash: %x\n", high, mid, low, current_hash);
+    D_PRINTF("high: %i mid: %i low %i hash: %x\n", high, mid, low, current_hash);
 
     if (current_hash > hash) {
       high = mid - 1;
@@ -239,17 +239,17 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
       low = mid + 1;
     } else  // Duplicate hash detected.
     {
-      PRINTF("hash detected, ");
+      D_PRINTF("hash detected, ");
 
       // Check for other collisions.
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%u\n", index);
+      D_PRINTF("index:%u\n", index);
 
       if (index < ~0)  //< There are other collisions.
       {
-        PRINTF("with collisions, ");
+        D_PRINTF("with collisions, ");
         // There was a collision so check the table.
 
         // The collisionsList is a sequence of indexes terminated
@@ -260,9 +260,9 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         temp_ptr = collission_list + temp;
         index = *temp_ptr;  //< Load the index in the collision table.
         while (index < MaxSetIndexes<I>()) {
-          PRINTF("comparing to \"%s\"\n", keys - key_offsets[index]);
+          D_PRINTF("comparing to \"%s\"\n", keys - key_offsets[index]);
           if (strcmp(key, keys - key_offsets[index]) == 0) {
-            PRINTF(
+            D_PRINTF(
                 "but table already contains key at "
                 "offset: %u.\n",
                 index);
@@ -273,7 +273,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         }
 
         // Its a new collision!
-        PRINTF("and new collision detected.\n");
+        D_PRINTF("and new collision detected.\n");
 
         // Copy the key
         value = key_offsets[item_count - 1] + key_length + 1;
@@ -294,7 +294,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         *temp_ptr = item_count;
 
         multimap->size_pile = size_pile + 1;
-        PRINTF("\n\ncollision index: %u\n", temp);
+        D_PRINTF("\n\ncollision index: %u\n", temp);
         // Store the collision index.
         indexes[item_count] = temp;  //< Store the collision index
         multimap->item_count = item_count + 1;
@@ -307,20 +307,20 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         indexes[item_count] = item_count;
 
         SetPrint(multimap);
-        PRINTF("Done inserting.\n");
+        D_PRINTF("Done inserting.\n");
         return item_count;
       }
 
       // But we still don't know if the CH1 is a new collision.
 
-      PRINTF("Checking if it's a collision... ");
+      D_PRINTF("Checking if it's a collision... ");
 
       if (strcmp(key, keys - key_offsets[index]) != 0) {
         // It's a new collision!
-        PRINTF("It's a new collision!\n");
+        D_PRINTF("It's a new collision!\n");
 
         if (value < 3) {
-          PRINTF("Buffer overflow!\n");
+          D_PRINTF("Buffer overflow!\n");
           return ~0;
         }
 
@@ -328,10 +328,10 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         value = key_offsets[item_count - 1] + key_length + 1;
 
         UI1 collision_index = unsorted_indexes[mid];
-        PRINTF("\n\ncollision_index: %u", collision_index);
+        D_PRINTF("\n\ncollision_index: %u", collision_index);
 
         SlotWrite(keys - value, key);
-        PRINTF(
+        D_PRINTF(
             "Inserting value: %u into index:%u "
             ";:%u with other collision_index: %u\n",
             value, index, item_count, collision_index);
@@ -364,11 +364,11 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
         SetPrint(multimap);
 
         SetPrint(multimap);
-        PRINTF("Done inserting.\n");
+        D_PRINTF("Done inserting.\n");
         // Then it was a collision so the table doesn't contain .
         return item_count;
       }
-      PRINTF("table already contains the key\n");
+      D_PRINTF("table already contains the key\n");
       return index;
     }
   }
@@ -378,7 +378,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   value = key_offsets[item_count - 1] + key_length + 1;
   destination = keys - value;
 
-  PRINTF(
+  D_PRINTF(
       "The hash 0x%x was not in the table so inserting %s into mid:"
       " %i at index %u before hash 0x%x \n",
       hash, key, mid, Diff(multimap, destination), hashes[mid]);
@@ -391,7 +391,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   hash_ptr = hashes;
   hash_ptr += item_count;
   //*test = hashes;
-  PRINTF("l_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u\n", item_count,
+  D_PRINTF("l_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u\n", item_count,
          Diff(multimap, hashes), Diff(multimap, hash_ptr),
          Diff(multimap, hashes + mid));
   hashes += mid;
@@ -419,7 +419,7 @@ I MultimapAdd(TMap<Index, I>* multimap, const CH1* key, AsciiType type,
   multimap->item_count = item_count + 1;
 
   SetPrint(multimap);
-  PRINTF("Done inserting.\n");
+  D_PRINTF("Done inserting.\n");
   TPrintLinef();
 
   return item_count;
@@ -452,16 +452,16 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
   const CH1* keys = reinterpret_cast<const CH1*>(multimap) + table_size - 1;
   const I *collisions, *temp_ptr;
 
-  Size hash = Hash16(key);
+  Size hash = HashPrime16(key);
 
-  PRINTF("\nSearching for key \"%s\" with hash 0x%x\n", key, hash);
+  D_PRINTF("\nSearching for key \"%s\" with hash 0x%x\n", key, hash);
 
   if (item_count == 1) {
     if (strcmp(key, keys - key_offsets[0]) != 0) {
-      PRINTF("Did not find key %s\n", key);
+      D_PRINTF("Did not find key %s\n", key);
       return ~((I)0);
     }
-    PRINTF("Found key %s\n", key);
+    D_PRINTF("Found key %s\n", key);
     TPrintLinef();
     return 0;
   }
@@ -475,7 +475,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
     mid = (low + high) >> 1;  //< >> 1 to /2
 
     Size current_hash = hashes[mid];
-    PRINTF("low: %i mid: %i high %i hashes[mid]:%x\n", low, mid, high,
+    D_PRINTF("low: %i mid: %i high %i hashes[mid]:%x\n", low, mid, high,
            hashes[mid]);
 
     if (current_hash > hash) {
@@ -484,7 +484,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
       low = mid + 1;
     } else {
       // Duplicate hash found.
-      PRINTF(
+      D_PRINTF(
           "\nFound same hash at mid:%i hash:%x offset for key: "
           "%s\n",
           mid, hashes[mid], key);
@@ -497,7 +497,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
 
       if (index < ~0) {
         // There was a collision so check the table.
-        PRINTF("There was a collision so check the table\n");
+        D_PRINTF("There was a collision so check the table\n");
 
         // The collisionsList is a sequence of indexes terminated by
         // an invalid index > kMaxNumOperands. collissionsList[0] is an
@@ -509,9 +509,9 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
         temp_ptr = collission_list + temp;
         index = *temp_ptr;
         while (index < MaxSetIndexes<I>()) {
-          PRINTF("comparing to \"%s\"\n", keys - key_offsets[index]);
+          D_PRINTF("comparing to \"%s\"\n", keys - key_offsets[index]);
           if (strcmp(key, keys - key_offsets[index]) == 0) {
-            PRINTF(
+            D_PRINTF(
                 "but table already contains key at offset:"
                 "%u.\n",
                 index);
@@ -520,7 +520,7 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
           ++temp_ptr;
           index = *temp_ptr;
         }
-        PRINTF("Did not find \"%s\"\n", key);
+        D_PRINTF("Did not find \"%s\"\n", key);
         return ~((I)0);
       }
 
@@ -532,23 +532,23 @@ I MultimapFind(TMap<Index, I>* multimap, const CH1* key) {
       indexes += count_max;
       index = unsorted_indexes[mid];
 
-      PRINTF(
+      D_PRINTF(
           "\n!!!mid: %i-%x unsorted_indexes: %u key: %s\n"
           "hash: %x\n",
           mid, hashes[mid], index, keys - key_offsets[index],
-          Hash16(keys - key_offsets[index]));
+          HashPrime16(keys - key_offsets[index]));
 
       if (strcmp(key, keys - key_offsets[index]) != 0) {
         //< It was a collision so the table doesn't contain .
-        PRINTF(" but it was a collision and did not find key.\n");
+        D_PRINTF(" but it was a collision and did not find key.\n");
         return ~((I)0);
       }
 
-      PRINTF("and found key at mid: %i\n", (SI4)mid);
+      D_PRINTF("and found key at mid: %i\n", (SI4)mid);
       return index;
     }
   }
-  PRINTF("Did not find a hash for key \"%s\"\n", key);
+  D_PRINTF("Did not find a hash for key \"%s\"\n", key);
   TPrintLinef();
 
   return ~((I)0);
@@ -568,21 +568,21 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
   TPrintLinef('_');
 
   if (sizeof(Size) == 2)
-    PRINTF("\nSet2: %p\n", multimap);
+    D_PRINTF("\nSet2: %p\n", multimap);
   else if (sizeof(Size) == 4)
-    PRINTF("\nSet4: %p\n", multimap);
+    D_PRINTF("\nSet4: %p\n", multimap);
   else if (sizeof(Size) == 8)
-    PRINTF("\nSet8: %p\n", multimap);
+    D_PRINTF("\nSet8: %p\n", multimap);
   else
-    PRINTF("\nInvalid TMultimap type: %p\n", multimap);
-  PRINTF(
+    D_PRINTF("\nInvalid TMultimap type: %p\n", multimap);
+  D_PRINTF(
       "\n;: %u count_max: %u  "
       "size_pile: %u  size: %u",
       item_count, count_max, size_pile, table_size);
-  PRINT(kLF);
-  PRINT('|');
-  for (SI4 i = 0; i < 79; ++i) PRINT('_');
-  PRINT(kLF);
+  D_COUT(kLF);
+  D_COUT('|');
+  for (SI4 i = 0; i < 79; ++i) D_COUT('_');
+  D_COUT(kLF);
 
   const CH1* states =
       reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>);
@@ -597,18 +597,18 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
           *collission_list = unsorted_indexes + count_max, *begin;
   const CH1* keys = reinterpret_cast<const CH1*>(multimap) + table_size - 1;
 
-  PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
+  D_PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
-  PRINT('|');
+  D_COUT('|');
   for (SI4 i = 0; i < 79; ++i) Print('_');
-  PRINT(kLF);
+  D_COUT(kLF);
 
   for (I i = 0; i < count_max; ++i) {
     // Print each record as a row.
     // @todo Change count_max to ; after done debugging.
     collision_index = indexes[i];
-    PRINTF("\n%3i %9s %7u %9x %9x %9x %9u %10u: ", i, keys - key_offsets[i],
-           key_offsets[i], Hash16(keys - key_offsets[i]),
+    D_PRINTF("\n%3i %9s %7u %9x %9x %9x %9u %10u: ", i, keys - key_offsets[i],
+           key_offsets[i], HashPrime16(keys - key_offsets[i]),
            hashes[unsorted_indexes[i]], hashes[i], unsorted_indexes[i],
            collision_index);
 
@@ -617,22 +617,22 @@ void MultimapPrint(const TMap<Index, I>* multimap) {
       begin = &collission_list[collision_index];
       temp = *begin;
       ++begin;
-      PRINTF("%u", temp);
+      D_PRINTF("%u", temp);
       while (temp != ~0) {
         temp = *begin;
         ++begin;
         if (temp == ~0) break;
-        PRINTF(", %u", temp);
+        D_PRINTF(", %u", temp);
       }
     }
 
-    PRINT(kLF);
+    D_COUT(kLF);
   }
   TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(multimap) + sizeof(TMap<Index, I>),
               multimap->size);
-  PRINT(kLF);
+  D_COUT(kLF);
 }
 
 /* Deletes the multimap contents without wiping the contents. */
@@ -790,4 +790,4 @@ using Multimap8 = TMap<UI4, UI4, UI8>;
 }  // namespace _
 
 #endif  //< INCLUDED_SCRIPTTBOOK
-#endif  //< #if SEAM >= SCRIPT2_SEAM_MAP
+#endif  //< #if SEAM >= SEAM_SCRIPT2_MAP

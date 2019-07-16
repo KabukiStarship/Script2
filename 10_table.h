@@ -10,7 +10,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_TABLE
+#include "t_table.h"
+
+#if SEAM == SEAM_SCRIPT2_TABLE
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,13 +24,12 @@ namespace script2 {
 
 template <typename Char, typename SIZ>
 void TestTable() {
-  PRINTF("Testing ATable<CH%c,SI%c>\n\n", '0' + sizeof(Char),
-         '0' + sizeof(SIZ));
+  D_PRINTF("Testing ATable<CH%c,SI%c>\n\n", '0' + sizeof(Char),
+           '0' + sizeof(SIZ));
 
-  ALoom<Char, SIZ> table;
+  ATable<Char, SIZ> table;
 
-#if DEBUG_SEAM
-  Print("\nPrinting empty table:");
+#if DEBUG_THIS
   table.COut();
 #endif
 
@@ -39,63 +40,58 @@ void TestTable() {
                     cab[] = {'c', 'a', 'b', '\0'},
                     test[] = {'t', 'e', 's', 't', '\0'};
 
-  AVOW((SIZ)0, table.Add(d));
+  A_AVOW((SIZ)0, table.Add(d));
 
-#if DEBUG_SEAM
-  Print("\nPrinting table with count:1");
-  table.COut();
-#endif
+  D_COUT_OBJ(table);
 
-  AVOW((SIZ)0, table.Find(d));
+  A_AVOW((SIZ)0, table.Find(d));
 
-  AVOW((SIZ)1, table.Add(c));
-  AVOW((SIZ)0, table.Find(d));
-  AVOW((SIZ)1, table.Find(c));
+  A_AVOW((SIZ)1, table.Add(c));
+  A_AVOW((SIZ)0, table.Find(d));
+  A_AVOW((SIZ)1, table.Find(c));
 
-  AVOW((SIZ)2, table.Add(b));
-  AVOW((SIZ)0, table.Find(d));
-  AVOW((SIZ)1, table.Find(c));
-  AVOW((SIZ)2, table.Find(b));
+  A_AVOW((SIZ)2, table.Add(b));
+  A_AVOW((SIZ)0, table.Find(d));
+  A_AVOW((SIZ)1, table.Find(c));
+  A_AVOW((SIZ)2, table.Find(b));
 
-  AVOW((SIZ)3, table.Add(a));
-  AVOW((SIZ)0, table.Find(d));
-  AVOW((SIZ)1, table.Find(c));
-  AVOW((SIZ)2, table.Find(b));
-  AVOW((SIZ)3, table.Find(a));
+  A_AVOW((SIZ)3, table.Add(a));
+  A_AVOW((SIZ)0, table.Find(d));
+  A_AVOW((SIZ)1, table.Find(c));
+  A_AVOW((SIZ)2, table.Find(b));
+  A_AVOW((SIZ)3, table.Find(a));
 
-  AVOW((SIZ)4, table.Add(abc));
-  AVOW((SIZ)4, table.Find(abc));
+  A_AVOW((SIZ)4, table.Add(abc));
+  A_AVOW((SIZ)4, table.Find(abc));
 
-  AVOW((SIZ)5, table.Add(bac));
-  AVOW((SIZ)4, table.Find(abc));
-  AVOW((SIZ)5, table.Find(bac));
+  A_AVOW((SIZ)5, table.Add(bac));
+  A_AVOW((SIZ)4, table.Find(abc));
+  A_AVOW((SIZ)5, table.Find(bac));
 
-  AVOW((SIZ)6, table.Add(cba));
-  AVOW((SIZ)4, table.Find(abc));
-  AVOW((SIZ)5, table.Find(bac));
-  AVOW((SIZ)6, table.Find(cba));
+  A_AVOW((SIZ)6, table.Add(cba));
+  A_AVOW((SIZ)4, table.Find(abc));
+  A_AVOW((SIZ)5, table.Find(bac));
+  A_AVOW((SIZ)6, table.Find(cba));
 
-  AVOW((SIZ)7, table.Add(cab));
-  AVOW((SIZ)4, table.Find(abc));
-  AVOW((SIZ)5, table.Find(bac));
-  AVOW((SIZ)6, table.Find(cba));
-  AVOW((SIZ)7, table.Find(cab));
+  A_AVOW((SIZ)7, table.Add(cab));
+  A_AVOW((SIZ)4, table.Find(abc));
+  A_AVOW((SIZ)5, table.Find(bac));
+  A_AVOW((SIZ)6, table.Find(cba));
+  A_AVOW((SIZ)7, table.Find(cab));
 
-  AVOW((SIZ)1, table.Add(a));
-  AVOW((SIZ)1, table.Add(b));
-  AVOW((SIZ)1, table.Add(c));
-  AVOW((SIZ)1, table.Add(d));
+  A_AVOW((SIZ)1, table.Add(a));
+  A_AVOW((SIZ)1, table.Add(b));
+  A_AVOW((SIZ)1, table.Add(c));
+  A_AVOW((SIZ)1, table.Add(d));
 
-#if DEBUG_SEAM
-  table.COut();
-#endif
-  PAUSE("");
-  AVOW((SIZ)-1, table.Find(test));
+  D_COUT_OBJ(table);
+  A_AVOW((SIZ)-1, table.Find(test));
+  D_PAUSE("");
 }
 
-static const CH1* _10_Table(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_TABLE
-  TEST_BEGIN;
+static const CH1* _10_Table(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_TABLE
+  A_TEST_BEGIN;
 
   TestTable<CH1, SI2>();
   TestTable<CH2, SI2>();
