@@ -10,249 +10,68 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
+#if USING_CONSOLE == YES
+
 #ifndef SCRIPT2_COUT_C
 #define SCRIPT2_COUT_C 1
 
-#if USING_UTF8 == YES
-#include "c_utf1.h"
-#endif
-#if USING_UTF16 == YES
-#include "c_utf2.h"
-#endif
-#if USING_UTF32 == YES
-#include "c_utf4.h"
-#endif
+#include "c_valuef.h"
 
 namespace _ {
 
-/* Converts SI4 main(SI4,CH1**) arguments back into a string.
-@return nil if there are no arguments or the args string upon success.
-@param arg_count The number_ of arguments.
-@param args      The arguments. */
-SDK const CH1* ArgsToSring(SI4 arg_count, CH1** args);
-
-/* Force-prints a single CH1 to the console.
-SDK void PrintChar(CH1 c);
-SDK void PrintChar(CH2 c);
-SDK void PrintChar(CH4 c);
-*/
-
-/* Prints a single CH1 to the console. */
-SDK void Print(CH1 first, CH1 second);
-
-/* Prints a single CH1 to the console. */
-SDK void Print(CH1 first, CH1 second, CH1 third);
-
-/* Prints a single string to the console followed by the given delimiter. */
-SDK void Print(const CH1* string, CH1 delimiter);
-
-/* Prints two strings to the COut. */
-SDK void Print(const CH1* a, const CH1* b);
-
-/* Prints the give item to the COut. */
-SDK /*inline*/ void Print(CH1 c);
-SDK /*inline*/ void Print(CH4 c);
-SDK void Print(const CH1* string);
-SDK void Print(const CH2* string);
-SDK void Print(const CH4* string);
-SDK void Print(SI8 item);
-SDK void Print(UI8 item);
-SDK void Print(SI4 item);
-SDK void Print(UI4 item);
-#if USING_FP4 == YES
-SDK void Print(FP4 item);
-#endif
-#if USING_FP8 == YES
-SDK void Print(FP8 item);
-#endif
-
-/* Prints a new line followed by a single CH1 to the console. */
-SDK /*inline*/ void PrintNL();
-
-/* Prints a new line followed by a single CH1 to the console. */
-SDK /*inline*/ void PrintNL(CH1 c);
-
-/* Prints a new line followed by a single CH1 to the console. */
-SDK /*inline*/ void PrintNL(CH1 first, CH1 second);
-
-/* Prints a new line followed by a single string to the console. */
-SDK /*inline*/ void PrintNL(const CH1* string);
-
 /* Prints a formatted string to the console. */
-SDK void Printf(const CH1* format, ...);
-
-/* Prints a new line followed by a formatted string to the console. */
-SDK void PrintfLn(const CH1* format, ...);
-
-/* Prints a new line followed by the given number_ of spaces.
-@param The number_ of spaces to indent. */
-SDK void PrintIndent(SI4 count = 1);
-
-/* Prints a item to the COut. */
-SDK void PrintBinary(UI1 item);
-SDK void PrintBinary(SI1 item);
-SDK void PrintBinary(UI2 item);
-SDK void PrintBinary(SI2 item);
-SDK void PrintBinary(UI4 item);
-SDK void PrintBinary(SI4 item);
-SDK void PrintBinary(UI8 item);
-SDK void PrintBinary(SI8 item);
-#if USING_FP4 == YES
-SDK void PrintBinary(FP4 item);
-#endif
-#if USING_FP8 == YES
-SDK void PrintBinary(FP8 item);
-#endif
-SDK void PrintBinary(const void* item);
-
-#if SEAM >= SCRIPT2_SEAM_ITOS
-/* Prints a item to the console to hex. */
-SDK void PrintHex(CH1 item);
-SDK void PrintHex(CH2 item);
-SDK void PrintHex(CH4 item);
-SDK void PrintHex(UI1 item);
-SDK void PrintHex(SI1 item);
-SDK void PrintHex(UI2 item);
-SDK void PrintHex(SI2 item);
-SDK void PrintHex(UI4 item);
-SDK void PrintHex(SI4 item);
-SDK void PrintHex(UI8 item);
-SDK void PrintHex(SI8 item);
-#if USING_FP4 == YES
-SDK void PrintHex(FP4 item);
-#endif
-#if USING_FP8 == YES
-SDK void PrintHex(FP8 item);
-#endif
-
-/* Prints the given socket to the stdout in hex format. */
-SDK void PrintHex(const void* begin, const void* end);
-
-/* Prints the given socket to the stdout in hex format. */
-SDK void PrintHex(const void* begin, SIW size);
-
-/* Prints a pointer to the console in hex. */
-SDK void PrintHex(const void* value);
-#endif
-
-/* Prints the given socket to the stdout. */
-SDK void PrintChars(const void* begin, const void* end);
-
-/* Prints the given socket to the stdout. */
-SDK void PrintChars(const void* begin, SIW size);
-
-/* Prints the given item right aligned the given count to the stdout. */
-SDK /*inline*/ void PrintRight(const CH1* item, SI4 count = 80);
-
-/* Prints the given item center aligned the given count to the stdout. */
-SDK /*inline*/ void PrintCenter(const CH1* item, SI4 count = 80);
-
-SDK const CH1* PrintLinefCH1();
-
-/* Prints a formatted line string with the given column_count. */
-SDK const CH1* PrintLinef(const CH1* style, SI4 column_count = 80);
-
-/* Prints the given token the specified column_count. */
-void PrintLinef(CH1 token, SI4 column_count = 80);
-
-/* Prints a the given line_count of new lines followed by a PrintLinef, the
-heading, followed by another PrintLinef.
-@return Nil upon success or a pointer to the
-@param style       The line format string.
-@param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH1* caption, const CH1* style = nullptr,
-                       SI4 column_count = 80, const CH1* caption2 = nullptr,
-                       const CH1* caption3 = nullptr);
-
-#if USING_UTF16 == YES
-
-/* Prints the given UTF-16 characters to the stdout. */
-SDK void PrintChars(const CH2* start, const CH2* stop);
-
-/* Prints the given UTF-16 characters to the stdout. */
-SDK void PrintChars(const CH2* start, SI4 count);
-
-/* Prints the given item right aligned the given count to the stdout. */
-SDK /*inline*/ void PrintRight(const CH2* item, SI4 count = 80);
-
-/* Prints the given item center aligned the given count to the stdout. */
-SDK /*inline*/ void PrintCenter(const CH2* item, SI4 count = 80);
-
-SDK const CH2* PrintLinefCH2();
-
-/* Prints the given token a specified count. */
-SDK const CH2* PrintLinef(const CH2* style = PrintLinefCH2(),
-                          SI4 column_count = 80);
-
-/* Prints the given token the specified column_count. */
-void PrintLinef(CH2 token, SI4 column_count = 80);
-
-/* Prints a the given line_count of new lines followed by a PrintLinef, the
-heading, followed by another PrintLinef.
-@param style       The line format string.
-@param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH2* caption, const CH2* style = nullptr,
-                       SI4 column_count = 80, const CH2* caption2 = nullptr,
-                       const CH2* caption3 = nullptr);
-#endif
-
-#if USING_UTF32 == YES
-
-/* Prints the given UTF-16 characters to the stdout. */
-SDK void PrintChars(const CH4* start, const CH4* stop);
-
-/* Prints the given UTF-16 characters to the stdout. */
-SDK void PrintChars(const CH4* start, SI4 size);
-
-/* Prints the given item right aligned the given count to the stdout. */
-SDK /*inline*/ void PrintRight(const CH4* item, SI4 count = 80);
-
-/* Prints the given item center aligned the given count to the stdout. */
-SDK /*inline*/ void PrintCenter(const CH4* item, SI4 count = 80);
-
-SDK const CH4* PrintLinefCH4();
-
-/* Prints the given style a specified count. */
-SDK const CH4* PrintLinef(const CH4* style, SI4 column_count = 80);
-
-/* Prints the given token the specified column_count. */
-void PrintLinef(CH4 token, SI4 column_count = 80);
-
-/* Prints a the given line_count of new lines followed by a PrintLinef, the
-heading, followed by another PrintLinef.
-@param style       The line format string.
-@param column_count The width of the line to utf. */
-SDK void PrintHeadingf(const CH4* caption, const CH4* style = nullptr,
-                       SI4 column_count = 80, const CH4* caption2 = nullptr,
-                       const CH4* caption3 = nullptr);
-#endif
+LIB_MEMBER void Printf(const CH1* format, ...);
 
 /* Utility class for printing to the stdout. */
-class COut {
+class LIB_MEMBER COut {
  public:
-  /* Does nothing. */
+  /* Prints nothing. */
   COut();
 
   /* Prints the given item to the COut stream. */
-  explicit COut(CH1 item);
-  explicit COut(CH4 item);
-  explicit COut(const CH1* item);
-  explicit COut(const CH2* item);
-  explicit COut(const CH4* item);
-  explicit COut(SI1 item);
-  explicit COut(UI1 item);
-  explicit COut(SI2 item);
-  explicit COut(UI2 item);
-  explicit COut(SI4 item);
-  explicit COut(UI4 item);
-  explicit COut(SI8 item);
-  explicit COut(UI8 item);
+  COut(CH1 item);
+  COut(const CH1* item);
+
+#if USING_UTF16 == YES
+  COut(CH2 item);
+  COut(const CH2* item);
+#endif
+#if USING_UTF32 == YES
+  COut(CH4 item);
+  COut(const CH4* item);
+#endif
+  COut(SI1 item);
+  COut(UI1 item);
+  COut(SI2 item);
+  COut(UI2 item);
+  COut(SI4 item);
+  COut(UI4 item);
+  COut(SI8 item);
+  COut(UI8 item);
 #if USING_FP4 == YES
-  explicit COut(FP4 item);
+  COut(FP4 item);
 #endif
 #if USING_FP8 == YES
-  explicit COut(FP8 item);
+  COut(FP8 item);
 #endif
+  COut(Hexf item);
+  COut(Binaryf item);
+  COut(Centerf item);
+  COut(Rightf item);
+  COut(Linef item);
+  COut(Headingf item);
+  COut(Indentf item);
+  COut(Charsf item);
+
+  /* Prints the given items to the COut stream. */
+  COut(CH1 item, CH1 second_item);
+  COut(CH1 item, const CH1* second_item);
+  COut(const CH1* item, CH1 second_item);
+  COut(const CH1* item, const CH1* second_item);
+  COut(CH1 item, CH1 second_item, CH1 third_item);
+  COut(CH1 item, CH1 second_item, const CH1* third_item);
+  COut(const CH1* item, const CH1* second_item, CH1 third_item);
+  COut(const CH1* item, const CH1* second_item, const CH1* third_item);
 
   /* Returns reference to this. */
   COut& Star();
@@ -260,6 +79,14 @@ class COut {
   /* Prints the given item to the stdout. */
   COut& Print(CH1 item);
   COut& Print(const CH1* item);
+#if USING_UTF16 == YES
+  COut& Print(CH2 item);
+  COut& Print(const CH2* item);
+#endif
+#if USING_UTF32 == YES
+  COut& Print(CH4 item);
+  COut& Print(const CH4* item);
+#endif
   COut& Print(SI4 item);
   COut& Print(UI4 item);
   COut& Print(SI8 item);
@@ -270,79 +97,121 @@ class COut {
 #if USING_FP8 == YES
   COut& Print(FP8 item);
 #endif
+  COut& Print(Hexf item);
+  COut& Print(Binaryf item);
+  COut& Print(Centerf item);
+  COut& Print(Rightf item);
+  COut& Print(Linef item);
+  COut& Print(Headingf item);
+  COut& Print(Indentf item);
+  COut& Print(Charsf item);
 
-  COut& PrintHex(const void* begin, SIW size_bytes);
-  COut& Print(Hex item);
+  /* Prints a new line followed by the given item to the stdout. */
+  COut& NL();
 
-  COut& PrintBinary(const void* begin, SIW size_bytes);
-  COut& Print(Binary item);
-
-#if SEAM >= SCRIPT2_SEAM_UTF
-  COut& Print(Right1 item);
-  COut& Print(Center1 item);
-  COut& Print(Linef1 item);
-  COut& Print(Headingf1 item);
-  COut& Print(Chars1 item);
-#endif
+  /* Prints a new line followed by the given item to the stdout. */
+  COut& NL(CH1 item);
+  COut& NL(const CH1* item);
 #if USING_UTF16 == YES
-  COut& Print(CH2 item);
-  COut& Print(const CH2* item);
-  COut& Print(Right2 item);
-  COut& Print(Center2 item);
-  COut& Print(Linef2 item);
-  COut& Print(Headingf2 item);
-  COut& Print(Chars2 item);
+  COut& NL(CH2 item);
+  COut& NL(const CH2* item);
 #endif
 #if USING_UTF32 == YES
-  COut& Print(CH4 item);
-  COut& Print(const CH4* item);
-  COut& Print(Right4 item);
-  COut& Print(Center4 item);
-  COut& Print(Linef4 item);
-  COut& Print(Headingf4 item);
-  COut& Print(Chars4 item);
+  COut& NL(CH4 item);
+  COut& NL(const CH4* item);
+#endif
+  COut& NL(SI4 item);
+  COut& NL(UI4 item);
+  COut& NL(SI8 item);
+  COut& NL(UI8 item);
+#if USING_FP4 == YES
+  COut& NL(FP4 item);
+#endif
+#if USING_FP8 == YES
+  COut& NL(FP8 item);
+#endif
+
+  /* Stores the given item to the buffer and store the size. */
+  COut& Hex(const void* item);
+  COut& Hex(const void* item, SIW size);
+  COut& Hex(const void* item, const void* item_stop);
+  COut& Hex(SI1 item);
+  COut& Hex(UI1 item);
+  COut& Hex(SI2 item);
+  COut& Hex(UI2 item);
+  COut& Hex(SI4 item);
+  COut& Hex(UI4 item);
+  COut& Hex(SI8 item);
+  COut& Hex(UI8 item);
+#if USING_FP4 == YES
+  COut& Hex(FP4 item);
+#endif
+#if USING_FP8 == YES
+  COut& Hex(FP8 item);
+#endif
+
+  /* Stores the given item to the buffer and store the size. */
+  COut& Binary(const void* item);
+  COut& Binary(const void* item, SIW size);
+  COut& Binary(const void* item, const void* item_stop);
+  COut& Binary(SI1 item);
+  COut& Binary(UI1 item);
+  COut& Binary(SI2 item);
+  COut& Binary(UI2 item);
+  COut& Binary(SI4 item);
+  COut& Binary(UI4 item);
+  COut& Binary(SI8 item);
+  COut& Binary(UI8 item);
+#if USING_FP4 == YES
+  COut& Binary(FP4 item);
+#endif
+#if USING_FP8 == YES
+  COut& Binary(FP8 item);
+#endif
+
+  SIN PrintAndCount(const CH1* string);
+#if USING_UTF16 == YES
+  SIN PrintAndCount(const CH2* string);
+#endif
+#if USING_UTF32 == YES
+  SIN PrintAndCount(const CH4* string);
 #endif
 };
 
+LIB_INLINE COut CPrint();
+
 }  // namespace _
 
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH1 c);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH1* string);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI4 value);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI4 value);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, SI8 value);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, UI8 value);
-#if USING_FP4 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP4 value);
-#endif
-#if USING_FP8 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, FP8 value);
-#endif
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Hex item);
-
-#if SEAM >= SCRIPT2_SEAM_UTF
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center1 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right1 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef1 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf1 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars1 item);
+/* Prints the given item to the COut. */
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH1 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH1* item);
 #if USING_UTF16 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH2* string);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center2 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right2 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef2 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf2 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars2 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH2 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH2* item);
 #endif
 #if USING_UTF32 == YES
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, CH4 c);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, const CH4* string);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Center4 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Right4 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Linef4 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Headingf4 item);
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::Chars4 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH4 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH4* item);
 #endif
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI4 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI4 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI8 item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI8 item);
+#if USING_FP4 == YES
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP4 item);
 #endif
-/*inline*/ ::_::COut& operator<<(::_::COut& cout, ::_::COut& o);
+#if USING_FP8 == YES
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP8 item);
+#endif
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Hexf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Binaryf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Centerf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Rightf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Linef item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Headingf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Indentf item);
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Charsf item);
+
+LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::COut& item);
+#endif
 #endif

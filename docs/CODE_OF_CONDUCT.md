@@ -2,12 +2,49 @@
 
 ## [docs](./readme.md)
 
-### Code of Conduct
+### Contributor Covenant Code of Conduct
 
-There are only four rules to be a part of our development community: Thou shalt not jeopardize the mission, get us in trouble with the law, ruin our public image, or scare off contributors. Below is a list of known ways that you can violate the Code of Conduct (CoC).
+#### Our Pledge
 
-1. By using the CoC to try to kick people out of the community just because you don't like them or you're too liberal for now.
-2. By making others feel bad by being impatient or disrespectful; it takes years to get good with APIs and find contributors.
-3. By splitting up our community to try to make money of your spin-off. If a community splits off naturally, more power to you, but this product is Apache-licensed for you to make closed-source software for without paying a licensing fee, not for you to make a spin-off using our community that hurts everyone. There is just no money in open-source software like aside from getting paid to use it and you'll get a higher quality product if you hold the community together and contribute rather than take.
-4. By trying to control all of the design decisions, getting hopping mad when people don't go with your idea, or escalating drama with someone who is being a butt-head.
-5. By making stupid rules. Fuck the authoritarians; no more stupid rules. #Peace #ImOut #MicDrop
+In the interest of fostering an open and welcoming environment, we as contributors and maintainers pledge to making participation in our project and our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+
+#### Our Standards
+
+Examples of behavior that contributes to creating a positive environment include:
+
+* Using welcoming and inclusive language
+* Being respectful of differing viewpoints and experiences
+* Gracefully accepting constructive criticism
+* Focusing on what is best for the community
+* Showing empathy towards other community members
+
+Examples of unacceptable behavior by participants include:
+
+* The use of sexualized language or imagery and unwelcome sexual attention or advances
+* Trolling, insulting/derogatory comments, and personal or political attacks
+* Public or private harassment
+* Publishing others' private information, such as a physical or electronic address, without explicit permission
+* Other conduct which could reasonably be considered inappropriate in a professional setting
+
+#### Our Responsibilities
+
+Project maintainers are responsible for clarifying the standards of acceptable behavior and are expected to take appropriate and fair corrective action in response to any instances of unacceptable behavior.
+
+Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, or to ban temporarily or permanently any contributor for other behaviors that they deem inappropriate, threatening, offensive, or harmful.
+
+#### Scope
+
+This Code of Conduct applies both within project spaces and in public spaces when an individual is representing the project or its community. Examples of representing a project or community include using an official project e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event. Representation of a project may be further defined and clarified by project maintainers.
+
+#### Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting opensource@github.com, which is a shared team inbox. If the incident involves someone who receives that shared inbox, you can contact an individual maintainer (@bkeepers or @nayafia) at ```GitHub username``` + ```@github.com```. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain confidentiality with regard to the reporter of an incident. Further details of specific enforcement policies may be posted separately.
+
+Project maintainers who do not follow or enforce the Code of Conduct in good faith may face temporary or permanent repercussions as determined by other members of the project's leadership.
+
+#### Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4, available at [https://contributor-covenant.org/version/1/4][version]
+
+[homepage]: https://contributor-covenant.org
+[version]: https://contributor-covenant.org/version/1/4/

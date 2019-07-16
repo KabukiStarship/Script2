@@ -9,14 +9,25 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_ROOM
-#ifndef INCLUDED_ASCIIDATA_T
-#define INCLUDED_ASCIIDATA_T
 
+#ifndef INCLUDED_T_ASCIIDATA
+#define INCLUDED_T_ASCIIDATA
+
+#include "c_avalue.h"
+
+namespace _ {
+
+template <DTW core_type, DTW map_type, DTW size_width = 0>
+DTW TTypeMap() {
+  return TypeMap(core_type, map_type) | (size_width << kTypeBitCount);
+}
+}  // namespace _
+
+#if SEAM >= SEAM_SCRIPT2_UTF
 #include "t_socket.h"
-#include "t_strand.h"
+#include "t_utf.h"
 
-#if SEAM == SCRIPT2_SEAM_ROOM
+#if SEAM == SEAM_SCRIPT2_UTF
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -38,7 +49,7 @@ inline UI4 T() {
 }
 
 template <typename T = CH1>
-T* TypeAlignUpPointer(void* pointer, SI4 type) {
+T* TypeAlignUpPointer(void* pointer, SIN type) {
   if (type <= kUI1)
     return reinterpret_cast<T*>(pointer);
   else if (type <= kFP2)
@@ -61,8 +72,8 @@ T* TypeAlignUpPointer(void* pointer, SI4 type) {
   return reinterpret_cast<T*>(ptr);
 }
 /*
-template <typename Char = CH1>
-Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
+template <typename Char = CHR>
+Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
@@ -80,13 +91,13 @@ Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
     case kBOL:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const BOL*>(value));
     case kSI4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
     case kUI4:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
     case kFP4:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const FP4*>(value));
     case kTM4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI4*>(value));
+      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
     case kTM8:
     case kTM8:
       return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
@@ -108,10 +119,10 @@ Char* PrintTypePod(Char* cursor, Char* stop, SI4 type, const void* value) {
   return nullptr;
 }
 
-template <typename Char = CH1>
-Char* Print(Char* cursor, Char* stop, SI4 type, const void* value) {
+template <typename Char = CHR>
+Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
   if (cursor == nullptr) return nullptr;
-  ASSERT(cursor < stop);
+  A_ASSERT(cursor < stop);
 
   if (type <= kFPH) {
     cursor = PrintTypePod<Char>(cursor, stop, type, value);
@@ -121,7 +132,7 @@ Char* Print(Char* cursor, Char* stop, SI4 type, const void* value) {
     return TPrint<Char>(cursor, stop, STRType(type));
   }
 
-  if (!TypeIsValid(type)) return TPrint<Char>(cursor, stop, "illegal_type");
+  if (!TypeIsSupported(type)) return TPrint<Char>(cursor, stop, "illegal_type");
 
   if (TypeIsStrand(type)) {
     cursor = TPrint<Char>(cursor, stop, '\"');

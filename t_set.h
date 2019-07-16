@@ -9,11 +9,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_CLOCK
+#if SEAM >= SEAM_SCRIPT2_CLOCK
 #ifndef INCLUDED_F2_SET
 #define INCLUDED_F2_SET 1
 
-#include "c_ascii.h"
+#include "c_avalue.h"
 #include "c_utf.h"
 
 namespace _ {
@@ -23,7 +23,7 @@ namespace _ {
     @endcode
 */
 template <typename Index, typename TKey, typename SIZ, typename THash>
-struct SDK TSet {
+struct LIB_MEMBER TSet {
   SIZ size;          //< Total size of the set.
   TKey table_size,   //< Size of the (optional) key strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.
@@ -105,5 +105,5 @@ struct Collection {
   virtual UTF1& Print(UTF1& out_) = 0;
 };
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_SEAM_CLOCK
+#endif  //< #if SEAM >= SEAM_SCRIPT2_CLOCK
 #endif  //< INCLUDED_F2_SET

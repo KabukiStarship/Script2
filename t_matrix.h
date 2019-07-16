@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_MATRIX
+#if SEAM >= SEAM_SCRIPT2_MATRIX
 #ifndef INCLUDED_SCRIPT2_ARRAY
 #define INCLUDED_SCRIPT2_ARRAY
 
@@ -53,7 +53,7 @@ constexpr SIZ TMatrixCountUpperLimit(SIZ dimension_count, SIZ element_count) {
 /* Returns the required size of the given array. */
 template <typename T = SI4, typename SIZ = SI4>
 constexpr SIZ TMatrixElementCount(const SIZ* dimensions) {
-  DASSERT(dimensions);
+  D_ASSERT(dimensions);
   SIZ dimension_count = *dimensions++;
   SIZ size = sizeof(TStack<SIZ>) + sizeof(SIZ);
   while (dimension_count-- > 0) {
@@ -68,7 +68,7 @@ constexpr SIZ TMatrixElementCount(const SIZ* dimensions) {
 /* Returns the required size of the given array. */
 template <typename T = SI4, typename SIZ = SI4>
 constexpr SIZ TMatrixSize(const SIZ* dimensions) {
-  DASSERT(dimensions);
+  D_ASSERT(dimensions);
   SIZ dimension_count = *dimensions++;
   if (dimension_count-- <= 0) return 0;
   SIZ element_count = *dimensions++;
@@ -85,7 +85,7 @@ constexpr SIZ TMatrixSize(const SIZ* dimensions) {
 @param socket An stack of bytes large enough to fit the stack. */
 template <typename T = SI4, typename SIZ = SI4>
 TStack<SIZ>* TMatrixInit(const SIZ* dimensions) {
-  ASSERT(dimensions);
+  A_ASSERT(dimensions);
   SIZ dimension_count = *dimension;
   if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
   SIZ size = (SIZ)sizeof(TStack<SIZ>) + dimension_count * sizeof(T);
@@ -112,7 +112,7 @@ TStack<SIZ>* TMatrixNew(SIZ x) {
 
 template <typename T = SI4, typename SIZ = SI4>
 TStack<SIZ>* TMatrixNew(const SIZ* dimensions) {
-  DASSERT(dimensions);
+  D_ASSERT(dimensions);
   const SIZ* begin = dimensions;
   SIZ count = (*begin++) - 1,    //
       element_count = *begin++,  //
@@ -144,14 +144,14 @@ SIZ* TMatrixDimensions(TStack<SIZ>* obj) {
 @return Pointer to the first element in the array. */
 template <typename T, typename SIZ = SI4>
 SIZ* TMatrixDimensionsEnd(TStack<SIZ>* obj) {
-  ASSERT(obj);
+  A_ASSERT(obj);
   return TMatrixDimensions<T, SIZ>(obj) + obj->count - 1;
 }
 
 /* Prints the TMatrix to the UTF. */
 template <typename Printer, typename T = SI4, typename SIZ = SI4>
 Printer& TPrintArray(Printer& o, TStack<SIZ>* obj) {
-  ASSERT(obj);
+  A_ASSERT(obj);
   SIZ size_array = obj->size_array;
   SIZ count = obj->count;
   if (size_array == 0) {

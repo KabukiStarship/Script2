@@ -30,28 +30,27 @@
     <None Include="17_seam.s2" />
     <None Include="global.inl" />
     <None Include="global_config.inl" />
-    <None Include="global_debug.inl" />
-    <None Include="global_footer.inl" />
-    <None Include="global_release.inl" />
-    <None Include="global_seams.inl" />
     <None Include="module_debug.inl" />
     <None Include="module_footer.inl" />
     <None Include="module_release.inl" />
+    <None Include="module_seams.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="c_puff.h" />
     <ClCompile Include="module_tester.cc" />
     <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_ascii.cc" />
-    <ClCompile Include="script2_benchmark.cc" />
+    <ClCompile Include="script2_avalue.cc" />
     <ClCompile Include="script2_bin.cc" />
     <ClCompile Include="script2_bout.cc" />
     <ClCompile Include="script2_bsq.cc" />
+    <ClCompile Include="script2_cin.cc" />
     <ClCompile Include="script2_clock.cc" />
     <ClCompile Include="script2_crabs.cc" />
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_event.cc" />
     <ClCompile Include="script2_floor.cc" />
+    <ClCompile Include="script2_utf.cc" />
+    <ClCompile Include="script2_valuef.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
     <ClCompile Include="script2_lock.cc" />
@@ -62,18 +61,16 @@
     <ClCompile Include="script2_puff.cc" />
     <ClCompile Include="script2_rng.cc" />
     <ClCompile Include="script2_room.cc" />
-    <ClCompile Include="script2_sin.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
     <ClCompile Include="script2_cout.cc" />
     <ClCompile Include="script2_test.cc" />
-    <ClCompile Include="script2_utf.cc" />
     <ClCompile Include="script2_vk.cc" />
     <ClCompile Include="script2_wall.cc" />
     <ClCompile Include="t_puff.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="00_rng.h" />
+    <ClInclude Include="00_core.h" />
     <ClInclude Include="01_itos.h" />
     <ClInclude Include="02_socket.h" />
     <ClInclude Include="04_utf.h" />
@@ -93,8 +90,7 @@
     <ClInclude Include="17_room.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
-    <ClInclude Include="c_ascii.h" />
-    <ClInclude Include="c_benchmark.h" />
+    <ClInclude Include="c_avalue.h" />
     <ClInclude Include="c_bin.h" />
     <ClInclude Include="c_bout.h" />
     <ClInclude Include="c_bsq.h" />
@@ -113,6 +109,7 @@
     <ClInclude Include="c_autoject.h" />
     <ClInclude Include="c_op.h" />
     <ClInclude Include="c_operand.h" />
+    <ClInclude Include="c_valuef.h" />
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
     <ClInclude Include="c_cin.h" />
@@ -122,9 +119,6 @@
     <ClInclude Include="c_strand.h" />
     <ClInclude Include="c_test.h" />
     <ClInclude Include="c_utf.h" />
-    <ClInclude Include="c_utf1.h" />
-    <ClInclude Include="c_utf2.h" />
-    <ClInclude Include="c_utf4.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
     <ClInclude Include="c_wall.h" />
@@ -133,7 +127,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="public.h" />
     <ClInclude Include="t_matrix.h" />
-    <ClInclude Include="t_ascii.h" />
+    <ClInclude Include="t_avalue.h" />
     <ClInclude Include="t_benchmark.h" />
     <ClInclude Include="t_book.h" />
     <ClInclude Include="t_clock.h" />
@@ -149,6 +143,7 @@
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
+    <ClInclude Include="t_stringcore.h" />
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
     <ClInclude Include="t_utf.h" />

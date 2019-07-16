@@ -15,27 +15,26 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "c_puff.h"
 
-#if SEAM >= SCRIPT2_SEAM_ITOS
-#if SEAM == SCRIPT2_SEAM_ITOS
+#if SEAM >= SEAM_SCRIPT2_ITOS
+#if SEAM == SEAM_SCRIPT2_ITOS
 #include "module_debug.inl"
 //
-#include <cstdio>
-
+#include <cstdio>  // For sprintf_s
 namespace _ {
-template <typename Char = CH1>
-SIW TPrintAndCount(const Char* string) {
-  if (!string) return 0;
-  SI4 print_count = 0;
-  Char c = *string;
-  while (c) {
-    Print(c);
+
+template <typename Char = CHR>
+SIN TPrintAndCount(const Char* string) {
+  SIN print_count = 0;
+  Char c;
+  while ((c = *string++) != 0) {
     ++print_count;
-    c = *(++string);
+    COut(c);
+    // Printf("%c", c);
   }
   return print_count;
 }
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPuffItoSBegin(Char* start = nullptr) {
   static Char* buffer_begin = 0;
   if (start) {
@@ -45,36 +44,33 @@ Char* TPuffItoSBegin(Char* start = nullptr) {
   return buffer_begin;
 }
 
-template <typename Char = CH1>
-void TPrintPrinted(Char* start) {
-  Print("\n    Printed \"");
-  SIW print_count = TPrintAndCount<Char>(TPuffItoSBegin<Char>());
-  Print('\"', ':');
-  Print(print_count);
+template <typename Char = CHR>
+void TPrintPrinted(Char* string) {
+  Printf("\n    Printed \"%s\"", string);
+  // SIN char_count = TPrintAndCount<Char>(string);
+  // COut('\"', ':').Print(char_count);
 }
+
 }  // namespace _
 
-#define BEGIN_ITOS_ALGORITHM                                         \
-  static const CH1* ui_format = sizeof(UI) == 8 ? FORMAT_UI8 : "%u"; \
-  TPuffItoSBegin<Char>(cursor);                                      \
-  for (SI4 i = 0; i < 10; ++i) *(cursor + i) = 'x';                  \
-  *(cursor + 21) = 0;                                                \
-  enum { kSize = 256 };                                              \
-  CH1 socket[kSize];                                                 \
-  sprintf_s(socket, kSize, ui_format, value);                        \
-  Printf(" Expecting %s:%i ", socket, TSTRLength<Char>(socket))
-#define PRINT_PRINTED TPrintPrinted<Char>(TPuffItoSBegin<Char>())
+#define BEGIN_ITOS_ALGORITHM                               \
+  SIN string_length = STRLength(value);                    \
+  TPuffItoSBegin<Char>(cursor);                            \
+  for (SIN i = 0; i < string_length; ++i) cursor[i] = 'x'; \
+  cursor[string_length] = 0;                               \
+  COut("Expecting:").Print(value) << " length:" << STRLength(value)
+#define D_COUT_PRINTED TPrintPrinted<Char>(TPuffItoSBegin<Char>())
 
 #else
 #include "module_release.inl"
 #define BEGIN_ITOS_ALGORITHM
-#define PRINT_PRINTED
+#define D_COUT_PRINTED
 #endif
 
 namespace _ {
 /* Prints two chars to the console.
 @warning This function DOES NOT do any error checking! */
-template <typename Char = CH1>
+template <typename Char = CHR>
 inline Char* TPrintNil(Char* start) {
   *start = 0;
   return start;
@@ -82,20 +78,20 @@ inline Char* TPrintNil(Char* start) {
 
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking!  */
-template <typename Char = CH1>
-inline Char* TPrintDecimal(Char* socket, Char value) {
-  *reinterpret_cast<Char*>(socket) = '0' + value;
-  PRINT_PRINTED;
-  return socket;
+template <typename Char = CHR>
+inline Char* TPrintDecimal(Char* cursor, Char value) {
+  *reinterpret_cast<Char*>(cursor) = '0' + value;
+  D_COUT_PRINTED;
+  return cursor;
 }
 
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking! */
-template <typename Char = CH1>
-inline Char* TWriteChar(Char* socket, Char value) {
-  *socket++ = value;
-  PRINT_PRINTED;
-  return socket;
+template <typename Char = CHR>
+inline Char* TWriteChar(Char* cursor, Char value) {
+  *cursor++ = value;
+  D_COUT_PRINTED;
+  return cursor;
 }
 
 /* Utility function for printing a char with any Unicode conversion. */
@@ -108,13 +104,13 @@ inline CH4* Write(CH4* cursor, CH4 c) { return TWriteChar<CH4>(cursor, c); }
 /* Prints a two decimals to the socket.
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
-template <typename Char = CH1>
+template <typename Char = CHR>
 inline Char* TPrint2Decimals(Char* socket, UI2 decimal_pair) {
   enum { kSizeBits = sizeof(Char) * 8 };
   socket[0] = (Char)(decimal_pair >> 8);
   CH1 c = (CH1)decimal_pair;
   socket[1] = (Char)(c);
-  PRINT_PRINTED;
+  D_COUT_PRINTED;
   return socket;
 }
 
@@ -125,8 +121,8 @@ inline void PrintCharPair(CH1* socket, UI2 value) {
 #else
   *((UI2*)socket) = value;
 #endif
-  using Char = CH1;
-  PRINT_PRINTED;
+  using Char = CHR;
+  D_COUT_PRINTED;
 }
 
 inline void PrintCharPair(CH2* cursor, UI2 decimal_pair) {
@@ -138,10 +134,9 @@ inline void PrintCharPair(CH4* cursor, UI2 decimal_pair) {
 }
 
 /* Prints 8 decimals to the given socket with given LUT.*/
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPrint8Decimals(Char* cursor, UI4 value, const UI2* lut) {
-  PRINT("\n    Printing 8 decimals:");
-  PRINT(value);
+  D_PRINTF("\n    Printing 8 decimals:%u", value);
   UI2 pow_10_ui2 = 10000, digits6and5 = (UI2)(value / pow_10_ui2),
       digits2and1 = value - pow_10_ui2 * digits6and5;
   pow_10_ui2 = 100;
@@ -153,32 +148,32 @@ Char* TPrint8Decimals(Char* cursor, UI4 value, const UI2* lut) {
   PrintCharPair(cursor + 2, lut[digits6and5]);
   PrintCharPair(cursor + 4, lut[digits4and3]);
   PrintCharPair(cursor + 6, lut[digits2and1]);
-  PRINT_PRINTED;
+  D_COUT_PRINTED;
   return cursor + 8;
 }
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 inline void TPrint8or16Decimals(Char* cursor, UI4 lsd, const UI2* lut,
                                 UI4 middle_sd, UI4 delta) {
   if (delta == 8) {
-    PRINTF("\n    Printing less than 17 decimals:");
+    D_COUT("\n    Printing less than 17 decimals:");
     TPrint8Decimals<Char>(cursor, lsd, lut);
   } else {
-    PRINTF("\n    Printing more than 16 decimals:");
+    D_COUT("\n    Printing more than 16 decimals:");
     TPrint8Decimals<Char>(cursor, middle_sd, lut);
     TPrint8Decimals<Char>(cursor + 8, lsd, lut);
   }
 }
 
-inline UI4 ValueUI4(UI4 value) { return value; }
-inline UI4 ValueUI4(UI8 value) { return (UI4)value; }
+inline UI4 ToUI4(UI4 value) { return value; }
+inline UI4 ToUI4(UI8 value) { return (UI4)value; }
 
 /* Prints the give value to the given socket as a Unicode string.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  cursor The beginning of the socket.
 @param  stop    The stop address of the socket. */
-template <typename UI = UI8, typename Char = CH1>
+template <typename UI = UIW, typename Char = CHR>
 Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
   BEGIN_ITOS_ALGORITHM;
 
@@ -196,7 +191,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
   // always be the LSD and digits4and3 and digits8and7 will always be the MSD.
 
   if (value < 10) {
-    PRINT("\n    Range:[0, 9] length:1 ");
+    D_COUT("\n    Range:[0, 9] length:1 ");
   Print1:
     nil_ptr = cursor + delta + 1;
     if (nil_ptr >= stop) return nullptr;
@@ -204,7 +199,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
     return TPrintNil<Char>(cursor + delta + 1);
   } else if (value < 100) {
   Print2:
-    PRINT("\n    Range:[10, 99] length:2 ");
+    D_COUT("\n    Range:[10, 99] length:2 ");
     nil_ptr = cursor + delta + 2;
     if (cursor + delta + 2 >= stop) return nullptr;
     PrintCharPair(cursor, lut[value]);
@@ -213,8 +208,8 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
     if ((value >> 10) == 0) {
       pow_10_ui2 = 1000;
       if (value >= pow_10_ui2) {
-      Print4A:
-        PRINT("\n    Range:[1000, 1023] length:4");
+      Print4B:
+        D_COUT("\n    Range:[1000, 1023] length:4");
         nil_ptr = cursor + delta + 4;
         if (nil_ptr >= stop) return nullptr;
         UI2 digits2and1 = (UI2)(value - pow_10_ui2);
@@ -229,7 +224,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
         return TPrintNil<Char>(nil_ptr);
       }
     Print3:
-      PRINT("\n    Range:[100, 999] length:3");
+      D_COUT("\n    Range:[100, 999] length:3");
       nil_ptr = cursor + delta + 3;
       if (nil_ptr >= stop) return nullptr;
       UI2 digits2and1 = (UI2)value, pow_10_ui2 = 100;
@@ -241,15 +236,15 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
     } else if ((value >> 14) == 0) {
       pow_10_ui2 = 10000;
       if (value >= pow_10_ui2) {
-      Print5A:
-        PRINT("\n    Range:[10000, 16383] length:5");
+      Print5B:
+        D_COUT("\n    Range:[10000, 16383] length:5");
         nil_ptr = cursor + delta + 5;
         if (nil_ptr >= stop) return nullptr;
         cursor = TWriteChar<Char>(cursor, '1');
         value -= pow_10_ui2;
       } else {
       Print4:
-        PRINT("\n    Range:[1024, 9999] length:4");
+        D_COUT("\n    Range:[1024, 9999] length:4");
         nil_ptr = cursor + delta + 4;
         if (nil_ptr >= stop) return nullptr;
         TPrintNil<Char>(nil_ptr);
@@ -262,15 +257,15 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
       return TPrintNil<Char>(nil_ptr);
     } else if ((value >> 17) == 0) {
       if (value >= 100000) {
-      Print6A:
-        PRINT("\n    Range:[65536, 131071] length:6");
+      Print6B:
+        D_COUT("\n    Range:[65536, 131071] length:6");
         goto Print6;
       }
     Print5:
-      PRINT("\n    Range:[10000, 65535] length:5");
+      D_COUT("\n    Range:[10000, 65535] length:5");
       nil_ptr = cursor + delta + 5;
       if (nil_ptr >= stop) return nullptr;
-      UI4 value_ui4 = ValueUI4(value);
+      UI4 value_ui4 = ToUI4(value);
       pow_10_ui2 = 10000;
       Char digit6 = (UI1)(value_ui4 / pow_10_ui2);
       value_ui4 -= pow_10_ui2 * digit6;
@@ -284,15 +279,15 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
     } else if ((value >> 20) == 0) {
       pow_10_ui4 = 1000000;
       if (value >= pow_10_ui4) {
-      Print7A:
-        PRINT("\n    Range:[100000, 1048575] length:7");
+      Print7B:
+        D_COUT("\n    Range:[100000, 1048575] length:7");
         nil_ptr = cursor + delta + 7;
         if (nil_ptr >= stop) return nullptr;
         cursor = TWriteChar<Char>(cursor, '1');
         value -= pow_10_ui4;
       } else {
       Print6:
-        PRINT("\n    Range:[131072, 999999] length:6");
+        D_COUT("\n    Range:[131072, 999999] length:6");
         nil_ptr = cursor + delta + 6;
         if (nil_ptr >= stop) return nullptr;
         TPrintNil<Char>(nil_ptr);
@@ -313,15 +308,15 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
     } else if ((value >> 24) == 0) {
       pow_10_ui4 = 10000000;  //< 10^7
       if (value >= pow_10_ui4) {
-        PRINT("\n    Range:[10000000, 16777216] length:8");
-        return TPrint8Decimals<Char>(cursor, ValueUI4(value), lut);
+        D_COUT("\n    Range:[10000000, 16777216] length:8");
+        return TPrint8Decimals<Char>(cursor, ToUI4(value), lut);
       }
     Print7:
-      PRINT("\n    Range:[1048576, 9999999] length:7");
+      D_COUT("\n    Range:[1048576, 9999999] length:7");
       nil_ptr = cursor + delta + 7;
       if (nil_ptr >= stop) return nullptr;
       UI2 pow_10_ui2 = 10000;
-      UI4 value_ui4 = ValueUI4(value);
+      UI4 value_ui4 = ToUI4(value);
       UI2 digits6and5 = value_ui4 / pow_10_ui2,
           digits2and1 = value_ui4 - pow_10_ui2 * digits6and5;
       pow_10_ui2 = 100;
@@ -336,72 +331,81 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
       return TPrintNil<Char>(nil_ptr);
     } else {
       UI4 comparator = 100000000;  // 10^8
-      UI msd = (value >= (~(UI4)0)) ? value / comparator
-                                    : ValueUI4(value) / comparator;
+      UI msd =
+          (value >= (~(UI4)0)) ? value / comparator : ToUI4(value) / comparator;
       UI4 lsd = (UI4)(value - comparator * msd), middle_sd;
       if (msd >= comparator) {
         delta = 16;
         value = msd / comparator;
-        middle_sd = ValueUI4(msd - value * comparator);
-        PRINT(value);
-        PRINT('_');
-        PRINT(middle_sd);
-        PRINT('_');
-        PRINT(lsd);
+        middle_sd = ToUI4(msd - value * comparator);
+        D_COUT_6("\n    Printing ", value, '_', middle_sd, '_', lsd);
       } else {
         value = msd;
         middle_sd = 0;
         delta = 8;
-        PRINT(value);
-        PRINT('_');
-        PRINT(lsd);
+        D_COUT_4("\n    Printing ", value, '_', lsd);
       }
-      if (value < 10) {
+      if (value == 0) {
+        D_COUT("\n    Length:8");
+        TPrint8or16Decimals<Char>(cursor, lsd, lut, middle_sd, delta);
+        return TPrintNil<Char>(cursor + 8);
+      } else if (value < 10) {
+        D_COUT("\n    Length:9");
         TPrint8or16Decimals<Char>(cursor + 1, lsd, lut, middle_sd, delta);
         goto Print1;
       } else if (value < 100) {
+        D_COUT("\n    Length:10");
         TPrint8or16Decimals<Char>(cursor + 2, lsd, lut, middle_sd, delta);
         goto Print2;
-      }
-      if ((value >> 10) == 0) {
+      } else if ((value >> 10) == 0) {
         pow_10_ui2 = 1000;
         if (value >= pow_10_ui2) {
+          D_COUT("\n    Length:12B");
           TPrint8or16Decimals<Char>(cursor + 4, lsd, lut, middle_sd, delta);
-          goto Print4A;
+          goto Print4B;
         }
+        D_COUT("\n    Length:11");
         TPrint8or16Decimals<Char>(cursor + 3, lsd, lut, middle_sd, delta);
         goto Print3;
-      } else if ((value >> 13) == 0) {
+      } else if ((value >> 14) == 0) {
         pow_10_ui2 = 10000;
         if (value >= pow_10_ui2) {
+          D_COUT("\n    Length:13B");
           TPrint8or16Decimals<Char>(cursor + 5, lsd, lut, middle_sd, delta);
-          goto Print5A;
+          goto Print5B;
         }
+        D_COUT("\n    Length:12");
         TPrint8or16Decimals<Char>(cursor + 4, lsd, lut, middle_sd, delta);
         goto Print4;
       } else if ((value >> 17) == 0) {
         pow_10_ui4 = 100000;
         if (value >= pow_10_ui4) {
+          D_COUT("\n    Length:14B");
           TPrint8or16Decimals<Char>(cursor + 6, lsd, lut, middle_sd, delta);
-          goto Print6A;
+          goto Print6B;
         }
+        D_COUT("\n    Length:13");
         TPrint8or16Decimals<Char>(cursor + 5, lsd, lut, middle_sd, delta);
         goto Print5;
       } else if ((value >> 20) == 0) {
         pow_10_ui4 = 1000000;
         if (value >= pow_10_ui4) {
+          D_COUT("\n    Length:15B");
           TPrint8or16Decimals<Char>(cursor + 7, lsd, lut, middle_sd, delta);
-          goto Print7A;
+          goto Print7B;
         }
+        D_COUT("\n    Length:14");
         TPrint8or16Decimals<Char>(cursor + 6, lsd, lut, middle_sd, delta);
         goto Print6;
       } else {
         comparator = 10000000;
         if (value >= comparator) {
-          TPrint8Decimals<Char>(cursor, ValueUI4(value), lut);
+          D_COUT("\n    Length:16");
+          TPrint8Decimals<Char>(cursor, ToUI4(value), lut);
           TPrint8Decimals<Char>(cursor + 8, lsd, lut);
           return TPrintNil<Char>(cursor + 16);
         }
+        D_COUT("\n    Length:15");
         TPrint8or16Decimals<Char>(cursor + 7, lsd, lut, middle_sd, delta);
         goto Print7;
       }
@@ -410,23 +414,55 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
   return nullptr;  //< Unreachable.
 }
 
-template <typename UI = UI8, typename Char = CH1>
-inline Char* TPrintUnsigned(Char* socket, SI4 size, UI value) {
+template <typename UI = UI8, typename Char = CHR>
+inline Char* TPrintUnsigned(Char* socket, SIW size, UI value) {
   return TPrintUnsigned<UI, Char>(socket, socket + size - 1, value);
 }
 
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, UI8 value) {
+  return TPrintUnsigned<UI8, Char>(start, stop, value);
+}
+
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, UI8 value) {
+  return TPrintUnsigned<UI8, Char>(start, size, value);
+}
+
+#if CPU_SIZE < 64
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, UI4 value) {
+  return TPrintUnsigned<UI4, Char>(start, stop, value);
+}
+
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, UI4 value) {
+  return TPrintUnsigned<UI4, Char>(start, size, value);
+}
+#else
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, UI4 value) {
+  return TPrint<Char>(start, stop, (UI8)value);
+}
+
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, UI4 value) {
+  return TPrint<Char>(start, size, (UI8)value);
+}
+#endif
+
 /* Writes the give value to the given socket as an ASCII string.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
 @param  utf The text formatter to utf to.
 @param value The value to write. */
-template <typename SI = SI8, typename UI = UI8, typename Char = CH1>
-inline Char* TPrintSigned(Char* socket, Char* stop, SI value) {
+template <typename SI = SI8, typename UI = UI8, typename Char = CHR>
+inline Char* TPrintSigned(Char* start, Char* stop, SI value) {
   if (value >= 0) {
-    return TPrintUnsigned<UI, Char>(socket, stop, (UI)value);
+    return TPrintUnsigned<UI, Char>(start, stop, (UI)value);
   }
-  *socket++ = '-';
-  return TPrintUnsigned<UI, Char>(socket, stop, (UI)(-(SI)value));
+  *start++ = '-';
+  return TPrintUnsigned<UI, Char>(start, stop, (UI)(-(SI)value));
 }
 
 /* Writes the give value to the given socket as an ASCII string.
@@ -434,29 +470,56 @@ inline Char* TPrintSigned(Char* socket, Char* stop, SI value) {
 success.
 @param  utf The text formatter to utf to.
 @param value The value to write. */
-template <typename SI = SI8, typename UI = UI8, typename Char = CH1>
-inline Char* TPrintSigned(Char* socket, SI4 size, SI value) {
-  return TPrintSigned<SI, UI, Char>(socket, socket + size - 1, value);
+template <typename SI = SI8, typename UI = UI8, typename Char = CHR>
+inline Char* TPrintSigned(Char* start, SIW size, SI value) {
+  return TPrintSigned<SI, UI, Char>(start, start + size - 1, value);
 }
 
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, SI8 value) {
+  return TPrintSigned<SI4, UI4, Char>(start, stop, value);
+}
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, SI8 value) {
+  return TPrintSigned<SI4, UI4, Char>(start, size, value);
+}
+
+#if CPU_SIZE < 64
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, SI4 value) {
+  return TPrintSigned<SI4, UI4, Char>(start, stop, value);
+}
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, SI4 value) {
+  return TPrintSigned<SI4, UI4, Char>(start, size, value);
+}
+#else
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, Char* stop, SI4 value) {
+  return TPrint<Char>(start, stop, (SI8)value);
+}
+template <typename Char = CHR>
+inline Char* TPrint(Char* start, SIW size, SI4 value) {
+  return TPrint<Char>(start, size, (SI8)value);
+}
+#endif
 }  // namespace _
 
 #endif
 
-#if SEAM >= SCRIPT2_SEAM_FTOS
-#if SEAM == SCRIPT2_SEAM_FTOS
+#if SEAM >= SEAM_SCRIPT2_FTOS
+#if SEAM == SEAM_SCRIPT2_FTOS
 #include "module_debug.inl"
-#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count) \
-  Print("\nBinary:\"");                                      \
-  TPrintBinary(value);                                       \
+#define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count) \
+  Print("\nBinary:\"");                                       \
+  TPrintBinary(value);                                        \
   PrintNL()
 #else
 #include "module_release.inl"
-#define PRINT_FLOAT_BINARY(integer, decimals, decimal_count)
+#define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 
 namespace _ {
-
 /* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
 template <typename UI>
 inline UI TUnsignedNaN() {
@@ -500,7 +563,8 @@ SI4 TMSbAssertedReverse(UI value) {
 }
 
 /* A decimal number in floating-point format.
-To use this class the sizeof (Float) must equal the sizeof (UI) and sizeof (SI).
+To use this class the sizeof (Float) must equal the sizeof (UI) and sizeof
+(SI).
 */
 template <typename Float = FPW, typename SI = SI4, typename UI = UIW>
 class TBinary {
@@ -555,7 +619,7 @@ class TBinary {
     return (decimal << (kExponentSizeBits + 1)) >> (kExponentSizeBits + 1);
   }
 
-  template <typename Char = CH1>
+  template <typename Char = CHR>
   static Char* Print(Char* socket, Char* stop, Float value) {
     // Not handling NaN and inf
     if (IsNaN(value)) {
@@ -618,7 +682,7 @@ class TBinary {
     k = -(-((SI)348) + (index << 3));
     // decimal exponent no need lookup table.
 
-    DASSERT(index < 87);
+    D_ASSERT(index < 87);
 
     const UI* f_lut = Pow10IntegralLUT();
     const SI2* e_lut = reinterpret_cast<const SI2*>(BinaryPow10Exponents());
@@ -626,14 +690,14 @@ class TBinary {
   }
 
   TBinary Minus(const TBinary<Float, SI, UI>& value) const {
-    DASSERT(e == value.e);
-    DASSERT(f >= value.f);
+    D_ASSERT(e == value.e);
+    D_ASSERT(f >= value.f);
     return TBinary(f - value.f, e);
   }
 
-#if DEBUG_SEAM
+#if DEBUG_THIS
   static void PrintDebugInfo() {
-    PRINTF(
+    D_PRINTF(
         "\nkSize:%i kSizeBits:%i kMSbIndex:%i kStrandLengthMax:%i"
         "\nkExponentSizeBits:%i kCoefficientSize:%i kMantissaSize:%i"
         "\nkExponentMaskUnshifted:%i kExponentBias:%i ExponentMin ():%i\n\n",
@@ -650,7 +714,8 @@ class TBinary {
   static inline void Multiply(TBinary& result, TBinary& a, TBinary& b) {}
 
   static constexpr SIW LUTCount() {
-    // @todo Figure out the LUT sizes for Half and Single precision FP numbers.
+    // @todo Figure out the LUT sizes for Half and Single precision FP
+    // numbers.
     return (sizeof(Float) == 4) ? 83 : (sizeof(Float) == 8) ? 83 : 0;
   }
 
@@ -663,7 +728,7 @@ class TBinary {
   }
 
   static void AlignLUT(CH1* begin, SIW size) {
-    DASSERT(size);
+    D_ASSERT(size);
     SIW lut_count = LUTCount();
     if (size != ((100 + lut_count) * 2 + lut_count * 8)) return;
     UI2* ui2_ptr = reinterpret_cast<UI2*>(begin);
@@ -683,7 +748,7 @@ class TBinary {
     for (SI4 i = 0; i < 87; ++i) *ui8_ptr = f_lut[i];
   }
 
-  template <typename Char = CH1>
+  template <typename Char = CHR>
   static Char* Print(Char* socket, Char* stop, Float value, SI& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
@@ -846,7 +911,7 @@ class TBinary {
 
   /* Prints the integer portion of the floating-point number_.
   @return Nil upon failure or a pointer to the nil-term Char upon success. */
-  template <typename Char = CH1>
+  template <typename Char = CHR>
   static Char* DigitGen(Char* cursor, Char* stop, const TBinary& w,
                         const TBinary& m_plus, UI delta, SI& k) {
     TBinary one(((UI)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
@@ -957,7 +1022,7 @@ class TBinary {
   }
 
   /* Converts the Grisu2 output to a standardized/easier-to-read format. */
-  template <typename Char = CH1>
+  template <typename Char = CHR>
   static Char* Standardize(Char* socket, Char* stop, SIW length, SI k) {
     const SIW kk = length + k;  // 10^(kk-1) <= v < 10^kk
     Char* nil_term_char;
@@ -1000,22 +1065,22 @@ class TBinary {
 using Binary32 = TBinary<FP4, SI4, UI4>;
 using Binary64 = TBinary<FP8, SI4, UI8>;
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPrint(Char* begin, Char* stop, FP4 value) {
   return TBinary<FP4, SI4, UI4>::template Print<Char>(begin, stop, value);
 }
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPrint(Char* begin, SIW size, FP4 value) {
   return TPrint<Char>(begin, begin + size - 1, value);
 }
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPrint(Char* begin, Char* stop, FP8 value) {
   return TBinary<FP8, SI8, UI8>::template Print<Char>(begin, stop, value);
 }
 
-template <typename Char = CH1>
+template <typename Char = CHR>
 Char* TPrint(Char* begin, SIW size, FP8 value) {
   return TPrint<Char>(begin, begin + size - 1, value);
 }

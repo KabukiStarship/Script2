@@ -14,7 +14,66 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-#if SEAM >= SCRIPT2_SEAM_ITOS
+#if SEAM >= SEAM_SCRIPT2_ITOS
+
+const UI8* Pow10_UI8() {
+  static const UI8 k10ToThe[20] = {
+      1,                     //< 10^0
+      10,                    //< 10^1
+      100,                   //< 10^2
+      1000,                  //< 10^3
+      10000,                 //< 10^4
+      100000,                //< 10^5
+      1000000,               //< 10^6
+      10000000,              //< 10^7
+      100000000,             //< 10^8
+      1000000000,            //< 10^9
+      10000000000,           //< 10^10
+      100000000000,          //< 10^11
+      1000000000000,         //< 10^12
+      10000000000000,        //< 10^13
+      100000000000000,       //< 10^14
+      1000000000000000,      //< 10^15
+      10000000000000000,     //< 10^16
+      100000000000000000,    //< 10^17
+      1000000000000000000,   //< 10^18
+      10000000000000000000,  //< 10^19
+  };
+  return k10ToThe;
+}
+
+UI8 Pow10(UI8 index) { return (index > 19) ? 0 : Pow10_UI8()[index]; }
+
+const UI4* Pow10_UI4() {
+  static const UI4 k10ToThe[20] = {
+      1,           //< 10^0
+      10,          //< 10^1
+      100,         //< 10^2
+      1000,        //< 10^3
+      10000,       //< 10^4
+      100000,      //< 10^5
+      1000000,     //< 10^6
+      10000000,    //< 10^7
+      100000000,   //< 10^8
+      1000000000,  //< 10^9
+  };
+  return k10ToThe;
+}
+
+UI4 Pow10(UI4 index) { return (index > 9) ? 0 : Pow10_UI4()[index]; }
+
+const UI2* Pow10_UI2() {
+  static const UI2 k10ToThe[20] = {
+      1,      //< 10^0
+      10,     //< 10^1
+      100,    //< 10^2
+      1000,   //< 10^3
+      10000,  //< 10^4
+  };
+  return k10ToThe;
+}
+
+UI2 Pow10(UI2 index) { return (index > 4) ? 0 : Pow10_UI2()[index]; }
 
 #if CPU_ENDIAN == LITTLE_ENDIAN
 static const UI2 kDigits00To99[100] = {
@@ -49,9 +108,45 @@ static const UI2 kDigits00To99[100] = {
 
 const UI2* BinaryLUTDecimals() { return kDigits00To99; }
 
+SIN STRLength(UI1 value) {
+  if (value < 10) return 1;
+  if (value < 100) return 2;
+  return 3;
+}
+SIN STRLength(UI2 value) {
+  if (value < 10) return 1;
+  if (value < 100) return 2;
+  if (value < 1000) return 3;
+  if (value < 10000) return 4;
+  return 5;
+}
+
+SIN STRLength(UI4 value) {
+  if ((value >> 16) == 0) return STRLength((UI2)value);
+  if (value < 1000000) return 6;
+  if (value < 10000000) return 7;
+  if (value < 100000000) return 8;
+  if (value < 1000000000) return 9;
+  return 10;
+}
+
+SIN STRLength(UI8 value) {
+  if ((value >> 32) == 0) return STRLength((UI4)value);
+  if (value < 100000000000) return 11;
+  if (value < 1000000000000) return 12;
+  if (value < 10000000000000) return 13;
+  if (value < 100000000000000) return 14;
+  if (value < 1000000000000000) return 15;
+  if (value < 10000000000000000) return 16;
+  if (value < 100000000000000000) return 17;
+  if (value < 1000000000000000000) return 18;
+  if (value < 10000000000000000000) return 19;
+  return 20;
+}
+
 #endif
 
-#if SEAM >= SCRIPT2_SEAM_FTOS
+#if SEAM >= SEAM_SCRIPT2_FTOS
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
@@ -130,6 +225,47 @@ BOL IsNaN(UI8 value) { return value > TUnsignedNaN<UI8>(); }
 
 BOL IsNaN(SI1 value) {
   return (value > TUnsignedNaN<SI1>()) && (value > TSignedNaN<SI1, UI1>());
+}
+
+/* Masks the lower bits using faster bit shifting.
+@brief The algorithm has you enter the highest bit rather than bit count because
+it would introduce an extra instruction and you should do that manually if you
+wish to do so.
+@param value The value to mask.
+@param left_bits Number of bits to shift left.
+@param right_bits Number of bits to shift right. */
+template <typename UI>
+inline UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
+  value = value << left_bits;
+  return value >> right_bits;
+}
+
+/* Creates a mask with the given number_ of zeros in the MSb(s).
+@param msb_zero_count The number_ of zeros in the Most Significant bits. */
+template <typename UI>
+inline UI CreateMaskLSb(UI msb_zero_count) {
+  UI mask = 0;
+  return (~mask) >> msb_zero_count;
+}
+
+/* Masks off the lower bits. */
+template <typename UI>
+inline UI MaskLSb(UI value, UI msb_zero_count) {
+  return value & CreateMaskLSb<UI>(msb_zero_count);
+}
+
+/* Returns 2^n. */
+template <typename I>
+inline I PowerOf2(I n) {
+  I value = 1;
+  return value << n;
+}
+
+UI8 ComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
+  FP8 pow_10 = 0.30102999566398114,  //< 1/lg(10)
+      alpha_minus_e_plus_63 = static_cast<FP8>(alpha - e + 63),
+      ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
+  return *reinterpret_cast<UI8*>(&pow_10);
 }
 
 #endif

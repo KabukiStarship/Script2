@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef INCLUDED_SCRIPT2_LIBRARY_T
 #define INCLUDED_SCRIPT2_LIBRARY_T
 #include "c_onfig.h"
@@ -186,11 +186,11 @@ class Library : public Operand {
 
 /* Destructs the given bag. */
 template <typename TIndex, typename TKey, typename TData, UIN MaxStackSize>
-SDK void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CH1*>(r);
 }
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _
 #endif  //< INCLUDED_SCRIPT2_LIBRARY_T
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_rng.h"
 #include "t_utf.h"
 
-#if SEAM == SCRIPT2_SEAM_ITOS
+#if SEAM == SEAM_SCRIPT2_ITOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -33,170 +33,172 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-inline const CH1* _01_ItoS_StoI(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_ITOS
-  TEST_BEGIN;
 
-  static const UI8 k10ToThe[20] = {
-      1,           //< 10^0
-      10,          //< 10^1
-      100,         //< 10^2
-      1000,        //< 10^3
-      10000,       //< 10^4
-      100000,      //< 10^5
-      1000000,     //< 10^6
-      10000000,    //< 10^7
-      100000000,   //< 10^8
-      1000000000,  //< 10^9
-  };
+inline const CH1* _01_ItoS_StoI(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_ITOS
+  A_TEST_BEGIN;
+  D_COUT(
+      "\n\nDirections: To use this tester, you'll want to run the script on "
+      "random numbers until you find one that fails the test. After the test "
+      "has failed you add that number to the problem_child array so it will "
+      "get tested first and you'll get some extra debug information.");
 
-  static const UI8 test_value[] = {
-      1,
-      12,
-      123,
-      1234,
-      12345,
-      123456,
-      1234567,
-      12345678,
-      123456789,
-      k10ToThe[0] - 1,
-      k10ToThe[0],
-      k10ToThe[0] + 1,
-      k10ToThe[1] - 1,
-      k10ToThe[1],
-      k10ToThe[1] + 1,
-      k10ToThe[1] + k10ToThe[1] / 2,
-      k10ToThe[2] - 1,
-      k10ToThe[2],
-      k10ToThe[2] + 1,
-      k10ToThe[2] + k10ToThe[2] / 2,
-      k10ToThe[3] - 1,
-      k10ToThe[3],
-      k10ToThe[3] + 1,
-      k10ToThe[3] + k10ToThe[3] / 2,
-      k10ToThe[4] - 1,
-      k10ToThe[4],
-      k10ToThe[4] + 1,
-      k10ToThe[4] + k10ToThe[4] / 2,
-      k10ToThe[5] - 1,
-      k10ToThe[5],
-      k10ToThe[5] + 1,
-      k10ToThe[5] + k10ToThe[5] / 2,
-      k10ToThe[6] - 1,
-      k10ToThe[6],
-      k10ToThe[6] + 1,
-      k10ToThe[6] + k10ToThe[6] / 2,
-      k10ToThe[7] - 1,
-      k10ToThe[7],
-      k10ToThe[7] + 1,
-      k10ToThe[7] + k10ToThe[7] / 2,
-      k10ToThe[8] - 1,
-      k10ToThe[8],
-      k10ToThe[8] + 1,
-      k10ToThe[8] + k10ToThe[8] / 2,
-      k10ToThe[9] - 1,
-      k10ToThe[9],
-      k10ToThe[9] + 1,
-      k10ToThe[9] + k10ToThe[9] / 2,
-  };
-
-  /*
-  PRINTF ("\nTesting quick MSD lookup...\n    Length 1:");
-  static const UI8 delta_one_bits[] = { 4, 7, 10, 14, 17, 20, 24, 27, 30 };
-  UI8 max,
-           num_bits,
-           msd_bit_range;
-  PRINTF ("\n| Length | MSD Offset | Min Value  |"
-          "\n|:------:|:----------:|:----------:|");
-  for (SI4 length = 3; length < 10; ++length) {
-      num_bits = delta_one_bits[length - 2];
-      msd_bit_range = (length == 10 || length == 20) ? 16: 8;
-      for (UI8 i = 1;  i <= 8; ++i) {
-          PRINTF ("\n|   %llu    |     %llu      | %10u |", length, i, i <<
-  num_bits);
-      }
+  D_COUT("\n\nTesting Pow10_UI2...");
+  UI2 pow10_ui2 = 1;
+  for (UI2 i = 0; i < _::kUI2DigitCountMax; ++i) {
+    A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
+    pow10_ui2 *= 10;
   }
-  PRINTNL;
-  system ("PAUSE");*/
 
-  static const UI8 problem_children[] = {
-      9173263544803952,
-  };
-  enum { kNumProblemChildren = 0, kSize = 23 };
+  D_COUT("\n\nTesting Pow10_UI4...");
+  UI4 pow10_ui4 = 1;
+  for (UI4 i = 0; i < _::kUI4DigitCountMax; ++i) {
+    A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
+    pow10_ui4 *= 10;
+  }
+
+  D_COUT("\n\nTesting Pow10_UI8...");
+  UI8 pow10_ui8 = 1;
+  for (UI8 i = 0; i < _::kUI8DigitCountMax; ++i) {
+    A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
+    pow10_ui8 *= 10;
+  }
+
+  static const UI8 edge_condition[] = {1,
+                                       12,
+                                       123,
+                                       1234,
+                                       12345,
+                                       123456,
+                                       1234567,
+                                       12345678,
+                                       123456789,
+                                       Pow10_UI8()[1] - 1,
+                                       Pow10_UI8()[1],
+                                       Pow10_UI8()[1] + 1,
+                                       Pow10_UI8()[1] + Pow10_UI8()[1] / 2,
+                                       Pow10_UI8()[2] - 1,
+                                       Pow10_UI8()[2],
+                                       Pow10_UI8()[2] + 1,
+                                       Pow10_UI8()[2] + Pow10_UI8()[2] / 2,
+                                       Pow10_UI8()[3] - 1,
+                                       Pow10_UI8()[3],
+                                       Pow10_UI8()[3] + 1,
+                                       Pow10_UI8()[3] + Pow10_UI8()[3] / 2,
+                                       Pow10_UI8()[4] - 1,
+                                       Pow10_UI8()[4],
+                                       Pow10_UI8()[4] + 1,
+                                       Pow10_UI8()[4] + Pow10_UI8()[4] / 2,
+                                       Pow10_UI8()[5] - 1,
+                                       Pow10_UI8()[5],
+                                       Pow10_UI8()[5] + 1,
+                                       Pow10_UI8()[5] + Pow10_UI8()[5] / 2,
+                                       Pow10_UI8()[6] - 1,
+                                       Pow10_UI8()[6],
+                                       Pow10_UI8()[6] + 1,
+                                       Pow10_UI8()[6] + Pow10_UI8()[6] / 2,
+                                       Pow10_UI8()[7] - 1,
+                                       Pow10_UI8()[7],
+                                       Pow10_UI8()[7] + 1,
+                                       Pow10_UI8()[7] + Pow10_UI8()[7] / 2,
+                                       Pow10_UI8()[8] - 1,
+                                       Pow10_UI8()[8],
+                                       Pow10_UI8()[8] + 1,
+                                       Pow10_UI8()[8] + Pow10_UI8()[8] / 2,
+                                       Pow10_UI8()[9] - 1,
+                                       Pow10_UI8()[9],
+                                       Pow10_UI8()[9] + 1,
+                                       Pow10_UI8()[9] + Pow10_UI8()[9] / 2,
+                                       0};
+
+  static const UI8 problem_child[] = {9173263544803952, 827672716845, 0};
+
+  enum { kNumProblemChildren = 2, kSize = 23 };
 
   CH1 text[kSize + 1], expecting[kSize + 1];
   CH1 socket[kSize];
   CH1* result;
   UI8 result_ui8, expected_ui8;
 
-  PRINT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
+  D_COUT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
 
   for (SI4 i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(socket, kSize, FORMAT_UI8, expected_ui8);
     const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
-    ASSERT(test);
-    AVOW(expected_ui8, result_ui8);
+    A_ASSERT(test);
+    A_AVOW(expected_ui8, result_ui8);
   }
 
-  PRINT("\n\nTesting Puff ItoS Algorithm...\n\n");
+  D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
 
-  // PrintDigits99To99Lut ();
+  UIN count = TSTRLength<UI8>(problem_child);
+  D_PRINTF("\n\nTesting %i problem children...\n\n", count);
 
-  PRINT("\n\nTesting problem children...\n\n");
-
-  for (SI4 i = 0; i < kNumProblemChildren; ++i) {
-    PRINT_LINEF('-');
-    expected_ui8 = problem_children[i];
+  for (SI4 i = 0; i < count; ++i) {
+    expected_ui8 = problem_child[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    PRINTF("\n%i.) Expecting \"%s\":%llu", i + 1, expecting,
-           TSTRLength<>(expecting));
+    static const CH1 kPuffDebugHeader[] =
+        "\n\n    "
+        "|6666555555555544444444443333333333222222222211111111110000000000|\n"
+        "    "
+        "|3210987654321098765432109876543210987654321098765432109876543210|\n"
+        "    "
+        "|*   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   |\n"
+        //                                                     10000001010100
+        "    |\0";
+    D_COUT_6(kPuffDebugHeader, Binaryf(expected_ui8), '|', '\n', i, ".) ");
+    SIN expected_length = TSTRLength<CH1>(expecting);
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
-      PAUSE("An error occurred :-(");
+      D_PAUSE("An error occurred :-(");
       break;
     }
     *result = 0;
-    if (TSTRCompare<>(expecting, text)) {
-      PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
-    }
+    D_AVOW(expecting, text);
   }
 
-  PRINT("\n\nTesting edge conditions...\n\n");
-  for (SI4 i = 0; i < 28; ++i) {
-    PRINT_LINEF('-');
-    expected_ui8 = test_value[i];
+  count = TSTRLength<UI8>(edge_condition);
+  D_PRINTF("\n\nTesting %i edge conditions...\n\n", count);
+  for (SIW i = 0; i < count; ++i) {
+    D_COUT_LINEF('-');
+    expected_ui8 = edge_condition[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    PRINTF("\n%i.) ", i + 1);
+    D_PRINTF("\n\n%i.) ", i + 1);
     result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
-      PAUSE("An error occurred :-(");
+      D_PAUSE("An error occurred :-(");
       break;
     }
     *result = 0;
-    if (strcmp(expecting, text)) {
-      PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
-    }
+    D_AVOW(expecting, text);
   }
 
-  PRINTF("\n\nTesting random numbers...\n\n");
+#if DEBUG_THIS
+  Printf("\n\nTesting %i random numbers of each length...\n\n", count);
+  count = 200;
+#else
+  count = 1000;
+#endif
+  UIN count_digits = STRLength(count);
+  D_PRINTF("\n\ncount_digits:%i", count_digits);
 
-  for (SI4 i = 0; i < 0x0000ffff; ++i) {
-    PRINT_LINEF('-');
-    expected_ui8 = RandomUI8();
-    sprintf_s(expecting, 24, "%llu", expected_ui8);
-    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
-    if (!result) {
-      PAUSE("An error occurred :-(");
-      break;
-    }
-    *result = 0;
-    if (TSTRCompare<>(expecting, text)) {
-      PAUSEF("\n\nERROR: Expecting \"%s\":%llu and found \"%s\":%llu",
-             expecting, TSTRLength<>(expecting), text, TSTRLength<>(text));
+  // We don't want to do 1000 tests of length 1, so we're going to
+
+  for (UIN i = 0; i < 20; ++i) {
+    for (UIN j = 0; j < count; ++j) {
+      if (j >= Pow10_UI8()[i + i] - 1 - Pow10_UI8()[i]) break;
+      UI8 lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] - 1;
+      expected_ui8 = Random(lower_bounds, upper_bounds);
+      sprintf_s(expecting, 24, "%llu", expected_ui8);
+      D_PRINTF("\n\n", i + 1);
+      result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+      if (!result) {
+        D_PAUSE("An error occurred :-(");
+        break;
+      }
+      *result = 0;
+      D_AVOW(expecting, text);
     }
   }
 

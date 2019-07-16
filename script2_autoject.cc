@@ -9,12 +9,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_STACK
+#if SEAM >= SEAM_SCRIPT2_STACK
 
 #include "c_autoject.h"
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_SEAM_STRAND
+#if SEAM == SEAM_SCRIPT2_STRAND
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -25,7 +25,7 @@ namespace _ {
 UIW* RamFactoryHeap(UIW* obj, SIW size) {
   if (size > 0) {
     size = TAlignUpSigned<SIW>(size);
-    DASSERT(!(size & (sizeof(SIW) - 1)));
+    D_ASSERT(!(size & (sizeof(SIW) - 1)));
     return new UIW[TWordCount<SIW>(size)];
   }
   if (obj) delete[] obj;

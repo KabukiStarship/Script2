@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,8 +21,8 @@ using namespace _;
 namespace script2 {
 static const CH1* _14_Dictionary(CH1* seam_log, CH1* seam_end,
                                  const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_DIC
-  TEST_BEGIN;
+#if SEAM >= SEAM_SCRIPT2_DIC
+  A_TEST_BEGIN;
 
   UIW socket[kBufferSizeWords];
 
@@ -34,7 +34,7 @@ static const CH1* _14_Dictionary(CH1* seam_log, CH1* seam_end,
 
   Compare(0, index) Multimap2Print(multimap);
   Compare(0, index) index = Multimap2Find(multimap, "D");
-  Compare(0, index) PAUSE("\n");
+  Compare(0, index) D_PAUSE("\n");
   index = Multimap2Add<UI1, kUI1>(multimap, "C", (UI1)0xFF);
   Compare(1, index) index = Multimap2Find(multimap, "D");
   Compare(0, index) index = Multimap2Find(multimap, "C");

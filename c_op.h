@@ -3,14 +3,14 @@
 @file    /script2/c_op.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= _0_0_01__13
+#if SEAM >= SEAM_SCRIPT2_ROOM
 #ifndef INCLUDED_SCRIPT2_OP
 #define INCLUDED_SCRIPT2_OP 1
 
@@ -37,7 +37,7 @@ struct BOut;
         NumOps (0), FirstOp ('A'),
         "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
     @endcode */
-struct SDK Op {
+struct LIB_MEMBER Op {
   const CH1* name;          //< Op name.
   const SI4 *in,            //< Input kBSQ params or OpFirst.
       *out;                 //< Output kBSQ params or OpLast.
@@ -61,7 +61,7 @@ inline const SI4* OpFirst(CH4 index) {
 
 /* Converts the given value to a pointer. */
 inline CH4 OpFirst(const Op* op) {
-  ASSERT(op);
+  A_ASSERT(op);
   return (CH4) reinterpret_cast<UIW>(op->in);
 }
 
@@ -72,7 +72,7 @@ inline const SI4* OpLast(CH4 index) {
 
 /* Converts the given value to a pointer. */
 inline CH4 OpLast(const Op* op) {
-  ASSERT(op);
+  A_ASSERT(op);
   return (CH4) reinterpret_cast<UIW>(op->out);
 }
 
@@ -89,4 +89,4 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const ::_::Op* op) {
 }
 
 #endif  //< #if INCLUDED_SCRIPT2_OP 1
-#endif  //< #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

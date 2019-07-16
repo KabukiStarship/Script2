@@ -8,9 +8,9 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #include "c_args.h"
-#include "c_ascii.h"
+#include "c_avalue.h"
 #include "c_bout.h"
 #include "c_bsq.h"
 #include "c_hash.h"
@@ -19,13 +19,13 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_utf.h"
 #include "slot.h"
 
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #include "module_debug.inl"
-#define PRINT_BOUT(header, bout) \
+#define D_COUT_BOUT(header, bout) \
   Console<>().Out() << "\n" << header << kLF << bout;
 #else
 #include "module_release.inl"
-#define PRINT_BOUT(header, bout)
+#define D_COUT_BOUT(header, bout)
 #endif
 
 namespace _ {
@@ -83,7 +83,7 @@ const CH1** BOutStateStrands() {
 }
 
 CH1* BOutBuffer(BOut* bout) {
-  ASSERT(bout);
+  A_ASSERT(bout);
   return reinterpret_cast<CH1*>(bout) + sizeof(BOut);
 }
 
@@ -144,16 +144,16 @@ SI4 BOutStreamByte(BOut* bout) {
 }
 
 const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
-  PRINT_BSQ("\n\nWriting ", params)
+  D_COUT_BSQ("\n\nWriting ", params)
   enum {
     kBOutBufferSize = 1024,
     kBOutBufferSizeWords = kBOutBufferSize >> kWordBitCount
   };
-  PRINT_BOUT(" to B-Output:", bout)
+  D_COUT_BOUT(" to B-Output:", bout)
 
-  ASSERT(bout);
-  ASSERT(params);
-  ASSERT(args);
+  A_ASSERT(bout);
+  A_ASSERT(params);
+  A_ASSERT(args);
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1  // type,
@@ -213,7 +213,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   // Write data.
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
-    PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
+    D_PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
            STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
            space)
     switch (type) {
@@ -234,14 +234,14 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         }
         // Load the source data pointer and increment args.fs
         ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
-        PRINTF("\"%p", ui1_ptr);
+        D_PRINTF("\"%p", ui1_ptr);
 
         // We know we will always have at least one nil-term CH1.
         ui1 = *ui1_ptr;
         while (ui1 != 0) {
           if (space-- == 0)
             return BOutError(bout, kErrorBufferOverflow, params, index, begin);
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
 
           *stop = ui1;  // Write UI1
           if (++stop >= stop) stop -= size;
@@ -270,7 +270,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 
         // Write data.
         *stop = ui1;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
         if (++stop >= stop) stop -= size;
         break;
 #else
@@ -296,18 +296,18 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         ui1 = (UI1)ui2;
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
 
         // Byte 2
         ui1 = (UI1)(ui2 >> 8);
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
         break;
 #else
         return BOutError(bout, kErrorInvalidType);
 #endif  // USING_SCRIPT2_2_BYTE_TYPES
-#if ALU_SIZE <= 16
+#if CPU_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
@@ -336,12 +336,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
 
         // Byte 2
         if (--space == 0)
@@ -352,12 +352,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
 
         // Byte 3
         if (--space == 0)
@@ -366,7 +366,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         ui1 |= 0x80;
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
       } break;
 #else
       case SVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
@@ -390,12 +390,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
         // This wont happen I don't think.
         // if (--ui2 == 0)
         //    return BOutError (kErrorVarintOverflow, params, index,
@@ -424,7 +424,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           // Byte 1
           ui1 = (UI1)ui4;
           *stop = ui1;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           if (++stop >= stop) stop -= size;
         }
         break;
@@ -449,7 +449,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         for (value = sizeof(SI8); value > 0; --value) {
           // Byte 1
           ui1 = (UI1)ui8;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           *stop = ui1;
           if (++stop >= stop) stop -= size;
         }
@@ -474,7 +474,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           ui1 = ui8 & 0xFF;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           break;
         }
         ui1 = ui8 & 0x7f;  //< Take 7 bits at a time.
@@ -483,12 +483,12 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = Hash16(ui1, hash);
+        hash = HashPrime16(ui1, hash);
 
         goto WriteVarint8;
       } break;
@@ -563,14 +563,14 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         if (begin + length >= stop) {
           for (; size - length > 0; --length) {
             ui1 = *(ui1_ptr++);
-            hash = Hash16(ui1, hash);
+            hash = HashPrime16(ui1, hash);
             *stop = ui1;
             ++stop;
           }
           stop = begin - 1;
           for (; length > 0; --length) {
             ui1 = *(ui1_ptr++);
-            hash = Hash16(ui1, hash);
+            hash = HashPrime16(ui1, hash);
             *stop = ui1;
             ++stop;
           }
@@ -578,7 +578,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         }
         for (; length > 0; --length) {
           ui1 = *(ui1_ptr++);
-          hash = Hash16(ui1, hash);
+          hash = HashPrime16(ui1, hash);
           *stop = ui1;
           ++stop;
         }
@@ -595,7 +595,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   *stop = (UI1)(hash >> 8);
   if (++stop >= stop) stop -= size;
   bout->stop = (SI4)Size(begin, stop);
-  PRINTF("\nDone writing to B-Output with the hash 0x%x.", hash)
+  D_PRINTF("\nDone writing to B-Output with the hash 0x%x.", hash)
   return 0;
 }
 
@@ -606,7 +606,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
   if (address == nullptr) {
     address = "";
   }
-  PRINTF("\nRinging BEL to address:0x%p", address)
+  D_PRINTF("\nRinging BEL to address:0x%p", address)
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
@@ -619,7 +619,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
               *stop = begin + bout->stop;  //< Stop of the data.
   space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
-    PRINTF("\nBuffer overflow!")
+    D_PRINTF("\nBuffer overflow!")
     return;
   }
   *stop = 0;
@@ -628,7 +628,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      PRINTF("\nBuffer overflow!");
+      D_PRINTF("\nBuffer overflow!");
       return;
     }
     *stop = c;
@@ -646,7 +646,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   if (address == nullptr) {
     address = "";
   }
-  PRINTF("\n\nRinging BEL to address:0x%p", address)
+  D_PRINTF("\n\nRinging BEL to address:0x%p", address)
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
@@ -660,7 +660,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
               *stop = begin + bout->stop;  //< Stop of the data.
   space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
-    PRINTF("\nBuffer overflow!")
+    D_PRINTF("\nBuffer overflow!")
     return;
   }
   *stop = 0;
@@ -669,7 +669,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      PRINTF("\nBuffer overflow!")
+      D_PRINTF("\nBuffer overflow!")
       return;
     }
     *stop = c;
@@ -719,7 +719,7 @@ CH1* Print (BOut* bout, CH1* socket, CH1* buffer_end) {
 }*/
 
 UTF1& PrintBOut(UTF1& utf, BOut* bout) {
-  ASSERT(bout);
+  A_ASSERT(bout);
   SI4 size = bout->size;
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
       << " start:" << bout->begin << " stop:" << bout->stop
@@ -731,4 +731,4 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //> #if SEAM >= SEAM_SCRIPT2_DIC

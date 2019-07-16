@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_SEAM_STRAND
+#if SEAM == SEAM_SCRIPT2_STRAND
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,12 +20,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using namespace _;
 
-#if SEAM >= SCRIPT2_SEAM_STRAND
+#if SEAM >= SEAM_SCRIPT2_STRAND
 namespace script2 {
 template <typename Char>
 void _06_StrandN() {
-  PRINT_LINEF('-');
-  PRINTF("Testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
+  D_COUT_LINEF('-');
+  D_PRINTF("Testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
 
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
@@ -35,42 +35,42 @@ void _06_StrandN() {
     kCharSizeChar = '0' + sizeof(Char),
   };
 
-  PRINT("\n\nExpecting \"");
-  PRINT(kTesting123);
-  PRINT("\"\n");
+  D_COUT("\n\nExpecting \"");
+  D_COUT(kTesting123);
+  D_COUT("\"\n");
   AStrand<Char, 8> strand;
-  PRINT("\nPrinting newly constructed strand:\n");
-#if SEAM_DEBUG
+  D_COUT("\nPrinting newly constructed strand:\n");
+#if DEBUG_THIS
   strand.PrintTo<COut>(COut().Star());
 #endif
-  PRINT("\n\nPrinting:\"Testing \"");
+  D_COUT("\n\nPrinting:\"Testing \"");
   strand << "Testing ";
-  PRINT("\n\nPrinting:\"1\"");
+  D_COUT("\n\nPrinting:\"1\"");
   strand << 1;
-  PRINT("\n\nPrinting:\", \"");
+  D_COUT("\n\nPrinting:\", \"");
   strand << ", ";
-  PRINT("\n\nPrinting:\"2\"");
+  D_COUT("\n\nPrinting:\"2\"");
   strand << 2;
-  PRINT("\n\nPrinting:\", \"");
+  D_COUT("\n\nPrinting:\", \"");
   strand << ", ";
-  PRINT("\n\nPrinting:\"3\"");
+  D_COUT("\n\nPrinting:\"3\"");
   strand << 3;
-  PRINT("\n\nPrinting:\".\"");
+  D_COUT("\n\nPrinting:\".\"");
   strand << '.';
-  PRINTF("\n\nResult:\"");
-  PRINT(strand.Start());
-  PRINT("\"\n");
-  // PRINT_CHARS(strand.ARY().Begin(), strand.ARY().Size());
+  D_PRINTF("\n\nResult:\"");
+  D_COUT(strand.Start());
+  D_COUT("\"\n");
+  // D_COUT_CHARS(strand.ARY().Begin(), strand.ARY().Size());
 
   const Char* cursor = strand.Find(kTesting123);
-  ASSERT(cursor);
-  PRINTF("\nDone testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
+  A_ASSERT(cursor);
+  D_PRINTF("\nDone testing TStrand<CH%c>\n\n", '0' + sizeof(Char));
 }
-#endif  //< #if SEAM >= SCRIPT2_SEAM_STRAND
+#endif  //< #if SEAM >= SEAM_SCRIPT2_STRAND
 
-static const CH1* _06_Strand(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_STRAND
-  TEST_BEGIN;
+static const CH1* _06_Strand(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_STRAND
+  A_TEST_BEGIN;
 
   _06_StrandN<CH1>();
   //_06_StrandN<CH2>();

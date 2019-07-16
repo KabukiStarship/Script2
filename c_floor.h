@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef SCRIPT2_FLOOR
 #define SCRIPT2_FLOOR
 
@@ -20,14 +20,14 @@ The Floor is the Floor in the Chinese Room. In Kabuki Crabs, the floor is
 designed to store variables without having to include the classes the variable
 controls. For this reason only strings and POD types are in the Floor.
 */
-struct SDK Floor {
+struct LIB_MEMBER Floor {
   SI2 epoch;
 };
 
 /* Returns the the global Floor. */
-SDK inline Floor* Global();
+LIB_MEMBER inline Floor* Global();
 
 }  // namespace _
 
 #endif  // #if SCRIPT2_FLOOR
-#endif  // #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  // #if SEAM >= SEAM_SCRIPT2_DIC

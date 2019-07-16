@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_EXPR
+#if SEAM >= SEAM_SCRIPT2_EXPR
 #ifndef SCRIPT2_DOOR
 #define SCRIPT2_DOOR
 #include "c_crabs.h"
@@ -69,7 +69,7 @@ class TDoor : public Operand {
     } else {
       if (size_bytes < kMinDoorSize) {
         // @todo insert error code here
-        PRINTF("\nError: Door size_bytes < kMinDoorSize!");
+        D_PRINTF("\nError: Door size_bytes < kMinDoorSize!");
         return;
       }
     }
@@ -174,5 +174,5 @@ static Door* DoorInit (SI4* socket, SI4 slot_size) {
 }*/
 
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_SEAM_EXPR
+#endif  //< #if SEAM >= SEAM_SCRIPT2_EXPR
 #endif  //< SCRIPT2_DOOR

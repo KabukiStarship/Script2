@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
 #include "c_bout.h"
@@ -37,7 +37,7 @@ typedef enum BInStates {
 
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
-struct SDK BIn {
+struct LIB_MEMBER BIn {
   SI4 size,           //< The size of the socket.
       begin;          //< The starting index of the ring socket data.
   volatile SI4 stop;  //< The stopping index of the ring socket data.
@@ -45,44 +45,44 @@ struct SDK BIn {
 };
 
 /* Get's the B-Input's socket. */
-SDK inline CH1* BInBegin(BIn* bin);
+LIB_MEMBER inline CH1* BInBegin(BIn* bin);
 
-SDK inline CH1* BInEnd(BIn* bin);
+LIB_MEMBER inline CH1* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-SDK inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
+LIB_MEMBER inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
 @param  Start The begin of the data.
 @param  Stop  The stop of the data.
 @param  Size  The size of the socket. */
-SDK inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
+LIB_MEMBER inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
 
 /* Gets the rx socket length. */
-SDK inline SI4 BInSpace(BIn* bin);
+LIB_MEMBER inline SI4 BInSpace(BIn* bin);
 
-SDK inline SI4 BinBufferLength(BIn* bin);
+LIB_MEMBER inline SI4 BinBufferLength(BIn* bin);
 
 #if USING_SCRIPT2_TEXT == YES
 /* Gets a a CH1 for printing out the bin_state. */
-SDK const CH1** STRBInStates();
+LIB_MEMBER const CH1** STRBInStates();
 
 /* Pulls the keyboard input into the ring socket. */
-// SDK void BInKeyboard ()
+// LIB_MEMBER void BInKeyboard ()
 #endif
 
-/* Initializes the BIn struct SDK to an empty socket. */
-SDK BIn* BInInit(UIW* socket, SI4 size);
+/* Initializes the BIn struct LIB_MEMBER to an empty socket. */
+LIB_MEMBER BIn* BInInit(UIW* socket, SI4 size);
 
 /* Gets the stop address of the rx socket. */
-SDK CH1* BInEnd(BIn* bin);
+LIB_MEMBER CH1* BInEnd(BIn* bin);
 
 /* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */
-SDK BOL BInIsReadable(BIn* bin);
+LIB_MEMBER BOL BInIsReadable(BIn* bin);
 
 /* Scans a message with the given params to the given BIn.
 The data in the BIn is word-aligned, unlike the Slot. It also
@@ -93,7 +93,7 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number_ upon
               failure. */
-SDK const Op* BInRead(BIn* bin, const SI4* params, void** args);
+LIB_MEMBER const Op* BInRead(BIn* bin, const SI4* params, void** args);
 
 inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
@@ -104,7 +104,7 @@ inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-SDK UTF1& Print(UTF1& printer, BIn* bin);
+LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
 
 #endif  //< #if USING_UTF8 == YES
 #if USING_UTF16 == YES
@@ -113,7 +113,7 @@ SDK UTF1& Print(UTF1& printer, BIn* bin);
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-SDK UTF2& Print(UTF2& printer, BIn* bin);
+LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
 
 #endif  //< #if USING_UTF16 == YES
 #if USING_UTF32 == YES
@@ -122,7 +122,7 @@ SDK UTF2& Print(UTF2& printer, BIn* bin);
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
-SDK UTF4& Print(UTF4& printer, BIn* bin);
+LIB_MEMBER UTF4& Print(UTF4& printer, BIn* bin);
 
 #endif  //< #if USING_UTF32 == YES
 
@@ -136,4 +136,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BIn* bin) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_CBIN
-#endif  //> #if SEAM >= SCRIPT2_SEAM_DIC
+#endif  //> #if SEAM >= SEAM_SCRIPT2_DIC

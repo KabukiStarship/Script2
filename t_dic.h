@@ -10,15 +10,15 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_BOOK
+#if SEAM >= SEAM_SCRIPT2_BOOK
 
 #ifndef SCRIPT2_TDIC
 #define SCRIPT2_TDIC 1
 
-#include "c_ascii.h"
+#include "c_avalue.h"
 #include "c_socket.h"
 
-#if SEAM >= SCRIPT2_SEAM_BOOK
+#if SEAM >= SEAM_SCRIPT2_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -113,8 +113,8 @@ namespace _ {
   done using a nil-terminated list in the Collision List. In the
 
   # Use Case Scenario
-  We are creating a plug-in SDK. We need to create a dictionary in the SDK
-  code, and pass it over to the program. The SDK manages the memory for the
+  We are creating a plug-in LIB_MEMBER. We need to create a dictionary in the LIB_MEMBER
+  code, and pass it over to the program. The LIB_MEMBER manages the memory for the
   dictionary. This dictionary might contain several million entries, and more
   than 4GB of data.
 
@@ -141,7 +141,7 @@ namespace _ {
   @endcode
 */
 template <typename Size, typename Offset, typename Index>
-struct SDK Dictionary {
+struct LIB_MEMBER Dictionary {
   Size size;          //< Total size of the set.
   Offset table_size,  //< Size of the (optional) key strings in bytes.
       size_pile;      //< Size of the (optional) collisions pile in bytes.
@@ -181,7 +181,7 @@ enum {
 template <typename Size, typename Offset, typename Index>
 Dictionary<Size, Offset, Index>* DictionaryInit(UIW* socket, UI1 max_size,
                                                 UI2 table_size, UI2 size) {
-  ASSERT(socket);
+  A_ASSERT(socket);
   if (table_size >= (size - sizeof(Dictionary<Size, Offset, Index>)))
     return nullptr;
   if (table_size < sizeof(Dictionary<Size, Offset, Index>) +
@@ -258,16 +258,16 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
          key_length = static_cast<UI2>(SlotLength(key)), size_pile;
 
   TPrintLinef();
-  PRINTF(
+  D_PRINTF(
       "Adding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p\n"
       "%20s: %p\n%20s: %u\n",
       key, "hashes", hashes, "key_offsets", key_offsets, "keys", keys,
       "indexes", indexes, "value", value)
 
-  Size hash = Hash16(key), current_hash;
+  Size hash = HashPrime16(key), current_hash;
 
   if (key_length > value) {
-    PRINTF("Buffer overflow\n")
+    D_PRINTF("Buffer overflow\n")
     return ~((Index)0);
   }
 
@@ -282,7 +282,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
     destination = keys - key_length;
 
     SlotWrite(destination, key);
-    PRINTF("\nInserted key %s at GetAddress 0x%p", key, destination)
+    D_PRINTF("\nInserted key %s at GetAddress 0x%p", key, destination)
     DicPrint(dictionary);
     return 0;
   }
@@ -290,11 +290,11 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
   // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
-    PRINTF("\nNot enough room in buffer!")
+    D_PRINTF("\nNot enough room in buffer!")
     return 0;  //< There isn't enough room left in the socket.
   }
 
-  PRINTF("\nFinding insert location...")
+  D_PRINTF("\nFinding insert location...")
 
   SI4 low = 0, mid, high = item_count, index;
 
@@ -304,23 +304,23 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
 
     current_hash = hashes[mid];
-    PRINTF("high: %i mid: %i low %i hash: %x\n", high, mid, low, current_hash)
+    D_PRINTF("high: %i mid: %i low %i hash: %x\n", high, mid, low, current_hash)
 
     if (current_hash > hash) {
       high = mid - 1;
     } else if (current_hash < hash) {
       low = mid + 1;
     } else {  // Duplicate hash detected.
-      PRINTF("hash detected, ")
+      D_PRINTF("hash detected, ")
 
       // Check for other collisions.
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%u", index)
+      D_PRINTF("index:%u", index)
 
       if (index < ~0) {  //< There are other collisions.
-        PRINTF("with collisions, ")
+        D_PRINTF("with collisions, ")
         // There was a collision so check the table.
 
         // The collisionsList is a sequence of indexes terminated
@@ -331,9 +331,9 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         temp_ptr = collission_list + temp;
         index = *temp_ptr;  //< Load the index in the collision table.
         while (index < MaxDicIndexes<Index>()) {
-          PRINTF("comparing to \"%s\"", keys - key_offsets[index])
+          D_PRINTF("comparing to \"%s\"", keys - key_offsets[index])
           if (strcmp(key, keys - key_offsets[index]) == 0) {
-            PRINTF(" but table already contains key at offset: %u.\n", index)
+            D_PRINTF(" but table already contains key at offset: %u.\n", index)
             return index;
           }
           ++temp_ptr;
@@ -341,7 +341,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         }
 
         // Its a new collision!
-        PRINTF("and new collision detected.")
+        D_PRINTF("and new collision detected.")
 
         // Copy the key
         value = key_offsets[item_count - 1] + key_length + 1;
@@ -362,7 +362,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         *temp_ptr = item_count;
 
         dictionary->size_pile = size_pile + 1;
-        PRINTF("\ncollision index: %u", temp)
+        D_PRINTF("\ncollision index: %u", temp)
         // Store the collision index.
         indexes[item_count] = temp;  //< Store the collision index
         dictionary->item_count = item_count + 1;
@@ -375,20 +375,20 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         indexes[item_count] = item_count;
 
         DicPrint(dictionary);
-        PRINTF("Done inserting.\n")
+        D_PRINTF("Done inserting.\n")
         return item_count;
       }
 
       // But we still don't know if the CH1 is a new collision.
 
-      PRINTF("Checking if it's a collision... ")
+      D_PRINTF("Checking if it's a collision... ")
 
       if (strcmp(key, keys - key_offsets[index]) != 0) {
         // It's a new collision!
-        PRINTF("It's a new collision!\n")
+        D_PRINTF("It's a new collision!\n")
 
         if (value < 3) {
-          PRINTF("Buffer overflow!\n")
+          D_PRINTF("Buffer overflow!\n")
           return ~0;
         }
 
@@ -396,10 +396,10 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         value = key_offsets[item_count - 1] + key_length + 1;
 
         UI1 collision_index = unsorted_indexes[mid];
-        PRINTF("\n\ncollision_index: %u", collision_index)
+        D_PRINTF("\n\ncollision_index: %u", collision_index)
 
         SlotWrite(keys - value, key);
-        PRINTF(
+        D_PRINTF(
             "\nInserting value: %u into index:%u item_count:%u with other "
             "collision_index: %u",
             value, index, item_count, collision_index)
@@ -432,11 +432,11 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
         DicPrint(dictionary);
 
         DicPrint(dictionary);
-        PRINTF("\nDone inserting.")
+        D_PRINTF("\nDone inserting.")
         // Then it was a collision so the table doesn't contain .
         return item_count;
       }
-      PRINTF("\nTable already contains the key")
+      D_PRINTF("\nTable already contains the key")
       return index;
     }
   }
@@ -446,7 +446,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
   value = key_offsets[item_count - 1] + key_length + 1;
   destination = keys - value;
 
-  PRINTF(
+  D_PRINTF(
       "The hash 0x%x was not in the table so inserting %s into mid: %i at "
       "index %u before hash 0x%x \n",
       hash, key, mid, Diff(dictionary, destination), hashes[mid]);
@@ -459,7 +459,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
   hash_ptr = hashes;
   hash_ptr += item_count;
   //*test = hashes;
-  PRINTF("l_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u\n", item_count,
+  D_PRINTF("l_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u\n", item_count,
          Diff(dictionary, hashes), Diff(dictionary, hash_ptr),
          Diff(dictionary, hashes + mid))
   hashes += mid;
@@ -487,7 +487,7 @@ Index DictionaryAdd(Dictionary<Size, Offset, Index>* dictionary, const CH1* key,
   dictionary->item_count = item_count + 1;
 
   DicPrint(dictionary);
-  PRINTF("Done inserting.\n")
+  D_PRINTF("Done inserting.\n")
   TPrintLinef();
 
   return item_count;
@@ -504,7 +504,7 @@ template <typename Size, typename Offset, typename Index>
 Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
                      const CH1* key) {
   if (dictionary == nullptr) return 0;
-  PRINT_HEADING("Finding record...")
+  D_COUT_HEADING("Finding record...")
   Index index, item_count = dictionary->item_count, count = dictionary->count,
                temp;
 
@@ -522,16 +522,16 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
   const CH1* keys = reinterpret_cast<const CH1*>(dictionary) + table_size - 1;
   const Index *collisions, *temp_ptr;
 
-  Size hash = Hash16(key);
+  Size hash = HashPrime16(key);
 
-  PRINTF("\nSearching for key \"%s\" with hash 0x%x", key, hash)
+  D_PRINTF("\nSearching for key \"%s\" with hash 0x%x", key, hash)
 
   if (item_count == 1) {
     if (!SlotEquals(key, keys - key_offsets[0])) {
-      PRINTF("\nDid not find key %s", key)
+      D_PRINTF("\nDid not find key %s", key)
       return ~((Index)0);
     }
-    PRINTF("\nFound key \"%s\"", key)
+    D_PRINTF("\nFound key \"%s\"", key)
     TPrintLinef();
     return 0;
   }
@@ -545,7 +545,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
     mid = (low + high) >> 1;  //< >> 1 to /2
 
     Size current_hash = hashes[mid];
-    PRINTF("\nlow: %i mid: %i high %i hashes[mid]:%x", low, mid, high,
+    D_PRINTF("\nlow: %i mid: %i high %i hashes[mid]:%x", low, mid, high,
            hashes[mid])
 
     if (current_hash > hash) {
@@ -554,7 +554,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
       low = mid + 1;
     } else {
       // Duplicate hash found.
-      PRINTF(
+      D_PRINTF(
           "\nFound same hash at mid:%i hash:%x offset for key: "
           "%s",
           mid, hashes[mid], key)
@@ -567,7 +567,7 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
 
       if (index < ~0) {
         // There was a collision so check the table.
-        PRINTF("\nThere was a collision so check the table")
+        D_PRINTF("\nThere was a collision so check the table")
 
         // The collisionsList is a sequence of indexes terminated by
         // an invalid index > kMaxNumOperands. collissionsList[0] is an
@@ -579,15 +579,15 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
         temp_ptr = collission_list + temp;
         index = *temp_ptr;
         while (index < MaxDicIndexes<Index>()) {
-          PRINTF("\nComparing to \"%s\"", keys - key_offsets[index]);
+          D_PRINTF("\nComparing to \"%s\"", keys - key_offsets[index]);
           if (!SlotEquals(key, keys - key_offsets[index])) {
-            PRINTF("but table already contains key at offset:%u.", index)
+            D_PRINTF("but table already contains key at offset:%u.", index)
             return index;
           }
           ++temp_ptr;
           index = *temp_ptr;
         }
-        PRINTF("Did not find \"" << key << "\"\n")
+        D_PRINTF("Did not find \"" << key << "\"\n")
         return ~((Index)0);
       }
 
@@ -599,47 +599,47 @@ Index DictionaryFind(Dictionary<Size, Offset, Index>* dictionary,
       indexes += count;
       index = unsorted_indexes[mid];
 
-      PRINTF("\n!!!mid: %i-%x unsorted_indexes: %u key: %s\n hash: %x\n", mid,
+      D_PRINTF("\n!!!mid: %i-%x unsorted_indexes: %u key: %s\n hash: %x\n", mid,
              hashes[mid], index, keys - key_offsets[index],
-             Hash16(keys - key_offsets[index]));
+             HashPrime16(keys - key_offsets[index]));
 
       if (!SlotEquals(key, keys - key_offsets[index]) != 0) {
         //< It was a collision so the table doesn't contain .
-        PRINTF(" but it was a collision and did not find key.\n");
+        D_PRINTF(" but it was a collision and did not find key.\n");
         return ~((Index)0);
       }
 
-      PRINTF("and found key at mid: %i", (SI4)mid);
+      D_PRINTF("and found key at mid: %i", (SI4)mid);
       return index;
     }
   }
-  PRINTF("\nDid not find a hash for key \"%s\"", key);
+  D_PRINTF("\nDid not find a hash for key \"%s\"", key);
   TPrintLinef();
 
   return ~((Index)0);
 }
 
 /* Prints this object out to the console. */
-template <typename Size, typename Offset, typename Index, typename Char = CH1>
+template <typename Size, typename Offset, typename Index, typename Char = CHR>
 TUTF<Char> DicPrint(TUTF<Char>& utf,
                     const Dictionary<Size, Offset, Index>* dictionary) {
-  ASSERT(dictionary)
+  A_ASSERT(dictionary)
 
   Index item_count = dictionary->item_count, count = dictionary->count,
         collision_index, temp;
   Offset table_size = dictionary->table_size, size_pile = dictionary->size_pile;
 
-  PRINT_LINEF('_', 80);
+  D_COUT_LINEF('_', 80);
 
-  PRINTF((sizeof(Size) == 2)
+  D_PRINTF((sizeof(Size) == 2)
              ? "\nDic2:\n"
              : (sizeof(Size) == 4)
                    ? "\nDic4:0x%p\n"
                    : (sizeof(Size) == 8) ? "\nDic8:0x%p\n" : "\nError:");
-  PRINTF("\n0x%p %u stack_height: %u size_pile: %u  size: %u\n|", dictionary,
+  D_PRINTF("\n0x%p %u stack_height: %u size_pile: %u  size: %u\n|", dictionary,
          item_count, stack_height, size_pile, table_size);
-  PRINT_LINEF('_', 80);
-  PRINTF(kLF);
+  D_COUT_LINEF('_', 80);
+  D_PRINTF(kLF);
 
   const CH1* states = reinterpret_cast<const CH1*>(dictionary) +
                       sizeof(Dictionary<Size, Offset, Index>);
@@ -655,18 +655,18 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
               *collission_list = unsorted_indexes + count, *begin;
   const CH1* keys = reinterpret_cast<const CH1*>(dictionary) + table_size - 1;
 
-  PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
+  D_PRINTF("\n%3s%10s%8s%10s%10s%10s%10s%11s\n", "i", "key", "offset", "hash_e",
          "hash_u", "hash_s", "index_u", "collisions");
-  PRINT('|');
-  for (SI4 i = 0; i < 79; ++i) PRINT('_');
-  PRINT(kLF);
+  D_COUT('|');
+  for (SI4 i = 0; i < 79; ++i) D_COUT('_');
+  D_COUT(kLF);
 
   for (Index i = 0; i < count; ++i) {
     // Print each record as a row.
     // @todo Change stack_height to ; after done debugging.
     collision_index = indexes[i];
-    PRINTF("\n%3i %9s %7u %9x %9x %9x %9u %10u: ", i, keys - key_offsets[i],
-           key_offsets[i], Hash16(keys - key_offsets[i]),
+    D_PRINTF("\n%3i %9s %7u %9x %9x %9x %9u %10u: ", i, keys - key_offsets[i],
+           key_offsets[i], HashPrime16(keys - key_offsets[i]),
            hashes[unsorted_indexes[i]], hashes[i], unsorted_indexes[i],
            collision_index);
 
@@ -675,29 +675,29 @@ TUTF<Char> DicPrint(TUTF<Char>& utf,
       begin = &collission_list[collision_index];
       temp = *begin;
       ++begin;
-      PRINTF("%u@", temp);
+      D_PRINTF("%u@", temp);
       while (temp != ~0) {
         temp = *begin;
         ++begin;
         if (temp == ~0) break;
-        PRINTF(", %u$", temp);
+        D_PRINTF(", %u$", temp);
       }
     }
 
-    PRINT(kLF);
+    D_COUT(kLF);
   }
   TPrintLinef('_');
 
   PrintChars(reinterpret_cast<const CH1*>(dictionary) +
                  sizeof(Dictionary<Size, Offset, Index>),
              dictionary->size);
-  PRINT(kLF);
+  D_COUT(kLF);
 }
 
 /* Deletes the dictionary contents without wiping the contents. */
 template <typename Size, typename Offset, typename Index>
 void DicClear(Dictionary<Size, Offset, Index>* dictionary) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
 
   dictionary->item_count = 0;
   dictionary->size_pile = 0;
@@ -706,7 +706,7 @@ void DicClear(Dictionary<Size, Offset, Index>* dictionary) {
 /* Deletes the dictionary contents by overwriting it with zeros. */
 template <typename Size, typename Offset, typename Index>
 void DictionaryWipe(Dictionary<Size, Offset, Index>* dictionary) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
 
   Size size = dictionary->size;
   memset(dictionary, 0, size);
@@ -715,7 +715,7 @@ void DictionaryWipe(Dictionary<Size, Offset, Index>* dictionary) {
 /* Returns true if this crabs contains only the given address. */
 template <typename Size, typename Offset, typename Index>
 void* DicContains(Dictionary<Size, Offset, Index>* dictionary, void* data) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
 
   if (data < dictionary) return false;
   CH1* base = reinterpret_cast<CH1*>(dictionary);
@@ -728,7 +728,7 @@ void* DicContains(Dictionary<Size, Offset, Index>* dictionary, void* data) {
 template <typename Size, typename Offset, typename Index>
 BOL DicRemoveCopy(Dictionary<Size, Offset, Index>* dictionary,
                   void* destination, SIW buffer_size, void* data) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
 
   return false;
 }
@@ -736,7 +736,7 @@ BOL DicRemoveCopy(Dictionary<Size, Offset, Index>* dictionary,
 /* Removes the item at the given address from the dictionary. */
 template <typename Size, typename Offset, typename Index>
 BOL DicRemove(Dictionary<Size, Offset, Index>* dictionary, void* adress) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
 
   return false;
 }
@@ -744,11 +744,11 @@ BOL DicRemove(Dictionary<Size, Offset, Index>* dictionary, void* adress) {
 /* Prints the given Dictionary to the console. */
 template <typename Size, typename Offset, typename Index>
 UTF1& DicPrint(UTF1& utf, Dictionary<Size, Offset, Index>* dictionary) {
-  ASSERT(dictionary);
+  A_ASSERT(dictionary);
   return utf;
 }
 
 }  // namespace _
 
 #endif  //< SCRIPT2_TDIC
-#endif  //< #if SEAM >= SCRIPT2_SEAM_BOOK
+#endif  //< #if SEAM >= SEAM_SCRIPT2_BOOK

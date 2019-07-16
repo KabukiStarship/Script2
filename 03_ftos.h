@@ -18,7 +18,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using namespace std;
 
-#if SEAM == SCRIPT2_SEAM_FTOS
+#if SEAM == SEAM_SCRIPT2_FTOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -27,11 +27,11 @@ using namespace std;
 using namespace _;
 
 namespace script2 {
-const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_FTOS
-  TEST_BEGIN;
+const CH1* _04_FtoS(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_FTOS
+  A_TEST_BEGIN;
 
-#if SEAM == SCRIPT2_SEAM_FTOS
+#if SEAM == SEAM_SCRIPT2_FTOS
   enum { kTestCount = 1 << 20 };
 #else
   enum { kTestCount = 1 << 15 };
@@ -43,7 +43,7 @@ const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
   UI8 value;
   FP8 dbl_expected, dbl_found;
 
-  PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
+  D_PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
@@ -55,7 +55,7 @@ const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
     Test(dbl_expected, dbl_found);
   }
 
-  PRINT(
+  D_COUT(
       "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FP4&) "
       "functions...\n");
 
@@ -65,11 +65,11 @@ const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
       dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
     sprintf_s(socket, kSize, "%lf", dbl_expected);
-    ASSERT(Scan(socket, dbl_found));
-    AVOW(dbl_expected, dbl_found);
+    A_ASSERT(Scan(socket, dbl_found));
+    A_AVOW(dbl_expected, dbl_found);
   }
 
-  PRINTF("\n\nTesting Char* TPrint<Char> (Char*, Char*, Float)...\n");
+  D_PRINTF("\n\nTesting Char* TPrint<Char> (Char*, Char*, Float)...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
@@ -78,8 +78,8 @@ const CH1* _04_FtoS(CH1* seam_log, CH1* seam_end, const CH1* args) {
     } while (!IsFinite(dbl_expected));
     Print(socket, socket + kSize, dbl_expected);
     SI4 r = sscanf_s(socket, "%lf", &dbl_found);
-    ASSERT(r);
-    AVOW(dbl_expected, dbl_found);
+    A_ASSERT(r);
+    A_AVOW(dbl_expected, dbl_found);
   }
   TBinary<>::PrintDebugInfo();
   */

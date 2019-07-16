@@ -12,7 +12,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_SEAM_SOCKET
+#if SEAM == SEAM_SCRIPT2_SOCKET
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,11 +21,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _02_Socket(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_SOCKET
-  TEST_BEGIN;
+static const CH1* _02_Socket(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_SOCKET
+  A_TEST_BEGIN;
 
-  PRINT_HEADING("Test SocketCopy and MemoryCompare");
+  D_COUT_HEADING("Test SocketCopy and MemoryCompare");
 
   enum {
     kTestCharsCount = 1024,
@@ -34,16 +34,16 @@ static const CH1* _02_Socket(CH1* seam_log, CH1* seam_end, const CH1* args) {
   CH1 test_chars[kTestCharsCount];
   CH1 test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
 
-  PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
-         test_chars_result);
+  D_PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
+           test_chars_result);
 
   for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
     for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
     CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
                              kTestCharsCount);
-    ASSERT(result);
-    ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
-                          kTestCharsCount));
+    A_ASSERT(result);
+    A_ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
+                            kTestCharsCount));
   }
 #endif
   return nullptr;

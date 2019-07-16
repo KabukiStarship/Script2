@@ -9,11 +9,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_ROOM
+#if SEAM >= SEAM_SCRIPT2_ROOM
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
 #include "c_interrupts.h"
-#include "t_wall.h"
+#include "c_wall.h"
 
 namespace _ {
 
@@ -29,13 +29,13 @@ typedef enum Requests {
 
 /* Returns an array of pointers to strings that describe the program states.
  */
-SDK const CH1** RoomStateTexts();
+LIB_MEMBER const CH1** RoomStateTexts();
 
 /* Returns a pointer to an array of pointers to the Request strings. */
-SDK const CH1** RequestTexts();
+LIB_MEMBER const CH1** RequestTexts();
 
 /* Gets the response CH1 corresponding to the given request. */
-SDK const CH1* RequestText(Request r);
+LIB_MEMBER const CH1* RequestText(Request r);
 
 /* A Chinese Room.
 An Chinese Room works the same way as in the Chinese Room thought
@@ -250,7 +250,7 @@ class Room : public Operand {
 };
 
 /* Returns the Room-Level Script. */
-// SDK Room* ChineseRoom (Room* room = nullptr);
+// LIB_MEMBER Room* ChineseRoom (Room* room = nullptr);
 
 }  // namespace _
 #endif

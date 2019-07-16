@@ -8,40 +8,41 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_LOOM
+#if SEAM >= SEAM_SCRIPT2_LOOM
 #include "t_hash.h"
 
 namespace _ {
 
-UI2 Hash16(CH1 value, UI2 hash) { return hash + hash * value; }
+UI2 HashPrime16(CH1 value, UI2 hash) { return hash + hash * value; }
 
-UI2 Hash16(const CH1* str, UI2 hash) {
+UI2 HashPrime16(const CH1* str, UI2 hash) {
   UI1 c = *str;
   while (c) {
-    hash = Hash16(c, hash);
+    hash = HashPrime16(c, hash);
     ++str;
     c = *str;
   }
   return hash;
 }
 
-UI4 Hash32(CH2 value, UI4 hash) { return hash + hash * value; }
+UI4 HashPrime32(CH2 value, UI4 hash) { return hash + hash * value; }
 
-UI4 Hash32(const CH1* str, UI4 hash) {
+UI4 HashPrime32(const CH1* str, UI4 hash) {
   UI1 c = *str;
   while (c) {
-    hash = Hash32(c, hash);
+    hash = HashPrime32(c, hash);
     ++str;
     c = *str;
   }
   return hash;
 }
-UI8 Hash64(CH4 value, UI8 hash) { return hash + hash * value; }
 
-UI8 Hash64(const CH1* str, UI8 hash) {
+UI8 HashPrime64(CH4 value, UI8 hash) { return hash + hash * value; }
+
+UI8 HashPrime64(const CH1* str, UI8 hash) {
   UI1 c = *str;
   while (c) {
-    hash = Hash64(c, hash);
+    hash = HashPrime64(c, hash);
     ++str;
     c = *str;
   }
@@ -49,14 +50,14 @@ UI8 Hash64(const CH1* str, UI8 hash) {
 }
 
 UI2 Hash16UI2(UI2 value, UI2 hash) {
-  UI2 prime = PrimeMaxUnigned<UI2>();
+  UI2 prime = TPrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = ((value >> 8) * prime) + hash;
   return hash;
 }
 
 UI2 Hash16UI4(UI4 value, UI2 hash) {
-  UI2 prime = PrimeMaxUnigned<UI2>();
+  UI2 prime = TPrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;
@@ -65,7 +66,7 @@ UI2 Hash16UI4(UI4 value, UI2 hash) {
 }
 
 UI2 Hash16UI8(UI8 value, UI2 hash) {
-  UI2 prime = PrimeMaxUnigned<UI2>();
+  UI2 prime = TPrimeMaxUnigned<UI2>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;
@@ -78,4 +79,4 @@ UI2 Hash16UI8(UI8 value, UI2 hash) {
 }
 
 }  // namespace _
-#endif  //> #if SEAM >= SCRIPT2_SEAM_LOOM
+#endif  //> #if SEAM >= SEAM_SCRIPT2_LOOM

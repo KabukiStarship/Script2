@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_SOCKET
+#if SEAM >= SEAM_SCRIPT2_SOCKET
 #ifndef SCRIPT2_KABUKI_TSOCKET
 #define SCRIPT2_KABUKI_TSOCKET
 
@@ -19,6 +19,24 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 /* @ingroup Socket */
+
+/* Returns the maximum value of the given unsigned type. */
+template <typename UI>
+inline UI TNaNUnsigned() {
+  return ~((UI)0);
+}
+
+/* Returns the maximum value of the given signed type. */
+template <typename SIZ>
+constexpr SIZ TNaNSigned() {
+  return (~ToUnsigned(SIZ)) >> 1;
+}
+
+template <typename SI = SIW>
+inline SI TDelta(const void* begin, const void* end) {
+  SIW delta = reinterpret_cast<SIW>(end) - reinterpret_cast<SIW>(begin);
+  return (SI)delta;
+}
 
 enum {
   kStack = 0,  //< Flag for using stack memory.
@@ -57,12 +75,30 @@ inline SIZ TSizeWords(SIZ size) {
 }
 
 /* Converts the given size into CPU word count. */
-template <typename SIZ, SIZ kHeaderSize = sizeof(SIW)>
+template <typename SIZ = SIW, SIZ kSize_ = 0>
+inline SIZ TWordCount() {
+  SIZ align_offset = (-kSize_) & (kHeaderSize - 1);  // Why did I do this???
+  SIZ size_aligned = kSize_ + align_offset;
+  return size_aligned >> TBitShiftCount<SIW>();
+}
+
+/* Converts the given size into CPU word count. */
+template <typename SIZ = SIW>
 inline SIZ TWordCount(SIZ size) {
-  // SIZ align_offset = (-size) & (kHeaderSize - 1); // Why did I do this???
-  // SIZ size_aligned = size + align_offset;
+  SIZ align_offset = (-size) & (sizeof(SIW) - 1);
+  size += align_offset;
   return size >> TBitShiftCount<SIW>();
 }
+
+/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
+inline UI1 Negative(SI1 value) { return (UI1)(-value); }
+inline UI1 Negative(UI1 value) { return (UI1)(-(SI1)value); }
+inline UI2 Negative(SI2 value) { return (UI2)(-value); }
+inline UI2 Negative(UI2 value) { return (UI2)(-(SI2)value); }
+inline UI4 Negative(SI4 value) { return (UI4)(-value); }
+inline UI4 Negative(UI4 value) { return (UI4)(-(SI4)value); }
+inline UI8 Negative(SI8 value) { return (UI8)(-value); }
+inline UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
 
 /* Aligns the given pointer up to a sizeof (T) boundary.
 @return The aligned value.
@@ -269,7 +305,7 @@ class TSocket {
   /* Sets the size to the new value. */
   template <typename SIW>
   inline UIW* SetSize(SIW size) {
-    ASSERT((size & kAlignMask) == 0)
+    A_ASSERT((size & kWordLSbMask) == 0)
     *reinterpret_cast<SIW*>(socket_) = size;
     return socket_;
   }
@@ -277,12 +313,6 @@ class TSocket {
  private:
   UIW socket_[SizeWords()];  //< The word-aligned socket.
 };
-
-template <typename SI = SIW>
-inline SI TDelta(const void* begin, const void* end) {
-  SIW delta = reinterpret_cast<SIW>(end) - reinterpret_cast<SIW>(begin);
-  return (SI)delta;
-}
 
 /* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>

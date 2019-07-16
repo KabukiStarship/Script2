@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_LIST
+#if SEAM >= SEAM_SCRIPT2_LIST
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
-#include "c_ascii.h"
+#include "c_avalue.h"
 #include "c_socket.h"
 
-#if SEAM == SCRIPT2_SEAM_LIST
+#if SEAM == SEAM_SCRIPT2_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -88,8 +88,8 @@ function '\"' (i.e. "foo" is Index 44).
 
 # Use Case Scenario
 
-We are creating a plug-in SDK. We need to create a map in the SDK code, and
-pass it over to the program. The SDK manages the memory for the map. This
+We are creating a plug-in LIB_MEMBER. We need to create a map in the LIB_MEMBER code, and
+pass it over to the program. The LIB_MEMBER manages the memory for the map. This
 map might contain several million entries, and more than 4GB of data.
 
 ### Why So Many TMap Types?
@@ -160,7 +160,7 @@ enum {
 */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 TMap<Size, Index, I>* MapInit(UIW* socket, Size size, I count_max) {
-  ASSERT(socket);
+  A_ASSERT(socket);
 
   if (table_size >= size) return nullptr;
   Size kSizeMin = sizeof(TMap<Size, Index, I>) +
@@ -229,10 +229,10 @@ Index MapCountUpperBounds() {
  */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
-  ASSERT(map);
-  ASSERT(value);
+  A_ASSERT(map);
+  A_ASSERT(value);
 
-  PRINT_LINEF(id, 80);
+  D_COUT_LINEF(id, 80);
 
   Index count = map->count, count = map->stack->count, temp;
 
@@ -256,17 +256,17 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   Size value = table_size - count * MapOverheadPerIndex<Size, Index, I>(),
        key_length = static_cast<UI2>(strlen(id)), size_pile;
 
-  PRINT_LINEF('-');
-  PRINTF(
+  D_COUT_LINEF('-');
+  D_PRINTF(
       "\nAdding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p"
       "%20s: %p\n%20s: %u\n",
       id, "hashes", hashes, "key_offsets", key_offsets, "keys", keys, "indexes",
       indexes, "value", value);
 
-  Size temp_id = Hash16(id), current_mapping;
+  Size temp_id = HashPrime16(id), current_mapping;
 
   if (key_length > value) {
-    PRINTF("\nBuffer overflow!");
+    D_PRINTF("\nBuffer overflow!");
     return ~((Index)0);
   }
 
@@ -279,7 +279,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
     destination = keys - key_length;
 
     SlotWrite(destination, id);
-    PRINTF("\nInserted key %s at GetAddress 0x%p", id, destination);
+    D_PRINTF("\nInserted key %s at GetAddress 0x%p", id, destination);
     MapPrint(map);
     return 0;
   }
@@ -287,11 +287,11 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   // Calculate left over socket size by looking up last CH1.
 
   if (key_length >= value) {
-    PRINTF("\nNot enough room in buffer!");
+    D_PRINTF("\nNot enough room in buffer!");
     return 0;  //< There isn't enough room left in the socket.
   }
 
-  PRINTF("\nFinding insert location...");
+  D_PRINTF("\nFinding insert location...");
 
   Index low = 0, mid, high = count, index;
 
@@ -301,7 +301,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
 
     current_mapping = hashes[mid];
-    PRINTF("\nhigh: %i mid: %i low %i hash: %x", high, mid, low,
+    D_PRINTF("\nhigh: %i mid: %i low %i hash: %x", high, mid, low,
            current_mapping);
 
     if (current_mapping > temp_id) {
@@ -309,16 +309,16 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
     } else if (current_mapping < temp_id) {
       low = mid + 1;
     } else {
-      PRINTF(" duplicate hash detected, ");
+      D_PRINTF(" duplicate hash detected, ");
 
       // Check for other collisions.
 
       index = indexes[mid];  //< Index in the collision table.
 
-      PRINTF("index:%i", (SI4)index);
+      D_PRINTF("index:%i", (SI4)index);
 
       if (index < ~0) {  //< There are other collisions.
-        PRINTF("with collisions, ");
+        D_PRINTF("with collisions, ");
         // There was a collision so check the table.
 
         // The collisionsList is a sequence of indexes terminated
@@ -329,9 +329,9 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         temp_ptr = collission_list + temp;
         index = *temp_ptr;  //< Load the index in the collision table.
         while (index < MapCountUpperBounds<Index>()) {
-          PRINTF("\ncomparing to \"%s\"", keys - key_offsets[index]);
+          D_PRINTF("\ncomparing to \"%s\"", keys - key_offsets[index]);
           if (strcmp(id, keys - key_offsets[index]) == 0) {
-            PRINTF(
+            D_PRINTF(
                 "but table already contains key at "
                 "offset: %u.\n",
                 index);
@@ -342,7 +342,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         }
 
         // Its a new collision!
-        PRINTF(" new collision detected.");
+        D_PRINTF(" new collision detected.");
 
         // Copy the key
         value = key_offsets[count - 1] + key_length + 1;
@@ -363,7 +363,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         *temp_ptr = count;
 
         map->size_pile = size_pile + 1;
-        PRINTF("\ncollision index: %u", temp);
+        D_PRINTF("\ncollision index: %u", temp);
         // Store the collision index.
         indexes[count] = temp;  //< Store the collision index
         map->count = count + 1;
@@ -376,20 +376,20 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         indexes[count] = count;
 
         MapPrint(map);
-        PRINT("\nDone inserting.");
+        D_COUT("\nDone inserting.");
         return count;
       }
 
       // But we still don't know if the CH1 is a new collision.
 
-      PRINT("\nChecking if it's a collision... ");
+      D_COUT("\nChecking if it's a collision... ");
 
       if (strcmp(id, keys - key_offsets[index]) != 0) {
         // It's a new collision!
-        PRINT("It's a new collision!");
+        D_COUT("It's a new collision!");
 
         if (value < 3) {
-          PRINT("Buffer overflow!");
+          D_COUT("Buffer overflow!");
           return ~0;
         }
 
@@ -397,10 +397,10 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         value = key_offsets[count - 1] + key_length + 1;
 
         SI4 collision_index = unsorted_indexes[mid];
-        PRINTF("\n\ncollision_index: %u", collision_index);
+        D_PRINTF("\n\ncollision_index: %u", collision_index);
 
         SlotWrite(keys - value, id);
-        PRINTF(
+        D_PRINTF(
             "\nInserting value: %u into index:%u "
             "count:%u with other collision_index: %u",
             value, index, count, collision_index);
@@ -433,11 +433,11 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
         MapPrint(map);
 
         MapPrint(map);
-        PRINT("\nDone inserting.");
+        D_COUT("\nDone inserting.");
         // Then it was a collision so the table doesn't contain .
         return count;
       }
-      PRINT("\nTable already contains the key");
+      D_COUT("\nTable already contains the key");
       return index;
     }
   }
@@ -447,7 +447,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   value = key_offsets[count - 1] + key_length + 1;
   destination = keys - value;
 
-  PRINTF(
+  D_PRINTF(
       "\nThe id 0x%x was not in the table so inserting %s into mid:"
       " %i at index %u before hash 0x%x",
       temp_id, id, mid, Diff(map, destination), hashes[mid]);
@@ -460,7 +460,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   hash_ptr = hashes;
   hash_ptr += count;
   //*test = hashes;
-  PRINTF("\nl_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u", count,
+  D_PRINTF("\nl_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u", count,
          Diff(map, hashes), Diff(map, hash_ptr), Diff(map, hashes + mid));
   hashes += mid;
   MapPrint(map);
@@ -487,8 +487,8 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   map->count = count + 1;
 
   MapPrint(map);
-  PRINT("\nDone inserting.");
-  PRINT_LINEF('-');
+  D_COUT("\nDone inserting.");
+  D_COUT_LINEF('-');
 
   return count;
 }
@@ -496,7 +496,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
 /* Deletes the map contents without wiping the contents. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 void MapClear(TMap<Size, Index, I>* map) {
-  ASSERT(map);
+  A_ASSERT(map);
 
   map->count = 0;
   map->size_pile = 0;
@@ -505,7 +505,7 @@ void MapClear(TMap<Size, Index, I>* map) {
 /* Deletes the map contents by overwriting it with zeros. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 void MapWipe(TMap<Size, Index, I>* map) {
-  ASSERT(map);
+  A_ASSERT(map);
 
   Size size = map->size;
   MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<Size, Index, I>), size);
@@ -514,7 +514,7 @@ void MapWipe(TMap<Size, Index, I>* map) {
 /* Returns true if this crabs contains only the given address. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 BOL MapContains(TMap<Size, Index, I>* map, void* value) {
-  ASSERT(map);
+  A_ASSERT(map);
 
   if (value < map) return false;
   if (value > GetEndAddress()) return false;
@@ -524,16 +524,16 @@ BOL MapContains(TMap<Size, Index, I>* map, void* value) {
 /* Removes the item at the given address from the map. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2>
 BOL MapRemove(TMap<Size, Index, I>* map, void* adress) {
-  ASSERT(map);
+  A_ASSERT(map);
 
   return false;
 }
 
 /* Prints this object out to the console. */
 template <typename Size = UI4, typename Index = SI4, typename I = SI2,
-          typename Char = CH1>
+          typename Char = CHR>
 TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
-  ASSERT(map)
+  A_ASSERT(map)
   l
 
       Index count = map->count,
@@ -574,7 +574,7 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
     collision_index = indexes[i];
     utf << Right<Index>(i, 3) << Right<Index>(keys - key_offsets[i], 10)
         << Right<Index>(key_offsets[i], 8)
-        << Right<Hex<Size>>(Hash16(keys - key_offsets[i]), 10)
+        << Right<Hex<Size>>(HashPrime16(keys - key_offsets[i]), 10)
         << Right<Hex<Size>>(hashes[unsorted_indexes[i]], 10)
         << Right<Hex<Size>>(hashes[i], 10)
         << Right<Size>(unsorted_indexes[i], 10)
@@ -663,4 +663,4 @@ class Map {
 }  // namespace _
 
 #endif  //< INCLUDED_CRAPS_TMAP
-#endif  //< #if SEAM >= SCRIPT2_SEAM_LIST
+#endif  //< #if SEAM >= SEAM_SCRIPT2_LIST

@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_STACK
+#if SEAM >= SEAM_SCRIPT2_STACK
 #ifndef SCRIPT2_COBJECT
 #define SCRIPT2_COBJECT
 
@@ -55,15 +55,15 @@ enum AsciiFactoryError {
 };
 
 /* Creates or destroys a block of heap memory. */
-SDK UIW* RamFactoryHeap(UIW* obj, SIW size);
+LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, SIW size);
 
 /* Creates a block of heap memory. */
-SDK UIW* RamFactoryStack(UIW* ptr, SIW size);
+LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, SIW size);
 
-SDK /*inline*/ UIW* AutojectBeginSet(Autoject& obj, void* buffer);
+LIB_MEMBER LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 
 /* Deletes the given obj using the obj.factory. */
-SDK void Delete(Autoject& obj);
+LIB_MEMBER void Delete(Autoject& obj);
 
 }  // namespace _
 #endif

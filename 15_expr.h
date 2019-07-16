@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_EXPR
+#if SEAM == SEAM_SCRIPT2_EXPR
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,9 +21,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _15_Expr(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM == SCRIPT2_SEAM_EXPR
-  TEST_BEGIN;
+static const CH1* _15_Expr(const CH1* args) {
+#if SEAM == SEAM_SCRIPT2_EXPR
+  A_TEST_BEGIN;
 
   enum {
     kBufferSize = 2048,
@@ -31,7 +31,7 @@ static const CH1* _15_Expr(CH1* seam_log, CH1* seam_end, const CH1* args) {
     kStackHeight = 8,
   };
   UIW buffer[kBufferWords], unpacked_expr[kBufferWords];
-  PRINTF("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
+  D_PRINTF("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
          &buffer[0], &buffer[kBufferWords - 1]);
 
   This a;
@@ -55,7 +55,7 @@ static const CH1* _15_Expr(CH1* seam_log, CH1* seam_end, const CH1* args) {
                 Args(args, Address<'A', 'A', 'A'>(), &io_number_, Const("Test"),
                      Address<BS, CR>()));
   BoutPrint(bout);
-  ASSERT(!result);
+  A_ASSERT(!result);
 
   ExprPrint(expr);
 

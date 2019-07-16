@@ -8,14 +8,14 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_DIC
+#if SEAM >= SEAM_SCRIPT2_DIC
 #include "c_slot.h"
 
-#include "c_ascii.h"
+#include "c_avalue.h"
 #include "c_socket.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_SEAM_DIC
+#if SEAM == SEAM_SCRIPT2_DIC
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,29 +24,29 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 const Op* ReturnError(Slot* slot, Error error) {
-  PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header) {
-  PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, UI1 offset) {
-  PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, SI4 offset,
                       CH1* address) {
-  PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
   return reinterpret_cast<const Op*>(error);
 }
 
 Slot::Slot(UIW* socket, SI4 size) {
-  ASSERT(socket);
-  ASSERT(size >= kSlotSizeMin);
+  A_ASSERT(socket);
+  A_ASSERT(size >= kSlotSizeMin);
   CH1* l_begin = reinterpret_cast<CH1*>(socket);
   begin = l_begin;
   begin = l_begin;
@@ -55,7 +55,7 @@ Slot::Slot(UIW* socket, SI4 size) {
 }
 
 Slot::Slot(BIn* bin) {
-  ASSERT(bin);
+  A_ASSERT(bin);
   CH1* l_begin = reinterpret_cast<CH1*>(bin) + sizeof(BIn);
   begin = l_begin;
   begin = l_begin + bin->begin;
@@ -64,7 +64,7 @@ Slot::Slot(BIn* bin) {
 }
 
 Slot::Slot(BOut* bout) {
-  ASSERT(bout);
+  A_ASSERT(bout);
   CH1* l_begin = reinterpret_cast<CH1*>(bout) + sizeof(BIn);
   begin = l_begin;
   begin = l_begin + bout->begin;
@@ -96,10 +96,10 @@ void Slot::Wipe() {
 }
 
 const Op* Slot::Write(const SI4* params, void** args) {
-  ASSERT(params);
-  ASSERT(args);
+  A_ASSERT(params);
+  A_ASSERT(args);
 
-  ASSERT(false);
+  A_ASSERT(false);
   // @todo Write me!
   return nullptr;
 }
@@ -145,8 +145,8 @@ BOL Slot::IsReadable() { return begin != stop; }
 }*/
 
 const Op* Slot::Read(const SI4* params, void** args) {
-  ASSERT(params);
-  ASSERT(args);
+  A_ASSERT(params);
+  A_ASSERT(args);
   UI1 ui1;  //< Temp variable to load most types.
   UI2 ui2;  //< Temp variable for working with kUI2 types.
 #if USING_SCRIPT2_4_BYTE_TYPES
@@ -167,9 +167,9 @@ const Op* Slot::Read(const SI4* params, void** args) {
       count,                 //< Argument length.
       size;                  //< Size of the ring socket.
 
-  ASSERT(num_params);
+  A_ASSERT(num_params);
 
-  PRINTF("\n\nReading BIn: ");
+  D_PRINTF("\n\nReading BIn: ");
 
   CH1 *l_begin = begin,           //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
@@ -181,14 +181,14 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
   length = SlotLength(l_start, l_stop, size);
 
-  PRINTF("\n\nReading %i bytes.", (SI4)length);
-  // PRINT_BSQ (params)
+  D_PRINTF("\n\nReading %i bytes.", (SI4)length);
+  // D_COUT_BSQ (params)
   // When we scan, we are reading from the beginning of the BIn socket.
 
   for (index = 0; index < num_params; ++index) {
     type = (UI1)*param;
     ++param;
-    PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (UIN)index,
+    D_PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (UIN)index,
            STRType(type), (SI4)Size(l_begin, l_start),
            (SI4)Size(l_begin, l_stop));
 
@@ -220,7 +220,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
           if (count-- == 0)
             return ReturnError(this, kErrorBufferUnderflow, params, index,
                                l_start);
-          PRINT(ui1);
+          D_COUT(ui1);
 
           ui1 = *l_start;  // Read UI1 from ring-socket.
           if (++l_start > l_end) l_start -= size;
@@ -228,7 +228,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
           ++ui1_ptr;
         }
 
-        PRINT(" done!\n");
+        D_COUT(" done!\n");
 
         if (type == 0) {
           *ui1_ptr = ui1;
@@ -265,7 +265,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case kUI2:
       case kFP2:
-#if ALU_SIZE <= 16
+#if CPU_SIZE <= 16
       case SVI:
       case UVI:
 #endif
@@ -305,7 +305,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 #else
         return ReturnError(this, kErrorInvalidType);
 #endif
-#if ALU_SIZE > 16
+#if CPU_SIZE > 16
       case SVI:
       case UVI:
 #endif
@@ -487,10 +487,10 @@ const Op* Slot::Read(const SI4* params, void** args) {
         break;
 #endif
       }
-        PRINT(" |");
+        D_COUT(" |");
     }
   }
-  PRINT("\nDone reading.");
+  D_COUT("\nDone reading.");
   // SlotWipe (slot);
 
   // Convert pointer back to offset

@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_BOOK
+#if SEAM == SEAM_SCRIPT2_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -19,9 +19,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _13_Book(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM >= SCRIPT2_SEAM_BOOK
-  TEST_BEGIN;
+static const CH1* _13_Book(const CH1* args) {
+#if SEAM >= SEAM_SCRIPT2_BOOK
+  A_TEST_BEGIN;
 
   CH4 index;
   UIW socket[128];

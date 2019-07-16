@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_SEAM_STACK
+#if SEAM >= SEAM_SCRIPT2_STACK
 #ifndef SCRIPT2_TSTACK
 #define SCRIPT2_TSTACK 1
 
@@ -17,7 +17,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "t_array.h"
 #include "t_strand.h"
 
-#if SEAM == SCRIPT2_SEAM_STACK
+#if SEAM == SEAM_SCRIPT2_STACK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -110,8 +110,8 @@ inline SIZ TStackSizeMax(SIZ count_max) {
 @return A dynamically allocated socket. */
 template <typename T = SI4, typename SIZ = SIN>
 TStack<SIZ>* TStackInit(TStack<SIZ>* stack, SIZ count_max) {
-  DASSERT(stack);
-  DASSERT(count_max < sizeof(TStack<SIZ>)) return nullptr;
+  D_ASSERT(stack);
+  D_ASSERT(count_max < sizeof(TStack<SIZ>)) return nullptr;
   stack->size = count_max;
   stack->count = 0;
   return stack;
@@ -130,8 +130,8 @@ inline BOL TStackContains(TStack<SIZ>* stack, SIZ index) {
 @return A dynamically allocated socket. */
 template <typename T = SI4, typename SIZ = SIN>
 UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
-  DASSERT(socket);
-  DASSERT(size > sizeof(TStack<SI4>));
+  D_ASSERT(socket);
+  D_ASSERT(size > sizeof(TStack<SI4>));
 
   if (!items || count < 0) return nullptr;
 
@@ -143,7 +143,7 @@ UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
 
 template <typename T = SI4, typename SIZ = SIN>
 UIW* TStackClone(TStack<SIZ>* stack) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   SIZ size = stack->size_stack >> kWordBitCount;
   UIW* other_buffer = new UIW[size];
   UIW *source = reinterpret_cast<UIW*>(stack),  //
@@ -200,7 +200,7 @@ UIW* TStackClone(Autoject& obj) {
 /* Prints the given obj to the console. */
 template <typename Printer, typename T = SI4, typename SIZ = SIN>
 Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
-  DASSERT(stack);
+  D_ASSERT(stack);
   SIZ count = stack->count;
   o << "\n\nTStack<SI" << (CH1)('0' + sizeof(SIZ)) << ">: size: " << stack->size
     << " count:" << count;
@@ -218,9 +218,9 @@ size upper bounds, or a new dynamically allocated socket upon failure. */
 template <typename T = SI4, typename SIZ = SIN>
 BOL TStackGrow(Autoject& obj) {
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(obj.begin);
-  ASSERT(stack);
-#if DEBUG_SEAM
-  PRINT("\nAuto-growing Stack...\nBefore:");
+  A_ASSERT(stack);
+#if DEBUG_THIS
+  D_COUT("\nAuto-growing Stack...\nBefore:");
   TStackPrint<COut, T, SIZ>(COut().Star(), stack);
 #endif
   SIZ size = stack->size;
@@ -232,12 +232,12 @@ BOL TStackGrow(Autoject& obj) {
   TStack<SIZ>* other = reinterpret_cast<TStack<SIZ>*>(new_begin);
   other->size = size;
   other->count = stack->count;
-  PRINT(" copying data...");
+  D_COUT(" copying data...");
   SocketCopy(TStackStart<T, SIZ>(other), size_bytes, TStackStart<T, SIZ>(stack),
              size_bytes);
   obj.begin = new_begin;
-#if DEBUG_SEAM
-  PRINT("\nResult:");
+#if DEBUG_THIS
+  D_COUT("\nResult:");
   TStackPrint<COut, T, SIZ>(COut().Star(), other);
 #endif
   return true;
@@ -281,7 +281,7 @@ inline SIZ TStackInsert(T* items, SIZ count, T item, SIZ index) {
 @return -1 if a is nil and -2 if the obj is full. */
 template <typename T = SIW, typename SIZ = SIN>
 inline SIZ TStackAdd(T* items, SIZ count, T item, SIZ index) {
-  ASSERT(items);
+  A_ASSERT(items);
   if (index < 0 || index > count) return -1;
   if (index == count) {
     items[count] = item;
@@ -299,7 +299,7 @@ inline SIZ TStackAdd(T* items, SIZ count, T item, SIZ index) {
 @return The new count of the stack. */
 template <typename T = SIW, typename SIZ = SIW>
 inline SIZ TStackRemove(T* elements, SIZ count, SIZ index) {
-  ASSERT(elements);
+  A_ASSERT(elements);
   if (index < 0 || index >= count) return -1;
   elements += index;
   T* elements_end = elements + --count;
@@ -313,7 +313,7 @@ inline SIZ TStackRemove(T* elements, SIZ count, SIZ index) {
 @return True if the index is out of bounds. */
 template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackRemove(TStack<SIZ>* stack, SIZ index) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   SIZ result =
       TStackRemove<T, SIZ>(TStackStart<T, SIZ>(stack), stack->count, index);
   if (result < 0) return result;
@@ -327,10 +327,10 @@ SIZ TStackRemove(TStack<SIZ>* stack, SIZ index) {
 @param  item  The item to push onto the obj. */
 template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackPush(TStack<SIZ>* stack, const T& item) {
-  DASSERT(stack);
-  PRINT("\nPushing:");
-  PRINT(item);
-  PRINTF(" size:%i count:%i", stack->size, stack->count);
+  D_ASSERT(stack);
+  D_COUT("\nPushing:");
+  D_COUT(item);
+  D_PRINTF(" size:%i count:%i", stack->size, stack->count);
   SIZ size = stack->size,  //
       count = stack->count;
   if (count >= size) return -1;
@@ -349,7 +349,7 @@ SIZ TStackPush(AArray<T, SIZ, BUF>& ary, const T& item) {
   TStack<SIZ>* stack = ary.BeginAs<TStack<SIZ>>();
   SIZ index = TStackPush<T, SIZ>(stack, item);
   if (index < 0) {
-    PRINT("\nStack overflow! Autogrowing...");
+    D_COUT("\nStack overflow! Autogrowing...");
     TStackGrow<T, SIZ>(ary.Auto());
     stack = ary.BeginAs<TStack<SIZ>>();
     T* items = TStackStart<T, SIZ>(stack);
@@ -368,9 +368,9 @@ SIZ TStackPush(AArray<T, SIZ, BUF>& ary, const T& item) {
 @param  items_count The number of items to push. */
 template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
-  DASSERT(items);
-  DASSERT(count >= 0);
-  PRINTF("\nPushing %i items:", (SIN)items_count);
+  D_ASSERT(items);
+  D_ASSERT(count >= 0);
+  D_PRINTF("\nPushing %i items:", (SIN)items_count);
   SIZ count = stack->count,  //
       size = stack->size;
   if (count >= size) return -1;
@@ -385,7 +385,7 @@ SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
 @return The item popped off the obj. */
 template <typename T = SI4, typename SIZ = SIN>
 T TStackPop(TStack<SIZ>* stack) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   SIZ count = stack->count;
   if (count == 0) return 0;
   T* items = TStackStart<T, SIZ>(stack);
@@ -399,7 +399,7 @@ T TStackPop(TStack<SIZ>* stack) {
 @return The item popped off the obj. */
 template <typename T = SI4, typename SIZ = SIN>
 T TStackPeek(TStack<SIZ>* stack) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   SIZ count = stack->count;
   if (count == 0) return 0;
   T* items = TStackStart<T, SIZ>(stack);
@@ -413,7 +413,7 @@ T TStackPeek(TStack<SIZ>* stack) {
 @return -1 if a is nil and -2 if the index is out of bounds. */
 template <typename T = SI4, typename SIZ = SIN>
 T TStackGet(TStack<SIZ>* stack, SIZ index) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   if (index < 0 || index >= stack->count) return 0;
   return TStackStart<T, SIZ>(stack)[index];
 }
@@ -422,7 +422,7 @@ T TStackGet(TStack<SIZ>* stack, SIZ index) {
 @return false upon failure. */
 template <typename T = SI4, typename SIZ = SIN>
 BOL TStackContains(TStack<SIZ>* stack, void* address) {
-  ASSERT(stack);
+  A_ASSERT(stack);
   CH1 *ptr = reinterpret_cast<CH1*>(stack),
       *adr = reinterpret_cast<CH1*>(address);
   if (adr < ptr) return false;
@@ -457,6 +457,8 @@ This is a wrapper class for the
 */
 template <typename T = SI4, typename SIZ = SIN, typename BUF = Nil>
 class AStack {
+  AArray<T, SIZ, BUF> obj_;  //< An Auto-Array.
+
  public:
   /* Initializes a stack of n elements to whatever can fit in the BUF.
   @param size The number of elements in the Array. */
@@ -594,9 +596,6 @@ class AStack {
 
   /* Gets a const reference to the given element index. */
   inline const T& operator[](SIW index) const { return Start()[index]; }
-
- private:
-  AArray<T, SIZ, BUF> obj_;  //< An Auto-Array.
 };
 
 }  // namespace _

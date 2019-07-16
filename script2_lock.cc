@@ -9,7 +9,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_SOCKET
+#if SEAM >= SEAM_SCRIPT2_SOCKET
 
 #include "c_lock.h"
 
@@ -20,4 +20,4 @@ void RoomLock() {}
 void RoomUnlock() {}
 
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_SEAM_SOCKET
+#endif  //< #if SEAM >= SEAM_SCRIPT2_SOCKET

@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_LOOM
+#if SEAM >= SEAM_SCRIPT2_LOOM
 #include "c_hash.h"
 
 #ifndef INCLUDED_SCRIPT2_HASH_T
@@ -21,7 +21,7 @@ namespace _ {
 /* Returns the highest signed prime that can fit in type SI.
 @return 0 if the sizeof (SI) is not 1, 2, 4, or 8.  */
 template <typename SI>
-inline SI PrimeMaxSigned() {
+constexpr SI PrimeMaxSigned() {
   SI prime =
       sizeof(SI) == 1
           ? 127
@@ -34,16 +34,33 @@ inline SI PrimeMaxSigned() {
 
 /* Returns the highest signed prime that can fit in type UI.
 @return 0 if the sizeof (UI) is not 1, 2, 4, or 8. */
-template <typename UI>
-inline UI PrimeMaxUnigned() {
-  UI prime = sizeof(UI) == 1
-                 ? 251
-                 : sizeof(UI) == 2
-                       ? 65535
-                       : sizeof(UI) == 4
-                             ? 4294967291
-                             : sizeof(UI) == 8 ? 18446744073709551557 : 0;
+template <typename HSH>
+constexpr HSH TPrimeMaxUnigned() {
+  HSH prime = sizeof(HSH) == 1
+                  ? 251
+                  : sizeof(HSH) == 2
+                        ? 65535
+                        : sizeof(HSH) == 4
+                              ? 4294967291
+                              : sizeof(HSH) == 8 ? 18446744073709551557 : 0;
   return prime;
+}
+
+template <typename Char, typename HSH>
+HSH THashPrime(Char value, HSH hash) {
+  return hash + hash * (HSH)value;
+}
+
+template <typename Char, typename HSH>
+UI2 THashPrime(const Char* str) {
+  HSH c = (HSH)*str;
+  HSH hash = TPrimeMaxUnigned<HSH>();
+  while (c) {
+    hash = THashPrime<Char, HSH>(c, hash);
+    ++str;
+    c = *str;
+  }
+  return hash;
 }
 
 }  // namespace _

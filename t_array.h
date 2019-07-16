@@ -10,14 +10,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_SEAM_STACK
+#if SEAM >= SEAM_SCRIPT2_STACK
 #ifndef SCRIPT2_TOBJECT
 #define SCRIPT2_TOBJECT 1
 
 #include "c_autoject.h"
 #include "t_socket.h"
 
-#if SEAM == SCRIPT2_SEAM_STACK
+#if SEAM == SEAM_SCRIPT2_STACK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -29,18 +29,6 @@ namespace _ {
 Stack is an ASCII Data Type designed to use a C-style templated struct in C++
 using no dynamic memory and with dynamic memory as a templated C++ warper class
 and cross-language bindings and deterministic CPU cache optimizations. */
-
-/* Returns the maximum value of the given unsigned type. */
-template <typename UI>
-inline UI TNaNUnsigned() {
-  return ~((UI)0);
-}
-
-/* Returns the maximum value of the given signed type. */
-template <typename SIZ>
-constexpr SIZ TNaNSigned() {
-  return (~ToUnsigned(SIZ)) >> 1;
-}
 
 /* An 1-dimensional array of homogeneous kind and size types in the C format.
 
@@ -114,8 +102,8 @@ UIW* TArrayNew(RamFactory factory, SIZ size) {
 required.
 template <typename SIZ>
 inline UIW* TArrayInit(UIW* begin, SIZ size) {
-  DASSERT(begin);
-  DASSERT(size >= TSizeMin<SIZ>());
+  D_ASSERT(begin);
+  D_ASSERT(size >= TSizeMin<SIZ>());
   TSizeSet<SIZ>(begin, size);
   return begin;
 } */
@@ -125,15 +113,15 @@ required. */
 template <typename T, typename SIZ>
 inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
                        RamFactory factory) {
-  DASSERT(factory);
-  DASSERT(size >= TSizeMin<SIZ>());
+  D_ASSERT(factory);
+  D_ASSERT(size >= TSizeMin<SIZ>());
   obj.ram_factory = factory;
   if (!buffer) {
     SIZ buffer_size =
         TAlignUpSigned<SIZ>(size * sizeof(T) + sizeof(TArray<SIZ>));
     buffer = factory(nullptr, buffer_size);
   }
-  SOCKET_WIPE(buffer, size * sizeof(T) + sizeof(TArray<SIZ>));
+  D_SOCKET_WIPE(buffer, size * sizeof(T) + sizeof(TArray<SIZ>));
   TSizeSet<SIZ>(buffer, size);
   obj.begin = buffer;
   return buffer;
@@ -166,8 +154,8 @@ inline BOL TArrayCountIsValid(SI index, SI count_min) {
 template <typename T = UI1, typename SIZ = SI4, typename Class = TArray<SIZ>>
 TArray<SIZ>* TArrayWrite(TArray<SIZ>* destination, TArray<SIZ>* source,
                          SIZ size) {
-  DASSERT(destination);
-  DASSERT(source);
+  D_ASSERT(destination);
+  D_ASSERT(source);
 
   SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, Class>(size);
   if (!SocketCopy(destination, size_bytes, source, size_bytes)) return nullptr;
@@ -208,7 +196,7 @@ BOL TCanGrow(SIZ size) {
 @return True upon success and false upon failure. */
 template <typename T, typename SIZ, typename Class = TArray<SIZ>>
 BOL TArrayResize(Autoject& obj, SIZ new_size) {
-  PRINTF("\nResizing Array to new_size:%i", (SIN)new_size);
+  D_PRINTF("\nResizing Array to new_size:%i", (SIN)new_size);
   UIW* begin = obj.begin;
   if (!begin) return false;
   SIZ size = TSize<SIZ>(begin);
@@ -242,7 +230,7 @@ word-align to produce a valid result, which is 3 bytes on 32-bit systems and
 template <typename SIZ>
 inline CH1* TArrayEnd(Autoject stack) {
   UIW* socket = stack.begin;
-  ASSERT(socket);
+  A_ASSERT(socket);
   SIZ size = *reinterpret_cast<SIZ*>(socket);
   return reinterpret_cast<CH1*>(socket) + size;
 }
@@ -310,6 +298,9 @@ Arrays may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. */
 template <typename T, typename SIZ = SIN, typename BUF = Nil>
 class AArray {
+  Autoject obj_;  //< Automatic Object.
+  BUF buffer_;    //< Optional socket on the program stack.
+
  public:
   /* Constructs. */
   AArray() {
@@ -386,6 +377,7 @@ class AArray {
   /* Gets the Autoject. */
   inline Autoject& Auto() { return obj_; }
 
+  /* . */
   inline TArray<SIZ>* Array() {
     return reinterpret_cast<TArray<SIZ>*>(obj_.begin);
   }
@@ -412,9 +404,6 @@ class AArray {
   void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
 
  private:
-  Autoject obj_;  //< Automatic Object.
-  BUF buffer_;    //< Optional socket on the program stack.
-
   /* Gets the correct */
   RamFactory RamFactoryInit() {
     return sizeof(BUF) == 0 ? RamFactoryHeap : RamFactoryStack;

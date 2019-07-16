@@ -11,7 +11,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SCRIPT2_SEAM_DOOR
+#if SEAM == SEAM_SCRIPT2_DOOR
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,9 +22,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _16_Door(CH1* seam_log, CH1* seam_end, const CH1* args) {
-#if SEAM == SCRIPT2_SEAM_DOOR
-  TEST_BEGIN;
+static const CH1* _16_Door(const CH1* args) {
+#if SEAM == SEAM_SCRIPT2_DOOR
+  A_TEST_BEGIN;
   Door door;
   Slot slot
 #endif
