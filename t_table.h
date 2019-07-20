@@ -32,9 +32,7 @@ namespace _ {
 
 /* A dense key-index map.
 
-# Foo: Warriors of Bar
-
-## Collision Table
+# Collision Table
 
 Collision table works by using the maximum key value (i.e. 255 for a SIZ,
 2^15-1 for a SI2, etc). The collisions list is a sequence of indexes
@@ -63,7 +61,7 @@ from lower address up.
     |_____   Buffer Indexes                           |
     |_____                             Hash Table     |
     |_____ ^ Collision Table N          Unsorted      |
-    |_____ | ...                         Indexes      |
+    |_____ | ...                        Indexes       |
     |      | Collision table 0                        |
     |_________________________________________________|
     |_____                          Size Size = 2^N   |
@@ -263,8 +261,8 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
     destination = keys - key_length;
 
     TPrint<Char>(destination, keys, key);
-    D_PRINTF("\nInserted key \"%s\" at element %i", key, destination,
-             TDelta<SIN>(table, destination));
+    D_PRINTF("\nInserted key \"%s\" at element %i with result:\"%s\"", key,
+             TDelta<SIN>(table, destination), destination);
     D_COUT_TABLE(table);
     return 0;
   }

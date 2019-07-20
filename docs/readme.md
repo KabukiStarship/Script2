@@ -21,7 +21,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 * The Doxygen config file;
 * `ASCII C++ Style Guide` in the `ascii_cpp_style_guide` folder;
 * Example RFCs from the Internet Task Force in the `example_rfcs` folder; and
-* Experimental SCRIPT Specification RFCs in the `experimental` folder.
+* Experimental SCRIPT Specifications in the `experimental` folder.
 
 ### Frequently Asked Questions
 
