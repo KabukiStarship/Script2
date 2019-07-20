@@ -4,13 +4,13 @@
 
 Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
 
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [https://mozilla.org/MPL/2.0/](https://mozilla.org/MPL/2.0/).
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
 
 ## [ASCII Data Specification](readme.md)
 
 ### Binary Numbers
 
-Script supports, 16, 32, 64, and 128-bit floating-point numbers as defined, also called half, float, and double, and quadruple precision float-point numbers, as defined in the IEEE754 specificaiton.
+Script supports, 16, 32, 64, and 128-bit floating-point numbers as defined, also called half, float, and double, and quadruple precision float-point numbers, as defined in the IEEE754 specification.
 
 ```C++
 FP2 0.0     // Use a HLF to save memory and bandwidth!

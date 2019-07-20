@@ -1,5 +1,11 @@
 # script2
 
+## License
+
+Copyright 2014-19 (C) Cale Jamison McCollough <<cale@astartup.net>> and contributors. All rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+
 ## docs
 
 * [Contributing](./CONTRIBUTING.md]
@@ -42,9 +48,3 @@
 
 * How do I use Script2 in my app?
   * [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit) contains all of the demo apps because this is a Nanoframework designed for use with Microframeworks and monolithic frameworks.
-
-## License
-
-Copyright 2014-19 (C) Cale Jamison McCollough <<cale@astartup.net>> and contributors. All rights reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [https://mozilla.org/MPL/2.0/](https://mozilla.org/MPL/2.0/).
