@@ -61,7 +61,7 @@ constexpr SIZ TArraySizeMax() {
 
 /* Gets the ASCII Autoject size. */
 template <typename T, typename SIZ, typename Class = TArray<SIZ>>
-inline SIW TArraySizeOf(SIZ size) {
+inline SIW TSizeOf(SIZ size) {
   return (SIW)sizeof(Class) + ((SIW)sizeof(T) * (SIW)size);
 }
 
@@ -88,7 +88,7 @@ inline void TSizeSet(UIW* obj, SIZ new_size) {
 @param socket A raw ASCII Socket to clone. */
 template <typename T, typename SIZ = SI4, typename Class = TArray<SIZ>>
 UIW* TArrayNew(RamFactory factory, SIZ size) {
-  UIW* begin = factory(nullptr, TArraySizeOf<T, SIZ, Class>(size));
+  UIW* begin = factory(nullptr, TSizeOf<T, SIZ, Class>(size));
   TSizeSet<SIZ>(begin, size);
   return begin;
 }
@@ -152,7 +152,7 @@ TArray<SIZ>* TArrayWrite(TArray<SIZ>* destination, TArray<SIZ>* source,
   D_ASSERT(destination);
   D_ASSERT(source);
 
-  SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, Class>(size);
+  SIW size_bytes = (SIW)TSizeOf<T, SIZ, Class>(size);
   if (!SocketCopy(destination, size_bytes, source, size_bytes)) return nullptr;
   return destination;
 }
@@ -358,7 +358,7 @@ class AArray {
   inline SIZ Size() { return TSize<SIZ>(obj_.begin); }
 
   /* Gets the ASCII Object size in elements including the header size. */
-  inline SIZ SizeBytes() { return TArraySizeOf<T, SIZ>(Size()); }
+  inline SIZ SizeBytes() { return TSizeOf<T, SIZ>(Size()); }
 
   /* Gets the RamFactory. */
   inline RamFactory Factory() { return obj_.ram_factory; }

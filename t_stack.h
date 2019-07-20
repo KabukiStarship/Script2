@@ -190,7 +190,7 @@ UIW* TStackClone(Autoject& obj) {
   TStack<SIZ>* o = reinterpret_cast<TStack<SIZ>*>(begin);
   SIZ count = o->count;
   UIW* clone = TArrayNew<T, SIZ, TStack<SIZ>>(count);
-  SIW size_bytes = (SIW)TArraySizeOf<T, SIZ, TStack<SIZ>>(count);
+  SIW size_bytes = (SIW)TSizeOf<T, SIZ, TStack<SIZ>>(count);
   if (!SocketCopy(clone, count, begin, size_bytes)) return nullptr;
   TSizeSet<SIZ>(begin, count);
   return clone;
@@ -224,9 +224,9 @@ BOL TStackGrow(Autoject& obj) {
 #endif
   SIZ size = stack->size;
   if (!TCanGrow<SIZ>(size)) return false;
-  SIW size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(stack->count);
+  SIW size_bytes = TSizeOf<T, SIZ, TStack<SIZ>>(stack->count);
   size = size << 1;
-  SIZ new_size_bytes = TArraySizeOf<T, SIZ, TStack<SIZ>>(size);
+  SIZ new_size_bytes = TSizeOf<T, SIZ, TStack<SIZ>>(size);
   UIW* new_begin = obj.ram_factory(nullptr, new_size_bytes);
   TStack<SIZ>* other = reinterpret_cast<TStack<SIZ>*>(new_begin);
   other->size = size;

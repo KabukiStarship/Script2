@@ -20,7 +20,8 @@ CH1 HexNibbleToUpperCase(UI1 nibble) {
 }
 
 const CH1* STRPrintCharsHeader() {
-  return "\n|0       8       16      24      32      40      48      56      |";
+  return "\n|0       8       16      24      32      40      48      56      |"
+         " ";
 }
 
 const CH1* STRPrintCharsBorder() {
@@ -29,11 +30,13 @@ const CH1* STRPrintCharsBorder() {
 }
 
 const CH1* STRPrintHexHeader() {
-  return "\n|0               8               16              24              |";
+  return "\n|0               8               16              24              "
+         "| ";
 }
 
 const CH1* STRPrintHexBorder() {
-  return "\n|+---------------+---------------+---------------+---------------|";
+  return "\n|+---------------+---------------+---------------+---------------|"
+         " ";
 }
 
 CH1 HexNibbleToLowerCase(UI1 b) {
