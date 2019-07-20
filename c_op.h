@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_op.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -76,7 +76,7 @@ inline CH4 OpLast(const Op* op) {
   return (CH4) reinterpret_cast<UIW>(op->out);
 }
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 template <typename Char>
 TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
 #endif

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/05_stack.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -20,8 +20,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using namespace _;
 
-#if SEAM >= SEAM_SCRIPT2_STRAND
 namespace script2 {
+#if SEAM >= SEAM_SCRIPT2_STRAND
 template <typename Char>
 void _06_StrandN() {
   D_COUT_LINEF('-');
@@ -79,4 +79,4 @@ static const CH1* _06_Strand(const CH1* args) {
 #endif
   return nullptr;
 }
-}  //< namespace script2
+}  // namespace script2

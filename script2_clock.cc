@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_clock.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -256,7 +256,7 @@ TM8 ClockTimeTME(SIN year, SIN month, SIN day, SIN hour, SIN minute,
   return TClockTime<TM4>(year, month, day, hour, minute, second);
 }
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 CH1* Print(CH1* begin, CH1* stop, const AClock& clock) {
   return TPrint<CH1>(begin, stop, clock);
 }
@@ -296,7 +296,7 @@ const CH1* ScanTime(const CH1* string, TM8& t) {
 }
 
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 
 CH2* Print(CH2* begin, CH2* stop, AClock& clock) {
   return TPrint<CH2>(begin, stop, clock);
@@ -335,7 +335,7 @@ const CH2* ScanTime(const CH2* string, TM8& result) {
 }
 #endif
 
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 
 CH4* Print(CH4* begin, CH4* stop, AClock& clock) {
   return TPrint<CH4>(begin, stop, clock);

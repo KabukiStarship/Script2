@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_hash.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -21,7 +21,7 @@ namespace _ {
 @return hash + value * hash.
 @param  value The CH1 value to hash.
 @param  hash  The hash. */
-LIB_MEMBER inline UI2 HashPrime16(CH1 value, UI2 hash = kPrimeLargestUI2);
+LIB_MEMBER inline UI2 HashPrime16(CH1 value, UI2 hash = PRIME_LARGEST_UI2);
 
 /* Basic prime multiple hash algorithm.
 @return hash + value * hash.
@@ -41,7 +41,7 @@ the see to a different prime number_.
 @return A prime multiple hash of the given .
 @param   The  to hash.
 @param  hash   A prime number_ seed hash. */
-LIB_MEMBER UI2 HashPrime16(const CH1*, UI2 hash = kPrimeLargestUI2);
+LIB_MEMBER UI2 HashPrime16(const CH1*, UI2 hash = PRIME_LARGEST_UI2);
 
 /* Hashes the given CH1 using the primeHash function.
 If you are experiencing collisions in your hash table, you may want to change

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_autoject.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -60,7 +60,7 @@ LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, SIW size);
 /* Creates a block of heap memory. */
 LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, SIW size);
 
-LIB_MEMBER LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
+LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 
 /* Deletes the given obj using the obj.factory. */
 LIB_MEMBER void Delete(Autoject& obj);

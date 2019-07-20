@@ -20,13 +20,13 @@
 ### Frequently Asked Questions
 
 * What does SCRIPT stand for?
-  * Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.
+  * Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) { Specification, Protocol, Script }.
 
 * Where is the RFC?
   * The RFC is broken up into chapters and located in this directory with the Overview in [script_specification_rfc.md](script_specification_rfc.md).
 
 * Does Script cost any money?
-  * No: Script is licensed under the Apache 2.0 License and welcomes closed-source commercial usage.
+  * No: Script is licensed under the Mozilla Public License 2 (MPL2) License which welcomes closed-source commercial usage. The only thing we ask is that if you make useful modifications that you donate them back to our community via and Issue Ticket.
 
 * Where can I find a working Script Implementation?
   * Download this repository using the command `git clone https://github.com/kabuki-starship/script2.git`.
@@ -41,7 +41,7 @@
   * Stupid questions are asked repeatedly and assist in saving time when answered quickly. Please submit any questions you think should be on this FAQ using an issue ticket using the format `FAQ:<insert stupid question here>?`.
 
 * How do I use Script2 in my app?
-  * Script2 is a Nanoframework intended to make microframeworks and Frameworks, this means that it can't do too much by itself. For example, the harness for mbed is dramatically different than the [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit) harness.
+  * [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit) contains all of the demo apps because this is a Nanoframework designed for use with Microframeworks and monolithic frameworks.
 
 ## License
 

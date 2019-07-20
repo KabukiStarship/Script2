@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    \02_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>

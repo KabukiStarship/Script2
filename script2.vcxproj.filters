@@ -11,16 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="global.inl">
-      <Filter>script2</Filter>
-    </None>
-    <None Include="global_config.inl">
-      <Filter>script2</Filter>
-    </None>
     <None Include="17_seam.s2">
-      <Filter>script2</Filter>
-    </None>
-    <None Include="module_seams.inl">
       <Filter>script2</Filter>
     </None>
     <None Include="module_release.inl">
@@ -30,6 +21,15 @@
       <Filter>script2</Filter>
     </None>
     <None Include="module_debug.inl">
+      <Filter>script2</Filter>
+    </None>
+    <None Include="module_seams.h">
+      <Filter>script2</Filter>
+    </None>
+    <None Include="pch_header.h">
+      <Filter>script2</Filter>
+    </None>
+    <None Include="pch_footer.inl">
       <Filter>script2</Filter>
     </None>
   </ItemGroup>
@@ -100,9 +100,6 @@
     <ClCompile Include="script2_vk.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_wall.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_cout.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -118,9 +115,6 @@
     <ClCompile Include="script2_autoject.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_valuef.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_avalue.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -128,6 +122,9 @@
       <Filter>script2</Filter>
     </ClCompile>
     <ClCompile Include="script2_utf.cc">
+      <Filter>script2</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_stringf.cc">
       <Filter>script2</Filter>
     </ClCompile>
   </ItemGroup>
@@ -264,9 +261,6 @@
     <ClInclude Include="c_socket.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_strand.h">
-      <Filter>script2</Filter>
-    </ClInclude>
     <ClInclude Include="c_test.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -274,9 +268,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="c_vk.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_wall.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="global.h">
@@ -348,7 +339,6 @@
     <ClInclude Include="08_matrix.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="c_valuef.h" />
     <ClInclude Include="c_avalue.h">
       <Filter>script2</Filter>
     </ClInclude>
@@ -358,7 +348,11 @@
     <ClInclude Include="00_core.h">
       <Filter>script2</Filter>
     </ClInclude>
-    <ClInclude Include="t_stringcore.h" />
+    <ClInclude Include="t_stringf.h" />
+    <ClInclude Include="c_stringf.h" />
+    <ClInclude Include="t_wall.h">
+      <Filter>script2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt">

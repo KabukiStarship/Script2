@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_puff.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -11,6 +11,10 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <pch.h>
 
 #include "t_puff.h"
+
+// Because some of y'all will try to make this a single file header, just
+// keep in mind that the static data will get duplicated in each library
+// you build.
 
 namespace _ {
 
@@ -75,7 +79,7 @@ const UI2* Pow10_UI2() {
 
 UI2 Pow10(UI2 index) { return (index > 4) ? 0 : Pow10_UI2()[index]; }
 
-#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
 static const UI2 kDigits00To99[100] = {
     0x3030, 0x3130, 0x3230, 0x3330, 0x3430, 0x3530, 0x3630, 0x3730, 0x3830,
     0x3930, 0x3031, 0x3131, 0x3231, 0x3331, 0x3431, 0x3531, 0x3631, 0x3731,
@@ -108,17 +112,30 @@ static const UI2 kDigits00To99[100] = {
 
 const UI2* BinaryLUTDecimals() { return kDigits00To99; }
 
+// @todo This is not Puff and it should be. We really only want one that works
+// with one word. We also have to run on 16-bit systems so we have to provide
+// a lower memory cost overhead version of puff.
+
 SIN STRLength(UI1 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   return 3;
 }
+SIN STRLength(SI1 value) {
+  if (value < 0) return STRLength((UI1)-value) + 1;
+  return STRLength((UI1)value);
+}
+
 SIN STRLength(UI2 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
   if (value < 10000) return 4;
   return 5;
+}
+SIN STRLength(SI2 value) {
+  if (value < 0) return STRLength((UI2)-value) + 1;
+  return STRLength((UI2)value);
 }
 
 SIN STRLength(UI4 value) {
@@ -128,6 +145,10 @@ SIN STRLength(UI4 value) {
   if (value < 100000000) return 8;
   if (value < 1000000000) return 9;
   return 10;
+}
+SIN STRLength(SI4 value) {
+  if (value < 0) return STRLength((UI4)-value) + 1;
+  return STRLength((UI4)value);
 }
 
 SIN STRLength(UI8 value) {
@@ -142,6 +163,10 @@ SIN STRLength(UI8 value) {
   if (value < 1000000000000000000) return 18;
   if (value < 10000000000000000000) return 19;
   return 20;
+}
+SIN STRLength(SI8 value) {
+  if (value < 0) return STRLength((UI8)-value) + 1;
+  return STRLength((UI8)value);
 }
 
 #endif
@@ -238,27 +263,6 @@ template <typename UI>
 inline UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
   value = value << left_bits;
   return value >> right_bits;
-}
-
-/* Creates a mask with the given number_ of zeros in the MSb(s).
-@param msb_zero_count The number_ of zeros in the Most Significant bits. */
-template <typename UI>
-inline UI CreateMaskLSb(UI msb_zero_count) {
-  UI mask = 0;
-  return (~mask) >> msb_zero_count;
-}
-
-/* Masks off the lower bits. */
-template <typename UI>
-inline UI MaskLSb(UI value, UI msb_zero_count) {
-  return value & CreateMaskLSb<UI>(msb_zero_count);
-}
-
-/* Returns 2^n. */
-template <typename I>
-inline I PowerOf2(I n) {
-  I value = 1;
-  return value << n;
 }
 
 UI8 ComputePow10(SI4 e, SI4 alpha, SI4 gamma) {

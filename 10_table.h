@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/08_table.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -22,16 +22,12 @@ using namespace _;
 
 namespace script2 {
 
-template <typename Char, typename SIZ>
+template <typename Char, typename SIZ, typename UIZ>
 void TestTable() {
-  D_PRINTF("Testing ATable<CH%c,SI%c>\n\n", '0' + sizeof(Char),
+  D_PRINTF("\nTesting ATable<CH%c,SI%c>\n", '0' + sizeof(Char),
            '0' + sizeof(SIZ));
 
-  ATable<Char, SIZ> table;
-
-#if DEBUG_THIS
-  table.COut();
-#endif
+  ATable<Char, SIZ, UIZ> table;
 
   static const Char a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
                     d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
@@ -40,26 +36,24 @@ void TestTable() {
                     cab[] = {'c', 'a', 'b', '\0'},
                     test[] = {'t', 'e', 's', 't', '\0'};
 
-  A_AVOW((SIZ)0, table.Add(d));
+  A_AVOW((SIZ)0, table.Add(a));
 
-  D_COUT_OBJ(table);
+  A_AVOW((SIZ)0, table.Find(a));
 
-  A_AVOW((SIZ)0, table.Find(d));
+  A_AVOW((SIZ)1, table.Add(b));
+  A_AVOW((SIZ)0, table.Find(a));
+  A_AVOW((SIZ)1, table.Find(b));
 
-  A_AVOW((SIZ)1, table.Add(c));
-  A_AVOW((SIZ)0, table.Find(d));
-  A_AVOW((SIZ)1, table.Find(c));
+  A_AVOW((SIZ)2, table.Add(c));
+  A_AVOW((SIZ)0, table.Find(a));
+  A_AVOW((SIZ)1, table.Find(b));
+  A_AVOW((SIZ)2, table.Find(c));
 
-  A_AVOW((SIZ)2, table.Add(b));
-  A_AVOW((SIZ)0, table.Find(d));
-  A_AVOW((SIZ)1, table.Find(c));
-  A_AVOW((SIZ)2, table.Find(b));
-
-  A_AVOW((SIZ)3, table.Add(a));
-  A_AVOW((SIZ)0, table.Find(d));
-  A_AVOW((SIZ)1, table.Find(c));
-  A_AVOW((SIZ)2, table.Find(b));
-  A_AVOW((SIZ)3, table.Find(a));
+  A_AVOW((SIZ)3, table.Add(d));
+  A_AVOW((SIZ)0, table.Find(a));
+  A_AVOW((SIZ)1, table.Find(b));
+  A_AVOW((SIZ)2, table.Find(c));
+  A_AVOW((SIZ)3, table.Find(d));
 
   A_AVOW((SIZ)4, table.Add(abc));
   A_AVOW((SIZ)4, table.Find(abc));
@@ -93,12 +87,12 @@ static const CH1* _10_Table(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_TABLE
   A_TEST_BEGIN;
 
-  TestTable<CH1, SI2>();
-  TestTable<CH2, SI2>();
-  TestTable<CH4, SI2>();
-  TestTable<CH1, SI4>();
-  TestTable<CH2, SI4>();
-  TestTable<CH4, SI4>();
+  TestTable<CH1, SI2, UI2>();
+  TestTable<CH2, SI2, UI2>();
+  TestTable<CH4, SI2, UI2>();
+  TestTable<CH1, SI4, UI4>();
+  TestTable<CH2, SI4, UI4>();
+  TestTable<CH4, SI4, UI4>();
 #endif
   return nullptr;
 }

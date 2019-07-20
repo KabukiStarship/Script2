@@ -28,12 +28,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="17_seam.s2" />
-    <None Include="global.inl" />
-    <None Include="global_config.inl" />
+    <None Include="pch_header.h" />
+    <None Include="pch_footer.inl" />
     <None Include="module_debug.inl" />
     <None Include="module_footer.inl" />
     <None Include="module_release.inl" />
-    <None Include="module_seams.inl" />
+    <None Include="module_seams.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="c_puff.h" />
@@ -50,7 +50,7 @@
     <ClCompile Include="script2_event.cc" />
     <ClCompile Include="script2_floor.cc" />
     <ClCompile Include="script2_utf.cc" />
-    <ClCompile Include="script2_valuef.cc" />
+    <ClCompile Include="script2_stringf.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
     <ClCompile Include="script2_lock.cc" />
@@ -66,7 +66,6 @@
     <ClCompile Include="script2_cout.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_vk.cc" />
-    <ClCompile Include="script2_wall.cc" />
     <ClCompile Include="t_puff.h" />
   </ItemGroup>
   <ItemGroup>
@@ -109,19 +108,18 @@
     <ClInclude Include="c_autoject.h" />
     <ClInclude Include="c_op.h" />
     <ClInclude Include="c_operand.h" />
-    <ClInclude Include="c_valuef.h" />
+    <ClInclude Include="c_stringf.h" />
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
     <ClInclude Include="c_cin.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
     <ClInclude Include="c_cout.h" />
-    <ClInclude Include="c_strand.h" />
     <ClInclude Include="c_test.h" />
     <ClInclude Include="c_utf.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
-    <ClInclude Include="c_wall.h" />
+    <ClInclude Include="t_wall.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="module_tests.h" />
     <ClInclude Include="pch.h" />
@@ -143,7 +141,7 @@
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
-    <ClInclude Include="t_stringcore.h" />
+    <ClInclude Include="t_stringf.h" />
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
     <ClInclude Include="t_utf.h" />
@@ -156,41 +154,41 @@
     <ProjectGuid>{E38DB956-F3D9-4F16-9503-2FE5BD337B39}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>kabukisdkdata</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>script2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|Win32'">
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

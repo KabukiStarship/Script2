@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bout.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -307,7 +307,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #else
         return BOutError(bout, kErrorInvalidType);
 #endif  // USING_SCRIPT2_2_BYTE_TYPES
-#if CPU_SIZE <= 16
+#if CPU_WORD_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);

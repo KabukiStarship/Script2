@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_array.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -18,22 +18,24 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* An one-or-more dimensional Array of homogeneous same-sized types.
+/* @ingroup AsciiMatrix
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/matrix.md
+*/
 
-An array may use two different memory layouts, one for a 1D obj of a
-given types, and another for a multi-dimensional array that uses the 1D
-array in order to store the dimensions. The only different between them is
-that the size_array variable gets set to 0.
+/* A multi-dimensional array of homogeneous types with a Stack of dimensions.
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/matrix.md
 
-# Memory Layout
+***Memory Layout***
 
 @code
     +-----------------+
-    |  C-Style Array  | <-- Only if header_size > 0
+    |  C-Style Array  |
     |-----------------|
     | Dimension Stack |
  ^  |-----------------|
- |  |  TStack Header  |
+ |  |     Header      |
 0xN +-----------------+
 @endcode
 */

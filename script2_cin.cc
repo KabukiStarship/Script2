@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_cout.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -9,14 +9,14 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if USING_CONSOLE == YES
+#if USING_CONSOLE == YES_0
 //
 #include <conio.h>
 
 #include <cstdio>
 
 #include "c_cin.h"
-#include "t_stringcore.h"
+#include "t_stringf.h"
 
 #if SEAM == SEAM_SCRIPT2_CORE
 #include "module_debug.inl"
@@ -112,11 +112,13 @@ inline BOL TCInFloatingPoint(FP& result) {
         if (!c) break;
       }
       case CIn::kStateDotOrExponent: {
-        if (c != 'e' || c != 'E') return false;
-        if (c == '.') state = CIn::kStateExponentSign;
+        if ((c == 'e') || (c == 'E'))
+          state = CIn::kStateExponentSign;
+        else if (c == '.')
+          state = CIn::kStateFractionalPart;
       }
       case CIn::kStateFractionalPart: {
-        if (c != 'e' || c != 'E') return false;
+        if (!TIsDigit<>(c) || c != '-') return false;
         if (c == '.') state = CIn::kStateExponentSign;
       }
       case CIn::kStateExponentSign: {
@@ -141,15 +143,15 @@ SIN IsYesNo(const CH4* string) { return TIsYesNo<CH4>(string); }
 
 CIn::CIn() {}
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 CIn::CIn(CH1& result) { Scan(result); }
 CIn::CIn(CH1* result, SIW buffer_size) { Scan(result, buffer_size); }
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 CIn::CIn(CH2& result) { Scan(result); }
 CIn::CIn(CH2* result, SIW buffer_size) { Scan(result, buffer_size); }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 CIn::CIn(CH4& result) { Scan(result); }
 CIn::CIn(CH4* result, SIW buffer_size) { Scan(result, buffer_size); }
 #endif
@@ -161,14 +163,14 @@ CIn::CIn(SI4& result) { Scan(result); }
 CIn::CIn(UI4& result) { Scan(result); }
 CIn::CIn(SI8& result) { Scan(result); }
 CIn::CIn(UI8& result) { Scan(result); }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 CIn::CIn(FP4& result) { Scan(result); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 CIn::CIn(FP8& result) { Scan(result); }
 #endif
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 BOL CIn::Scan(CH1& result) {
   result = ScanKey();
   return true;
@@ -178,7 +180,7 @@ BOL CIn::Scan(CH1* result, SIW buffer_size) {
   return TCInString<CH1>(result, buffer_size);
 }
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 BOL CIn::Scan(CH2& result) {
   result = ScanKey();
   return true;
@@ -187,7 +189,7 @@ BOL CIn::Scan(CH2* result, SIW buffer_size) {
   return TCInString<CH2>(result, buffer_size);
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 BOL CIn::Scan(CH4& result) {
   result = ScanKey();
   return true;
@@ -204,10 +206,10 @@ BOL CIn::Scan(SI4& result) { return TCInSigned<SI4, UI4>(result); }
 BOL CIn::Scan(UI4& result) { return TCInUnsigned<UI4>(result); }
 BOL CIn::Scan(SI8& result) { return TCInSigned<SI8, UI8>(result); }
 BOL CIn::Scan(UI8& result) { return TCInUnsigned<UI8>(result); }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 BOL CIn::Scan(FP4& result) { return TCInFloatingPoint<FP4, SI4, UI4>(result); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 BOL CIn::Scan(FP8& result) { return TCInFloatingPoint<FP8, SI8, UI8>(result); }
 #endif
 

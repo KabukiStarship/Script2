@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_avalue.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -158,11 +158,12 @@ DT2 TypeWidthBits(DTW value) { return value >> 12; }
 
 SI1 TypeTextFormat(DTW type) {
   DTW core_type = type & kTypeCountMask;
+  if (core_type == 0) return -1;  //< then core_type < 32
   if (core_type <= kST3) {
     if (core_type == kNIL) return -1;
     return type;
   }
-  if (core_type == type) return -1;  //< Faster way to check if core_type < 32
+  if (core_type == type) return -1;  //< then core_type < 32
   if (core_type == kCH1) return 1;
   if (core_type == kCH2) return 2;
   if (core_type <= kCH4) return 3;
@@ -183,102 +184,91 @@ DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
   return TypeMap(core_type, map_type) | (size_width << kTypeBitCount);
 }
 
-AValue::AValue() : type_(kNIL) {}
+AValue::AValue() : type_(kNIL) { value_[0] = 0; }
 
-AValue::AValue(UIW item, DTW type) : type_(type) { value_[0] = item; }
+AValue::AValue(UIW item, DTW type) : type_(type) {
+  *reinterpret_cast<DTW*>(value_) = item;
+}
 
 AValue::AValue(void* item) : type_(kPTR) {
-  value_[0] = reinterpret_cast<UIW>(item);
+  *reinterpret_cast<void**>(value_) = item;
 }
 
 AValue::AValue(const void* item) : type_(kPTC) {
-  value_[0] = reinterpret_cast<UIW>(item);
+  *reinterpret_cast<const void**>(value_) = item;
 }
 
-#if USING_UTF8 == YES
-AValue::AValue(CH1 item) : type_(kCH1) { value_[0] = (UIW)item; }
+#if USING_UTF8 == YES_0
+AValue::AValue(CH1 item) : type_(kCH1) {
+  *reinterpret_cast<CH1*>(value_) = item;
+}
 
 AValue::AValue(const CH1* item) : type_(kST1) {
-  value_[0] = reinterpret_cast<UIW>(item);
+  *reinterpret_cast<const CH1**>(value_) = item;
 }
 #endif
 
-#if USING_UTF16 == YES
-AValue::AValue(CH2 item) : type_(kCH2) { value_[0] = (CH2)item; }
+#if USING_UTF16 == YES_0
+AValue::AValue(CH2 item) : type_(kCH2) {
+  *reinterpret_cast<CH2*>(value_) = item;
+}
 
 AValue::AValue(const CH2* item) : type_(kST2) {
-  value_[0] = reinterpret_cast<UIW>(item);
+  *reinterpret_cast<const CH2**>(value_) = item;
 }
 #endif
 
-#if USING_UTF32 == YES
-AValue::AValue(CH4 item) : type_(kCH4) { value_[0] = (UIW)item; }
+#if USING_UTF32 == YES_0
+AValue::AValue(CH4 item) : type_(kCH4) {
+  *reinterpret_cast<CH4*>(value_) = item;
+}
 
-AValue::AValue(const CH4* item) : type_(kST3 + 96) {
-  value_[0] = reinterpret_cast<UIW>(item);
+AValue::AValue(const CH4* item) : type_(kST3) {
+  *reinterpret_cast<const CH4**>(value_) = item;
 }
 #endif
 
-AValue::AValue(SI1 item) : type_(kSI1) { value_[0] = (UIW)item; }
+AValue::AValue(SI1 item) : type_(kSI1) {
+  *reinterpret_cast<SI1*>(value_) = item;
+}
 
-AValue::AValue(UI1 item) : type_(kUI1) { value_[0] = (UIW)item; }
+AValue::AValue(UI1 item) : type_(kUI1) {
+  *reinterpret_cast<UI1*>(value_) = item;
+}
 
-AValue::AValue(SI2 item) : type_(kSI2) { value_[0] = (UIW)item; }
+AValue::AValue(SI2 item) : type_(kSI2) {
+  *reinterpret_cast<SI2*>(value_) = item;
+}
 
-AValue::AValue(UI2 item) : type_(kUI2) { value_[0] = (UIW)item; }
+AValue::AValue(UI2 item) : type_(kUI2) {
+  *reinterpret_cast<UI2*>(value_) = item;
+}
 
 AValue::AValue(SI4 item) : type_(kSI4) {
-#if CPU_SIZE < 32
-  *reinterpret_cast<SI4*>(data_) = item;
-#else
-  value_[0] = (UIW)item;
-#endif
+  *reinterpret_cast<SI4*>(value_) = item;
 }
 
 AValue::AValue(UI4 item) : type_(kUI4) {
-#if CPU_SIZE < 32
-  *reinterpret_cast<UI4*>(data_) = item;
-#else
-  value_[0] = (UIW)item;
-#endif
+  *reinterpret_cast<UI4*>(value_) = item;
 }
 
 AValue::AValue(SI8 item) : type_(kSI8) {
-#if CPU_SIZE < 64
-  *reinterpret_cast<SI8*>(data_) = item;
-#else
-  value_[0] = (UIW)item;
-#endif
+  *reinterpret_cast<SI8*>(value_) = item;
 }
 
 AValue::AValue(UI8 item) : type_(kUI8) {
-#if CPU_SIZE < 64
-  *reinterpret_cast<UI8*>(data_) = item;
-#else
-  value_[0] = (UIW)item;
-#endif
+  *reinterpret_cast<UI8*>(value_) = item;
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 AValue::AValue(FP4 item) : type_(kFP4) {
-#if CPU_SIZE < 32
-  FP4 value = *reinterpret_cast<UI4*>(&item);
-  data_[0] = (UIW)value;
-#else
-  FP4 value = *reinterpret_cast<UI4*>(&item);
-  value_[0] = (UIW)value;
-#endif
+  *reinterpret_cast<FP4*>(value_) = item;
 }
 #endif
 
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 AValue::AValue(FP8 item) : type_(kFP8) {
-  UI8 value = *reinterpret_cast<UI8*>(&item);
-#if CPU_SIZE < 64
-  *reinterpret_cast<UI8*>(data_) = value;
-#else
-  value_[0] = value;
-#endif
+  *reinterpret_cast<FP8*>(value_) = item;
 }
 #endif
 
@@ -290,6 +280,12 @@ void* AValue::Value() { return value_; }
 
 void* AValue::Ptr() { return reinterpret_cast<void*>(value_[0]); }
 
+const CH1* AValue::ST1() { return reinterpret_cast<const CH1*>(value_[0]); }
+
+const CH2* AValue::ST2() { return reinterpret_cast<const CH2*>(value_[0]); }
+
+const CH4* AValue::ST3() { return reinterpret_cast<const CH4*>(value_[0]); }
+
 UIW AValue::Word() { return value_[0]; }
 
 void AValue::SetNIL() { type_ = kNIL; }
@@ -299,7 +295,7 @@ void AValue::SetNIL(UIW value) {
   value_[0] = value;
 }
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 void AValue::Set(CH1 item) {
   type_ = kCH1;
   value_[0] = (UIW)item;
@@ -310,7 +306,7 @@ void AValue::Set(const CH1* item) {
   value_[0] = reinterpret_cast<UIW>(item);
 }
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 void AValue::Set(CH2 item) {
   type_ = kCH2;
   value_[0] = (UIW)item;
@@ -322,7 +318,7 @@ void AValue::Set(const CH2* item) {
 }
 
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 void AValue::Set(CH4 item) {
   type_ = kCH4;
   value_[0] = (UIW)item;
@@ -379,14 +375,14 @@ void AValue::Set(UI8 item) {
   value_[0] = (UIW)item;
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 void AValue::Set(FP4 item) {
   type_ = kFP4;
   value_[0] = (UIW)item;
 }
 
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 void AValue::Set(FP8 item) {
   type_ = kFP8;
   value_[0] = (UIW)item;

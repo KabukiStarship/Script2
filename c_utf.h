@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -53,10 +53,10 @@ LIB_MEMBER SI4 HexToByte(CH1 hex_byte);
 */
 LIB_MEMBER SI4 HexToByte(UI2 hex);
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 
 /* Converts a signed or unsigned CH1 to a (unsigned) cH4. */
-LIB_INLINE LIB_MEMBER CH4 ToCH4(CH1 c);
+LIB_INLINE CH4 ToCH4(CH1 c);
 
 /* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -72,7 +72,7 @@ LIB_MEMBER CH1* Print(CH1* cursor, SIW size, CH4 c);
 
 #endif
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -98,7 +98,7 @@ success. */
 LIB_MEMBER const CH2* Scan(const CH2* string, CH4& result);
 #endif
 
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   cursor The beginning of the socket.

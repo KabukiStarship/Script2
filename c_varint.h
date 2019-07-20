@@ -17,7 +17,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-#if CPU_SIZE == 16
+#if CPU_WORD_SIZE == CPU_16_BIT
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);

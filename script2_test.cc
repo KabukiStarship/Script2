@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_test.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -18,7 +18,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 namespace _ {
 
 void TestFunctionLine(SI4 line, const CH1* function, const CH1* file) {
-  static const CH1 kStrandFunction[] = "";
   static const CH1 kStrandIndex[] = "\0";
   Printf("\n        Function:%s\n            Line:%d in \"%s\"", function, line,
          file);
@@ -31,7 +30,6 @@ BOL TestWarn(SI4 line, const CH1* function, const CH1* file) {
 
 BOL TestFail(SI4 line, const CH1* function, const CH1* file) {
   BOL result = TestWarn(line, function, file);
-  Pausef();
   return result;
 }
 
@@ -54,12 +52,8 @@ const CH1* TestTree(const CH1* args, TestCase* tests, SIN count) {
       Pausef("\nError: seam node %i is missing!", i);
       return "";
     }
-    const CH1* seam = test(nullptr);
-    A_ASSERT(seam);
-    COut(Headingf("Testing ", nullptr, 80, seam));
     const CH1* error = test(args);
     if (error) return error;
-    COut("\nDone testing ", seam);
   }
   COut("\n\nTest finished successfully! (:-)+==<\n");
   return nullptr;
@@ -80,7 +74,7 @@ BOL Test(const CH1* a, const CH1* b) {
   return false;
 }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 BOL Test(const CH2* a, const CH2* b) {
   SIN difference = ::_::TSTRCompare<CH2>(a, b);
   if (!difference) return true;
@@ -90,7 +84,7 @@ BOL Test(const CH2* a, const CH2* b) {
   return false;
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 BOL Test(const CH4* a, const CH4* b) {
   SIN difference = ::_::TSTRCompare<CH4>(a, b);
   if (!difference) return true;
@@ -183,7 +177,7 @@ BOL Test(SI8 a, SI8 b) {
   return false;
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 BOL Test(FP4 a, FP4 b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
@@ -191,7 +185,7 @@ BOL Test(FP4 a, FP4 b) {
   return false;
 }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 BOL Test(FP8 a, FP8 b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_lock.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -601,7 +601,7 @@ struct LIB_MEMBER TClock {
 };
 
 }  // namespace _
-#if USING_CONSOLE == YES
+#if USING_CONSOLE == YES_0
 
 inline _::COut& operator<<(_::COut& o, const _::AClock& item) {
   return _::TPrint(o, item);

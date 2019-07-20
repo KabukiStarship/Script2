@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/bout.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -37,7 +37,7 @@ struct LIB_MEMBER BOut {
 /* Get's the B-Output's socket.*/
 LIB_MEMBER CH1* BOutBuffer(BOut* bout);
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 
 /* Gets a a CH1 for printing out the bout_state. */
 LIB_MEMBER const CH1** BOutStateStrands();
@@ -79,7 +79,7 @@ LIB_MEMBER void BOutAckBack(BOut* bout, const CH1* address);
 /* . */
 LIB_MEMBER void BInKeyStrokes();
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 /* Prints the BIn to the Text.
     @param  bout The bout to utf.
     @param  text The Text to utf to the bout.
@@ -89,7 +89,7 @@ LIB_MEMBER UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 }  // namespace _
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 /* Prints out the bin to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
   return ::_::PrintBOut(utf, bout);

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_cout.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -9,15 +9,16 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #include <pch.h>
 
-#if USING_CONSOLE == YES
+#if USING_CONSOLE == YES_0
+
+#include "c_cout.h"
+//
+#include "c_avalue.h"
+#include "t_puff.h"
+#include "t_stringf.h"
 
 #include <cstdio>
 #include <iostream>
-
-#include "c_avalue.h"
-#include "c_cout.h"
-#include "t_puff.h"
-#include "t_stringcore.h"
 
 #if SEAM == SEAM_SCRIPT2_CORE
 #include "module_debug.inl"
@@ -25,7 +26,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "module_release.inl"
 #endif
 
-#define STD_COUT std::cout
+#define STD_COUT std::wcout
 
 namespace _ {
 
@@ -41,54 +42,35 @@ COut::COut() {}
 
 COut::COut(CH1 item) { Print(item); }
 COut::COut(const CH1* item) { Print(item); }
-
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 COut::COut(CH2 item) { Print(item); }
 COut::COut(const CH2* item) { Print(item); }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 COut::COut(CH4 item) { Print(item); }
 COut::COut(const CH4* item) { Print(item); }
 #endif
-
 COut::COut(SI1 item) { Print(item); }
-
 COut::COut(UI1 item) { Print(item); }
-
 COut::COut(SI2 item) { Print(item); }
-
 COut::COut(UI2 item) { Print(item); }
-
 COut::COut(SI4 item) { Print(item); }
-
 COut::COut(UI4 item) { Print(item); }
-
 COut::COut(SI8 item) { Print(item); }
-
 COut::COut(UI8 item) { Print(item); }
-
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 COut::COut(FP4 item) { Print(item); }
 #endif
-#if USING_FP8 == YES
-
+#if USING_FP8 == YES_0
 COut::COut(FP8 item) { Print(item); }
 #endif
-
 COut::COut(Hexf item) { Print(item); }
-
 COut::COut(Binaryf item) { Print(item); }
-
 COut::COut(Centerf item) { Print(item); }
-
 COut::COut(Rightf item) { Print(item); }
-
 COut::COut(Linef item) { Print(item); }
-
 COut::COut(Headingf item) { Print(item); }
-
 COut::COut(Indentf item) { Print(item); }
-
 COut::COut(Charsf item) { Print(item); }
 
 COut::COut(const CH1* item, CH1 second_item) {
@@ -139,7 +121,7 @@ COut& COut::Print(const CH1* item) {
   return TPrintString<COut, CH1>(*this, item);
 }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 COut& COut::Print(CH2 item) {
   STD_COUT << (CHN)item;
   return *this;
@@ -149,9 +131,14 @@ COut& COut::Print(const CH2* item) {
   return TPrintString<COut, CH2>(*this, item);
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 COut& COut::Print(CH4 item) {
-  STD_COUT << (CHN)item;
+  if (item >= (CH4(1) << 9)) {
+    STD_COUT << (CHN)(item & 0x3f) + 0xD800;
+    STD_COUT << (CHN)((item >> 10) & 0x3f) + 0xDC00;
+  } else {
+    STD_COUT << (CHN)item;
+  }
   return *this;
 }
 COut& COut::Print(const CH4* item) {
@@ -163,7 +150,7 @@ COut& COut::Print(SI4 item) {
 #if SEAM <= SEAM_SCRIPT2_ITOS
   STD_COUT << item;
 #else
-#if CPU_SIZE == 64
+#if CPU_WORD_SIZE == CPU_64_BIT
   Print((SI8)item);
 #else
   enum { kSize = 24 };
@@ -179,7 +166,7 @@ COut& COut::Print(UI4 item) {
 #if SEAM <= SEAM_SCRIPT2_ITOS
   STD_COUT << item;
 #else
-#if CPU_SIZE == 64
+#if CPU_WORD_SIZE == CPU_64_BIT
   Print((UI8)item);
 #else
   enum { kSize = 24 };
@@ -215,7 +202,7 @@ COut& COut::Print(UI8 item) {
   return *this;
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 COut& COut::Print(FP4 item) {
 #if SEAM <= SEAM_SCRIPT2_BOOK
   STD_COUT << item;
@@ -228,7 +215,7 @@ COut& COut::Print(FP4 item) {
   return *this;
 }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 COut& COut::Print(FP8 item) {
 #if SEAM <= SEAM_SCRIPT2_BOOK
   STD_COUT << item;
@@ -251,103 +238,132 @@ COut& COut::Print(Binaryf item) {
 }
 
 COut& COut::Print(Centerf item) {
-  SIW utf_format = ::_::TypeTextFormat(item.valuef.item.Type());
-#if USING_UTF8 == YES
-  if (utf_format == 1) {
-    const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
-    return ::_::TPrintCenter<::_::COut, CH1>(*this, start, item.valuef.count);
-  }
+  SIW utf_format = ::_::TypeTextFormat(item.stringf.Type());
+  switch (utf_format) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return ::_::TPrintCenter<::_::COut, CH1>(*this, item.stringf.ST1(),
+                                               item.stringf.Count());
+    }
 #endif
-#if USING_UTF16 == YES
-  if (utf_format == 2) {
-    const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
-    return ::_::TPrintCenter<::_::COut, CH2>(*this, start, item.valuef.count);
-  }
+#if USING_UTF16 == YES_0
+    case 2: {
+      return ::_::TPrintCenter<::_::COut, CH2>(*this, item.stringf.ST2(),
+                                               item.stringf.Count());
+    }
 #endif
-#if USING_UTF32 == YES
-  if (utf_format == 4) {
-    const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
-    return ::_::TPrintCenter<::_::COut, CH4>(*this, start, item.valuef.count);
-  }
+#if USING_UTF32 == YES_0
+    case 3: {
+      return ::_::TPrintCenter<::_::COut, CH4>(*this, item.stringf.ST3(),
+                                               item.stringf.Count());
+    }
 #endif
+  }
   return *this;
 }
 
 COut& COut::Print(Rightf item) {
-  SIW utf_format = ::_::TypeTextFormat(item.valuef.item.Type());
-#if USING_UTF8 == YES
-  if (utf_format == 1) {
-    const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
-    return ::_::TPrintRight<::_::COut, CH1>(*this, start, item.valuef.count);
-  }
+  switch (::_::TypeTextFormat(item.stringf.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return ::_::TPrintRight<::_::COut, CH1>(*this, item.stringf.ST1(),
+                                              item.stringf.Count());
+    }
 #endif
-#if USING_UTF16 == YES
-  if (utf_format == 2) {
-    const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
-    return ::_::TPrintRight<::_::COut, CH2>(*this, start, item.valuef.count);
-  }
+#if USING_UTF16 == YES_0
+    case 2: {
+      return ::_::TPrintRight<::_::COut, CH2>(*this, item.stringf.ST2(),
+                                              item.stringf.Count());
+    }
 #endif
-#if USING_UTF32 == YES
-  if (utf_format == 4) {
-    const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
-    return ::_::TPrintRight<::_::COut, CH4>(*this, start, item.valuef.count);
-  }
+#if USING_UTF32 == YES_0
+    case 3: {
+      return ::_::TPrintRight<::_::COut, CH4>(*this, item.stringf.ST3(),
+                                              item.stringf.Count());
+    }
 #endif
+  }
   return *this;
-}
+}  // namespace _
 
 COut& COut::Print(Linef item) {
-  SIW utf_format = ::_::TypeTextFormat(item.valuef.item.Type());
-#if USING_UTF8 == YES
-  if (utf_format == 1) {
-    const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
-    ::_::TPrintLinef<::_::COut, CH1>(*this, start, item.valuef.count);
-    return *this;
-  }
+  SIW type = item.valuef.item.Type(),  //
+      utf_format = ::_::TypeTextFormat(type);
+  switch (utf_format) {
+#if USING_UTF8 == YES_0
+    case kST1: {
+      const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
+      ::_::TPrintLinef<::_::COut, CH1>(*this, start, item.valuef.count);
+      break;
+    }
 #endif
-#if USING_UTF16 == YES
-  if (utf_format == 2) {
-    const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
-    ::_::TPrintLinef<::_::COut, CH2>(*this, start, item.valuef.count);
-    return *this;
-  }
+#if USING_UTF16 == YES_0
+    case kST2: {
+      const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
+      ::_::TPrintLinef<::_::COut, CH2>(*this, start, item.valuef.count);
+      break;
+    }
 #endif
-#if USING_UTF32 == YES
-  if (utf_format == 4) {
-    const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
-    ::_::TPrintLinef<::_::COut, CH4>(*this, start, item.valuef.count);
-    return *this;
-  }
+#if USING_UTF32 == YES_0
+    case kST3: {
+      const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
+      ::_::TPrintLinef<::_::COut, CH4>(*this, start, item.valuef.count);
+      break;
+    }
 #endif
+    case -1: {
+      switch (type & kTypeCountMask) {
+#if USING_UTF8 == YES_0
+        case kCH1: {
+          CH1 c = (CH1)item.valuef.item.Word();
+          ::_::TPrintLinef<::_::COut, CH1>(*this, c, item.valuef.count);
+          break;
+        }
+#endif
+#if USING_UTF16 == YES_0
+        case kCH2: {
+          CH4 c = item.valuef.item.Word();
+          ::_::TPrintLinef<::_::COut, CH2>(*this, c, item.valuef.count);
+          break;
+        }
+#endif
+#if USING_UTF32 == YES_0
+        case kCH4: {
+          CH4 c = (CH4)item.valuef.item.Word();
+          ::_::TPrintLinef<::_::COut, CH4>(*this, c, item.valuef.count);
+          break;
+        }
+#endif
+      }
+    }
+  }
   return *this;
-}
+}  // namespace _
 
 COut& COut::Print(Headingf item) {
-  SIW utf_format = ::_::TypeTextFormat(item.caption.item.Type());
-#if USING_UTF8 == YES
-  if (utf_format == 1) {
-    const CH1* caption = reinterpret_cast<const CH1*>(item.caption.item.Ptr());
-    return ::_::TPrintHeadingf<::_::COut, CH1>(*this, caption, item.style,
-                                               item.caption.count,
-                                               item.caption2, item.caption3);
-  }
+  switch (::_::TypeTextFormat(item.caption.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return ::_::TPrintHeadingf<::_::COut, CH1>(
+          *this, item.caption.ST1(), item.style, item.caption.Count(),
+          item.caption2, item.caption3);
+    }
 #endif
-#if USING_UTF16 == YES
-  if (utf_format == 2) {
-    const CH2* caption = reinterpret_cast<const CH2*>(item.caption.item.Ptr());
-    return ::_::TPrintHeadingf<::_::COut, CH2>(*this, caption, item.style,
-                                               item.caption.count,
-                                               item.caption2, item.caption3);
-  }
+#if USING_UTF16 == YES_0
+    case 2: {
+      return ::_::TPrintHeadingf<::_::COut, CH2>(
+          *this, item.caption.ST2(), item.style, item.caption.Count(),
+          item.caption2, item.caption3);
+    }
 #endif
-#if USING_UTF32 == YES
-  if (utf_format == 3) {
-    const CH4* caption = reinterpret_cast<const CH4*>(item.caption.item.Ptr());
-    return ::_::TPrintHeadingf<::_::COut, CH4>(*this, caption, item.style,
-                                               item.caption.count,
-                                               item.caption2, item.caption3);
-  }
+#if USING_UTF32 == YES_0
+    case 3: {
+      return ::_::TPrintHeadingf<::_::COut, CH4>(
+          *this, item.caption.ST3(), item.style, item.caption.Count(),
+          item.caption2, item.caption3);
+    }
 #endif
+  }
   return *this;
 }
 
@@ -356,27 +372,30 @@ COut& COut::Print(Indentf item) {
 }
 
 COut& COut::Print(Charsf item) {
-  SIW utf_format = ::_::TypeTextFormat(item.valuef.item.Type());
-#if USING_UTF8 == YES
-  if (utf_format == 1) {
-    const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
-    return ::_::TPrintChars<::_::COut, CH1>(*this, start, item.valuef.count);
-  }
+  switch (::_::TypeTextFormat(item.valuef.item.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return ::_::TPrintChars<::_::COut, CH1>(*this, item.valuef.item.ST1(),
+                                              item.valuef.count);
+    }
 #endif
-#if USING_UTF16 == YES
-  if (utf_format == 2) {
-    const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
-    return ::_::TPrintChars<::_::COut, CH2>(*this, start, item.valuef.count);
-  }
+#if USING_UTF16 == YES_0
+    case 2: {
+      return ::_::TPrintChars<::_::COut, CH2>(*this, item.valuef.item.ST2(),
+                                              item.valuef.count);
+    }
 #endif
-#if USING_UTF32 == YES
-  if (utf_format == 4) {
-    const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
-    return ::_::TPrintChars<::_::COut, CH4>(*this, start, item.valuef.count);
-  }
+#if USING_UTF32 == YES_0
+    case 3: {
+      return ::_::TPrintChars<::_::COut, CH4>(*this, item.valuef.item.ST3(),
+                                              item.valuef.count);
+    }
 #endif
-  return *this;
-}
+  }
+  return ::_::TPrintChars<::_::COut, CH1>(
+      *this, reinterpret_cast<CH1*>(item.valuef.item.Value()),
+      item.valuef.count);
+}  // namespace _
 
 COut& COut::NL() { return Print('\n'); }
 COut& COut::NL(CH1 item) {
@@ -387,7 +406,7 @@ COut& COut::NL(const CH1* item) {
   NL();
   return Print(item);
 }
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 COut& COut::NL(CH2 item) {
   NL();
   return Print(item);
@@ -397,7 +416,7 @@ COut& COut::NL(const CH2* item) {
   return Print(item);
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 COut& COut::NL(CH4 item) {
   NL();
   return Print(item);
@@ -423,13 +442,13 @@ COut& COut::NL(UI8 item) {
   NL();
   return Print(item);
 }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 COut& COut::NL(FP4 item) {
   NL();
   return Print(item);
 }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 COut& COut::NL(FP8 item) {
   NL();
   return Print(item);
@@ -451,10 +470,10 @@ COut& COut::Hex(SI4 item) { return TPrintHex<COut, SI4, UI4>(*this, item); }
 COut& COut::Hex(UI4 item) { return TPrintHex<COut, UI4>(*this, item); }
 COut& COut::Hex(SI8 item) { return TPrintHex<COut, SI8, UI8>(*this, item); }
 COut& COut::Hex(UI8 item) { return TPrintHex<COut, UI8>(*this, item); }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 COut& COut::Hex(FP4 item) { return TPrintHex<COut>(*this, item); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 COut& COut::Hex(FP8 item) { return TPrintHex<COut>(*this, item); }
 #endif
 
@@ -484,21 +503,21 @@ COut& COut::Binary(SI8 item) {
   return TPrintBinary<COut, SI8, UI8>(*this, item);
 }
 COut& COut::Binary(UI8 item) { return TPrintBinary<COut, UI8>(*this, item); }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 COut& COut::Binary(FP4 item) { return TPrintBinary<COut>(*this, item); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 COut& COut::Binary(FP8 item) { return TPrintBinary<COut>(*this, item); }
 #endif
 SIN COut::PrintAndCount(const CH1* string) {
   return TPrintAndCount<COut, CH1>(*this, string);
 }
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 SIN COut::PrintAndCount(const CH2* string) {
   return TPrintAndCount<COut, CH2>(*this, string);
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 SIN COut::PrintAndCount(const CH4* string) {
   return TPrintAndCount<COut, CH4>(*this, string);
 }
@@ -512,11 +531,12 @@ COut CPrint() { return COut(); }
 
 ::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 ::_::COut& operator<<(::_::COut& o, CH2 item) { return o.Print(item); }
 ::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
 #endif
-#if USING_UTF32 == YES
+
+#if USING_UTF32 == YES_0
 ::_::COut& operator<<(::_::COut& o, CH4 item) { return o.Print(item); }
 ::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
 #endif
@@ -529,11 +549,11 @@ COut CPrint() { return COut(); }
 
 ::_::COut& operator<<(::_::COut& o, UI8 item) { return o.Print(item); }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 ::_::COut& operator<<(::_::COut& o, FP4 item) { return o.Print(item); }
 #endif
 
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 ::_::COut& operator<<(::_::COut& o, FP8 item) { return o.Print(item); }
 #endif
 
