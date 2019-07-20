@@ -1,4 +1,4 @@
-# [SCRIPT Specification RFC](../readme.md)
+# [SCRIPT Specification](../readme.md)
 
 ## License
 

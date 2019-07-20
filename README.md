@@ -46,7 +46,7 @@ Please **@see** [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolk
 ## Quick Links
 
 * [FAQ](https://github.com/kabuki-starship/script/blob/master/docs/readme.md) - *Frequently asked questions.*
-* [Script Specification RFC](https://github.com/kabuki-starship/script2/blob/master/spec/readme.md) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
+* [SCRIPT Specification](https://github.com/kabuki-starship/script2/blob/master/spec/readme.md) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
 * [Kabuki Toolkit](https://github.com/kabuki-starship/kabuki_toolkit) - *A cross-platform Modern Embedded-C++ toolkit for making intelligent connected technologies, plugins, games, servers, firmware, and art with Script2. This is where you'll find the visual studio projects.*
 * [Kabuki Starship Website](https://kabuki-starship.github.io/) - *Official Kabuki Starship website. #WorkInProgress*
 
