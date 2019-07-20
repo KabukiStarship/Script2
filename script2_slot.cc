@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_slot.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -265,7 +265,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
       case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case kUI2:
       case kFP2:
-#if CPU_SIZE <= 16
+#if CPU_WORD_SIZE <= 16
       case SVI:
       case UVI:
 #endif
@@ -305,7 +305,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 #else
         return ReturnError(this, kErrorInvalidType);
 #endif
-#if CPU_SIZE > 16
+#if CPU_WORD_SIZE > 16
       case SVI:
       case UVI:
 #endif

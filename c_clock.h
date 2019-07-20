@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_clock.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -69,16 +69,16 @@ enum ClockConstants {
 };
 
 /* Gets the 32-bit kTM4 clock epoch. */
-LIB_MEMBER LIB_INLINE SI2 ClockEpoch();
+LIB_INLINE SI2 ClockEpoch();
 
 /* Lookup table for converting from day-of-year to month. */
-LIB_MEMBER LIB_INLINE const SI2* ClockLastDayOfMonth();
+LIB_INLINE const SI2* ClockLastDayOfMonth();
 
 /* Lookup table for converting from day-of-year to month. */
-LIB_MEMBER LIB_INLINE const SI2* ClockLastDayOfMonthLeapYear();
+LIB_INLINE const SI2* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
-LIB_MEMBER LIB_INLINE SIN MonthByDay(SIN day, SIN year);
+LIB_INLINE SIN MonthByDay(SIN day, SIN year);
 
 /* Initializes the clock from the given timestamp. */
 LIB_MEMBER AClock* ClockInit(AClock& clock, TM4 time);
@@ -93,18 +93,18 @@ LIB_MEMBER TME& StopwatchInit(TME& clock, TM4 t, UI4 ticks);
 LIB_MEMBER AClock* ClockInit(AClock& clock);
 
 /* Gets the current microsecond timestamp. */
-LIB_MEMBER LIB_INLINE TM8 ClockNow();
+LIB_INLINE TM8 ClockNow();
 
 /* Creates a timestamp from the given seconds Clock. */
 LIB_MEMBER TM4 ClockSeconds(AClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-LIB_MEMBER LIB_INLINE TM4 ClockTM4(AClock& clock);
+LIB_INLINE TM4 ClockTM4(AClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-LIB_MEMBER LIB_INLINE TM8 ClockTM8(AClock& clock);
+LIB_INLINE TM8 ClockTM8(AClock& clock);
 
 /* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
@@ -146,7 +146,7 @@ LIB_MEMBER TM4 ClockTimeTMS(SIN year, SIN month, SIN day, SIN hour = 0,
 LIB_MEMBER TM8 ClockTimeTME(SIN year, SIN month, SIN day, SIN hour = 0,
                             SIN minute = 0, SIN second = 0);
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
@@ -216,9 +216,9 @@ LIB_MEMBER const CH1* ScanTime(const CH1*, TM4& result);
 /* Converts a keyboard input to a TM8. */
 LIB_MEMBER const CH1* ScanTime(const CH1*, TM8& result);
 
-#endif  //< #if USING_UTF8 == YES
+#endif  //< #if USING_UTF8 == YES_0
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -290,8 +290,8 @@ LIB_MEMBER const CH2* ScanTime(const CH2*, TM4& result);
 /* Converts a keyboard input to a TM8. */
 LIB_MEMBER const CH2* ScanTime(const CH2*, TM8& result);
 
-#endif  //< #if USING_UTF16 == YES
-#if USING_UTF32 == YES
+#endif  //< #if USING_UTF16 == YES_0
+#if USING_UTF32 == YES_0
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
@@ -360,7 +360,7 @@ LIB_MEMBER const CH4* ScanTime(const CH4* input, TM4& result);
 /* Converts a keyboard input to a TM4. */
 LIB_MEMBER const CH4* ScanTime(const CH4* input, TM8& result);
 
-#endif  //< #if USING_UTF32 == YES
+#endif  //< #if USING_UTF32 == YES_0
 }  // namespace _
 
 #endif

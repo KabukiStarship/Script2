@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bin.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -66,7 +66,7 @@ LIB_MEMBER inline SI4 BInSpace(BIn* bin);
 
 LIB_MEMBER inline SI4 BinBufferLength(BIn* bin);
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 /* Gets a a CH1 for printing out the bin_state. */
 LIB_MEMBER const CH1** STRBInStates();
 
@@ -99,15 +99,15 @@ inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
 @param  text The Text to utf the bin to.
 @return The text. */
 LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
 
-#endif  //< #if USING_UTF8 == YES
-#if USING_UTF16 == YES
+#endif  //< #if USING_UTF8 == YES_0
+#if USING_UTF16 == YES_0
 
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
@@ -115,8 +115,8 @@ LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
 @return The text. */
 LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
 
-#endif  //< #if USING_UTF16 == YES
-#if USING_UTF32 == YES
+#endif  //< #if USING_UTF16 == YES_0
+#if USING_UTF32 == YES_0
 
 /* Prints the BIn to the Text.
 @param  bin The pin to utf.
@@ -124,11 +124,11 @@ LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
 @return The text. */
 LIB_MEMBER UTF4& Print(UTF4& printer, BIn* bin);
 
-#endif  //< #if USING_UTF32 == YES
+#endif  //< #if USING_UTF32 == YES_0
 
 }  // namespace _
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 /* Prints out the bin to the text. */
 inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BIn* bin) {
   return Print(utf, bin);

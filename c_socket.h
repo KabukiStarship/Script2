@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -30,31 +30,31 @@ LIB_MEMBER UIW* AlignDown(UIW* pointer, UIW mask = kWordLSbMask);
 LIB_MEMBER const UIW* AlignDown(const UIW* pointer, UIW mask = kWordLSbMask);
 
 /* Aligns the given value down to the given mask. */
-LIB_MEMBER LIB_INLINE SI1 AlignDown(SI1 value, SI1 mask = kWordLSbMask);
+LIB_INLINE SI1 AlignDown(SI1 value, SI1 mask = kWordLSbMask);
 
 /* Aligns the given value down to the given mask. */
-LIB_MEMBER LIB_INLINE SI2 AlignDown(SI2 value, SI2 mask = kWordLSbMask);
+LIB_INLINE SI2 AlignDown(SI2 value, SI2 mask = kWordLSbMask);
 
 /* Aligns the given value down to the given mask. */
-LIB_MEMBER LIB_INLINE SI4 AlignDown(SI4 value, SI4 mask = kWordLSbMask);
+LIB_INLINE SI4 AlignDown(SI4 value, SI4 mask = kWordLSbMask);
 
 /* Aligns the given value down to the given mask. */
-LIB_MEMBER LIB_INLINE SI8 AlignDown(SI8 value, SI8 mask = kWordLSbMask);
+LIB_INLINE SI8 AlignDown(SI8 value, SI8 mask = kWordLSbMask);
 
 /* Aligns the given pointer up to the given mask. */
 LIB_MEMBER const CH1* AlignUp(const CH1* pointer, UIW mask = kWordLSbMask);
 
 /* Aligns the given socket pointer up to a cache line boundary (64 bytes). */
-LIB_MEMBER LIB_INLINE UIW* AlignUp(UIW* socket, UIW mask = kWordLSbMask);
+LIB_INLINE UIW* AlignUp(UIW* socket, UIW mask = kWordLSbMask);
 
 /* Aligns the given pointer up to the given mask. */
 LIB_MEMBER CH1* AlignUp(CH1* pointer, UIW mask = kWordLSbMask);
 
 /* Aligns the given value up to an 8-UI1 boundary. */
-LIB_MEMBER LIB_INLINE UI1 AlignUp(UI1 value, UI1 mask = kWordLSbMask);
+LIB_INLINE UI1 AlignUp(UI1 value, UI1 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 8-UI1 boundary. */
-LIB_MEMBER LIB_INLINE SI1 AlignUp(SI1 value, SI1 mask = kWordLSbMask);
+LIB_INLINE SI1 AlignUp(SI1 value, SI1 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 16-UI1 boundary. */
 LIB_MEMBER UI2 AlignUp(UI2 value, UI2 mask = kWordLSbMask);
@@ -63,16 +63,16 @@ LIB_MEMBER UI2 AlignUp(UI2 value, UI2 mask = kWordLSbMask);
 LIB_MEMBER SI2 AlignUp(SI2 value, SI2 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 32-UI1 boundary. */
-LIB_MEMBER LIB_INLINE UI4 AlignUp(UI4 value, UI4 mask = kWordLSbMask);
+LIB_INLINE UI4 AlignUp(UI4 value, UI4 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 32-UI1 boundary. */
-LIB_MEMBER LIB_INLINE SI4 AlignUp(SI4 value, SI4 mask = kWordLSbMask);
+LIB_INLINE SI4 AlignUp(SI4 value, SI4 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 64-UI1 boundary. */
-LIB_MEMBER LIB_INLINE UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
+LIB_INLINE UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
 
 /* Aligns the given value up to an 64-UI1 boundary. */
-LIB_MEMBER LIB_INLINE SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
+LIB_INLINE SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
 
 /* Gets the next address that a data type may be stored at. */
 LIB_MEMBER const void* TypeAlign(SIW type, const void* value);
@@ -92,7 +92,7 @@ class Socket {
   CH1 *begin,  //< Beginning of the socket.
       *end;    //< End of the socket.
 
-  /* Constructs an uninitialized socket. */
+  /* Constructs an NIL socket. */
   Socket();
 
   /* Constructor. */
@@ -124,16 +124,16 @@ class Nil {
 };
 
 /* Converts the pointer to a std::UIW. */
-LIB_MEMBER LIB_INLINE UIW UIntPtr(const void* value);
+LIB_INLINE UIW UIntPtr(const void* value);
 
 /* Converts the std::UIW to a pointer. */
-LIB_MEMBER LIB_INLINE void* VoidPtr(UIW value);
+LIB_INLINE void* VoidPtr(UIW value);
 
 /* Converts the std::UIW to a pointer. */
-LIB_MEMBER LIB_INLINE const void* ConstVoidPtr(UIW value);
+LIB_INLINE const void* ConstVoidPtr(UIW value);
 
 /* Calculates the difference between the begin and stop address. */
-LIB_MEMBER LIB_INLINE SIW SizeOf(const void* begin, const void* stop);
+LIB_INLINE SIW SizeOf(const void* begin, const void* stop);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
 LIB_MEMBER CH1* SocketFill(void* begin, void* end, CH1 fill_char);
@@ -171,8 +171,8 @@ LIB_MEMBER CH1* SocketCopy(void* start, void* stop, const void* begin,
 @param  begin The begin of the read socket.
 @param  end   The end of the read socket.
 @return Pointer to the last UI1 written or nil upon failure. */
-LIB_MEMBER LIB_INLINE CH1* SocketCopy(void* start, void* stop,
-                                      const void* begin, const void* end);
+LIB_INLINE CH1* SocketCopy(void* start, void* stop, const void* begin,
+                           const void* end);
 
 /* Compares the two memory sockets.
 @param  start  The start of Socket A.
@@ -189,8 +189,8 @@ LIB_MEMBER BOL SocketCompare(const void* start, const void* stop,
 @param  begin The begin of Socket B.
 @param  size  The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER LIB_INLINE BOL SocketCompare(const void* start, void* stop,
-                                        const void* begin, SIW size);
+LIB_MEMBER BOL SocketCompare(const void* start, void* stop, const void* begin,
+                             SIW size);
 
 /* Compares the two memory sockets.
 @param  start The start of socket a.
@@ -198,22 +198,22 @@ LIB_MEMBER LIB_INLINE BOL SocketCompare(const void* start, void* stop,
 @param  start  The begin of socket b.
 @param  size_b The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER LIB_INLINE BOL SocketCompare(const void* start, SIW size_a,
-                                        const void* begin, SIW size_b);
+LIB_MEMBER BOL SocketCompare(const void* start, SIW size_a, const void* begin,
+                             SIW size_b);
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
 @param  begin       The begin UI1.
 @param  end         The end UI1.
 @param  count_bytes The UI1 count to shift up. */
-SIW SocketShiftUp(void* begin, void* end, SIW count_bytes);
+LIB_MEMBER SIW SocketShiftUp(void* begin, void* end, SIW count_bytes);
 
 /* Shifts the memory down by the given bytes_count.
 @return 0 upon failure and count upon success.
 @param  begin       The start UI1.
 @param  end         The end UI1.
 @param  count_bytes The UI1 count to shift up. */
-SIW SocketShiftDown(void* begin, void* end, SIW bytes_count);
+LIB_MEMBER SIW SocketShiftDown(void* begin, void* end, SIW bytes_count);
 
 }  // namespace _
 

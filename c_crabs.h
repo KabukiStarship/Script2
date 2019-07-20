@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_crabs.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -21,7 +21,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* A full-duplex CCrabs EXP (Expression) interpreter.
+/* A full-duplex Crabs EXP (Expression) interpreter.
 Crabs' (crabs(s)) must be word-aligned in order to run correctly
 so it's best to scan and word align the data types in the same sweep.
 
@@ -59,12 +59,12 @@ that grows down.
     |=========================|
     |   Stack of Operand**    |
  +  |=========================|
- |  |      CCrabs struct      |
+ |  |      Crabs struct      |
 0xN |=========================|
 @endcode
 */
-struct CCrabs {
-  /* List of CCrabs Error Ops. */
+struct Crabs {
+  /* List of Crabs Error Ops. */
   typedef enum Errors {
     kErrorBufferOverflow = 0,
     kErrorBufferUnderflow,
@@ -108,175 +108,175 @@ struct CCrabs {
 };
 
 /* Gets a pointer to the BIn slot. */
-LIB_MEMBER UIW* CrabsBinAddress(CCrabs* crabs);
+LIB_MEMBER UIW* CrabsBinAddress(Crabs* crabs);
 
 /* Gets the crabs's socket. */
-LIB_MEMBER CH1* CrabsBuffer(CCrabs* crabs);
+LIB_MEMBER CH1* CrabsBuffer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
-LIB_MEMBER BIn* CrabsBIn(CCrabs* crabs);
+LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-LIB_MEMBER UIW* CrabsBOutAddress(CCrabs* crabs);
+LIB_MEMBER UIW* CrabsBOutAddress(Crabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-LIB_MEMBER BOut* CrabsBOut(CCrabs* crabs);
+LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-LIB_MEMBER CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
+LIB_MEMBER Crabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
                       Operand* root, UIW* unpacked_buffer, UIW unpacked_size);
 
 /* Gets the base address of the device stack. */
-inline Operand** CrabsStack(CCrabs* crabs) {
+inline Operand** CrabsStack(Crabs* crabs) {
   return reinterpret_cast<Operand**>(&crabs->root);
 }
 
 /* Returns true if the Stack uses dynamic memory. */
-// LIB_MEMBER BOL CrabsIsDynamic (CCrabs* crabs);
+// LIB_MEMBER BOL CrabsIsDynamic (Crabs* crabs);
 
-LIB_MEMBER CH1* CrabsEndAddress(CCrabs* crabs);
+LIB_MEMBER CH1* CrabsEndAddress(Crabs* crabs);
 
 /* Resets this Stack to the new state. */
-LIB_MEMBER const Op* CrabsReset(CCrabs* crabs);
+LIB_MEMBER const Op* CrabsReset(Crabs* crabs);
 
 /* Pushes the operand at the given index of the current
 device control onto the stack.
 @return Returns nil upon success and a pointer to a CH1
 upon failure. */
-LIB_MEMBER const Op* Push(CCrabs* crabs, Operand* operand);
+LIB_MEMBER const Op* Push(Crabs* crabs, Operand* operand);
 
 /* Attempts to pop an Star off the stack and returns a pointer to a
     CH1 upon failure. */
-LIB_MEMBER const Op* Pop(CCrabs* crabs);
+LIB_MEMBER const Op* Pop(Crabs* crabs);
 
 /* Exits the current state. */
-LIB_MEMBER UI1 CrabsExitState(CCrabs* crabs);
+LIB_MEMBER UI1 CrabsExitState(Crabs* crabs);
 
 /* Sets the new state onto the expression stack.
-LIB_MEMBER const Op* CrabsSetState (CCrabs* crabs, BInState state); */
+LIB_MEMBER const Op* CrabsSetState (Crabs* crabs, BInState state); */
 
 /* Saves the current bin_state and sets the bin_state to the new state. */
-LIB_MEMBER const Op* CrabsEnterState(CCrabs* crabs, BInState state);
+LIB_MEMBER const Op* CrabsEnterState(Crabs* crabs, BInState state);
 
 /* Streams a B-Output UI1. */
-LIB_MEMBER UI1 CrabsStreamBOut(CCrabs* crabs);
+LIB_MEMBER UI1 CrabsStreamBOut(Crabs* crabs);
 
 /* Scans the BIn socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
-LIB_MEMBER const Op* CrabsScanBIn(CCrabs* crabs);  // , Portal* io);
+LIB_MEMBER const Op* CrabsScanBIn(Crabs* crabs);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
-LIB_MEMBER BOL CrabsContains(CCrabs* crabs, void* address);
+LIB_MEMBER BOL CrabsContains(Crabs* crabs, void* address);
 
 /* Pushes a header onto the scan stack.*/
-LIB_MEMBER const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header);
+LIB_MEMBER const Op* CrabsScanHeader(Crabs* crabs, const SI4* header);
 
 /* Gets the base address of the header stack. */
-LIB_MEMBER const SI4* CrabsHeaderStack(CCrabs* crabs);
+LIB_MEMBER const SI4* CrabsHeaderStack(Crabs* crabs);
 
 /* Closes the current crabs and cues it for execution. */
-LIB_MEMBER void CrabsClose(CCrabs* crabs);
+LIB_MEMBER void CrabsClose(Crabs* crabs);
 
 /* Cancels the current crabs. */
-LIB_MEMBER void CrabsCancel(CCrabs* crabs);
+LIB_MEMBER void CrabsCancel(Crabs* crabs);
 
 /* Cancels the current crabs and writes zeros to the socket. */
-LIB_MEMBER void CrabsClear(CCrabs* crabs);
+LIB_MEMBER void CrabsClear(Crabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
-LIB_MEMBER void CrabsRingBell(CCrabs* crabs, const CH1* address = "");
+LIB_MEMBER void CrabsRingBell(Crabs* crabs, const CH1* address = "");
 
 /* Script Ack-back Op replies an ACK to a Bell Op. */
-LIB_MEMBER void CrabsAckBack(CCrabs* crabs, const CH1* address = "");
+LIB_MEMBER void CrabsAckBack(Crabs* crabs, const CH1* address = "");
 
 /* Disconnects the expression. */
-LIB_MEMBER const Op* CrabsForceDisconnect(CCrabs* crabs, Error error);
+LIB_MEMBER const Op* CrabsForceDisconnect(Crabs* crabs, Error error);
 
-/* Reads the CCrabs args from the crabs->slot.
-inline const Op* CrabsArgs (CCrabs* crabs, const SI4* params, void** args) {
+/* Reads the Crabs args from the crabs->slot.
+inline const Op* CrabsArgs (Crabs* crabs, const SI4* params, void** args) {
    const CH1* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
                                    params, args);
    if (!cursor) {
    }
 }*/
 
-/* Pops the args off the CCrabs Args Stack. */
-inline const Op* CrabsArgs(CCrabs* crabs, const SI4* params, void** args) {
+/* Pops the args off the Crabs Args Stack. */
+inline const Op* CrabsArgs(Crabs* crabs, const SI4* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
   Slot slot(CrabsBIn(crabs));
   return slot.Read(params, args);
 }
 
-/* Pops the args off the CCrabs Args Stack. */
-inline const Op* CrabsArgs(CCrabs* crabs, const Op& op, void** args) {
+/* Pops the args off the Crabs Args Stack. */
+inline const Op* CrabsArgs(Crabs* crabs, const Op& op, void** args) {
   A_ASSERT(crabs);
   A_ASSERT(args);
   Slot slot(CrabsBIn(crabs));
   return slot.Read(op.in, args);
 }
 
-/* Writes the result to the CCrabs.
+/* Writes the result to the Crabs.
 @param  crabs The resulting expression.
 @param  op   The Operation with result B-Sequence header.
 @param  args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(CCrabs* crabs, const Op& op, void** args) {
+inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args) {
   return BOutWrite(CrabsBOut(crabs), op.out, args);
 }
 
-/* Writes the result to the CCrabs.
+/* Writes the result to the Crabs.
 @param  crabs The resulting expression.
 @param  op   The Operation with result B-Sequence header.
 @param  args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(CCrabs* crabs, const SI4* params, void** args) {
+inline const Op* CrabsResult(Crabs* crabs, const SI4* params, void** args) {
   if (!params) {
     return nullptr;
   }
   return BOutWrite(CrabsBOut(crabs), params, args);
 }
 
-/* Writes the result to the CCrabs.
+/* Writes the result to the Crabs.
 @return NIL upon ?
 @param  crabs The resulting expression.
 @param  op   The Operation with result B-Sequence header.
 @param  args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(CCrabs* crabs, const Op* op, void** args) {
+inline const Op* CrabsResult(Crabs* crabs, const Op* op, void** args) {
   if (!op) {
     return nullptr;
   }
   return BOutWrite(CrabsBOut(crabs), op->out, args);
 }
 
-/* Returns the Operand header or writes it to the CCrabs.
+/* Returns the Operand header or writes it to the Crabs.
 @param crabs  The expression to write the Op header to.
 @param header The Op header.
 @return Returns the header if crabs is nil. */
-LIB_MEMBER const Op* CrabsQuery(CCrabs* crabs, const Op& header);
+LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op& header);
 
-/* Returns the Op header or writes it to the CCrabs.
+/* Returns the Op header or writes it to the Crabs.
 @param crabs The expression to write the Op header to.
 @param op    The Op header.
 @return Returns the header if crabs is nil. */
-LIB_MEMBER const Op* CrabsQuery(CCrabs* crabs, const Op* op);
+LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op* op);
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 
-/* Prints the CCrabs stack to the Text socket */
-LIB_MEMBER UTF1& PrintCrabs(UTF1& printer, CCrabs* crabs);
+/* Prints the Crabs stack to the Text socket */
+LIB_MEMBER UTF1& PrintCrabs(UTF1& printer, Crabs* crabs);
 
-/* Prints the CCrabs stack to the Text socket */
-LIB_MEMBER UTF1& PrintCrabsStack(UTF1& printer, CCrabs* crabs);
+/* Prints the Crabs stack to the Text socket */
+LIB_MEMBER UTF1& PrintCrabsStack(UTF1& printer, Crabs* crabs);
 #endif
 
 }  // namespace _
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 
-/* Prints the given CCrabs to the Text socket. */
-inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::CCrabs* crabs) {
+/* Prints the given Crabs to the Text socket. */
+inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Crabs* crabs) {
   return ::_::PrintCrabs(printer, crabs);
 }
 #endif

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_strand.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -25,7 +25,7 @@ const CH1* STRPrintCharsHeader() {
 
 const CH1* STRPrintCharsBorder() {
   return "\n|+-------+-------+-------+-------+-------+-------+-------+-------|"
-         " 0x";
+         " ";
 }
 
 const CH1* STRPrintHexHeader() {
@@ -33,33 +33,8 @@ const CH1* STRPrintHexHeader() {
 }
 
 const CH1* STRPrintHexBorder() {
-  return "\n|+---------------+---------------+---------------+---------------|"
-         " 0x";
+  return "\n|+---------------+---------------+---------------+---------------|";
 }
-
-CH1 ToLower(CH1 value) { return TToLower<CH1>(value); }
-CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
-CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
-
-SI1 ToSigned(CH1 value) { return (SI1)value; }
-SI2 ToSigned(CH2 value) { return (SI2)value; }
-SI4 ToSigned(CH4 value) { return (SI4)value; }
-SIN ToSigned(CHN value) { return (SIN)value; }
-SI1 ToSigned(UI1 value) { return (SI1)value; }
-SI2 ToSigned(UI2 value) { return (SI2)value; }
-SI4 ToSigned(UI4 value) { return (SI4)value; }
-SI8 ToSigned(UI8 value) { return (SI8)value; }
-SI1 ToSigned(SI1 value) { return (SI1)value; }
-SI2 ToSigned(SI2 value) { return (SI2)value; }
-SI4 ToSigned(SI4 value) { return (SI4)value; }
-SI8 ToSigned(SI8 value) { return (SI8)value; }
-SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
-#if USING_FP4 == YES
-SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
-#endif
-#if USING_FP8 == YES
-SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
-#endif
 
 CH1 HexNibbleToLowerCase(UI1 b) {
   b = b & 0xf;
@@ -140,50 +115,38 @@ CH1* Print(CH1* start, CH1* stop, CH4 c) {
   if ((c >> 11) == 0) {  // 2 bytes.
     if (start + 2 >= stop) return nullptr;
     CH1 byte = (CH1)(0xC0 | (c >> 6));
-    // PRINT ("\nPrinting 2:");
-    // PRINT_HEX (c);
-    // PRINT (" UTF8:");
-    // PRINT_HEX (byte);
+    // D_PRINTF ("\nPrinting 2:%x  string_type:%x", c, byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | (c & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
   } else if ((c >> 16) == 0) {  // 3 bytes.
     if (start + 3 >= stop) return nullptr;
     CH1 byte = (CH1)(0xE0 | (c >> 12));
-    // PRINT ("\nPrinting 3:");
-    // PRINT_HEX (c);
-    // PRINT (" UTF8:");
-    // PRINT_HEX (byte);
+    // D_PRINTF ("\nPrinting 3:%x  string_type:%x", c, byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | (c & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
   } else if ((c >> 21) == 0) {  // 4 bytes.
     if (start + 4 >= stop) return nullptr;
     CH1 byte = (CH1)(0xF0 | (c >> 18));
-    // PRINT ("\nPrinting 4:");
-    // PRINT_HEX (c);
-    // PRINT (" UTF8:");
-    // PRINT_HEX (byte);
+    // D_PRINTF ("\nPrinting 4:%x  string_type:%x", c, byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
     byte = (CH1)(msb_mask | (c & lsb_mask));
-    // PRINT_HEX (byte);
+    // D_PRINTF_HEX (byte);
     *start++ = byte;
   } else {
-    // PRINT ("\nUTF8 print Error:CH4 is out of range:");
-    // PRINT_HEX (c);
-    // PRINT (':');
-    // PRINT ((UI4)c);
+    // D_PRINTFF ("\nUTF8 print Error: CH4 is out of range:%x:%u", c, (UI4)c);
     return nullptr;
   }
   *start = 0;
@@ -210,61 +173,65 @@ const CH1* Scan(const CH1* string, CH4& result) {
   if (!(c >> 7)) {
     r = (CH4)c;
   } else if ((c >> 5) == 0x6) {
-    // PRINT ("  Scanning 2:");
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF ("  Scanning 2:");
+    // D_PRINTF_HEX ((CH1)c);
     r = (c & 31) << 6;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= c & (CH4)63;
-    // PRINT ("  Result:");
-    // PRINT_HEX (r);
+    // D_PRINTF ("  Result:");
+    // D_PRINTF_HEX (r);
   } else if ((c >> 4) == 0xE) {
-    // PRINT ("  Scanning 3:");
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF ("  Scanning 3:");
+    // D_PRINTF_HEX ((CH1)c);
     r = ((CH4)(c & 15)) << 12;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= (c & 63) << 6;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= c & lsb_mask;
-    // PRINT ("  Result:");
-    // PRINT_HEX (r);
+    // D_PRINTF ("  Result:");
+    // D_PRINTF_HEX (r);
   } else if ((c >> 3) == 0x1E) {
-    // PRINT ("  Scanning 4:");
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF ("  Scanning 4:");
+    // D_PRINTF_HEX ((CH1)c);
     r = ((CH4)(c & 7)) << 18;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= (c & lsb_mask) << 12;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= (c & lsb_mask) << 6;
     c = ToCH4(*string++);
-    // PRINT_HEX ((CH1)c);
+    // D_PRINTF_HEX ((CH1)c);
     if (!(c & msb)) return nullptr;
     r |= c & lsb_mask;
-    // PRINT ("  Result:");
-    // PRINT_HEX (r);
+    // D_PRINTF ("  Result:");
+    // D_PRINTF_HEX (r);
   } else {
-    // PRINT ("\nUTF8 scan error:");
-    // PRINT_HEX ((CH1)c);
-    // PRINT ((SI4)c);
+    // D_PRINTF ("\nUTF8 scan error:");
+    // D_PRINTF_HEX ((CH1)c);
+    // D_PRINTF ((SI4)c);
     return nullptr;
   }
   result = r;
   return string;
 }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 
 CH1* Print(CH1* start, CH1* stop, CH2 c) {
-#if USING_UTF32 == YES
+  // U' = yyyyyyyyyyxxxxxxxxxx  // U - 0x10000
+  // W1 = 110110yyyyyyyyyy      // 0xD800 + yyyyyyyyyy
+  // W2 = 110111xxxxxxxxxx      // 0xDC00 + xxxxxxxxxx
+
+#if USING_UTF32 == YES_0
   return Print(start, stop, (CH4)c);
 #else
   enum { k2ByteMSbMask = 0xC0, k3ByteMSbMask = 0xE0, k4ByteMSbMask = 0xF0 };
@@ -311,8 +278,8 @@ CH2* Print(CH2* start, CH2* stop, CH4 c) {
   if (!msb) {
     if (start + 1 >= stop) return nullptr;
     *start++ = (CH2)c;
-    // PRINT ("\nPrinting 1:");
-    // PRINT_HEX ((CH2)c);
+    // D_PRINTF ("\nPrinting 1:");
+    // D_PRINTF_HEX ((CH2)c);
     *start = 0;
     return start;
   } else {
@@ -320,11 +287,11 @@ CH2* Print(CH2* start, CH2* stop, CH4 c) {
     if (msb >> 10) return nullptr;  // Non-Unicode value.
     if (start + 2 >= stop) return nullptr;
     CH2 nibble = (CH2)(lsb & msb_mask);
-    // PRINT ("\nPrinting 2:");
-    // PRINT_HEX ((CH2)nibble);
+    // D_PRINTF ("\nPrinting 2:");
+    // D_PRINTF_HEX ((CH2)nibble);
     *start++ = nibble;
     nibble = (CH2)(msb & msb_mask);
-    // PRINT_HEX ((CH2)nibble);
+    // D_PRINTF_HEX ((CH2)nibble);
     *start++ = nibble;
     *start = 0;
     return start;
@@ -344,19 +311,19 @@ const CH2* Scan(const CH2* string, CH4& result) {
   CH2 c = *string++;
   CH2 lsb_mask = (1 << 10) - 1;
   if (c <= lsb_mask) {
-    // PRINT (" Scanning 1:");
-    // PRINT_HEX (c);
+    // D_PRINTF (" Scanning 1:");
+    // D_PRINTF_HEX (c);
     result = (CH4)c;
   } else if ((c >> 10) == 30) {
-    // PRINT (" Scanning 1:");
-    // PRINT_HEX (c);
+    // D_PRINTF (" Scanning 1:");
+    // D_PRINTF_HEX (c);
     CH4 r = ((CH4)c) & lsb_mask;
     c = *string++;
     if (c >> 10 != 55) return nullptr;
     r |= ((CH4)(c & lsb_mask)) << 10;
   } else {
-    // PRINT (" Scan error:");
-    // PRINT_HEX (c);
+    // D_PRINTF (" Scan error:");
+    // D_PRINTF_HEX (c);
     return nullptr;
   }
   return string;
@@ -369,7 +336,7 @@ const CH4* Scan(const CH4* string, CH4& result) {
 }
 
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 CH4* Print(CH4* start, CH4* stop, CH1 c) {
   if (!start || start + 1 >= stop) return nullptr;
   *start++ = (CH4)c;
@@ -454,28 +421,12 @@ const CH1* Scan(const CH1* start, FP8& value) {
   return TStrandFloatStop<CH1>(start);
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 SI4 FloatDigitsMax() { return 15; }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 SI4 DoubleDigitsMax() { return 31; }
 #endif
-
-SI4 MSbAsserted(UI1 value) { return TMSbAssertedReverse<UI1>(value); }
-
-SI4 MSbAsserted(SI1 value) { return TMSbAssertedReverse<UI1>((UI8)value); }
-
-SI4 MSbAsserted(UI2 value) { return TMSbAssertedReverse<UI2>(value); }
-
-SI4 MSbAsserted(SI2 value) { return TMSbAssertedReverse<UI2>((UI8)value); }
-
-SI4 MSbAsserted(UI4 value) { return TMSbAssertedReverse<UI4>(value); }
-
-SI4 MSbAsserted(SI4 value) { return TMSbAssertedReverse<UI4>((UI8)value); }
-
-SI4 MSbAsserted(UI8 value) { return TMSbAssertedReverse<UI8>(value); }
-
-SI4 MSbAsserted(SI8 value) { return TMSbAssertedReverse<UI8>((UI8)value); }
 
 void FloatBytes(FP4 value, CH1& byte_0, CH1& byte_1, CH1& byte_2, CH1& byte_3) {
   UI4 ui_value = *reinterpret_cast<UI4*>(&value);
@@ -484,71 +435,6 @@ void FloatBytes(FP4 value, CH1& byte_0, CH1& byte_1, CH1& byte_2, CH1& byte_3) {
   byte_2 = (CH1)(ui_value >> 16);
   byte_3 = (CH1)(ui_value >> 24);
 }
-
-CH1* Print(CH1* begin, UI2 chars) {
-#if ALIGN_MEMORY
-  *reinterpret_cast<UI2*>(chars);
-  return begin + 2;
-#else
-  *reinterpret_cast<UI2*>(chars);
-  return begin + 2;
-#endif
-}
-
-CH1* Print(CH1* begin, CH1 byte_0, CH1 byte_1) {
-#if ALIGN_MEMORY
-  if (reinterpret_cast<UIW>(begin) & 1) {
-    begin[0] = byte_1;
-    begin[1] = NIL;
-  }
-  if (align == 0) begin[0] = byte_0;
-  begin[0] = byte_0;
-  begin[1] = NIL;
-#else
-  *reinterpret_cast<UI2*>(begin) = byte_0 | (((UI2)byte_1) << 8);
-#endif
-  return &begin[2];
-}
-
-CH1* Print(CH1* begin, CH1* stop, CH1 byte_0, CH1 byte_1, CH1 byte_2) {
-#if ALIGN_MEMORY
-  switch (reinterpret_cast<UIW>(begin) & 3) {
-    case 0: {
-      *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
-                                       ((UI4)byte_1) << 16 |
-                                       ((UI4)byte_1) << 24;
-      return &begin[4];
-    }
-    case 1: {
-      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
-      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
-      *ptr = word;
-      begin[3] = 0;
-      return &begin[4];
-    }
-    case 2: {
-      UI2 ptr = *reinterpret_cast<UI2*>(begin);
-      *ptr++ = ((UI2)byte_0) | ((UI2)byte_1) << 8;
-      *ptr++ = ((UI2)byte_2) | ((UI2)byte_3) << 8;
-      return reinterpret_cast<CH1*>(ptr);
-    }
-    case 3: {
-      *begin = byte_0;
-      UI4* ptr = reinterpret_cast<UI4*>(begin) - 1;
-      UI4 word = (*ptr) & ((UI4)0xff) << 24;  //< Mask off byte_0 UI1.
-      word |= ((UI4)byte_0) | ((UI4)byte_0) << 8 |
-              ((UI4)byte_0) << 16;  //< OR together three.
-      begin[3] = 0
-    }
-  }
-#else
-  *reinterpret_cast<UI4*>(begin) = ((UI4)byte_0) | ((UI4)byte_1) << 8 |
-                                   ((UI4)byte_1) << 16 | ((UI4)byte_1) << 24;
-#endif
-  return &begin[4];
-}
-
-// CH1 puff_lut[2 * 100 + (8 + 2) * 87]; //< Experiment for cache aligned LUT.
 
 constexpr SIW IEEE754LutElementCount() { return 87; }
 
@@ -590,7 +476,7 @@ FP4 Ceiling(FP4 value) { return ceil(value); }
 
 CH1* LastByte(CH1* c) { return c; }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*>(c) + 1; }
 
 CH2* Print(CH2* start, CH2* stop, FP4 value) {
@@ -602,7 +488,7 @@ CH2* Print(CH2* start, CH2* stop, FP8 value) {
 }
 #endif
 
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*>(c) + 3; }
 
 CH4* Print(CH4* start, CH4* stop, FP4 value) {

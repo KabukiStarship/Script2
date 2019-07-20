@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_cin.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -10,7 +10,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if USING_CONSOLE == YES
+#if USING_CONSOLE == YES_0
 
 #ifndef SCRIPT2_C_CIN
 #define SCRIPT2_C_CIN 1
@@ -34,7 +34,7 @@ COut("\n\nEnter a value 0-1,000,000").Star() << cin.Scan(a)
 @endcode
 */
 class LIB_MEMBER CIn {
-  char buffer_[24];  //< Buffer for scanning numbers and short strings.
+  CH1 buffer_[24];  //< Buffer for scanning numbers and short strings.
 
  public:
   enum {
@@ -54,16 +54,16 @@ class LIB_MEMBER CIn {
   /* Pauses until any key is pressed. */
   CIn();
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
   CIn(CH1& result);
   /* CIns a string with a larger buffer than the */
   CIn(CH1* result, SIW buffer_size);
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   CIn(CH2& result);
   CIn(CH2* result, SIW buffer_size);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   CIn(CH4& result);
   CIn(CH4* result, SIW buffer_size);
 #endif
@@ -77,28 +77,28 @@ class LIB_MEMBER CIn {
   CIn(UI4& result);
   CIn(SI8& result);
   CIn(UI8& result);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   CIn(FP4& result);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   CIn(FP8& result);
 #endif
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
   /* Reads the character from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH1& result);
+  LIB_MEMBER static BOL Scan(CH1& result);
 
   /* Reads the string with the given buffer_size from the CIn stream. */
   static LIB_MEMBER BOL Scan(CH1* result, SIW buffer_size);
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   /* Reads the character from the CIn stream. */
   static LIB_MEMBER BOL Scan(CH2& result);
 
   /* Reads the string with the given buffer_size from the CIn stream. */
   static LIB_MEMBER BOL Scan(CH2* result, SIW buffer_size);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   /* Reads the character from the CIn stream. */
   static LIB_MEMBER BOL Scan(CH4& result);
 
@@ -115,10 +115,10 @@ class LIB_MEMBER CIn {
   static LIB_MEMBER BOL Scan(UI4& result);
   static LIB_MEMBER BOL Scan(SI8& result);
   static LIB_MEMBER BOL Scan(UI8& result);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   static LIB_MEMBER BOL Scan(FP4& result);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   static LIB_MEMBER BOL Scan(FP8& result);
 #endif
 

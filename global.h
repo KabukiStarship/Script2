@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/global.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -62,4 +62,4 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if SEAM == SEAM_SCRIPT2_ROOM
 #endif
 
-#endif  //< #ifndef INCLUDED_SCRIPTGLOBAL
+#endif

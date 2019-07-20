@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_bsq.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -26,7 +26,7 @@ struct Bsq {
   }
 };
 
-#if CPU_SIZE == 16
+#if CPU_WORD_SIZE == CPU_16_BIT
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);
@@ -148,24 +148,24 @@ LIB_MEMBER SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
 
 }  // namespace _
 
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
 /*  Prints out the parameters. */
 inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Bsq bsq) {
   return ::_::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF8
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 /*  Prints out the parameters. */
 inline ::_::UTF2& operator<<(::_::UTF2& printer, ::_::Bsq bsq) {
   return ::_::PrintBsq(printer, bsq.params);
 }
 #endif  //< USING_UTF16
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 /*  Prints out the parameters. */
 inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
   return ::_::PrintBsq(printer, bsq.params);
 }
-#endif  //< USING_UTF8 == YES
+#endif  //< USING_UTF8 == YES_0
 
 #endif  //< SCRIPT2_BSQ_C
 #endif  //< #if SEAM >= SEAM_SCRIPT2_DIC

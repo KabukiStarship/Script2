@@ -3,8 +3,7 @@
 #include "t_test.h"
 
 #define DEBUG_THIS 0
-#define A_TEST_BEGIN \
-  if (!args) return __FUNCTION__
+#define A_TEST_BEGIN
 #define COUT_COUT
 #define COUT(item)
 #define D_COUT(item)

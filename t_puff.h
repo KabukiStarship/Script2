@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_puff.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -21,18 +21,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 //
 #include <cstdio>  // For sprintf_s
 namespace _ {
-
-template <typename Char = CHR>
-SIN TPrintAndCount(const Char* string) {
-  SIN print_count = 0;
-  Char c;
-  while ((c = *string++) != 0) {
-    ++print_count;
-    COut(c);
-    // Printf("%c", c);
-  }
-  return print_count;
-}
 
 template <typename Char = CHR>
 Char* TPuffItoSBegin(Char* start = nullptr) {
@@ -213,7 +201,7 @@ Char* TPrintUnsigned(Char* cursor, Char* stop, UI value) {
         nil_ptr = cursor + delta + 4;
         if (nil_ptr >= stop) return nullptr;
         UI2 digits2and1 = (UI2)(value - pow_10_ui2);
-#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
         cursor[0] = '1';
         cursor[1] = '0';
 #else
@@ -429,7 +417,7 @@ inline Char* TPrint(Char* start, SIW size, UI8 value) {
   return TPrintUnsigned<UI8, Char>(start, size, value);
 }
 
-#if CPU_SIZE < 64
+#if CPU_WORD_SIZE < 64
 template <typename Char = CHR>
 inline Char* TPrint(Char* start, Char* stop, UI4 value) {
   return TPrintUnsigned<UI4, Char>(start, stop, value);
@@ -484,7 +472,7 @@ inline Char* TPrint(Char* start, SIW size, SI8 value) {
   return TPrintSigned<SI4, UI4, Char>(start, size, value);
 }
 
-#if CPU_SIZE < 64
+#if CPU_WORD_SIZE < 64
 template <typename Char = CHR>
 inline Char* TPrint(Char* start, Char* stop, SI4 value) {
   return TPrintSigned<SI4, UI4, Char>(start, stop, value);
@@ -520,6 +508,16 @@ inline Char* TPrint(Char* start, SIW size, SI4 value) {
 #endif
 
 namespace _ {
+
+template <typename Char = CHR>
+Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
+  if (!socket || socket + 3 >= stop) return nullptr;
+  *socket++ = a;
+  *socket++ = b;
+  *socket++ = c;
+  return socket;
+}
+
 /* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
 template <typename UI>
 inline UI TUnsignedNaN() {
@@ -568,6 +566,9 @@ To use this class the sizeof (Float) must equal the sizeof (UI) and sizeof
 */
 template <typename Float = FPW, typename SI = SI4, typename UI = UIW>
 class TBinary {
+  UI f;
+  SI e;
+
  public:
   enum {
     kSizeMax = 8,
@@ -590,7 +591,7 @@ class TBinary {
   };
 
   // Constructs an uninitialized floating-point number_.
-  TBinary() {}
+  TBinary() : f(0), e(0) {}
 
   inline static UI Coefficient(UI decimal) {
     return (decimal << (kExponentSizeBits + 1)) >> (kExponentSizeBits + 1);
@@ -612,8 +613,6 @@ class TBinary {
   }
 
   TBinary(UI f, SI e) : f(f), e(e) {}
-
-  TBinary(const TBinary a, const TBinary b) {}
 
   inline static UI Exponent(UI decimal) {
     return (decimal << (kExponentSizeBits + 1)) >> (kExponentSizeBits + 1);
@@ -707,10 +706,64 @@ class TBinary {
   }
 #endif
 
- private:
-  UI f;
-  SI e;
+  inline TBinary Multiply(UI2 other_f, SI2 other_e) const {
+    UI4 p = UI4(f) * UI4(rhs_f);
+    UI2 h = p >> 16;
+    UI2 l = UI2(p);
+    if (l & (UI2(1) << 15))  // rounding
+      h++;
+    return TBinary(h, e + rhs_e + 16);
+  }
 
+  inline TBinary Multiply(UI4 rhs_f, SI4 rhs_e) const {
+    UI8 p = UI8(f) * UI8(rhs_f);
+    UI4 h = p >> 32;
+    UI4 l = UI4(p);
+    if (l & (UI4(1) << 31))  // rounding
+      h++;
+    return TBinary(h, e + rhs_e + 32);
+  }
+
+  inline TBinary Multiply(UI8 rhs_f, SI8 rhs_e) const {
+#if defined(_MSC_VER) && defined(_M_AMD64)
+    UI8 h;
+    UI8 l = _umul128(f, rhs_f, &h);
+    if (l & (UI8(1) << 63))  // rounding
+      h++;
+    return TBinary(h, e + rhs_e + 64);
+#elif (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)) && \
+    defined(__x86_64__)
+    UIH p = static_cast<UIH>(f) * static_cast<UIH>(rhs_f);
+    UI8 h = p >> 64;
+    UI8 l = static_cast<UI8>(p);
+    if (l & (UI8(1) << 63))  // rounding
+      h++;
+    return TBinary(h, e + rhs_e + 64);
+#else
+    const UI8 M32 = 0xFFFFFFFF;
+    const UI8 a = f >> 32;
+    const UI8 b = f & M32;
+    const UI8 c = rhs_f >> 32;
+    const UI8 d = rhs_f & M32;
+    const UI8 ac = a * c;
+    const UI8 bc = b * c;
+    const UI8 ad = a * d;
+    const UI8 bd = b * d;
+    UI8 tmp = (bd >> 32) + (ad & M32) + (bc & M32);
+    tmp += 1U << 31;  /// mult_round
+    return TBinary(ac + (ad >> 32) + (bc >> 32) + (tmp >> 32), e + rhs_e + 64);
+#endif
+  }
+
+  TBinary operator*(const TBinary& rhs) const { return Multiply(rhs.f, rhs.e); }
+
+  TBinary operator-(const TBinary& rhs) const {
+    D_ASSERT(e == rhs.e);
+    D_ASSERT(f >= rhs.f);
+    return TBinary(f - rhs.f, e);
+  }
+
+ private:
   static inline void Multiply(TBinary& result, TBinary& a, TBinary& b) {}
 
   static constexpr SIW LUTCount() {
@@ -756,8 +809,9 @@ class TBinary {
 
     TBinary c_mk = IEEE754Pow10(upper_estimate.e, k);
 
-    TBinary W(v.NormalizeBoundary(), c_mk);
-    TBinary w_plus(upper_estimate, c_mk), w_minus(lower_estimate, c_mk);
+    TBinary W = v.NormalizeBoundary() * c_mk,  //
+        w_plus = upper_estimate * c_mk,        //
+        w_minus = lower_estimate * c_mk;
     w_minus.f++;
     w_plus.f--;
     return DigitGen<Char>(socket, stop, W, w_plus, w_plus.f - w_minus.f, k);

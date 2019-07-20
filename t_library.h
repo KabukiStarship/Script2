@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_library.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -146,8 +146,8 @@ class Library : public Operand {
   @return       Returns nil upon success, a Set header upon query, and an
   error_t ticket upon Read-Write failure.
   @param index The index of the expression.
-  @param crabs  The CCrabs to read and write from. */
-  virtual const Op* Star(CH4 index, CCrabs* crabs) {
+  @param crabs  The Crabs to read and write from. */
+  virtual const Op* Star(CH4 index, Crabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 

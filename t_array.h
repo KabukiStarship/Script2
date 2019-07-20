@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_array.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -25,24 +25,19 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* @ingroup AsciiStack
-Stack is an ASCII Data Type designed to use a C-style templated struct in C++
-using no dynamic memory and with dynamic memory as a templated C++ warper class
-and cross-language bindings and deterministic CPU cache optimizations. */
+/* @ingroup AsciiArray
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/array.md */
 
-/* An 1-dimensional array of homogeneous kind and size types in the C format.
-
-# Array Memory Layout
+/* An ASCII Array.
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/array.md
 
 @code
     +----------------+
-    |  Packed Array  |  <-- Only if header_size = 0
-    |----------------|
-    |     Buffer     |
-    |----------------|
-    | Array Elements |
+    | C-Style Array  |  <-- Only if header_size = 0
  ^  |----------------|
- |  | TArray Header  |
+ |  |     Header     |
 0xN +----------------+
 @endcode
 */

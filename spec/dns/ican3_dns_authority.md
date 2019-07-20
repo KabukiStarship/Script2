@@ -1,5 +1,11 @@
 # [SCRIPT Specification RFC](../readme.md)
 
+## License
+
+Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [https://mozilla.org/MPL/2.0/](https://mozilla.org/MPL/2.0/).
+
 ## [Distributed Nomination System](readme.md)
 
 The **ICAN3 Distributed Nomination Systems** (**ICAN3 DNS**) is a technology for the fair promotion of unique key domains to the **Global Namespace** (i.e. ".com websites"). It's designed to make corporate control of the .com a domain a thing of the past. In ICAN3 DNS, keys without and .tags are Global in scopes, meaning they go to the DNS Authorities for that planet.

@@ -3,8 +3,7 @@
 #include "module_footer.inl"
 
 #define DEBUG_THIS 1
-#define A_TEST_BEGIN \
-  if (!args) return __FUNCTION__
+#define A_TEST_BEGIN COut(Headingf("Testing ", nullptr, 80, __FUNCTION__))
 #define A_TEST_END Print("\n\nDone testing ", __FUNCTION__)
 #define DECLARE_COUT COut CPrint()
 #define COUT(item) ::_::CPrint() << item

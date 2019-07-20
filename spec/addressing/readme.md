@@ -1,5 +1,11 @@
 # [SCRIPT Specification RFC](../readme.md)
 
+## License
+
+Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [https://mozilla.org/MPL/2.0/](https://mozilla.org/MPL/2.0/).
+
 ## [Universal Addressing Specification](readme.md)
 
 **Universal Addressing** or UA is a method of conveying physical addresses and Internet Protocol Addressing that works identically on every planet or spherical object. Before we talk about a UA it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.

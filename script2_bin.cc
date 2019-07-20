@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_bin.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -61,7 +61,7 @@ SI4 BinBufferLength(BIn* bin) {
   return (SI4)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
 }
 
-#if USING_SCRIPT2_TEXT == YES
+#if USING_SCRIPT2_TEXT == YES_0
 const CH1** STRBInStates() {
   static const CH1* kStateStrands[] = {
       "Address",       //< 0
@@ -307,7 +307,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #endif
       case SVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
       case UVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
-#if CPU_SIZE <= 16
+#if CPU_WORD_SIZE <= 16
                  // Load next pointer and increment args.
         ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/room.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -42,14 +42,14 @@ An Chinese Room works the same way as in the Chinese Room thought
 experiment. An Room receives a message through a slot in the door, the man
 in the room reads does manual optical character recognition with a pen and
 paper stack, some filing cabinets, and a library of multimaps.
-  The size of the CCrabs Stack is defined by the Script Protocol to be a
+  The size of the Crabs Stack is defined by the Script Protocol to be a
 a maximum of 2^15-1 expressions tall.
 # Memory Layout
 Some systems have the stack grow up from the bottom and heap grow up and
 vice versa.
 @code
     +-----------------------+
-    |          Heap         |
+    |         Heap          |
     |         Wall 1        |
     |         Wall 2        |
     |          ...          |
@@ -59,7 +59,7 @@ vice versa.
     |^^^^^^^^^^^^^^^^^^^^^^^|
     |     Program Stack     |
 +/- |-----------------------|
-  |  | Floor (Static Memory) |
+ |  | Floor (Static Memory) |
 0xN +-----------------------+
 @endcode
 
@@ -193,7 +193,7 @@ class Room : public Operand {
   virtual void DiagnoseProblems();
 
   /* Sets up the Room. */
-  virtual const Op* Init(CCrabs* crabs);
+  virtual const Op* Init(Crabs* crabs);
 
   /* Handler for shut down event. */
   virtual void ShutDown();
@@ -224,7 +224,7 @@ class Room : public Operand {
   virtual CH1 CommandNext();
 
   /* Script2 operations. */
-  virtual const Op* Star(CH4 index, CCrabs* crabs);
+  virtual const Op* Star(CH4 index, Crabs* crabs);
 
 #if USING_SCRIPT2_TEXT
   /* Prints the Room to the stdout. */
@@ -232,17 +232,17 @@ class Room : public Operand {
 #endif
 
  protected:
-  SI4 state_count_,                    //< Number of FSM states.
-      state_;                          //< Room state.
-  const CH1* name_;                    //< Room Name.
-  TMatrix<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
-  CCrabs* expr_;                       //< Current CCrabs being executed.
-                                       //< DC1: this.
-  Door* this_;                         //< DC2: The Door to this room.
-  Operand *xoff_,                      //< DC3: XOFF - XOFF handling device.
-      *device_,                        //< DC4: the current device control.
-      *devices_;               //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];  //< Room Floor socket.
+  SI4 state_count_,                 //< Number of FSM states.
+      state_;                       //< Room state.
+  const CH1* name_;                 //< Room Name.
+  TMap<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
+  Crabs* expr_;                     //< Current Crabs being executed.
+                                    //< DC1: this.
+  Door* this_;                      //< DC2: The Door to this room.
+  Operand *xoff_,                   //< DC3: XOFF - XOFF handling device.
+      *device_,                     //< DC4: the current device control.
+      *devices_;                    //< Pointer to the current device control.
+  UIW begin[kFloorSizeWords];       //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

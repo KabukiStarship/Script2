@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_strand.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -14,7 +14,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #if SEAM >= SEAM_SCRIPT2_STRAND
 #include "c_avalue.h"
-#include "c_strand.h"
+#include "c_utf.h"
+//#include "c_socket.h"
 #include "t_array.h"
 #include "t_utf.h"
 
@@ -154,7 +155,7 @@ class AStrand {
     Print(item);
   }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   /* Constructs a Strand and prints the given item. */
   AStrand(const CH2* item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
@@ -162,7 +163,7 @@ class AStrand {
   }
 #endif
 
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   /* Constructs a Strand and prints the given item. */
   AStrand(CH4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
@@ -223,14 +224,14 @@ class AStrand {
     Print(item);
   }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Constructs a Strand and prints the given item. */
   AStrand(FP4 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
     Print(item);
   }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Constructs a Strand and prints the given item. */
   AStrand(FP8 item) : obj_(kSize_, RamFactoryInit()) {
     Reset();
@@ -275,12 +276,12 @@ class AStrand {
 
   inline AStrand& Print(const CH1* item) { return Print<const CH1*>(item); }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   inline AStrand& Print(CH2 item) { return Print<CH2>(item); }
 
   inline AStrand& Print(const CH2* item) { return Print<const CH2*>(item); }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   inline AStrand& Print(CH4 item) { return Print<CH4>(item); }
 
   inline AStrand& Print(const CH4* item) { return Print<const CH4*>(item); }
@@ -293,10 +294,10 @@ class AStrand {
 
   inline AStrand& Print(UI8 item) { return Print<UI8>(item); }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   inline AStrand& Print(FP4 item) { return Print<FP4>(item); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   inline AStrand& Print(FP8 item) { return Print<FP8>(item); }
 #endif
 
@@ -361,13 +362,13 @@ class AStrand {
 };
 
 /*
-#if USING_UTF1 == YES
+#if USING_UTF1 == YES_0
 using Strand1 = TStrand<CH1>;
 #endif
-#if USING_UTF2 == YES
+#if USING_UTF2 == YES_0
 using Strand2 = TStrand<CH2>;
 #endif
-#if USING_UTF4 == YES
+#if USING_UTF4 == YES_0
 using Strand4 = TStrand<CH4>;
 #endif*/
 
@@ -386,7 +387,7 @@ inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
   return obj.Print(item);
 }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
     ::_::AStrand<Char, kSize_, BUF>& obj, const CH2* item) {
@@ -394,7 +395,7 @@ inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
 }
 #endif
 
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
     ::_::AStrand<Char, kSize_, BUF>& obj, const CH4* item) {
@@ -462,14 +463,14 @@ inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
   return obj.Print(item);
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
     ::_::AStrand<Char, kSize_, BUF>& obj, FP4 item) {
   return obj.Print(item);
 }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
 inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
     ::_::AStrand<Char, kSize_, BUF>& obj, FP8 item) {

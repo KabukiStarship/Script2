@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_socket.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -334,6 +334,13 @@ offset.
 template <typename T = void>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<SIW>(begin) + offset);
+}
+
+/* Masks off the lower bits. */
+template <typename UI>
+inline UI TMaskLSb(UI value, UI msb_zero_count) {
+  UI mask = (~UI(0)) >> msb_zero_count;
+  return value & mask;
 }
 
 }  // namespace _

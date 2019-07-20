@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/operand.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-struct LIB_MEMBER CCrabs;
+struct LIB_MEMBER Crabs;
 
 /* Interface for an abstract A*B Op operand.
     A Script Operand is an object that is being operated on.
@@ -47,10 +47,10 @@ struct LIB_MEMBER CCrabs;
 struct LIB_MEMBER Operand {
   /* Script2 Operations.
       @param index The index of the expression.
-      @param crabs  The CCrabs to read and write from.
+      @param crabs  The Crabs to read and write from.
       @return      Returns nil upon success, a Set header upon query, and an
                    error_t ticket upon Read-Write failure. */
-  virtual const Op* Star(CH4 index, CCrabs* crabs) = 0;
+  virtual const Op* Star(CH4 index, Crabs* crabs) = 0;
 };
 
 /* Returns the name of the given Operand. */
@@ -72,7 +72,7 @@ LIB_MEMBER CH4 OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
                  op.
     @param  op   The Op header.
     @return Returns nil upon success and an error Op upon failure.
-LIB_MEMBER const Op* OperandQuery (CCrabs* crabs, const Op* op);*/
+LIB_MEMBER const Op* OperandQuery (Crabs* crabs, const Op* op);*/
 
 /* Queries the operand for the given ??? @todo fix me */
 Slot& OperandQuery(Operand* root, const CH1* address, Slot& key);

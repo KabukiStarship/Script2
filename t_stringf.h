@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -10,12 +10,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#ifndef SCRIPT2_T_STRING
-#define SCRIPT2_T_STRING 1
+#ifndef SCRIPT2_STRINGF_TEMPLATES_H
+#define SCRIPT2_STRINGF_TEMPLATES_H 1
 
 #include "c_utf.h"
 
-#if SEAM == SEAM_SCRIPT2_RGN
+#if SEAM == SEAM_SCRIPT2_CORE
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -26,10 +26,21 @@ namespace _ {
 template <typename Printer, typename Char = CH1>
 Printer& TPrintString(Printer& o, const Char* string) {
   if (!string) return o;
-  Char c = *string;
+#if LARGEST_CHAR == 1
+  CH1 c = *string++;
+#else
+  CH4 c;
+  string = Scan(string, c);
+  if (!string) return o;
+#endif
   while (c) {
     o << c;
-    c = *(++string);
+#if LARGEST_CHAR == 1
+    c = *string++;
+#else
+    string = Scan(string, c);
+    if (!string) return o;
+#endif
   }
   return o;
 }
@@ -37,8 +48,20 @@ Printer& TPrintString(Printer& o, const Char* string) {
 template <typename Printer, typename Char = CH1>
 SIN TPrintAndCount(Printer& o, const Char* string) {
   SIN print_count = 0;
-  Char c;
-  while ((c = *string++) != 0) {
+#if LARGEST_CHAR == 1
+  CH1 c = *string++;
+#else
+  CHA c;
+  string = Scan(string, c);
+  if (!string) return -1;
+#endif
+  while (c) {
+#if LARGEST_CHAR == 1
+    c = *string++;
+#else
+    string = Scan(string, c);
+    if (!string) return -1;
+#endif
     o << c;
     ++print_count;
   }
@@ -108,10 +131,10 @@ inline UI8 ToUnsigned(UI8 value) { return (UI8)value; }
 inline UIW ToUnsigned(const void* value) {
   return reinterpret_cast<UIW>(value);
 }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 inline UI4 ToUnsigned(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 inline UI8 ToUnsigned(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
 #endif
 
@@ -136,14 +159,14 @@ template <typename Printer, typename SI, typename UI>
 Printer& TPrintHex(Printer& o, SI item) {
   return TPrintHex<Printer, UI>(o, (UI)item);
 }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Printer>
 Printer& TPrintHex(Printer& o, FP4 item) {
   UI4 value = *reinterpret_cast<UI4*>(&item);
   return TPrintHex<Printer, UI4>(o, value);
 }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 template <typename Printer>
 Printer& TPrintHex(Printer& o, FP8 item) {
   UI8 value = *reinterpret_cast<UI8*>(&item);
@@ -164,7 +187,7 @@ Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
   if (!begin) return o;
   SIW address, delta;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
-#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   if (byte_count < 0) {
     delta = -1;
     cursor -= byte_count + 1;
@@ -174,9 +197,13 @@ Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
 #else
   delta = 1;
 #endif
-  while (byte_count-- > 0) {
+  while (--byte_count >= 0) {
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
     UI1 byte = *cursor;
     cursor += delta;
+#else
+    UI1 byte = *cursor++;
+#endif
     o << HexNibbleToUpperCase(byte & 0xf) << HexNibbleToUpperCase(byte >> 4);
   }
   return o;
@@ -193,7 +220,7 @@ template <typename Printer, typename SI>
 Printer& TPrintBinary(Printer& o, const void* begin, SI byte_count) {
   if (!begin) return o;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
-#if CPU_ENDIAN == LITTLE_ENDIAN
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   SI1 delta;
   if (byte_count < 0) {
     delta = -1;
@@ -234,14 +261,14 @@ template <typename Printer, typename SI, typename UI>
 Printer& TPrintBinary(Printer& o, SI item) {
   return TPrintBinary<Printer, UI>(o, (UI)item);
 }
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Printer>
 Printer& TPrintBinary(Printer& o, FP4 item) {
   UI4 value = *reinterpret_cast<UI4*>(&item);
   return TPrintBinary<Printer, UI4>(o, value);
 }
 #endif
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Printer>
 Printer& TPrintBinary(Printer& o, FP8 item) {
   UI8 value = *reinterpret_cast<UI8*>(&item);
@@ -265,7 +292,7 @@ pointer to the nil-term CH1 upon success.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CH1>
-Printer& TPrintCenter(Printer& o, const Char* item, SI4 column_count = 80) {
+Printer& TPrintCenter(Printer& o, const Char* item, SIN column_count = 80) {
   if (!item || column_count < 1) return o;
 
   const Char* token_end = TSTREnd<Char>(item);
@@ -301,7 +328,7 @@ pointer to the nil-term CH1 upon success.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CH1>
-Printer& TPrintRight(Printer& o, const Char* item, SI4 column_count = 80) {
+Printer& TPrintRight(Printer& o, const Char* item, SIN column_count = 80) {
   if (!item || column_count < 1) return o;
 
   const Char* token_end = TSTREnd<Char>(item);
@@ -384,34 +411,42 @@ template <typename Printer, typename Char = CH1>
 const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
                         SIW column_count = 80) {
   enum {
+    kStateScanningDifferentChars = 0,
+    kStateStateDuplicateChar = 1,
     kBreakCount = 3,
   };
   if (!style) style = TSTRLinef<Char>();
   if (column_count < kBreakCount) return nullptr;
 
-  Char c = *style++,  //< Current.
-      p = ~c;         //< Previous.
+  SIW state = kStateScanningDifferentChars;
+  Char current = *style++, prev = ~current;
   SI4 hit_count = 0, column_index = 0;
-  while (c) {
-    o << Char(c);
-    ++column_index;
-    if (c == kLF) {
-      p = c;
-      do {
-        c = *style++;
-        o << Char(c);
-      } while (c == kLF);
+  while (current) {
+    o << current;
+    if (current == '\n')
       column_index = 0;
-    }
-    if (c == p && !TIsWhitespace<Char>(c)) {
-      ++hit_count;
-      if (hit_count >= kBreakCount - 1) {
-        TPrintRepeat<Printer, Char>(o, c, column_count - column_index);
-        column_index = hit_count = 0;
+    else
+      ++column_index;
+    switch (state) {
+      case kStateScanningDifferentChars: {
+        if (current == prev && !TIsWhitespace<Char>(current)) {
+          state = kStateStateDuplicateChar;
+          hit_count = 1;
+        }
+        break;
+      }
+      case kStateStateDuplicateChar: {
+        if (current != prev)
+          state = kStateScanningDifferentChars;
+        else if (++hit_count >= kBreakCount - 1) {
+          TPrintRepeat<Printer, Char>(o, current, column_count - column_index);
+          column_index = hit_count = 0;
+        }
+        break;
       }
     }
-    p = c;
-    c = *style++;
+    prev = current;
+    current = *style++;
   }
   return style;
 }
@@ -430,12 +465,6 @@ const Char* TSTRHeadingf() {
   return kStrand;
 }
 
-/* Prints an easy-to-read text heading with a formatting options.
-@code
-TPrintHeadingf<CH1> ("\n+---\0\n+---", 80, "Foo ", "Bar ",
-                     TToken<CH1> (420).String ());
-@endcode
-*/
 template <typename Printer, typename Char = CH1>
 Printer& TPrintHeadingf(Printer& o, const Char* caption,
                         const CH1* style = nullptr, SIW column_count = 80,
@@ -455,31 +484,32 @@ template <typename Printer, typename Char = CH1>
 Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
   if (!start || start >= stop) return o;
 
-  SIW size = stop - start, extra_row = ((size & 63) != 0) ? 1 : 0,
-      row_count = (size >> 6) + extra_row;
+  SIW size = stop - start,                     //<
+      extra_row = ((size & 63) != 0) ? 1 : 0,  //<
+      row_count = (size >> 6) + extra_row;     //< 2^6=64
 
   SIW num_bytes = 81 * (row_count + 2);
   size += num_bytes;
-  o << STRPrintCharsHeader() << STRPrintCharsBorder() << "0x" << Hexf(start);
+  o << STRPrintCharsHeader() << STRPrintCharsBorder() << Hexf(start);
   int i = 0;
   Char c;
   while (start <= stop) {
     o << '\n' << '|';
     for (SI4 i = 0; i < 64; ++i) {
       c = *start++;
-      if (start > stop)
+      if (start >= stop)
         c = 'x';
       else if (c < ' ')
         c = c + kPrintC0Offset;
       o << Char(c);
     }
-    o << "| 0x" << Hexf(start);
+    o << "| " << Hexf(start);
   }
-  return o << STRPrintCharsBorder() << "0x" << Hexf(start + size);
+  return o << STRPrintCharsBorder() << Hexf(start + size);
 }
 
 template <typename Printer, typename Char = CH1>
-Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
+inline Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
   return TPrintChars<Printer, Char>(o, start, start + count - 1);
 }
 
@@ -487,10 +517,34 @@ template <typename Char>
 Char* TScanChar(Char* cursor, Char& c) {}
 
 template <typename Char>
-Char TToLower(Char c) {
+inline Char TToLower(Char c) {
   if (c >= 'A' && c <= 'Z') c -= 32;
   return c;
 }
+
+inline CH1 ToLower(CH1 value) { return TToLower<CH1>(value); }
+inline CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
+inline CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
+
+inline SI1 ToSigned(CH1 value) { return (SI1)value; }
+inline SI2 ToSigned(CH2 value) { return (SI2)value; }
+inline SI4 ToSigned(CH4 value) { return (SI4)value; }
+inline SIN ToSigned(CHN value) { return (SIN)value; }
+inline SI1 ToSigned(UI1 value) { return (SI1)value; }
+inline SI2 ToSigned(UI2 value) { return (SI2)value; }
+inline SI4 ToSigned(UI4 value) { return (SI4)value; }
+inline SI8 ToSigned(UI8 value) { return (SI8)value; }
+inline SI1 ToSigned(SI1 value) { return (SI1)value; }
+inline SI2 ToSigned(SI2 value) { return (SI2)value; }
+inline SI4 ToSigned(SI4 value) { return (SI4)value; }
+inline SI8 ToSigned(SI8 value) { return (SI8)value; }
+inline SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
+#if USING_FP4 == YES_0
+inline SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
+#endif
+#if USING_FP8 == YES_0
+inline SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
+#endif
 
 template <typename Char>
 SIN TIsYesNo(const Char* string) {

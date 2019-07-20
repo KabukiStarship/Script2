@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_crabs.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -27,31 +27,31 @@ namespace _ {
 /* Used to return an erroneous result from a B-Input.
 @return Returns a Static Error Op Result.
 @param error The error type. */
-inline const Op* CrabsError(CCrabs* crabs, Error error) {
+inline const Op* CrabsError(Crabs* crabs, Error error) {
   D_PRINTF("\nCrabs %s Error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  crabs    The source CCrabs.
+@param  crabs    The source Crabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header) {
+inline const Op* CrabsError(Crabs* crabs, Error error, const SI4* header) {
   D_PRINTF("\nCrabs %s Error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  crabs    The source CCrabs.
+@param  crabs    The source Crabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
+inline const Op* CrabsError(Crabs* crabs, Error error, const SI4* header,
                             UI1 offset) {
   D_PRINTF("\nCrabs %s Error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(1);
@@ -59,48 +59,48 @@ inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
 
 /* Used to return an erroneous result from a B-Input.
 @return         Returns a Static Error Op Result.
-@param  crabs    The source CCrabs.
+@param  crabs    The source Crabs.
 @param  error   The error type.
 @param  header  The B-Sequence Header.
 @param  offset  The offset to the type in error in the B-Sequence.
 @param  address The address of the UI1 in error. */
-inline const Op* CrabsError(CCrabs* crabs, Error error, const SI4* header,
+inline const Op* CrabsError(Crabs* crabs, Error error, const SI4* header,
                             UI1 offset, CH1* address) {
   D_PRINTF("\nCrabs %s Error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(1);
 }
 
-UIW* CrabsBinAddress(CCrabs* crabs) {
+UIW* CrabsBinAddress(Crabs* crabs) {
   if (!crabs) return nullptr;
   return reinterpret_cast<UIW*>(crabs) + crabs->header_size;
 }
 
-CH1* CrabsBuffer(CCrabs* crabs) {
+CH1* CrabsBuffer(Crabs* crabs) {
   CH1* ptr = reinterpret_cast<CH1*>(crabs);
-  return ptr + sizeof(CCrabs);
+  return ptr + sizeof(Crabs);
 }
 
-BIn* CrabsBIn(CCrabs* crabs) {
+BIn* CrabsBIn(Crabs* crabs) {
   return reinterpret_cast<BIn*>(CrabsBinAddress(crabs));
 }
 
-UIW* CrabsBOutAddress(CCrabs* crabs) {
+UIW* CrabsBOutAddress(Crabs* crabs) {
   if (!crabs) {
     return nullptr;
   }
   return reinterpret_cast<UIW*>(crabs) + crabs->header_size;
 }
 
-BOut* CrabsBOut(CCrabs* crabs) {
+BOut* CrabsBOut(Crabs* crabs) {
   return reinterpret_cast<BOut*>(CrabsBOutAddress(crabs));
 }
 
-CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
+Crabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
                   UIW* unpacked_buffer, UIW unpacked_size) {
   if (!socket) {
     return nullptr;
   }
-  if (buffer_size < CCrabs::kMinBufferSize) {
+  if (buffer_size < Crabs::kMinBufferSize) {
     return nullptr;
   }
   if (stack_size < kMinStackSize) {
@@ -115,11 +115,11 @@ CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
     return nullptr;
   }
 
-  CCrabs* crabs = reinterpret_cast<CCrabs*>(socket);
+  Crabs* crabs = reinterpret_cast<Crabs*>(socket);
 
   SI4 total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
   // Calculate the size of the Slot and Stack.
-  SI4 size = (buffer_size - sizeof(CCrabs) - total_stack_size + 1) >> 1;
+  SI4 size = (buffer_size - sizeof(Crabs) - total_stack_size + 1) >> 1;
 
   //< >>1 to divide by 2
   crabs->bout_state = kBOutStateDisconnected;
@@ -132,16 +132,16 @@ CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
   D_PRINTF("\nInitializing Stack with size:%i buffer_size:%i size:%i", stack_size,
          buffer_size, size);
   crabs->bytes_left = 0;
-  // SI4 offset    = sizeof (CCrabs) + total_stack_size - sizeof (void*);
+  // SI4 offset    = sizeof (Crabs) + total_stack_size - sizeof (void*);
   // bin_offset       = sizeof (BIn) + total_stack_size + offset;
-  crabs->header_size = sizeof(CCrabs) + 2 * sizeof(void*) * stack_size;
+  crabs->header_size = sizeof(Crabs) + 2 * sizeof(void*) * stack_size;
   crabs->hash = kPrimeLargestUI2;
   crabs->result = nullptr;
   crabs->header = nullptr;
   crabs->header_start = nullptr;
   crabs->root = root;
   UIW* base_ptr =
-      reinterpret_cast<UIW*>(crabs) + sizeof(CCrabs) + stack_size * sizeof(SI4);
+      reinterpret_cast<UIW*>(crabs) + sizeof(Crabs) + stack_size * sizeof(SI4);
   crabs->slot.Set(base_ptr, unpacked_size);
   D_PRINTF("crabs->op:");
   D_COUT_HEX(crabs->operand);
@@ -150,15 +150,15 @@ CCrabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_size, Operand* root,
   return crabs;
 }
 
-// BOL CrabsIsDynamic (CCrabs* crabs) {
+// BOL CrabsIsDynamic (Crabs* crabs) {
 //    return crabs->type % 2 == 1;
 //}
 
-CH1* CrabsEndAddress(CCrabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
+CH1* CrabsEndAddress(Crabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
 
-const Op* CrabsReset(CCrabs* crabs) { return 0; }
+const Op* CrabsReset(Crabs* crabs) { return 0; }
 
-UI1 CrabsExitState(CCrabs* crabs) {
+UI1 CrabsExitState(Crabs* crabs) {
   // We are guaranteed crabs is not nil at this point.
   // if (!crabs) {
   //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
@@ -171,7 +171,7 @@ UI1 CrabsExitState(CCrabs* crabs) {
   return state;
 }
 
-const Op* CrabsSetState(CCrabs* crabs, BInState state) {
+const Op* CrabsSetState(Crabs* crabs, BInState state) {
   // We are guaranteed crabs is not nil at this point.
   // if (!crabs) {
   //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
@@ -184,7 +184,7 @@ const Op* CrabsSetState(CCrabs* crabs, BInState state) {
   return nullptr;
 }
 
-const Op* CrabsEnterState(CCrabs* crabs, BInState state) {
+const Op* CrabsEnterState(Crabs* crabs, BInState state) {
   // We are guaranteed crabs is not nil at this point.
   // if (!crabs) {
   //    return  CrabsError (CrabsBIn (crabs), kErrorImplementation);
@@ -195,9 +195,9 @@ const Op* CrabsEnterState(CCrabs* crabs, BInState state) {
   return nullptr;
 }
 
-UI1 CrabsStreamBOut(CCrabs* crabs) { return BOutStreamByte(CrabsBOut(crabs)); }
+UI1 CrabsStreamBOut(Crabs* crabs) { return BOutStreamByte(CrabsBOut(crabs)); }
 
-const Op* Push(CCrabs* crabs, Operand* operand) {
+const Op* Push(Crabs* crabs, Operand* operand) {
   if (!crabs) {
     return CrabsError(crabs, kErrorImplementation);
   }
@@ -218,7 +218,7 @@ const Op* Push(CCrabs* crabs, Operand* operand) {
     return nullptr;
 }
 
-const Op* Pop(CCrabs* crabs) {
+const Op* Pop(Crabs* crabs) {
   SI4 stack_count = crabs->stack_count;
   if (stack_count == 0) {  // This should not happen.
     return CrabsError(crabs, kErrorInvalidOperand);
@@ -240,7 +240,7 @@ const Op* Pop(CCrabs* crabs) {
     return nullptr;
 }
 
-const Op* CrabsScanBIn(CCrabs* crabs) {
+const Op* CrabsScanBIn(Crabs* crabs) {
   if (!crabs) {
     return CrabsError(crabs, kErrorImplementation);
   }
@@ -306,7 +306,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
   bin_stop = bin_begin + bin->stop;
   space = (SI4)SlotSpace(bin_start, bin_stop, size);
   length = size - space;
-  D_PRINTF("\n    Scanning CCrabs:0x%p with length:%i", crabs, length);
+  D_PRINTF("\n    Scanning Crabs:0x%p with length:%i", crabs, length);
   for (; length != 0; --length) {
     b = *bin_start;
     *slot_start++ = b;
@@ -370,7 +370,7 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
 
           result = CrabsScanHeader(crabs, params);
           if (result) {
-            D_COUT("CCrabs::Error reading address.");
+            D_COUT("Crabs::Error reading address.");
             return CrabsForceDisconnect(crabs, kErrorImplementation);
           }
 
@@ -701,13 +701,13 @@ const Op* CrabsScanBIn(CCrabs* crabs) {
   return nullptr;
 }
 
-BOL CrabsContains(CCrabs* crabs, void* address) {
+BOL CrabsContains(Crabs* crabs, void* address) {
   if (address < reinterpret_cast<UIW*>(crabs)) return false;
   if (address > CrabsEndAddress(crabs)) return false;
   return true;
 }
 
-const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header) {
+const Op* CrabsScanHeader(Crabs* crabs, const SI4* header) {
   if (crabs->stack_count >= crabs->stack_size) {
     // Handle overflow cleanup:
     return CrabsError(crabs, kErrorStackOverflow, header);
@@ -716,24 +716,24 @@ const Op* CrabsScanHeader(CCrabs* crabs, const SI4* header) {
   return 0;
 }
 
-const SI4* CrabsHeaderStack(CCrabs* crabs) {
+const SI4* CrabsHeaderStack(Crabs* crabs) {
   return reinterpret_cast<const SI4*>(reinterpret_cast<CH1*>(crabs) +
-                                      sizeof(CCrabs) + crabs->stack_count);
+                                      sizeof(Crabs) + crabs->stack_count);
 }
 
-void CrabsClose(CCrabs* crabs) {
+void CrabsClose(Crabs* crabs) {
   D_COUT("\nClosing expression.");
   crabs->stack_count = 1;
 }
 
-void CrabsCancel(CCrabs* crabs) {
+void CrabsCancel(Crabs* crabs) {
   D_COUT("\nCanceling expression.");
   crabs->stack_count = 1;
   crabs->bin_state = kBInStateAddress;
   // CrabsPush (crabs->root);
 }
 
-void CrabsClear(CCrabs* crabs) {
+void CrabsClear(Crabs* crabs) {
   // Erase the socket by writing zeros to it.
 
   BIn* bin = CrabsBIn(crabs);
@@ -754,20 +754,20 @@ void CrabsClear(CCrabs* crabs) {
   bin->stop = (SI4)Size(crabs, begin + 1);
 }
 
-void CrabsRingBell(CCrabs* crabs, const CH1* address) {
+void CrabsRingBell(Crabs* crabs, const CH1* address) {
   BOutRingBell(CrabsBOut(crabs), address);
 }
 
-void CrabsAckBack(CCrabs* crabs, const CH1* address) {
+void CrabsAckBack(Crabs* crabs, const CH1* address) {
   BOutAckBack(CrabsBOut(crabs), address);
 }
 
-const Op* CrabsForceDisconnect(CCrabs* crabs, Error error) {
+const Op* CrabsForceDisconnect(Crabs* crabs, Error error) {
   crabs->bin_state = kBInStateDisconnected;
   return CrabsError(crabs, error);
 }
 
-const Op* CrabsQuery(CCrabs* crabs, const Op& op) {
+const Op* CrabsQuery(Crabs* crabs, const Op& op) {
   if (crabs) {
     void* args[2];
     UIW num_ops = (UIW)op.in, first_op = (UIW)op.out;
@@ -806,7 +806,7 @@ CH1* CrabsEndAddress(BIn* bin) {
   return reinterpret_cast<CH1*>(bin) + sizeof(BIn) + bin->size;
 }
 
-const Op* CrabsQuery(CCrabs* crabs, const Op* op) {
+const Op* CrabsQuery(Crabs* crabs, const Op* op) {
   if (crabs) {
     if (!op) {
       return CrabsError(crabs, kErrorImplementation);
@@ -821,7 +821,7 @@ const Op* CrabsQuery(CCrabs* crabs, const Op* op) {
 }
 
 #if USING_SCRIPT2_TEXT
-UTF1& PrintCrabsStack(UTF1& utf, CCrabs* crabs) {
+UTF1& PrintCrabsStack(UTF1& utf, Crabs* crabs) {
   A_ASSERT(crabs);
 
   SI4 i, stack_count;
@@ -845,7 +845,7 @@ UTF1& PrintCrabsStack(UTF1& utf, CCrabs* crabs) {
   return utf << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
-Printer& Print(Printer& o, CCrabs* crabs) {
+Printer& Print(Printer& o, Crabs* crabs) {
   o << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << kLF
     << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left
     << "\nheader_size: " << crabs->header_size

@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /c_avalue.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -89,7 +89,7 @@ LIB_INLINE const CH1* STRType(DTW index);
 LIB_INLINE const SI1* TypeBasicSizes();
 
 /* Returns the size or max size of the given type. */
-LIB_INLINE LIB_MEMBER DTW TypeSizeOf(DTW type);
+LIB_INLINE DTW TypeSizeOf(DTW type);
 
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
@@ -106,26 +106,23 @@ LIB_INLINE BOL TypeIsSupported(DTW type);
 SI1 TypeTextFormat(DTW type);
 
 /* Masks off the primary type. */
-LIB_MEMBER LIB_INLINE SI1 TypeBase(DTW value);
+LIB_INLINE SI1 TypeBase(DTW value);
 
 /* Returns true if the given type is an Array type. */
-LIB_MEMBER LIB_INLINE BOL TypeIsArray(DTW type);
+LIB_INLINE BOL TypeIsArray(DTW type);
 
-LIB_MEMBER LIB_INLINE SIN TypeSizeWidthCode(SIN type);
-
-/* Maps the givn  */
-LIB_MEMBER LIB_INLINE DTW TypeMap(DTW core_type, DTW map_type);
+LIB_INLINE SIN TypeSizeWidthCode(SIN type);
 
 /* Maps the givn  */
-LIB_MEMBER LIB_INLINE DTW TypeMap(DTW core_type, DTW map_type, DTW size_width);
+LIB_INLINE DTW TypeMap(DTW core_type, DTW map_type);
+
+/* Maps the givn  */
+LIB_INLINE DTW TypeMap(DTW core_type, DTW map_type, DTW size_width);
 
 /* An ASCII Type-Value tuple. */
 class LIB_MEMBER AValue {
-  enum {
-    kWordCount = 2,  //< The number of poin
-  };
-  DTW type_;               //< The ASCII Data type.
-  UIW value_[kWordCount];  // The words.
+  DTW type_;      //< The ASCII Data type.
+  UIW value_[2];  //< Two data words.
 
  public:
   /* Stores a NIL type with indeterminite value_. */
@@ -134,15 +131,15 @@ class LIB_MEMBER AValue {
   /* Stores the item to the value_ and the ASCII type of the item. */
   explicit AValue(void* item);
   explicit AValue(const void* item);
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
   explicit AValue(CH1 item);
   explicit AValue(const CH1* item);
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   explicit AValue(CH2 item);
   explicit AValue(const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   explicit AValue(CH4 item);
   explicit AValue(const CH4* item);
 #endif
@@ -154,10 +151,10 @@ class LIB_MEMBER AValue {
   explicit AValue(UI4 item);
   explicit AValue(SI8 item);
   explicit AValue(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   explicit AValue(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   explicit AValue(FP8 item);
 #endif
 
@@ -175,6 +172,9 @@ class LIB_MEMBER AValue {
 
   /* Gets the pointer contained in value_[0]. */
   void* Ptr();
+  const CH1* ST1();
+  const CH2* ST2();
+  const CH4* ST3();
 
   /* Gets the first word of the value_. */
   UIW Word();
@@ -186,15 +186,15 @@ class LIB_MEMBER AValue {
   LIB_INLINE void SetNIL(UIW value);
 
   /*Sets the value_ to the given item and updates the type. */
-#if USING_UTF8 == YES
+#if USING_UTF8 == YES_0
   LIB_INLINE void Set(CH1 item);
   LIB_INLINE void Set(const CH1* item);
 #endif
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   LIB_INLINE void Set(CH2 item);
   LIB_INLINE void Set(const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   LIB_INLINE void Set(const CH4* item);
   LIB_INLINE void Set(CH4 item);
 #endif
@@ -207,10 +207,10 @@ class LIB_MEMBER AValue {
   LIB_INLINE void Set(UI4 item);
   LIB_INLINE void Set(SI8 item);
   LIB_INLINE void Set(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   LIB_INLINE void Set(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   LIB_INLINE void Set(FP8 item);
 #endif
 };

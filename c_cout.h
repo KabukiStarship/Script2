@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_cout.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -10,12 +10,12 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #pragma once
 #include <pch.h>
 
-#if USING_CONSOLE == YES
+#if USING_CONSOLE == YES_0
 
-#ifndef SCRIPT2_COUT_C
-#define SCRIPT2_COUT_C 1
+#ifndef SCRIPT2_COUT_H
+#define SCRIPT2_COUT_H 1
 
-#include "c_valuef.h"
+#include "c_stringf.h"
 
 namespace _ {
 
@@ -32,11 +32,11 @@ class LIB_MEMBER COut {
   COut(CH1 item);
   COut(const CH1* item);
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   COut(CH2 item);
   COut(const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   COut(CH4 item);
   COut(const CH4* item);
 #endif
@@ -48,10 +48,10 @@ class LIB_MEMBER COut {
   COut(UI4 item);
   COut(SI8 item);
   COut(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   COut(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   COut(FP8 item);
 #endif
   COut(Hexf item);
@@ -79,11 +79,11 @@ class LIB_MEMBER COut {
   /* Prints the given item to the stdout. */
   COut& Print(CH1 item);
   COut& Print(const CH1* item);
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   COut& Print(CH2 item);
   COut& Print(const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   COut& Print(CH4 item);
   COut& Print(const CH4* item);
 #endif
@@ -91,10 +91,10 @@ class LIB_MEMBER COut {
   COut& Print(UI4 item);
   COut& Print(SI8 item);
   COut& Print(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   COut& Print(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   COut& Print(FP8 item);
 #endif
   COut& Print(Hexf item);
@@ -112,11 +112,11 @@ class LIB_MEMBER COut {
   /* Prints a new line followed by the given item to the stdout. */
   COut& NL(CH1 item);
   COut& NL(const CH1* item);
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   COut& NL(CH2 item);
   COut& NL(const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   COut& NL(CH4 item);
   COut& NL(const CH4* item);
 #endif
@@ -124,10 +124,10 @@ class LIB_MEMBER COut {
   COut& NL(UI4 item);
   COut& NL(SI8 item);
   COut& NL(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   COut& NL(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   COut& NL(FP8 item);
 #endif
 
@@ -143,10 +143,10 @@ class LIB_MEMBER COut {
   COut& Hex(UI4 item);
   COut& Hex(SI8 item);
   COut& Hex(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   COut& Hex(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   COut& Hex(FP8 item);
 #endif
 
@@ -162,18 +162,18 @@ class LIB_MEMBER COut {
   COut& Binary(UI4 item);
   COut& Binary(SI8 item);
   COut& Binary(UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   COut& Binary(FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   COut& Binary(FP8 item);
 #endif
 
   SIN PrintAndCount(const CH1* string);
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
   SIN PrintAndCount(const CH2* string);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
   SIN PrintAndCount(const CH4* string);
 #endif
 };
@@ -185,11 +185,11 @@ LIB_INLINE COut CPrint();
 /* Prints the given item to the COut. */
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH1 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH1* item);
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH2 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH2* item);
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH4 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH4* item);
 #endif
@@ -197,10 +197,10 @@ LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI4 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI4 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI8 item);
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI8 item);
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP4 item);
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP8 item);
 #endif
 LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Hexf item);

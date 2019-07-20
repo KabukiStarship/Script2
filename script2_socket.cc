@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_socket.cc
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -72,7 +72,7 @@ const void* TypeAlign(SIW type, const void* value) {
   SIW size = TypeSizeOf(type);
   if (type <= kUI1) return value;
   SIW value_ptr = reinterpret_cast<SIW>(value);
-#if CPU_SIZE == 2
+#if CPU_WORD_SIZE == 2
   if (type <= kFP2) return AlignUpPointer2<>(value);
 #else
   if (type <= kBOL) return TAlignUp2<>(value);
@@ -111,16 +111,16 @@ SIW SizeOf(void* begin, void* stop) {
 
 SIW SizeOf(const void* start, const void* stop) {
   return reinterpret_cast<const CH1*>(stop) -
-         reinterpret_cast<const CH1*>(start);
+         reinterpret_cast<const CH1*>(start) + 1;
 }
 
 inline UIW FillWord(CH1 fill_char) {
   UIW value = (UIW)(UI1)fill_char;
-#if CPU_ENDIAN == LITTLE_ENDIAN
-#if CPU_SIZE == 64
+#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
+#if CPU_WORD_SIZE == CPU_64_BIT
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
          (value << 48) | (value << 56);
-#elif CPU_SIZE == 32
+#elif CPU_WORD_SIZE == CPU_32_BIT
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
   return value | (value << 8);
@@ -267,9 +267,7 @@ BOL SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
                        reinterpret_cast<const CH1*>(begin_b) + size_b);
 }
 
-Socket::Socket() {
-  // Nothing to do here! (:-)-+=<
-}
+Socket::Socket() : begin(nullptr), end(nullptr) {}
 
 Socket::Socket(void* begin, void* end)
     : begin(reinterpret_cast<CH1*>(begin)), end(reinterpret_cast<CH1*>(end)) {

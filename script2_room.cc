@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/script2_room.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -95,7 +95,7 @@ void Room::DiagnoseProblems() {
   // throw RoomCrashException ();
 }
 
-const Op* Room::Init(CCrabs* crabs) {
+const Op* Room::Init(Crabs* crabs) {
   if (crabs != nullptr) {
     // @todo We need to load a stored Room state.
     return nullptr;
@@ -157,7 +157,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
 
 CH1 Room::CommandNext() { return 0; }
 
-const Op* Room::Star(CH4 index, CCrabs* crabs) {
+const Op* Room::Star(CH4 index, Crabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 

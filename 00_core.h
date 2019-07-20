@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/00_core.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -11,7 +11,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include <pch.h>
 
 #include "c_rng.h"
-#include "t_stringcore.h"
+#include "c_stringf.h"
 
 #if SEAM == SEAM_SCRIPT2_CORE
 #include "module_debug.inl"
@@ -22,7 +22,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 using namespace _;
 
 namespace script2 {
-inline const CH1* _00_RNG(const CH1* args) {
+inline const CH1* _00_Core(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_CORE
   A_TEST_BEGIN;
 
@@ -48,7 +48,7 @@ inline const CH1* _00_RNG(const CH1* args) {
   D_ASSERT(CIn::Args(kArgCount, test_args));
 
   D_COUT("Result:\"");
-  D_COUT(test_argsg[1]);
+  D_COUT(test_args[1]);
   D_COUT('\"');
   D_COUT_HEADING("Testing Rangom Number Generator (RNG)");
 

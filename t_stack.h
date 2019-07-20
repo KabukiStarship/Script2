@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_stack.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -25,25 +25,24 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* An array obj of homogeneous-sized plain-old-data (POD) types.
+/* @ingroup AsciiStack
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/stack.md */
 
-An array may use two different memory layouts, one for a 1D obj of a
-given types, and another for a multi-dimensional array that uses the 1D
-array in order to store the dimensions. The only different between them is
-that the size_array variable gets set to 0.
+/* An array obj of homogeneous-sized plain-old-data (POD) types.
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/vector_types/stack.md
 
 # Stack Memory Layout
 
 @code
-    +----------------+
-    |  Packed Stack  |  <-- Only if header_size = 0
-    |----------------|
-    |     Buffer     |
-    |----------------|
-    | Stack Elements |
- ^  |----------------|
- |  | TStack Header  |
-0xN +----------------+
+    +---------------+
+    |    Buffer     |
+    |---------------|
+    | C-Style Array |
+ ^  |---------------|
+ |  |    Header     |
+0xN +---------------+
 @endcode
 */
 template <typename SIZ = SIN>
@@ -436,9 +435,7 @@ inline SIZ TStackSizeWords(SIZ count) {
   return TStackSizeMin<T, SIZ>(count) / sizeof(UIW);
 }
 
-/* An ASCII Stack with an RamFactory.
-
-This is a wrapper class for the
+/* An ASCII Stack Autoject.
 
 # Stack Memory Map
 

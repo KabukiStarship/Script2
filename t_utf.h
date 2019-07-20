@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -16,7 +16,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_utf.h"
 #include "t_puff.h"
 #include "t_socket.h"
-#include "t_stringcore.h"
+#include "t_stringf.h"
 
 #if SEAM >= SEAM_SCRIPT2_ITOS
 namespace _ {
@@ -171,14 +171,14 @@ inline Char* TPrintHex(Char* start, Char* stop, UI8 value) {
   return TPrintHex<Char, UI8>(start, stop, value);
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Char = CHR>
 inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   return TPrintHex<Char, UI4>(start, stop, ToUnsigned(value));
 }
 #endif
 
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 template <typename Char = CHR>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
   return TPrintHex<Char, UI8>(start, stop, ToUnsigned(value));
@@ -316,15 +316,6 @@ Char* TPrintChars(Char* begin, Char* end, const Char* start, const Char* stop) {
   begin = Print(begin, end, STRPrintCharsBorder());
   begin = PrintHex(begin, end, start + size);
   return begin;
-}
-
-template <typename Char = CHR>
-Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
-  if (!socket || socket + 3 >= stop) return nullptr;
-  *socket++ = a;
-  *socket++ = b;
-  *socket++ = c;
-  return socket;
 }
 
 template <typename Char = CHR>
@@ -1107,7 +1098,7 @@ class TNumString {
     if (!item) *string_ = 0;
   }
 
-#if CPU_SIZE < 64
+#if CPU_WORD_SIZE < 64
   TNumString(SI4 item, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
@@ -1132,14 +1123,14 @@ class TNumString {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Prints the item to the token_. */
   TNumString(FP4 item, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Prints the item to the token_. */
   TNumString(FP8 item, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
@@ -1248,7 +1239,7 @@ class TNumString {
     return cursor;
   }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Prints the given item to the strand_. */
   inline Char* Print(FP4 item) {
     auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
@@ -1257,7 +1248,7 @@ class TNumString {
     return cursor;
   }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Prints the given item to the strand_. */
   inline Char* Print(FP8 item) {
     auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
@@ -1292,10 +1283,10 @@ struct TUTF {
 
   /* Initializes the UTF& from the given begin pointers.
   @param begin The begin address of a word-aligned socket.
-  @param count The size in bytes. */
-  TUTF(UIW* begin, SIZ size)
+  @param count The number of Char(s) in the buffer. */
+  TUTF(UIW* begin, SIZ count)
       : start(reinterpret_cast<Char*>(begin)),
-        stop(TPtr<Char>(begin, size - 1)) {
+        stop(TPtr<Char>(begin, count - 1)) {
     D_ASSERT(start);
     Reset();
   }
@@ -1423,14 +1414,14 @@ struct TUTF {
     return Set(::_::TPrint<Char>(start, stop, item));
   }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP4 item) {
     return Set(::_::TPrint<Char>(start, stop, item));
   }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP8 item) {
@@ -1441,13 +1432,13 @@ struct TUTF {
   /* Prints the given item. */
   inline TUTF& Print(Rightf item) {
     return Set(::_::TPrintRight<Char>(start, stop, item.item.Value(),
-                                      item.valuef.count));
+                                      item.stringf.count));
   }
 
   /* Prints the given item. */
   inline TUTF& Print(Centerf item) {
     return Set(::_::TPrintCenter<Char>(start, stop, item.item.Value(),
-                                       item.valuef.count));
+                                       item.stringf.count));
   }
 
   /* Prints the given item. */
@@ -1491,11 +1482,11 @@ struct TUTF {
   /* Prints the given item as hex. */
   inline TUTF& Hex(UI8 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Prints the given item as hex. */
   inline TUTF& Hex(FP4 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Prints the given item as hex. */
   inline TUTF& Hex(FP8 item) { return Set(TPrintHex<Char>(start, stop, item)); }
 #endif
@@ -1529,11 +1520,11 @@ struct TUTF {
   /* Prints the given item as binary. */
   inline TUTF& Binary(UI8 item) { return Set(Binary<Char>(start, stop, item)); }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
   /* Prints the given item as binary. */
   inline TUTF& Binary(FP4 item) { return Set(Binary<Char>(start, stop, item)); }
 #endif
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
   /* Prints the given item as binary. */
   inline TUTF& Binary(FP8 item) { return Set(Binary<Char>(start, stop, item)); }
 #endif
@@ -1655,7 +1646,7 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH1* item) {
   return utf.Print(item);
 }
 
-#if USING_UTF16 == YES
+#if USING_UTF16 == YES_0
 template <typename Char = CHR>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 item) {
   return utf.Print(item);
@@ -1666,7 +1657,7 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH2* item) {
   return utf.Print(item);
 }
 #endif
-#if USING_UTF32 == YES
+#if USING_UTF32 == YES_0
 template <typename Char = CHR>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 item) {
   return utf.Print(item);
@@ -1718,14 +1709,14 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
   return utf.Print(item);
 }
 
-#if USING_FP4 == YES
+#if USING_FP4 == YES_0
 template <typename Char = CHR>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP4 item) {
   return utf.Print(item);
 }
 #endif
 
-#if USING_FP8 == YES
+#if USING_FP8 == YES_0
 template <typename Char = CHR>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP8 item) {
   return utf.Print(item);

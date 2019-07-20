@@ -1,4 +1,4 @@
-/* Script^2 @version 0.x
+/* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/test_tree.h
 @author  Cale McCollough <https://calemccollough.github.io>
@@ -68,7 +68,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* TestNode(const CH1* args) {
-  return TTestTree<_00_RNG
+  return TTestTree<_00_Core
 #if SEAM >= SEAM_SCRIPT2_ITOS
                    ,
                    _01_ItoS_StoI
