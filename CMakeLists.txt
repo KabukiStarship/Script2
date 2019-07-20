@@ -1,21 +1,4 @@
 cmake_minimum_required (VERSION 2.6)
-project (Tutorial)
-# The version number.
-set (SCRIPT2_VERSION_MAJOR 0)
-set (Script2_VERSION_MINOR 9)
- 
-# configure a header file to pass some of the CMake settings
-# to the source code
-configure_file (
-  "${PROJECT_SOURCE_DIR}/TutorialConfig.h.in"
-  "${PROJECT_BINARY_DIR}/TutorialConfig.h"
-  "${PROJECT_BINARY_DIR}/TutorialConfig.h"
-  "${PROJECT_BINARY_DIR}/TutorialConfig.h"
-  )
- 
-# add the binary tree to the search path for include files
-# so that we will find TutorialConfig.h
+project (Script2)
 include_directories("${PROJECT_BINARY_DIR}")
- 
-# add the executable
-add_executable(Tutorial tutorial.cxx)
+add_library(Script2LibStatic script2_autoject.cc script2_avalue.cc script2_bin.cc script2_bout.cc script2_bsq.cc script2_cin.cc script2_clock.cc script2_cout.cc script2_crabs.cc script2_error.cc script2_event.cc script2_floor.cc script2_hash.cc script2_interrupts.cc script2_lock.cc script2_morsecode.cc script2_op.cc script2_operand.cc script2_puff.cc script2_rng.cc script2_room.cc script2_slot.cc script2_socket.cc script2_stringf.cc script2_test.cc script2_utf.cc script2_vk.cc global.h)
