@@ -19,11 +19,11 @@ struct TArray {
 };
 ```
 
-##### Array Memory Layout
+##### Memory Layout
 
 ```AsciiArt
     +----------------+
-    | C-Style Array  |  <-- Only if header_size = 0
+    | C-Style Array  |
  ^  |----------------|
  |  |     Header     |
 0xN +----------------+

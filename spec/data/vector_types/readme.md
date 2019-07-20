@@ -1,0 +1,37 @@
+# [SCRIPT Specification](../../readme.md)
+
+## License
+
+Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at [https://mozilla.org/MPL/2.0/](https://mozilla.org/MPL/2.0/).
+
+## [ASCII Data Specification](../readme.md)
+
+### [Vector Types](readme.md)
+
+There are four Vector Types:
+
+1. [Array](./array.md);
+2. [Vector](./vector.md);
+3. [Matrix](./matrix); and 
+4. [Homogenous Vector](./homogeneous_vector.md)
+
+Array, Vector, and Matrix types store the element count of the data section as the first word, which is called the SIZ word. The first word means that the element width may be one size and the SIZ word might be another, such as an Array of CH1 with less than 2^15 elements.
+
+```AsciiArt
+    +--------------+
+    | Data Section |
+ ^  |--------------|
+ |  |    Header    |
+0xN +--------------+
+```
+
+This allows the size of the Vector type in bytes to be calculated with the formula:
+
+```C++
+template <typename T, typename SIZ, typename Class = TArray<SIZ>>
+inline SIW TSizeOf(SIZ size) {
+  return (SIW)sizeof(Class) + ((SIW)sizeof(T) * (SIW)size);
+}
+```
