@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -23,7 +23,7 @@ static const CH1* _11_List(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_LIST
   A_TEST_BEGIN;
 
-  List<> list(36, 960);
+  AList<> list(36, 960);
 
   D_PRINTF("\nPushing items on to the List stack...\n");
 

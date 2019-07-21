@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -25,11 +25,8 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 namespace _ {
 
-/* A ordered collection of either UTF-8 or UTF-16 strands starting at index 0.
-TLoom shares the same design pattern as the ASCII kSTR (Strand) type: the lower
-5 bits store the type kLOM, b6:b7 stores the size of the Size type and b5 stores
-if it is a UTF-8 (de-asserted) or UTF-16 (asserted).
-*/
+/* A Associative Array of strings to contiguous indexes.
+ */
 template <typename SIZ>
 struct TLoom {
   SIZ size,             //< Size of the Loom in bytes.
@@ -131,7 +128,7 @@ SIZ TLoomAdd(TLoom<SIZ>* loom, const Char* string) {
 
   if (loom->offsets.count >= loom->offsets.size) return -1;
   Char* cursor = TPtr<Char>(loom, loom->top);
-  cursor = TPrint<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
+  cursor = TPrintString<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
   if (!cursor) return -1;
   SIZ index = TStackPush<SIZ, SIZ>(&loom->offsets, loom->top);
   loom->top = TDelta<SIZ>(loom, cursor + 1);

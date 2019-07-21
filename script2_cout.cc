@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
@@ -263,23 +263,21 @@ COut& COut::Print(Centerf item) {
 }
 
 COut& COut::Print(Rightf item) {
+  SIW count = item.stringf.Count();
   switch (::_::TypeTextFormat(item.stringf.Type())) {
 #if USING_UTF8 == YES_0
     case 1: {
-      return ::_::TPrintRight<::_::COut, CH1>(*this, item.stringf.ST1(),
-                                              item.stringf.Count());
+      return ::_::TPrintRight<::_::COut, CH1>(*this, item.stringf.ST1(), count);
     }
 #endif
 #if USING_UTF16 == YES_0
     case 2: {
-      return ::_::TPrintRight<::_::COut, CH2>(*this, item.stringf.ST2(),
-                                              item.stringf.Count());
+      return ::_::TPrintRight<::_::COut, CH2>(*this, item.stringf.ST2(), count);
     }
 #endif
 #if USING_UTF32 == YES_0
     case 3: {
-      return ::_::TPrintRight<::_::COut, CH4>(*this, item.stringf.ST3(),
-                                              item.stringf.Count());
+      return ::_::TPrintRight<::_::COut, CH4>(*this, item.stringf.ST3(), count);
     }
 #endif
   }

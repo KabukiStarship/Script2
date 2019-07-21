@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -509,6 +509,29 @@ inline Char* TPrint(Char* start, SIW size, SI4 value) {
 
 namespace _ {
 
+inline void FloatBytes(FP4 value, CH1& byte_0, CH1& byte_1, CH1& byte_2,
+                       CH1& byte_3) {
+  UI4 ui_value = *reinterpret_cast<UI4*>(&value);
+  byte_0 = (CH1)(ui_value);
+  byte_1 = (CH1)(ui_value >> 8);
+  byte_2 = (CH1)(ui_value >> 16);
+  byte_3 = (CH1)(ui_value >> 24);
+}
+
+inline void FloatBytes(FP8 value, CH1& byte_0, CH1& byte_1, CH1& byte_2,
+                       CH1& byte_3, CH1& byte_4, CH1& byte_5, CH1& byte_6,
+                       CH1& byte_7) {
+  UI8 ui_value = *reinterpret_cast<UI8*>(&value);
+  byte_0 = (CH1)(ui_value);
+  byte_1 = (CH1)(ui_value >> 8);
+  byte_2 = (CH1)(ui_value >> 16);
+  byte_3 = (CH1)(ui_value >> 24);
+  byte_4 = (CH1)(ui_value >> 32);
+  byte_5 = (CH1)(ui_value >> 40);
+  byte_6 = (CH1)(ui_value >> 48);
+  byte_7 = (CH1)(ui_value >> 56);
+}
+
 template <typename Char = CHR>
 Char* TPrint3(Char* socket, Char* stop, Char a, Char b, Char c) {
   if (!socket || socket + 3 >= stop) return nullptr;
@@ -531,8 +554,8 @@ inline SI TSignedNaN() {
 }
 
 /* Masks off the given bits starting at b0. */
-template <typename I, SIN kMSb_, SIN kLSb_>
-I TMiddleBits(I value) {
+template <typename SIZ, SIN kMSb_, SIN kLSb_>
+SIZ TMiddleBits(SIZ value) {
   // The goal is to not allow for undefined shifting behavior and not pay for
   // the error checking.
   //                              b15 ---vv--- b8
@@ -540,7 +563,7 @@ I TMiddleBits(I value) {
   //          Expecting 0xff
   // right_shift_count = 32 - 16 = 16
   enum {
-    kSize = sizeof(I) * 8,
+    kSize = sizeof(SIZ) * 8,
     kMSbNatural = (kMSb_ < 0) ? 0 : kMSb_,
     kLSbLNatural = (kLSb_ < 0) ? 0 : kLSb_,
     kRightShiftTemp1 = kSize - kMSbNatural + 1,
@@ -725,14 +748,13 @@ class TBinary {
   }
 
   inline TBinary Multiply(UI8 rhs_f, SI8 rhs_e) const {
-#if defined(_MSC_VER) && defined(_M_AMD64)
+#if USING_VISUAL_CPP_X64
     UI8 h;
     UI8 l = _umul128(f, rhs_f, &h);
     if (l & (UI8(1) << 63))  // rounding
       h++;
     return TBinary(h, e + rhs_e + 64);
-#elif (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)) && \
-    defined(__x86_64__)
+#elif USING_GCC
     UIH p = static_cast<UIH>(f) * static_cast<UIH>(rhs_f);
     UI8 h = p >> 64;
     UI8 l = static_cast<UI8>(p);

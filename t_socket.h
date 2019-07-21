@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -49,15 +49,15 @@ SIN size_bytes = 32;
 SIN size_words = size_bytes >> TBitShiftCount<SIN> ()
 @endcode
 */
-template <typename I = SIW>
+template <typename SIZ = SIW>
 inline SI4 TBitShiftCount() {
-  return (sizeof(I) == 1)
+  return (sizeof(SIZ) == 1)
              ? 0
-             : (sizeof(I) == 2)
+             : (sizeof(SIZ) == 2)
                    ? 1
-                   : (sizeof(I) == 4)
+                   : (sizeof(SIZ) == 4)
                          ? 2
-                         : (sizeof(I) == 8) ? 3 : (sizeof(I) == 16) ? 4 : 0;
+                         : (sizeof(SIZ) == 8) ? 3 : (sizeof(SIZ) == 16) ? 4 : 0;
 }
 
 template <typename SIZ, SIZ kSize_>
@@ -138,8 +138,8 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
-template <typename I = UIW>
-inline I TAlignUpOffset(I value, I mask = sizeof(I) * 8 - 1) {
+template <typename SIZ = UIW>
+inline SIZ TAlignUpOffset(SIZ value, SIZ mask = sizeof(SIZ) * 8 - 1) {
   return Negative(value) & mask;
 }
 
@@ -205,8 +205,8 @@ inline T TAlignDown(const void* ptr, UIW mask = kWordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename I = UIW>
-inline I TAlignDownI(I value, I mask = (I)kWordLSbMask) {
+template <typename SIZ = UIW>
+inline SIZ TAlignDownI(SIZ value, SIZ mask = (SIZ)kWordLSbMask) {
   return value & (~mask);
 }
 
@@ -296,8 +296,8 @@ class TSocket {
   }
 
   /* Gets the begin of the socket. */
-  template <typename T = CH1, typename I = SIW>
-  inline T* Element(I index) {
+  template <typename T = CH1, typename SIZ = SIW>
+  inline T* Element(SIZ index) {
     if (!InRange(index)) return nullptr;
     return Start()[index];
   }

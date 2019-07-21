@@ -5,11 +5,11 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
 #include "c_args.h"
@@ -282,4 +282,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Crabs* crabs) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_EXPR
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY

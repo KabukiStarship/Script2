@@ -5,12 +5,12 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_DIC
+#if SEAM == SEAM_SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,7 +21,7 @@ using namespace _;
 namespace script2 {
 static const CH1* _14_Dictionary(CH1* seam_log, CH1* seam_end,
                                  const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
   A_TEST_BEGIN;
 
   UIW socket[kBufferSizeWords];

@@ -5,12 +5,12 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 
 #ifndef INCLUDED_SCRIPT2_BOUT
 #define INCLUDED_SCRIPT2_BOUT
@@ -98,4 +98,4 @@ inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
 
 #endif  //< INCLUDED_SCRIPT2_BOUT
 #undef DEBUG_SCRIPT2_BOUT
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY

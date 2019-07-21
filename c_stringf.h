@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -15,6 +15,94 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_avalue.h"
 
 namespace _ {
+
+/* Gets the header to print for PrintChars(const void*, const void*). */
+LIB_MEMBER const CH1* STRPrintCharsHeader();
+
+/* Gets the header to print for PrintChars(const void*, const void*). */
+LIB_MEMBER const CH1* STRPrintCharsBorder();
+
+/* Gets the header to print for PrintHex(const void*, const void*). */
+LIB_MEMBER const CH1* STRPrintHexHeader();
+
+/* Gets the header to print for PrintHex(const void*, const void*). */
+LIB_MEMBER const CH1* STRPrintHexBorder();
+
+LIB_MEMBER CH1 HexNibbleToLowerCase(UI1 b);
+
+LIB_MEMBER UI2 HexByteToLowerCase(UI1 b);
+
+LIB_MEMBER UI2 HexByteToUpperCase(UI1 b);
+
+LIB_MEMBER SI4 HexToByte(CH1 hex_byte);
+
+/* Converts a UI1 into a two-UI1 hex representation.
+@return Returns -1 if c is not a hex UI1.
+*/
+LIB_MEMBER SI4 HexToByte(UI2 hex);
+
+#if USING_UTF8 == YES_0
+
+/* Converts a signed or unsigned CH1 to a (unsigned) cH4. */
+LIB_INLINE CH4 ToCH4(CH1 c);
+
+/* Prints a CH2 to the CH1* by converting it to a CH4.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH1 c);
+LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH2 c);
+LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH4 c);
+LIB_MEMBER CH1* Print(CH1* cursor, SIW size, CH4 c);
+
+#endif
+
+#if USING_UTF16 == YES_0
+
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH12 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH2 c);
+LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH1 c);
+LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH4 c);
+
+LIB_MEMBER CH2* Print(CH2* cursor, SIW size, CH4 c);
+
+/* Attempts to scan a UTF-32 CH1 from the given UTF-8 string.
+@return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
+success. */
+LIB_MEMBER const CH1* Scan(const CH1* string, CH4& result);
+
+/* Attempts to scan a UTF-32 CH1 from the given UTF-16 string.
+@return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
+success. */
+LIB_MEMBER const CH2* Scan(const CH2* string, CH4& result);
+#endif
+
+#if USING_UTF32 == YES_0
+/* Prints a Unicode Char to the given socket.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   cursor The beginning of the socket.
+@param   stop   The last UI1 in the socket.
+@param   c      The CH1 to utf.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH1 c);
+LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH2 c);
+LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH4 c);
+
+/* Attempts to scan a UTF-32 CH1 from the given UTF-32 string.
+@return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
+success. */
+LIB_MEMBER const CH4* Scan(const CH4* string, CH4& result);
+#endif
 
 /* Utility class for printing numbers. */
 struct LIB_MEMBER Valuef {
@@ -132,17 +220,25 @@ struct LIB_MEMBER Charsf {
 center aligned. */
 class LIB_MEMBER Stringf {
  public:
-  enum { kLengthMax = 31 };
+  enum {
+    // Max length of the buffer in characters.
+    kLengthMax = 2 * kLargestPODType + 1,
+    // Character count of buffer word-aligned.
+    kCharCount = (kLengthMax + 1) + (kLengthMax + 1) & kWordLSbMask,
+    // Number of words in the buffer.
+    kBufferWordCount =
+        (kCharCount >> kWordBitCount) < 1 ? 1 : kCharCount >> kWordBitCount,
+  };
 
  private:
-  const void* string_;          // Pointer to a string or the buffer_.
-  SIW type_,                    //< The ASCII String Type, 1-3, of the string_.
-      count_;                   //< The count.
-  CH1 buffer_[kLengthMax + 1];  //< Strand buffer for the token.
+  const void* string_;  // Pointer to a string or the buffer_.
+  SIW type_,            //< The ASCII String Type, 1-3, of the string_.
+      count_;           //< The count.
+  UIW buffer_[kBufferWordCount];  //< Strand buffer for the token.
 
  public:
-  /* Default constructor sets the count but doesn't write a nil-term char to the
-  buffer. */
+  /* Default constructor sets the count but doesn't write a nil-term char
+  to the buffer. */
   Stringf();
 
   /* Sets the string_ to the given pointer and stores the count. */
@@ -237,6 +333,30 @@ class LIB_MEMBER Stringf {
 #if USING_FP8 == YES_0
   LIB_INLINE void Print(FP8 item);
 #endif
+
+  /* Stores the item to the first word of the buffer and the negative of the
+  count. */
+  LIB_INLINE void Hex(CH1 item, SIW count = 80);
+#if USING_UTF16 == YES_0
+  LIB_INLINE void Hex(CH2 item, SIW count = 80);
+#endif
+#if USING_UTF32 == YES_0
+  LIB_INLINE void Hex(CH4 item, SIW count = 80);
+#endif
+  LIB_INLINE void Hex(SI1 item, SIW count = 80);
+  LIB_INLINE void Hex(UI1 item, SIW count = 80);
+  LIB_INLINE void Hex(SI2 item, SIW count = 80);
+  LIB_INLINE void Hex(UI2 item, SIW count = 80);
+  LIB_INLINE void Hex(SI4 item, SIW count = 80);
+  LIB_INLINE void Hex(UI4 item, SIW count = 80);
+  LIB_INLINE void Hex(SI8 item, SIW count = 80);
+  LIB_INLINE void Hex(UI8 item, SIW count = 80);
+#if USING_FP4 == YES_0
+  LIB_INLINE void Hex(FP4 item, SIW count = 80);
+#endif
+#if USING_FP8 == YES_0
+  LIB_INLINE void Hex(FP8 item, SIW count = 80);
+#endif
 };
 
 /* Utility class for printing hex with operator<<. */
@@ -244,27 +364,27 @@ struct LIB_MEMBER Centerf {
   Stringf stringf;  //< Pointer to a pointer to utf.
 
   /* Prints the item to the value. */
-  Centerf(CH1 item, SIW count = kCOutColumnCountDefault);
-  Centerf(const CH1* start, SIW count = kCOutColumnCountDefault);
+  Centerf(CH1 item, SIW count = kConsoleWidth);
+  Centerf(const CH1* start, SIW count = kConsoleWidth);
 #if USING_UTF16 == YES_0
-  Centerf(CH2 item, SIW count = kCOutColumnCountDefault);
-  Centerf(const CH2* item, SIW count = kCOutColumnCountDefault);
+  Centerf(CH2 item, SIW count = kConsoleWidth);
+  Centerf(const CH2* item, SIW count = kConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Centerf(CH4 item, SIW count = kCOutColumnCountDefault);
-  Centerf(const CH4* item, SIW count = kCOutColumnCountDefault);
+  Centerf(CH4 item, SIW count = kConsoleWidth);
+  Centerf(const CH4* item, SIW count = kConsoleWidth);
 #endif
-  Centerf(SI4 item, SIW count = kCOutColumnCountDefault);
+  Centerf(SI4 item, SIW count = kConsoleWidth);
 
-  Centerf(UI4 item, SIW count = kCOutColumnCountDefault);
-  Centerf(SI8 item, SIW count = kCOutColumnCountDefault);
-  Centerf(UI8 item, SIW count = kCOutColumnCountDefault);
+  Centerf(UI4 item, SIW count = kConsoleWidth);
+  Centerf(SI8 item, SIW count = kConsoleWidth);
+  Centerf(UI8 item, SIW count = kConsoleWidth);
 
 #if USING_FP4 == YES_0
-  Centerf(FP4 item, SIW count = kCOutColumnCountDefault);
+  Centerf(FP4 item, SIW count = kConsoleWidth);
 #endif
 #if USING_FP8 == YES_0
-  Centerf(FP8 item, SIW count = kCOutColumnCountDefault);
+  Centerf(FP8 item, SIW count = kConsoleWidth);
 #endif
 };
 
@@ -273,26 +393,26 @@ struct LIB_MEMBER Rightf {
   Stringf stringf;  //< Pointer to a pointer to utf.
 
   /* Prints the item to the value. */
-  Rightf(CH1 item, SIW count = kCOutColumnCountDefault);
-  Rightf(const CH1* item, SIW count = kCOutColumnCountDefault);
+  Rightf(CH1 item, SIW count = kConsoleWidth);
+  Rightf(const CH1* item, SIW count = kConsoleWidth);
 #if USING_UTF16 == YES_0
-  Rightf(CH2 item, SIW count = kCOutColumnCountDefault);
-  Rightf(const CH2* item, SIW count = kCOutColumnCountDefault);
+  Rightf(CH2 item, SIW count = kConsoleWidth);
+  Rightf(const CH2* item, SIW count = kConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Rightf(CH4 item, SIW count = kCOutColumnCountDefault);
-  Rightf(const CH4* item, SIW count = kCOutColumnCountDefault);
+  Rightf(CH4 item, SIW count = kConsoleWidth);
+  Rightf(const CH4* item, SIW count = kConsoleWidth);
 #endif
-  Rightf(SI4 item, SIW count = kCOutColumnCountDefault);
-  Rightf(UI4 item, SIW count = kCOutColumnCountDefault);
-  Rightf(SI8 item, SIW count = kCOutColumnCountDefault);
-  Rightf(UI8 item, SIW count = kCOutColumnCountDefault);
+  Rightf(SI4 item, SIW count = kConsoleWidth);
+  Rightf(UI4 item, SIW count = kConsoleWidth);
+  Rightf(SI8 item, SIW count = kConsoleWidth);
+  Rightf(UI8 item, SIW count = kConsoleWidth);
 
 #if USING_FP4 == YES_0
-  Rightf(FP4 item, SIW count = kCOutColumnCountDefault);
+  Rightf(FP4 item, SIW count = kConsoleWidth);
 #endif
 #if USING_FP8 == YES_0
-  Rightf(FP8 item, SIW count = kCOutColumnCountDefault);
+  Rightf(FP8 item, SIW count = kConsoleWidth);
 #endif
 };
 
@@ -301,10 +421,10 @@ struct LIB_MEMBER Linef {
   Valuef valuef;  //< Pointer to a pointer to utf.
 
   /* Constructors a horizontal line of the character. */
-  Linef(CH1 item, SIW count = kCOutColumnCountDefault);
+  Linef(CH1 item, SIW count = kConsoleWidth);
 
   /* Constructors a horizontal line of the given string. */
-  Linef(const CH1* start = nullptr, SIW count = kCOutColumnCountDefault);
+  Linef(const CH1* start = nullptr, SIW count = kConsoleWidth);
 };
 
 /* Utility class for printing a Heading with formatting with operator<<. */
@@ -314,7 +434,7 @@ struct LIB_MEMBER Headingf {
 
   /* Saves the parameters to the corresponding data members. */
   Headingf(const CH1* caption, const CH1* style = nullptr,
-           SIW count = kCOutColumnCountDefault, const CH1* caption2 = nullptr,
+           SIW count = kConsoleWidth, const CH1* caption2 = nullptr,
            const CH1* caption3 = nullptr);
 };
 

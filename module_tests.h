@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -51,7 +51,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #if SEAM >= SEAM_SCRIPT2_BOOK
 #include "13_book.h"
 #endif
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 #include "14_dictionary.h"
 #endif
 #if SEAM >= SEAM_SCRIPT2_EXPR
@@ -117,7 +117,7 @@ static const CH1* TestNode(const CH1* args) {
                    ,
                    _13_Book
 #endif
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
                    ,
                    _14_Dictionary
 #endif
