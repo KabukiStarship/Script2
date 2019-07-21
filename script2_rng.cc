@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
@@ -62,9 +62,9 @@ void RandomNumber(UI8& result) { result = RandomUI8(); }
 
 void RandomNumber(SI8& result) { result = RandomSI8(); }
 
-template <typename I>
-I Random(I min, I max) {
-  std::uniform_int_distribution<I> dist(min, max);
+template <typename SIZ>
+SIZ Random(SIZ min, SIZ max) {
+  std::uniform_int_distribution<SIZ> dist(min, max);
   return dist(rng);
 }
 

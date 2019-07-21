@@ -5,11 +5,11 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the 
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_FLOOR
 #define SCRIPT2_FLOOR
 
@@ -30,4 +30,4 @@ LIB_MEMBER inline Floor* Global();
 }  // namespace _
 
 #endif  // #if SCRIPT2_FLOOR
-#endif  // #if SEAM >= SEAM_SCRIPT2_DIC
+#endif  // #if SEAM >= SEAM_SCRIPT2_DICTIONARY

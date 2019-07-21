@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -32,7 +32,7 @@ static const CH1* _15_Expr(const CH1* args) {
   };
   UIW buffer[kBufferWords], unpacked_expr[kBufferWords];
   D_PRINTF("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
-         &buffer[0], &buffer[kBufferWords - 1]);
+           &buffer[0], &buffer[kBufferWords - 1]);
 
   This a;
 

@@ -5,11 +5,11 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
@@ -168,4 +168,4 @@ inline ::_::UTF4& operator<<(::_::UTF4& printer, ::_::Bsq bsq) {
 #endif  //< USING_UTF8 == YES_0
 
 #endif  //< SCRIPT2_BSQ_C
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DIC
+#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY

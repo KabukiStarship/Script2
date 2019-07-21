@@ -3,9 +3,9 @@
 @file    /script2/t_map.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -37,33 +37,25 @@ use a TMap to map a Slot number_ to a slot.
 # TMap Data Structure
 
 @code
-+===========================+ -----------
++---------------------------+ -----------
 |_______ Buffer             |   ^     ^
-|_______ ...                |   |     |
-|_______ Data N             |  Data   |
-|_______ ...                |   |     |
-|_______ Data 0             |   v     |
-|===========================| -----   |
-|_______ count_max          |   ^     |
-|_______ ...                |   |     |
+|_______ Data object N      |  Data   |
+|_______ Data object 0      |   v     |
++---------------------------+ -----   |
+|_______ Buffer             |   ^     |
 |_______ Sorted Mappings N  |   |     |
-|_______ ...                |   |     |
 |        Sorted Mappings 1  |   |     |
-|===========================|   |     |
-|_______ count_max          |   |    Size
-|_______ ...                |   |     |
-|_______ Data Offset N      |   |     |
-|_______ ...                | Header  |
-|        Data Offset 1      |   |     |
-|===========================|   |     |
-|_______ count_max          |   |     |
-|_______ ...                |   |     |
-|_______ Type UI1 N         |   |     |
-|_______ ...                |   |     |
-|        Type UI1 1         |   |     |   ^ Up in addresses
-|===========================|   |     |   |
-|    TSparseArray Struct    |   v     v   ^
-+===========================+ ----------- ^ 0xN
++---------------------------+   |     |
+|_______ Buffer             |   |    SIZ
+|_______ Data Offset N      | Header  |
+|        Data Offset 1      |  SIZ   |
++---------------------------+   |     |
+|_______ Buffer             |   |     |
+|_______ Type N             |   |     |
+|        Type 1             |   |     |   ^ Up in addresses
++---------------------------+   |     |   |
+|     TMapSparse Struct     |   v     v   ^
++---------------------------+ ----------- ^ 0xN base address
 @endcode
 
 | Map | Max Values | % Collisions (p) |           Overhead             |
@@ -78,7 +70,7 @@ for a key, there might or might not be a hash table.
 
 How to calculate size:
 The size of any size map can be calculated as follows:
-size = ; * (2*sizeof (Index) + sizeof (Size)) + collissionSize +
+size = ; * (2*sizeof (Index) + sizeof (SIZ)) + collissionSize +
 
 # Cache Page Optimizations
 
@@ -88,9 +80,9 @@ function '\"' (i.e. "foo" is Index 44).
 
 # Use Case Scenario
 
-We are creating a plug-in LIB_MEMBER. We need to create a map in the LIB_MEMBER code, and
-pass it over to the program. The LIB_MEMBER manages the memory for the map. This
-map might contain several million entries, and more than 4GB of data.
+We are creating a plug-in LIB_MEMBER. We need to create a map in the LIB_MEMBER
+code, and pass it over to the program. The LIB_MEMBER manages the memory for the
+map. This map might contain several million entries, and more than 4GB of data.
 
 ### Why So Many TMap Types?
 
@@ -122,25 +114,25 @@ pair, so we need a 64-bit map.
 .
 @endcode
 */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = SI4, typename SIY = SI2>
 struct TMap {
-  Size size;        //< ASCII AArray size.
-  Index table_size, /*< Size of the key strings in bytes.
+  SIZ size;       //< ASCII AArray size.
+  SIY table_size, /*< SIZ of the key strings in bytes.
                      Set to 0 for ASCII Map. */
-      size_pile;    /*< Size of the collisions pile in bytes.
-                        Set to 0 for ASCII Map and ASCII Multimap. */
-  I count,          //< Element count.
-      count_max;    //< Max count of items that can fit in the socket.
+      size_pile,  /*< SIZ of the collisions pile in bytes.
+                      Set to 0 for ASCII Map and ASCII Multimap. */
+      count,      //< Element count.
+      count_max;  //< Max count of items that can fit in the socket.
 };
 
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
 constexpr SI4 MapOverheadPerIndex() {
-  return sizeof(2 * sizeof(Index) + sizeof(Size) + sizeof(Size) + 3);
+  return sizeof(2 * sizeof(Index) + sizeof(SIZ) + sizeof(SIZ) + 3);
 };
 
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-constexpr Size MapSizeRequired(Index count) {
-  return count * sizeof(2(sizeof(Index) + sizeof(Size)) + 3);
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+constexpr SIZ MapSizeRequired(Index count) {
+  return count * sizeof(2(sizeof(Index) + sizeof(SIZ)) + 3);
 };
 
 enum {
@@ -158,16 +150,16 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4.
 */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-TMap<Size, Index, I>* MapInit(UIW* socket, Size size, I count_max) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+TMap<SIZ, Index, I>* MapInit(UIW* socket, SIZ size, I count_max) {
   A_ASSERT(socket);
 
   if (table_size >= size) return nullptr;
-  Size kSizeMin = sizeof(TMap<Size, Index, I>) +
-                  count_max * (MapOverheadPerIndex<Size, Index, I>() + 2);
+  SIZ kSizeMin = sizeof(TMap<SIZ, Index, I>) +
+                 count_max * (MapOverheadPerIndex<SIZ, Index, I>() + 2);
   if (table_size < kSizeMin) return nullptr;
 
-  Map<Size, Index, I>* map = reinterpret_cast<TMap*>(socket);
+  Map<SIZ, Index, I>* map = reinterpret_cast<TMap*>(socket);
   map->size = table_size;
   map->table_size = table_size;
   map->size_pile = 1;
@@ -175,36 +167,36 @@ TMap<Size, Index, I>* MapInit(UIW* socket, Size size, I count_max) {
   map->count = 0;
   return map;
 }
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-inline Size MapSizeBoundsLower() {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+inline SIZ MapSizeBoundsLower() {
   return 64;
 }
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-inline Size MapSizeBoundsUpper() {
-  Size bounds_upper = 0;
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+inline SIZ MapSizeBoundsUpper() {
+  SIZ bounds_upper = 0;
   bounds_upper = ~bounds_upper;
   return bounds_upper - 7;
 }
 
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
 inline Index MapCountBoundsLower() {
-  return 8 / sizeof(Size);
+  return 8 / sizeof(SIZ);
 }
 
 /* Creates a map from dynamic memory. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-UIW* MapNew(Size size = 0, I count_max = 0) {
-  size = AlignDown<SI8, Size>(size);
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+UIW* MapNew(SIZ size = 0, I count_max = 0) {
+  size = AlignDown<SI8, SIZ>(size);
   count_max = AlignDown<SI8, Index>(count_max);
-  Size size_min = MapSizeBoundsLower<Size, Index, I>();
-  Index count_min = MapCountBoundsLower<Size, Index, I>();
+  SIZ size_min = MapSizeBoundsLower<SIZ, Index, I>();
+  Index count_min = MapCountBoundsLower<SIZ, Index, I>();
   if (size < size_min || count_max < count_min) {
     size = size_min;
     count_max = size_min;
   }
 
   UIW* socket = new UIW[size >> kWordBitCount];
-  TMap<Size, Index, I>* map = reinterpret_cast<TMap<Size, Index, I>*>(socket);
+  TMap<SIZ, Index, I>* map = reinterpret_cast<TMap<SIZ, Index, I>*>(socket);
   map->size = size;
   map->table_size = 0;
   map->size_pile = 0;
@@ -227,8 +219,8 @@ Index MapCountUpperBounds() {
 
 /* Insets the given key-type-value tuple.
  */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+Index MapInsert(TMap<SIZ, Index, I>* map, void* value, SI4 type, Index index) {
   A_ASSERT(map);
   A_ASSERT(value);
 
@@ -236,25 +228,25 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
 
   Index count = map->count, count = map->stack->count, temp;
 
-  Size table_size = map->table_size;
+  SIZ table_size = map->table_size;
 
   if (count >= count) return ~0;
   //< We're out of buffered indexes.
 
-  CH1* types = reinterpret_cast<CH1*>(map) + sizeof(TMap<Size, Index, I>);
-  Size* data_offsets = reinterpret_cast<Size*>(types + count * (sizeof(Size)));
-  Size *hashes = reinterpret_cast<Size*>(types +
-                                         count * (sizeof(Size) + sizeof(Size))),
-       *hash_ptr;
+  CH1* types = reinterpret_cast<CH1*>(map) + sizeof(TMap<SIZ, Index, I>);
+  SIZ* data_offsets = reinterpret_cast<SIZ*>(types + count * (sizeof(SIZ)));
+  SIZ *hashes =
+          reinterpret_cast<SIZ*>(types + count * (sizeof(SIZ) + sizeof(SIZ))),
+      *hash_ptr;
   Index *indexes = reinterpret_cast<Index*>(
-            types + count * (sizeof(Size) + 2 * sizeof(Index))),
+            types + count * (sizeof(SIZ) + 2 * sizeof(Index))),
         *unsorted_indexes = indexes + count,
         *collission_list = unsorted_indexes + count;
   CH1 *keys = reinterpret_cast<CH1*>(map) + table_size - 1, *destination;
 
   // Calculate space left.
-  Size value = table_size - count * MapOverheadPerIndex<Size, Index, I>(),
-       key_length = static_cast<UI2>(strlen(id)), size_pile;
+  SIZ value = table_size - count * MapOverheadPerIndex<SIZ, Index, I>(),
+      key_length = static_cast<UI2>(strlen(id)), size_pile;
 
   D_COUT_LINEF('-');
   D_PRINTF(
@@ -263,7 +255,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
       id, "hashes", hashes, "key_offsets", key_offsets, "keys", keys, "indexes",
       indexes, "value", value);
 
-  Size temp_id = HashPrime16(id), current_mapping;
+  SIZ temp_id = HashPrime16(id), current_mapping;
 
   if (key_length > value) {
     D_PRINTF("\nBuffer overflow!");
@@ -302,7 +294,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
 
     current_mapping = hashes[mid];
     D_PRINTF("\nhigh: %i mid: %i low %i hash: %x", high, mid, low,
-           current_mapping);
+             current_mapping);
 
     if (current_mapping > temp_id) {
       high = mid - 1;
@@ -461,7 +453,7 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
   hash_ptr += count;
   //*test = hashes;
   D_PRINTF("\nl_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u", count,
-         Diff(map, hashes), Diff(map, hash_ptr), Diff(map, hashes + mid));
+           Diff(map, hashes), Diff(map, hash_ptr), Diff(map, hashes + mid));
   hashes += mid;
   MapPrint(map);
   while (hash_ptr > hashes) {
@@ -494,8 +486,8 @@ Index MapInsert(TMap<Size, Index, I>* map, void* value, SI4 type, Index index) {
 }
 
 /* Deletes the map contents without wiping the contents. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-void MapClear(TMap<Size, Index, I>* map) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+void MapClear(TMap<SIZ, Index, I>* map) {
   A_ASSERT(map);
 
   map->count = 0;
@@ -503,17 +495,17 @@ void MapClear(TMap<Size, Index, I>* map) {
 }
 
 /* Deletes the map contents by overwriting it with zeros. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-void MapWipe(TMap<Size, Index, I>* map) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+void MapWipe(TMap<SIZ, Index, I>* map) {
   A_ASSERT(map);
 
-  Size size = map->size;
-  MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<Size, Index, I>), size);
+  SIZ size = map->size;
+  MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<SIZ, Index, I>), size);
 }
 
 /* Returns true if this crabs contains only the given address. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-BOL MapContains(TMap<Size, Index, I>* map, void* value) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+BOL MapContains(TMap<SIZ, Index, I>* map, void* value) {
   A_ASSERT(map);
 
   if (value < map) return false;
@@ -522,42 +514,41 @@ BOL MapContains(TMap<Size, Index, I>* map, void* value) {
 }
 
 /* Removes the item at the given address from the map. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-BOL MapRemove(TMap<Size, Index, I>* map, void* adress) {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+BOL MapRemove(TMap<SIZ, Index, I>* map, void* adress) {
   A_ASSERT(map);
 
   return false;
 }
 
 /* Prints this object out to the console. */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2,
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2,
           typename Char = CHR>
-TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
+TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<SIZ, Index, I>* map) {
   A_ASSERT(map)
   l
 
       Index count = map->count,
             collision_index, temp;
-  Size table_size = map->table_size, size_pile = map->size_pile;
+  SIZ table_size = map->table_size, size_pile = map->size_pile;
 
   utf << '_';
 
-  utf << "\nMap" << sizeof(Size) << ": " << Hex<>(map) << " count:" << count
+  utf << "\nMap" << sizeof(SIZ) << ": " << Hex<>(map) << " count:" << count
       << "size_pile:" << size_pile << " size:" << map->size;
   utf << "\n|";
   for (SI4 i = 0; i < 79; ++i) utf << '_';
   utf << kLF;
 
   const CH1* states =
-      reinterpret_cast<const CH1*>(map) + sizeof(TMap<Size, Index, I>);
-  const Size* key_offsets = reinterpret_cast<const Size*>(states + count);
-  const Size* data_offsets =
-      reinterpret_cast<const Size*>(states + count * sizeof(Size));
-  const Size* hashes = reinterpret_cast<const Size*>(
-      states + count * (sizeof(Size) + sizeof(Size)));
+      reinterpret_cast<const CH1*>(map) + sizeof(TMap<SIZ, Index, I>);
+  const SIZ* key_offsets = reinterpret_cast<const SIZ*>(states + count);
+  const SIZ* data_offsets =
+      reinterpret_cast<const SIZ*>(states + count * sizeof(SIZ));
+  const SIZ* hashes = reinterpret_cast<const SIZ*>(
+      states + count * (sizeof(SIZ) + sizeof(SIZ)));
   const Index *indexes = reinterpret_cast<const Index*>(
-                  states +
-                  count * (sizeof(Size) + sizeof(Size) + sizeof(Index))),
+                  states + count * (sizeof(SIZ) + sizeof(SIZ) + sizeof(Index))),
               *unsorted_indexes = indexes + count,
               *collission_list = unsorted_indexes + count, *begin;
   const CH1* keys = reinterpret_cast<const CH1*>(map) + table_size - 1;
@@ -574,11 +565,10 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
     collision_index = indexes[i];
     utf << Right<Index>(i, 3) << Right<Index>(keys - key_offsets[i], 10)
         << Right<Index>(key_offsets[i], 8)
-        << Right<Hex<Size>>(HashPrime16(keys - key_offsets[i]), 10)
-        << Right<Hex<Size>>(hashes[unsorted_indexes[i]], 10)
-        << Right<Hex<Size>>(hashes[i], 10)
-        << Right<Size>(unsorted_indexes[i], 10)
-        << Right<Size>(collision_index, 11);
+        << Right<Hex<SIZ>>(HashPrime16(keys - key_offsets[i]), 10)
+        << Right<Hex<SIZ>>(hashes[unsorted_indexes[i]], 10)
+        << Right<Hex<SIZ>>(hashes[i], 10) << Right<SIZ>(unsorted_indexes[i], 10)
+        << Right<SIZ>(collision_index, 11);
 
     if (collision_index != ~0 && i < item_count) {
       // Print collisions.
@@ -609,55 +599,55 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<Size, Index, I>* map) {
     .
     @endcode
 */
-template <typename Size = UI4, typename Index = SI4, typename I = SI2>
-class Map {
+template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+class AMap {
  public:
   /* Constructs a Map with the given count_max.
-      If count_max is less than 0 it will be set to the default value. IF the
-      */
-  Map(Size size = 0, I count_max = 0)
-      : socket(MapNew<Size, Index, I>(size, count_max)) {
+  If count_max is less than 0 it will be set to the default value. If the
+  */
+  AMap(SIZ size = 0, I count_max = 0)
+      : socket(MapNew<SIZ, Index, I>(size, count_max)) {
     // Nothing to do here! (:-)-+=<
   }
 
   /* Destructs the dynamically allocated socket. */
-  ~Map() { delete socket; }
+  ~AMap() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<Size, Index, I>(AArray(), adress);
+    return MapRemove<SIZ, Index, I>(AArray(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<Size, Index, I>(AArray(), value);
+    return MapContains<SIZ, Index, I>(AArray(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<Size, Index, I>(AArray()); }
+  inline void Wipe() { MapWipe<SIZ, Index, I>(AArray()); }
 
   static inline Index CountUpperBounds() {
-    return MapCountUpperBounds<Size, Index, I>();
+    return MapCountUpperBounds<SIZ, Index, I>();
   }
 
   inline Index Insert(void* value, Index index, SI4 type) {
-    return MapInsert<Size, Index, I>(AArray(), value, type, index);
+    return MapInsert<SIZ, Index, I>(AArray(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<Size, Index, I>(AArray()); }
+  inline void Clear() { MapClear<SIZ, Index, I>(AArray()); }
 
   /* Prints this object to a printer. */
   inline UTF1& Print(UTF1& printer) {
-    return MapPrint<Size, Index, I>(utf, AArray());
+    return MapPrint<SIZ, Index, I>(utf, AArray());
   }
 
  private:
   UIW* socket;
 
-  /* Returns the socket casted as a TMap<Size, Index, I>*. */
-  inline TMap<Size, Index, I>* AArray() {
-    return reinterpret_cast<TMap<Size, Index, I>*>(socket);
+  /* Returns the socket casted as a TMap<SIZ, Index, I>*. */
+  inline TMap<SIZ, Index, I>* AArray() {
+    return reinterpret_cast<TMap<SIZ, Index, I>*>(socket);
   }
 };  //< class Map
 }  // namespace _

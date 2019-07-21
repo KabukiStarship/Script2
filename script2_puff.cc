@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -110,8 +110,6 @@ static const UI2 kDigits00To99[100] = {
     0x3939};
 #endif
 
-const UI2* BinaryLUTDecimals() { return kDigits00To99; }
-
 // @todo This is not Puff and it should be. We really only want one that works
 // with one word. We also have to run on 16-bit systems so we have to provide
 // a lower memory cost overhead version of puff.
@@ -172,6 +170,9 @@ SIN STRLength(SI8 value) {
 #endif
 
 #if SEAM >= SEAM_SCRIPT2_FTOS
+
+constexpr SIW IEEE754LutElementCount() { return 87; }
+
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
@@ -251,6 +252,31 @@ BOL IsNaN(UI8 value) { return value > TUnsignedNaN<UI8>(); }
 BOL IsNaN(SI1 value) {
   return (value > TUnsignedNaN<SI1>()) && (value > TSignedNaN<SI1, UI1>());
 }
+
+BOL IsNaN(FP4 value) { return isnan(value); }
+
+BOL IsNaN(FP8 value) { return isnan(value); }
+
+const UI2* BinaryLUTDecimals() { return kDigits00To99; }
+
+#if USING_FP4 == YES_0
+SI4 FloatDigitsMax() { return 15; }
+#endif
+#if USING_FP8 == YES_0
+SI4 DoubleDigitsMax() { return 31; }
+#endif
+
+BOL IsFinite(FP4 value) { return isfinite(value); }
+
+BOL IsFinite(FP8 value) { return isfinite(value); }
+
+BOL IsInfinite(FP4 value) { return isinf(value); }
+
+BOL IsInfinite(FP8 value) { return isinf(value); }
+
+FP8 Ceiling(FP8 value) { return ceil(value); }
+
+FP4 Ceiling(FP4 value) { return ceil(value); }
 
 /* Masks the lower bits using faster bit shifting.
 @brief The algorithm has you enter the highest bit rather than bit count because

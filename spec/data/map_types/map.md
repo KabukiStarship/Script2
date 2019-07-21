@@ -8,42 +8,34 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 ## [ASCII Data Specification](../readme.md)
 
-### [Objects](readme.md)
+### [Map Types]./(readme.md)
 
-#### Maps
+#### Map
 
 Maps are one-to-one maps of Id-{Type-Value} tuples identical in structure to Lists with the exception that the . are stacks of type-value tuples similar in memory layout to Books but they **do not** have keys. Functionally they are identical to B-Sequences expect the offsets are stored as an Array to eliminate the need to scan through the header to calculate the data offset. Sequences are ideal for situations where the fastest possible RW performance is needed.
 
 ##### Memory Layout
 
-```
-    +==========================+ -----------
+```AsciiArt
+    +--------------------------+ -----------
     |_______ Buffer            |   ^     ^
-    |_______ ...               |   |     |
     |_______ Data N            |  Data   |
-    |_______ ...               |   |     |
     |_______ Data 0            |   v     |
-    |==========================| -----   |
-    |_______ count_max         |   ^     |
-    |_______ ...               |   |     |
+    +--------------------------+ -----   |
+    |_______ Buffer            |   ^     |
     |_______ Sorted Mappings N |   |     |
-    |_______ ...               |   |     |
     |        Sorted Mappings 1 |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |    Size
-    |_______ ...               |   |     |
-    |_______ Data Offset N     |   |     |
-    |_______ ...               | Header  |
+    +--------------------------+   |     |
+    |_______ Buffer            |   |    Size
+    |_______ Data Offset N     | Header  |
     |        Data Offset 1     |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Type byte N       |   |     |
-    |_______ ...               |   |     |
-    |        Type byte 1       |   |     |   ^ 0x(N+c)+sizeof(AsciiList<UI, SI>)
-    |==========================|   |     |   |
-    |  AsciiMap<UI, SI> Struct |   v     v   ^
-    +==========================+ ----------- ^ 0xN
+    +--------------------------+   |     |
+    |_______ Buffer            |   |     |
+    |_______ Type N            |   |     |
+    |        Type 1            |   |     |
+    +--------------------------+   |     |   ^ Up in addresses.
+    |  AsciiMap<UI, SI> Struct |   v     v   |
+    +--------------------------+ ----------- ^ 0xN
 ```
 
 ##### Set C++ Data Structure

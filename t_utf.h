@@ -2,10 +2,10 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/t_utf.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -13,7 +13,6 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #ifndef SCRIPT2_TUTF
 #define SCRIPT2_TUTF 1
 
-#include "c_utf.h"
 #include "t_puff.h"
 #include "t_socket.h"
 #include "t_stringf.h"
@@ -34,42 +33,19 @@ inline Char* TSTREnd(Char* start, Char delimiter = 0) {
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
-template <typename Char = CHR, typename I = SIN>
-I TSTRLength(const Char* start) {
+template <typename Char = CHR, typename SIZ = SIN>
+SIZ TSTRLength(const Char* start) {
   D_ASSERT(start);
-  return (I)(TSTREnd<Char>(start) - start);
+  return (SIZ)(TSTREnd<Char>(start) - start);
 }
 
 /* Gets the length of the given CH1.
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM strings with a nil-term
 CH1. */
-template <typename Char = CHR, typename I = SIN>
-inline I TSTRLength(Char* start) {
+template <typename Char = CHR, typename SIZ = SIN>
+inline SIZ TSTRLength(Char* start) {
   return TSTRLength<Char>(reinterpret_cast<const Char*>(start));
-}
-
-/* Finds the end of a decimal number of the given string.
-@return Nil if the string doesn't contain a decimal or is nil.
-@param  start The start of the string to search. */
-template <typename Char = const CH1>
-const Char* TSTRDecimalEnd(const Char* start) {
-  if (!start) return start;
-  Char c = *start++;
-  if (c == '-') c = *start++;
-  if (c < '0' || c > '9') return nullptr;
-  c = *start++;
-  while (TIsDigit<Char>(c)) {
-    c = *start++;
-    if (c <= 0) return start - 1;
-  }
-  return start - 1;
-}
-
-template <typename Char = const CH1>
-Char* TSTRDecimalEnd(Char* start) {
-  const Char* ptr = reinterpret_cast<const Char*>(start);
-  return const_cast<Char*>(TSTRDecimalEnd<Char>(ptr));
 }
 
 }  // namespace _
@@ -347,8 +323,8 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     return nullptr;
   }
   size += num_bytes;
-  cursor = TPrint<Char>(cursor, stop, STRPrintCharsHeader());
-  cursor = TPrint<Char>(cursor, stop, STRPrintCharsBorder());
+  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsHeader());
+  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsBorder());
   cursor = TPrintHex<Char>(cursor, stop, address_ptr);
 
   D_PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
@@ -370,7 +346,7 @@ Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
     *cursor++ = ' ';
     cursor = TPrintHex<Char>(cursor, stop, address_ptr);
   }
-  cursor = TPrint<Char>(cursor, stop, STRPrintCharsBorder());
+  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsBorder());
   return TPrintHex<Char>(cursor, stop, address_ptr + size);
 }
 
@@ -479,38 +455,6 @@ inline Char* TSTRLineEnd(Char* cursor, Char* stop, SI4 column_count = 80) {
   return const_cast<const Char*>(
       TSTRLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
                         reinterpret_cast<const Char*>(stop), column_count));
-}
-
-/* Finds the stop of the decimals in the s, if there are any.
-@param  cursor  The first Char in the buffer.
-@param  stop    The last Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRDecimalEnd(const Char* cursor, const Char* stop) {
-  A_ASSERT(cursor);
-  A_ASSERT(cursor <= stop);
-  Char c = *cursor++;
-  if (!c) return nullptr;
-  if (c == '-') {  // It might be negative.
-    if (cursor >= stop) return nullptr;
-    c = *cursor++;
-  }
-  if (!TIsDigit<Char>(c)) return nullptr;
-  while (c) {
-    if (cursor >= stop) return nullptr;
-    if (!TIsDigit<Char>(c)) return cursor - 1;
-    c = *cursor++;
-  }
-  return cursor - 1;
-}
-
-/* Finds the stop of the decimals in the s, if there are any.
-@param  cursor  The first Char in the buffer.
-@param  stop    The last Char in the buffer. */
-template <typename Char = CHR>
-inline Char* TSTRDecimalEnd(Char* cursor, Char* stop) {
-  return const_cast<Char*>(
-      TSTRDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
-                           reinterpret_cast<const Char*>(stop)));
 }
 
 /* Skips the given Char in a s if there are any.
@@ -1056,84 +1000,78 @@ inline Char* TStrandInit(UIW* obj, SIZ size) {
 
 /* Utility class for printing numbers. */
 template <typename Char = CHR, SIN kLengthMax = 31>
-class TNumString {
+class TStringf {
   Char string_[kLengthMax + 1];  //< Strand buffer for the token.
 
  public:
   enum { kLengthMax = kLengthMax };
 
-  TNumString(CH1 item = 0, SI4 count = kLengthMax)
+  TStringf(CH1 item = 0, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
     auto cursor = string_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TNumString(const CH1* item, SI4 count = kLengthMax)
+  TStringf(const CH1* item, SI4 count = kLengthMax)
       : string_(item), count_(count) {
     if (!item) *string_ = 0;
   }
 
-  TNumString(CH2 item = 0, SI4 count = kLengthMax)
+  TStringf(CH2 item = 0, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
     auto cursor = string_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TNumString(const CH2* item, SI4 count = kLengthMax)
+  TStringf(const CH2* item, SI4 count = kLengthMax)
       : string_(item), count_(count) {
     if (!item) *string_ = 0;
   }
 
-  TNumString(CH4 item = 0, SI4 count = kLengthMax)
+  TStringf(CH4 item = 0, SI4 count = kLengthMax)
       : string_(string_), count_(count) {
     auto cursor = string_;
     *cursor = item;
     *cursor = 0;
   }
 
-  TNumString(const CH4* item, SI4 count = kLengthMax)
+  TStringf(const CH4* item, SI4 count = kLengthMax)
       : string_(item), count_(count) {
     if (!item) *string_ = 0;
   }
 
 #if CPU_WORD_SIZE < 64
-  TNumString(SI4 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(SI4 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 
   /* Prints the item to the token_. */
-  TNumString(UI4 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(UI4 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 #endif
 
   /* Prints the item to the token_. */
-  TNumString(SI8 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(SI8 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 
   /* Prints the item to the token_. */
-  TNumString(UI8 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(UI8 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 
 #if USING_FP4 == YES_0
   /* Prints the item to the token_. */
-  TNumString(FP4 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(FP4 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 #endif
 #if USING_FP8 == YES_0
   /* Prints the item to the token_. */
-  TNumString(FP8 item, SI4 count = kLengthMax)
-      : string_(string_), count_(count) {
+  TStringf(FP8 item, SI4 count = kLengthMax) : string_(string_), count_(count) {
     TPrint<Char>(string_, string_ + kLengthMax, item);
   }
 #endif
@@ -1381,17 +1319,17 @@ struct TUTF {
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH1* item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(::_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH2* item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(::_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH4* item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(::_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints the given item. */
@@ -1745,7 +1683,7 @@ inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Headingf item) {
 
 template <typename Char = CHR>
 inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TNumString<Char> item) {
+                                   ::_::TStringf<Char> item) {
   return utf.Print(item);
 }
 

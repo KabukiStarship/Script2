@@ -49,7 +49,6 @@
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_event.cc" />
     <ClCompile Include="script2_floor.cc" />
-    <ClCompile Include="script2_utf.cc" />
     <ClCompile Include="script2_stringf.cc" />
     <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
@@ -116,7 +115,6 @@
     <ClInclude Include="c_socket.h" />
     <ClInclude Include="c_cout.h" />
     <ClInclude Include="c_test.h" />
-    <ClInclude Include="c_utf.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
     <ClInclude Include="t_wall.h" />

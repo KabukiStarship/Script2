@@ -121,9 +121,6 @@
     <ClCompile Include="script2_cin.cc">
       <Filter>script2</Filter>
     </ClCompile>
-    <ClCompile Include="script2_utf.cc">
-      <Filter>script2</Filter>
-    </ClCompile>
     <ClCompile Include="script2_stringf.cc">
       <Filter>script2</Filter>
     </ClCompile>
@@ -310,9 +307,6 @@
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="t_utf.h">
-      <Filter>script2</Filter>
-    </ClInclude>
-    <ClInclude Include="c_utf.h">
       <Filter>script2</Filter>
     </ClInclude>
     <ClInclude Include="01_itos.h">

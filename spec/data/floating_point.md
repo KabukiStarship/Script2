@@ -8,7 +8,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 
 ## [ASCII Data Specification](readme.md)
 
-### Binary Numbers
+### Floating Point
 
 Script supports, 16, 32, 64, and 128-bit floating-point numbers as defined, also called half, float, and double, and quadruple precision float-point numbers, as defined in the IEEE754 specification.
 

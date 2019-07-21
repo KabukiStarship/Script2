@@ -5,7 +5,7 @@
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -63,7 +63,7 @@ static const Char* _04_UTF() {
   const Char* cursor;
   for (SI4 i = 0; i < kTestStrandsCount; ++i) {
     D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
-    cursor = TPrint<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
+    cursor = TPrintString<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
     D_COUT_CHARS(str_a, 64);
     Test(cursor);
     cursor = TSTREquals<Char>(str_a, kTestStrands[i][0]);

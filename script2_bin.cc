@@ -3,12 +3,12 @@
 @file    /script2/script2_bin.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SEAM_SCRIPT2_DICTIONARY
 #include "c_bin.h"
 
 #include "c_avalue.h"
@@ -17,7 +17,7 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 #include "c_hash.h"
 #include "c_socket.h"
 
-#if SEAM == SEAM_SCRIPT2_DIC
+#if SEAM == SEAM_SCRIPT2_DICTIONARY
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
 #define D_COUT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);
@@ -35,28 +35,28 @@ inline CH1* BInBegin(BIn* bin) {
 }
 
 CH1* BInEnd(BIn* bin) {
-  A_ASSERT(bin);
+  D_ASSERT(bin);
   return reinterpret_cast<CH1*>(bin) + bin->size;
 }
 
 SIW SlotLength(CH1* begin, CH1* stop, UIW size) {
-  A_ASSERT(begin < stop);
+  D_ASSERT(begin < stop);
   return stop - begin;
 }
 
 SIW SlotSpace(CH1* begin, CH1* stop, UIW size) {
-  A_ASSERT(begin < stop);
+  D_ASSERT(begin < stop);
   return size - (stop - begin);
 }
 
 SI4 BInSpace(BIn* bin) {
-  A_ASSERT(bin);
+  D_ASSERT(bin);
   CH1* txb_ptr = reinterpret_cast<CH1*>(bin);
   return (SI4)SlotSpace(txb_ptr + bin->begin, txb_ptr + bin->stop, bin->size);
 }
 
 SI4 BinBufferLength(BIn* bin) {
-  A_ASSERT(bin);
+  D_ASSERT(bin);
   CH1* begin = BInBegin(bin);
   return (SI4)SlotLength(begin + bin->begin, begin + bin->stop, bin->size);
 }
@@ -129,7 +129,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header, SI4 offset,
 }
 
 BIn* BInInit(UIW* socket, SI4 size) {
-  A_ASSERT(size >= kSlotSizeMin);
+  D_ASSERT(size >= kSlotSizeMin);
 
   BIn* bin = reinterpret_cast<BIn*>(socket);
   bin->size = size - sizeof(BIn);
@@ -213,8 +213,8 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
     D_PRINTF("\nparam:%u type:%s start:%i stop:%i length:%u", arg_index + 1,
-           STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
-           length);
+             STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
+             length);
     switch (type) {
       ;
       case kNIL:
@@ -269,7 +269,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         // Byte 1
         ui1 = *begin;  //< Read
         D_PRINTF(" \'%u\', ", ui1);
-        hash = HashPrime16(ui1, hash);            //< Hash
+        hash = HashPrime16(ui1, hash);       //< Hash
         if (++begin >= stop) begin -= size;  //< Increment
         *ui1_ptr = ui1;                      //< Write
         break;
@@ -292,13 +292,13 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 
         // Byte 1
         ui1 = *begin;                        //< Read
-        hash = HashPrime16(ui1, hash);            //< Hash
+        hash = HashPrime16(ui1, hash);       //< Hash
         if (++begin >= stop) begin -= size;  //< Increment
         *ui1_ptr = ui1;                      //< Write
 
         // Byte 2
         ui1 = *begin;                        //< Read
-        hash = HashPrime16(ui1, hash);            //< Hash
+        hash = HashPrime16(ui1, hash);       //< Hash
         if (++begin >= stop) begin -= size;  //< Increment
         *(ui1_ptr + 1) = ui1;                //< Write
         break;
@@ -387,7 +387,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         for (value = sizeof(UI4); value > 0; --value) {
           // Byte 1
           ui1 = *begin;                        //< Read
-          hash = HashPrime16(ui1, hash);            //< Hash
+          hash = HashPrime16(ui1, hash);       //< Hash
           if (++begin >= stop) begin -= size;  //< Increment
           *ui1_ptr++ = ui1;                    //< Write
         }
@@ -411,7 +411,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         for (value = sizeof(UI8); value > 0; --value) {
           // Byte 1
           ui1 = *begin;                        //< Read
-          hash = HashPrime16(ui1, hash);            //< Hash
+          hash = HashPrime16(ui1, hash);       //< Hash
           if (++begin >= stop) begin -= size;  //< Increment
           *ui1_ptr++ = ui1;                    //< Write
         }
@@ -613,7 +613,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 
 #if USING_SCRIPT2_TEXT
 UTF1& Print(UTF1& utf, BIn* bin) {
-  A_ASSERT(bin);
+  D_ASSERT(bin);
 
   SI4 size = bin->size;
   return utf << Line('_', 80) << " size:" << bin->size
