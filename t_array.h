@@ -55,14 +55,16 @@ constexpr SIZ TSizeMin() {
 /* The upper bounds defines exactly how many elements can fit into a space
 in memory. */
 template <typename T = SI4, typename SIZ = SI4, typename Class = TArray<SIZ>>
-constexpr SIZ TArraySizeMax() {
-  return (SIZ)((((~(SIZ)0) - 7) - (SIZ)sizeof(TStack<SIZ>)) / (SIZ)sizeof(T));
+inline SIZ TArraySizeMax() {
+  SIZ max_value = SIZ((~SIZ(0)) >> 1);
+  return max_value - SIZ(sizeof(UIW) - 1 - sizeof(Class) / sizeof(T));
 }
 
 /* Gets the ASCII Autoject size. */
-template <typename T, typename SIZ, typename Class = TArray<SIZ>>
-inline SIW TSizeOf(SIZ size) {
-  return (SIW)sizeof(Class) + ((SIW)sizeof(T) * (SIW)size);
+template <typename T, typename SIZ, typename Class = TArray<SIZ>,
+          typename I = SIZ>
+inline I TSizeOf(SIZ size) {
+  return I(sizeof(Class) + sizeof(T) * size);
 }
 
 /* Gets the ASCII Autoject size. */
@@ -299,7 +301,7 @@ class AArray {
  public:
   /* Constructs. */
   AArray() {
-    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), buffer_.Size(),
+    TArrayInit<T, SIZ>(obj_, buffer_.Buffer(), SIZ(buffer_.Size()),
                        RamFactoryInit());
   }
 
@@ -340,7 +342,7 @@ class AArray {
 
   /* Sets the begin to the given pointer.
   @return Nil if the input is nil. */
-  inline UIW* BeginSet(void* socket) { return AutojectBeginSet(socket); }
+  inline UIW* BeginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
 
   /* Returns the start of the OBJ. */
   inline T* Start() {
@@ -396,7 +398,7 @@ class AArray {
     return TArrayPrint<T, SIZ>(o, Array());
   }
 
-  void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
+  void COut() { PrintTo<_::COut>(_::COut().Star()); }
 
  private:
   /* Gets the correct */

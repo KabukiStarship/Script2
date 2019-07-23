@@ -41,10 +41,9 @@ LIB_MEMBER SI4 HexToByte(CH1 hex_byte);
 */
 LIB_MEMBER SI4 HexToByte(UI2 hex);
 
-#if USING_UTF8 == YES_0
+LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH1 c);
 
-/* Converts a signed or unsigned CH1 to a (unsigned) cH4. */
-LIB_INLINE CH4 ToCH4(CH1 c);
+#if SEAM >= SEAM_SCRIPT2_UTF
 
 /* Prints a CH2 to the CH1* by converting it to a CH4.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -53,12 +52,9 @@ LIB_INLINE CH4 ToCH4(CH1 c);
 @param   c      The CH12 to utf.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
-LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH1 c);
 LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH2 c);
 LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH4 c);
 LIB_MEMBER CH1* Print(CH1* cursor, SIW size, CH4 c);
-
-#endif
 
 #if USING_UTF16 == YES_0
 
@@ -103,11 +99,12 @@ LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH4 c);
 success. */
 LIB_MEMBER const CH4* Scan(const CH4* string, CH4& result);
 #endif
+#endif
 
 /* Utility class for printing numbers. */
 struct LIB_MEMBER Valuef {
-  SIW count;    //< Width of the item in bytes or columns.
-  AValue item;  //< The type and value.
+  SIW count;     //< Width of the item in bytes or columns.
+  AValue value;  //< The type and value.
 
   /* Constrcts a NIL item. */
   Valuef();
@@ -142,6 +139,12 @@ struct LIB_MEMBER Valuef {
   Valuef(FP8 item, SIW count = 0);
 #endif
 
+  /* Gets the value.Type(). */
+  LIB_INLINE SIW Type();
+
+  /* Gets the count. */
+  LIB_INLINE SIW Count();
+
   /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
   LIB_INLINE void* Value();
 
@@ -149,12 +152,21 @@ struct LIB_MEMBER Valuef {
   LIB_INLINE void* Ptr();
 
   /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
+  LIB_INLINE CH1* ST1();
+
+  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
+  LIB_INLINE CH2* ST2();
+
+  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
+  LIB_INLINE CH4* ST3();
+
+  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
   LIB_INLINE UIW Word();
 };
 
 /* Utility class for printing a POD type in hex. */
 struct Hexf {
-  Valuef valuef;  //< Stores the ASCII Type, it's value, and the byte count.
+  Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
   Hexf(const void* item, SIW size);
   /* Stores the given item to the buffer and stores the size. */
@@ -177,7 +189,7 @@ struct Hexf {
 
 /* Utility class for printing a POD type in binary. */
 struct LIB_MEMBER Binaryf {
-  Valuef valuef;  //< Stores the ASCII Type, it's value, and the byte count.
+  Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
   /* Stores the given item to the buffer and store the size. */
   Binaryf(const void* item);
@@ -201,7 +213,7 @@ struct LIB_MEMBER Binaryf {
 /* Utility class for printing blocks of characters to the console with
 operator<<. */
 struct LIB_MEMBER Charsf {
-  Valuef valuef;  //< The type, value and CH1, CH2, or CH4 count.
+  Valuef element;  //< The type, value and CH1, CH2, or CH4 count.
 
   /* Constructs the value from the delta between start and stop. */
   Charsf(const void* start, const void* stop);
@@ -239,7 +251,7 @@ class LIB_MEMBER Stringf {
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
   to the buffer. */
-  Stringf();
+  Stringf() {}
 
   /* Sets the string_ to the given pointer and stores the count. */
   Stringf(const CH1* item);
@@ -290,6 +302,14 @@ class LIB_MEMBER Stringf {
 #if USING_FP8 == YES_0
   Stringf(FP8 item, SIW count);
 #endif
+
+  LIB_INLINE UIW Word();
+
+  /* Gets a void pointer to the value_. */
+  void* Value();
+
+  /* Gets the pointer contained in value_[0]. */
+  void* Ptr();
 
   /* Gets the string_. */
   LIB_INLINE const CH1* ST1();
@@ -361,7 +381,10 @@ class LIB_MEMBER Stringf {
 
 /* Utility class for printing hex with operator<<. */
 struct LIB_MEMBER Centerf {
-  Stringf stringf;  //< Pointer to a pointer to utf.
+  Stringf element;  //< Pointer to a pointer to utf.
+
+  /* Does nothing. */
+  Centerf();
 
   /* Prints the item to the value. */
   Centerf(CH1 item, SIW count = kConsoleWidth);
@@ -386,11 +409,38 @@ struct LIB_MEMBER Centerf {
 #if USING_FP8 == YES_0
   Centerf(FP8 item, SIW count = kConsoleWidth);
 #endif
+
+  /* Stores the item to the first word of the buffer and the negative of the
+  count. */
+  LIB_INLINE Centerf& Hex(CH1 item, SIW count = 80);
+#if USING_UTF16 == YES_0
+  LIB_INLINE Centerf& Hex(CH2 item, SIW count = 80);
+#endif
+#if USING_UTF32 == YES_0
+  LIB_INLINE Centerf& Hex(CH4 item, SIW count = 80);
+#endif
+  LIB_INLINE Centerf& Hex(SI1 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(UI1 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(SI2 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(UI2 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(SI4 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(UI4 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(SI8 item, SIW count = 80);
+  LIB_INLINE Centerf& Hex(UI8 item, SIW count = 80);
+#if USING_FP4 == YES_0
+  LIB_INLINE Centerf& Hex(FP4 item, SIW count = 80);
+#endif
+#if USING_FP8 == YES_0
+  LIB_INLINE Centerf& Hex(FP8 item, SIW count = 80);
+#endif
 };
 
 /* Utility class for printing hex with operator<<. */
 struct LIB_MEMBER Rightf {
-  Stringf stringf;  //< Pointer to a pointer to utf.
+  Stringf element;  //< Pointer to a pointer to utf.
+
+  /* Does nothing. */
+  Rightf();
 
   /* Prints the item to the value. */
   Rightf(CH1 item, SIW count = kConsoleWidth);
@@ -414,11 +464,35 @@ struct LIB_MEMBER Rightf {
 #if USING_FP8 == YES_0
   Rightf(FP8 item, SIW count = kConsoleWidth);
 #endif
+
+  /* Stores the item to the first word of the buffer and the negative of the
+  count. */
+  LIB_INLINE Rightf& Hex(CH1 item, SIW count = 80);
+#if USING_UTF16 == YES_0
+  LIB_INLINE Rightf& Hex(CH2 item, SIW count = 80);
+#endif
+#if USING_UTF32 == YES_0
+  LIB_INLINE Rightf& Hex(CH4 item, SIW count = 80);
+#endif
+  LIB_INLINE Rightf& Hex(SI1 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(UI1 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(SI2 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(UI2 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(SI4 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(UI4 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(SI8 item, SIW count = 80);
+  LIB_INLINE Rightf& Hex(UI8 item, SIW count = 80);
+#if USING_FP4 == YES_0
+  LIB_INLINE Rightf& Hex(FP4 item, SIW count = 80);
+#endif
+#if USING_FP8 == YES_0
+  LIB_INLINE Rightf& Hex(FP8 item, SIW count = 80);
+#endif
 };
 
 /* Utility class for printing a horizontal line with operator<<. */
 struct LIB_MEMBER Linef {
-  Valuef valuef;  //< Pointer to a pointer to utf.
+  Valuef element;  //< Pointer to a pointer to utf.
 
   /* Constructors a horizontal line of the character. */
   Linef(CH1 item, SIW count = kConsoleWidth);
@@ -429,7 +503,7 @@ struct LIB_MEMBER Linef {
 
 /* Utility class for printing a Heading with formatting with operator<<. */
 struct LIB_MEMBER Headingf {
-  Stringf caption;
+  Stringf element;
   const CH1 *style, *caption2, *caption3;
 
   /* Saves the parameters to the corresponding data members. */

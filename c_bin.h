@@ -130,7 +130,7 @@ LIB_MEMBER UTF4& Print(UTF4& printer, BIn* bin);
 
 #if USING_SCRIPT2_TEXT == YES_0
 /* Prints out the bin to the text. */
-inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BIn* bin) {
+inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
   return Print(utf, bin);
 }
 #endif

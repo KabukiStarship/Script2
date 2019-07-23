@@ -31,6 +31,13 @@ struct TStrand {
   SIZ size;  //< Size of the ASCII Object.
 };
 
+/* Initializes an ASCII Strand. */
+template <typename SIZ, typename Char>
+inline Char* TStrandInit(UIW* obj, SIZ size) {
+  UIW address = reinterpret_cast<UIW>(TArrayInit<SIZ>(obj, size));
+  return reinterpret_cast<Char*>(address + sizeof(SIZ));
+}
+
 template <typename Char, typename SIZ = SIN>
 UIW* TStrandClone(Autoject& obj) {
   UIW *begin = obj.begin,  //
@@ -71,7 +78,7 @@ template <typename Char, typename T, typename SIZ = SIN>
 void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item) {
   Char *start = utf.start,  //
       *stop = utf.stop;
-  auto cursor = ::_::TPrint<Char>(start, stop, item);
+  auto cursor = _::TPrint<Char>(start, stop, item);
   if (!cursor) {
     *utf.start = 0;  //< Replace the delimiter so we can copy the string.
     SIW count = stop - start;
@@ -89,7 +96,7 @@ void TStrandPrint(Autoject& obj, TUTF<Char>& utf, T item) {
         obj.ram_factory = factory;
       }
 
-      cursor = ::_::TPrint<Char>(utf.start, utf.stop, item);
+      cursor = _::TPrint<Char>(utf.start, utf.stop, item);
       D_COUT("\nRe-printed:\"");
       D_COUT(utf.start);
       D_COUT("\"");
@@ -136,26 +143,29 @@ TStrand<UI4, TSocket<64>> () << "Hello world!";
 template <typename Char = CHR, SIN kSize_ = kSTRCount,
           typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
 class AStrand {
+  TUTF<Char> utf_;              //< UTF for the strand.
+  AArray<Char, SIN, BUF> obj_;  //< AutoArray of Char(s).
+
  public:
   /* Constructs a Strand that auto-grows from stack to heap.
   @param factory ASCII Factory to call when the Strand overflows. */
   AStrand() : obj_(kSize_) { Reset(); }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH1 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(CH1 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH1* item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(const CH1* item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
 #if USING_UTF16 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH2* item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(const CH2* item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
@@ -163,88 +173,88 @@ class AStrand {
 
 #if USING_UTF32 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH4 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(CH4 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 #endif
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH4* item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(const CH4* item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI1 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(SI1 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI1 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(UI1 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI2 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(SI2 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI2 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(UI2 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI4 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(SI4 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI4 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(UI4 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI8 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(SI8 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI8 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(UI8 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
 #if USING_FP4 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP4 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(FP4 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 #endif
 #if USING_FP8 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP8 item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(FP8 item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 #endif
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Hexf item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(Hexf item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Binaryf item) : obj_(kSize_, RamFactoryInit()) {
+  AStrand(Binaryf item) : obj_(kSize_) {
     Reset();
     Print(item);
   }
@@ -349,14 +359,6 @@ class AStrand {
     TStrandPrint<Char, T>(obj_.Auto(), utf_, item);
     return *this;
   }
-
-  /* Returns true if the buffer is a Socket and false if it's a Nil. */
-  static constexpr BOL UsesStack() { return buffer_.Size() != 0; }
-
- private:
-  TUTF<Char> utf_;  //< UTF for the strand.
-  // AutoArray of Char(s).
-  AArray<Char, SIN, BUF> obj_;
 };
 
 /*
@@ -373,148 +375,147 @@ using Strand4 = TStrand<CH4>;
 }  // namespace _
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj,
-    ::_::AStrand<Char, kSize_, BUF>& item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::AStrand<Char, kSize_, BUF>& item) {
   return obj;
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, const CH1* item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, const CH1* item) {
   return obj.Print(item);
 }
 
 #if USING_UTF16 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, const CH2* item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, const CH2* item) {
   return obj.Print(item);
 }
 #endif
 
 #if USING_UTF32 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, const CH4* item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, const CH4* item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, CH4 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, CH4 item) {
   return obj.Print(item);
 }
 #endif
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, CH1 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, CH1 item) {
   return obj.Print(item);
 }
 /*
 template <typename Char, SIN kCount_, typename BUF>
-inline ::_::AStrand<Char, kCount_, BUF>& operator<<(
-    ::_::AStrand<Char, kCount_, BUF>& obj, CH2 item) {
+inline _::AStrand<Char, kCount_, BUF>& operator<<(
+    _::AStrand<Char, kCount_, BUF>& obj, CH2 item) {
   return obj.Print(item);
 }*/
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, UI1 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, UI1 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, SI2 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, SI2 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, UI2 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, UI2 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, SI4 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, SI4 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, UI4 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, UI4 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, SI8 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, SI8 item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, UI8 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, UI8 item) {
   return obj.Print(item);
 }
 
 #if USING_FP4 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, FP4 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, FP4 item) {
   return obj.Print(item);
 }
 #endif
 #if USING_FP8 == YES_0
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, FP8 item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, FP8 item) {
   return obj.Print(item);
 }
 #endif
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Hexf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Hexf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Binaryf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Binaryf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Centerf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Centerf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Rightf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Rightf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Linef item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Linef item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Headingf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Headingf item) {
   return obj.Print(item);
 }
 
 template <typename Char, SIN kSize_, typename BUF>
-inline ::_::AStrand<Char, kSize_, BUF>& operator<<(
-    ::_::AStrand<Char, kSize_, BUF>& obj, ::_::Charsf item) {
+inline _::AStrand<Char, kSize_, BUF>& operator<<(
+    _::AStrand<Char, kSize_, BUF>& obj, _::Charsf item) {
   return obj.Print(item);
 }
 

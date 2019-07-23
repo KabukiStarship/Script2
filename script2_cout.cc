@@ -17,7 +17,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "t_puff.h"
 #include "t_stringf.h"
 
-#include <cstdio>
+//#include <cstdio>
 #include <iostream>
 
 #if SEAM == SEAM_SCRIPT2_CORE
@@ -229,170 +229,32 @@ COut& COut::Print(FP8 item) {
 }
 #endif
 
-COut& COut::Print(Hexf item) {
-  return TPrintHex<COut>(*this, item.valuef.Value(), item.valuef.count);
+COut& COut::Print(Hexf& item) {
+  return TPrintHex<COut>(*this, item.element.Value(), item.element.count);
 }
 
-COut& COut::Print(Binaryf item) {
-  return TPrintBinary<COut>(*this, item.valuef.Value(), item.valuef.count);
+COut& COut::Print(Binaryf& item) {
+  return TPrintBinary<COut>(*this, item.element.Value(), item.element.count);
 }
 
-COut& COut::Print(Centerf item) {
-  SIW utf_format = ::_::TypeTextFormat(item.stringf.Type());
-  switch (utf_format) {
-#if USING_UTF8 == YES_0
-    case 1: {
-      return ::_::TPrintCenter<::_::COut, CH1>(*this, item.stringf.ST1(),
-                                               item.stringf.Count());
-    }
-#endif
-#if USING_UTF16 == YES_0
-    case 2: {
-      return ::_::TPrintCenter<::_::COut, CH2>(*this, item.stringf.ST2(),
-                                               item.stringf.Count());
-    }
-#endif
-#if USING_UTF32 == YES_0
-    case 3: {
-      return ::_::TPrintCenter<::_::COut, CH4>(*this, item.stringf.ST3(),
-                                               item.stringf.Count());
-    }
-#endif
-  }
-  return *this;
+COut& COut::Print(Centerf& item) {
+  return TPrintCenter<COut>(*this, item.element);
 }
 
-COut& COut::Print(Rightf item) {
-  SIW count = item.stringf.Count();
-  switch (::_::TypeTextFormat(item.stringf.Type())) {
-#if USING_UTF8 == YES_0
-    case 1: {
-      return ::_::TPrintRight<::_::COut, CH1>(*this, item.stringf.ST1(), count);
-    }
-#endif
-#if USING_UTF16 == YES_0
-    case 2: {
-      return ::_::TPrintRight<::_::COut, CH2>(*this, item.stringf.ST2(), count);
-    }
-#endif
-#if USING_UTF32 == YES_0
-    case 3: {
-      return ::_::TPrintRight<::_::COut, CH4>(*this, item.stringf.ST3(), count);
-    }
-#endif
-  }
-  return *this;
-}  // namespace _
-
-COut& COut::Print(Linef item) {
-  SIW type = item.valuef.item.Type(),  //
-      utf_format = ::_::TypeTextFormat(type);
-  switch (utf_format) {
-#if USING_UTF8 == YES_0
-    case kST1: {
-      const CH1* start = reinterpret_cast<const CH1*>(item.valuef.item.Ptr());
-      ::_::TPrintLinef<::_::COut, CH1>(*this, start, item.valuef.count);
-      break;
-    }
-#endif
-#if USING_UTF16 == YES_0
-    case kST2: {
-      const CH2* start = reinterpret_cast<const CH2*>(item.valuef.item.Ptr());
-      ::_::TPrintLinef<::_::COut, CH2>(*this, start, item.valuef.count);
-      break;
-    }
-#endif
-#if USING_UTF32 == YES_0
-    case kST3: {
-      const CH4* start = reinterpret_cast<const CH4*>(item.valuef.item.Ptr());
-      ::_::TPrintLinef<::_::COut, CH4>(*this, start, item.valuef.count);
-      break;
-    }
-#endif
-    case -1: {
-      switch (type & kTypeCountMask) {
-#if USING_UTF8 == YES_0
-        case kCH1: {
-          CH1 c = (CH1)item.valuef.item.Word();
-          ::_::TPrintLinef<::_::COut, CH1>(*this, c, item.valuef.count);
-          break;
-        }
-#endif
-#if USING_UTF16 == YES_0
-        case kCH2: {
-          CH4 c = item.valuef.item.Word();
-          ::_::TPrintLinef<::_::COut, CH2>(*this, c, item.valuef.count);
-          break;
-        }
-#endif
-#if USING_UTF32 == YES_0
-        case kCH4: {
-          CH4 c = (CH4)item.valuef.item.Word();
-          ::_::TPrintLinef<::_::COut, CH4>(*this, c, item.valuef.count);
-          break;
-        }
-#endif
-      }
-    }
-  }
-  return *this;
-}  // namespace _
-
-COut& COut::Print(Headingf item) {
-  switch (::_::TypeTextFormat(item.caption.Type())) {
-#if USING_UTF8 == YES_0
-    case 1: {
-      return ::_::TPrintHeadingf<::_::COut, CH1>(
-          *this, item.caption.ST1(), item.style, item.caption.Count(),
-          item.caption2, item.caption3);
-    }
-#endif
-#if USING_UTF16 == YES_0
-    case 2: {
-      return ::_::TPrintHeadingf<::_::COut, CH2>(
-          *this, item.caption.ST2(), item.style, item.caption.Count(),
-          item.caption2, item.caption3);
-    }
-#endif
-#if USING_UTF32 == YES_0
-    case 3: {
-      return ::_::TPrintHeadingf<::_::COut, CH4>(
-          *this, item.caption.ST3(), item.style, item.caption.Count(),
-          item.caption2, item.caption3);
-    }
-#endif
-  }
-  return *this;
+COut& COut::Print(Rightf& item) {
+  return TPrintRight<COut>(*this, item.element);
 }
 
-COut& COut::Print(Indentf item) {
-  return ::_::TPrintIndent<::_::COut>(*this, item.indent_count);
+COut& COut::Print(Linef& item) { return TPrintLinef<COut>(*this, item); }
+
+COut& COut::Print(Headingf& item) { return TPrintHeadingf<COut>(*this, item); }
+
+COut& COut::Print(Indentf& item) {
+  return _::TPrintIndent<_::COut>(*this, item.indent_count);
 }
 
-COut& COut::Print(Charsf item) {
-  switch (::_::TypeTextFormat(item.valuef.item.Type())) {
-#if USING_UTF8 == YES_0
-    case 1: {
-      return ::_::TPrintChars<::_::COut, CH1>(*this, item.valuef.item.ST1(),
-                                              item.valuef.count);
-    }
-#endif
-#if USING_UTF16 == YES_0
-    case 2: {
-      return ::_::TPrintChars<::_::COut, CH2>(*this, item.valuef.item.ST2(),
-                                              item.valuef.count);
-    }
-#endif
-#if USING_UTF32 == YES_0
-    case 3: {
-      return ::_::TPrintChars<::_::COut, CH4>(*this, item.valuef.item.ST3(),
-                                              item.valuef.count);
-    }
-#endif
-  }
-  return ::_::TPrintChars<::_::COut, CH1>(
-      *this, reinterpret_cast<CH1*>(item.valuef.item.Value()),
-      item.valuef.count);
+COut& COut::Print(Charsf& item) {
+  return _::TPrintChars<COut>(*this, item);
 }  // namespace _
 
 COut& COut::NL() { return Print('\n'); }
@@ -521,58 +383,83 @@ SIN COut::PrintAndCount(const CH4* string) {
 }
 #endif
 
-COut CPrint() { return COut(); }
+COut CPrint(CH1 item) { return COut(item); }
+COut CPrint(const CH1* item) { return COut(item); }
+#if USING_UTF16 == YES_0
+COut CPrint(CH2 item) { return COut(item); }
+COut CPrint(const CH2* item) { return COut(item); }
+#endif
+#if USING_UTF32 == YES_0
+COut CPrint(CH4 item) { return COut(item); }
+COut CPrint(const CH4* item) { return COut(item); }
+#endif
+
+COut CPrint(SI4 item) { return COut(item); }
+COut CPrint(UI4 item) { return COut(item); }
+COut CPrint(SI8 item) { return COut(item); }
+COut CPrint(UI8 item) { return COut(item); }
+#if USING_FP4 == YES_0
+COut CPrint(FP4 item) { return COut(item); }
+#endif
+#if USING_FP8 == YES_0
+COut CPrint(FP8 item) { return COut(item); }
+#endif
+COut CPrint(Hexf& item) { return COut(item); }
+COut CPrint(Binaryf& item) { return COut(item); }
+COut CPrint(Centerf& item) { return COut(item); }
+COut CPrint(Rightf& item) { return COut(item); }
+COut CPrint(Linef& item) { return COut(item); }
+COut CPrint(Headingf& item) { return COut(item); }
+COut CPrint(Indentf& item) { return COut(item); }
 
 }  // namespace _
 
-::_::COut& operator<<(::_::COut& o, CH1 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CH1 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, const CH1* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CH1* item) { return o.Print(item); }
 
 #if USING_UTF16 == YES_0
-::_::COut& operator<<(::_::COut& o, CH2 item) { return o.Print(item); }
-::_::COut& operator<<(::_::COut& o, const CH2* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CH2 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CH2* item) { return o.Print(item); }
 #endif
 
 #if USING_UTF32 == YES_0
-::_::COut& operator<<(::_::COut& o, CH4 item) { return o.Print(item); }
-::_::COut& operator<<(::_::COut& o, const CH4* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CH4 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CH4* item) { return o.Print(item); }
 #endif
 
-::_::COut& operator<<(::_::COut& o, SI4 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, SI4 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, UI4 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, UI4 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, SI8 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, SI8 item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, UI8 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, UI8 item) { return o.Print(item); }
 
 #if USING_FP4 == YES_0
-::_::COut& operator<<(::_::COut& o, FP4 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, FP4 item) { return o.Print(item); }
 #endif
 
 #if USING_FP8 == YES_0
-::_::COut& operator<<(::_::COut& o, FP8 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, FP8 item) { return o.Print(item); }
 #endif
 
-::_::COut& operator<<(::_::COut& o, ::_::Hexf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Hexf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Binaryf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Binaryf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Centerf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Centerf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Rightf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Rightf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Linef item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Linef item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Headingf item) {
-  return o.Print(item);
-}
+_::COut& operator<<(_::COut& o, _::Headingf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Indentf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Indentf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::Charsf item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, _::Charsf item) { return o.Print(item); }
 
-::_::COut& operator<<(::_::COut& o, ::_::COut& item) { return o; }
+_::COut& operator<<(_::COut& o, _::COut item) { return o; }
 
 #endif

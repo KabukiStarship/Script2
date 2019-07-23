@@ -276,8 +276,8 @@ LIB_MEMBER UTF1& PrintCrabsStack(UTF1& printer, Crabs* crabs);
 #if USING_SCRIPT2_TEXT == YES_0
 
 /* Prints the given Crabs to the Text socket. */
-inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Crabs* crabs) {
-  return ::_::PrintCrabs(printer, crabs);
+inline _::UTF1& operator<<(_::UTF1& printer, _::Crabs* crabs) {
+  return _::PrintCrabs(printer, crabs);
 }
 #endif
 

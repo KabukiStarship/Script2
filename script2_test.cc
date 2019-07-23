@@ -9,11 +9,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
-#include "c_cin.h"
-#include "c_cout.h"
 #include "c_test.h"
-#include "module_debug.inl"
-#include "t_utf.h"
+//
+#include "c_cout.h"
+#include "t_stringf.h"
 
 namespace _ {
 
@@ -33,30 +32,41 @@ BOL TestFail(SI4 line, const CH1* function, const CH1* file) {
   return result;
 }
 
-SIN SeamTreeTest(SI4 arg_count, CH1** args, TestCase* tests, SIN test_count) {
-  const CH1* result = TestTree(CIn::Args(arg_count, args), tests, test_count);
-  if (result) {
-    Pausef("\n\nError testing seam %s", result);
-    Pausef();
-    return APP_EXIT_FAILURE;
+const CH1* ArgsToString(SIN arg_count, CH1** args) {
+  if (!args || arg_count <= 1) return "";
+  if (arg_count == 2) return args[1];
+  CH1 *begin = args[1], *stop = args[arg_count - 1] - 1;
+  while (stop > begin) {
+    CH1 c = *stop;
+    if (!c) *stop = ' ';
+    --stop;
   }
-  Pausef();
-  return APP_EXIT_SUCCESS;
+  return begin;
 }
 
 const CH1* TestTree(const CH1* args, TestCase* tests, SIN count) {
-  A_ASSERT(tests);
+  if (!tests) return nullptr;
   for (SIN i = 0; i < count; ++i) {
     TestCase test = tests[i];
     if (!test) {
-      Pausef("\nError: seam node %i is missing!", i);
+      Printf("\nError: seam node %i is missing!", i);
       return "";
     }
     const CH1* error = test(args);
     if (error) return error;
   }
-  COut("\n\nTest finished successfully! (:-)+==<\n");
+  Printf("\n\nUnit tests completed successfully! (:-)+==<\n");
   return nullptr;
+}
+
+SIN SeamTreeTest(SI4 arg_count, CH1** args, TestCase* tests, SIN test_count) {
+  const CH1* result =
+      TestTree(ArgsToString(arg_count, args), tests, test_count);
+  if (result) {
+    Printf("\n\nError testing seam %s", result);
+    return APP_EXIT_FAILURE;
+  }
+  return APP_EXIT_SUCCESS;
 }
 
 BOL Test(BOL condition) { return condition; }
@@ -66,7 +76,7 @@ static const CH1 kSTRFound[] = "\n           Found:0x\0";
 static const CH1 kSTRErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL Test(const CH1* a, const CH1* b) {
-  SIN difference = ::_::TSTRCompare<CH1>(a, b);
+  SIN difference = TSTRCompare<CH1>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
@@ -76,7 +86,7 @@ BOL Test(const CH1* a, const CH1* b) {
 
 #if USING_UTF16 == YES_0
 BOL Test(const CH2* a, const CH2* b) {
-  SIN difference = ::_::TSTRCompare<CH2>(a, b);
+  SIN difference = TSTRCompare<CH2>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
@@ -86,7 +96,7 @@ BOL Test(const CH2* a, const CH2* b) {
 #endif
 #if USING_UTF32 == YES_0
 BOL Test(const CH4* a, const CH4* b) {
-  SIN difference = ::_::TSTRCompare<CH4>(a, b);
+  SIN difference = TSTRCompare<CH4>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"

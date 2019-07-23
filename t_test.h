@@ -14,6 +14,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_TTEST 1
 
 #include "c_test.h"
+//
+#include "c_cin.h"
+#include "t_stringf.h"
 
 namespace _ {
 

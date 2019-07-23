@@ -35,12 +35,12 @@ void TestLoom() {
 
   ALoom<Char, SIZ, kSize, TSocket<kSize>> loom(kCount);
 #if DEBUG_THIS
-  CPrint() << "\nPrinting empty loom:\n";
+  COut().Star() << "\nPrinting empty loom:\n";
   loom.COut();
 #endif
 
   enum {
-    kLengthMax = kSize << 2 - 1,
+    kLengthMax = (kSize << 2) - 1,
   };
 
   Char string[kLengthMax + 1];

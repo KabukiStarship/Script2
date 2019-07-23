@@ -62,7 +62,7 @@ inline SI4 TBitShiftCount() {
 
 template <typename SIZ, SIZ kSize_>
 constexpr SIZ TSizeWords() {
-  SIZ align_offset = (-kSize) & (sizeof(SIW) - 1);
+  SIZ align_offset = (-kSize_) & (sizeof(SIW) - 1);
   SIZ size_aligned = kSize_ + align_offset;
   return size_aligned >> TBitShiftCount<SIZ>();
 }
@@ -74,13 +74,13 @@ inline SIZ TSizeWords(SIZ size) {
   return size_aligned >> TBitShiftCount<SIZ>();
 }
 
-/* Converts the given size into CPU word count. */
+/* Converts the given size into CPU word count.
 template <typename SIZ = SIW, SIZ kSize_ = 0>
 inline SIZ TWordCount() {
   SIZ align_offset = (-kSize_) & (kHeaderSize - 1);  // Why did I do this???
   SIZ size_aligned = kSize_ + align_offset;
   return size_aligned >> TBitShiftCount<SIW>();
-}
+} */
 
 /* Converts the given size into CPU word count. */
 template <typename SIZ = SIW>
@@ -292,7 +292,7 @@ class TSocket {
   /* Returns the last element of the ASCII Object data section. */
   template <typename T, UIW kHeaderSize_>
   inline T* Stop() {
-    return Start<SIW, T>() + index - 1;
+    return Start<SIW, T>() + Size() - 1;
   }
 
   /* Gets the begin of the socket. */

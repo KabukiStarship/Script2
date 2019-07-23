@@ -135,8 +135,17 @@ LIB_MEMBER SIN ClockCompare(const AClock& clock, SIN year, SIN month, SIN day,
                             SIN hour, SIN minute, SIN second);
 
 /* Zeros out the struct values.
-    @param calendar_time A calendar time struct to zero out. */
+@param calendar_time A calendar time struct to zero out. */
 LIB_MEMBER void ClockZeroTime(AClock& seconds);
+
+/* Gets the array of days in each month. */
+LIB_MEMBER const SI2* ClockDaysInMonth();
+
+/* Converts the month and year into days in the month. */
+LIB_MEMBER SIN ClockDaysInMonth(SIN month, SIN year);
+
+/* Converts the year, month, and day to day of the year 1-365. */
+LIB_MEMBER SIN ClockDayOfYear(SIN year, SIN month, SIN day);
 
 /* Creates a 32-bit seconds timestamp.  */
 LIB_MEMBER TM4 ClockTimeTMS(SIN year, SIN month, SIN day, SIN hour = 0,

@@ -95,9 +95,9 @@ static const CH1* _10_Table(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_TABLE
   A_TEST_BEGIN;
 
-  // TestTable<SI2, UI2, CH1>();
-  // TestTable<SI2, UI2, CH2>();
-  // TestTable<SI2, UI2, CH4>();
+  TestTable<SI2, UI2, CH1>();
+  TestTable<SI2, UI2, CH2>();
+  TestTable<SI2, UI2, CH4>();
   TestTable<SI4, UI4, CH1>();
   TestTable<SI4, UI4, CH2>();
   TestTable<SI4, UI4, CH4>();

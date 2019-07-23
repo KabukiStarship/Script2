@@ -91,8 +91,8 @@ LIB_MEMBER UTF1& PrintBOut(UTF1& printer, BOut* bout);
 
 #if USING_SCRIPT2_TEXT == YES_0
 /* Prints out the bin to the text. */
-inline ::_::UTF1& operator<<(::_::UTF1& utf, ::_::BOut* bout) {
-  return ::_::PrintBOut(utf, bout);
+inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
+  return _::PrintBOut(utf, bout);
 }
 #endif
 

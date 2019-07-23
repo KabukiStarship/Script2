@@ -16,13 +16,52 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_stringf.h"
 #include "t_puff.h"
 
-#if SEAM == SEAM_SCRIPT2_CORE
-#include "module_debug.inl"
-#else
-#include "module_release.inl"
-#endif
-
 namespace _ {
+
+/* Compares the two strings up to the given delimiter.
+@param delimiter Delimiters in Script2 are equal to or less than.
+@return 0 if the strings are equal or a non-zero delta upon failure. */
+template <typename Char = CHR>
+SIN TSTRCompare(const Char* string_a, const Char* string_b,
+                Char delimiter = 0) {
+  if (!string_a || !string_b) return 0;
+
+  SIN a, b, result;
+  if (!string_a) {
+    if (!string_b) return 0;
+    return SIN(*string_a);
+  }
+  if (!string_b) return 0 - *string_a;
+
+  a = *string_a;
+  b = *string_b;
+  if (!a) {
+    if (!b) return 0;
+    return b;
+  }
+  if (!b) {
+    if (!a) return 0;
+    return 0 - a;
+  }
+  // string_b SHOULD be a nil-terminated string without whitespace.
+  while (b) {
+    result = b - a;
+    if (result) {
+      return result;
+    }
+    if (a <= (SI4)delimiter) {
+      return result;
+    }
+    ++string_a;
+    ++string_b;
+    a = *string_a;
+    b = *string_b;
+  }
+  if (a > (SI4)delimiter) {
+    return b - a;
+  }
+  return 0;
+}
 
 /* Converts a UI1 a two-UI1 hex representation. */
 inline UI2 HexByteToLowerCase(UI1 b) {
@@ -45,6 +84,60 @@ inline CH1 HexNibbleToLowerCase(UI1 b) {
   if (b > 9) return b + ('a' - 10);
   return b + '0';
 }
+
+/* Converts the given character to lowercase if it is uppercase. */
+template <typename Char>
+inline Char TToLower(Char c) {
+  if (c >= 'A' && c <= 'Z') c -= 32;
+  return c;
+}
+
+inline CH1 ToLower(CH1 value) { return TToLower<CH1>(value); }
+inline CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
+inline CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
+
+inline SI1 ToSigned(CH1 value) { return (SI1)value; }
+inline SI2 ToSigned(CH2 value) { return (SI2)value; }
+inline SI4 ToSigned(CH4 value) { return (SI4)value; }
+inline SIN ToSigned(CHN value) { return (SIN)value; }
+inline SI1 ToSigned(UI1 value) { return (SI1)value; }
+inline SI2 ToSigned(UI2 value) { return (SI2)value; }
+inline SI4 ToSigned(UI4 value) { return (SI4)value; }
+inline SI8 ToSigned(UI8 value) { return (SI8)value; }
+inline SI1 ToSigned(SI1 value) { return (SI1)value; }
+inline SI2 ToSigned(SI2 value) { return (SI2)value; }
+inline SI4 ToSigned(SI4 value) { return (SI4)value; }
+inline SI8 ToSigned(SI8 value) { return (SI8)value; }
+inline SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
+#if USING_FP4 == YES_0
+inline SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
+#endif
+#if USING_FP8 == YES_0
+inline SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
+#endif
+
+/* Utility functions for converting POD types to unsigned for printing. */
+inline UI1 ToUnsigned(CH1 value) { return (UI1)value; }
+inline UI2 ToUnsigned(CH2 value) { return (UI2)value; }
+inline UI4 ToUnsigned(CH4 value) { return (UI4)value; }
+inline UIN ToUnsigned(CHN value) { return (UIN)value; }
+inline UI1 ToUnsigned(SI1 value) { return (UI1)value; }
+inline UI2 ToUnsigned(SI2 value) { return (UI2)value; }
+inline UI4 ToUnsigned(SI4 value) { return (UI4)value; }
+inline UI8 ToUnsigned(SI8 value) { return (UI4)value; }
+inline UI1 ToUnsigned(UI1 value) { return (UI1)value; }
+inline UI2 ToUnsigned(UI2 value) { return (UI2)value; }
+inline UI4 ToUnsigned(UI4 value) { return (UI4)value; }
+inline UI8 ToUnsigned(UI8 value) { return (UI8)value; }
+inline UIW ToUnsigned(const void* value) {
+  return reinterpret_cast<UIW>(value);
+}
+#if USING_FP4 == YES_0
+inline UI4 ToUnsigned(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
+#endif
+#if USING_FP8 == YES_0
+inline UI8 ToUnsigned(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
+#endif
 
 /* Prints the following item to the console in Hex. */
 template <typename Printer, typename UI>
@@ -101,7 +194,7 @@ inline SIN HexToByte(UI2 h) {
 template <typename Printer, typename Char = CHR>
 Printer& TPrintString(Printer& o, const Char* string) {
   if (!string) return o;
-#if LARGEST_CHAR == 1
+#if LARGEST_CHAR == 1 || SEAM < SEAM_SCRIPT2_UTF
   CH1 c = *string++;
 #else
   CH4 c;
@@ -110,7 +203,7 @@ Printer& TPrintString(Printer& o, const Char* string) {
 #endif
   while (c) {
     o << c;
-#if LARGEST_CHAR == 1
+#if LARGEST_CHAR == 1 || SEAM < SEAM_SCRIPT2_UTF
     c = *string++;
 #else
     string = Scan(string, c);
@@ -125,7 +218,7 @@ printed. */
 template <typename Printer, typename Char = CHR>
 SIN TPrintAndCount(Printer& o, const Char* string) {
   SIN print_count = 0;
-#if LARGEST_CHAR == 1
+#if LARGEST_CHAR == 1 || SEAM < SEAM_SCRIPT2_UTF
   CH1 c = *string++;
 #else
   CHA c;
@@ -133,7 +226,7 @@ SIN TPrintAndCount(Printer& o, const Char* string) {
   if (!string) return -1;
 #endif
   while (c) {
-#if LARGEST_CHAR == 1
+#if LARGEST_CHAR == 1 || SEAM < SEAM_SCRIPT2_UTF
     c = *string++;
 #else
     string = Scan(string, c);
@@ -145,75 +238,6 @@ SIN TPrintAndCount(Printer& o, const Char* string) {
   return print_count;
 }
 
-/* Compares the two strings up to the given delimiter.
-@param delimiter Delimiters in Script2 are equal to or less than.
-@return 0 if the strings are equal or a non-zero delta upon failure. */
-template <typename Char = CHR>
-SIN TSTRCompare(const Char* string_a, const Char* string_b,
-                Char delimiter = 0) {
-  SIN a, b, result;
-  if (!string_a) {
-    if (!string_b) return 0;
-    return *string_a;
-  }
-  if (!string_b) return 0 - *string_a;
-
-  D_PRINTF("\nComparing \"%s\" to \"%s\"", string_a, string_b);
-  a = *string_a;
-  b = *string_b;
-  if (!a) {
-    if (!b) return 0;
-    return b;
-  }
-  if (!b) {
-    if (!a) return 0;
-    return 0 - a;
-  }
-  // string_b SHOULD be a nil-terminated string without whitespace.
-  while (b) {
-    result = b - a;
-    if (result) {
-      D_COUT(" is not a hit.");
-      return result;
-    }
-    if (a <= (SI4)delimiter) {
-      D_COUT(" is a partial match but a reached a delimiter first.");
-      return result;
-    }
-    ++string_a;
-    ++string_b;
-    a = *string_a;
-    b = *string_b;
-  }
-  if (a > (SI4)delimiter) {
-    D_PRINTF(" is only a partial match but b reached a delimiter first.");
-    return b - a;
-  }
-  return 0;
-}
-
-/* Utility functions for converting POD types to unsigned for printing. */
-inline UI1 ToUnsigned(CH1 value) { return (UI1)value; }
-inline UI2 ToUnsigned(CH2 value) { return (UI2)value; }
-inline UI4 ToUnsigned(CH4 value) { return (UI4)value; }
-inline UIN ToUnsigned(CHN value) { return (UIN)value; }
-inline UI1 ToUnsigned(SI1 value) { return (UI1)value; }
-inline UI2 ToUnsigned(SI2 value) { return (UI2)value; }
-inline UI4 ToUnsigned(SI4 value) { return (UI4)value; }
-inline UI8 ToUnsigned(SI8 value) { return (UI4)value; }
-inline UI1 ToUnsigned(UI1 value) { return (UI1)value; }
-inline UI2 ToUnsigned(UI2 value) { return (UI2)value; }
-inline UI4 ToUnsigned(UI4 value) { return (UI4)value; }
-inline UI8 ToUnsigned(UI8 value) { return (UI8)value; }
-inline UIW ToUnsigned(const void* value) {
-  return reinterpret_cast<UIW>(value);
-}
-#if USING_FP4 == YES_0
-inline UI4 ToUnsigned(FP4 value) { return *reinterpret_cast<UI4*>(&value); }
-#endif
-#if USING_FP8 == YES_0
-inline UI8 ToUnsigned(FP8 value) { return *reinterpret_cast<UI8*>(&value); }
-#endif
 /* Prints the following item to the console in Hex. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* item) {
@@ -222,7 +246,7 @@ Printer& TPrintHex(Printer& o, const void* item) {
 }
 template <typename Printer, typename SI, typename UI>
 Printer& TPrintHex(Printer& o, SI item) {
-  return TPrintHex<Printer, UI>(o, (UI)item);
+  return TPrintHex<Printer, UI>(o, UI(item));
 }
 #if USING_FP4 == YES_0
 template <typename Printer>
@@ -250,7 +274,7 @@ one byte at a time. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
   if (!begin) return o;
-  SIW address, delta;
+  SIW delta;
   const UI1* cursor = reinterpret_cast<const UI1*>(begin);
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   // We have to print the hex value backwards.
@@ -280,11 +304,11 @@ Printer& TPrintHex(Printer& o, const void* start, const void* stop) {
   return TPrintHex<Printer>(o, start, delta);
 }
 
-/* Prints the given value to Binary. */
-template <typename Printer, typename SI>
-Printer& TPrintBinary(Printer& o, const void* begin, SI byte_count) {
-  if (!begin) return o;
-  const UI1* cursor = reinterpret_cast<const UI1*>(begin);
+/* Prints the memory beginning at start to the Printer. */
+template <typename Printer>
+Printer& TPrintBinary(Printer& o, const void* start, SIW byte_count) {
+  if (!start) return o;
+  const UI1* cursor = reinterpret_cast<const UI1*>(start);
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   SI1 delta;
   if (byte_count < 0) {
@@ -305,9 +329,11 @@ Printer& TPrintBinary(Printer& o, const void* begin, SI byte_count) {
   }
   return o;
 }
+
 template <typename Printer>
-Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
-  return TPrintBinary<Printer>(o, start, TDelta<>(start, stop));
+inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
+  SIW delta = reinterpret_cast<SIW>(stop) - reinterpret_cast<SIW>(start);
+  return TPrintBinary<Printer>(o, start, reinterpret_cast<const void*>(delta));
 }
 
 template <typename Printer, typename UI>
@@ -351,13 +377,41 @@ inline const Char* TSTREnd(const Char* start, CH1 delimiter = 0) {
   return start - 1;
 }
 
+/* Scrolls over to the next FP8 quote mark.
+@warning This function is only safe to use on ROM strings with a nil-term
+CH1. */
+template <typename Char = CHR>
+inline Char* TSTREnd(Char* start, Char delimiter = 0) {
+  return const_cast<Char*>(
+      TSTREnd<Char>(reinterpret_cast<const Char*>(start), delimiter));
+}
+
+/* Gets the length of the given CH1.
+@return  Returns -1 if the text CH1 is nil.
+@warning This function is only safe to use on ROM strings with a nil-term
+CH1. */
+template <typename Char = CHR, typename SIZ = SIN>
+SIZ TSTRLength(const Char* start) {
+  D_ASSERT(start);
+  return (SIZ)(TSTREnd<Char>(start) - start);
+}
+
+/* Gets the length of the given CH1.
+@return  Returns -1 if the text CH1 is nil.
+@warning This function is only safe to use on ROM strings with a nil-term
+CH1. */
+template <typename Char = CHR, typename SIZ = SIN>
+inline SIZ TSTRLength(Char* start) {
+  return TSTRLength<Char>(reinterpret_cast<const Char*>(start));
+}
+
 /* Prints the given token aligned center the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CH1 upon success.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CHR>
-Printer& TPrintCenter(Printer& o, const Char* item, SIN column_count = 80) {
+Printer& TPrintCenter(Printer& o, const Char* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
 
   const Char* token_end = TSTREnd<Char>(item);
@@ -374,15 +428,88 @@ Printer& TPrintCenter(Printer& o, const Char* item, SIN column_count = 80) {
   }
   length = (-length) - 3;
   if (length < 0) {
-    if (length == 1)
-      o << '.';
-    else if (length == 2)
-      o << '.' << '.';
-    else if (length == 3)
-      o << '.' << '.' << '.';
+    while (--length > 0) o << '.';
   } else {
     while (length > 0) o << *item++;
-    o << '.' << '.' << '.';
+    o << "...";
+  }
+  return o;
+}
+
+template <typename Printer>
+Printer& TPrintAligned(Printer& o, const CH1* string, SIW char_count,
+                       SIW left_count, SIW dot_count, SIW right_count) {
+  while (--left_count > 0) o << ' ';
+  while (--char_count > 0) {
+#if LARGEST_CHAR == 1 || SEAM < SEAM_SCRIPT2_UTF
+    o << *string++;
+#else
+    CHA c;
+    string = Scan(string, c);
+    if (!string) return o;
+    o << c;
+#endif
+  }
+  while (--dot_count > 0) o << ' ';
+  while (--right_count > 0) o << ' ';
+  return o;
+}
+
+template <typename Printer>
+Printer& TPrintAlignedHex(Printer& o, const CH1* begin, SIW byte_count,
+                          SIW left_count, SIW dot_count, SIW right_count) {
+  while (--left_count > 0) o << ' ';
+  TPrintHex<Printer>(o, begin, byte_count);
+  while (--dot_count > 0) o << ' ';
+  while (--right_count > 0) o << ' ';
+  return o;
+}
+
+/* Prints th given Stringf centered unless it's count is less then 0, in which
+case it will print the POD value stored in the first Word of the String. */
+template <typename Printer>
+Printer& TPrintCenter(Printer& o, Stringf& item) {
+  SIW column_count = item.Count();
+  if (column_count < 0) {  // Print hex.
+    column_count = -column_count;
+    SIW type_width = TypeSizeOf(item.Type()), left_count, dot_count,
+        right_count;
+    if (type_width < 0) return o;
+    if (type_width > column_count) {
+      left_count = 0;
+      right_count = 0;
+      if (column_count < 3) {
+        type_width = 0;
+        dot_count = column_count;
+      } else {
+        type_width = column_count - 3;
+        dot_count = 3;
+      }
+    } else {
+      left_count = (column_count - type_width) >> 1;
+      dot_count = 0;
+      right_count = column_count - left_count;
+    }
+    return TPrintAlignedHex<Printer>(o, item.ST1(), type_width, left_count,
+                                     dot_count, right_count);
+  }
+  SIW utf_format = _::TypeTextFormat(item.Type());
+  switch (utf_format) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return _::TPrintCenter<Printer, CH1>(o, item.ST1(), column_count);
+    }
+#endif
+#if USING_UTF16 == YES_0
+    case 2: {
+      return _::TPrintCenter<_::COut, CH2>(o, item.ST2(), column_count);
+    }
+#endif
+#if USING_UTF32 == YES_0
+    case 3: {
+      return _::TPrintCenter<Printer, CH4>(o, item.ST3(), column_count);
+    }
+#endif
   }
   return o;
 }
@@ -393,7 +520,7 @@ pointer to the nil-term CH1 upon success.
 @param  token  The token to utf.
 @param  column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CHR>
-Printer& TPrintRight(Printer& o, const Char* item, SIN column_count = 80) {
+Printer& TPrintRight(Printer& o, const Char* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
 
   const Char* token_end = TSTREnd<Char>(item);
@@ -411,13 +538,61 @@ Printer& TPrintRight(Printer& o, const Char* item, SIN column_count = 80) {
       case 1:
         o << '.';
       case 2:
-        o << '.' << '.';
+        o << "..";
       case 3:
-        o << '.' << '.' << '.';
+        o << "...";
     }
   } else {
     while (length > 0) o << *item++;
-    o << '.' << '.' << '.';
+    o << "...";
+  }
+  return o;
+}
+
+/* Prints th given Stringf centered, printing it as hex if the item.Count() is
+less than 0. */
+template <typename Printer>
+Printer& TPrintRight(Printer& o, Stringf& item) {
+  SIW column_count = item.Count();
+  if (column_count < 0) {  // Print hex.
+    column_count = -column_count;
+    SIW char_count = TypeSizeOf(item.Type());
+    if (char_count < 0) return o;
+
+    SIW left_count, dot_count;
+    if (char_count > column_count) {
+      left_count = 0;
+      if (column_count < 3) {
+        char_count = 0;
+        dot_count = column_count;
+      } else {
+        char_count = column_count - 3;
+        dot_count = 3;
+      }
+    } else {
+      left_count = column_count - char_count;
+      dot_count = 0;
+    }
+    return TPrintAlignedHex<Printer>(o, item.ST1(), char_count, left_count,
+                                     dot_count, 0);
+  }
+  SIW count = item.Count();
+  switch (_::TypeTextFormat(item.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return _::TPrintRight<Printer, CH1>(o, item.ST1(), count);
+    }
+#endif
+#if USING_UTF16 == YES_0
+    case 2: {
+      return _::TPrintRight<Printer, CH2>(o, item.ST2(), count);
+    }
+#endif
+#if USING_UTF32 == YES_0
+    case 3: {
+      return _::TPrintRight<Printer, CH4>(o, item.ST3(), count);
+    }
+#endif
   }
   return o;
 }
@@ -434,9 +609,9 @@ inline BOL TIsWhitespace(Char character) {
   return character <= ' ';
 }
 
-template <typename Printer, typename Char = CHR>
-Printer& TPrintRepeat(Printer& o, Char c, SI4 count) {
-  for (; count > 0; --count) o << Char(c);
+template <typename Printer, typename Char>
+Printer& TPrintRepeat(Printer& o, Char c, SIW count) {
+  while (--count >= 0) o << c;
   return o;
 }
 
@@ -484,43 +659,98 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
   if (column_count < kBreakCount) return nullptr;
 
   SIW state = kStateScanningDifferentChars;
-  Char current = *style++, prev = ~current;
+  Char current_char = *style++,  //
+      prev_char = ~current_char;
   SI4 hit_count = 0, column_index = 0;
-  while (current) {
-    o << current;
-    if (current == '\n')
+  while (current_char) {
+    o << current_char;
+    if (current_char == '\n')
       column_index = 0;
     else
       ++column_index;
     switch (state) {
       case kStateScanningDifferentChars: {
-        if (current == prev && !TIsWhitespace<Char>(current)) {
+        if (current_char == prev_char && !TIsWhitespace<Char>(current_char)) {
           state = kStateStateDuplicateChar;
           hit_count = 1;
         }
         break;
       }
       case kStateStateDuplicateChar: {
-        if (current != prev)
+        if (current_char != prev_char)
           state = kStateScanningDifferentChars;
         else if (++hit_count >= kBreakCount - 1) {
-          TPrintRepeat<Printer, Char>(o, current, column_count - column_index);
+          TPrintRepeat<Printer, Char>(o, current_char,
+                                      column_count - column_index);
           column_index = hit_count = 0;
         }
         break;
       }
     }
-    prev = current;
-    current = *style++;
+    prev_char = current_char;
+    current_char = *style++;
   }
   return style;
 }
 
 template <typename Printer, typename Char = CHR>
-Printer& TPrintLinef(Printer& o, Char token = '-', SIW column_count = 80) {
+Printer& TPrintLine(Printer& o, Char token = '-', SIW column_count = 80) {
   o << '\n';
   TPrintRepeat<Printer, Char>(o, token, column_count);
   return o << '\n';
+}
+
+template <typename Printer>
+Printer& TPrintLinef(Printer& o, Linef& item) {
+  SIW type = item.element.value.Type(),  //
+      utf_format = _::TypeTextFormat(type);
+  switch (utf_format) {
+#if USING_UTF8 == YES_0
+    case kST1: {
+      _::TPrintLinef<Printer, CH1>(o, item.element.ST1(), item.element.count);
+      break;
+    }
+#endif
+#if USING_UTF16 == YES_0
+    case kST2: {
+      _::TPrintLinef<Printer, CH2>(o, item.element.ST2(), item.element.count);
+      break;
+    }
+#endif
+#if USING_UTF32 == YES_0
+    case kST3: {
+      const CH4* start = reinterpret_cast<const CH4*>(item.element.value.Ptr());
+      _::TPrintLinef<Printer, CH4>(o, item.element.ST3(), item.element.count);
+      break;
+    }
+#endif
+    case -1: {
+      switch (type & kTypeCountMask) {
+#if USING_UTF8 == YES_0
+        case kCH1: {
+          CH1 c = (CH1)item.element.value.Word();
+          _::TPrintLine<Printer, CH1>(o, c, item.element.count);
+          break;
+        }
+#endif
+#if USING_UTF16 == YES_0
+        case kCH2: {
+          CH2 c = (CH2)item.element.value.Word();
+          _::TPrintLine<Printer, CH2>(o, c, item.element.count);
+          break;
+        }
+#endif
+#if USING_UTF32 == YES_0
+        case kCH4: {
+          CH4 c = (CH4)item.element.value.Word();
+          _::TPrintLine<Printer, CH4>(o, c, item.element.count);
+          break;
+        }
+#endif
+      }
+    }
+  }
+  return o;
 }
 
 template <typename Char = CHR>
@@ -530,18 +760,48 @@ const Char* TSTRHeadingf() {
   return kStrand;
 }
 
-template <typename Printer, typename Char = CHR>
-Printer& TPrintHeadingf(Printer& o, const Char* caption,
+/* Prints a heading with the */
+template <typename Printer, typename Char>
+Printer& TPrintHeadingf(Printer& o, const Char* element,
                         const CH1* style = nullptr, SIW column_count = 80,
                         const CH1* caption2 = nullptr,
                         const CH1* caption3 = nullptr) {
   if (!style) style = TSTRHeadingf<CH1>();
   style = TPrintLinef<Printer, CH1>(o, style, column_count);
   if (!style) return o;
-  o << caption;
+  o << element;
   if (caption2) o << caption2;
   if (caption3) o << caption3;
   TPrintLinef<Printer, CH1>(o, style, column_count);
+  return o;
+}
+
+/* Prints the given  */
+template <typename Printer>
+Printer& TPrintHeadingf(Printer& o, Headingf& item) {
+  switch (_::TypeTextFormat(item.element.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return _::TPrintHeadingf<Printer, CH1>(o, item.element.ST1(), item.style,
+                                             item.element.Count(),
+                                             item.caption2, item.caption3);
+    }
+#endif
+#if USING_UTF16 == YES_0
+    case 2: {
+      return _::TPrintHeadingf<Printer, CH2>(o, item.element.ST2(), item.style,
+                                             item.element.Count(),
+                                             item.caption2, item.caption3);
+    }
+#endif
+#if USING_UTF32 == YES_0
+    case 3: {
+      return _::TPrintHeadingf<Printer, CH4>(o, item.element.ST3(), item.style,
+                                             item.element.Count(),
+                                             item.caption2, item.caption3);
+    }
+#endif
+  }
   return o;
 }
 
@@ -578,43 +838,38 @@ inline Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
   return TPrintChars<Printer, Char>(o, start, start + count - 1);
 }
 
+template <typename Printer>
+Printer& TPrintChars(Printer& o, Charsf& item) {
+  Valuef& element = item.element;
+  SIW count = element.Count();
+  switch (_::TypeTextFormat(element.Type())) {
+#if USING_UTF8 == YES_0
+    case 1: {
+      return _::TPrintChars<Printer, CH1>(o, element.ST1(), count);
+    }
+#endif
+#if USING_UTF16 == YES_0
+    case 2: {
+      return _::TPrintChars<Printer, CH2>(o, element.ST2(), count);
+    }
+#endif
+#if USING_UTF32 == YES_0
+    case 3: {
+      return _::TPrintChars<Printer, CH4>(o, element.ST3(), count);
+    }
+#endif
+  }
+  return _::TPrintChars<Printer, CH1>(
+      o, reinterpret_cast<CH1*>(element.Value()), count);
+}
+
 template <typename Char>
 Char* TScanChar(Char* cursor, Char& c) {}
 
 template <typename Char>
-inline Char TToLower(Char c) {
-  if (c >= 'A' && c <= 'Z') c -= 32;
-  return c;
-}
-
-inline CH1 ToLower(CH1 value) { return TToLower<CH1>(value); }
-inline CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
-inline CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
-
-inline SI1 ToSigned(CH1 value) { return (SI1)value; }
-inline SI2 ToSigned(CH2 value) { return (SI2)value; }
-inline SI4 ToSigned(CH4 value) { return (SI4)value; }
-inline SIN ToSigned(CHN value) { return (SIN)value; }
-inline SI1 ToSigned(UI1 value) { return (SI1)value; }
-inline SI2 ToSigned(UI2 value) { return (SI2)value; }
-inline SI4 ToSigned(UI4 value) { return (SI4)value; }
-inline SI8 ToSigned(UI8 value) { return (SI8)value; }
-inline SI1 ToSigned(SI1 value) { return (SI1)value; }
-inline SI2 ToSigned(SI2 value) { return (SI2)value; }
-inline SI4 ToSigned(SI4 value) { return (SI4)value; }
-inline SI8 ToSigned(SI8 value) { return (SI8)value; }
-inline SIW ToSigned(const void* value) { return reinterpret_cast<SIW>(value); }
-#if USING_FP4 == YES_0
-inline SI4 ToSigned(FP4 value) { return *reinterpret_cast<SI4*>(&value); }
-#endif
-#if USING_FP8 == YES_0
-inline SI8 ToSigned(FP8 value) { return *reinterpret_cast<SI8*>(&value); }
-#endif
-
-template <typename Char>
 SIN TIsYesNo(const Char* string) {
   if (!string) return 0;
-  CHR c = TToLower<Char>(*string++);
+  Char c = TToLower<Char>(*string++);
   SIN result;
   if (c == 'y')
     result = 1;
@@ -630,15 +885,13 @@ SIN TIsYesNo(const Char* string) {
   if (TToLower<Char>(*string++) != 's') return 0;
   return (SIN)TIsWhitespace<Char>(*string++);
 }
-}  // namespace _
 
-#if SEAM == SEAM_SCRIPT2_RNG
-#include "module_debug.inl"
-#else
-#include "module_release.inl"
-#endif
-
-namespace _ {
+/* Checks if the given CH1 is a digit of a number_.
+@return True if it is a digit. */
+template <typename Char = CHR>
+BOL TIsDigit(Char c) {
+  return (c >= '0') && (c <= '9');
+}
 
 /* Scans the given socket for an Signed Integer (SI).
 @return Nil if there is no UI to scan.
@@ -646,16 +899,14 @@ namespace _ {
 @param result The SI to write the scanned SI. */
 template <typename SI = SIW, typename UI = UIW, typename Char = CHR>
 const Char* TScanSigned(const Char* start, SI& result) {
-  D_ASSERT(start);
+  if (!start) return nullptr;
   SI sign;
   const Char* cursor = start;
   Char c = *cursor++;
   if (c == '-') {
-    D_COUT("\nScanning negative backwards:\"");
     c = *start++;
     sign = -1;
   } else {
-    D_COUT("\nScanning positive backwards:\"");
     sign = 1;
   }
   if (!TIsDigit<Char>(c)) return nullptr;
@@ -665,8 +916,6 @@ const Char* TScanSigned(const Char* start, SI& result) {
   while (TIsDigit<Char>(c)) c = *cursor++;
   const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
-  D_PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-           (SI4)(cursor - start));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
@@ -678,7 +927,6 @@ const Char* TScanSigned(const Char* start, SI& result) {
     UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
-    D_PRINTF("\nvalue:%u", (UIN)value);
   }
   result = sign * value;
   return stop;
@@ -731,21 +979,13 @@ Char* TScan(Char* start, SI8& result) {
   return TScanSigned<SI8, UI8, Char>(start, result);
 }
 
-/* Checks if the given CH1 is a digit of a number_.
-@return True if it is a digit. */
-template <typename Char = CHR>
-BOL TIsDigit(Char c) {
-  return (c >= '0') && (c <= '9');
-}
-
 /* Scans the given socket for an unsigned integer (UI).
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param result The UI to write the scanned UI. */
 template <typename UI, typename Char = CHR>
 const Char* TScanUnsigned(const Char* start, UI& result) {
-  D_ASSERT(start);
-  D_PRINTF("\n\nScanning unsigned value:%s", start);
+  if (!start) return nullptr;
   const Char* cursor = start;
   Char c = *cursor++;
   if (!TIsDigit<Char>(c)) return nullptr;
@@ -755,8 +995,6 @@ const Char* TScanUnsigned(const Char* start, UI& result) {
   while (TIsDigit<Char>(c)) c = *cursor++;
   const Char* stop = cursor;  // Store stop to return.
   cursor -= 2;
-  D_PRINTF("\nPointed at \'%c\' and found length:%i", *cursor,
-           (SI4)(cursor - start));
 
   c = *cursor--;
   UI value = (UI)(c - '0');
@@ -768,9 +1006,7 @@ const Char* TScanUnsigned(const Char* start, UI& result) {
     UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
-    D_PRINTF("\nvalue:%u", (UIN)value);
   }
-  D_PRINTF("\nvalue:%u", (UIN)value);
   result = value;
   return stop;
 }
@@ -835,7 +1071,10 @@ inline SI TSignedMax() {
 @param   item   The string to print. */
 template <typename Char = CHR>
 Char* TPrint(Char* start, Char* stop, CH1 item) {
-  return Print(start, stop, item);
+  if (!start || start >= stop) return nullptr;
+  *start++ = item;
+  *start = 0;
+  return start;
 }
 /* Prints a Unicode Char to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
@@ -874,9 +1113,6 @@ Char* TPrint(Char* start, SIW count, CH4 item) {
  @param   item   The item to print. */
 template <typename Char = CHR>
 Char* TPrintString(Char* start, Char* stop, const CH1* item) {
-  D_ASSERT(start);
-  D_ASSERT(start <= stop);
-  D_ASSERT(item);
   if (!start || start >= stop || !item) return nullptr;
 
   if (start >= stop) return nullptr;
@@ -905,9 +1141,6 @@ inline Char* TPrint(Char* start, Char* stop, const CH1* item) {
  with one or more bytes in it, or if item is nil. */
 template <typename Char = CHR>
 Char* TPrintString(Char* start, Char* stop, const CH2* item) {
-  D_ASSERT(start);
-  D_ASSERT(start <= stop);
-  D_ASSERT(item);
   if (!start || start >= stop || !item) return nullptr;
 
   CH2 c = *item++;
@@ -936,8 +1169,6 @@ template <typename Char = CHR>
 Char* TPrintString(Char* start, Char* stop, const CH4* item) {
   if (!start || start >= stop || !item) return nullptr;
 
-  if (start >= stop) return nullptr;
-
   CH4 c = *item++;
   while (c) {
     start = Print(start, stop, c);
@@ -952,6 +1183,7 @@ template <typename Char = CHR>
 inline Char* TPrint(Char* start, Char* stop, const CH4* item) {
   return TPrintString<Char>(start, stop, item);
 }
+
 /* Prints a Unicode string to the given socket.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
 @param   start    The beginning of the socket.
@@ -1005,6 +1237,49 @@ const Char* TSTRDecimalEnd(const Char* start) {
   return start - 1;
 }
 
+/* Skips all the chars in a given range.
+@return Nil upon failure or a pointer to the Char after the last Char in the
+given range.
+@param  cursor  The first Char in the buffer.
+@param  lower_bounds
+@param  upper bounds*/
+template <typename Char = CHR>
+const Char* TSTRSkipCharsInRange(const Char* cursor, Char lower_bounds,
+                                 Char upper_bounds) {
+  A_ASSERT(cursor);
+  A_ASSERT(lower_bounds < upper_bounds);
+  Char c = *cursor;
+  while (c >= lower_bounds && c <= upper_bounds) c = *(++cursor);
+  return cursor;
+}
+
+/* Skips all the chars in a given range.
+@return Nil upon failure or a pointer to the Char after the last Char in the
+given range.
+@param  cursor  The first Char in the buffer.
+@param  lower_bounds
+@param  upper bounds*/
+template <typename Char = CHR>
+Char* TSTRSkipCharsInRange(Char* cursor, Char lower_bounds, Char upper_bounds) {
+  return const_cast<Char*>(TSTRSkipCharsInRange(
+      reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
+}
+
+/* Skips the numbers in the given range. */
+template <typename Char = CHR>
+inline const Char* TSTRSkipNumbers(const Char* cursor) {
+  return const_cast<Char*>(TSTRSkipCharsInRange<Char>(
+      reinterpret_cast<const Char*>(cursor), '0', '9'));
+}
+/* Skips the numbers in the given range. */
+template <typename Char = CHR>
+inline Char* TSTRSkipNumbers(Char* cursor) {
+  return const_cast<Char*>(
+      TSTRSkipNumbers<Char>(reinterpret_cast<const Char*>(cursor)));
+}
+
+/* Finds the stop of the decimals in the s, if there are any.
+@param  cursor  The first Char in the buffer. */
 template <typename Char = const CH1>
 Char* TSTRDecimalEnd(Char* start) {
   const Char* ptr = reinterpret_cast<const Char*>(start);
@@ -1016,8 +1291,7 @@ Char* TSTRDecimalEnd(Char* start) {
 @param  stop    The last Char in the buffer. */
 template <typename Char = CHR>
 const Char* TSTRDecimalEnd(const Char* cursor, const Char* stop) {
-  A_ASSERT(cursor);
-  A_ASSERT(cursor <= stop);
+  if (!cursor || cursor >= stop) return nullptr;
   Char c = *cursor++;
   if (!c) return nullptr;
   if (c == '-') {  // It might be negative.
@@ -1041,6 +1315,46 @@ inline Char* TSTRDecimalEnd(Char* cursor, Char* stop) {
   return const_cast<Char*>(
       TSTRDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
                            reinterpret_cast<const Char*>(stop)));
+}
+template <typename Char>
+const Char* TSTRFloatStop(const Char* start) {
+  const CH1* stop = TSTRDecimalEnd<CH1>(start);
+  if (!stop) return stop;
+  CH1 c = *stop++;
+  if (c == '.') {
+    stop = TSTRDecimalEnd<CH1>(start);
+    c = *stop++;
+  }
+  if (c == 'e' || c != 'E') {
+    if (c == '-') c = *stop++;
+    return TSTRDecimalEnd<CH1>(start);
+  }
+  return stop;
+}
+
+/* Skips the given Char in a s if there are any.
+@param  cursor  The first Char in the buffer. */
+template <typename Char = CHR>
+const Char* TSTRSkipChar(const Char* cursor, Char skip_char) {
+  if (cursor == nullptr) return nullptr;
+  Char c = *cursor, d;
+  if (c != skip_char) return cursor;
+  d = *cursor;
+  // We know the first Char is a skip_char so just loop till c and d aren't
+  // the skip_char.
+  while (c == d) {
+    c = d;
+    d = *(++cursor);
+  }
+  return cursor;
+}
+
+/* Skips the given Char in a s if there are any.
+@param  cursor  The first Char in the buffer. */
+template <typename Char = CHR>
+inline Char* TSTRSkipChar(Char* cursor, Char skip_char) {
+  return const_cast<const Char*>(
+      TSTRSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
 }
 
 }  // namespace _

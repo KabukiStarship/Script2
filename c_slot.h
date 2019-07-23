@@ -120,7 +120,7 @@ struct Slot {
 
 #if USING_SCRIPT2_TEXT
 /* Prints out the bin to the text. */
-inline ::_::UTF1& operator<<(::_::UTF1& printer, ::_::Slot& slot) {
+inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
   return slot.Print(printer);
 }
 #endif

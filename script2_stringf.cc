@@ -39,14 +39,18 @@ CH1* Print(CH1* start, CH1* stop, CH1 c) {
   *start = 0;
   return start;
 }
+
 }  // namespace _
 
+#if SEAM >= SEAM_SCRIPT2_UTF
 #if SEAM == SEAM_SCRIPT2_UTF
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
+
 namespace _ {
+
 CH1* Print(CH1* start, CH1* stop, CH4 c) {
   // | Byte 1   | Byte 2   | Byte 3   | Byte 4   | UTF-32 Result         |
   // |:--------:|:--------:|:--------:|:--------:|:---------------------:|
@@ -302,11 +306,7 @@ CH4* Print(CH4* start, CH4* stop, CH2 c) { return Print(start, stop, CH4(c)); }
 CH4* Print(CH4* start, CH4* stop, CH1 c) { return Print(start, stop, CH4(c)); }
 #endif
 
-CH1* LastByte(CH1* c) { return c; }
-
 #if USING_UTF16 == YES_0
-CH1* LastByte(CH2* c) { return reinterpret_cast<CH1*>(c) + 1; }
-
 CH2* Print(CH2* start, CH2* stop, FP4 value) {
   return TBinary<FP4, SI4, UI4>::template Print<CH2>(start, stop, value);
 }
@@ -317,8 +317,6 @@ CH2* Print(CH2* start, CH2* stop, FP8 value) {
 #endif
 
 #if USING_UTF32 == YES_0
-CH1* LastByte(CH4* c) { return reinterpret_cast<CH1*>(c) + 3; }
-
 CH4* Print(CH4* start, CH4* stop, FP4 value) {
   return TBinary<FP4, SI4, UI4>::template Print<CH4>(start, stop, value);
 }
@@ -327,77 +325,90 @@ CH4* Print(CH4* start, CH4* stop, FP8 value) {
   return TBinary<FP8, SI8, UI8>::template Print<CH4>(start, stop, value);
 }
 #endif
+}  // namespace _
+#endif
 
-Valuef::Valuef() : count(0), item() {}
+namespace _ {
 
-Valuef::Valuef(void* item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(const void* item, SIW count) : count(count), item(item) {}
+Valuef::Valuef() : count(0), value() {}
+
+Valuef::Valuef(void* item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(const void* item, SIW count) : count(count), value(item) {}
 #if USING_UTF8 == YES_0
-Valuef::Valuef(CH1 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(const CH1* item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(CH1 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(const CH1* item, SIW count) : count(count), value(item) {}
 #endif
 #if USING_UTF16 == YES_0
-Valuef::Valuef(CH2 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(const CH2* item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(CH2 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(const CH2* item, SIW count) : count(count), value(item) {}
 #endif
 #if USING_UTF32 == YES_0
-Valuef::Valuef(CH4 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(const CH4* item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(CH4 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(const CH4* item, SIW count) : count(count), value(item) {}
 #endif
-Valuef::Valuef(SI1 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(UI1 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(SI2 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(UI2 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(SI4 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(UI4 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(SI8 item, SIW count) : count(count), item(item) {}
-Valuef::Valuef(UI8 item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(SI1 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(UI1 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(SI2 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(UI2 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(SI4 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(UI4 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(SI8 item, SIW count) : count(count), value(item) {}
+Valuef::Valuef(UI8 item, SIW count) : count(count), value(item) {}
 #if USING_FP4 == YES_0
-Valuef::Valuef(FP4 item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(FP4 item, SIW count) : count(count), value(item) {}
 #endif
 #if USING_FP8 == YES_0
-Valuef::Valuef(FP8 item, SIW count) : count(count), item(item) {}
+Valuef::Valuef(FP8 item, SIW count) : count(count), value(item) {}
 #endif
 
-void* Valuef::Value() { return item.Value(); }
+SIW Valuef::Type() { return value.Type(); }
 
-void* Valuef::Ptr() { return item.Ptr(); }
+SIW Valuef::Count() { return count; }
 
-UIW Valuef::Word() { return item.Word(); }
+void* Valuef::Value() { return value.Value(); }
 
-Hexf::Hexf(const void* begin, SIW size) : valuef(begin, size) {}
+void* Valuef::Ptr() { return value.Ptr(); }
+
+CH1* Valuef::ST1() { return value.ST1(); }
+CH2* Valuef::ST2() { return value.ST2(); }
+CH4* Valuef::ST3() { return value.ST3(); }
+
+UIW Valuef::Word() { return value.Word(); }
+
+Hexf::Hexf(const void* begin, SIW size) : element(begin, size) {}
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-Hexf::Hexf(const void* item) : valuef(UIW(item), -sizeof(const void*)) {}
-Hexf::Hexf(SI1 item) : valuef(item, -sizeof(SI1)) {}
-Hexf::Hexf(UI1 item) : valuef(item, -sizeof(UI1)) {}
-Hexf::Hexf(SI2 item) : valuef(item, -sizeof(SI2)) {}
-Hexf::Hexf(UI2 item) : valuef(item, -sizeof(UI2)) {}
-Hexf::Hexf(SI4 item) : valuef(item, -sizeof(SI4)) {}
-Hexf::Hexf(UI4 item) : valuef(item, -sizeof(UI4)) {}
-Hexf::Hexf(SI8 item) : valuef(item, -sizeof(SI8)) {}
-Hexf::Hexf(UI8 item) : valuef(item, -sizeof(UI8)) {}
-#if USING_FP8 == YES_0
-Hexf::Hexf(FP4 item) : valuef(item, -sizeof(FP4)) {}
+Hexf::Hexf(const void* item) : element(UIW(item), -SIW(sizeof(const void*))) {}
+Hexf::Hexf(SI1 item) : element(item, -SIW(sizeof(SI1))) {}
+Hexf::Hexf(UI1 item) : element(item, -SIW(sizeof(UI1))) {}
+Hexf::Hexf(SI2 item) : element(item, -SIW(sizeof(SI2))) {}
+Hexf::Hexf(UI2 item) : element(item, -SIW(sizeof(UI2))) {}
+Hexf::Hexf(SI4 item) : element(item, -SIW(sizeof(SI4))) {}
+Hexf::Hexf(UI4 item) : element(item, -SIW(sizeof(UI4))) {}
+Hexf::Hexf(SI8 item) : element(item, -SIW(sizeof(SI8))) {}
+Hexf::Hexf(UI8 item) : element(item, -SIW(sizeof(UI8))) {}
+#if USING_FP4 == YES_0
+Hexf::Hexf(FP4 item) : element(item, -SIW(sizeof(FP4))) {}
 #endif
 #if USING_FP8 == YES_0
-Hexf::Hexf(FP8 item) : valuef(item, -sizeof(FP8)) {}
+Hexf::Hexf(FP8 item) : element(item, -SIW(sizeof(FP8))) {}
 #endif
 
-Binaryf::Binaryf(const void* begin, SIW size) : valuef(begin, size) {}
-Binaryf::Binaryf(const void* item) : valuef(UIW(item), -sizeof(const void*)) {}
-Binaryf::Binaryf(SI1 item) : valuef(item, -sizeof(SI1)) {}
-Binaryf::Binaryf(UI1 item) : valuef(item, -sizeof(UI1)) {}
-Binaryf::Binaryf(SI2 item) : valuef(item, -sizeof(SI2)) {}
-Binaryf::Binaryf(UI2 item) : valuef(item, -sizeof(UI2)) {}
-Binaryf::Binaryf(SI4 item) : valuef(item, -sizeof(SI4)) {}
-Binaryf::Binaryf(UI4 item) : valuef(item, -sizeof(UI4)) {}
-Binaryf::Binaryf(SI8 item) : valuef(item, -sizeof(SI8)) {}
-Binaryf::Binaryf(UI8 item) : valuef(item, -sizeof(UI8)) {}
-#if USING_FP8 == YES_0
-Binaryf::Binaryf(FP4 item) : valuef(item, -sizeof(FP4)) {}
+Binaryf::Binaryf(const void* begin, SIW size) : element(begin, size) {}
+Binaryf::Binaryf(const void* item)
+    : element(UIW(item), -SIW(sizeof(const void*))) {}
+Binaryf::Binaryf(SI1 item) : element(item, -SIW(sizeof(SI1))) {}
+Binaryf::Binaryf(UI1 item) : element(item, -SIW(sizeof(UI1))) {}
+Binaryf::Binaryf(SI2 item) : element(item, -SIW(sizeof(SI2))) {}
+Binaryf::Binaryf(UI2 item) : element(item, -SIW(sizeof(UI2))) {}
+Binaryf::Binaryf(SI4 item) : element(item, -SIW(sizeof(SI4))) {}
+Binaryf::Binaryf(UI4 item) : element(item, -SIW(sizeof(UI4))) {}
+Binaryf::Binaryf(SI8 item) : element(item, -SIW(sizeof(SI8))) {}
+Binaryf::Binaryf(UI8 item) : element(item, -SIW(sizeof(UI8))) {}
+#if USING_FP4 == YES_0
+Binaryf::Binaryf(FP4 item) : element(item, -SIW(sizeof(FP4))) {}
 #endif
 #if USING_FP8 == YES_0
-Binaryf::Binaryf(FP8 item) : valuef(item, -sizeof(FP8)) {}
+Binaryf::Binaryf(FP8 item) : element(item, -SIW(sizeof(FP8))) {}
 #endif
 #else
 Hexf::Hexf(const void* item) : valuef(item, sizeof(const void*)) {}
@@ -433,43 +444,31 @@ Binaryf::Binaryf(FP4 item) : valuef(item, sizeof(FP4)) {}
 Binaryf::Binaryf(FP8 item) : valuef(item, sizeof(FP8)) {}
 #endif
 #endif
-Stringf::Stringf() {}
 
 Stringf::Stringf(const CH1* item) : string_(item) { Print(item); }
-
 #if USING_UTF16 == YES_0
 Stringf::Stringf(const CH2* item) : string_(item) { Print(item); }
 #endif
 #if USING_UTF32 == YES_0
 Stringf::Stringf(const CH4* item) : string_(item) { Print(item); }
 #endif
-
 Stringf::Stringf(CH1 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(CH2 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(CH4 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(SI4 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(UI4 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(SI8 item) : string_(buffer_) { Print(item); }
-
 Stringf::Stringf(UI8 item) : string_(buffer_) { Print(item); }
 
 #if USING_FP4 == YES_0
 Stringf::Stringf(FP4 item) : string_(buffer_) { Print(item); }
 #endif
-
 #if USING_FP8 == YES_0
 Stringf::Stringf(FP8 item) : string_(buffer_) { Print(item); }
 #endif
-
 Stringf::Stringf(const CH1* item, SIW count) : string_(item), count_(count) {
   Print(item);
 }
-
 #if USING_UTF16 == YES_0
 Stringf::Stringf(const CH2* item, SIW count) : string_(item), count_(count) {
   Print(item);
@@ -480,47 +479,40 @@ Stringf::Stringf(const CH4* item, SIW count) : string_(item), count_(count) {
   Print(item);
 }
 #endif
-
 Stringf::Stringf(CH1 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(CH2 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(CH4 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(SI4 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(UI4 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(SI8 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 Stringf::Stringf(UI8 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-
 #if USING_FP4 == YES_0
 Stringf::Stringf(FP4 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
 #endif
-
 #if USING_FP8 == YES_0
 Stringf::Stringf(FP8 item, SIW count) : string_(buffer_), count_(count) {
   Print(item);
 }
 #endif
-
+UIW Stringf::Word() { return buffer_[0]; }
+void* Stringf::Value() { return buffer_; }
+void* Stringf::Ptr() { return reinterpret_cast<void*>(buffer_[0]); }
 const CH1* Stringf::ST1() { return reinterpret_cast<const CH1*>(string_); }
 const CH2* Stringf::ST2() { return reinterpret_cast<const CH2*>(string_); }
 const CH4* Stringf::ST3() { return reinterpret_cast<const CH4*>(string_); }
@@ -548,7 +540,7 @@ void Stringf::Print(const CH4* item) {
 
 void Stringf::Print(CH1 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::Print(buffer, buffer + kLengthMax, item);
+  _::Print(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer_;
 }
@@ -556,7 +548,7 @@ void Stringf::Print(CH1 item) {
 #if USING_UTF16 == YES_0
 void Stringf::Print(CH2 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::Print(buffer, buffer + kLengthMax, item);
+  _::Print(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer_;
 }
@@ -564,35 +556,43 @@ void Stringf::Print(CH2 item) {
 #if USING_UTF32 == YES_0
 void Stringf::Print(CH4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::Print(buffer, buffer + kLengthMax, item);
+  _::Print(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
 #endif
 void Stringf::Print(SI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SEAM_SCRIPT2_ITOS
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#endif
   type_ = kST1;
   string_ = buffer;
 }
 
 void Stringf::Print(UI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SEAM_SCRIPT2_ITOS
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#endif
   type_ = kST1;
   string_ = buffer;
 }
 
 void Stringf::Print(SI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SEAM_SCRIPT2_ITOS
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#endif
   type_ = kST1;
   string_ = buffer;
 }
 
 void Stringf::Print(UI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SEAM_SCRIPT2_ITOS
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#endif
   type_ = kST1;
   string_ = buffer;
 }
@@ -600,7 +600,7 @@ void Stringf::Print(UI8 item) {
 #if USING_FP4 == YES_0
 void Stringf::Print(FP4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
@@ -608,7 +608,7 @@ void Stringf::Print(FP4 item) {
 #if USING_FP8 == YES_0
 void Stringf::Print(FP8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  ::_::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
@@ -682,7 +682,7 @@ void Stringf::Hex(UI8 item, SIW count) {
 
 #if USING_FP4 == YES_0
 void Stringf::Hex(FP4 item, SIW count) {
-  UI4 value = *reinterpret_cast<FP4*>(&item);
+  UI4 value = *reinterpret_cast<UI4*>(&item);
   *buffer_ = UIW(value);
   type_ = kFP4;
   string_ = buffer_;
@@ -691,98 +691,222 @@ void Stringf::Hex(FP4 item, SIW count) {
 
 #if USING_FP8 == YES_0
 void Stringf::Hex(FP8 item, SIW count) {
-  UI8 value = *reinterpret_cast<FP8*>(&item);
+  UI8 value = *reinterpret_cast<UI8*>(&item);
   *buffer_ = UIW(value);
   type_ = kFP8;
   string_ = buffer_;
 }
 #endif
 
+Centerf::Centerf() {}
+
 #if USING_UTF8 == YES_0
-Centerf::Centerf(CH1 item, SIW count) : stringf(item, count) {}
-Centerf::Centerf(const CH1* item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(CH1 item, SIW count) : element(item, count) {}
+Centerf::Centerf(const CH1* item, SIW count) : element(item, count) {}
 #endif
 #if USING_UTF16 == YES_0
-Centerf::Centerf(CH2 item, SIW count) : stringf(item, count) {}
-Centerf::Centerf(const CH2* item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(CH2 item, SIW count) : element(item, count) {}
+Centerf::Centerf(const CH2* item, SIW count) : element(item, count) {}
 #endif
 #if USING_UTF32 == YES_0
-Centerf::Centerf(CH4 item, SIW count) : stringf(item, count) {}
-Centerf::Centerf(const CH4* item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(CH4 item, SIW count) : element(item, count) {}
+Centerf::Centerf(const CH4* item, SIW count) : element(item, count) {}
 #endif
-Centerf::Centerf(SI4 item, SIW count) : stringf(item, count) {}
-Centerf::Centerf(UI4 item, SIW count) : stringf(item, count) {}
-Centerf::Centerf(SI8 item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(SI4 item, SIW count) : element(item, count) {}
+Centerf::Centerf(UI4 item, SIW count) : element(item, count) {}
+Centerf::Centerf(SI8 item, SIW count) : element(item, count) {}
 #if USING_FP4 == YES_0
-Centerf::Centerf(FP4 item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(FP4 item, SIW count) : element(item, count) {}
 #endif
 #if USING_FP8 == YES_0
-Centerf::Centerf(FP8 item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(FP8 item, SIW count) : element(item, count) {}
 #endif
-Centerf::Centerf(UI8 item, SIW count) : stringf(item, count) {}
+Centerf::Centerf(UI8 item, SIW count) : element(item, count) {}
 
-Rightf::Rightf(CH1 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(const CH1* item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(CH1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #if USING_UTF16 == YES_0
-Rightf::Rightf(CH2 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(const CH2* item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(CH2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #endif
 #if USING_UTF32 == YES_0
-Rightf::Rightf(CH4 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(const CH4* item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(CH4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #endif
-Rightf::Rightf(SI4 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(UI4 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(SI8 item, SIW count) : stringf(item, count) {}
-Rightf::Rightf(UI8 item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(SI1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(UI1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(SI2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(UI2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(SI4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(UI4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(SI8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Centerf& Centerf::Hex(UI8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #if USING_FP4 == YES_0
-Rightf::Rightf(FP4 item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(FP4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #endif
 #if USING_FP8 == YES_0
-Rightf::Rightf(FP8 item, SIW count) : stringf(item, count) {}
+Centerf& Centerf::Hex(FP8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
 #endif
 
-Linef::Linef(CH1 item, SIW count) : valuef(item, count) {}
-Linef::Linef(const CH1* item, SIW count) : valuef(item, count) {}
+Rightf::Rightf() {}
+Rightf::Rightf(CH1 item, SIW count) : element(item, count) {}
+Rightf::Rightf(const CH1* item, SIW count) : element(item, count) {}
+#if USING_UTF16 == YES_0
+Rightf::Rightf(CH2 item, SIW count) : element(item, count) {}
+Rightf::Rightf(const CH2* item, SIW count) : element(item, count) {}
+#endif
+#if USING_UTF32 == YES_0
+Rightf::Rightf(CH4 item, SIW count) : element(item, count) {}
+Rightf::Rightf(const CH4* item, SIW count) : element(item, count) {}
+#endif
+Rightf::Rightf(SI4 item, SIW count) : element(item, count) {}
+Rightf::Rightf(UI4 item, SIW count) : element(item, count) {}
+Rightf::Rightf(SI8 item, SIW count) : element(item, count) {}
+Rightf::Rightf(UI8 item, SIW count) : element(item, count) {}
+#if USING_FP4 == YES_0
+Rightf::Rightf(FP4 item, SIW count) : element(item, count) {}
+#endif
+#if USING_FP8 == YES_0
+Rightf::Rightf(FP8 item, SIW count) : element(item, count) {}
+#endif
+
+Rightf& Rightf::Hex(CH1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#if USING_UTF16 == YES_0
+Rightf& Rightf::Hex(CH2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#endif
+#if USING_UTF32 == YES_0
+Rightf& Rightf::Hex(CH4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#endif
+Rightf& Rightf::Hex(SI1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(UI1 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(SI2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(UI2 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(SI4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(UI4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(SI8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+Rightf& Rightf::Hex(UI8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#if USING_FP4 == YES_0
+Rightf& Rightf::Hex(FP4 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#endif
+#if USING_FP8 == YES_0
+Rightf& Rightf::Hex(FP8 item, SIW count) {
+  element.Hex(item, count);
+  return *this;
+}
+#endif
+
+Linef::Linef(CH1 item, SIW count) : element(item, count) {}
+Linef::Linef(const CH1* item, SIW count) : element(item, count) {}
 
 Headingf::Headingf(const CH1* caption1, const CH1* style, SIW count,
                    const CH1* caption2, const CH1* caption3)
-    : caption(caption1, count),
+    : element(caption1, count),
       style(style),
       caption2(caption2),
       caption3(caption3) {}
 
 Charsf::Charsf(const void* start, const void* stop)
-    : valuef(reinterpret_cast<const CH1*>(start),
-             reinterpret_cast<const CH1*>(stop) -
-                 reinterpret_cast<const CH1*>(start)) {}
+    : element(reinterpret_cast<const CH1*>(start),
+              reinterpret_cast<const CH1*>(stop) -
+                  reinterpret_cast<const CH1*>(start)) {}
 Charsf::Charsf(const void* start, SIW count)
-    : valuef(reinterpret_cast<const CH1*>(start), count) {}
+    : element(reinterpret_cast<const CH1*>(start), count) {}
 
 #if USING_UTF16 == YES_0
 Charsf::Charsf(const CH2* start, const CH2* stop)
-    : valuef(start, stop - start) {}
-Charsf::Charsf(const CH2* start, SIW count) : valuef(start, count) {}
+    : element(start, stop - start) {}
+Charsf::Charsf(const CH2* start, SIW count) : element(start, count) {}
 #endif
 #if USING_UTF32 == YES_0
 Charsf::Charsf(const CH4* start, const CH4* stop)
-    : valuef(start, stop - start) {}
-Charsf::Charsf(const CH4* start, SIW count) : valuef(start, count) {}
+    : element(start, stop - start) {}
+Charsf::Charsf(const CH4* start, SIW count) : element(start, count) {}
 #endif
 
 Indentf::Indentf(SIW indent_count) : indent_count(indent_count) {}
+
 }  // namespace _
 
 #if SEAM >= SEAM_SCRIPT2_FTOS
-//#include <cmath>
-
 #if SEAM == SEAM_SCRIPT2_FTOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
 
-#include <cstdio>
+#include <cstdio>  // For sprintf_s
 
 namespace _ {
 
@@ -806,30 +930,14 @@ CH1* Print(CH1* start, CH1* stop, FP8 value) {
   // return TBinary<FP8, UI8>::TPrint<CH1>(start, stop, value);
 }
 
-template <typename Char>
-const Char* TStrandFloatStop(const Char* start) {
-  const CH1* stop = TSTRDecimalEnd<CH1>(start);
-  if (!stop) return stop;
-  CH1 c = *stop++;
-  if (c == '.') {
-    stop = TSTRDecimalEnd<CH1>(start);
-    c = *stop++;
-  }
-  if (c == 'e' || c != 'E') {
-    if (c == '-') c = *stop++;
-    return TSTRDecimalEnd<CH1>(start);
-  }
-  return stop;
-}
-
 const CH1* Scan(const CH1* start, FP4& value) {
   SI4 count = sscanf_s(start, "%f", &value);
-  return TStrandFloatStop<CH1>(start);
+  return TSTRFloatStop<CH1>(start);
 }
 
 const CH1* Scan(const CH1* start, FP8& value) {
   SI4 count = sscanf_s(start, "%lf", &value);
-  return TStrandFloatStop<CH1>(start);
+  return TSTRFloatStop<CH1>(start);
 }
-#endif
 }  // namespace _
+#endif
