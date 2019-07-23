@@ -96,10 +96,10 @@ const SI1* TypeBasicSizes() {
   return kSizes;
 }
 
-DTW TypeSizeOf(DTW type) {
-  type &= kTypeCountMask;
-  if (type >= kVAL) return -1;
-  return (DTW)TypeBasicSizes()[type];
+SI1 TypeSizeOf(DTW index) {
+  SIN invalid = kINV;
+  if (index < 0 || index > invalid) return -1;
+  return TypeBasicSizes()[index];
 }
 
 const SI1* TypeAlignmentMasks() {
@@ -140,12 +140,6 @@ const SI1* TypeAlignmentMasks() {
   return kSizes;
 }
 
-SI1 TypePODSize(DTW index) {
-  SIN invalid = kINV;
-  if (index < 0 || index > invalid) return -1;
-  return TypeBasicSizes()[index];
-}
-
 BOL TypeIsSupported(DTW type) { return true; }
 
 const CH1* STRType(DTW index) {
@@ -154,14 +148,14 @@ const CH1* STRType(DTW index) {
   return strings + (index << 2);
 }
 
-DT2 TypeWidthBits(DTW value) { return value >> 12; }
+DT2 TypeWidthBits(DTW value) { return DT2(value >> 12); }
 
 SI1 TypeTextFormat(DTW type) {
   DTW core_type = type & kTypeCountMask;
   if (core_type == 0) return -1;  //< then core_type < 32
   if (core_type <= kST3) {
     if (core_type == kNIL) return -1;
-    return type;
+    return SI1(type);
   }
   if (core_type == type) return -1;  //< then core_type < 32
   if (core_type == kCH1) return 1;
@@ -277,14 +271,10 @@ DTW AValue::Type() { return type_; }
 DTW AValue::UnicodeFormat() { return TypeTextFormat(type_); }
 
 void* AValue::Value() { return value_; }
-
 void* AValue::Ptr() { return reinterpret_cast<void*>(value_[0]); }
-
-const CH1* AValue::ST1() { return reinterpret_cast<const CH1*>(value_[0]); }
-
-const CH2* AValue::ST2() { return reinterpret_cast<const CH2*>(value_[0]); }
-
-const CH4* AValue::ST3() { return reinterpret_cast<const CH4*>(value_[0]); }
+CH1* AValue::ST1() { return reinterpret_cast<CH1*>(value_[0]); }
+CH2* AValue::ST2() { return reinterpret_cast<CH2*>(value_[0]); }
+CH4* AValue::ST3() { return reinterpret_cast<CH4*>(value_[0]); }
 
 UIW AValue::Word() { return value_[0]; }
 

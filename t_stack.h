@@ -47,8 +47,8 @@ Please see the ASCII Data Types Specificaiton for DRY documentation.
 */
 template <typename SIZ = SIN>
 struct TStack {
-  SIZ size,   //< Size of the Array in elements.
-      count;  //< Element count.
+  SIZ height,  //< Size of the Array in elements.
+      count;   //< Element count.
 };
 
 /* Gets the size of a Stack with the given count_max. */
@@ -108,10 +108,11 @@ inline SIZ TStackSizeMax(SIZ count_max) {
 @param socket An obj of bytes large enough to fit the obj.
 @return A dynamically allocated socket. */
 template <typename T = SI4, typename SIZ = SIN>
-TStack<SIZ>* TStackInit(TStack<SIZ>* stack, SIZ count_max) {
+TStack<SIZ>* TStackInit(TStack<SIZ>* stack, SIZ stack_height) {
   D_ASSERT(stack);
-  D_ASSERT(count_max < sizeof(TStack<SIZ>)) return nullptr;
-  stack->size = count_max;
+  D_ASSERT(stack_height > sizeof(TStack<SIZ>));
+  return nullptr;
+  stack->height = stack_height;
   stack->count = 0;
   return stack;
 }
@@ -135,7 +136,7 @@ UIW* TStackInit(UIW* socket, SIZ size, const T* items, SIZ count) {
   if (!items || count < 0) return nullptr;
 
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(socket);
-  stack->size = (size - sizeof(TStack<SIZ>)) >> kWordBitCount;
+  stack->height = (size - sizeof(TStack<SIZ>)) >> kWordBitCount;
   stack->count = 0;
   return socket;
 }
@@ -175,7 +176,7 @@ inline T* TStackTop(TStack<SIZ>* stack) {
 /* Returns the last element of the stack. */
 template <typename T = SI4, typename SIZ = SIN, typename Type = T>
 inline Type TStackEnd(TStack<SIZ>* stack) {
-  return reinterpret_cast<Type>(&TStackStart<T, SIZ>(stack)[stack->size]);
+  return reinterpret_cast<Type>(&TStackStart<T, SIZ>(stack)[stack->height]);
 }
 
 /* Clones the other ASCII Autoject including possibly unused object space.
@@ -201,8 +202,8 @@ template <typename Printer, typename T = SI4, typename SIZ = SIN>
 Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
   D_ASSERT(stack);
   SIZ count = stack->count;
-  o << "\n\nTStack<SI" << (CH1)('0' + sizeof(SIZ)) << ">: size: " << stack->size
-    << " count:" << count;
+  o << "\n\nTStack<SI" << (CH1)('0' + sizeof(SIZ))
+    << ">: size: " << stack->height << " count:" << count;
 
   T* elements = TStackStart<T, SIZ>(stack);
   for (SI4 i = 0; i < count; ++i) o << '\n' << i << ".) " << elements[i];
@@ -222,14 +223,14 @@ BOL TStackGrow(Autoject& obj) {
   D_COUT("\nAuto-growing Stack...\nBefore:");
   TStackPrint<COut, T, SIZ>(COut().Star(), stack);
 #endif
-  SIZ size = stack->size;
+  SIZ size = stack->height;
   if (!TCanGrow<SIZ>(size)) return false;
   SIW size_bytes = TSizeOf<T, SIZ, TStack<SIZ>>(stack->count);
   size = size << 1;
   SIZ new_size_bytes = TSizeOf<T, SIZ, TStack<SIZ>>(size);
   UIW* new_begin = obj.ram_factory(nullptr, new_size_bytes);
   TStack<SIZ>* other = reinterpret_cast<TStack<SIZ>*>(new_begin);
-  other->size = size;
+  other->height = size;
   other->count = stack->count;
   D_COUT(" copying data...");
   SocketCopy(TStackStart<T, SIZ>(other), size_bytes, TStackStart<T, SIZ>(stack),
@@ -247,13 +248,13 @@ BOL TStackGrow(Autoject& obj) {
 template <typename T = SI4, typename SIZ = SIN>
 BOL TStackResize(Autoject& obj, SIZ new_count) {
   TStack<SIZ> stack = *reinterpret_cast<TStack<SIZ>*>(obj.begin);
-  SIZ count = obj.count, count_max = TStackSizeMax<T, SIZ>();
+  SIZ count = stack.count, count_max = TStackSizeMax<T, SIZ>();
   if (count > count_max || count == new_count) return false;
 }
 
 template <typename T = SI4, typename SIZ = SIN>
 BOL TStackInBounds(TStack<SIZ>* stack, SIZ index) {
-  return index >= 0 && index < stack->size;
+  return index >= 0 && index < stack->height;
 }
 
 /* Inserts the item into the obj at the given index.
@@ -329,8 +330,8 @@ SIZ TStackPush(TStack<SIZ>* stack, const T& item) {
   D_ASSERT(stack);
   D_COUT("\nPushing:");
   D_COUT(item);
-  D_PRINTF(" size:%i count:%i", stack->size, stack->count);
-  SIZ size = stack->size,  //
+  D_PRINTF(" size:%i count:%i", stack->height, stack->count);
+  SIZ size = stack->height,  //
       count = stack->count;
   if (count >= size) return -1;
   T* items = TStackStart<T, SIZ>(stack);
@@ -368,10 +369,10 @@ SIZ TStackPush(AArray<T, SIZ, BUF>& ary, const T& item) {
 template <typename T = SI4, typename SIZ = SIN>
 SIZ TStackPush(TStack<SIZ>* stack, const T* items, SIZ items_count) {
   D_ASSERT(items);
-  D_ASSERT(count >= 0);
+  D_ASSERT(items_count >= 0);
   D_PRINTF("\nPushing %i items:", (SIN)items_count);
   SIZ count = stack->count,  //
-      size = stack->size;
+      size = stack->height;
   if (count >= size) return -1;
   T* cursor = TStackStart<T, SIZ>(stack) + count;
   for (SIN i = 0; i < count; ++i) cursor[i] = cursor[i];
@@ -468,7 +469,7 @@ class AStack {
   /* Copies the items into the obj_.Buffer () with some additional
   empty_elements. */
   AStack(SIZ count_max, const T* items, SIZ items_count)
-      : obj_(TStackSize<T, SIZ>(items_count + empty_elements)) {
+      : obj_(TStackSize<T, SIZ>(items_count)) {
     TStackPush<T, SIZ>(items, items_count);
   }
 
@@ -478,9 +479,6 @@ class AStack {
       : obj_(TStackSize<T, SIZ>(items_count)) {
     TStackPush<T, SIZ>(items, items_count);
   }
-
-  /* Copy constructor. */
-  AStack(const AStack& other) : obj_(other.RamFactoryInit(buffer_.Size())) {}
 
   /* Destructs nothing. */
   ~AStack() {}
@@ -580,7 +578,7 @@ class AStack {
   }
 
   /* Prints this object to the given UTF. */
-  inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
+  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
 
   /* Clones the other object. */
   inline AStack<T, SIZ>& operator=(const AStack<T, SIZ>& other) {
@@ -597,14 +595,14 @@ class AStack {
 
 }  // namespace _
 
-template <typename T = SI4, typename SIZ = SIN, typename BUF = ::_::Nil>
-::_::AArray<T, SIZ, BUF>& operator<<(::_::AArray<T, SIZ, BUF>& obj, T item) {
+template <typename T = SI4, typename SIZ = SIN, typename BUF = _::Nil>
+_::AArray<T, SIZ, BUF>& operator<<(_::AArray<T, SIZ, BUF>& obj, T item) {
   obj.Push(item);
   return obj;
 }
 
-template <typename T = SI4, typename SIZ = SIN, typename BUF = ::_::Nil>
-::_::AArray<T, SIZ, BUF>& operator>>(T& item, ::_::AArray<T, SIZ, BUF>& obj) {
+template <typename T = SI4, typename SIZ = SIN, typename BUF = _::Nil>
+_::AArray<T, SIZ, BUF>& operator>>(T& item, _::AArray<T, SIZ, BUF>& obj) {
   item = obj.Pop();
   return obj;
 }

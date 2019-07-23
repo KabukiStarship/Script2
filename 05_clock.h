@@ -26,7 +26,7 @@ static const CH1* _05_Clock(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_CLOCK
   A_TEST_BEGIN;
 
-  D_COUT_HEADING("\n\nTesting TScanTime...");
+  D_COUT(Headingf("\n\nTesting TScanTime..."));
 
   TM4 t, t_found;
   const CH1* result;
@@ -88,7 +88,7 @@ static const CH1* _05_Clock(const CH1* args) {
   D_COUT("\"\"");
   A_ASSERT(ClockCompare(t, t_found));
 
-  D_COUT_HEADING("Testing invalid input");
+  D_COUT(Headingf("Testing invalid input"));
   TScan<CH1>("cat", t);
 
   TScan<CH1>("2017-30-40", t);

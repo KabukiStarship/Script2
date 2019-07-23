@@ -13,10 +13,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef INCLUDED_SEAM_TREE
 #define INCLUDED_SEAM_TREE 1
 
-#include "module_tests.h"
-#include "t_test.h"
+#include <module_tests.h>
 
 SI4 main(SI4 arg_count, CH1** args) {
-  return ::_::TTestTree<script2::TestNode>(arg_count, args);
+  return _::TTestTree<script2::TestNode>(arg_count, args);
 }
 #endif

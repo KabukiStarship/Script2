@@ -110,6 +110,8 @@ static const UI2 kDigits00To99[100] = {
     0x3939};
 #endif
 
+const UI2* BinaryLUTDecimals() { return kDigits00To99; }
+
 // @todo This is not Puff and it should be. We really only want one that works
 // with one word. We also have to run on 16-bit systems so we have to provide
 // a lower memory cost overhead version of puff.
@@ -257,8 +259,6 @@ BOL IsNaN(FP4 value) { return isnan(value); }
 
 BOL IsNaN(FP8 value) { return isnan(value); }
 
-const UI2* BinaryLUTDecimals() { return kDigits00To99; }
-
 #if USING_FP4 == YES_0
 SI4 FloatDigitsMax() { return 15; }
 #endif
@@ -266,17 +266,23 @@ SI4 FloatDigitsMax() { return 15; }
 SI4 DoubleDigitsMax() { return 31; }
 #endif
 
-BOL IsFinite(FP4 value) { return isfinite(value); }
+BOL IsFinite(FP4 value) {
+  return static_cast<FP4>(isfinite(static_cast<FP8>(value)));
+}
 
 BOL IsFinite(FP8 value) { return isfinite(value); }
 
-BOL IsInfinite(FP4 value) { return isinf(value); }
+BOL IsInfinite(FP4 value) {
+  return static_cast<FP4>(isinf(static_cast<FP8>(value)));
+}
 
 BOL IsInfinite(FP8 value) { return isinf(value); }
 
 FP8 Ceiling(FP8 value) { return ceil(value); }
 
-FP4 Ceiling(FP4 value) { return ceil(value); }
+FP4 Ceiling(FP4 value) {
+  return static_cast<FP4>(ceil(static_cast<FP8>(value)));
+}
 
 /* Masks the lower bits using faster bit shifting.
 @brief The algorithm has you enter the highest bit rather than bit count because

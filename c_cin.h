@@ -129,12 +129,6 @@ class LIB_MEMBER CIn {
   /* Spin waits for the user to press a keyboard key.
   @return The key the user pressed. */
   static LIB_MEMBER SIN ScanKey();
-
-  /* Converts SI4 main(SI4,CH1**) arguments back into a string.
-  @return nil if there are no arguments or the args string upon success.
-  @param arg_count The number_ of arguments.
-  @param args      The arguments. */
-  static LIB_MEMBER const CH1* Args(SIN arg_count, CH1** args);
 };
 
 /* Prints a formatted string to the console and then pauses for the user to
@@ -145,9 +139,10 @@ struct LIB_MEMBER Pausef {
 };
 }  // namespace _
 
-::_::COut& operator<<(::_::COut& o, ::_::CIn& i);
+_::COut& operator<<(_::COut& o, _::CIn i);
+_::COut& operator<<(_::COut& o, _::CIn& i);
 
-::_::COut& operator<<(::_::COut& o, ::_::Pausef& i);
+_::COut& operator<<(_::COut& o, _::Pausef& i);
 
 #endif
 #endif

@@ -9,12 +9,11 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
+#if SEAM >= SEAM_SCRIPT2_ITOS
 #ifndef SCRIPT2_PUFF
 #define SCRIPT2_PUFF 1
 
 namespace _ {
-
-#if SEAM >= SEAM_SCRIPT2_ITOS
 
 /* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
 LIB_INLINE const UI2* BinaryLUTDecimals();
@@ -43,8 +42,6 @@ LIB_MEMBER SI4 STRLength(UI4 value);
 LIB_MEMBER SI4 STRLength(SI4 value);
 LIB_MEMBER SI4 STRLength(UI8 value);
 LIB_MEMBER SI4 STRLength(SI8 value);
-
-#endif
 
 #if SEAM >= SEAM_SCRIPT2_FTOS
 
@@ -134,10 +131,7 @@ LIB_MEMBER BOL IsInfinite(FP8 value);
 LIB_MEMBER FP8 Ceiling(FP8 value);
 #endif
 
-/* Returns the last UI1 in the given CH1, which is c in this case. */
-LIB_MEMBER CH1* LastByte(CH1* c);
-
 #endif
 }  // namespace _
-
+#endif
 #endif

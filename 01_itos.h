@@ -14,20 +14,13 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <cstring>
 
 #include "c_rng.h"
-#include "t_utf.h"
+#include "t_puff.h"
+#include "t_stringf.h"
 
 #if SEAM == SEAM_SCRIPT2_ITOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
-#endif
-
-#if COMPILER == VISUAL_CPP
-#define FORMAT_SI8 "%I64i"
-#define FORMAT_UI8 "%I64u"
-#else
-#define FORMAT_SI8 "%lld"
-#define FORMAT_UI8 "%llu"
 #endif
 
 using namespace _;
@@ -45,21 +38,21 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
 
   D_COUT("\n\nTesting Pow10_UI2...");
   UI2 pow10_ui2 = 1;
-  for (UI2 i = 0; i < _::kUI2DigitCountMax; ++i) {
+  for (UI2 i = 0; i < kUI2DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
     pow10_ui2 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI4...");
   UI4 pow10_ui4 = 1;
-  for (UI4 i = 0; i < _::kUI4DigitCountMax; ++i) {
+  for (UI4 i = 0; i < kUI4DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
     pow10_ui4 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI8...");
   UI8 pow10_ui8 = 1;
-  for (UI8 i = 0; i < _::kUI8DigitCountMax; ++i) {
+  for (UI8 i = 0; i < kUI8DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
     pow10_ui8 *= 10;
   }
@@ -122,9 +115,9 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
 
   D_COUT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
 
-  for (SI4 i = 0; i < 1 << 6; ++i) {
+  for (SIN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
-    sprintf_s(socket, kSize, FORMAT_UI8, expected_ui8);
+    sprintf_s(socket, kSize, "%llu", expected_ui8);
     const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
     A_ASSERT(test);
     A_AVOW(expected_ui8, result_ui8);
@@ -132,10 +125,10 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
 
   D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
 
-  UIN count = TSTRLength<UI8>(problem_child);
+  SIN count = TSTRLength<UI8>(problem_child);
   D_PRINTF("\n\nTesting %i problem children...\n\n", count);
 
-  for (SI4 i = 0; i < count; ++i) {
+  for (SIN i = 0; i < count; ++i) {
     expected_ui8 = problem_child[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     static const CH1 kPuffDebugHeader[] =
@@ -173,34 +166,31 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
     *result = 0;
     D_AVOW(expecting, text);
   }
+  /* This is produc
+  #if DEBUG_THIS
+    Printf("\n\nTesting %i random numbers of each length...\n\n", count);
+    count = 200;
+  #else
+    count = 1000;
+  #endif
+    SIN count_digits = STRLength(count);
+    D_PRINTF("\n\ncount_digits:%i", count_digits);
 
-#if DEBUG_THIS
-  Printf("\n\nTesting %i random numbers of each length...\n\n", count);
-  count = 200;
-#else
-  count = 1000;
-#endif
-  UIN count_digits = STRLength(count);
-  D_PRINTF("\n\ncount_digits:%i", count_digits);
+    // We don't want to do 1000 tests of length 1, so we're going to
 
-  // We don't want to do 1000 tests of length 1, so we're going to
-
-  for (UIN i = 0; i < 20; ++i) {
-    for (UIN j = 0; j < count; ++j) {
-      if (j >= Pow10_UI8()[i + i] - 1 - Pow10_UI8()[i]) break;
-      UI8 lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] - 1;
-      expected_ui8 = Random(lower_bounds, upper_bounds);
-      sprintf_s(expecting, 24, "%llu", expected_ui8);
-      D_PRINTF("\n\n", i + 1);
-      result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
-      if (!result) {
-        D_PAUSE("An error occurred :-(");
-        break;
+    for (SIN i = 0; i < 20; ++i) {
+      for (SIN j = 0; j < count; ++j) {
+        if (j >= Pow10_UI8()[i + i] - 1 - Pow10_UI8()[i]) break;
+        UI8 lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] -
+  1; expected_ui8 = Random(lower_bounds, upper_bounds); sprintf_s(expecting, 24,
+  "%llu", expected_ui8); D_PRINTF("\n\n", i + 1); result = TPrintUnsigned<UI8,
+  CH1>(text, text + kSize - 1, expected_ui8); if (!result) { D_PAUSE("An error
+  occurred :-("); break;
+        }
+        *result = 0;
+        D_AVOW(expecting, text);
       }
-      *result = 0;
-      D_AVOW(expecting, text);
-    }
-  }
+    }*/
 
 #endif
   return 0;

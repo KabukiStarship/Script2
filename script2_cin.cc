@@ -12,7 +12,6 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #if USING_CONSOLE == YES_0
 //
 #include <conio.h>
-
 #include <cstdio>
 
 #include "c_cin.h"
@@ -222,18 +221,6 @@ SIN CIn::ScanKey() {
   return c;
 }
 
-const CH1* CIn::Args(SIN arg_count, CH1** args) {
-  if (!args || arg_count <= 1) return "";
-  if (arg_count == 2) return args[1];
-  CH1 *begin = args[1], *stop = args[arg_count - 1] - 1;
-  while (stop > begin) {
-    CH1 c = *stop;
-    if (!c) *stop = ' ';
-    --stop;
-  }
-  return begin;
-}
-
 Pausef::Pausef() {
   COut("\nPress any key to continue...");
   CIn::ScanKey();
@@ -249,7 +236,8 @@ Pausef::Pausef(const CH1* format, ...) {
 
 }  // namespace _
 
-::_::COut& operator<<(::_::COut& o, ::_::CIn& i) { return o; }
+_::COut& operator<<(_::COut& o, _::CIn i) { return o; }
+_::COut& operator<<(_::COut& o, _::CIn& i) { return o; }
 
-::_::COut& operator<<(::_::COut& o, ::_::Pausef& i) { return o; }
+_::COut& operator<<(_::COut& o, _::Pausef& i) { return o; }
 #endif

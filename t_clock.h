@@ -17,9 +17,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "c_clock.h"
 #include "c_test.h"
-#include "t_utf.h"
+#include "t_stringf.h"
 
-#if SEAM == SEAM_SCRIPT2_CLOCK
+#if SEAM == SEAM_SCRIPT2_CORE
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -172,11 +172,11 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
     hour = h;
     return string;
   }
-  c = TLowercase<Char>(c);
+  c = TToLower<Char>(c);
   if (c == 'a') {  //
     D_COUT("\nCase @HHAm\n HHam ");
 
-    if (TLowercase<Char>(c = *string++) == 'm') c = *string++;
+    if (TToLower<Char>(c = *string++) == 'm') c = *string++;
     if (c && !TIsWhitespace<Char>(c)) {
       D_COUT("\nInvalid am format.");
       return nullptr;
@@ -188,7 +188,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'p') {
     D_COUT(" Case @HHpm ");
     c = *string++;
-    if (TLowercase<Char>(c) == 'm') c = *string++;
+    if (TToLower<Char>(c) == 'm') c = *string++;
     if (c && !TIsWhitespace<Char>(c)) {
       D_COUT("\ninvalid pm format.");
       return nullptr;
@@ -226,11 +226,11 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
     minute = m;
     return string;
   }
-  c = TLowercase<Char>(c);
+  c = TToLower<Char>(c);
   if (c == 'a') {
     D_COUT(" HH:MMam ");
     c = *string++;
-    if (TLowercase<Char>(c) == 'm') {  // The 'm' is optional.
+    if (TToLower<Char>(c) == 'm') {  // The 'm' is optional.
       c = *string++;
     }
     if (c && !TIsWhitespace<Char>(c)) {  // The space is not.
@@ -244,7 +244,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'p') {  //< Case HH:MM PM
     D_COUT(" HH:MMpm ");
     c = *string++;
-    if (TLowercase<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TToLower<Char>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
     if (c && !TIsWhitespace<Char>(c)) {  //< The space is not.
@@ -270,7 +270,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   }
   D_PRINTF(":%i", s);
   string = TSTRSkipNumbers<Char>(string);
-  c = TLowercase<Char>(*string);
+  c = TToLower<Char>(*string);
   if (!c || TIsWhitespace<Char>(c)) {
     D_PRINTF(" HH:MM:SS ");
     hour = h;
@@ -281,7 +281,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'a') {
     D_COUT(" HH:MM:SSam ");
     c = *string++;
-    if (TLowercase<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TToLower<Char>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
     if (!c || !TIsWhitespace<Char>(c)) {  //< The space is not.
@@ -298,7 +298,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
     return nullptr;  // Format error!
   }
   D_PRINTF(" HH:MM:SSpm ");
-  c = TLowercase<Char>(*string++);
+  c = TToLower<Char>(*string++);
   if (c == 'm') {  //< The 'm' is optional.
     c = *string++;
   }
@@ -412,7 +412,7 @@ const Char* TScan(const Char* string, AClock& clock) {
 
       return string + 1;
     }
-    c = TLowercase<Char>(c);
+    c = TToLower<Char>(c);
     if ((value1 < 12) && (value2 > 0) &&
         (value2 <= ClockMonthDayCount(value1))) {
       D_COUT(" MM/DD ");

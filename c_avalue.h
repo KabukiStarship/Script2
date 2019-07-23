@@ -88,15 +88,12 @@ LIB_INLINE const CH1* STRType(DTW index);
 /* Array of bytes of the sizes of POD types. */
 LIB_INLINE const SI1* TypeBasicSizes();
 
-/* Returns the size or max size of the given type. */
-LIB_INLINE DTW TypeSizeOf(DTW type);
-
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
 LIB_INLINE SI1 TypeTextFormat(DTW type);
 
 /* Gets one of the */
-LIB_INLINE SI1 TypePODSize(DTW index);
+LIB_INLINE SI1 TypeSizeOf(DTW index);
 
 /* Checks if the given type is valid.
 @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */
@@ -172,9 +169,9 @@ class LIB_MEMBER AValue {
 
   /* Gets the pointer contained in value_[0]. */
   void* Ptr();
-  const CH1* ST1();
-  const CH2* ST2();
-  const CH4* ST3();
+  CH1* ST1();
+  CH2* ST2();
+  CH4* ST3();
 
   /* Gets the first word of the value_. */
   UIW Word();

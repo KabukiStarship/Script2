@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug Script2|Win32">
-      <Configuration>Debug Script2</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug Script2|x64">
-      <Configuration>Debug Script2</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -27,55 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="17_seam.s2" />
-    <None Include="pch_header.h" />
-    <None Include="pch_footer.inl" />
-    <None Include="module_debug.inl" />
-    <None Include="module_footer.inl" />
-    <None Include="module_release.inl" />
-    <None Include="module_seams.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="c_puff.h" />
-    <ClCompile Include="module_tester.cc" />
-    <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_avalue.cc" />
-    <ClCompile Include="script2_bin.cc" />
-    <ClCompile Include="script2_bout.cc" />
-    <ClCompile Include="script2_bsq.cc" />
-    <ClCompile Include="script2_cin.cc" />
-    <ClCompile Include="script2_clock.cc" />
-    <ClCompile Include="script2_crabs.cc" />
-    <ClCompile Include="script2_error.cc" />
-    <ClCompile Include="script2_event.cc" />
-    <ClCompile Include="script2_floor.cc" />
-    <ClCompile Include="script2_stringf.cc" />
-    <ClCompile Include="script2_hash.cc" />
-    <ClCompile Include="script2_interrupts.cc" />
-    <ClCompile Include="script2_lock.cc" />
-    <ClCompile Include="script2_morsecode.cc" />
-    <ClCompile Include="script2_autoject.cc" />
-    <ClCompile Include="script2_op.cc" />
-    <ClCompile Include="script2_operand.cc" />
-    <ClCompile Include="script2_puff.cc" />
-    <ClCompile Include="script2_rng.cc" />
-    <ClCompile Include="script2_room.cc" />
-    <ClCompile Include="script2_slot.cc" />
-    <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_cout.cc" />
-    <ClCompile Include="script2_test.cc" />
-    <ClCompile Include="script2_vk.cc" />
-    <ClCompile Include="t_puff.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="00_core.h" />
     <ClInclude Include="01_itos.h" />
     <ClInclude Include="02_socket.h" />
-    <ClInclude Include="04_utf.h" />
     <ClInclude Include="03_ftos.h" />
+    <ClInclude Include="04_utf.h" />
     <ClInclude Include="05_clock.h" />
-    <ClInclude Include="07_strand.h" />
     <ClInclude Include="06_stack.h" />
+    <ClInclude Include="07_strand.h" />
     <ClInclude Include="08_matrix.h" />
     <ClInclude Include="09_loom.h" />
     <ClInclude Include="10_table.h" />
@@ -88,12 +39,15 @@
     <ClInclude Include="17_room.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
+    <ClInclude Include="c_autoject.h" />
     <ClInclude Include="c_avalue.h" />
     <ClInclude Include="c_bin.h" />
     <ClInclude Include="c_bout.h" />
     <ClInclude Include="c_bsq.h" />
     <ClInclude Include="c_buffer.h" />
+    <ClInclude Include="c_cin.h" />
     <ClInclude Include="c_clock.h" />
+    <ClInclude Include="c_cout.h" />
     <ClInclude Include="c_crabs.h" />
     <ClInclude Include="c_error.h" />
     <ClInclude Include="c_event.h" />
@@ -104,25 +58,25 @@
     <ClInclude Include="c_language.h" />
     <ClInclude Include="c_lock.h" />
     <ClInclude Include="c_mirror.h" />
-    <ClInclude Include="c_autoject.h" />
     <ClInclude Include="c_op.h" />
     <ClInclude Include="c_operand.h" />
-    <ClInclude Include="c_stringf.h" />
+    <ClInclude Include="c_puff.h" />
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
-    <ClInclude Include="c_cin.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
-    <ClInclude Include="c_cout.h" />
+    <ClInclude Include="c_stringf.h" />
     <ClInclude Include="c_test.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
-    <ClInclude Include="t_wall.h" />
+    <ClInclude Include="c_wall.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="module_seams.h" />
     <ClInclude Include="module_tests.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="pch_header.h" />
     <ClInclude Include="public.h" />
-    <ClInclude Include="t_matrix.h" />
+    <ClInclude Include="t_array.h" />
     <ClInclude Include="t_avalue.h" />
     <ClInclude Include="t_benchmark.h" />
     <ClInclude Include="t_book.h" />
@@ -134,7 +88,8 @@
     <ClInclude Include="t_list.h" />
     <ClInclude Include="t_loom.h" />
     <ClInclude Include="t_map.h" />
-    <ClInclude Include="t_array.h" />
+    <ClInclude Include="t_matrix.h" />
+    <ClInclude Include="t_puff.h" />
     <ClInclude Include="t_set.h" />
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
@@ -143,17 +98,54 @@
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
     <ClInclude Include="t_utf.h" />
+    <ClInclude Include="t_wall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="17_seam.s2" />
+    <None Include="module_debug.inl" />
+    <None Include="module_footer.inl" />
+    <None Include="module_release.inl" />
+    <None Include="pch_footer.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="module_tester.cc" />
+    <ClCompile Include="pch.cc" />
+    <ClCompile Include="script2_autoject.cc" />
+    <ClCompile Include="script2_avalue.cc" />
+    <ClCompile Include="script2_bin.cc" />
+    <ClCompile Include="script2_bout.cc" />
+    <ClCompile Include="script2_bsq.cc" />
+    <ClCompile Include="script2_cin.cc" />
+    <ClCompile Include="script2_clock.cc" />
+    <ClCompile Include="script2_cout.cc" />
+    <ClCompile Include="script2_crabs.cc" />
+    <ClCompile Include="script2_error.cc" />
+    <ClCompile Include="script2_event.cc" />
+    <ClCompile Include="script2_floor.cc" />
+    <ClCompile Include="script2_hash.cc" />
+    <ClCompile Include="script2_interrupts.cc" />
+    <ClCompile Include="script2_lock.cc" />
+    <ClCompile Include="script2_morsecode.cc" />
+    <ClCompile Include="script2_op.cc" />
+    <ClCompile Include="script2_operand.cc" />
+    <ClCompile Include="script2_puff.cc" />
+    <ClCompile Include="script2_rng.cc" />
+    <ClCompile Include="script2_room.cc" />
+    <ClCompile Include="script2_slot.cc" />
+    <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_stringf.cc" />
+    <ClCompile Include="script2_test.cc" />
+    <ClCompile Include="script2_vk.cc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{E38DB956-F3D9-4F16-9503-2FE5BD337B39}</ProjectGuid>
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>kabukisdkdata</RootNamespace>
+    <RootNamespace>script2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>script2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -181,12 +173,6 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|Win32'">
-    <PlatformToolset>v142</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
-    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -226,8 +212,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir).\</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir).\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -236,13 +222,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -251,7 +237,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -259,7 +246,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -270,7 +256,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -278,8 +265,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir).\..\..\..\;$(ProjectDir).\..\..\..\script2\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -287,11 +272,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Script2|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjctDir)./;</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,21 +21,21 @@ namespace _ {
 /* Returns the highest signed prime that can fit in type SI.
 @return 0 if the sizeof (SI) is not 1, 2, 4, or 8.  */
 template <typename SI>
-constexpr SI PrimeMaxSigned() {
-  SI prime =
-      sizeof(SI) == 1
-          ? 127
-          : sizeof(SI) == 2 ? 32767 :
-                            ? sizeof(SI) == 4
-                                  ? 2147483647
-                                  : sizeof(SI) == 8 ? 9223372036854775783 : 0;
+inline SI PrimeMaxSigned() {
+  SI prime = (sizeof(SI) == 1)
+                 ? 127
+                 : (sizeof(SI) == 2)
+                       ? 32767
+                       : (sizeof(SI) == 4)
+                             ? 2147483647
+                             : (sizeof(SI) == 8) ? 9223372036854775783 : 0;
   return prime;
 }
 
 /* Returns the highest signed prime that can fit in type UI.
 @return 0 if the sizeof (UI) is not 1, 2, 4, or 8. */
 template <typename HSH>
-constexpr HSH TPrimeMaxUnigned() {
+inline HSH TPrimeMaxUnigned() {
   HSH prime = sizeof(HSH) == 1
                   ? 251
                   : sizeof(HSH) == 2
@@ -47,12 +47,12 @@ constexpr HSH TPrimeMaxUnigned() {
 }
 
 template <typename Char, typename HSH>
-HSH THashPrime(Char value, HSH hash) {
+inline HSH THashPrime(Char value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
 template <typename HSH = UIN, typename Char = CHR>
-UI2 THashPrime(const Char* str) {
+inline UI2 THashPrime(const Char* str) {
   HSH c = (HSH)*str;
   HSH hash = TPrimeMaxUnigned<HSH>();
   while (c) {

@@ -10,6 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
+#if SEAM >= SEAM_SCRIPT2_UTF
 #ifndef SCRIPT2_TUTF
 #define SCRIPT2_TUTF 1
 
@@ -17,41 +18,6 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "t_socket.h"
 #include "t_stringf.h"
 
-#if SEAM >= SEAM_SCRIPT2_ITOS
-namespace _ {
-
-/* Scrolls over to the next FP8 quote mark.
-@warning This function is only safe to use on ROM strings with a nil-term
-CH1. */
-template <typename Char = CHR>
-inline Char* TSTREnd(Char* start, Char delimiter = 0) {
-  return const_cast<Char*>(
-      TSTREnd(reinterpret_cast<const Char*>(start), delimiter));
-}
-
-/* Gets the length of the given CH1.
-@return  Returns -1 if the text CH1 is nil.
-@warning This function is only safe to use on ROM strings with a nil-term
-CH1. */
-template <typename Char = CHR, typename SIZ = SIN>
-SIZ TSTRLength(const Char* start) {
-  D_ASSERT(start);
-  return (SIZ)(TSTREnd<Char>(start) - start);
-}
-
-/* Gets the length of the given CH1.
-@return  Returns -1 if the text CH1 is nil.
-@warning This function is only safe to use on ROM strings with a nil-term
-CH1. */
-template <typename Char = CHR, typename SIZ = SIN>
-inline SIZ TSTRLength(Char* start) {
-  return TSTRLength<Char>(reinterpret_cast<const Char*>(start));
-}
-
-}  // namespace _
-#endif
-
-#if SEAM >= SEAM_SCRIPT2_UTF
 #if SEAM == SEAM_SCRIPT2_UTF
 #include "module_debug.inl"
 #else
@@ -153,7 +119,6 @@ inline Char* TPrintHex(Char* start, Char* stop, FP4 value) {
   return TPrintHex<Char, UI4>(start, stop, ToUnsigned(value));
 }
 #endif
-
 #if USING_FP8 == YES_0
 template <typename Char = CHR>
 inline Char* TPrintHex(Char* start, Char* stop, FP8 value) {
@@ -304,50 +269,52 @@ Char* TScan(const Char* start, FP8& result) {
   return nullptr;
 }
 
+#if SEAM >= SEAM_SCRIPT2_FTOS
+#endif
+
 /* Prints the given socket to the COut. */
 template <typename Char = CHR>
-Char* TPrintSocket(Char* cursor, Char* stop, const void* begin,
+Char* TPrintSocket(Char* start, Char* stop, const void* begin,
                    const void* end) {
-  A_ASSERT(begin || cursor || cursor < stop);
+  const Char *read = reinterpret_cast<const Char*>(begin),
+             *read_end = reinterpret_cast<const Char*>(end);
+  if (!start || start >= stop || !begin || read > read_end) return nullptr;
 
-  Char* buffer_begin = cursor;
-  const Char *address_ptr = reinterpret_cast<const Char*>(begin),
-             *address_end_ptr = reinterpret_cast<const Char*>(end);
-  SIW size = address_end_ptr - address_ptr,
-      num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+  Char* buffer_begin = start;
+  SIW size = read_end - read, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
   SIW num_bytes = 81 * (num_rows + 2);
-  if ((stop - cursor) <= num_bytes) {
+  if ((stop - start) <= num_bytes) {
     D_PRINTF("\nERROR: buffer overflow trying to fit %i in %i bytes!",
-             (SI4)num_bytes, (SI4)(stop - cursor));
+             (SI4)num_bytes, (SI4)(stop - start));
     return nullptr;
   }
   size += num_bytes;
-  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsHeader());
-  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsBorder());
-  cursor = TPrintHex<Char>(cursor, stop, address_ptr);
+  start = TPrintString<Char>(start, stop, STRPrintCharsHeader());
+  start = TPrintString<Char>(start, stop, STRPrintCharsBorder());
+  start = TPrintHex<Char>(start, stop, read);
 
-  D_PRINTF("\nBuffer space left:%i", (SI4)(stop - cursor));
+  D_PRINTF("\nBuffer space left:%i", (SI4)(stop - start));
   Char c;
-  while (address_ptr < address_end_ptr) {
-    *cursor++ = kLF;
-    *cursor++ = '|';
+  while (read < read_end) {
+    *start++ = kLF;
+    *start++ = '|';
     for (SI4 i = 0; i < 64; ++i) {
-      c = *address_ptr++;
-      if (address_ptr > address_end_ptr)
+      c = *read++;
+      if (read > read_end)
         c = 'x';
       else if (!c || c == kTAB)
         c = ' ';
       else if (c < ' ')
         c = kDEL;
-      *cursor++ = c;
+      *start++ = c;
     }
-    *cursor++ = '|';
-    *cursor++ = ' ';
-    cursor = TPrintHex<Char>(cursor, stop, address_ptr);
+    *start++ = '|';
+    *start++ = ' ';
+    start = TPrintHex<Char>(start, stop, read);
   }
-  cursor = TPrintString<Char>(cursor, stop, STRPrintCharsBorder());
-  return TPrintHex<Char>(cursor, stop, address_ptr + size);
+  start = TPrintString<Char>(start, stop, STRPrintCharsBorder());
+  return TPrintHex<Char>(start, stop, read + size);
 }
 
 /* An empty string. */
@@ -455,31 +422,6 @@ inline Char* TSTRLineEnd(Char* cursor, Char* stop, SI4 column_count = 80) {
   return const_cast<const Char*>(
       TSTRLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
                         reinterpret_cast<const Char*>(stop), column_count));
-}
-
-/* Skips the given Char in a s if there are any.
-@param  cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRSkipChar(const Char* cursor, Char skip_char) {
-  if (cursor == nullptr) return nullptr;
-  Char c = *cursor, d;
-  if (c != skip_char) return cursor;
-  d = *cursor;
-  // We know the first Char is a skip_char so just loop till c and d aren't
-  // the skip_char.
-  while (c == d) {
-    c = d;
-    d = *(++cursor);
-  }
-  return cursor;
-}
-
-/* Skips the given Char in a s if there are any.
-@param  cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-inline Char* TSTRSkipChar(Char* cursor, Char skip_char) {
-  return const_cast<const Char*>(
-      TSTRSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
 }
 
 /* Scrolls over any whitespace.
@@ -735,47 +677,6 @@ BOL TSTRIsntEmpty(Char* cursor, const Char* stop) {
                        reinterpret_cast<const Char*>(stop));
 }
 
-/* Skips all the chars in a given range.
-@return Nil upon failure or a pointer to the Char after the last Char in the
-given range.
-@param  cursor  The first Char in the buffer.
-@param  lower_bounds
-@param  upper bounds*/
-template <typename Char = CHR>
-const Char* TSTRSkipCharsInRange(const Char* cursor, Char lower_bounds,
-                                 Char upper_bounds) {
-  A_ASSERT(cursor);
-  A_ASSERT(lower_bounds < upper_bounds);
-  Char c = *cursor;
-  while (c >= lower_bounds && c <= upper_bounds) c = *(++cursor);
-  return cursor;
-}
-
-/* Skips all the chars in a given range.
-@return Nil upon failure or a pointer to the Char after the last Char in the
-given range.
-@param  cursor  The first Char in the buffer.
-@param  lower_bounds
-@param  upper bounds*/
-template <typename Char = CHR>
-Char* TSTRSkipCharsInRange(Char* cursor, Char lower_bounds, Char upper_bounds) {
-  return const_cast<Char*>(TSTRSkipCharsInRange(
-      reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
-}
-
-/* Skips the numbers in the given range. */
-template <typename Char = CHR>
-inline const Char* TSTRSkipNumbers(const Char* cursor) {
-  return const_cast<Char*>(TSTRSkipCharsInRange<Char>(
-      reinterpret_cast<const Char*>(cursor), '0', '9'));
-}
-/* Skips the numbers in the given range. */
-template <typename Char = CHR>
-inline Char* TSTRSkipNumbers(Char* cursor) {
-  return const_cast<Char*>(
-      TSTRSkipNumbers<Char>(reinterpret_cast<const Char*>(cursor)));
-}
-
 /* Prints the given item aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CH1 upon success.
@@ -984,23 +885,34 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
   return cursor;
 }
 
-/* Converts the given Char to lowercase. */
-template <typename Char = CHR>
-Char TLowercase(Char c) {
-  if ((c & 0x3f) == 3) return c - 64;
-  return c;
+/* Returns the first CH1 in the cursor socket. */
+template <typename Char = CHR, typename SIZ = SI4>
+inline Char* TSTRStart(UIW* start) {
+  UIW address = reinterpret_cast<UIW>(start) + sizeof(SIZ);
+  return reinterpret_cast<Char*>(address);
 }
 
-/* Initializes an ASCII Strand. */
-template <typename SIZ, typename Char>
-inline Char* TStrandInit(UIW* obj, SIZ size) {
-  UIW address = reinterpret_cast<UIW>(AArrayInit<SIZ>(obj, size));
-  return reinterpret_cast<Char*>(address + sizeof(SIZ));
+/* Searches for the stop of the strand. */
+template <typename Char = CHR, typename SIZ = SI4>
+inline Char* TSTRStop(void* begin) {
+  SIZ size = *reinterpret_cast<SIZ*>(begin);
+  UIW address = reinterpret_cast<UIW>(begin);
+  Char* ptr = reinterpret_cast<Char*>(address + sizeof(SIZ));
+  return ptr + (size >> TBitShiftCount<Char>()) - 1;
+}
+
+/* Searches for the stop of the strand. */
+template <typename Char = CHR, typename SIZ = SI4>
+inline Char* TSTRStop(void* begin, SIW size_bytes) {
+  UIW address = reinterpret_cast<UIW>(begin);
+  Char* ptr = reinterpret_cast<Char*>(address + sizeof(SIZ));
+  return ptr + (size_bytes >> TBitShiftCount<Char>()) - 1;
 }
 
 /* Utility class for printing numbers. */
 template <typename Char = CHR, SIN kLengthMax = 31>
 class TStringf {
+  SIW count_;
   Char string_[kLengthMax + 1];  //< Strand buffer for the token.
 
  public:
@@ -1099,80 +1011,70 @@ class TStringf {
 
   /* Prints the given item to the strand_. */
   inline Char* Print(CH1 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH1* item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(CH2 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH2* item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(CH4 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(const CH4* item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(SI4 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(UI4 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(SI8 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
 
   /* Prints the given item to the strand_. */
   inline Char* Print(UI8 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
@@ -1180,8 +1082,7 @@ class TStringf {
 #if USING_FP4 == YES_0
   /* Prints the given item to the strand_. */
   inline Char* Print(FP4 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
@@ -1189,8 +1090,7 @@ class TStringf {
 #if USING_FP8 == YES_0
   /* Prints the given item to the strand_. */
   inline Char* Print(FP8 item) {
-    auto cursor = ::_::TPrint<Char>(string_, kLengthMax, item);
-    if (!cursor) return cursor;
+    auto cursor = _::TPrint<Char>(string_, kLengthMax, item);
     string_ = nullptr;
     return cursor;
   }
@@ -1213,9 +1113,9 @@ struct TUTF {
   /* Initializes the UTF& from the given begin pointers.
   @param start The begin of the begin.
   @param count The number of Char(s) in the buffer. */
-  TUTF(Char* start, SIZ count)
-      : start(start), stop(TPtr<Char>(start, count - 1)) {
+  TUTF(Char* start, SIZ count) : start(start), stop(start + count - 1) {
     D_ASSERT(start);
+    D_ASSERT(count >= 0);
     Reset();
   }
 
@@ -1295,17 +1195,17 @@ struct TUTF {
 
   /* Prints a CH1 to the strand. */
   inline TUTF& PrintChar(CH1 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& PrintChar(CH2 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& PrintChar(CH4 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
@@ -1319,81 +1219,78 @@ struct TUTF {
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH1* item) {
-    return Set(::_::TPrintString<Char>(start, stop, item));
+    return Set(_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH2* item) {
-    return Set(::_::TPrintString<Char>(start, stop, item));
+    return Set(_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints a CH1 to the strand. */
   inline TUTF& Print(const CH4* item) {
-    return Set(::_::TPrintString<Char>(start, stop, item));
+    return Set(_::TPrintString<Char>(start, stop, item));
   }
 
   /* Prints the given item. */
   inline TUTF& Print(SI4 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints the given item. */
   inline TUTF& Print(UI4 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints the given item. */
   inline TUTF& Print(SI8 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
   /* Prints the given item. */
   inline TUTF& Print(UI8 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 
 #if USING_FP4 == YES_0
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP4 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 #endif
 #if USING_FP8 == YES_0
   /* Prints the given item.
   @return A UTF. */
   inline TUTF& Print(FP8 item) {
-    return Set(::_::TPrint<Char>(start, stop, item));
+    return Set(_::TPrint<Char>(start, stop, item));
   }
 #endif
 
   /* Prints the given item. */
+  inline TUTF& Print(Hexf item) { return TPrintHex<TUTF>(*this, item.element); }
+
+  /* Prints the given item. */
   inline TUTF& Print(Rightf item) {
-    return Set(::_::TPrintRight<Char>(start, stop, item.item.Value(),
-                                      item.stringf.count));
+    return TPrintRight<TUTF>(*this, item.element);
   }
 
   /* Prints the given item. */
   inline TUTF& Print(Centerf item) {
-    return Set(::_::TPrintCenter<Char>(start, stop, item.item.Value(),
-                                       item.stringf.count));
+    return TPrintCenter<TUTF>(*this, item.element);
   }
 
   /* Prints the given item. */
-  inline TUTF& Print(Linef item) {
-    return Set(::_::TPrintLinef<Char>(start, stop, item.item.Value(),
-                                      item.valuef.count));
-  }
+  inline TUTF& Print(Linef item) { return TPrintLinef<TUTF>(*this, item); }
 
   /* Prints the given item. */
   inline TUTF& Print(Headingf item) {
-    return Set(::_::TPrintLinef<Char>(start, stop, item.item.Value(),
-                                      item.value.count));
+    return TPrintHeadingf<TUTF>(*this, item);
   }
 
   /* Prints the given pointer as hex. */
   inline TUTF& Hex(Hexf item) {
-    return TPrintHex<Char>(*this, item.Begin(), item.valuef.count);
+    return TPrintHex<Char>(*this, item.element.Ptr(), item.element.count);
   }
 
   /* Prints the given item as hex. */
@@ -1487,30 +1384,6 @@ struct TUTF {
   }
 };
 
-/* Returns the first CH1 in the cursor socket. */
-template <typename Char = CHR, typename SIZ = SI4>
-inline Char* TSTRStart(UIW* start) {
-  UIW address = reinterpret_cast<UIW>(start) + sizeof(SIZ);
-  return reinterpret_cast<Char*>(address);
-}
-
-/* Searches for the stop of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
-inline Char* TSTRStop(void* begin) {
-  SIZ size = *reinterpret_cast<SIZ*>(begin);
-  UIW address = reinterpret_cast<UIW>(begin);
-  Char* ptr = reinterpret_cast<Char*>(address + sizeof(SIZ));
-  return ptr + (size >> TBitShiftCount<Char>()) - 1;
-}
-
-/* Searches for the stop of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
-inline Char* TSTRStop(void* begin, SIW size_bytes) {
-  UIW address = reinterpret_cast<UIW>(begin);
-  Char* ptr = reinterpret_cast<Char*>(address + sizeof(SIZ));
-  return ptr + (size_bytes >> TBitShiftCount<Char>()) - 1;
-}
-
 /* Queries the given s for the given query. */
 template <typename Char = CHR>
 SI4 TSTRQuery(const Char* cursor, const Char* stop, const Char* query) {
@@ -1575,139 +1448,153 @@ SI4 TSTRQuery(const Char* cursor, const Char* stop, const Char* query) {
 @param  utf The utf.
 @param  item   The item to utf. */
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH1 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, CH1 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH1* item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const CH1* item) {
   return utf.Print(item);
 }
 
 #if USING_UTF16 == YES_0
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH2 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, CH2 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH2* item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const CH2* item) {
   return utf.Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, CH4 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, CH4 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, const CH4* item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const CH4* item) {
   return utf.Print(item);
 }
 #endif
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI1 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI1 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI1 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI1 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI2 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI2 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI2 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI2 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI4 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI4 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI4 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI4 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, SI8 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, SI8 item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, UI8 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, UI8 item) {
   return utf.Print(item);
 }
 
 #if USING_FP4 == YES_0
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP4 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FP4 item) {
   return utf.Print(item);
 }
 #endif
 
 #if USING_FP8 == YES_0
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, FP8 item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, FP8 item) {
   return utf.Print(item);
 }
 #endif
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Centerf item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Centerf item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Centerf& item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Rightf item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Rightf item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Rightf& item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Linef item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Linef item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Linef& item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Headingf item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Headingf item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Headingf& item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TStringf<Char> item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TStringf<Char> item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::TStringf<Char>& item) {
   return utf.Print(item);
 }
 
 template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Hexf& item) {
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Hexf item) {
+  return utf.Print(item);
+}
+template <typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Hexf& item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Charsf& item) {
-  return TPrintChars<Printer>(utf, item.start, item.stop);
+template <typename Printer, typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Charsf item) {
+  return utf.Print(item);
 }
-
-template <typename Char = CHR>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf, ::_::Nil& socket) {
-  utf.Set(socket.Start(), socket.Stop());
-  return *this;
-}
-
-template <typename Char = CHR, SIW kSize_>
-inline ::_::TUTF<Char>& operator<<(::_::TUTF<Char>& utf,
-                                   ::_::TSocket<kSize_>& socket) {
-  utf.Set(socket.Start(), socket.Stop());
-  return *this;
+template <typename Printer, typename Char = CHR>
+inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, _::Charsf& item) {
+  return utf.Print(item);
 }
 #endif
 #endif

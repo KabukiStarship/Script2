@@ -13,8 +13,6 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_C_TEST
 #define SCRIPT2_C_TEST 1
 
-#include "c_cin.h"
-
 /* Function pointer prototype for a test case with command line argument
 .
 @return Pointer to a  to utf to the stdout.
@@ -46,6 +44,12 @@ LIB_MEMBER BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file);
 @param  file    The file the error occurred at.
 @param  message An optional message to utf. */
 LIB_MEMBER BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
+
+/* Converts SI4 main(SI4,CH1**) arguments back into a string.
+@return nil if there are no arguments or the args string upon success.
+@param arg_count The number_ of arguments.
+@param args      The arguments. */
+LIB_MEMBER const CH1* ArgsToString(SIN arg_count, CH1** args);
 
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */

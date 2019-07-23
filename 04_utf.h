@@ -70,7 +70,7 @@ static const Char* _04_UTF() {
     Test(cursor);
   }
 
-  D_COUT_HEADING("Testing TUTF<Char>");
+  D_COUT(Headingf("Testing TUTF<Char>"));
 
   D_PRINTF("\n\nExpecting \"%s\"", kTesting123);
   static const Char kCommaSpace[] = {',', ' ', NIL};
@@ -116,7 +116,7 @@ static const Char* _04_UTF() {
   A_ASSERT(TSTRFind<Char>(kTesting123, kOne));
   A_ASSERT(TSTRFind<Char>(kTesting123, kThreePeriod));
 
-  D_COUT_HEADING("Testing TPrintRight<Char>");
+  D_COUT(Headingf("Testing TPrintRight<Char>"));
 
   const Char kRightAligned[12][13] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -141,7 +141,7 @@ static const Char* _04_UTF() {
     D_PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
     A_AVOW_INDEX(&kRightAligned[i][0], str_a, i);
   }
-  D_COUT_HEADING("Testing TPrintCenter<Char>");
+  D_COUT(Headingf("Testing TPrintCenter<Char>"));
 
   const Char kCentered[13][14] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -170,7 +170,7 @@ static const Char* _04_UTF() {
     A_AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 
-  D_COUT_HEADING("Testing TPrintSocket<Char>");
+  D_COUT(Headingf("Testing TPrintSocket<Char>"));
 
   for (SI4 i = 0; i < kCount / 4; ++i) str_b[i] = '0' + i % 10;
 

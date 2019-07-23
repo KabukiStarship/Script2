@@ -10,8 +10,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <pch.h>
 
 #if SEAM >= SEAM_SCRIPT2_TABLE
-#ifndef INCLUDED_SCRIPTT2_TTABLE
-#define INCLUDED_SCRIPTT2_TTABLE
+
+#ifndef SCRIPTT2_TABLE_T
+#define SCRIPTT2_TABLE_T
 
 #include "c_socket.h"
 #include "t_array.h"
@@ -22,7 +23,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM == SEAM_SCRIPT2_TABLE
 #include "module_debug.inl"
 #define D_COUT_TABLE(item) \
-  TTablePrint<::_::COut, SIZ, HSH, Char>(COut().Star(), item)
+  TTablePrint<_::COut, SIZ, HSH, Char>(COut().Star(), item)
 #else
 #include "module_release.inl"
 #define D_COUT_TABLE(item)
@@ -96,13 +97,13 @@ constexpr SIZ TTableEntryOverhead() {
 template <typename SIZ = SIN, typename Char = CHR, SIZ kCountMax = 32,
           SIZ kAverageStringLength = 16>
 constexpr SIZ TTableSize() {
-  return sizeof(TTable<SIZ>) + 8 * kCountMax * sizeof(SIZ) +
+  return sizeof(TTable<SIZ>) + 4 * kCountMax * sizeof(SIZ) +
          kCountMax * (kAverageStringLength + 1);
 }
 
 template <typename SIZ = SIN, typename Char = CHR>
 constexpr SIZ TTableSize(SIZ count_max, SIZ average_string_length = 24) {
-  return sizeof(TTable<SIZ>) + 5 * count_max * 2 * sizeof(SIZ) +
+  return sizeof(TTable<SIZ>) + 4 * count_max * sizeof(SIZ) +
          count_max * (average_string_length + 1);
 }
 
@@ -110,8 +111,8 @@ constexpr SIZ TTableSize(SIZ count_max, SIZ average_string_length = 24) {
 The keys get printed down from the end so this is the first nil-term Char of the
 first string, which is very convenient. */
 template <typename SIZ = SIN, typename Char = CHR>
-inline Char* TTableKeysStop(TTable<SIZ>* table, SIZ size_bytes) {
-  return TPtr<Char>(table, size_bytes) - 1;
+inline Char* TTableKeysTop(TTable<SIZ>* table, SIZ* offsets, SIZ count) {
+  return TPtr<Char>(table, offsets[count - 1]) - 1;
 }
 
 /* Creates a streamable hash table with enough socket space for the
@@ -142,7 +143,7 @@ TTable<SIZ>* TTableInit(TTable<SIZ>* table, SIZ count_max, SIZ size_bytes) {
 
   table->count = 0;
   table->count_max = count_max;
-  table->top = SIZ(reinterpret_cast<SIW>(table) + size_bytes);
+  table->top = size_bytes - sizeof(Char);
   table->size_pile = 0;
   table->size_bytes = size_bytes;
   return table;
@@ -181,25 +182,26 @@ Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
     << Linef(" \"Key\":{Collissions}\n+---");
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
-  SIZ* key_offsets = reinterpret_cast<SIZ*>(hashes + count_max);
-  Char *collision_indexes = reinterpret_cast<Char*>(key_offsets + count_max),
-       *unsorted_indexes = collision_indexes + count_max,
-       *keys = TPtr<Char>(table, size_bytes - sizeof(Char));
+  SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
+      *collision_indexes = reinterpret_cast<SIZ*>(key_offsets + count_max),
+      *unsorted_indexes = collision_indexes + count_max;
+  Char* keys = TPtr<Char>(table, size_bytes - sizeof(Char));
 
   for (SIZ i = 0; i < count; ++i) {
     o << '\n'
-      << Rightf(i, count_length_max) << Centerf(key_offsets[i], 8)
-      << Centerf(THashPrime<HSH, Char>(keys - key_offsets[i]), 10)
-      << Centerf(hashes[i], kHashWidth)
-      << Centerf(hashes[unsorted_indexes[i]], kHashWidth)
+      << Rightf(i, count_length_max)  //
+      << Centerf(key_offsets[i], 8)
+      << Centerf().Hex(THashPrime<HSH, Char>(keys - key_offsets[i]), kHashWidth)
+      << Centerf().Hex(hashes[i], kHashWidth)
+      << Centerf().Hex(hashes[unsorted_indexes[i]], kHashWidth)
       << Centerf(unsorted_indexes[i], kHashWidth) << " \""
       << (keys - key_offsets[i]) << "\":{";
 
     collision_index = collision_indexes[i];
     if ((collision_index >= 0) && (i < count)) {
       // Print collisions.
-      Char *collission_list = unsorted_indexes + count_max,
-           *begin = &collission_list[collision_index];
+      SIZ *collission_list = unsorted_indexes + count_max,
+          *begin = &collission_list[collision_index];
 
       temp = *begin;
       ++begin;
@@ -213,7 +215,7 @@ Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
     o << '}';
   }
 #if DEBUG_THIS
-  return o << Linef("\n+---") << Charsf(table, table->size_bytes + 16) << '\n';
+  return o << Linef("\n+---") << Charsf(table, table->size_bytes) << '\n';
 #endif
   return o << Linef("\n+---\n");
 #endif
@@ -234,16 +236,17 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
   if (count >= count_max) return -1;  //< We're out of buffered indexes.
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
-  SIZ* key_offsets = reinterpret_cast<SIZ*>(hashes + count_max);
-  Char *collision_indexes = reinterpret_cast<Char*>(key_offsets + count_max),
-       *unsorted_indexes = collision_indexes + count_max,
-       *keys = TPtr<Char>(table, size_bytes - sizeof(Char));
+  SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
+      *collision_indexes = key_offsets + count_max,
+      *unsorted_indexes = collision_indexes + count_max;
+  Char* keys = TPtr<Char>(table, size_bytes - sizeof(Char));
 
   // Calculate space left.
-  SIZ sapce_left = size_bytes - sizeof(TTable<SIZ>) - table->size_pile -
-                   count_max * TTableEntryOverhead<SIZ>(),  //
-      size_pile,                                            //
-      key_length = TSTRLength<Char, SIZ>(key);
+  SIZ* collission_list = unsorted_indexes + count_max;
+  Char *top = TPtr<Char>(table, keys[count - 1]),
+       *bottom = reinterpret_cast<Char*>(collission_list + table->size_pile);
+  SIZ key_length = TSTRLength<Char, SIZ>(key);
+  SIZ sapce_left = SIZ(top - bottom);  //
 
   D_PRINTF(
       "\nAdding key \"%s\":%u"
@@ -252,17 +255,18 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
       "\ncollision_indexes:%i"
       "\n             keys:%i"
       "\n       size_bytes:%i"
-      "\n       sapce_left:%i\n",
+      "\n       sapce_left:%i",
       key, (UIN)key_length, TDelta<SIN>(table, hashes),
       TDelta<SIN>(table, key_offsets), TDelta<SIN>(table, collision_indexes),
       TDelta<SIN>(table, keys), SIN(size_bytes), SIN(sapce_left));
-
-  HSH hash = THashPrime<HSH, Char>(key), current_hash;
 
   if (key_length > sapce_left) {
     D_PRINTF("\nBuffer overflow!");
     return ~(SIZ)0;
   }
+
+  HSH hash = THashPrime<HSH, Char>(key), current_hash;
+  D_PRINTF("\n             hash:0x%x\n", hash);
   Char* destination;
   if (count == 0) {
     table->count = 1;
@@ -271,7 +275,6 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
     *collision_indexes = -1;
     *unsorted_indexes = 0;
     destination = keys - key_length;
-
     TPrintString<Char>(destination, keys, key);
     D_PRINTF("\nInserted key \"%s\" at element:%i with result:\"%s\"", key,
              TDelta<SIN>(table, destination), destination);
@@ -290,7 +293,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 
   SIZ low = 0, mid, high = count, index;
 
-  Char* temp_ptr;
+  SIZ* temp_ptr;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
@@ -303,7 +306,6 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
     } else if (current_hash < hash) {
       low = mid + 1;
     } else {  // Duplicate hash detected.
-      Char* collission_list = unsorted_indexes + count_max;
       D_PRINTF("hash detected, ");
 
       // Check for other collisions.
@@ -341,7 +343,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
         key_offsets[count] = sapce_left;
 
         // Update the collision table.
-        size_pile = table->size_pile;
+        SIZ size_pile = table->size_pile;
         // Shift the collisions table up one element and insert
         // the unsorted collision index.
         // Then move to the top of the collisions list.
@@ -396,7 +398,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
             sapce_left, index, count, collision_index);
         key_offsets[count] = sapce_left;
 
-        size_pile = table->size_pile;
+        SIZ size_pile = table->size_pile;
         collision_indexes[mid] = static_cast<SIZ>(size_pile);
         collision_indexes[count] = static_cast<SIZ>(size_pile);
 
@@ -477,8 +479,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
   table->count = count + 1;
 
   D_COUT_TABLE(table);
-  D_PRINTF("Done inserting.\n");
-  D_COUT_LINEF('-');
+  D_COUT_LINEF("Done inserting.\n---");
 
   return count;
 }
@@ -495,10 +496,10 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   SIZ size_bytes = table->size_bytes;
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
-  SIZ* key_offsets = reinterpret_cast<SIZ*>(hashes + count_max);
-  Char *collision_indexes = reinterpret_cast<Char*>(key_offsets + count_max),
-       *unsorted_indexes = collision_indexes + count_max,
-       *keys = TPtr<Char>(table, size_bytes - sizeof(Char));
+  SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
+      *collision_indexes = key_offsets + count_max,
+      *unsorted_indexes = collision_indexes + count_max;
+  Char* keys = TPtr<Char>(table, size_bytes - sizeof(Char));
 
   HSH hash = THashPrime<HSH, Char>(key);
 
@@ -513,7 +514,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
       return -1;
     }
     D_PRINTF("Found key %s\n", key);
-    D_COUT_LINEF('-');
+    D_COUT(Linef('-'));
     return 0;
   }
 
@@ -541,7 +542,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
 
       // Check for collisions
 
-      Char* collisions = TPtr<Char>(key_offsets, count_max * sizeof(HSH));
+      SIZ* collisions = unsorted_indexes + count_max;
       index = collisions[mid];
 
       if (index != -1) {
@@ -554,8 +555,8 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
         // lower address up.
 
         temp = collision_indexes[mid];
-        Char *collission_list = unsorted_indexes + count_max,
-             *temp_ptr = collission_list + temp;
+        SIZ *collission_list = unsorted_indexes + count_max,
+            *temp_ptr = collission_list + temp;
         index = *temp_ptr;
         while (index != -1) {
           D_PRINTF("comparing to \"%s\"", keys - key_offsets[index]);
@@ -601,6 +602,60 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   return -1;
 }
 
+/* Gets the given key.
+@return Returns the index it go inserted into. */
+template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+SIZ TTableGet(TTable<SIZ>* table, SIZ index) {
+  D_ASSERT(table);
+  D_COUT("\nBefore:");
+  D_COUT_TABLE(table);
+
+  SIZ count = table->count;
+  if (index < 0 || index >= count) return -1;
+
+  SIZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
+
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
+  SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
+      *collision_indexes = key_offsets + count_max,
+      *unsorted_indexes = collision_indexes + count_max;
+  Char* keys = TPtr<Char>(table, size_bytes - sizeof(Char));
+}
+
+/* Removes the string at the given index. */
+template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+SIZ TTableRemove(TTable<SIZ>* table, SIZ index) {
+  D_ASSERT(table);
+  D_COUT("\nBefore:");
+  D_COUT_TABLE(table);
+
+  SIZ count = table->count;
+  if (index < 0 || index >= count) return -1;
+
+  SIZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
+
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
+  SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
+      *collision_indexes = reinterpret_cast<Char*>(key_offsets + count_max),
+      *unsorted_indexes = collision_indexes + count_max;
+  Char* keys = TPtr<Char>(table, size_bytes - sizeof(Char));
+
+  // Algorithm:
+  // 1. Remove the hashes.
+  // 2. Remove the key offsets.
+  // 3. Remove from collision indexes.
+  // 4. Remove from unsorted indexes.
+  // 5. Remove from collisions list.
+  return count;
+}
+
+/* Removes the given key from the table. */
+template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+SIZ TTableRemove(TTable<SIZ>* table, const Char* key) {
+  SIZ index = TTableFind<SIZ, HSH, Char>(table, key);
+  return TTableRemove<SIZ, HSH, Char>(table, index);
+}
+
 /* An ASCII Table Autoject. */
 template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR,
           SIZ kCountMax_ = 32,
@@ -621,7 +676,7 @@ class ATable {
   @param factory ASCII Factory to call when the Strand overflows. */
   ATable(SIZ count_max) {
     SIZ size_bytes = TTableSize<SIZ, Char, count_max>();
-    D_SOCKET_WIPE(obj_.Begin(), TTableSize<SIZ, Char>(count_max));
+    D_SOCKET_WIPE(obj_.Begin(), size_bytes);
     TTableInit<SIZ, HSH, Char>(obj_.Begin(), count_max, size_bytes);
   }
 
@@ -634,6 +689,11 @@ class ATable {
   /* Removes the string at the given index from the Table. */
   inline SIZ Remove(SIZ index) {
     return TTableRemove<SIZ, HSH, Char>(OBJ(), index);
+  }
+
+  /* Removes the string at the given index from the Table. */
+  inline SIZ Remove(const Char* key) {
+    return TTableRemove<SIZ, HSH, Char>(OBJ(), key);
   }
 
   /* Gets the string at the given index. */
@@ -657,11 +717,11 @@ class ATable {
     return TTablePrint<Printer, SIZ, HSH, Char>(o, OBJ());
   }
 
-  inline void COut() { PrintTo<::_::COut>(::_::COut().Star()); }
+  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
 #endif
 };
 
 }  // namespace _
-
+#undef D_COUT_TABLE
 #endif
 #endif

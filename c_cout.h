@@ -97,14 +97,14 @@ class LIB_MEMBER COut {
 #if USING_FP8 == YES_0
   COut& Print(FP8 item);
 #endif
-  COut& Print(Hexf item);
-  COut& Print(Binaryf item);
-  COut& Print(Centerf item);
-  COut& Print(Rightf item);
-  COut& Print(Linef item);
-  COut& Print(Headingf item);
-  COut& Print(Indentf item);
-  COut& Print(Charsf item);
+  COut& Print(Hexf& item);
+  COut& Print(Binaryf& item);
+  COut& Print(Centerf& item);
+  COut& Print(Rightf& item);
+  COut& Print(Linef& item);
+  COut& Print(Headingf& item);
+  COut& Print(Indentf& item);
+  COut& Print(Charsf& item);
 
   /* Prints a new line followed by the given item to the stdout. */
   COut& NL();
@@ -178,40 +178,77 @@ class LIB_MEMBER COut {
 #endif
 };
 
-LIB_INLINE COut CPrint();
+/* Wrapper function for COut so you can use it more than once in a lexical
+scope without delcaring COut cout. */
+LIB_INLINE COut CPrint(CH1 item);
+LIB_INLINE COut CPrint(const CH1* item);
+#if USING_UTF16 == YES_0
+LIB_INLINE COut CPrint(CH2 item);
+LIB_INLINE COut CPrint(const CH2* item);
+#endif
+#if USING_UTF32 == YES_0
+LIB_INLINE COut CPrint(CH4 item);
+LIB_INLINE COut CPrint(const CH4* item);
+#endif
+
+LIB_INLINE COut CPrint(SI4 item);
+LIB_INLINE COut CPrint(UI4 item);
+LIB_INLINE COut CPrint(SI8 item);
+LIB_INLINE COut CPrint(UI8 item);
+#if USING_FP4 == YES_0
+LIB_INLINE COut CPrint(FP4 item);
+#endif
+#if USING_FP8 == YES_0
+LIB_INLINE COut CPrint(FP8 item);
+#endif
+LIB_INLINE COut CPrint(Hexf& item);
+LIB_INLINE COut CPrint(Binaryf& item);
+LIB_INLINE COut CPrint(Centerf& item);
+LIB_INLINE COut CPrint(Rightf& item);
+LIB_INLINE COut CPrint(Linef& item);
+LIB_INLINE COut CPrint(Headingf& item);
+LIB_INLINE COut CPrint(Indentf& item);
 
 }  // namespace _
 
 /* Prints the given item to the COut. */
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH1 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH1* item);
+LIB_INLINE _::COut& operator<<(_::COut& o, CH1 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, const CH1* item);
+
 #if USING_UTF16 == YES_0
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH2 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH2* item);
+LIB_INLINE _::COut& operator<<(_::COut& o, CH2 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, const CH2* item);
 #endif
 #if USING_UTF32 == YES_0
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, CH4 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, const CH4* item);
+LIB_INLINE _::COut& operator<<(_::COut& o, CH4 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, const CH4* item);
 #endif
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI4 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI4 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, SI8 item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, UI8 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, SI4 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, UI4 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, SI8 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, UI8 item);
 #if USING_FP4 == YES_0
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP4 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, FP4 item);
 #endif
 #if USING_FP8 == YES_0
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, FP8 item);
+LIB_INLINE _::COut& operator<<(_::COut& o, FP8 item);
 #endif
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Hexf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Binaryf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Centerf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Rightf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Linef item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Headingf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Indentf item);
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::Charsf item);
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Hexf item);
 
-LIB_INLINE ::_::COut& operator<<(::_::COut& o, ::_::COut& item);
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Binaryf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Centerf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Rightf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Linef item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Headingf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Indentf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::Charsf item);
+
+LIB_INLINE _::COut& operator<<(_::COut& o, _::COut item);
 #endif
 #endif
