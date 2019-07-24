@@ -251,10 +251,10 @@ class LIB_MEMBER Stringf {
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
   to the buffer. */
-  Stringf() {}
+   Stringf ();
 
   /* Sets the string_ to the given pointer and stores the count. */
-  Stringf(const CH1* item);
+   Stringf(const CH1* item);
 #if USING_UTF16 == YES_0
   Stringf(const CH2* item);
 #endif

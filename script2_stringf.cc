@@ -445,6 +445,7 @@ Binaryf::Binaryf(FP8 item) : valuef(item, sizeof(FP8)) {}
 #endif
 #endif
 
+Stringf::Stringf() {}
 Stringf::Stringf(const CH1* item) : string_(item) { Print(item); }
 #if USING_UTF16 == YES_0
 Stringf::Stringf(const CH2* item) : string_(item) { Print(item); }

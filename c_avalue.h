@@ -60,9 +60,9 @@ enum {
   kRS2 = 98,  //< 98. A type-value tuple list with 32-bit signed size_bytes.
   kRS4 = 99,  //< 99. A type-value tuple list with 64-bit signed size_bytes.
   kINV = 64,  //< The number of Ascii Data Type base types.
-  kTypeBitCount = 5,        //< Bit
-  kTypeCount = 32,          //< The starting index of invalid types.
-  kTypeCountMask = 32 - 1,  //< The starting index of invalid types.
+  kTypeBitCount = 5,      //< Bit
+  kTypeCount = 32,        //< The starting index of invalid types.
+  kTypePODMask = 32 - 1,  //< The starting index of invalid types.
 };
 
 enum {
@@ -94,6 +94,9 @@ LIB_INLINE SI1 TypeTextFormat(DTW type);
 
 /* Gets one of the */
 LIB_INLINE SI1 TypeSizeOf(DTW index);
+
+/* Gets the alignment mask for the given POD data type. */
+LIB_INLINE SIW TypeAlignmentMask(SIW index);
 
 /* Checks if the given type is valid.
 @return False if the given type is an 8-bit kLST, kMAP, kBOK, or kDIC. */

@@ -12,9 +12,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_T_STRAND
 #define SCRIPT2_T_STRAND 1
 
+#include "t_array.h"
+
 #if SEAM >= SEAM_SCRIPT2_STRAND
 #include "c_avalue.h"
-#include "t_array.h"
 #include "t_utf.h"
 
 #if SEAM == SEAM_SCRIPT2_STRAND
@@ -129,7 +130,7 @@ obj_.Factory () is nil then it will get replaced with the foo.
 #
 
 @code
-TStrand<> (TSocket<64>).Star ("Hello ") << "world!";
+AStrand<> (TSocket<64>).Star ("Hello ") << "world!";
 @endcode
 
 # Dynamic Allocated Strands
@@ -137,11 +138,11 @@ TStrand<> (TSocket<64>).Star ("Hello ") << "world!";
 Strands that use dynamic memory use the TC:
 
 @code
-TStrand<UI4, TSocket<64>> () << "Hello world!";
+AStrand<UI4, TSocket<64>> () << "Hello world!";
 @endcode
 */
 template <typename Char = CHR, SIN kSize_ = kSTRCount,
-          typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
+          typename BUF = TSocket<kSize_, Char, SIN, TStrand<SIN>>>
 class AStrand {
   TUTF<Char> utf_;              //< UTF for the strand.
   AArray<Char, SIN, BUF> obj_;  //< AutoArray of Char(s).

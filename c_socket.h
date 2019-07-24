@@ -75,10 +75,10 @@ LIB_INLINE UI8 AlignUp(UI8 value, UI8 mask = kWordLSbMask);
 LIB_INLINE SI8 AlignUp(SI8 value, SI8 mask = kWordLSbMask);
 
 /* Gets the next address that a data type may be stored at. */
-LIB_MEMBER const void* TypeAlign(SIW type, const void* value);
+LIB_MEMBER const void* TypeAlignUp(SIW type, const void* value);
 
 /* Gets the next address that a data type may be stored at. */
-LIB_MEMBER void* TypeAlign(SIW type, void* value);
+LIB_MEMBER void* TypeAlignUp(SIW type, void* value);
 
 /* A managed general purpose (i.e. not just for networking) memory socket.
 A socket is just a hole in something for fitting something in, like a light
@@ -119,6 +119,12 @@ class Nil {
   /* Gets the size of the socket. */
   static constexpr SIW Size();
 
+  /* Gets the size of the socket. */
+  static constexpr SIW SizeBytes ();
+
+  /* Gets the size of the socket. */
+  static constexpr SIW SizeWords ();
+
   /* Gets the nil begin word address. */
   UIW* Buffer();
 };
@@ -136,10 +142,10 @@ LIB_INLINE const void* ConstVoidPtr(UIW value);
 LIB_INLINE SIW SizeOf(const void* begin, const void* stop);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* SocketFill(void* begin, void* end, CH1 fill_char);
+LIB_MEMBER CH1* SocketFill(void* begin, void* end, CH1 fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* SocketFill(void* begin, SIW size, CH1 fill_char);
+LIB_MEMBER CH1* SocketFill(void* begin, SIW size, CH1 fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
 LIB_MEMBER CH1* SocketWipe(void* begin, void* end);

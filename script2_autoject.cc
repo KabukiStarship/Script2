@@ -24,7 +24,7 @@ namespace _ {
 
 UIW* RamFactoryHeap(UIW* obj, SIW size) {
   if (size > 0) {
-    size = TAlignUpSigned<SIW>(size);
+    size = AlignUp(size);
     D_ASSERT(!(size & (sizeof(SIW) - 1)));
     return new UIW[TWordCount<SIW>(size)];
   }

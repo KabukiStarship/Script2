@@ -49,27 +49,9 @@ inline UI4 T() {
 }
 
 template <typename T = CH1>
-T* TypeAlignUpPointer(void* pointer, SIN type) {
-  if (type <= kUI1)
-    return reinterpret_cast<T*>(pointer);
-  else if (type <= kFP2)
-    return TAlignUp2<T>(pointer);
-  else if (type <= kTM4)
-    return TAlignUp<T>(pointer, 3);
-  else if (type <= kFPH)
-    return TAlignUp<T>(pointer, 7);
-  // else it's an ASCII AArray.
-  // | Code | Binary | Mask needed |
-  // |:----:|:------:|:-----------:|
-  // |  0   | 0b'00  |   0b'000    |
-  // |  1   | 0b'01  |   0b'001    |
-  // |  2   | 0b'10  |   0b'011    |
-  // |  3   | 0b'11  |   0b'111    |
-  UIW ptr = reinterpret_cast<UIW>(pointer), mask = (type >> 6);
-  if (mask == 2) return TAlignUp<T>(pointer, 3);
-  if (mask == 3) return TAlignUp<T>(pointer, 7);
-  ptr += ((~ptr) + 1) & mask;
-  return reinterpret_cast<T*>(ptr);
+T* TTypeAlignUp(void* pointer, SIW type) {
+  SIW align_mask = TypeAlignmentMask(type & kTypePODMask);
+  return reinterpret_cast<T*>(AlignUp(pointer, align_mask));
 }
 /*
 template <typename Char = CHR>
