@@ -102,42 +102,11 @@ SI1 TypeSizeOf(DTW index) {
   return TypeBasicSizes()[index];
 }
 
-const SI1* TypeAlignmentMasks() {
-  static const SI1 kSizes[] = {
-      0,                //< 00. NIL
-      0,                //< 01. ADR
-      0,                //< 02. STR
-      0,                //< 03. TKN
-      0,                //< 04. CH1
-      0,                //< 05. SI1
-      0,                //< 06. UI1
-      1,                //< 07. CH2
-      1,                //< 08. SI2
-      1,                //< 09. UI2
-      1,                //< 10. FP2
-      sizeof(SIN) - 1,  //< 11. BOL
-      sizeof(SIN) - 1,  //< 12. CH4
-      sizeof(SIN) - 1,  //< 13. SI4
-      sizeof(SIN) - 1,  //< 14. UI4
-      sizeof(SIN) - 1,  //< 15. FP4
-      sizeof(SIN) - 1,  //< 16. TM4
-      sizeof(SIN) - 1,  //< 17. TME
-      kWordLSbMask,     //< 18. TM8
-      kWordLSbMask,     //< 19. SI8
-      kWordLSbMask,     //< 20. UI8
-      kWordLSbMask,     //< 21. FP8
-      kWordLSbMask,     //< 22. SIH
-      kWordLSbMask,     //< 23. UIH
-      kWordLSbMask,     //< 24. FPH
-      kWordLSbMask,     //< 25. SIV
-      kWordLSbMask,     //< 26. UIV
-      kWordLSbMask,     //< 27. PTC
-      kWordLSbMask,     //< 28. PTR
-      kWordLSbMask,     //< 29. OPD
-      kWordLSbMask,     //< 30. AJT
-      kWordLSbMask,     //< 31. VAL
-  };
-  return kSizes;
+SIW TypeAlignmentMask(SIW index) {
+  if (index < kCH2) return 0;
+  if (index < kBOL) return 1;
+  if (index < kTM8) sizeof(SIN) - 1;
+  return sizeof(SIW) - 1;
 }
 
 BOL TypeIsSupported(DTW type) { return true; }
@@ -151,7 +120,7 @@ const CH1* STRType(DTW index) {
 DT2 TypeWidthBits(DTW value) { return DT2(value >> 12); }
 
 SI1 TypeTextFormat(DTW type) {
-  DTW core_type = type & kTypeCountMask;
+  DTW core_type = type & kTypePODMask;
   if (core_type == 0) return -1;  //< then core_type < 32
   if (core_type <= kST3) {
     if (core_type == kNIL) return -1;

@@ -90,17 +90,7 @@ inline SIZ TWordCount(SIZ size) {
   return size >> TBitShiftCount<SIW>();
 }
 
-/* Utility function inverts the bits and adds one (i.e. multiplies by -1). */
-inline UI1 Negative(SI1 value) { return (UI1)(-value); }
-inline UI1 Negative(UI1 value) { return (UI1)(-(SI1)value); }
-inline UI2 Negative(SI2 value) { return (UI2)(-value); }
-inline UI2 Negative(UI2 value) { return (UI2)(-(SI2)value); }
-inline UI4 Negative(SI4 value) { return (UI4)(-value); }
-inline UI4 Negative(UI4 value) { return (UI4)(-(SI4)value); }
-inline UI8 Negative(SI8 value) { return (UI8)(-value); }
-inline UI8 Negative(UI8 value) { return (UI8)(-(SI8)value); }
-
-/* Aligns the given pointer up to a sizeof (T) boundary.
+/* Aligns the given value up to a sizeof (T) boundary.
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask).
@@ -138,27 +128,42 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
-template <typename SIZ = UIW>
-inline SIZ TAlignUpOffset(SIZ value, SIZ mask = sizeof(SIZ) * 8 - 1) {
-  return Negative(value) & mask;
+
+inline SI1 AlignUp(SI1 value, SI1 align_mask) {
+  return value + ((-value) & align_mask);
+}
+inline UI1 AlignUp(UI1 value, UI1 align_mask) {
+  return UI1(AlignUp(SI1(value), SI1(align_mask)));
 }
 
-/* Aligns the given pointer to a power of two boundary.
-@return The aligned value.
-@param value The value to align.
-@param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename UI = CH1>
-inline UI TAlignUpUnsigned(UI value, UI mask = kWordLSbMask) {
-  return value + TAlignUpOffset<UI>(value, mask);
+inline SI2 AlignUp(SI2 value, SI2 align_mask) {
+  return value + ((-value) & align_mask);
+}
+inline UI2 AlignUp(UI2 value, UI2 align_mask) {
+  return value + (UI2(-SI2(value)) & align_mask);
 }
 
-/* Aligns the given pointer to a power of two boundary.
-@return The aligned value.
-@param value The value to align.
-@param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename SI = CH1>
-inline SI TAlignUpSigned(SI value, SI mask = kWordLSbMask) {
-  return value + TAlignUpOffset<SI>(value, mask);
+inline SI4 AlignUp(SI4 value, SI4 align_mask) {
+  return value + ((-value) & align_mask);
+}
+inline UI4 AlignUp(UI4 value, UI4 align_mask) {
+  return value + (UI4(-SI4(value)) & align_mask);
+}
+
+inline SI8 AlignUp(SI8 value, SI8 align_mask) {
+  return value + ((-value) & align_mask);
+}
+inline UI8 AlignUp(UI8 value, UI8 align_mask) {
+  return value + (UI8(-SI8(value)) & align_mask);
+}
+
+inline void* AlignUp(void* pointer, UIW mask = kWordLSbMask) {
+  UIW address = reinterpret_cast<UIW>(pointer);
+  return reinterpret_cast<void*>(AlignUp(address, mask));
+}
+inline const void* AlignUp(const void* pointer, UIW mask = kWordLSbMask) {
+  UIW value = reinterpret_cast<UIW>(pointer);
+  return reinterpret_cast<void*>(AlignUp(value, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -166,9 +171,9 @@ inline SI TAlignUpSigned(SI value, SI mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CH1>
-inline T* TAlignUp(void* pointer, UIW mask = kWordLSbMask) {
-  UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value + TAlignUpOffset<>((UIW)pointer, mask));
+inline T* TAlignUp(void* pointer, SIW mask = kWordLSbMask) {
+  SIW value = reinterpret_cast<SIW>(pointer);
+  return reinterpret_cast<T*>(value + ((-value) & mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -176,10 +181,82 @@ inline T* TAlignUp(void* pointer, UIW mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CH1>
-inline T* TAlignUp(const void* pointer, UIW mask = kWordLSbMask) {
-  UIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(value + TAlignUpOffset<>((UIW)pointer, mask));
+inline T* TAlignUp(const void* pointer, SIW mask = kWordLSbMask) {
+  SIW value = reinterpret_cast<SIW>(pointer);
+  return reinterpret_cast<T*>(value + ((-value) & mask));
 }
+
+/* Aligns th given value down to the given word goundary. */
+template <SI1 kValue_, SI1 kAlignMask_ = kWordLSbMask>
+constexpr SI1 TAlignDown() {
+  return kValue_ - (kValue_ & kAlignMask_);
+}
+template <UI1 kValue_, UI1 kAlignMask_ = kWordLSbMask>
+constexpr UI1 TAlignDown() {
+  return kValue_ + (kValue_ & kAlignMask_);
+}
+inline SI1 AlignDown(SI1 value, SI1 align_mask) {
+  return value + (value & align_mask);
+}
+inline UI1 AlignDown(UI1 value, UI1 align_mask) {
+  return UI1(AlignDown(SI1(value), SI1(align_mask)));
+}
+
+template <SI2 kValue_, SI2 kAlignMask_ = kWordLSbMask>
+constexpr SI2 TAlignDown() {
+  return kValue_ + (kValue_ & kAlignMask_);
+}
+template <UI2 kValue_, UI2 kAlignMask_ = kWordLSbMask>
+constexpr UI2 TAlignDown() {
+  return kValue_ + (kValue_ & kAlignMask_);
+}
+inline SI2 AlignDown(SI2 value, SI2 align_mask) {
+  return value - (value & align_mask);
+}
+inline UI2 AlignDown(UI2 value, UI2 align_mask) {
+  return value - (value & align_mask);
+}
+
+template <SI4 kValue_, SI4 kAlignMask_ = kWordLSbMask>
+constexpr SI4 TAlignDown() {
+  return kValue_ - (kValue_ & kAlignMask_);
+}
+template <UI4 kValue_, UI4 kAlignMask_ = kWordLSbMask>
+constexpr UI4 TAlignDown() {
+  return kValue_ + (kValue_ & kAlignMask_);
+}
+inline SI4 AlignDown(SI4 value, SI4 align_mask) {
+  return value + (value & align_mask);
+}
+inline UI4 AlignDown(UI4 value, UI4 align_mask) {
+  return value - (value & align_mask);
+}
+
+template <SI8 kValue_, SI8 kAlignMask_ = kWordLSbMask>
+constexpr SI8 TAlignDown() {
+  return kValue_ - (kValue_ & kAlignMask_);
+}
+template <UI8 kValue_, UI8 kAlignMask_ = kWordLSbMask>
+constexpr UI8 TAlignDown() {
+  return kValue_ + (kValue_ & kAlignMask_);
+}
+inline SI8 AlignDown(SI8 value, SI8 align_mask) {
+  return value - (value & align_mask);
+}
+inline UI8 AlignDown(UI8 value, UI8 align_mask) {
+  return value - (value & align_mask);
+}
+
+/* Utility function for converting to two's complement and back with templates.
+ */
+inline SI1 Negative(SI1 value) { return -value; }
+inline UI1 Negative(UI1 value) { return UI1(Negative(SI1(value))); }
+inline SI2 Negative(SI2 value) { return -value; }
+inline UI2 Negative(UI2 value) { return UI2(Negative(SI2(value))); }
+inline SI4 Negative(SI4 value) { return -value; }
+inline UI4 Negative(UI4 value) { return UI4(Negative(SI4(value))); }
+inline SI8 Negative(SI8 value) { return -value; }
+inline UI8 Negative(UI8 value) { return UI8(Negative(SI8(value))); }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
 @return The aligned value.
@@ -210,25 +287,6 @@ inline SIZ TAlignDownI(SIZ value, SIZ mask = (SIZ)kWordLSbMask) {
   return value & (~mask);
 }
 
-/* Calculates the offset to align the given pointer to a 16-bit word boundary.
-@return The aligned value.
-@param  pointer The value to align. */
-template <typename T = CH1>
-inline T* TAlignUp2(void* pointer) {
-  // Mask off lower bit and add it to the ptr.
-  UIW ptr = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(ptr + (ptr & 0x1));
-}
-
-/* Calculates the offset to align the given pointer to a 16-bit word boundary.
-@return A TMatrix you add to a pointer to align it. */
-template <typename T = CH1>
-inline T* TAlignUp2(const void* pointer) {
-  // Mask off lower bit and add it to the ptr.
-  UIW ptr = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<T*>(ptr + (ptr & 0x1));
-}
-
 /* Aligns the given size to a word-sized boundary. */
 template <typename SIZ>
 constexpr SIZ SizeAlign(SIZ size) {
@@ -240,7 +298,7 @@ constexpr SIZ SizeAlign(SIZ size) {
 }
 
 /* A contiguous memory socket of kSize_ elements of T including a Header. */
-template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1,
+template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1, typename SIZ = SIN,
           typename Class = Nil>
 class TSocket {
  public:
@@ -248,23 +306,18 @@ class TSocket {
   TSocket() {}
 
   /* The size in elements. */
-  static constexpr SIW Size() {
-    if (kSize_ < sizeof(Class)) return sizeof(Class);
-    return kSize_;
-  }
+  static constexpr SIZ Size() { return (SIZ(kSize_) < 0) ? 0 : SIZ(kSize_); }
 
   /* The size in bytes including the header. */
-  static constexpr SIW SizeBytes() {
-    SIW size = Size() * sizeof(T) + sizeof(Class),
-        size_aligned = size + (-size & (sizeof(SIW) - 1));
-    return size_aligned / (SIW)sizeof(SIW);
+  static constexpr SIZ SizeBytes() {
+    return Size() * sizeof(T) + sizeof(Class);
   }
 
   /* The size in words rounded down. */
-  static constexpr SIW SizeWords() {
-    SIW size = Size() * sizeof(T) + sizeof(Class),
-        size_aligned = size + (-size & (sizeof(SIW) - 1));
-    return size_aligned / (SIW)sizeof(SIW);
+  static constexpr SIZ SizeWords() {
+    SIZ size = SizeBytes() + ((-SizeBytes()) & kWordLSbMask);
+    size = size >> kWordBitCount;
+    return size < 1 ? 1 : size;
   }
 
   /* Returns the socket as a UIW*. */

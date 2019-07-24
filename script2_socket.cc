@@ -30,71 +30,20 @@ const UIW* AlignDown(const UIW* pointer, UIW mask) {
   return TAlignDown<const UIW*>(pointer);
 }
 
-UIW* AlignDown(UIW* pointer, UIW mask) { return TAlignDown<UIW*>(pointer); }
-
-SI1 AlignDown(SI1 value, SI1 mask) { return TAlignDownI<SI1>(value, mask); }
-
-SI2 AlignDown(SI2 value, SI2 mask) { return TAlignDownI<SI2>(value, mask); }
-
-SI4 AlignDown(SI4 value, SI4 mask) { return TAlignDownI<SI4>(value, mask); }
-
-SI8 AlignDown(SI8 value, SI8 mask) { return TAlignDownI<SI8>(value, mask); }
-
-UIW* AlignUp(UIW* socket, UIW mask) { return TAlignUp<UIW>(socket, mask); }
-
-CH1* AlignUp(CH1* pointer, UIW mask) { return TAlignUp<CH1>(pointer, mask); }
-
 const CH1* AlignUp(const CH1* pointer, UIW mask) {
   return TAlignUp<const CH1>(pointer, mask);
 }
 
-UI1 AlignUp(UI1 value, UI1 mask) { return TAlignUpUnsigned<UI1>(value, mask); }
-
-SI1 AlignUp(SI1 value, SI1 mask) { return TAlignUpSigned<SI1>(value, mask); }
-
-UI2 AlignUp(UI2 value, UI2 mask) { return TAlignUpUnsigned<UI2>(value, mask); }
-
-SI2 AlignUp(SI2 value, SI2 mask) { return TAlignUpSigned<SI2>(value, mask); }
-
-UI4 AlignUp(UI4 value, UI4 mask) { return TAlignUpUnsigned<UI4>(value, mask); }
-
-SI4 AlignUp(SI4 value, SI4 mask) { return TAlignUpSigned<SI4>(value, mask); }
-
-UI8 AlignUp(UI8 value, UI8 mask) { return TAlignUpUnsigned<UI8>(value, mask); }
-
-SI8 AlignUp(SI8 value, SI8 mask) { return TAlignUpSigned<SI8>(value, mask); }
-
-const void* TypeAlign(SIW type, const void* value) {
+const void* TypeAlignUp(SIW type, const void* value) {
   A_ASSERT(value);
   if (type == 0) return nullptr;
-  if (!TypeIsSupported(type)) return nullptr;
-
-  SIW size = TypeSizeOf(type);
-  if (type <= kUI1) return value;
-  SIW value_ptr = reinterpret_cast<SIW>(value);
-#if CPU_WORD_SIZE == 2
-  if (type <= kFP2) return AlignUpPointer2<>(value);
-#else
-  if (type <= kBOL) return TAlignUp2<>(value);
-#endif
-  if (type <= kTM4) return TAlignUp<>(value, 3);
-  if (type <= kFPH) return TAlignUp<>(value, 7);
-
-  switch (type >> 6) {
-    case 0:
-      return value;
-    case 1:
-      return TAlignUp2<>(value);
-    case 2:
-      return TAlignUp<>(value, 3);
-    case 3:
-      return TAlignUp<>(value, 7);
-  }
-  return 0;
+  SIW align_mask = TypeAlignmentMask(type & kTypeBitCount);
+  if (align_mask < 0) return value;
+  return AlignUp(value, align_mask);
 }
 
-void* TypeAlign(SIW type, void* value) {
-  return const_cast<void*>(TypeAlign(type, (const void*)value));
+void* TypeAlignUp(SIW type, void* value) {
+  return const_cast<void*>(TypeAlignUp(type, (const void*)value));
 }
 
 UIW UIntPtr(const void* value) { return reinterpret_cast<UIW>(value); }
@@ -130,52 +79,49 @@ inline UIW FillWord(CH1 fill_char) {
 #endif
 }
 
-CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
-  CH1 *start = reinterpret_cast<CH1*>(begin),
-      *stop = reinterpret_cast<CH1*>(end);
-  A_ASSERT(start);
-  SIW count = stop - start;
-  D_PRINTF("\ncursor:%p\nbyte_count:%d", start, (SI4)count);
+CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
+  D_ASSERT(begin);
+  CH1* start = reinterpret_cast<CH1*>(begin);
+  if (count < 3 * sizeof(SIW)) {
+    while (--count > 0) *start++ = fill_char;
+    return start;
+  }
 
-  D_PRINTF("\nFilling %i bytes from %p", (SI4)count, start);
+  D_PRINTF("\ncursor:%p\ncount:%i", start, SIN(count));
+
+  CH1* stop = start + count;
 
   UIW fill_word = FillWord(fill_char);
 
-  // Algorithm:
-  // 1.) Save return value.
-  // 2.) Align write pointer up and copy the unaligned bytes in
-  // the lower
-  //     memory region.
-  // 3.) Align write_end pointer down and copy the unaligned
-  // bytes in the
-  //     upper memory region.
-  // 4.) Copy the word-aligned middle region.
+  // 1.) Align start pointer up to a word boundry and fill the unaligned bytes.
   CH1 *success = stop, *aligned_pointer = TAlignUp<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
-  aligned_pointer = TAlignDown<CH1*>(stop);
-  while (stop > aligned_pointer) *stop-- = fill_char;
-
+  // 2.) Align stop pointer down to a word boundry and copy the midde words.
   UIW *words = reinterpret_cast<UIW*>(start),
-      *words_end = reinterpret_cast<UIW*>(stop);
-
+      *words_end = reinterpret_cast<UIW*>(TAlignDown<CH1*>(stop));
   while (words < words_end) *words++ = fill_word;
+  // 3.) Copy remaining unaligned bytes.
+  start = reinterpret_cast<CH1*>(words_end);
+  while (start < stop) *start++ = fill_char;
 
   return success;
 }
 
-CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
-  return SocketFill(reinterpret_cast<CH1*>(begin),
-                    reinterpret_cast<CH1*>(begin) + count - 1, fill_char);
+CH1* SocketFill(void* begin, void* end, CH1 fill_char) {
+  return SocketFill(reinterpret_cast<CH1*>(begin), TDelta<SIW>(begin, end) + 1,
+                    fill_char);
 }
 
 CH1* SocketWipe(void* begin, void* end) { return SocketFill(begin, end, 0); }
 
-CH1* SocketWipe(CH2* begin, CH2* end) {
-  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 1, 0);
+CH2* SocketWipe(CH2* start, CH2* stop) {
+  CH1* result = SocketFill(start, TDelta<SIW>(start, stop + 1));
+  return reinterpret_cast<CH2*>(result);
 }
 
-CH1* SocketWipe(CH2* begin, CH4* end) {
-  return SocketFill(begin, reinterpret_cast<CH1*>(end) + 3, 0);
+CH4* SocketWipe(CH4* start, CH4* stop) {
+  CH1* result = SocketFill(start, TDelta<SIW>(start, stop + 1));
+  return reinterpret_cast<CH4*>(result);
 }
 
 CH1* SocketWipe(void* begin, SIW count) { return SocketFill(begin, count, 0); }
@@ -301,6 +247,8 @@ Socket& Socket::operator=(const Socket& other) {
 Nil::Nil() {}
 
 constexpr SIW Nil::Size() { return 0; }
+constexpr SIW Nil::SizeBytes() { return 0; }
+constexpr SIW Nil::SizeWords() { return 0; }
 
 UIW* Nil::Buffer() { return nullptr; }
 

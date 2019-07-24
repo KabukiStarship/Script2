@@ -90,7 +90,7 @@ enum {
 };
 
 template <typename SIZ = SIN>
-constexpr SIZ TTableEntryOverhead() {
+inline SIZ TTableEntryOverhead() {
   return 4 * sizeof(SIZ);
 }
 
@@ -127,8 +127,10 @@ template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
 TTable<SIZ>* TTableInit(TTable<SIZ>* table, SIZ count_max, SIZ size_bytes) {
   D_ASSERT(table);
 
-  SIZ min_required_size =
-      sizeof(TTable<SIZ>) + count_max * (TTableEntryOverhead<SIZ>() + 2);
+  SIZ array_sizes =
+          count_max * TTableEntryOverhead<SIZ>() + sizeof(TTable<SIZ>),
+      min_required_size = 2 * count_max;
+  min_required_size += array_sizes;
   D_PRINTF(
       "\nAttempting to create aTTable<> with size_bytes:%i count:%i"
       " min_required_size:%i",
@@ -230,8 +232,8 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
   D_COUT("\nBefore:");
   D_COUT_TABLE(table);
 
-  SIZ count = table->count, count_max = table->count_max, temp,
-      size_bytes = table->size_bytes;
+  SIZ count = table->count, count_max = table->count_max,
+      size_bytes = table->size_bytes, temp;
 
   if (count >= count_max) return -1;  //< We're out of buffered indexes.
 
@@ -467,7 +469,8 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 
   // Move up the sorted indexes and insert the unsorted index (which is
   // the current count).
-  collision_indexes += count_max + mid;
+  collision_indexes += count_max;
+  collision_indexes += mid;
   temp_ptr = collision_indexes + count;
 
   while (temp_ptr > collision_indexes) {
@@ -659,8 +662,8 @@ SIZ TTableRemove(TTable<SIZ>* table, const Char* key) {
 /* An ASCII Table Autoject. */
 template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR,
           SIZ kCountMax_ = 32,
-          typename BUF =
-              TSocket<TTableSize<SIZ, Char, kCountMax_>(), SI1, TTable<SIZ>>>
+          typename BUF = TSocket<TTableSize<SIZ, Char, kCountMax_>(), SI1, SIZ,
+                                 TTable<SIZ>>>
 class ATable {
   AArray<Char, SIZ, BUF> obj_;  //< Auto-Array of Char(s).
  public:

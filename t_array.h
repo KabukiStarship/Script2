@@ -63,8 +63,8 @@ inline SIZ TArraySizeMax() {
 /* Gets the ASCII Autoject size. */
 template <typename T, typename SIZ, typename Class = TArray<SIZ>,
           typename I = SIZ>
-inline I TSizeOf(SIZ size) {
-  return I(sizeof(Class) + sizeof(T) * size);
+inline I TSizeOf(SIZ count) {
+  return I(sizeof(Class) + sizeof(T) * count);
 }
 
 /* Gets the ASCII Autoject size. */
@@ -114,8 +114,7 @@ inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
   D_ASSERT(size >= TSizeMin<SIZ>());
   obj.ram_factory = factory;
   if (!buffer) {
-    SIZ buffer_size =
-        TAlignUpSigned<SIZ>(size * sizeof(T) + sizeof(TArray<SIZ>));
+    SIZ buffer_size = AlignUp(size * sizeof(T) + sizeof(TArray<SIZ>));
     buffer = factory(nullptr, buffer_size);
   }
   D_SOCKET_WIPE(buffer, size * sizeof(T) + sizeof(TArray<SIZ>));
@@ -125,10 +124,10 @@ inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
 }
 
 /* Gets the first byte of the ASCII Object data section. */
-template <typename T, typename Class>
-inline T* TAsciiData(Class* object) {
-  SIW address = reinterpret_cast<SIW>(object) + sizeof(Class);
-  return reinterpret_cast<T*>(address);
+template <typename Class, typename T>
+inline T* TArrayStart(Class* object) {
+  SIW address = reinterpret_cast<SIW>(object);
+  return reinterpret_cast<T*>(address + sizeof(Class));
 }
 
 /* The maximum object size.
@@ -360,7 +359,7 @@ class AArray {
   inline SIZ Size() { return TSize<SIZ>(obj_.begin); }
 
   /* Gets the ASCII Object size in elements including the header size. */
-  inline SIZ SizeBytes() { return TSizeOf<T, SIZ>(Size()); }
+  inline SIZ SizeBytes() { return TSizeOf<T, SIZ, TArray<SIZ>>(Size()); }
 
   /* Gets the RamFactory. */
   inline RamFactory Factory() { return obj_.ram_factory; }

@@ -18,9 +18,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 +--------------------------------------+
 |_____ | Key 1                         |
 |_____ v Key N                Keys     |
-|+-------------------------------------+
++--------------------------------------+
 |        Buffer                        |
-|+-------------------------------------+
++--------------------------------------+
 |_____   Buffer                        |
 |_____ ^ Collision List N   Collision  |
 |_____ | Collision List 0     List     |
@@ -28,19 +28,19 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 |_____   Buffer                        |
 |_____ ^ Collision Index N   Unsorted  |
 |      | Collision Index 0   Indexes   |
-|+-------------------------------------+
++--------------------------------------+
 |_____   Buffer                        |
 |_____ ^ Collision Index N  Collision  |
 |      | Collision Index 0   Indexes   |
-|+-------------------------------------+
++--------------------------------------+
 |_____   Buffer                        |
 |_____ ^ Key Offset N          key     |
 |      | Key Offset 1        Offsets   |
-|+-------------------------------------+
++--------------------------------------+
 |_____   Buffer                        |
 |_____ ^ Sorted Hash N        Hashes   |
 |      | Sorted Hash 1                 |
-|+-------------------------------------+  ^ Up in addresses.
++--------------------------------------+  ^ Up in addresses.
 |            TTable Header             |  |
-|+-------------------------------------+ 0x0
++-------------------------------------+ 0x0
 ```

@@ -46,19 +46,18 @@ inline HSH TPrimeMaxUnigned() {
   return prime;
 }
 
-template <typename Char, typename HSH>
+template <typename HSH, typename Char = CHR>
 inline HSH THashPrime(Char value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
 template <typename HSH = UIN, typename Char = CHR>
-inline UI2 THashPrime(const Char* str) {
-  HSH c = (HSH)*str;
+inline HSH THashPrime(const Char* str) {
+  Char c = (Char)*str++;
   HSH hash = TPrimeMaxUnigned<HSH>();
   while (c) {
     hash = THashPrime<HSH, Char>(c, hash);
-    ++str;
-    c = *str;
+    c = *str++;
   }
   return hash;
 }

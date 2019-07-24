@@ -22,26 +22,38 @@ using namespace _;
 
 namespace script2 {
 
-template <typename SIZ>
+template <typename T, typename SIZ>
 void TestStack(const CH1* args) {
-  D_COUT("\n\nTesting AStack<SI");
-  D_COUT(sizeof(SIZ));
-  D_COUT(">...\n\nPrinting empty stack...\n");
+  D_PRINTF("Testing AStack<SI%i, SI%i>...\n", sizeof(T), sizeof(SIZ));
 
-  AStack<SI8, SIZ, TSocket<8, SI8, TStack<SIZ>>> stack;
-#if DEBUG_THIS
-  stack.COut();
-#endif
+  AStack<T, SIZ, 8> stack;
 
-  D_COUT("\n\nPushing items on to the Stack...\n");
+  D_COUT(Linef("\n+---\n| TSocket: size:")
+         << stack.Auto().Buffer().Size() << " expected_size_bytes:"
+         << stack.Auto().Buffer().Size() * sizeof(T) + sizeof(TStack<SIZ>)
+         << " size_bytes:" << stack.Auto().Buffer().SizeBytes()
+         << " size_words:" << stack.Auto().Buffer().SizeWords());
+  D_COUT_OBJ(stack);
 
-  SI8 test_count = 32, count_init = 0;
-  for (SI8 i = count_init; i <= test_count; ++i) stack.Push(i);
+  enum { kTestCount = 32, kOffset = '0' };
+  D_PRINTF("\n\nPushing %i items on to the Stack...\n", kTestCount);
+  for (T i = kOffset; i <= kTestCount + kOffset; ++i) {
+    D_COUT("\n| Before calling push:" << Charsf(stack.Auto().Begin(),
+                                                stack.Auto().SizeBytes()));
+    D_COUT(Linef("\n\n+---\n| ") << i << ".) ");
+    stack.Push(i);
+    D_COUT("\n| Result:");
+    D_COUT_OBJ(stack);
+  }
 
-  D_COUT("\nPopping items off the Stack...\n");
+  D_COUT(Headingf("\n\nPopping items off the Stack...\n"));
 
-  for (SI8 i = test_count; i >= count_init; --i)
-    A_AVOW_INDEX(i, stack.Pop(), i);
+  for (T test_count = kTestCount + kOffset; test_count >= kOffset;
+       --test_count) {
+    D_COUT_OBJ(stack);
+    A_AVOW_INDEX(test_count, stack.Pop(), test_count);
+  }
+  D_COUT_OBJ(stack);
   A_ASSERT(stack.Count() == 0);
 }
 
@@ -49,10 +61,10 @@ static const CH1* _07_Stack(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_STACK
   A_TEST_BEGIN;
 
-  const CH1* result = 0;
-  TestStack<SI2>(args);
-  TestStack<SI4>(args);
-  TestStack<SI8>(args);
+  // TestStack<SI4, SI8>(args); is illegal
+  TestStack<SI4, SI4>(args);
+  TestStack<SI8, SI8>(args);
+  TestStack<SI8, SI4>(args);
 #endif
   return nullptr;
 }

@@ -67,7 +67,7 @@ inline Char* TLoomStart(TLoom<SIZ>* loom, SIZ count_max) {
 
 template <typename Char, typename SIZ>
 inline Char* TLoomStart(TLoom<SIZ>* loom) {
-  return TLoomStart<Char, SIZ>(loom, loom->offsets.height);
+  return TLoomStart<Char, SIZ>(loom, loom->offsets.size);
 }
 
 template <typename Char, typename SIZ>
@@ -79,7 +79,7 @@ inline TLoom<SIZ>* TLoomInit(TLoom<SIZ>* loom, SIZ count_max) {
 
   // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
   loom->top = TDelta<SIZ>(loom, TLoomStart<Char, SIZ>(loom, count_max));
-  loom->offsets.height = count_max;
+  loom->offsets.size = count_max;
   loom->offsets.count = 0;
   return loom;
 }
@@ -108,7 +108,7 @@ template <typename Char, typename SIZ, typename Printer>
 Printer& TLoomPrint(Printer& o, TLoom<SIZ>* loom) {
   SIZ count = loom->offsets.count;
   o << "\nLoom<SI" << (CH1)('0' + sizeof(SIZ)) << "> size:" << loom->size
-    << " top:" << loom->top << " stack_size:" << loom->offsets.height
+    << " top:" << loom->top << " stack_size:" << loom->offsets.size
     << " count:" << count;
   SIZ* offsets = TStackStart<SIZ, SIZ>(&loom->offsets);
   for (SIZ i = 0; i < count; ++i)
@@ -126,7 +126,7 @@ SIZ TLoomAdd(TLoom<SIZ>* loom, const Char* string) {
   A_ASSERT(loom);
   A_ASSERT(string);
 
-  if (loom->offsets.count >= loom->offsets.height) return -1;
+  if (loom->offsets.count >= loom->offsets.size) return -1;
   Char* cursor = TPtr<Char>(loom, loom->top);
   cursor = TPrintString<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
   if (!cursor) return -1;
@@ -155,7 +155,7 @@ BOL TLoomGrow(Autoject& obj) {
   A_ASSERT(loom);
   SIZ size = loom->size;
   if (!TCanGrow<SIZ>(size)) return false;
-  SIZ count_max = loom->offsets.height;
+  SIZ count_max = loom->offsets.size;
   if (!TCanGrow<SIZ>(count_max)) return false;
 
   size = size << 1;
@@ -179,7 +179,7 @@ BOL TLoomGrow(Autoject& obj) {
       top = loom->top;
   other->size = size;
   other->top = top + extra_header_space;
-  other->offsets.height = count_max;
+  other->offsets.size = count_max;
   other->offsets.count = count;
   SIZ *loom_offsets = TStackStart<SIZ, SIZ>(&loom->offsets),
       *other_offsets = TStackStart<SIZ, SIZ>(&other->offsets);

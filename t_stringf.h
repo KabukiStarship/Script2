@@ -725,7 +725,7 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
     }
 #endif
     case -1: {
-      switch (type & kTypeCountMask) {
+      switch (type & kTypePODMask) {
 #if USING_UTF8 == YES_0
         case kCH1: {
           CH1 c = (CH1)item.element.value.Word();
@@ -809,28 +809,27 @@ template <typename Printer, typename Char = CHR>
 Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
   if (!start || start >= stop) return o;
 
-  SIW size = stop - start,                     //<
-      extra_row = ((size & 63) != 0) ? 1 : 0,  //<
-      row_count = (size >> 6) + extra_row;     //< 2^6=64
+  SIW size_bytes = stop - start + 1;
 
-  SIW num_bytes = 81 * (row_count + 2);
-  size += num_bytes;
   o << STRPrintCharsHeader() << STRPrintCharsBorder() << Hexf(start);
   int i = 0;
   Char c;
+  const Char* address_to_print = start;
   while (start <= stop) {
     o << '\n' << '|';
     for (SI4 i = 0; i < 64; ++i) {
-      c = *start++;
-      if (start >= stop)
+      c = *start;
+      if (start++ > stop) {
         c = 'x';
-      else if (c < ' ')
-        c = c + kPrintC0Offset;
-      o << Char(c);
+      } else if (c < ' ') {
+        address_to_print = start;
+        c += kPrintC0Offset;
+      }
+      o << c;
     }
-    o << "| " << Hexf(start);
+    o << "| " << Hexf(address_to_print - 1);
   }
-  return o << STRPrintCharsBorder() << Hexf(start + size);
+  return o << STRPrintCharsBorder() << "Chars printed:" << size_bytes;
 }
 
 template <typename Printer, typename Char = CHR>
