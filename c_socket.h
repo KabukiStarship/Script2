@@ -10,10 +10,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_SOCKET
+#if SEAM >= SCRIPT2_SOCKET
 
-#ifndef INCLUDED_SCRIPTKABUKI_SOCKET
-#define INCLUDED_SCRIPTKABUKI_SOCKET
+#ifndef SCRIPT2_SOCKET_HEADER
+#define SCRIPT2_SOCKET_HEADER
 
 namespace _ {
 
@@ -80,35 +80,35 @@ LIB_MEMBER const void* TypeAlignUp(SIW type, const void* value);
 /* Gets the next address that a data type may be stored at. */
 LIB_MEMBER void* TypeAlignUp(SIW type, void* value);
 
-/* A managed general purpose (i.e. not just for networking) memory socket.
+/* A word-aligned buffer on the program stack.
 A socket is just a hole in something for fitting something in, like a light
 or electric socket. A socket of memory is just a block of memory you fit
 something in. A network socket is a socket for interprocess communication,
 which is usually implemented with a ring socket
 (@see ~/kabuki-toolkit/slot.h).
 */
-class Socket {
+class BufPtrs {
  public:
   CH1 *begin,  //< Beginning of the socket.
       *end;    //< End of the socket.
 
   /* Constructs an NIL socket. */
-  Socket();
+  BufPtrs();
 
   /* Constructor. */
-  Socket(void* begin, void* stop);
+  BufPtrs(void* begin, void* stop);
 
   /* Constructor. */
-  Socket(void* begin, SIW size);
+  BufPtrs(void* begin, SIW size);
 
   /* Clones the other memory. */
-  Socket(const Socket& other);
+  BufPtrs(const BufPtrs& other);
 
   /* Gets the size of the socket. */
   SIW Size();
 
   /* C++ operator= overload. */
-  Socket& operator=(const Socket& other);
+  BufPtrs& operator=(const BufPtrs& other);
 };
 
 class Nil {
@@ -120,10 +120,10 @@ class Nil {
   static constexpr SIW Size();
 
   /* Gets the size of the socket. */
-  static constexpr SIW SizeBytes ();
+  static constexpr SIW SizeBytes();
 
   /* Gets the size of the socket. */
-  static constexpr SIW SizeWords ();
+  static constexpr SIW SizeWords();
 
   /* Gets the nil begin word address. */
   UIW* Buffer();

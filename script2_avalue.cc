@@ -11,7 +11,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_avalue.h"
 
-#if SEAM == SEAM_SCRIPT2_CORE
+#if SEAM == SCRIPT2_UNIPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -409,25 +409,25 @@ nullptr;
   if (TypeIsStrand(type)) {
     switch (type >> 6) {
       case 0:
-        return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
+        return TSPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 1:
-        return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
+        return TSPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 2:
-        return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
+        return TSPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 3:
-        return reinterpret_cast<CH1*>(TPrint<CH2>(
+        return reinterpret_cast<CH1*>(TSPrint<CH2>(
             reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
             reinterpret_cast<const CH2*>(value)));
       case 4:
-        return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
+        return TSPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 5:
-        return reinterpret_cast<CH1*>(TPrint<CH2>(
+        return reinterpret_cast<CH1*>(TSPrint<CH2>(
             reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
             reinterpret_cast<const CH2*>(value)));
       case 6:
-        return TPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
+        return TSPrint<CH1>(begin, stop, reinterpret_cast<const CH1*>(value));
       case 7:
-        return reinterpret_cast<CH1*>(TPrint<CH2>(
+        return reinterpret_cast<CH1*>(TSPrint<CH2>(
             reinterpret_cast<CH2*>(begin), reinterpret_cast<CH2*>(stop),
             reinterpret_cast<const CH2*>(value)));
     }

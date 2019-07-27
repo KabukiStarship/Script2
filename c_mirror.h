@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
@@ -129,4 +129,4 @@ LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header
 
 }  // namespace _
 #endif  //< SCRIPT2_MIRROR
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

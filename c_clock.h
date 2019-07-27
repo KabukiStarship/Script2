@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_CLOCK
+#if SEAM >= SCRIPT2_CLOCK
 #ifndef SCRIPT2_CLOCK_C
 #define SCRIPT2_CLOCK_C
 
@@ -162,7 +162,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* Print(CH1* begin, CH1* stop, const AClock& clock);
+LIB_MEMBER CH1* SPrint(CH1* begin, CH1* stop, const AClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -170,7 +170,7 @@ UI1 written.
 @param begin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-LIB_MEMBER CH1* Print(CH1* begin, CH1* stop, TME& t);
+LIB_MEMBER CH1* SPrint(CH1* begin, CH1* stop, TME& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
@@ -214,10 +214,10 @@ LIB_MEMBER const CH1* ScanTime(const CH1* string, SIN& hour, SIN& minute,
 @return Nil upon socket failure or CH1 directly after the stop of the
 timestamp upon success.
 */
-LIB_MEMBER const CH1* Scan(const CH1*, AClock& clock);
+LIB_MEMBER const CH1* SScan(const CH1*, AClock& clock);
 
 /* Converts a keyboard input to a TME. */
-LIB_MEMBER const CH1* Scan(const CH1*, TME& result);
+LIB_MEMBER const CH1* SScan(const CH1*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
 LIB_MEMBER const CH1* ScanTime(const CH1*, TM4& result);
@@ -288,10 +288,10 @@ LIB_MEMBER const CH2* ScanTime(const CH2*, SIN& hour, SIN& minute, SIN& second);
 @return Nil upon socket failure or CH2 directly after the stop of the
 timestamp upon success.
 */
-LIB_MEMBER const CH2* Scan(const CH2*, AClock& result);
+LIB_MEMBER const CH2* SScan(const CH2*, AClock& result);
 
 /* Converts a keyboard input to a TME. */
-LIB_MEMBER const CH2* Scan(const CH2*, TME& result);
+LIB_MEMBER const CH2* SScan(const CH2*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
 LIB_MEMBER const CH2* ScanTime(const CH2*, TM4& result);
@@ -358,10 +358,10 @@ LIB_MEMBER const CH4* ScanTime(const CH4* input, SIN& hour, SIN& minute,
 
 /* Converts a keyboard input to CH1 and deletes the CH1.
  */
-LIB_MEMBER const CH4* Scan(const CH4* input, AClock& time);
+LIB_MEMBER const CH4* SScan(const CH4* input, AClock& time);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH4* Scan(const CH4* input, TME& result);
+LIB_MEMBER const CH4* SScan(const CH4* input, TME& result);
 
 /* Converts a keyboard input to a TM4. */
 LIB_MEMBER const CH4* ScanTime(const CH4* input, TM4& result);

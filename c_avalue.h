@@ -18,8 +18,7 @@ namespace _ {
 /* List of the 32 ASCII Data Types from the Script2 Specification.
 @link ./spec/data/readme.md
 @todo Wishlist item: Can we make a type that tells the AValue to delete dynamic
-memory?
-*/
+memory? */
 typedef enum AsciiTypes {
   kNIL = 0,  //< 00. Nil/void type or a BigNum (BGN) of 1 to 2047 bytes wide.
   kST1,      //< 01. Nil-terminated string Type 1 (UTF-8).

@@ -15,6 +15,6 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "c_cout.h"
 #include "c_test.h"
-#include "t_utf.h"
+#include "t_uniprinter.h"
 
 #endif  //< SCRIPT2_PUBLIC

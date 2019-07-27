@@ -3,13 +3,13 @@
 @file    /script2/t_door.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+All right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_EXPR
+#if SEAM >= SCRIPT2_EXPR
 #ifndef SCRIPT2_DOOR
 #define SCRIPT2_DOOR
 #include "c_crabs.h"
@@ -69,7 +69,7 @@ class TDoor : public Operand {
     } else {
       if (size_bytes < kMinDoorSize) {
         // @todo insert error code here
-        D_PRINTF("\nError: Door size_bytes < kMinDoorSize!");
+        D_COUT("\nError: Door size_bytes < kMinDoorSize!");
         return;
       }
     }
@@ -122,7 +122,7 @@ class TDoor : public Operand {
       for (SI4 count = scan_count_max; count > 0; --count) {
         SI4 value = BInNextByte(bin);
         if (value < 0) break;
-        const Op* result = crabs->Scan(value);
+        const Op* result = crabs->SScan(value);
       }
     }
     return nullptr;
@@ -153,9 +153,9 @@ class TDoor : public Operand {
   }
 
  private:
-  SI4 size_bytes_,                //< Door size in bytes.
-      scan_count_max_;            //< Max bytes to pull throught the slot.
-  UIW* begin_;                    //< Pointer to dynamic socket.
+  SI4 size_bytes_,                 //< Door size in bytes.
+      scan_count_max_;             //< Max bytes to pull throught the slot.
+  UIW* begin_;                     //< Pointer to dynamic socket.
   TMatrix<SI4, SI4, SI4>* slots_;  //< Slots in the door.
   CBIn* OffsetToBIn(SI4 offset) {
     return reinterpret_cast<CBIn*>(reinterpret_cast<UIW>(this) + offset);
@@ -174,5 +174,5 @@ static Door* DoorInit (SI4* socket, SI4 slot_size) {
 }*/
 
 }  // namespace _
-#endif  //< #if SEAM >= SEAM_SCRIPT2_EXPR
+#endif  //< #if SEAM >= SCRIPT2_EXPR
 #endif  //< SCRIPT2_DOOR

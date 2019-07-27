@@ -9,14 +9,14 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_STACK
+#if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_TSTACK
 #define SCRIPT2_TSTACK 1
 
 #include "c_socket.h"
 #include "t_strand.h"
 
-#if SEAM == SEAM_SCRIPT2_STACK
+#if SEAM == SCRIPT2_STACK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -186,7 +186,7 @@ Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
   T* elements = TStackStart<T, SIZ>(stack);
   for (SI4 i = 0; i < count; ++i) o << "\n| " << i << ".) " << elements[i];
   if (count == 0) o << "\n| Empty";
-#if DEBUG_THIS
+#if D_THIS
   SIZ size_bytes = TStackSizeOf<T, SIZ>(stack->size);
   return o << Linef("\n+---") << Charsf(stack, size_bytes) << '\n';
 #else
@@ -202,7 +202,7 @@ template <typename T = SIN, typename SIZ = SIN>
 BOL TStackGrow(Autoject& obj) {
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(obj.begin);
   A_ASSERT(stack);
-#if DEBUG_THIS
+#if D_THIS
   D_COUT("\nAuto-growing Stack...\nBefore:");
   TStackPrint<COut, T, SIZ>(COut().Star(), stack);
 #endif
@@ -219,7 +219,7 @@ BOL TStackGrow(Autoject& obj) {
   SocketCopy(TStackStart<T, SIZ>(other), size_bytes, TStackStart<T, SIZ>(stack),
              size_bytes);
   obj.begin = new_begin;
-#if DEBUG_THIS
+#if D_THIS
   D_COUT("\nResult:");
   TStackPrint<COut, T, SIZ>(COut().Star(), other);
 #endif
@@ -352,7 +352,7 @@ template <typename T = SIN, typename SIZ = SIN, typename BUF = Nil>
 SIZ TStackPush(AArray<T, SIZ, BUF>& obj, const T* items, SIZ items_count) {
   D_ASSERT(items);
   D_ASSERT(items_count >= 0);
-  D_PRINTF("\nPushing %i items:", (SIN)items_count);
+  D_COUT("\nPushing " << items_count << " items:");
   SIZ count = obj->count;
   for (SIN i = 0; i < count; ++i) TStackPush<T, SIZ>(obj, items[i]);
   return 0;
@@ -436,7 +436,7 @@ inline SIZ TStackSizeWords(SIZ count) {
 */
 template <typename T = SIN, typename SIZ = SIN,
           SIZ kSize_ = kStackCountMaxDefault,
-          typename BUF = TSocket<kSize_, T, SIZ, TStack<SIZ>>>
+          typename BUF = TBuf<kSize_, T, SIZ, TStack<SIZ>>>
 class AStack {
   AArray<T, SIZ, BUF> obj_;  //< An Auto-Array.
 
@@ -574,7 +574,7 @@ class AStack {
   }
 
   /* Prints this object to the given UTF. */
-  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
 
   /* Gets a reference to the given element index. */
   inline T& operator[](SIW index) { return Start()[index]; }

@@ -15,9 +15,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <cstdio>
 
 #include "c_cin.h"
-#include "t_stringf.h"
+#include "t_string.h"
 
-#if SEAM == SEAM_SCRIPT2_CORE
+#if SEAM == SCRIPT2_UNIPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -143,73 +143,73 @@ SIN IsYesNo(const CH4* string) { return TIsYesNo<CH4>(string); }
 CIn::CIn() {}
 
 #if USING_UTF8 == YES_0
-CIn::CIn(CH1& result) { Scan(result); }
-CIn::CIn(CH1* result, SIW buffer_size) { Scan(result, buffer_size); }
+CIn::CIn(CH1& result) { SScan(result); }
+CIn::CIn(CH1* result, SIW buffer_size) { SScan(result, buffer_size); }
 #endif
 #if USING_UTF16 == YES_0
-CIn::CIn(CH2& result) { Scan(result); }
-CIn::CIn(CH2* result, SIW buffer_size) { Scan(result, buffer_size); }
+CIn::CIn(CH2& result) { SScan(result); }
+CIn::CIn(CH2* result, SIW buffer_size) { SScan(result, buffer_size); }
 #endif
 #if USING_UTF32 == YES_0
-CIn::CIn(CH4& result) { Scan(result); }
-CIn::CIn(CH4* result, SIW buffer_size) { Scan(result, buffer_size); }
+CIn::CIn(CH4& result) { SScan(result); }
+CIn::CIn(CH4* result, SIW buffer_size) { SScan(result, buffer_size); }
 #endif
-CIn::CIn(SI1& result) { Scan(result); }
-CIn::CIn(UI1& result) { Scan(result); }
-CIn::CIn(SI2& result) { Scan(result); }
-CIn::CIn(UI2& result) { Scan(result); }
-CIn::CIn(SI4& result) { Scan(result); }
-CIn::CIn(UI4& result) { Scan(result); }
-CIn::CIn(SI8& result) { Scan(result); }
-CIn::CIn(UI8& result) { Scan(result); }
+CIn::CIn(SI1& result) { SScan(result); }
+CIn::CIn(UI1& result) { SScan(result); }
+CIn::CIn(SI2& result) { SScan(result); }
+CIn::CIn(UI2& result) { SScan(result); }
+CIn::CIn(SI4& result) { SScan(result); }
+CIn::CIn(UI4& result) { SScan(result); }
+CIn::CIn(SI8& result) { SScan(result); }
+CIn::CIn(UI8& result) { SScan(result); }
 #if USING_FP4 == YES_0
-CIn::CIn(FP4& result) { Scan(result); }
+CIn::CIn(FP4& result) { SScan(result); }
 #endif
 #if USING_FP8 == YES_0
-CIn::CIn(FP8& result) { Scan(result); }
+CIn::CIn(FP8& result) { SScan(result); }
 #endif
 
 #if USING_UTF8 == YES_0
-BOL CIn::Scan(CH1& result) {
+BOL CIn::SScan(CH1& result) {
   result = ScanKey();
   return true;
 }
 
-BOL CIn::Scan(CH1* result, SIW buffer_size) {
+BOL CIn::SScan(CH1* result, SIW buffer_size) {
   return TCInString<CH1>(result, buffer_size);
 }
 #endif
 #if USING_UTF16 == YES_0
-BOL CIn::Scan(CH2& result) {
+BOL CIn::SScan(CH2& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::Scan(CH2* result, SIW buffer_size) {
+BOL CIn::SScan(CH2* result, SIW buffer_size) {
   return TCInString<CH2>(result, buffer_size);
 }
 #endif
 #if USING_UTF32 == YES_0
-BOL CIn::Scan(CH4& result) {
+BOL CIn::SScan(CH4& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::Scan(CH4* result, SIW buffer_size) {
+BOL CIn::SScan(CH4* result, SIW buffer_size) {
   return TCInString<CH4>(result, buffer_size);
 }
 #endif
-BOL CIn::Scan(SI1& result) { return TCInSigned<SI1, UI1>(result); }
-BOL CIn::Scan(UI1& result) { return TCInUnsigned<UI1>(result); }
-BOL CIn::Scan(SI2& result) { return TCInSigned<SI2, UI2>(result); }
-BOL CIn::Scan(UI2& result) { return TCInUnsigned<UI2>(result); }
-BOL CIn::Scan(SI4& result) { return TCInSigned<SI4, UI4>(result); }
-BOL CIn::Scan(UI4& result) { return TCInUnsigned<UI4>(result); }
-BOL CIn::Scan(SI8& result) { return TCInSigned<SI8, UI8>(result); }
-BOL CIn::Scan(UI8& result) { return TCInUnsigned<UI8>(result); }
+BOL CIn::SScan(SI1& result) { return TCInSigned<SI1, UI1>(result); }
+BOL CIn::SScan(UI1& result) { return TCInUnsigned<UI1>(result); }
+BOL CIn::SScan(SI2& result) { return TCInSigned<SI2, UI2>(result); }
+BOL CIn::SScan(UI2& result) { return TCInUnsigned<UI2>(result); }
+BOL CIn::SScan(SI4& result) { return TCInSigned<SI4, UI4>(result); }
+BOL CIn::SScan(UI4& result) { return TCInUnsigned<UI4>(result); }
+BOL CIn::SScan(SI8& result) { return TCInSigned<SI8, UI8>(result); }
+BOL CIn::SScan(UI8& result) { return TCInUnsigned<UI8>(result); }
 #if USING_FP4 == YES_0
-BOL CIn::Scan(FP4& result) { return TCInFloatingPoint<FP4, SI4, UI4>(result); }
+BOL CIn::SScan(FP4& result) { return TCInFloatingPoint<FP4, SI4, UI4>(result); }
 #endif
 #if USING_FP8 == YES_0
-BOL CIn::Scan(FP8& result) { return TCInFloatingPoint<FP8, SI8, UI8>(result); }
+BOL CIn::SScan(FP8& result) { return TCInFloatingPoint<FP8, SI8, UI8>(result); }
 #endif
 
 SIN CIn::GetKey() { return _getch(); }
@@ -221,17 +221,9 @@ SIN CIn::ScanKey() {
   return c;
 }
 
-Pausef::Pausef() {
-  COut("\nPress any key to continue...");
+Pausef::Pausef(const CH1* message) {
+  COut().Star() << message;
   CIn::ScanKey();
-}
-
-Pausef::Pausef(const CH1* format, ...) {
-  va_list arg;
-  va_start(arg, format);
-  vfprintf(stdout, format, arg);
-  va_end(arg);
-  Pausef();
 }
 
 }  // namespace _

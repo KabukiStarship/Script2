@@ -17,25 +17,10 @@
     <ClInclude Include="t_test.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="t_utf.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="t_wall.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="00_core.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="01_itos.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="02_socket.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="03_ftos.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="04_utf.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="05_clock.h">
@@ -161,9 +146,6 @@
     <ClInclude Include="c_socket.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="c_stringf.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="c_test.h">
       <Filter>lib</Filter>
     </ClInclude>
@@ -248,7 +230,25 @@
     <ClInclude Include="t_strand.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="t_stringf.h">
+    <ClInclude Include="t_string.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="t_uniprinter.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="c_string.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="04_sprinter.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="00_uniprinter.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="01_rng.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="02_itos.h">
       <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
@@ -275,9 +275,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="module_tester.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cc">
       <Filter>lib</Filter>
     </ClCompile>
@@ -350,13 +347,13 @@
     <ClCompile Include="script2_socket.cc">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="script2_stringf.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="script2_test.cc">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="script2_vk.cc">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_string.cc">
       <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>

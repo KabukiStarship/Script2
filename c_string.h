@@ -1,6 +1,6 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \c_stringf.h
+@file    \c_string.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -9,6 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
+
 #ifndef SCRIPT2_STRINGF_H
 #define SCRIPT2_STRINGF_H 1
 
@@ -28,77 +29,42 @@ LIB_MEMBER const CH1* STRPrintHexHeader();
 /* Gets the header to print for PrintHex(const void*, const void*). */
 LIB_MEMBER const CH1* STRPrintHexBorder();
 
-LIB_MEMBER CH1 HexNibbleToLowerCase(UI1 b);
-
-LIB_MEMBER UI2 HexByteToLowerCase(UI1 b);
-
-LIB_MEMBER UI2 HexByteToUpperCase(UI1 b);
-
-LIB_MEMBER SI4 HexToByte(CH1 hex_byte);
-
 /* Converts a UI1 into a two-UI1 hex representation.
 @return Returns -1 if c is not a hex UI1.
 */
 LIB_MEMBER SI4 HexToByte(UI2 hex);
 
-LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH1 c);
-
-#if SEAM >= SEAM_SCRIPT2_UTF
-
-/* Prints a CH2 to the CH1* by converting it to a CH4.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH2 c);
-LIB_MEMBER CH1* Print(CH1* cursor, CH1* stop, CH4 c);
-LIB_MEMBER CH1* Print(CH1* cursor, SIW size, CH4 c);
-
-#if USING_UTF16 == YES_0
-
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH12 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH2 c);
-LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH1 c);
-LIB_MEMBER CH2* Print(CH2* cursor, CH2* stop, CH4 c);
-
-LIB_MEMBER CH2* Print(CH2* cursor, SIW size, CH4 c);
-
 /* Attempts to scan a UTF-32 CH1 from the given UTF-8 string.
 @return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
 success. */
-LIB_MEMBER const CH1* Scan(const CH1* string, CH4& result);
+LIB_MEMBER const CH1* SScan(const CH1* string, CH4& character);
+
+#if USING_UTF16 == YES_0
+
+/* Prints a UTF-32 character to the string terminated at the stop.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   string    The start of the string.
+@param   stop      The last CH1 in the string buffer.
+@warning This algorithm is designed to fail if the socket is not a valid socket
+with one or more bytes in it. */
+LIB_MEMBER CH2* SPrint(CH2* string, CH2* stop, CH4 character);
 
 /* Attempts to scan a UTF-32 CH1 from the given UTF-16 string.
 @return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
 success. */
-LIB_MEMBER const CH2* Scan(const CH2* string, CH4& result);
+LIB_MEMBER const CH2* SScan(const CH2* string, CH4& character);
 #endif
 
 #if USING_UTF32 == YES_0
-/* Prints a Unicode Char to the given socket.
+/* Prints a character to the string.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   cursor The beginning of the socket.
-@param   stop   The last UI1 in the socket.
-@param   c      The CH1 to utf.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH1 c);
-LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH2 c);
-LIB_MEMBER CH4* Print(CH4* cursor, CH4* stop, CH4 c);
+@param   stop The last character in the string buffer. */
+LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH2 character);
 
-/* Attempts to scan a UTF-32 CH1 from the given UTF-32 string.
-@return  Nil upon failure or a pointer to the end of the UTF-8 CH1 upon
-success. */
-LIB_MEMBER const CH4* Scan(const CH4* string, CH4& result);
-#endif
+/* Prints a Unicode character to the given string.
+@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@param   stop   The last Char in the socket. */
+LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH4 character);
 #endif
 
 /* Utility class for printing numbers. */
@@ -173,10 +139,13 @@ struct Hexf {
   Hexf(const void* item);
   Hexf(SI1 item);
   Hexf(UI1 item);
+  Hexf(CH1 item);
   Hexf(SI2 item);
   Hexf(UI2 item);
+  Hexf(CH2 item);
   Hexf(SI4 item);
   Hexf(UI4 item);
+  Hexf(CH4 item);
   Hexf(SI8 item);
   Hexf(UI8 item);
 #if USING_FP4 == YES_0
@@ -251,10 +220,10 @@ class LIB_MEMBER Stringf {
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
   to the buffer. */
-   Stringf ();
+  Stringf();
 
   /* Sets the string_ to the given pointer and stores the count. */
-   Stringf(const CH1* item);
+  Stringf(const CH1* item);
 #if USING_UTF16 == YES_0
   Stringf(const CH2* item);
 #endif

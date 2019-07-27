@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_STACK
+#if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_COBJECT
 #define SCRIPT2_COBJECT
 

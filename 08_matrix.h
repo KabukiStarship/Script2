@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_matrix.h"
 
-#if SEAM == SEAM_SCRIPT2_MATRIX
+#if SEAM == SCRIPT2_MATRIX
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _08_Matrix(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_MATRIX
+#if SEAM >= SCRIPT2_MATRIX
   A_TEST_BEGIN;
 
   D_COUT("\n\nTesting AStack<SI4>...\n\nPrinting empty stack...\n");

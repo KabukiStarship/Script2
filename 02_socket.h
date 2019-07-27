@@ -1,6 +1,6 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \02_socket.h
+@file    \02_rng.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_socket.h"
 
-#if SEAM == SEAM_SCRIPT2_SOCKET
+#if SEAM == SCRIPT2_RNG
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,29 +22,39 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _02_Socket(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_SOCKET
+#if SEAM >= SCRIPT2_RNG
   A_TEST_BEGIN;
 
-  D_COUT_HEADING("Test SocketCopy and MemoryCompare");
+  D_COUT(Headingf("Testing Rangom Number Generator (RNG)"));
 
-  enum {
-    kTestCharsCount = 1024,
-    kTestCharsOffsetCount = 16,
-  };
-  CH1 test_chars[kTestCharsCount];
-  CH1 test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
-
-  D_PRINTF("\ntest_chars[0]:0x%p test_chars_result[n]:0x%p ", test_chars,
-           test_chars_result);
-
-  for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
-    for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
-    CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
-                             kTestCharsCount);
-    A_ASSERT(result);
-    A_ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
-                            kTestCharsCount));
+  for (SI4 i = 0; i < 100; ++i) {
+    RandomizeSeed();
+    auto value = RandomUI4();
+    D_COUT("\n, " << value);
   }
+
+  D_COUT(Headingf("Testing Hex functions"));
+  for (SI4 i = 0; i < 16; ++i) {
+    SI4 value = HexToByte(HexNibbleToLowerCase(i));
+    Test(i, value);
+    // D_COUT("\n    " << i << ".) " >> value);
+    value = HexToByte(HexNibbleToUpperCase(i));
+    // D_COUT(" Result:" << value);
+    Test(i, value);
+  }
+
+  for (SI4 i = 0; i < 256; ++i) {
+    UI2 c = HexByteToLowerCase(i);
+    // D_COUT('\n' << i << ".) Expecting:" << Hexf(i)
+    //             << "        HexByteToLowerCase:" << CH1(c) << CH1(c >> 8));
+    SI4 value = HexToByte(c);
+    // D_COUT("        HexToByte:" << value);
+    A_AVOW(i, value);
+    value = HexToByte(HexByteToUpperCase(i));
+    // D_COUT(" Result:" << value);
+    Test(i, value);
+  }
+
 #endif
   return nullptr;
 }

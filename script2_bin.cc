@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_bin.h"
 
 #include "c_avalue.h"
@@ -17,7 +17,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_hash.h"
 #include "c_socket.h"
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
 #define D_COUT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);
@@ -86,7 +86,7 @@ const CH1** STRBInStates() {
 @param error The error type.
 @return Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error) {
-  D_PRINTF("\nBIn %s error!", ErrorStrand(error));
+  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -98,7 +98,7 @@ inline const Op* BInError(BIn* bin, Error error) {
     @param  address The address of the UI1 in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
-  D_PRINTF("\nBIn %s error!", ErrorStrand(error));
+  D_COUT("\nBIn %s error!", ErrorStrand(error));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -111,7 +111,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header,
                           SI4 offset) {
-  D_PRINTF("\nBIn %s error!", ErrorStrand(error));
+  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -124,7 +124,7 @@ inline const Op* BInError(BIn* bin, Error error, const SI4* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const SI4* header, SI4 offset,
                           CH1* address) {
-  D_PRINTF("\nBIn %s error!", ErrorStrand(error));
+  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -137,7 +137,7 @@ BIn* BInInit(UIW* socket, SI4 size) {
   bin->stop = 0;
   bin->read = 0;
 
-#if SCRIPT2_DEBUG == 1
+#if D_THIS == 1
   MemoryClear(BInBegin(bin), size);
 #endif
   return bin;
@@ -212,9 +212,9 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
-    D_PRINTF("\nparam:%u type:%s start:%i stop:%i length:%u", arg_index + 1,
-             STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
-             length);
+    D_COUT("\nparam:" << arg_index + 1 << " type:" << STRType(type)
+                      << " start:" << TDelta<>(begin, start) << " stop:"
+                      << TDelta<>(begin, stop) << " length:" << length);
     switch (type) {
       ;
       case kNIL:
@@ -229,7 +229,8 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         ui1_ptr = reinterpret_cast<CH1*>(args[arg_index]);
         if (ui1_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, begin);
-        D_PRINTF("\nReading kSTR:0x%p with length:%u", ui1_ptr, count)
+        D_COUT("\nReading kSTR:0x" << Hexf(ui1_ptr)
+                                   << " with length:" << count);
         // Read CH1.
         ui1 = *begin;
         hash = HashPrime16(ui1, hash);
@@ -247,7 +248,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           *ui1_ptr++ = ui1;  // Write UI1 to destination.
           D_COUT(ui1);
         }
-        D_PRINTF("\" success!\n");
+        D_COUT("\" success!\n");
         if (type != kADR) {
           *ui1_ptr = 0;
           // No need to hash 0.
@@ -268,7 +269,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 
         // Byte 1
         ui1 = *begin;  //< Read
-        D_PRINTF(" \'%u\', ", ui1);
+        D_COUT(" '" << ui1 << "', ");
         hash = HashPrime16(ui1, hash);       //< Hash
         if (++begin >= stop) begin -= size;  //< Increment
         *ui1_ptr = ui1;                      //< Write
@@ -312,7 +313,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, begin);
-        // Scan UI1 1.
+        // SScan UI1 1.
         ui1 = *begin;
         if (++begin >= stop) begin -= size;
         hash = HashPrime16(ui1, hash);
@@ -343,7 +344,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         if (ui4_ptr == nullptr)
           return BInError(bin, kErrorImplementation, params, index, begin);
 
-        // Scan UI1 1.
+        // SScan UI1 1.
         ui1 = *begin;
         if (++begin >= stop) begin -= size;
         hash = HashPrime16(ui1, hash);
@@ -426,7 +427,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         if (!ui8_ptr) {
           return BInError(bin, kErrorImplementation, params, index, begin);
         }
-        // Scan UI1 1.
+        // SScan UI1 1.
         ui1 = *begin;
         if (++begin >= stop) begin -= size;
         hash = HashPrime16(ui1, hash);
@@ -466,7 +467,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         ui1 = *begin;
 #endif
       default: {  //< It's an Array
-        D_PRINTF("\nIt's an array!\n");
+        D_COUT("\nIt's an array!\n");
 #if USING_SCRIPT2_ARRAY
         switch (type & 0x60) {
           case 0: {
@@ -584,13 +585,13 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           ++ui1_ptr;
         }
         break;
-#endif  //< SCRIPT2_DEBUG
+#endif  //< D_THIS
       }
     }
     ++arg_index;
-    D_PRINTF(" |");
+    D_COUT(" |");
   }
-  D_PRINTF("\nHash expected:0x%x", hash);
+  D_COUT("\nHash expected:0x" << Hexf(hash));
   if (length < 2)
     return BInError(bin, kErrorBufferUnderflow, params, index, begin);
   ui2 = *begin;
@@ -598,11 +599,11 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   ui1 = *begin;
   if (++begin >= stop) begin -= size;
   ui2 |= (((UI2)ui1) << 8);
-  D_PRINTF("found:0x%x", ui2);
+  D_COUT("found:0x" << Hexf(ui2));
   if (hash != ui2)
     return BInError(bin, kErrorInvalidHash, params, index, begin);
 
-  D_PRINTF("\nDone reading\n");
+  D_COUT("\nDone reading\n");
   CLEAR(begin, stop)
 
   // Convert pointer back to offset

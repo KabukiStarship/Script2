@@ -9,7 +9,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-
+//
+#include <cmath>
+//
 #include "t_puff.h"
 
 // Because some of y'all will try to make this a single file header, just
@@ -18,7 +20,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-#if SEAM >= SEAM_SCRIPT2_ITOS
+#if SEAM >= SCRIPT2_ITOS
 
 const UI8* Pow10_UI8() {
   static const UI8 k10ToThe[20] = {
@@ -171,7 +173,7 @@ SIN STRLength(SI8 value) {
 
 #endif
 
-#if SEAM >= SEAM_SCRIPT2_FTOS
+#if SEAM >= SCRIPT2_FTOS
 
 constexpr SIW IEEE754LutElementCount() { return 87; }
 

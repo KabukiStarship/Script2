@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_table.h"
 
-#if SEAM == SEAM_SCRIPT2_TABLE
+#if SEAM == SCRIPT2_TABLE
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,10 +24,10 @@ namespace script2 {
 
 template <typename SIZ, typename HSH, typename Char>
 void TestTable() {
-  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<SI"));
-  D_PRINTF("%c,UI%c,CH%c>\n", '0' + sizeof(SIZ), '0' + sizeof(HSH),
-           '0' + sizeof(Char));
-  D_COUT(Linef("+---\n"));
+  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<SI")
+         << Char('0' + sizeof(SIZ)) << ",UI" << Char('0' + sizeof(HSH)) << ",CH"
+         << Char('0' + sizeof(Char)) << ">\n"
+         << Linef("+---\n"));
 
   ATable<SIZ, HSH, Char> table;
 
@@ -41,27 +41,22 @@ void TestTable() {
   A_AVOW((SIZ)0, table.Add(a));
 
   A_AVOW((SIZ)0, table.Find(a));
-  A_AVOW((SIZ)-1, table.Add(a));
 
   A_AVOW((SIZ)1, table.Add(b));
   A_AVOW((SIZ)0, table.Find(a));
   A_AVOW((SIZ)1, table.Find(b));
-  A_AVOW((SIZ)-1, table.Add(a));
-  A_AVOW((SIZ)-1, table.Add(b));
 
   A_AVOW((SIZ)2, table.Add(c));
   A_AVOW((SIZ)0, table.Find(a));
   A_AVOW((SIZ)1, table.Find(b));
   A_AVOW((SIZ)2, table.Find(c));
-  A_AVOW((SIZ)-1, table.Add(a));
-  A_AVOW((SIZ)-1, table.Add(b));
-  A_AVOW((SIZ)-1, table.Add(c));
 
   A_AVOW((SIZ)3, table.Add(d));
   A_AVOW((SIZ)0, table.Find(a));
   A_AVOW((SIZ)1, table.Find(b));
   A_AVOW((SIZ)2, table.Find(c));
   A_AVOW((SIZ)3, table.Find(d));
+
   A_AVOW((SIZ)-1, table.Add(a));
   A_AVOW((SIZ)-1, table.Add(b));
   A_AVOW((SIZ)-1, table.Add(c));
@@ -92,15 +87,19 @@ void TestTable() {
 }
 
 static const CH1* _10_Table(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_TABLE
+#if SEAM >= SCRIPT2_TABLE
   A_TEST_BEGIN;
 
   TestTable<SI2, UI2, CH1>();
-  TestTable<SI2, UI2, CH2>();
-  TestTable<SI2, UI2, CH4>();
   TestTable<SI4, UI4, CH1>();
+#if USING_UTF16 == YES_0
+  TestTable<SI2, UI2, CH2>();
   TestTable<SI4, UI4, CH2>();
+#endif
+#if USING_UTF32 == YES_0
+  TestTable<SI2, UI2, CH4>();
   TestTable<SI4, UI4, CH4>();
+#endif
 #endif
   return nullptr;
 }

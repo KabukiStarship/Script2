@@ -11,9 +11,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <pch.h>
 
 #include "t_clock.h"
-#include "t_utf.h"
+#include "t_string.h"
 
-#if SEAM == SEAM_SCRIPT2_CLOCK
+#if SEAM == SCRIPT2_CLOCK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -23,7 +23,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _05_Clock(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_CLOCK
+#if SEAM >= SCRIPT2_CLOCK
   A_TEST_BEGIN;
 
   D_COUT(Headingf("\n\nTesting TScanTime..."));
@@ -55,14 +55,13 @@ static const CH1* _05_Clock(const CH1* args) {
   };
 
   for (SI4 i = 0; i < 18; ++i) {
-    D_COUT_LINEF('-');
-    D_PRINTF("\n    %i", i);
+    D_COUT(Linef('-') << "\n    " << i);
     TM4 t = 0;
     result = ScanTime(strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }
 
-  D_PRINTF("\n\nTesting more valid input...\n");
+  D_COUT("\n\nTesting more valid input...\n");
 
   enum { kSize = 128 };
   CH1 socket[kSize];
@@ -79,21 +78,17 @@ static const CH1* _05_Clock(const CH1* args) {
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
   ClockPrint(socket, socket + kSize, t);
-  D_COUT("\n  Before:\"");
-  D_COUT(socket);
-  D_COUT('\"');
-  result = TScan<CH1>(socket, t_found);
-  D_COUT("\n\n\nresult:\"");
-  D_COUT(TClock<SI4>(t_found));
-  D_COUT("\"\"");
+  D_COUT("\n  Before:\"" << socket << '\"');
+  result = TSScan<CH1>(socket, t_found);
+  D_COUT("\n\n\nresult:\"" << TClock<SI4>(t_found) << "\"\"");
   A_ASSERT(ClockCompare(t, t_found));
 
   D_COUT(Headingf("Testing invalid input"));
-  TScan<CH1>("cat", t);
+  TSScan<CH1>("cat", t);
 
-  TScan<CH1>("2017-30-40", t);
+  TSScan<CH1>("2017-30-40", t);
 
-  D_PRINTF("\nDone testing date parsing utils! :-)\n");
+  D_COUT("\nDone testing date parsing utils! :-)\n");
 #endif
   return nullptr;
 }

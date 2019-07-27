@@ -15,28 +15,21 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 //
 #include "c_avalue.h"
 #include "t_puff.h"
-#include "t_stringf.h"
+#include "t_string.h"
+#include "t_uniprinter.h"
 
 //#include <cstdio>
 #include <iostream>
 
-#if SEAM == SEAM_SCRIPT2_CORE
+#if SEAM == SCRIPT2_UNIPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
 
-#define STD_COUT std::wcout
+#define STD_COUT std::wcerr
 
 namespace _ {
-
-void Printf(const CH1* format, ...) {
-  if (!format) return;
-  va_list arg;
-  va_start(arg, format);
-  vfprintf(stdout, format, arg);
-  va_end(arg);
-}
 
 COut::COut() {}
 
@@ -118,7 +111,7 @@ COut& COut::Print(CH1 item) {
 }
 
 COut& COut::Print(const CH1* item) {
-  return TPrintString<COut, CH1>(*this, item);
+  return TSPrintString<COut, CH1>(*this, item);
 }
 
 #if USING_UTF16 == YES_0
@@ -128,7 +121,7 @@ COut& COut::Print(CH2 item) {
 }
 
 COut& COut::Print(const CH2* item) {
-  return TPrintString<COut, CH2>(*this, item);
+  return TSPrintString<COut, CH2>(*this, item);
 }
 #endif
 #if USING_UTF32 == YES_0
@@ -142,12 +135,12 @@ COut& COut::Print(CH4 item) {
   return *this;
 }
 COut& COut::Print(const CH4* item) {
-  return TPrintString<COut, CH4>(*this, item);
+  return TSPrintString<COut, CH4>(*this, item);
 }
 #endif
 
 COut& COut::Print(SI4 item) {
-#if SEAM <= SEAM_SCRIPT2_ITOS
+#if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
 #if CPU_WORD_SIZE == CPU_64_BIT
@@ -155,7 +148,7 @@ COut& COut::Print(SI4 item) {
 #else
   enum { kSize = 24 };
   CH1 socket[kSize];
-  TPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
+  TSPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
   Print(socket);
 #endif
 #endif
@@ -163,7 +156,7 @@ COut& COut::Print(SI4 item) {
 }
 
 COut& COut::Print(UI4 item) {
-#if SEAM <= SEAM_SCRIPT2_ITOS
+#if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
 #if CPU_WORD_SIZE == CPU_64_BIT
@@ -171,7 +164,7 @@ COut& COut::Print(UI4 item) {
 #else
   enum { kSize = 24 };
   CH1 buffer[kSize];
-  TPrintUnsigned<UI4, CH1>(buffer, kSize - 1, item);
+  TSPrintUnsigned<UI4, CH1>(buffer, kSize - 1, item);
   Print(buffer);
 #endif
 #endif
@@ -179,24 +172,24 @@ COut& COut::Print(UI4 item) {
 }
 
 COut& COut::Print(SI8 item) {
-#if SEAM <= SEAM_SCRIPT2_ITOS
+#if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
   enum { kSize = 24 };
   CH1 buffer[kSize];
-  TPrintSigned<SI8, UI8, CH1>(buffer, kSize - 1, item);
+  TSPrintSigned<SI8, UI8, CH1>(buffer, kSize - 1, item);
   Print(buffer);
 #endif
   return *this;
 }
 
 COut& COut::Print(UI8 item) {
-#if SEAM <= SEAM_SCRIPT2_ITOS
+#if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
   enum { kSize = 24 };
   CH1 buffer[kSize];
-  TPrintUnsigned<UI8, CH1>(buffer, kSize - 1, item);
+  TSPrintUnsigned<UI8, CH1>(buffer, kSize - 1, item);
   Print(buffer);
 #endif
   return *this;
@@ -204,7 +197,7 @@ COut& COut::Print(UI8 item) {
 
 #if USING_FP4 == YES_0
 COut& COut::Print(FP4 item) {
-#if SEAM <= SEAM_SCRIPT2_BOOK
+#if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
   enum { kSize = 16 };
@@ -217,7 +210,7 @@ COut& COut::Print(FP4 item) {
 #endif
 #if USING_FP8 == YES_0
 COut& COut::Print(FP8 item) {
-#if SEAM <= SEAM_SCRIPT2_BOOK
+#if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
   enum { kSize = 24 };

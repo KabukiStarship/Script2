@@ -10,14 +10,14 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_LOOM
+#if SEAM >= SCRIPT2_LOOM
 
 #ifndef SCRIPT2_LOOM_TEMPLATES
 #define SCRIPT2_LOOM_TEMPLATES
 
 #include "t_stack.h"
 
-#if SEAM == SEAM_SCRIPT2_LOOM
+#if SEAM == SCRIPT2_LOOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -114,8 +114,7 @@ Printer& TLoomPrint(Printer& o, TLoom<SIZ>* loom) {
   for (SIZ i = 0; i < count; ++i)
     o << '\n'
       << i << ".) \"" << TLoomGet<Char, SIZ>(loom, i) << "\":" << offsets[i];
-  D_COUT("\n\n");
-  D_COUT_CHARS(loom, loom->size);
+  D_COUT(Linef('-') << Charsf(loom, loom->size));
   return o << '\n';
 }
 
@@ -128,7 +127,7 @@ SIZ TLoomAdd(TLoom<SIZ>* loom, const Char* string) {
 
   if (loom->offsets.count >= loom->offsets.size) return -1;
   Char* cursor = TPtr<Char>(loom, loom->top);
-  cursor = TPrintString<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
+  cursor = TSPrintString<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
   if (!cursor) return -1;
   SIZ index = TStackPush<SIZ, SIZ>(&loom->offsets, loom->top);
   loom->top = TDelta<SIZ>(loom, cursor + 1);
@@ -161,12 +160,12 @@ BOL TLoomGrow(Autoject& obj) {
   size = size << 1;
   count_max = count_max << 1;
 
-  D_PRINTF(" new size:%i count_max:%i ", size, count_max);
+  D_COUT(" new size:" << size << " count_max:" << count_max);
 
-#if DEBUG_THIS
+#if D_THIS
   CPrint("\n\nBefore:\n");
   TLoomPrint<Char, SIZ, COut>(COut().Star(), loom);
-  D_COUT_CHARS(loom, loom->size);
+  D_COUT(Charsf(loom, loom->size));
 #endif
 
   UIW* new_begin = obj.ram_factory(nullptr, size);
@@ -192,10 +191,10 @@ BOL TLoomGrow(Autoject& obj) {
   Char* other_start = TLoomStart<Char, SIZ>(other);
   if (strings_size_bytes)
     SocketCopy(other_start, strings_size_bytes, start, strings_size_bytes);
-#if DEBUG_THIS
+#if D_THIS
   CPrint("\n\nAfter:\n");
   TLoomPrint<Char, SIZ, COut>(COut().Star(), other);
-  D_COUT_CHARS(other, other->size);
+  D_COUT(Charsf(other, other->size));
 #endif
 
   Delete(obj);
@@ -208,9 +207,7 @@ BOL TLoomGrow(Autoject& obj) {
 template <typename Char, typename SIZ, typename BUF>
 SIZ TLoomAdd(AArray<Char, SIZ, BUF>& obj, const Char* item) {
   if (!item) return -1;
-  D_COUT("\nAdding:\"");
-  D_COUT(item);
-  D_COUT('\"');
+  D_COUT("\nAdding:\"" << item << '\"');
   SIZ result = TLoomAdd<Char, SIZ>(obj.BeginAs<TLoom<SIZ>>(), item);
   while (result < 0) {
     if (!TLoomGrow<Char, SIZ>(obj.Auto())) {
@@ -268,7 +265,7 @@ SIZ TLoomFind(TLoom<SIZ>* loom, const Char* string) {
 
 /* An ASCII Loom Autoject. */
 template <typename Char = CHR, typename SIZ = SIN, SIZ kSize_ = 512,
-          typename BUF = TSocket<kSize_, Char, TStrand<SIN>>>
+          typename BUF = TBuf<kSize_, Char, TStrand<SIN>>>
 class ALoom {
  public:
   enum { kCountDefault = kSize_ / 16 };

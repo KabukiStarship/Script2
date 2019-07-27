@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_ITERATOR_H
 #define SCRIPT2_ITERATOR_H
 // Dependencies:
@@ -35,4 +35,4 @@ struct LIB_MEMBER Iterator {
 
 }  //< namespace _
 #endif  //< SCRIPT2_ITERATOR_H
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

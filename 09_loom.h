@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_loom.h"
 
-#if SEAM == SEAM_SCRIPT2_LOOM
+#if SEAM == SCRIPT2_LOOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,18 +24,19 @@ namespace script2 {
 
 template <typename Char, typename SIZ>
 void TestLoom() {
-  D_COUT_LINEF("\n\n---\n\n");
+  D_COUT(Linef("\n\n---\n\n"));
 
   enum {
     kSize = 256 * sizeof(Char),
     kCount = 32,
   };
-  D_PRINTF("Testing ALoom<CH%c,SI%c> with kSize:%i and kCount:%i",
-           '0' + sizeof(Char), '0' + sizeof(SIZ), kSize, kCount);
+  D_COUT("Testing ALoom<CH"
+         << Char('0' + sizeof(Char)) << ",SI" << Char('0' + sizeof(SIZ))
+         << "> with kSize:" << kSize << " and kCount:kCount");
 
-  ALoom<Char, SIZ, kSize, TSocket<kSize>> loom(kCount);
-#if DEBUG_THIS
-  COut().Star() << "\nPrinting empty loom:\n";
+  ALoom<Char, SIZ, kSize, TBuf<kSize>> loom(kCount);
+#if D_THIS
+  D_COUT("\nPrinting empty loom:\n");
   loom.COut();
 #endif
 
@@ -47,21 +48,21 @@ void TestLoom() {
   Char* string_end = &string[kLengthMax];
 
   for (SIN i = 0; i < 32; ++i) {
-    TPrint<Char>(string, string_end, i);
+    TSPrint<Char>(string, string_end, i);
     A_AVOW((SIZ)i, loom.Add(string));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  TPrint<Char>(string, string_end, 32);
+  TSPrint<Char>(string, string_end, 32);
   A_AVOW((SIZ)32, loom.Add(string));
 
   for (SIN i = 33; i < 96; ++i) {
-    TPrint<Char>(string, string_end, i);
+    TSPrint<Char>(string, string_end, i);
     A_AVOW((SIZ)(i), loom.Add(string));
   }
 
-  TPrint<Char>(string, string_end, 96);
+  TSPrint<Char>(string, string_end, 96);
   A_AVOW((SIZ)96, loom.Add(string));
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
@@ -71,12 +72,12 @@ void TestLoom() {
   string[kLengthMax] = 0;
 
   SIZ index = loom.Add(string);
-#if DEBUG_THIS
+#if D_THIS
   loom.COut();
 #endif
   A_AVOW((SIZ)97, index);
 
-#if DEBUG_THIS
+#if D_THIS
   D_COUT('\n');
   loom.COut();
   D_COUT('\n');
@@ -128,7 +129,7 @@ void TestLoom() {
   A_AVOW((SIZ)104, loom.Find(cba));
   A_AVOW((SIZ)105, loom.Find(cab));
 
-#if DEBUG_THIS
+#if D_THIS
   D_COUT('\n');
   loom.COut();
   D_COUT('\n');
@@ -138,13 +139,17 @@ void TestLoom() {
 }
 
 static const CH1* _09_Loom(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_LOOM
+#if SEAM >= SCRIPT2_LOOM
   A_TEST_BEGIN;
   TestLoom<CH1, SI2>();
-  TestLoom<CH2, SI2>();
   TestLoom<CH1, SI4>();
+#if USING_UTF16 == YES_0
+  TestLoom<CH2, SI2>();
   TestLoom<CH2, SI4>();
-  // TestLoom<CH4, SI4>();
+#endif
+#if USING_UTF32 == YES_0
+  TestLoom<CH4, SI4>();
+#endif
 #endif
   return nullptr;
 }

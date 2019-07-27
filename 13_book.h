@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_BOOK
+#if SEAM == SCRIPT2_BOOK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,7 +20,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _13_Book(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_BOOK
+#if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
 
   CH4 index;

@@ -30,7 +30,7 @@ LIB_MEMBER SIN IsYesNo(const CH4* string);
 SI4 a;
 FL4 b;
 CIn cin;
-COut("\n\nEnter a value 0-1,000,000").Star() << cin.Scan(a)
+COut("\n\nEnter a value 0-1,000,000").Star() << cin.SScan(a)
 @endcode
 */
 class LIB_MEMBER CIn {
@@ -86,40 +86,40 @@ class LIB_MEMBER CIn {
 
 #if USING_UTF8 == YES_0
   /* Reads the character from the CIn stream. */
-  LIB_MEMBER static BOL Scan(CH1& result);
+  LIB_MEMBER static BOL SScan(CH1& result);
 
   /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH1* result, SIW buffer_size);
+  static LIB_MEMBER BOL SScan(CH1* result, SIW buffer_size);
 #endif
 #if USING_UTF16 == YES_0
   /* Reads the character from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH2& result);
+  static LIB_MEMBER BOL SScan(CH2& result);
 
   /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH2* result, SIW buffer_size);
+  static LIB_MEMBER BOL SScan(CH2* result, SIW buffer_size);
 #endif
 #if USING_UTF32 == YES_0
   /* Reads the character from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH4& result);
+  static LIB_MEMBER BOL SScan(CH4& result);
 
   /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL Scan(CH4* result, SIW buffer_size);
+  static LIB_MEMBER BOL SScan(CH4* result, SIW buffer_size);
 #endif
 
   /* Reads the value from the CIn stream. */
-  static LIB_MEMBER BOL Scan(SI1& result);
-  static LIB_MEMBER BOL Scan(UI1& result);
-  static LIB_MEMBER BOL Scan(SI2& result);
-  static LIB_MEMBER BOL Scan(UI2& result);
-  static LIB_MEMBER BOL Scan(SI4& result);
-  static LIB_MEMBER BOL Scan(UI4& result);
-  static LIB_MEMBER BOL Scan(SI8& result);
-  static LIB_MEMBER BOL Scan(UI8& result);
+  static LIB_MEMBER BOL SScan(SI1& result);
+  static LIB_MEMBER BOL SScan(UI1& result);
+  static LIB_MEMBER BOL SScan(SI2& result);
+  static LIB_MEMBER BOL SScan(UI2& result);
+  static LIB_MEMBER BOL SScan(SI4& result);
+  static LIB_MEMBER BOL SScan(UI4& result);
+  static LIB_MEMBER BOL SScan(SI8& result);
+  static LIB_MEMBER BOL SScan(UI8& result);
 #if USING_FP4 == YES_0
-  static LIB_MEMBER BOL Scan(FP4& result);
+  static LIB_MEMBER BOL SScan(FP4& result);
 #endif
 #if USING_FP8 == YES_0
-  static LIB_MEMBER BOL Scan(FP8& result);
+  static LIB_MEMBER BOL SScan(FP8& result);
 #endif
 
   /* Reads the current key depressed on the keyboard.
@@ -134,8 +134,7 @@ class LIB_MEMBER CIn {
 /* Prints a formatted string to the console and then pauses for the user to
 press any key to continue. */
 struct LIB_MEMBER Pausef {
-  Pausef();
-  Pausef(const CH1* format, ...);
+  Pausef(const CH1* message = "\nPress any key to continue...");
 };
 }  // namespace _
 

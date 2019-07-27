@@ -12,14 +12,14 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_test.h"
 //
 #include "c_cout.h"
-#include "t_stringf.h"
+#include "t_string.h"
 
 namespace _ {
 
 void TestFunctionLine(SI4 line, const CH1* function, const CH1* file) {
   static const CH1 kStrandIndex[] = "\0";
-  Printf("\n        Function:%s\n            Line:%d in \"%s\"", function, line,
-         file);
+  COut("\n        Function:").Print(function)
+      << "\n            Line:" << line << " in \"" << file << '\"';
 }
 
 BOL TestWarn(SI4 line, const CH1* function, const CH1* file) {
@@ -49,13 +49,12 @@ const CH1* TestTree(const CH1* args, TestCase* tests, SIN count) {
   for (SIN i = 0; i < count; ++i) {
     TestCase test = tests[i];
     if (!test) {
-      Printf("\nError: seam node %i is missing!", i);
+      COut("\nError: seam node ").Print(i) << " is missing!";
       return "";
     }
     const CH1* error = test(args);
     if (error) return error;
   }
-  Printf("\n\nUnit tests completed successfully! (:-)+==<\n");
   return nullptr;
 }
 
@@ -63,9 +62,10 @@ SIN SeamTreeTest(SI4 arg_count, CH1** args, TestCase* tests, SIN test_count) {
   const CH1* result =
       TestTree(ArgsToString(arg_count, args), tests, test_count);
   if (result) {
-    Printf("\n\nError testing seam %s", result);
+    COut("\n\nError in seam ").Print(result);
     return APP_EXIT_FAILURE;
   }
+  COut("\n\nUnit tests completed successfully! (:-)+==<\n");
   return APP_EXIT_SUCCESS;
 }
 

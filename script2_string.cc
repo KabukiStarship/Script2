@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 //
-#include "t_stringf.h"
+#include "t_string.h"
 
 namespace _ {
 
@@ -33,17 +33,10 @@ const CH1* STRPrintHexBorder() {
          " ";
 }
 
-CH1* Print(CH1* start, CH1* stop, CH1 c) {
-  if (!start || start >= stop) return nullptr;
-  *start++ = c;
-  *start = 0;
-  return start;
-}
-
 }  // namespace _
 
-#if SEAM >= SEAM_SCRIPT2_UTF
-#if SEAM == SEAM_SCRIPT2_UTF
+#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM == SCRIPT2_UNIPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -51,7 +44,7 @@ CH1* Print(CH1* start, CH1* stop, CH1 c) {
 
 namespace _ {
 
-CH1* Print(CH1* start, CH1* stop, CH4 c) {
+CH1* SPrint(CH1* string, CH1* stop, CH4 item) {
   // | Byte 1   | Byte 2   | Byte 3   | Byte 4   | UTF-32 Result         |
   // |:--------:|:--------:|:--------:|:--------:|:---------------------:|
   // | 0aaaaaaa |          |          |          | 00000000000000aaaaaaa |
@@ -59,183 +52,139 @@ CH1* Print(CH1* start, CH1* stop, CH4 c) {
   // | 1110aaaa | 10bbbbbb | 10cccccc |          | 00000aaaabbbbbbcccccc |
   // | 11110aaa | 10bbbbbb | 10cccccc | 10dddddd | aaabbbbbbccccccdddddd |
 
-  if (!start || start >= stop) return nullptr;
-
-  if (!(c >> 7)) {  // 1 ASCII CH1.
-    if (start + 1 > stop) return nullptr;
-    *start++ = (CH1)c;
-  }
-  CH2 lsb_mask = 0x3f, msb_mask = 0x80;
-  if ((c >> 11) == 0) {  // 2 bytes.
-    if (start + 2 >= stop) return nullptr;
-    CH1 byte = (CH1)(0xC0 | (c >> 6));
-    // D_PRINTF ("\nPrinting 2:%x  string_type:%x", c, byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | (c & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-  } else if ((c >> 16) == 0) {  // 3 bytes.
-    if (start + 3 >= stop) return nullptr;
-    CH1 byte = (CH1)(0xE0 | (c >> 12));
-    // D_PRINTF ("\nPrinting 3:%x  string_type:%x", c, byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | (c & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-  } else if ((c >> 21) == 0) {  // 4 bytes.
-    if (start + 4 >= stop) return nullptr;
-    CH1 byte = (CH1)(0xF0 | (c >> 18));
-    // D_PRINTF ("\nPrinting 4:%x  string_type:%x", c, byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-    byte = (CH1)(msb_mask | (c & lsb_mask));
-    // D_PRINTF_HEX (byte);
-    *start++ = byte;
-  } else {
-    // D_PRINTFF ("\nUTF8 print Error: CH4 is out of range:%x:%u", c, (UI4)c);
-    return nullptr;
-  }
-  *start = 0;
-  return start;
-}
-
-CH1* Print(CH1* start, SIW size, CH4 c) {
-  return Print(start, start + size - 1, c);
-}
-
-CH4 ToCH4(CH1 c) {
-#if CHAR_MIN == 0
-  return (CH4)c;
-#else
-  return (CH4)(UI1)c;
-#endif
-}
-
-const CH1* Scan(const CH1* string, CH4& result) {
   if (!string) return nullptr;
-  CH4 c = ToCH4(*string++), lsb_mask = 0x3f, msb = 0x80;
-  CH4 r = 0;
 
-  if (!(c >> 7)) {
-    r = (CH4)c;
-  } else if ((c >> 5) == 0x6) {
-    // D_PRINTF ("  Scanning 2:");
-    // D_PRINTF_HEX ((CH1)c);
-    r = (c & 31) << 6;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= c & (CH4)63;
-    // D_PRINTF ("  Result:");
-    // D_PRINTF_HEX (r);
-  } else if ((c >> 4) == 0xE) {
-    // D_PRINTF ("  Scanning 3:");
-    // D_PRINTF_HEX ((CH1)c);
-    r = ((CH4)(c & 15)) << 12;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= (c & 63) << 6;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= c & lsb_mask;
-    // D_PRINTF ("  Result:");
-    // D_PRINTF_HEX (r);
-  } else if ((c >> 3) == 0x1E) {
-    // D_PRINTF ("  Scanning 4:");
-    // D_PRINTF_HEX ((CH1)c);
-    r = ((CH4)(c & 7)) << 18;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= (c & lsb_mask) << 12;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= (c & lsb_mask) << 6;
-    c = ToCH4(*string++);
-    // D_PRINTF_HEX ((CH1)c);
-    if (!(c & msb)) return nullptr;
-    r |= c & lsb_mask;
-    // D_PRINTF ("  Result:");
-    // D_PRINTF_HEX (r);
+  D_COUT("\n\n" << UI4(item) << ".) Printed:0x");
+  if (!(item >> 7)) {  // 1 ASCII CH1.
+    if (string + 1 > stop) return nullptr;
+    *string++ = CH1(item);
+    D_COUT(Hexf(*(string - 1)) << "   ");
   } else {
-    // D_PRINTF ("\nUTF8 scan error:");
-    // D_PRINTF_HEX ((CH1)c);
-    // D_PRINTF ((SI4)c);
-    return nullptr;
+    CH2 lsb_mask = 0x3f, msb_mask = 0x80;
+    if ((item >> 11) == 0) {
+      if (string + 2 >= stop) return nullptr;
+      *string++ = CH1(0xC0 | (item >> 6));
+      *string++ = CH1(msb_mask | (item & lsb_mask));
+      D_COUT(Hexf(*(string - 2)) << '_' << Hexf(*(string - 1)) << "   ");
+    } else if ((item >> 16) == 0) {
+      if (string + 3 >= stop) return nullptr;
+
+      *string++ = CH1(0xE0 | (item >> 12));
+      *string++ = CH1(msb_mask | ((item >> 6) & lsb_mask));
+      *string++ = CH1(msb_mask | (item & lsb_mask));
+      D_COUT(Hexf(*(string - 3)) << '_' << Hexf(*(string - 2)) << '_'
+                                 << Hexf(*(string - 1)) << "   ");
+    } else if ((item >> 21) == 0) {
+      if (string + 4 >= stop) return nullptr;
+      *string++ = CH1(0xF0 | (item >> 18));
+      *string++ = CH1(msb_mask | ((item >> 12) & lsb_mask));
+      *string++ = CH1(msb_mask | ((item >> 6) & lsb_mask));
+      *string++ = CH1(msb_mask | (item & lsb_mask));
+      D_COUT(Hexf(*(string - 4))
+             << '_' << Hexf(*(string - 3)) << '_' << Hexf(*(string - 2)) << '_'
+             << Hexf(*(string - 1)) << "   ");
+    } else {
+      D_COUT("\n\nUTF8 print Error: CH4 is out of range!");
+      return nullptr;
+    }
   }
-  result = r;
+  *string = 0;
   return string;
 }
 
-#if USING_UTF16 == YES_0
+const CH1* SScan(const CH1* string, CH4& item) {
+  if (!string) return nullptr;
+  CH1 c = CH4(*string++);
+  CH4 lsb_mask = 0x3f, msb = 0x80, result = 0;
+  D_COUT("SScan:" << Hexf(c));
+  if (!(c >> 7)) {
+    result = CH4(c);
+  } else if ((UI1(c) >> 5) == 6) {
+    result = (c & 31) << 6;
+    c = CH4(*string++);
+    D_COUT(Hexf(c));
+    if (!(c & msb)) return nullptr;
+    result |= c & CH4(63);
+    D_COUT(Hexf(*(string - 1)));
+  } else if ((UI1(c) >> 4) == 0xE) {
+    result = CH4(c & 15) << 12;
+    c = CH4(*string++);
+    if (!(c & msb)) return nullptr;
+    result |= (c & 63) << 6;
+    c = CH4(*string++);
+    if (!(c & msb)) return nullptr;
+    result |= c & lsb_mask;
+    D_COUT('_' << Hexf(*(string - 2)) << '_' << Hexf(*(string - 1)));
+  } else if ((UI1(c) >> 3) == 0x1E) {
+    result = CH4(c & 7) << 18;
+    c = CH4(*string++);
+    if (!(c & msb)) return nullptr;
+    result |= (c & lsb_mask) << 12;
+    c = CH4(*string++);
+    if (!(c & msb)) return nullptr;
+    result |= (c & lsb_mask) << 6;
+    c = CH4(*string++);
+    if (!(c & msb)) return nullptr;
+    result |= c & lsb_mask;
+    D_COUT('_' << Hexf(*(string - 3)) << '_' << Hexf(*(string - 2)) << '_'
+               << Hexf(*(string - 1)));
+  } else {
+    D_COUT(" error:0x" << Hexf(c) << '_' << Hexf(*string++) << '_'
+                       << Hexf(*string++) << '_' << Hexf(*string++) << '\n');
+    return nullptr;
+  }
+  item = result;
+  return string;
+}
 
-CH1* Print(CH1* start, CH1* stop, CH2 c) {
+CH1* SPrint(CH1* start, CH1* stop, CH2 item) {
   // | Byte 1   | Byte 2   | Byte 3   |  UTF-32 Result   |
   // |:--------:|:--------:|:--------:|:----------------:|
   // | 0aaaaaaa |          |          | 000000000aaaaaaa |
   // | 110aaaaa | 10bbbbbb |          | 00000aaaaabbbbbb |
   // | 1110aaaa | 10bbbbbb | 10cccccc | aaaabbbbbbcccccc |
 #if USING_UTF32 == YES_0
-  return Print(start, stop, (CH4)c);
+  return SPrint(start, stop, CH4(item));
 #else
   enum { k2ByteMSbMask = 0xC0, k3ByteMSbMask = 0xE0, k4ByteMSbMask = 0xF0 };
-  if (!start) return nullptr;
-  if (!(c >> 7)) {  // 1 byte.
+  if (!start || start >= stop) return nullptr;
+  if (!(item >> 7)) {  // 1 byte.
     if (start + 1 > stop) return nullptr;
-    *start++ = (CH1)c;
+    *start++ = CH1(item);
     *start = 0;
     return start;
   }
   CH2 lsb_mask = 0x3f, msb_mask = 0x80;
-  if (!(c >> 12)) {  // 2 bytes.
+  if (!(item >> 12)) {  // 2 bytes.
     if (start + 2 >= stop) return nullptr;
-    *start++ = (CH1)(0xC0 | c >> 6);
-    *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
+    *start++ = (CH1)(0xC0 | item >> 6);
+    *start++ = (CH1)(msb_mask | ((item >> 6) & lsb_mask));
     *start = 0;
     return start;
   }  // else 3 bytes.
   if (start + 3 >= stop) return nullptr;
-  *start++ = (CH1)(0xE0 | c >> 12);
-  *start++ = (CH1)(msb_mask | ((c >> 6) & lsb_mask));
-  *start++ = (CH1)(msb_mask | ((c >> 12) & lsb_mask));
+  *start++ = (CH1)(0xE0 | item >> 12);
+  *start++ = (CH1)(msb_mask | ((item >> 6) & lsb_mask));
+  *start++ = (CH1)(msb_mask | ((item >> 12) & lsb_mask));
   *start = 0;
   return start;
 #endif
 }
+#if USING_UTF16 == YES_0
 
-CH2* Print(CH2* start, CH2* stop, CH2 c) {
-  if (!start || start + 1 > stop) return nullptr;
-  *start++ = c;
-  *start = 0;
-  return start;
-}
-
-CH2* Print(CH2* start, CH2* stop, CH1 c) { return Print(start, stop, (CH2)c); }
-
-CH2* Print(CH2* start, CH2* stop, CH4 c) {
+#if USING_UTF16 == YES_0
+CH2* SPrint(CH2* start, CH2* stop, CH4 item) {
   // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} |    UTF-32 Result     |
   // |:-----------------:|:---------------------:|:--------------------:|
   // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
   // | 110110yyyyyyyyyy  |   110111xxxxxxxxxx    | yyyyyyyyyyxxxxxxxxxx |
   // |      0xD800       |         0xDC00        |                      |
   if (!start || start + 1 >= stop) return nullptr;
-  CH4 lsb_mask = 0x3f, lsb = c & lsb_mask, msb = c >> 10;
+  CH4 lsb_mask = 0x3f, lsb = item & lsb_mask, msb = item >> 10;
   if (!msb) {
     if (start + 1 > stop) return nullptr;
-    *start++ = (CH2)c;
-    // D_PRINTF ("\nPrinting 1:");
-    // D_PRINTF_HEX ((CH2)c);
+    *start++ = CH2(item);
+    D_COUT("\nPrinting 1:" << (Hexf(CH2(item))));
     *start = 0;
     return start;
   } else {
@@ -243,23 +192,17 @@ CH2* Print(CH2* start, CH2* stop, CH4 c) {
     if (msb >> 10) return nullptr;  // Non-Unicode value.
     if (start + 2 >= stop) return nullptr;
     CH2 nibble = (CH2)(lsb & msb_mask);
-    // D_PRINTF ("\nPrinting 2:");
-    // D_PRINTF_HEX ((CH2)nibble);
+    D_COUT("\nPrinting 2:" << Hexf(CH2(nibble)));
     *start++ = nibble;
     nibble = (CH2)(msb & msb_mask);
-    // D_PRINTF_HEX ((CH2)nibble);
+    D_COUT(Hexf(CH2(nibble)));
     *start++ = nibble;
     *start = 0;
     return start;
   }
 }
 
-CH2* Print(CH2* start, SIW size, CH4 c) {
-  return Print(start, start + size - 1, c);
-}
-
-const CH2* Scan(const CH2* string, CH4& result) {
-  if (!string) return nullptr;
+const CH2* SScan(const CH2* string, CH4& item) {
   // | Bytes {4N, 4N+ 1} | Bytes {4N + 2, 4N+ 3} | UTF-32 Result        |
   // |:-----------------:|:---------------------:|:--------------------:|
   // | 000000aaaaaaaaaa  |                       | 0000000000aaaaaaaaaa |
@@ -267,64 +210,23 @@ const CH2* Scan(const CH2* string, CH4& result) {
   CH2 c = *string++;
   CH2 lsb_mask = (1 << 10) - 1;
   if (c <= lsb_mask) {
-    // D_PRINTF (" Scanning 1:");
-    // D_PRINTF_HEX (c);
-    result = (CH4)c;
+    D_COUT(" Scanning 1:" << Hexf(c));
+    item = CH4(c);
   } else if ((c >> 10) == 30) {
-    // D_PRINTF (" Scanning 1:");
-    // D_PRINTF_HEX (c);
-    CH4 r = ((CH4)c) & lsb_mask;
+    D_COUT(" Scanning 1:" << Hexf(c));
+    CH4 r = (CH4(c)) & lsb_mask;
     c = *string++;
     if (c >> 10 != 55) return nullptr;
     r |= ((CH4)(c & lsb_mask)) << 10;
   } else {
-    // D_PRINTF (" Scan error:");
-    // D_PRINTF_HEX (c);
+    D_COUT(" SScan error:" << Hexf(c));
     return nullptr;
   }
   return string;
 }
-
-const CH4* Scan(const CH4* string, CH4& result) {
-  if (!string) return string;
-  result = *string++;
-  return string;
-}
-
 #endif
-#if USING_UTF32 == YES_0
-
-CH4* Print(CH4* start, CH4* stop, CH4 c) {
-  if (!start || start + 1 > stop) return nullptr;
-  *start++ = c;
-  *start = 0;
-  return start;
-}
-
-CH4* Print(CH4* start, CH4* stop, CH2 c) { return Print(start, stop, CH4(c)); }
-
-CH4* Print(CH4* start, CH4* stop, CH1 c) { return Print(start, stop, CH4(c)); }
 #endif
 
-#if USING_UTF16 == YES_0
-CH2* Print(CH2* start, CH2* stop, FP4 value) {
-  return TBinary<FP4, SI4, UI4>::template Print<CH2>(start, stop, value);
-}
-
-CH2* Print(CH2* start, CH2* stop, FP8 value) {
-  return TBinary<FP8, SI8, UI8>::template Print<CH2>(start, stop, value);
-}
-#endif
-
-#if USING_UTF32 == YES_0
-CH4* Print(CH4* start, CH4* stop, FP4 value) {
-  return TBinary<FP4, SI4, UI4>::template Print<CH4>(start, stop, value);
-}
-
-CH4* Print(CH4* start, CH4* stop, FP8 value) {
-  return TBinary<FP8, SI8, UI8>::template Print<CH4>(start, stop, value);
-}
-#endif
 }  // namespace _
 #endif
 
@@ -378,10 +280,13 @@ UIW Valuef::Word() { return value.Word(); }
 Hexf::Hexf(const void* begin, SIW size) : element(begin, size) {}
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
 Hexf::Hexf(const void* item) : element(UIW(item), -SIW(sizeof(const void*))) {}
+Hexf::Hexf(CH1 item) : element(item, -SIW(sizeof(SI1))) {}
 Hexf::Hexf(SI1 item) : element(item, -SIW(sizeof(SI1))) {}
 Hexf::Hexf(UI1 item) : element(item, -SIW(sizeof(UI1))) {}
+Hexf::Hexf(CH2 item) : element(item, -SIW(sizeof(CH2))) {}
 Hexf::Hexf(SI2 item) : element(item, -SIW(sizeof(SI2))) {}
 Hexf::Hexf(UI2 item) : element(item, -SIW(sizeof(UI2))) {}
+Hexf::Hexf(CH4 item) : element(item, -SIW(sizeof(CH4))) {}
 Hexf::Hexf(SI4 item) : element(item, -SIW(sizeof(SI4))) {}
 Hexf::Hexf(UI4 item) : element(item, -SIW(sizeof(UI4))) {}
 Hexf::Hexf(SI8 item) : element(item, -SIW(sizeof(SI8))) {}
@@ -445,27 +350,32 @@ Binaryf::Binaryf(FP8 item) : valuef(item, sizeof(FP8)) {}
 #endif
 #endif
 
-Stringf::Stringf() {}
-Stringf::Stringf(const CH1* item) : string_(item) { Print(item); }
+// Stringf::Stringf () {}
+Stringf::Stringf() : string_(&buffer_[0]), type_(kNIL), count_(0) {
+  *buffer_ = 0;
+}
+//< Visual C++ is complaining about unitialized members. I think it's a bug.
+
+Stringf::Stringf(const CH1* item) : string_(item), count_(0) { Print(item); }
 #if USING_UTF16 == YES_0
-Stringf::Stringf(const CH2* item) : string_(item) { Print(item); }
+Stringf::Stringf(const CH2* item) : string_(item), count_(0) { Print(item); }
 #endif
 #if USING_UTF32 == YES_0
-Stringf::Stringf(const CH4* item) : string_(item) { Print(item); }
+Stringf::Stringf(const CH4* item) : string_(item), count_(0) { Print(item); }
 #endif
-Stringf::Stringf(CH1 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(CH2 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(CH4 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(SI4 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(UI4 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(SI8 item) : string_(buffer_) { Print(item); }
-Stringf::Stringf(UI8 item) : string_(buffer_) { Print(item); }
+Stringf::Stringf(CH1 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CH2 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CH4 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(SI4 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(UI4 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(SI8 item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(UI8 item) : string_(buffer_), count_(0) { Print(item); }
 
 #if USING_FP4 == YES_0
-Stringf::Stringf(FP4 item) : string_(buffer_) { Print(item); }
+Stringf::Stringf(FP4 item) : string_(buffer_), count_(0) { Print(item); }
 #endif
 #if USING_FP8 == YES_0
-Stringf::Stringf(FP8 item) : string_(buffer_) { Print(item); }
+Stringf::Stringf(FP8 item) : string_(buffer_), count_(0) { Print(item); }
 #endif
 Stringf::Stringf(const CH1* item, SIW count) : string_(item), count_(count) {
   Print(item);
@@ -541,7 +451,7 @@ void Stringf::Print(const CH4* item) {
 
 void Stringf::Print(CH1 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::Print(buffer, buffer + kLengthMax, item);
+  _::SPrint(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer_;
 }
@@ -549,7 +459,7 @@ void Stringf::Print(CH1 item) {
 #if USING_UTF16 == YES_0
 void Stringf::Print(CH2 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::Print(buffer, buffer + kLengthMax, item);
+  _::SPrint(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer_;
 }
@@ -557,15 +467,15 @@ void Stringf::Print(CH2 item) {
 #if USING_UTF32 == YES_0
 void Stringf::Print(CH4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::Print(buffer, buffer + kLengthMax, item);
+  _::SPrint(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
 #endif
 void Stringf::Print(SI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-#if SEAM >= SEAM_SCRIPT2_ITOS
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SCRIPT2_ITOS
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
 #endif
   type_ = kST1;
   string_ = buffer;
@@ -573,8 +483,8 @@ void Stringf::Print(SI4 item) {
 
 void Stringf::Print(UI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-#if SEAM >= SEAM_SCRIPT2_ITOS
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SCRIPT2_ITOS
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
 #endif
   type_ = kST1;
   string_ = buffer;
@@ -582,8 +492,8 @@ void Stringf::Print(UI4 item) {
 
 void Stringf::Print(SI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-#if SEAM >= SEAM_SCRIPT2_ITOS
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SCRIPT2_ITOS
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
 #endif
   type_ = kST1;
   string_ = buffer;
@@ -591,8 +501,8 @@ void Stringf::Print(SI8 item) {
 
 void Stringf::Print(UI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-#if SEAM >= SEAM_SCRIPT2_ITOS
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+#if SEAM >= SCRIPT2_ITOS
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
 #endif
   type_ = kST1;
   string_ = buffer;
@@ -601,7 +511,7 @@ void Stringf::Print(UI8 item) {
 #if USING_FP4 == YES_0
 void Stringf::Print(FP4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
@@ -609,93 +519,90 @@ void Stringf::Print(FP4 item) {
 #if USING_FP8 == YES_0
 void Stringf::Print(FP8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::TPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
   type_ = kST1;
   string_ = buffer;
 }
 #endif
 
 void Stringf::Hex(CH1 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<CH1*>(buffer_) = item;
   type_ = kCH1;
-  string_ = buffer_;
+  count_ = -count;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Hex(CH2 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<CH2*>(buffer_) = item;
   type_ = kCH2;
-  string_ = buffer_;
+  count_ = -count;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Hex(CH4 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<CH4*>(buffer_) = item;
   type_ = kCH4;
-  string_ = buffer_;
+  count_ = -count;
 }
 #endif
 void Stringf::Hex(SI1 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<SI1*>(buffer_) = item;
   type_ = kSI1;
-  string_ = buffer_;
+  count_ = -count;
 }
 void Stringf::Hex(UI1 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<UI1*>(buffer_) = item;
   type_ = kUI1;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 void Stringf::Hex(SI2 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<SI2*>(buffer_) = item;
   type_ = kSI2;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 void Stringf::Hex(UI2 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<UI2*>(buffer_) = item;
   type_ = kUI2;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 void Stringf::Hex(SI4 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<SI4*>(buffer_) = item;
   type_ = kSI4;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 void Stringf::Hex(UI4 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<UI4*>(buffer_) = item;
   type_ = kUI4;
-  string_ = buffer_;
 }
 
 void Stringf::Hex(SI8 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<SI8*>(buffer_) = item;
   type_ = kSI8;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 void Stringf::Hex(UI8 item, SIW count) {
-  *buffer_ = UIW(item);
+  *reinterpret_cast<UI8*>(buffer_) = item;
   type_ = kUI8;
-  string_ = buffer_;
+  count_ = -count;
 }
 
 #if USING_FP4 == YES_0
 void Stringf::Hex(FP4 item, SIW count) {
-  UI4 value = *reinterpret_cast<UI4*>(&item);
-  *buffer_ = UIW(value);
+  *reinterpret_cast<FP4*>(buffer_) = item;
   type_ = kFP4;
-  string_ = buffer_;
+  count_ = -count;
 }
 #endif
 
 #if USING_FP8 == YES_0
 void Stringf::Hex(FP8 item, SIW count) {
-  UI8 value = *reinterpret_cast<UI8*>(&item);
-  *buffer_ = UIW(value);
+  *reinterpret_cast<FP8*>(buffer_) = item;
   type_ = kFP8;
-  string_ = buffer_;
+  count_ = -count;
 }
 #endif
 
@@ -900,8 +807,8 @@ Indentf::Indentf(SIW indent_count) : indent_count(indent_count) {}
 
 }  // namespace _
 
-#if SEAM >= SEAM_SCRIPT2_FTOS
-#if SEAM == SEAM_SCRIPT2_FTOS
+#if SEAM >= SCRIPT2_FTOS
+#if SEAM == SCRIPT2_FTOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -911,32 +818,32 @@ Indentf::Indentf(SIW indent_count) : indent_count(indent_count) {}
 
 namespace _ {
 
-CH1* Print(CH1* start, CH1* stop, FP4 value) {
-  if (!start || start >= stop) return nullptr;
-  SIW size = stop - start;
-  D_PRINTF("\ncursor:%p end:%p size:%i\nExpecting:%f", start, stop, (SI4)size,
-           value);
-  SI4 count = sprintf_s(start, stop - start, "%f", value);
+CH1* SPrint(CH1* string, CH1* stop, FP4 value) {
+  if (!string || string >= stop) return nullptr;
+  SIW size = stop - string;
+  D_COUT("\nstring:" << Hexf(string) << " end:" << Hexf(stop)
+                     << " size:" << size << "\nExpecting:" << value);
+  SI4 count = sprintf_s(string, stop - string, "%f", value);
   if (count <= 0) return nullptr;
-  return start + count;
-  // return TBinary<FP4, UI4>::TPrint<CH1>(start, stop, value);
+  return string + count;
 }
 
-CH1* Print(CH1* start, CH1* stop, FP8 value) {
+#if USING_FP8 == YES_0
+CH1* SPrint(CH1* start, CH1* stop, FP8 value) {
   if (!start || start >= stop) return nullptr;
   SIW size = stop - start;
   SI4 count = sprintf_s(start, size, "%lf", value);
   if (count <= 0) return nullptr;
   return start + count;
-  // return TBinary<FP8, UI8>::TPrint<CH1>(start, stop, value);
 }
-
-const CH1* Scan(const CH1* start, FP4& value) {
+#endif
+#if USING_FP4 == YES_0
+const CH1* SScan(const CH1* start, FP4& value) {
   SI4 count = sscanf_s(start, "%f", &value);
   return TSTRFloatStop<CH1>(start);
 }
-
-const CH1* Scan(const CH1* start, FP8& value) {
+#endif
+const CH1* SScan(const CH1* start, FP8& value) {
   SI4 count = sscanf_s(start, "%lf", &value);
   return TSTRFloatStop<CH1>(start);
 }

@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_SOCKET
+#if SEAM >= SCRIPT2_RNG
 
 #include "c_lock.h"
 

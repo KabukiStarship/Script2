@@ -8,13 +8,13 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_bsq.h"
 #include "c_op.h"
 #include "c_slot.h"
 #include "c_test.h"
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -142,4 +142,4 @@ void Print (Op& log) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DICTIONARY

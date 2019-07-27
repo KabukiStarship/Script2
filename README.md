@@ -2,31 +2,29 @@
 
 [![GitHub version](https://badge.fury.io/gh/kabuki-starship%2Fscript2.svg)](https://badge.fury.io/gh/kabuki-starship%2Fscript2)
 
-The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively referred to as Script, built with the Automaton Standard Code for Information Interchange (ASCII) Data Types, the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and SCRIPT Script (Script^2 or Script2). Script2 provides:
+The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines A family of technologies, collectively referred to as Script, built with the ASCII Data Types, the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and SCRIPT Script (Script^2 or Script2). Script2 provides:
 
 * Cross-platform Modern Embedded-C++11 replacement for C++ std library with optional use of dynamic memory.
-* Nanoframework provides the core module for creating Microframeworks and Monolithic frameworks.
-* Interprocess communication, data serialization, and marshaling engine.
+* Interprocess communication, data serialization, and marshaling engine modeled after AI philosophy of the Chinese Room Thought Experiment.
+* Ultra-fast Unicode printing and scanning with the Uniprinter (Universal Printer), featuring the [Puff Algorithm](https://github.com/kabuki-starship/script2/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers) and template-friendly Stringf formatting utilities to replace printf and scanf.
 * Unit test framework with low-cost in-order Seam tree tests for Agile, Test, and Issue Driven Development featuring debug information customized for each tree node.
 * Rapid compile time using 3-file translation units and wrapper classes that hide templates and large header files.
-* Powerful Unicode engine that allows printing to different streams using some template tricks and simple familiar syntax.
-* Crabs Expression scanner uses an impressively small amount of code to scan a crazy large number of data types using only using resources for the ones you use.
-* Modeled after AI philosophy of the Chinese Room Thought Experiment and ASCII C0 Control Codes.
+* Crabs Expression scanner uses an impressively small amount of code to scan a crazy large number of data types using only using resources for the ones you use in RPC calls.
 
 ## ASCII Data Types
 
-ASCII Data Types provide:
+The Automaton Standard Code for Information Interchange (ASCII) Data Types Data Types are mimicked after ASCII C0 Control code and provide:
 
 * All of the C++ POD types.
 * Convenient and easy-to-read-and-type 3-letter all-caps abbreviations that POP out around lower_snake_case.
 * Year 2038-safe 32-bit, 64- bit and dual-32-bit with 32-year epoch and sub-second tick timestamps.
-* All data types are word-aligned so they may be rapidly copied from one system to another on homo-endian system.
 * MSB variant encoding called Varints provides fast data compression similar to UTF-8.
 * Contiguous Objects:
-  * Types can be represented as 8, 15, or 32-bit types for 255 8-bit types, 8K 16-bit types, and over 100M 32-bit types.
+  * Types can be represented as 8, 16, or 32-bit types for 255 8-bit types, 8K 16-bit types, and over 100M 32-bit types respectively.
   * UTF-8, UTF-16, and UTF-32 support.
   * Array - An array with the first word being the element count.
   * Stack - A stack of POD types stored as an array where the second word is the stack count.
+  * Matrix - A homogeneous multi-dimensional array with a Stack of dimensions.
   * Loom - A homogeneous array of UTF-8, UTF-16, or UTF-32 strings using a Stack of offsets.
   * B-Sequence - Describes the order and maximum sizes of a Byte-Sequence of ASCII Data.
   * Expression - Chinese Room Expressions capable of concurrently executing scripts in multiple languages with interrupts.
