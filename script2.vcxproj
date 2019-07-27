@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="00_core.h" />
-    <ClInclude Include="01_itos.h" />
-    <ClInclude Include="02_socket.h" />
+    <ClInclude Include="00_uniprinter.h" />
+    <ClInclude Include="02_itos.h" />
+    <ClInclude Include="01_rng.h" />
     <ClInclude Include="03_ftos.h" />
-    <ClInclude Include="04_utf.h" />
+    <ClInclude Include="04_sprinter.h" />
     <ClInclude Include="05_clock.h" />
     <ClInclude Include="06_stack.h" />
     <ClInclude Include="07_strand.h" />
@@ -65,7 +65,7 @@
     <ClInclude Include="c_room.h" />
     <ClInclude Include="c_slot.h" />
     <ClInclude Include="c_socket.h" />
-    <ClInclude Include="c_stringf.h" />
+    <ClInclude Include="c_string.h" />
     <ClInclude Include="c_test.h" />
     <ClInclude Include="c_varint.h" />
     <ClInclude Include="c_vk.h" />
@@ -94,10 +94,10 @@
     <ClInclude Include="t_socket.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
-    <ClInclude Include="t_stringf.h" />
+    <ClInclude Include="t_uniprinter.h" />
     <ClInclude Include="t_table.h" />
     <ClInclude Include="t_test.h" />
-    <ClInclude Include="t_utf.h" />
+    <ClInclude Include="t_string.h" />
     <ClInclude Include="t_wall.h" />
   </ItemGroup>
   <ItemGroup>
@@ -111,7 +111,6 @@
     <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="module_tester.cc" />
     <ClCompile Include="pch.cc" />
     <ClCompile Include="script2_autoject.cc" />
     <ClCompile Include="script2_avalue.cc" />
@@ -136,7 +135,7 @@
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_slot.cc" />
     <ClCompile Include="script2_socket.cc" />
-    <ClCompile Include="script2_stringf.cc" />
+    <ClCompile Include="script2_string.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_vk.cc" />
   </ItemGroup>

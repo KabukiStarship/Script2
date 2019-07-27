@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_utf.h"
+#include "t_uniprinter.h"
 
 #if SEAM == SEAM_SCRIPT2_UTF
 #include "module_debug.inl"
@@ -25,12 +25,9 @@ namespace script2 {
 
 template <typename Char, typename SIZ>
 static const Char* _04_UTF() {
-  D_COUT_LINEF('-');
-  D_COUT_LINEF('-');
-  D_PRINTF("\n\n\nTesting UTF<CH%c,SI%c>\n\n", '0' + sizeof(Char),
-           '0' + sizeof(SIZ));
-  D_COUT_LINEF('-');
-  D_COUT_LINEF('-');
+  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(Char) << ",SI"
+                    << sizeof(SIZ) << ">\n\n"
+                    << Linef('-'));
 
   enum {
     kCount = 512,
@@ -43,10 +40,10 @@ static const Char* _04_UTF() {
                                      ',', ' ', '3', '.', NIL};
 
   D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
-  TPrint<Char>(str_a, kCount, kTesting123);
-  D_COUT_CHARS(str_a, 64);
+  TSPrint<Char>(str_a, kCount, kTesting123);
+  D_COUT(Charsf(str_a, 64));
 
-  TUTF<Char> utf(str_a, kCount);
+  TSPrinter<Char> utf(str_a, kCount);
 
   enum { kTestStrandsCount = 4 };
 
@@ -63,16 +60,15 @@ static const Char* _04_UTF() {
   const Char* cursor;
   for (SI4 i = 0; i < kTestStrandsCount; ++i) {
     D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
-    cursor = TPrintString<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
-    D_COUT_CHARS(str_a, 64);
+    cursor = TSPrintString<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
+    D_COUT(Charsf(str_a, 64));
     Test(cursor);
     cursor = TSTREquals<Char>(str_a, kTestStrands[i][0]);
     Test(cursor);
   }
 
-  D_COUT(Headingf("Testing TUTF<Char>"));
-
-  D_PRINTF("\n\nExpecting \"%s\"", kTesting123);
+  D_COUT(Headingf("Testing TSPrinter<Char>")
+         << "\n\nExpecting \"" << kTesting123 << '\"');
   static const Char kCommaSpace[] = {',', ' ', NIL};
 
   const Char kTestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
@@ -88,10 +84,10 @@ static const Char* _04_UTF() {
   utf.Print('.');
 
   utf.Set(str_a) << kTestingSpace << 1 << kCommaSpace << 2 << ", " << 3 << '.';
-  D_COUT_CHARS(str_a, 64);
+  D_COUT(Charsf(str_a, 64));
   A_AVOW(kTesting123, str_a);
 
-  D_PRINTF("\n\nTesting TSTREquals<Char>");
+  D_COUT("\n\nTesting TSTREquals<Char>");
 
   const Char kCompareStrands[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
@@ -109,7 +105,7 @@ static const Char* _04_UTF() {
   const Char k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
   A_AVOW(9, TSTRLength<Char>(k1to9));
 
-  D_PRINTF("\n\nTesting TSTRFind<Char>");
+  D_COUT("\n\nTesting TSTRFind<Char>");
 
   const Char kOne[] = {'1', ',', NIL};
   const Char kThreePeriod[] = {'3', '.', NIL};
@@ -136,9 +132,9 @@ static const Char* _04_UTF() {
   for (SI4 i = 0; i < 12; ++i) {
     D_SOCKET_WIPE(str_a, (SIW)(kCount * sizeof(Char)));
     cursor = TPrintRight<Char>(str_a, str_a + kCount - 1, kTestingSpace, i + 1);
-    D_COUT_CHARS(str_a, 64);
     D_ASSERT_INDEX(cursor, i);
-    D_PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
+    D_COUT(Charsf(str_a, 64)
+           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<Char>(str_a));
     A_AVOW_INDEX(&kRightAligned[i][0], str_a, i);
   }
   D_COUT(Headingf("Testing TPrintCenter<Char>"));
@@ -164,9 +160,9 @@ static const Char* _04_UTF() {
   for (SI4 i = 12; i >= 0; --i) {
     D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
     cursor = TPrintCenter<Char>(str_a, str_a + kCount - 1, kNumbers, i + 1);
-    D_COUT_CHARS(str_a, 64);
     D_ASSERT_INDEX(cursor, i);
-    D_PRINTF("\n    Wrote:\"%s\":%i", str_a, TSTRLength<Char>(str_a));
+    D_COUT(Charsf(str_a, 64)
+           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<Char>(str_a));
     A_AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 
@@ -179,7 +175,7 @@ static const Char* _04_UTF() {
   str_b[kCount - 1] = 0;
   A_ASSERT(
       TPrintSocket<Char>(str_a, str_a + kCount, str_b, str_b + kCount / 4));
-  D_COUT_CHARS(str_b, kCount / 2);
+  D_COUT(Charsf(str_b, kCount / 2));
 
   return nullptr;
 }
@@ -189,81 +185,14 @@ static const CH1* _04_UTF(const CH1* args) {
 #if SEAM >= SEAM_SCRIPT2_UTF
   A_TEST_BEGIN;
 
-  D_COUT("\n\nTesting COut().Hex");
-  for (SI4 i = 0; i < 16; ++i) {
-    SI4 value = HexToByte(HexNibbleToLowerCase(i));
-    Test(i, value);
-    // D_PRINTF("\n    %i.) %i", i, value);
-    value = HexToByte(HexNibbleToUpperCase(i));
-    // D_PRINTF(" Result:%i", value);
-    Test(i, value);
-  }
-
-  for (SI4 i = 0; i < 256; ++i) {
-    UI2 c = HexByteToLowerCase(i);
-    // D_PRINTF("\n%i.) Expecting:%x        HexByteToLowerCase:%c%c", i, i,
-    // (CH1)c,
-    //       (CH1)(c >> 8));
-    SI4 value = HexToByte(c);
-    // D_PRINTF("        HexToByte:%i", value);
-    A_AVOW(i, value);
-    value = HexToByte(HexByteToUpperCase(i));
-    // D_PRINTF(" Result:%i", value);
-    Test(i, value);
-  }
-
-  D_COUT("\n\nTesting Unicode character functions.");
-
-  D_COUT("\n\nTesting CH1* Print (CH1*,CH1*,CH4);\n");
-  enum { kSTR1Count = 8 };
-  CH1 str1[kSTR1Count];
-  CH4 ch4_found;
-  CH1* str1_cursor = Print(str1, kSTR1Count, (CH4)0);
-  D_SOCKET_WIPE(str1, kSTR1Count);
-  A_ASSERT(str1_cursor);
-  const CH1* str1_result = Scan(str1, ch4_found);
-  D_ASSERT_INDEX(str1_result, (SI4)0);
-  if (ch4_found != 0) COut().Hex(str1, kSTR1Count);
-  A_AVOW_INDEX((CH4)0, ch4_found, 0);
-
-  for (CH4 ch4_expected = 1; ch4_expected < (1 << 21); ++ch4_expected) {
-    D_SOCKET_WIPE(str1, kSTR1Count);
-    str1_cursor = Print(str1, kSTR1Count, ch4_expected);
-    D_ASSERT_INDEX(str1_cursor, (UI4)ch4_expected);
-    const CH1* str1_result = Scan(str1, ch4_found);
-    D_ASSERT_INDEX(str1_result, (UI4)ch4_expected);
-    if (ch4_found != ch4_expected) COut().Hex(str1, kSTR1Count);
-    A_AVOW_INDEX(ch4_expected, ch4_found, (SI4)ch4_expected);
-  }
-
-  D_COUT("\n\nTesting CH2* Print (CH2*,CH2*,CH4);\n");
-  enum {
-    kSTR2Count = 4,
-  };
-  CH2 str2[kSTR2Count];
-  D_SOCKET_WIPE(str2, kSTR2Count * 2);
-  CH2* str2_cursor = str2;
-  str2_cursor = Print(str2, str2 + kSTR2Count - 1, (CH4)0);
-  D_COUT_HEXF(str2, reinterpret_cast<CH1*>(str2 + 3) - 1);
-  A_ASSERT(str2_cursor);
-  const CH2* str2_result = Scan(str2, ch4_found);
-  D_ASSERT_INDEX(str2_result, (SI4)0);
-  A_AVOW_INDEX((CH4)0, ch4_found, 0);
-
-  for (CH4 ch4_expected = 1; ch4_expected < (1 << 10); ++ch4_expected) {
-    D_SOCKET_WIPE(str1, kSTR1Count);
-    str2_cursor = Print(str2, str2 + 3, ch4_expected);
-    D_ASSERT_INDEX(str2_cursor, (UI4)ch4_expected);
-    const CH2* str2_result = Scan(str2, ch4_found);
-    D_ASSERT_INDEX(str2_result, (UI4)ch4_expected);
-    A_AVOW_INDEX(ch4_expected, ch4_found, (SI4)ch4_expected);
-    if (ch4_found != ch4_expected) COut().Hex(str2, kSTR1Count * 2);
-  }
-
   if (_04_UTF<CH1, SI4>()) return "Error testing UTF-8.";
-  if (_04_UTF<CH2, SI4>()) return "Error testing UTF-16.";
-  if (_04_UTF<CH4, SI4>()) return "Error testing UTF-32.";
 
+#if USING_UTF16 == YES_0
+  if (_04_UTF<CH2, SI4>()) return "Error testing UTF-16.";
+#endif
+#if USING_UTF32 == YES_0
+  if (_04_UTF<CH4, SI4>()) return "Error testing UTF-32.";
+#endif
 #endif
   return nullptr;
 }

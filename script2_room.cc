@@ -8,14 +8,14 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_ROOM
+#if SEAM >= SCRIPT2_ROOM
 #include "c_bsq.h"
 #include "c_door.h"
 #include "c_room.h"
 #include "c_stack.h"
 #include "t_strand.h"
 
-#if SEAM == SEAM_SCRIPT2_ROOM
+#if SEAM == SCRIPT2_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -103,29 +103,13 @@ const Op* Room::Init(Crabs* crabs) {
   return nullptr;
 }
 
-void Room::ShutDown() {
-#if SCRIPT2_DEBUG
-    D_PRINTF ("\nShutting down...";
-#endif  //< SCRIPT2_DEBUG
-}
+void Room::ShutDown() { D_COUT("\nShutting down..."); }
 
-void Room::Sleep() {
-#if SCRIPT2_DEBUG
-    D_PRINTF ("\nGoing to sleep...";
-#endif  //< SCRIPT2_DEBUG
-}
+void Room::Sleep() { D_COUT("\nGoing to sleep..."); }
 
-void Room::Wake() {
-#if SCRIPT2_DEBUG
-    D_PRINTF ("\nWaking up...";
-#endif  //< SCRIPT2_DEBUG
-}
+void Room::Wake() { D_COUT("\nWaking up..."); }
 
-void Room::Crash() {
-#if SCRIPT2_DEBUG
-    D_PRINTF ("\nRoom crash!";
-#endif  //< SCRIPT2_DEBUG
-}
+void Room::Crash() { D_COUT("\nRoom crash!"); }
 
 const Op* Room::Loop() { return 0; }
 
@@ -133,10 +117,12 @@ BOL Room::IsOn() { return true; }
 
 SI4 Room::Main(const CH1** args, SI4 args_count) {
   const Op* result = nullptr;
-  D_PRINTF("\nInitializing Chinese Room with %i args:", args_count)
+  D_COUT("\nInitializing Chinese Room with " << args_count << " args:");
+#if D_THIS
   for (SI4 i = 0; i < args_count; ++i) {
-    D_PRINTF("\n%i:\"%s\"", i, args[i])
+    D_COUT('\n' << i << ":\"" << args[i] << '\"');
   }
+#endif
   D_COUT(kLF)
   while (IsOn()) {
     try {
@@ -148,7 +134,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
       } while (!result);
       ShutDown();
     } catch (...) {
-      D_PRINTF("\nRoom crashed!")
+      D_COUT("\nRoom crashed!")
       return 3;
     }
   }

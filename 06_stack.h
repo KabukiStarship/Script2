@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "t_stack.h"
 
-#if SEAM == SEAM_SCRIPT2_STACK
+#if SEAM == SCRIPT2_STACK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,11 +24,11 @@ namespace script2 {
 
 template <typename T, typename SIZ>
 void TestStack(const CH1* args) {
-  D_PRINTF("Testing AStack<SI%i, SI%i>...\n", sizeof(T), sizeof(SIZ));
+  D_COUT("Testing AStack<SI" << sizeof(T) << ",SI" << sizeof(SIZ) << ">...\n");
 
   AStack<T, SIZ, 8> stack;
 
-  D_COUT(Linef("\n+---\n| TSocket: size:")
+  D_COUT(Linef("\n+---\n| TBuf: size:")
          << stack.Auto().Buffer().Size() << " expected_size_bytes:"
          << stack.Auto().Buffer().Size() * sizeof(T) + sizeof(TStack<SIZ>)
          << " size_bytes:" << stack.Auto().Buffer().SizeBytes()
@@ -36,11 +36,11 @@ void TestStack(const CH1* args) {
   D_COUT_OBJ(stack);
 
   enum { kTestCount = 32, kOffset = '0' };
-  D_PRINTF("\n\nPushing %i items on to the Stack...\n", kTestCount);
+  D_COUT("\n\nPushing " << kTestCount << " items on to the Stack...\n");
   for (T i = kOffset; i <= kTestCount + kOffset; ++i) {
-    D_COUT("\n| Before calling push:" << Charsf(stack.Auto().Begin(),
-                                                stack.Auto().SizeBytes()));
-    D_COUT(Linef("\n\n+---\n| ") << i << ".) ");
+    D_COUT("\n| Before calling push:"
+           << Charsf(stack.Auto().Begin(), stack.Auto().SizeBytes())
+           << Linef("\n\n+---\n| ") << i << ".) ");
     stack.Push(i);
     D_COUT("\n| Result:");
     D_COUT_OBJ(stack);
@@ -58,7 +58,7 @@ void TestStack(const CH1* args) {
 }
 
 static const CH1* _07_Stack(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_STACK
+#if SEAM >= SCRIPT2_STACK
   A_TEST_BEGIN;
 
   // TestStack<SI4, SI8>(args); is illegal

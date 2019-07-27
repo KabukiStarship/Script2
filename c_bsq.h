@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
@@ -168,4 +168,4 @@ inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
 #endif  //< USING_UTF8 == YES_0
 
 #endif  //< SCRIPT2_BSQ_C
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

@@ -15,9 +15,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "c_rng.h"
 #include "t_puff.h"
-#include "t_stringf.h"
+#include "t_string.h"
 
-#if SEAM == SEAM_SCRIPT2_ITOS
+#if SEAM == SCRIPT2_ITOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -27,8 +27,8 @@ using namespace _;
 
 namespace script2 {
 
-inline const CH1* _01_ItoS_StoI(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_ITOS
+inline const CH1* _03_ItoS(const CH1* args) {
+#if SEAM >= SCRIPT2_ITOS
   A_TEST_BEGIN;
   D_COUT(
       "\n\nDirections: To use this tester, you'll want to run the script on "
@@ -126,7 +126,7 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
   D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
 
   SIN count = TSTRLength<UI8>(problem_child);
-  D_PRINTF("\n\nTesting %i problem children...\n\n", count);
+  D_COUT("\n\nTesting %i problem children...\n\n" << count);
 
   for (SIN i = 0; i < count; ++i) {
     expected_ui8 = problem_child[i];
@@ -138,11 +138,11 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
         "|3210987654321098765432109876543210987654321098765432109876543210|\n"
         "    "
         "|*   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   |\n"
-        //                                                     10000001010100
         "    |\0";
-    D_COUT_6(kPuffDebugHeader, Binaryf(expected_ui8), '|', '\n', i, ".) ");
+    D_COUT(kPuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
+                            << i << ".) ");
     SIN expected_length = TSTRLength<CH1>(expecting);
-    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+    result = TSPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -152,13 +152,13 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
   }
 
   count = TSTRLength<UI8>(edge_condition);
-  D_PRINTF("\n\nTesting %i edge conditions...\n\n", count);
+  D_COUT("\n\nTesting " << count << " edge conditions...\n\n");
   for (SIW i = 0; i < count; ++i) {
-    D_COUT_LINEF('-');
+    D_COUT(Linef('-'));
     expected_ui8 = edge_condition[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    D_PRINTF("\n\n%i.) ", i + 1);
-    result = TPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+    D_COUT("\n\n" << i + 1 << ".) ");
+    result = TSPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -167,14 +167,14 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
     D_AVOW(expecting, text);
   }
   /* This is produc
-  #if DEBUG_THIS
+  #if D_THIS
     Printf("\n\nTesting %i random numbers of each length...\n\n", count);
     count = 200;
   #else
     count = 1000;
   #endif
     SIN count_digits = STRLength(count);
-    D_PRINTF("\n\ncount_digits:%i", count_digits);
+    D_COUT("\n\ncount_digits:" << count_digits);
 
     // We don't want to do 1000 tests of length 1, so we're going to
 
@@ -183,7 +183,7 @@ inline const CH1* _01_ItoS_StoI(const CH1* args) {
         if (j >= Pow10_UI8()[i + i] - 1 - Pow10_UI8()[i]) break;
         UI8 lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] -
   1; expected_ui8 = Random(lower_bounds, upper_bounds); sprintf_s(expecting, 24,
-  "%llu", expected_ui8); D_PRINTF("\n\n", i + 1); result = TPrintUnsigned<UI8,
+  "%llu", expected_ui8); D_COUT("\n\n" << i + 1); result = TSPrintUnsigned<UI8,
   CH1>(text, text + kSize - 1, expected_ui8); if (!result) { D_PAUSE("An error
   occurred :-("); break;
         }

@@ -18,7 +18,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 using namespace std;
 
-#if SEAM == SEAM_SCRIPT2_FTOS
+#if SEAM == SCRIPT2_FTOS
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -28,10 +28,10 @@ using namespace _;
 
 namespace script2 {
 const CH1* _04_FtoS(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_FTOS
+#if SEAM >= SCRIPT2_FTOS
   A_TEST_BEGIN;
 
-#if SEAM == SEAM_SCRIPT2_FTOS
+#if SEAM == SCRIPT2_FTOS
   enum { kTestCount = 1 << 20 };
 #else
   enum { kTestCount = 1 << 15 };
@@ -43,7 +43,7 @@ const CH1* _04_FtoS(const CH1* args) {
   UI8 value;
   FP8 dbl_expected, dbl_found;
 
-  D_PRINTF("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
+  D_COUT("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {
@@ -56,7 +56,7 @@ const CH1* _04_FtoS(const CH1* args) {
   }
 
   D_COUT(
-      "\n\nTesting const Char* TScan<Char> (const Char*, const Char*, FP4&) "
+      "\n\nTesting const Char* TSScan<Char> (const Char*, const Char*, FP4&) "
       "functions...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
@@ -65,11 +65,11 @@ const CH1* _04_FtoS(const CH1* args) {
       dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
     sprintf_s(socket, kSize, "%lf", dbl_expected);
-    A_ASSERT(Scan(socket, dbl_found));
+    A_ASSERT(SScan(socket, dbl_found));
     A_AVOW(dbl_expected, dbl_found);
   }
 
-  D_PRINTF("\n\nTesting Char* TPrint<Char> (Char*, Char*, Float)...\n");
+  D_COUT("\n\nTesting Char* TSPrint<Char> (Char*, Char*, Float)...\n");
 
   for (SI4 i = 0; i < kTestCount; ++i) {
     do {

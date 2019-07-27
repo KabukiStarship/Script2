@@ -23,11 +23,11 @@ DTW TTypeMap() {
 }
 }  // namespace _
 
-#if SEAM >= SEAM_SCRIPT2_UTF
+#if SEAM >= SCRIPT2_UNIPRINTER
 #include "t_socket.h"
-#include "t_utf.h"
+#include "t_string.h"
 
-#if SEAM == SEAM_SCRIPT2_UTF
+#if SEAM == SCRIPT2_UNIPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -59,44 +59,44 @@ Char* PrintTypePod(Char* cursor, Char* stop, SIN type, const void* value) {
   if (!value) return printer << "Nil";
   switch (type & 0x1f) {
     case kNIL:
-      return TPrint<Char>(cursor, stop, "Error");
+      return TSPrint<Char>(cursor, stop, "Error");
     case kSI1:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI1*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SI1*>(value));
     case kUI1:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI1*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const UI1*>(value));
     case kSI2:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI2*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SI2*>(value));
     case kUI2:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI2*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const UI2*>(value));
     case kFP2:
-      return TPrint<Char>(cursor, stop, "not_implemented");
+      return TSPrint<Char>(cursor, stop, "not_implemented");
     case kBOL:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const BOL*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const BOL*>(value));
     case kSI4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
     case kUI4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const UI4*>(value));
     case kFP4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FP4*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const FP4*>(value));
     case kTM4:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SIN*>(value));
     case kTM8:
     case kTM8:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
     case kSI8:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const SI8*>(value));
     case kUI8:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const UI8*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const UI8*>(value));
     case kFP8:
-      return TPrint<Char>(cursor, stop, *reinterpret_cast<const FP8*>(value));
+      return TSPrint<Char>(cursor, stop, *reinterpret_cast<const FP8*>(value));
       // case SV8:
-      //  return TPrint<Char> (cursor, stop, *reinterpret_cast<const
+      //  return TSPrint<Char> (cursor, stop, *reinterpret_cast<const
       //  SI8*>(value));
       // case UV8:
-      //  return TPrint<Char> (cursor, stop, *reinterpret_cast<const
+      //  return TSPrint<Char> (cursor, stop, *reinterpret_cast<const
       //  UI8*>(value));
     case kFPH:
-      return TPrint<Char>(cursor, stop, "not_implemented");
+      return TSPrint<Char>(cursor, stop, "not_implemented");
   }
   return nullptr;
 }
@@ -109,23 +109,24 @@ Char* Print(Char* cursor, Char* stop, SIN type, const void* value) {
   if (type <= kFPH) {
     cursor = PrintTypePod<Char>(cursor, stop, type, value);
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, ':');
+    cursor = TSPrint<Char>(cursor, stop, ':');
     if (!cursor) return nullptr;
-    return TPrint<Char>(cursor, stop, STRType(type));
+    return TSPrint<Char>(cursor, stop, STRType(type));
   }
 
-  if (!TypeIsSupported(type)) return TPrint<Char>(cursor, stop, "illegal_type");
+  if (!TypeIsSupported(type)) return TSPrint<Char>(cursor, stop,
+"illegal_type");
 
   if (TypeIsStrand(type)) {
-    cursor = TPrint<Char>(cursor, stop, '\"');
+    cursor = TSPrint<Char>(cursor, stop, '\"');
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, *reinterpret_cast<const CH1*>(value));
+    cursor = TSPrint<Char>(cursor, stop, *reinterpret_cast<const CH1*>(value));
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, reinterpret_cast<const CH1*>(value));
+    cursor = TSPrint<Char>(cursor, stop, reinterpret_cast<const CH1*>(value));
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, "\":");
+    cursor = TSPrint<Char>(cursor, stop, "\":");
     if (!cursor) return nullptr;
-    cursor = TPrint<Char>(cursor, stop, STRType(type));
+    cursor = TSPrint<Char>(cursor, stop, STRType(type));
     return cursor;
   }
 

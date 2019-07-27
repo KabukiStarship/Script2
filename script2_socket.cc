@@ -8,11 +8,11 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_SOCKET
+#if SEAM >= SCRIPT2_SOCKET
 
 #include "t_socket.h"
 
-#if SEAM == SEAM_SCRIPT2_SOCKET
+#if SEAM == SCRIPT2_RNG
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -87,7 +87,7 @@ CH1* SocketFill(void* begin, SIW count, CH1 fill_char) {
     return start;
   }
 
-  D_PRINTF("\ncursor:%p\ncount:%i", start, SIN(count));
+  D_COUT("\ncursor:" << Hexf(start) << "\ncount:" << count);
 
   CH1* stop = start + count;
 
@@ -148,8 +148,8 @@ CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
     return cursor;
   }
 
-  D_PRINTF("\nCopying %i bytes from %p and writing to %p",
-         (SI4)(stop_ptr - start_ptr), cursor, stop_ptr);
+  D_COUT("\nCopying " << stop_ptr - start_ptr << " bytes from " << Hexf(cursor)
+                      << " and writing to " << Hexf (stop_ptr));
 
   // Algorithm:
   // 1.) Save return value.
@@ -159,13 +159,13 @@ CH1* SocketCopy(void* destination, SIW destination_size, const void* source,
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
   CH1 *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
-  D_PRINTF("\n  AlignUpPointer<> (begin):0x%p", aligned_pointer);
+  D_COUT("\n  AlignUpPointer<> (begin):0x" << Hexf (aligned_pointer));
   while (cursor < aligned_pointer) *cursor++ = *start_ptr++;
   aligned_pointer = TAlignDown<CH1*>(end_ptr);
-  D_PRINTF("\n  AlignDownPointer<> (begin):0x%p", aligned_pointer);
+  D_COUT("\n  AlignDownPointer<> (begin):0x" << aligned_pointer;
   while (end_ptr > aligned_pointer) *end_ptr-- = *stop_ptr--;
-  D_PRINTF("\n  Down-stage pointers are now begin:0x%p end:0x%p", cursor,
-         end_ptr);
+  D_COUT("\n  Down-stage pointers are now begin:0x" << Hexf(cursor) << " end:0x"
+  << Hexf(end_ptr));
 
   UIW *words = reinterpret_cast<UIW*>(cursor),
       *words_end = reinterpret_cast<UIW*>(end_ptr);
@@ -213,9 +213,9 @@ BOL SocketCompare(const void* begin_a, void* end_a, const void* begin_b,
                        reinterpret_cast<const CH1*>(begin_b) + size_b);
 }
 
-Socket::Socket() : begin(nullptr), end(nullptr) {}
+BufPtrs::BufPtrs() : begin(nullptr), end(nullptr) {}
 
-Socket::Socket(void* begin, void* end)
+BufPtrs::BufPtrs(void* begin, void* end)
     : begin(reinterpret_cast<CH1*>(begin)), end(reinterpret_cast<CH1*>(end)) {
   if (!begin || !end || begin > end) {
     begin = end = 0;
@@ -223,7 +223,7 @@ Socket::Socket(void* begin, void* end)
   }
 }
 
-Socket::Socket(void* begin, SIW size)
+BufPtrs::BufPtrs(void* begin, SIW size)
     : begin(reinterpret_cast<CH1*>(begin)),
       end(reinterpret_cast<CH1*>(begin) + size) {
   if (!begin || size < 0) {
@@ -232,13 +232,13 @@ Socket::Socket(void* begin, SIW size)
   }
 }
 
-Socket::Socket(const Socket& other) : begin(other.begin), end(other.end) {
+BufPtrs::BufPtrs(const BufPtrs& other) : begin(other.begin), end(other.end) {
   // Nothing to do here! (:-)-+=<
 }
 
-SIW Socket::Size() { return end - begin; }
+SIW BufPtrs::Size() { return end - begin; }
 
-Socket& Socket::operator=(const Socket& other) {
+BufPtrs& BufPtrs::operator=(const BufPtrs& other) {
   begin = other.begin;
   end = other.end;
   return *this;

@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_EXPR
+#if SEAM == SCRIPT2_EXPR
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _15_Expr(const CH1* args) {
-#if SEAM == SEAM_SCRIPT2_EXPR
+#if SEAM == SCRIPT2_EXPR
   A_TEST_BEGIN;
 
   enum {
@@ -31,8 +31,8 @@ static const CH1* _15_Expr(const CH1* args) {
     kStackHeight = 8,
   };
   UIW buffer[kBufferWords], unpacked_expr[kBufferWords];
-  D_PRINTF("\n|  - Running OperationTests in address ranges: [0x%p:0x%p]\n",
-           &buffer[0], &buffer[kBufferWords - 1]);
+  D_COUT("\n|  - Running OperationTests in address ranges: [0x"
+         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[kBufferWords - 1]));
 
   This a;
 
@@ -40,7 +40,7 @@ static const CH1* _15_Expr(const CH1* args) {
                                     unpacked_expr, kBufferSize);
   ExpressionPrint(expr);
 
-  std::cout << "\n|    Testing Root (@see \"a.h\")...\n";
+  D_COUT("\n|    Testing Root (@see \"a.h\")...\n");
 
   void* args[4];
   uint8_t io_number_ = 98;  //< ASCII:'b'

@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_CADDRESS
 #define SCRIPT2_CADDRESS 1
 
@@ -84,4 +84,4 @@ inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d,
 
 }  // namespace _
 #endif  //< SCRIPT2_CADDRESS
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

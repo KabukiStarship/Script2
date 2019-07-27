@@ -8,11 +8,11 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_op.h"
 #include "c_operand.h"
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -89,12 +89,12 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
   SI4 index = *address++;
   const Op* op = root->Star(index, nullptr);
   CH1 socket[1024];
-  D_PRINTF("%s", op->name)
+  D_COUT(op->name)
   index = *address++;
   while (index) {
     op = root->Star(index, nullptr);
     A_ASSERT(op);
-    D_PRINTF(".%s", op->name)
+    D_COUT('.' << op->name)
     index = *address++;
   }
   slot.Write(socket);
@@ -103,4 +103,4 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
 #endif
 }  // namespace _
 
-#endif  //> #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DICTIONARY

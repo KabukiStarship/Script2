@@ -9,11 +9,11 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DIC
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_SEAM_WALL
 #define SCRIPT2_WALL
 
-#if SEAM == SEAM_SCRIPT2_ROOM
+#if SEAM == SCRIPT2_ROOM
 #include "module_release.inl"
 #else
 #include "module_release.inl"

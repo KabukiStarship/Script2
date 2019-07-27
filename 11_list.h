@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_LIST
+#if SEAM == SCRIPT2_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -20,25 +20,25 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _11_List(const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_LIST
+#if SEAM >= SCRIPT2_LIST
   A_TEST_BEGIN;
 
   AList<> list(36, 960);
 
-  D_PRINTF("\nPushing items on to the List stack...\n");
+  D_COUT ("\nPushing items on to the List stack...\n");
 
   const SI4 test_ints[] = {'1', '2', '3', '4'};
 
   const SI4 list_test_count = 12;
   for (SI4 i = 0; i < 4;) {
-    D_PRINTF("\ni%i:", i);
+    D_COUT ("\ni" << i << ':');
     list.Push(kSI4, &test_ints[i++]);
     COUT << kLF << list << kLF << "\n\n"
          << Socket(list.This(), list.This()->size);
   }
   const FP4 test_floats[] = {9.0, 10.0, 11.0, 12.0};
   for (SI4 i = 0; i < 4;) {
-    D_PRINTF("\ni%i:", i);
+    D_COUT ("\ni" << i << ':');
     list.Push(kFP4, &test_floats[i++]);
     D_COUT(kLF);
     D_COUT(list);
@@ -49,7 +49,7 @@ static const CH1* _11_List(const CH1* args) {
 
   const CH1* test_strings[] = {"Test", " 1, ", " 2, ", " 3"};
   for (SI4 i = 0; i < 4;) {
-    D_PRINTF("\ni%i:", i);
+    D_COUT("\ni" << i << ':');
     list.Push(kSTR, test_strings[i++]);
     D_COUT(kLF);
     D_COUT(list);

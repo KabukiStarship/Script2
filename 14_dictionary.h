@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -21,7 +21,7 @@ using namespace _;
 namespace script2 {
 static const CH1* _14_Dictionary(CH1* seam_log, CH1* seam_end,
                                  const CH1* args) {
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
   A_TEST_BEGIN;
 
   UIW socket[kBufferSizeWords];

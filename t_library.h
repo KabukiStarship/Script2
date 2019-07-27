@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_LIBRARY_T
 #define INCLUDED_SCRIPT2_LIBRARY_T
 #include "c_onfig.h"
@@ -193,4 +193,4 @@ LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _
 #endif  //< INCLUDED_SCRIPT2_LIBRARY_T
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

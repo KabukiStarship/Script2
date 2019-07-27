@@ -15,12 +15,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_COUT_H
 #define SCRIPT2_COUT_H 1
 
-#include "c_stringf.h"
+#include "c_string.h"
 
 namespace _ {
-
-/* Prints a formatted string to the console. */
-LIB_MEMBER void Printf(const CH1* format, ...);
 
 /* Utility class for printing to the stdout. */
 class LIB_MEMBER COut {
@@ -180,6 +177,9 @@ class LIB_MEMBER COut {
 
 /* Wrapper function for COut so you can use it more than once in a lexical
 scope without delcaring COut cout. */
+inline COut CPrint() { return COut(); }
+
+/* Prints the given item to the COut. */
 LIB_INLINE COut CPrint(CH1 item);
 LIB_INLINE COut CPrint(const CH1* item);
 #if USING_UTF16 == YES_0
@@ -234,21 +234,13 @@ LIB_INLINE _::COut& operator<<(_::COut& o, FP4 item);
 LIB_INLINE _::COut& operator<<(_::COut& o, FP8 item);
 #endif
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Hexf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Binaryf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Centerf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Rightf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Linef item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Headingf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Indentf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::Charsf item);
-
 LIB_INLINE _::COut& operator<<(_::COut& o, _::COut item);
 #endif
 #endif

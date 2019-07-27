@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_bsq.h"
 #include "c_test.h"
 
@@ -29,7 +29,7 @@ SIN BsqParamNumber(const SIN* params, SIN param_number) {
         param_number += 2;
         break;
       } else if (value > 7) {  // Gratuitous explanation points!
-        // D_PRINTF ("\nError";
+        // D_COUT ("\nError");
         return kNIL;
       } else {
         param_number += params[i] + 1;

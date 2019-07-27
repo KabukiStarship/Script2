@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_ERROR
 #define SCRIPT2_ERROR
 
@@ -55,4 +55,4 @@ LIB_MEMBER const CH1* ErrorStrand(Error error);
 
 }  // namespace _
 #endif  //< SCRIPT2_ERROR
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

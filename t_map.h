@@ -9,14 +9,14 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_LIST
+#if SEAM >= SCRIPT2_LIST
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
 
 #include "c_avalue.h"
 #include "c_socket.h"
 
-#if SEAM == SEAM_SCRIPT2_LIST
+#if SEAM == SCRIPT2_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -70,13 +70,13 @@ for a key, there might or might not be a hash table.
 
 How to calculate size:
 The size of any size map can be calculated as follows:
-size = ; * (2*sizeof (Index) + sizeof (SIZ)) + collissionSize +
+size = ; * (2*sizeof (UIY) + sizeof (SIZ)) + collissionSize +
 
 # Cache Page Optimizations
 
 In order to optimize the cache pages, we need to group hot data together.
-ChineseRoom Objs work through calling by Index, or by key by using the
-function '\"' (i.e. "foo" is Index 44).
+ChineseRoom Objs work through calling by UIY, or by key by using the
+function '\"' (i.e. "foo" is UIY 44).
 
 # Use Case Scenario
 
@@ -125,14 +125,14 @@ struct TMap {
       count_max;  //< Max count of items that can fit in the socket.
 };
 
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
 constexpr SI4 MapOverheadPerIndex() {
-  return sizeof(2 * sizeof(Index) + sizeof(SIZ) + sizeof(SIZ) + 3);
+  return sizeof(2 * sizeof(UIY) + sizeof(SIZ) + sizeof(SIZ) + 3);
 };
 
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-constexpr SIZ MapSizeRequired(Index count) {
-  return count * sizeof(2(sizeof(Index) + sizeof(SIZ)) + 3);
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+constexpr SIZ MapSizeRequired(UIY count) {
+  return count * sizeof(2(sizeof(UIY) + sizeof(SIZ)) + 3);
 };
 
 enum {
@@ -150,16 +150,16 @@ enum {
     @warning The reservedNumOperands must be aligned to a 32-bit value, and it
              will get rounded up to the next higher multiple of 4.
 */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-TMap<SIZ, Index, I>* MapInit(UIW* socket, SIZ size, I count_max) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+TMap<SIZ, UIY, I>* MapInit(UIW* socket, SIZ size, I count_max) {
   A_ASSERT(socket);
 
   if (table_size >= size) return nullptr;
-  SIZ kSizeMin = sizeof(TMap<SIZ, Index, I>) +
-                 count_max * (MapOverheadPerIndex<SIZ, Index, I>() + 2);
+  SIZ kSizeMin = sizeof(TMap<SIZ, UIY, I>) +
+                 count_max * (MapOverheadPerIndex<SIZ, UIY, I>() + 2);
   if (table_size < kSizeMin) return nullptr;
 
-  Map<SIZ, Index, I>* map = reinterpret_cast<TMap*>(socket);
+  Map<SIZ, UIY, I>* map = reinterpret_cast<TMap*>(socket);
   map->size = table_size;
   map->table_size = table_size;
   map->size_pile = 1;
@@ -167,36 +167,36 @@ TMap<SIZ, Index, I>* MapInit(UIW* socket, SIZ size, I count_max) {
   map->count = 0;
   return map;
 }
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
 inline SIZ MapSizeBoundsLower() {
   return 64;
 }
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
 inline SIZ MapSizeBoundsUpper() {
   SIZ bounds_upper = 0;
   bounds_upper = ~bounds_upper;
   return bounds_upper - 7;
 }
 
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-inline Index MapCountBoundsLower() {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+inline UIY MapCountBoundsLower() {
   return 8 / sizeof(SIZ);
 }
 
 /* Creates a map from dynamic memory. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
 UIW* MapNew(SIZ size = 0, I count_max = 0) {
   size = AlignDown<SI8, SIZ>(size);
-  count_max = AlignDown<SI8, Index>(count_max);
-  SIZ size_min = MapSizeBoundsLower<SIZ, Index, I>();
-  Index count_min = MapCountBoundsLower<SIZ, Index, I>();
+  count_max = AlignDown<SI8, UIY>(count_max);
+  SIZ size_min = MapSizeBoundsLower<SIZ, UIY, I>();
+  UIY count_min = MapCountBoundsLower<SIZ, UIY, I>();
   if (size < size_min || count_max < count_min) {
     size = size_min;
     count_max = size_min;
   }
 
   UIW* socket = new UIW[size >> kWordBitCount];
-  TMap<SIZ, Index, I>* map = reinterpret_cast<TMap<SIZ, Index, I>*>(socket);
+  TMap<SIZ, UIY, I>* map = reinterpret_cast<TMap<SIZ, UIY, I>*>(socket);
   map->size = size;
   map->table_size = 0;
   map->size_pile = 0;
@@ -205,289 +205,31 @@ UIW* MapNew(SIZ size = 0, I count_max = 0) {
   return socket;
 }
 
-template <typename Index>
-Index MapCountUpperBounds() {
+template <typename UIY>
+UIY MapCountUpperBounds() {
   enum {
-    kCountUpperBounds = sizeof(Index) == 1
+    kCountUpperBounds = sizeof(UIY) == 1
                             ? 120
-                            : sizeof(Index) == 2
+                            : sizeof(UIY) == 2
                                   ? 8 * 1024
-                                  : sizeof(Index) == 4 ? 512 * 1024 * 1024 : 0
+                                  : sizeof(UIY) == 4 ? 512 * 1024 * 1024 : 0
   };
   return CountUpperBounds;
 }
 
 /* Insets the given key-type-value tuple.
  */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-Index MapInsert(TMap<SIZ, Index, I>* map, void* value, SI4 type, Index index) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+UIY MapInsert(TMap<SIZ, UIY, I>* map, void* value, SI4 type, UIY index) {
   A_ASSERT(map);
   A_ASSERT(value);
-
-  D_COUT_LINEF(id, 80);
-
-  Index count = map->count, count = map->stack->count, temp;
-
-  SIZ table_size = map->table_size;
-
-  if (count >= count) return ~0;
-  //< We're out of buffered indexes.
-
-  CH1* types = reinterpret_cast<CH1*>(map) + sizeof(TMap<SIZ, Index, I>);
-  SIZ* data_offsets = reinterpret_cast<SIZ*>(types + count * (sizeof(SIZ)));
-  SIZ *hashes =
-          reinterpret_cast<SIZ*>(types + count * (sizeof(SIZ) + sizeof(SIZ))),
-      *hash_ptr;
-  Index *indexes = reinterpret_cast<Index*>(
-            types + count * (sizeof(SIZ) + 2 * sizeof(Index))),
-        *unsorted_indexes = indexes + count,
-        *collission_list = unsorted_indexes + count;
-  CH1 *keys = reinterpret_cast<CH1*>(map) + table_size - 1, *destination;
-
-  // Calculate space left.
-  SIZ value = table_size - count * MapOverheadPerIndex<SIZ, Index, I>(),
-      key_length = static_cast<UI2>(strlen(id)), size_pile;
-
-  D_COUT_LINEF('-');
-  D_PRINTF(
-      "\nAdding Key %s\n%20s: 0x%p\n%20s: %p\n%20s: 0x%p"
-      "%20s: %p\n%20s: %u\n",
-      id, "hashes", hashes, "key_offsets", key_offsets, "keys", keys, "indexes",
-      indexes, "value", value);
-
-  SIZ temp_id = HashPrime16(id), current_mapping;
-
-  if (key_length > value) {
-    D_PRINTF("\nBuffer overflow!");
-    return ~((Index)0);
-  }
-
-  if (count == 0) {
-    map->count = 1;
-    *hashes = temp_id;
-    *key_offsets = static_cast<UI2>(key_length);
-    *indexes = ~0;
-    *unsorted_indexes = 0;
-    destination = keys - key_length;
-
-    SlotWrite(destination, id);
-    D_PRINTF("\nInserted key %s at GetAddress 0x%p", id, destination);
-    MapPrint(map);
-    return 0;
-  }
-
-  // Calculate left over socket size by looking up last CH1.
-
-  if (key_length >= value) {
-    D_PRINTF("\nNot enough room in buffer!");
-    return 0;  //< There isn't enough room left in the socket.
-  }
-
-  D_PRINTF("\nFinding insert location...");
-
-  Index low = 0, mid, high = count, index;
-
-  Index* temp_ptr;
-
-  while (low <= high) {
-    mid = (low + high) >> 1;  //< Shift >> 1 to / 2
-
-    current_mapping = hashes[mid];
-    D_PRINTF("\nhigh: %i mid: %i low %i hash: %x", high, mid, low,
-             current_mapping);
-
-    if (current_mapping > temp_id) {
-      high = mid - 1;
-    } else if (current_mapping < temp_id) {
-      low = mid + 1;
-    } else {
-      D_PRINTF(" duplicate hash detected, ");
-
-      // Check for other collisions.
-
-      index = indexes[mid];  //< Index in the collision table.
-
-      D_PRINTF("index:%i", (SI4)index);
-
-      if (index < ~0) {  //< There are other collisions.
-        D_PRINTF("with collisions, ");
-        // There was a collision so check the table.
-
-        // The collisionsList is a sequence of indexes terminated
-        // by an invalid index. collissionsList[0] is
-        // an invalid index, so the collisionsList is searched from
-        // lower address up.
-        temp = indexes[mid];
-        temp_ptr = collission_list + temp;
-        index = *temp_ptr;  //< Load the index in the collision table.
-        while (index < MapCountUpperBounds<Index>()) {
-          D_PRINTF("\ncomparing to \"%s\"", keys - key_offsets[index]);
-          if (strcmp(id, keys - key_offsets[index]) == 0) {
-            D_PRINTF(
-                "but table already contains key at "
-                "offset: %u.\n",
-                index);
-            return index;
-          }
-          ++temp_ptr;
-          index = *temp_ptr;
-        }
-
-        // Its a new collision!
-        D_PRINTF(" new collision detected.");
-
-        // Copy the key
-        value = key_offsets[count - 1] + key_length + 1;
-        SlotWrite(keys - value, id);
-        key_offsets[count] = value;
-
-        // Update the collision table.
-        size_pile = map->size_pile;
-        // Shift the collisions table up one element and insert
-        // the unsorted collision index.
-        // Then move to the top of the collisions list.
-        collission_list += size_pile;
-        // and iterate down to the insert spot
-        while (collission_list > temp_ptr) {
-          *collission_list = *(collission_list - 1);
-          --collission_list;
-        }
-        *temp_ptr = count;
-
-        map->size_pile = size_pile + 1;
-        D_PRINTF("\ncollision index: %u", temp);
-        // Store the collision index.
-        indexes[count] = temp;  //< Store the collision index
-        map->count = count + 1;
-        hashes[count] = ~0;  //< TMap the last hash to 0xFFFF
-
-        // Move collisions pointer to the unsorted_indexes.
-        indexes += count;
-
-        //< Add the newest CH1 to the stop.
-        indexes[count] = count;
-
-        MapPrint(map);
-        D_COUT("\nDone inserting.");
-        return count;
-      }
-
-      // But we still don't know if the CH1 is a new collision.
-
-      D_COUT("\nChecking if it's a collision... ");
-
-      if (strcmp(id, keys - key_offsets[index]) != 0) {
-        // It's a new collision!
-        D_COUT("It's a new collision!");
-
-        if (value < 3) {
-          D_COUT("Buffer overflow!");
-          return ~0;
-        }
-
-        // Get offset to write the key too.
-        value = key_offsets[count - 1] + key_length + 1;
-
-        SI4 collision_index = unsorted_indexes[mid];
-        D_PRINTF("\n\ncollision_index: %u", collision_index);
-
-        SlotWrite(keys - value, id);
-        D_PRINTF(
-            "\nInserting value: %u into index:%u "
-            "count:%u with other collision_index: %u",
-            value, index, count, collision_index);
-        key_offsets[count] = value;
-
-        size_pile = map->size_pile;
-        indexes[mid] = static_cast<SI4>(size_pile);
-        indexes[count] = static_cast<SI4>(size_pile);
-
-        // Insert the collision into the collision table.
-        temp_ptr = &collission_list[size_pile];
-        // Move collisions pointer to the unsorted_indexes.
-        indexes += count;
-        *temp_ptr = collision_index;
-        ++temp_ptr;
-        *temp_ptr = count;
-        ++temp_ptr;
-        *temp_ptr = ~0;
-        map->size_pile = size_pile + 3;
-        //< Added one term-SI4 and two indexes.
-
-        // Add the newest key at the stop.
-        indexes[count] = count;
-
-        // TMap the last hash to 0xFFFF
-        hashes[count] = ~0;
-
-        map->count = count + 1;
-
-        MapPrint(map);
-
-        MapPrint(map);
-        D_COUT("\nDone inserting.");
-        // Then it was a collision so the table doesn't contain .
-        return count;
-      }
-      D_COUT("\nTable already contains the key");
-      return index;
-    }
-  }
-
-  // The id was not in the table.
-
-  value = key_offsets[count - 1] + key_length + 1;
-  destination = keys - value;
-
-  D_PRINTF(
-      "\nThe id 0x%x was not in the table so inserting %s into mid:"
-      " %i at index %u before hash 0x%x",
-      temp_id, id, mid, Diff(map, destination), hashes[mid]);
-
-  // First copy the CH1 and set the key offset.
-  SlotWrite(destination, id);
-  key_offsets[count] = value;
-
-  // Second move up the hashes and insert at the insertion point.
-  hash_ptr = hashes;
-  hash_ptr += count;
-  //*test = hashes;
-  D_PRINTF("\nl_numkeys: %u, hashes: %u hash_ptr: %u insert_ptr: %u", count,
-           Diff(map, hashes), Diff(map, hash_ptr), Diff(map, hashes + mid));
-  hashes += mid;
-  MapPrint(map);
-  while (hash_ptr > hashes) {
-    *hash_ptr = *(hash_ptr - 1);
-    --hash_ptr;
-  }
-  *hashes = temp_id;
-
-  // Mark as not having any collisions.
-  indexes[count] = ~0;
-
-  // Move up the sorted indexes and insert the unsorted index (which is
-  // the current count).
-  indexes += count + mid;
-  temp_ptr = indexes + count;
-
-  while (temp_ptr > indexes) {
-    *temp_ptr = *(temp_ptr - 1);
-    --temp_ptr;
-  }
-  *temp_ptr = count;
-
-  map->count = count + 1;
-
-  MapPrint(map);
-  D_COUT("\nDone inserting.");
-  D_COUT_LINEF('-');
 
   return count;
 }
 
 /* Deletes the map contents without wiping the contents. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-void MapClear(TMap<SIZ, Index, I>* map) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+void MapClear(TMap<SIZ, UIY, I>* map) {
   A_ASSERT(map);
 
   map->count = 0;
@@ -495,17 +237,17 @@ void MapClear(TMap<SIZ, Index, I>* map) {
 }
 
 /* Deletes the map contents by overwriting it with zeros. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-void MapWipe(TMap<SIZ, Index, I>* map) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+void MapWipe(TMap<SIZ, UIY, I>* map) {
   A_ASSERT(map);
 
   SIZ size = map->size;
-  MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<SIZ, Index, I>), size);
+  MemoryWipe(reinterpret_cast<CH1*>(map) + sizeof(TMap<SIZ, UIY, I>), size);
 }
 
 /* Returns true if this crabs contains only the given address. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-BOL MapContains(TMap<SIZ, Index, I>* map, void* value) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+BOL MapContains(TMap<SIZ, UIY, I>* map, void* value) {
   A_ASSERT(map);
 
   if (value < map) return false;
@@ -514,81 +256,30 @@ BOL MapContains(TMap<SIZ, Index, I>* map, void* value) {
 }
 
 /* Removes the item at the given address from the map. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
-BOL MapRemove(TMap<SIZ, Index, I>* map, void* adress) {
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
+BOL MapRemove(TMap<SIZ, UIY, I>* map, void* adress) {
   A_ASSERT(map);
 
   return false;
 }
 
 /* Prints this object out to the console. */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2,
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2,
           typename Char = CHR>
-TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<SIZ, Index, I>* map) {
+TSPrinter<Char>& MapPrint(TSPrinter<Char>& o, const TMap<SIZ, UIY, I>* map) {
   A_ASSERT(map)
   l
 
-      Index count = map->count,
-            collision_index, temp;
+      UIY count = map->count,
+          collision_index, temp;
   SIZ table_size = map->table_size, size_pile = map->size_pile;
 
-  utf << '_';
+  o << Linef("\n+---") << "\nMap" << sizeof(SIZ) << ": " << Hex<>(map)
+    << " count:" << count << "size_pile:" << size_pile << " size:" << map->size;
+  o << "\n|";
 
-  utf << "\nMap" << sizeof(SIZ) << ": " << Hex<>(map) << " count:" << count
-      << "size_pile:" << size_pile << " size:" << map->size;
-  utf << "\n|";
-  for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << kLF;
-
-  const CH1* states =
-      reinterpret_cast<const CH1*>(map) + sizeof(TMap<SIZ, Index, I>);
-  const SIZ* key_offsets = reinterpret_cast<const SIZ*>(states + count);
-  const SIZ* data_offsets =
-      reinterpret_cast<const SIZ*>(states + count * sizeof(SIZ));
-  const SIZ* hashes = reinterpret_cast<const SIZ*>(
-      states + count * (sizeof(SIZ) + sizeof(SIZ)));
-  const Index *indexes = reinterpret_cast<const Index*>(
-                  states + count * (sizeof(SIZ) + sizeof(SIZ) + sizeof(Index))),
-              *unsorted_indexes = indexes + count,
-              *collission_list = unsorted_indexes + count, *begin;
-  const CH1* keys = reinterpret_cast<const CH1*>(map) + table_size - 1;
-  utf << "\n " << Right<>("i", 3) << Right<>("key", 10) << Right<>("offset", 8)
-      << Right<>("hash_e", 10) << Right<>("hash_s", 10)
-      << Right<>("index_u", 10) << Right<>("collisions", 11);
-  utf << '|';
-  for (SI4 i = 0; i < 79; ++i) utf << '_';
-  utf << kLF;
-
-  for (Index i = 0; i < count; ++i) {
-    // Print each record as a row.
-    // @todo Change stack_height to ; after done debugging.
-    collision_index = indexes[i];
-    utf << Right<Index>(i, 3) << Right<Index>(keys - key_offsets[i], 10)
-        << Right<Index>(key_offsets[i], 8)
-        << Right<Hex<SIZ>>(HashPrime16(keys - key_offsets[i]), 10)
-        << Right<Hex<SIZ>>(hashes[unsorted_indexes[i]], 10)
-        << Right<Hex<SIZ>>(hashes[i], 10) << Right<SIZ>(unsorted_indexes[i], 10)
-        << Right<SIZ>(collision_index, 11);
-
-    if (collision_index != ~0 && i < item_count) {
-      // Print collisions.
-      begin = &collission_list[collision_index];
-      temp = *begin;
-      ++begin;
-      utf << temp;
-      while (temp != ~0) {
-        temp = *begin;
-        ++begin;
-        if (temp == ~0) break;
-        utf << ", " << temp;
-      }
-    }
-
-    utf << '_';
-  }
-
-  return utf << '_' << Socket(reinterpret_cast<const CH1*>(map), map->size)
-             << kLF;
+  return o << '_' << Socket(reinterpret_cast<const CH1*>(map), map->size)
+           << kLF;
 }
 
 /* C++ Wrapper for the AsciiMap that uses dynamic memory and auto-grows.
@@ -599,14 +290,14 @@ TUTF<Char>& MapPrint(TUTF<Char>& utf, const TMap<SIZ, Index, I>* map) {
     .
     @endcode
 */
-template <typename SIZ = UI4, typename Index = SI4, typename I = SI2>
+template <typename SIZ = UI4, typename UIY = SI4, typename I = SI2>
 class AMap {
  public:
   /* Constructs a Map with the given count_max.
   If count_max is less than 0 it will be set to the default value. If the
   */
   AMap(SIZ size = 0, I count_max = 0)
-      : socket(MapNew<SIZ, Index, I>(size, count_max)) {
+      : socket(MapNew<SIZ, UIY, I>(size, count_max)) {
     // Nothing to do here! (:-)-+=<
   }
 
@@ -614,43 +305,44 @@ class AMap {
   ~AMap() { delete socket; }
 
   inline BOL Remove(void* adress) {
-    return MapRemove<SIZ, Index, I>(AArray(), adress);
+    return MapRemove<SIZ, UIY, I>(AArray(), adress);
   }
 
   /* Checks if the map contains the given pointer.
       @return True if the pointer lies in this socket. */
   inline BOL Contains(void* value) {
-    return MapContains<SIZ, Index, I>(AArray(), value);
+    return MapContains<SIZ, UIY, I>(AArray(), value);
   }
 
   /* Wipes the map by overwriting it with zeros. */
-  inline void Wipe() { MapWipe<SIZ, Index, I>(AArray()); }
+  inline void Wipe() { MapWipe<SIZ, UIY, I>(AArray()); }
 
-  static inline Index CountUpperBounds() {
-    return MapCountUpperBounds<SIZ, Index, I>();
+  static inline UIY CountUpperBounds() {
+    return MapCountUpperBounds<SIZ, UIY, I>();
   }
 
-  inline Index Insert(void* value, Index index, SI4 type) {
-    return MapInsert<SIZ, Index, I>(AArray(), value, type, index);
+  inline UIY Insert(void* value, UIY index, SI4 type) {
+    return MapInsert<SIZ, UIY, I>(AArray(), value, type, index);
   }
 
   /* Clears the list. */
-  inline void Clear() { MapClear<SIZ, Index, I>(AArray()); }
+  inline void Clear() { MapClear<SIZ, UIY, I>(AArray()); }
 
   /* Prints this object to a printer. */
-  inline UTF1& Print(UTF1& printer) {
-    return MapPrint<SIZ, Index, I>(utf, AArray());
+  template <typename Printer>
+  inline Printer& Print(Printer& o) {
+    return TMapPrint<SIZ, UIY, I>(o, This());
   }
 
  private:
   UIW* socket;
 
-  /* Returns the socket casted as a TMap<SIZ, Index, I>*. */
-  inline TMap<SIZ, Index, I>* AArray() {
-    return reinterpret_cast<TMap<SIZ, Index, I>*>(socket);
+  /* Returns the socket casted as a TMap<SIZ, UIY, I>*. */
+  inline TMap<SIZ, UIY, I>* AArray() {
+    return reinterpret_cast<TMap<SIZ, UIY>*>(socket);
   }
 };  //< class Map
 }  // namespace _
 
 #endif  //< INCLUDED_CRAPS_TMAP
-#endif  //< #if SEAM >= SEAM_SCRIPT2_LIST
+#endif  //< #if SEAM >= SCRIPT2_LIST

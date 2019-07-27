@@ -10,10 +10,11 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_SOCKET
+#if SEAM >= SCRIPT2_SOCKET
 #ifndef SCRIPT2_KABUKI_TSOCKET
 #define SCRIPT2_KABUKI_TSOCKET
 
+#include "c_cout.h"
 #include "c_socket.h"
 
 namespace _ {
@@ -46,11 +47,11 @@ enum {
 /* Returns the N in 2^N for the sizeof (I) to speed up dividing by powers of 2.
 @code
 SIN size_bytes = 32;
-SIN size_words = size_bytes >> TBitShiftCount<SIN> ()
+SIN size_words = size_bytes >> TBitCount<SIN> ()
 @endcode
 */
 template <typename SIZ = SIW>
-inline SI4 TBitShiftCount() {
+inline SI4 TBitCount() {
   return (sizeof(SIZ) == 1)
              ? 0
              : (sizeof(SIZ) == 2)
@@ -58,36 +59,6 @@ inline SI4 TBitShiftCount() {
                    : (sizeof(SIZ) == 4)
                          ? 2
                          : (sizeof(SIZ) == 8) ? 3 : (sizeof(SIZ) == 16) ? 4 : 0;
-}
-
-template <typename SIZ, SIZ kSize_>
-constexpr SIZ TSizeWords() {
-  SIZ align_offset = (-kSize_) & (sizeof(SIW) - 1);
-  SIZ size_aligned = kSize_ + align_offset;
-  return size_aligned >> TBitShiftCount<SIZ>();
-}
-
-template <typename SIZ>
-inline SIZ TSizeWords(SIZ size) {
-  SIZ align_offset = (-size) & (sizeof(SIW) - 1);
-  SIZ size_aligned = size + align_offset;
-  return size_aligned >> TBitShiftCount<SIZ>();
-}
-
-/* Converts the given size into CPU word count.
-template <typename SIZ = SIW, SIZ kSize_ = 0>
-inline SIZ TWordCount() {
-  SIZ align_offset = (-kSize_) & (kHeaderSize - 1);  // Why did I do this???
-  SIZ size_aligned = kSize_ + align_offset;
-  return size_aligned >> TBitShiftCount<SIW>();
-} */
-
-/* Converts the given size into CPU word count. */
-template <typename SIZ = SIW>
-inline SIZ TWordCount(SIZ size) {
-  SIZ align_offset = (-size) & (sizeof(SIW) - 1);
-  size += align_offset;
-  return size >> TBitShiftCount<SIW>();
 }
 
 /* Aligns the given value up to a sizeof (T) boundary.
@@ -247,6 +218,43 @@ inline UI8 AlignDown(UI8 value, UI8 align_mask) {
   return value - (value & align_mask);
 }
 
+template <typename SIZ, SIZ kSize_>
+constexpr SIZ TSizeWords() {
+  SIZ size_aligned = kSize_ + ((-kSize_) & (sizeof(SIW) - 1));
+  size_aligned = size_aligned >> kWordBitCount;
+  return (size_aligned < 1) ? 1 : size_aligned;
+}
+
+template <typename SIZ, typename SIY>
+inline SIZ TSizeWords(SIZ size, SIY align_mask) {
+  SIZ size_aligned = size + ((-size) & SIZ(align_mask));
+  size_aligned = size_aligned >> kWordBitCount;
+  return (size_aligned < 1) ? 1 : size_aligned;
+}
+
+template <typename SIZ>
+constexpr SIZ CSizeWords(SIZ size) {
+  SIZ size_aligned = size + ((-size) & (sizeof(SIW) - 1));
+  size_aligned = size_aligned >> kWordBitCount;
+  return (size_aligned < 1) ? 1 : size_aligned;
+}
+
+/* Converts the given size into CPU word count.
+template <typename SIZ = SIW, SIZ kSize_ = 0>
+inline SIZ TWordCount() {
+  SIZ align_offset = (-kSize_) & (kHeaderSize - 1);  // Why did I do this???
+  SIZ size_aligned = kSize_ + align_offset;
+  return size_aligned >> TBitCount<SIW>();
+} */
+
+/* Converts the given size into CPU word count. */
+template <typename SIZ = SIW>
+inline SIZ TWordCount(SIZ size) {
+  SIZ align_offset = (-size) & (sizeof(SIW) - 1);
+  size += align_offset;
+  return size >> TBitCount<SIW>();
+}
+
 /* Utility function for converting to two's complement and back with templates.
  */
 inline SI1 Negative(SI1 value) { return -value; }
@@ -297,13 +305,56 @@ constexpr SIZ SizeAlign(SIZ size) {
   return size + (-size) & lsb_mask;
 }
 
-/* A contiguous memory socket of kSize_ elements of T including a Header. */
+/* A word-aligned array of kSize_ elements of T on the progam stack. */
 template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1, typename SIZ = SIN,
           typename Class = Nil>
-class TSocket {
+class TBuf {
  public:
   /* Default destructor does nothing. */
-  TSocket() {}
+  TBuf() {}
+
+  /* Returns the socket as a UIW*. */
+  inline UIW* Words() { return words_; }
+
+  /* Gets the end word of the socket. */
+  inline UIW* WordsEnd() { return &words_[SizeWords()]; }
+
+  /* Gets the stop word of the socket. */
+  inline UIW* WordsStop() { return WordsEnd() - 1; }
+
+  /* Gets the begin element of the socket. */
+  template <typename T = CH1>
+  inline T* Begin() {
+    return reinterpret_cast<T*>(words_);
+  }
+
+  /* Returns the first element of the ASCII Object data section. */
+  template <typename RT = T>
+  inline RT* Start() {
+    SIW address = reinterpret_cast<UIW>(words_);
+    return reinterpret_cast<RT*>(address + sizeof(Class));
+  }
+
+  /* Gets the end element of the socket. */
+  inline T* End() { return &words_[SizeWords()]; }
+
+  /* Returns the last element of the ASCII Object data section. */
+  inline T* Stop() { return Start<>() + Size() - 1; }
+
+  /* Gets the begin of the socket. */
+  template <typename T = CH1, typename SIZ = SIW>
+  inline T& Element(SIZ index) {
+    if (index < 0 || index >= Size()) return nullptr;
+    return Start()[index];
+  }
+
+  /* Sets the size to the new value. */
+  template <typename SIW>
+  inline UIW* SetSize(SIW size) {
+    A_ASSERT((size & kWordLSbMask) == 0)
+    *reinterpret_cast<SIW*>(words_) = size;
+    return words_;
+  }
 
   /* The size in elements. */
   static constexpr SIZ Size() { return (SIZ(kSize_) < 0) ? 0 : SIZ(kSize_); }
@@ -314,57 +365,10 @@ class TSocket {
   }
 
   /* The size in words rounded down. */
-  static constexpr SIZ SizeWords() {
-    SIZ size = SizeBytes() + ((-SizeBytes()) & kWordLSbMask);
-    size = size >> kWordBitCount;
-    return size < 1 ? 1 : size;
-  }
-
-  /* Returns the socket as a UIW*. */
-  inline UIW* Buffer() { return socket_; }
-
-  /* Gets the begin UI1 of the socket. */
-  inline UIW* BufferEnd() { return &socket_[SizeWords()]; }
-
-  /* Gets the begin element of the socket. */
-  template <typename T = CH1>
-  inline T* Begin() {
-    return reinterpret_cast<T*>(socket_);
-  }
-
-  /* Gets the end element of the socket. */
-  inline T* End() { return Begin() + kSize_; }
-
-  /* Returns the first element of the ASCII Object data section. */
-  template <typename T>
-  inline T* Start() {
-    UIW ptr = reinterpret_cast<UIW>(socket_);
-    return reinterpret_cast<T*>(ptr + sizeof(Class));
-  }
-
-  /* Returns the last element of the ASCII Object data section. */
-  template <typename T, UIW kHeaderSize_>
-  inline T* Stop() {
-    return Start<SIW, T>() + Size() - 1;
-  }
-
-  /* Gets the begin of the socket. */
-  template <typename T = CH1, typename SIZ = SIW>
-  inline T* Element(SIZ index) {
-    if (!InRange(index)) return nullptr;
-    return Start()[index];
-  }
-
-  /* Sets the size to the new value. */
-  template <typename SIW>
-  inline UIW* SetSize(SIW size) {
-    A_ASSERT((size & kWordLSbMask) == 0)
-    *reinterpret_cast<SIW*>(socket_) = size;
-    return socket_;
-  }
+  static constexpr SIZ SizeWords() { return CSizeWords<SIZ>(SizeBytes()); }
 
  private:
-  UIW socket_[SizeWords()];  //< The word-aligned socket.
+  UIW words_[SizeWords()];  //< The word-aligned socket.
 };
 
 /* Syntactical sugar for reinterpret_cast using templates. */
@@ -379,11 +383,9 @@ inline T* TPtr(const void* ptr) {
   return reinterpret_cast<T*>(ptr);
 }
 
-/* Utility function for syntactical sugar creating a pointer from a base plus
-offset.
-@return Pointer of the type specified by template parameter T.
+/* Creates a T pointer from a base pointer plus the offset.
 @param  base The base address.
-@param  offset The offset. */
+@param  offset The offset in bytes. */
 template <typename T = void>
 inline T* TPtr(const void* begin, SIW offset) {
   return reinterpret_cast<T*>(reinterpret_cast<SIW>(begin) + offset);

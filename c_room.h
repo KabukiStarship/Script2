@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_ROOM
+#if SEAM >= SCRIPT2_ROOM
 #ifndef SCRIPT2_ROOM
 #define SCRIPT2_ROOM
 #include "c_interrupts.h"
@@ -17,8 +17,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* A list of Requests that can be sent from Slot<SI4, TSize> to
-    Slot<SI4, TSize>.  */
+/* A list of Requests that can be sent from Slot<SI4, TSizeBytes> to
+    Slot<SI4, TSizeBytes>.  */
 typedef enum Requests {
   kOpenDoorRequest = 0,
   kCloseDoorRequest,

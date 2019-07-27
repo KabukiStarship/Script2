@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_CLOCK
+#if SEAM >= SCRIPT2_CLOCK
 #ifndef INCLUDED_F2_SET
 #define INCLUDED_F2_SET 1
 
@@ -105,5 +105,5 @@ struct Collection {
   virtual UTF1& Print(UTF1& out_) = 0;
 };
 }  // namespace _
-#endif  //< #if SEAM >= SEAM_SCRIPT2_CLOCK
+#endif  //< #if SEAM >= SCRIPT2_CLOCK
 #endif  //< INCLUDED_F2_SET

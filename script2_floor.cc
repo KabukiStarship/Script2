@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_floor.h"
 
 #include "c_lock.h"
@@ -24,9 +24,9 @@ Floor* FloorInit(Floor* floor) {
 }
 
 inline Floor* Global() {
-  static TSocket<kFloorSize, kCpuCacheLineSize> floor_socket;
+  static TBuf<kFloorSize, kCpuCacheLineSize> floor_socket;
   return floor_socket.Start<Floor>();
 }
 
 }  // namespace _
-#endif  // #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  // #if SEAM >= SCRIPT2_DICTIONARY

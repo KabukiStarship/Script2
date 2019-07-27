@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
 #include "c_args.h"
@@ -35,7 +35,7 @@ asynchronous.
 @code
       |>---------------------- Ring Buffer ------------------------->|
       ________________________________________________________________
-BOut  |>-Buffer->|>-Sync User Scan-->|>-Async Portal Rx-->|>-Buffer->|
+BOut  |>-Buffer->|>-Sync User SScan-->|>-Async Portal Rx-->|>-Buffer->|
       |__________|___________________|____________________|__________|
       ________________________________________________________________
 BIn   |>-Buffer->|>-Async Portal Tx->|>-Sync User Writes->|>-Buffer->|
@@ -282,4 +282,4 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::Crabs* crabs) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_EXPR
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

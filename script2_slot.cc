@@ -8,14 +8,14 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_slot.h"
 
 #include "c_avalue.h"
 #include "c_socket.h"
 #include "t_strand.h"
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -24,23 +24,23 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 const Op* ReturnError(Slot* slot, Error error) {
-  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_COUT('\n' << TSTRError<CH1>()[error]));
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header) {
-  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_COUT('\n' << TSTRError<CH1>()[error]));
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, UI1 offset) {
-  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_COUT('\n' << TSTRError<CH1>()[error]));
   return reinterpret_cast<const Op*>(error);
 }
 
 const Op* ReturnError(Slot* slot, Error error, const SI4* header, SI4 offset,
                       CH1* address) {
-  D_PRINTF("\n%s", TSTRError<CH1>()[error]);
+  D_COUT('\n' << TSTRError<CH1>()[error]));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -169,7 +169,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
   A_ASSERT(num_params);
 
-  D_PRINTF("\n\nReading BIn: ");
+  D_COUT ("\n\nReading BIn: ");
 
   CH1 *l_begin = begin,           //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
@@ -181,16 +181,16 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
   length = SlotLength(l_start, l_stop, size);
 
-  D_PRINTF("\n\nReading %i bytes.", (SI4)length);
+  D_COUT ("\n\nReading " << length << " bytes.");
   // D_COUT_BSQ (params)
   // When we scan, we are reading from the beginning of the BIn socket.
 
   for (index = 0; index < num_params; ++index) {
     type = (UI1)*param;
     ++param;
-    D_PRINTF("\nindex:%u:\"%s\", start:0x%i, stop:0x%i", (UIN)index,
-           STRType(type), (SI4)Size(l_begin, l_start),
-           (SI4)Size(l_begin, l_stop));
+    D_COUT("\nindex:" << index << ":\"" << STRType(type) << "\" start:0x"
+                      << TDelta<>(l_begin, start) << " stop:0x"
+                      << TDelta<>(l_begin, stop));
 
     switch (type) {
       case kNIL:

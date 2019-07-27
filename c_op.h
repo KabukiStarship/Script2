@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_ROOM
+#if SEAM >= SCRIPT2_ROOM
 #ifndef INCLUDED_SCRIPT2_OP
 #define INCLUDED_SCRIPT2_OP 1
 
@@ -78,15 +78,15 @@ inline CH4 OpLast(const Op* op) {
 
 #if USING_SCRIPT2_TEXT == YES_0
 template <typename Char>
-TUTF<Char>& Print(TUTF<Char>& utf, const Op* op) {}
+TSPrinter<Char>& Print(TSPrinter<Char>& utf, const Op* op) {}
 #endif
 
 }  // namespace _
 
 template <typename Char>
-inline _::TUTF<Char>& operator<<(_::TUTF<Char>& utf, const _::Op* op) {
+inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, const _::Op* op) {
   return _::Print(utf, op);
 }
 
 #endif  //< #if INCLUDED_SCRIPT2_OP 1
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

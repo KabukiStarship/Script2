@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM == SEAM_SCRIPT2_ROOM
+#if SEAM == SCRIPT2_ROOM
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -22,7 +22,7 @@ using namespace _;
 
 namespace script2 {
 static const CH1* _17_Room_Wall(const CH1* args) {
-#if SEAM == SEAM_SCRIPT2_ROOM
+#if SEAM == SCRIPT2_ROOM
   A_TEST_BEGIN;
   Room room_a, room_b;
 #endif

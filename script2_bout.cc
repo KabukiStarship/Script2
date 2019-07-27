@@ -8,7 +8,7 @@ Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #include "c_args.h"
 #include "c_avalue.h"
 #include "c_bout.h"
@@ -19,7 +19,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_utf.h"
 #include "slot.h"
 
-#if SEAM == SEAM_SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #define D_COUT_BOUT(header, bout) \
   Console<>().Out() << "\n" << header << kLF << bout;
@@ -213,9 +213,9 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   // Write data.
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
-    D_PRINTF("\nparam: %u type: %s start:%i stop:%i space: %u", arg_index + 1,
-           STRType(type), (SI4)Size(begin, begin), (SI4)Size(begin, stop),
-           space)
+    D_COUT("\nparam: " << arg_index + 1 << " type:" << STRType(type)
+                       << " start:" << TDelta<>(begin, begin) << " stop:"
+                       << TDelta<>(begin, stop) << " space:" << space);
     switch (type) {
       case kNIL:
         break;
@@ -234,7 +234,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         }
         // Load the source data pointer and increment args.fs
         ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
-        D_PRINTF("\"%p", ui1_ptr);
+        D_COUT('\"' << Hexf(ui1_ptr));
 
         // We know we will always have at least one nil-term CH1.
         ui1 = *ui1_ptr;
@@ -595,7 +595,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   *stop = (UI1)(hash >> 8);
   if (++stop >= stop) stop -= size;
   bout->stop = (SI4)Size(begin, stop);
-  D_PRINTF("\nDone writing to B-Output with the hash 0x%x.", hash)
+  D_COUT("\nDone writing to B-Output with the hash 0x" << Hexf(hash));
   return 0;
 }
 
@@ -606,7 +606,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
   if (address == nullptr) {
     address = "";
   }
-  D_PRINTF("\nRinging BEL to address:0x%p", address)
+  D_COUT("\nRinging BEL to address:0x" << Hexf(address));
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
@@ -619,7 +619,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
               *stop = begin + bout->stop;  //< Stop of the data.
   space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
-    D_PRINTF("\nBuffer overflow!")
+    D_COUT("\nBuffer overflow!");
     return;
   }
   *stop = 0;
@@ -628,7 +628,7 @@ void BOutRingBell(BOut* bout, const CH1* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      D_PRINTF("\nBuffer overflow!");
+      D_COUT("\nBuffer overflow!");
       return;
     }
     *stop = c;
@@ -646,7 +646,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   if (address == nullptr) {
     address = "";
   }
-  D_PRINTF("\n\nRinging BEL to address:0x%p", address)
+  D_COUT("\n\nRinging BEL to address:0x" << Hexf(address));
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   UI1 c;
@@ -660,7 +660,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
               *stop = begin + bout->stop;  //< Stop of the data.
   space = (SI4)SlotSpace(begin, stop, size);
   if (space == 0) {
-    D_PRINTF("\nBuffer overflow!")
+    D_COUT("\nBuffer overflow!");
     return;
   }
   *stop = 0;
@@ -669,7 +669,7 @@ void BOutAckBack(BOut* bout, const CH1* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      D_PRINTF("\nBuffer overflow!")
+      D_COUT("\nBuffer overflow!");
       return;
     }
     *stop = c;
@@ -731,4 +731,4 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DICTIONARY

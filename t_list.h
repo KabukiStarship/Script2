@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_LIST
+#if SEAM >= SCRIPT2_LIST
 #ifndef INCLUDED_SCRIPTTLIST
 #define INCLUDED_SCRIPTTLIST
 
@@ -18,7 +18,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "t_socket.h"
 #include "t_stack.h"
 
-#if SEAM == SEAM_SCRIPT2_LIST
+#if SEAM == SCRIPT2_LIST
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -81,10 +81,10 @@ constexpr SIZ ListSizeMin(Index count_max) {
 /* Deletes the list contents by overwriting it with zeros. */
 template <typename SIZ = UI4, typename Index = SI2>
 void ListWipe(TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list)
   list->count = 0;
   SIZ size = list->size - sizeof(TList<SIZ, Index>);
-  memset(reinterpret_cast<CH1*>(list) + sizeof(TList<SIZ, Index>), 0, size);
+  SocketWipe(reinterpret_cast<CH1*>(list) + sizeof(TList<SIZ, Index>), size);
 }
 
 /* Initializes a AsciiList from preallocated memory.
@@ -95,20 +95,20 @@ TList<SIZ, Index>* ListInit(UIW* socket, SIZ size, Index count_max) {
   if (!socket)  // This may be nullptr if ListNew<SIZ,Index> (Index, SIZ)
                 // failed.
     return nullptr;
-  D_PRINTF("\n  Initializing List with size_bytes:%u and count_max:%i",
-           (UIN)size, (SI4)count_max)
+  D_COUT("\n  Initializing List with size_bytes:" << size << " and count_max:"
+                                                  << count_max);
   Index count_max_bounds_lower = ListCountMaxBoundsLower<SIZ, Index>();
   if (count_max < count_max_bounds_lower) {
-    D_PRINTF("\n count_max == 0 and is now %i", (SI4)count_max_bounds_lower)
+    D_COUT("\n count_max == 0 and is now " << count_max_bounds_lower)
     count_max = count_max_bounds_lower;
   } else {
-    D_PRINTF("\ncount_max was %i ", (SI4)count_max)
+    D_COUT("\ncount_max was %i ", (SI4)count_max)
     count_max = AlignUp<Index>(count_max);
-    D_PRINTF("\n and now is %i.", (SI4)count_max)
+    D_COUT("\n and now is %i.", (SI4)count_max)
   }
 
   // count_max = AlignUp<Index> (count_max);
-  // D_PRINTF ("\n  Aligning up to count_max:%i", (SI4)count_max)
+  // D_COUT ("\n  Aligning up to count_max:" << count_max);
 
   TList<SIZ, Index>* list = reinterpret_cast<TList<SIZ, Index>*>(socket);
   list->size = size;
@@ -155,14 +155,14 @@ inline UIW* ListNew(Index count_max) {
 /* Returns the type bytes array. */
 template <typename SIZ = UI4, typename Index = SI2>
 SI4* ListTypes(TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   return reinterpret_cast<SI4*>(list) + sizeof(CList<SIZ, Index>);
 }
 
 /* Gets a pointer to the begging of the data socket. */
 template <typename SIZ = UI4, typename Index = SI2>
 inline CH1* ListDataBegin(TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   return reinterpret_cast<CH1*>(list) + list->count_max * (sizeof(Index) + 1);
 }
 
@@ -177,14 +177,14 @@ inline SIZ* ListOffsets(TList<SIZ, Index>* list) {
 /* Returns the last UI1 in the data array. */
 template <typename SIZ = UI4, typename Index = SI2>
 inline CH1* ListDataEnd(TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   return reinterpret_cast<CH1*>(list) + list->size - 1;
 }
 
 /* Returns the last UI1 in the data array. */
 template <typename SIZ = UI4, typename Index = SI2>
 inline CH1* ListDataEnd(TList<SIZ, Index>* list, Index index) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   if (index < 0 || index >= index->count) return nullptr;
   return reinterpret_cast<CH1*>(list) + list->size - 1;
 }
@@ -198,7 +198,7 @@ Socket ListDataVector(TList<SIZ, Index>* list) {
 /* Returns the last UI1 in the data array. */
 template <typename SIZ = UI4, typename Index = SI2>
 inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   Index count = list->count;
   if (count == 0) {
     if (index != -1) return nullptr;
@@ -206,7 +206,7 @@ inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
   }
   SI4 type = ListTypes<SIZ, Index>(list)[index];
   SIZ offset = ListOffsets<SIZ, Index>(list)[index];
-  D_PRINTF("!offset %u", offset)
+  D_COUT("!offset:" << offset)
   CH1* pointer = reinterpret_cast<CH1*>(list) + offset;
   return ObjEnd<SIZ>(pointer, type);
 }
@@ -214,14 +214,14 @@ inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
 template <typename SIZ = UI4, typename Index = SI2>
 void ListDataSpaceBelow(TList<SIZ, Index>* list, Index index,
                         Socket& free_space) {
-  A_ASSERT(list)
+  D_ASSERT(list);
   CH1* data_stop;
   if (index == 0) {
     data_stop = ListDataBegin<SIZ, Index>(list);
     free_space.begin = free_space.stop = data_stop;
     return;
   }
-  A_ASSERT(index >= 0 && index <= list->count)
+  D_ASSERT(index >= 0 && index <= list->count)
   if (index == list->count) {
     free_space.begin = ListDataStop<SIZ, Index>(list);
     free_space.stop = ListDataEnd<SIZ, Index>(list);
@@ -237,38 +237,39 @@ void ListDataSpaceBelow(TList<SIZ, Index>* list, Index index,
 template <typename SIZ = UI4, typename Index = SI2>
 Index ListInsert(TList<SIZ, Index>* list, SI4 type, const void* value,
                  Index index) {
-  A_ASSERT(list)
-  A_ASSERT(value)
-  D_PRINTF("\nInserting type:")
-  D_COUT_TYPE(type, value)
-  D_PRINTF(" into index:%i", index)
+  D_ASSERT(list)
+  D_ASSERT(value);
+  D_COUT("\nInserting type:");
+  D_COUT_TYPE(type, value);
+  D_COUT(" into index:%i", index);
 
   Index count = list->count, count_max = list->count_max;
   if (count >= count_max || index > count || !TypeIsSupported(type) ||
       index < 0) {
-    D_PRINTF("\nError inserting type:%s into index %i", STRType(type),
-             (SI4)index);
+    D_COUT("\nError inserting type:" << STRType(type) << " into index "
+                                     << index);
     return -1;
   }
-  D_PRINTF(" when count is %i", (SI4)count)
+  D_COUT(" when count is " << count)
 
   SI4* types = ListTypes<SIZ, Index>(list);
 
   // 1. Check for stack push operation.
   if (index == count) {
-    D_PRINTF("\nPushing element...")
+    D_COUT("\nPushing element...")
     // Push type onto the top of the type stack.
     types[index] = type;
     //  Push the offset onto the top of the offset stack.
     CH1* data_stop = ListDataStop<SIZ, Index>(list, count - 1);
-    D_PRINTF("\n  Aligning data_stop from %i to ", (SI4)SIZ(list, data_stop))
+    D_COUT("\n  Aligning data_stop from " << TDelta<>(list, data_stop)
+                                          << " to ");
     data_stop = TypeAlignUpPointer<CH1>(data_stop, type);
-    D_PRINTF("%i", (SI4)SIZ(list, data_stop))
+    D_COUT(TDelta<>(list, data_stop))
     SIZ stop_offset = (SIZ)(data_stop - reinterpret_cast<CH1*>(list));
     ListOffsets<SIZ, Index>(list)[index] = stop_offset;
     // Write the value to the top of the value stack.
-    D_PRINTF(" leaving %i bytes.",
-             (SI4)(ListDataEnd<SIZ, Index>(list) - data_stop))
+    D_COUT(" leaving " << (ListDataEnd<SIZ, Index>(list) - data_stop)
+                       << " bytes.");
     if (!Write(data_stop, ListDataEnd<SIZ, Index>(list), type, value))
       return -2;
     list->count = count + 1;
@@ -280,13 +281,13 @@ Index ListInsert(TList<SIZ, Index>* list, SI4 type, const void* value,
 
   // 3. Calculate the offset to insert at.
   CH1* aligned_begin = ListDataStop<SIZ, Index>(list, index);
-  D_PRINTF("\nListDataStop<SIZ, Index> (list) starts as %p then is aligned to ",
-           aligned_begin)
+  D_COUT("\nListDataStop<SIZ, Index> (list) starts as "
+         << Hexf(aligned_begin) << " then is aligned to ");
   aligned_begin = TypeAlignUpPointer<CH1>(aligned_begin, type);
-  D_PRINTF("%p", aligned_begin)
+  D_COUT(Hexf(aligned_begin));
 
   // 4. Insert the offset.
-  D_PRINTF("\nInserting into ")
+  D_COUT("\nInserting into ");
   TStackInsert<SIZ, Index>(ListOffsets<SIZ, Index>(list), count, type, index);
 
   SIZ space_needed = ObjSize<SIZ>(value, type);
@@ -334,7 +335,7 @@ Index ListCountMax() {
 /* Deletes the list contents without wiping the contents. */
 template <typename SIZ = UI4, typename Index = SI2>
 void ListClear(TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list)
   list->count = 0;
 }
 
@@ -346,7 +347,7 @@ from Script. If it's you're own code calling this, you are
 required to ensure the value came from a ASCII List. */
 template <typename SIZ = UI4, typename Index = SI2>
 BOL ListContains(TList<SIZ, Index>* list, void* address) {
-  A_ASSERT(list)
+  D_ASSERT(list)
   if (reinterpret_cast<CH1*>(address) < reinterpret_cast<CH1*>(list))
     return false;
   if (reinterpret_cast<CH1*>(address) > ListEndByte()) return false;
@@ -364,7 +365,7 @@ Index ListRemove(TList<SIZ, Index>* list, Index index) {
 /* Finds a tuple that contains the given pointer. */
 template <typename SIZ = UI4, typename Index = SI2>
 Index ListFind(TList<SIZ, Index>* list, void* adress) {
-  A_ASSERT(list)
+  D_ASSERT(list)
   SIZ *offsets = ListOffsets<SIZ, Index>(list),
       *offset_end = offsets + list->count;
   while (offsets < offset_end) {
@@ -387,7 +388,7 @@ BOL ListRemove(TList<SIZ, Index>* list, void* adress) {
     @return Returns nil if the index is out of the count range. */
 template <typename SIZ = UI4, typename Index = SI2>
 const void* ListValue(TList<SIZ, Index>* list, Index index) {
-  A_ASSERT(list)
+  D_ASSERT(list)
   if (index < 0 || index >= list->count) return nullptr;
   return reinterpret_cast<CH1*>(list) + ListOffsets<SIZ, Index>(list)[index];
 }
@@ -395,7 +396,7 @@ const void* ListValue(TList<SIZ, Index>* list, Index index) {
 /* Prints the given AsciiList to the console. */
 template <typename Printer, typename SIZ = UI4, typename Index = SI2>
 Printer& PrintList(Printer& o, TList<SIZ, Index>* list) {
-  A_ASSERT(list)
+  D_ASSERT(list)
 
   Index count = list->count;
   o << "\n\nList: size:" << list->size << " count:" << count

@@ -9,15 +9,15 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_CLOCK
+#if SEAM >= SCRIPT2_CLOCK
 
 #include "t_clock.h"
 //
-//#include "t_utf.h"
+//#include "t_uniprinter.h"
 //
 #include <ctime>
 
-#if SEAM == SEAM_SCRIPT2_CLOCK
+#if SEAM == SCRIPT2_CLOCK
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
@@ -137,31 +137,35 @@ CH1 ClockDayOfWeekInitial(SIN day_number) {
 }
 
 SIN ClockCompare(const AClock& date_a, const AClock& date_b) {
-  D_COUT_4("\n    Expecting Date:", date_a, " and found:", date_b);
+  D_COUT("\n    Expecting Date:" << date_a << " and found:" << date_b);
 
   if (date_a.year != date_b.year) {
-    D_PRINTF("\n    year.a:%i != year.b:%i ", date_a.year + ClockEpoch(),
-             date_b.year + ClockEpoch());
+    D_COUT("\n    year.a:" << date_a.year + ClockEpoch()
+                           << " != year.b:" << date_b.year + ClockEpoch());
     return 1;
   }
   if (date_a.month != date_b.month) {
-    D_PRINTF("\n    month.a:%i != month.b:%i ", date_a.month, date_b.month + 1);
+    D_COUT("\n    month.a:" << date_a.month
+                            << " != month.b:" << date_b.month + 1 << " ");
     return 2;
   }
   if (date_a.day != date_b.day) {
-    D_PRINTF("\n    day.a:%i != day.b:%i ", date_a.day, date_b.day);
+    D_COUT("\n    day.a:" << date_a.day << " != day.b:" << date_b.day << " ");
     return 3;
   }
   if (date_a.hour != date_b.hour) {
-    D_PRINTF("\n    hour.a:%i != hour.b:%i ", date_a.hour, date_b.hour);
+    D_COUT("\n    hour.a:" << date_a.hour << " != hour.b:" << date_b.hour
+                           << " ");
     return 4;
   }
   if (date_a.minute != date_b.minute) {
-    D_PRINTF("\n    minute.a:%i != minute.b:%i", date_a.minute, date_b.minute);
+    D_COUT("\n    minute.a:" << date_a.minute
+                             << " != minute.b:" << date_b.minute);
     return 5;
   }
   if (date_a.second != date_b.second) {
-    D_PRINTF("\n    second.a:%i != second.b:%i ", date_a.second, date_b.second);
+    D_COUT("\n    second.a:" << date_a.second
+                             << " != second.b:" << date_b.second);
     return 6;
   }
   return 0;
@@ -172,40 +176,44 @@ SIN ClockCompare(TM4 time_a, TM4 time_b) {
   ClockInit(a, time_a);
   ClockInit(b, time_b);
   SIN result = ClockCompare(a, b);
-  D_PRINTF("\n  Comparing time_a:%i to time_b:%i with result:%i", time_a,
-           time_b, result);
+  D_COUT("\n  Comparing time_a:" << time_a << " to time_b:" << time_b
+                                 << " with result:" << result);
   return result;
 }
 
 SIN ClockCompare(const AClock& clock, SIN year, SIN month, SIN day,
                  SIN hour = 0, SIN minute = 0, SIN second = 0) {
-  D_PRINTF("\n    Expecting %i/%i/%i@%i:%i:%i and found ", year, month, day,
-           hour, minute, second);
-  D_COUT(clock);
+  D_COUT("\n    Expecting " << year << '/"' << month << '/"' << day << '@'
+                            << hour << ':' << minute << ':' << second
+                            << " and found " << clock);
 
   if (year - ClockEpoch() != clock.year) {
-    D_PRINTF("\n    Expecting year:%i but found:%i.", year,
-             clock.year + ClockEpoch());
+    D_COUT("\n    Expecting year:" << year << " but found:"
+                                   << clock.year + ClockEpoch() << '.');
     return 1;
   }
   if (month != clock.month + 1) {
-    D_PRINTF("\n    Expecting month:%i but found:%i.", month, clock.month + 1);
+    D_COUT("\n    Expecting month:" << month << " but found:" << clock.month + 1
+                                    << '.');
     return 2;
   }
   if (day != clock.day) {
-    D_PRINTF("\n    Expecting day:%i but found:%i.", day, clock.day);
+    D_COUT("\n    Expecting day:" << day << " but found:" << clock.day << '.');
     return 3;
   }
   if (hour != clock.hour) {
-    D_PRINTF("\n    Expecting hour:%i but found:%i.", hour, clock.hour);
+    D_COUT("\n    Expecting hour:" << hour << " but found:" << clock.hour
+                                   << '.');
     return 4;
   }
   if (minute != clock.minute) {
-    D_PRINTF("\n    Expecting minute:%i but found:%i.", minute, clock.minute);
+    D_COUT("\n    Expecting minute:" << minute << " but found:" << clock.minute
+                                     << '.');
     return 5;
   }
   if (second != clock.second) {
-    D_PRINTF("\n    Expecting second:%i but found:%i.", second, clock.second);
+    D_COUT("\n    Expecting second:" << second << " but found:" << clock.second
+                                     << '.');
     return 6;
   }
   return 0;
@@ -257,35 +265,35 @@ TM8 ClockTimeTME(SIN year, SIN month, SIN day, SIN hour, SIN minute,
 }
 
 #if USING_UTF8 == YES_0
-CH1* Print(CH1* begin, CH1* stop, const AClock& clock) {
-  return TPrint<CH1>(begin, stop, clock);
+CH1* SPrint(CH1* begin, CH1* stop, const AClock& clock) {
+  return TSPrint<CH1>(begin, stop, clock);
 }
 
 CH1* Print(CH1* begin, CH1* stop, TME& t) {
-  return TPrint<CH1>(begin, stop, t);
+  return TSPrint<CH1>(begin, stop, t);
 }
 
 CH1* ClockPrint(CH1* begin, CH1* stop, TM4 t) {
   AClock clock;
   ClockInit(clock, t);
-  return TPrint<CH1>(begin, stop, clock);
+  return TSPrint<CH1>(begin, stop, clock);
 }
 
 CH1* ClockPrint(CH1* begin, CH1* stop, TM8 t) {
   AClock clock;
   ClockInit(clock, t);
-  return TPrint<CH1>(begin, stop, clock);
+  return TSPrint<CH1>(begin, stop, clock);
 }
 
 const CH1* ScanTime(const CH1* string, SIN& hour, SIN& minute, SIN& second) {
   return TScanTime<CH1>(string, hour, minute, second);
 }
 
-const CH1* Scan(const CH1* string, AClock& clock) {
-  return TScan<CH1>(string, clock);
+const CH1* SScan(const CH1* string, AClock& clock) {
+  return TSScan<CH1>(string, clock);
 }
 
-const CH1* Scan(const CH1* string, TME& t) { return TScan<CH1>(string, t); }
+const CH1* SScan(const CH1* string, TME& t) { return TSScan<CH1>(string, t); }
 
 const CH1* ScanTime(const CH1* string, TM4& t) {
   return TScanTime<CH1, TM4>(string, t);
@@ -298,12 +306,12 @@ const CH1* ScanTime(const CH1* string, TM8& t) {
 #endif
 #if USING_UTF16 == YES_0
 
-CH2* Print(CH2* begin, CH2* stop, AClock& clock) {
-  return TPrint<CH2>(begin, stop, clock);
+CH2* SPrint(CH2* begin, CH2* stop, AClock& clock) {
+  return TSPrint<CH2>(begin, stop, clock);
 }
 
-CH2* Print(CH2* begin, CH2* stop, TME& t) {
-  return TPrint<CH2>(begin, stop, t);
+CH2* SPrint(CH2* begin, CH2* stop, TME& t) {
+  return TSPrint<CH2>(begin, stop, t);
 }
 
 CH2* ClockPrint(CH2* begin, CH2* stop, TM4 t) {
@@ -314,16 +322,16 @@ CH2* ClockPrint(CH2* begin, CH2* stop, TM8 t) {
   return TClockPrint<CH2, TM8>(begin, stop, t);
 }
 
-const CH2* Scan(const CH2* string, AClock& clock) {
-  return TScan<CH2>(string, clock);
+const CH2* SScan(const CH2* string, AClock& clock) {
+  return TSScan<CH2>(string, clock);
 }
 
 const CH2* ScanTime(const CH2* string, SIN& hour, SIN& minute, SIN& second) {
   return TScanTime<CH2>(string, hour, minute, second);
 }
 
-const CH2* Scan(const CH2* string, TME& result) {
-  return TScan<CH2>(string, result);
+const CH2* SScan(const CH2* string, TME& result) {
+  return TSScan<CH2>(string, result);
 }
 
 const CH2* ScanTime(const CH2* string, TM4& result) {
@@ -337,12 +345,12 @@ const CH2* ScanTime(const CH2* string, TM8& result) {
 
 #if USING_UTF32 == YES_0
 
-CH4* Print(CH4* begin, CH4* stop, AClock& clock) {
-  return TPrint<CH4>(begin, stop, clock);
+CH4* SPrint(CH4* begin, CH4* stop, AClock& clock) {
+  return TSPrint<CH4>(begin, stop, clock);
 }
 
-CH4* Print(CH4* begin, CH4* stop, TME& t) {
-  return TPrint<CH4>(begin, stop, t);
+CH4* SPrint(CH4* begin, CH4* stop, TME& t) {
+  return TSPrint<CH4>(begin, stop, t);
 }
 
 CH4* ClockPrint(CH4* begin, CH4* stop, TM4 t) {
@@ -357,12 +365,12 @@ const CH4* ScanTime(const CH4* string, SIN& hour, SIN& minute, SIN& second) {
   return TScanTime<CH4>(string, hour, minute, second);
 }
 
-const CH4* Scan(const CH4* string, AClock& time) {
-  return TScan<CH4>(string, time);
+const CH4* SScan(const CH4* string, AClock& time) {
+  return TSScan<CH4>(string, time);
 }
 
-const CH4* Scan(const CH4* string, TME& result) {
-  return TScan<CH4>(string, result);
+const CH4* SScan(const CH4* string, TME& result) {
+  return TSScan<CH4>(string, result);
 }
 
 const CH4* ScanTime(const CH4* string, TM4& result) {
@@ -377,4 +385,4 @@ const CH4* ScanTime(const CH4* string, TM8& result) {
 
 }  // namespace _
 
-#endif  //< #if SEAM >= SEAM_SCRIPT2_CLOCK
+#endif  //< #if SEAM >= SCRIPT2_CLOCK

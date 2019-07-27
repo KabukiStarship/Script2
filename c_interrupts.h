@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_EXCEPTIONS
 #define INCLUDED_SCRIPT2_EXCEPTIONS YES_0
 #if USING_SCRIPT2_INTERRUPTS == YES_0
@@ -25,4 +25,4 @@ struct LIB_MEMBER RoomCrashException : public std::exception {
 }  // namespace _
 #endif  //< #if USING_SCRIPT2_INTERRUPTS == YES_0
 #endif  //< #if INCLUDED_SCRIPT2_EXCEPTIONS == YES_0
-#endif  //< #if SEAM >= SEAM_SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DICTIONARY

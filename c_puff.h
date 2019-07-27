@@ -9,7 +9,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
-#if SEAM >= SEAM_SCRIPT2_ITOS
+#if SEAM >= SCRIPT2_ITOS
 #ifndef SCRIPT2_PUFF
 #define SCRIPT2_PUFF 1
 
@@ -43,7 +43,7 @@ LIB_MEMBER SI4 STRLength(SI4 value);
 LIB_MEMBER SI4 STRLength(UI8 value);
 LIB_MEMBER SI4 STRLength(SI8 value);
 
-#if SEAM >= SEAM_SCRIPT2_FTOS
+#if SEAM >= SCRIPT2_FTOS
 
 /* IEEE754 Powers of 10 integral portions LUT. */
 LIB_INLINE const void* Binary32Pow10IntegralPortions();
