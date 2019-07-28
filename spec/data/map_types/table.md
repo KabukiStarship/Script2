@@ -22,8 +22,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 |        Buffer                        |
 +--------------------------------------+
 |_____   Buffer                        |
-|_____ ^ Collision List N   Collision  |
-|_____ | Collision List 0     List     |
+|_____ ^ Collision N        Collision  |
+|_____ | Collision 0          Pile     |
 +--------------------------------------+
 |_____   Buffer                        |
 |_____ ^ Collision Index N   Unsorted  |
@@ -34,7 +34,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 |      | Collision Index 0   Indexes   |
 +--------------------------------------+
 |_____   Buffer                        |
-|_____ ^ Key Offset N          key     |
+|_____ ^ Key Offset N          Key     |
 |      | Key Offset 1        Offsets   |
 +--------------------------------------+
 |_____   Buffer                        |
