@@ -27,7 +27,7 @@ void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    kSize = 256 * sizeof(Char),
+    kSize = 192 * sizeof(Char),
     kCount = 32,
   };
   D_COUT("Testing ALoom<CH"

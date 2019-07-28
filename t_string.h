@@ -564,7 +564,6 @@ Char* TSPrintString(Char* string, Char* stop, const CHE* item) {
     if (!string) return string;
     item = SScan(item, c);
   }
-  if (string >= stop) return nullptr;
   *string = 0;
   return string;
 }

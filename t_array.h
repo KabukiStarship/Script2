@@ -46,6 +46,28 @@ struct TArray {
   SIZ size;  //< Size of the Array in elements.
 };
 
+/* Gets the first byte of the ASCII Object data section. */
+template <typename Class, typename T>
+inline T* TArrayStart(Class* autoject) {
+  SIW address = reinterpret_cast<SIW>(autoject);
+  return reinterpret_cast<T*>(address + sizeof(Class));
+}
+
+/* Prints the item to the printer*/
+template <typename T, typename SIZ, typename Printer>
+Printer& TArrayPrint(Printer& o, TArray<SIZ>* item) {
+  SIZ size = item->size;
+  o << Linef("\n+---\nTArray<SI") << (char)('0' + sizeof(SIZ))
+    << "> size:" << size;
+  if (size == 0) return o;
+  T* items = TArrayStart<T, SIZ>(item);
+  SIZ i = 0;
+  for (; i < size; ++i) {
+    o << "\n| " << i << ".) " << items[i];
+  }
+  return o << Linef("\n+---");
+}
+
 /* The minimum size of an array with zero elements. */
 template <typename SIZ>
 constexpr SIZ TSizeMin() {
@@ -147,13 +169,6 @@ inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
   TSizeSet<SIZ>(buffer, size);
   obj.begin = buffer;
   return buffer;
-}
-
-/* Gets the first byte of the ASCII Object data section. */
-template <typename Class, typename T>
-inline T* TArrayStart(Class* autoject) {
-  SIW address = reinterpret_cast<SIW>(autoject);
-  return reinterpret_cast<T*>(address + sizeof(Class));
 }
 
 /* The maximum autoject size.
@@ -293,7 +308,7 @@ inline T* TArrayStop(UIW* obj) {
 /* Prints this autoject to the COut. */
 template <typename SIZ, typename Printer>
 Printer& TArrayPrint(Printer& o, Autoject& obj) {
-  o << "\nAutoArray<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
+  o << "\nAutoject<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
   UIW* begin = obj.begin;
   if (begin) {
     SIZ size = *reinterpret_cast<SIZ*>(begin);
@@ -302,17 +317,31 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
   return o;
 }
 
-template <typename T, typename SIZ, typename Printer>
-Printer& TArrayPrint(Printer& o, TArray<SIZ>* ary) {
-  SIZ size = ary->size;
-  o << "\nTArray<SI" << (char)('0' + sizeof(SIZ)) << "> size:" << size;
-  if (size == 0) return o;
-  T* items = TArrayStart<T, SIZ>(ary);
-  SIZ i = 0;
-  for (; i < size; ++i) {
-    o << '\n' << i << ".) " << items[i];
+/* Shifts the array elements up and inserts the item at the insert_point. */
+template <typename T>
+inline void TArrayInsert(T* insert_point, T* end, const T& item) {
+  while (end > insert_point) {
+    *end = *(end - 1);
+    --end;
   }
-  return o;
+  *insert_point = item;
+}
+template <typename T, typename SIZ>
+inline void TArrayInsert(T* start, SIZ index, SIZ count, const T& item) {
+  return TArrayInsert<T>(start + index, start + count, item);
+}
+
+/* Deletes the item from the array and shifts the elements down by 1. */
+template <typename T>
+void TArrayDelete(T* item, T* end) {
+  while (item < end) {
+    *item = *(item + 1);
+    ++item;
+  }
+}
+template <typename T, typename SIZ>
+void TArrayDelete(T* item, SIZ count) {
+  return TArrayDelete<T>(item, item + count);
 }
 
 /* An Autoject Array of type T.
@@ -344,9 +373,9 @@ class AArray {
   }
 
   /* Constructs a autoject with either statically or dynamically allocated
-  memory based on the size can fit in the buffer_. If the buffer_ is statically
-  allocated but the size can't fit in the buffer a new block of dynamic memory
-  will be created. */
+  memory based on the size can fit in the buffer_. If the buffer_ is
+  statically allocated but the size can't fit in the buffer a new block of
+  dynamic memory will be created. */
   AArray(SIZ size, RamFactory factory) {
     TArrayInit<T, SIZ>(obj_, buffer_.Words(), size, RamFactoryInit(factory));
   }

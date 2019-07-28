@@ -27,7 +27,7 @@ void TestTable() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<SI")
          << Char('0' + sizeof(SIZ)) << ",UI" << Char('0' + sizeof(HSH)) << ",CH"
          << Char('0' + sizeof(Char)) << ">\n"
-         << Linef("+---\n"));
+         << Linef("+---\n\n"));
 
   ATable<SIZ, HSH, Char> table;
 
@@ -57,10 +57,10 @@ void TestTable() {
   A_AVOW((SIZ)2, table.Find(c));
   A_AVOW((SIZ)3, table.Find(d));
 
-  A_AVOW((SIZ)-1, table.Add(a));
-  A_AVOW((SIZ)-1, table.Add(b));
-  A_AVOW((SIZ)-1, table.Add(c));
-  A_AVOW((SIZ)-1, table.Add(d));
+  A_AVOW(TInvalidIndex<SIZ>(), table.Add(a));
+  A_AVOW(TInvalidIndex<SIZ>(), table.Add(b));
+  A_AVOW(TInvalidIndex<SIZ>(), table.Add(c));
+  A_AVOW(TInvalidIndex<SIZ>(), table.Add(d));
 
   A_AVOW((SIZ)4, table.Add(abc));
   A_AVOW((SIZ)4, table.Find(abc));
@@ -81,7 +81,7 @@ void TestTable() {
   A_AVOW((SIZ)7, table.Find(cab));
 
   D_COUT_OBJ(table);
-  A_AVOW((SIZ)-1, table.Find(test));
+  A_AVOW(TInvalidIndex<SIZ>(), table.Find(test));
 
   // D_PAUSE("");
 }
