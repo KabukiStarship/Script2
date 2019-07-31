@@ -26,12 +26,12 @@
     <ClInclude Include="04_sprinter.h" />
     <ClInclude Include="05_clock.h" />
     <ClInclude Include="06_stack.h" />
-    <ClInclude Include="07_strand.h" />
-    <ClInclude Include="08_matrix.h" />
-    <ClInclude Include="09_loom.h" />
-    <ClInclude Include="10_table.h" />
-    <ClInclude Include="11_list.h" />
-    <ClInclude Include="12_map.h" />
+    <ClInclude Include="09_strand.h" />
+    <ClInclude Include="07_matrix.h" />
+    <ClInclude Include="10_loom.h" />
+    <ClInclude Include="11_table.h" />
+    <ClInclude Include="12_list.h" />
+    <ClInclude Include="08_map.h" />
     <ClInclude Include="13_book.h" />
     <ClInclude Include="14_dictionary.h" />
     <ClInclude Include="15_expr.h" />
@@ -39,7 +39,7 @@
     <ClInclude Include="17_room.h" />
     <ClInclude Include="c_address.h" />
     <ClInclude Include="c_args.h" />
-    <ClInclude Include="c_autoject.h" />
+    <ClInclude Include="c_array.h" />
     <ClInclude Include="c_avalue.h" />
     <ClInclude Include="c_bin.h" />
     <ClInclude Include="c_bout.h" />
@@ -52,11 +52,9 @@
     <ClInclude Include="c_error.h" />
     <ClInclude Include="c_event.h" />
     <ClInclude Include="c_floor.h" />
-    <ClInclude Include="c_hash.h" />
     <ClInclude Include="c_interrupts.h" />
     <ClInclude Include="c_iterator.h" />
     <ClInclude Include="c_language.h" />
-    <ClInclude Include="c_lock.h" />
     <ClInclude Include="c_mirror.h" />
     <ClInclude Include="c_op.h" />
     <ClInclude Include="c_operand.h" />
@@ -64,7 +62,6 @@
     <ClInclude Include="c_rng.h" />
     <ClInclude Include="c_room.h" />
     <ClInclude Include="c_slot.h" />
-    <ClInclude Include="c_socket.h" />
     <ClInclude Include="c_string.h" />
     <ClInclude Include="c_test.h" />
     <ClInclude Include="c_varint.h" />
@@ -83,7 +80,6 @@
     <ClInclude Include="t_clock.h" />
     <ClInclude Include="t_dic.h" />
     <ClInclude Include="t_door.h" />
-    <ClInclude Include="t_hash.h" />
     <ClInclude Include="t_library.h" />
     <ClInclude Include="t_list.h" />
     <ClInclude Include="t_loom.h" />
@@ -91,7 +87,7 @@
     <ClInclude Include="t_matrix.h" />
     <ClInclude Include="t_puff.h" />
     <ClInclude Include="t_set.h" />
-    <ClInclude Include="t_socket.h" />
+    <ClInclude Include="t_binary.h" />
     <ClInclude Include="t_stack.h" />
     <ClInclude Include="t_strand.h" />
     <ClInclude Include="t_uniprinter.h" />
@@ -112,7 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc" />
-    <ClCompile Include="script2_autoject.cc" />
+    <ClCompile Include="script2_array.cc" />
     <ClCompile Include="script2_avalue.cc" />
     <ClCompile Include="script2_bin.cc" />
     <ClCompile Include="script2_bout.cc" />
@@ -124,9 +120,7 @@
     <ClCompile Include="script2_error.cc" />
     <ClCompile Include="script2_event.cc" />
     <ClCompile Include="script2_floor.cc" />
-    <ClCompile Include="script2_hash.cc" />
     <ClCompile Include="script2_interrupts.cc" />
-    <ClCompile Include="script2_lock.cc" />
     <ClCompile Include="script2_morsecode.cc" />
     <ClCompile Include="script2_op.cc" />
     <ClCompile Include="script2_operand.cc" />
@@ -134,7 +128,7 @@
     <ClCompile Include="script2_rng.cc" />
     <ClCompile Include="script2_room.cc" />
     <ClCompile Include="script2_slot.cc" />
-    <ClCompile Include="script2_socket.cc" />
+    <ClCompile Include="script2_binary.cc" />
     <ClCompile Include="script2_string.cc" />
     <ClCompile Include="script2_test.cc" />
     <ClCompile Include="script2_vk.cc" />

@@ -14,7 +14,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_WALL
 #include "c_door.h"
 #include "c_op.h"
-#incude "c_autoject.h"
+#incude "c_array.h"
 
 namespace _ {
 

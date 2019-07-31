@@ -1,4 +1,31 @@
 cmake_minimum_required (VERSION 2.6)
 project (Script2)
 include_directories("${PROJECT_BINARY_DIR}")
-add_library(Script2LibStatic script2_autoject.cc script2_avalue.cc script2_bin.cc script2_bout.cc script2_bsq.cc script2_cin.cc script2_clock.cc script2_cout.cc script2_crabs.cc script2_error.cc script2_event.cc script2_floor.cc script2_hash.cc script2_interrupts.cc script2_lock.cc script2_morsecode.cc script2_op.cc script2_operand.cc script2_puff.cc script2_rng.cc script2_room.cc script2_slot.cc script2_socket.cc script2_stringf.cc script2_test.cc script2_vk.cc global.h)
+add_library(Script2LibStatic 
+  script2_autoject.cc
+	script2_avalue.cc 
+	script2_bin.cc
+	script2_bout.cc
+	script2_bsq.cc
+	script2_cin.cc
+	script2_clock.cc 
+	script2_cout.cc
+	script2_crabs.cc
+	script2_error.cc
+	script2_event.cc 
+	script2_floor.cc
+	script2_hash.cc
+	script2_interrupts.cc
+	script2_lock.cc 
+	script2_morsecode.cc
+	script2_op.cc
+	script2_operand.cc
+	script2_puff.cc 
+	script2_rng.cc
+	script2_room.cc
+	script2_slot.cc
+	script2_socket.cc
+	script2_string.cc
+	script2_test.cc
+	script2_vk.cc
+	global.h)

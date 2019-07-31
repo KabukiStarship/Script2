@@ -1,110 +1,47 @@
 # [SCRIPT Specification](../../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](../readme.md)
 
 ### [Map Types]./(readme.md)
 
 #### Map
 
-Maps are one-to-one maps of Id-{Type-Value} tuples identical in structure to Lists with the exception that the . are stacks of type-value tuples similar in memory layout to Books but they **do not** have keys. Functionally they are identical to B-Sequences expect the offsets are stored as an Array to eliminate the need to scan through the header to calculate the data offset. Sequences are ideal for situations where the fastest possible RW performance is needed.
-
-##### Memory Layout
-
-```AsciiArt
-    +--------------------------+ -----------
-    |_______ Buffer            |   ^     ^
-    |_______ Data N            |  Data   |
-    |_______ Data 0            |   v     |
-    +--------------------------+ -----   |
-    |_______ Buffer            |   ^     |
-    |_______ Sorted Mappings N |   |     |
-    |        Sorted Mappings 1 |   |     |
-    +--------------------------+   |     |
-    |_______ Buffer            |   |    Size
-    |_______ Data Offset N     | Header  |
-    |        Data Offset 1     |   |     |
-    +--------------------------+   |     |
-    |_______ Buffer            |   |     |
-    |_______ Type N            |   |     |
-    |        Type 1            |   |     |
-    +--------------------------+   |     |   ^ Up in addresses.
-    |  AsciiMap<UI, SI> Struct |   v     v   |
-    +--------------------------+ ----------- ^ 0xN
-```
+A Map is a sparse array map of Sorted Domain Values to Codomain Mappings. Codomain mappings always unsigned integers starting where the highest value integer, 0xF...F or -1 in 2's complement, is always an illegal mapping index. Domain types shall be integer or floating-point types.
 
 ##### Set C++ Data Structure
 
+The TMap data structure is identical to the TStack but the two classes are not interoperable due to Memory Layout Requirement.
+
 ```C++
-template<typename UI, typename SI, typename I>
+template <typename SIZ = SI4>
 struct TMap {
-    UI size;       //< ASCII Object size.
-    SI table_size, //< Size of the key strings in bytes.
-       pile_size;  //< Size of the collisions pile in bytes, or 0 if unused.
-    I  item_count, //< Number of items.
-       count_max;  //< Max number of items that can fit in the header.
+  SIZ size,   //< Number of elements in the map.
+      count;  //< Number of mappings.
 };
 ```
 
-##### Hash Function
+##### Memory Layout
 
-**@warning** *Hash function used may change to use an XOR method*.
+The Memory Layout Requirement is we are required to first search the sorted domain values before looking up it's Codomain mapping.
 
-All strings are hashed using a prime multiple with the initial value of the largest possible prime that can fit in a 16, 32, or 64-bit size.
-
-##### Hash Function and Overhead
-
-16, 32, and 64-bit hashes all use the same formula. You multiply the current byte by the magic prime (i.e. the largest 16, 32, or 64-bit prime) and add it to the current hash.
-
-##### C Hash Functions
-
-```C++
-inline hash16_t Hash16 (char c, hash16_t hash) {
-    return cprime + (c * 65521);
-}
-
-hash16_t Hash16 (const char* s, hash16_t hash) {
-    byte c = *s;
-    while (c) {
-        hash = Hash16 (c, hash);
-        ++s;
-        c = *s;
-    }
-    return hash;
-}
-
-inline hash32_t Hash32 (char c, hash32_t hash) {
-    hash32_t cprime = c * 4294967291;
-    return cprime + hash;
-}
-
-hash16_t Hash32 (const char* s, hash32_t hash) {
-    byte c = *s;
-    while (c) {
-        hash = Hash32 (c, hash);
-        ++s;
-        c = *s;
-    }
-    return hash;
-}
-
-inline hash64_t Hash64 (char c, hash64_t hash) {
-    hash64_t cprime = c * 18446744073709551557;
-    return cprime + hash;
-}
-
-hash64_t Hash64 (const char* s, hash64_t hash) {
-    byte c = *s;
-    while (c) {
-        hash = Hash64 (c, hash);
-        ++s;
-        c = *s;
-    }
-    return hash;
-}
+```AsciiArt
++-------------------------------+
+|_____   Buffer                 |
+|_____ ^ Y_n        Codomain    |
+|      | Y_0        Mappings    |
++-------------------------------+
+|_____   Buffer                 |
+|_____ ^ X_n     Sorted Domain  |
+|      | X_0         Values     |
++-------------------------------+  ^ Up in addresses.
+|          TMap Header          |  |
++-------------------------------+ 0x0
 ```
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

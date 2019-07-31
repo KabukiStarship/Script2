@@ -86,7 +86,7 @@ void TestTable() {
   // D_PAUSE("");
 }
 
-static const CH1* _10_Table(const CH1* args) {
+static const CH1* _11_Table(const CH1* args) {
 #if SEAM >= SCRIPT2_TABLE
   A_TEST_BEGIN;
 

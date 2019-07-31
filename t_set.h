@@ -14,7 +14,6 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define INCLUDED_F2_SET 1
 
 #include "c_avalue.h"
-#include "c_utf.h"
 
 namespace _ {
 /*
@@ -100,10 +99,7 @@ struct Collection {
 
   /* Gets the SIW of the object being stored. */
   virtual UIW GetSizeWidth() = 0;
-
-  /*  */
-  virtual UTF1& Print(UTF1& out_) = 0;
 };
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_CLOCK
-#endif  //< INCLUDED_F2_SET
+#endif
+#endif

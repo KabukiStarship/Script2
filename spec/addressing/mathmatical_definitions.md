@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [Universal Addressing Specification](readme.md)
 
 ### Mathmatical Definitions
@@ -39,3 +33,11 @@ Haversine Formula's is used to calculate 3D arc lengths using polar coordinates 
 * Let a = power (power ((sin (l / 2), 2) + cos (l_1) * cos(l_2) * (sin(L / 2), 2)
 * Let c = 2 * atan2 ( sqrt(a), sqrt(1 - a) )
 * Let d = R * c
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

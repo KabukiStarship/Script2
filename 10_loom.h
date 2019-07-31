@@ -138,7 +138,7 @@ void TestLoom() {
   A_AVOW((SIZ)-1, loom.Find(test));
 }
 
-static const CH1* _09_Loom(const CH1* args) {
+static const CH1* _10_Loom(const CH1* args) {
 #if SEAM >= SCRIPT2_LOOM
   A_TEST_BEGIN;
   TestLoom<CH1, SI2>();

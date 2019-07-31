@@ -400,7 +400,7 @@ Printer& TPrintRepeat(Printer& o, Char c, SIW count) {
 
 template <typename Char = CHR>
 const Char* TSTRLinef() {
-  static const Char kString[] = {kLF, kLF, '-', '-', '-', kLF, NIL};
+  static const Char kString[] = {'\n', '\n', '-', '-', '-', '\n', NIL};
   return kString;
 }
 
@@ -538,8 +538,8 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
 
 template <typename Char = CHR>
 const Char* TSTRHeadingf() {
-  static const Char kStrand[] = {kLF, kLF, '+', '-', '-', '-', kLF, '|', ' ',
-                                 NIL, kLF, '+', '-', '-', '-', kLF, NIL};
+  static const Char kStrand[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
+                                 NIL, '\n', '+', '-', '-', '-', '\n', NIL};
   return kStrand;
 }
 

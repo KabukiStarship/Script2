@@ -351,7 +351,8 @@ Binaryf::Binaryf(FP8 item) : valuef(item, sizeof(FP8)) {}
 #endif
 
 // Stringf::Stringf () {}
-Stringf::Stringf() : string_(&buffer_[0]), type_(kNIL), count_(0) {
+Stringf::Stringf() : type_(kNIL), count_(0), buffer_() {
+  string_ = &buffer_[0];
   *buffer_ = 0;
 }
 //< Visual C++ is complaining about unitialized members. I think it's a bug.
@@ -422,8 +423,11 @@ Stringf::Stringf(FP8 item, SIW count) : string_(buffer_), count_(count) {
 }
 #endif
 UIW Stringf::Word() { return buffer_[0]; }
+
 void* Stringf::Value() { return buffer_; }
+
 void* Stringf::Ptr() { return reinterpret_cast<void*>(buffer_[0]); }
+
 const CH1* Stringf::ST1() { return reinterpret_cast<const CH1*>(string_); }
 const CH2* Stringf::ST2() { return reinterpret_cast<const CH2*>(string_); }
 const CH4* Stringf::ST3() { return reinterpret_cast<const CH4*>(string_); }
@@ -778,8 +782,20 @@ Rightf& Rightf::Hex(FP8 item, SIW count) {
 Linef::Linef(CH1 item, SIW count) : element(item, count) {}
 Linef::Linef(const CH1* item, SIW count) : element(item, count) {}
 
-Headingf::Headingf(const CH1* caption1, const CH1* style, SIW count,
-                   const CH1* caption2, const CH1* caption3)
+Headingf::Headingf(const CH1* caption1)
+    : element(caption1, kConsoleWidth),
+      style(nullptr),
+      caption2(nullptr),
+      caption3(nullptr) {}
+
+Headingf::Headingf(const CH1* caption1, const CH1* caption2)
+    : element(caption1, kConsoleWidth),
+      style(nullptr),
+      caption2(caption2),
+      caption3(nullptr) {}
+
+Headingf::Headingf(const CH1* caption1, const CH1* caption2,
+                   const CH1* caption3, const CH1* style, SIW count)
     : element(caption1, count),
       style(style),
       caption2(caption2),

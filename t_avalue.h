@@ -1,6 +1,6 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_ascii.cc
+@file    /script2/t_avalue.h
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -24,7 +24,7 @@ DTW TTypeMap() {
 }  // namespace _
 
 #if SEAM >= SCRIPT2_UNIPRINTER
-#include "t_socket.h"
+#include "t_binary.h"
 #include "t_string.h"
 
 #if SEAM == SCRIPT2_UNIPRINTER
@@ -51,7 +51,7 @@ inline UI4 T() {
 template <typename T = CH1>
 T* TTypeAlignUp(void* pointer, SIW type) {
   SIW align_mask = TypeAlignmentMask(type & kTypePODMask);
-  return reinterpret_cast<T*>(AlignUp(pointer, align_mask));
+  return reinterpret_cast<T*>(AlignUpPTR(pointer, align_mask));
 }
 /*
 template <typename Char = CHR>

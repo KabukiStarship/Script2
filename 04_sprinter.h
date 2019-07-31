@@ -10,17 +10,18 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
+#if SEAM >= SCRIPT2_SPRINTER
+
+#include "t_array.h"
 #include "t_string.h"
 
-#if SEAM == SCRIPT2_UNIPRINTER
+#if SEAM == SCRIPT2_SPRINTER
 #include "module_debug.inl"
 #else
 #include "module_release.inl"
 #endif
 
 using namespace _;
-
-#if SEAM >= SCRIPT2_UNIPRINTER
 namespace script2 {
 
 template <typename Char, typename SIZ>
@@ -33,13 +34,13 @@ static const Char* _04_SPrinter() {
     kCount = 512,
   };
 
-  Char str_a[kCount], str_b[kCount];
+  Char str_a[kCount];
 
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
 
-  D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
+  D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
   TSPrint<Char>(str_a, kCount, kTesting123);
   D_COUT(Charsf(str_a, 64));
 
@@ -59,7 +60,7 @@ static const Char* _04_SPrinter() {
                                        {'A', 'p', 'p', 'l', 'e', 's', NIL}}};
   const Char* cursor;
   for (SI4 i = 0; i < kTestStrandsCount; ++i) {
-    D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
+    D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
     cursor = TSPrintString<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
     D_COUT(Charsf(str_a, 64));
     Test(cursor);
@@ -73,7 +74,7 @@ static const Char* _04_SPrinter() {
 
   const Char kTestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
 
-  D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
+  D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
 
   utf.Set(str_a).Print(kTestingSpace);
   utf.Print(1);
@@ -130,7 +131,7 @@ static const Char* _04_SPrinter() {
 
   SI4 shift_right = 6;
   for (SI4 i = 0; i < 12; ++i) {
-    D_SOCKET_WIPE(str_a, (SIW)(kCount * sizeof(Char)));
+    D_ARRAY_WIPE(str_a, (SIW)(kCount * sizeof(Char)));
     cursor = TPrintRight<Char>(str_a, str_a + kCount - 1, kTestingSpace, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
@@ -158,7 +159,7 @@ static const Char* _04_SPrinter() {
                                   '6', '7', '8', '9', NIL};
 
   for (SI4 i = 12; i >= 0; --i) {
-    D_SOCKET_WIPE(str_a, kCount * sizeof(Char));
+    D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
     cursor = TPrintCenter<Char>(str_a, str_a + kCount - 1, kNumbers, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
@@ -166,23 +167,12 @@ static const Char* _04_SPrinter() {
     A_AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 
-  D_COUT(Headingf("Testing TPrintSocket<Char>"));
-
-  for (SI4 i = 0; i < kCount / 4; ++i) str_b[i] = '0' + i % 10;
-
-  D_SOCKET_WIPE(str_a, (kCount * sizeof(Char)) / 4);
-
-  str_b[kCount - 1] = 0;
-  A_ASSERT(
-      TPrintSocket<Char>(str_a, str_a + kCount, str_b, str_b + kCount / 4));
-  D_COUT(Charsf(str_b, kCount / 2));
-
   return nullptr;
 }
-#endif  //< #if SEAM >= SCRIPT2_UNIPRINTER
+#endif  //< #if SEAM >= SCRIPT2_SPRINTER
 
 static const CH1* _04_SPrinter(const CH1* args) {
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= SCRIPT2_SPRINTER
   A_TEST_BEGIN;
 
   if (_04_SPrinter<CH1, SI4>()) return "Error testing UTF-8.";

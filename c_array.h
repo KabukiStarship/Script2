@@ -10,13 +10,16 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_AUTOJECT_HEADER
 #define SCRIPT2_AUTOJECT_HEADER
 
 namespace _ {
 struct Autoject;
-}
+/* Fills the array with the given fill_char identical to memset. */
+LIB_MEMBER CH1* ArrayFill(void* begin, SIW size_bytes, CH1 fill_char = 0);
+}  // namespace _
+
+#if SEAM >= SCRIPT2_STACK
 
 /* RamFactory manages memory for ASCII Objects.
 @return A word-aligned buffer, rounding up if unaligned.
@@ -51,28 +54,40 @@ enum AsciiFactoryError {
   kFactoryErrorCount = 6,   //< Factory function count.
 };
 
-/* Creates or destroys a block of heap memory. */
+/* Deletes the given heap_block. */
+LIB_MEMBER void Delete(UIW* heap_block);
+
+/* RamFactory deletes the heap_block. */
 LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, SIW size);
 
 /* Creates a block of heap memory. */
 LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, SIW size);
 
+/* RamFactory deletes the heap_block. */
+LIB_MEMBER UIW* RamFactoryHeapType(UIW* obj, SIW size, DTW data_type);
+
+/* Creates a block of heap memory. */
+LIB_MEMBER UIW* RamFactoryStackType(UIW* ptr, SIW size, DTW data_type);
+
 LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 
-/* Deletes the given obj using the obj.factory. */
-LIB_MEMBER void Delete(Autoject& obj);
+class Nil {
+ public:
+  /* Constructures nothing. */
+  Nil();
 
-/* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayFill(void* begin, void* end, CH1 fill_char = 0);
+  /* Gets the size of the socket. */
+  static constexpr SIW Size();
 
-/* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayFill(void* begin, SIW size, CH1 fill_char = 0);
+  /* Gets the size of the socket. */
+  static constexpr SIW SizeBytes();
 
-/* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayWipe(void* begin, void* end);
+  /* Gets the size of the socket. */
+  static constexpr SIW SizeWords();
 
-/* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayWipe(void* begin, SIW size);
+  /* Gets the nil begin word address. */
+  UIW* Words();
+};
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin     The start of the write socket.
@@ -83,47 +98,11 @@ LIB_MEMBER CH1* ArrayWipe(void* begin, SIW size);
 LIB_MEMBER CH1* ArrayCopy(void* begin, SIW size, const void* read,
                           SIW read_size);
 
-/* Copies the source to the target functionally identical to memcpy.
-@param  begin The start of the write socket.
-@param  stop  The stop of the write socket.
-@param  begin The begin of the read socket.
-@param  size  Number of bytes to copy.
-@return Pointer to the last UI1 written or nil upon failure. */
-LIB_MEMBER CH1* ArrayCopy(void* start, void* stop, const void* begin,
-                          SIW read_size);
-
-/* Copies the source to the target functionally identical to memcpy.
-@param  start The start of the write socket.
-@param  stop  The stop of the write socket.
-@param  begin The begin of the read socket.
-@param  end   The end of the read socket.
-@return Pointer to the last UI1 written or nil upon failure. */
-LIB_INLINE CH1* ArrayCopy(void* start, void* stop, const void* begin,
-                          const void* end);
-
-/* Compares the two memory sockets.
-@param  start  The start of Socket A.
-@param  stop   The stop of Socket A.
-@param  begin  The begin of Socket B.
-@param  end    The end of Socket B.
-@return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, const void* stop,
-                            const void* begin, const void* end);
-
-/* Compares the two memory sockets.
-@param  start The start of Socket A.
-@param  stop  The stop of Socket A.
-@param  begin The begin of Socket B.
-@param  size  The size of Socket B.
-@return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, void* stop, const void* begin,
-                            SIW size);
-
 /* Compares the two memory sockets.
 @param  start The start of socket a.
-@param  size_a The size of Socket A .
+@param  size_a The size of Array A .
 @param  start  The begin of socket b.
-@param  size_b The size of Socket B.
+@param  size_b The size of Array B.
 @return True if they are the same and false if they are not. */
 LIB_MEMBER BOL ArrayCompare(const void* start, SIW size_a, const void* begin,
                             SIW size_b);

@@ -123,7 +123,7 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
     D_COUT('\n' << i << ":\"" << args[i] << '\"');
   }
 #endif
-  D_COUT(kLF)
+  D_COUT('\n')
   while (IsOn()) {
     try {
       result = Init(nullptr);

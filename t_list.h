@@ -14,8 +14,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef INCLUDED_SCRIPTTLIST
 #define INCLUDED_SCRIPTTLIST
 
+#include "t_binary.h"
 #include "t_set.h"
-#include "t_socket.h"
 #include "t_stack.h"
 
 #if SEAM == SCRIPT2_LIST
@@ -26,7 +26,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* An ASCII List header.
+/* ASCII List header.
 Like most ASCII AArray Types, the size may only be 16-bit, 32-bit, or
 64-bit. The unsigned value must be twice the width of the signed value.
 
@@ -54,14 +54,14 @@ Like most ASCII AArray Types, the size may only be 16-bit, 32-bit, or
 +--------------------------+ ----------- ^ 0xN
 @endcode
 */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 struct TList {
   SIZ size;
   Index count_max, count;
 };
 
 /* Returns the minimum count to align the data struct to a 64-bit boundary. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Index ListCountMaxBoundsLower() {
   return 8 / sizeof(Index);
 }
@@ -70,7 +70,7 @@ Index ListCountMaxBoundsLower() {
 The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
-template <typename SIZ = UI4, typename Index = SI2,
+template <typename SIZ = SIN, typename Index = SI2,
           SIW largest_expected_type = sizeof(SIW)>
 constexpr SIZ ListSizeMin(Index count_max) {
   return (SIZ)sizeof(TList<SIZ, Index>) +
@@ -79,18 +79,18 @@ constexpr SIZ ListSizeMin(Index count_max) {
 }
 
 /* Deletes the list contents by overwriting it with zeros. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 void ListWipe(TList<SIZ, Index>* list) {
   D_ASSERT(list)
   list->count = 0;
   SIZ size = list->size - sizeof(TList<SIZ, Index>);
-  SocketWipe(reinterpret_cast<CH1*>(list) + sizeof(TList<SIZ, Index>), size);
+  ArrayFill(reinterpret_cast<CH1*>(list) + sizeof(TList<SIZ, Index>), size);
 }
 
 /* Initializes a AsciiList from preallocated memory.
 count_max must be in multiples of 4. Given there is a fixed size, both the
 count_max and size will be downsized to a multiple of 4 automatically. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 TList<SIZ, Index>* ListInit(UIW* socket, SIZ size, Index count_max) {
   if (!socket)  // This may be nullptr if ListNew<SIZ,Index> (Index, SIZ)
                 // failed.
@@ -120,7 +120,7 @@ TList<SIZ, Index>* ListInit(UIW* socket, SIZ size, Index count_max) {
 }
 
 /* Creates a list from dynamic memory. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 UIW* ListNew(Index count_max, SIZ size) {
   count_max = TAlignUpUnsigned<UI8, SIZ>(count_max);
   if (size < ListSizeMin<SIZ, Index>(count_max)) return nullptr;
@@ -136,7 +136,7 @@ UIW* ListNew(Index count_max, SIZ size) {
 }
 
 /* Creates a list from dynamic memory. */
-template <typename SIZ = UI4, typename Index = SI2,
+template <typename SIZ = SIN, typename Index = SI2,
           SIW largest_expected_type = sizeof(SIW)>
 inline UIW* ListNew(Index count_max) {
   count_max = AlignUp<Index>(count_max);
@@ -153,21 +153,21 @@ inline UIW* ListNew(Index count_max) {
 }
 
 /* Returns the type bytes array. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 SI4* ListTypes(TList<SIZ, Index>* list) {
   D_ASSERT(list);
   return reinterpret_cast<SI4*>(list) + sizeof(CList<SIZ, Index>);
 }
 
 /* Gets a pointer to the begging of the data socket. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline CH1* ListDataBegin(TList<SIZ, Index>* list) {
   D_ASSERT(list);
   return reinterpret_cast<CH1*>(list) + list->count_max * (sizeof(Index) + 1);
 }
 
 /* Gets the base element 0 of the list's offset array. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline SIZ* ListOffsets(TList<SIZ, Index>* list) {
   UIW ptr =
       reinterpret_cast<UIW>(list) + sizeof(TList<SIZ, Index>) + list->count_max;
@@ -175,14 +175,14 @@ inline SIZ* ListOffsets(TList<SIZ, Index>* list) {
 }
 
 /* Returns the last UI1 in the data array. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline CH1* ListDataEnd(TList<SIZ, Index>* list) {
   D_ASSERT(list);
   return reinterpret_cast<CH1*>(list) + list->size - 1;
 }
 
 /* Returns the last UI1 in the data array. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline CH1* ListDataEnd(TList<SIZ, Index>* list, Index index) {
   D_ASSERT(list);
   if (index < 0 || index >= index->count) return nullptr;
@@ -190,13 +190,13 @@ inline CH1* ListDataEnd(TList<SIZ, Index>* list, Index index) {
 }
 
 /* Returns a pointer to the begging of the data socket. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Socket ListDataVector(TList<SIZ, Index>* list) {
   return Socket(ListDataBegin<SIZ, Index>(list), ListDataEnd<SIZ, Index>(list));
 }
 
 /* Returns the last UI1 in the data array. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
   D_ASSERT(list);
   Index count = list->count;
@@ -211,7 +211,7 @@ inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
   return ObjEnd<SIZ>(pointer, type);
 }
 
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 void ListDataSpaceBelow(TList<SIZ, Index>* list, Index index,
                         Socket& free_space) {
   D_ASSERT(list);
@@ -234,7 +234,7 @@ void ListDataSpaceBelow(TList<SIZ, Index>* list, Index index,
 
 /* Insets the given type-value tuple.
     @return -1 upon failure or the index upon success. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Index ListInsert(TList<SIZ, Index>* list, SI4 type, const void* value,
                  Index index) {
   D_ASSERT(list)
@@ -308,19 +308,19 @@ Index ListInsert(TList<SIZ, Index>* list, SI4 type, const void* value,
 }
 
 /* Adds a type-value to the stop of the list. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline Index ListPush(TList<SIZ, Index>* list, SI4 type, const void* value) {
   return ListInsert<SIZ, Index>(list, type, value, list->count);
 }
 
 /* Removes a type-value to the stop of the list. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 inline Index ListPop(TList<SIZ, Index>* list) {
   return ListRemove<SIZ, Index>(list, list->count - 1);
 }
 
 /* Returns the max count an array can handle. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Index ListCountMax() {
   enum {
     kMaxIndexes = sizeof(Index) == 1
@@ -333,7 +333,7 @@ Index ListCountMax() {
 }
 
 /* Deletes the list contents without wiping the contents. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 void ListClear(TList<SIZ, Index>* list) {
   D_ASSERT(list)
   list->count = 0;
@@ -345,7 +345,7 @@ void ListClear(TList<SIZ, Index>* list) {
 @warning This function assumes that the member you're checking for came
 from Script. If it's you're own code calling this, you are
 required to ensure the value came from a ASCII List. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 BOL ListContains(TList<SIZ, Index>* list, void* address) {
   D_ASSERT(list)
   if (reinterpret_cast<CH1*>(address) < reinterpret_cast<CH1*>(list))
@@ -355,7 +355,7 @@ BOL ListContains(TList<SIZ, Index>* list, void* address) {
 }
 
 /* Removes the item at the given address from the list. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Index ListRemove(TList<SIZ, Index>* list, Index index) {
   Index count = list->count;
   TStackRemove<SIZ, Index>(ListOffsets<SIZ, Index>(list), count, index);
@@ -363,7 +363,7 @@ Index ListRemove(TList<SIZ, Index>* list, Index index) {
 }
 
 /* Finds a tuple that contains the given pointer. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 Index ListFind(TList<SIZ, Index>* list, void* adress) {
   D_ASSERT(list)
   SIZ *offsets = ListOffsets<SIZ, Index>(list),
@@ -379,14 +379,14 @@ Index ListFind(TList<SIZ, Index>* list, void* adress) {
 }
 
 /* Removes the item at the given address from the list. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 BOL ListRemove(TList<SIZ, Index>* list, void* adress) {
   return ListRemove<SIZ, Index>(list, ListFind(list, address));
 }
 
 /* Returns the value at the given index.
     @return Returns nil if the index is out of the count range. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 const void* ListValue(TList<SIZ, Index>* list, Index index) {
   D_ASSERT(list)
   if (index < 0 || index >= list->count) return nullptr;
@@ -394,7 +394,7 @@ const void* ListValue(TList<SIZ, Index>* list, Index index) {
 }
 
 /* Prints the given AsciiList to the console. */
-template <typename Printer, typename SIZ = UI4, typename Index = SI2>
+template <typename Printer, typename SIZ = SIN, typename Index = SI2>
 Printer& PrintList(Printer& o, TList<SIZ, Index>* list) {
   D_ASSERT(list)
 
@@ -402,7 +402,8 @@ Printer& PrintList(Printer& o, TList<SIZ, Index>* list) {
   o << "\n\nList: size:" << list->size << " count:" << count
     << " count_max:" << list->count_max;
   for (Index index = 0; index < count; ++index) {
-    o << kLF << index << ".) "
+    o << '\n'
+      << index << ".) "
       << AValue(ListTypes<SIZ, Index>(list)[index],
                 ListValue<SIZ, Index>(list, index));
   }
@@ -410,7 +411,7 @@ Printer& PrintList(Printer& o, TList<SIZ, Index>* list) {
 }
 
 /* ASCII List that uses dynamic memory. */
-template <typename SIZ = UI4, typename Index = SI2>
+template <typename SIZ = SIN, typename Index = SI2>
 class AList {
  public:
   /* Constructs a list with a given count_max with estimated size_bytes. */

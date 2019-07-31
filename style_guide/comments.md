@@ -1,5 +1,4 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Comments
 
@@ -159,7 +158,6 @@ for (int i = 0; i < result->size(); i++) {
   (*result)[i] = x >> 1;
   x &= 1;
 }
-
 ```
 
 #### Line Comments
@@ -205,13 +203,9 @@ When the meaning of a function argument is non-obvious, consider one of the foll
 
 Consider the following example:
 
-#### Bad Code// What are these arguments?
+***Bad Code***// What are these arguments?
 
 const DecimalNumber product = CalculateProduct(values, 7, false, nullptr);
-
-```
-
-versus:
 
 ```C++
 ProductOptions options;
@@ -221,13 +215,13 @@ const DecimalNumber product =
     CalculateProduct(values, options, /*completion_callback=*/nullptr);
 ```
 
-#### Don'ts
+***Dont's***
 
 Do not state the obvious. In particular, don't literally describe what code does, unless the behavior is non-obvious to a reader who understands C++ well. Instead, provide higher level comments that describe _why_ the code does what it does, or make the code self describing.
 
 Compare this:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 // Find the element in the vector.  <-- Bad: obvious!
@@ -245,7 +239,6 @@ auto iter = std::find(v.begin(), v.end(), element);
 if (iter != v.end()) {
   Process(element);
 }
-
 ```
 
 Self-describing code doesn't need a comment. The comment from the example above would be obvious:

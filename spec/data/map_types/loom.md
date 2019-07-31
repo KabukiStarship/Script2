@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](../readme.md)
 
 ### [Objects](readme.md)
@@ -17,31 +11,39 @@ ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash 
 ##### Sequence Memory Layout
 
 ```AsciiArt
-    +==========================+ -----------
-    |_______ Strings 0         |  Strings   |
-    |_______ ...               |   |     |
-    |_______ Data N            |   v     |
-    |_______ ...               |   |     |
-    |_______ Buffer            |   ^     ^
-    |==========================| -----   |
-    |_______ count_max         |   ^     |
-    |_______ ...               |   |     |
-    |_______ Sorted Mappings N |   |     |
-    |_______ ...               |   |     |
-    |        Sorted Mappings 1 |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |    Size
-    |_______ ...               |   |     |
-    |_______ Data Offset N     |   |     |
-    |_______ ...               | Header  |
-    |        Data Offset 1     |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Type byte N       |   |     |
-    |_______ ...               |   |     |
-    |        Type byte 1       |   |     |   ^ 0x(N+c)+sizeof(AsciiList<UI, SI>)
-    |==========================|   |     |   |
-    |  AsciiMap<UI, SI> Struct |   v     v   ^
-    +==========================+ ----------- ^ 0xN
++--------------------------+ -----------
+|_______ Strings 0         |  Strings   |
+|_______ ...               |   |     |
+|_______ Data N            |   v     |
+|_______ ...               |   |     |
+|_______ Buffer            |   ^     ^
++--------------------------+ -----   |
+|_______ count_max         |   ^     |
+|_______ ...               |   |     |
+|_______ Sorted Mappings N |   |     |
+|_______ ...               |   |     |
+|        Sorted Mappings 1 |   |     |
++--------------------------+   |     |
+|_______ count_max         |   |    Size
+|_______ ...               |   |     |
+|_______ Data Offset N     |   |     |
+|_______ ...               | Header  |
+|        Data Offset 1     |   |     |
++--------------------------+   |     |
+|_______ count_max         |   |     |
+|_______ ...               |   |     |
+|_______ Type byte N       |   |     |
+|_______ ...               |   |     |
+|        Type byte 1       |   |     |   ^ Up in addresses.
++--------------------------+   |     |   |
+|       Loom Header        |   v     v   ^
++==========================+ ----------- ^ 0xN
 ```
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

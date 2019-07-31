@@ -11,8 +11,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <pch.h>
 
 #if SEAM >= SCRIPT2_MATRIX
-#ifndef INCLUDED_SCRIPT2_ARRAY
-#define INCLUDED_SCRIPT2_ARRAY
+#ifndef INCLUDED_SCRIPT2_MATRIX
+#define INCLUDED_SCRIPT2_MATRIX
 
 #include "t_stack.h"
 
@@ -39,37 +39,68 @@ Please see the ASCII Data Types Specificaiton for DRY documentation.
 0xN +-----------------+
 @endcode
 */
-template <typename SIZ = SI4>
+template <typename SIZ = SIN>
 struct TMatrix {
   SIZ size;                //< SIZ of the array in bytes.
   TStack<SIZ> dimensions;  //< The stack of dimensions.
 };
 
-template <typename T = SI4, typename SIZ = SI4>
-constexpr SIZ TMatrixCountUpperLimit(SIZ dimension_count, SIZ element_count) {
-  SIZ header_size = (SIZ)(sizeof(TStack<SIZ>) +
-                          TAlignUpSigned<SIZ>(dimension_count * sizeof(SIZ)));
-  return (SIZ)(((~(SIZ)0) - 7) - header_size) / (SIZ)sizeof(T);
+/* Max number of elements that can fit in the given SIZ. */
+template <typename T = SIW, typename SIZ = SIN>
+constexpr SIZ CMatrixElementCountMax() {
+  return (TSignedMax<SIZ>() - sizeof(TStack<SIZ>)) / sizeof(T);
+}
+
+template <typename T = SIW, typename SIZ = SIN>
+constexpr SIZ cMatrixCountUpperLimit(SIZ dimension_count, SIZ element_count) {
+  SIZ header_size =
+      (SIZ)(sizeof(TStack<SIZ>) + AlignUp(dimension_count * sizeof(SIZ)));
+  return (SIZ)(((~(SIZ)0) - kWordLSbMask) - header_size) / (SIZ)sizeof(T);
+}
+
+/* Prints the TMatrix to the UTF. */
+template <typename Printer, typename T = SIW, typename SIZ = SIN>
+Printer& TMatrixPrint(Printer& o, TMatrix<SIZ>* matrix) {
+  A_ASSERT(matrix);
+  SIZ size = matrix->size, dimension_size = matrix->dimensions.size,
+      dimension_count = matrix->dimensions.count;
+
+  o << "\n\nArray: size:" << size << " dimensions:{" << dimension_count;
+
+  SIZ *dimensions = TStackStart<SIZ, SIZ>(&matrix->dimensions),
+      *dimensions_end = dimensions + dimension_count - 1;
+  SIZ element_count = *dimensions++;
+
+  while (dimensions < dimensions_end) {
+    SIZ dimension = *dimensions++;
+    element_count *= dimension;
+    if (dimensions == dimensions_end)
+      o << dimension << '\n';
+    else
+      o << dimension << ", ";
+  }
+  o << '}';
+
+  return o;
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SI4, typename SIZ = SI4>
-constexpr SIZ TMatrixElementCount(const SIZ* dimensions) {
+template <typename T = SIW, typename SIZ = SIN>
+SIZ TMatrixElementCount(const SIZ* dimensions) {
   D_ASSERT(dimensions);
-  SIZ dimension_count = *dimensions++;
-  SIZ size = sizeof(TStack<SIZ>) + sizeof(SIZ);
+  SIZ dimension_count = *dimensions++, element_count = *dimensions++;
   while (dimension_count-- > 0) {
     SIZ current_dimension = *dimensions++;
     if (current_dimension < 1) return -1;
     element_count *= current_dimension;
   }
-  if (element_count > TMatrixCountUpperLimit<T, SIZ>()) return -1;
-  return element_count * sizeof(T);
+  if (element_count > cMatrixCountUpperLimit<T, SIZ>()) return -1;
+  return element_count(T);
 }
 
 /* Returns the required size of the given array. */
-template <typename T = SI4, typename SIZ = SI4>
-constexpr SIZ TMatrixSize(const SIZ* dimensions) {
+template <typename T = SIW, typename SIZ = SIN>
+SIZ TMatrixSize(const SIZ* dimensions) {
   D_ASSERT(dimensions);
   SIZ dimension_count = *dimensions++;
   if (dimension_count-- <= 0) return 0;
@@ -79,17 +110,17 @@ constexpr SIZ TMatrixSize(const SIZ* dimensions) {
     if (dimension <= 0) return -1;
     element_count *= dimension;
   }
-  if (element_count > TMatrixCountUpperLimit<T, SIZ>()) return -1;
+  if (element_count > cMatrixCountUpperLimit<T, SIZ>()) return -1;
   return sizeof(TStack<SIZ>) + element_count * sizeof(T);
 }
 
 /* Initializes an stack of n elements of the given type.
 @param socket An stack of bytes large enough to fit the stack. */
-template <typename T = SI4, typename SIZ = SI4>
-TStack<SIZ>* TMatrixInit(const SIZ* dimensions) {
+template <typename T = SIW, typename SIZ = SIN>
+TMatrix<SIZ>* TMatrixInit(const SIZ* dimensions) {
   A_ASSERT(dimensions);
-  SIZ dimension_count = *dimension;
-  if (dimension_count < 0 || dimension_count > kStackCountMax) return nullptr;
+  SIZ dimension_count = *dimensions;
+  if (dimension_count < 0) return nullptr;
   SIZ size = (SIZ)sizeof(TStack<SIZ>) + dimension_count * sizeof(T);
   UIW* socket = new UIW[size >> kWordBitCount];
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(socket);
@@ -100,20 +131,46 @@ TStack<SIZ>* TMatrixInit(const SIZ* dimensions) {
   return stack;
 }
 
-template <typename T = SI4, typename SIZ = SI4>
-SIZ TMatrixElementCountMax() {
-  return (UnsignedMax<SIZ>() - (SIZ)sizeof(TStack<SIZ>)) / sizeof(T);
+/* Calculates the size of the Dimensions Stack with the TMatrix header. */
+template <typename SIZ>
+inline SIZ TDimensionsSize(SIZ dimension_count) {
+  return sizeof(TMatrix<SIZ>) + sizeof(SIZ) * dimension_count;
+}
+
+template <typename T, typename SIZ, SIZ kAlignementMask_ = sizeof(T) - 1>
+SIZ TMatrixSizeBytes(SIZ dimension_count, SIZ element_count) {
+  SIZ size_bytes =
+      TDimensionsSize<SIZ>(dimension_count) + sizeof(T) * element_count;
+  return AlignUp(size_bytes, kAlignementMask_);
 }
 
 /* Creates a dynamically allocated ARY. */
-template <typename T = SI4, typename SIZ = SI4>
-TStack<SIZ>* TMatrixNew(SIZ x) {
+template <typename T = SIW, typename SIZ = SIN>
+TMatrix<SIZ>* TMatrixNew(SIZ x) {
   SIZ size = sizeof(TStack<SIZ>) + sizeof(T) * x;
-  size = TAlignUpSigned<SIZ>(size);
+  size = AlignUp(size);
 }
 
-template <typename T = SI4, typename SIZ = SI4>
-TStack<SIZ>* TMatrixNew(const SIZ* dimensions) {
+/* Creates a dynamically allocated ARY. */
+template <typename T = SIW, typename SIZ = SIN>
+inline TMatrix<SIZ>* TMatrixNew(RamFactory ram_factory, SIZ x, SIZ y) {
+  if (x < 0 || y < 0) return nullptr;
+  SIZ dimension_count = x * y,
+      size_bytes = AlignUp(TMatrixSizeBytes<T, SIZ>(dimension_count));
+  return TMatrixInit<T, SIZ>(ram_factory(nullptr, size_bytes), x, y);
+}
+
+/* Creates a dynamically allocated ARY. */
+template <typename T = SIW, typename SIZ = SIN>
+inline TMatrix<SIZ>* TMatrixNew(RamFactory ram_factory, SIZ x, SIZ y, SIZ z) {
+  if (x < 0 || y < 0) return nullptr;
+  SIZ element_count = z * x * y,
+      size_bytes = AlignUp(TDimensionsSize<T, SIZ>(2, element_count));
+  return TMatrixInit<T, SIZ>(ram_factory(nullptr, size_bytes), x, y);
+}
+
+template <typename T = SIW, typename SIZ = SIN>
+inline TMatrix<SIZ>* TMatrixNew(const SIZ* dimensions) {
   D_ASSERT(dimensions);
   const SIZ* begin = dimensions;
   SIZ count = (*begin++) - 1,    //
@@ -126,60 +183,10 @@ TStack<SIZ>* TMatrixNew(const SIZ* dimensions) {
 /* Gets the address of the packed array.
 @param obj ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename SIZ = SI4>
-T* TMatrixElements(TStack<SIZ>* obj) {
-  CH1* elements = reinterpret_cast<CH1*>(obj) + obj->size_stack;
-  return reinterpret_cast<T*>(elements);
-}
-
-/* Gets the address of the packed SIZ dimensions.
-@param obj ASCII Array data structure.
-@return Pointer to the first element in the array. */
-template <typename T, typename SIZ = SI4>
-SIZ* TMatrixDimensions(TStack<SIZ>* obj) {
-  CH1* elements = reinterpret_cast<CH1*>(obj) + sizeof(TStack<SIZ>);
-  return reinterpret_cast<SIZ*>(elements);
-}
-
-/* Gets the stop address of the packed SIZ dimensions.
-@param obj ASCII Array data structure.
-@return Pointer to the first element in the array. */
-template <typename T, typename SIZ = SI4>
-SIZ* TMatrixDimensionsEnd(TStack<SIZ>* obj) {
-  A_ASSERT(obj);
-  return TMatrixDimensions<T, SIZ>(obj) + obj->count - 1;
-}
-
-/* Prints the TMatrix to the UTF. */
-template <typename Printer, typename T = SI4, typename SIZ = SI4>
-Printer& TPrintArray(Printer& o, TStack<SIZ>* obj) {
-  A_ASSERT(obj);
-  SIZ size_array = obj->size_array;
-  SIZ count = obj->count;
-  if (size_array == 0) {
-    return TStackPrint<T, SIZ>(o, obj);
-  }
-  if (count <= 0) o << "Array: Error! Dimension count must be positive!";
-
-  o << "\n\nArray: dimension_count: " << count << " count_max:" << obj->size
-    << " size_stack:" << obj->size_stack << " size_array:" << obj->size_array
-    << "\nDimensions:\n";
-
-  SIZ *dimensions = TMatrixDimensions<T, SIZ>(obj),
-      *dimensions_end = dimensions + count - 1;
-  SIZ element_count = *dimensions++;
-
-  while (dimensions < dimensions_end) {
-    SIZ dimension = *dimensions++;
-    element_count *= dimension;
-    if (element_count > TMatrixElementCountMax<T, SIZ>())
-      return o << "Max element count exceeded";
-    if (dimensions == dimensions_end)
-      o << dimension << kLF;
-    else
-      o << dimension << ", ";
-  }
-  return o;
+template <typename T, typename SIZ = SIN>
+inline T* TMatrixElements(TMatrix<SIZ>* obj) {
+  return reinterpret_cast<T*>(TStackStart<SIZ, SIZ>(&obj->dimensions) +
+                              obj->size);
 }
 
 /* Creates a immutable array of dimensions. */
@@ -203,37 +210,60 @@ inline const SI4* TStack4() {
   return &kCount;
 }
 
-/* Creates a immutable array of SI8 dimensions. */
+/* Creates a static array of SI8 dimensions. */
 template <const SI8... N>
 inline const SI8* TDim8() {
   static const SI8 kCount = (SI8)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &kCount;
 }
 
-/* A multi-dimensional array Ascii Object.
+template <typename T = SIW, typename SIZ = SIN>
+inline SIZ TMatrixClone(TMatrix<SIZ>* matrix, RamFactory ram_factory) {
+  return 0;
+}
 
-*/
-template <typename T = SI4, typename SIZ = SI4, typename BUF = Nil>
+template <typename T = SIW, typename SIZ = SIN>
+inline UIW* TMatrixClone(TMatrix<SIZ>* matrix, TMatrix<SIZ>* other,
+                         RamFactory ram_factory) {
+  return nullptr;
+}
+
+template <typename T = SIW, typename SIZ = SIN>
+UIW* TMatrixNew(RamFactory ram_factory) {}
+
+/* A multi-dimensional array Ascii Object. */
+template <typename T = SIW, typename SIZ = SIN, typename BUF = Nil>
 class AMatrix {
+  AArray<SIZ> obj_;  //< The Auto-array.
+
  public:
+  /* Constructs an empty Matrix with 4 reserved dimensions and 64 elements. */
+  AMatrix() : obj_(TMatrixSizeBytes<T, SIZ>(4, 64)) {}
+
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
-  AMatrix(SIZ x, const T* elements = nullptr) : obj_(TMatrixNew<T, SIZ>(x)) {}
+  AMatrix(SIZ x, const T* elements = nullptr) : obj_(TMatrixNew<T, SIZ>(x)) {
+    D_ASSERT(x >= 0);
+  }
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
   AMatrix(SIZ x, SIZ y, const T* elements = nullptr)
-      : obj_(TMatrixNew<T, SIZ>(x, y)) {}
+      : obj_(TMatrixSizeBytes<T, SIZ>(2, x * y)) {
+    D_ASSERT(x >= 0 && y >= 0);
+  }
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
   AMatrix(SIZ x, SIZ y, SIZ z, const T* elements = nullptr)
-      : obj_(TMatrixNew<T, SIZ>(x, y, z)) {}
+      : obj_(TMatrixSizeBytes<T, SIZ>(3, x * y * z)) {
+    D_ASSERT(x >= 0 && y >= 0 && z >= 0);
+  }
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
   AMatrix(SIZ w, SIZ x, SIZ y, SIZ z, const T* elements = nullptr)
-      : obj_(TMatrixNew<T, SIZ>(w, x, y, z)) {}
+      : obj_(TMatrixSizeBytes<T, SIZ>(4, w * x * y * z)) {}
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
@@ -243,38 +273,51 @@ class AMatrix {
   ~AMatrix() {}
 
   /* Clones the other object; up-sizing the socket only if required. */
-  inline AMatrix<T, SIZ>* Clone(AMatrix<T, SIZ>& other) {
-    TMatrixClone<T, SIZ>(obj_.Obj(), other);
+  inline SIZ Clone(RamFactory ram_factory = obj_.AJT().ram_factory) {
+    TMatrixClone<T, SIZ>(obj_.Obj(), ram_factory);
+    return this;
+  }
+
+  /* Clones the other object; up-sizing the socket only if required. */
+  inline SIZ Clone(AMatrix<T, SIZ>& other,
+                   RamFactory ram_factory = obj_.AJT().ram_factory) {
+    TMatrixClone<T, SIZ>(obj_.Obj(), other, ram_factory);
     return this;
   }
 
   /* Gets the number_ of dimensions. */
-  inline SIZ DimensionCount() { return stack->count; }
+  inline SIZ DimensionCount() { return This().dimensions->count; }
 
   /* Gets the dimensions array. */
   inline T* Dimension() { return TStackStart<T, SIZ>(Array()); }
 
   /* Gets the underlying array. */
-  inline T* Elements() { return TMatrixElements<T, SIZ>(Array()); }
+  inline T* Elements() { return TMatrixElements<T, SIZ>(This()); }
+
+  /* Returns the Autoject-Array. */
+  inline AArray<SIZ>& AJT_ARY() { return obj_; }
+
+  /* Returns the Autoject. */
+  inline Autoject& AJT() { return obj_.AJT(); }
+
+  /* Returns the Autoject::begin cased as a TMap<SIZ>. */
+  inline TMatrix<SIZ>* This() {
+    return reinterpret_cast<TMatrix<SIZ>*>(AJT().begin);
+  }
+
+  /* Returns the Auto-Array. */
+  inline AArray<T, SIZ, BUF>& Array() { return obj_; }
+
+  template <typename Printer = COut>
+  inline Printer& PrintTo(Printer& o) {
+    return TMatrixPrint<Printer, T, SIZ>(o, This());
+  }
 
   /* Operator= overload. */
   inline AMatrix<T, SIZ>& operator=(AMatrix<T, SIZ>& other) {
     Clone(other);
     return *this;
   }
-
-  /* Gets the Autoject. */
-  inline Autoject& AObj() {
-    return reinterpret_cast<AMatrix<SIZ>*>(obj_.Begin());
-  }
-
-  /* Gets the S-Object. */
-  inline AArray<T, SIZ, BUF> Array() {
-    return reinterpret_cast<AMatrix<SIZ>*>(obj_.Begin());
-  }
-
- private:
-  AArray<SIZ> obj_;  //< The Ascii Object.
 };
 
 }  // namespace _

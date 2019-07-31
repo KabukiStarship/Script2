@@ -16,7 +16,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_TDIC 1
 
 #include "c_avalue.h"
-#include "c_socket.h"
+#include "c_binary.h"
 
 #if SEAM >= SCRIPT2_BOOK
 #include "module_debug.inl"

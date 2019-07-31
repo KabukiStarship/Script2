@@ -55,7 +55,7 @@ inline Char* TSTRStart(UIW* begin) {
 }
 
 /* Searches for the stop of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
+template <typename Char = CHR, typename SIZ = SIN>
 inline Char* TSTRStop(void* begin) {
   SIZ size = reinterpret_cast<TStrand<SIZ>*>(begin)->size;
   Char* start = TSTRStart<Char, SIZ>(reinterpret_cast<TStrand<SIZ>*>(begin));
@@ -63,7 +63,7 @@ inline Char* TSTRStop(void* begin) {
 }
 
 /* Gets the stop char of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
+template <typename Char = CHR, typename SIZ = SIN>
 inline Char* TSTRStop(void* begin, SIW size) {
   Char* ptr = reinterpret_cast<Char*>(TSTRStart<Char, SIZ>(begin));
   return ptr + size - 1;
@@ -241,7 +241,7 @@ class AStrand {
 
  public:
   /* Constructs a Strand that auto-grows from stack to heap.
-  @param factory ASCII Factory to call when the Strand overflows. */
+  @param factory RamFactory to call when the Strand overflows. */
   AStrand() : obj_(kSize_) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
@@ -418,10 +418,10 @@ class AStrand {
   inline SIZ Size() { return obj_.Size(); }
 
   /* Gets the total ASCII Object size in bytes. */
-  inline SIZ SizeBytes() { return obj_.SizeBytes<TStrand<SIZ>>(Auto()); }
+  inline SIZ SizeBytes() { return obj_.SizeBytes<TStrand<SIZ>>(AJT()); }
 
   /* Gets the total ASCII Object size in words. */
-  inline SIZ SizeWords() { return obj_.SizeWords<TStrand<SIZ>>(Auto()); }
+  inline SIZ SizeWords() { return obj_.SizeWords<TStrand<SIZ>>(AJT()); }
 
   /* Returns the begin of the obj. */
   inline Char* Start() { return TSTRStart<Char, SIZ>(obj_.Begin()); }
@@ -451,14 +451,14 @@ class AStrand {
   inline AArray<Char, SIZ, BUF>& Array() { return obj_; }
 
   /* Gets the obj of the Console obj. */
-  inline Autoject& Auto() { return obj_.OBJ(); }
+  inline Autoject& AJT() { return obj_.OBJ(); }
 
   /* Gets the obj.begin as a TStrand<SI4>. */
   inline TStrand<SIZ>* This() { return obj_.BeginAs<TStrand<SIZ>>(); }
 
   template <typename T>
   inline AStrand& Print(T item) {
-    TStrandSPrint<T, Char>(obj_.Auto(), sprinter_, item);
+    TStrandSPrint<T, Char>(obj_.AJT(), sprinter_, item);
     return *this;
   }
 

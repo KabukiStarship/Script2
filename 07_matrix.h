@@ -21,22 +21,43 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _08_Matrix(const CH1* args) {
-#if SEAM >= SCRIPT2_MATRIX
-  A_TEST_BEGIN;
 
-  D_COUT("\n\nTesting AStack<SI4>...\n\nPrinting empty stack...\n");
+template <typename SI, typename SIZ>
+void TestMatrixIntegers() {
+  D_COUT(Linef("\n\n+---\n| ")
+         << "Testing AMatrix<SI" << sizeof(SIZ) << ">" << Linef("\n+---"));
 
   static const SI4 array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
   const SI4* dimensions = TStack4<2, 2, 2>();
-  AMatrix<SI4> test_matrix(2, 2, 2, &array_3d_exected[0][0][0]);
-
+  AMatrix<SI4> matrix(2, 2, 2, &array_3d_exected[0][0][0]);
+  D_COUT_OBJ(matrix);
   SI4 w = 0;
-  SI4* array_base = test_matrix.Elements();
+  SI4* array_base = matrix.Elements();
   for (SI4 x = 0; x < 2; ++x)
     for (SI4 y = 0; y < 2; ++y)
       for (SI4 z = 0; z < 2; ++z) A_AVOW(w++, array_3d_exected[x][y][z]);
+}
+
+static const CH1* _07_Matrix(const CH1* args) {
+#if SEAM >= SCRIPT2_MATRIX
+  A_TEST_BEGIN;
+  TestMatrixIntegers<SI1, SI1>();
+  TestMatrixIntegers<SI1, SI2>();
+  TestMatrixIntegers<SI1, SI4>();
+  TestMatrixIntegers<SI1, SI8>();
+  TestMatrixIntegers<UI2, SI1>();
+  TestMatrixIntegers<UI2, SI2>();
+  TestMatrixIntegers<UI2, SI4>();
+  TestMatrixIntegers<UI2, SI8>();
+  TestMatrixIntegers<SI4, SI1>();
+  TestMatrixIntegers<SI4, SI2>();
+  TestMatrixIntegers<SI4, SI4>();
+  TestMatrixIntegers<SI4, SI8>();
+  TestMatrixIntegers<UI8, SI1>();
+  TestMatrixIntegers<UI8, SI2>();
+  TestMatrixIntegers<UI8, SI4>();
+  TestMatrixIntegers<UI8, SI8>();
 #endif
   return nullptr;
 }

@@ -12,7 +12,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_slot.h"
 
 #include "c_avalue.h"
-#include "c_socket.h"
+#include "c_binary.h"
 #include "t_strand.h"
 
 #if SEAM == SCRIPT2_DICTIONARY
@@ -135,12 +135,12 @@ BOL Slot::IsReadable() { return begin != stop; }
         SIW top_chunk = stop - stop;
         size -= top_chunk;
 
-        SocketCopy (target, target_end, begin, top_chunk);
-        SocketCopy (reinterpret_cast<CH1*>(target) + top_chunk, size,
+        ArrayCopy (target, target_end, begin, top_chunk);
+        ArrayCopy (reinterpret_cast<CH1*>(target) + top_chunk, size,
                     begin);
         return begin + size;
     }
-    SocketCopy (target, target_end, stop, size);
+    ArrayCopy (target, target_end, stop, size);
     return begin + size;
 }*/
 

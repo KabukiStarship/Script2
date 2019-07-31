@@ -22,6 +22,7 @@ using namespace _;
 
 namespace script2 {
 
+#if SEAM >= SCRIPT2_STACK
 template <typename T, typename SIZ>
 void TestStack(const CH1* args) {
   D_COUT("Testing AStack<SI" << sizeof(T) << ",SI" << sizeof(SIZ) << ">...\n");
@@ -29,17 +30,17 @@ void TestStack(const CH1* args) {
   AStack<T, SIZ, 8> stack;
 
   D_COUT(Linef("\n+---\n| TBuf: size:")
-         << stack.Auto().Buffer().Size() << " expected_size_bytes:"
-         << stack.Auto().Buffer().Size() * sizeof(T) + sizeof(TStack<SIZ>)
-         << " size_bytes:" << stack.Auto().Buffer().SizeBytes()
-         << " size_words:" << stack.Auto().Buffer().SizeWords());
+         << stack.AJT().Buffer().Size() << " expected_size_bytes:"
+         << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<SIZ>)
+         << " size_bytes:" << stack.AJT().Buffer().SizeBytes()
+         << " size_words:" << stack.AJT().Buffer().SizeWords());
   D_COUT_OBJ(stack);
 
   enum { kTestCount = 32, kOffset = '0' };
   D_COUT("\n\nPushing " << kTestCount << " items on to the Stack...\n");
   for (T i = kOffset; i <= kTestCount + kOffset; ++i) {
     D_COUT("\n| Before calling push:"
-           << Charsf(stack.Auto().Begin(), stack.Auto().SizeBytes())
+           << Charsf(stack.AJT().Begin(), stack.AJT().SizeBytes())
            << Linef("\n\n+---\n| ") << i << ".) ");
     stack.Push(i);
     D_COUT("\n| Result:");
@@ -56,9 +57,32 @@ void TestStack(const CH1* args) {
   D_COUT_OBJ(stack);
   A_ASSERT(stack.Count() == 0);
 }
+#endif
 
-static const CH1* _07_Stack(const CH1* args) {
+static const CH1* _06_Stack(const CH1* args) {
 #if SEAM >= SCRIPT2_STACK
+
+  D_COUT(Headingf("Test ArrayCopy and MemoryCompare"));
+
+  enum {
+    kTestCharsCount = 1024,
+    kTestCharsOffsetCount = 16,
+  };
+  CH1 test_chars[kTestCharsCount];
+  CH1 test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
+
+  D_COUT("\ntest_chars[0]:0x" << Hexf(test_chars) << " test_chars_result[n]:0x"
+                              << Hexf(test_chars_result));
+
+  for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
+    for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
+    CH1* result = ArrayCopy(test_chars_result + i, kTestCharsCount, test_chars,
+                            kTestCharsCount);
+    A_ASSERT(result);
+    A_ASSERT(!ArrayCompare(test_chars + i, kTestCharsCount, test_chars_result,
+                           kTestCharsCount));
+  }
+
   A_TEST_BEGIN;
 
   // TestStack<SI4, SI8>(args); is illegal

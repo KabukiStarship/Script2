@@ -18,13 +18,13 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* C++11 constexpr function for creating Script addresses headers with less
-    typing as well as ensuring there is only a single copy in ROM.
-    Template solves the problem of not being able using array constructors to
-    create data structures in ROM.
+typing as well as ensuring there is only a single copy in ROM.
+Template solves the problem of not being able using array constructors to 
+create data structures in ROM.
 
-    @code
-    Address<'A', 'B', 'C'> ()
-    @endcode
+@code
+Address<'A', 'B', 'C'> ()
+@endcode
 */
 template <const CH1... N>
 LIB_MEMBER const CH1* Address() {
@@ -83,5 +83,5 @@ inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d,
 }
 
 }  // namespace _
-#endif  //< SCRIPT2_CADDRESS
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif
+#endif

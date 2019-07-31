@@ -12,6 +12,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <random>
 
 #include "c_rng.h"
+//
+#include "module_debug.inl"
 
 namespace _ {
 
@@ -63,25 +65,25 @@ void RandomNumber(UI8& result) { result = RandomUI8(); }
 void RandomNumber(SI8& result) { result = RandomSI8(); }
 
 template <typename SIZ>
-SIZ Random(SIZ min, SIZ max) {
+SIZ TRandom(SIZ min, SIZ max) {
   std::uniform_int_distribution<SIZ> dist(min, max);
   return dist(rng);
 }
 
-UI1 Random(UI1 min, UI1 max) { return (UI1)Random<UI2>(min, max); }
+UI1 Random(UI1 min, UI1 max) { return UI1(TRandom<UI2>(min, max)); }
 
-SI1 Random(SI1 min, SI1 max) { return (SI1)Random<UI2>(min, max); }
+SI1 Random(SI1 min, SI1 max) { return SI1(TRandom<SI2>(min, max)); }
 
-UI2 Random(UI2 min, UI2 max) { return Random<UI2>(min, max); }
+UI2 Random(UI2 min, UI2 max) { return TRandom<UI2>(min, max); }
 
-SI2 Random(SI2 min, SI2 max) { return (SI2)Random<UI2>(min, max); }
+SI2 Random(SI2 min, SI2 max) { return TRandom<SI2>(min, max); }
 
-UI4 Random(UI4 min, UI4 max) { return Random<UI4>(min, max); }
+UI4 Random(UI4 min, UI4 max) { return TRandom<UI4>(min, max); }
 
-SI4 Random(SI4 min, SI4 max) { return (SI4)Random<UI4>(min, max); }
+SI4 Random(SI4 min, SI4 max) { return TRandom<SI4>(min, max); }
 
-UI8 Random(UI8 min, UI8 max) { return Random<UI8>(min, max); }
+UI8 Random(UI8 min, UI8 max) { return TRandom<UI8>(min, max); }
 
-SI8 Random(SI8 min, SI8 max) { return (SI8)Random<UI8>(min, max); }
+SI8 Random(SI8 min, SI8 max) { return TRandom<SI8>(min, max); }
 
 }  // namespace _

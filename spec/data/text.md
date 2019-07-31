@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](readme.md)
 
 ### Text
@@ -20,3 +14,11 @@ ARY_CH1_4 "Foo"           //< STR is shorthand for ARY_CH1_1/2/4.
 STR_2 "Hello world!"      //< This is a _::TStrand<> that is up to 64KB long.
 STR_4 "Hello world!"      //< This is a _::TStrand<> that is up to 4GB long.
 ```
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

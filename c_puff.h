@@ -34,8 +34,6 @@ const UI2* Pow10_UI2();
 UI2 Pow10(UI2 index);
 
 /* Finds the string length of the given value. */
-LIB_MEMBER SI4 STRLength(UI1 value);
-LIB_MEMBER SI4 STRLength(SI1 value);
 LIB_MEMBER SI4 STRLength(UI2 value);
 LIB_MEMBER SI4 STRLength(SI2 value);
 LIB_MEMBER SI4 STRLength(UI4 value);
@@ -55,53 +53,10 @@ LIB_INLINE const void* Binary64Pow10IntegralPortions();
  */
 LIB_INLINE const void* BinaryPow10Exponents();
 
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(SI1 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(UI1 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(SI2 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(UI2 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(SI4 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(UI4 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(SI8 value);
-
-/* Checks if the given value is Not-a-Number.
-@param  value The value to check.
-@return True if the value is NaN and false otherwise. */
-LIB_MEMBER BOL IsNaN(UI8 value);
-
 #if USING_FP4 == YES_0
 /* Gets the maximum number_ of digits required to represent a FP4 as in
 ASCII. */
 LIB_MEMBER SI4 FloatDigitsMax();
-
-/* Checks if the given value is Not-a-Number. */
-LIB_MEMBER BOL IsNaN(FP4 value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 LIB_MEMBER BOL IsFinite(FP4 value);
@@ -117,9 +72,6 @@ LIB_MEMBER FP4 Ceiling(FP4 value);
 /* Gets the maximum number_ of digits required to represent a FP8 as in
 ASCII. */
 LIB_MEMBER SI4 DoubleDigitsMax();
-
-/* Checks if the given value is Not-a-Number. */
-LIB_MEMBER BOL IsNaN(FP8 value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 LIB_MEMBER BOL IsFinite(FP8 value);

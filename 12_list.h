@@ -19,30 +19,30 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 using namespace _;
 
 namespace script2 {
-static const CH1* _11_List(const CH1* args) {
+static const CH1* _12_List(const CH1* args) {
 #if SEAM >= SCRIPT2_LIST
   A_TEST_BEGIN;
 
   AList<> list(36, 960);
 
-  D_COUT ("\nPushing items on to the List stack...\n");
+  D_COUT("\nPushing items on to the List stack...\n");
 
   const SI4 test_ints[] = {'1', '2', '3', '4'};
 
   const SI4 list_test_count = 12;
   for (SI4 i = 0; i < 4;) {
-    D_COUT ("\ni" << i << ':');
+    D_COUT("\ni" << i << ':');
     list.Push(kSI4, &test_ints[i++]);
-    COUT << kLF << list << kLF << "\n\n"
+    COUT << '\n' << list << '\n' << "\n\n"
          << Socket(list.This(), list.This()->size);
   }
   const FP4 test_floats[] = {9.0, 10.0, 11.0, 12.0};
   for (SI4 i = 0; i < 4;) {
-    D_COUT ("\ni" << i << ':');
+    D_COUT("\ni" << i << ':');
     list.Push(kFP4, &test_floats[i++]);
-    D_COUT(kLF);
+    D_COUT('\n');
     D_COUT(list);
-    D_COUT(kLF);
+    D_COUT('\n');
     D_COUT("\n\n");
     D_COUT(Socket(list.This(), list.This()->size));
   }
@@ -51,9 +51,9 @@ static const CH1* _11_List(const CH1* args) {
   for (SI4 i = 0; i < 4;) {
     D_COUT("\ni" << i << ':');
     list.Push(kSTR, test_strings[i++]);
-    D_COUT(kLF);
+    D_COUT('\n');
     D_COUT(list);
-    D_COUT(kLF);
+    D_COUT('\n');
     D_COUT("\n\n");
     D_COUT(Socket(list.This(), list.This()->size));
   }

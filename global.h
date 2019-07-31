@@ -24,7 +24,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM == SCRIPT2_RNG
 #include "c_cout.h"
 #include "c_rng.h"
-#include "t_socket.h"
+#include "t_binary.h"
 #include "t_uniprinter.h"
 #endif
 #if SEAM == SCRIPT2_UNIPRINTER || SEAM == SCRIPT2_FTOS

@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](readme.md)
 
 Automaton Standard Code for Information Interchange (ASCII) Data Types are mimicked after the the American Standard Code for Information Interchange C0 Control Codes using 3 all capitol letters. There are 32 POD Data Types, mimicking the number of ASCII C0 Control Codes, that include 5 Object pointer types that point to objects. Arrays, Stacks, multi-dimensional matrices, and 2, 3, and 4-homogenous-tuple (homo-tuple) types can be created using the Vector types bit. All data types are word-aligned leaving some illegal Vector types, such as an 8-bit Array of 16-bit types. These illegal types are used in order to create 2, 3, and 4-tuple homogeneous Vectors of a type, such as a 4-tuple of 8-bit unsigned integers (UI1).
@@ -23,27 +17,31 @@ Data Types can be represented using 1-byte, 2-byte, and 4-byte data types. 1-byt
 |  4 | CH1  |     char     |   1   | 8-bit character (CH1). |
 |  5 | SI1  |     int8_t   |   1   | 8-bit signed integer. |
 |  6 | UI1  |    uint8_t   |   1   | 8-bit unsigned integer. |
-|  7 | BO1  |     char     |   1   | A boolean value stored as a CH1. |
+|  7 | DT1  |      SI1     |   1   | 8-bit ASCII data type. |
 |  8 | CH2  |   char16_t   |   2   | 16-bit character (CH2). |
 |  9 | SI2  |    int16_t   |   2   | 16-bit signed integer. |
 | 10 | UI2  |   uint16_t   |   2   | 16-bit unsigned integer. |
-| 11 | FP2  |     half     |   2   | 16-bit floating-point number. |
-| 12 | CH4  |   char32_t   |   4   | 32-bit character (CH4). |
-| 13 | SI4  |    int32_t   |   4   | 32-bit signed varint. |
-| 14 | UI4  |   uint32_t   |   4   | 32-bit unsigned integer. |
-| 15 | FP4  |     float    |   4   | 32-bit floating-point number. |
-| 16 | BOL  |     bool     |   4   | Boolean variable. |
-| 17 | DT4  |     SI4      |   4   | 32-bit ASCII Data Type. |
-| 18 | TM4  |    int32_t   |   4   | 32-bit signed integer seconds since epoch timestamp. |
-| 19 | TME  |    int64_t   |   8   | 64-bit TM4 and UI4 sub-second tick timestamp. |
-| 20 | TM8  |    int64_t   |   8   | 64-bit microsecond since epoch timestamp. |
-| 21 | SI8  |    int64_t   |   8   | 64-bit signed integer. |
-| 22 | UI8  |   uint64_t   |   8   | 64-bit unsigned integer. |
-| 23 | FP8  |    double    |   8   | 64-bit floating-point number. |
-| 24 | FPG  |  float80_t   |  10   | 80-bit floating-point number. |
-| 25 | SIH  |   int128_t   |  16   | 128-bit (Hexadeca-byte) signed integer. |
-| 26 | UIH  |   uint128_t  |  16   | 128-bit (Hexadeca-byte) unsigned integer. |
-| 27 | FPH  |  float128_t  |  16   | 128-bit (Hexadeca-byte) floating-point number. |
+| 11 | DT2  |      UI2     |   2   | A 16-bit ASCII Data Type. |
+| 12 | FP2  |     half     |   2   | 16-bit floating-point number. |
+| 13 | BLN  |      SI2     |   2   | A boolean value stored as a SI2. |
+| 14 | DTB  |      UI2     |   2   | Two 8-bit ASCII Data Types. |
+| 15 | DTC  |      UI2     |   2   | Three 5-bit ASCII POD Types. |
+| 16 | CH4  |   char32_t   |   4   | 32-bit character (CH4). |
+| 17 | SI4  |    int32_t   |   4   | 32-bit signed varint. |
+| 18 | UI4  |   uint32_t   |   4   | 32-bit unsigned integer. |
+| 19 | DT4  |     UI4      |   4   | 32-bit ASCII Data Type. |
+| 20 | FP4  |     float    |   4   | 32-bit floating-point number. |
+| 21 | BOL  |     bool     |   4   | Boolean variable. |
+| 22 | TM4  |    int32_t   |   4   | 32-bit signed integer seconds since epoch timestamp. |
+| 23 | TME  |    int64_t   |   8   | 64-bit TM4 and UI4 sub-second tick timestamp. |
+| 24 | TM8  |    int64_t   |   8   | 64-bit microsecond since epoch timestamp. |
+| 25 | SI8  |    int64_t   |   8   | 64-bit signed integer. |
+| 26 | UI8  |   uint64_t   |   8   | 64-bit unsigned integer. |
+| 27 | DT8  |      UI8     |   8   | 64-bit ASCII Data Type. |
+| 28 | FP8  |    double    |   8   | 64-bit floating-point number. |
+| 29 | SIH  |   int128_t   |  16   | 128-bit (Hexadeca-byte) signed integer. |
+| 30 | UIH  |   uint128_t  |  16   | 128-bit (Hexadeca-byte) unsigned integer. |
+| 31 | FPH  |  float128_t  |  16   | 128-bit (Hexadeca-byte) floating-point number. |
 
 #### List of Types Key
 
@@ -98,7 +96,7 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 
 Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned. If the POD type is 8 or more bytes wide then the stack or array must use a SW8 (8-byte Size Width).
 
-| Byte Depth | ARY Range  | ARY Range  | ARY Range  | Total |
+| Byte Depth | ARY Range  | STK Range  | MAT Range  | Total |
 |:----------:|:----------:|:----------:|:----------:|:-----:|
 |     1      | [40 ,  64] | [72 , 128] | [200, 255] |  72   |
 |     2      | [280, 295] | [312, 327] | [344, 359] |  36   |
@@ -106,18 +104,18 @@ Extended types are created by the Illegal Types. The Illegal Types are types tha
 
 ```AsciiArt
 | Vector |                   POD Type 0-31 (1=Yes, 0=No)                    |
-|  Type  | N S S S C S U B C S U F R R R E  R C S U F B T T T S U F F S U F |
-| SW:VET | I T T T H I I O H I I P E E E E  E H I I P O M M M I I P P I I P |
-| b8:b5  | L 1 2 3 1 1 1 N 2 2 2 2 0 1 2 3  4 4 4 4 4 L 4 E 8 8 8 8 G H H H |
+|  Type  | N S S S C S U D C S U D F B R R  C S U D F B T T T S U F F S U F |
+| SW:VET | I T T T H I I T H I I T P L E E  H I I T P O M M M I I P P I I P |
+| b8:b5  | L 1 2 3 1 1 1 1 2 2 2 2 2 N 1 2  4 4 4 4 4 L 4 E 8 8 8 8 G H H H |
 +--------+------------------------------------------------------------------|
 | 00_VH1 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 00_ARY | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 00_STK | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 00_MAT | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 01_VHT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 01_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 |
+| 01_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 |
+| 01_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 |
+| 01_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 |
 | 10_VH4 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 10_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 |
 | 10_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 |
@@ -137,7 +135,6 @@ Extended Types are created from the Illegal Types.
 
 | ID  |  Type   |    Name    | Description |
 |:---:|:-------:|:----------:|:------------|
-| 39  |   DYN   |  Dynamic   | Flag for u
 | 39  |   WLD   |  Wildcard  | Flag type commonly used to pass any of the Data types into a operation parameter. |
 | 76  |   LST   |    List    | A collection of type-value tuples. |
 | 77  |   BOK   |    Book    | A STR-VAL (String-Value) map without a hash-table. |
@@ -146,13 +143,21 @@ Extended Types are created from the Illegal Types.
 | 80  |   BOU   |  B-Output  | A Byte-output ring buffer socket. |
 | 81  |   XPR   | Expression | A SCRIPT Script. |
 
-#### 2-byte and 4-byte Extended Type Bit Pattern
+#### 2-byte DTB Bit Pattern
 
-ASCII Data Types are created from a combination of two types. For mono-types VHT is used for the Map Type.
+Data Type B (DTB) is two 16-bit words where the first DT2 is the first type.
 
-| b31:16 | b15:b14 |   b13:b9 | b8:b7 | b6:b5 | b4:b0  |
-|:------:|:-------:|:--------:|:-----:|:-----:|:------:|
-|    0   |   RW    | Map type |   2   |  SWO  | Object |
+| b31:b16 | b15:b0 |
+|:-------:|:------:|
+| Type 2  | Type 1 |
+
+#### 2-byte DTC Bit Pattern
+
+Data Type B (DTB) is two 16-bit words where the first DT2 is the first type.
+
+| b15 | b14:b10 | b9:b5  | b4:b0  |
+|:---:|:-------:|:------:|:------:|
+|  0  | Type 3  | Type 2 | Type 1 |
 
 ### Read-Write Bits
 
@@ -173,20 +178,34 @@ For 2 and 4-byte types, b15:b14 are used to store Read-Write flags. If a type ca
 |:-------:|:--------:|:-----:|:-----:|:-----:|
 |   RW    | Map type |  SW   |  VHT  |  POD  |
 
+#### 2-byte and 4-byte Extended Type Bit Pattern
+
+ASCII Data Types are created from a combination of two types. For mono-types VHT is used for the Map Type.
+
+| b31:16 | b15:b14 |   b13:b9 | b8:b7 | b6:b5 | b4:b0  |
+|:------:|:-------:|:--------:|:-----:|:-----:|:------:|
+|    0   |   RW    | Map type |   2   |  SWO  | Object |
+
 #### 4-byte Map Type Bit Pattern
 
 ASCII Data Types are created from a combination of two types. For mono-types TYP is used for the Map Type.
 
-| b31:16 | b15:b14 |   b13:b9 | b8:b7 | b6:b5 | b4:b0 |
-|:------:|:-------:|:--------:|:-----:|:-----:|:-----:|
-|    0   |    RW   | Map type |  SW   |  VHT  |  POD  |
+| b31:b16 | b15:b0 |
+|:-------:|:------:|
+| Type 2  | Type 1 |
 
-#### 4-byte Type Tuple Bit Pattern
+#### 8-byte Type Tuple Bit Pattern
 
-4-byte Data Types are used to create up to a 5-tuples of heterogeneous types (hetero-tuples). To create a Hetero-tuple type you must assert b31.
+4-byte Data Types are used to create up to a 4-tuples of heterogeneous types (hetero-tuples) using up to 4 16-bit ASCII Data Types.
 
-|      b31       | b30:b26 | b25:b21 | b20:b16 | b15:b14 |  b13:b9  | b8:b7 | b6:b5 | b4:b0 |
-|:--------------:|:-------:|:-------:|:-------:|:-------:|:--------:|:-----:|:-----:|:-----:|
-| Hetero-tuple=1 | Tuple 5 | Tuple 4 | Tuple 3 |   RW    | Map type |  SW   |  VHT  |  POD  |
+| b63:b48 | b55:b32 | b31:b16 | b15:b0 |
+|:-------:|:-------:|:-------:|:------:|
+| Type 4  | Type 3  | Type 2  | Type 1 |
 
-***Example:*** We have need to internationalize our strings using a Loom. I need to make a:
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

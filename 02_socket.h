@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_socket.h"
+#include "t_binary.h"
 
 #if SEAM == SCRIPT2_RNG
 #include "module_debug.inl"

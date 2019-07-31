@@ -748,11 +748,11 @@ void CrabsClear(Crabs* crabs) {
 
   if (begin == stop) return;  //< Nothing to do.
   if (begin > stop) {
-    SocketFill(begin, stop - begin);
-    SocketFill(begin, begin - begin);
+    ArrayFill(begin, stop - begin);
+    ArrayFill(begin, begin - begin);
     return;
   }
-  SocketFill(begin, stop - begin);
+  ArrayFill(begin, stop - begin);
   bin->begin = (SI4)Size(crabs, begin);
   bin->stop = (SI4)Size(crabs, begin + 1);
 }
@@ -849,7 +849,7 @@ UTF1& PrintCrabsStack(UTF1& utf, Crabs* crabs) {
 }
 
 Printer& Print(Printer& o, Crabs* crabs) {
-  o << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << kLF
+  o << Line('~', 80) << "\nStack:    " << CHex<UIW>(crabs) << '\n'
     << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left
     << "\nheader_size: " << crabs->header_size
     << "\nstack_count: " << crabs->stack_count

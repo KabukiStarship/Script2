@@ -1,9 +1,6 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Other C++ Features
-
-### Section Content
 
 1. [Rvalue References](other_cpp_features.md#rvalue-references)
 1. [Friends](other_cpp_features.md#friends)
@@ -37,25 +34,25 @@ Use rvalue references to:
 * Define [overload sets](#Function_Overloading) with const& and && variants if you have evidence that this provides meaningfully better performance than passing by value, or if you're writing low-overhead generic code that needs to support arbitrary types. Beware combinatorial overload sets, that is, seldom overload more than one parameter.
 * Support 'perfect forwarding' in generic code.
 
-#### Definition
+***Definition***
 
 Rvalue references are a type of reference that can only bind to temporary objects. The syntax is similar to traditional reference syntax. For example, `void f(_::TStrand<>&& s);` declares a function whose argument is an rvalue reference to a _::TStrand<>.
 
 When the token '&&' is applied to an unqualified template argument in a function parameter, special template argument deduction rules apply. Such a reference is called forwarding reference.
 
-#### Pros
+***Pros***
 
 * Defining a move constructor (a constructor taking an rvalue reference to the class type) makes it possible to move a value instead of copying it. If `v1` is a `_::TArray<_::TStrand<>>`, for example, then `auto v2(std::move(v1))` will probably just result in some simple pointer manipulation instead of copying a large amount of data. In many cases this can result in a major performance improvement.
 * Rvalue references make it possible to implement types that are movable but not copyable, which can be useful for types that have no sensible definition of copying but where you might still want to pass them as function arguments, put them in containers, etc.
 *   `std::move` is necessary to make effective use of some standard-library types, such as `std::unique_ptr`.
 * [Forwarding references](#Forwarding_references) which use the rvalue reference token, make it possible to write a generic function wrapper that forwards its arguments to another function, and works whether or not its arguments are temporary objects and/or const. This is called 'perfect forwarding'.
 
-#### Cons
+***Cons***
 
 * Rvalue references are not yet widely understood. Rules like automatic synthesis of move constructors and reference collapsing (the latter refers to the special rules that apply to a T&& parameter in a function template) are somewhat obscure.
 * Rvalue references are often misused. Using rvalue references is counter-intuitive in signatures where the argument is expected to have a valid specified state after the function call, or where no move operation is performed.
 
-#### Decision
+***Decision***
 
 You may use rvalue references to define move constructors and move assignment operators (as described in [Copyable and Movable Types](#Copyable_Movable_Types)). See the [C++ Primer](primer#copying_moving) for more information about move semantics and `std::move`.
 
@@ -75,7 +72,7 @@ Friends extend, but do not break, the encapsulation boundary of a class. In some
 
 We do not use C++ exceptions.
 
-#### Pros
+***Pros***
 
 * Exceptions allow higher levels of an application to decide how to handle "can't happen" failures in deeply nested functions, without the obscuring and error-prone bookkeeping of error codes.
 * Exceptions are used by most other modern languages. Using them in C++ would make it more consistent with Python, Java, and the C++ that others are familiar with.
@@ -83,7 +80,7 @@ We do not use C++ exceptions.
 * Exceptions are the only way for a constructor to fail. We can simulate this with a factory function or an `Init()` method, but these require heap allocation or a new "invalid" state, respectively.
 * Exceptions are really handy in testing frameworks.
 
-#### Cons
+***Cons***
 
 * When you add a `throw` statement to an existing function, you must examine all of its transitive callers. Either they must make at least the basic exception safety guarantee, or they must never catch the exception and be happy with the program terminating as a result. For instance, if `f()` calls `g()` calls `h()`, and `h` throws an exception that `f` catches, `g` has to be careful or it may not clean up properly.
 * More generally, exceptions make the control flow of programs difficult to evaluate by looking at code: functions may return in places you don't expect. This causes maintainability and debugging difficulties. You can minimize this cost via some rules on how and where exceptions can be used, but at the cost of more that a developer needs to know and understand.
@@ -91,7 +88,7 @@ We do not use C++ exceptions.
 * Turning on exceptions adds data to each binary produced, increasing compile time (probably slightly) and possibly increasing address space pressure.
 * The availability of exceptions may encourage developers to throw them when they are not appropriate or recover from them when it's not safe to do so. For example, invalid user input should not cause exceptions to be thrown. We would need to make the style guide even longer to document these restrictions!
 
-#### Decision
+***Decision***
 
 On their face, the benefits of using exceptions outweigh the costs, especially in new projects. However, for existing code, the introduction of exceptions has implications on all dependent code. If exceptions can be propagated beyond a new project, it also becomes problematic to integrate the new project into existing exception-free code. Because most existing C++ code at Google is not prepared to deal with exceptions, it is comparatively difficult to adopt new code that generates exceptions.
 
@@ -107,23 +104,23 @@ There is an [exception](#Windows_Code) to this rule (no pun intended) for Window
 
 Specify `noexcept` when it is useful and correct.
 
-#### Definition
+***Definition***
 
 The `noexcept` specifier is used to specify whether a function will throw exceptions or not. If an exception escapes from a function marked `noexcept`, the program crashes via `std::terminate`.
 
 The `noexcept` operator performs a compile-time check that returns true if an expression is declared to not throw any exceptions.
 
-#### Pros
+***Pros***
 
 * Specifying move constructors as `noexcept` improves performance in some cases, e.g. `_::TArray<T>::resize()` moves rather than copies the objects if T's move constructor is `noexcept`.
 * Specifying `noexcept` on a function can trigger compiler optimizations in environments where exceptions are enabled, e.g. compiler does not have to generate extra code for stack-unwinding, if it knows that no exceptions can be thrown due to a `noexcept` specifier.
 
-#### Cons
+***Cons***
 
 * In projects following this guide that have exceptions disabled it is hard to ensure that `noexcept` specifiers are correct, and hard to define what correctness even means.
 * It's hard, if not impossible, to undo `noexcept` because it eliminates a guarantee that callers may be relying on, in ways that are hard to detect.
 
-#### Decision
+***Decision***
 
 You may use `noexcept` when it is useful for performance if it accurately reflects the intended semantics of your function, i.e. that if an exception is somehow thrown from within the function body then it represents a fatal error. You can assume that `noexcept` on move constructors has a meaningful performance benefit. If you think there is significant performance benefit from specifying `noexcept` on some other function, please discuss it with your project leads.
 
@@ -133,17 +130,17 @@ Prefer unconditional `noexcept` if exceptions are completely disabled (i.e. most
 
 Avoid using Run Time Type Information (RTTI).
 
-#### Definition
+***Definition***
 
 RTTI allows a programmer to query the C++ class of an object at run time. This is done by use of `typeid` or `dynamic_cast`.
 
-#### Cons
+***Cons***
 
 Querying the type of an object at run-time frequently means a design problem. Needing to know the type of an object at runtime is often an indication that the design of your class hierarchy is flawed.
 
 Undisciplined use of RTTI makes code hard to maintain. It can lead to type-based decision trees or switch statements scattered throughout the code, all of which must be examined when making further changes.
 
-#### Pros
+***Pros***
 
 The standard alternatives to RTTI (described below) require modification or redesign of the class hierarchy in question. Sometimes such modifications are infeasible or undesirable, particularly in widely-used or mature code.
 
@@ -161,7 +158,7 @@ BOL Derived::Equal(Base* other) {
 }
 ```
 
-#### Decision
+***Decision***
 
 RTTI has legitimate uses but is prone to abuse, so you must be careful when using it. You may use it freely in unittests, but avoid it when possible in other code. In particular, think twice before using RTTI in new code. If you find yourself needing to write code that behaves differently based on the class of an object, consider one of the following alternatives to querying the type:
 
@@ -172,7 +169,7 @@ When the logic of a program guarantees that a given instance of a base class is 
 
 Decision trees based on type are a strong indication that your code is on the wrong track.
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 if (typeid(*data) == typeid(D1)) {
@@ -191,19 +188,19 @@ Do not hand-implement an RTTI-like workaround. The arguments against RTTI apply 
 
 Use C++-style casts like `static_cast<FLT>(double_value)`, or brace initialization for conversion of arithmetic types like `int64 y = int64{1} << 42`. Do not use cast formats like `SIN y = (SIN)x` or `SIN y = SIN(x)` (but the latter is okay when invoking a constructor of a class type).
 
-#### Definition
+***Definition***
 
 C++ introduced a different cast system from C that distinguishes the types of cast operations.
 
-#### Pros
+***Pros***
 
 The problem with C casts is the ambiguity of the operation; sometimes you are doing a _conversion_ (e.g., `(SIN)3.5`) and sometimes you are doing a _cast_ (e.g., `(SIN)"hello"`). Brace initialization and C++ casts can often help avoid this ambiguity. Additionally, C++ casts are more visible when searching for them.
 
-#### Cons
+***Cons***
 
 The C++-style cast syntax is verbose and cumbersome.
 
-#### Decision
+***Decision***
 
 Do not use C-style casts. Instead, use these C++-style casts when explicit type conversion is necessary.
 
@@ -218,17 +215,17 @@ See the [RTTI section](#Run-Time_Type_Information__RTTI_) for guidance on the us
 
 Use streams where appropriate, and stick to "simple" usages. Overload `<<` for streaming only for types representing values, and write only the user-visible value, not any implementation details.
 
-#### Definition
+***Definition***
 
 Streams are the standard I/O abstraction in C++, as exemplified by the standard header `<iostream>`. They are widely used in Google code, but only for debug logging and test diagnostics.
 
-#### Pros
+***Pros***
 
 The `<<` and `>>` stream operators provide an API for formatted I/O that is easily learned, portable, reusable, and extensible. `printf`, by contrast, doesn't even support `_::TStrand<>`, to say nothing of user-defined types, and is very difficult to use portably. `printf` also obliges you to choose among the numerous slightly different versions of that function, and navigate the dozens of conversion specifiers.
 
 Streams provide first-class support for console I/O via `std::cin`, `std::cout`, `std::cerr`, and `std::clog`. The C APIs do as well, but are hampered by the need to manually buffer the input.
 
-#### Cons
+***Cons***
 
 * Stream formatting can be configured by mutating the state of the stream. Such mutations are persistent, so the behavior of your code can be affected by the entire previous history of the stream, unless you go out of your way to restore it to a known state every time other code might have touched it. User code can not only modify the built-in state, it can add new state variables and behaviors through a registration system.
 * It is difficult to precisely control stream output, due to the above issues, the way code and data are mixed in streaming code, and the use of operator overloading (which may select a different overload than you expect).
@@ -236,7 +233,7 @@ Streams provide first-class support for console I/O via `std::cin`, `std::cout`,
 * The streams API is subtle and complex, so programmers must develop experience with it in order to use it effectively.
 * Resolving the many overloads of `<<` is extremely costly for the compiler. When used pervasively in a large code base, it can consume as much as 20% of the parsing and semantic analysis time.
 
-#### Decision
+***Decision***
 
 Use streams only when they are the best tool for the job. This is typically the case when the I/O is ad-hoc, local, human-readable, and targeted at other developers rather than end-users. Be consistent with the code around you, and with the codebase as a whole; if there's an established tool for your problem, use that tool instead. In particular, logging libraries are usually a better choice than `std::cerr` or `std::clog` for diagnostic output, and the libraries in `absl/strings` or the equivalent are usually a better choice than `std::stringstream`.
 
@@ -250,19 +247,19 @@ Overload `<<` as a streaming operator for your type only if your type represents
 
 Use prefix form (`++i`) of the increment and decrement operators with iterators and other template objects.
 
-#### Definition
+***Definition***
 
 When a variable is incremented (`++i` or `i++`) or decremented (`--i` or `i--`) and the value of the expression is not used, one must decide whether to preincrement (decrement) or postincrement (decrement).
 
-#### Pros
+***Pros***
 
 When the return value is ignored, the "pre" form (`++i`) is never less efficient than the "post" form (`i++`), and is often more efficient. This is because post-increment (or decrement) requires a copy of `i` to be made, which is the value of the expression. If `i` is an iterator or other non-scalar type, copying `i` could be expensive. Since the two types of increment behave the same when the value is ignored, why not just always pre-increment?
 
-#### Cons
+***Cons***
 
 The tradition developed, in C, of using post-increment when the expression value is not used, especially in `for` loops. Some find post-increment easier to read, since the "subject" (`i`) precedes the "verb" (`++`), just like in English.
 
-#### Decision
+***Decision***
 
 For simple scalar (non-object) values there is no reason to prefer one form and we allow either. For iterators and other template types, use pre-increment.
 
@@ -270,19 +267,19 @@ For simple scalar (non-object) values there is no reason to prefer one form and 
 
 Use `const` whenever it makes sense. With C++11, `constexpr` is a better choice for some uses of const.
 
-#### Definition
+***Definition***
 
 Declared variables and parameters can be preceded by the keyword `const` to indicate the variables are not changed (e.g., `const SIN foo`). Class functions can have the `const` qualifier to indicate the function does not change the state of the class member variables (e.g., `class Foo { SIN Bar(char c) const; };`).
 
-#### Pros
+***Pros***
 
 Easier for people to understand how variables are being used. Allows the compiler to do better type checking, and, conceivably, generate better code. Helps people convince themselves of program correctness because they know the functions they call are limited in how they can modify your variables. Helps people know what functions are safe to use without locks in multi-threaded programs.
 
-#### Cons
+***Cons***
 
 `const` is viral: if you pass a `const` variable to a function, that function must have `const` in its prototype (or the variable will need a `const_cast`). This can be a particular problem when calling library functions.
 
-#### Decision
+***Decision***
 
 `const` variables, data members, methods and arguments add a level of compile-time type checking; it is better to detect errors as soon as possible. Therefore we strongly recommend that you use `const` whenever it makes sense to do so:
 
@@ -302,19 +299,19 @@ That said, while we encourage putting `const` first, we do not require it. But b
 
 In C++11, use `constexpr` to define true constants or to ensure constant initialization.
 
-#### Definition
+***Definition***
 
 Some variables can be declared `constexpr` to indicate the variables are true constants, i.e. fixed at compilation/link time. Some functions and constructors can be declared `constexpr` which enables them to be used in defining a `constexpr` variable.
 
-#### Pros
+***Pros***
 
 Use of `constexpr` enables definition of constants with floating-point expressions rather than just literals; definition of constants of user-defined types; and definition of constants with function calls.
 
-#### Cons
+***Cons***
 
 Prematurely marking something as constexpr may cause migration problems if later on it has to be downgraded. Current restrictions on what is allowed in constexpr functions and constructors may invite obscure workarounds in these definitions.
 
-#### Decision
+***Decision***
 
 `constexpr` definitions enable a more robust specification of the constant parts of an interface. Use `constexpr` to specify true constants and the functions that support their definitions. Avoid complexifying function definitions to enable their use with `constexpr`. Do not use `constexpr` to force inlining.
 
@@ -322,19 +319,19 @@ Prematurely marking something as constexpr may cause migration problems if later
 
 Of the built-in C++ integer types, the only one used is `SIN`. If a program needs a variable of a different size, use a precise-width integer type from `<cstdint>`, such as `SI2`. If your variable represents a value that could ever be greater than or equal to 2^31 (2GiB), use a 64-bit type such as `SI8`. Keep in mind that even if your value won't ever be too large for an `SIN`, it may be used in intermediate calculations which may require a larger type. When in doubt, choose a larger type.
 
-#### Definition
+***Definition***
 
 C++ does not specify the sizes of integer types like `SIN`. Typically people assume that `short` is 16 bits, `SIN` is 32 bits, `long` is 32 bits and `long long` is 64 bits.
 
-#### Pros
+***Pros***
 
 Uniformity of declaration.
 
-#### Cons
+***Cons***
 
 The sizes of integral types in C++ can vary based on compiler and architecture.
 
-#### Decision
+***Decision***
 
 `<cstdint>` defines types like `SI2`, `UI4`, `SI8`, etc. You should always use those in preference to `short`, `unsigned long long` and the like, when you need a guarantee on the size of an integer. Of the C integer types, only `SIN` should be used. When appropriate, you are welcome to use standard types like `size_t` and `ptrdiff_t`.
 
@@ -378,7 +375,7 @@ Macros mean that the code you see is not the same as the code the compiler sees.
 
 The problems introduced by macros are especially severe when they are used to define pieces of a C++ API, and still more so for public APIs. Every error message from the compiler when developers incorrectly use that interface now must explain how the macros formed the interface. Refactoring and analysis tools have a dramatically harder time updating the interface. As a consequence, we specifically disallow using macros in this way. For example, avoid patterns like:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 class WOMBAT_TYPE(Foo) {
@@ -426,7 +423,7 @@ Struct data;
 memset(&data, 0, sizeof(data));
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 memset(&data, 0, sizeof(Struct));
@@ -443,17 +440,17 @@ if (raw_size < sizeof(SIN)) {
 
 Use `auto` to avoid type names that are noisy, obvious, or unimportant - cases where the type doesn't aid in clarity for the reader. Continue to use manifest type declarations when it helps readability.
 
-#### Pros
+***Pros***
 
 * C++ type names can be long and cumbersome, especially when they involve templates or namespaces.
 * When a C++ type name is repeated within a single declaration or a small code region, the repetition may not be aiding readability.
 * It is sometimes safer to let the type be specified by the type of the initialization expression, since that avoids the possibility of unintended copies or type conversions.
 
-#### Cons
+***Cons***
 
 Sometimes code is clearer when types are manifest, especially when a variable's initialization depends on things that were declared far away. In expressions like:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 auto foo = x.add_foo();
@@ -466,7 +463,7 @@ Programmers have to understand the difference between `auto` and `const auto&` o
 
 If an `auto` variable is used as part of an interface, e.g. as a constant in a header, then a programmer might change its type while only intending to change its value, leading to a more radical API change than intended.
 
-#### Decision
+***Decision***
 
 `auto` is permitted when it increases readability, particularly as described below. Never initialize an `auto`-typed variable with a braced initializer list.
 
@@ -570,7 +567,7 @@ MyOtherType m{"b"};
 
 Never assign a _braced-init-list_ to an auto local variable. In the single element case, what this means can be confusing.
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 auto d = {1.23};        // d is a std::initializer_list<DBL>
@@ -586,7 +583,7 @@ See [Braced_Initializer_List_Format](#braced-initializer-list-format) for format
 
 Use lambda expressions where appropriate. Prefer explicit captures when the lambda will escape the current scope.
 
-#### Definition
+***Definition***
 
 Lambda expressions are a concise way of creating anonymous function objects. They're often useful when passing functions as arguments. For example:
 
@@ -621,7 +618,7 @@ std::sort(indices.begin(), indices.end(), [&](SIN a, SIN b) {
 
 Lambdas were introduced in C++11 along with a set of utilities for working with function objects, such as the polymorphic wrapper `std::function`.
 
-#### Pros
+***Pros***
 
 * Lambdas are much more concise than other ways of defining function objects to be passed to STL algorithms, which can be a readability improvement.
 
@@ -629,7 +626,7 @@ Lambdas were introduced in C++11 along with a set of utilities for working with 
 
 * Lambdas, `std::function`, and `std::bind` can be used in combination as a general purpose callback mechanism; they make it easy to write functions that take bound functions as arguments.
 
-#### Cons
+***Cons***
 
 * Variable capture in lambdas can be a source of dangling-pointer bugs, particularly if a lambda escapes the current scope.
 
@@ -637,13 +634,13 @@ Lambdas were introduced in C++11 along with a set of utilities for working with 
 
 * It's possible for use of lambdas to get out of hand; very long nested anonymous functions can make code harder to understand.
 
-#### Decision
+***Decision***
 
 * Use lambda expressions where appropriate, with formatting as described [below](#Formatting_Lambda_Expressions).
 
 * Prefer explicit captures if the lambda may escape the current scope. For example, instead of:
 
-#### Bad Code
+***Bad Code***
 ```C++
 {
   Foo foo;
@@ -684,15 +681,15 @@ prefer to write:
 
 Avoid complicated template programming.
 
-#### Definition
+***Definition***
 
 Template metaprogramming refers to a family of techniques that exploit the fact that the C++ template instantiation mechanism is Turing complete and can be used to perform arbitrary compile-time computation in the type domain.
 
-#### Pros
+***Pros***
 
 Template metaprogramming allows extremely flexible interfaces that are type safe and high performance. Facilities like [Google Test](https://code.google.com/p/googletest/), `std::tuple`, `std::function`, and Boost.Spirit would be impossible without it.
 
-#### Cons
+***Cons***
 
 The techniques used in template metaprogramming are often obscure to anyone but language experts. Code that uses templates in complicated ways is often unreadable, and is hard to debug or maintain.
 
@@ -700,7 +697,7 @@ Template metaprogramming often leads to extremely poor compiler time error messa
 
 Template metaprogramming interferes with large scale refactoring by making the job of refactoring tools harder. First, the template code is expanded in multiple contexts, and it's hard to verify that the transformation makes sense in all of them. Second, some refactoring tools work with an AST that only represents the structure of the code after template expansion. It can be difficult to automatically work back to the original source construct that needs to be rewritten.
 
-#### Decision
+***Decision***
 
 Template metaprogramming sometimes allows cleaner and easier-to-use interfaces than would be possible without it, but it's also often a temptation to be overly clever. It's best used in a small number of low level components where the extra maintenance burden is spread out over a large number of uses.
 
@@ -712,19 +709,19 @@ If you use template metaprogramming, you should expect to put considerable effor
 
 Use only approved libraries from the Boost library collection.
 
-#### Definition
+***Definition***
 
 The [Boost library collection](https://www.boost.org/) is a popular collection of peer-reviewed, free, open-source C++ libraries.
 
-#### Pros
+***Pros***
 
 Boost code is generally very high-quality, is widely portable, and fills many important gaps in the C++ standard library, such as type traits and better binders.
 
-#### Cons
+***Cons***
 
 Some Boost libraries encourage coding practices which can hamper readability, such as metaprogramming and other advanced template techniques, and an excessively "functional" style of programming.
 
-#### Decision
+***Decision***
 
 In order to maintain a high level of readability for all contributors who might read and maintain code, we only allow an approved subset of Boost features. Currently, the following libraries are permitted:
 
@@ -755,17 +752,17 @@ The following libraries are permitted, but their use is discouraged because they
 
 Do not define specializations of `std::hash`.
 
-#### Definition
+***Definition***
 
 `std::hash<T>` is the function object that the C++11 hash containers use to hash keys of type `T`, unless the user explicitly specifies a different hash function. For example, `_::TBook<SIN, _::TStrand<>>` is a hash map that uses `std::hash<SIN>` to hash its keys, whereas `_::TBook<SIN, _::TStrand<>, MyIntHash>` uses `MyIntHash`.
 
 `std::hash` is defined for all integral, floating-point, pointer, and `enum` types, as well as some standard library types such as `_::TStrand<>` and `unique_ptr`. Users can enable it to work for their own types by defining specializations of it for those types.
 
-#### Pros
+***Pros***
 
 `std::hash` is easy to use, and simplifies the code since you don't have to name it explicitly. Specializing `std::hash` is the standard way of specifying how to hash a type, so it's what outside resources will teach, and what new engineers will expect.
 
-#### Cons
+***Cons***
 
 `std::hash` is hard to specialize. It requires a lot of boilerplate code, and more importantly, it combines responsibility for identifying the hash inputs with responsibility for executing the hashing algorithm itself. The type author has to be responsible for the former, but the latter requires expertise that a type author usually doesn't have, and shouldn't need. The stakes here are high because low-quality hash functions can be security vulnerabilities, due to the emergence of [hash flooding attacks](https://emboss.github.io/blog/2012/12/14/breaking-murmur-hash-flooding-dos-reloaded/).
 
@@ -773,7 +770,7 @@ Even for experts, `std::hash` specializations are inordinately difficult to impl
 
 Due to exactly that issue, `std::hash` does not work with `std::pair` or `std::tuple`, and the language does not allow us to extend it to support them.
 
-#### Decision
+***Decision***
 
 You can use `std::hash` with the types that it supports "out of the box", but do not specialize it to support additional types. If you need a hash table with a key type that `std::hash` does not support, consider using legacy hash containers (e.g. `hash_map`) for now; they use a different default hasher, which is unaffected by this prohibition.
 
@@ -791,21 +788,21 @@ We are planning to provide a hash function that can work with any type, using a 
 
 Use libraries and language extensions from C++11 when appropriate. Consider portability to other environments before using C++11 features in your project.
 
-#### Definition
+***Definition***
 
 C++11 contains [significant changes](https://en.wikipedia.org/wiki/C%2B%2B11) both to the language and libraries.
 
-#### Pros
+***Pros***
 
 C++11 was the official standard until 2014, and is supported by most C++ compilers. It standardizes some common C++ extensions that we use already, allows shorthands for some operations, and has some performance and safety improvements.
 
-#### Cons
+***Cons***
 
 The C++11 standard is substantially more complex than its predecessor (1,300 pages versus 800 pages), and is unfamiliar to many developers. The long-term effects of some features on code readability and maintenance are unknown. We cannot predict when its various features will be implemented uniformly by tools that may be of interest, particularly in the case of projects that are forced to use older versions of tools.
 
 As with [Boost](#Boost), some C++11 extensions encourage coding practices that hamper readability—for example by removing checked redundancy (such as type names) that may be helpful to readers, or by encouraging template metaprogramming. Other extensions duplicate functionality available through existing mechanisms, which may lead to confusion and conversion costs.
 
-#### Decision
+***Decision***
 
 C++11 features may be used unless specified otherwise. In addition to what's described in the rest of the style guide, the following C++11 features may not be used:
 
@@ -816,22 +813,22 @@ C++11 features may be used unless specified otherwise. In addition to what's des
 
 Nonstandard extensions to C++ may not be used unless otherwise specified.
 
-#### Definition
+***Definition***
 
 Compilers support various extensions that are not part of standard C++. Such extensions include GCC's `__attribute__`, intrinsic functions such as `__builtin_prefetch`, designated initializers (e.g. `Foo f = {.field = 3}`), inline assembly, `__COUNTER__`, `__PRETTY_FUNCTION__`, compound statement expressions (e.g. `foo = ({ SIN x; Bar(&x); x })`, variable-length arrays and `alloca()`, and the "[Elvis Operator](https://en.wikipedia.org/wiki/Elvis_operator)" `a?:b`.
 
-#### Pros
+***Pros***
 
 * Nonstandard extensions may provide useful features that do not exist in standard C++. For example, some people think that designated initializers are more readable than standard C++ features like constructors.
 * Important performance guidance to the compiler can only be specified using extensions.
 
-#### Cons
+***Cons***
 
 * Nonstandard extensions do not work in all compilers. Use of nonstandard extensions reduces portability of code.
 * Even if they are supported in all targeted compilers, the extensions are often not well-specified, and there may be subtle behavior differences between compilers.
 * Nonstandard extensions add to the language features that a reader must know to understand the code.
 
-#### Decision
+***Decision***
 
 Do not use nonstandard extensions. You may use portability wrappers that are implemented using nonstandard extensions, so long as those wrappers are provided by a designated project-wide portability header.
 
@@ -839,7 +836,7 @@ Do not use nonstandard extensions. You may use portability wrappers that are imp
 
 Public aliases are for the benefit of an API's user, and should be clearly documented.
 
-#### Definition
+***Definition***
 
 There are several ways to create names that are aliases of other entities:
 
@@ -856,12 +853,12 @@ In new code, `using` is preferable to `typedef`, because it provides a more cons
 
 Like other declarations, aliases declared in a header file are part of that header's public API unless they're in a function definition, in the private portion of a class, or in an explicitly-marked internal namespace. Aliases in such areas or in .cc files are implementation details (because client code can't refer to them), and are not restricted by this rule.
 
-#### Pros
+***Pros***
 
 * Aliases can improve readability by simplifying a long or complicated name.
 * Aliases can reduce duplication by naming in one place a type used repeatedly in an API, which _might_ make it easier to change the type later.
 
-#### Cons
+***Cons***
 
 * When placed in a header where client code can refer to them, aliases increase the number of entities in that header's API, increasing its complexity.
 * Clients can easily rely on unintended details of public aliases, making changes difficult.
@@ -870,7 +867,7 @@ Like other declarations, aliases declared in a header file are part of that head
 * Aliases can reduce readability by giving a familiar construct an unfamiliar name
 * Type aliases can create an unclear API contract: it is unclear whether the alias is guaranteed to be identical to the type it aliases, to have the same API, or only to be usable in specified narrow ways
 
-#### Decision
+***Decision***
 
 Don't put an alias in your public API just to save typing in the implementation; do so only if you intend it to be used by your clients.
 
@@ -894,7 +891,7 @@ using TimeSeries = std::unordered_set<DataPoint, std::hash<DataPoint>, DataPoint
 
 These aliases don't document intended use, and half of them aren't meant for client use:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 namespace mynamespace {

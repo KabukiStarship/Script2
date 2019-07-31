@@ -23,7 +23,7 @@ using namespace _;
 namespace script2 {
 #if SEAM >= SCRIPT2_STRAND
 template <typename Char, typename SIZ>
-void _06_StrandN() {
+void TestStrandN() {
   static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
@@ -46,16 +46,16 @@ void _06_StrandN() {
 }
 #endif
 
-static const CH1* _06_Strand(const CH1* args) {
+static const CH1* _09_Strand(const CH1* args) {
 #if SEAM >= SCRIPT2_STRAND
   A_TEST_BEGIN;
 
-  _06_StrandN<CH1, SI4>();
+  TestStrandN<CH1, SI4>();
 #if USING_UTF16 == YES_0
-  _06_StrandN<CH2, SI4>();
+  TestStrandN<CH2, SI4>();
 #endif
 #if USING_UTF32 == YES_0
-  _06_StrandN<CH4, SI4>();
+  TestStrandN<CH4, SI4>();
 #endif
 
 #endif

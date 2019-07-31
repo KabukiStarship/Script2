@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](../readme.md)
 
 ### [Objects](readme.md)
@@ -17,61 +11,13 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 ##### Dictionary Memory Layout
 
 ```AsciiArt
-    +==========================+ -----------
-    |_______ Buffer            |   ^     ^
-    |_______ ...               |   |     |
-    |_______ Data N            |  Data   |
-    |_______ ...               |   |     |
-    |_______ Data 0            |   v     |
-    |==========================| -----   |
-    |        Key 1             |   ^     |
-    |        ...               |   |     |
-    |        Key N             |   |     |
-    |vvvvvvvvvvvvvvvvvvvvvvvvvv|   |     |
-    |        buffer            |   |     |
-    |^^^^^^^^^^^^^^^^^^^^^^^^^^|   |     |
-    |_______ Collision N       |   |     |
-    |_______ ...               |   |     |
-    |        Collision 1       |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Collision Index N |   |     |
-    |_______ ...               |   |     |
-    |        Collision Index 1 |   |     |
-    |==========================|   |    Size
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Collision Table N |   |     |
-    |_______ ...               |   |     |
-    |        Collision Table 1 |   |     |
-    |==========================| Header  |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Key Offset N      |   |     |
-    |_______ ...               |   |     |
-    |        Key Offset 1      |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Sorted Mappings N |   |     |
-    |_______ ...               |   |     |
-    |        Sorted Mappings 1 |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Data Offset N     |   |     |
-    |_______ ...               |   |     |
-    |        Data Offset 1     |   |     |
-    |==========================|   |     |
-    |_______ count_max         |   |     |
-    |_______ ...               |   |     |
-    |_______ Type byte N       |   |     |
-    |_______ ...               |   |     |
-    |        Type byte 1       |   |     |   ^ Up in addresses
-    |==========================|   |     |   |
-    |  TMapKey<UI, SI> Struct  |   v     v   ^
-    +==========================+ ----------- ^ 0xN
+    +--------------------------+
+    |          List            |
+    |--------------------------|
+    |          Table           |
+    |--------------------------|  ^ Up in addresses
+    |    TDictionary Struct    |  |
+    +--------------------------+ 0xN
 ```
 
 ##### Book Memory Overhead
@@ -83,3 +29,11 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 |    8   |   4   |    8   |   8   |   32  | 24 + 16 per index + buffer.|
 
 * All sizes listed in bytes.
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

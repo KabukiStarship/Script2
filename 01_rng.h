@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_socket.h"
+#include "c_rng.h"
 
 #if SEAM == SCRIPT2_RNG
 #include "module_debug.inl"
@@ -25,26 +25,17 @@ static const CH1* _01_RNG(const CH1* args) {
 #if SEAM >= SCRIPT2_RNG
   A_TEST_BEGIN;
 
-  D_COUT(Headingf("Test SocketCopy and MemoryCompare"));
+#if SEAM == SCRIPT2_RNG
+  enum { kPrintCount = 256 };
+#else
+  enum { kPrintCount = 1 };
+#endif
+  D_COUT(
+      Headingf("Printing ", TStringf<>(kPrintCount).String(), " numbers..."));
 
-  enum {
-    kTestCharsCount = 1024,
-    kTestCharsOffsetCount = 16,
-  };
-  CH1 test_chars[kTestCharsCount];
-  CH1 test_chars_result[kTestCharsCount + kTestCharsOffsetCount];
+  for (SIN i = 0; i < kPrintCount; ++i)
+    D_COUT('\n' << i << ".) " << Random(TSignedMin<SIN>(), TSignedMax<SIN>()));
 
-  D_COUT("\ntest_chars[0]:0x" << Hexf(test_chars) << " test_chars_result[n]:0x"
-                              << Hexf(test_chars_result));
-
-  for (SI4 i = 0; i < kTestCharsOffsetCount; ++i) {
-    for (SI4 j = 0; j < kTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
-    CH1* result = SocketCopy(test_chars_result + i, kTestCharsCount, test_chars,
-                             kTestCharsCount);
-    A_ASSERT(result);
-    A_ASSERT(!SocketCompare(test_chars + i, kTestCharsCount, test_chars_result,
-                            kTestCharsCount));
-  }
 #endif
   return nullptr;
 }

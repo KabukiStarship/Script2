@@ -29,24 +29,6 @@
     <ClInclude Include="06_stack.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="07_strand.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="08_matrix.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="09_loom.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="10_table.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="11_list.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="12_map.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="13_book.h">
       <Filter>lib</Filter>
     </ClInclude>
@@ -66,9 +48,6 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_args.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_autoject.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_avalue.h">
@@ -107,9 +86,6 @@
     <ClInclude Include="c_floor.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="c_hash.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="c_interrupts.h">
       <Filter>lib</Filter>
     </ClInclude>
@@ -117,9 +93,6 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_language.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_lock.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_mirror.h">
@@ -141,9 +114,6 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_slot.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_socket.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="c_test.h">
@@ -197,9 +167,6 @@
     <ClInclude Include="t_door.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="t_hash.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="t_library.h">
       <Filter>lib</Filter>
     </ClInclude>
@@ -219,9 +186,6 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="t_set.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="t_socket.h">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="t_stack.h">
@@ -251,6 +215,30 @@
     <ClInclude Include="02_itos.h">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="10_loom.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="11_table.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="07_matrix.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="08_map.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="09_strand.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="12_list.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="t_binary.h">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="c_array.h">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="17_seam.s2">
@@ -276,9 +264,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_autoject.cc">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="script2_avalue.cc">
@@ -314,13 +299,7 @@
     <ClCompile Include="script2_floor.cc">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="script2_hash.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="script2_interrupts.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="script2_lock.cc">
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="script2_morsecode.cc">
@@ -344,9 +323,6 @@
     <ClCompile Include="script2_slot.cc">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="script2_socket.cc">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="script2_test.cc">
       <Filter>lib</Filter>
     </ClCompile>
@@ -354,6 +330,12 @@
       <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="script2_string.cc">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_binary.cc">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="script2_array.cc">
       <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>

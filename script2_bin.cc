@@ -15,13 +15,13 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_bout.h"
 #include "c_bsq.h"
 #include "c_hash.h"
-#include "c_socket.h"
+#include "c_binary.h"
 
 #if SEAM == SCRIPT2_DICTIONARY
 #define CLEAR(begin, stop) \
   while (begin <= stop) *begin++ = ' ';
-#define D_COUT_BSQ(header, bsq) Console<>().Out() << header << kLF << Bsq(bsq);
-#define D_COUT_BIN(header, bin) Console<>().Out() << header << kLF << bin;
+#define D_COUT_BSQ(header, bsq) Console<>().Out() << header << '\n' << Bsq(bsq);
+#define D_COUT_BIN(header, bin) Console<>().Out() << header << '\n' << bin;
 #else
 #define CLEAR(begin, stop)
 #define D_COUT_BSQ(header, bsq)

@@ -1,5 +1,4 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Functions
 
@@ -40,19 +39,19 @@ You could find long and complicated functions when working with some code. Do no
 
 All parameters passed by lvalue reference must be labeled `const`.
 
-#### definition
+***Definition***
 
 In C, if a function needs to modify a variable, the parameter must use a pointer, eg `SIN foo(SIN *pval)`. In C++, the function can alternatively declare a reference parameter: `SIN foo(SIN &val)`.
 
-#### Pros
+***Pros***
 
 Defining a parameter as reference avoids ugly code like `(*pval)++`. Necessary for some applications like copy constructors. Makes it clear, unlike with pointers, that a null pointer is not a possible value.
 
-#### Cons
+***Cons***
 
 References can be confusing, as they have value syntax but pointer semantics.
 
-#### Decision
+***Decision***
 
 Within function parameter lists all references must be `const`:
 
@@ -73,7 +72,7 @@ Remember that most of the time input parameters are going to be specified as `co
 
 Use overloaded functions (including constructors) only if a reader looking at a call site can get a good idea of what is happening without having to first figure out exactly which overload is being called.
 
-#### definition
+***Definition***
 
 You may write a function that takes a `const _::TStrand<>&` and overload it with another that takes `const char*`. However, in this case consider std::string_view instead.
 
@@ -85,17 +84,17 @@ class MyClass {
 };
 ```
 
-#### Pros
+***Pros***
 
 Overloading can make code more intuitive by allowing an identically-named function to take different arguments. It may be necessary for templatized code, and it can be convenient for Visitors.
 
 Overloading based on const or ref qualification may make utility code more usable, more efficient, or both. (See [TotW 148](http://abseil.io/tips/148) for more.)
 
-#### Cons
+***Cons***
 
 If a function is overloaded by the argument types alone, a reader may have to understand C++'s complex matching rules in order to tell what's going on. Also many people are confused by the semantics of inheritance if a derived class overrides only some of the variants of a function.
 
-#### Decision
+***Decision***
 
 You may overload a function when there are no semantic differences between variants. These overloads may vary in types, qualifiers, or argument count. However, a reader of such a call must not need to know which member of the overload set is chosen, only that **something	* from the set is being called. If you can document all entries in the overload set with a single comment in the header, that is a good sign that it is a well-designed overload set.
 
@@ -103,11 +102,11 @@ You may overload a function when there are no semantic differences between varia
 
 Default arguments are allowed on non-virtual functions when the default is guaranteed to always have the same value. Follow the same restrictions as for [function overloading](#Function_Overloading), and prefer overloaded functions if the readability gained with default arguments doesn't outweigh the downsides below.
 
-#### Pros
+***Pros***
 
 Often you have a function that uses default values, but occasionally you want to override the defaults. Default parameters allow an easy way to do this without having to define many functions for the rare exceptions. Compared to overloading the function, default arguments have a cleaner syntax, with less boilerplate and a clearer distinction between 'required' and 'optional' arguments.
 
-#### Cons
+***Cons***
 
 Defaulted arguments are another way to achieve the semantics of overloaded functions, so all the [reasons not to overload functions](#Function_Overloading) apply.
 The defaults for arguments in a virtual function call are determined by the static type of the target object, and there's no guarantee that all overrides of a given function declare the same defaults.
@@ -116,7 +115,7 @@ Default parameters are re-evaluated at each call site, which can bloat the gener
 
 Function pointers are confusing in the presence of default arguments, since the function signature often doesn't match the call signature. Adding function overloads avoids these problems.
 
-#### Decision
+***Decision***
 
 Default arguments are banned on virtual functions, where they don't work properly, and in cases where the specified default might not evaluate to the same value depending on when it was evaluated. (For example, don't write `void f(SIN n = counter++);`.)
 
@@ -126,7 +125,7 @@ In some other cases, default arguments can improve the readability of their func
 
 Use trailing return types only where using the ordinary syntax (leading return types) is impractical or much less readable.
 
-#### Definition
+***Definition***
 
 C++ allows two different forms of function declarations. In the older form, the return type appears before the function name. For example:
 
@@ -142,7 +141,7 @@ auto foo(SIN x) -> SIN;
 
 The trailing return type is in the function's scope. This doesn't make a difference for a simple case like `SIN` but it matters for more complicated cases, like types declared in class scope or types written in terms of the function parameters.
 
-#### Pros
+***Pros***
 
 Trailing return types are the only way to explicitly specify the return type of a [lambda expression](#Lambda_expressions). In some cases the compiler is able to deduce a lambda's return type, but not in all cases. Even when the compiler can deduce it automatically, sometimes specifying it explicitly would be clearer for readers.
 
@@ -160,13 +159,13 @@ template <typename T, typename U>
 decltype(declval<T&>() + declval<U&>()) add(T t, U u);
 ```
 
-#### Cons
+***Cons***
 
 Trailing return type syntax is relatively new and it has no analogue in C++-like languages such as C and Java, so some readers may find it unfamiliar.
 
 Existing code bases have an enormous number of function declarations that aren't going to get changed to use the new syntax, so the realistic choices are using the old syntax only or using a mixture of the two. Using a single version is better for uniformity of style.
 
-#### Decision
+***Decision***
 
 In most cases, continue to use the older style of function declaration where the return type goes before the function name. Use the new trailing-return-type form only in cases where it's required (such as lambdas) or where, by putting the type after the function's parameter list, it allows you to write the type in a much more readable way. The latter case should be rare; it's mostly an issue in fairly complicated template code, which is [discouraged in most cases](#Template_metaprogramming).
 
@@ -188,10 +187,10 @@ const SIN* Foo (SIN& bar) {
 }
 ```
 
-#### Pros
+***Pros***
 
 This method can help reduce bugs when using multiple libraries with static data, and is generally very fast and easy to type.
 
-#### Cons
+***Cons***
 
 It requires some more typing in some circumstances.

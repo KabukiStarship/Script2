@@ -118,16 +118,6 @@ const UI2* BinaryLUTDecimals() { return kDigits00To99; }
 // with one word. We also have to run on 16-bit systems so we have to provide
 // a lower memory cost overhead version of puff.
 
-SIN STRLength(UI1 value) {
-  if (value < 10) return 1;
-  if (value < 100) return 2;
-  return 3;
-}
-SIN STRLength(SI1 value) {
-  if (value < 0) return STRLength((UI1)-value) + 1;
-  return STRLength((UI1)value);
-}
-
 SIN STRLength(UI2 value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
@@ -174,6 +164,13 @@ SIN STRLength(SI8 value) {
 #endif
 
 #if SEAM >= SCRIPT2_FTOS
+
+UI8 TComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
+  FP8 pow_10 = 0.30102999566398114,  //< 1/lg(10)
+      alpha_minus_e_plus_63 = static_cast<FP8>(alpha - e + 63),
+      ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
+  return *reinterpret_cast<UI8*>(&pow_10);
+}
 
 constexpr SIW IEEE754LutElementCount() { return 87; }
 
@@ -239,35 +236,6 @@ const void* Binary32Pow10IntegralPortions() { return kIEEE754Pow10F4; }
 
 const void* Binary64Pow10IntegralPortions() { return kIEEE754Pow10F8; }
 
-BOL IsNaN(UI1 value) { return value > TUnsignedNaN<UI1>(); }
-
-BOL IsNaN(SI2 value) { return value > TSignedNaN<SI2, UI2>(); }
-
-BOL IsNaN(UI2 value) { return value > TUnsignedNaN<UI2>(); }
-
-BOL IsNaN(SI4 value) { return value > TSignedNaN<SI4, UI4>(); }
-
-BOL IsNaN(UI4 value) { return value > TUnsignedNaN<UI4>(); }
-
-BOL IsNaN(SI8 value) { return value > TSignedNaN<SI8, UI8>(); }
-
-BOL IsNaN(UI8 value) { return value > TUnsignedNaN<UI8>(); }
-
-BOL IsNaN(SI1 value) {
-  return (value > TUnsignedNaN<SI1>()) && (value > TSignedNaN<SI1, UI1>());
-}
-
-BOL IsNaN(FP4 value) { return isnan(value); }
-
-BOL IsNaN(FP8 value) { return isnan(value); }
-
-#if USING_FP4 == YES_0
-SI4 FloatDigitsMax() { return 15; }
-#endif
-#if USING_FP8 == YES_0
-SI4 DoubleDigitsMax() { return 31; }
-#endif
-
 BOL IsFinite(FP4 value) {
   return static_cast<FP4>(isfinite(static_cast<FP8>(value)));
 }
@@ -284,26 +252,6 @@ FP8 Ceiling(FP8 value) { return ceil(value); }
 
 FP4 Ceiling(FP4 value) {
   return static_cast<FP4>(ceil(static_cast<FP8>(value)));
-}
-
-/* Masks the lower bits using faster bit shifting.
-@brief The algorithm has you enter the highest bit rather than bit count because
-it would introduce an extra instruction and you should do that manually if you
-wish to do so.
-@param value The value to mask.
-@param left_bits Number of bits to shift left.
-@param right_bits Number of bits to shift right. */
-template <typename UI>
-inline UI ShiftLeftRight(UI value, SI4 left_bits, SI4 right_bits) {
-  value = value << left_bits;
-  return value >> right_bits;
-}
-
-UI8 ComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
-  FP8 pow_10 = 0.30102999566398114,  //< 1/lg(10)
-      alpha_minus_e_plus_63 = static_cast<FP8>(alpha - e + 63),
-      ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
-  return *reinterpret_cast<UI8*>(&pow_10);
 }
 
 #endif

@@ -16,13 +16,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_PUFF_HEADER_WITH_TEMPLATES 1
 
 #include "c_puff.h"
+#include "t_binary.h"
 #if SEAM == SCRIPT2_ITOS
 #include <iostream>
-#include "module_debug.inl"
-
-#ifndef D_COUT
 #define D_COUT(item) std::cout << item
-#endif
 namespace _ {
 template <typename Char = CHR>
 Char* TPrintPrinted(Char* start = nullptr) {
@@ -52,7 +49,7 @@ Char* TPrintPrinted(Char* start = nullptr) {
 #define D_PRINT_PRINTED TPrintPrinted<Char>()
 
 #else
-#include "module_release.inl"
+#define D_COUT(item)
 #define BEGIN_ITOS_ALGORITHM
 #define D_PRINT_PRINTED
 #endif
@@ -542,18 +539,6 @@ Char* TPrint3(Char* string, Char* stop, Char a, Char b, Char c) {
   return string;
 }
 
-/* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
-template <typename UI>
-inline UI TUnsignedNaN() {
-  return (~(UI)0);  // -sizeof (UIW) - 2;
-}
-
-/* Signed Not-a-number_ is the lowest possible signed integer value. */
-template <typename SI, typename UI>
-inline SI TSignedNaN() {
-  return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
-}
-
 /* Masks off the given bits starting at b0. */
 template <typename SIZ, SIN kMSb_, SIN kLSb_>
 SIZ TMiddleBits(SIZ value) {
@@ -645,6 +630,7 @@ class TBinary {
   template <typename Char = CHR>
   static Char* Print(Char* socket, Char* stop, Float value) {
     // Not handling NaN and inf
+
     if (IsNaN(value)) {
       if (stop - socket < 4) return nullptr;
       socket[0] = 'N';
@@ -675,18 +661,6 @@ class TBinary {
     Char* cursor = Print<Char>(socket, stop, value, k);
     if (!cursor) return cursor;
     return Standardize<Char>(socket, stop, cursor - socket, k);
-  }
-
-  template <typename UI = UIW>
-  static inline UI NaNUnsigned() {
-    UI nan = 0;
-    return ~nan;
-  }
-
-  template <typename SI, typename UI>
-  static inline SI NaNSigned() {
-    UI nan = 1;
-    return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
 
   static TBinary IEEE754Pow10(SI e, SI& k) {
@@ -1161,4 +1135,5 @@ inline CH4* SPrint(CH4* string, CH4* stop, FP8 value) {
 #endif
 }  // namespace _
 #endif
+#undef D_COUT
 #endif

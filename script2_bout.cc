@@ -14,7 +14,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "c_bout.h"
 #include "c_bsq.h"
 #include "c_hash.h"
-#include "c_socket.h"
+#include "c_binary.h"
 #include "c_test.h"
 #include "c_utf.h"
 #include "slot.h"
@@ -22,7 +22,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM == SCRIPT2_DICTIONARY
 #include "module_debug.inl"
 #define D_COUT_BOUT(header, bout) \
-  Console<>().Out() << "\n" << header << kLF << bout;
+  Console<>().Out() << "\n" << header << '\n' << bout;
 #else
 #include "module_release.inl"
 #define D_COUT_BOUT(header, bout)

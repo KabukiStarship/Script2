@@ -9,7 +9,7 @@
 #undef D_COUT_FUNCTION_LINE
 #undef D_SOCKET_SAVE
 #undef D_SOCKET_FILL
-#undef D_SOCKET_WIPE
+#undef D_ARRAY_WIPE
 #undef A_CHECK
 #undef D_CHECK
 #undef R_CHECK

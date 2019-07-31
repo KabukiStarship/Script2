@@ -13,7 +13,7 @@
 #define D_COUT_FUNCTION_LINE
 #define D_SOCKET_SAVE(begin, stop)
 #define D_SOCKET_FILL(begin, end_or_size, c)
-#define D_SOCKET_WIPE(begin, end_or_size)
+#define D_ARRAY_WIPE(begin, end_or_size)
 #define D_ASSERT_INDEX(condition, index)
 #define A_ASSERT(condition) \
   if (!_::Test(condition)) _::TestFail(__LINE__, __FUNCTION__, __FILE__)

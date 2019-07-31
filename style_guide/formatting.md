@@ -1,5 +1,4 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Formatting
 
@@ -35,15 +34,15 @@ Each line of text in your code should be at most 80 characters long.
 
 We recognize that this rule is controversial, but so much existing code already adheres to it, and we feel that consistency is important.
 
-#### Pros
+***Pros***
 
 Those who favor this rule argue that it is rude to force them to resize their windows and there is no need for anything longer. Some folks are used to having several code windows side-by-side, and thus don't have room to widen their windows in any case. People set up their work environment assuming a particular maximum window width, and 80 columns has been the traditional standard. Why change it?
 
-#### Cons
+***Cons***
 
 Proponents of change argue that a wider line can make code more readable. The 80-column limit is an hidebound throwback to 1960s mainframes; modern equipment has wide screens that can easily show longer lines.
 
-#### Decision
+***Decision***
 
 80 characters is the maximum.
 
@@ -160,7 +159,7 @@ class Circle : public Shape {
 void Circle::Rotate(DBL /*radians*/) {}
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 // Bad - if someone wants to implement later, it's not clear what the
@@ -319,7 +318,7 @@ if ( condition ) {  // spaces inside parentheses - rare
 
 Note that in all cases you must have a space between the `if` and the open parenthesis. You must also have a space between the close parenthesis and the curly brace, if you're using one.
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 if(condition) {   // Bad - space missing after IF.
@@ -343,7 +342,7 @@ if (x == kBar) return new Bar();
 
 This is not allowed when the if statement has an `else`:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 // Not allowed - IF statement on one line when there is an ELSE clause
@@ -364,7 +363,7 @@ if (condition) {
 
 However, if one part of an `if`-`else` statement uses curly braces, the other part must too:
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 // Not allowed - curly on IF but not ELSE
@@ -458,7 +457,7 @@ for (SIN i = 0; i < kSomeNumber; ++i) {}  // Good - one newline is also OK.
 while (condition) continue;  // Good - continue indicates no logic.
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 while (condition);  // Bad - looks like part of do/while loop.
@@ -502,7 +501,7 @@ It is allowed (if unusual) to declare multiple variables in the same declaration
 SIN x, y;
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 SIN x, *y;  // Disallowed - no & or * in multiple declaration
@@ -541,7 +540,7 @@ return (some_long_condition &&
         another_condition);
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 return (value);                // You wouldn't write var = (value);
@@ -596,7 +595,7 @@ Even when preprocessor directives are within the body of indented code, the dire
   }
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 // Bad - indented directives
@@ -686,7 +685,7 @@ void foo() {  // Correct.  No extra indentation within namespace.
 
 ```
 Do not indent within a namespace:
-#### Bad Code
+***Bad Code***
 
 ```C++
 namespace {

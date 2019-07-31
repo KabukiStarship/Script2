@@ -1,13 +1,10 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Naming
 
 The most important consistency rules are those that govern naming. The style of a name immediately informs us what sort of thing the named entity is: a type, a variable, a function, a constant, a macro, etc., without requiring us to search for the declaration of that entity. The pattern-matching engine in our brains relies a great deal on these naming rules.
 
-Naming rules are pretty arbitrary, but we feel that consistency is more important than individual preferences in this area, so regardless of whether you find them sensible or not, the rules are the rules.
-
-### Section Content
+Naming rules are pretty arbitrary, but we feel that consistency is more important than individual preferences in this area, so regardless of whether you find them sensible or not, the rules are the rules:
 
 1. [General Naming Rules](naming.md#general-naming-rules)
 1. [File Names](naming.md#file-names)
@@ -22,11 +19,7 @@ Naming rules are pretty arbitrary, but we feel that consistency is more importan
 
 ### General Naming Rules
 
-Be consitant and minimize overall labor.
-
-#### Summary
-
-Names should be descriptive; avoid abbreviation.
+Be consistent and minimize overall labor and clutter. Names should be descriptive enough to not require comments to convey how to use the code; avoid abbreviation.
 
 Give as descriptive a name as possible, within reason. Do not worry about saving horizontal space as it is far more important to make your code immediately understandable by a new reader. Do not use abbreviations that are ambiguous or unfamiliar to readers outside your project, and do not abbreviate by deleting letters within a word. Abbreviations that would be familiar to someone outside your project with relevant domain knowledge are OK. As a rule of thumb, an abbreviation is probably OK if it's listed in Wikipedia.
 
@@ -38,7 +31,7 @@ SIN lstm_size;             // "LSTM" is a common machine learning abbreviation.
 
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 SIN n;                     // Meaningless.
@@ -58,8 +51,6 @@ Template parameters should follow the naming style for their category: type temp
 
 ### File Names
 
-#### Summary
-
 Filenames should be all lowercase and can include underscores (`_`) or dashes (`-`). Follow the convention that your project uses. If there is no consistent local pattern to follow, prefer "_".
 
 Examples of acceptable file names:
@@ -76,8 +67,6 @@ Do not use filenames that already exist in `/usr/include`, such as `db.h`.
 In general, make your filenames very specific. For example, use `http_server_logs.h` rather than `logs.h`. A very common case is to have a pair of files called, e.g., `foo_bar.h` and `foo_bar.cc`, defining a class called `FooBar`.
 
 ### Type Names
-
-#### Summary
 
 Type names start with a capital letter and have a capital letter for each new word, with no underscores: `MyExcitingClass`, `MyExcitingEnum`.
 
@@ -102,8 +91,6 @@ enum UrlTableErrors { ...
 
 ### Variable Names
 
-#### Summary
-
 The names of variables (including function parameters) and data members are all lowercase, with underscores between words. Data members of classes (but not structs) additionally have trailing underscores. For instance: `a_local_variable`, `a_struct_data_member`, `a_class_data_member_`.
 
 #### Common Variable names
@@ -115,7 +102,7 @@ _::TStrand<> table_name;  // OK - uses underscore.
 _::TStrand<> tablename;   // OK - all lowercase.
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```
 _::TStrand<> tableName;   // Bad - mixed case.
@@ -153,8 +140,6 @@ See [Structs vs. Classes](#Structs_vs._Classes) for a discussion of when to use 
 
 ### Constant Names
 
-#### Summary
-
 Variables declared constexpr or const, and whose value is fixed for the duration of the program, are named with a leading "k" followed by mixed case. Underscores can be used as separators in the rare cases where capitalization cannot be used for separation. For example:
 
 ```C++
@@ -165,8 +150,6 @@ const SIN kAndroid8_0_0 = 24;  // Android 8.0.0
 All such variables with static storage duration (i.e. statics and globals, see [Storage Duration](http://en.cppreference.com/w/cpp/language/storage_duration#Storage_duration) for details) should be named this way. This convention is optional for variables of other storage classes, e.g. automatic variables, otherwise the usual variable naming rules apply.
 
 ### Function Names
-
-#### Summary
 
 Regular functions have mixed case; accessors and mutators may be named like variables.
 
@@ -182,9 +165,7 @@ OpenFileOrDie()
 
 Accessors and mutators (get and set functions) may be named like variables. These often correspond to actual member variables, but this is not required. For example, `SIN count()` and `void set_count(SIN count)`.
 
-### Namespace Names
-
-#### SummaryNamespace names are all lower-case. Top-level namespace names are based on the project name . Avoid collisions between nested namespaces and well-known top-level namespaces.
+### Namespace NamesNamespace names are all lower-case. Top-level namespace names are based on the project name . Avoid collisions between nested namespaces and well-known top-level namespaces.
 
 The name of a top-level namespace should usually be the name of the project or team whose code is contained in that namespace. The code in that namespace should usually be in a directory whose basename matches the namespace name (or in subdirectories thereof).
 
@@ -195,8 +176,6 @@ Avoid nested namespaces that match well-known top-level namespaces. Collisions b
 For `internal` namespaces, be wary of other code being added to the same `internal` namespace causing a collision (internal helpers within a team tend to be related and may lead to collisions). In such a situation, using the filename to make a unique internal name is helpful (`websearch::index::frobber_internal` for use in `frobber.h`)
 
 ### Enumerator Names
-
-#### Summary
 
 Enumerators (for both scoped and unscoped enums) should be named _either_ like [constants](#Constant_Names) or like [macros](#Macro_Names): either `kEnumName` or `ENUM_NAME`.
 
@@ -221,8 +200,6 @@ Until January 2009, the style was to name enum values like [macros](#Macro_Names
 
 ### Macro Names
 
-#### Summary
-
 You're not really going to [define a macro](#Preprocessor_Macros), are you? If you do, they're like this: `MY_MACRO_THAT_SCARES_SMALL_CHILDREN_AND_ADULTS_ALIKE`.
 
 Please see the [description of macros](#Preprocessor_Macros); in general macros should _not_ be used. However, if they are absolutely needed, then they should be named with all capitals and underscores.
@@ -233,8 +210,6 @@ Please see the [description of macros](#Preprocessor_Macros); in general macros 
 ```
 
 ### Exceptions to Naming Rules
-
-#### Summary
 
 If you are naming something that is analogous to an existing C or C++ entity then you can follow the existing naming convention scheme.
 

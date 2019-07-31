@@ -1,6 +1,6 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/script2_object.cc
+@file    /script2/script2_array.cc
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
 All right reserved (R). This Source Code Form is subject to the terms of the
@@ -11,8 +11,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_STACK
 
-#include "c_autoject.h"
-#include "t_socket.h"
+#include "c_array.h"
+#include "t_binary.h"
 
 #if SEAM == SCRIPT2_STRAND
 #include "module_debug.inl"
@@ -22,18 +22,42 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-UIW* RamFactoryHeap(UIW* obj, SIW size) {
-  if (size > 0) {
-    size = AlignUp(size);
-    D_ASSERT(!(size & (sizeof(SIW) - 1)));
-    return new UIW[TWordCount<SIW>(size)];
+// enum {
+//  kWordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
+//};
+
+template <DTW kDataType_>
+UIW* TRamFactoryHeap(UIW* obj, SIW size) {
+  if (obj) {
+    delete[] obj;
   }
-  if (obj) delete[] obj;
-  return nullptr;
+  if (size < 0) {
+    if (size == 0) return (UIW*)RamFactoryHeap;
+    return (UIW)kDataType_;
+  }
+  size += (-size) & (sizeof(UIW) - 1);
+  return new UIW[size >> kWordBitCount];
 }
 
-UIW* RamFactoryStack(UIW* ptr, SIW size) {
-  return RamFactoryHeap(nullptr, size);
+template <DTW kDataType_>
+UIW* TRamFactoryStack(UIW* obj, SIW size) {
+  if (obj) {
+    delete[] obj;
+  }
+  if (size < 0) {
+    if (size == 0) return (UIW*)RamFactoryHeap;
+    return (UIW)kDataType_;
+  }
+  size += (-size) & (sizeof(UIW) - 1);
+  return new UIW[size >> kWordBitCount];
+}
+
+UIW* RamFactoryStack(UIW* obj, SIW size) {
+  return TRamFactoryStack<kNIL>(obj, size);
+}
+
+UIW* RamFactoryHeap(UIW* obj, SIW size) {
+  return TRamFactoryHeap<kNIL>(obj, size);
 }
 
 UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
@@ -41,11 +65,6 @@ UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
   if (!ptr) return ptr;
   obj.begin = ptr;
   return ptr;
-}
-
-void Delete(Autoject& obj) {
-  RamFactory ram_factory = obj.ram_factory;
-  if (ram_factory) ram_factory(obj.begin, 0);
 }
 
 }  // namespace _

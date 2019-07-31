@@ -282,11 +282,7 @@ class LIB_MEMBER Stringf {
 
   /* Gets the string_. */
   LIB_INLINE const CH1* ST1();
-
-  /* Gets the string_. */
   LIB_INLINE const CH2* ST2();
-
-  /* Gets the string_. */
   LIB_INLINE const CH4* ST3();
 
   /* Gets the type_. */
@@ -476,9 +472,15 @@ struct LIB_MEMBER Headingf {
   const CH1 *style, *caption2, *caption3;
 
   /* Saves the parameters to the corresponding data members. */
-  Headingf(const CH1* caption, const CH1* style = nullptr,
-           SIW count = kConsoleWidth, const CH1* caption2 = nullptr,
-           const CH1* caption3 = nullptr);
+  Headingf(const CH1* caption);
+
+  /* Saves the parameters to the corresponding data members. */
+  Headingf(const CH1* caption, const CH1* caption2);
+
+  /* Saves the parameters to the corresponding data members. */
+  Headingf(const CH1* caption, const CH1* caption2,
+           const CH1* caption3 = nullptr, const CH1* style = nullptr,
+           SIW count = kConsoleWidth);
 };
 
 /* Utility class for indenting text with operator<<. */

@@ -25,7 +25,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* A Associative Array of strings to contiguous indexes.
+/* An array of strings.
  */
 template <typename SIZ>
 struct TLoom {
@@ -75,7 +75,7 @@ inline TLoom<SIZ>* TLoomInit(TLoom<SIZ>* loom, SIZ count_max) {
   A_ASSERT(loom);
   A_ASSERT((count_max >= TLoomCountMin<Char, SIZ>()));
 
-  D_SOCKET_WIPE(&loom->top, loom->size - sizeof(SIZ));
+  D_ARRAY_WIPE(&loom->top, loom->size - sizeof(SIZ));
 
   // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
   loom->top = TDelta<SIZ>(loom, TLoomStart<Char, SIZ>(loom, count_max));
@@ -169,7 +169,7 @@ BOL TLoomGrow(Autoject& obj) {
 #endif
 
   UIW* new_begin = obj.ram_factory(nullptr, size);
-  D_SOCKET_WIPE(new_begin, size);
+  D_ARRAY_WIPE(new_begin, size);
   TLoom<SIZ>* other = reinterpret_cast<TLoom<SIZ>*>(new_begin);
 
   // Copy the offsets and offset them and the loom->top.
@@ -190,7 +190,7 @@ BOL TLoomGrow(Autoject& obj) {
   SIZ strings_size_bytes = TDelta<SIZ>(start, TPtr<>(loom, top));
   Char* other_start = TLoomStart<Char, SIZ>(other);
   if (strings_size_bytes)
-    SocketCopy(other_start, strings_size_bytes, start, strings_size_bytes);
+    ArrayCopy(other_start, strings_size_bytes, start, strings_size_bytes);
 #if D_THIS
   CPrint("\n\nAfter:\n");
   TLoomPrint<Char, SIZ, COut>(COut().Star(), other);
@@ -210,7 +210,7 @@ SIZ TLoomAdd(AArray<Char, SIZ, BUF>& obj, const Char* item) {
   D_COUT("\nAdding:\"" << item << '\"');
   SIZ result = TLoomAdd<Char, SIZ>(obj.BeginAs<TLoom<SIZ>>(), item);
   while (result < 0) {
-    if (!TLoomGrow<Char, SIZ>(obj.Auto())) {
+    if (!TLoomGrow<Char, SIZ>(obj.AJT())) {
       D_COUT("\n\nFailed to grow.\n\n");
       return -1;
     }
@@ -244,7 +244,7 @@ SIZ TLoomRemove(TLoom<SIZ>* loom, SIZ index) {
 
   TStackRemove<SIZ, SIZ>(loom->offsets, index);
 
-  // SocketShiftDown(reinterpret_cast<CH1*>(loom) + offset, delta);
+  // ArrayShiftDown(reinterpret_cast<CH1*>(loom) + offset, delta);
   return index;
 }
 
@@ -275,13 +275,13 @@ class ALoom {
   }
 
   /* Constructs a Loom subclass.
-  @param factory ASCII Factory to call when the Strand overflows. */
+  @param factory RamFactory to call when the Strand overflows. */
   ALoom(RamFactory ram_factory, SIZ count = kCountDefault) : obj_(ram_factory) {
     TLoomInit<Char, SIZ>(OBJ(), count);
   }
 
   /* Constructs a Loom subclass.
-  @param factory ASCII Factory to call when the Strand overflows. */
+  @param factory RamFactory to call when the Strand overflows. */
   ALoom(RamFactory ram_factory, SIZ size = TLoomSizeDefault<Char, SIZ>(),
         SIZ count = TLoomCountDefault<Char, SIZ>())
       : obj_(ram_factory) {
@@ -293,7 +293,7 @@ class ALoom {
   /* Deep copies the given string into the Loom.
   @return The index of the string in the Loom. */
   inline SIZ Add(const Char* string) {
-    return TLoomAdd<Char, SIZ, BUF>(Auto(), string);
+    return TLoomAdd<Char, SIZ, BUF>(AJT(), string);
   }
 
   /* Removes the string at the given index from the Loom. */
@@ -313,7 +313,7 @@ class ALoom {
   inline TLoom<SIZ>* OBJ() { return obj_.BeginAs<TLoom<SIZ>>(); }
 
   /* Gets the Auto-Array. */
-  inline AArray<Char, SIZ, BUF>& Auto() { return obj_; }
+  inline AArray<Char, SIZ, BUF>& AJT() { return obj_; }
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {

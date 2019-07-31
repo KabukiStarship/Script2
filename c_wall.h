@@ -9,9 +9,9 @@ this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_SEAM_WALL
-#define SCRIPT2_WALL
+#if SEAM >= SCRIPT2_DICTIONARY
+#ifndef SCRIPT2_WALL_HEADER
+#define SCRIPT2_WALL_HEADER
 
 #if SEAM == SCRIPT2_ROOM
 #include "module_release.inl"

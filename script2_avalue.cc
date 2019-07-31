@@ -357,7 +357,7 @@ inline CH1* WriteStrand(CH1* begin, CH1* stop, const void* value) {
   UI length = TSTRLength<UI, Char>(source);
   UI* target = reinterpret_cast<UI*>(begin);
   *target++ = length;
-  return SocketCopy(target, stop, value, length + sizeof(Char));
+  return ArrayCopy(target, stop, value, length + sizeof(Char));
 }*/
 
 /*
@@ -368,7 +368,7 @@ inline CH1* TWriteObj(CH1* begin, CH1* stop, const void* value) {
   SI size = *source++;
   if (!TSizeIsValid<SI>(size)) return nullptr;
   *target++ = size;
-  return SocketCopy(target, stop, value, size - sizeof(SI));
+  return ArrayCopy(target, stop, value, size - sizeof(SI));
 }
 
 CH1* Write(CH1* begin, CH1* stop, SIN type, const void* value) {
@@ -376,7 +376,7 @@ CH1* Write(CH1* begin, CH1* stop, SIN type, const void* value) {
   // 1.) Determine type.
   // 2.) Align begin pointer to type width.
   // 3.) Check for enough room in begin-stop socket.
-  // 4.) Use SocketCopy to copy the data into the given begin-stop socket.
+  // 4.) Use ArrayCopy to copy the data into the given begin-stop socket.
 
   if (!begin || begin >= stop || !value || !TypeIsSupported(type)) return
 nullptr;

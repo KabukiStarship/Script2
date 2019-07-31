@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](../readme.md)
 
 ### [Vector Types](./readme.md)
@@ -21,3 +15,11 @@ A Homogenous Vector is a Vector of homogeneous types of length 2, 3, or 4. Homog
 | b15:b14 |  b13:b9  | b8:b7 | b6:b5  | b4:b0 |
 |:-------:|:--------:|:-----:|:------:|:-----:|
 |   RW    | Map type | SW=1  | Vector | Core  |
+
+**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+
+## License
+
+Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
