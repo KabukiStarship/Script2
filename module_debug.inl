@@ -1,6 +1,6 @@
 #include "module_footer.inl"
 //
-#include "t_test.h"
+#include "test.hpp"
 
 #define D_THIS 1
 #define A_TEST_BEGIN \

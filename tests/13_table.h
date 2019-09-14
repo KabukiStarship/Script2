@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_table.h"
+#include "table.hpp"
 
 #if SEAM == SCRIPT2_TABLE
 #include "module_debug.inl"

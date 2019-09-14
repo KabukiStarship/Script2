@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_stack.h"
+#include "stack.hpp"
 
 #if SEAM == SCRIPT2_STACK
 #include "module_debug.inl"

@@ -13,9 +13,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include <cstdio>
 #include <cString>
 
-#include "c_rng.h"
-#include "t_puff.h"
-#include "t_string.h"
+#include "rng.h"
+#include "puff.hpp"
+#include "stringf.hpp"
 
 #if SEAM == SCRIPT2_ITOS
 #include "module_debug.inl"

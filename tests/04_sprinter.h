@@ -12,8 +12,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_SPRINTER
 
-#include "t_array.h"
-#include "t_string.h"
+#include "array.hpp"
+#include "stringf.hpp"
 
 #if SEAM == SCRIPT2_SPRINTER
 #include "module_debug.inl"

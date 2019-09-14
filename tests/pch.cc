@@ -14,7 +14,7 @@ the MPL was not distributed with this file, You can obtain one at
 
 #if SCRIPT2_RUN_TESTS == YES_0
 
-#include "../t_test.h"
+#include "../test.hpp"
 
 #if SEAM >= SCRIPT2_UNIPRINTER
 #include "00_uniprinter.h"

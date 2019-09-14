@@ -11,7 +11,7 @@ the MPL was not distributed with this file, You can obtain one at
 #pragma once
 #include <pch.h>
 
-#include "t_loom.h"
+#include "loom.hpp"
 
 #if SEAM == SCRIPT2_LOOM
 #include "module_debug.inl"

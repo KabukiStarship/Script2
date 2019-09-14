@@ -9,9 +9,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
-#include "t_map.h"
+#include "map.hpp"
 //
-#include "c_rng.h"
+#include "rng.h"
 
 #if SEAM == SCRIPT2_MAP
 #include "module_debug.inl"

@@ -10,8 +10,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "c_rng.h"
-#include "t_list.h"
+#include "list.hpp"
+#include "rng.h"
 
 #if SEAM == SCRIPT2_LIST
 #include "module_debug.inl"

@@ -10,8 +10,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-//#include "c_rng.h"
-//#include "c_utf.h"
+//#include "rng.h"
+//#include "utf.h"
 
 #include <cmath>
 #include <cstdio>

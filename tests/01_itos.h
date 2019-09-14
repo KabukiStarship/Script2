@@ -10,12 +10,12 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include <cstdio>
 #include <cString>
+#include <cstdio>
 
-#include "c_rng.h"
-#include "t_puff.h"
-#include "t_string.h"
+#include "puff.hpp"
+#include "rng.h"
+#include "stringf.hpp"
 
 #if SEAM == SCRIPT2_ITOS
 #include "module_debug.inl"
