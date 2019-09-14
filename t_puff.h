@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_puff.h
+@file    /t_puff.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -16,13 +17,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_PUFF_HEADER_WITH_TEMPLATES 1
 
 #include "c_puff.h"
+#include "t_binary.h"
 #if SEAM == SCRIPT2_ITOS
 #include <iostream>
-#include "module_debug.inl"
-
-#ifndef D_COUT
 #define D_COUT(item) std::cout << item
-#endif
 namespace _ {
 template <typename Char = CHR>
 Char* TPrintPrinted(Char* start = nullptr) {
@@ -44,15 +42,15 @@ Char* TPrintPrinted(Char* start = nullptr) {
 }  // namespace _
 
 #define BEGIN_ITOS_ALGORITHM                               \
-  auto string_length = STRLength(value);                   \
+  auto String_length = STRLength(value);                   \
   TPrintPrinted<Char>(cursor);                             \
-  for (SIN i = 0; i < string_length; ++i) cursor[i] = 'x'; \
-  cursor[string_length] = 0;                               \
-  std::cout << "Expecting:" << value << " length:" << string_length
+  for (SIN i = 0; i < String_length; ++i) cursor[i] = 'x'; \
+  cursor[String_length] = 0;                               \
+  std::cout << "Expecting:" << value << " length:" << String_length
 #define D_PRINT_PRINTED TPrintPrinted<Char>()
 
 #else
-#include "module_release.inl"
+#define D_COUT(item)
 #define BEGIN_ITOS_ALGORITHM
 #define D_PRINT_PRINTED
 #endif
@@ -161,8 +159,8 @@ inline UI4 ToUI4(UI8 value) { return (UI4)value; }
 /* Prints the give value to the given socket as a Unicode string.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
-@param  cursor The beginning of the socket.
-@param  stop    The stop address of the socket. */
+@param cursor The beginning of the socket.
+@param stop    The stop address of the socket. */
 template <typename UI = UIW, typename Char = CHR>
 Char* TSPrintUnsigned(Char* cursor, Char* stop, UI value) {
   BEGIN_ITOS_ALGORITHM;
@@ -419,7 +417,7 @@ inline Char* TSPrint(Char* start, SIW size, UI8 value) {
   return TSPrintUnsigned<UI8, Char>(start, size, value);
 }
 
-#if CPU_WORD_SIZE < 64
+#if ALU_SIZE < 64
 template <typename Char = CHR>
 inline Char* TSPrint(Char* start, Char* stop, UI4 value) {
   return TSPrintUnsigned<UI4, Char>(start, stop, value);
@@ -444,7 +442,7 @@ inline Char* TSPrint(Char* start, SIW size, UI4 value) {
 /* Writes the give value to the given socket as an ASCII string.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
-@param  utf The text formatter to utf to.
+@param utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = CHR>
 inline Char* TSPrintSigned(Char* start, Char* stop, SI value) {
@@ -458,7 +456,7 @@ inline Char* TSPrintSigned(Char* start, Char* stop, SI value) {
 /* Writes the give value to the given socket as an ASCII string.
 @return Nil upon socket overflow and a pointer to the nil-term Char upon
 success.
-@param  utf The text formatter to utf to.
+@param utf The text formatter to utf to.
 @param value The value to write. */
 template <typename SI = SI8, typename UI = UI8, typename Char = CHR>
 inline Char* TSPrintSigned(Char* start, SIW size, SI value) {
@@ -474,7 +472,7 @@ inline Char* TSPrint(Char* start, SIW size, SI8 value) {
   return TSPrintSigned<SI8, UI8, Char>(start, size, value);
 }
 
-#if CPU_WORD_SIZE < 64
+#if ALU_SIZE < 64
 template <typename Char = CHR>
 inline Char* TSPrint(Char* start, Char* stop, SI4 value) {
   return TSPrintSigned<SI4, UI4, Char>(start, stop, value);
@@ -540,18 +538,6 @@ Char* TPrint3(Char* string, Char* stop, Char a, Char b, Char c) {
   *string++ = b;
   *string++ = c;
   return string;
-}
-
-/* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
-template <typename UI>
-inline UI TUnsignedNaN() {
-  return (~(UI)0);  // -sizeof (UIW) - 2;
-}
-
-/* Signed Not-a-number_ is the lowest possible signed integer value. */
-template <typename SI, typename UI>
-inline SI TSignedNaN() {
-  return (SI)(((UI)1) << (sizeof(SI) * 8 - 1));
 }
 
 /* Masks off the given bits starting at b0. */
@@ -645,6 +631,7 @@ class TBinary {
   template <typename Char = CHR>
   static Char* Print(Char* socket, Char* stop, Float value) {
     // Not handling NaN and inf
+
     if (IsNaN(value)) {
       if (stop - socket < 4) return nullptr;
       socket[0] = 'N';
@@ -675,18 +662,6 @@ class TBinary {
     Char* cursor = Print<Char>(socket, stop, value, k);
     if (!cursor) return cursor;
     return Standardize<Char>(socket, stop, cursor - socket, k);
-  }
-
-  template <typename UI = UIW>
-  static inline UI NaNUnsigned() {
-    UI nan = 0;
-    return ~nan;
-  }
-
-  template <typename SI, typename UI>
-  static inline SI NaNSigned() {
-    UI nan = 1;
-    return (SI)(nan << (sizeof(UI) * 8 - 1));
   }
 
   static TBinary IEEE754Pow10(SI e, SI& k) {
@@ -804,11 +779,11 @@ class TBinary {
     return reinterpret_cast<const UI*>(ptr);
   }
 
-  static void AlignLUT(CH1* begin, SIW size) {
+  static void AlignLUT(CH1* origin, SIW size) {
     D_ASSERT(size);
     SIW lut_count = LUTCount();
     if (size != ((100 + lut_count) * 2 + lut_count * 8)) return;
-    UI2* ui2_ptr = reinterpret_cast<UI2*>(begin);
+    UI2* ui2_ptr = reinterpret_cast<UI2*>(origin);
 
     for (CH1 tens = '0'; tens <= '9'; ++tens)
       for (SIN ones = '0'; ones <= '9'; ++ones)
@@ -1161,4 +1136,5 @@ inline CH4* SPrint(CH4* string, CH4* stop, FP8 value) {
 #endif
 }  // namespace _
 #endif
+#undef D_COUT
 #endif

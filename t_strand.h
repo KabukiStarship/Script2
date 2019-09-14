@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_strand.h
+@file    /t_strand.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #include <pch.h>
 
@@ -15,7 +16,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "t_array.h"
 
 #if SEAM >= SCRIPT2_STRAND
-#include "c_avalue.h"
+#include "c_typevalue.h"
 #include "t_string.h"
 
 #if SEAM == SCRIPT2_STRAND
@@ -50,22 +51,22 @@ inline Char* TSTRStart(TStrand<SIZ>* strand) {
   return TPtr<Char>(strand, sizeof(TStrand<SIZ>));
 }
 template <typename Char = CHR, typename SIZ = SIN>
-inline Char* TSTRStart(UIW* begin) {
-  return TSTRStart<Char, SIZ>(reinterpret_cast<TStrand<SIZ>*>(begin));
+inline Char* TSTRStart(UIW* origin) {
+  return TSTRStart<Char, SIZ>(reinterpret_cast<TStrand<SIZ>*>(origin));
 }
 
 /* Searches for the stop of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
-inline Char* TSTRStop(void* begin) {
-  SIZ size = reinterpret_cast<TStrand<SIZ>*>(begin)->size;
-  Char* start = TSTRStart<Char, SIZ>(reinterpret_cast<TStrand<SIZ>*>(begin));
+template <typename Char = CHR, typename SIZ = SIN>
+inline Char* TSTRStop(void* origin) {
+  SIZ size = reinterpret_cast<TStrand<SIZ>*>(origin)->size;
+  Char* start = TSTRStart<Char, SIZ>(reinterpret_cast<TStrand<SIZ>*>(origin));
   return start + size - 1;
 }
 
 /* Gets the stop char of the strand. */
-template <typename Char = CHR, typename SIZ = SI4>
-inline Char* TSTRStop(void* begin, SIW size) {
-  Char* ptr = reinterpret_cast<Char*>(TSTRStart<Char, SIZ>(begin));
+template <typename Char = CHR, typename SIZ = SIN>
+inline Char* TSTRStop(void* origin, SIW size) {
+  Char* ptr = reinterpret_cast<Char*>(TSTRStart<Char, SIZ>(origin));
   return ptr + size - 1;
 }
 
@@ -120,51 +121,51 @@ PrintBottomLine:
 template <typename Printer, typename Char = CHR, typename SIZ = SIN>
 inline Printer& TStrandPrint(Printer& o, Autoject autoject) {
   return TStrandPrint<Printer, Char, SIZ>(
-      o, reinterpret_cast<TStrand<SIZ>*>(autoject.begin));
+      o, reinterpret_cast<TStrand<SIZ>*>(autoject.origin));
 }
 
 template <typename Char = CHR, typename SIZ = SIN>
 UIW* TStrandClone(Autoject& obj) {
-  UIW* begin = obj.begin;  //
-  SIZ size = TSize<SIZ>(begin);
+  UIW* origin = obj.origin;  //
+  SIZ size = TSize<SIZ>(origin);
   UIW* new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(size);
   D_COUT(" new size:" << TSize<SIZ>(new_begin));
   TSPrinter<Char> new_utf(new_begin);
-  Char* start = TSTRStart<Char>(begin);
+  Char* start = TSTRStart<Char>(origin);
   new_utf << start;
   D_COUT("\nCopying \"" << start << "\" with result:\""
                         << TSTRStart<Char>(new_begin) << '\"');
   return new_begin;
 }
 
-/* Gets the size from the strand at the given begin address. */
+/* Gets the size from the strand at the given origin address. */
 template <typename SIZ = SIN>
-inline SIZ TStrandSize(UIW* begin) {
-  return reinterpret_cast<TStrand<SIZ>*>(begin)->size;
+inline SIZ TStrandSize(UIW* origin) {
+  return reinterpret_cast<TStrand<SIZ>*>(origin)->size;
 }
 
 template <typename Char = CHR, typename SIZ = SIN>
 BOL TStrandGrow(Autoject& obj, TSPrinter<Char, SIZ>& utf) {
-  UIW* begin = obj.begin;
-  SIZ size = TStrandSize<SIZ>(begin), new_size = size << 1,
+  UIW* origin = obj.origin;
+  SIZ size = TStrandSize<SIZ>(origin), new_size = size << 1,
       new_size_bytes = TSizeBytes<Char, SIZ, TStrand<SIZ>>(new_size);
   if (!TCanGrow<SIZ>(new_size_bytes)) return false;
   size = new_size;
-  D_COUT("new_size:" << new_size << " new_size_bytes:" << new_size_bytes);
+  D_COUT(" new_size:" << new_size << " new_size_bytes:" << new_size_bytes);
 
-  UIW* new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(obj.ram_factory, size);
+  UIW* new_begin = TArrayNew<Char, SIZ, TStrand<SIZ>>(obj.socket_factory, size);
   if (!new_begin) return false;
   D_COUT(" new size:" << new_size_bytes);
 
   TSPrinter<Char, SIZ> new_sprinter(TSTRStart<Char, SIZ>(new_begin), size);
-  Char* start = TSTRStart<Char>(begin);
+  Char* start = TSTRStart<Char>(origin);
   new_sprinter << start;
   utf.Set(new_sprinter);
   D_COUT("\nCopying \"" << start << "\" with result:\""
                         << TSTRStart<Char>(new_begin) << '\"');
 
   Delete(obj);
-  obj.begin = new_begin;
+  obj.origin = new_begin;
   return true;
 }
 
@@ -172,14 +173,14 @@ template <typename T, typename Char = CHR, typename SIZ = SIN>
 void TStrandSPrint(Autoject& obj, TSPrinter<Char>& sprinter, T item) {
   Char *start = sprinter.start,  //
       *stop = sprinter.stop;
-  D_COUT("\ncount:" << stop - start << "start:0x" << Hexf(start) << " stop:0x"
+  D_COUT("\ncount:" << stop - start << " start:0x" << Hexf(start) << " stop:0x"
                     << Hexf(stop));
   auto cursor = _::TSPrint<Char>(start, stop, item);
   if (!cursor) {
     *start = 0;  //< Replace the delimiter so we can copy the string.
     do {
-      RamFactory factory = obj.ram_factory,  //
-          factory_heap = RamFactoryHeap;
+      SocketFactory factory = obj.socket_factory,  //
+          factory_heap = (SocketFactory)factory(nullptr, 0);
       D_ASSERT(factory);
       D_COUT(
           "\nPrint failed, attempting to auto-grow from "
@@ -189,7 +190,7 @@ void TStrandSPrint(Autoject& obj, TSPrinter<Char>& sprinter, T item) {
 
       if (factory != factory_heap) {
         factory = factory_heap;
-        obj.ram_factory = factory;
+        obj.socket_factory = factory;
       }
 
       cursor = _::TSPrint<Char>(sprinter.start, sprinter.stop, item);
@@ -215,14 +216,14 @@ in the opposite order then where called.
 # Initialization
 
 A Strand may be initialed to print to the socket or to a dynamically allocated
-string. This behavior is configured with the constructors. The RamFactory can
+string. This behavior is configured with the constructors. The SocketFactory can
 either be configured using the class template argument kFactory1_. If the
 obj_.Factory () is nil then it will get replaced with the foo.
 
 #
 
 @code
-AStrand<> (TBuf<64>).Star ("Hello ") << "world!";
+AStrand<> (TUIB<64>).Star ("Hello ") << "world!";
 @endcode
 
 # Dynamic Allocated Strands
@@ -230,32 +231,36 @@ AStrand<> (TBuf<64>).Star ("Hello ") << "world!";
 Strands that use dynamic memory use the TC:
 
 @code
-AStrand<UI4, TBuf<64>> () << "Hello world!";
+AStrand<UI4, TUIB<64>> () << "Hello world!";
 @endcode
 */
 template <typename Char = CHR, typename SIZ = SIN, SIZ kSize_ = kSTRCount,
-          typename BUF = TBuf<kSize_, Char, SIZ, TStrand<SIZ>>>
+          typename BUF = TUIB<kSize_, Char, SIZ, TStrand<SIZ>>>
 class AStrand {
   AArray<Char, SIZ, BUF> obj_;  //< AutoArray of Char(s).
   TSPrinter<Char> sprinter_;    //< UTF for the strand.
 
  public:
+  static constexpr DT2 Type() {
+    return CTypeVector(CTypeChar<Char>(), kARY, CTypeSize<SIZ>());
+  }
+
   /* Constructs a Strand that auto-grows from stack to heap.
-  @param factory ASCII Factory to call when the Strand overflows. */
-  AStrand() : obj_(kSize_) {
+  @param factory SocketFactory to call when the Strand overflows. */
+  AStrand() : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH1 item) : obj_(kSize_) {
+  AStrand(CH1 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH1* item) : obj_(kSize_) {
+  AStrand(const CH1* item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -263,7 +268,7 @@ class AStrand {
 
 #if USING_UTF16 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH2* item) : obj_(kSize_) {
+  AStrand(const CH2* item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -272,70 +277,70 @@ class AStrand {
 
 #if USING_UTF32 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(CH4 item) : obj_(kSize_) {
+  AStrand(CH4 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 #endif
   /* Constructs a Strand and prints the given item. */
-  AStrand(const CH4* item) : obj_(kSize_) {
+  AStrand(const CH4* item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI1 item) : obj_(kSize_) {
+  AStrand(SI1 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI1 item) : obj_(kSize_) {
+  AStrand(UI1 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI2 item) : obj_(kSize_) {
+  AStrand(SI2 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI2 item) : obj_(kSize_) {
+  AStrand(UI2 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI4 item) : obj_(kSize_) {
+  AStrand(SI4 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI4 item) : obj_(kSize_) {
+  AStrand(UI4 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(SI8 item) : obj_(kSize_) {
+  AStrand(SI8 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(UI8 item) : obj_(kSize_) {
+  AStrand(UI8 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -343,7 +348,7 @@ class AStrand {
 
 #if USING_FP4 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP4 item) : obj_(kSize_) {
+  AStrand(FP4 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -351,7 +356,7 @@ class AStrand {
 #endif
 #if USING_FP8 == YES_0
   /* Constructs a Strand and prints the given item. */
-  AStrand(FP8 item) : obj_(kSize_) {
+  AStrand(FP8 item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -359,14 +364,14 @@ class AStrand {
 #endif
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Hexf item) : obj_(kSize_) {
+  AStrand(Hexf item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a Strand and prints the given item. */
-  AStrand(Binaryf item) : obj_(kSize_) {
+  AStrand(Binaryf item) : obj_(kSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<Char, SIZ>(This());
     Reset();
     Print(item);
@@ -418,12 +423,12 @@ class AStrand {
   inline SIZ Size() { return obj_.Size(); }
 
   /* Gets the total ASCII Object size in bytes. */
-  inline SIZ SizeBytes() { return obj_.SizeBytes<TStrand<SIZ>>(Auto()); }
+  inline SIZ SizeBytes() { return obj_.SizeBytes<TStrand<SIZ>>(AJT()); }
 
   /* Gets the total ASCII Object size in words. */
-  inline SIZ SizeWords() { return obj_.SizeWords<TStrand<SIZ>>(Auto()); }
+  inline SIZ SizeWords() { return obj_.SizeWords<TStrand<SIZ>>(AJT()); }
 
-  /* Returns the begin of the obj. */
+  /* Returns the origin of the obj. */
   inline Char* Start() { return TSTRStart<Char, SIZ>(obj_.Begin()); }
 
   /* Returns the stop of the obj. */
@@ -440,7 +445,7 @@ class AStrand {
   inline Char* Find(const Char* querry) { return TSTRFind(Start(), querry); }
 
   /* Checks if this Strand to the other string are equivalent.
-  @return Nil if they strings are not equivalent and a pointer to the next CH1
+  @return Nil if they Strings are not equivalent and a pointer to the next CH1
   after the end of the equivalent part of this strand upon success. */
   inline Char Equals(const Char* other) { return TSTRFind(Start(), other); }
 
@@ -451,14 +456,14 @@ class AStrand {
   inline AArray<Char, SIZ, BUF>& Array() { return obj_; }
 
   /* Gets the obj of the Console obj. */
-  inline Autoject& Auto() { return obj_.OBJ(); }
+  inline Autoject& AJT() { return obj_.OBJ(); }
 
-  /* Gets the obj.begin as a TStrand<SI4>. */
+  /* Gets the obj.origin as a TStrand<SI4>. */
   inline TStrand<SIZ>* This() { return obj_.BeginAs<TStrand<SIZ>>(); }
 
   template <typename T>
   inline AStrand& Print(T item) {
-    TStrandSPrint<T, Char>(obj_.Auto(), sprinter_, item);
+    TStrandSPrint<T, Char>(obj_.AJT(), sprinter_, item);
     return *this;
   }
 

@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_dic.h
+@file    /t_dictionary.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -16,7 +16,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_TDIC 1
 
 #include "c_avalue.h"
-#include "c_socket.h"
+#include "c_binary.h"
 
 #if SEAM >= SCRIPT2_BOOK
 #include "module_debug.inl"
@@ -143,7 +143,7 @@ namespace _ {
 template <typename Size, typename Offset, typename Index>
 struct LIB_MEMBER Dictionary {
   Size size;          //< Total size of the set.
-  Offset table_size,  //< Size of the (optional) key strings in bytes.
+  Offset table_size,  //< Size of the (optional) key Strings in bytes.
       size_pile;      //< Size of the (optional) collisions pile in bytes.
   Index item_count,   //< Number of items.
       count;          //< Max number_ of items that can fit in the header.

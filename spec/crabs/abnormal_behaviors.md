@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [SCRIPT Protocol](readme.md)
 
 ### Abnormal Behaviors
@@ -41,3 +35,11 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 #### Reporting Compromised Automata
 
 Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

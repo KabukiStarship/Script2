@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_lock.h
+@file    /c_lock.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -74,7 +75,7 @@ Char* Print(Char* cursor, Char* stop, TME& t) {
   return TSPrint<Char>(cursor, stop, t.ticks);
 }*/
 
-#if USING_STR
+#if USING_STR == YES_0
 
 template <typename Char = CHR>
 Char* TSPrint(Char* cursor, Char* stop, const AClock& clock) {
@@ -530,30 +531,30 @@ const Char* TSScan(const Char* string, AClock& clock) {
 }
 
 template <typename Char, typename SI>
-const Char* TScanTime(const Char* begin, TM4& result) {
+const Char* TScanTime(const Char* origin, TM4& result) {
   AClock clock;
-  const Char* stop = TSScan<Char>(begin, clock);
+  const Char* stop = TSScan<Char>(origin, clock);
   result = (TM4)ClockSeconds(clock);
   return stop;
 }
 
 template <typename Char, typename SI>
-const Char* TScanTime(const Char* begin, TM8& result) {
+const Char* TScanTime(const Char* origin, TM8& result) {
   AClock clock;
-  const Char* stop = TSScan<Char>(begin, clock);
+  const Char* stop = TSScan<Char>(origin, clock);
   result = (TM8)ClockSeconds(clock);
   return stop;
 }
 
 template <typename Char>
-const Char* TSScan(const Char* begin, TME& result) {
-  begin = TScanTime<Char, TM4>(begin, result.seconds);
-  if (!begin) return nullptr;
-  if (*begin++ != ':') {
+const Char* TSScan(const Char* origin, TME& result) {
+  origin = TScanTime<Char, TM4>(origin, result.seconds);
+  if (!origin) return nullptr;
+  if (*origin++ != ':') {
     result.ticks = 0;
-    return begin - 1;
+    return origin - 1;
   }
-  return TScanUnsigned<UI4, Char>(begin, result.ticks);
+  return TScanUnsigned<UI4, Char>(origin, result.ticks);
 }
 #endif  // #if USING_STR
 

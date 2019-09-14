@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [Distributed Nomination System](readme.md)
 
 ### Internet Guilds
@@ -26,7 +20,7 @@ A tree hierarchy of one or more levels of hierarchies of Organizations of **regi
 
 ### Geographic Coordinate Grid Guild
 
-There is one **Geographic Coordinate Grid (GCG) Guild** per one-degree longitude and latitude. There is a maximum of 2,008,800 (= (360 longitudes * 180 latitudes) * 32 heights) GCG Guilds on every planet, most of which are **uninhabited** meaning there is no internet there.
+There is one **Geographic Coordinate Grid (GCG) Guild** per one-degree longitude and latitude. There is a maximum of `2,008,800 (= (360 longitudes * 180 latitudes) * 32` heights) GCG Guilds on every planet, most of which are **uninhabited** meaning there is no internet there.
 
 ### GCG Guild Example
 
@@ -37,3 +31,11 @@ In order to keep track of the change in IP Addresses, each Script Network must k
 #### Registering an Internet Guild
 
 Registering a *Internet Guild* requires a server computer with fixed *UP IP Address*. This server is responsible for resolving DNS Queries for the *guild*.
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

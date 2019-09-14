@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [SCRIPT Protocol](readme.md)
 
 ### Generic Handshake
@@ -28,3 +22,11 @@ This Source Code Form is subject to the terms of the Mozilla Public License, v. 
 11. **Script Router** adds return address and hash:
     1. ☺└¿�☺B**☻�¿└**
 12. **host_a** and **host_b** are now connected.
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

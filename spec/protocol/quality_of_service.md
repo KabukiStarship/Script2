@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [SCRIPT Protocol](readme.md)
 
 ### Quality of Service
@@ -39,3 +33,11 @@ A slave device assumes that there is another Automaton or Automata performing th
 ## 3.13 Encryption
 
 Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

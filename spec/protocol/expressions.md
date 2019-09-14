@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [SCRIPT Protocol](readme.md)
 
 ### Expressions
@@ -225,3 +219,11 @@ Reset Operations are operations that required the slot in the Chinese Door to be
 ##### Return Values
 
 Return values just need an address of an Operation to send the return value too. Return values shall be written to the BOut that leads to the initiating Operation's BIn in an automated process. In the case that a different Operation's return address is needed Rooms may pass the return address of the as an input parameter as a kTKN type.
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

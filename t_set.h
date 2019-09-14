@@ -1,20 +1,19 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_set.h
+@file    /t_collection.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
-#if SEAM >= SCRIPT2_CLOCK
+#if SEAM >= SCRIPT2_BOOK
 #ifndef INCLUDED_F2_SET
 #define INCLUDED_F2_SET 1
 
-#include "c_avalue.h"
-#include "c_utf.h"
+#include "c_typevalue.h"
 
 namespace _ {
 /*
@@ -23,9 +22,9 @@ namespace _ {
     @endcode
 */
 template <typename Index, typename TKey, typename SIZ, typename THash>
-struct LIB_MEMBER TSet {
+struct LIB_MEMBER TCollection {
   SIZ size;          //< Total size of the set.
-  TKey table_size,   //< Size of the (optional) key strings in bytes.
+  TKey table_size,   //< Size of the (optional) key Strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.
   Index item_count,  //< Number of items.
       count_max;     //< Max number_ of items that can fit in the header.
@@ -33,29 +32,28 @@ struct LIB_MEMBER TSet {
 
 /* A Type-Value Tuple. */
 struct Tuple2 {
-  AsciiType type;  //< The tuple type.
-  void* value;     //< The tuple value.
+  PODType type;  //< The tuple type.
+  void* value;   //< The tuple value.
 };
 
 /* A Type-Value Tuple. */
 struct Tuple3 {
-  AsciiType type;  //< The tuple type.
+  PODType type;    //< The tuple type.
   void* value;     //< The tuple value.
   const CH1* key;  //< The Tuple key.
 };
 
 /* Interface for a Script Set.
-    Set Types:
-
-    | Name       | Code | Description                                 |
-    |-----------:|:----:|:--------------------------------------------|
-    |      Array | ARY  | A packed c-style array of POD number_ types. |
-    |      Stack | STK  | A stack of POD number_ types.                |
-    |       List | kLST  | A stack of Type-Value tuples.               |
-    |        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
-    |   Multimap | kDIC  | A multimap of Key-Value tuples.             |
-    | Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |
-    |   Observer | STC  | A Observer with Subscriber List.            |
+Set Types:
+| Name       | Code | Description                                 |
+|-----------:|:----:|:--------------------------------------------|
+|      Array | ARY  | A packed c-style array of POD number_ types. |
+|      Stack | STK  | A stack of POD number_ types.                |
+|       List | kLST  | A stack of Type-Value tuples.               |
+|        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
+|   Multimap | kDIC  | A multimap of Key-Value tuples.             |
+| Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |
+|   Observer | STC  | A Observer with Subscriber List.            |
 */
 struct Collection {
   /* Clears the Set without wiping the memory. */
@@ -65,10 +63,10 @@ struct Collection {
   virtual void Wipe() = 0;
 
   /* Adds the given Tuple2 to this Set. */
-  virtual BOL Push(AsciiType type, void* value) = 0;
+  virtual BOL Push(PODType type, void* value) = 0;
 
   /* Adds the given Tuple3 to this Set. */
-  virtual BOL Push(AsciiType type, void* value, const CH1* key) = 0;
+  virtual BOL Push(PODType type, void* value, const CH1* key) = 0;
 
   /* Merges the given Set into this one. */
   virtual BOL Merge(Collection* collection) = 0;
@@ -93,17 +91,14 @@ struct Collection {
   virtual UIW FindIndex(const CH1* key) = 0;
 
   /* Returns true if this Set contains this given Type-Value. */
-  virtual UIW FindIndex(AsciiType type, void* value) = 0;
+  virtual UIW FindIndex(PODType type, void* value) = 0;
 
   /* Gets the SIW of the object being stored. */
   virtual UIW Size() = 0;
 
   /* Gets the SIW of the object being stored. */
   virtual UIW GetSizeWidth() = 0;
-
-  /*  */
-  virtual UTF1& Print(UTF1& out_) = 0;
 };
 }  // namespace _
-#endif  //< #if SEAM >= SCRIPT2_CLOCK
-#endif  //< INCLUDED_F2_SET
+#endif
+#endif

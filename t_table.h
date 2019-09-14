@@ -1,10 +1,12 @@
 /* SCRIPT Script @version 0.x
-@file    /script2/t_table.h
+@link    https://github.com/kabuki-starship/script2.git
+@file    /t_table.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -14,16 +16,12 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPTT2_TABLE_T
 #define SCRIPTT2_TABLE_T
 
-#include "c_socket.h"
 #include "t_array.h"
-#include "t_hash.h"
-#include "t_socket.h"
+#include "t_binary.h"
 #include "t_uniprinter.h"
 
 #if SEAM == SCRIPT2_TABLE
 #include "module_debug.inl"
-#define D_COUT_TABLE(item) \
-  TTablePrint<_::COut, SIZ, HSH, Char>(COut().Star(), item)
 #else
 #include "module_release.inl"
 #define D_COUT_TABLE(item)
@@ -32,7 +30,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* A dense key-index map.
-@see ASCII Data Type Specification for DRY documentation.
+@see ASCII Data Type Specification.
 @link ./spec/data/map_types/table.md
 
 # Collision Table
@@ -75,7 +73,7 @@ from lower address up.
 @endcode
 */
 template <typename SIZ>
-struct LIB_MEMBER TTable {
+struct TTable {
   SIZ size_bytes,  //< Size of this object in bytes.
       size_pile,   //< Size of the collision table pile.
       count,       //< Number of keys.
@@ -86,10 +84,77 @@ enum {
   kMinTableSize = 64,  //< Min size of a Table
 };
 
-/* An invalid index. */
-template <typename SIZ>
-inline SIZ TInvalidIndex() {
-  return -1;
+/* Returns the highest signed prime that can fit in type SI.
+@return 0 if the sizeof (SI) is not 1, 2, 4, or 8.  */
+template <typename SI>
+inline SI PrimeMaxSigned() {
+  SI prime = (sizeof(SI) == 1)
+                 ? 127
+                 : (sizeof(SI) == 2)
+                       ? 32767
+                       : (sizeof(SI) == 4)
+                             ? 2147483647
+                             : (sizeof(SI) == 8) ? 9223372036854775783 : 0;
+  return prime;
+}
+
+/* Returns the highest signed prime that can fit in type UI.
+@return 0 if the sizeof (UI) is not 1, 2, 4, or 8. */
+template <typename HSH>
+inline HSH TPrimeMaxUnigned() {
+  HSH prime = sizeof(HSH) == 1
+                  ? 251
+                  : sizeof(HSH) == 2
+                        ? 65535
+                        : sizeof(HSH) == 4
+                              ? 4294967291
+                              : sizeof(HSH) == 8 ? 18446744073709551557 : 0;
+  return prime;
+}
+
+template <typename HSH, typename Char = CHR>
+inline HSH THashPrime(Char value, HSH hash) {
+  return hash + hash * (HSH)value;
+}
+
+template <typename HSH = UIN, typename Char = CHR>
+inline HSH THashPrime(const Char* str) {
+  Char c = (Char)*str++;
+  HSH hash = TPrimeMaxUnigned<HSH>();
+  while (c) {
+    hash = THashPrime<HSH, Char>(c, hash);
+    c = *str++;
+  }
+  return hash;
+}
+
+inline UI2 Hash16UI2(UI2 value, UI2 hash) {
+  UI2 prime = TPrimeMaxUnigned<UI2>();
+  hash = ((value & 0xff) * prime) + hash;
+  hash = ((value >> 8) * prime) + hash;
+  return hash;
+}
+
+inline UI2 Hash16UI4(UI4 value, UI2 hash) {
+  UI2 prime = TPrimeMaxUnigned<UI2>();
+  hash = ((value & 0xff) * prime) + hash;
+  hash = (((value >> 8) & 0xff) * prime) + hash;
+  hash = (((value >> 16) & 0xff) * prime) + hash;
+  hash = (((value >> 24) & 0xff) * prime) + hash;
+  return hash;
+}
+
+inline UI2 Hash16UI8(UI8 value, UI2 hash) {
+  UI2 prime = TPrimeMaxUnigned<UI2>();
+  hash = ((value & 0xff) * prime) + hash;
+  hash = (((value >> 8) & 0xff) * prime) + hash;
+  hash = (((value >> 16) & 0xff) * prime) + hash;
+  hash = (((value >> 24) & 0xff) * prime) + hash;
+  hash = (((value >> 32) & 0xff) * prime) + hash;
+  hash = (((value >> 40) & 0xff) * prime) + hash;
+  hash = (((value >> 48) & 0xff) * prime) + hash;
+  hash = (((value >> 56) & 0xff) * prime) + hash;
+  return hash;
 }
 
 /* Checks of the given index is valid. */
@@ -111,9 +176,9 @@ constexpr SIZ TTableSize() {
 }
 
 template <typename SIZ = SIN, typename Char = CHR>
-constexpr SIZ TTableSize(SIZ count_max, SIZ average_string_length = 24) {
+constexpr SIZ TTableSize(SIZ count_max, SIZ average_String_length = 24) {
   return sizeof(TTable<SIZ>) + 4 * count_max * sizeof(SIZ) +
-         count_max * (average_string_length + 1);
+         count_max * (average_String_length + 1);
 }
 
 template <typename SIZ = SIN, typename Char = CHR>
@@ -199,7 +264,7 @@ TTable<SIZ>* TTableInit(TTable<SIZ>* table, SIZ height, SIZ size_bytes) {
     return nullptr;
   }
 
-  D_SOCKET_WIPE(table, size_bytes);
+  D_ARRAY_WIPE(table, size_bytes);
 
   table->count = 0;
   table->count_max = height;
@@ -226,7 +291,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
       size_bytes = table->size_bytes;
 
   if (count >= count_max)
-    return TInvalidIndex<SIZ>();  //< We're out of buffered indexes.
+    return CInvalidIndex<SIZ>();  //< We're out of buffered indexes.
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CH1>(table, sizeof(TTable<SIZ>)));
   SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
@@ -251,16 +316,15 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 
   if (count == 0) {
     *hashes = hash;
-    *collision_indexes = TInvalidIndex<SIZ>();
+    *collision_indexes = CInvalidIndex<SIZ>();
     *unsorted_indexes = 0;
-    // Check if there is enough room to print the string
     destination = keys - key_length;
     D_COUT("\n      destination:" << TDelta<>(table, destination) <<  //
            "\n       key_offset:" << TDelta<>(destination, keys));
 
     if (!TSPrintString<Char>(destination, keys, key)) {
       D_COUT("\nKey buffer overflow printing string when count:0");
-      return TInvalidIndex<SIZ>();
+      return CInvalidIndex<SIZ>();
     }
     SIZ key_offset = SIZ(keys - destination);
     key_offsets[count] = key_offset;
@@ -280,7 +344,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
   SIZ key_offset = SIZ(keys - destination);
   if (!TSPrintString<Char>(destination, keys, key)) {
     D_COUT("\nKey buffer overflow printing key.");
-    return TInvalidIndex<SIZ>();
+    return CInvalidIndex<SIZ>();
   }
   key_offsets[count] = key_offset;
   D_COUT("\n       key_offset:" << key_offset <<  //
@@ -321,7 +385,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
         }
         D_COUT("\n    New collision detected. Updating the collision_pile...");
         SIZ size_pile = table->size_pile;
-        TArrayInsert<SIZ>(collision_pile, collision_index, size_pile, count);
+        TStackInsert<SIZ>(collision_pile, count, collision_index, size_pile);
         table->size_pile = size_pile + 1;
         collision_indexes[count] = collision_index;
         unsorted_indexes[count] = count;
@@ -347,7 +411,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 
         *collision_pile_top++ = unsorted_index;
         *collision_pile_top++ = count;
-        *collision_pile_top = TInvalidIndex<SIZ>();
+        *collision_pile_top = CInvalidIndex<SIZ>();
 
         table->size_pile = size_pile + 3;
         table->count = count + 1;
@@ -355,15 +419,15 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
         return count;
       }
       D_COUT("\nTable already contains the key.");
-      return TInvalidIndex<SIZ>();
+      return CInvalidIndex<SIZ>();
     }
   }
   D_COUT("\n\nHash not found. Inserting into mid:" << mid << " before hash:0x"
                                                    << Hexf(hashes[mid]));
 
-  TArrayInsert(hashes, mid, count, hash);
-  collision_indexes[count] = TInvalidIndex<SIZ>();
-  TArrayInsert<SIZ>(unsorted_indexes, mid, count, count);
+  TStackInsert<HSH>(hashes, count, mid, hash);
+  collision_indexes[count] = CInvalidIndex<SIZ>();
+  TStackInsert<SIZ>(unsorted_indexes, count, mid, count);
   table->count = count + 1;
   D_COUT_TABLE(table);
   return count;
@@ -373,11 +437,11 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 @return Returns TTableInvalidIndex<SIZ>() upon failure, and valid index upon
 success. */
 template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
-LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
+SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   D_ASSERT(table);
   SIZ count = table->count, count_max = table->count_max;
 
-  if (!key || count == 0) return TInvalidIndex<SIZ>();
+  if (!key || count == 0) return CInvalidIndex<SIZ>();
 
   SIZ size_bytes = table->size_bytes;
 
@@ -401,7 +465,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
     }
     if (!TSTREquals<Char>(key, keys - offset)) {
       D_COUT("key not found.");
-      return TInvalidIndex<SIZ>();
+      return CInvalidIndex<SIZ>();
     }
     D_COUT("Found key:\"" << key << '\"' << Linef('-'));
     return 0;
@@ -454,7 +518,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
           collision_index = *collision_cursor++;
         }
         D_COUT(Linef("\n      collision_pile does not contain the key.\n---"));
-        return TInvalidIndex<SIZ>();
+        return CInvalidIndex<SIZ>();
       }
 
       SIZ key_offset = key_offsets[unsorted_index];
@@ -463,7 +527,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
 
       if (!TSTREquals<Char>(key, other_key)) {
         D_COUT("\n    Table does not contain key.");
-        return TInvalidIndex<SIZ>();
+        return CInvalidIndex<SIZ>();
       }
 
       D_COUT("\n    Found key at unsorted_index:" << unsorted_index);
@@ -472,7 +536,7 @@ LIB_MEMBER SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   }
   D_COUT(Linef("\nTable does not contain the hash.\n---"));
 
-  return TInvalidIndex<SIZ>();
+  return CInvalidIndex<SIZ>();
 }
 
 /* Gets the given key.
@@ -484,7 +548,7 @@ SIZ TTableGet(TTable<SIZ>* table, SIZ index) {
   D_COUT_TABLE(table);
 
   SIZ count = table->count;
-  if (index < 0 || index >= count) return TInvalidIndex<SIZ>();
+  if (index < 0 || index >= count) return CInvalidIndex<SIZ>();
 
   SIZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
 
@@ -503,7 +567,7 @@ SIZ TTableRemove(TTable<SIZ>* table, SIZ index) {
   D_COUT_TABLE(table);
 
   SIZ count = table->count;
-  if (index < 0 || index >= count) return TInvalidIndex<SIZ>();
+  if (index < 0 || index >= count) return CInvalidIndex<SIZ>();
 
   SIZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
 
@@ -533,23 +597,23 @@ SIZ TTableRemove(TTable<SIZ>* table, const Char* key) {
 template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR,
           SIZ kCountMax_ = 32,
           typename BUF =
-              TBuf<TTableSize<SIZ, Char, kCountMax_>(), SI1, SIZ, TTable<SIZ>>>
+              TUIB<TTableSize<SIZ, Char, kCountMax_>(), SI1, SIZ, TTable<SIZ>>>
 class ATable {
   AArray<Char, SIZ, BUF> obj_;  //< Auto-Array of Char(s).
  public:
   /* Constructs a Table.
-  @param factory ASCII Factory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the Strand overflows. */
   ATable() {
     SIZ size_bytes = TTableSize<SIZ, Char, kCountMax_>();
-    D_SOCKET_WIPE(obj_.Begin(), size_bytes);
+    D_ARRAY_WIPE(obj_.Begin(), size_bytes);
     TTableInit<SIZ, HSH, Char>(obj_.Begin(), kCountMax_, size_bytes);
   }
 
   /* Constructs a Table.
-  @param factory ASCII Factory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the Strand overflows. */
   ATable(SIZ count_max) {
     SIZ size_bytes = TTableSize<SIZ, Char, count_max>();
-    D_SOCKET_WIPE(obj_.Begin(), size_bytes);
+    D_ARRAY_WIPE(obj_.Begin(), size_bytes);
     TTableInit<SIZ, HSH, Char>(obj_.Begin(), count_max, size_bytes);
   }
 

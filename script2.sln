@@ -1,0 +1,111 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Script2.Tests", "tests\script2.tests.vcxproj", "{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Script2.Lib", "script2.lib.vcxproj", "{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug.Experiments|x64 = Debug.Experiments|x64
+		Debug.Experiments|x86 = Debug.Experiments|x86
+		Debug.KabukiPress.Lib|x64 = Debug.KabukiPress.Lib|x64
+		Debug.KabukiPress.Lib|x86 = Debug.KabukiPress.Lib|x86
+		Debug.Script2|x64 = Debug.Script2|x64
+		Debug.Script2|x86 = Debug.Script2|x86
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release.Experiments|x64 = Release.Experiments|x64
+		Release.Experiments|x86 = Release.Experiments|x86
+		Release.Graph|x64 = Release.Graph|x64
+		Release.Graph|x86 = Release.Graph|x86
+		Release.KabukiPress|x64 = Release.KabukiPress|x64
+		Release.KabukiPress|x86 = Release.KabukiPress|x86
+		Release.Script2|x64 = Release.Script2|x64
+		Release.Script2|x86 = Release.Script2|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Experiments|x64.ActiveCfg = Debug.Experiments|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Experiments|x64.Build.0 = Debug.Experiments|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Experiments|x86.ActiveCfg = Debug.Experiments|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Experiments|x86.Build.0 = Debug.Experiments|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.KabukiPress.Lib|x64.ActiveCfg = Debug.KabukiPress.Lib|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.KabukiPress.Lib|x64.Build.0 = Debug.KabukiPress.Lib|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.KabukiPress.Lib|x86.ActiveCfg = Debug.KabukiPress.Lib|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.KabukiPress.Lib|x86.Build.0 = Debug.KabukiPress.Lib|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Script2|x64.ActiveCfg = Debug.Script2|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Script2|x64.Build.0 = Debug.Script2|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Script2|x86.ActiveCfg = Debug.Script2|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug.Script2|x86.Build.0 = Debug.Script2|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug|x64.ActiveCfg = Debug|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug|x64.Build.0 = Debug|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug|x86.ActiveCfg = Debug|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Debug|x86.Build.0 = Debug|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Experiments|x64.ActiveCfg = Release.Experiments|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Experiments|x64.Build.0 = Release.Experiments|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Experiments|x86.ActiveCfg = Release.Experiments|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Experiments|x86.Build.0 = Release.Experiments|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Graph|x64.ActiveCfg = Release.Graph|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Graph|x64.Build.0 = Release.Graph|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Graph|x86.ActiveCfg = Release.Graph|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Graph|x86.Build.0 = Release.Graph|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.KabukiPress|x64.ActiveCfg = Release.KabukiPress|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.KabukiPress|x64.Build.0 = Release.KabukiPress|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.KabukiPress|x86.ActiveCfg = Release.KabukiPress|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.KabukiPress|x86.Build.0 = Release.KabukiPress|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Script2|x64.ActiveCfg = Release.Script2|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Script2|x64.Build.0 = Release.Script2|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Script2|x86.ActiveCfg = Release.Script2|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release.Script2|x86.Build.0 = Release.Script2|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release|x64.ActiveCfg = Release|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release|x64.Build.0 = Release|x64
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release|x86.ActiveCfg = Release|Win32
+		{2522892D-2E95-49CA-9C3F-614BDEC1BCD6}.Release|x86.Build.0 = Release|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Experiments|x64.ActiveCfg = Debug.Experiments|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Experiments|x64.Build.0 = Debug.Experiments|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Experiments|x86.ActiveCfg = Debug.Experiments|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Experiments|x86.Build.0 = Debug.Experiments|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.KabukiPress.Lib|x64.ActiveCfg = Debug.KabukiPress.Lib|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.KabukiPress.Lib|x64.Build.0 = Debug.KabukiPress.Lib|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.KabukiPress.Lib|x86.ActiveCfg = Debug.KabukiPress.Lib|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.KabukiPress.Lib|x86.Build.0 = Debug.KabukiPress.Lib|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Script2|x64.ActiveCfg = Debug.Script2|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Script2|x64.Build.0 = Debug.Script2|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Script2|x86.ActiveCfg = Debug.Script2|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug.Script2|x86.Build.0 = Debug.Script2|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug|x64.ActiveCfg = Debug|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug|x64.Build.0 = Debug|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug|x86.ActiveCfg = Debug|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Debug|x86.Build.0 = Debug|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Experiments|x64.ActiveCfg = Release.Experiments|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Experiments|x64.Build.0 = Release.Experiments|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Experiments|x86.ActiveCfg = Release.Experiments|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Experiments|x86.Build.0 = Release.Experiments|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Graph|x64.ActiveCfg = Release.Graph|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Graph|x64.Build.0 = Release.Graph|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Graph|x86.ActiveCfg = Release.Graph|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Graph|x86.Build.0 = Release.Graph|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.KabukiPress|x64.ActiveCfg = Release.KabukiPress|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.KabukiPress|x64.Build.0 = Release.KabukiPress|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.KabukiPress|x86.ActiveCfg = Release.KabukiPress|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.KabukiPress|x86.Build.0 = Release.KabukiPress|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Script2|x64.ActiveCfg = Release.Script2|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Script2|x64.Build.0 = Release.Script2|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Script2|x86.ActiveCfg = Release.Script2|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release.Script2|x86.Build.0 = Release.Script2|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release|x64.ActiveCfg = Release|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release|x64.Build.0 = Release|x64
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release|x86.ActiveCfg = Release|Win32
+		{7A3DF7FC-3A68-41FB-A4A2-F96C92C1362A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8427DA0E-405B-4856-82EA-B2F1CC38F4E0}
+	EndGlobalSection
+EndGlobal

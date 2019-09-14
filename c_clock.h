@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_clock.h
+@file    /c_clock.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -19,8 +20,7 @@ namespace _ {
 /* A time in seconds and optional microseconds format that is compatible with
 the C++ standard library.
 Data structure is identical to std::tm with the execution that it has an
-additional microseconds from begin of second variable.
-*/
+additional microseconds from origin of second variable. */
 struct LIB_MEMBER AClock {
   SIN second,  //< Second of the minute [0, 59].
       minute,  //< Minute of the hour [0, 59].
@@ -69,16 +69,16 @@ enum ClockConstants {
 };
 
 /* Gets the 32-bit kTM4 clock epoch. */
-LIB_INLINE SI2 ClockEpoch();
+SI2 ClockEpoch();
 
 /* Lookup table for converting from day-of-year to month. */
-LIB_INLINE const SI2* ClockLastDayOfMonth();
+const SI2* ClockLastDayOfMonth();
 
 /* Lookup table for converting from day-of-year to month. */
-LIB_INLINE const SI2* ClockLastDayOfMonthLeapYear();
+const SI2* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
-LIB_INLINE SIN MonthByDay(SIN day, SIN year);
+SIN MonthByDay(SIN day, SIN year);
 
 /* Initializes the clock from the given timestamp. */
 LIB_MEMBER AClock* ClockInit(AClock& clock, TM4 time);
@@ -93,18 +93,18 @@ LIB_MEMBER TME& StopwatchInit(TME& clock, TM4 t, UI4 ticks);
 LIB_MEMBER AClock* ClockInit(AClock& clock);
 
 /* Gets the current microsecond timestamp. */
-LIB_INLINE TM8 ClockNow();
+TM8 ClockNow();
 
 /* Creates a timestamp from the given seconds Clock. */
 LIB_MEMBER TM4 ClockSeconds(AClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-LIB_INLINE TM4 ClockTM4(AClock& clock);
+TM4 ClockTM4(AClock& clock);
 
 /* Calculates the seconds from epoch from the clock and stores it to the result.
  */
-LIB_INLINE TM8 ClockTM8(AClock& clock);
+TM8 ClockTM8(AClock& clock);
 
 /* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
@@ -159,34 +159,34 @@ LIB_MEMBER TM8 ClockTimeTME(SIN year, SIN month, SIN day, SIN hour = 0,
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* SPrint(CH1* begin, CH1* stop, const AClock& clock);
+LIB_MEMBER CH1* SPrint(CH1* origin, CH1* stop, const AClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-LIB_MEMBER CH1* SPrint(CH1* begin, CH1* stop, TME& t);
+LIB_MEMBER CH1* SPrint(CH1* origin, CH1* stop, TME& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* ClockPrint(CH1* begin, CH1* stop, TM4 time);
+LIB_MEMBER CH1* ClockPrint(CH1* origin, CH1* stop, TM4 time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* ClockPrint(CH1* begin, CH1* stop, TM8 time);
+LIB_MEMBER CH1* ClockPrint(CH1* origin, CH1* stop, TM8 time);
 
 /* Reads a time or time delta from a a CH1 starting with an '@' sign.
 @brief
@@ -232,34 +232,34 @@ LIB_MEMBER const CH1* ScanTime(const CH1*, TM8& result);
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* Print(CH2* begin, CH2* stop, AClock& clock);
+LIB_MEMBER CH2* Print(CH2* origin, CH2* stop, AClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* Print(CH2* begin, CH2* stop, TME& t);
+LIB_MEMBER CH2* Print(CH2* origin, CH2* stop, TME& t);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* ClockPrint(CH2* begin, CH2* stop, TM4 time);
+LIB_MEMBER CH2* ClockPrint(CH2* origin, CH2* stop, TM4 time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* ClockPrint(CH2* begin, CH2* stop, TM8 time);
+LIB_MEMBER CH2* ClockPrint(CH2* origin, CH2* stop, TM8 time);
 
 /* Reads a time or time delta from a a CH2 starting with an '@' sign.
 
@@ -304,34 +304,34 @@ LIB_MEMBER const CH2* ScanTime(const CH2*, TM8& result);
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* Print(CH4* begin, CH4* stop, AClock& clock);
+LIB_MEMBER CH4* Print(CH4* origin, CH4* stop, AClock& clock);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* Print(CH4* begin, CH4* stop, TME& time);
+LIB_MEMBER CH4* Print(CH4* origin, CH4* stop, TME& time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* ClockPrint(CH4* begin, CH4* stop, TM4 time);
+LIB_MEMBER CH4* ClockPrint(CH4* origin, CH4* stop, TM4 time);
 
 /* Writes the given time to the text socket.
 @return Null upon failure or a pointer to the UI1 after the last
 UI1 written.
-@param begin The beginning of the write socket.
+@param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* ClockPrint(CH4* begin, CH4* stop, TM8 time);
+LIB_MEMBER CH4* ClockPrint(CH4* origin, CH4* stop, TM8 time);
 
 /* Reads a time or time delta from a a CH1 starting with an '@' sign..
 @param input  The CH1 to parse.

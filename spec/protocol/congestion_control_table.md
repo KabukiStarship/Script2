@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [SCRIPT Protocol](readme.md)
 
 ### Congestion Control Table
@@ -16,7 +10,7 @@ Upon opening a *Packet Portal* between a *ASCII Router* and *ASCII Endpoint* the
 
 Three years of data must be stored in order to detect annual cycles such as holidays. To calculate contention the following formula is used:
 
-   current_sample = Sigma (0.85* previos_sample + 0.15 * current) / num_samples
+`current_sample = Sigma (0.85* previos_sample + 0.15 * current) / num_samples`
 
 #### Memory Footprint
 
@@ -26,3 +20,11 @@ Three years of data must be stored in order to detect annual cycles such as holi
 | One Day's Memory | One Week's Memory | Three Year's Memory |
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

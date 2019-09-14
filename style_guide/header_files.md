@@ -1,5 +1,4 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Header Files
 
@@ -46,16 +45,16 @@ To guarantee uniqueness, they should be based on the full path in a project's so
 
 Avoid using forward declarations where possible. Just `#include` the headers you need.
 
-#### Definition
+***Definition***
 
 A "forward declaration" is a declaration of a class, function, or template without an associated definition.
 
-#### Pros
+***Pros***
 
 * Forward declarations can save compile time, as `#include`s force the compiler to open more files and process more input.
 * Forward declarations can save on unnecessary recompilation. `#include`s can force your code to be recompiled more often, due to unrelated changes in the header.
 
-#### Cons
+***Cons***
 
 * Forward declarations can hide a dependency, allowing user code to skip necessary recompilation when headers change.
 * A forward declaration may be broken by subsequent changes to the library. Forward declarations of functions and templates can prevent the header owners from making otherwise-compatible changes to their APIs, such as widening a parameter type, adding a template parameter with a default value, or migrating to a new namespace.
@@ -79,7 +78,7 @@ If the `#include` was replaced with forward decls for `B` and `D`, `test()` woul
 *   Forward declaring multiple symbols from a header can be more verbose than simply `#include`ing the header.
 *   Structuring code to enable forward declarations (e.g. using pointer members instead of object members) can make the code slower and more complex.
 
-#### Decision
+***Decision***
 
 * Try to avoid forward declarations of entities defined in another project.
 * When using a function declared in a header file, always `#include` that header.
@@ -91,19 +90,19 @@ Please see [Names and Order of Includes](#Names_and_Order_of_Includes) for rules
 
 Define functions inline only when they are small, say, 10 lines or fewer.
 
-#### definition
+***Definition***
 
 You can declare functions in a way that allows the compiler to expand them inline rather than calling them through the usual function call mechanism.
 
-#### Pros
+***Pros***
 
 Inlining a function can generate more efficient object code, as long as the inlined function is small. Feel free to inline accessors and mutators, and other short, performance-critical functions.
 
-#### Cons
+***Cons***
 
 Overuse of inlining can actually make programs slower. Depending on a function's size, inlining it can cause the code size to increase or decrease. Inlining a very small accessor function will usually decrease code size while inlining a very large function can dramatically increase code size. On modern processors smaller code usually runs faster due to better use of the instruction cache.
 
-#### Decision
+***Decision***
 
 A decent rule of thumb is to not inline a function if it is more than 10 lines long. Beware of destructors, which are often longer than they appear because of implicit member- and base-destructor calls!
 

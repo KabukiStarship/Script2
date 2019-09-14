@@ -1,19 +1,21 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_uniprinter.h
+@file    /t_uniprinter.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
 
-#ifndef SCRIPT2_STRINGF_HEADER_WITH_TEMPLATES
-#define SCRIPT2_STRINGF_HEADER_WITH_TEMPLATES 1
+#ifndef SCRIPT2_UNIPRINTER_CODE_HEADER
+#define SCRIPT2_UNIPRINTER_CODE_HEADER 1
 
 #include "c_string.h"
+#include "t_typevalue.h"
 
 namespace _ {
 
@@ -92,10 +94,10 @@ which is frutrating because of how simple the conversion code is. If the
 byte_count is greater than zero then the memory will be printed sequentially
 one byte at a time. */
 template <typename Printer>
-Printer& TPrintHex(Printer& o, const void* begin, SIW byte_count) {
-  if (!begin) return o;
+Printer& TPrintHex(Printer& o, const void* origin, SIW byte_count) {
+  if (!origin) return o;
   SIW delta;
-  const UI1* cursor = reinterpret_cast<const UI1*>(begin);
+  const UI1* cursor = reinterpret_cast<const UI1*>(origin);
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   // We have to print the hex value backwards.
   if (byte_count < 0) {
@@ -211,8 +213,8 @@ Printer& TPrintAligned(Printer& o, const CH1* string, SIW char_count,
 /* Prints the given token aligned center the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CH1 upon success.
-@param  token  The token to utf.
-@param  column_count The number_ of columns to align right to. */
+@param token  The token to utf.
+@param column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CHR>
 Printer& TPrintCenter(Printer& o, const Char* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
@@ -240,11 +242,11 @@ Printer& TPrintCenter(Printer& o, const Char* item, SIW column_count = 80) {
 }
 
 template <typename Printer>
-Printer& TPrintAlignedHex(Printer& o, const void* begin, SIW byte_count,
+Printer& TPrintAlignedHex(Printer& o, const void* origin, SIW byte_count,
                           SIW left_count, SIW dot_count, SIW right_count) {
-  const CH1* cursor = reinterpret_cast<const CH1*>(begin);
+  const CH1* cursor = reinterpret_cast<const CH1*>(origin);
   while (--left_count > 0) o << ' ';
-  // TPrintHex<Printer>(o, begin, byte_count >> 1);
+  // TPrintHex<Printer>(o, origin, byte_count >> 1);
   TPrintHex<Printer>(o, cursor, -byte_count);
   while (--dot_count > 0) o << ' ';
   while (--right_count > 0) o << ' ';
@@ -252,7 +254,7 @@ Printer& TPrintAlignedHex(Printer& o, const void* begin, SIW byte_count,
 }
 
 /* Prints th given Stringf centered unless it's count is less then 0, in which
-case it will print the POD value stored in the first Word of the String. */
+case it will print the POD value stored in the first Word of the string. */
 template <typename Printer>
 Printer& TPrintCenter(Printer& o, Stringf& item) {
   SIW column_count = item.Count();
@@ -305,8 +307,8 @@ Printer& TPrintCenter(Printer& o, Stringf& item) {
 /* Prints the given token aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CH1 upon success.
-@param  token  The token to utf.
-@param  column_count The number_ of columns to align right to. */
+@param token  The token to utf.
+@param column_count The number_ of columns to align right to. */
 template <typename Printer, typename Char = CHR>
 Printer& TPrintRight(Printer& o, const Char* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
@@ -400,7 +402,7 @@ Printer& TPrintRepeat(Printer& o, Char c, SIW count) {
 
 template <typename Char = CHR>
 const Char* TSTRLinef() {
-  static const Char kString[] = {kLF, kLF, '-', '-', '-', kLF, NIL};
+  static const Char kString[] = {'\n', '\n', '-', '-', '-', '\n', NIL};
   return kString;
 }
 
@@ -490,20 +492,21 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
   switch (utf_format) {
 #if USING_UTF8 == YES_0
     case kST1: {
-      _::TPrintLinef<Printer, CH1>(o, item.element.ST1(), item.element.count);
+      _::TPrintLinef<Printer, CH1>(o, item.element.ToST1(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF16 == YES_0
     case kST2: {
-      _::TPrintLinef<Printer, CH2>(o, item.element.ST2(), item.element.count);
+      _::TPrintLinef<Printer, CH2>(o, item.element.ToST2(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF32 == YES_0
     case kST3: {
-      const CH4* start = reinterpret_cast<const CH4*>(item.element.value.Ptr());
-      _::TPrintLinef<Printer, CH4>(o, item.element.ST3(), item.element.count);
+      const CH4* start =
+          reinterpret_cast<const CH4*>(item.element.value.ToPTR());
+      _::TPrintLinef<Printer, CH4>(o, item.element.ToST3(), item.element.count);
       break;
     }
 #endif
@@ -538,8 +541,8 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
 
 template <typename Char = CHR>
 const Char* TSTRHeadingf() {
-  static const Char kStrand[] = {kLF, kLF, '+', '-', '-', '-', kLF, '|', ' ',
-                                 NIL, kLF, '+', '-', '-', '-', kLF, NIL};
+  static const Char kStrand[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
+                                 NIL,  '\n', '+', '-', '-', '-', '\n', NIL};
   return kStrand;
 }
 
@@ -627,23 +630,48 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
   switch (_::TypeTextFormat(element.Type())) {
 #if USING_UTF8 == YES_0
     case 1: {
-      return _::TPrintChars<Printer, CH1>(o, element.ST1(), count);
+      return _::TPrintChars<Printer, CH1>(o, element.ToST1(), count);
     }
 #endif
 #if USING_UTF16 == YES_0
     case 2: {
-      return _::TPrintChars<Printer, CH2>(o, element.ST2(), count);
+      return _::TPrintChars<Printer, CH2>(o, element.ToST2(), count);
     }
 #endif
 #if USING_UTF32 == YES_0
     case 3: {
-      return _::TPrintChars<Printer, CH4>(o, element.ST3(), count);
+      return _::TPrintChars<Printer, CH4>(o, element.ToST3(), count);
     }
 #endif
   }
   return _::TPrintChars<Printer, CH1>(
       o, reinterpret_cast<CH1*>(element.Value()), count);
 }
+
+template <typename Printer, typename DT = DT2>
+Printer& TPrintTypeNamePOD(Printer& o, DT type) {
+  DT pod_type = type & kTypePODMask,        //
+      vector_type = TTypeVector<DT>(type),  //
+      map_type = TTypeMap<DT>(type);        //
+}
+
+template <typename Printer, typename DT = DT2>
+Printer& TPrintTypeName(Printer& o, DT type) {
+  DT pod_type = type & kTypePODMask;
+  if (pod_type == 0) return o << "BGN" << (type >> kTypePODBitCount);
+  DT vector_type = TTypeVector<DT>(type);
+  if (vector_type) {
+    return o << TypeSTR(vector_type) << '_' << TypeSTR(pod_type);
+  }
+  DT map_type = TTypeMap<DT>(type);
+  if (map_type) {
+    return o << TypeSTR(map_type) << '_' << TypeSTR(pod_type);
+  }
+  return o;
+}
+
+template <typename Printer, typename DT = DT2>
+Printer& TPrintValue(Printer& o, DT type, void* item) {}
 
 }  // namespace _
 

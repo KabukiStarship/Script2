@@ -1,11 +1,5 @@
 # [SCRIPT Specification](../../readme.md)
 
-## License
-
-Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>; All right reserved (R).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
-
 ## [ASCII Data Specification](../readme.md)
 
 ### [Objects](readme.md)
@@ -63,3 +57,11 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
                          may also make a rather funny or inappropriate joke when put
                          on coworkers foreheads. :-) */
 ```
+
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+
+## License
+
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

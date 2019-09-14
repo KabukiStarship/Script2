@@ -1,5 +1,4 @@
-ASCII C++ Style Guide
-=====================
+# [ASCII C++ Style Guide](./readme.md)
 
 ## Classes
 
@@ -20,22 +19,22 @@ Classes are the fundamental unit of code in C++. Naturally, we use them extensiv
 
 Avoid virtual method calls in constructors, and avoid initialization that can fail if you can't signal an error.
 
-#### Definition
+***Definition***
 It is possible to perform arbitrary initialization in the body of the constructor.
 
-#### Pros
+***Pros***
 
 *   No need to worry about whether the class has been initialized or not.
 *   Objects that are fully initialized by constructor call can be `const` and may also be easier to use with standard containers or algorithms.
 
-#### Cons
+***Cons***
 
 *   If the work calls virtual functions, these calls will not get dispatched to the subclass implementations. Future modification to your class can quietly introduce this problem even if your class is not currently subclassed, causing much confusion.
 *   There is no easy way for constructors to signal errors, short of crashing the program (not always appropriate) or using exceptions (which are [forbidden](#Exceptions)).
 *   If the work fails, we now have an object whose initialization code failed, so it may be an unusual state requiring a `BOL IsValid()` state checking mechanism (or similar) which is easy to forget to call.
 *   You cannot take the address of a constructor, so whatever work is done in the constructor cannot easily be handed off to, for example, another thread.
 
-#### Decision
+***Decision***
 
 Constructors should never call virtual functions. If appropriate for your code , terminating the program may be an appropriate error handling response. Otherwise, consider a factory function or `Init()` method as described in [TotW #42](https://abseil.io/tips/42) . Avoid `Init()` methods on objects with no other states that affect which public methods may be called (semi-constructed objects of this form are particularly hard to work with correctly).
 <a id="Explicit_Constructors</a>
@@ -44,7 +43,7 @@ Constructors should never call virtual functions. If appropriate for your code ,
 
 Do not define implicit conversions. Use the `explicit` keyword for conversion operators and single-argument constructors.
 
-#### Definition
+***Definition***
 
 Implicit conversions allow an object of one type (called the <dfn>source type</dfn>) to be used where a different type (called the <dfn>destination type</dfn>) is expected, such as when passing an `SIN` argument to a function that takes a `DBL` parameter.
 
@@ -60,7 +59,7 @@ class Foo {
 void Func(Foo f);
 ```
 
-#### Bad Code
+***Bad Code***
 
 ```C++
 Func({42, 3.14});  // Error
@@ -68,13 +67,13 @@ Func({42, 3.14});  // Error
 
 This kind of code isn't technically an implicit conversion, but the language treats it as one as far as `explicit` is concerned.
 
-#### Pros
+***Pros***
 
 *   Implicit conversions can make a type more usable and expressive by eliminating the need to explicitly name a type when it's obvious.
 *   Implicit conversions can be a simpler alternative to overloading, such as when a single function with a `string_view` parameter takes the place of separate overloads for `_::TStrand<>` and `const char*`.
 *   List initialization syntax is a concise and expressive way of initializing objects.
 
-#### Cons
+***Cons***
 
 *   Implicit conversions can hide type-mismatch bugs, where the destination type does not match the user's expectation, or the user is unaware that any conversion will take place.
 *   Implicit conversions can make code harder to read, particularly in the presence of overloading, by making it less obvious what code is actually getting called.
@@ -83,7 +82,7 @@ This kind of code isn't technically an implicit conversion, but the language tre
 *   It's not always clear which type should provide the conversion, and if they both do, the code becomes ambiguous.
 *   List initialization can suffer from the same problems if the destination type is implicit, particularly if the list has only a single element.
 
-#### Decision
+***Decision***
 
 Type conversion operators, and constructors that are callable with a single argument, must be marked `explicit` in the class definition. As an exception, copy and move constructors should not be `explicit`, since they do not perform type conversion. Implicit conversions can sometimes be necessary and appropriate for types that are designed to transparently wrap other types. In that case, contact your project leads to request a waiver of this rule.
 Constructors that cannot be called with a single argument may omit `explicit`. Constructors that take a single `std::initializer_list` parameter should also omit `explicit`, in order to support copy-initialization (e.g. `MyType m = {1, 2};`).
@@ -92,7 +91,7 @@ Constructors that cannot be called with a single argument may omit `explicit`. C
 
 A class's public API should make explicit whether the class is copyable, move-only, or neither copyable nor movable. Support copying and/or moving if these operations are clear and meaningful for your type.
 
-#### Definition
+***Definition***
 
 A movable type is one that can be initialized and assigned from temporaries.
 
@@ -102,19 +101,19 @@ For user-defined types, the copy behavior is defined by the copy constructor and
 
 The copy/move constructors can be implicitly invoked by the compiler in some situations, e.g. when passing objects by value.
 
-#### Pros
+***Pros***
 
 Objects of copyable and movable types can be passed and returned by value, which makes APIs simpler, safer, and more general. Unlike when passing objects by pointer or reference, there's no risk of confusion over ownership, lifetime, mutability, and similar issues, and no need to specify them in the contract. It also prevents non-local interactions between the client and the implementation, which makes them easier to understand, maintain, and optimize by the compiler. Further, such objects can be used with generic APIs that require pass-by-value, such as most containers, and they allow for additional flexibility in e.g., type composition.
 Copy/move constructors and assignment operators are usually easier to define correctly than alternatives like `Clone()`, `CopyFrom()` or `Swap()`, because they can be generated by the compiler, either implicitly or with `= default`. They are concise, and ensure that all data members are copied. Copy and move constructors are also generally more efficient, because they don't require heap allocation or separate initialization and assignment steps, and they're eligible for optimizations such as [copy elision](http://en.cppreference.com/w/cpp/language/copy_elision).
 Move operations allow the implicit and efficient transfer of resources out of rvalue objects. This allows a plainer coding style in some cases.
 
-#### Cons
+***Cons***
 
 Some types do not need to be copyable, and providing copy operations for such types can be confusing, nonsensical, or outright incorrect. Types representing singleton objects (`Registerer`), objects tied to a specific scope (`Cleanup`), or closely coupled to object identity (`Mutex`) cannot be copied meaningfully. Copy operations for base class types that are to be used polymorphically are hazardous, because use of them can lead to [object slicing](https://en.wikipedia.org/wiki/Object_slicing). Defaulted or carelessly-implemented copy operations can be incorrect, and the resulting bugs can be confusing and difficult to diagnose.
 
 Copy constructors are invoked implicitly, which makes the invocation easy to miss. This may cause confusion for programmers used to languages where pass-by-reference is conventional or mandatory. It may also encourage excessive copying, which can cause performance problems.
 
-#### Decision
+***Decision***
 
 Every class's public interface should make explicit which copy and move operations the class supports. This should usually take the form of explicitly declaring and/or deleting the appropriate operations in the `public` section of the declaration.
 
@@ -174,21 +173,21 @@ Note that member variables in structs and classes have [different naming rules](
 
 Composition is often more appropriate than inheritance. When using inheritance, make it `public`.
 
-#### Definition
+***Definition***
 
 When a sub-class inherits from a base class, it includes the definitions of all the data and operations that the base class defines. "Interface inheritance" is inheritance from a pure abstract base class (one with no state or defined methods); all other inheritance is "implementation inheritance".
 
-#### Pros
+***Pros***
 
 Implementation inheritance reduces code size by re-using the base class code as it specializes an existing type. Because inheritance is a compile-time declaration, you and the compiler can understand the operation and detect errors. Interface inheritance can be used to programmatically enforce that a class expose a particular API. Again, the compiler can detect errors, in this case, when a class does not define a necessary method of the API.
 
-#### Cons
+***Cons***
 
 For implementation inheritance, because the code implementing a sub-class is spread between the base and the sub-class, it can be more difficult to understand an implementation. The sub-class cannot override functions that are not virtual, so the sub-class cannot change implementation.
 
 Multiple inheritance is especially problematic, because it often imposes a higher performance overhead (in fact, the performance drop from single inheritance to multiple inheritance can often be greater than the performance drop from ordinary to virtual dispatch), and because it risks leading to "diamond" inheritance patterns, which are prone to ambiguity, confusion, and outright bugs.
 
-#### Decision
+***Decision***
 
 All inheritance should be `public`. If you want to do private inheritance, you should be including an instance of the base class as a member instead.
 
@@ -204,17 +203,17 @@ Multiple inheritance is permitted, but multiple _implementation_ inheritance is 
 
 Overload operators judiciously. Do not create user-defined literals.
 
-#### Definition
+***Definition***
 
 C++ permits user code to [declare overloaded versions of the built-in operators](http://en.cppreference.com/w/cpp/language/operators) using the `operator` keyword, so long as one of the parameters is a user-defined type. The `operator` keyword also permits user code to define new kinds of literals using `operator""`, and to define type-conversion functions such as `operator BOL()`.
 
-#### Pros
+***Pros***
 
 Operator overloading can make code more concise and intuitive by enabling user-defined types to behave the same as built-in types. Overloaded operators are the idiomatic names for certain operations (e.g. `==`, `<`, `=`, and `<<`), and adhering to those conventions can make user-defined types more readable and enable them to interoperate with libraries that expect those names.
 
 User-defined literals are a very concise notation for creating objects of user-defined types.
 
-#### Cons
+***Cons***
 
 *   Providing a correct, consistent, and unsurprising set of operator overloads requires some care, and failure to do so can lead to confusion and bugs.
 *   Overuse of operators can lead to obfuscated code, particularly if the overloaded operator's semantics don't follow convention.
@@ -226,7 +225,7 @@ User-defined literals are a very concise notation for creating objects of user-d
 *   Operators are often defined outside the class, so there's a risk of different files introducing different definitions of the same operator. If both definitions are linked into the same binary, this results in undefined behavior, which can manifest as subtle run-time bugs.
 *   User-defined literals allow the creation of new syntactic forms that are unfamiliar even to experienced C++ programmers.
 
-#### Decision
+***Decision***
 
 Define overloaded operators only if their meaning is obvious, unsurprising, and consistent with the corresponding built-in operators. For example, use `|` as a bitwise- or logical-or, not as a shell-style pipe.
 

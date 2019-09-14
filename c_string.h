@@ -2,18 +2,19 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    \c_string.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
 
-#ifndef SCRIPT2_STRINGF_H
-#define SCRIPT2_STRINGF_H 1
+#ifndef SCRIPT2_StringF_CODLESS_HEADER
+#define SCRIPT2_StringF_CODLESS_HEADER 1
 
-#include "c_avalue.h"
+#include "c_typevalue.h"
 
 namespace _ {
 
@@ -30,8 +31,7 @@ LIB_MEMBER const CH1* STRPrintHexHeader();
 LIB_MEMBER const CH1* STRPrintHexBorder();
 
 /* Converts a UI1 into a two-UI1 hex representation.
-@return Returns -1 if c is not a hex UI1.
-*/
+@return Returns -1 if c is not a hex UI1. */
 LIB_MEMBER SI4 HexToByte(UI2 hex);
 
 /* Attempts to scan a UTF-32 CH1 from the given UTF-8 string.
@@ -40,11 +40,10 @@ success. */
 LIB_MEMBER const CH1* SScan(const CH1* string, CH4& character);
 
 #if USING_UTF16 == YES_0
-
 /* Prints a UTF-32 character to the string terminated at the stop.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   string    The start of the string.
-@param   stop      The last CH1 in the string buffer.
+@param string    The start of the string.
+@param stop      The last CH1 in the string buffer.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 LIB_MEMBER CH2* SPrint(CH2* string, CH2* stop, CH4 character);
@@ -58,19 +57,19 @@ LIB_MEMBER const CH2* SScan(const CH2* string, CH4& character);
 #if USING_UTF32 == YES_0
 /* Prints a character to the string.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   stop The last character in the string buffer. */
+@param stop The last character in the string buffer. */
 LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH2 character);
 
 /* Prints a Unicode character to the given string.
 @return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param   stop   The last Char in the socket. */
+@param stop   The last Char in the socket. */
 LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH4 character);
 #endif
 
 /* Utility class for printing numbers. */
 struct LIB_MEMBER Valuef {
-  SIW count;     //< Width of the item in bytes or columns.
-  AValue value;  //< The type and value.
+  SIW count;        //< Width of the item in bytes or columns.
+  TypeValue value;  //< The type and value.
 
   /* Constrcts a NIL item. */
   Valuef();
@@ -106,28 +105,20 @@ struct LIB_MEMBER Valuef {
 #endif
 
   /* Gets the value.Type(). */
-  LIB_INLINE SIW Type();
+  SIW Type();
 
   /* Gets the count. */
-  LIB_INLINE SIW Count();
+  SIW Count();
 
   /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE void* Value();
+  void* Value();
 
-  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE void* Ptr();
-
-  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE CH1* ST1();
-
-  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE CH2* ST2();
-
-  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE CH4* ST3();
-
-  /* Gets the pointer to either the item.Ptr () or the pointer item stores. */
-  LIB_INLINE UIW Word();
+  /* Gets the value::word_ as the specified type. */
+  void* ToPtr();
+  CH1* ToST1();
+  CH2* ToST2();
+  CH4* ToST3();
+  UIW ToWord();
 };
 
 /* Utility class for printing a POD type in hex. */
@@ -202,19 +193,19 @@ center aligned. */
 class LIB_MEMBER Stringf {
  public:
   enum {
-    // Max length of the buffer in characters.
-    kLengthMax = 2 * kLargestPODType + 1,
-    // Character count of buffer word-aligned.
-    kCharCount = (kLengthMax + 1) + (kLengthMax + 1) & kWordLSbMask,
-    // Number of words in the buffer.
+    // Max length of the buffer in ALU words.
     kBufferWordCount =
-        (kCharCount >> kWordBitCount) < 1 ? 1 : kCharCount >> kWordBitCount,
+        (sizeof(void*) == 2)
+            ? 5
+            : (sizeof(void*) == 4) ? 6 : (sizeof(void*) == 8) ? 5 : 1,
+    // Max length of a string in characters.
+    kLengthMax = kBufferWordCount * sizeof(void*) - 1,
   };
 
  private:
-  const void* string_;  // Pointer to a string or the buffer_.
-  SIW type_,            //< The ASCII String Type, 1-3, of the string_.
-      count_;           //< The count.
+  const void* String_;  // Pointer to a string or the buffer_.
+  SIW count_;           //< The count.
+  DTW type_;            //< The ASCII string Type, 1-3, of the String_.
   UIW buffer_[kBufferWordCount];  //< Strand buffer for the token.
 
  public:
@@ -222,7 +213,7 @@ class LIB_MEMBER Stringf {
   to the buffer. */
   Stringf();
 
-  /* Sets the string_ to the given pointer and stores the count. */
+  /* Sets the String_ to the given pointer and stores the count. */
   Stringf(const CH1* item);
 #if USING_UTF16 == YES_0
   Stringf(const CH2* item);
@@ -231,7 +222,7 @@ class LIB_MEMBER Stringf {
   Stringf(const CH4* item);
 #endif
 
-  /* Prints the item to the buffer_, stores the count, and sets the string_ to
+  /* Prints the item to the buffer_, stores the count, and sets the String_ to
   the buffer_. */
   Stringf(CH1 item);
   Stringf(CH2 item);
@@ -247,7 +238,7 @@ class LIB_MEMBER Stringf {
   Stringf(FP8 item);
 #endif
 
-  /* Sets the string_ to the given pointer and stores the count. */
+  /* Sets the String_ to the given pointer and stores the count. */
   Stringf(const CH1* item, SIW count);
 #if USING_UTF16 == YES_0
   Stringf(const CH2* item, SIW count);
@@ -256,7 +247,7 @@ class LIB_MEMBER Stringf {
   Stringf(const CH4* item, SIW count);
 #endif
 
-  /* Prints the item to the buffer_, stores the count, and sets the string_ to
+  /* Prints the item to the buffer_, stores the count, and sets the String_ to
   the buffer_. */
   Stringf(CH1 item, SIW count);
   Stringf(CH2 item, SIW count);
@@ -271,8 +262,9 @@ class LIB_MEMBER Stringf {
 #if USING_FP8 == YES_0
   Stringf(FP8 item, SIW count);
 #endif
+  Stringf(TypeValue item, SIW count = kConsoleWidth);
 
-  LIB_INLINE UIW Word();
+  UIW Word();
 
   /* Gets a void pointer to the value_. */
   void* Value();
@@ -280,71 +272,74 @@ class LIB_MEMBER Stringf {
   /* Gets the pointer contained in value_[0]. */
   void* Ptr();
 
-  /* Gets the string_. */
-  LIB_INLINE const CH1* ST1();
-
-  /* Gets the string_. */
-  LIB_INLINE const CH2* ST2();
-
-  /* Gets the string_. */
-  LIB_INLINE const CH4* ST3();
+  /* Gets the String_. */
+  const CH1* ST1();
+  const CH2* ST2();
+  const CH4* ST3();
 
   /* Gets the type_. */
-  LIB_INLINE SIW Type() const;
+  SIW Type() const;
 
   /* Gets the count_. */
-  LIB_INLINE SIW Count() const;
+  SIW Count() const;
 
-  /* Saves the pointer to the string_. */
-  LIB_INLINE void Print(const CH1* item);
+  /* Saves the pointer to the String_. */
+  void Print(const CH1* item);
 #if USING_UTF16 == YES_0
-  LIB_INLINE void Print(const CH2* item);
+  void Print(const CH2* item);
 #endif
 #if USING_UTF32 == YES_0
-  LIB_INLINE void Print(const CH4* item);
+  void Print(const CH4* item);
 #endif
 
   /* Prints the given item to the buffer_. */
-  LIB_INLINE void Print(CH1 item);
+  void Print(CH1 item);
 #if USING_UTF16 == YES_0
-  LIB_INLINE void Print(CH2 item);
+  void Print(CH2 item);
 #endif
 #if USING_UTF32 == YES_0
-  LIB_INLINE void Print(CH4 item);
+  void Print(CH4 item);
 #endif
-  LIB_INLINE void Print(SI4 item);
-  LIB_INLINE void Print(UI4 item);
-  LIB_INLINE void Print(SI8 item);
-  LIB_INLINE void Print(UI8 item);
+  void Print(SI4 item);
+  void Print(UI4 item);
+  void Print(SI8 item);
+  void Print(UI8 item);
 #if USING_FP4 == YES_0
-  LIB_INLINE void Print(FP4 item);
+  void Print(FP4 item);
 #endif
 #if USING_FP8 == YES_0
-  LIB_INLINE void Print(FP8 item);
+  void Print(FP8 item);
 #endif
+
+  /* Prints a timestamp to the buffer_. */
+  void PrintTM4(TM4 item);
+  void PrintTME(TM4 item, UI4 subsecond_tick);
+  void PrintTM8(TM8 item);
+
+  void Print(TypeValue item);
 
   /* Stores the item to the first word of the buffer and the negative of the
   count. */
-  LIB_INLINE void Hex(CH1 item, SIW count = 80);
+  void Hex(CH1 item, SIW count = 80);
 #if USING_UTF16 == YES_0
-  LIB_INLINE void Hex(CH2 item, SIW count = 80);
+  void Hex(CH2 item, SIW count = 80);
 #endif
 #if USING_UTF32 == YES_0
-  LIB_INLINE void Hex(CH4 item, SIW count = 80);
+  void Hex(CH4 item, SIW count = 80);
 #endif
-  LIB_INLINE void Hex(SI1 item, SIW count = 80);
-  LIB_INLINE void Hex(UI1 item, SIW count = 80);
-  LIB_INLINE void Hex(SI2 item, SIW count = 80);
-  LIB_INLINE void Hex(UI2 item, SIW count = 80);
-  LIB_INLINE void Hex(SI4 item, SIW count = 80);
-  LIB_INLINE void Hex(UI4 item, SIW count = 80);
-  LIB_INLINE void Hex(SI8 item, SIW count = 80);
-  LIB_INLINE void Hex(UI8 item, SIW count = 80);
+  void Hex(SI1 item, SIW count = 80);
+  void Hex(UI1 item, SIW count = 80);
+  void Hex(SI2 item, SIW count = 80);
+  void Hex(UI2 item, SIW count = 80);
+  void Hex(SI4 item, SIW count = 80);
+  void Hex(UI4 item, SIW count = 80);
+  void Hex(SI8 item, SIW count = 80);
+  void Hex(UI8 item, SIW count = 80);
 #if USING_FP4 == YES_0
-  LIB_INLINE void Hex(FP4 item, SIW count = 80);
+  void Hex(FP4 item, SIW count = 80);
 #endif
 #if USING_FP8 == YES_0
-  LIB_INLINE void Hex(FP8 item, SIW count = 80);
+  void Hex(FP8 item, SIW count = 80);
 #endif
 };
 
@@ -381,26 +376,26 @@ struct LIB_MEMBER Centerf {
 
   /* Stores the item to the first word of the buffer and the negative of the
   count. */
-  LIB_INLINE Centerf& Hex(CH1 item, SIW count = 80);
+  Centerf& Hex(CH1 item, SIW count = 80);
 #if USING_UTF16 == YES_0
-  LIB_INLINE Centerf& Hex(CH2 item, SIW count = 80);
+  Centerf& Hex(CH2 item, SIW count = 80);
 #endif
 #if USING_UTF32 == YES_0
-  LIB_INLINE Centerf& Hex(CH4 item, SIW count = 80);
+  Centerf& Hex(CH4 item, SIW count = 80);
 #endif
-  LIB_INLINE Centerf& Hex(SI1 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(UI1 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(SI2 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(UI2 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(SI4 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(UI4 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(SI8 item, SIW count = 80);
-  LIB_INLINE Centerf& Hex(UI8 item, SIW count = 80);
+  Centerf& Hex(SI1 item, SIW count = 80);
+  Centerf& Hex(UI1 item, SIW count = 80);
+  Centerf& Hex(SI2 item, SIW count = 80);
+  Centerf& Hex(UI2 item, SIW count = 80);
+  Centerf& Hex(SI4 item, SIW count = 80);
+  Centerf& Hex(UI4 item, SIW count = 80);
+  Centerf& Hex(SI8 item, SIW count = 80);
+  Centerf& Hex(UI8 item, SIW count = 80);
 #if USING_FP4 == YES_0
-  LIB_INLINE Centerf& Hex(FP4 item, SIW count = 80);
+  Centerf& Hex(FP4 item, SIW count = 80);
 #endif
 #if USING_FP8 == YES_0
-  LIB_INLINE Centerf& Hex(FP8 item, SIW count = 80);
+  Centerf& Hex(FP8 item, SIW count = 80);
 #endif
 };
 
@@ -436,26 +431,26 @@ struct LIB_MEMBER Rightf {
 
   /* Stores the item to the first word of the buffer and the negative of the
   count. */
-  LIB_INLINE Rightf& Hex(CH1 item, SIW count = 80);
+  Rightf& Hex(CH1 item, SIW count = 80);
 #if USING_UTF16 == YES_0
-  LIB_INLINE Rightf& Hex(CH2 item, SIW count = 80);
+  Rightf& Hex(CH2 item, SIW count = 80);
 #endif
 #if USING_UTF32 == YES_0
-  LIB_INLINE Rightf& Hex(CH4 item, SIW count = 80);
+  Rightf& Hex(CH4 item, SIW count = 80);
 #endif
-  LIB_INLINE Rightf& Hex(SI1 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(UI1 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(SI2 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(UI2 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(SI4 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(UI4 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(SI8 item, SIW count = 80);
-  LIB_INLINE Rightf& Hex(UI8 item, SIW count = 80);
+  Rightf& Hex(SI1 item, SIW count = 80);
+  Rightf& Hex(UI1 item, SIW count = 80);
+  Rightf& Hex(SI2 item, SIW count = 80);
+  Rightf& Hex(UI2 item, SIW count = 80);
+  Rightf& Hex(SI4 item, SIW count = 80);
+  Rightf& Hex(UI4 item, SIW count = 80);
+  Rightf& Hex(SI8 item, SIW count = 80);
+  Rightf& Hex(UI8 item, SIW count = 80);
 #if USING_FP4 == YES_0
-  LIB_INLINE Rightf& Hex(FP4 item, SIW count = 80);
+  Rightf& Hex(FP4 item, SIW count = 80);
 #endif
 #if USING_FP8 == YES_0
-  LIB_INLINE Rightf& Hex(FP8 item, SIW count = 80);
+  Rightf& Hex(FP8 item, SIW count = 80);
 #endif
 };
 
@@ -476,9 +471,15 @@ struct LIB_MEMBER Headingf {
   const CH1 *style, *caption2, *caption3;
 
   /* Saves the parameters to the corresponding data members. */
-  Headingf(const CH1* caption, const CH1* style = nullptr,
-           SIW count = kConsoleWidth, const CH1* caption2 = nullptr,
-           const CH1* caption3 = nullptr);
+  Headingf(const CH1* caption);
+
+  /* Saves the parameters to the corresponding data members. */
+  Headingf(const CH1* caption, const CH1* caption2);
+
+  /* Saves the parameters to the corresponding data members. */
+  Headingf(const CH1* caption, const CH1* caption2,
+           const CH1* caption3 = nullptr, const CH1* style = nullptr,
+           SIW count = kConsoleWidth);
 };
 
 /* Utility class for indenting text with operator<<. */
