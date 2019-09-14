@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <pch.h>
 
-#include "t_uniprinter.h"
+#include "uniprinter.hpp"
 
 #if SEAM == SEAM_SCRIPT2_UTF
 #include "module_debug.inl"

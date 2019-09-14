@@ -16,7 +16,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "module_release.inl"
 #endif
 
-#include "c_room.h"
+#include "room.h"
 
 using namespace _;
 

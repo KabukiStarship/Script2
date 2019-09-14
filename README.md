@@ -8,7 +8,7 @@ The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defi
 * Interprocess communication and data serialization engine modeled after AI philosophy of the Chinese Room Thought Experiment and ASCII C0 Control Codes.
 * Ultra-fast Unicode string processing with the Uniprinter (Universal Printer), featuring the [Puff Algorithm](https://github.com/kabuki-starship/Script2/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers) and template-friendly Stringf formatting utilities to replace printf, sprintf, and sscanf.
 * Unit test framework with low-cost in-order Seam tree tests for Agile, Test, and Issue Driven Development featuring debug information customized for each tree node.
-* Rapid compile time using 3-file translation units and wrapper classes that hide templates and large header files.
+* Rapid compile time using 3-file translation unit and wrapper classes that hide templates and large header files.
 * The Automaton Standard Code for Information Interchange (ASCII) Data Specification is an Abstract Data Type Specification that defines a memory layout and Algebraic test contracts for concrete implementations of the Abstract Data Types.
 * The [ASCII C++ Style Guide](https://github.com/kabuki-starship/script2/style_guide/readme.md) is a fork of the Google C++ Style Guide that uses ASCII Data Types and intelligent rules to dramatically reduced clutter and improved readability.
 
@@ -21,6 +21,6 @@ The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defi
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io). All rights reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

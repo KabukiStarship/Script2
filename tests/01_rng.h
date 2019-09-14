@@ -11,7 +11,7 @@ the MPL was not distributed with this file, You can obtain one at
 #pragma once
 #include <pch.h>
 
-#include "c_rng.h"
+#include "rng.h"
 
 #if SEAM == SCRIPT2_RNG
 #include "module_debug.inl"

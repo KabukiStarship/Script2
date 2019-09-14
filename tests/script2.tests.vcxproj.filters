@@ -1,24 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Lib">
       <UniqueIdentifier>{e1bd9232-32df-4aee-a799-e1224a538bef}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib\Tests">
       <UniqueIdentifier>{f343f5ed-e408-46b5-bd2d-e17e3e89c5a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
+    <None Include="17_seam.s2">
       <Filter>Lib\Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="00_uniprinter.h">
-      <Filter>Lib\Tests</Filter>
-    </ClInclude>
+    </None>
+    <None Include="..\floor.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\interrupts.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\module_assembly.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\module_debug.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\module_footer.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\module_release.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\morsecode.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\op.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\operand.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\pch_footer.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\pch_header.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\puff.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\rng.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\room.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\slot.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\stringf.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\test.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\typevalue.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\vk.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\array.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\bin.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\bout.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\bsq.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\cin.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\clock.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\cout.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\crabs.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\error.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+    <None Include="..\event.cc.inl">
+      <Filter>Lib</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="01_itos.h">
       <Filter>Lib\Tests</Filter>
     </ClInclude>
@@ -79,97 +165,73 @@
     <ClInclude Include="17_room.h">
       <Filter>Lib\Tests</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_array.h">
+    <ClInclude Include="pch.h">
+      <Filter>Lib\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="00_uniprinter.h">
+      <Filter>Lib\Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\address.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_autoject.h">
+    <ClInclude Include="..\args.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_bin.h">
+    <ClInclude Include="..\array.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_bout.h">
+    <ClInclude Include="..\autoject.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_bsq.h">
+    <ClInclude Include="..\bout.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_buffer.h">
+    <ClInclude Include="..\bsq.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_cin.h">
+    <ClInclude Include="..\buffer.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_clock.h">
+    <ClInclude Include="..\cin.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_cout.h">
+    <ClInclude Include="..\clock.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_crabs.h">
+    <ClInclude Include="..\cout.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_error.h">
+    <ClInclude Include="..\crabs.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_event.h">
+    <ClInclude Include="..\error.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_floor.h">
+    <ClInclude Include="..\event.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_interrupts.h">
+    <ClInclude Include="..\floor.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_iterator.h">
+    <ClInclude Include="..\interrupts.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_language.h">
+    <ClInclude Include="..\iterator.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_mirror.h">
+    <ClInclude Include="..\language.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_op.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_operand.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_puff.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_rng.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_room.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_slot.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_string.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_test.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_typevalue.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_varint.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_vk.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\c_wall.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\global.h">
+    <ClInclude Include="..\mirror.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="..\module_seams.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\op.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\operand.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="..\pch.h">
@@ -181,176 +243,108 @@
     <ClInclude Include="..\public.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_array.h">
+    <ClInclude Include="..\puff.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_avalue.h">
+    <ClInclude Include="..\rng.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_benchmark.h">
+    <ClInclude Include="..\room.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_binary.h">
+    <ClInclude Include="..\slot.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_book.h">
+    <ClInclude Include="..\stringf.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_clock.h">
+    <ClInclude Include="..\test.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_dic.h">
+    <ClInclude Include="..\typevalue.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_dictionary.h">
+    <ClInclude Include="..\varint.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_door.h">
+    <ClInclude Include="..\vk.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_library.h">
+    <ClInclude Include="..\wall.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_list.h">
+    <ClInclude Include="..\array.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_loom.h">
+    <ClInclude Include="..\avalue.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_map.h">
+    <ClInclude Include="..\bin.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_matrix.h">
+    <ClInclude Include="..\binary.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_puff.h">
+    <ClInclude Include="..\book.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_set.h">
+    <ClInclude Include="..\clock.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_stack.h">
+    <ClInclude Include="..\dic.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_strand.h">
+    <ClInclude Include="..\dictionary.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_string.h">
+    <ClInclude Include="..\door.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_table.h">
+    <ClInclude Include="..\library.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_test.h">
+    <ClInclude Include="..\list.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_typevalue.h">
+    <ClInclude Include="..\loom.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_uniprinter.h">
+    <ClInclude Include="..\map.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\t_wall.h">
+    <ClInclude Include="..\matrix.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_address.h">
+    <ClInclude Include="..\puff.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\c_args.h">
+    <ClInclude Include="..\set.hpp">
       <Filter>Lib</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="17_seam.s2">
-      <Filter>Lib\Tests</Filter>
-    </None>
-    <None Include="..\module_assembly.inl">
+    <ClInclude Include="..\stack.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\module_debug.inl">
+    </ClInclude>
+    <ClInclude Include="..\strand.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\module_footer.inl">
+    </ClInclude>
+    <ClInclude Include="..\stringf.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\module_release.inl">
+    </ClInclude>
+    <ClInclude Include="..\table.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\pch_footer.inl">
+    </ClInclude>
+    <ClInclude Include="..\test.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\pch_header.inl">
+    </ClInclude>
+    <ClInclude Include="..\typevalue.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_array.inl">
+    </ClInclude>
+    <ClInclude Include="..\uniprinter.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_bin.inl">
+    </ClInclude>
+    <ClInclude Include="..\wall.hpp">
       <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_bout.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_bsq.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_cin.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_clock.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_cout.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_crabs.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_error.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_event.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_floor.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_interrupts.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_morsecode.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_op.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_operand.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_puff.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_rng.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_room.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_slot.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_string.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_test.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_typevalue.inl">
-      <Filter>Lib</Filter>
-    </None>
-    <None Include="..\script2_vk.inl">
-      <Filter>Lib</Filter>
-    </None>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cc">
