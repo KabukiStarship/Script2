@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/bout.h
+@file    /bout.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -29,7 +29,7 @@ typedef enum BOutStates {
 /* B-Output ring socket socket. */
 struct LIB_MEMBER BOut {
   SI4 size;            //< Size of the B-Output.
-  volatile SI4 begin;  //< Starting index of the ring-socket data.
+  volatile SI4 origin;  //< Starting index of the ring-socket data.
   SI4 stop,            //< Stopping index of the ring-socket data.
       read;            //< Address that the BOut device is reading from.
 };
@@ -48,7 +48,7 @@ LIB_MEMBER const CH1** BOutStateStrands();
 LIB_MEMBER BOut* BOutInit(UIW* socket, SI4 size);
 
 /* Calculates the space left in the given ring socket.
-    @param  bout The B-Output socket. */
+    @param bout The B-Output socket. */
 LIB_MEMBER SI4 BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
@@ -81,8 +81,8 @@ LIB_MEMBER void BInKeyStrokes();
 
 #if USING_SCRIPT2_TEXT == YES_0
 /* Prints the BIn to the Text.
-    @param  bout The bout to utf.
-    @param  text The Text to utf to the bout.
+    @param bout The bout to utf.
+    @param text The Text to utf to the bout.
     @return The slot. */
 LIB_MEMBER UTF1& PrintBOut(UTF1& printer, BOut* bout);
 #endif

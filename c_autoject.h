@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /script2/c_array.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@author  Cale McCollough <<https://calemccollough.github.io>>
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -37,7 +37,7 @@ enum AsciiFactoryFunction {
   kFactoryNew = 1,     //< Factory function checks if the size can double.
   kFactoryGrow = 2,    //< Factory function double OBJ size.
   kFactoryClone = 3,   //< Factory function clones the OBJ.
-  kFactoryName = 4,    //< Factory function gets the info string.
+  kFactoryName = 4,    //< Factory function gets the info AString.
   kFactoryFunctionCount = 5,  //< Factory function count.
 };
 

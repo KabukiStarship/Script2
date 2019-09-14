@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_book.h
+@file    /t_book.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -13,7 +13,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef INCLUDED_SCRIPTTBOOK
 #define INCLUDED_SCRIPTTBOOK
 
-#include "t_dic.h"
+#include "t_dictionary.h"
 
 #if SEAM == SCRIPT2_MAP
 #include "module_debug.inl"
@@ -22,54 +22,39 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 
 namespace _ {
+/* @ingroup Book
+Please see the ASCII Data Types Specificaiton for DRY documentation.
+@link ./spec/data/map_types/book.md
+*/
 
 /* A multimap created from contiguous memory.
 @ingroup Book
-A multimap is like a Python dictionary or C++ map, the difference being a
-TMultimap can contain nested TMultimap (). The key design difference
-between both Python dictionaries and C++ maps are Sets do not contains
-points, and instead works using offsets.
-
-A multimap may or may not have a hash table. In order to turn on the hash
-table, simply set the collissionsSize to non-zero in the TMultimap header.
-
-The memory layout is the same for all of the TMultimap types as depicted
-below:
-
 @code
-+==========================+ -----------
-|_______ Buffer            |   ^     ^
-|_______ ...               |   |     |
-|_______ Data N            |  Data   |
-|_______ ...               |   |     |
-|_______ Data 0            |   v     |
-|==========================| -----   |
-|        Key 1             |   ^     |
-|        ...               |   |     |
-|        Key N             |   |     |
-|vvvvvvvvvvvvvvvvvvvvvvvvvv|   |     |
-|        socket            |   |     |
-|==========================|   |     |
-|_______ count_max         |   |     |
-|_______ ...               |   |    Size
-|_______ Key Offset N      |   |     |
-|_______ ...               |   |     |
-|        Key Offset 1      |   |     |
-|==========================| Header  |
-|_______ count_max         |   |     |
-|_______ ...               |   |     |
-|_______ Data Offset N     |   |     |
-|_______ ...               |   |     |
-|        Data Offset 1     |   |     |
-|==========================|   |     |
-|_______ count_max         |   |     |
-|_______ ...               |   |     |
-|_______ Type UI1 N        |   |     |
-|_______ ...               |   |     |
-|        Type UI1 1        |   |     |   ^ Up in addresses
-|==========================|   |     |   |
-|      TMapKey Header      |   v     v   ^
-+==========================+ ----------- ^ 0xN
++--------------------------+
+|_______ Buffer            |
+|_______ Data N            |
+|_______ Data 0            |
+|--------------------------|
+|        Key 1             |
+|        ...               |
+|        Key N             |
+|vvvvvvvvvvvvvvvvvvvvvvvvvv|
+|        socket            |
+|--------------------------|
+|_______ Buffer            |
+|_______ Key Offset N      |
+|        Key Offset 1      |
+|--------------------------|
+|_______ Buffer            |
+|_______ Type N            |
+|        Type 1            |
+|--------------------------|
+|_______ Buffer            |
+|_______ Value Offset N    |
+|        Value Offset 1    |
+|--------------------------|  ^ Up in addresses
+|       TBook Header       |  |
++--------------------------+ 0xN
 @endcode
 
 # Memory Overhead
@@ -82,6 +67,11 @@ below:
 
 * Sizes shown in bytes.
 */
+template <typename SIZ = SIN, typename HSH = UIN,
+          typename SIY = SIG typename Char = CHR>
+struct TBook {
+  TLoom<SIZ>* keys;
+};
 
 }  // namespace _
 

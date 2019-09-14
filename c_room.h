@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/room.h
+@file    /room.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -27,11 +27,11 @@ typedef enum Requests {
   kInvalidRequest,
 } Request;
 
-/* Returns an array of pointers to strings that describe the program states.
+/* Returns an array of pointers to Strings that describe the program states.
  */
 LIB_MEMBER const CH1** RoomStateTexts();
 
-/* Returns a pointer to an array of pointers to the Request strings. */
+/* Returns a pointer to an array of pointers to the Request Strings. */
 LIB_MEMBER const CH1** RequestTexts();
 
 /* Gets the response CH1 corresponding to the given request. */
@@ -144,7 +144,7 @@ class Room : public Operand {
                    kMaxRoomSize. */
   Room(const CH1* room_name = "chinese_room", SI4 num_states = 2);
 
-  /* RamFactory. */
+  /* SocketFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */
@@ -242,7 +242,7 @@ class Room : public Operand {
   Operand *xoff_,                   //< DC3: XOFF - XOFF handling device.
       *device_,                     //< DC4: the current device control.
       *devices_;                    //< Pointer to the current device control.
-  UIW begin[kFloorSizeWords];       //< Room Floor socket.
+  UIW origin[kFloorSizeWords];       //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

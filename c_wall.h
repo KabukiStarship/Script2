@@ -1,11 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_wall.h
+@file    /c_wall.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -67,7 +67,7 @@ class Wall : public Operand {
     //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
     //< on 16 and 32-bit systems.
     size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
-    begin = socket;
+    origin = socket;
     doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
     TStackInit(socket, size_bytes >> sizeof(UIW));
   }
@@ -87,7 +87,7 @@ class Wall : public Operand {
     //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
     //< on 16 and 32-bit systems.
     size_bytes -= sizeof(UIW) * (aligned_buffer - socket);
-    begin = socket;
+    origin = socket;
     doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
     TStackInit(socket, size_bytes >> sizeof(UIW));
   }
@@ -119,7 +119,7 @@ class Wall : public Operand {
    private:
     BOL is_dynamic_;        //< Flag for if using dynamic memory.
     SIW size_bytes_;        //< Size of the Wall in bytes.
-    UIW* begin;             //< The Wall's socket.
+    UIW* origin;            //< The Wall's socket.
     TSTack<Door*>* doors_;  //< The doors in the room.
   };
 

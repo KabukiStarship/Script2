@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/library/script/c_mirror.h
+@file    /c_mirror.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the 
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -22,7 +22,7 @@ namespace _ {
 A Mirror */
 struct LIB_MEMBER Mirror {
   SI4 size,   //< The size of the socket.
-      begin,  //< The starting index of the ring socket data.
+      origin,  //< The starting index of the ring socket data.
       stop,   //< The stopping index of the ring socket data.
       read;   //< The read variable.
 };
@@ -37,16 +37,16 @@ enum {
 static const UIW kMaxMirrorSize = ~((UIW)0);
 
 /* Calculates the used ring socket space.
-@param  Start The begin of the data.
-@param  Stop  The stop of the data.
-@param  Size The size of the socket. */
-LIB_MEMBER SI4 MirrorLength(CH1* begin, CH1* stop, SI4 size);
+@param Start The origin of the data.
+@param Stop  The stop of the data.
+@param Size The size of the socket. */
+LIB_MEMBER SI4 MirrorLength(CH1* origin, CH1* stop, SI4 size);
 
 /* Calculates the space left in the given ring socket.
-@param  Start The begin of the data.
-@param  Stop  The stop of the data.
-@param  Size  The size of the socket. */
-LIB_MEMBER SI4 MirrorSpace(CH1* begin, CH1* stop, SI4 size);
+@param Start The origin of the data.
+@param Stop  The stop of the data.
+@param Size  The size of the socket. */
+LIB_MEMBER SI4 MirrorSpace(CH1* origin, CH1* stop, SI4 size);
 
 /* Checks if the given slot contains the specified address. */
 LIB_MEMBER void* MirrorContains(Mirror* mirror, void* address);
@@ -70,59 +70,59 @@ LIB_MEMBER const Op* MirrorRead(Mirror* mirror, const SI4* params, void** args);
 LIB_MEMBER BOL MirrorIsReadable(Mirror* mirror);
 
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header);
 
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            UI1 offset);
 
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 // LIB_MEMBER const Op* MirrorResult (Mirror* mirror, Error error,
 //                                   const SI4* header,
 //                                   SI4 offset);
 
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);
 
 /* Used to return an erroneous result from a B-Input.
-@param  bin     The source Mirror.
-@param  error   The error type.
-@param  header  The B-Sequence Header.
-@param  offset  The offset to the type in error in the B-Sequence.
-@param  address The address of the UI1 in error.
+@param bin     The source Mirror.
+@param error   The error type.
+@param header  The B-Sequence Header.
+@param offset  The offset to the type in error in the B-Sequence.
+@param address The address of the UI1 in error.
 @return         Returns a Static Error Operation Result. */
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error, const SI4* header,
                            SI4 offset, CH1* address);

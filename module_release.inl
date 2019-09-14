@@ -11,9 +11,16 @@
 #define D_COUT_OBJ(stack)
 #define D_COUT_FUNCTION
 #define D_COUT_FUNCTION_LINE
-#define D_SOCKET_SAVE(begin, stop)
-#define D_SOCKET_FILL(begin, end_or_size, c)
-#define D_ARRAY_WIPE(begin, end_or_size)
+#define D_COUT_ARRAY(item)
+#define D_COUT_STACK(item)
+#define D_COUT_MATRIX(item)
+#define D_COUT_TABLE(item)
+#define D_COUT_MAP(item)
+#define D_COUT_BOOK(item)
+#define D_COUT_DICTIONARY(item)
+#define D_ARRAY_SAVE(origin, stop)
+#define D_ARRAY_FILL(origin, end_or_size, c)
+#define D_ARRAY_WIPE(origin, end_or_size)
 #define D_ASSERT_INDEX(condition, index)
 #define A_ASSERT(condition) \
   if (!_::Test(condition)) _::TestFail(__LINE__, __FUNCTION__, __FILE__)

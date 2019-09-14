@@ -4,6 +4,7 @@
 
 #define D_THIS 1
 #define A_TEST_BEGIN \
+  _::COut cout;      \
   _::CPrint().Star() << Headingf("Testing ", __FUNCTION__, nullptr, nullptr, 80)
 #define D_COUT(item) _::CPrint().Star() << item
 #define D_COUT_NL _::CPrint().Star().NL()
@@ -17,10 +18,20 @@
 #define D_COUT_FUNCTION_LINE \
   _::COut().NL();            \
   _::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
-#define D_SOCKET_SAVE(cursor, end_a) SBuf socket_to_print(cursor, end_a)
-#define D_SOCKET_FILL(begin, end_or_size, c) \
+#define D_COUT_ARRAY(item) TArrayPrint<COut, SIZ>(COut().Star(), item)
+#define D_COUT_STACK(item) TStackPrint<COut, T, SIZ>(COut().Star(), item)
+#define D_COUT_MATRIX(item) TMatrixPrint<COut, T, SIZ>(COut().Star(), item)
+#define D_COUT_TABLE(item) \
+  TTablePrint<_::COut, SIZ, HSH, Char>(COut().Star(), item)
+#define D_COUT_MAP(item) TMapPrint<COut, D, SIZ>(COut().Star(), item)
+#define D_COUT_BOOK(item) TBookPrint<COut, SIZ, SIY, HSH>(COut().Star(), item)
+#define D_COUT_DICTIONARY(item) \
+  TArrayPrint<COut, SIZ, SIY, HSH>(COut().Star(), item)
+#define D_ARRAY_SAVE(origin, end_or_size) \
+  Socket socket_to_print(origin, end_or_size)
+#define D_ARRAY_FILL(origin, end_or_size, c) \
   _::ArrayFill(cursor, end_or_size, c)
-#define D_ARRAY_WIPE(begin, end_or_size) _::ArrayFill(begin, end_or_size)
+#define D_ARRAY_WIPE(origin, end_or_size) _::ArrayFill(origin, end_or_size)
 #define A_CHECK(condition) \
   if (!_::Test(condition)) _::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define A_COMPARE(a, b)                            \

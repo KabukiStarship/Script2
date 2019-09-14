@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_array.cc
+@file    /t_array.cc
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -62,7 +62,7 @@ constexpr SIZ cMatrixCountUpperLimit(SIZ dimension_count, SIZ element_count) {
 template <typename Printer, typename T = SIW, typename SIZ = SIN>
 Printer& TMatrixPrint(Printer& o, TMatrix<SIZ>* matrix) {
   A_ASSERT(matrix);
-  SIZ size = matrix->size, dimension_size = matrix->dimensions.size,
+  SIZ size = matrix->size, dimension_size = matrix->dimensions.count_max,
       dimension_count = matrix->dimensions.count;
 
   o << "\n\nArray: size:" << size << " dimensions:{" << dimension_count;
@@ -126,7 +126,7 @@ TMatrix<SIZ>* TMatrixInit(const SIZ* dimensions) {
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
-  stack->size = dimension_count;
+  stack->count_max = dimension_count;
   stack->count = 0;
   return stack;
 }
@@ -153,30 +153,30 @@ TMatrix<SIZ>* TMatrixNew(SIZ x) {
 
 /* Creates a dynamically allocated ARY. */
 template <typename T = SIW, typename SIZ = SIN>
-inline TMatrix<SIZ>* TMatrixNew(RamFactory ram_factory, SIZ x, SIZ y) {
+inline TMatrix<SIZ>* TMatrixNew(SocketFactory socket_factory, SIZ x, SIZ y) {
   if (x < 0 || y < 0) return nullptr;
   SIZ dimension_count = x * y,
       size_bytes = AlignUp(TMatrixSizeBytes<T, SIZ>(dimension_count));
-  return TMatrixInit<T, SIZ>(ram_factory(nullptr, size_bytes), x, y);
+  return TMatrixInit<T, SIZ>(socket_factory(nullptr, size_bytes), x, y);
 }
 
 /* Creates a dynamically allocated ARY. */
 template <typename T = SIW, typename SIZ = SIN>
-inline TMatrix<SIZ>* TMatrixNew(RamFactory ram_factory, SIZ x, SIZ y, SIZ z) {
+inline TMatrix<SIZ>* TMatrixNew(SocketFactory socket_factory, SIZ x, SIZ y, SIZ z) {
   if (x < 0 || y < 0) return nullptr;
   SIZ element_count = z * x * y,
       size_bytes = AlignUp(TDimensionsSize<T, SIZ>(2, element_count));
-  return TMatrixInit<T, SIZ>(ram_factory(nullptr, size_bytes), x, y);
+  return TMatrixInit<T, SIZ>(socket_factory(nullptr, size_bytes), x, y);
 }
 
 template <typename T = SIW, typename SIZ = SIN>
 inline TMatrix<SIZ>* TMatrixNew(const SIZ* dimensions) {
   D_ASSERT(dimensions);
-  const SIZ* begin = dimensions;
-  SIZ count = (*begin++) - 1,    //
-      element_count = *begin++,  //
+  const SIZ* origin = dimensions;
+  SIZ count = (*origin++) - 1,    //
+      element_count = *origin++,  //
       index = count;
-  while (index-- > 0) element_count *= *begin++;
+  while (index-- > 0) element_count *= *origin++;
   SIZ size = ((SIZ)element_count * (SIZ)sizeof(T));
 }
 
@@ -218,18 +218,18 @@ inline const SI8* TDim8() {
 }
 
 template <typename T = SIW, typename SIZ = SIN>
-inline SIZ TMatrixClone(TMatrix<SIZ>* matrix, RamFactory ram_factory) {
+inline SIZ TMatrixClone(TMatrix<SIZ>* matrix, SocketFactory socket_factory) {
   return 0;
 }
 
 template <typename T = SIW, typename SIZ = SIN>
 inline UIW* TMatrixClone(TMatrix<SIZ>* matrix, TMatrix<SIZ>* other,
-                         RamFactory ram_factory) {
+                         SocketFactory socket_factory) {
   return nullptr;
 }
 
 template <typename T = SIW, typename SIZ = SIN>
-UIW* TMatrixNew(RamFactory ram_factory) {}
+UIW* TMatrixNew(SocketFactory socket_factory) {}
 
 /* A multi-dimensional array Ascii Object. */
 template <typename T = SIW, typename SIZ = SIN, typename BUF = Nil>
@@ -273,15 +273,15 @@ class AMatrix {
   ~AMatrix() {}
 
   /* Clones the other object; up-sizing the socket only if required. */
-  inline SIZ Clone(RamFactory ram_factory = obj_.AJT().ram_factory) {
-    TMatrixClone<T, SIZ>(obj_.Obj(), ram_factory);
+  inline SIZ Clone(SocketFactory socket_factory = obj_.AJT().socket_factory) {
+    TMatrixClone<T, SIZ>(obj_.Obj(), socket_factory);
     return this;
   }
 
   /* Clones the other object; up-sizing the socket only if required. */
   inline SIZ Clone(AMatrix<T, SIZ>& other,
-                   RamFactory ram_factory = obj_.AJT().ram_factory) {
-    TMatrixClone<T, SIZ>(obj_.Obj(), other, ram_factory);
+                   SocketFactory socket_factory = obj_.AJT().socket_factory) {
+    TMatrixClone<T, SIZ>(obj_.Obj(), other, socket_factory);
     return this;
   }
 
@@ -300,9 +300,9 @@ class AMatrix {
   /* Returns the Autoject. */
   inline Autoject& AJT() { return obj_.AJT(); }
 
-  /* Returns the Autoject::begin cased as a TMap<SIZ>. */
+  /* Returns the Autoject::origin cased as a TMap<SIZ>. */
   inline TMatrix<SIZ>* This() {
-    return reinterpret_cast<TMatrix<SIZ>*>(AJT().begin);
+    return reinterpret_cast<TMatrix<SIZ>*>(AJT().origin);
   }
 
   /* Returns the Auto-Array. */

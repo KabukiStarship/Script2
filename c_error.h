@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/error.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@file    /c_error.h
+@author  Cale McCollough <<https://calemccollough.github.io>>
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the 
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -50,7 +50,7 @@ typedef enum ScriptError {
 /* Returns an array or  pointers for the KabukiError(s). */
 LIB_MEMBER const CH1** ErrorStrands();
 
-/* Returns one of the Errors () strings. */
+/* Returns one of the Errors () Strings. */
 LIB_MEMBER const CH1* ErrorStrand(Error error);
 
 }  // namespace _

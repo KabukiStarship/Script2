@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/slot.h
+@file    /slot.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -23,18 +23,18 @@ namespace _ {
 /* A Slot in a Door in a Chinese Room to pass messages through.
 A Slot is Ring Buffer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
-pointers for the (socket) begin and (data) begin of the ring socket and
+pointers for the (socket) origin and (data) origin of the ring socket and
 you may write packed data.
 
 */
 struct Slot {
   CH1 *stop,   //< Stop of the data in the ring socket.
       *stop,   //< End of the ring socket.
-      *begin,  //< Beginning of the ring socket.
-      *begin;  //< Start of the data in the ring socket.
+      *origin,  //< Beginning of the ring socket.
+      *origin;  //< Start of the data in the ring socket.
 
-  /* Initializes the ring socket with the given socket begin and size.
-  @param begin Pointer to the beginning of the ring socket.
+  /* Initializes the ring socket with the given socket origin and size.
+  @param origin Pointer to the beginning of the ring socket.
   @param size  The size of the ring socket in bytes. */
   Slot(UIW* socket, UIW size);
 
@@ -44,13 +44,13 @@ struct Slot {
   /* Initializes the slot from the BIn. */
   Slot(BOut* bout);
 
-  /* Sets the ring socket to the given socket begin and size.
-      @param begin Pointer to the beginning of the ring socket.
+  /* Sets the ring socket to the given socket origin and size.
+      @param origin Pointer to the beginning of the ring socket.
       @param size  The size of the ring socket in bytes. */
   inline BOL Set(UIW* socket, UIW size) {
     if (!socket) return true;
     CH1* l_begin = reinterpret_cast<CH1*>(socket);
-    begin = begin = stop = l_begin;
+    origin = origin = stop = l_begin;
     stop = l_begin + size;
     return false;
   }
@@ -61,7 +61,7 @@ struct Slot {
   void* Contains(void* address);
 
   /* Clears the socket without zeroing it out. */
-  inline void Clear() { begin = stop = begin; }
+  inline void Clear() { origin = stop = origin; }
 
   /* Zeros out the Slot. */
   void Wipe();
@@ -75,30 +75,30 @@ struct Slot {
   BOL IsReadable();
 
   /* Reads the given Operation input parameters from the slot to the args.
-  @param  slot The slot to read from.
-  @param  op   The Operation to get the in from.
-  @param  args The args array of pointers to write to.
+  @param slot The slot to read from.
+  @param op   The Operation to get the in from.
+  @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Read(const SI4* params, void** args);
 
   /* Reads the given Operation input parameters from the slot to the args.
-  @param  slot The slot to read from.
-  @param  op   The Operation to get the in from.
-  @param  args The args array of pointers to write to.
+  @param slot The slot to read from.
+  @param op   The Operation to get the in from.
+  @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Read(const Op& op, void** args);
 
   /* Writes the given Operation output parameters from the slot to the args.
-  @param  slot The slot to read from.
-  @param  op   The Operation to get the in from.
-  @param  args The args array of pointers to write to.
+  @param slot The slot to read from.
+  @param op   The Operation to get the in from.
+  @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const SI4* params, void** args);
 
   /* Writes the given Operation output parameters from the slot to the args.
-  @param  slot The slot to read from.
-  @param  op   The Operation to get the in from.
-  @param  args The args array of pointers to write to.
+  @param slot The slot to read from.
+  @param op   The Operation to get the in from.
+  @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const Op& op, void** args);
 

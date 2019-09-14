@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/list.h
+@file    /list.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -17,6 +17,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "t_binary.h"
 #include "t_set.h"
 #include "t_stack.h"
+#include "t_typevalue.h"
 
 #if SEAM == SCRIPT2_LIST
 #include "module_debug.inl"
@@ -26,475 +27,645 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* ASCII List header.
-Like most ASCII AArray Types, the size may only be 16-bit, 32-bit, or
-64-bit. The unsigned value must be twice the width of the signed value.
-
+/* A collection of type-value tuples.
+@see ASCII Data Type Specification.
+@link file://./spec/data/map_types/map.md
 @code
-+--------------------------+ -----------
-|_______ Buffer            |   ^     ^
-|_______ ...               |   |     |
-|_______ Data N            |  Data   |
-|_______ ...               |   |     |
-|_______ Data 0            |   v     |
-+--------------------------+ -----   |
-|_______ count_max         |   ^     |
-|_______ ...               |   |     |
-|_______ Data Offset N     |   |     |
-|_______ ...               |   |    SIZ
-|        Data Offset 1     |   |     |
-+--------------------------+ Header  |
-|_______ count_max         |   |     |
-|_______ ...               |   |     |
-|_______ Type N            |   |     |
-|_______ ...               |   |     |
-|        Type 1            |   |     |   ^ Up in addresses
-+--------------------------+   |     |   |
-|       TList Header       |   v     v   ^
-+--------------------------+ ----------- ^ 0xN
+      List Memory Layout
++----------------------------+
+|_______   Buffer            |
+|_______ ^ Value N           |
+|        | Value 0           |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Type of Value N   |
+|        | Type of Value 1   |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Offset to Value N |
+|        | Offset to Value 1 |
+|----------------------------|  ^ Up in addresses.
+|        TList Struct        |  |
++----------------------------+ 0xN
 @endcode
 */
-template <typename SIZ = SIN, typename Index = SI2>
+template <typename SIZ = SIN>
 struct TList {
-  SIZ size;
-  Index count_max, count;
+  SIZ size_bytes,  //< Size of the List in bytes.
+      top;         //< Offset to the top of the data.
+  TStack<SIZ> offsets;
 };
 
+/* Gets the base pointer to the Offsets. */
+template <typename SIZ = SIN>
+SIZ* TListOffsets(TList<SIZ>* list) {
+  return TStackStart<SIZ, SIZ>(&list->offsets);
+}
+
+/* Calculates the data_types pointer from the data_offsets and the count. */
+template <typename SIZ = SIN, typename DT = DT2>
+inline DT* TListTypes(SIZ* data_offsets, SIZ list_size) {
+  return reinterpret_cast<DT*>(data_offsets + list_size);
+}
+
+/* Returns the type bytes array. */
+template <typename SIZ = SIN, typename DT = DT2>
+DT* TListTypes(TList<SIZ>* list) {
+  return TListTypes<SIZ, DT>(TListOffsets<SIZ>(list), list->offsets.count_max);
+}
+
+/* Prints the given AsciiList to the console. */
+template <typename Printer, typename SIZ = SIN, typename DT = DT2>
+Printer& TListPrint(Printer& o, TList<SIZ>* list) {
+  D_ASSERT(list);
+
+  SIZ count = list->offsets.count, count_max = list->offsets.count_max;
+  o << Linef("\n\n+---\n| List<SI") << CH1('0' + sizeof(SIZ))
+    << "> size:" << list->size_bytes << " size:" << count_max
+    << " count:" << count << Linef("\n+---");
+  SIZ* data_offsets = TListOffsets<SIZ>(list);
+  DT* data_types = TListTypes<SIZ, DT>(data_offsets, count_max);
+  for (SIZ index = 0; index < count; ++index) {
+    SIZ data_offset = *data_offsets++;
+    DT data_type = *data_types++;
+    o << "\n| " << Centerf(index, SIW(STRLength(count)) + 2)
+      << Centerf(TypeSTR(data_type), 10);
+  }
+  return o << Linef("\n+---");
+}
+
 /* Returns the minimum count to align the data struct to a 64-bit boundary. */
-template <typename SIZ = SIN, typename Index = SI2>
-Index ListCountMaxBoundsLower() {
-  return 8 / sizeof(Index);
+template <typename SIZ = SIN>
+SIZ TListCountMaxBoundsLower() {
+  return 8 / sizeof(SIZ);
+}
+
+/* Initializes a AsciiList from preallocated memory.
+count_max must be in multiples of 4. Given there is a fixed size, both the
+count_max and size will be downsized to a multiple of 4 automatically. */
+template <typename SIZ = SIN, typename DT = DT2>
+TList<SIZ>* TListInit(TList<SIZ>* list, SIZ size_bytes, SIZ count_max) {
+  D_ASSERT(list);
+  D_ARRAY_WIPE(list, size_bytes);
+  list->size_bytes = size_bytes;
+  list->offsets.count = 0;
+  list->offsets.count_max = count_max;
+  list->top = TDelta<SIZ>(list, TListTypes<SIZ, DT>(list) + count_max);
+  return list;
 }
 
 /* Returns the min size of an ASCII List with the given count_max.
 The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
-template <typename SIZ = SIN, typename Index = SI2,
-          SIW largest_expected_type = sizeof(SIW)>
-constexpr SIZ ListSizeMin(Index count_max) {
-  return (SIZ)sizeof(TList<SIZ, Index>) +
-         (SIZ)(count_max * (largest_expected_type + sizeof(SIZ) + 1));
-  ///<< 2 to * 4.
+template <typename SIZ = SIN, SIW largest_expected_type = sizeof(SIW)>
+constexpr SIZ CListSizeMin(SIZ count_max) {
+  return sizeof(TList<SIZ>) +
+         SIZ(count_max * (largest_expected_type + sizeof(SIZ) + 1));
 }
 
-/* Deletes the list contents by overwriting it with zeros. */
-template <typename SIZ = SIN, typename Index = SI2>
-void ListWipe(TList<SIZ, Index>* list) {
-  D_ASSERT(list)
-  list->count = 0;
-  SIZ size = list->size - sizeof(TList<SIZ, Index>);
-  ArrayFill(reinterpret_cast<CH1*>(list) + sizeof(TList<SIZ, Index>), size);
+/* Gets origin byte of the of the data. */
+template <typename SIZ = SIN, typename DT = DT2>
+inline CH1* TListValues(TList<SIZ>* list, SIZ size) {
+  return reinterpret_cast<CH1*>(TListTypes<SIZ, DT>(list, size) +
+                                list->offsets.count_max);
+}
+template <typename SIZ = SIN>
+inline CH1* TListValues(TList<SIZ>* list) {
+  return TListValues<SIZ>(list, list->offsets->size);
 }
 
-/* Initializes a AsciiList from preallocated memory.
-count_max must be in multiples of 4. Given there is a fixed size, both the
-count_max and size will be downsized to a multiple of 4 automatically. */
-template <typename SIZ = SIN, typename Index = SI2>
-TList<SIZ, Index>* ListInit(UIW* socket, SIZ size, Index count_max) {
-  if (!socket)  // This may be nullptr if ListNew<SIZ,Index> (Index, SIZ)
-                // failed.
-    return nullptr;
-  D_COUT("\n  Initializing List with size_bytes:" << size << " and count_max:"
-                                                  << count_max);
-  Index count_max_bounds_lower = ListCountMaxBoundsLower<SIZ, Index>();
-  if (count_max < count_max_bounds_lower) {
-    D_COUT("\n count_max == 0 and is now " << count_max_bounds_lower)
-    count_max = count_max_bounds_lower;
-  } else {
-    D_COUT("\ncount_max was %i ", (SI4)count_max)
-    count_max = AlignUp<Index>(count_max);
-    D_COUT("\n and now is %i.", (SI4)count_max)
-  }
-
-  // count_max = AlignUp<Index> (count_max);
-  // D_COUT ("\n  Aligning up to count_max:" << count_max);
-
-  TList<SIZ, Index>* list = reinterpret_cast<TList<SIZ, Index>*>(socket);
-  list->size = size;
-  list->count = 0;
-  list->count_max = count_max;
-  // WIPE
-  ListWipe<SIZ, Index>(list);
-  return list;
+/* Returns the end byte of the data. */
+template <typename SIZ = SIN>
+inline CH1* TListDataEnd(TList<SIZ>* list, SIZ size) {
+  return reinterpret_cast<CH1*>(list) + list->size_bytes;
+}
+template <typename SIZ = SIN>
+inline CH1* TListDataEnd(TList<SIZ>* list) {
+  return TListDataEnd<SIZ>(list, list->offsets->size);
 }
 
-/* Creates a list from dynamic memory. */
-template <typename SIZ = SIN, typename Index = SI2>
-UIW* ListNew(Index count_max, SIZ size) {
-  count_max = TAlignUpUnsigned<UI8, SIZ>(count_max);
-  if (size < ListSizeMin<SIZ, Index>(count_max)) return nullptr;
-  UIW* socket = new UIW[size >> kWordBitCount];
-
-  TList<SIZ, Index>* list = reinterpret_cast<TList<SIZ, Index>*>(socket);
-  list->size = size;
-  list->count = 0;
-  list->count_max = count_max;
-  // WIPE
-  ListWipe<SIZ, Index>(list);
-  return socket;
+/* Gets the first addrss in the Values section where you may be able to write
+too. */
+template <typename SIZ = SIN>
+inline CH1* TListValuesTop(TList<SIZ>* list) {
+  return TPtr<CH1>(list, list->top);
 }
 
-/* Creates a list from dynamic memory. */
-template <typename SIZ = SIN, typename Index = SI2,
-          SIW largest_expected_type = sizeof(SIW)>
-inline UIW* ListNew(Index count_max) {
-  count_max = AlignUp<Index>(count_max);
-  SIZ size = ListSizeMin<SIZ, Index, largest_expected_type>(count_max);
-  UIW* socket = new UIW[size >> kWordBitCount];
-
-  TList<SIZ, Index>* list = reinterpret_cast<TList<SIZ, Index>*>(socket);
-  list->size = size;
-  list->count = 0;
-  list->count_max = count_max;
-  // WIPE
-  ListWipe<SIZ, Index>(list);
-  return socket;
-}
-
-/* Returns the type bytes array. */
-template <typename SIZ = SIN, typename Index = SI2>
-SI4* ListTypes(TList<SIZ, Index>* list) {
-  D_ASSERT(list);
-  return reinterpret_cast<SI4*>(list) + sizeof(CList<SIZ, Index>);
-}
-
-/* Gets a pointer to the begging of the data socket. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline CH1* ListDataBegin(TList<SIZ, Index>* list) {
-  D_ASSERT(list);
-  return reinterpret_cast<CH1*>(list) + list->count_max * (sizeof(Index) + 1);
-}
-
-/* Gets the base element 0 of the list's offset array. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline SIZ* ListOffsets(TList<SIZ, Index>* list) {
-  UIW ptr =
-      reinterpret_cast<UIW>(list) + sizeof(TList<SIZ, Index>) + list->count_max;
-  return reinterpret_cast<SIZ*>(ptr);
-}
-
-/* Returns the last UI1 in the data array. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline CH1* ListDataEnd(TList<SIZ, Index>* list) {
-  D_ASSERT(list);
-  return reinterpret_cast<CH1*>(list) + list->size - 1;
-}
-
-/* Returns the last UI1 in the data array. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline CH1* ListDataEnd(TList<SIZ, Index>* list, Index index) {
-  D_ASSERT(list);
-  if (index < 0 || index >= index->count) return nullptr;
-  return reinterpret_cast<CH1*>(list) + list->size - 1;
-}
-
-/* Returns a pointer to the begging of the data socket. */
-template <typename SIZ = SIN, typename Index = SI2>
-Socket ListDataVector(TList<SIZ, Index>* list) {
-  return Socket(ListDataBegin<SIZ, Index>(list), ListDataEnd<SIZ, Index>(list));
-}
-
-/* Returns the last UI1 in the data array. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline CH1* ListDataStop(TList<SIZ, Index>* list, Index index = -1) {
-  D_ASSERT(list);
-  Index count = list->count;
-  if (count == 0) {
-    if (index != -1) return nullptr;
-    return ListDataBegin<SIZ, Index>(list);
-  }
-  SI4 type = ListTypes<SIZ, Index>(list)[index];
-  SIZ offset = ListOffsets<SIZ, Index>(list)[index];
-  D_COUT("!offset:" << offset)
-  CH1* pointer = reinterpret_cast<CH1*>(list) + offset;
-  return ObjEnd<SIZ>(pointer, type);
-}
-
-template <typename SIZ = SIN, typename Index = SI2>
-void ListDataSpaceBelow(TList<SIZ, Index>* list, Index index,
-                        Socket& free_space) {
-  D_ASSERT(list);
-  CH1* data_stop;
-  if (index == 0) {
-    data_stop = ListDataBegin<SIZ, Index>(list);
-    free_space.begin = free_space.stop = data_stop;
-    return;
-  }
-  D_ASSERT(index >= 0 && index <= list->count)
-  if (index == list->count) {
-    free_space.begin = ListDataStop<SIZ, Index>(list);
-    free_space.stop = ListDataEnd<SIZ, Index>(list);
-    return;
-  }
-  data_stop = ListDataStop<SIZ, Index>(list, index);
-  SIZ* offsets = ListOffsets<SIZ, Index>(list);
-  SIZ offset_low = offsets[index], offset_high = offsets[index + 1];
-}
-
-/* Insets the given type-value tuple.
-    @return -1 upon failure or the index upon success. */
-template <typename SIZ = SIN, typename Index = SI2>
-Index ListInsert(TList<SIZ, Index>* list, SI4 type, const void* value,
-                 Index index) {
-  D_ASSERT(list)
-  D_ASSERT(value);
-  D_COUT("\nInserting type:");
-  D_COUT_TYPE(type, value);
-  D_COUT(" into index:%i", index);
-
-  Index count = list->count, count_max = list->count_max;
-  if (count >= count_max || index > count || !TypeIsSupported(type) ||
-      index < 0) {
-    D_COUT("\nError inserting type:" << STRType(type) << " into index "
-                                     << index);
-    return -1;
-  }
-  D_COUT(" when count is " << count)
-
-  SI4* types = ListTypes<SIZ, Index>(list);
-
-  // 1. Check for stack push operation.
-  if (index == count) {
-    D_COUT("\nPushing element...")
-    // Push type onto the top of the type stack.
-    types[index] = type;
-    //  Push the offset onto the top of the offset stack.
-    CH1* data_stop = ListDataStop<SIZ, Index>(list, count - 1);
-    D_COUT("\n  Aligning data_stop from " << TDelta<>(list, data_stop)
-                                          << " to ");
-    data_stop = TypeAlignUpPointer<CH1>(data_stop, type);
-    D_COUT(TDelta<>(list, data_stop))
-    SIZ stop_offset = (SIZ)(data_stop - reinterpret_cast<CH1*>(list));
-    ListOffsets<SIZ, Index>(list)[index] = stop_offset;
-    // Write the value to the top of the value stack.
-    D_COUT(" leaving " << (ListDataEnd<SIZ, Index>(list) - data_stop)
-                       << " bytes.");
-    if (!Write(data_stop, ListDataEnd<SIZ, Index>(list), type, value))
-      return -2;
-    list->count = count + 1;
-    return index;
-  }
-
-  // 2. Shift up the types.
-  TStackInsert<SI4, Index>(types, count, type, index);
-
-  // 3. Calculate the offset to insert at.
-  CH1* aligned_begin = ListDataStop<SIZ, Index>(list, index);
-  D_COUT("\nListDataStop<SIZ, Index> (list) starts as "
-         << Hexf(aligned_begin) << " then is aligned to ");
-  aligned_begin = TypeAlignUpPointer<CH1>(aligned_begin, type);
-  D_COUT(Hexf(aligned_begin));
-
-  // 4. Insert the offset.
-  D_COUT("\nInserting into ");
-  TStackInsert<SIZ, Index>(ListOffsets<SIZ, Index>(list), count, type, index);
-
-  SIZ space_needed = ObjSize<SIZ>(value, type);
-
-  // 5. Check if there is enough room to insert the value without shifting up
-  // any data.
-  Socket free_space;
-  ListDataSpaceBelow<SIZ, Index>(list, index, free_space);
-  if (Write(free_space.begin, free_space.stop, type, value)) return index;
-
-  // 6. Shift up the data enough to fit the new value.
-
-  // 5. Write the value to the data socket.
-  if (!Write(aligned_begin, ListDataEnd<SIZ, Index>(list), type, value))
-    return -1;
-  list->count = ++count;
-  return count;
-}
-
-/* Adds a type-value to the stop of the list. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline Index ListPush(TList<SIZ, Index>* list, SI4 type, const void* value) {
-  return ListInsert<SIZ, Index>(list, type, value, list->count);
-}
-
-/* Removes a type-value to the stop of the list. */
-template <typename SIZ = SIN, typename Index = SI2>
-inline Index ListPop(TList<SIZ, Index>* list) {
-  return ListRemove<SIZ, Index>(list, list->count - 1);
+template <typename SIZ = SIN>
+inline CH1* TListValuesEnd(TList<SIZ>* list) {
+  return TPtr<CH1>(list, list->size_bytes);
 }
 
 /* Returns the max count an array can handle. */
-template <typename SIZ = SIN, typename Index = SI2>
-Index ListCountMax() {
+template <typename SIZ = SIN>
+SIZ TListSize() {
   enum {
-    kMaxIndexes = sizeof(Index) == 1
-                      ? 120
-                      : sizeof(Index) == 2
-                            ? 8 * 1024
-                            : sizeof(Index) == 4 ? 512 * 1024 * 1024 : 0,
+    kMaxSIYes = sizeof(SIZ) == 1
+                    ? 120
+                    : sizeof(SIZ) == 2
+                          ? 8 * 1024
+                          : sizeof(SIZ) == 4 ? 512 * 1024 * 1024 : 0,
   };
-  return kMaxIndexes;
+  return kMaxSIYes;
 }
 
 /* Deletes the list contents without wiping the contents. */
-template <typename SIZ = SIN, typename Index = SI2>
-void ListClear(TList<SIZ, Index>* list) {
-  D_ASSERT(list)
+template <typename SIZ = SIN>
+void TListClear(TList<SIZ>* list) {
+  D_ASSERT(list);
   list->count = 0;
 }
 
-/* Checks if this crabs contains only the given address.
-@return  True if the data lies in the list's memory socket.
+template <typename T, typename SIZ = SIN, typename DT = DT2>
+CH1* TListContains(TList<SIZ>* list, SIZ sizeof_value,
+                   SIZ align_mask = sizeof(T) - 1) {
+  SIZ size = list->offsets.count_max, count = list->offsets.count;
+  if (count >= size) return nullptr;
+  SIZ *offsets = TListOffsets<SIZ>(list, size),  //
+      *offsets_end = offsets + size;
+  DT* types = reinterpret_cast<DT*>(offsets_end);
+  if (offsets == offsets_end) return nullptr;
+  CH1* previous_begin = 0;
 
-@warning This function assumes that the member you're checking for came
-from Script. If it's you're own code calling this, you are
-required to ensure the value came from a ASCII List. */
-template <typename SIZ = SIN, typename Index = SI2>
-BOL ListContains(TList<SIZ, Index>* list, void* address) {
-  D_ASSERT(list)
-  if (reinterpret_cast<CH1*>(address) < reinterpret_cast<CH1*>(list))
-    return false;
-  if (reinterpret_cast<CH1*>(address) > ListEndByte()) return false;
+  CH1* origin = TPtr<CH1>(list, *offsets++);
+  DT type = *types++;
+  origin =
+      AlignUpPTR(origin, TypeAlignmentMask(type)) + TSizeOf<SIZ>(origin, type);
+  CH1* end = origin;
+  SIZ index = 0;
+  while (++offsets < offsets_end) {
+    end = AlignUpPTR(end, align_mask);
+    CH1* origin = TPtr<CH1>(list, *offsets++);
+    if (TDelta<>(end, origin)) return index;
+    ++index;
+    DT type = *types++;
+    origin = AlignUpPTR(origin, TypeAlignmentMask(type));
+    CH1* end = origin + TSizeOf<SIZ>(origin, type);
+    previous_begin = origin;
+  }
+}
+
+/* Searches the list->offsets for the address.
+@return An invalid index if the list doesn't dontain the address or the index
+of the object if the list contains the address. */
+template <typename SIZ = SIN>
+SIZ TListContains(TList<SIZ>* list, void* address) {
+  D_ASSERT(list);
+  if (TListValues<SIZ>(list)) return false;
   return true;
 }
-
-/* Removes the item at the given address from the list. */
-template <typename SIZ = SIN, typename Index = SI2>
-Index ListRemove(TList<SIZ, Index>* list, Index index) {
-  Index count = list->count;
-  TStackRemove<SIZ, Index>(ListOffsets<SIZ, Index>(list), count, index);
-  return TStackRemove<SI4, Index>(ListTypes<SIZ, Index>(list), count, index);
+template <typename T, typename SIZ = SIN>
+inline SIZ TListInsert(TList<SIZ>* list, T item) {
+  CH1* values_begin = TListContains<SIZ>(list, sizeof(T));
 }
 
-/* Finds a tuple that contains the given pointer. */
-template <typename SIZ = SIN, typename Index = SI2>
-Index ListFind(TList<SIZ, Index>* list, void* adress) {
-  D_ASSERT(list)
-  SIZ *offsets = ListOffsets<SIZ, Index>(list),
-      *offset_end = offsets + list->count;
+/* Finds a tuple  the given pointer. */
+template <typename SIZ = SIN>
+SIZ TListFind(TList<SIZ>* list, void* address) {
+  D_ASSERT(list);
+  CH1* adr = reinterpret_cast<CH1*>(address);
+  SIZ size = list->offsets->size;
+  SIZ* data_offsets = TListOffsets<SIZ>(list, size);
+
+  SIZ *offsets = TListOffsets<SIZ>(list), *offset_end = offsets + list->count;
+  SIZ offset = TDelta<SIZ>(list, address), index = 0;
   while (offsets < offset_end) {
-    CH1 *begin = reinterpret_cast<CH1*>(list) + *offsets++,
-        *stop = ListDataStop<SIZ, Index>(list, index);
-    if (reinterpret_cast<CH1*>(address) >= begin &&
-        reinterpret_cast<CH1*>(address) <= stop)
-      return true;
+    if (*data_offsets++ == offset) return index;
+    ++index;
   }
-  return -1;
+  return CInvalidIndex<SIZ>();
+}
+
+/* Adds a given POD type-value tuple at the given index and
+values_begin.
+@return CInvalidIndex<SIZ>() upon failure or the index upon success. */
+template <typename T, typename SIZ = SIN, typename DT = DT2>
+SIZ TListAdd(TList<SIZ>* list, T item, DT type, SIZ alignment_mask, SIZ index,
+             CH1* values_begin, CH1* values_end) {
+  D_ASSERT(list);
+  SIZ count = list->offsets.count, size = list->offsets.count_max;
+  D_ASSERT(count >= 0 && values_begin < values_end);
+  D_COUT("\nInserting " << TypeSTR(type) << ':' << item
+                        << " into index:" << index << " count: " << count);
+  if (index < 0 || index > count || count >= size || !TypeIsSupported(type))
+    return CInvalidIndex<SIZ>();
+
+  values_begin = TAlignUpPTR<CH1>(values_begin, alignment_mask);
+  if ((values_begin + sizeof(T)) > values_end) return CInvalidIndex<SIZ>();
+  *reinterpret_cast<T*>(values_begin) = item;
+
+  SIZ* offsets = TListOffsets<SIZ>(list);
+  DT* types = TListTypes<SIZ, DT>(list);
+
+  TStackInsert<SIZ, SIZ>(TStackStart<SIZ, SIZ>(&list->offsets), count, index,
+                         TDelta<SIZ>(list, values_begin));
+  TStackInsert<DT, SIZ>(types, count, index, type);
+  list->offsets.count = count + 1;
+  return count;
+}
+
+/* Pushes the item onto the List stack. */
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, UI1 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI1, SIZ, DT>(list, item, kUI1, sizeof(UI1) - 1, index,
+                                values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, CH1 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI1, SIZ, DT>(list, ToUnsigned(item), kCH1, sizeof(UI1) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, SI1 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI1, SIZ, DT>(list, ToUnsigned(item), kSI1, sizeof(UI1) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, UI2 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI2, SIZ, DT>(list, item, kUI2, sizeof(UI2) - 1, index,
+                                values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, SI2 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI2, SIZ, DT>(list, ToUnsigned(item), kSI2, sizeof(UI2) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, CH2 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI2, SIZ>(list, ToUnsigned(item), kCH2, sizeof(UI2) - 1,
+                            index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, BOL item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI2, SIZ, DT>(list, ToUnsigned(item), kBOL, sizeof(BOL) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, UI4 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI4, SIZ, DT>(list, item, kUI4, sizeof(UI4) - 1, index,
+                                values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, SI4 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kSI4, sizeof(UI4) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, CH4 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kCH4, sizeof(UI4) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, FP4 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kFP4, sizeof(UI4) - 1,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, UI8 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI8, SIZ, DT>(list, item, kUI8, kWordLSbMask, index,
+                                values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, SI8 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI8, SIZ, DT>(list, ToUnsigned(item), kSI8, kWordLSbMask,
+                                index, values_begin, values_end);
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListAdd(TList<SIZ>* list, FP8 item, SIZ index, CH1* values_begin,
+                    CH1* values_end) {
+  return TListAdd<UI8, SIZ, DT>(list, ToUnsigned(item), kFP8, kWordLSbMask,
+                                index, values_begin, values_end);
+}
+
+/* Pushes the item onto the List stack. */
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, UI1 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, CH1 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, SI1 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, UI2 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, SI2 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, CH2 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, UI4 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, SI4 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, BOL item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, CH4 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, FP4 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, UI8 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, SI8 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+template <typename SIZ = SIN, typename DT = DT2>
+inline SIZ TListPush(TList<SIZ>* list, FP8 item) {
+  return TListAdd<SIZ, DT>(list, item, list->offsets.count_max,
+                           TListValuesTop<SIZ>(list),
+                           TListValuesEnd<SIZ>(list));
+}
+
+template <typename SIZ = SIN>
+inline SIZ TSizeOf(void* value, DT2 type) {
+  SIW size_bytes = TypeSizeOf(type);
+  if (size_bytes != 0) return size_bytes;
 }
 
 /* Removes the item at the given address from the list. */
-template <typename SIZ = SIN, typename Index = SI2>
-BOL ListRemove(TList<SIZ, Index>* list, void* adress) {
-  return ListRemove<SIZ, Index>(list, ListFind(list, address));
+template <typename SIZ = SIN, typename DT = DT2>
+void* TListRemove(TList<SIZ>* list, SIZ index) {
+  SIZ count = list->offsets.count;
+  SIZ* offsets = TListOffsets<SIZ>(list);
+  TStackRemove<SIZ, SIZ>(offsets, count, index);
+  TStackRemove<DT, SIZ>(TListTypes<SIZ, DT>(list), count, index);
+  return offsets + index;
+}
+
+/* Removes the item at the given address from the list. */
+template <typename SIZ = SIN>
+void* TListRemove(TList<SIZ>* list, void* address) {
+  D_ASSERT(list);
+  return TListRemove<SIZ>(list, TListFind(list, address));
+}
+
+/* Removes a type-value to the stop of the list. */
+template <typename SIZ = SIN>
+inline void* TListPop(TList<SIZ>* list) {
+  return TListRemove<SIZ>(list, list->offsets.count - 1);
 }
 
 /* Returns the value at the given index.
-    @return Returns nil if the index is out of the count range. */
-template <typename SIZ = SIN, typename Index = SI2>
-const void* ListValue(TList<SIZ, Index>* list, Index index) {
-  D_ASSERT(list)
+@return Returns nil if the index is out of the count range. */
+template <typename SIZ = SIN>
+const void* TListValue(TList<SIZ>* list, SIZ index) {
+  D_ASSERT(list);
   if (index < 0 || index >= list->count) return nullptr;
-  return reinterpret_cast<CH1*>(list) + ListOffsets<SIZ, Index>(list)[index];
+  return reinterpret_cast<CH1*>(list) + TListOffsets<SIZ>(list)[index];
 }
 
-/* Prints the given AsciiList to the console. */
-template <typename Printer, typename SIZ = SIN, typename Index = SI2>
-Printer& PrintList(Printer& o, TList<SIZ, Index>* list) {
-  D_ASSERT(list)
-
-  Index count = list->count;
-  o << "\n\nList: size:" << list->size << " count:" << count
-    << " count_max:" << list->count_max;
-  for (Index index = 0; index < count; ++index) {
-    o << '\n'
-      << index << ".) "
-      << AValue(ListTypes<SIZ, Index>(list)[index],
-                ListValue<SIZ, Index>(list, index));
-  }
-  return o;
+/* Creates an Autoject buffer large enough to fit a List with the given. */
+template <typename SIZ = SIN, typename SIY = SIG, typename DT>
+UIW* TListNew(SIZ size_data, SIZ count_max, SocketFactory socket_factory) {
+  SIZ count_max_align_lsb_mask = (sizeof(SIZ) / sizeof(DT)) - 1;
+  count_max = AlignUp(count_max, count_max_align_lsb_mask);
+  SIZ size_bytes = sizeof(TList<SIZ>) + count_max * (sizeof(SIZ) + sizeof(DT)) +
+                   AlignUp(size_data);
+  UIW* buffer = socket_factory(nullptr, SIW(size_bytes));
+  TList<SIZ>* list = reinterpret_cast<TList<SIZ>*>(buffer);
+  return reinterpret_cast<UIW*>(TListInit<SIZ>(list, size_bytes, count_max));
 }
 
 /* ASCII List that uses dynamic memory. */
-template <typename SIZ = SIN, typename Index = SI2>
+template <typename SIZ = SIN, SIZ kSizeBytes_ = 512, SIZ kCountMax_ = 32,
+          typename BUF = TUIB<kSizeBytes_, UI1, SIZ, Nil>, typename DT = DT2>
 class AList {
+  AArray<UI1, SIZ, BUF> obj_;  //< An Auto-array.
  public:
+  static constexpr DT Type() { return CTypeMap<DT>(CTypeSize<SIZ>()); }
+
   /* Constructs a list with a given count_max with estimated size_bytes. */
-  AList(Index count_max = 0) : begin(ListNew<SIZ, Index>(count_max)) {
-    // Nothing to do here! (:-)|==<,
-  }
+  AList(SIZ count_max = kCountMax_)
+      : obj_(TListNew<SIZ, SIZ, DT>(kSizeBytes_, count_max,
+                                    TRamFactory<Type()>().Init<BUF>()),
+             TRamFactory<Type()>().Init<BUF>()) {}
 
-  /* Constructs a List with the given size_bytes and count_max.
-  size_bytes and count_max both get rounded down to a multiple of 64
-  before allocating the socket. If the count_max is not enough for the
-  socket then the size_bytes will be increased to the minimum size to
-  make a valid ASCII List. */
-  AList(Index count_max, SIZ size)
-      : begin(ListNew<SIZ, Index>(count_max, size)) {
-    // Nothing to do here! (:-)+==<
-  }
+  /* Constructs a List with the given size_bytes and count_max. */
+  AList(SIZ count_max, SIZ size_bytes)
+      : obj_(TListNew<SIZ, SIZ, DT>(size_bytes, count_max,
+                                    TRamFactory<Type()>().Init<BUF>()),
+             TRamFactory<Type()>().Init<BUF>()) {}
 
-  /* Deletes the dynamically allocated socket. */
-  ~AList() { delete[] begin; }
-
-  inline Index Push(SI4 type, const void* value) {
-    return ListPush<SIZ, Index>(AArray(), type, value);
+  inline SIZ Push(SI4 type, const void* value) {
+    return TListAdd<SIZ, DT>(This(), type, value);
   }
 
   /* Inserts the given type-value tuple in the list at the given index. */
-  inline Index Insert(UI1 type, void* value, Index index) {
-    return ListInsert<SIZ, Index>(AArray(), type, value, index);
+  inline SIZ Insert(UI1 type, void* value, SIZ index) {
+    return TListAdd<SIZ, DT>(This(), type, value, index);
   }
 
-  /* Returns the maximum count of the give list in the current memory
-      profile. */
-  inline Index CountMax() { return ListCountMax<SIZ, Index>(); }
+  /* Maximum count of the item in the List. */
+  inline SIZ Size() { return TListSize<SIZ>(); }
 
-  /* Clears the list without overwriting the contents. */
-  void Clear(TList<SIZ, Index>* list) { ListClear<SIZ, Index>(AArray()); }
+  /* Count of the item in the List. */
+  inline SIZ Count() { return TListSize<SIZ>(); }
 
-  /* Deletes the list contents by overwriting it with zeros. */
-  inline void Wipe() { ListWipe<SIZ, Index>(AArray()); }
+  /* Count of the item in the List. */
+  inline SIZ SizeBytes() { return This()->size_bytes; }
+
+  /* Count of the item in the List. */
+  inline SIZ SizeWords() { return TSizeWords<SIZ>(SizeBytes()); }
+
+  /* Count of the item in the List. */
+  inline SIZ Top() { return This()->top; }
 
   /* Returns true if this crabs contains only the given address.
   @warning This function assumes that the member you're checking for came from
   Script. If it's you're own code calling this, you are required to ensure the
   value came from a ASCII List.
-  @return  True if the data lies in the list's memory socket. */
-  inline BOL Contains(void* value) {
-    return ListContains<SIZ, Index>(AArray(), value);
+  @return  True if the data lies in the list's memory array. */
+  inline CH1* Contains(void* value) {
+    return TListContains<SIZ>(This(), value);
   }
+
+  /* Clears the list by setting the count to 0. */
+  void Clear(TList<SIZ>* list) { TListClear<SIZ>(This()); }
 
   /* Removes the item at the given address from the list. */
-  inline BOL Remove(void* adress) {
-    return ListRemove<SIZ, Index>(AArray(), adress);
-  }
+  inline BOL Remove(void* address) { return TListRemove<SIZ>(This(), address); }
 
   /* Removes the item at the given address from the list. */
-  inline BOL Remove(Index index) {
-    return ListRemove<SIZ, Index>(AArray(), index);
-  }
+  inline BOL Remove(SIZ index) { return TListRemove<SIZ>(This(), index); }
 
-  /* Removes the last item from the list. */
-  inline Index Pop() { return ListPop<SIZ, Index>(AArray()); }
+  /* Searches for the first empty spot in the list that can fit the item and
+  inserts the item to the list at the given index.
+  @return An invalid index upon failure or the index of the index upon success.
+  */
+  SIZ Add(UI1 item, SIZ index) { return TListAdd<UI1>(This(), item); }
+  SIZ Add(SI1 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(CH1 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(UI2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(SI2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(CH2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(BOL item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(UI4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(SI4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(CH4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(FP4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(UI8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(SI8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Add(FP8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
 
-  /* Prints the given AsciiList to the console. */
-  inline UTF1& Print(UTF1& printer) {
-    return PrintList<SIZ, Index>(printer, AArray());
-  }
+  /* Pushes the item onto the List stack.
+  @return An invalid index upon failure or the index of the item in the list
+  upon success. */
+  SIZ Push(UI1 item) { return TListAdd<UI1>(This(), item); }
+  SIZ Push(SI1 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(CH1 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(UI2 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(SI2 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(CH2 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(BOL item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(UI4 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(SI4 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(CH4 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(FP4 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(UI8 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(SI8 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Push(FP8 item) { return TListPush<SIZ>(This(), item); }
+
+  /* Removes the last item from the list.
+  @returns The address of the object just popped off the stack. */
+  inline void* Pop() { return TListPop<SIZ>(This()); }
+
+  /* Gets the obj_'s Autoject. */
+  inline Autoject AJT() { return obj_.AJT(); }
+
+  /* Gets the Auto-Array. */
+  inline AArray<UI1, SIZ>& AJT_ARY() { return obj_; }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline TList<SIZ, Index>* AArray() {
-    return reinterpret_cast<TList<SIZ, Index>*>(begin);
+  inline TList<SIZ>* This() {
+    return reinterpret_cast<TList<SIZ>*>(AJT().origin);
   }
 
+  /* Prints This object to the printer. */
   template <typename Printer>
-  Printer& PrinterTo(Printer& o) {
-    return PrintList<Printer>(;
+  Printer& PrintTo(Printer& o) {
+    return TListPrint<Printer, SIZ>(o, This());
   }
-
-  void CPrint() { return PrintTo<COut>(COut()); }
-
- private:
-  AArray obj_;  //< An Auto-array.
 };
 
 }  // namespace _
+
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, CH1 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, SI1 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, UI1 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, CH2 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, SI2 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, UI2 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, BOL item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, CH4 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, UI4 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, SI4 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, FP4 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, SI8 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, UI8 item) {
+  list.Add(item);
+}
+template <typename SIZ>
+inline _::TList<SIZ>& operator<<(_::TList<SIZ>& list, FP8 item) {
+  list.Add(item);
+}
 
 #endif
 #endif

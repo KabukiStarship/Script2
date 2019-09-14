@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/script2_bin.cc
+@file    /script2_bin.cc
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the 
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -39,7 +39,7 @@ typedef enum BInStates {
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct LIB_MEMBER BIn {
   SI4 size,           //< The size of the socket.
-      begin;          //< The starting index of the ring socket data.
+      origin;          //< The starting index of the ring socket data.
   volatile SI4 stop;  //< The stopping index of the ring socket data.
   SI4 read;           //< The read variable.
 };
@@ -50,16 +50,16 @@ LIB_MEMBER inline CH1* BInBegin(BIn* bin);
 LIB_MEMBER inline CH1* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
-@param  Start The begin of the data.
-@param  Stop  The stop of the data.
-@param  Size  The size of the socket. */
-LIB_MEMBER inline SIW SlotLength(CH1* begin, CH1* stop, UIW size);
+@param Start The origin of the data.
+@param Stop  The stop of the data.
+@param Size  The size of the socket. */
+LIB_MEMBER inline SIW SlotLength(CH1* origin, CH1* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
-@param  Start The begin of the data.
-@param  Stop  The stop of the data.
-@param  Size  The size of the socket. */
-LIB_MEMBER inline SIW SlotSpace(CH1* begin, CH1* stop, UIW size);
+@param Start The origin of the data.
+@param Stop  The stop of the data.
+@param Size  The size of the socket. */
+LIB_MEMBER inline SIW SlotSpace(CH1* origin, CH1* stop, UIW size);
 
 /* Gets the rx socket length. */
 LIB_MEMBER inline SI4 BInSpace(BIn* bin);
@@ -101,8 +101,8 @@ inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
 
 #if USING_UTF8 == YES_0
 /* Prints the BIn to the Text.
-@param  bin The pin to utf.
-@param  text The Text to utf the bin to.
+@param bin The pin to utf.
+@param text The Text to utf the bin to.
 @return The text. */
 LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
 
@@ -110,8 +110,8 @@ LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
 #if USING_UTF16 == YES_0
 
 /* Prints the BIn to the Text.
-@param  bin The pin to utf.
-@param  text The Text to utf the bin to.
+@param bin The pin to utf.
+@param text The Text to utf the bin to.
 @return The text. */
 LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
 
@@ -119,8 +119,8 @@ LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
 #if USING_UTF32 == YES_0
 
 /* Prints the BIn to the Text.
-@param  bin The pin to utf.
-@param  text The Text to utf the bin to.
+@param bin The pin to utf.
+@param text The Text to utf the bin to.
 @return The text. */
 LIB_MEMBER UTF4& Print(UTF4& printer, BIn* bin);
 

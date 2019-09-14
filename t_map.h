@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_map.h
+@file    /t_map.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (SIZ) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (SIZ) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -26,7 +26,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* A sparse array map of Sorted Domain Values to Codomain Mappings.
-@see ASCII Data Type Specification for DRY documentation.
+@see ASCII Data Type Specification.
 @link file://./spec/data/map_types/map.md
 
 @code
@@ -50,7 +50,7 @@ struct TMap {
       count;  //< Element count.
 };
 
-/* Utility class for creating an object with the TBuf. */
+/* Utility class for creating an object with the TUIB. */
 template <typename D = SIN, typename SIZ = SIW>
 struct TMapBuf {
   D domain_value;
@@ -181,7 +181,7 @@ SIZ TMapAdd(TMap<SIZ>* map, D domain_value, SIZ codomain_mapping) {
   D_ASSERT(map);
   D_COUT("\n\nAdding:" << domain_value << "->" << codomain_mapping);
   SIZ count = map->count, size = map->size;
-  if (count >= size) return TInvalidIndex<SIZ>();
+  if (count >= size) return CInvalidIndex<SIZ>();
   D* domain = TMapDomain<D, SIZ>(map);
   SIZ* codomain = TMapCodomain<D, SIZ>(domain, size);
 
@@ -209,7 +209,7 @@ SIZ TMapAdd(TMap<SIZ>* map, D domain_value, SIZ codomain_mapping) {
       low = mid + 1;
     } else {
       D_COUT(". The value exists in the domain.");
-      return TInvalidIndex<SIZ>();
+      return CInvalidIndex<SIZ>();
     }
   }
   if (domain_value > current_domain_value) {
@@ -222,8 +222,8 @@ SIZ TMapAdd(TMap<SIZ>* map, D domain_value, SIZ codomain_mapping) {
     }
     ++mid;
   }
-  TArrayInsert<D>(domain, mid, count, domain_value);
-  TArrayInsert<SIZ>(codomain, mid, count, codomain_mapping);
+  TStackInsert<D>(domain, count, mid, domain_value);
+  TStackInsert<SIZ>(codomain, count, mid, codomain_mapping);
   D_COUT("\n      Inserted domain[mid-1], mid, mid+1]: = ["
          << *(domain + mid - 1) << ", " << *(domain + mid) << ", "
          << *(domain + mid + 1) << ']');
@@ -268,7 +268,7 @@ SIZ TMapFind(const TMap<SIZ>* map, const D& domain_member) {
     }
   }
   D_COUT("\n  Domain does not contain domain_member.");
-  return TInvalidIndex<SIZ>();
+  return CInvalidIndex<SIZ>();
 }
 
 /* Attempts to find the codomain_mapping index.
@@ -290,7 +290,7 @@ void TMapRemapCodomain(TMap<SIZ>* map, SIZ index, SIZ codomain_mapping) {
 */
 template <typename D = SIN, typename SIZ = SIW>
 SIZ TMapRemove(TMap<SIZ>* map, SIZ index) {
-  if (index < 0 || index >= map->count) return TInvalidIndex<SIZ>();
+  if (index < 0 || index >= map->count) return CInvalidIndex<SIZ>();
   SIZ size = map->size, count = map->count, zero = 0;
   if (count == zero)
     if (--count == zero) {
@@ -298,7 +298,7 @@ SIZ TMapRemove(TMap<SIZ>* map, SIZ index) {
       return zero;
     }
   D* domain = TMapDomain<D, SIZ>(map);
-  TArrayRemove(domain, index, count);
+  TStackRemove(domain, index, count);
   SIZ* codomain = TMapCodomain<D, SIZ>(domain, size);
 
   return 0;
@@ -308,7 +308,7 @@ SIZ TMapRemove(TMap<SIZ>* map, SIZ index) {
 CMapSizeBytes<D, SIZ>(kSize_)
 */
 template <typename D = SIN, typename SIZ = SIW, SIZ kSize_ = 16,
-          typename BUF = TBuf<kSize_, TMapBuf<D, SIZ>, SIZ, TMap<SIZ>>>
+          typename BUF = TUIB<kSize_, TMapBuf<D, SIZ>, SIZ, TMap<SIZ>>>
 class AMap {
   AArray<TMapBuf<D, SIZ>, SIZ, BUF> array_;
 
@@ -392,7 +392,7 @@ class AMap {
   /* Gets the aarray_. */
   inline AArray<TMapBuf<D, SIZ>, SIZ, BUF>& AJT() { return array_; }
 
-  /* Gets a pointer to the object at the begin of the aarray_. */
+  /* Gets a pointer to the object at the origin of the aarray_. */
   inline TMap<SIZ>* This() {
     return reinterpret_cast<TMap<SIZ>*>(AJT().Begin());
   }

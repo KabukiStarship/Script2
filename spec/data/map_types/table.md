@@ -101,10 +101,10 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 }
 ```
 
-**<< [Previous Section:Map](map.md) | [Next Section:Book](book.md) >>**
+**[<< Previous Section:Map](map.md) | [Next Section:Book >>](book.md)**
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

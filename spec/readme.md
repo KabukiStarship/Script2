@@ -1,29 +1,31 @@
 # SCRIPT Specification
 
-This document is a Release for Comment (RFC) not an ISO Specification, there are plenty of errors and things we can do better so your comments and criticism are appreciated. If you would like to contribute to this RFC, please email Cale Jamison McCollough at <mailto:cale@astartup.net>.
+This document is a Release for Comment (RFC) not an ISO Specification, there are plenty of errors and things we can do better so your comments and criticism are appreciated. If you would like to contribute to this RFC, contributors are welcome on GitHub at <https://github.com/kabuki-starship/script2>.
 
 ## Content Table
 
 1. [License](#license)
 2. [Overview](./overview/readme.md)
+    1. [Requirements](./overview/requirements.md)
     1. [Terminology](./overview/terminology.md)
     1. [System Classes](./overview/system_classes.md)
 3. [ASCII Data Specification](./data/readme.md)
-    1. [Integers](./data/integers.md)
-    1. [Boolean Values](./data/boolean_values.md)
-    1. [Floating-point Numbers](./data/floating-point_numbers.md)
+    1. [Data Types](./data/data_types.md)
+    1. [Numbers](./data/numbers.md)
     1. [Timestamps](./data/timestamps.md)
+	1. [String](./data/strings.md)
     1. [B-Sequences](./data/b-sequences.md)
-    1. [Vector Types](./data/vector_types/readme.md)
-       1.[Homo-tuple](./data/vector_types/homo-tuple.md)
-       1.[Array](./data/vector_types/array.md)
-       1.[Stack](./data/vector_types/stack.md)
-       1.[Matrix](./data/vector_types/matrix.md)
+    1. [Homo-tuple](./data/vector_types/homo-tuple.md)
     1. [Map Types](./data/map_types/readme.md)
+      1. [Vector Types](./data/vector_types/readme.md)
+       1. [Array](./data/vector_types/array.md)
+       1. [Stack](./data/vector_types/stack.md)
        1. [Map](./data/map_types/map.md)
+       1. [List](./data/map_types/list.md)
        1. [Table](./data/map_types/table.md)
        1. [Book](./data/map_types/book.md)
        1. [Dictionary](./data/map_types/dictionary.md)
+    1. [Matrix](./data/vector_types/matrix.md)
 4. [Universal Addressing Specification](./addressing/readme.md)
     1. [Longitude and Latitude](./addressing/longitude_and_latitude.md)
     1. [Most Longitudinal bit](./addressing/most_longitudinal_bit.md)
@@ -50,6 +52,6 @@ This document is a Release for Comment (RFC) not an ISO Specification, there are
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

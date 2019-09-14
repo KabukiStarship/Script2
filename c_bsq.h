@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_bsq.h
+@file    /c_bsq.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -13,7 +13,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
-#include "c_avalue.h"
+#include "c_typevalue.h"
 
 namespace _ {
 
@@ -26,7 +26,7 @@ struct Bsq {
   }
 };
 
-#if CPU_WORD_SIZE == CPU_16_BIT
+#if ALU_SIZE == ALU_16_BIT
 inline SI2 UnpackSVI(SI2 value) {
   if (value < 0) {
     UI2 result = 0x8000 return result | ~(value - 1);

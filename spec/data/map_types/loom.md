@@ -40,10 +40,10 @@ ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash 
 +==========================+ ----------- ^ 0xN
 ```
 
-**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

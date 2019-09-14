@@ -8,10 +8,10 @@ A **Crabs Message** is similar to an internet datagram and may be enclosed in a 
 
 Crabs Messages beginning with a non-printable Unicode Character shall be UI1-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
 
-**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

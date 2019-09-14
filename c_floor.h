@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/floor.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@file    /floor.h
+@author  Cale McCollough <<https://calemccollough.github.io>>
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the 
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -18,7 +18,7 @@ namespace _ {
 /* Cache-aligned group of global system variables.
 The Floor is the Floor in the Chinese Room. In Kabuki Crabs, the floor is
 designed to store variables without having to include the classes the variable
-controls. For this reason only strings and POD types are in the Floor.
+controls. For this reason only Strings and POD types are in the Floor.
 */
 struct LIB_MEMBER Floor {
   SI2 epoch;

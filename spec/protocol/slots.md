@@ -47,7 +47,7 @@ struct BIn {
 
 Finite State Machine uses a stack of state indexes for all states that have bidirectional arrows. Once the Crabs Message has been interpreted and the hash is verified, the data has thought to be in the correct format but has not been verified to be bound into determinant ranges (@see Bounding Escape Sequences).
 
-![B-Input Interpreter FSM](https://github.com/kabuki-starship/kabuki-toolkit/wiki/expression-scanner-fsm.jpg)
+![B-Input Interpreter FSM](https://github.com/kabuki-starship/kabuki.toolkit/wiki/expression-scanner-fsm.jpg)
 
 #### B-Output Slot
 
@@ -95,10 +95,10 @@ Windows combine a BIn and BOut in contiguous memory. The ring buffers function s
 Script implementations may implement a default BIn Slot named In (**in UpperCaseCamel**)
  and default BOut Slot named Out (**in UpperCaseCamel**). In shall stream bytes from a Text keyboard, BOut Slot or Text display input. Out stream bytes to a Abstract text display, BIn Slot, or Abstract serial output.
 
-**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

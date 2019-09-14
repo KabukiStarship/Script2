@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_crabs.h
+@file    /c_crabs.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -220,17 +220,17 @@ inline const Op* CrabsArgs(Crabs* crabs, const Op& op, void** args) {
 }
 
 /* Writes the result to the Crabs.
-@param  crabs The resulting expression.
-@param  op   The Operation with result B-Sequence header.
-@param  args Pointers to the B-Sequence args. */
+@param crabs The resulting expression.
+@param op   The Operation with result B-Sequence header.
+@param args Pointers to the B-Sequence args. */
 inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args) {
   return BOutWrite(CrabsBOut(crabs), op.out, args);
 }
 
 /* Writes the result to the Crabs.
-@param  crabs The resulting expression.
-@param  op   The Operation with result B-Sequence header.
-@param  args Pointers to the B-Sequence args. */
+@param crabs The resulting expression.
+@param op   The Operation with result B-Sequence header.
+@param args Pointers to the B-Sequence args. */
 inline const Op* CrabsResult(Crabs* crabs, const SI4* params, void** args) {
   if (!params) {
     return nullptr;
@@ -240,9 +240,9 @@ inline const Op* CrabsResult(Crabs* crabs, const SI4* params, void** args) {
 
 /* Writes the result to the Crabs.
 @return NIL upon ?
-@param  crabs The resulting expression.
-@param  op   The Operation with result B-Sequence header.
-@param  args Pointers to the B-Sequence args. */
+@param crabs The resulting expression.
+@param op   The Operation with result B-Sequence header.
+@param args Pointers to the B-Sequence args. */
 inline const Op* CrabsResult(Crabs* crabs, const Op* op, void** args) {
   if (!op) {
     return nullptr;

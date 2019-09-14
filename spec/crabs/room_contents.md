@@ -28,10 +28,10 @@ Back-doors are unknown entrances to the Room.
 
 **Mirrors** in a *Chinese Rooms* are *Contiguous Word-Aligned Memory Blocks* used for *Expressions* and *Interprocess IO Portals* that use *Word-Aligned Hashless B-Sequences*. When two one-way Mirrors are combined they create a duplex Slot called a **Window**. Mirror and Windows shall be used to for Interprocess Same-System Terminals.
 
-**<< [Previous Section](.md)** | **[Next Section](.md) >>**
+**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
 
 ## License
 
-Copyright (C) 2014-9 Cale McCollough <http://calemccollough.github.io/>; All right reserved (R).
+Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

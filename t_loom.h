@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/t_loom.h
+@file    /t_loom.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -25,12 +26,12 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* An array of strings.
+/* An array of Strings.
  */
 template <typename SIZ>
 struct TLoom {
   SIZ size,             //< Size of the Loom in bytes.
-      top;              //< Offset to the top of the String stack.
+      top;              //< Offset to the top of the string stack.
   TStack<SIZ> offsets;  //< A Stack of offsets to strands.
 };
 
@@ -67,7 +68,7 @@ inline Char* TLoomStart(TLoom<SIZ>* loom, SIZ count_max) {
 
 template <typename Char, typename SIZ>
 inline Char* TLoomStart(TLoom<SIZ>* loom) {
-  return TLoomStart<Char, SIZ>(loom, loom->offsets.size);
+  return TLoomStart<Char, SIZ>(loom, loom->offsets.count_max);
 }
 
 template <typename Char, typename SIZ>
@@ -79,7 +80,7 @@ inline TLoom<SIZ>* TLoomInit(TLoom<SIZ>* loom, SIZ count_max) {
 
   // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
   loom->top = TDelta<SIZ>(loom, TLoomStart<Char, SIZ>(loom, count_max));
-  loom->offsets.size = count_max;
+  loom->offsets.count_max = count_max;
   loom->offsets.count = 0;
   return loom;
 }
@@ -108,7 +109,7 @@ template <typename Char, typename SIZ, typename Printer>
 Printer& TLoomPrint(Printer& o, TLoom<SIZ>* loom) {
   SIZ count = loom->offsets.count;
   o << "\nLoom<SI" << (CH1)('0' + sizeof(SIZ)) << "> size:" << loom->size
-    << " top:" << loom->top << " stack_size:" << loom->offsets.size
+    << " top:" << loom->top << " stack_size:" << loom->offsets.count_max
     << " count:" << count;
   SIZ* offsets = TStackStart<SIZ, SIZ>(&loom->offsets);
   for (SIZ i = 0; i < count; ++i)
@@ -125,7 +126,7 @@ SIZ TLoomAdd(TLoom<SIZ>* loom, const Char* string) {
   A_ASSERT(loom);
   A_ASSERT(string);
 
-  if (loom->offsets.count >= loom->offsets.size) return -1;
+  if (loom->offsets.count >= loom->offsets.count_max) return -1;
   Char* cursor = TPtr<Char>(loom, loom->top);
   cursor = TSPrintString<Char>(cursor, TLoomEnd<Char, SIZ>(loom), string);
   if (!cursor) return -1;
@@ -150,11 +151,11 @@ size upper bounds, or a new dynamically allocated socket upon failure. */
 template <typename Char = SI4, typename SIZ = SIN>
 BOL TLoomGrow(Autoject& obj) {
   D_COUT("\n\nGrowing Loom...");
-  TLoom<SIZ>* loom = reinterpret_cast<TLoom<SIZ>*>(obj.begin);
+  TLoom<SIZ>* loom = reinterpret_cast<TLoom<SIZ>*>(obj.origin);
   A_ASSERT(loom);
   SIZ size = loom->size;
   if (!TCanGrow<SIZ>(size)) return false;
-  SIZ count_max = loom->offsets.size;
+  SIZ count_max = loom->offsets.count_max;
   if (!TCanGrow<SIZ>(count_max)) return false;
 
   size = size << 1;
@@ -168,7 +169,7 @@ BOL TLoomGrow(Autoject& obj) {
   D_COUT(Charsf(loom, loom->size));
 #endif
 
-  UIW* new_begin = obj.ram_factory(nullptr, size);
+  UIW* new_begin = obj.socket_factory(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
   TLoom<SIZ>* other = reinterpret_cast<TLoom<SIZ>*>(new_begin);
 
@@ -178,19 +179,19 @@ BOL TLoomGrow(Autoject& obj) {
       top = loom->top;
   other->size = size;
   other->top = top + extra_header_space;
-  other->offsets.size = count_max;
+  other->offsets.count_max = count_max;
   other->offsets.count = count;
   SIZ *loom_offsets = TStackStart<SIZ, SIZ>(&loom->offsets),
       *other_offsets = TStackStart<SIZ, SIZ>(&other->offsets);
   for (SIZ i = 0; i < count; ++i)
     other_offsets[i] = loom_offsets[i] + extra_header_space;
 
-  // Copy the strings.
+  // Copy the Strings.
   Char* start = TLoomStart<Char, SIZ>(loom);
-  SIZ strings_size_bytes = TDelta<SIZ>(start, TPtr<>(loom, top));
+  SIZ Strings_size_bytes = TDelta<SIZ>(start, TPtr<>(loom, top));
   Char* other_start = TLoomStart<Char, SIZ>(other);
-  if (strings_size_bytes)
-    ArrayCopy(other_start, strings_size_bytes, start, strings_size_bytes);
+  if (Strings_size_bytes)
+    ArrayCopy(other_start, Strings_size_bytes, start, Strings_size_bytes);
 #if D_THIS
   CPrint("\n\nAfter:\n");
   TLoomPrint<Char, SIZ, COut>(COut().Star(), other);
@@ -198,7 +199,7 @@ BOL TLoomGrow(Autoject& obj) {
 #endif
 
   Delete(obj);
-  obj.begin = new_begin;
+  obj.origin = new_begin;
   return true;
 }
 
@@ -265,8 +266,9 @@ SIZ TLoomFind(TLoom<SIZ>* loom, const Char* string) {
 
 /* An ASCII Loom Autoject. */
 template <typename Char = CHR, typename SIZ = SIN, SIZ kSize_ = 512,
-          typename BUF = TBuf<kSize_, Char, TStrand<SIN>>>
+          typename BUF = TUIB<kSize_, Char, TStrand<SIN>>>
 class ALoom {
+  AArray<Char, SIZ, BUF> obj_;  //< An Auto-Array object.
  public:
   enum { kCountDefault = kSize_ / 16 };
   /* Constructs a Loom. */
@@ -275,16 +277,17 @@ class ALoom {
   }
 
   /* Constructs a Loom subclass.
-  @param factory RamFactory to call when the Strand overflows. */
-  ALoom(RamFactory ram_factory, SIZ count = kCountDefault) : obj_(ram_factory) {
+  @param factory SocketFactory to call when the Strand overflows. */
+  ALoom(SocketFactory socket_factory, SIZ count = kCountDefault)
+      : obj_(socket_factory) {
     TLoomInit<Char, SIZ>(OBJ(), count);
   }
 
   /* Constructs a Loom subclass.
-  @param factory RamFactory to call when the Strand overflows. */
-  ALoom(RamFactory ram_factory, SIZ size = TLoomSizeDefault<Char, SIZ>(),
+  @param factory SocketFactory to call when the Strand overflows. */
+  ALoom(SocketFactory socket_factory, SIZ size = TLoomSizeDefault<Char, SIZ>(),
         SIZ count = TLoomCountDefault<Char, SIZ>())
-      : obj_(ram_factory) {
+      : obj_(socket_factory) {
     TLoomInit<Char, SIZ>(OBJ(), count);
   }
 
@@ -322,9 +325,6 @@ class ALoom {
   }
 
   inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
-
- private:
-  AArray<Char, SIZ, BUF> obj_;  //< Auto-Array of Char(s).
 };
 }  // namespace _
 

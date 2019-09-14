@@ -1,11 +1,12 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_cout.h
+@file    /c_cout.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
-All right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough
+<<calemccollough.github.io>>; All right reserved (R). This Source Code
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at
+<https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <pch.h>
@@ -180,67 +181,67 @@ scope without delcaring COut cout. */
 inline COut CPrint() { return COut(); }
 
 /* Prints the given item to the COut. */
-LIB_INLINE COut CPrint(CH1 item);
-LIB_INLINE COut CPrint(const CH1* item);
+COut CPrint(CH1 item);
+COut CPrint(const CH1* item);
 #if USING_UTF16 == YES_0
-LIB_INLINE COut CPrint(CH2 item);
-LIB_INLINE COut CPrint(const CH2* item);
+COut CPrint(CH2 item);
+COut CPrint(const CH2* item);
 #endif
 #if USING_UTF32 == YES_0
-LIB_INLINE COut CPrint(CH4 item);
-LIB_INLINE COut CPrint(const CH4* item);
+COut CPrint(CH4 item);
+COut CPrint(const CH4* item);
 #endif
 
-LIB_INLINE COut CPrint(SI4 item);
-LIB_INLINE COut CPrint(UI4 item);
-LIB_INLINE COut CPrint(SI8 item);
-LIB_INLINE COut CPrint(UI8 item);
+COut CPrint(SI4 item);
+COut CPrint(UI4 item);
+COut CPrint(SI8 item);
+COut CPrint(UI8 item);
 #if USING_FP4 == YES_0
-LIB_INLINE COut CPrint(FP4 item);
+COut CPrint(FP4 item);
 #endif
 #if USING_FP8 == YES_0
-LIB_INLINE COut CPrint(FP8 item);
+COut CPrint(FP8 item);
 #endif
-LIB_INLINE COut CPrint(Hexf& item);
-LIB_INLINE COut CPrint(Binaryf& item);
-LIB_INLINE COut CPrint(Centerf& item);
-LIB_INLINE COut CPrint(Rightf& item);
-LIB_INLINE COut CPrint(Linef& item);
-LIB_INLINE COut CPrint(Headingf& item);
-LIB_INLINE COut CPrint(Indentf& item);
+COut CPrint(Hexf& item);
+COut CPrint(Binaryf& item);
+COut CPrint(Centerf& item);
+COut CPrint(Rightf& item);
+COut CPrint(Linef& item);
+COut CPrint(Headingf& item);
+COut CPrint(Indentf& item);
 
 }  // namespace _
 
 /* Prints the given item to the COut. */
-LIB_INLINE _::COut& operator<<(_::COut& o, CH1 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, const CH1* item);
+_::COut& operator<<(_::COut& o, CH1 item);
+_::COut& operator<<(_::COut& o, const CH1* item);
 
 #if USING_UTF16 == YES_0
-LIB_INLINE _::COut& operator<<(_::COut& o, CH2 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, const CH2* item);
+_::COut& operator<<(_::COut& o, CH2 item);
+_::COut& operator<<(_::COut& o, const CH2* item);
 #endif
 #if USING_UTF32 == YES_0
-LIB_INLINE _::COut& operator<<(_::COut& o, CH4 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, const CH4* item);
+_::COut& operator<<(_::COut& o, CH4 item);
+_::COut& operator<<(_::COut& o, const CH4* item);
 #endif
-LIB_INLINE _::COut& operator<<(_::COut& o, SI4 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, UI4 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, SI8 item);
-LIB_INLINE _::COut& operator<<(_::COut& o, UI8 item);
+_::COut& operator<<(_::COut& o, SI4 item);
+_::COut& operator<<(_::COut& o, UI4 item);
+_::COut& operator<<(_::COut& o, SI8 item);
+_::COut& operator<<(_::COut& o, UI8 item);
 #if USING_FP4 == YES_0
-LIB_INLINE _::COut& operator<<(_::COut& o, FP4 item);
+_::COut& operator<<(_::COut& o, FP4 item);
 #endif
 #if USING_FP8 == YES_0
-LIB_INLINE _::COut& operator<<(_::COut& o, FP8 item);
+_::COut& operator<<(_::COut& o, FP8 item);
 #endif
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Hexf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Binaryf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Centerf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Rightf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Linef item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Headingf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Indentf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::Charsf item);
-LIB_INLINE _::COut& operator<<(_::COut& o, _::COut item);
+_::COut& operator<<(_::COut& o, _::Hexf item);
+_::COut& operator<<(_::COut& o, _::Binaryf item);
+_::COut& operator<<(_::COut& o, _::Centerf item);
+_::COut& operator<<(_::COut& o, _::Rightf item);
+_::COut& operator<<(_::COut& o, _::Linef item);
+_::COut& operator<<(_::COut& o, _::Headingf item);
+_::COut& operator<<(_::COut& o, _::Indentf item);
+_::COut& operator<<(_::COut& o, _::Charsf item);
+_::COut& operator<<(_::COut& o, _::COut item);
 #endif
 #endif

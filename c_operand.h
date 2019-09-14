@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/operand.h
+@file    /operand.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -60,17 +60,17 @@ LIB_MEMBER const CH1* OperandName(Operand* op);
 LIB_MEMBER UIW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
-    @param  key_begin Beginning of the key slot socket.
-    @param  key_end   End of the key slot socket.
+    @param key_begin Beginning of the key slot socket.
+    @param key_end   End of the key slot socket.
     @return A value printable Unicode CH1 or invalid if the Operand doesn't
             Contain the given key. */
 LIB_MEMBER CH4 OperandIndex(Operand* operand, CH1* key_begin, CH1* key_end);
 
 #if USING_SCRIPT2_TEXT
 /* Queries the given Operand Op Header.
-    @param  crabs The expression to write the query to. Set to nil to return
+    @param crabs The expression to write the query to. Set to nil to return
                  op.
-    @param  op   The Op header.
+    @param op   The Op header.
     @return Returns nil upon success and an error Op upon failure.
 LIB_MEMBER const Op* OperandQuery (Crabs* crabs, const Op* op);*/
 
@@ -78,8 +78,8 @@ LIB_MEMBER const Op* OperandQuery (Crabs* crabs, const Op* op);*/
 Slot& OperandQuery(Operand* root, const CH1* address, Slot& key);
 
 /* Prints the Operand to the Text.
-    @param  text     The Text to utf to.
-    @param  operand The Operand to utf.
+    @param text     The Text to utf to.
+    @param operand The Operand to utf.
     @return text. */
 LIB_MEMBER UTF1& PrintOperand(UTF1& slot, Operand* operand);
 #endif

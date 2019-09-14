@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/script2_puff.cc
+@file    /script2_puff.cc
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-2019 Cale McCollough <cale@astartup.net>;
+@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
 All right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -16,7 +16,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
-LIB_INLINE const UI2* BinaryLUTDecimals();
+const UI2* BinaryLUTDecimals();
 
 enum {
   kUI2DigitCountMax = 5,
@@ -44,14 +44,14 @@ LIB_MEMBER SI4 STRLength(SI8 value);
 #if SEAM >= SCRIPT2_FTOS
 
 /* IEEE754 Powers of 10 integral portions LUT. */
-LIB_INLINE const void* Binary32Pow10IntegralPortions();
+const void* Binary32Pow10IntegralPortions();
 
 /* IEEE754 Powers of 10 integral portions LUT. */
-LIB_INLINE const void* Binary64Pow10IntegralPortions();
+const void* Binary64Pow10IntegralPortions();
 
 /* Lookup table of the IEEE754 integral portion of pre-computed powers of 10.
  */
-LIB_INLINE const void* BinaryPow10Exponents();
+const void* BinaryPow10Exponents();
 
 #if USING_FP4 == YES_0
 /* Gets the maximum number_ of digits required to represent a FP4 as in
