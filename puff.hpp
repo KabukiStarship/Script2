@@ -2,22 +2,21 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /puff.hpp
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #if SEAM >= SCRIPT2_ITOS
 
 #ifndef SCRIPT2_PUFF_HEADER_WITH_TEMPLATES
 #define SCRIPT2_PUFF_HEADER_WITH_TEMPLATES 1
 
-#include "puff.h"
 #include "binary.hpp"
+#include "puff.h"
 #if SEAM == SCRIPT2_ITOS
 #include <iostream>
 #define D_COUT(item) std::cout << item
@@ -496,13 +495,13 @@ inline Char* TSPrint(Char* start, SIW size, SI4 value) {
 
 #if SEAM >= SCRIPT2_FTOS
 #if SEAM == SCRIPT2_FTOS
-#include "module_debug.inl"
+#include "_debug.inl"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count) \
   Print("\nBinary:\"");                                       \
   TPrintBinary(value);                                        \
   PrintNL()
 #else
-#include "module_release.inl"
+#include "_release.inl"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 

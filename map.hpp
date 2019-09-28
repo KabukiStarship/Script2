@@ -3,12 +3,12 @@
 @file    /map.hpp
 @author  Cale McCollough <https://calemccollough.github.io>
 @license Copyright (SIZ) 2014-9 Cale McCollough <<calemccollough.github.io>>;
-All right reserved (R). This Source Code Form is subject to the terms of the
+all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 #if SEAM >= SCRIPT2_MAP
 #ifndef INCLUDED_CRAPS_TMAP
 #define INCLUDED_CRAPS_TMAP
@@ -16,10 +16,10 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "stack.hpp"
 
 #if SEAM == SCRIPT2_MAP
-#include "module_debug.inl"
+#include "_debug.inl"
 #define D_COUT_MAP(map) TMapPrint<COut, D, SIZ>(COut().Star(), map)
 #else
-#include "module_release.inl"
+#include "_release.inl"
 #define D_COUT_MAP(map)
 #endif
 

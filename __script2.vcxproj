@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="address.h" />
+    <ClInclude Include="args.h" />
+    <ClInclude Include="array.h" />
+    <ClInclude Include="array.hpp" />
+    <ClInclude Include="autoject.h" />
+    <ClInclude Include="avalue.hpp" />
+    <ClInclude Include="bin.hpp" />
+    <ClInclude Include="binary.hpp" />
+    <ClInclude Include="book.hpp" />
+    <ClInclude Include="bout.h" />
+    <ClInclude Include="bsq.h" />
+    <ClInclude Include="buffer.h" />
+    <ClInclude Include="cin.h" />
+    <ClInclude Include="clock.h" />
+    <ClInclude Include="clock.hpp" />
+    <ClInclude Include="cout.h" />
+    <ClInclude Include="crabs.h" />
+    <ClInclude Include="dic.hpp" />
+    <ClInclude Include="dictionary.hpp" />
+    <ClInclude Include="door.hpp" />
+    <ClInclude Include="error.h" />
+    <ClInclude Include="event.h" />
+    <ClInclude Include="floor.h" />
+    <ClInclude Include="interrupts.h" />
+    <ClInclude Include="iterator.h" />
+    <ClInclude Include="language.h" />
+    <ClInclude Include="library.hpp" />
+    <ClInclude Include="list.hpp" />
+    <ClInclude Include="loom.hpp" />
+    <ClInclude Include="map.hpp" />
+    <ClInclude Include="matrix.hpp" />
+    <ClInclude Include="mirror.h" />
+    <ClInclude Include="op.h" />
+    <ClInclude Include="operand.h" />
+    <ClInclude Include="puff.h" />
+    <ClInclude Include="puff.hpp" />
+    <ClInclude Include="rng.h" />
+    <ClInclude Include="room.h" />
+    <ClInclude Include="set.hpp" />
+    <ClInclude Include="slot.h" />
+    <ClInclude Include="stack.hpp" />
+    <ClInclude Include="strand.hpp" />
+    <ClInclude Include="stringf.h" />
+    <ClInclude Include="stringf.hpp" />
+    <ClInclude Include="table.hpp" />
+    <ClInclude Include="test.h" />
+    <ClInclude Include="test.hpp" />
+    <ClInclude Include="typevalue.h" />
+    <ClInclude Include="typevalue.hpp" />
+    <ClInclude Include="uniprinter.hpp" />
+    <ClInclude Include="varint.h" />
+    <ClInclude Include="vk.h" />
+    <ClInclude Include="wall.h" />
+    <ClInclude Include="wall.hpp" />
+    <ClInclude Include="_seams\00.uniprinter.h" />
+    <ClInclude Include="_seams\01.rng.h" />
+    <ClInclude Include="_seams\02.itos.h" />
+    <ClInclude Include="_seams\02.socket.h" />
+    <ClInclude Include="_seams\03.ftos.h" />
+    <ClInclude Include="_seams\04.sprinter.h" />
+    <ClInclude Include="_seams\05.clock.h" />
+    <ClInclude Include="_seams\06.stack.h" />
+    <ClInclude Include="_seams\07.matrix.h" />
+    <ClInclude Include="_seams\08.strand.h" />
+    <ClInclude Include="_seams\09.loom.h" />
+    <ClInclude Include="_seams\10.list.h" />
+    <ClInclude Include="_seams\11.book.h" />
+    <ClInclude Include="_seams\12.map.h" />
+    <ClInclude Include="_seams\13.table.h" />
+    <ClInclude Include="_seams\14.dictionary.h" />
+    <ClInclude Include="_seams\15.expr.h" />
+    <ClInclude Include="_seams\16.door.h" />
+    <ClInclude Include="_seams\17.room.h" />
+    <ClInclude Include="_seams\18.release.h" />
+    <ClInclude Include="_seams\_config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="array.inl" />
+    <None Include="bin.inl" />
+    <None Include="bout.inl" />
+    <None Include="bsq.inl" />
+    <None Include="cin.inl" />
+    <None Include="clock.inl" />
+    <None Include="cout.inl" />
+    <None Include="crabs.inl" />
+    <None Include="error.inl" />
+    <None Include="event.inl" />
+    <None Include="floor.inl" />
+    <None Include="interrupts.inl" />
+    <None Include="morsecode.inl" />
+    <None Include="op.inl" />
+    <None Include="operand.inl" />
+    <None Include="puff.inl" />
+    <None Include="readme.md" />
+    <None Include="rng.inl" />
+    <None Include="room.inl" />
+    <None Include="slot.inl" />
+    <None Include="stringf.inl" />
+    <None Include="test.inl" />
+    <None Include="typevalue.inl" />
+    <None Include="vk.inl" />
+    <None Include="_config.inl" />
+    <None Include="_debug.inl" />
+    <None Include="_impl.inl" />
+    <None Include="_platform.inl" />
+    <None Include="_release.inl" />
+    <None Include="_seams\17.seam.s2" />
+    <None Include="_seams\_seams.inl" />
+    <None Include="_undef.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_seams\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="_seams\_main.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{8FA0C775-E3C6-46ED-8707-339E0DFE9921}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>kabukisdkdata</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>script2</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>_config.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir).\_seams\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

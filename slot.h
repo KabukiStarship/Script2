@@ -2,20 +2,20 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /slot.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
-All right reserved (R). This Source Code Form is subject to the terms of the
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 #if SEAM >= SCRIPT2_DICTIONARY
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
 #include "bin.h"
+#include "binary.h"
 #include "bout.h"
 #include "op.h"
-#include "binary.h"
 #include "uniprinter.hpp"
 
 namespace _ {
@@ -28,8 +28,8 @@ you may write packed data.
 
 */
 struct Slot {
-  CH1 *stop,   //< Stop of the data in the ring socket.
-      *stop,   //< End of the ring socket.
+  CH1 *stop,    //< Stop of the data in the ring socket.
+      *stop,    //< End of the ring socket.
       *origin,  //< Beginning of the ring socket.
       *origin;  //< Start of the data in the ring socket.
 

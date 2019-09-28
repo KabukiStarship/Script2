@@ -2,17 +2,16 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /uniprinter.hpp
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 /* There is a different set of string printing utilities because it's a little
 faster. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #ifndef SCRIPT2_STRING_CODE_HEADER
 #define SCRIPT2_STRING_CODE_HEADER 1
@@ -628,8 +627,8 @@ given range.
 @param lower_bounds
 @param upper bounds*/
 template <typename Char = CHR>
-const Char* TSTRSkipCharsInRange(const Char* cursor, Char lower_bounds,
-                                 Char upper_bounds) {
+const Char* TSTRSkimodulearsInRange(const Char* cursor, Char lower_bounds,
+                                    Char upper_bounds) {
   A_ASSERT(cursor);
   A_ASSERT(lower_bounds < upper_bounds);
   Char c = *cursor;
@@ -644,15 +643,16 @@ given range.
 @param lower_bounds
 @param upper bounds*/
 template <typename Char = CHR>
-Char* TSTRSkipCharsInRange(Char* cursor, Char lower_bounds, Char upper_bounds) {
-  return const_cast<Char*>(TSTRSkipCharsInRange(
+Char* TSTRSkimodulearsInRange(Char* cursor, Char lower_bounds,
+                              Char upper_bounds) {
+  return const_cast<Char*>(TSTRSkimodulearsInRange(
       reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
 }
 
 /* Skips the numbers in the given range. */
 template <typename Char = CHR>
 inline const Char* TSTRSkipNumbers(const Char* cursor) {
-  return const_cast<Char*>(TSTRSkipCharsInRange<Char>(
+  return const_cast<Char*>(TSTRSkimodulearsInRange<Char>(
       reinterpret_cast<const Char*>(cursor), '0', '9'));
 }
 /* Skips the numbers in the given range. */
@@ -719,7 +719,7 @@ const Char* TSTRFloatStop(const Char* start) {
 /* Skips the given Char in a s if there are any.
 @param cursor  The first Char in the buffer. */
 template <typename Char = CHR>
-const Char* TSTRSkipChar(const Char* cursor, Char skip_char) {
+const Char* TSTRSkimodulear(const Char* cursor, Char skip_char) {
   if (cursor == nullptr) return nullptr;
   Char c = *cursor, d;
   if (c != skip_char) return cursor;
@@ -797,9 +797,9 @@ inline SIN HexToByte(UI2 h) {
 /* Skips the given Char in a s if there are any.
 @param cursor  The first Char in the buffer. */
 template <typename Char = CHR>
-inline Char* TSTRSkipChar(Char* cursor, Char skip_char) {
+inline Char* TSTRSkimodulear(Char* cursor, Char skip_char) {
   return const_cast<const Char*>(
-      TSTRSkipChar<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
+      TSTRSkimodulear<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
 }
 
 template <typename Char>
@@ -1773,8 +1773,7 @@ struct TSPrinter {
     return o << " }\n";
 
 #if D_THIS
-    TPrintSocket<Printer>(o, start, End());
-    return TPrintChars<Printer, Char>(o, start, stop);
+    // return TPrintChars<Printer, Char>(o, start, stop);
 #endif
   }
 };

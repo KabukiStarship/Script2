@@ -2,14 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /test.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #ifndef SCRIPT2_C_TEST
 #define SCRIPT2_C_TEST 1
@@ -29,7 +28,7 @@ namespace _ {
 @param line    The line the program failed at.
 @param file    The file the error occurred at.
 @param message An optional message to utf. */
-LIB_MEMBER void TestFunctionLine(SI4 line, const CH1* funciton,
+LIB_MEMBER void TestFunctionLine(SIN line, const CH1* funciton,
                                  const CH1* file);
 
 /* Handles an D_ASSERT.
@@ -37,14 +36,14 @@ LIB_MEMBER void TestFunctionLine(SI4 line, const CH1* funciton,
 @param line    The line the program failed at.
 @param file    The file the error occurred at.
 @param message An optional message to utf. */
-LIB_MEMBER BOL TestWarn(SI4 line, const CH1* funciton, const CH1* file);
+LIB_MEMBER BOL TestWarn(SIN line, const CH1* funciton, const CH1* file);
 
 /* Handles an D_ASSERT.
 @return True upon failure.
 @param line    The line the program failed at.
 @param file    The file the error occurred at.
 @param message An optional message to utf. */
-LIB_MEMBER BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
+LIB_MEMBER BOL TestFail(SIN line, const CH1* funciton, const CH1* file);
 
 /* Converts SI4 main(SI4,CH1**) arguments back into a string.
 @return nil if there are no arguments or the args string upon success.
@@ -52,9 +51,13 @@ LIB_MEMBER BOL TestFail(SI4 line, const CH1* funciton, const CH1* file);
 @param args      The arguments. */
 LIB_MEMBER const CH1* ArgsToString(SIN arg_count, CH1** args);
 
+/* Converts the result not being null into the proper OS return value for int
+main (). */
+LIB_MEMBER SIN SeamResult(const CH1* result);
+
 /* Tests an array of TestCase(s).
 @return 0 upon success or an app exit code upon failure. */
-LIB_MEMBER SIN SeamTreeTest(SI4 arg_count, CH1** args, TestCase* tests,
+LIB_MEMBER SIN SeamTreeTest(SIN arg_count, CH1** args, TestCase* tests,
                             SIN test_count);
 
 /* Tests an array of TestCase(s).

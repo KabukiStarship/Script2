@@ -2,13 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bout.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
-All right reserved (R). This Source Code Form is subject to the terms of the
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #if SEAM >= SCRIPT2_DICTIONARY
 
@@ -28,10 +28,10 @@ typedef enum BOutStates {
 
 /* B-Output ring socket socket. */
 struct LIB_MEMBER BOut {
-  SI4 size;            //< Size of the B-Output.
+  SI4 size;             //< Size of the B-Output.
   volatile SI4 origin;  //< Starting index of the ring-socket data.
-  SI4 stop,            //< Stopping index of the ring-socket data.
-      read;            //< Address that the BOut device is reading from.
+  SI4 stop,             //< Stopping index of the ring-socket data.
+      read;             //< Address that the BOut device is reading from.
 };
 
 /* Get's the B-Output's socket.*/
