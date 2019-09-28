@@ -2,13 +2,12 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /strand.hpp
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <pch.h>
+#include <_config.h>
 
 #ifndef SCRIPT2_T_STRAND
 #define SCRIPT2_T_STRAND 1
@@ -16,15 +15,15 @@ the MPL was not distributed with this file, You can obtain one at
 #include "array.hpp"
 
 #if SEAM >= SCRIPT2_STRAND
-#include "typevalue.h"
 #include "stringf.hpp"
+#include "typevalue.h"
 
 #if SEAM == SCRIPT2_STRAND
-#include "module_debug.inl"
+#include "_debug.inl"
 #define D_COUT_STRAND(strand) \
   TStrandPrint<COut, Char, SIZ>(COut().Star(), strand)
 #else
-#include "module_release.inl"
+#include "_release.inl"
 #define D_COUT_STRAND(strand)
 #endif
 

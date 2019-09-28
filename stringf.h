@@ -1,15 +1,14 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \c_string.h
+@file    \string.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #ifndef SCRIPT2_StringF_CODLESS_HEADER
 #define SCRIPT2_StringF_CODLESS_HEADER 1
@@ -457,6 +456,7 @@ struct LIB_MEMBER Rightf {
 /* Utility class for printing a horizontal line with operator<<. */
 struct LIB_MEMBER Linef {
   Valuef element;  //< Pointer to a pointer to utf.
+  CH1 string[4];   //< Used to create a string in Linef(CH1,SIW).
 
   /* Constructors a horizontal line of the character. */
   Linef(CH1 item, SIW count = kConsoleWidth);

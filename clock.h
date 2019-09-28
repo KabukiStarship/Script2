@@ -2,14 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /clock.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #if SEAM >= SCRIPT2_CLOCK
 #ifndef SCRIPT2_CLOCK_C
@@ -36,7 +35,7 @@ Operation of the TME is intended for two scenarios:
 2. Processor is an x86 and timer gets updated with a tread or OS.
 In the real microsecond timer scenario the processor will just
 take the unsigned in value and copy it to the kUI4 member. In the
-case of the OS having a variable update tick period, the ticker will
+case of the OS having a variable Update tick period, the ticker will
 work best if the value gets incremented using the ++operator and you will
 need to use modulo updates_per_second unless the timer is set to 64 updates
 per second or some other power of 2 in which case bit masking is the

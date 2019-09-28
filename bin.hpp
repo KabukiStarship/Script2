@@ -2,13 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bin.inl
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
-All right reserved (R). This Source Code Form is subject to the terms of the 
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with 
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 #if SEAM >= SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
@@ -39,7 +39,7 @@ typedef enum BInStates {
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct LIB_MEMBER BIn {
   SI4 size,           //< The size of the socket.
-      origin;          //< The starting index of the ring socket data.
+      origin;         //< The starting index of the ring socket data.
   volatile SI4 stop;  //< The stopping index of the ring socket data.
   SI4 read;           //< The read variable.
 };

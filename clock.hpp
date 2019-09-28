@@ -2,14 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /lock.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough
-<<calemccollough.github.io>>; All right reserved (R). This Source Code
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
-<https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
+this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 
 #if SEAM >= SCRIPT2_CLOCK
 
@@ -17,13 +16,13 @@ the MPL was not distributed with this file, You can obtain one at
 #define INCLUDED_SCRIPT2_TCLOCK
 
 #include "clock.h"
-#include "test.h"
 #include "stringf.hpp"
+#include "test.h"
 
 #if SEAM == SCRIPT2_UNIPRINTER
-#include "module_debug.inl"
+#include "_debug.inl"
 #else
-#include "module_release.inl"
+#include "_release.inl"
 #endif
 
 namespace _ {
@@ -75,7 +74,7 @@ Char* Print(Char* cursor, Char* stop, TME& t) {
   return TSPrint<Char>(cursor, stop, t.ticks);
 }*/
 
-#if USING_STR == YES_0
+#if USING_STR
 
 template <typename Char = CHR>
 Char* TSPrint(Char* cursor, Char* stop, const AClock& clock) {
@@ -319,7 +318,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
   D_ASSERT(string);
   D_COUT("\n    Scanning AClock:\"" << string << "\n    Scanning: ");
 
-  string = TSTRSkipChar<Char>(string, '0');
+  string = TSTRSkimodulear<Char>(string, '0');
   Char c = *string,  //< The current Char.
       delimiter;     //< The delimiter.
   const Char* stop;  //< Might not need
@@ -378,7 +377,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
     return string + 1;
   }
   // SScan value2.
-  string = TSTRSkipChar<Char>(string, '0');
+  string = TSTRSkimodulear<Char>(string, '0');
   if (!TScanSigned<SI4, UI4, Char>(string, value2)) {
     D_COUT("\n    Failed scanning value2 of date.");
     return nullptr;
@@ -457,7 +456,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
 
-  string = TSTRSkipChar<Char>(++string, '0');
+  string = TSTRSkimodulear<Char>(++string, '0');
   c = *string;
   // Then there are 3 values and 2 delimiters.
   if (!TIsDigit<Char>(c) || !TScanSigned<SI4, UI4, Char>(string, value3)) {

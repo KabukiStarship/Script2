@@ -2,13 +2,13 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /crabs.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <<calemccollough.github.io>>;
-All right reserved (R). This Source Code Form is subject to the terms of the
+@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <pch.h>
+#include <_config.h>
 #if SEAM >= SCRIPT2_DICTIONARY
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
@@ -127,7 +127,8 @@ LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
 LIB_MEMBER Crabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
-                      Operand* root, UIW* unpacked_buffer, UIW unpacked_size);
+                            Operand* root, UIW* unpacked_buffer,
+                            UIW unpacked_size);
 
 /* Gets the base address of the device stack. */
 inline Operand** CrabsStack(Crabs* crabs) {
