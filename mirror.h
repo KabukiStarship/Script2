@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /mirror.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
@@ -31,7 +31,7 @@ const Op* MirrorResult(Mirror* mirror, Error error);
 const Op* MirrorResult(Mirror* mirror, Error error);
 
 enum {
-  kMirrorHeaderSize = 4 * sizeof(SI4)  //< Size of a Mirror Header.
+  cMirrorHeaderSize = 4 * sizeof(SI4)  //< Size of a Mirror Header.
 };
 
 static const UIW kMaxMirrorSize = ~((UIW)0);
@@ -131,4 +131,4 @@ LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error,
 
 }  // namespace _
 #endif  //< SCRIPT2_MIRROR
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

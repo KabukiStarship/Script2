@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_array.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /matrix.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -19,12 +19,12 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* @ingroup AsciiMatrix
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/matrix.md
 */
 
 /* A multi-dimensional array of homogeneous types with a Stack of dimensions.
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/matrix.md
 
 ***Memory Layout***
@@ -47,7 +47,7 @@ struct TMatrix {
 
 /* Max number of elements that can fit in the given SIZ. */
 template <typename T = SIW, typename SIZ = SIN>
-constexpr SIZ CMatrixElementCountMax() {
+constexpr SIZ cMatrixElementCountMax() {
   return (TSignedMax<SIZ>() - sizeof(TStack<SIZ>)) / sizeof(T);
 }
 
@@ -55,7 +55,7 @@ template <typename T = SIW, typename SIZ = SIN>
 constexpr SIZ cMatrixCountUpperLimit(SIZ dimension_count, SIZ element_count) {
   SIZ header_size =
       (SIZ)(sizeof(TStack<SIZ>) + AlignUp(dimension_count * sizeof(SIZ)));
-  return (SIZ)(((~(SIZ)0) - kWordLSbMask) - header_size) / (SIZ)sizeof(T);
+  return (SIZ)(((~(SIZ)0) - cWordLSbMask) - header_size) / (SIZ)sizeof(T);
 }
 
 /* Prints the TMatrix to the UTF. */
@@ -122,7 +122,7 @@ TMatrix<SIZ>* TMatrixInit(const SIZ* dimensions) {
   SIZ dimension_count = *dimensions;
   if (dimension_count < 0) return nullptr;
   SIZ size = (SIZ)sizeof(TStack<SIZ>) + dimension_count * sizeof(T);
-  UIW* socket = new UIW[size >> kWordBitCount];
+  UIW* socket = new UIW[size >> cWordBitCount];
   TStack<SIZ>* stack = reinterpret_cast<TStack<SIZ>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
@@ -193,29 +193,29 @@ inline T* TMatrixElements(TMatrix<SIZ>* obj) {
 /* Creates a immutable array of dimensions. */
 template <typename SI, const SI... N>
 inline const SI* TDim() {
-  static const SI kCount = (SI)sizeof...(N), kList[sizeof...(N)] = {N...};
-  return &kCount;
+  static const SI cCount = (SI)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &cCount;
 }
 
 /* Creates a immutable array of SI2 dimensions. */
 template <const SI2... N>
 inline const SI2* TDim2() {
-  static const SI2 kCount = (SI2)sizeof...(N), kList[sizeof...(N)] = {N...};
-  return &kCount;
+  static const SI2 cCount = (SI2)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &cCount;
 }
 
 /* Creates a immutable array of SI4 dimensions. */
 template <const SI4... N>
 inline const SI4* TStack4() {
-  static const SI4 kCount = (SI4)sizeof...(N), kList[sizeof...(N)] = {N...};
-  return &kCount;
+  static const SI4 cCount = (SI4)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &cCount;
 }
 
 /* Creates a static array of SI8 dimensions. */
 template <const SI8... N>
 inline const SI8* TDim8() {
-  static const SI8 kCount = (SI8)sizeof...(N), kList[sizeof...(N)] = {N...};
-  return &kCount;
+  static const SI8 cCount = (SI8)sizeof...(N), kList[sizeof...(N)] = {N...};
+  return &cCount;
 }
 
 template <typename T = SIW, typename SIZ = SIN>

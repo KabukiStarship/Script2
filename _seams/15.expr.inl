@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/15.expr.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_EXPR
 #include "../room.h"
@@ -26,18 +23,18 @@ static const CH1* Expr(const CH1* args) {
   A_TEST_BEGIN;
 
   enum {
-    kBufferSize = 2048,
-    kBufferWords = kBufferSize / sizeof(UIW),
-    kStackHeight = 8,
+    cBufferSize = 2048,
+    cBufferWords = cBufferSize / sizeof(UIW),
+    cStackHeight = 8,
   };
-  UIW buffer[kBufferWords], unpacked_expr[kBufferWords];
+  UIW buffer[cBufferWords], unpacked_expr[cBufferWords];
   D_COUT("\n|  - Running OperationTests in address ranges: [0x"
-         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[kBufferWords - 1]));
+         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[cBufferWords - 1]));
 
   This a;
 
-  Expression* expr = ExpressionInit(buffer, kBufferSize, kStackHeight, &a,
-                                    unpacked_expr, kBufferSize);
+  Expression* expr = ExpressionInit(buffer, cBufferSize, cStackHeight, &a,
+                                    unpacked_expr, cBufferSize);
   ExpressionPrint(expr);
 
   D_COUT("\n|    Testing Root (@see \"a.h\")...\n");

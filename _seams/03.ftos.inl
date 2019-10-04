@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/03.ftos.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_FTOS
 //#include "../rng.h"
@@ -27,20 +24,20 @@ const CH1* FtoS(const CH1* args) {
   A_TEST_BEGIN;
 
 #if SEAM == SCRIPT2_FTOS
-  enum { kTestCount = 1 << 20 };
+  enum { cTestCount = 1 << 20 };
 #else
-  enum { kTestCount = 1 << 15 };
+  enum { cTestCount = 1 << 15 };
 #endif
   /*
-  enum { kSize = 31 };
-  CH1 socket[kSize + 1];
+  enum { cSize = 31 };
+  CH1 socket[cSize + 1];
 
   UI8 value;
   FP8 dbl_expected, dbl_found;
 
   D_COUT("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
 
-  for (SI4 i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < cTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<FP8>(value);
@@ -51,27 +48,27 @@ const CH1* FtoS(const CH1* args) {
   }
 
   D_COUT(
-      "\n\nTesting const Char* TSScan<Char> (const Char*, const Char*, FP4&) "
+      "\n\nTesting const CHT* TSScan<CHT> (const CHT*, const CHT*, FP4&) "
       "functions...\n");
 
-  for (SI4 i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < cTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
-    sprintf_s(socket, kSize, "%lf", dbl_expected);
+    sprintf_s(socket, cSize, "%lf", dbl_expected);
     A_ASSERT(SScan(socket, dbl_found));
     A_AVOW(dbl_expected, dbl_found);
   }
 
-  D_COUT("\n\nTesting Char* TSPrint<Char> (Char*, Char*, Float)...\n");
+  D_COUT("\n\nTesting CHT* TSPrint<CHT> (CHT*, CHT*, Float)...\n");
 
-  for (SI4 i = 0; i < kTestCount; ++i) {
+  for (SI4 i = 0; i < cTestCount; ++i) {
     do {
       value = RandomUI8();
       dbl_expected = static_cast<FP8>(value);
     } while (!IsFinite(dbl_expected));
-    Print(socket, socket + kSize, dbl_expected);
+    Print(socket, socket + cSize, dbl_expected);
     SI4 r = sscanf_s(socket, "%lf", &dbl_found);
     A_ASSERT(r);
     A_AVOW(dbl_expected, dbl_found);

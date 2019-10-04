@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /puff.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -172,7 +172,7 @@ UI8 TComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
   return *reinterpret_cast<UI8*>(&pow_10);
 }
 
-constexpr SIW IEEE754LutElementCount() { return 87; }
+constexpr SIW cIEEE754LutElementCount() { return 87; }
 
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.

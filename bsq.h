@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bsq.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
@@ -82,35 +82,35 @@ inline SI8 PackSV8(SI8 value) {
 //    return temp;
 //}
 
-constexpr SI4 BsqSize(const SI4* params) {
+constexpr SI4 cBsqSize(const SI4* params) {
   if (!params) {
     return 0;
   }
   SI4 size_bytes = sizeof(SI4), count = *params++;
 
-  if (count > kParamsMax) {
+  if (count > cParamsMax) {
     return 0;
   }
 
   for (; count > 0; --count) {
     SI4 param = *params++;
 
-    if (param == kNIL) {  // This is illegal.
+    if (param == cNIL) {  // This is illegal.
       return 0;
     }
     if (param <= kTKN) {
       size_bytes += sizeof(SI4);
       ++params;
     }
-    if (param == kSIH) {
+    if (param == cSIH) {
       size_bytes += sizeof(SI4);
       ++params;
     }
-    if (param == kUIH) {
+    if (param == cUIH) {
       size_bytes += sizeof(SI4);
       ++params;
     }
-    if (param >= kLST && param <= kMAP) {  // This is illegal.
+    if (param >= cLST && param <= kMAP) {  // This is illegal.
       return 0;
     }
     if (param > kMAP) {
@@ -132,9 +132,9 @@ constexpr SI4 BsqSize(const SI4* params) {
     and to eliminate some redundant typing. */
 template <const SI4... N>
 inline const SI4* Params() {
-  static const SI4 kSize = 0,  // BsqSize ({ N... })
+  static const SI4 cSize = 0,  // BsqSize ({ N... })
       kList[sizeof...(N)] = {N...};
-  return &kSize;
+  return &cSize;
 }
 
 /* Prints out the kBSQ parameters. */
@@ -168,4 +168,4 @@ inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
 #endif  //< USING_UTF8 == YES_0
 
 #endif  //< SCRIPT2_BSQ_C
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

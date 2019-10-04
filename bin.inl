@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bin.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 
 #include "bin.h"
 
@@ -19,7 +19,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "hash.h"
 #include "typevalue.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #define CLEAR(origin, stop) \
   while (origin <= stop) *origin++ = ' ';
 #define D_COUT_BSQ(header, bsq) Console<>().Out() << header << '\n' << Bsq(bsq);
@@ -154,7 +154,7 @@ SI4 BInStreamByte(BIn* bin) {
                                      : (stop - origin) + (open - origin) + 2);
 
   if (length < 1) {
-    BInError(bin, kErrorBufferOverflow, Params<1, kSTR>(), 2, origin);
+    BInError(bin, cErrorBufferOverflow, Params<1, kSTR>(), 2, origin);
     return -1;
   }
   // UI1 b = *cursor;
@@ -170,22 +170,22 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   D_COUT_BIN(" from B-Input:", bin);
 
   if (!bin) {
-    return BInError(bin, kErrorImplementation);
+    return BInError(bin, cErrorImplementation);
   }
   if (!params) {
-    return BInError(bin, kErrorImplementation);
+    return BInError(bin, cErrorImplementation);
   }
   if (!args) {
-    return BInError(bin, kErrorImplementation);
+    return BInError(bin, cErrorImplementation);
   }
   UI1 ui1;       //< Temp variable.
   UI2 ui2;       //< Temp variable.
   UI4 ui4;       //< Temp variable.
   UI8 ui8;       //< Temp variable.
-  CH1* ui1_ptr;  //< Pointer to a kUI1.
-  // UI2* ui2_ptr;              //< Pointer to a kUI2.
-  UI4* ui4_ptr;              //< Pointer to a kUI4.
-  UI8* ui8_ptr;              //< Pointer to a kUI1.
+  CH1* ui1_ptr;  //< Pointer to a cUI1.
+  // UI2* ui2_ptr;              //< Pointer to a cUI2.
+  UI4* ui4_ptr;              //< Pointer to a cUI4.
+  UI8* ui8_ptr;              //< Pointer to a cUI1.
   SI4 type,                  //< The current type being read.
       size,                  //< Size of the ring socket.
       length,                //< Length of the data in the socket.
@@ -219,8 +219,8 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
                       << TDelta<>(origin, stop) << " length:" << length);
     switch (type) {
       ;
-      case kNIL:
-        return BInError(bin, kErrorInvalidType, params, index, origin);
+      case cNIL:
+        return BInError(bin, cErrorInvalidType, params, index, origin);
       case kADR:
       case kSTR:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
                   // Load buffered-type argument length and increment the index.
@@ -230,7 +230,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         // Load next pointer and increment args.
         ui1_ptr = reinterpret_cast<CH1*>(args[arg_index]);
         if (ui1_ptr == nullptr)
-          return BInError(bin, kErrorImplementation, params, index, origin);
+          return BInError(bin, cErrorImplementation, params, index, origin);
         D_COUT("\nReading kSTR:0x" << Hexf(ui1_ptr)
                                    << " with length:" << count);
         // Read CH1.
@@ -243,7 +243,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         while ((ui1 != 0) && (count != 0)) {
           --count;
           if (count == 0)  //< Reached count:0 before nil-term CH1.
-            return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, cErrorBufferUnderflow, params, index, origin);
           ui1 = *origin;  // Read UI1 from ring-socket.
           hash = HashPrime16(ui1, hash);
           if (++origin >= stop) origin -= size;
@@ -256,12 +256,12 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           // No need to hash 0.
         }
         break;
-      case kSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
-      case kUI1:
-      case kBOL:
+      case cSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
+      case cUI1:
+      case cBOL:
 #if USING_SCRIPT2_1_BYTE_TYPES
         if (length-- == 0)
-          return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, cErrorBufferUnderflow, params, index, origin);
 
         // Load next pointer and increment args.
         ui1_ptr = reinterpret_cast<CH1*>(args[arg_index]);
@@ -277,14 +277,14 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         *ui1_ptr = ui1;                        //< Write
         break;
 #else
-        return BInError(bin, kErrorInvalidType, params, index, origin);
+        return BInError(bin, cErrorInvalidType, params, index, origin);
 #endif
-      case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
-      case kUI2:
-      case kFP2:
+      case cSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s_______________
+      case cUI2:
+      case cFP2:
 #if USING_SCRIPT2_2_BYTE_TYPES
         if (length < 2)
-          return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, cErrorBufferUnderflow, params, index, origin);
         length -= 2;
 
         // Load next pointer and increment args.
@@ -306,7 +306,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         *(ui1_ptr + 1) = ui1;                  //< Write
         break;
 #else
-        return BInError(bin, kErrorInvalidType, params, index, origin);
+        return BInError(bin, cErrorInvalidType, params, index, origin);
 #endif
       case SVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
       case UVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
@@ -314,7 +314,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
                  // Load next pointer and increment args.
         ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
-          return BInError(bin, kErrorImplementation, params, index, origin);
+          return BInError(bin, cErrorImplementation, params, index, origin);
         // SScan UI1 1.
         ui1 = *origin;
         if (++origin >= stop) origin -= size;
@@ -324,7 +324,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         count = 5;  //< The max number_ of Varint4 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, cErrorBufferUnderflow, params, index, origin);
           ui1 = *origin;
           if (++origin >= stop) origin -= size;
           hash = HashPrime16(ui1, hash);
@@ -333,7 +333,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           //< because we're packing them up and will overwrite.
           temp += 7;
           if (--count == 0)
-            return BInError(bin, kErrorVarintOverflow, params, index, origin);
+            return BInError(bin, cErrorVarintOverflow, params, index, origin);
         }
         if (count == 5)  //< If there is only one UI1 we need to
           ui4 &= 0x7F;   //< mask off the terminating varint bit.
@@ -344,7 +344,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
                  // Load next pointer and increment args.
         ui4_ptr = reinterpret_cast<UI4*>(args[arg_index]);
         if (ui4_ptr == nullptr)
-          return BInError(bin, kErrorImplementation, params, index, origin);
+          return BInError(bin, cErrorImplementation, params, index, origin);
 
         // SScan UI1 1.
         ui1 = *origin;
@@ -355,7 +355,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         count = 5;  //< The max number_ of Varint4 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, cErrorBufferUnderflow, params, index, origin);
           ui1 = *origin;
           if (++origin >= stop) origin -= size;
           hash = HashPrime16(ui1, hash);
@@ -364,7 +364,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           //< because we're packing them up and will overwrite.
           ui2 += 7;
           if (--count == 0)
-            return BInError(bin, kErrorVarintOverflow, params, index, origin);
+            return BInError(bin, cErrorVarintOverflow, params, index, origin);
         }
         if (count == 5)  //< If there is only one UI1 we need to
           ui4 &= 0x7F;   //< mask off the terminating varint bit.
@@ -372,13 +372,13 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         *ui4_ptr = ui4;
         break;
 #endif
-      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
-      case kUI4:
-      case kFP4:
+      case cSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s_______________
+      case cUI4:
+      case cFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         if (length < 4)
-          return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, cErrorBufferUnderflow, params, index, origin);
         length -= 4;
 
         // Load next pointer and increment args.
@@ -395,15 +395,15 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           *ui1_ptr++ = ui1;                      //< Write
         }
 #else
-        return BInError(bin, kErrorInvalidType, params, index, origin);
+        return BInError(bin, cErrorInvalidType, params, index, origin);
 #endif
       case kTM8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s_______________
-      case kSI8:
-      case kUI8:
-      case kFP8:
+      case cSI8:
+      case cUI8:
+      case cFP8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         if (length < 8)
-          return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, cErrorBufferUnderflow, params, index, origin);
         length -= 8;
 
         // Load next pointer and increment args.
@@ -420,14 +420,14 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         }
         break;
 #else
-        return BInError(bin, kErrorInvalidType, params, index, origin);
+        return BInError(bin, cErrorInvalidType, params, index, origin);
 #endif
       case SV8:  //< _R_e_a_d__V_a_r_i_n_t__8____________________
       case UV8:
         // Load next pointer and increment args.
         ui8_ptr = reinterpret_cast<UI8*>(args[arg_index]);
         if (!ui8_ptr) {
-          return BInError(bin, kErrorImplementation, params, index, origin);
+          return BInError(bin, cErrorImplementation, params, index, origin);
         }
         // SScan UI1 1.
         ui1 = *origin;
@@ -438,7 +438,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
         count = 9;  //< The max number_ of Varint8 bytes.
         while (ui1 >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, cErrorBufferUnderflow, params, index, origin);
           ui1 = *origin;
           if (++origin >= stop) origin -= size;
           hash = HashPrime16(ui1, hash);
@@ -454,7 +454,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           //< ui1 because we're packing them up and will overwrite.
           ui2 += 7;
           if (--count == 0)
-            return BInError(bin, kErrorVarintOverflow, params, index, origin);
+            return BInError(bin, cErrorVarintOverflow, params, index, origin);
         }
         if (count == 9)  //< If there is only one UI1 we need to
           ui8 &= 0x7F;   //< mask off the terminating varint bit.
@@ -465,7 +465,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #if USING_BSC
         ui1_ptr = reinterpret_cast<CH1*>(args[arg_index]);
         if (ui1_ptr == nullptr)
-          return BInError(bin, kErrorImplementation, params, index, origin);
+          return BInError(bin, cErrorImplementation, params, index, origin);
         ui1 = *origin;
 #endif
       default: {  //< It's an Array
@@ -473,33 +473,33 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
 #if USING_SCRIPT2_ARRAY
         switch (type & 0x60) {
           case 0: {
-            if ((type < kLST) && (type < kMAP))
-              return BInError(bin, kErrorInvalidType, params, index, origin);
+            if ((type < cLST) && (type < kMAP))
+              return BInError(bin, cErrorInvalidType, params, index, origin);
             if (length < 1)  // 1 UI1 for the width word.
-              return BInError(bin, kErrorBufferUnderflow, params, index,
+              return BInError(bin, cErrorBufferUnderflow, params, index,
                               origin);
 
             ui1_ptr = reinterpret_cast<CH1*>(args[arg_index]);
             if (ui1_ptr == nullptr)
-              return BInError(bin, kErrorImplementation, params, index, origin);
+              return BInError(bin, cErrorImplementation, params, index, origin);
 
             ui1 = *origin;
             if (++origin >= stop) origin -= size;
             hash = HashPrime16(ui1, hash);
             if (ui1 > length - 1)
-              return BInError(bin, kErrorBufferOverflow, params, index, origin);
+              return BInError(bin, cErrorBufferOverflow, params, index, origin);
             length = length - count - 1;
             count = (UIW)ui1;
             break;
           }
           case 1: {
             if (length < 2)  // 2 UI1 for the width word.
-              return BInError(bin, kErrorBufferUnderflow, params, index,
+              return BInError(bin, cErrorBufferUnderflow, params, index,
                               origin);
             length -= 2;
             ui2_ptr = reinterpret_cast<UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
-              return BInError(bin, kErrorImplementation, params, index, origin);
+              return BInError(bin, cErrorImplementation, params, index, origin);
 
             for (temp = 0; temp <= sizeof(UI2); temp += 8) {
               ui1 = *origin;
@@ -508,7 +508,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
               ui2 |= ((UI2)ui1) << temp;
             }
             if (ui2 > length)
-              return BInError(bin, kErrorBufferOverflow, params, index, origin);
+              return BInError(bin, cErrorBufferOverflow, params, index, origin);
             length -= count;
             count = (UIW)ui2;
             ui1_ptr = reinterpret_cast<CH1*>(ui2_ptr);
@@ -516,12 +516,12 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           }
           case 2: {
             if (length < 4)  // 4 UI1 for the width word.
-              return BInError(bin, kErrorBufferUnderflow, params, index,
+              return BInError(bin, cErrorBufferUnderflow, params, index,
                               origin);
             length -= 4;
             ui4_ptr = reinterpret_cast<UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
-              return BInError(bin, kErrorImplementation, params, index, origin);
+              return BInError(bin, cErrorImplementation, params, index, origin);
 
             for (temp = 0; temp <= sizeof(UI4); temp += 8) {
               ui1 = *origin;
@@ -530,7 +530,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
               ui4 |= ((UI4)ui1) << temp;
             }
             if (ui4 >= length)
-              return BInError(bin, kErrorBufferOverflow, params, index, origin);
+              return BInError(bin, cErrorBufferOverflow, params, index, origin);
             length -= count;
             count = (UIW)ui4;
             ui1_ptr = reinterpret_cast<CH1*>(ui4_ptr);
@@ -538,12 +538,12 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
           }
           case 3: {  // 8 UI1 for the width word.
             if (length < 9)
-              return BInError(bin, kErrorBufferUnderflow, params, index,
+              return BInError(bin, cErrorBufferUnderflow, params, index,
                               origin);
             length -= 8;
             ui8_ptr = reinterpret_cast<UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
-              return BInError(bin, kErrorImplementation, params, index, origin);
+              return BInError(bin, cErrorImplementation, params, index, origin);
 
             for (temp = 0; temp <= sizeof(UI8); temp += 8) {
               ui1 = *origin;
@@ -552,18 +552,18 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
               ui8 |= ((UI8)ui1) << temp;
             }
             if (ui8 > length)
-              return BInError(bin, kErrorBufferOverflow, params, index, origin);
+              return BInError(bin, cErrorBufferOverflow, params, index, origin);
             length -= count;
             count = (UIW)ui8;
             ui1_ptr = reinterpret_cast<CH1*>(ui8_ptr);
             break;
           }
           default:
-            return BInError(bin, kErrorImplementation, params, index, origin);
+            return BInError(bin, cErrorImplementation, params, index, origin);
         }
 
         if (length < count)
-          return BInError(bin, kErrorBufferOverflow, params, index, origin);
+          return BInError(bin, cErrorBufferOverflow, params, index, origin);
         if (count == 0) break;  //< Not sure if this is an error.
         if (origin + count >= stop) {
           for (; size - count > 0; --count) {
@@ -599,7 +599,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   }
   D_COUT("\nHash expected:0x" << Hexf(hash));
   if (length < 2)
-    return BInError(bin, kErrorBufferUnderflow, params, index, origin);
+    return BInError(bin, cErrorBufferUnderflow, params, index, origin);
   ui2 = *origin;
   if (++origin >= stop) origin -= size;
   ui1 = *origin;
@@ -607,7 +607,7 @@ const Op* BInRead(BIn* bin, const SI4* params, void** args) {
   ui2 |= (((UI2)ui1) << 8);
   D_COUT("found:0x" << Hexf(ui2));
   if (hash != ui2)
-    return BInError(bin, kErrorInvalidHash, params, index, origin);
+    return BInError(bin, cErrorInvalidHash, params, index, origin);
 
   D_COUT("\nDone reading\n");
   CLEAR(origin, stop)

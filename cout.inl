@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cout.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -147,9 +147,9 @@ COut& COut::Print(SI4 item) {
 #if ALU_SIZE == ALU_64_BIT
   Print((SI8)item);
 #else
-  enum { kSize = 24 };
-  CH1 socket[kSize];
-  TSPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
+  enum { cSize = 24 };
+  CH1 socket[cSize];
+  TSPrintSigned<SI8, UI8, CH1>(socket, cSize - 1, (SI8)value);
   Print(socket);
 #endif
 #endif
@@ -163,9 +163,9 @@ COut& COut::Print(UI4 item) {
 #if ALU_SIZE == ALU_64_BIT
   Print((UI8)item);
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintUnsigned<UI4, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CH1 buffer[cSize];
+  TSPrintUnsigned<UI4, CH1>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
 #endif
@@ -176,9 +176,9 @@ COut& COut::Print(SI8 item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintSigned<SI8, UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CH1 buffer[cSize];
+  TSPrintSigned<SI8, UI8, CH1>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
@@ -188,9 +188,9 @@ COut& COut::Print(UI8 item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintUnsigned<UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CH1 buffer[cSize];
+  TSPrintUnsigned<UI8, CH1>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
@@ -201,9 +201,9 @@ COut& COut::Print(FP4 item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { kSize = 16 };
-  CH1 buffer[kSize];
-  TPrintFloat<FP4, UI4, CH1>(buffer, kSize, value);
+  enum { cSize = 16 };
+  CH1 buffer[cSize];
+  TPrintFloat<FP4, UI4, CH1>(buffer, cSize, value);
   Print(buffer);
 #endif
   return *this;
@@ -214,9 +214,9 @@ COut& COut::Print(FP8 item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TPrintFloat<FP8, UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CH1 buffer[cSize];
+  TPrintFloat<FP8, UI8, CH1>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;

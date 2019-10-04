@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /wall.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_WALL_HEADER
 #define SCRIPT2_WALL_HEADER
 
@@ -45,7 +45,7 @@ needed a new Wall may be created and destroyed dynamically.
 class Wall : public Operand {
  public:
   enum {
-    kMinSizeBytes = 512,  //< Min functional Wall size.
+    cMinSizeBytes = 512,  //< Min functional Wall size.
   };
 
   virtual ~Wall() {
@@ -58,8 +58,8 @@ class Wall : public Operand {
   Wall(TMap<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
-  Wall(SIW size_bytes = kMinSizeBytes) : is_dynamic_(true) {
-    size_bytes = size_bytes < kMinSizeBytes ? (SI4)kMinSizeBytes : size_bytes;
+  Wall(SIW size_bytes = cMinSizeBytes) : is_dynamic_(true) {
+    size_bytes = size_bytes < cMinSizeBytes ? (SI4)cMinSizeBytes : size_bytes;
     size_bytes = TAlignUpUnsigned<SI8, SIW>(size_bytes);
     SIW size_words = (size_bytes >> sizeof(void*)) + 3;
     UIW *socket = new UIW[size_words],
@@ -78,7 +78,7 @@ class Wall : public Operand {
     //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
     //    * end_ptr = ptr + size_bytes;
     enum {
-      kBitsShift = sizeof(UIW) == 2 ? 1 : sizeof(UIW) == 2 ? 2 : 3,
+      cBitsShift = sizeof(UIW) == 2 ? 1 : sizeof(UIW) == 2 ? 2 : 3,
     };
     // SI4 size_words = (size_bytes >> kBitsShift) + 3;
     //< Computer engineering voodoo for aligning to 64-bit boundary.

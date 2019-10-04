@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_collection.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /set.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,16 +10,16 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_config.h>
 #if SEAM >= SCRIPT2_BOOK
-#ifndef INCLUDED_F2_SET
-#define INCLUDED_F2_SET 1
+#ifndef SCRIPT2_BOOK
+#define SCRIPT2_BOOK 1
 
 #include "typevalue.h"
 
 namespace _ {
 /*
-    @code
-    ;
-    @endcode
+  @code
+  ;
+  @endcode
 */
 template <typename Index, typename TKey, typename SIZ, typename THash>
 struct LIB_MEMBER TCollection {
@@ -49,7 +49,7 @@ Set Types:
 |-----------:|:----:|:--------------------------------------------|
 |      Array | ARY  | A packed c-style array of POD number_ types. |
 |      Stack | STK  | A stack of POD number_ types.                |
-|       List | kLST  | A stack of Type-Value tuples.               |
+|       List | cLST  | A stack of Type-Value tuples.               |
 |        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
 |   Multimap | kDIC  | A multimap of Key-Value tuples.             |
 | Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |

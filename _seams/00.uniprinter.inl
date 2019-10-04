@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/00.uniprinter.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_UNIPRINTER
 #include "../stringf.hpp"
@@ -36,10 +33,10 @@ inline const CH1* Uniprinter(const CH1* args) {
 
   CH1* test_args[] = {arg_String, arg_String + 11, arg_String + 16,
                       arg_String + 26};
-  const SI4 kArgCount = 4;
+  const SI4 cArgCount = 4;
 
   D_COUT("\nArguments:\n");
-  for (SI4 i = 0; i < kArgCount; ++i) {
+  for (SI4 i = 0; i < cArgCount; ++i) {
     CH1* arg = test_args[i];
     if (arg) {
       D_COUT("\n" << i << ".)\"" << arg << "\" delta:" << arg - arg_String);
@@ -49,7 +46,7 @@ inline const CH1* Uniprinter(const CH1* args) {
   }
   D_COUT("\n\nRunning ArgsToString... ");
 
-  D_ASSERT(ArgsToString(kArgCount, test_args));
+  D_ASSERT(ArgsToString(cArgCount, test_args));
 
   D_COUT("Result:\"");
   D_COUT(test_args[1]);
@@ -58,21 +55,21 @@ inline const CH1* Uniprinter(const CH1* args) {
 
   D_COUT(Headingf("Testing CH1* SPrint (CH1*,CH1*,CH4);"));
   enum {
-    kUTF8EdgeCondition2 = 0x7f,
-    kUTF8EdgeCondition3 = 0x7ff,
-    kUTF8EdgeCondition4 = 0xffff,
-    kSTR1Count = 8
+    cSTAEdgeCondition2 = 0x7f,
+    cSTAEdgeCondition3 = 0x7ff,
+    cSTAEdgeCondition4 = 0xffff,
+    cSTACount = 8
   };
-  CH1 str1[kSTR1Count];
-  CH1* str1_cursor = SPrint(str1, kSTR1Count, CH4(0));
+  CH1 str1[cSTACount];
+  CH1* str1_cursor = SPrint(str1, cSTACount, CH4(0));
   A_ASSERT(str1_cursor);
   const CH1* str1_result = SScan(str1, ch4_found);
   D_ASSERT_INDEX(str1_result, SI4(0));
   A_AVOW_INDEX(CH4(0), ch4_found, 0);
 
-  for (CH4 ch4_expected = kUTF8EdgeCondition4; ch4_expected < (1 << 21);
+  for (CH4 ch4_expected = cSTAEdgeCondition4; ch4_expected < (1 << 21);
        ch4_expected += 64) {
-    str1_cursor = SPrint(str1, kSTR1Count, ch4_expected);
+    str1_cursor = SPrint(str1, cSTACount, ch4_expected);
     D_ASSERT_INDEX(str1_cursor, UI4(ch4_expected));
     const CH1* str1_result = SScan(str1, ch4_found);
     D_ASSERT_INDEX(str1_result, UI4(ch4_expected));
@@ -82,11 +79,11 @@ inline const CH1* Uniprinter(const CH1* args) {
 #if USING_UTF16 == YES_0
   D_COUT(Headingf("Testing Testing CH2* SPrint (CH2*,CH2*,CH4)..."));
   enum {
-    kSTR2Count = 4,
+    cSTRBCount = 4,
   };
-  CH2 str2[kSTR2Count];
+  CH2 str2[cSTRBCount];
   CH2* str2_cursor = str2;
-  str2_cursor = SPrint(str2, kSTR2Count - 1, CH4(0));
+  str2_cursor = SPrint(str2, cSTRBCount - 1, CH4(0));
   D_COUT(Hexf(str2) << reinterpret_cast<CH1*>(str2 + 3) - 1);
   A_ASSERT(str2_cursor);
   const CH2* str2_result = SScan(str2, ch4_found);

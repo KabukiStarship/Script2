@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bout.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,7 +10,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_config.h>
 
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 
 #ifndef INCLUDED_SCRIPT2_BOUT
 #define INCLUDED_SCRIPT2_BOUT
@@ -21,9 +21,9 @@ namespace _ {
 
 /* List of the Finite BOut States. */
 typedef enum BOutStates {
-  kBOutStateDisconnected = 0,  //< BOut State 0: BOut locked.
-  kBOutStateWriting,           //< BOut State 1: Most common state.
-  kBOutStateWritingBsc,        //< BOut State 2: Writing kBSQ.
+  cBOutStateDisconnected = 0,  //< BOut State 0: BOut locked.
+  cBOutStateWriting,           //< BOut State 1: Most common state.
+  cBOutStateWritingBsc,        //< BOut State 2: Writing kBSQ.
 } BOutState;
 
 /* B-Output ring socket socket. */
@@ -98,4 +98,4 @@ inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
 
 #endif  //< INCLUDED_SCRIPT2_BOUT
 #undef DEBUG_SCRIPT2_BOUT
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

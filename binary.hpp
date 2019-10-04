@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /binary.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -76,7 +76,7 @@ inline UI TNaNUnsigned() {
 
 /* Returns the maximum value of the given signed type. */
 template <typename SIZ>
-constexpr SIZ TNaNSigned() {
+constexpr SIZ cNaNSigned() {
   return (~ToUnsigned(SIZ)) >> 1;
 }
 
@@ -87,8 +87,8 @@ inline SI TDelta(const void* start, const void* stop) {
 }
 
 enum {
-  kStack = 0,  //< Flag for using stack memory.
-  kHeap = 1,   //< Flag for using heap memory.
+  cStack = 0,  //< Flag for using stack memory.
+  cHeap = 1,   //< Flag for using heap memory.
 };
 
 /* Returns the N in 2^N for the sizeof (I) to speed up dividing by powers of 2.
@@ -98,7 +98,7 @@ SIN size_words = size_bytes >> CBitCount<SIN> ()
 @endcode
 */
 template <typename SIZ = SIW>
-constexpr SI4 CBitCount() {
+constexpr SI4 cBitCount() {
   return (sizeof(SIZ) == 1)
              ? 0
              : (sizeof(SIZ) == 2)
@@ -147,62 +147,62 @@ unsgiend_example = AlignUp<SI4, UI2, UI2> (unsigned_example);
 // value + ((~value) + 1) & (sizeof (SI1) - 1) = value
 @endcode */
 
-inline SI1 AlignUp(SI1 value, SI1 align_lsb_mask = kWordLSbMask) {
+inline SI1 AlignUp(SI1 value, SI1 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline UI1 AlignUp(UI1 value, UI1 align_lsb_mask = kWordLSbMask) {
+inline UI1 AlignUp(UI1 value, UI1 align_lsb_mask = cWordLSbMask) {
   return UI1(AlignUp(SI1(value), SI1(align_lsb_mask)));
 }
-inline SI2 AlignUp(SI2 value, SI2 align_lsb_mask = kWordLSbMask) {
+inline SI2 AlignUp(SI2 value, SI2 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline UI2 AlignUp(UI2 value, UI2 align_lsb_mask = kWordLSbMask) {
+inline UI2 AlignUp(UI2 value, UI2 align_lsb_mask = cWordLSbMask) {
   return value + (UI2(-SI2(value)) & align_lsb_mask);
 }
-inline SI4 AlignUp(SI4 value, SI4 align_lsb_mask = kWordLSbMask) {
+inline SI4 AlignUp(SI4 value, SI4 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline UI4 AlignUp(UI4 value, UI4 align_lsb_mask = kWordLSbMask) {
+inline UI4 AlignUp(UI4 value, UI4 align_lsb_mask = cWordLSbMask) {
   return value + (UI4(-SI4(value)) & align_lsb_mask);
 }
-constexpr SI8 AlignUp(SI8 value, SI8 align_lsb_mask = kWordLSbMask) {
+inline SI8 AlignUp(SI8 value, SI8 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr UI8 AlignUp(UI8 value, UI8 align_lsb_mask = kWordLSbMask) {
+inline UI8 AlignUp(UI8 value, UI8 align_lsb_mask = cWordLSbMask) {
   return value + (UI8(-SI8(value)) & align_lsb_mask);
 }
-constexpr SI1 CAlignUp(SI1 value, SI1 align_lsb_mask = kWordLSbMask) {
+constexpr SI1 cAlignUp(SI1 value, SI1 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr UI1 CAlignUp(UI1 value, UI1 align_lsb_mask = kWordLSbMask) {
-  return UI1(CAlignUp(SI1(value), SI1(align_lsb_mask)));
+constexpr UI1 cAlignUp(UI1 value, UI1 align_lsb_mask = cWordLSbMask) {
+  return UI1(cAlignUp(SI1(value), SI1(align_lsb_mask)));
 }
-constexpr SI2 CAlignUp(SI2 value, SI2 align_lsb_mask = kWordLSbMask) {
+constexpr SI2 cAlignUp(SI2 value, SI2 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr UI2 CAlignUp(UI2 value, UI2 align_lsb_mask = kWordLSbMask) {
+constexpr UI2 cAlignUp(UI2 value, UI2 align_lsb_mask = cWordLSbMask) {
   return value + (UI2(-SI2(value)) & align_lsb_mask);
 }
-constexpr SI4 CAlignUp(SI4 value, SI4 align_lsb_mask = kWordLSbMask) {
+constexpr SI4 cAlignUp(SI4 value, SI4 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr UI4 CAlignUp(UI4 value, UI4 align_lsb_mask = kWordLSbMask) {
+constexpr UI4 cAlignUp(UI4 value, UI4 align_lsb_mask = cWordLSbMask) {
   return value + (UI4(-SI4(value)) & align_lsb_mask);
 }
-constexpr SI8 CAlignUp(SI8 value, SI8 align_lsb_mask = kWordLSbMask) {
+constexpr SI8 cAlignUp(SI8 value, SI8 align_lsb_mask = cWordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr UI8 CAlignUp(UI8 value, UI8 align_lsb_mask = kWordLSbMask) {
+constexpr UI8 cAlignUp(UI8 value, UI8 align_lsb_mask = cWordLSbMask) {
   return value + (UI8(-SI8(value)) & align_lsb_mask);
 }
 
-inline void* AlignUpPTR(void* pointer, SIW mask = kWordLSbMask) {
+inline void* AlignUpPTR(void* pointer, SIW mask = cWordLSbMask) {
   SIW address = reinterpret_cast<SIW>(pointer);
-  return reinterpret_cast<void*>(AlignUp(address, mask));
+  return reinterpret_cast<void*>(cAlignUp(address, mask));
 }
-inline const void* AlignUpPTR(const void* pointer, SIW mask = kWordLSbMask) {
+inline const void* AlignUpPTR(const void* pointer, SIW mask = cWordLSbMask) {
   SIW value = reinterpret_cast<UIW>(pointer);
-  return reinterpret_cast<void*>(AlignUp(value, mask));
+  return reinterpret_cast<void*>(cAlignUp(value, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -210,7 +210,7 @@ inline const void* AlignUpPTR(const void* pointer, SIW mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CH1>
-inline T* TAlignUpPTR(void* pointer, SIW mask = kWordLSbMask) {
+inline T* TAlignUpPTR(void* pointer, SIW mask = cWordLSbMask) {
   SIW value = reinterpret_cast<SIW>(pointer);
   return reinterpret_cast<T*>(value + ((-value) & mask));
 }
@@ -220,7 +220,7 @@ inline T* TAlignUpPTR(void* pointer, SIW mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CH1>
-inline T* TAlignUpPTR(const void* pointer, SIW mask = kWordLSbMask) {
+inline T* TAlignUpPTR(const void* pointer, SIW mask = cWordLSbMask) {
   SIW value = reinterpret_cast<SIW>(pointer);
   return reinterpret_cast<T*>(value + ((-value) & mask));
 }
@@ -250,41 +250,41 @@ inline SI8 AlignDown(SI8 value, SI8 align_lsb_mask) {
 inline UI8 AlignDown(UI8 value, UI8 align_lsb_mask) {
   return value - (value & align_lsb_mask);
 }
-constexpr SI1 CAlignDown(SI1 value, SI1 align_lsb_mask = kWordLSbMask) {
+constexpr SI1 cAlignDown(SI1 value, SI1 align_lsb_mask = cWordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr UI1 CAlignDown(UI1 value, UI1 align_lsb_mask = kWordLSbMask) {
+constexpr UI1 cAlignDown(UI1 value, UI1 align_lsb_mask = cWordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr SI2 CAlignDown(SI2 value, SI2 align_lsb_mask = kWordLSbMask) {
+constexpr SI2 cAlignDown(SI2 value, SI2 align_lsb_mask = cWordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr UI2 CAlignDown(UI2 value, UI2 align_lsb_mask = kWordLSbMask) {
+constexpr UI2 cAlignDown(UI2 value, UI2 align_lsb_mask = cWordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr SI4 CAlignDown(SI4 value, SI4 align_lsb_mask = kWordLSbMask) {
+constexpr SI4 cAlignDown(SI4 value, SI4 align_lsb_mask = cWordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr UI4 CAlignDown(UI4 value, UI4 align_lsb_mask = kWordLSbMask) {
+constexpr UI4 cAlignDown(UI4 value, UI4 align_lsb_mask = cWordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr SI8 CAlignDown(SI8 value, SI8 align_lsb_mask = kWordLSbMask) {
+constexpr SI8 cAlignDown(SI8 value, SI8 align_lsb_mask = cWordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr UI8 CAlignDown(UI8 value, UI8 align_lsb_mask = kWordLSbMask) {
+constexpr UI8 cAlignDown(UI8 value, UI8 align_lsb_mask = cWordLSbMask) {
   return value + (value & align_lsb_mask);
 }
 
 /* Calculates the size_bytes in size_words. */
 template <typename SIZ>
 inline SIZ TSizeWords(SIZ size) {
-  return AlignUp(size) >> kWordBitCount;
+  return AlignUp(size) >> cWordBitCount;
 }
 
 template <typename SIZ>
-constexpr SIZ CSizeWords(SIZ size) {
-  SIZ size_aligned = size + ((-size) & kWordLSbMask);
-  size_aligned = size_aligned >> kWordBitCount;
+constexpr SIZ cSizeWords(SIZ size) {
+  SIZ size_aligned = size + ((-size) & cWordLSbMask);
+  size_aligned = size_aligned >> cWordBitCount;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
 
@@ -293,7 +293,7 @@ template <typename SIZ = SIW>
 inline SIZ TWordCount(SIZ size) {
   SIZ align_offset = (-size) & (sizeof(SIW) - 1);
   size += align_offset;
-  return size >> CBitCount<SIW>();
+  return size >> cBitCount<SIW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -312,7 +312,7 @@ inline UI8 Negative(UI8 value) { return UI8(Negative(SI8(value))); }
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = UIW>
-inline T TAlignDownPTR(void* ptr, SIW mask = kWordLSbMask) {
+inline T TAlignDownPTR(void* ptr, SIW mask = cWordLSbMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
   return reinterpret_cast<T>(value - (value & mask));
 }
@@ -322,7 +322,7 @@ inline T TAlignDownPTR(void* ptr, SIW mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = UIW>
-inline T TAlignDownPTR(const void* ptr, SIW mask = kWordLSbMask) {
+inline T TAlignDownPTR(const void* ptr, SIW mask = cWordLSbMask) {
   UIW value = reinterpret_cast<UIW>(ptr);
   return reinterpret_cast<const T>(value - (value & mask));
 }
@@ -332,13 +332,13 @@ inline T TAlignDownPTR(const void* ptr, SIW mask = kWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename SIZ = UIW>
-inline SIZ TAlignDownI(SIZ value, SIZ mask = (SIZ)kWordLSbMask) {
+inline SIZ TAlignDownI(SIZ value, SIZ mask = (SIZ)c_WordLSbMask) {
   return value & (~mask);
 }
 
 /* Aligns the given size to a word-sized boundary. */
 template <typename SIZ>
-constexpr SIZ SizeAlign(SIZ size) {
+constexpr SIZ cSizeAlign(SIZ size) {
   SIZ align_lsb_mask = sizeof(UIW) - 1;
   if (size < sizeof(UIW)) return sizeof(UIW);
   SIZ size_max = ~align_lsb_mask;
@@ -411,16 +411,16 @@ inline SI1 SignedMin(SI1 one) { return SI1(UI1(one) << (sizeof(SI1) * 8 - 1)); }
 inline SI2 SignedMin(SI2 one) { return SI2(UI2(one) << (sizeof(SI2) * 8 - 1)); }
 inline SI4 SignedMin(SI4 one) { return SI4(UI4(one) << (sizeof(SI4) * 8 - 1)); }
 inline SI8 SignedMin(SI8 one) { return SI8(UI8(one) << (sizeof(SI8) * 8 - 1)); }
-constexpr SI1 CSignedMin(SI1 one) {
+constexpr SI1 cSignedMin(SI1 one) {
   return SI1(UI1(one) << (sizeof(SI1) * 8 - 1));
 }
-constexpr SI2 CSignedMin(SI2 one) {
+constexpr SI2 cSignedMin(SI2 one) {
   return SI2(UI2(one) << (sizeof(SI2) * 8 - 1));
 }
-constexpr SI4 CSignedMin(SI4 one) {
+constexpr SI4 cSignedMin(SI4 one) {
   return SI4(UI4(one) << (sizeof(SI4) * 8 - 1));
 }
-constexpr SI8 CSignedMin(SI8 one) {
+constexpr SI8 cSignedMin(SI8 one) {
   return SI8(UI8(one) << (sizeof(SI8) * 8 - 1));
 }
 template <typename SI>
@@ -428,7 +428,7 @@ inline SI TSignedMin() {
   return SignedMin(SI(1));
 }
 template <typename SI>
-constexpr SI CSignedMin() {
+constexpr SI cSignedMin() {
   return CSignedMin(SI(1));
 }
 
@@ -438,7 +438,7 @@ inline SI TSignedNaN() {
   return TSignedMin<SI>() - 1;
 }
 template <typename SI>
-constexpr SI CSignedNaN() {
+constexpr SI cSignedNaN() {
   return TSignedNaN<SI>();
 }
 
@@ -459,13 +459,13 @@ template <typename UI>
 inline UI TUnsignedMax() {
   return UnsignedMax(UI(0));
 }
-constexpr UI1 CUnsignedMax(SI1 zero) { return ~UI1(zero); }
-constexpr UI2 CUnsignedMax(SI2 zero) { return ~UI2(zero); }
-constexpr UI4 CUnsignedMax(SI4 zero) { return ~UI4(zero); }
-constexpr UI8 CUnsignedMax(SI8 zero) { return ~UI8(zero); }
+constexpr UI1 cUnsignedMax(SI1 zero) { return ~UI1(zero); }
+constexpr UI2 cUnsignedMax(SI2 zero) { return ~UI2(zero); }
+constexpr UI4 cUnsignedMax(SI4 zero) { return ~UI4(zero); }
+constexpr UI8 cUnsignedMax(SI8 zero) { return ~UI8(zero); }
 template <typename SI>
-constexpr SI CUnsignedMax() {
-  return CUnsignedMax(SI(0));
+constexpr SI cUnsignedMax() {
+  return cUnsignedMax(SI(0));
 }
 
 /* Returns the minimum signed value.
@@ -485,13 +485,13 @@ template <typename SI>
 inline SI TSignedMax() {
   return SignedMax(SI(0));
 }
-constexpr SI1 CSignedMax(SI1 zero) { return SI1(CUnsignedMax(zero) >> 1); }
-constexpr SI2 CSignedMax(SI2 zero) { return SI2(CUnsignedMax(zero) >> 1); }
-constexpr SI4 CSignedMax(SI4 zero) { return SI4(CUnsignedMax(zero) >> 1); }
-constexpr SI8 CSignedMax(SI8 zero) { return SI8(CUnsignedMax(zero) >> 1); }
+constexpr SI1 cSignedMax(SI1 zero) { return SI1(cUnsignedMax(zero) >> 1); }
+constexpr SI2 cSignedMax(SI2 zero) { return SI2(cUnsignedMax(zero) >> 1); }
+constexpr SI4 cSignedMax(SI4 zero) { return SI4(cUnsignedMax(zero) >> 1); }
+constexpr SI8 cSignedMax(SI8 zero) { return SI8(cUnsignedMax(zero) >> 1); }
 
 template <typename SI>
-constexpr SI CSignedMax() {
+constexpr SI cSignedMax() {
   return CSignedMax(SI(0));
 }
 
@@ -593,7 +593,7 @@ inline const CH1* AlignUp(const CH1* pointer, UIW least_significant_bits_max) {
 This funciton is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = SIW, I kPowerOf2_ = CBitCount<I>()>
+template <typename I = SIW, I kPowerOf2_ = cBitCount<I>()>
 I TAlignUp(I value) {
   return ALignUp(value, kPowerOf2_ - 1);
 }

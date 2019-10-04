@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/01.itos.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_ITOS
 #include <cString>
@@ -38,21 +35,21 @@ inline const CH1* ItoS(const CH1* args) {
 
   D_COUT("\n\nTesting Pow10_UI2...");
   UI2 pow10_ui2 = 1;
-  for (UI2 i = 0; i < kUI2DigitCountMax; ++i) {
+  for (UI2 i = 0; i < cUI2DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
     pow10_ui2 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI4...");
   UI4 pow10_ui4 = 1;
-  for (UI4 i = 0; i < kUI4DigitCountMax; ++i) {
+  for (UI4 i = 0; i < cUI4DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
     pow10_ui4 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI8...");
   UI8 pow10_ui8 = 1;
-  for (UI8 i = 0; i < kUI8DigitCountMax; ++i) {
+  for (UI8 i = 0; i < cUI8DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
     pow10_ui8 *= 10;
   }
@@ -106,18 +103,18 @@ inline const CH1* ItoS(const CH1* args) {
 
   static const UI8 problem_child[] = {9173263544803952, 827672716845, 0};
 
-  enum { kNumProblemChildren = 2, kSize = 23 };
+  enum { cProblemChildCount = 2, cSize = 23 };
 
-  CH1 text[kSize + 1], expecting[kSize + 1];
-  CH1 socket[kSize];
+  CH1 text[cSize + 1], expecting[cSize + 1];
+  CH1 socket[cSize];
   CH1* result;
   UI8 result_ui8, expected_ui8;
 
-  D_COUT("\nTesting ScanUnsigned<UI, Char> (const Char*, const CH1*, I);");
+  D_COUT("\nTesting ScanUnsigned<UI, CHT> (const CHT*, const CH1*, I);");
 
   for (SIN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
-    sprintf_s(socket, kSize, "%llu", expected_ui8);
+    sprintf_s(socket, cSize, "%llu", expected_ui8);
     const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
     A_ASSERT(test);
     A_AVOW(expected_ui8, result_ui8);
@@ -142,7 +139,7 @@ inline const CH1* ItoS(const CH1* args) {
     D_COUT(kPuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
                             << i << ".) ");
     SIN expected_length = TSTRLength<CH1>(expecting);
-    result = TSPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+    result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -158,7 +155,7 @@ inline const CH1* ItoS(const CH1* args) {
     expected_ui8 = edge_condition[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     D_COUT("\n\n" << i + 1 << ".) ");
-    result = TSPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+    result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -185,7 +182,7 @@ inline const CH1* ItoS(const CH1* args) {
       expected_ui8 = Random(lower_bounds, upper_bounds);
       sprintf_s(expecting, 24, "%llu", expected_ui8);
       D_COUT("\n\n" << i + 1);
-      result = TSPrintUnsigned<UI8, CH1>(text, text + kSize - 1, expected_ui8);
+      result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
       if (!result) {
         D_PAUSE("An error occurred :-(");
         break;

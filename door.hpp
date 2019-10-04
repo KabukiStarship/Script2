@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_door.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /door.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -46,25 +46,25 @@ template <SI4 kDoorCount_, SI4 kSlotSizeDefault_>
 class TDoor : public Operand {
  public:
   enum {
-    kDoorCount = kDoorCount_,              //< Initial (or static) Door count.
-    kSlotSizeDefault = kSlotSizeDefault_,  //< Default.
+    cDoorCount = kDoorCount_,              //< Initial (or static) Door count.
+    cSlotSizeDefault = kSlotSizeDefault_,  //< Default.
   };
 
   typedef enum Errors {
-    kErrorInvalidOp = 0,   //< Error code for invalid operation.
-    kErrorImplementation,  //< Error code for an unkown implementation error.
+    cErrorInvalidOp = 0,   //< Error code for invalid operation.
+    cErrorImplementation,  //< Error code for an unkown implementation error.
   } Error;
 
   enum {
-    kMinDoorSize = 128,  //< The min and default size of the door socket.
+    cMinDoorSize = 128,  //< The min and default size of the door socket.
   };
 
   /* A door in a Chinese room. */
   TDoor(const CH1* roomName = nullptr, UIW* socket = nullptr,
-        UIW size_bytes = kMinDoorSize) {
+        UIW size_bytes = cMinDoorSize) {
     if (!socket) {
-      if (size_bytes < kMinDoorSize) {
-        size_bytes = kMinDoorSize;
+      if (size_bytes < cMinDoorSize) {
+        size_bytes = cMinDoorSize;
       }
     } else {
       if (size_bytes < kMinDoorSize) {
@@ -75,7 +75,7 @@ class TDoor : public Operand {
     }
     // tx.SetBuffer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
     // rx = new SerialSlot (tx.EndAddress (), aSlot, aSlotSize,
-    //  aTalkbackSize);
+    //  aTalkbaccSize);
   }
 
   /* SocketFactory. */
@@ -147,7 +147,7 @@ class TDoor : public Operand {
     }
     index -= ' ';
     if (((SI4)index) >= slots_->count) {
-      return DoorResult(this, Door::kErrorInvalidOp);
+      return DoorResult(this, Door::c_ErrorInvalidOp);
     }
     return nullptr;
   }

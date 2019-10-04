@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /op.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -19,9 +19,9 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 // enum {
-//    kOpPush          = 0, //< Operation Type 0: Stack push .
-//    kOpOperation     = 1, //< Operation Type 1: Abstract Operation.
-//    KOpOperationPush = 2, //< Operation Type 2: Operation with stack push.
+//    cOpPush          = 0, //< Operation Type 0: Stack push .
+//    cOpOperation     = 1, //< Operation Type 1: Abstract Operation.
+//    cOpOperationPush = 2, //< Operation Type 2: Operation with stack push.
 //};
 
 struct BOut;
@@ -77,17 +77,17 @@ inline CH4 OpLast(const Op* op) {
 }
 
 #if USING_SCRIPT2_TEXT == YES_0
-template <typename Char>
-TSPrinter<Char>& Print(TSPrinter<Char>& utf, const Op* op) {}
+template <typename CHT>
+TSPrinter<CHT>& Print(TSPrinter<CHT>& utf, const Op* op) {}
 #endif
 
 }  // namespace _
 
-template <typename Char>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
+template <typename CHT>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf,
                                       const _::Op* op) {
   return _::Print(utf, op);
 }
 
 #endif  //< #if INCLUDED_SCRIPT2_OP 1
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

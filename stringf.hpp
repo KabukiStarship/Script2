@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /uniprinter.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /stringf.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -13,8 +13,8 @@ faster. */
 #pragma once
 #include <_config.h>
 
-#ifndef SCRIPT2_STRING_CODE_HEADER
-#define SCRIPT2_STRING_CODE_HEADER 1
+#ifndef SCRIPT2_STRING_CODE
+#define SCRIPT2_STRING_CODE 1
 
 #include "binary.hpp"
 #include "puff.hpp"
@@ -36,9 +36,8 @@ inline SIN STRLength(SI1 value) {
 /* Compares the two Strings up to the given delimiter.
 @param delimiter Delimiters in Script2 are equal to or less than.
 @return 0 if the Strings are equal or a non-zero delta upon failure. */
-template <typename Char = CHR>
-SIN TSTRCompare(const Char* string, const Char* other_String,
-                Char delimiter = 0) {
+template <typename CHT = CHR>
+SIN TSTRCompare(const CHT* string, const CHT* other_String, CHT delimiter = 0) {
   if (!string || !other_String) return 0;
 
   SIN a, b, result;
@@ -81,8 +80,8 @@ SIN TSTRCompare(const Char* string, const Char* other_String,
 /* Scrolls over to the next FP8 quote mark.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CH1. */
-template <typename Char = CHR>
-inline const Char* TSTREnd(const Char* string, CH1 delimiter = 0) {
+template <typename CHT = CHR>
+inline const CHT* TSTREnd(const CHT* string, CH1 delimiter = 0) {
   while (*string++ != delimiter)
     ;
   return string - 1;
@@ -91,28 +90,28 @@ inline const Char* TSTREnd(const Char* string, CH1 delimiter = 0) {
 /* Scrolls over to the next FP8 quote mark.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CH1. */
-template <typename Char = CHR>
-inline Char* TSTREnd(Char* string, Char delimiter = 0) {
-  return const_cast<Char*>(
-      TSTREnd<Char>(reinterpret_cast<const Char*>(string), delimiter));
+template <typename CHT = CHR>
+inline CHT* TSTREnd(CHT* string, CHT delimiter = 0) {
+  return const_cast<CHT*>(
+      TSTREnd<CHT>(reinterpret_cast<const CHT*>(string), delimiter));
 }
 
 /* Gets the length of the given CH1.
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CH1. */
-template <typename Char = CHR, typename SIZ = SIN>
-SIZ TSTRLength(const Char* string) {
-  return (SIZ)(TSTREnd<Char>(string) - string);
+template <typename CHT = CHR, typename SIZ = SIN>
+SIZ TSTRLength(const CHT* string) {
+  return (SIZ)(TSTREnd<CHT>(string) - string);
 }
 
 /* Gets the length of the given CH1.
 @return  Returns -1 if the text CH1 is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CH1. */
-template <typename Char = CHR, typename SIZ = SIN>
-inline SIZ TSTRLength(Char* string) {
-  return TSTRLength<Char>(reinterpret_cast<const Char*>(string));
+template <typename CHT = CHR, typename SIZ = SIN>
+inline SIZ TSTRLength(CHT* string) {
+  return TSTRLength<CHT>(reinterpret_cast<const CHT*>(string));
 }
 
 /* Scans a item from the string.
@@ -161,7 +160,7 @@ inline CH2* SScan(CH2* string, CH4& item) {
 
 #if USING_UTF32 == YES_0
 // CH1* SScan (CH2* string, CH2& item) and
-// CH1* SScan (CH1* string, CH4& item) in c_string.h
+// CH1* SScan (CH1* string, CH4& item) in cstring.h
 
 inline const CH4* SScan(const CH4* string, CH1& result) {
   result = CH1(*string++);
@@ -190,12 +189,12 @@ inline CH4* SScan(CH4* string, CH4& item) {
 }
 #endif
 
-template <typename Char>
-Char* TScanChar(Char* cursor, Char& c) {}
+template <typename CHT>
+CHT* TScanChar(CHT* cursor, CHT& c) {}
 
 /* Converts the given item to lowercase if it is uppercase. */
-template <typename Char>
-inline Char TToLower(Char c) {
+template <typename CHT>
+inline CHT TToLower(CHT c) {
   if (c >= 'A' && c <= 'Z') c -= 32;
   return c;
 }
@@ -205,15 +204,15 @@ inline CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
 inline CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
 
 /* Checks if the given item is whitespace. */
-template <typename Char = CHR>
-inline BOL TIsWhitespace(Char item) {
+template <typename CHT = CHR>
+inline BOL TIsWhitespace(CHT item) {
   return item <= ' ';
 }
 
-template <typename Char>
-SIN TIsYesNo(const Char* string) {
+template <typename CHT>
+SIN TIsYesNo(const CHT* string) {
   if (!string) return 0;
-  Char c = TToLower<Char>(*string++);
+  CHT c = TToLower<CHT>(*string++);
   SIN result;
   if (c == 'y')
     result = 1;
@@ -222,18 +221,18 @@ SIN TIsYesNo(const Char* string) {
   else
     return 0;
   c = *string++;
-  if (TIsWhitespace<Char>(c)) return result;
-  c = TToLower<Char>(c);
-  if (c == 'o') return -(SIN)TIsWhitespace<Char>(*string++);
-  if (TToLower<Char>(*string++) != 'e') return 0;
-  if (TToLower<Char>(*string++) != 's') return 0;
-  return (SIN)TIsWhitespace<Char>(*string++);
+  if (TIsWhitespace<CHT>(c)) return result;
+  c = TToLower<CHT>(c);
+  if (c == 'o') return -(SIN)TIsWhitespace<CHT>(*string++);
+  if (TToLower<CHT>(*string++) != 'e') return 0;
+  if (TToLower<CHT>(*string++) != 's') return 0;
+  return (SIN)TIsWhitespace<CHT>(*string++);
 }
 
 /* Checks if the given CH1 is a digit of a number_.
 @return True if it is a digit. */
-template <typename Char = CHR>
-BOL TIsDigit(Char c) {
+template <typename CHT = CHR>
+BOL TIsDigit(CHT c) {
   return (c >= '0') && (c <= '9');
 }
 
@@ -241,24 +240,24 @@ BOL TIsDigit(Char c) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename Char = CHR>
-const Char* TScanSigned(const Char* string, SI& item) {
+template <typename SI = SIW, typename UI = UIW, typename CHT = CHR>
+const CHT* TScanSigned(const CHT* string, SI& item) {
   if (!string) return nullptr;
   SI sign;
-  const Char* cursor = string;
-  Char c = *cursor++;
+  const CHT* cursor = string;
+  CHT c = *cursor++;
   if (c == '-') {
     c = *string++;
     sign = -1;
   } else {
     sign = 1;
   }
-  if (!TIsDigit<Char>(c)) return nullptr;
+  if (!TIsDigit<CHT>(c)) return nullptr;
 
   // Find length:
   c = *cursor++;
-  while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* stop = cursor;  // Store stop to return.
+  while (TIsDigit<CHT>(c)) c = *cursor++;
+  const CHT* stop = cursor;  // Store stop to return.
   cursor -= 2;
 
   c = *cursor--;
@@ -280,64 +279,64 @@ const Char* TScanSigned(const Char* string, SI& item) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename Char = CHR>
-Char* TScanSigned(Char* string, SI& item) {
-  const Char* ptr = reinterpret_cast<const Char*>(string);
-  return const_cast<Char*>(TScanSigned<SI, UI, Char>(ptr, item));
+template <typename SI = SIW, typename UI = UIW, typename CHT = CHR>
+CHT* TScanSigned(CHT* string, SI& item) {
+  const CHT* ptr = reinterpret_cast<const CHT*>(string);
+  return const_cast<CHT*>(TScanSigned<SI, UI, CHT>(ptr, item));
 }
 
 /* Scans the given socket for an Signed Integer (SI).
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, SI1& item) {
-  return TScanSigned<SI1, UI1, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, SI1& item) {
+  return TScanSigned<SI1, UI1, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, SI1& item) {
-  return TScanSigned<SI1, UI1, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, SI1& item) {
+  return TScanSigned<SI1, UI1, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, SI2& item) {
-  return TScanSigned<SI2, UI2, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, SI2& item) {
+  return TScanSigned<SI2, UI2, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, SI2& item) {
-  return TScanSigned<SI2, UI2, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, SI2& item) {
+  return TScanSigned<SI2, UI2, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, SI4& item) {
-  return TScanSigned<SI4, UI4, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, SI4& item) {
+  return TScanSigned<SI4, UI4, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, SI4& item) {
-  return TScanSigned<SI4, UI4, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, SI4& item) {
+  return TScanSigned<SI4, UI4, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, SI8& item) {
-  return TScanSigned<SI8, UI8, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, SI8& item) {
+  return TScanSigned<SI8, UI8, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, SI8& item) {
-  return TScanSigned<SI8, UI8, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, SI8& item) {
+  return TScanSigned<SI8, UI8, CHT>(string, item);
 }
 
 /* Scans the given socket for an unsigned integer (UI).
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The UI to write the scanned UI. */
-template <typename UI, typename Char = CHR>
-const Char* TScanUnsigned(const Char* string, UI& item) {
+template <typename UI, typename CHT = CHR>
+const CHT* TScanUnsigned(const CHT* string, UI& item) {
   if (!string) return nullptr;
-  const Char* cursor = string;
-  Char c = *cursor++;
-  if (!TIsDigit<Char>(c)) return nullptr;
+  const CHT* cursor = string;
+  CHT c = *cursor++;
+  if (!TIsDigit<CHT>(c)) return nullptr;
 
   // Find length:
   c = *cursor++;
-  while (TIsDigit<Char>(c)) c = *cursor++;
-  const Char* stop = cursor;  // Store stop to return.
+  while (TIsDigit<CHT>(c)) c = *cursor++;
+  const CHT* stop = cursor;  // Store stop to return.
   cursor -= 2;
 
   c = *cursor--;
@@ -359,86 +358,86 @@ const Char* TScanUnsigned(const Char* string, UI& item) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The UI to write the scanned UI. */
-template <typename UI, typename Char = CHR>
-Char* TScanUnsigned(Char* string, UI& item) {
-  const Char* ptr = reinterpret_cast<const Char*>(string);
-  return const_cast<Char*>(TScanUnsigned<UI, Char>(ptr, item));
+template <typename UI, typename CHT = CHR>
+CHT* TScanUnsigned(CHT* string, UI& item) {
+  const CHT* ptr = reinterpret_cast<const CHT*>(string);
+  return const_cast<CHT*>(TScanUnsigned<UI, CHT>(ptr, item));
 }
 
 /* Scans item from the string.
 @return Nil upon failure. */
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, UI1& item) {
-  return TScanUnsigned<UI1, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, UI1& item) {
+  return TScanUnsigned<UI1, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, UI1& item) {
-  return TScanUnsigned<UI1, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, UI1& item) {
+  return TScanUnsigned<UI1, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, UI2& item) {
-  return TScanUnsigned<UI2, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, UI2& item) {
+  return TScanUnsigned<UI2, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, UI2& item) {
-  return TScanUnsigned<UI2, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, UI2& item) {
+  return TScanUnsigned<UI2, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, UI4& item) {
-  return TScanUnsigned<UI4, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, UI4& item) {
+  return TScanUnsigned<UI4, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, UI4& item) {
-  return TScanUnsigned<UI4, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, UI4& item) {
+  return TScanUnsigned<UI4, CHT>(string, item);
 }
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, UI8& item) {
-  return TScanUnsigned<UI8, Char>(string, item);
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, UI8& item) {
+  return TScanUnsigned<UI8, CHT>(string, item);
 }
-template <typename Char = CHR>
-Char* TSScan(Char* string, UI8& item) {
-  return TScanUnsigned<UI8, Char>(string, item);
+template <typename CHT = CHR>
+CHT* TSScan(CHT* string, UI8& item) {
+  return TScanUnsigned<UI8, CHT>(string, item);
 }
 
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+/* Prints a Unicode CHT to the given socket.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param string The beginning of the socket.
 @param count  The element count.
 @param item   The string to print. */
-template <typename Char = CHR>
-Char* TSPrint(Char* string, Char* stop, CH1 item) {
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* string, CHT* stop, CH1 item) {
   if (!string || string >= stop) return nullptr;
   *string++ = item;
   *string = 0;
   return string;
 }
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+/* Prints a Unicode CHT to the given socket.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param string The beginning of the socket.
 @param count  The element count.
 @param item   The string to print. */
-template <typename Char = CHR>
-Char* TSPrint(Char* string, SIW count, CH1 item) {
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* string, SIW count, CH1 item) {
   return SPrint(string, string + count - 1, item);
 }
 
-/* Prints a Unicode Char to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+/* Prints a Unicode CHT to the given socket.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param string The beginning of the socket.
 @param count  The element count.
 @param item   The string to print. */
-template <typename Char = CHR>
-Char* TSPrint(Char* string, SIW count, CH2 item) {
-  return TSPrint<Char>(string, string + count - 1, item);
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* string, SIW count, CH2 item) {
+  return TSPrint<CHT>(string, string + count - 1, item);
 }
 
 /* Prints the given item to the string.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param count  The number of Chars in the string buffer.
 @param item   The string to print. */
-template <typename Char = CHR>
-Char* TSPrint(Char* string, SIW count, CH4 item) {
-  return TSPrint<Char>(string, string + count - 1, item);
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* string, SIW count, CH4 item) {
+  return TSPrint<CHT>(string, string + count - 1, item);
 }
 inline CH1* SPrint(CH1* string, CH1* stop, CH1 item) {
   if (!string || string >= stop) return nullptr;
@@ -506,12 +505,12 @@ inline CH4* SPrint(CH4* string, CH4* stop, CH2 item) {
 #endif  //< USING_UTF32 == YES_0
 
 /* Prints a Unicode item to the given socket.
- @return  Nil upon failure or a pointer to the nil-term Char upon success.
+ @return  Nil upon failure or a pointer to the nil-term CHT upon success.
  @param string  The beginning of the socket.
- @param stop    The last Char in the socket.
+ @param stop    The last CHT in the socket.
  @param item    The item to print. */
-template <typename Char, typename CHE>
-Char* TSPrintString(Char* string, Char* stop, const CHE* item) {
+template <typename CHX, typename CHY>
+CHX* TSPrintString(CHX* string, CHX* stop, const CHY* item) {
   if (!string || !item) return nullptr;
 
   CHA c;
@@ -525,95 +524,95 @@ Char* TSPrintString(Char* string, Char* stop, const CHE* item) {
   return string;
 }
 
-template <typename Char = CHR>
-inline Char* TSPrint(Char* start, Char* stop, const CH1* item) {
-  return TSPrintString<Char, CH1>(start, stop, item);
+template <typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, CHT* stop, const CH1* item) {
+  return TSPrintString<CHT, CH1>(start, stop, item);
 }
 
 #if USING_UTF16 == YES_0
 /* Prints a Unicode item to the given socket.
- @return  Nil upon failure or a pointer to the nil-term Char upon success.
+ @return  Nil upon failure or a pointer to the nil-term CHT upon success.
  @param string  The beginning of the socket.
- @param stop    The last Char in the socket.
+ @param stop    The last CHT in the socket.
  @param item    The item to print.
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
-template <typename Char = CHR>
-Char* TSPrintString(Char* string, Char* stop, const CH2* item) {
-  return TSPrintString<Char, CH2>(string, stop, item);
+template <typename CHT = CHR>
+CHT* TSPrintString(CHT* string, CHT* stop, const CH2* item) {
+  return TSPrintString<CHT, CH2>(string, stop, item);
 }
-template <typename Char = CHR>
-inline Char* TSPrint(Char* start, Char* stop, const CH2* item) {
-  return TSPrintString<Char>(start, stop, item);
+template <typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, CHT* stop, const CH2* item) {
+  return TSPrintString<CHT>(start, stop, item);
 }
 #endif
 
 #if USING_UTF32 == YES_0
 /* Prints a Unicode item to the given socket.
- @return  Nil upon failure or a pointer to the nil-term Char upon success.
+ @return  Nil upon failure or a pointer to the nil-term CHT upon success.
  @param start  The beginning of the socket.
- @param stop    The last Char in the socket.
+ @param stop    The last CHT in the socket.
  @param item    The item to print.
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
-template <typename Char = CHR>
-Char* TSPrintString(Char* start, Char* stop, const CH4* item) {
-  return TSPrintString<Char, CH4>(start, stop, item);
+template <typename CHT = CHR>
+CHT* TSPrintString(CHT* start, CHT* stop, const CH4* item) {
+  return TSPrintString<CHT, CH4>(start, stop, item);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrint(Char* start, Char* stop, const CH4* item) {
-  return TSPrintString<Char>(start, stop, item);
+template <typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, CHT* stop, const CH4* item) {
+  return TSPrintString<CHT>(start, stop, item);
 }
 #endif
 
 /* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param start    The beginning of the socket.
-@param size      The size of the socket in Char(s).
+@param size      The size of the socket in CHT(s).
 @param item      The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
-template <typename Char = CHR>
-inline Char* TSPrint(Char* start, SIW size, const CH1* item) {
-  return TSPrintString<Char>(start, start + size - 1, item);
+template <typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, SIW size, const CH1* item) {
+  return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
 /* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param start    The beginning of the socket.
-@param size      The size of the socket in Char(s).
+@param size      The size of the socket in CHT(s).
 @param item      The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
-template <typename Char = CHR>
-Char* TSPrint(Char* start, SIW size, const CH2* item) {
-  return TSPrintString<Char>(start, start + size - 1, item);
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* start, SIW size, const CH2* item) {
+  return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
 /* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param start    The beginning of the socket.
-@param size      The size of the socket in Char(s).
+@param size      The size of the socket in CHT(s).
 @param item      The string to print.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
-template <typename Char = CHR>
-Char* TSPrint(Char* start, SIW size, const CH4* item) {
-  return TSPrintString<Char>(start, start + size - 1, item);
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* start, SIW size, const CH4* item) {
+  return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
 /* Finds the end of a decimal number of the given string.
 @return Nil if the string doesn't contain a decimal or is nil.
 @param start The start of the string to search. */
-template <typename Char = const CH1>
-const Char* TSTRDecimalEnd(const Char* start) {
+template <typename CHT = const CH1>
+const CHT* TSTRDecimalEnd(const CHT* start) {
   if (!start) return start;
-  Char c = *start++;
+  CHT c = *start++;
   if (c == '-') c = *start++;
   if (c < '0' || c > '9') return nullptr;
   c = *start++;
-  while (TIsDigit<Char>(c)) {
+  while (TIsDigit<CHT>(c)) {
     c = *start++;
     if (c <= 0) return start - 1;
   }
@@ -621,87 +620,86 @@ const Char* TSTRDecimalEnd(const Char* start) {
 }
 
 /* Skips all the chars in a given range.
-@return Nil upon failure or a pointer to the Char after the last Char in the
+@return Nil upon failure or a pointer to the CHT after the last CHT in the
 given range.
-@param cursor  The first Char in the buffer.
+@param cursor  The first CHT in the buffer.
 @param lower_bounds
 @param upper bounds*/
-template <typename Char = CHR>
-const Char* TSTRSkimodulearsInRange(const Char* cursor, Char lower_bounds,
-                                    Char upper_bounds) {
+template <typename CHT = CHR>
+const CHT* TSTRSkimodulearsInRange(const CHT* cursor, CHT lower_bounds,
+                                   CHT upper_bounds) {
   A_ASSERT(cursor);
   A_ASSERT(lower_bounds < upper_bounds);
-  Char c = *cursor;
+  CHT c = *cursor;
   while (c >= lower_bounds && c <= upper_bounds) c = *(++cursor);
   return cursor;
 }
 
 /* Skips all the chars in a given range.
-@return Nil upon failure or a pointer to the Char after the last Char in the
+@return Nil upon failure or a pointer to the CHT after the last CHT in the
 given range.
-@param cursor  The first Char in the buffer.
+@param cursor  The first CHT in the buffer.
 @param lower_bounds
 @param upper bounds*/
-template <typename Char = CHR>
-Char* TSTRSkimodulearsInRange(Char* cursor, Char lower_bounds,
-                              Char upper_bounds) {
-  return const_cast<Char*>(TSTRSkimodulearsInRange(
-      reinterpret_cast<const Char*>(cursor), lower_bounds, upper_bounds));
+template <typename CHT = CHR>
+CHT* TSTRSkimodulearsInRange(CHT* cursor, CHT lower_bounds, CHT upper_bounds) {
+  return const_cast<CHT*>(TSTRSkimodulearsInRange(
+      reinterpret_cast<const CHT*>(cursor), lower_bounds, upper_bounds));
 }
 
 /* Skips the numbers in the given range. */
-template <typename Char = CHR>
-inline const Char* TSTRSkipNumbers(const Char* cursor) {
-  return const_cast<Char*>(TSTRSkimodulearsInRange<Char>(
-      reinterpret_cast<const Char*>(cursor), '0', '9'));
+template <typename CHT = CHR>
+inline const CHT* TSTRSkipNumbers(const CHT* cursor) {
+  return const_cast<CHT*>(TSTRSkimodulearsInRange<CHT>(
+      reinterpret_cast<const CHT*>(cursor), '0', '9'));
 }
 /* Skips the numbers in the given range. */
-template <typename Char = CHR>
-inline Char* TSTRSkipNumbers(Char* cursor) {
-  return const_cast<Char*>(
-      TSTRSkipNumbers<Char>(reinterpret_cast<const Char*>(cursor)));
+template <typename CHT = CHR>
+inline CHT* TSTRSkipNumbers(CHT* cursor) {
+  return const_cast<CHT*>(
+      TSTRSkipNumbers<CHT>(reinterpret_cast<const CHT*>(cursor)));
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first Char in the buffer. */
-template <typename Char = const CH1>
-Char* TSTRDecimalEnd(Char* start) {
-  const Char* ptr = reinterpret_cast<const Char*>(start);
-  return const_cast<Char*>(TSTRDecimalEnd<Char>(ptr));
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = const CH1>
+CHT* TSTRDecimalEnd(CHT* start) {
+  const CHT* ptr = reinterpret_cast<const CHT*>(start);
+  return const_cast<CHT*>(TSTRDecimalEnd<CHT>(ptr));
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRDecimalEnd(const Char* cursor, const Char* stop) {
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+const CHT* TSTRDecimalEnd(const CHT* cursor, const CHT* stop) {
   if (!cursor || cursor >= stop) return nullptr;
-  Char c = *cursor++;
+  CHT c = *cursor++;
   if (!c) return nullptr;
   if (c == '-') {  // It might be negative.
     if (cursor >= stop) return nullptr;
     c = *cursor++;
   }
-  if (!TIsDigit<Char>(c)) return nullptr;
+  if (!TIsDigit<CHT>(c)) return nullptr;
   while (c) {
     if (cursor >= stop) return nullptr;
-    if (!TIsDigit<Char>(c)) return cursor - 1;
+    if (!TIsDigit<CHT>(c)) return cursor - 1;
     c = *cursor++;
   }
   return cursor - 1;
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-inline Char* TSTRDecimalEnd(Char* cursor, Char* stop) {
-  return const_cast<Char*>(
-      TSTRDecimalEnd<Char>(reinterpret_cast<const Char*>(cursor),
-                           reinterpret_cast<const Char*>(stop)));
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+inline CHT* TSTRDecimalEnd(CHT* cursor, CHT* stop) {
+  return const_cast<CHT*>(
+      TSTRDecimalEnd<CHT>(reinterpret_cast<const CHT*>(cursor),
+                          reinterpret_cast<const CHT*>(stop)));
 }
-template <typename Char>
-const Char* TSTRFloatStop(const Char* start) {
+template <typename CHT>
+const CHT* TSTRFloatStop(const CHT* start) {
   const CH1* stop = TSTRDecimalEnd<CH1>(start);
   if (!stop) return stop;
   CH1 c = *stop++;
@@ -716,15 +714,15 @@ const Char* TSTRFloatStop(const Char* start) {
   return stop;
 }
 
-/* Skips the given Char in a s if there are any.
-@param cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRSkimodulear(const Char* cursor, Char skip_char) {
+/* Skips the given CHT in a s if there are any.
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = CHR>
+const CHT* TSTRSkimodulear(const CHT* cursor, CHT skip_char) {
   if (cursor == nullptr) return nullptr;
-  Char c = *cursor, d;
+  CHT c = *cursor, d;
   if (c != skip_char) return cursor;
   d = *cursor;
-  // We know the first Char is a skip_char so just loop till c and d aren't
+  // We know the first CHT is a skip_char so just loop till c and d aren't
   // the skip_char.
   while (c == d) {
     c = d;
@@ -794,32 +792,32 @@ inline SIN HexToByte(UI2 h) {
   return lowerValue | (upper_value << 4);
 }
 
-/* Skips the given Char in a s if there are any.
-@param cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-inline Char* TSTRSkimodulear(Char* cursor, Char skip_char) {
-  return const_cast<const Char*>(
-      TSTRSkimodulear<Char>(reinterpret_cast<const Char*>(cursor), skip_char));
+/* Skips the given CHT in a s if there are any.
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = CHR>
+inline CHT* TSTRSkimodulear(CHT* cursor, CHT skip_char) {
+  return const_cast<const CHT*>(
+      TSTRSkimodulear<CHT>(reinterpret_cast<const CHT*>(cursor), skip_char));
 }
 
-template <typename Char>
-void TPrint1(Char* start, Char token) {
+template <typename CHT>
+void TPrint1(CHT* start, CHT token) {
   *start++ = token;
   *start++ = 0;
 }
 
 /* @todo Delete me
-template <typename Char>
-void TPrint3(Char* start, Char token) {
+template <typename CHT>
+void TPrint3(CHT* start, CHT token) {
   *start++ = token;
   *start++ = token;
   *start++ = token;
   *start++ = 0;
 }*/
 
-template <typename T, typename Char = CHR>
-Char* TSPrintHex(Char* start, Char* stop, const void* origin, SIW size_bytes) {
-  Char* end = start + (size_bytes * 2);
+template <typename T, typename CHT = CHR>
+CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, SIW size_bytes) {
+  CHT* end = start + (size_bytes * 2);
   if (!start || size_bytes <= 0 || end < start) return nullptr;
   const UI1* cursor = reinterpret_cast<const UI1*>(origin);
   while (size_bytes-- > 0) {
@@ -832,11 +830,11 @@ Char* TSPrintHex(Char* start, Char* stop, const void* origin, SIW size_bytes) {
 }
 
 /* Prints a hex value to the Console. */
-template <typename Char, typename UI>
-Char* TSPrintHex(Char* start, Char* stop, UI value) {
-  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+template <typename CHT, typename UI>
+CHT* TSPrintHex(CHT* start, CHT* stop, UI value) {
+  enum { cHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
 
-  if (!start || start + kHexStrandLengthSizeMax >= stop) return nullptr;
+  if (!start || start + cHexStrandLengthSizeMax >= stop) return nullptr;
 
   *start++ = '0';
   *start++ = 'x';
@@ -850,73 +848,73 @@ Char* TSPrintHex(Char* start, Char* stop, UI value) {
 }
 
 /* Prints a hex value to a text socket. */
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, SI1 value) {
-  return TSPrintHex<Char, UI1>(start, stop, (UI1)value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, SI1 value) {
+  return TSPrintHex<CHT, UI1>(start, stop, (UI1)value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, UI1 value) {
-  return TSPrintHex<Char, UI1>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, UI1 value) {
+  return TSPrintHex<CHT, UI1>(start, stop, value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, SI2 value) {
-  return TSPrintHex<Char, UI2>(start, stop, (UI2)value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, SI2 value) {
+  return TSPrintHex<CHT, UI2>(start, stop, (UI2)value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, UI2 value) {
-  return TSPrintHex<Char, UI2>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, UI2 value) {
+  return TSPrintHex<CHT, UI2>(start, stop, value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, SI4 value) {
-  return TSPrintHex<Char, UI4>(start, stop, (UI4)value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, SI4 value) {
+  return TSPrintHex<CHT, UI4>(start, stop, (UI4)value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, UI4 value) {
-  return TSPrintHex<Char, UI4>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, UI4 value) {
+  return TSPrintHex<CHT, UI4>(start, stop, value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, SI8 value) {
-  return TSPrintHex<Char, UI8>(start, stop, (UI8)value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, SI8 value) {
+  return TSPrintHex<CHT, UI8>(start, stop, (UI8)value);
 }
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, UI8 value) {
-  return TSPrintHex<Char, UI8>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, UI8 value) {
+  return TSPrintHex<CHT, UI8>(start, stop, value);
 }
 
 #if USING_FP4 == YES_0
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, FP4 value) {
-  return TSPrintHex<Char, UI4>(start, stop, ToUnsigned(value));
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, FP4 value) {
+  return TSPrintHex<CHT, UI4>(start, stop, ToUnsigned(value));
 }
 #endif
 #if USING_FP8 == YES_0
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, FP8 value) {
-  return TSPrintHex<Char, UI8>(start, stop, ToUnsigned(value));
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, FP8 value) {
+  return TSPrintHex<CHT, UI8>(start, stop, ToUnsigned(value));
 }
 #endif
 
-template <typename Char = CHR>
-inline Char* TSPrintHex(Char* start, Char* stop, const void* ptr) {
-  return TSPrintHex<Char, UIW>(start, stop, ToUnsigned(ptr));
+template <typename CHT = CHR>
+inline CHT* TSPrintHex(CHT* start, CHT* stop, const void* ptr) {
+  return TSPrintHex<CHT, UIW>(start, stop, ToUnsigned(ptr));
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR, typename UI>
-Char* TPrintBinary(Char* start, Char* stop, UI value) {
+template <typename CHT = CHR, typename UI>
+CHT* TPrintBinary(CHT* start, CHT* stop, UI value) {
   if (start + sizeof(UI) * 8 >= stop) {
     return nullptr;
   }
 
   for (SI4 i = 0; i < sizeof(UI) * 8; ++i) {
-    *start++ = (Char)('0' + (value >> (sizeof(UI) * 8 - 1)));
+    *start++ = (CHT)('0' + (value >> (sizeof(UI) * 8 - 1)));
     value = value << 1;
   }
   *start = 0;
@@ -924,92 +922,92 @@ Char* TPrintBinary(Char* start, Char* stop, UI value) {
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, SI1 value) {
-  return TPrintBinary<Char, UI1>(start, stop, (UI1)value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, SI1 value) {
+  return TPrintBinary<CHT, UI1>(start, stop, (UI1)value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, UI1 value) {
-  return TPrintBinary<Char, UI1>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, UI1 value) {
+  return TPrintBinary<CHT, UI1>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, SI2 value) {
-  return TPrintBinary<Char, UI2>(start, stop, (UI2)value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, SI2 value) {
+  return TPrintBinary<CHT, UI2>(start, stop, (UI2)value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, UI2 value) {
-  return TPrintBinary<Char, UI2>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, UI2 value) {
+  return TPrintBinary<CHT, UI2>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, SI4 value) {
-  return TPrintBinary<Char, UI4>(start, stop, (UI4)value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, SI4 value) {
+  return TPrintBinary<CHT, UI4>(start, stop, (UI4)value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, UI4 value) {
-  return TPrintBinary<Char, UI4>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, UI4 value) {
+  return TPrintBinary<CHT, UI4>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, SI8 value) {
-  return TPrintBinary<Char, UI8>(start, stop, (UI8)value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, SI8 value) {
+  return TPrintBinary<CHT, UI8>(start, stop, (UI8)value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-inline Char* TPrintBinary(Char* start, Char* stop, UI8 value) {
-  return TPrintBinary<Char, UI8>(start, stop, value);
+template <typename CHT = CHR>
+inline CHT* TPrintBinary(CHT* start, CHT* stop, UI8 value) {
+  return TPrintBinary<CHT, UI8>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-Char* TPrintBinary(Char* start, Char* stop, FP4 value) {
+template <typename CHT = CHR>
+CHT* TPrintBinary(CHT* start, CHT* stop, FP4 value) {
   UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintBinary<Char, UI4>(start, stop, ui);
+  return TPrintBinary<CHT, UI4>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-Char* TPrintBinary(Char* start, Char* stop, FP8 value) {
+template <typename CHT = CHR>
+CHT* TPrintBinary(CHT* start, CHT* stop, FP8 value) {
   UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintBinary<Char, UI8>(start, stop, ui);
+  return TPrintBinary<CHT, UI8>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
-template <typename Char = CHR>
-Char* TPrintBinary(Char* start, Char* stop, const void* ptr) {
+template <typename CHT = CHR>
+CHT* TPrintBinary(CHT* start, CHT* stop, const void* ptr) {
   UIW address = *reinterpret_cast<UIW*>(&ptr);
-  return TPrintBinary<Char, UIW>(start, stop, address);
+  return TPrintBinary<CHT, UIW>(start, stop, address);
 }
 
-template <typename Char = CHR>
-Char* TSScan(const Char* start, FP4& result) {
+template <typename CHT = CHR>
+CHT* TSScan(const CHT* start, FP4& result) {
   return nullptr;
 }
 
-template <typename Char = CHR>
-Char* TSScan(const Char* start, FP8& result) {
+template <typename CHT = CHR>
+CHT* TSScan(const CHT* start, FP8& result) {
   return nullptr;
 }
 
 /* Prints the given socket to the COut.
-template <typename Char = CHR>
-Char* TPrintChars(Char* start, Char* stop, const void* origin, const void* end)
-{ const Char *read = reinterpret_cast<const Char*>(origin), *read_end =
-reinterpret_cast<const Char*>(end); if (!start || start >= stop || !origin ||
+template <typename CHT = CHR>
+CHT* TPrintChars(CHT* start, CHT* stop, const void* origin, const void* end)
+{ const CHT *read = reinterpret_cast<const CHT*>(origin), *read_end =
+reinterpret_cast<const CHT*>(end); if (!start || start >= stop || !origin ||
 read > read_end) return nullptr;
 
-  Char* buffer_begin = start;
+  CHT* buffer_begin = start;
   SIW size = read_end - read, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
   SIW num_bytes = 81 * (num_rows + 2);
@@ -1017,11 +1015,11 @@ read > read_end) return nullptr;
     return nullptr;
   }
   size += num_bytes;
-  start = TSPrintString<Char>(start, stop, STRPrintCharsHeader());
-  start = TSPrintString<Char>(start, stop, STRPrintCharsBorder());
-  start = TSPrintHex<Char>(start, stop, read);
+  start = TSPrintString<CHT>(start, stop, STRPrintCharsHeader());
+  start = TSPrintString<CHT>(start, stop, STRPrintCharsBorder());
+  start = TSPrintHex<CHT>(start, stop, read);
 
-  Char c;
+  CHT c;
   while (read < read_end) {
     *start++ = '\n';
     *start++ = '|';
@@ -1032,66 +1030,66 @@ read > read_end) return nullptr;
       else if (!c || c == kTAB)
         c = ' ';
       else if (c < ' ')
-        c = kDEL;
+        c = cDEL;
       *start++ = c;
     }
     *start++ = '|';
     *start++ = ' ';
-    start = TSPrintHex<Char>(start, stop, read);
+    start = TSPrintHex<CHT>(start, stop, read);
   }
-  start = TSPrintString<Char>(start, stop, STRPrintCharsBorder());
-  return TSPrintHex<Char>(start, stop, read + size);
+  start = TSPrintString<CHT>(start, stop, STRPrintCharsBorder());
+  return TSPrintHex<CHT>(start, stop, read + size);
 } */
 
 /* An empty string. */
-template <typename Char = CHR>
-const Char* TSTREmpty() {
-  static const Char kStrand[] = {NIL};
+template <typename CHT = CHR>
+const CHT* TSTREmpty() {
+  static const CHT kStrand[] = {NIL};
   return kStrand;
 }
 
 /* The new-line s. */
-template <typename Char = CHR>
-const Char* TSTRNL() {
-  static const Char kStrand[] = {'\n'};
+template <typename CHT = CHR>
+const CHT* TSTRNL() {
+  static const CHT kStrand[] = {'\n'};
   return kStrand;
 }
 
 /* Strand the reads "Error:". */
-template <typename Char = CHR>
-const Char* TSTRError() {
-  static const Char kStrand[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
+template <typename CHT = CHR>
+const CHT* TSTRError() {
+  static const CHT kStrand[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
   return kStrand;
 }
 
 /* Converts the given item to a printable CH1 if it's non-printable. */
-template <typename Char = CHR>
-inline Char TCharPrintable(Char item) {
+template <typename CHT = CHR>
+inline CHT TCharPrintable(CHT item) {
   if (item < 32 || item == 127) return ' ';
   return item;
 }
 
 /* Sets the s to either the given item or empty s if input
 is nil. */
-template <typename Char = CHR>
-inline Char* TSTRSet(Char* string) {
-  if (!string) return TSTREmpty<Char>();
+template <typename CHT = CHR>
+inline CHT* TSTRSet(CHT* string) {
+  if (!string) return TSTREmpty<CHT>();
   return string;
 }
 
 /* Searches fro the s line stop.
-@param cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRLineEnd(const Char* cursor, SI4 column_count = kConsoleWidth) {
-  Char c;
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = CHR>
+const CHT* TSTRLineEnd(const CHT* cursor, SI4 column_count = cConsoleWidth) {
+  CHT c;
   // Scroll to the stop of the line.
   c = *cursor++;
   while (c) {
     if (column_count-- < 0) {  // We've reached the stop.
                                // Scroll left till we hit whitespace (if any).
-      while (!TIsWhitespace<Char>(c)) c = *(--cursor);
+      while (!TIsWhitespace<CHT>(c)) c = *(--cursor);
       // Then scroll past the whitespace.
-      while (TIsWhitespace<Char>(c)) c = *(--cursor);
+      while (TIsWhitespace<CHT>(c)) c = *(--cursor);
       return cursor;
       c = *cursor++;
     }
@@ -1101,33 +1099,33 @@ const Char* TSTRLineEnd(const Char* cursor, SI4 column_count = kConsoleWidth) {
 }
 
 /* Searches fro the s line stop.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-Char* TSTRLineEnd(Char* cursor, SI4 column_count = kConsoleWidth) {
-  return const_cast<Char*>(
-      TSTRLineEnd(reinterpret_cast<const Char*>(cursor), column_count));
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+CHT* TSTRLineEnd(CHT* cursor, SI4 column_count = cConsoleWidth) {
+  return const_cast<CHT*>(
+      TSTRLineEnd(reinterpret_cast<const CHT*>(cursor), column_count));
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param cursor       The first Char in the buffer.
-@param stop         The last Char in the buffer.
+@param cursor       The first CHT in the buffer.
+@param stop         The last CHT in the buffer.
 @param column_count In characters. */
-template <typename Char = CHR>
-const Char* TSTRLineEnd(const Char* cursor, const Char* stop,
-                        SI4 column_count = kConsoleWidth) {
+template <typename CHT = CHR>
+const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
+                       SI4 column_count = cConsoleWidth) {
   if (!cursor) return nullptr;
   A_ASSERT(cursor < stop);
-  Char c;
+  CHT c;
   // Scroll to the stop of the line.
   c = *cursor++;
   while (c) {
     if (stop > cursor) return nullptr;
     if (column_count-- < 0) {  // We've reached the stop.
       // Scroll left till we hit whitespace (if any).
-      while (!TIsWhitespace<Char>(c)) c = *(--cursor);
+      while (!TIsWhitespace<CHT>(c)) c = *(--cursor);
       // Then scroll past the whitespace.
-      while (TIsWhitespace<Char>(c)) c = *(--cursor);
+      while (TIsWhitespace<CHT>(c)) c = *(--cursor);
       return cursor;
       c = *cursor++;
     }
@@ -1137,24 +1135,24 @@ const Char* TSTRLineEnd(const Char* cursor, const Char* stop,
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param cursor      The first Char in the buffer.
-@param stop        The last Char in the buffer.
+@param cursor      The first CHT in the buffer.
+@param stop        The last CHT in the buffer.
 @param column_coun In characters. */
-template <typename Char = CHR>
-inline Char* TSTRLineEnd(Char* cursor, Char* stop,
-                         SI4 column_count = kConsoleWidth) {
-  return const_cast<const Char*>(
-      TSTRLineEnd<Char>(reinterpret_cast<const Char*>(cursor),
-                        reinterpret_cast<const Char*>(stop), column_count));
+template <typename CHT = CHR>
+inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
+                        SI4 column_count = cConsoleWidth) {
+  return const_cast<const CHT*>(
+      TSTRLineEnd<CHT>(reinterpret_cast<const CHT*>(cursor),
+                       reinterpret_cast<const CHT*>(stop), column_count));
 }
 
 /* Scrolls over any whitespace.
-@param cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-const Char* TSTRSkipSpaces(const Char* cursor) {
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = CHR>
+const CHT* TSTRSkipSpaces(const CHT* cursor) {
   if (!cursor) return nullptr;
-  Char c = *cursor;
-  while (TIsWhitespace<Char>(c)) {
+  CHT c = *cursor;
+  while (TIsWhitespace<CHT>(c)) {
     if (!c) return cursor;  //< This isn't an error as far as I can see.
     ++cursor;
     c = *cursor;
@@ -1163,47 +1161,47 @@ const Char* TSTRSkipSpaces(const Char* cursor) {
 }
 
 /* Scrolls over any whitespace.
-@param cursor  The first Char in the buffer. */
-template <typename Char = CHR>
-Char* TSTRSkipSpaces(Char* cursor) {
-  return const_cast<Char*>(TSTRSkipSpaces<Char>(cursor));
+@param cursor  The first CHT in the buffer. */
+template <typename CHT = CHR>
+CHT* TSTRSkipSpaces(CHT* cursor) {
+  return const_cast<CHT*>(TSTRSkipSpaces<CHT>(cursor));
 }
 
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the cursor query.
-@param cursor  The first Char in the buffer.
+@param cursor  The first CHT in the buffer.
 @param query   A query string.  */
-template <typename Char = CHR>
-const Char* TSTRFind(const Char* start, const Char* query) {
+template <typename CHT = CHR>
+const CHT* TSTRFind(const CHT* start, const CHT* query) {
   A_ASSERT(start);
   A_ASSERT(query);
 
-  Char s = *start,  //< Current s Char.
-      t = *query,   //< Current query Char.
-      c = t;        //< The first Char of the query we're searching for.
-  if (!c)           //< We're not allowing empty queries.
+  CHT s = *start,  //< Current s CHT.
+      t = *query,  //< Current query CHT.
+      c = t;       //< The first CHT of the query we're searching for.
+  if (!c)          //< We're not allowing empty queries.
     return nullptr;
-  const Char *start_of_query, *cursor = start;
-  query = TSTRSkipSpaces<Char>(query);
+  const CHT *start_of_query, *cursor = start;
+  query = TSTRSkipSpaces<CHT>(query);
 
-  // Scroll through each Char and match it to the query Char.
+  // Scroll through each CHT and match it to the query CHT.
   while (s) {
-    if (s == c) {  // The first Char matches:
+    if (s == c) {  // The first CHT matches:
                    // Setup to compare the Strings;
       start_of_query = start;
       cursor = query;
       t = c;
-      // check the rest of the Char:
+      // check the rest of the CHT:
       while (s == t) {
         s = *(++start);
         t = *(++cursor);
         if (t == 0)  // Once we've reached the delimiter it's a match!
           return start_of_query;
-        if (!s)  // We've reached the stop of Char without a hit.
+        if (!s)  // We've reached the stop of CHT without a hit.
           return nullptr;
       }
     }
-    // The Char did not match so repeat the process for each Char.
+    // The CHT did not match so repeat the process for each CHT.
     s = *(++start);
     t = *(++cursor);
   }
@@ -1213,20 +1211,19 @@ const Char* TSTRFind(const Char* start, const Char* query) {
 
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the . */
-template <typename Char = CHR>
-inline Char* TSTRFind(Char* string, const Char* query) {
-  return const_cast<Char*>(
-      TSTRFind<Char>(reinterpret_cast<const Char*>(string),
-                     reinterpret_cast<const Char*>(query)));
+template <typename CHT = CHR>
+inline CHT* TSTRFind(CHT* string, const CHT* query) {
+  return const_cast<CHT*>(TSTRFind<CHT>(reinterpret_cast<const CHT*>(string),
+                                        reinterpret_cast<const CHT*>(query)));
 }
 
 /* Strand skip spaces.
 @return Nil if there are no spaces to skip. */
-template <typename Char = CHR>
-const Char* TSTRSkipSpaces(const Char* cursor, const Char* stop) {
+template <typename CHT = CHR>
+const CHT* TSTRSkipSpaces(const CHT* cursor, const CHT* stop) {
   if (!cursor) return nullptr;
   if (cursor > stop) return nullptr;
-  Char c = *cursor;
+  CHT c = *cursor;
   while (IsWhitespace(c)) {
     if (!c) return nullptr;
     if (++cursor >= stop) return nullptr;
@@ -1237,13 +1234,13 @@ const Char* TSTRSkipSpaces(const Char* cursor, const Char* stop) {
 
 /* Strand skip spaces.
 @return Nil if there are no spaces to skip.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-inline Char* TSTRSkipSpaces(Char* cursor, Char* stop) {
-  return const_cast<Char*>(
-      TSTRSkipSpaces<Char>(reinterpret_cast<const Char*>(cursor),
-                           reinterpret_cast<const Char*>(stop)));
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+inline CHT* TSTRSkipSpaces(CHT* cursor, CHT* stop) {
+  return const_cast<CHT*>(
+      TSTRSkipSpaces<CHT>(reinterpret_cast<const CHT*>(cursor),
+                          reinterpret_cast<const CHT*>(stop)));
 }
 
 /* Checks if the two Strings are the same.
@@ -1251,12 +1248,12 @@ inline Char* TSTRSkipSpaces(Char* cursor, Char* stop) {
 equivalent s upon success.
 @param String_a  A cursor to compare to String_b.
 @param String_b  A cursor to compare to String_a. */
-template <typename Char = CHR>
-const Char* TSTREquals(const Char* String_a, const Char* String_b) {
+template <typename CHT = CHR>
+const CHT* TSTREquals(const CHT* String_a, const CHT* String_b) {
   A_ASSERT(String_a);
   A_ASSERT(String_b);
 
-  Char a = *String_a, b = *String_b;
+  CHT a = *String_a, b = *String_b;
   while (a) {
     if (a != b) return nullptr;
     if (b == 0) return String_a;
@@ -1272,24 +1269,23 @@ equivalent s upon success.
 @param String_a  A cursor to compare to String_b.
 @param String_b  A cursor to compare to String_a.
 */
-template <typename Char = CHR>
-inline Char* TSTREquals(Char* String_a, const Char* String_b) {
-  return const_cast<Char*>(
-      TSTREquals<Char>(reinterpret_cast<const Char*>(String_a),
-                       reinterpret_cast<const Char*>(String_b)));
+template <typename CHT = CHR>
+inline CHT* TSTREquals(CHT* String_a, const CHT* String_b) {
+  return const_cast<CHT*>(
+      TSTREquals<CHT>(reinterpret_cast<const CHT*>(String_a),
+                      reinterpret_cast<const CHT*>(String_b)));
 }
 
 /* Compares the two Strings to see if the are equal.
 @return Nil of the two Strings aren't equal or a pointer to the stop of the
 s upon success. */
-template <typename Char = CHR>
-const Char* TSTREquals(const Char* cursor, const Char* stop,
-                       const Char* query) {
+template <typename CHT = CHR>
+const CHT* TSTREquals(const CHT* cursor, const CHT* stop, const CHT* query) {
   if (!cursor) return nullptr;
   A_ASSERT(cursor < stop);
   if (!query) return nullptr;
 
-  Char a = *cursor, b = *query;
+  CHT a = *cursor, b = *query;
   while (a) {
     if (a != b) return nullptr;
     if (b == 0) return cursor;
@@ -1306,23 +1302,23 @@ const Char* TSTREquals(const Char* cursor, const Char* stop,
 /* Compares the two Strings to see if the are equal.
 @return Nil of the two Strings aren't equal or a pointer to the stop of the
 s upon success. */
-template <typename Char = CHR>
-Char* TSTREquals(Char* cursor, Char* stop, const Char* query) {
-  return const_cast<Char*>(TSTREquals(reinterpret_cast<const Char*>(cursor),
-                                      reinterpret_cast<const Char*>(stop),
-                                      query));
+template <typename CHT = CHR>
+CHT* TSTREquals(CHT* cursor, CHT* stop, const CHT* query) {
+  return const_cast<CHT*>(TSTREquals(reinterpret_cast<const CHT*>(cursor),
+                                     reinterpret_cast<const CHT*>(stop),
+                                     query));
 }
 
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
-@param cursor  The first Char in the buffer.
+@param cursor  The first CHT in the buffer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
-template <typename Char = CHR>
-BOL TSTRIsntEmpty(const Char* cursor) {
+template <typename CHT = CHR>
+BOL TSTRIsntEmpty(const CHT* cursor) {
   if (!cursor) return false;
-  Char c = *cursor;
+  CHT c = *cursor;
   while (c) {
-    if (!TIsWhitespace<Char>(c)) return true;
+    if (!TIsWhitespace<CHT>(c)) return true;
     c = *(++cursor);
   }
   return false;
@@ -1330,29 +1326,29 @@ BOL TSTRIsntEmpty(const Char* cursor) {
 
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
-@param cursor  The first Char in the buffer.
+@param cursor  The first CHT in the buffer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
-template <typename Char = CHR>
-BOL TSTRIsntEmpty(Char* cursor) {
-  return TSTRIsntEmpty<Char>(reinterpret_cast<const Char*>(cursor));
+template <typename CHT = CHR>
+BOL TSTRIsntEmpty(CHT* cursor) {
+  return TSTRIsntEmpty<CHT>(reinterpret_cast<const CHT*>(cursor));
 }
 
 /* Checks to see if the cursor isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-BOL TSTRIsntEmpty(const Char* cursor, const Char* stop) {
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+BOL TSTRIsntEmpty(const CHT* cursor, const CHT* stop) {
   if (!cursor) return false;
   if (cursor > stop) return false;
-  Char c = *cursor;
+  CHT c = *cursor;
   while (c) {
-    if (!TIsWhitespace<Char>(c)) {
+    if (!TIsWhitespace<CHT>(c)) {
       // The text must stop at or before the target_end.
       do {
         if (++cursor >= stop) return false;
         c = *cursor;
-        if (!TIsWhitespace<Char>(c)) return true;
+        if (!TIsWhitespace<CHT>(c)) return true;
       } while (c);
       return true;
     }
@@ -1364,30 +1360,30 @@ BOL TSTRIsntEmpty(const Char* cursor, const Char* stop) {
 
 /* Checks to see if the cursor isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer. */
-template <typename Char = CHR>
-BOL TSTRIsntEmpty(Char* cursor, const Char* stop) {
-  return TSTRIsntEmpty(reinterpret_cast<const Char*>(cursor),
-                       reinterpret_cast<const Char*>(stop));
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer. */
+template <typename CHT = CHR>
+BOL TSTRIsntEmpty(CHT* cursor, const CHT* stop) {
+  return TSTRIsntEmpty(reinterpret_cast<const CHT*>(cursor),
+                       reinterpret_cast<const CHT*>(stop));
 }
 
 /* Prints the given item aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CH1 upon success.
-@param cursor  The first Char in the buffer.
-@param stop    The last Char in the buffer.
+@param cursor  The first CHT in the buffer.
+@param stop    The last CHT in the buffer.
 @param item  The item to utf.
 @param column_count The token_ of columns to align right to. */
-template <typename Char = CHR>
-Char* TPrintRight(Char* cursor, Char* stop, const Char* item,
-                  SI4 column_count = kConsoleWidth) {
+template <typename CHT = CHR>
+CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
+                 SI4 column_count = cConsoleWidth) {
   if (!cursor || cursor + column_count > stop) {
     return nullptr;
   }
 
-  auto item_end = TSTREnd<Char>(item);
-  Char c;  //< Temp variable.
+  auto item_end = TSTREnd<CHT>(item);
+  CHT c;  //< Temp variable.
   if (item == item_end) return cursor;
   SIW length = item_end - item;
 
@@ -1433,13 +1429,13 @@ Char* TPrintRight(Char* cursor, Char* stop, const Char* item,
 }
 
 /* Prints the given cursor center aligned to the given column_count. */
-template <typename Char = CHR>
-Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
-                   SI4 column_count = kConsoleWidth) {
+template <typename CHT = CHR>
+CHT* TPrintCenter(CHT* cursor, CHT* stop, const CHT* string,
+                  SI4 column_count = cConsoleWidth) {
   if (!cursor || cursor >= stop) return nullptr;
 
   // We need to leave at least one space to the left and right of
-  SI4 length = TSTRLength<Char>(string);
+  SI4 length = TSTRLength<CHT>(string);
   SI4 delta;
   if (length <= column_count) {
     delta = (column_count - length) >> 1;  //< >> 1 to /2
@@ -1448,7 +1444,7 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
     if (length != column_count)
       while (delta-- > 0) *cursor++ = ' ';
 
-    Char c = *string++;
+    CHT c = *string++;
     while (c) {
       *cursor++ = c;
       c = *string++;
@@ -1474,10 +1470,10 @@ Char* TPrintCenter(Char* cursor, Char* stop, const Char* string,
 }
 
 /* Prints a line of the given column_count the given start. */
-template <typename Char = CHR>
-Char* TPrintLinef(Char* start, Char* stop, Char item, SIW count = kConsoleWidth,
-                  const Char* header = TSTRNL<Char>(),
-                  const Char* footer = nullptr) {
+template <typename CHT = CHR>
+CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, SIW count = cConsoleWidth,
+                 const CHT* header = TSTRNL<CHT>(),
+                 const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
   if (!start || start + count <= stop) return nullptr;
 
@@ -1491,17 +1487,16 @@ Char* TPrintLinef(Char* start, Char* stop, Char item, SIW count = kConsoleWidth,
 }
 
 /* Prints the given cursor repeated to make a line. */
-template <typename Char = CHR>
-Char* TPrintLinef(Char* start, Char* stop, const Char* item,
-                  SIW count = kConsoleWidth,
-                  const Char* header = TSTRNL<Char>(),
-                  const Char* footer = nullptr) {
+template <typename CHT = CHR>
+CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
+                 SIW count = cConsoleWidth, const CHT* header = TSTRNL<CHT>(),
+                 const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
   if (!start || start <= stop || (start + count >= stop)) return nullptr;
 
-  const Char* cursor = item;
+  const CHT* cursor = item;
   while (count-- > 0) {
-    Char c = *cursor++;
+    CHT c = *cursor++;
     if (!c) {
       cursor = item;
       c = *cursor++;
@@ -1516,27 +1511,27 @@ Char* TPrintLinef(Char* start, Char* stop, const Char* item,
 }
 
 /* Prints the given cursor repeated to make a line. */
-template <typename Char = CHR>
-Char* TPrintHeadingf(Char* start, Char* stop, Char item,
-                     SIW count = kConsoleWidth) {
-  return TPrintLinef<Char>(start, stop, item, count, nullptr, nullptr);
+template <typename CHT = CHR>
+CHT* TPrintHeadingf(CHT* start, CHT* stop, CHT item,
+                    SIW count = cConsoleWidth) {
+  return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints the given cursor repeated to make a line. */
-template <typename Char = CHR>
-Char* TPrintHeadingf(Char* start, Char* stop, const Char* item,
-                     SIW count = kConsoleWidth) {
-  return TPrintLinef<Char>(start, stop, item, count, nullptr, nullptr);
+template <typename CHT = CHR>
+CHT* TPrintHeadingf(CHT* start, CHT* stop, const CHT* item,
+                    SIW count = cConsoleWidth) {
+  return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints a cursor to the given buffer without */
-template <typename Char = CHR>
-Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
-                 SIW column_count = kConsoleWidth) {
+template <typename CHT = CHR>
+CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
+                SIW column_count = cConsoleWidth) {
   if (!cursor || cursor <= stop || !string) return nullptr;
   if (column_count < 2) return cursor;
 
-  Char c = *string++;
+  CHT c = *string++;
 
   while (c) {
     for (SI4 i = column_count; i > 0; --i) {
@@ -1558,45 +1553,45 @@ Char* TPrintWrap(Char* cursor, Char* stop, const Char* string,
 }
 
 /* Templated string Printer. */
-template <typename Char = CHR, typename SIZ = SIN>
+template <typename CHT = CHR, typename SIZ = SIN>
 struct TSPrinter {
-  Char *start,  //< Start address.
-      *stop;    //< Stop address.
+  CHT *start,  //< Start address.
+      *stop;   //< Stop address.
 
   /* Default constructor does nothing. */
-  TSPrinter() {}
+  TSPrinter() : start(0), stop(0) {}
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
-  @param count The number of Char(s) in the buffer. */
-  TSPrinter(Char* start, SIZ size) : start(start), stop(start + size - 1) {
+  @param count The number of CHT(s) in the buffer. */
+  TSPrinter(CHT* start, SIZ size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the array pointers from the given start and stop pointers.
   @param start The start of the array.
   @param stop   The stop of the array. */
-  TSPrinter(Char* start, Char* stop) : start(start), stop(stop) { Reset(); }
+  TSPrinter(CHT* start, CHT* stop) : start(start), stop(stop) { Reset(); }
 
   /* Clones the other utf. */
   TSPrinter(const TSPrinter& other)
       : start(other.start), stop(other.stop) {  // Nothing to do here!.
   }
 
-  UI1* End() { return reinterpret_cast<UI1*>(start) + (sizeof(Char) - 1); }
+  UI1* End() { return reinterpret_cast<UI1*>(start) + (sizeof(CHT) - 1); }
 
-  SIZ SizeBytes() { return (SIZ)(stop - start + sizeof(Char)); }
+  SIZ SizeBytes() { return (SIZ)(stop - start + sizeof(CHT)); }
 
   void Wipe() { ArrayFill(start, stop); }
 
   /* Writes a nil-term CH1 at the start of the string. */
-  inline Char* Reset() {
+  inline CHT* Reset() {
     *start = 0;
     return start;
   }
 
   /* Sets the start pointer to the new_pointer. */
-  inline TSPrinter& Set(Char* cursor) {
+  inline TSPrinter& Set(CHT* cursor) {
     start = cursor;
     return *this;
   }
@@ -1605,14 +1600,14 @@ struct TSPrinter {
   inline TSPrinter& Set(UIW* buffer) {
     SIZ size = *reinterpret_cast<SIZ*>(buffer);
     UIW ptr = reinterpret_cast<UIW>(buffer) + sizeof(SIZ);
-    Char* start_ptr = reinterpret_cast<Char*>(ptr);
+    CHT* start_ptr = reinterpret_cast<CHT*>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
     return *this;
   }
 
   /* Sets the start pointer to the new_pointer. */
-  inline void Set(TSPrinter<Char> other) {
+  inline void Set(TSPrinter<CHT> other) {
     start = other.start;
     stop = other.stop;
   }
@@ -1625,46 +1620,46 @@ struct TSPrinter {
 
   /* Prints a item to the string. */
   inline TSPrinter& PrintChar(CH1 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& PrintChar(CH2 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& PrintChar(CH4 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(CH1 item) { return PrintChar(item); }
   inline TSPrinter& Print(CH2 item) { return PrintChar(item); }
   inline TSPrinter& Print(CH4 item) { return PrintChar(item); }
   inline TSPrinter& Print(const CH1* item) {
-    return Set(_::TSPrintString<Char>(start, stop, item));
+    return Set(_::TSPrintString<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(const CH2* item) {
-    return Set(_::TSPrintString<Char>(start, stop, item));
+    return Set(_::TSPrintString<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(const CH4* item) {
-    return Set(_::TSPrintString<Char>(start, stop, item));
+    return Set(_::TSPrintString<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(SI4 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(UI4 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(SI8 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
   inline TSPrinter& Print(UI8 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
 #if USING_FP4 == YES_0
   inline TSPrinter& Print(FP4 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
 #endif
 #if USING_FP8 == YES_0
   inline TSPrinter& Print(FP8 item) {
-    return Set(_::TSPrint<Char>(start, stop, item));
+    return Set(_::TSPrint<CHT>(start, stop, item));
   }
 #endif
   inline TSPrinter& Print(Hexf item) {
@@ -1685,103 +1680,103 @@ struct TSPrinter {
 
   /* Prints the given pointer as hex. */
   inline TSPrinter& Hex(Hexf item) {
-    return TSPrintHex<Char>(*this, item.element.ToPtr(), item.element.count);
+    return TSPrintHex<CHT>(*this, item.element.ToPtr(), item.element.count);
   }
   inline TSPrinter& Hex(SI1 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(UI1 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(SI2 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(UI2 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(SI4 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(UI4 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(SI8 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
   inline TSPrinter& Hex(UI8 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
 #if USING_FP4 == YES_0
   inline TSPrinter& Hex(FP4 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
 #endif
 #if USING_FP8 == YES_0
   inline TSPrinter& Hex(FP8 item) {
-    return Set(TSPrintHex<Char>(start, stop, item));
+    return Set(TSPrintHex<CHT>(start, stop, item));
   }
 #endif
   inline TSPrinter& Hex(const void* ptr) {
-    return Set(TSPrintHex<Char>(start, stop, ptr));
+    return Set(TSPrintHex<CHT>(start, stop, ptr));
   }
   inline TSPrinter& Binary(SI1 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(UI1 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(SI2 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(UI2 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(SI4 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(UI4 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(SI8 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
   inline TSPrinter& Binary(UI8 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
 #if USING_FP4 == YES_0
   inline TSPrinter& Binary(FP4 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
 #endif
 #if USING_FP8 == YES_0
   inline TSPrinter& Binary(FP8 item) {
-    return Set(Binary<Char>(start, stop, item));
+    return Set(Binary<CHT>(start, stop, item));
   }
 #endif
   /* Prints the given pointer as binary. */
   inline TSPrinter& Binary(const void* ptr) {
     UIW address = reinterpret_cast<UIW>(ptr);
-    return Set(Binary<Char>(start, stop, address));
+    return Set(Binary<CHT>(start, stop, address));
   }
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    o << "\nTUTF<CH" << sizeof(Char) << ", SI" << sizeof(SIZ) << ">{ start:";
+    o << "\nTUTF<CH" << sizeof(CHT) << ", SI" << sizeof(SIZ) << ">{ start:";
     TSPrintHex<Printer>(o, start);
     o << " stop:";
     TSPrintHex<Printer>(o, stop);
     return o << " }\n";
 
 #if D_THIS
-    // return TPrintChars<Printer, Char>(o, start, stop);
+    // return TPrintChars<Printer, CHT>(o, start, stop);
 #endif
   }
 };
 
 /* Queries the given s for the given query. */
-template <typename Char = CHR>
-SI4 TSTRQuery(const Char* cursor, const Char* stop, const Char* query) {
-  Char a = *cursor, b = *query;
+template <typename CHT = CHR>
+SI4 TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
+  CHT a = *cursor, b = *query;
   SI4 result;
 
   if (!cursor) {
@@ -1819,7 +1814,7 @@ SI4 TSTRQuery(const Char* cursor, const Char* stop, const Char* query) {
     a = *cursor;
     b = *query;
   }
-  if (a && !TIsWhitespace<Char>(a)) return b - a;
+  if (a && !TIsWhitespace<CHT>(a)) return b - a;
   return 0;
 }
 
@@ -1829,153 +1824,145 @@ SI4 TSTRQuery(const Char* cursor, const Char* stop, const Char* query) {
 @return The utf.
 @param utf The utf.
 @param item   The item to utf. */
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, CH1 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH1 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      const CH1* item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH1* item) {
   return utf.Print(item);
 }
 
 #if USING_UTF16 == YES_0
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, CH2 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH2 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      const CH2* item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH2* item) {
   return utf.Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, CH4 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH4 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      const CH4* item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH4* item) {
   return utf.Print(item);
 }
 #endif
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, SI1 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI1 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, UI1 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI1 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, SI2 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI2 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, UI2 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI2 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, SI4 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI4 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, UI4 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI4 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, SI8 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI8 item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, UI8 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI8 item) {
   return utf.Print(item);
 }
 
 #if USING_FP4 == YES_0
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, FP4 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FP4 item) {
   return utf.Print(item);
 }
 #endif
 
 #if USING_FP8 == YES_0
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, FP8 item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FP8 item) {
   return utf.Print(item);
 }
 #endif
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Centerf item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Centerf item) {
   return utf.Print(item);
 }
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Centerf& item) {
-  return utf.Print(item);
-}
-
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Rightf item) {
-  return utf.Print(item);
-}
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Rightf& item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Centerf& item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Linef item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Rightf item) {
   return utf.Print(item);
 }
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Linef& item) {
-  return utf.Print(item);
-}
-
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Headingf item) {
-  return utf.Print(item);
-}
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Headingf& item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Rightf& item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Hexf item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Linef item) {
   return utf.Print(item);
 }
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Hexf& item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Linef& item) {
   return utf.Print(item);
 }
 
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf, _::Charsf item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Headingf item) {
   return utf.Print(item);
 }
-template <typename Char = CHR>
-inline _::TSPrinter<Char>& operator<<(_::TSPrinter<Char>& utf,
-                                      _::Charsf& item) {
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf,
+                                     _::Headingf& item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Hexf item) {
+  return utf.Print(item);
+}
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Hexf& item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Charsf item) {
+  return utf.Print(item);
+}
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Charsf& item) {
   return utf.Print(item);
 }
 #endif

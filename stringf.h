@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \string.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /string.h
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -40,7 +40,7 @@ LIB_MEMBER const CH1* SScan(const CH1* string, CH4& character);
 
 #if USING_UTF16 == YES_0
 /* Prints a UTF-32 character to the string terminated at the stop.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param string    The start of the string.
 @param stop      The last CH1 in the string buffer.
 @warning This algorithm is designed to fail if the socket is not a valid socket
@@ -55,13 +55,13 @@ LIB_MEMBER const CH2* SScan(const CH2* string, CH4& character);
 
 #if USING_UTF32 == YES_0
 /* Prints a character to the string.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param stop The last character in the string buffer. */
 LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH2 character);
 
 /* Prints a Unicode character to the given string.
-@return  Nil upon failure or a pointer to the nil-term Char upon success.
-@param stop   The last Char in the socket. */
+@return  Nil upon failure or a pointer to the nil-term CHT upon success.
+@param stop   The last CHT in the socket. */
 LIB_MEMBER CH1* SPrint(CH1* string, CH1* stop, CH4 character);
 #endif
 
@@ -193,19 +193,19 @@ class LIB_MEMBER Stringf {
  public:
   enum {
     // Max length of the buffer in ALU words.
-    kBufferWordCount =
+    cBufferWordCount =
         (sizeof(void*) == 2)
             ? 5
             : (sizeof(void*) == 4) ? 6 : (sizeof(void*) == 8) ? 5 : 1,
     // Max length of a string in characters.
-    kLengthMax = kBufferWordCount * sizeof(void*) - 1,
+    cLengthMax = cBufferWordCount * sizeof(void*) - 1,
   };
 
  private:
   const void* String_;  // Pointer to a string or the buffer_.
   SIW count_;           //< The count.
   DTW type_;            //< The ASCII string Type, 1-3, of the String_.
-  UIW buffer_[kBufferWordCount];  //< Strand buffer for the token.
+  UIW buffer_[cBufferWordCount];  //< Strand buffer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
@@ -261,7 +261,7 @@ class LIB_MEMBER Stringf {
 #if USING_FP8 == YES_0
   Stringf(FP8 item, SIW count);
 #endif
-  Stringf(TypeValue item, SIW count = kConsoleWidth);
+  Stringf(TypeValue item, SIW count = cConsoleWidth);
 
   UIW Word();
 
@@ -350,27 +350,27 @@ struct LIB_MEMBER Centerf {
   Centerf();
 
   /* Prints the item to the value. */
-  Centerf(CH1 item, SIW count = kConsoleWidth);
-  Centerf(const CH1* start, SIW count = kConsoleWidth);
+  Centerf(CH1 item, SIW count = cConsoleWidth);
+  Centerf(const CH1* start, SIW count = cConsoleWidth);
 #if USING_UTF16 == YES_0
-  Centerf(CH2 item, SIW count = kConsoleWidth);
-  Centerf(const CH2* item, SIW count = kConsoleWidth);
+  Centerf(CH2 item, SIW count = cConsoleWidth);
+  Centerf(const CH2* item, SIW count = cConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Centerf(CH4 item, SIW count = kConsoleWidth);
-  Centerf(const CH4* item, SIW count = kConsoleWidth);
+  Centerf(CH4 item, SIW count = cConsoleWidth);
+  Centerf(const CH4* item, SIW count = cConsoleWidth);
 #endif
-  Centerf(SI4 item, SIW count = kConsoleWidth);
+  Centerf(SI4 item, SIW count = cConsoleWidth);
 
-  Centerf(UI4 item, SIW count = kConsoleWidth);
-  Centerf(SI8 item, SIW count = kConsoleWidth);
-  Centerf(UI8 item, SIW count = kConsoleWidth);
+  Centerf(UI4 item, SIW count = cConsoleWidth);
+  Centerf(SI8 item, SIW count = cConsoleWidth);
+  Centerf(UI8 item, SIW count = cConsoleWidth);
 
 #if USING_FP4 == YES_0
-  Centerf(FP4 item, SIW count = kConsoleWidth);
+  Centerf(FP4 item, SIW count = cConsoleWidth);
 #endif
 #if USING_FP8 == YES_0
-  Centerf(FP8 item, SIW count = kConsoleWidth);
+  Centerf(FP8 item, SIW count = cConsoleWidth);
 #endif
 
   /* Stores the item to the first word of the buffer and the negative of the
@@ -406,26 +406,26 @@ struct LIB_MEMBER Rightf {
   Rightf();
 
   /* Prints the item to the value. */
-  Rightf(CH1 item, SIW count = kConsoleWidth);
-  Rightf(const CH1* item, SIW count = kConsoleWidth);
+  Rightf(CH1 item, SIW count = cConsoleWidth);
+  Rightf(const CH1* item, SIW count = cConsoleWidth);
 #if USING_UTF16 == YES_0
-  Rightf(CH2 item, SIW count = kConsoleWidth);
-  Rightf(const CH2* item, SIW count = kConsoleWidth);
+  Rightf(CH2 item, SIW count = cConsoleWidth);
+  Rightf(const CH2* item, SIW count = cConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Rightf(CH4 item, SIW count = kConsoleWidth);
-  Rightf(const CH4* item, SIW count = kConsoleWidth);
+  Rightf(CH4 item, SIW count = cConsoleWidth);
+  Rightf(const CH4* item, SIW count = cConsoleWidth);
 #endif
-  Rightf(SI4 item, SIW count = kConsoleWidth);
-  Rightf(UI4 item, SIW count = kConsoleWidth);
-  Rightf(SI8 item, SIW count = kConsoleWidth);
-  Rightf(UI8 item, SIW count = kConsoleWidth);
+  Rightf(SI4 item, SIW count = cConsoleWidth);
+  Rightf(UI4 item, SIW count = cConsoleWidth);
+  Rightf(SI8 item, SIW count = cConsoleWidth);
+  Rightf(UI8 item, SIW count = cConsoleWidth);
 
 #if USING_FP4 == YES_0
-  Rightf(FP4 item, SIW count = kConsoleWidth);
+  Rightf(FP4 item, SIW count = cConsoleWidth);
 #endif
 #if USING_FP8 == YES_0
-  Rightf(FP8 item, SIW count = kConsoleWidth);
+  Rightf(FP8 item, SIW count = cConsoleWidth);
 #endif
 
   /* Stores the item to the first word of the buffer and the negative of the
@@ -459,10 +459,10 @@ struct LIB_MEMBER Linef {
   CH1 string[4];   //< Used to create a string in Linef(CH1,SIW).
 
   /* Constructors a horizontal line of the character. */
-  Linef(CH1 item, SIW count = kConsoleWidth);
+  Linef(CH1 item, SIW count = cConsoleWidth);
 
   /* Constructors a horizontal line of the given string. */
-  Linef(const CH1* start = nullptr, SIW count = kConsoleWidth);
+  Linef(const CH1* start = nullptr, SIW count = cConsoleWidth);
 };
 
 /* Utility class for printing a Heading with formatting with operator<<. */
@@ -479,7 +479,7 @@ struct LIB_MEMBER Headingf {
   /* Saves the parameters to the corresponding data members. */
   Headingf(const CH1* caption, const CH1* caption2,
            const CH1* caption3 = nullptr, const CH1* style = nullptr,
-           SIW count = kConsoleWidth);
+           SIW count = cConsoleWidth);
 };
 
 /* Utility class for indenting text with operator<<. */

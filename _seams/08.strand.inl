@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/05.stack.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_STRAND
 #include "../strand.hpp"
@@ -22,17 +19,17 @@ using namespace _;
 
 namespace script2 {
 #if SEAM >= SCRIPT2_STRAND
-template <typename Char, typename SIZ>
+template <typename CHT = CHR, typename SIZ = SIN>
 void TestStrandN() {
-  static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CHT kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
   enum {
-    kStrandLoopCount = 3,
-    kCharSizeChar = '0' + sizeof(Char),
+    cStrandLoopCount = 3,
+    cCharSizeChar = '0' + sizeof(CHT),
   };
 
-  AStrand<Char, SIZ, 8> strand;
+  AStrand<CHT, SIZ, 8> strand;
   D_COUT_OBJ(strand);
   D_COUT("\nbuffer_size:" << strand.Array().Size() << " buffer_size_bytes:"
                           << strand.Array().SizeBytes() << " buffer_size_words:"

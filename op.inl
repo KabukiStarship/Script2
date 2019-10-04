@@ -1,20 +1,20 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /op.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "bsq.h"
 #include "op.h"
 #include "slot.h"
 #include "test.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #include "_debug.inl"
 #else
 #include "_release.inl"
@@ -68,50 +68,50 @@ void Print (Op& log) {
                     return;
                 Write (socket);
             }
-            case kSI1: {
-                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
+            case cSI1: {
+                if (BinRead (bin, Params<2, kADR, cSI1> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case kUI1: {
-                if (BinRead (bin, Params<2, kADR, kUI1> (), Args (args, &ui1)))
+            case cUI1: {
+                if (BinRead (bin, Params<2, kADR, cUI1> (), Args (args, &ui1)))
                     return;
                 Write (si1);
             }
-            case kBOL: {
-                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
+            case cBOL: {
+                if (BinRead (bin, Params<2, kADR, cSI1> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case kSI2: {
-                if (BinRead (bin, Params<2, kADR, kSI2> (), Args (args, &si2)))
+            case cSI2: {
+                if (BinRead (bin, Params<2, kADR, cSI2> (), Args (args, &si2)))
                     return;
                 Write (si1);
             }
-            case kUI2: {
-                if (BinRead (bin, Params<2, kADR, kUI2> (),
+            case cUI2: {
+                if (BinRead (bin, Params<2, kADR, cUI2> (),
                              Args (args, &ui2, socket)))
                     return;
                 Write (si1);
             }
-            case kSI4: {
-                if (BinRead (bin, Params<2, kADR, kSI4> (),
+            case cSI4: {
+                if (BinRead (bin, Params<2, kADR, cSI4> (),
                              Args (args, &si4, socket)))
                     return;
                 Write (si1;
             }
-            case kUI4: {
-                if (BinRead (bin, Params<2, kADR, kUI4> (), Args (args, &ui4)))
+            case cUI4: {
+                if (BinRead (bin, Params<2, kADR, cUI4> (), Args (args, &ui4)))
                     return;
                 Write (si1;
             }
-            case kSI8: {
-                if (BinRead (bin, Params<2, kADR, kSI8> (), Args (args, &si8)))
+            case cSI8: {
+                if (BinRead (bin, Params<2, kADR, cSI8> (), Args (args, &si8)))
                     return;
                 Write (si8;
             }
-            case kUI8: {
-                if (BinRead (bin, Params<2, kADR, kUI8> (), Args (args, &ui8)))
+            case cUI8: {
+                if (BinRead (bin, Params<2, kADR, cUI8> (), Args (args, &ui8)))
                  return;
                 Write (ui8;
             }
@@ -125,12 +125,12 @@ void Print (Op& log) {
                     return;
                 ClockPrintTimestamp (ui8);
             }
-            case kFP4: {
-                if (BinRead (bin, Params<2, kADR, kFP4> (), Args (args, &flt)))
+            case cFP4: {
+                if (BinRead (bin, Params<2, kADR, cFP4> (), Args (args, &flt)))
                     return;
                 Write (si1;
             }
-            case kFP8: {
+            case cFP8: {
                 if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;
@@ -142,4 +142,4 @@ void Print (Op& log) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DIC

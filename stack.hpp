@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /stack.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -27,11 +27,11 @@ namespace _ {
 /* @ingroup AsciiStack */
 
 /* ASCII Stack
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/stack.md */
 
 /* An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/stack.md
 
 # Stack Memory Layout
@@ -55,8 +55,8 @@ struct TStack {
 /* Gets the size of a Stack with the given count_max. */
 template <typename T = SIW, typename SIZ = SIW>
 inline SIZ TStackSize(SIZ count_max) {
-  enum { kCountMaxMin = sizeof(UI8) / sizeof(T) };
-  if (count_max < kCountMaxMin) count_max = kCountMaxMin;
+  enum { cCountMaxMin = sizeof(UI8) / sizeof(T) };
+  if (count_max < cCountMaxMin) count_max = cCountMaxMin;
   return sizeof(TStack<SIZ>) + sizeof(T) * count_max;
 }
 
@@ -64,17 +64,17 @@ inline SIZ TStackSize(SIZ count_max) {
 template <typename T = SIW, typename SIZ = SIW>
 inline SIZ TStackSizeMin() {
   enum {
-    kStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
-    kStackCountMaxMin = sizeof(TStack<SIZ>) + sizeof(T) * kStackCountMin,
+    cStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
+    cStackCountMaxMin = sizeof(TStack<SIZ>) + sizeof(T) * cStackCountMin,
   };
-  return kStackCountMaxMin;
+  return cStackCountMaxMin;
 }
 
 /* Gets the max number_ of elements in an obj with the specific index
 width. */
 template <typename T = SIW, typename SIZ = SIW>
 inline SIZ TStackSizeMax() {
-  return (SIZ)((((~(SIZ)0) - kWordLSbMask) - (SIZ)sizeof(TStack<SIZ>)) /
+  return (SIZ)((((~(SIZ)0) - cWordLSbMask) - (SIZ)sizeof(TStack<SIZ>)) /
                (SIZ)sizeof(T));
 }
 
@@ -136,7 +136,7 @@ UIW* TStackClone(TStack<SIZ>* stack, SocketFactory socket_factory) {
   UIW *source = reinterpret_cast<UIW*>(stack),  //
       *destination = other_buffer;
   SIZ data_amount =
-      (stack->count * sizeof(T) + sizeof(TStack<SIZ>)) >> kWordBitCount;
+      (stack->count * sizeof(T) + sizeof(TStack<SIZ>)) >> cWordBitCount;
   size -= data_amount;
   while (data_amount-- > 0) *destination++ = *source++;
   return destination;
@@ -184,9 +184,8 @@ Printer& TStackPrint(Printer& o, TStack<SIZ>* stack) {
   D_ASSERT(stack);
   SIZ size = stack->count_max, count = stack->count;
   o << Linef("\n+---\n| TStack<T") << sizeof(T) << ",SI"
-    << (CH1)('0' + sizeof(SIZ))
-    << ">: size_bytes:" << TStackSizeOf<T, SIZ>(size) << " size: " << size
-    << " count:" << count << Linef("\n+---");
+    << CH1('0' + sizeof(SIZ)) << ">: size_bytes:" << TStackSizeOf<T, SIZ>(size)
+    << " size: " << size << " count:" << count << Linef("\n+---");
 
   T* elements = TStackStart<T, SIZ>(stack);
   for (SI4 i = 0; i < count; ++i) o << "\n| " << i << ".) " << elements[i];
@@ -333,12 +332,12 @@ SIZ TStackPush(TStack<SIZ>* stack, T item) {
 @param item  The item to push onto the obj. */
 template <typename T = SIW, typename SIZ = SIW, typename BUF = Nil>
 SIZ TStackPush(AArray<T, SIZ, BUF>& obj, T item) {
-  TStack<SIZ>* stack = obj.BeginAs<TStack<SIZ>>();
+  TStack<SIZ>* stack = obj.OriginAs<TStack<SIZ>*>();
   SIZ index = TStackPush<T, SIZ>(stack, item);
   if (index < 0) {
     D_COUT("\nStack overflow! Autogrowing...");
     TStackGrow<T, SIZ>(obj.AJT());
-    stack = obj.BeginAs<TStack<SIZ>>();
+    stack = obj.OriginAs<TStack<SIZ>*>();
     T* items = TStackStart<T, SIZ>(stack);
     SIZ count = stack->count;
     items[count++] = item;
@@ -461,8 +460,8 @@ inline SIZ TStackSizeWords(SIZ count) {
 @endcode
 */
 template <typename T = SIW, typename SIZ = SIW,
-          SIZ kSize_ = kStackCountMaxDefault,
-          typename BUF = TUIB<kSize_, T, SIZ, TStack<SIZ>>>
+          SIZ cSize_ = cStackCountMaxDefault,
+          typename BUF = TUIB<cSize_, T, SIZ, TStack<SIZ>>>
 class AStack {
   AArray<T, SIZ, BUF> obj_;  //< An Auto-Array.
 
@@ -596,7 +595,7 @@ class AStack {
 
   /* Gets this ASCII Object. */
   inline TStack<SIZ>* This() {
-    return reinterpret_cast<TStack<SIZ>*>(obj_.Begin());
+    return reinterpret_cast<TStack<SIZ>*>(obj_.Origin());
   }
 
   /* Gets this AArray. */

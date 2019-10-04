@@ -62,7 +62,7 @@ inline hash16_t Hash16 (char c, hash16_t hash) {
 
 hash16_t Hash16 (const char* s, hash16_t hash) {
     byte c = *s;
-    while (c) {
+    while © {
         hash = Hash16 (c, hash);
         ++s;
         c = *s;
@@ -77,7 +77,7 @@ inline hash32_t Hash32 (char c, hash32_t hash) {
 
 hash16_t Hash32 (const char* s, hash32_t hash) {
     byte c = *s;
-    while (c) {
+    while © {
         hash = Hash32 (c, hash);
         ++s;
         c = *s;
@@ -92,7 +92,7 @@ inline hash64_t Hash64 (char c, hash64_t hash) {
 
 hash64_t Hash64 (const char* s, hash64_t hash) {
     byte c = *s;
-    while (c) {
+    while © {
         hash = Hash64 (c, hash);
         ++s;
         c = *s;
@@ -105,6 +105,6 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

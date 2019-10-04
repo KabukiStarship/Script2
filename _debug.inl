@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \_debug.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /_debug.inl
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -31,7 +31,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define D_COUT_STACK(item) TStackPrint<COut, T, SIZ>(COut().Star(), item)
 #define D_COUT_MATRIX(item) TMatrixPrint<COut, T, SIZ>(COut().Star(), item)
 #define D_COUT_TABLE(item) \
-  TTablePrint<_::COut, SIZ, HSH, Char>(COut().Star(), item)
+  TTablePrint<_::COut, SIZ, HSH, CHT>(COut().Star(), item)
 #define D_COUT_MAP(item) TMapPrint<COut, D, SIZ>(COut().Star(), item)
 #define D_COUT_BOOK(item) TBookPrint<COut, SIZ, SIY, HSH>(COut().Star(), item)
 #define D_COUT_DICTIONARY(item) \

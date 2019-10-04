@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /array.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,8 +10,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_config.h>
 
-#ifndef SCRIPT2_ARRAY_CODE_HEADER
-#define SCRIPT2_ARRAY_CODE_HEADER 1
+#ifndef SCRIPT2_ARRAY_CODE
+#define SCRIPT2_ARRAY_CODE 1
 
 #include "array.h"
 #include "typevalue.hpp"
@@ -53,7 +53,7 @@ inline SIZ TArraySizeMax() {
 namespace _ {
 
 // enum {
-//  kWordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
+//  cWordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
 //};
 
 inline UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
@@ -64,7 +64,7 @@ inline UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
 }
 
 /* @ingroup AsciiArray
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/array.md */
 
 /* Deletes the given obj using the obj.factory. */
@@ -74,7 +74,7 @@ inline void Delete(Autoject obj) {
 }
 
 /* An ASCII Array.
-Please see the ASCII Data Types Specificaiton for DRY documentation.
+Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/vector_types/array.md
 
 @code
@@ -134,7 +134,7 @@ inline SI TSizeOf(SI size) {
 
 /* The minimum size of an array with zero elements. */
 template <typename SIZ>
-constexpr SIZ CSizeMin() {
+constexpr SIZ cSizeMin() {
   return 0;
 }
 
@@ -180,7 +180,7 @@ inline SIZ TSizeBytes(Autoject& autoject) {
 template <typename T, typename SIZ, typename Class>
 inline SIZ TSizeWords(SIZ size) {
   SIZ size_aligned_up = AlignUp(TSizeBytes<T, SIZ, Class>(size));
-  return size_aligned_up >> kWordBitCount;
+  return size_aligned_up >> cWordBitCount;
 }
 template <typename T, typename SIZ, typename Class>
 inline SIZ TSizeWords(UIW* origin) {
@@ -207,7 +207,7 @@ template <typename T, typename SIZ>
 inline UIW* TArrayInit(Autoject& obj, UIW* buffer, SIZ size,
                        SocketFactory socket_factory) {
   D_ASSERT(socket_factory);
-  D_ASSERT(size >= CSizeMin<SIZ>());
+  D_ASSERT(size >= cSizeMin<SIZ>());
   obj.socket_factory = socket_factory;
   if (!buffer) {
     SIZ buffer_size = AlignUp(SIZ(size * sizeof(T) + sizeof(TArray<SIZ>)));
@@ -363,7 +363,7 @@ inline T* TArrayStop(UIW* obj) {
 /* Prints this autoject to the COut. */
 template <typename SIZ, typename Printer>
 Printer& TArrayPrint(Printer& o, Autoject& obj) {
-  o << "\nAutoject<SI" << (CH1)('0' + sizeof(SIZ)) << '>';
+  o << "\nAutoject<SI" << CH1('0' + sizeof(SIZ)) << '>';
   UIW* origin = obj.origin;
   if (origin) {
     SIZ size = *reinterpret_cast<SIZ*>(origin);
@@ -374,7 +374,7 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
 
 /* An invalid index. */
 template <typename SIZ>
-constexpr SIZ CInvalidIndex() {
+constexpr SIZ cInvalidIndex() {
   return -1;
 }
 
@@ -384,7 +384,7 @@ template <typename T, typename SIZ>
 SIZ TArrayFind(const T* elements, SIZ element_count, const T& item) {
   for (SIZ i = 0; i < element_count; ++i)
     if (*elements++ == item) return i;
-  return CInvalidIndex<SIZ>();
+  return cInvalidIndex<SIZ>();
 }
 
 /* Compares the two memory sockets.
@@ -411,8 +411,8 @@ inline BOL ArrayCompare(const void* begin_a, void* end_a, const void* begin_b,
                       reinterpret_cast<const CH1*>(begin_b) + size_b);
 }
 
-/* A word-aligned array of kSize_ elements of T on the progam stack. */
-template <SIW kSize_ = kCpuCacheLineSize, typename T = UI1, typename SIZ = SIN,
+/* A word-aligned array of cSize_ elements of T on the progam stack. */
+template <SIW cSize_ = cCpuCacheLineSize, typename T = UI1, typename SIZ = SIN,
           typename Class = Nil>
 class TUIB {
  public:
@@ -457,13 +457,13 @@ class TUIB {
   /* Sets the size to the new value. */
   template <typename SIW>
   inline UIW* SetSize(SIW size) {
-    A_ASSERT((size & kWordLSbMask) == 0)
+    A_ASSERT((size & cWordLSbMask) == 0)
     *reinterpret_cast<SIW*>(words_) = size;
     return words_;
   }
 
   /* The size in elements. */
-  static constexpr SIZ Size() { return (SIZ(kSize_) < 0) ? 0 : SIZ(kSize_); }
+  static constexpr SIZ Size() { return (SIZ(cSize_) < 0) ? 0 : SIZ(cSize_); }
 
   /* The size in bytes including the header. */
   static constexpr SIZ SizeBytes() {
@@ -471,7 +471,7 @@ class TUIB {
   }
 
   /* The size in words rounded down. */
-  static constexpr SIZ SizeWords() { return CSizeWords<SIZ>(SizeBytes()); }
+  static constexpr SIZ SizeWords() { return cSizeWords<SIZ>(SizeBytes()); }
 
  private:
   UIW words_[SizeWords()];  //< The word-aligned socket.
@@ -528,7 +528,7 @@ class AArray {
 
   };
   /* Gets the ASCII Data Type. */
-  static constexpr DT1 Type() { return CTypeSize<SIZ, DT1>(kARY); }
+  static constexpr DT1 Type() { return cTypeSize<SIZ, DT1>(cARY); }
 
   /* Constructs. */
   AArray() {
@@ -558,16 +558,16 @@ class AArray {
   inline BUF& Buffer() { return buffer_; }
 
   /* Returns the buffer_. */
-  inline UIW* Begin() { return obj_.origin; }
+  inline UIW* Origin() { return obj_.origin; }
 
   template <typename T = TStack<SIZ>>
-  inline T* BeginAs() {
-    return reinterpret_cast<T*>(Begin());
+  inline T OriginAs() {
+    return reinterpret_cast<T>(Origin());
   }
 
   /* Sets the origin to the given pointer.
   @return Nil if the input is nil. */
-  inline UIW* BeginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
+  inline UIW* OriginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
 
   /* Gets the ASCII Object size in elements. */
   inline SIZ Size() { return TSize<SIZ>(obj_.origin); }

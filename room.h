@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /room.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -20,11 +20,11 @@ namespace _ {
 /* A list of Requests that can be sent from Slot<SI4, TSizeBytes> to
     Slot<SI4, TSizeBytes>.  */
 typedef enum Requests {
-  kOpenDoorRequest = 0,
-  kCloseDoorRequest,
-  kConnectionRequest,
-  kDisconnectRequest,
-  kInvalidRequest,
+  cOpenDoorRequest = 0,
+  cCloseDoorRequest,
+  cConnectionRequest,
+  cDisconnectRequest,
+  cInvalidRequest,
 } Request;
 
 /* Returns an array of pointers to Strings that describe the program states.
@@ -122,19 +122,19 @@ class Room : public Operand {
 
  public:
   typedef enum States {
-    kStateBooting = 0,
-    kStateGoingToSleep,
-    kShutdown,
+    cStateBooting = 0,
+    cStateGoingToSleep,
+    cShutdown,
   } State;
 
   enum {
 #ifndef SCRIPT2_MAX_WALLS
-    kRoomFloorSize = 1024,
+    cRoomFloorSize = 1024,
 #else
-    kRoomFloorSize = SCRIPT2_MAX_WALLS,
+    cRoomFloorSize = SCRIPT2_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
-    kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
+    cFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
   };
 
   /* Creates a Room with the given size.

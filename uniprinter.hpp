@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /uniprinter.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,8 +10,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_config.h>
 
-#ifndef SCRIPT2_UNIPRINTER_CODE_HEADER
-#define SCRIPT2_UNIPRINTER_CODE_HEADER 1
+#ifndef SCRIPT2_UNIPRINTER_CODE
+#define SCRIPT2_UNIPRINTER_CODE 1
 
 #include "stringf.h"
 #include "typevalue.hpp"
@@ -19,8 +19,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Prints the given string to the Printer. */
-template <typename Printer, typename Char = CHR>
-Printer& TSPrintString(Printer& o, const Char* string) {
+template <typename Printer, typename CHT = CHR>
+Printer& TSPrintString(Printer& o, const CHT* string) {
   if (!string) return o;
   CHA c;
   string = SScan(string, c);
@@ -33,8 +33,8 @@ Printer& TSPrintString(Printer& o, const Char* string) {
 
 /* Prints the given string to the Printer and returns the count of characters
 printed. */
-template <typename Printer, typename Char = CHR>
-SIN TPrintAndCount(Printer& o, const Char* string) {
+template <typename Printer, typename CHT = CHR>
+SIN TPrintAndCount(Printer& o, const CHT* string) {
   if (!string) return 0;
   SIN print_count = 0;
   CHA c;
@@ -50,7 +50,7 @@ SIN TPrintAndCount(Printer& o, const Char* string) {
 /* Prints the following item to the console in Hex. */
 template <typename Printer, typename UI>
 Printer& TPrintHex(Printer& o, UI item) {
-  enum { kHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+  enum { cHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
   auto ui = ToUnsigned(item);
   for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
@@ -146,7 +146,7 @@ Printer& TPrintBinary(Printer& o, const void* start, SIW byte_count) {
     UI1 c = *cursor;
     cursor += delta;
     for (SIW i = 8; i > 0; --i) {
-      o << (CH1)('0' + (c >> 7));
+      o << CH1('0' + (c >> 7));
       c = c << 1;
     }
   }
@@ -161,10 +161,10 @@ inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
 
 template <typename Printer, typename UI>
 Printer& TPrintBinary(Printer& o, UI item) {
-  enum { kSize = sizeof(UI) * 8 };
+  enum { cSize = sizeof(UI) * 8 };
   auto ui = ToUnsigned(item);
-  for (SI4 i = kSize; i > 0; --i) {
-    CH1 c = (CH1)('0' + (ui >> (kSize - 1)));
+  for (SI4 i = cSize; i > 0; --i) {
+    CH1 c = CH1('0' + (ui >> (cSize - 1)));
     o << c;
     ui = ui << 1;
   }
@@ -214,11 +214,11 @@ Printer& TPrintAligned(Printer& o, const CH1* string, SIW char_count,
 pointer to the nil-term CH1 upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
-template <typename Printer, typename Char = CHR>
-Printer& TPrintCenter(Printer& o, const Char* item, SIW column_count = 80) {
+template <typename Printer, typename CHT = CHR>
+Printer& TPrintCenter(Printer& o, const CHT* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
 
-  const Char* token_end = TSTREnd<Char>(item);
+  const CHT* token_end = TSTREnd<CHT>(item);
   if (item == token_end) return o;
   SIW length = token_end - item, space_count = column_count - length;
 
@@ -308,11 +308,11 @@ Printer& TPrintCenter(Printer& o, Stringf& item) {
 pointer to the nil-term CH1 upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
-template <typename Printer, typename Char = CHR>
-Printer& TPrintRight(Printer& o, const Char* item, SIW column_count = 80) {
+template <typename Printer, typename CHT = CHR>
+Printer& TPrintRight(Printer& o, const CHT* item, SIW column_count = 80) {
   if (!item || column_count < 1) return o;
 
-  const Char* token_end = TSTREnd<Char>(item);
+  const CHT* token_end = TSTREnd<CHT>(item);
   if (item == token_end) return o;
   SIW length = token_end - item, space_count = column_count - length;
 
@@ -393,15 +393,15 @@ Printer& TPrintIndent(Printer& o, SIW indent_count) {
   return o;
 }
 
-template <typename Printer, typename Char>
-Printer& TPrintRepeat(Printer& o, Char c, SIW count) {
+template <typename Printer, typename CHT>
+Printer& TPrintRepeat(Printer& o, CHT c, SIW count) {
   while (--count >= 0) o << c;
   return o;
 }
 
-template <typename Char = CHR>
-const Char* TSTRLinef() {
-  static const Char kString[] = {'\n', '\n', '-', '-', '-', '\n', NIL};
+template <typename CHT = CHR>
+const CHT* TSTRLinef() {
+  static const CHT kString[] = {'\n', '\n', '-', '-', '-', '\n', NIL};
   return kString;
 }
 
@@ -431,19 +431,19 @@ TPrintBreak<CH1> ("- \n---\n---\n\n   Foo\n\n---\n---", 10);
 //>>> -----------
 @endcode
 */
-template <typename Printer, typename Char = CHR>
-const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
-                        SIW column_count = 80) {
+template <typename Printer, typename CHT = CHR>
+const CHT* TPrintLinef(Printer& o, const CHT* style = nullptr,
+                       SIW column_count = 80) {
   enum {
-    kStateScanningDifferentChars = 0,
-    kStateStateDuplicateChar = 1,
-    kBreakCount = 3,
+    cStateScanningDifferentChars = 0,
+    cStateStateDuplicateChar = 1,
+    cBreakCount = 3,
   };
-  if (!style) style = TSTRLinef<Char>();
-  if (column_count < kBreakCount) return nullptr;
+  if (!style) style = TSTRLinef<CHT>();
+  if (column_count < cBreakCount) return nullptr;
 
-  SIW state = kStateScanningDifferentChars;
-  Char current_char = *style++,  //
+  SIW state = cStateScanningDifferentChars;
+  CHT current_char = *style++,  //
       prev_char = ~current_char;
   SI4 hit_count = 0, column_index = 0;
   while (current_char) {
@@ -453,19 +453,19 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
     else
       ++column_index;
     switch (state) {
-      case kStateScanningDifferentChars: {
-        if (current_char == prev_char && !TIsWhitespace<Char>(current_char)) {
-          state = kStateStateDuplicateChar;
+      case cStateScanningDifferentChars: {
+        if (current_char == prev_char && !TIsWhitespace<CHT>(current_char)) {
+          state = cStateStateDuplicateChar;
           hit_count = 1;
         }
         break;
       }
-      case kStateStateDuplicateChar: {
+      case cStateStateDuplicateChar: {
         if (current_char != prev_char)
-          state = kStateScanningDifferentChars;
-        else if (++hit_count >= kBreakCount - 1) {
-          TPrintRepeat<Printer, Char>(o, current_char,
-                                      column_count - column_index);
+          state = cStateScanningDifferentChars;
+        else if (++hit_count >= cBreakCount - 1) {
+          TPrintRepeat<Printer, CHT>(o, current_char,
+                                     column_count - column_index);
           column_index = hit_count = 0;
         }
         break;
@@ -477,10 +477,10 @@ const Char* TPrintLinef(Printer& o, const Char* style = nullptr,
   return style;
 }
 
-template <typename Printer, typename Char = CHR>
-Printer& TPrintLine(Printer& o, Char token = '-', SIW column_count = 80) {
+template <typename Printer, typename CHT = CHR>
+Printer& TPrintLine(Printer& o, CHT token = '-', SIW column_count = 80) {
   o << '\n';
-  TPrintRepeat<Printer, Char>(o, token, column_count);
+  TPrintRepeat<Printer, CHT>(o, token, column_count);
   return o << '\n';
 }
 
@@ -490,19 +490,19 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
       utf_format = _::TypeTextFormat(type);
   switch (utf_format) {
 #if USING_UTF8 == YES_0
-    case kST1: {
+    case cSTA: {
       _::TPrintLinef<Printer, CH1>(o, item.element.ToST1(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF16 == YES_0
-    case kST2: {
+    case cSTB: {
       _::TPrintLinef<Printer, CH2>(o, item.element.ToST2(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF32 == YES_0
-    case kST3: {
+    case cSTC: {
       const CH4* start =
           reinterpret_cast<const CH4*>(item.element.value.ToPTR());
       _::TPrintLinef<Printer, CH4>(o, item.element.ToST3(), item.element.count);
@@ -510,23 +510,23 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
     }
 #endif
     case -1: {
-      switch (type & kTypePODMask) {
+      switch (type & cTypePODMask) {
 #if USING_UTF8 == YES_0
-        case kCH1: {
+        case cCH1: {
           CH1 c = (CH1)item.element.value.Word();
           _::TPrintLine<Printer, CH1>(o, c, item.element.count);
           break;
         }
 #endif
 #if USING_UTF16 == YES_0
-        case kCH2: {
+        case cCH2: {
           CH2 c = (CH2)item.element.value.Word();
           _::TPrintLine<Printer, CH2>(o, c, item.element.count);
           break;
         }
 #endif
 #if USING_UTF32 == YES_0
-        case kCH4: {
+        case cCH4: {
           CH4 c = (CH4)item.element.value.Word();
           _::TPrintLine<Printer, CH4>(o, c, item.element.count);
           break;
@@ -538,16 +538,16 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
   return o;
 }
 
-template <typename Char = CHR>
-const Char* TSTRHeadingf() {
-  static const Char kStrand[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
-                                 NIL,  '\n', '+', '-', '-', '-', '\n', NIL};
+template <typename CHT = CHR>
+const CHT* TSTRHeadingf() {
+  static const CHT kStrand[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
+                                NIL,  '\n', '+', '-', '-', '-', '\n', NIL};
   return kStrand;
 }
 
 /* Prints a heading with the */
-template <typename Printer, typename Char>
-Printer& TPrintHeadingf(Printer& o, const Char* element,
+template <typename Printer, typename CHT>
+Printer& TPrintHeadingf(Printer& o, const CHT* element,
                         const CH1* style = nullptr, SIW column_count = 80,
                         const CH1* caption2 = nullptr,
                         const CH1* caption3 = nullptr) {
@@ -590,16 +590,16 @@ Printer& TPrintHeadingf(Printer& o, Headingf& item) {
   return o;
 }
 
-template <typename Printer, typename Char = CHR>
-Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
+template <typename Printer, typename CHT = CHR>
+Printer& TPrintChars(Printer& o, const CHT* start, const CHT* stop) {
   if (!start || start >= stop) return o;
 
   SIW size_bytes = stop - start + 1;
 
   o << STRPrintCharsHeader() << STRPrintCharsBorder() << Hexf(start);
   int i = 0;
-  Char c;
-  const Char* address_to_print = start;
+  CHT c;
+  const CHT* address_to_print = start;
   while (start <= stop) {
     o << '\n' << '|';
     for (SI4 i = 0; i < 64; ++i) {
@@ -608,7 +608,7 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
         c = 'x';
       } else if (c < ' ') {
         address_to_print = start;
-        c += kPrintC0Offset;
+        c += cPrintC0Offset;
       }
       o << c;
     }
@@ -617,9 +617,9 @@ Printer& TPrintChars(Printer& o, const Char* start, const Char* stop) {
   return o << STRPrintCharsBorder() << "Chars printed:" << size_bytes;
 }
 
-template <typename Printer, typename Char = CHR>
-inline Printer& TPrintChars(Printer& o, const Char* start, SIW count) {
-  return TPrintChars<Printer, Char>(o, start, start + count - 1);
+template <typename Printer, typename CHT = CHR>
+inline Printer& TPrintChars(Printer& o, const CHT* start, SIW count) {
+  return TPrintChars<Printer, CHT>(o, start, start + count - 1);
 }
 
 template <typename Printer>
@@ -648,16 +648,16 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
 }
 
 template <typename Printer, typename DT = DT2>
-Printer& TPrintTypeNamePOD(Printer& o, DT type) {
-  DT pod_type = type & kTypePODMask,        //
+Printer& TPrintTypePOD(Printer& o, DT type) {
+  DT pod_type = type & cTypePODMask,        //
       vector_type = TTypeVector<DT>(type),  //
       map_type = TTypeMap<DT>(type);        //
 }
 
 template <typename Printer, typename DT = DT2>
-Printer& TPrintTypeName(Printer& o, DT type) {
-  DT pod_type = type & kTypePODMask;
-  if (pod_type == 0) return o << "BGN" << (type >> kTypePODBitCount);
+Printer& TPrintType(Printer& o, DT type) {
+  DT pod_type = type & cTypePODMask;
+  if (pod_type == 0) return o << "BGN" << (type >> cTypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
     return o << TypeSTR(vector_type) << '_' << TypeSTR(pod_type);

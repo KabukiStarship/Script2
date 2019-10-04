@@ -1,21 +1,21 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /slot.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "slot.h"
 
 #include "binary.h"
 #include "strand.hpp"
 #include "typevalue.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #include "_debug.inl"
 #else
 #include "_release.inl"
@@ -148,17 +148,17 @@ const Op* Slot::Read(const SI4* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
   UI1 ui1;  //< Temp variable to load most types.
-  UI2 ui2;  //< Temp variable for working with kUI2 types.
+  UI2 ui2;  //< Temp variable for working with cUI2 types.
 #if USING_SCRIPT2_4_BYTE_TYPES
   UI4 ui4;
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
-  UI8 ui8;  //< Temp kUI8 variable.
+  UI8 ui8;  //< Temp cUI8 variable.
 #endif
-  CH1* ui1_ptr;              //< Pointer to a kUI1.
-  UI2* ui2_ptr;              //< Pointer to a kUI2.
-  UI4* ui4_ptr;              //< Pointer to a kUI4.
-  UI8* ui8_ptr;              //< Pointer to a kUI8.
+  CH1* ui1_ptr;              //< Pointer to a cUI1.
+  UI2* ui2_ptr;              //< Pointer to a cUI2.
+  UI4* ui4_ptr;              //< Pointer to a cUI4.
+  UI8* ui8_ptr;              //< Pointer to a cUI8.
   SI4 type,                  //< Current type being read.
       index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
@@ -193,8 +193,8 @@ const Op* Slot::Read(const SI4* params, void** args) {
                       << TDelta<>(l_begin, stop));
 
     switch (type) {
-      case kNIL:
-        return ReturnError(this, kErrorInvalidType);
+      case cNIL:
+        return ReturnError(this, cErrorInvalidType);
       case kADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
       case kSTR:
         // Load buffered-type argument length and increment the
@@ -218,7 +218,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
 
         while (ui1 && count) {
           if (count-- == 0)
-            return ReturnError(this, kErrorBufferUnderflow, params, index,
+            return ReturnError(this, cErrorBufferUnderflow, params, index,
                                l_start);
           D_COUT(ui1);
 
@@ -234,12 +234,12 @@ const Op* Slot::Read(const SI4* params, void** args) {
           *ui1_ptr = ui1;
         }
         break;
-      case kSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
-      case kUI1:
-      case kBOL:
+      case cSI1:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
+      case cUI1:
+      case cBOL:
 #if USING_SCRIPT2_1_BYTE_TYPES
         if (length == 0) {
-          return ReturnError(this, kErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
         --length;
@@ -260,11 +260,11 @@ const Op* Slot::Read(const SI4* params, void** args) {
         }
         break;
 #else
-        return ReturnError(this, kErrorInvalidType);
+        return ReturnError(this, cErrorInvalidType);
 #endif
-      case kSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
-      case kUI2:
-      case kFP2:
+      case cSI2:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
+      case cUI2:
+      case cFP2:
 #if ALU_SIZE <= 16
       case SVI:
       case UVI:
@@ -274,7 +274,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
         // Word-align
         offset = AlignUpOffset2(l_start);
         if ((UIW)length < offset + 2) {
-          return ReturnError(this, kErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
         length -= (SI4)offset + 2;
@@ -298,27 +298,27 @@ const Op* Slot::Read(const SI4* params, void** args) {
         //}
         break;
 #else
-        return ReturnError(this, kErrorInvalidType);
+        return ReturnError(this, cErrorInvalidType);
 #endif
 #if USING_SCRIPT2_VARINT2
         goto Read2ByteType;
 #else
-        return ReturnError(this, kErrorInvalidType);
+        return ReturnError(this, cErrorInvalidType);
 #endif
 #if ALU_SIZE > 16
       case SVI:
       case UVI:
 #endif
-      case kSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
-      case kUI4:
-      case kFP4:
+      case cSI4:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
+      case cUI4:
+      case cFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Read4ByteType:{
         // Word-align
         offset = AlignUpOffset4(l_start);
         if ((UIW)length < offset + 4) {
-          return ReturnError(this, kErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
         length -= (SI4)offset + 4;
@@ -342,18 +342,18 @@ const Op* Slot::Read(const SI4* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, kErrorInvalidType);
+        return ReturnError(this, cErrorInvalidType);
 #endif
-      case kSI8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
-      case kUI8:
-      case kFP8:
+      case cSI8:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
+      case cUI8:
+      case cFP8:
       case kTM8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
         offset = AlignUpOffset8(l_start);
         if ((UIW)length < offset + sizeof(SI8)) {
-          return ReturnError(this, kErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
         length -= offset + sizeof(SI8);
@@ -375,7 +375,7 @@ const Op* Slot::Read(const SI4* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, kErrorInvalidType);
+        return ReturnError(this, cErrorInvalidType);
 #endif
       default: {
 #if USING_SCRIPT2_OBJ
@@ -383,19 +383,19 @@ const Op* Slot::Read(const SI4* params, void** args) {
         type &= 0x1f;       //< Now type is the type 0-31
         if (count && (type >= kOBJ)) {
           // Can't make arrays out of objects!
-          return ReturnError(this, kErrorInvalidType, params, index, l_start);
+          return ReturnError(this, cErrorInvalidType, params, index, l_start);
         }
         // We don't care if it's a multidimensional array anymore.
         ui1_ptr = reinterpret_cast<CH1*>(args[index]);
         if (ui1_ptr == nullptr)
-          return ReturnError(this, kErrorImplementation, params, index,
+          return ReturnError(this, cErrorImplementation, params, index,
                              l_start);
         count &= 0x3;
         switch (count) {
           case 0: {  // It's a 8-bit count.
-            if (type >= kLST) {
-              // kLST, kBOK, kDIC, and kMAP can't be 8-bit!
-              return ReturnError(this, kErrorInvalidType, params, index,
+            if (type >= cLST) {
+              // cLST, kBOK, kDIC, and kMAP can't be 8-bit!
+              return ReturnError(this, cErrorInvalidType, params, index,
                                  l_start);
             }
             count = (UIW)*ui1_ptr;
@@ -403,57 +403,57 @@ const Op* Slot::Read(const SI4* params, void** args) {
           }
           case 1: {  // It's a 16-bit count.
             if (length < 3) {
-              return ReturnError(this, kErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBufferUnderflow, params, index,
                                  l_start);
             }
             count -= 2;
             ui2_ptr = reinterpret_cast<UI2*>(ui1_ptr);
             count = (UIW)*ui2_ptr;
             if (count > length) {
-              return ReturnError(this, kErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 2: {  // It's a 32-bit count.
             if (length < 5) {
-              return ReturnError(this, kErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBufferUnderflow, params, index,
                                  l_start);
             }
             count -= 4;
             ui4_ptr = reinterpret_cast<UI4*>(ui1_ptr);
             count = (UIW)*ui4_ptr;
             if (count > length) {
-              return ReturnError(this, kErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 3: {  // It's a 64-bit count.
             if (length < 9) {
-              return ReturnError(this, kErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBufferUnderflow, params, index,
                                  l_start);
             }
             count -= 8;
             ui8_ptr = reinterpret_cast<UI8*>(ui1_ptr);
             count = (UIW)*ui8_ptr;
             if (count > length) {
-              return ReturnError(this, kErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           default: {
-            return ReturnError(this, kErrorImplementation, params, index,
+            return ReturnError(this, cErrorImplementation, params, index,
                                l_start);
           }
         }
         if (length < count) {
-          return ReturnError(this, kErrorBufferOverflow, params, index,
+          return ReturnError(this, cErrorBufferOverflow, params, index,
                              l_start);
         }
         if (!count) {
-          return ReturnError(this, kErrorBufferOverflow, params, index,
+          return ReturnError(this, cErrorBufferOverflow, params, index,
                              l_start);
         }
         if (l_start + count >= l_end) {

@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /stringf.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -146,7 +146,7 @@ CH1* SPrint(CH1* start, CH1* stop, CH2 item) {
 #if USING_UTF32 == YES_0
   return SPrint(start, stop, CH4(item));
 #else
-  enum { k2ByteMSbMask = 0xC0, k3ByteMSbMask = 0xE0, k4ByteMSbMask = 0xF0 };
+  enum { c2ByteMSbMask = 0xC0, c3ByteMSbMask = 0xE0, c4ByteMSbMask = 0xF0 };
   if (!start || start >= stop) return nullptr;
   if (!(item >> 7)) {  // 1 byte.
     if (start + 1 > stop) return nullptr;
@@ -348,7 +348,7 @@ Binaryf::Binaryf(FP8 item) : valuef(item, sizeof(FP8)) {}
 #endif
 
 // Stringf::Stringf () {}
-Stringf::Stringf() : type_(kNIL), count_(0), buffer_() {
+Stringf::Stringf() : type_(cNIL), count_(0), buffer_() {
   String_ = &buffer_[0];
   *buffer_ = 0;
 }
@@ -437,94 +437,94 @@ SIW Stringf::Type() const { return type_; }
 SIW Stringf::Count() const { return count_; }
 
 void Stringf::Print(const CH1* item) {
-  type_ = kST1;
+  type_ = cSTA;
   String_ = item;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Print(const CH2* item) {
-  type_ = kST2;
+  type_ = cSTB;
   String_ = item;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(const CH4* item) {
-  type_ = kST3;
+  type_ = cSTC;
   String_ = item;
 }
 #endif
 
 void Stringf::Print(CH1 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::SPrint(buffer, buffer + kLengthMax, item);
-  type_ = kST1;
+  _::SPrint(buffer, buffer + cLengthMax, item);
+  type_ = cSTA;
   String_ = buffer_;
 }
 
 #if USING_UTF16 == YES_0
 void Stringf::Print(CH2 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::SPrint(buffer, buffer + kLengthMax, item);
-  type_ = kST1;
+  _::SPrint(buffer, buffer + cLengthMax, item);
+  type_ = cSTA;
   String_ = buffer_;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(CH4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::SPrint(buffer, buffer + kLengthMax, item);
-  type_ = kST1;
+  _::SPrint(buffer, buffer + cLengthMax, item);
+  type_ = cSTA;
   String_ = buffer;
 }
 #endif
 void Stringf::Print(SI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = kST1;
+  type_ = cSTA;
   String_ = buffer;
 }
 
 void Stringf::Print(UI4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = kST1;
+  type_ = cSTA;
   String_ = buffer;
 }
 
 void Stringf::Print(SI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = kST1;
+  type_ = cSTA;
   String_ = buffer;
 }
 
 void Stringf::Print(UI8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = kST1;
+  type_ = cSTA;
   String_ = buffer;
 }
 
 #if USING_FP4 == YES_0
 void Stringf::Print(FP4 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
-  type_ = kST1;
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
+  type_ = cSTA;
   String_ = buffer;
 }
 #endif
 #if USING_FP8 == YES_0
 void Stringf::Print(FP8 item) {
   CH1* buffer = reinterpret_cast<CH1*>(buffer_);
-  _::TSPrint<CH1>(buffer, buffer + kLengthMax, item);
-  type_ = kST1;
+  _::TSPrint<CH1>(buffer, buffer + cLengthMax, item);
+  type_ = cSTA;
   String_ = buffer;
 }
 #endif
@@ -539,57 +539,57 @@ void Stringf::Print(TypeValue item) {
   DTW type = item.Type();
   type_ = type;
   static const CH1 kNotSupported[] = "Not supported\0";
-  DTW pod_type = type & kTypePODMask;
+  DTW pod_type = type & cTypePODMask;
   if (type != pod_type) {  // It's not a POD type.
   }
   switch (type) {
-    case kNIL:
+    case cNIL:
       // CH4 c = 2205; // Empty-set Unicode character.
       return;
-    case kCH1:
+    case cCH1:
       Print(CH1(item.ToUI1()));
       return;
-    case kSI1:
+    case cSI1:
       Print(SI1(item.ToUI1()));
       return;
-    case kUI1:
+    case cUI1:
       Print((item.ToUI1()));
       return;
-    case kCH2:
+    case cCH2:
       Print(CH2(item.ToUI2()));
       return;
-    case kSI2:
+    case cSI2:
       Print(SI2(item.ToUI2()));
       return;
-    case kUI2:
+    case cUI2:
       Print(item.ToUI2());
       return;
-    case kFP2:
+    case cFP2:
       Print(item.ToUI2());
       return;
-    case kCH4:
+    case cCH4:
       Print(CH4(item.ToUI4()));
       return;
-    case kSI4:
+    case cSI4:
       Print(SI4(item.ToUI4()));
       return;
-    case kUI4:
+    case cUI4:
       Print(UI4(item.ToUI4()));
       return;
-    case kFP4:
+    case cFP4:
 #if USING_FP4 == YES_0
       Print(ToFloat(item.ToUI4()));
 #endif
       return;
-    case kTME:
+    case cTME:
       PrintTME(SI4(item.Word()), UI4(item.Word2()));
-    case kSI8:
+    case cSI8:
       Print(SI8(item.ToUI8()));
       return;
-    case kUI8:
+    case cUI8:
       Print(item.ToUI8());
       return;
-    case kFP8:
+    case cFP8:
 #if USING_FP8 == YES_0
       Print(ToFloat(item.ToUI8()));
 #endif
@@ -600,73 +600,73 @@ void Stringf::Print(TypeValue item) {
 
 void Stringf::Hex(CH1 item, SIW count) {
   *reinterpret_cast<CH1*>(buffer_) = item;
-  type_ = kCH1;
+  type_ = cCH1;
   count_ = -count;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Hex(CH2 item, SIW count) {
   *reinterpret_cast<CH2*>(buffer_) = item;
-  type_ = kCH2;
+  type_ = cCH2;
   count_ = -count;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Hex(CH4 item, SIW count) {
   *reinterpret_cast<CH4*>(buffer_) = item;
-  type_ = kCH4;
+  type_ = cCH4;
   count_ = -count;
 }
 #endif
 void Stringf::Hex(SI1 item, SIW count) {
   *reinterpret_cast<SI1*>(buffer_) = item;
-  type_ = kSI1;
+  type_ = cSI1;
   count_ = -count;
 }
 void Stringf::Hex(UI1 item, SIW count) {
   *reinterpret_cast<UI1*>(buffer_) = item;
-  type_ = kUI1;
+  type_ = cUI1;
   count_ = -count;
 }
 
 void Stringf::Hex(SI2 item, SIW count) {
   *reinterpret_cast<SI2*>(buffer_) = item;
-  type_ = kSI2;
+  type_ = cSI2;
   count_ = -count;
 }
 
 void Stringf::Hex(UI2 item, SIW count) {
   *reinterpret_cast<UI2*>(buffer_) = item;
-  type_ = kUI2;
+  type_ = cUI2;
   count_ = -count;
 }
 
 void Stringf::Hex(SI4 item, SIW count) {
   *reinterpret_cast<SI4*>(buffer_) = item;
-  type_ = kSI4;
+  type_ = cSI4;
   count_ = -count;
 }
 
 void Stringf::Hex(UI4 item, SIW count) {
   *reinterpret_cast<UI4*>(buffer_) = item;
-  type_ = kUI4;
+  type_ = cUI4;
 }
 
 void Stringf::Hex(SI8 item, SIW count) {
   *reinterpret_cast<SI8*>(buffer_) = item;
-  type_ = kSI8;
+  type_ = cSI8;
   count_ = -count;
 }
 
 void Stringf::Hex(UI8 item, SIW count) {
   *reinterpret_cast<UI8*>(buffer_) = item;
-  type_ = kUI8;
+  type_ = cUI8;
   count_ = -count;
 }
 
 #if USING_FP4 == YES_0
 void Stringf::Hex(FP4 item, SIW count) {
   *reinterpret_cast<FP4*>(buffer_) = item;
-  type_ = kFP4;
+  type_ = cFP4;
   count_ = -count;
 }
 #endif
@@ -674,7 +674,7 @@ void Stringf::Hex(FP4 item, SIW count) {
 #if USING_FP8 == YES_0
 void Stringf::Hex(FP8 item, SIW count) {
   *reinterpret_cast<FP8*>(buffer_) = item;
-  type_ = kFP8;
+  type_ = cFP8;
   count_ = -count;
 }
 #endif
@@ -858,13 +858,13 @@ Linef::Linef(CH1 item, SIW count) : element(string, count) {
 Linef::Linef(const CH1* item, SIW count) : element(item, count) {}
 
 Headingf::Headingf(const CH1* caption1)
-    : element(caption1, kConsoleWidth),
+    : element(caption1, cConsoleWidth),
       style(nullptr),
       caption2(nullptr),
       caption3(nullptr) {}
 
 Headingf::Headingf(const CH1* caption1, const CH1* caption2)
-    : element(caption1, kConsoleWidth),
+    : element(caption1, cConsoleWidth),
       style(nullptr),
       caption2(caption2),
       caption3(nullptr) {}

@@ -1,14 +1,14 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bout.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "args.h"
 #include "binary.h"
 #include "bout.h"
@@ -19,7 +19,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #include "typevalue.h"
 #include "utf.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #include "_debug.inl"
 #define D_COUT_BOUT(header, bout) \
   Console<>().Out() << "\n" << header << '\n' << bout;
@@ -78,7 +78,7 @@ inline const Op* BOutError(BOut* bout, Error error, const SI4* header,
 }
 
 const CH1** BOutStateStrands() {
-  static const CH1* Strings[] = {"WritingState", "kBInStateLocked"};
+  static const CH1* Strings[] = {"WritingState", "cBInStateLocked"};
   return Strings;
 }
 
@@ -135,7 +135,7 @@ SI4 BOutStreamByte(BOut* bout) {
                                     : (stop - origin) + (open - origin) + 2;
 
   if (length < 1) {
-    BOutError(bout, kErrorBufferOverflow, Params<1, kSTR>(), 2, origin);
+    BOutError(bout, cErrorBufferOverflow, Params<1, kSTR>(), 2, origin);
     return -1;
   }
   // UI1 b = *cursor;
@@ -147,8 +147,8 @@ SI4 BOutStreamByte(BOut* bout) {
 const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   D_COUT_BSQ("\n\nWriting ", params)
   enum {
-    kBOutBufferSize = 1024,
-    kBOutBufferSizeWords = kBOutBufferSize >> kWordBitCount
+    cBOutBufferSize = 1024,
+    cBOutBufferSizeWords = cBOutBufferSize >> cWordBitCount
   };
   D_COUT_BOUT(" to B-Output:", bout)
 
@@ -206,7 +206,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
   space = (SI4)SlotSpace(origin, stop, size);
 
   // Check if the socket has enough room.
-  if (space == 0) return BOutError(bout, kErrorBufferOverflow);
+  if (space == 0) return BOutError(bout, cErrorBufferOverflow);
   --space;
   length = params[0];  //< Load the max CH1 length.
   ++param;
@@ -218,20 +218,20 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
                        << " start:" << TDelta<>(origin, origin) << " stop:"
                        << TDelta<>(origin, stop) << " space:" << space);
     switch (type) {
-      case kNIL:
+      case cNIL:
         break;
 
       case kADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
       case kSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
         if (space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         if (type != kADR) {
           // We might not need to write anything if it's an kADR with
           // nil .
           length = params[++index];  //< Load the max CH1 length.
           ++num_params;
         } else {
-          length = kAddressLengthMax;
+          length = cAddressLengthMax;
         }
         // Load the source data pointer and increment args.fs
         ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
@@ -241,7 +241,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         ui1 = *ui1_ptr;
         while (ui1 != 0) {
           if (space-- == 0)
-            return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+            return BOutError(bout, cErrorBufferOverflow, params, index, origin);
           hash = HashPrime16(ui1, hash);
 
           *stop = ui1;  // Write UI1
@@ -257,13 +257,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         }
 
         break;
-      case kSI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
-      case kUI1:
-      case kBOL:
+      case cSI1:  //< _W_r_i_t_e__8_-_b_i_t__T_y_p_e_s_______________
+      case cUI1:
+      case cBOL:
 #if USING_SCRIPT2_1_BYTE_TYPES
         // Check if the socket has enough room.
         if (space-- == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
 
         // Load pointer and read data to write.
         ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
@@ -275,16 +275,16 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         if (++stop >= stop) stop -= size;
         break;
 #else
-        return BOutError(bout, kErrorInvalidType);
+        return BOutError(bout, cErrorInvalidType);
 #endif
-      case kSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
-      case kUI2:
-      case kFP2:
+      case cSI2:  //< _W_r_i_t_e__1_6_-_b_i_t__T_y_p_e_s______________
+      case cUI2:
+      case cFP2:
 #if USING_SCRIPT2_2_BYTE_TYPES
         // Align the socket to a word boundary and check if the
         // socket has enough room.
         if (space < sizeof(UI2))
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         space -= sizeof(UI2);
 
         // Load pointer and value to write.
@@ -306,7 +306,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         hash = HashPrime16(ui1, hash);
         break;
 #else
-        return BOutError(bout, kErrorInvalidType);
+        return BOutError(bout, cErrorInvalidType);
 #endif  // USING_SCRIPT2_2_BYTE_TYPES
 #if ALU_SIZE <= 16
       case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
@@ -324,13 +324,13 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         // Load next pointer value to write.
         ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
         if (ui2_ptr == nullptr)
-          return BOutError(bout, kErrorImplementation, params, index, origin);
+          return BOutError(bout, cErrorImplementation, params, index, origin);
         ui2 = *ui2_ptr;
 
       WriteVarint2 : {
         // Byte 1
         if (space-- == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         ui1 = ui2 & 0x7f;
         ui2 = ui2 >> 7;
         if (ui2 == 0) {
@@ -346,7 +346,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 
         // Byte 2
         if (--space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         ui1 = ui2 & 0x7f;
         ui2 = ui2 >> 7;
         if (ui2 == 0) {
@@ -362,7 +362,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 
         // Byte 3
         if (--space == 0)
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         ui1 = ui2 & 0x7f;
         ui1 |= 0x80;
         *stop = ui1;
@@ -383,7 +383,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       WriteVarint4 : {  //< Optimized manual do while loop.
         ui2 = 5;
         if (space == 0)  //< @todo Benchmark to space--
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         --space;  //< @todo Benchmark to space--
         ui1 = ui4 & 0x7f;
         ui4 = ui4 >> 7;
@@ -399,22 +399,22 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         hash = HashPrime16(ui1, hash);
         // This wont happen I don't think.
         // if (--ui2 == 0)
-        //    return BOutError (kErrorVarintOverflow, params, index,
+        //    return BOutError (cErrorVarintOverflow, params, index,
         //                       origin);
 
         goto WriteVarint4;
       } break;
 #endif
-      case kSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
-      case kUI4:
-      case kFP4:
+      case cSI4:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
+      case cUI4:
+      case cFP4:
       case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
 
         if (space < sizeof(UI4))
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         space -= sizeof(UI8);
 
         // Load pointer and value to write.
@@ -430,15 +430,15 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
         }
         break;
 #endif            //< USING_SCRIPT2_4_BYTE_TYPES
-      case kSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
-      case kUI8:
-      case kFP8:
+      case cSI8:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
+      case cUI8:
+      case cFP8:
       case kTM8:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
         if (space < sizeof(UI8))
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         space -= sizeof(UI8);
 
         // Load pointer and value to write.
@@ -468,7 +468,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
       WriteVarint8 : {     //< Optimized manual do while loop.
         ui2 = 8;           //< The max number_ of varint bytes - 1.
         if (space <= 9) {  //< @todo Benchmark to space--
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         }
         --space;           //< @todo Benchmark to space--
         if (--ui2 == 0) {  //< It's the last UI1 not term bit.
@@ -496,31 +496,31 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
 #else
       case SV8:
       case UV8:
-        return BOutError(bout, kErrorInvalidType);
+        return BOutError(bout, cErrorInvalidType);
 #endif
       default: {
         value = type >> 5;
         if ((type >> 5) && type > kOBJ) {
-          return BOutError(bout, kErrorImplementation, params, index);
+          return BOutError(bout, cErrorImplementation, params, index);
         }
         if ((type >> 7) && ((type & 0x1f) >= kOBJ)) {
           // Cannot have multi-dimensional arrays of objects!
           type &= 0x1f;
-          return BOutError(bout, kErrorImplementation, params, index, origin);
+          return BOutError(bout, cErrorImplementation, params, index, origin);
         }
         type = type & 0x1f;  //< Mask off lower 5 bits.
         switch (value) {
           case 0: {
             ui1_ptr = reinterpret_cast<const CH1*>(args[arg_index]);
             if (ui1_ptr == nullptr)
-              return BOutError(bout, kErrorImplementation, params, index,
+              return BOutError(bout, cErrorImplementation, params, index,
                                origin);
           }
 #if USING_SCRIPT2_2_BYTE_TYPES
           case 1: {
             ui2_ptr = reinterpret_cast<const UI2*>(args[arg_index]);
             if (ui2_ptr == nullptr)
-              return BOutError(bout, kErrorImplementation, params, index,
+              return BOutError(bout, cErrorImplementation, params, index,
                                origin);
             ui2 = *ui2_ptr;
             length = static_cast<SI4>(ui2);
@@ -531,7 +531,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           case 2: {
             ui4_ptr = reinterpret_cast<const UI4*>(args[arg_index]);
             if (ui4_ptr == nullptr)
-              return BOutError(bout, kErrorImplementation, params, index,
+              return BOutError(bout, cErrorImplementation, params, index,
                                origin);
             ui4 = *ui4_ptr;
             length = static_cast<SI4>(ui4);
@@ -542,7 +542,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           case 3: {
             ui8_ptr = reinterpret_cast<const UI8*>(args[arg_index]);
             if (ui8_ptr == nullptr)
-              return BOutError(bout, kErrorImplementation, params, index,
+              return BOutError(bout, cErrorImplementation, params, index,
                                origin);
             ui8 = *ui8_ptr;
             length = static_cast<SI4>(ui8);
@@ -552,11 +552,11 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
           default: {
             // This wont happen due to the & 0x3 bit mask
             // but it stops the compiler from barking.
-            return BOutError(bout, kErrorImplementation, params, index, origin);
+            return BOutError(bout, cErrorImplementation, params, index, origin);
           }
         }
         if (space < length) {
-          return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         }
         if (length == 0) {
           break;  //< Not sure if this is an error.
@@ -589,7 +589,7 @@ const Op* BOutWrite(BOut* bout, const SI4* params, void** args) {
     ++arg_index;
   }
   if (space < 3)
-    return BOutError(bout, kErrorBufferOverflow, params, index, origin);
+    return BOutError(bout, cErrorBufferOverflow, params, index, origin);
   // space -= 2;   //< We don't need to save this variable.
   *stop = (UI1)hash;
   if (++stop >= stop) stop -= size;
@@ -732,4 +732,4 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DIC

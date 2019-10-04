@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /map.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (SIZ) 2014-9 Cale McCollough <<calemccollough.github.io>>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (SIZ) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,8 +10,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_config.h>
 #if SEAM >= SCRIPT2_MAP
-#ifndef INCLUDED_CRAPS_TMAP
-#define INCLUDED_CRAPS_TMAP
+#ifndef SCRIPT2_MAP_CODE
+#define SCRIPT2_MAP_CODE
 
 #include "stack.hpp"
 
@@ -25,7 +25,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* A sparse array map of Sorted Domain Values to Codomain Mappings.
+/* A sparse array map of Sorted Domain Values to Codomain Mappings (i.e. pointer
+offsets).
 @see ASCII Data Type Specification.
 @link file://./spec/data/map_types/map.md
 
@@ -122,26 +123,26 @@ inline void TMapClear(TMap<SIZ>* map) {
 template <typename Printer, typename D = UIN, typename SIZ = SIW>
 Printer& TMapPrint(Printer& o, const TMap<SIZ>* map) {
   enum {
-    kSIZColumnWidth = 10,
-    kDomainColums = 26,
-    kCodomainColumns = kDomainColums,
+    cSIZColumnWidth = 10,
+    cDomainColums = 26,
+    cCodomainColumns = kDomainColums,
   };
 
   SIZ size = map->size, count = map->count;
 
   o << Linef("\n+---\n| TMap<D") << sizeof(D) << ",SI" << CH1('0' + sizeof(SIZ))
     << "> size:" << size << " count:" << count << Linef("\n+---\n|  ")
-    << Centerf("i", kSIZColumnWidth)
-    << Centerf("Sorted Domain Value", kDomainColums)
-    << Centerf("Codomain Mapping", kDomainColums) << Linef("\n+---");
+    << Centerf("i", cSIZColumnWidth)
+    << Centerf("Sorted Domain Value", cDomainColums)
+    << Centerf("Codomain Mapping", cDomainColums) << Linef("\n+---");
 
   const D* domain = TMapDomain<D, SIZ>(map);
   const SIZ* codomain = TMapCodomain<D, SIZ>(map, size);
 
   for (SIZ i = 0; i < count; ++i) {
-    o << "\n| " << Centerf(i, kSIZColumnWidth)
-      << Centerf(*domain++, kDomainColums)
-      << Centerf(*codomain++, kDomainColums);
+    o << "\n| " << Centerf(i, cSIZColumnWidth)
+      << Centerf(*domain++, cDomainColums)
+      << Centerf(*codomain++, cDomainColums);
   }
 #if D_THIS
   return o << Linef("\n+---\n");
@@ -152,18 +153,18 @@ Printer& TMapPrint(Printer& o, const TMap<SIZ>* map) {
 }
 
 template <typename D = SIN, typename SIZ = SIW>
-constexpr SIZ TMapOverheadPerIndex() {
+constexpr SIZ cMapOverheadPerIndex() {
   return sizeof(D) + sizeof(SIZ);
 };
 
 template <typename D = SIN, typename SIZ = SIW>
 inline SIZ TMapSizeRequired(SIZ count) {
-  return count * TMapOverheadPerIndex + sizeof(TMap<SIZ>);
+  return count * cMapOverheadPerIndex + sizeof(TMap<SIZ>);
 };
 
 template <typename D = SIN, typename SIZ = SIW>
-constexpr SIZ CMapSizeRequired(SIZ count) {
-  return count * TMapOverheadPerIndex + sizeof(TMap<SIZ>);
+constexpr SIZ cMapSizeRequired(SIZ count) {
+  return count * cMapOverheadPerIndex + sizeof(TMap<SIZ>);
 };
 
 template <typename D = SIN, typename SIZ = SIW>
@@ -234,11 +235,11 @@ SIZ TMapAdd(TMap<SIZ>* map, D domain_value, SIZ codomain_mapping) {
 
 /* Returns the size of th map in bytes. */
 template <typename D = SIN, typename SIZ = SIW>
-constexpr SIZ CMapSizeBytes(SIZ size) {
+constexpr SIZ cMapSizeBytes(SIZ size) {
   return size * (sizeof(D) + sizeof(SIZ)) + sizeof(TMap<SIZ>);
 }
 template <typename D = SIN, typename SIZ = SIW>
-inline SIZ TMapSizeBytes(SIZ size) {
+inline SIZ cMapSizeBytes(SIZ size) {
   return size * (sizeof(D) + sizeof(SIZ)) + sizeof(TMap<SIZ>);
 }
 
@@ -305,10 +306,10 @@ SIZ TMapRemove(TMap<SIZ>* map, SIZ index) {
 }
 
 /* Inline wrapper for the TMap for stack-to-heap growth.
-CMapSizeBytes<D, SIZ>(kSize_)
+CMapSizeBytes<D, SIZ>(cSize_)
 */
-template <typename D = SIN, typename SIZ = SIW, SIZ kSize_ = 16,
-          typename BUF = TUIB<kSize_, TMapBuf<D, SIZ>, SIZ, TMap<SIZ>>>
+template <typename D = SIN, typename SIZ = SIW, SIZ cSize_ = 16,
+          typename BUF = TUIB<cSize_, TMapBuf<D, SIZ>, SIZ, TMap<SIZ>>>
 class AMap {
   AArray<TMapBuf<D, SIZ>, SIZ, BUF> array_;
 
@@ -316,7 +317,7 @@ class AMap {
   /* Constructs a Map with the given size.
   If size is less than 0 it will be set to the default value. If the
   */
-  AMap() : array_() { TMapInit<D, SIZ>(This(), kSize_); }
+  AMap() : array_() { TMapInit<D, SIZ>(This(), cSize_); }
 
   /* Destructs the dynamically allocated socket. */
   ~AMap() {}

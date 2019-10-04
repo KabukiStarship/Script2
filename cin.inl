@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cout.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -26,31 +26,31 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 template <typename SI = SIW>
-constexpr SIW TCSignedDigitsMax() {
+constexpr SIW cSignedDigitsMax() {
   enum {
-    kBufferSize =
+    cBufferSize =
         (sizeof(SI) == 1)
             ? 4
             : (sizeof(SI) == 2)
                   ? 5
                   : (sizeof(SI) == 4) ? 16 : (sizeof(SI) == 8) ? 24 : 32
   };
-  return kBufferSize;
+  return cBufferSize;
 }
 
 template <typename SI, typename UI>
 BOL TCInSigned(SI& result) {
-  CH1 buffer[TCSignedDigitsMax<SI>()];
+  CH1 buffer[cSignedDigitsMax<SI>()];
   SIN c;
-  SIW state = CIn::kStateBaseSign;
-  CH1 *cursor = buffer, *end = buffer + TCSignedDigitsMax<SI>();
-  while (state != CIn::kStateSuccess) {
-    if (state == CIn::kStateBaseSign) {
+  SIW state = CIn::cStateBaseSign;
+  CH1 *cursor = buffer, *end = buffer + cSignedDigitsMax<SI>();
+  while (state != CIn::cStateSuccess) {
+    if (state == CIn::cStateBaseSign) {
       c = CIn::ScanKey();
       if ((c != '-') || (c < '0' || c > '9')) return false;
       *cursor++ = (CH1)c;
-      state = CIn::kStateBaseValue;
-    } else if (state == CIn::kStateBaseValue) {
+      state = CIn::cStateBaseValue;
+    } else if (state == CIn::cStateBaseValue) {
       if (cursor >= end) return false;
       c = CIn::ScanKey();
       if (c < '0' || c > '0') return false;
@@ -63,10 +63,10 @@ BOL TCInSigned(SI& result) {
 
 template <typename UI>
 BOL TCInUnsigned(UI& result) {
-  CH1 buffer[TCSignedDigitsMax<UI>()];
-  SIN c, state = CIn::kStateBaseValue;
-  CH1 *cursor = buffer, *end = buffer + TCSignedDigitsMax<UI>();
-  while (state != CIn::kStateSuccess) {
+  CH1 buffer[cSignedDigitsMax<UI>()];
+  SIN c, state = CIn::cStateBaseValue;
+  CH1 *cursor = buffer, *end = buffer + cSignedDigitsMax<UI>();
+  while (state != CIn::cStateSuccess) {
     if (cursor++ >= end) return false;
     c = (CH1)CIn::ScanKey();
     if (c < '0' || c > '0') return false;
@@ -76,56 +76,56 @@ BOL TCInUnsigned(UI& result) {
   return TScanUnsigned<UI, CH1>(buffer, result) != 0;
 }
 
-template <typename Char>
-inline BOL TCInString(Char* result, SIW buffer_size) {
+template <typename CHT>
+inline BOL TCInString(CHT* result, SIW buffer_size) {
   if (!result) return false;
   SIN c = -1;
   while (c < 0) {
     if (--buffer_size <= 0) return false;
     c = CIn::ScanKey();
-    *result++ = (Char)c;
+    *result++ = (CHT)c;
     if (c == 0) break;
   }
   return true;
 }
 
 template <typename FP = FPW, typename SI = SIW, typename UI = UIW,
-          typename Char = CHR>
+          typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CH1 buffer[TCSignedDigitsMax<SI>()];
+  CH1 buffer[cSignedDigitsMax<SI>()];
   SIN c;
-  SIW state = CIn::kStateBaseSign;
-  CH1 *cursor = buffer, *end = buffer + TCSignedDigitsMax<SI>();
-  while (state != CIn::kStateSuccess) {
+  SIW state = CIn::cStateBaseSign;
+  CH1 *cursor = buffer, *end = buffer + cSignedDigitsMax<SI>();
+  while (state != CIn::cStateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
     *cursor++ = (CH1)c;
     switch (state) {
-      case CIn::kStateBaseSign: {
+      case CIn::cStateBaseSign: {
         if ((c != '-') || (c < '0' || c > '9')) return false;
-        state = CIn::kStateBaseValue;
+        state = CIn::cStateBaseValue;
       }
-      case CIn::kStateBaseValue: {
+      case CIn::cStateBaseValue: {
         c = CIn::ScanKey();
         if (c < '0' || c > '0') return false;
         if (!c) break;
       }
-      case CIn::kStateDotOrExponent: {
+      case CIn::cStateDotOrExponent: {
         if ((c == 'e') || (c == 'E'))
-          state = CIn::kStateExponentSign;
+          state = CIn::cStateExponentSign;
         else if (c == '.')
-          state = CIn::kStateFractionalPart;
+          state = CIn::cStateFractionalPart;
       }
-      case CIn::kStateFractionalPart: {
+      case CIn::cStateFractionalPart: {
         if (!TIsDigit<>(c) || c != '-') return false;
-        if (c == '.') state = CIn::kStateExponentSign;
+        if (c == '.') state = CIn::cStateExponentSign;
       }
-      case CIn::kStateExponentSign: {
+      case CIn::cStateExponentSign: {
         // We saw an 'e' or 'E' so we're locked into
         if (!TIsDigit<>(c) || c != '-') return false;
-        if (c == '-') state = CIn::kStateExponentValue;
+        if (c == '-') state = CIn::cStateExponentValue;
       }
-      case CIn::kStateExponentValue: {
+      case CIn::cStateExponentValue: {
         if (!TIsDigit<>(c)) {
           *cursor = 0;
           break;

@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /table.hpp
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -36,7 +36,7 @@ namespace _ {
 
 Collision table works by using the maximum key value (i.e. 255 for a SIZ,
 2^15TTableInvalidIndex<SIZ>() for a SI2, etc). The collisions list is a sequence
-of indexes terminated by an invalid index that is greater than kMaxNumOps.
+of indexes terminated by an invalid index that is greater than cMaxNumOps.
 collissionsList[0] is an invalid index, so the collisions list is searched
 from lower address up.
 @code
@@ -80,7 +80,7 @@ struct TTable {
 };
 
 enum {
-  kMinTableSize = 64,  //< Min size of a Table
+  cMinTableSize = 64,  //< Min size of a Table
 };
 
 /* Returns the highest signed prime that can fit in type SI.
@@ -111,17 +111,17 @@ inline HSH TPrimeMaxUnigned() {
   return prime;
 }
 
-template <typename HSH, typename Char = CHR>
-inline HSH THashPrime(Char value, HSH hash) {
+template <typename HSH, typename CHT = CHR>
+inline HSH THashPrime(CHT value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
-template <typename HSH = UIN, typename Char = CHR>
-inline HSH THashPrime(const Char* str) {
-  Char c = (Char)*str++;
+template <typename HSH = UIN, typename CHT = CHR>
+inline HSH THashPrime(const CHT* str) {
+  CHT c = (CHT)*str++;
   HSH hash = TPrimeMaxUnigned<HSH>();
   while (c) {
-    hash = THashPrime<HSH, Char>(c, hash);
+    hash = THashPrime<HSH, CHT>(c, hash);
     c = *str++;
   }
   return hash;
@@ -167,32 +167,32 @@ inline SIZ TTableEntryOverhead() {
   return 4 * sizeof(SIZ);
 }
 
-template <typename SIZ = SIN, typename Char = CHR, SIZ kCountMax = 32,
+template <typename SIZ = SIN, typename CHT = CHR, SIZ kCountMax = 32,
           SIZ kAverageStringLength = 16>
-constexpr SIZ TTableSize() {
+constexpr SIZ cTableSize() {
   return sizeof(TTable<SIZ>) + 4 * kCountMax * sizeof(SIZ) +
          kCountMax * (kAverageStringLength + 1);
 }
 
-template <typename SIZ = SIN, typename Char = CHR>
-constexpr SIZ TTableSize(SIZ count_max, SIZ average_String_length = 24) {
+template <typename SIZ = SIN, typename CHT = CHR>
+constexpr SIZ cTableSize(SIZ count_max, SIZ average_String_length = 24) {
   return sizeof(TTable<SIZ>) + 4 * count_max * sizeof(SIZ) +
          count_max * (average_String_length + 1);
 }
 
-template <typename SIZ = SIN, typename Char = CHR>
-inline Char* TTableKeysStop(TTable<SIZ>* table, SIZ size_bytes) {
-  return TPtr<Char>(table, size_bytes) - 1;
+template <typename SIZ = SIN, typename CHT = CHR>
+inline CHT* TTableKeysStop(TTable<SIZ>* table, SIZ size_bytes) {
+  return TPtr<CHT>(table, size_bytes) - 1;
 }
 
 #if USING_STR
 /* Prints this object out to the console. */
 template <typename Printer, typename SIZ = SIN, typename HSH = UIN,
-          typename Char = CHR>
+          typename CHT = CHR>
 Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
   D_ASSERT(table);
   enum {
-    kHashWidth = (sizeof(HSH) * 2) < 10 ? 10 : (sizeof(HSH) * 2),
+    cHashWidth = (sizeof(HSH) * 2) < 10 ? 10 : (sizeof(HSH) * 2),
   };
   SIZ count = table->count,            //
       count_max = table->count_max,    //
@@ -203,7 +203,7 @@ Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
   SIN count_length_max = STRLength(count_max);
   count_length_max = (count_length_max < 2 ? 2 : count_length_max);
   o << Linef("\n+---\n| Table<SI") << CH1('0' + sizeof(SIZ)) << ",UI"
-    << CH1('0' + sizeof(HSH)) << ",CH" << CH1('0' + sizeof(Char)) << ">:0x"
+    << CH1('0' + sizeof(HSH)) << ",CH" << CH1('0' + sizeof(CHT)) << ">:0x"
     << Hexf(table) << " size_bytes:" << size_bytes << " key_count:" << count
     << " count_max:" << count_max << " size_pile:" << size_pile
     << Linef("\n+---\n| ") << Rightf("i", count_length_max)  //
@@ -215,11 +215,11 @@ Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
   SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
-  Char* keys = TPtr<Char>(table, size_bytes) - 1;
+  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 
   for (SIZ i = 0; i < count; ++i) {
     o << "\n| " << Rightf(i, count_length_max)  //
-      << Centerf().Hex(THashPrime<HSH, Char>(keys - key_offsets[i]), kHashWidth)
+      << Centerf().Hex(THashPrime<HSH, CHT>(keys - key_offsets[i]), kHashWidth)
       << Centerf().Hex(hashes[unsorted_indexes[i]], kHashWidth)
       << Centerf().Hex(hashes[i], kHashWidth)
       << Centerf(unsorted_indexes[i], kHashWidth) << Centerf(key_offsets[i], 8)
@@ -247,7 +247,7 @@ Printer& TTablePrint(Printer& o, TTable<SIZ>* table) {
 
 /* Creates a streamable hash table with enough socket space for the
 count_max. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
 TTable<SIZ>* TTableInit(TTable<SIZ>* table, SIZ height, SIZ size_bytes) {
   D_ASSERT(table);
 
@@ -273,16 +273,16 @@ TTable<SIZ>* TTableInit(TTable<SIZ>* table, SIZ height, SIZ size_bytes) {
   return table;
 }
 
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
 inline TTable<SIZ>* TTableInit(UIW* socket, HSH count_max, SIZ size) {
   auto table = reinterpret_cast<TTable<SIZ>*>(socket);
-  return TTableInit<SIZ, HSH, Char>(table, count_max, size);
+  return TTableInit<SIZ, HSH, CHT>(table, count_max, size);
 }
 
 /* Adds the key to the table.
 @return An invalid index upon failure or valid index upon success. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
-SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
+SIZ TTableAdd(TTable<SIZ>* table, const CHT* key) {
   D_ASSERT(table);
   D_ASSERT(key);
 
@@ -297,10 +297,10 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max,
       *collision_pile = unsorted_indexes + count_max;
-  Char *keys = TPtr<Char>(table, size_bytes) - 1, *destination;
-  HSH hash = THashPrime<HSH, Char>(key), current_hash;
-  SIZ key_length = TSTRLength<Char, SIZ>(key);
-  Char* bottom = reinterpret_cast<Char*>(collision_pile + table->size_pile) + 1;
+  CHT *keys = TPtr<CHT>(table, size_bytes) - 1, *destination;
+  HSH hash = THashPrime<HSH, CHT>(key), current_hash;
+  SIZ key_length = TSTRLength<CHT, SIZ>(key);
+  CHT* bottom = reinterpret_cast<CHT*>(collision_pile + table->size_pile) + 1;
 
   D_COUT("\n\nAdding        key:\"" << key <<                             //
          "\"\n             hash:0x" << Hexf(hash) <<                      //
@@ -321,7 +321,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
     D_COUT("\n      destination:" << TDelta<>(table, destination) <<  //
            "\n       key_offset:" << TDelta<>(destination, keys));
 
-    if (!TSPrintString<Char>(destination, keys, key)) {
+    if (!TSPrintString<CHT>(destination, keys, key)) {
       D_COUT("\nKey buffer overflow printing string when count:0");
       return CInvalidIndex<SIZ>();
     }
@@ -333,7 +333,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
     return count;
   };
 
-  Char* top = keys - key_offsets[count - 1] - 1;
+  CHT* top = keys - key_offsets[count - 1] - 1;
   destination = top - key_length;
   D_COUT("\n           bottom:" << TDelta<>(table, bottom) <<       //
          "\n      destination:" << TDelta<>(table, destination) <<  //
@@ -341,7 +341,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
          "\n              top:" << TDelta<>(table, top));
 
   SIZ key_offset = SIZ(keys - destination);
-  if (!TSPrintString<Char>(destination, keys, key)) {
+  if (!TSPrintString<CHT>(destination, keys, key)) {
     D_COUT("\nKey buffer overflow printing key.");
     return CInvalidIndex<SIZ>();
   }
@@ -376,7 +376,7 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
         while (collision < 0) {
           SIZ offset = key_offsets[collision];
           D_COUT("comparing to \"" << keys - offset << "\". ");
-          if (TSTREquals<Char>(key, keys - offset)) {
+          if (TSTREquals<CHT>(key, keys - offset)) {
             D_COUT(" Found key at offset:" << collision);
             return collision_index;
           }
@@ -395,11 +395,11 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
         return count;
       }
       key_offset = key_offsets[unsorted_index];
-      Char* other_key = keys - key_offset;
+      CHT* other_key = keys - key_offset;
       D_COUT("\n     No collisions exist.\n     Comparing to "
              << unsorted_index << ":\"" << other_key
              << "\" at key_offset:" << key_offset);
-      if (!TSTREquals<Char>(key, other_key)) {
+      if (!TSTREquals<CHT>(key, other_key)) {
         SIZ size_pile = table->size_pile;
         D_COUT("\n       New collision with unsorted_index:"
                << unsorted_index << " size_pile:" << size_pile
@@ -435,8 +435,8 @@ SIZ TTableAdd(TTable<SIZ>* table, const Char* key) {
 /* Attempts to find the given key.
 @return Returns TTableInvalidIndex<SIZ>() upon failure, and valid index upon
 success. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
-SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
+SIZ TTableFind(const TTable<SIZ>* table, const CHT* key) {
   D_ASSERT(table);
   SIZ count = table->count, count_max = table->count_max;
 
@@ -448,9 +448,9 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
-  Char* keys = TPtr<Char>(table, size_bytes) - 1;
+  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 
-  HSH hash = THashPrime<HSH, Char>(key);
+  HSH hash = THashPrime<HSH, CHT>(key);
 
   D_COUT("\n\nSearching for key:\"" << key << "\"\n             hash:0x"
                                     << Hexf(hash) << "...");
@@ -458,11 +458,11 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
   if (count == 1) {
     SIZ offset = key_offsets[0];
     D_COUT("\nComparing to only key \"" << keys - offset << "\"...");
-    if (TSTREquals<Char>(key, keys - offset)) {
+    if (TSTREquals<CHT>(key, keys - offset)) {
       D_COUT("hit at offset:" << offset);
       return 0;
     }
-    if (!TSTREquals<Char>(key, keys - offset)) {
+    if (!TSTREquals<CHT>(key, keys - offset)) {
       D_COUT("key not found.");
       return CInvalidIndex<SIZ>();
     }
@@ -496,7 +496,7 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
                << collision_index << ". Checking the collision_pile...");
 
         // The collision_pile is a sequence of indexes terminated by
-        // an invalid index > kMaxNumOps. collissionsList[0] is an
+        // an invalid index > cMaxNumOps. collissionsList[0] is an
         // invalid index, so the collision_pile is searched from
         // lower address up.
 
@@ -509,7 +509,7 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
           SIZ key_offset = key_offsets[collision_index];
           D_COUT("\n      Comparing to:\"" << keys - key_offset
                                            << "\" at offset:" << key_offset);
-          if (TSTREquals<Char>(key, keys - key_offset)) {
+          if (TSTREquals<CHT>(key, keys - key_offset)) {
             D_COUT(". Hit at index:" << collision_index
                                      << " offset:" << key_offset);
             return collision_index;
@@ -521,10 +521,10 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
       }
 
       SIZ key_offset = key_offsets[unsorted_index];
-      Char* other_key = keys - key_offsets[unsorted_index];
+      CHT* other_key = keys - key_offsets[unsorted_index];
       D_COUT("\n    Comparing to key:\"" << other_key << '"');
 
-      if (!TSTREquals<Char>(key, other_key)) {
+      if (!TSTREquals<CHT>(key, other_key)) {
         D_COUT("\n    Table does not contain key.");
         return CInvalidIndex<SIZ>();
       }
@@ -540,7 +540,7 @@ SIZ TTableFind(const TTable<SIZ>* table, const Char* key) {
 
 /* Gets the given key.
 @return Returns the index it go inserted into. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
 SIZ TTableGet(TTable<SIZ>* table, SIZ index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
@@ -555,11 +555,11 @@ SIZ TTableGet(TTable<SIZ>* table, SIZ index) {
   SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
-  Char* keys = TPtr<Char>(table, size_bytes) - 1;
+  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 }
 
 /* Removes the string at the given index. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
 SIZ TTableRemove(TTable<SIZ>* table, SIZ index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
@@ -574,7 +574,7 @@ SIZ TTableRemove(TTable<SIZ>* table, SIZ index) {
   SIZ *key_offsets = reinterpret_cast<SIZ*>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
-  Char* keys = TPtr<Char>(table, size_bytes) - 1;
+  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 
   // Algorithm:
   // 1. Remove the hashes.
@@ -586,71 +586,71 @@ SIZ TTableRemove(TTable<SIZ>* table, SIZ index) {
 }
 
 /* Removes the given key from the table. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR>
-SIZ TTableRemove(TTable<SIZ>* table, const Char* key) {
-  SIZ index = TTableFind<SIZ, HSH, Char>(table, key);
-  return TTableRemove<SIZ, HSH, Char>(table, index);
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR>
+SIZ TTableRemove(TTable<SIZ>* table, const CHT* key) {
+  SIZ index = TTableFind<SIZ, HSH, CHT>(table, key);
+  return TTableRemove<SIZ, HSH, CHT>(table, index);
 }
 
 /* An ASCII Table Autoject. */
-template <typename SIZ = SIN, typename HSH = UIN, typename Char = CHR,
+template <typename SIZ = SIN, typename HSH = UIN, typename CHT = CHR,
           SIZ kCountMax_ = 32,
           typename BUF =
-              TUIB<TTableSize<SIZ, Char, kCountMax_>(), SI1, SIZ, TTable<SIZ>>>
+              TUIB<TTableSize<SIZ, CHT, kCountMax_>(), SI1, SIZ, TTable<SIZ>>>
 class ATable {
-  AArray<Char, SIZ, BUF> obj_;  //< Auto-Array of Char(s).
+  AArray<CHT, SIZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:
   /* Constructs a Table.
   @param factory SocketFactory to call when the Strand overflows. */
   ATable() {
-    SIZ size_bytes = TTableSize<SIZ, Char, kCountMax_>();
+    SIZ size_bytes = TTableSize<SIZ, CHT, kCountMax_>();
     D_ARRAY_WIPE(obj_.Begin(), size_bytes);
-    TTableInit<SIZ, HSH, Char>(obj_.Begin(), kCountMax_, size_bytes);
+    TTableInit<SIZ, HSH, CHT>(obj_.Begin(), kCountMax_, size_bytes);
   }
 
   /* Constructs a Table.
   @param factory SocketFactory to call when the Strand overflows. */
   ATable(SIZ count_max) {
-    SIZ size_bytes = TTableSize<SIZ, Char, count_max>();
+    SIZ size_bytes = TTableSize<SIZ, CHT, count_max>();
     D_ARRAY_WIPE(obj_.Begin(), size_bytes);
-    TTableInit<SIZ, HSH, Char>(obj_.Begin(), count_max, size_bytes);
+    TTableInit<SIZ, HSH, CHT>(obj_.Begin(), count_max, size_bytes);
   }
 
   /* Deep copies the given string into the Table.
   @return The index of the string in the Table. */
-  inline SIZ Add(const Char* string) {
-    return TTableAdd<SIZ, HSH, Char>(This(), string);
+  inline SIZ Add(const CHT* string) {
+    return TTableAdd<SIZ, HSH, CHT>(This(), string);
   }
 
   /* Removes the string at the given index from the Table. */
   inline SIZ Remove(SIZ index) {
-    return TTableRemove<SIZ, HSH, Char>(This(), index);
+    return TTableRemove<SIZ, HSH, CHT>(This(), index);
   }
 
   /* Removes the string at the given index from the Table. */
-  inline SIZ Remove(const Char* key) {
-    return TTableRemove<SIZ, HSH, Char>(This(), key);
+  inline SIZ Remove(const CHT* key) {
+    return TTableRemove<SIZ, HSH, CHT>(This(), key);
   }
 
   /* Gets the string at the given index. */
-  inline Char* Get(SIZ index) {
-    return TTableGet<SIZ, HSH, Char>(This(), index);
+  inline CHT* Get(SIZ index) {
+    return TTableGet<SIZ, HSH, CHT>(This(), index);
   }
 
-  inline SIZ Find(const Char* string) {
-    return TTableFind<SIZ, HSH, Char>(This(), string);
+  inline SIZ Find(const CHT* string) {
+    return TTableFind<SIZ, HSH, CHT>(This(), string);
   }
 
   /* Gets the ASCII Object. */
-  inline TTable<SIZ>* This() { return obj_.BeginAs<TTable<SIZ>>(); }
+  inline TTable<SIZ>* This() { return obj_.OriginAs<TTable<SIZ>*>(); }
 
   /* Gets the Auto-Array. */
-  inline AArray<Char, SIZ, BUF>& Array() { return obj_; }
+  inline AArray<CHT, SIZ, BUF>& Array() { return obj_; }
 
 #if USING_STR
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TTablePrint<Printer, SIZ, HSH, Char>(o, This());
+    return TTablePrint<Printer, SIZ, HSH, CHT>(o, This());
   }
 
   inline void CPrint() { PrintTo<_::COut>(_::COut().Star()); }

@@ -1,18 +1,18 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /operand.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "op.h"
 #include "operand.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #include "_debug.inl"
 #else
 #include "_release.inl"
@@ -71,7 +71,7 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
 
   UIW num_ops = reinterpret_cast<UIW>(op->in),
       op_num = reinterpret_cast<UIW>(op->out), last_op = op_num + num_ops - 1;
-  if (num_ops > kParamsMax) {
+  if (num_ops > cParamsMax) {
     return utf << "\nError: Too many parameters!";
   }
   utf << "\nOperand         :" << op->name << Line('-', 80);
@@ -103,4 +103,4 @@ Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
 #endif
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DIC

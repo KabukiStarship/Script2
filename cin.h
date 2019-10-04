@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cin.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -38,17 +38,17 @@ class LIB_MEMBER CIn {
 
  public:
   enum {
-    kStateSuccess = 0,     //< State 0: Completed scanning.
-    kStateBaseSign,        //< State 1: Scanning base sign.
-    kStateBaseValue,       //< State 2: Scanning base value.
-    kStateDotOrExponent,   //< State 3: Scanning '.', 'e', or 'E'.
-    kStateFractionalPart,  //< State 4: Scanning the fraction part.
-    kStateExponentSign,    //< State 4: Scanning exponent sign.
-    kStateExponentValue,   //< State 5: Scanning exponent value.
+    cStateSuccess = 0,     //< State 0: Completed scanning.
+    cStateBaseSign,        //< State 1: Scanning base sign.
+    cStateBaseValue,       //< State 2: Scanning base value.
+    cStateDotOrExponent,   //< State 3: Scanning '.', 'e', or 'E'.
+    cStateFractionalPart,  //< State 4: Scanning the fraction part.
+    cStateExponentSign,    //< State 4: Scanning exponent sign.
+    cStateExponentValue,   //< State 5: Scanning exponent value.
   };
 
   enum {
-    kBufferSizeMin = 2,  //< This min size of a string buffer.
+    cBufferSizeMin = 2,  //< This min size of a string buffer.
   };
 
   /* Pauses until any key is pressed. */

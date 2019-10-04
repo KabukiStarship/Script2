@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/04.sprinter.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_SPRINTER
 #include "../array.hpp"
@@ -23,31 +20,31 @@ using namespace _;
 
 namespace script2 {
 #if SEAM >= SCRIPT2_SPRINTER
-template <typename Char, typename SIZ>
-static const Char* TestSPrinter() {
-  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(Char) << ",SI"
+template <typename CHT = CHR, typename SIZ = SIN>
+static const CHT* TestSPrinter() {
+  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",SI"
                     << sizeof(SIZ) << ">\n\n"
                     << Linef('-'));
 
   enum {
-    kCount = 512,
+    cCount = 512,
   };
 
-  Char str_a[kCount];
+  CHT str_a[cCount];
 
-  static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CHT kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
 
-  D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
-  TSPrint<Char>(str_a, kCount, kTesting123);
+  D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
+  TSPrint<CHT>(str_a, cCount, kTesting123);
   D_COUT(Charsf(str_a, 64));
 
-  TSPrinter<Char> utf(str_a, kCount);
+  TSPrinter<CHT> utf(str_a, cCount);
 
-  enum { kTestStrandsCount = 4 };
+  enum { cTestStrandsCount = 4 };
 
-  const Char kTestStrands[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
+  const CHT kTestStrands[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                        {NIL, NIL, NIL, NIL, NIL, NIL, NIL}},
                                       {{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                        {'?', NIL, NIL, NIL, NIL, NIL, NIL}},
@@ -57,23 +54,23 @@ static const Char* TestSPrinter() {
                                        {'A', 'p', 'p', 'l', 'e', 's', NIL}},
                                       {{'A', 'p', 'p', 'l', 'e', 's', NIL},
                                        {'A', 'p', 'p', 'l', 'e', 's', NIL}}};
-  const Char* cursor;
-  for (SI4 i = 0; i < kTestStrandsCount; ++i) {
-    D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
-    cursor = TSPrintString<Char>(str_a, str_a + kCount, kTestStrands[i][0]);
+  const CHT* cursor;
+  for (SI4 i = 0; i < cTestStrandsCount; ++i) {
+    D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
+    cursor = TSPrintString<CHT>(str_a, str_a + cCount, kTestStrands[i][0]);
     D_COUT(Charsf(str_a, 64));
     Test(cursor);
-    cursor = TSTREquals<Char>(str_a, kTestStrands[i][0]);
+    cursor = TSTREquals<CHT>(str_a, kTestStrands[i][0]);
     Test(cursor);
   }
 
-  D_COUT(Headingf("Testing TSPrinter<Char>")
+  D_COUT(Headingf("Testing TSPrinter<CHT>")
          << "\n\nExpecting \"" << kTesting123 << '\"');
-  static const Char kCommaSpace[] = {',', ' ', NIL};
+  static const CHT kCommaSpace[] = {',', ' ', NIL};
 
-  const Char kTestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
+  const CHT kTestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
 
-  D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
+  D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
 
   utf.Set(str_a).Print(kTestingSpace);
   utf.Print(1);
@@ -87,34 +84,34 @@ static const Char* TestSPrinter() {
   D_COUT(Charsf(str_a, 64));
   A_AVOW(kTesting123, str_a);
 
-  D_COUT("\n\nTesting TSTREquals<Char>");
+  D_COUT("\n\nTesting TSTREquals<CHT>");
 
-  const Char kCompareStrands[4][9] = {
+  const CHT kCompareStrands[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 's', 't', 'i', 'n', 'g', '@', NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', '@', NIL},
   };
 
-  A_ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[1]));
-  A_ASSERT(!TSTREquals<Char>(kCompareStrands[0], kCompareStrands[3]));
-  A_ASSERT(TSTREquals<Char>(kCompareStrands[0], kCompareStrands[0]));
-  A_ASSERT(!TSTREquals<Char>(kCompareStrands[2], kCompareStrands[3]));
-  A_ASSERT(TSTREquals<Char>(kCompareStrands[2], kCompareStrands[2]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[1]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[3]));
+  A_ASSERT(TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[0]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[2], kCompareStrands[3]));
+  A_ASSERT(TSTREquals<CHT>(kCompareStrands[2], kCompareStrands[2]));
 
-  const Char k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
-  A_AVOW(9, TSTRLength<Char>(k1to9));
+  const CHT k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
+  A_AVOW(9, TSTRLength<CHT>(k1to9));
 
-  D_COUT("\n\nTesting TSTRFind<Char>");
+  D_COUT("\n\nTesting TSTRFind<CHT>");
 
-  const Char kOne[] = {'1', ',', NIL};
-  const Char kThreePeriod[] = {'3', '.', NIL};
-  A_ASSERT(TSTRFind<Char>(kTesting123, kOne));
-  A_ASSERT(TSTRFind<Char>(kTesting123, kThreePeriod));
+  const CHT kOne[] = {'1', ',', NIL};
+  const CHT kThreePeriod[] = {'3', '.', NIL};
+  A_ASSERT(TSTRFind<CHT>(kTesting123, kOne));
+  A_ASSERT(TSTRFind<CHT>(kTesting123, kThreePeriod));
 
-  D_COUT(Headingf("Testing TPrintRight<Char>"));
+  D_COUT(Headingf("Testing TPrintRight<CHT>"));
 
-  const Char kRightAligned[12][13] = {
+  const CHT kRightAligned[12][13] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -130,16 +127,16 @@ static const Char* TestSPrinter() {
 
   SI4 shift_right = 6;
   for (SI4 i = 0; i < 12; ++i) {
-    D_ARRAY_WIPE(str_a, (SIW)(kCount * sizeof(Char)));
-    cursor = TPrintRight<Char>(str_a, str_a + kCount - 1, kTestingSpace, i + 1);
+    D_ARRAY_WIPE(str_a, (SIW)(cCount * sizeof(CHT)));
+    cursor = TPrintRight<CHT>(str_a, str_a + cCount - 1, kTestingSpace, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
-           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<Char>(str_a));
+           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<CHT>(str_a));
     A_AVOW_INDEX(&kRightAligned[i][0], str_a, i);
   }
-  D_COUT(Headingf("Testing TPrintCenter<Char>"));
+  D_COUT(Headingf("Testing TPrintCenter<CHT>"));
 
-  const Char kCentered[13][14] = {
+  const CHT kCentered[13][14] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -154,15 +151,15 @@ static const Char* TestSPrinter() {
       {' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ' ', NIL, NIL},
       {' ', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ' ', NIL}};
 
-  static const Char kNumbers[] = {'1', '2', '3', '4', '5',
+  static const CHT kNumbers[] = {'1', '2', '3', '4', '5',
                                   '6', '7', '8', '9', NIL};
 
   for (SI4 i = 12; i >= 0; --i) {
-    D_ARRAY_WIPE(str_a, kCount * sizeof(Char));
-    cursor = TPrintCenter<Char>(str_a, str_a + kCount - 1, kNumbers, i + 1);
+    D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
+    cursor = TPrintCenter<CHT>(str_a, str_a + cCount - 1, kNumbers, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
-           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<Char>(str_a));
+           << "\n    Wrote:\"" << str_a << "\":" << TSTRLength<CHT>(str_a));
     A_AVOW_INDEX(&kCentered[i][0], str_a, i);
   }
 

@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /puff.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -15,13 +15,13 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
+/* Lookup table of ASCII CHT pairs for 00, 01, ..., 99. */
 const UI2* BinaryLUTDecimals();
 
 enum {
-  kUI2DigitCountMax = 5,
-  kUI4DigitCountMax = 9,
-  kUI8DigitCountMax = 20,
+  cUI2DigitCountMax = 5,
+  cUI4DigitCountMax = 9,
+  cUI8DigitCountMax = 20,
 };
 
 const UI8* Pow10_UI8();

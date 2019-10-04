@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /crabs.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
 #include "args.h"
@@ -66,20 +66,20 @@ that grows down.
 struct Crabs {
   /* List of Crabs Error Ops. */
   typedef enum Errors {
-    kErrorBufferOverflow = 0,
-    kErrorBufferUnderflow,
-    kErrorInvalidOperand,
-    kErrorStackOverflow,
-    kErrorLockedState,
-    kErrorTextOverflow,
-    kErrorVarintOverflow,
-    kErrorReadInvalidType,
-    kErrorImplementation
+    cErrorBufferOverflow = 0,
+    cErrorBufferUnderflow,
+    cErrorInvalidOperand,
+    cErrorStackOverflow,
+    cErrorLockedState,
+    cErrorTextOverflow,
+    cErrorVarintOverflow,
+    cErrorReadInvalidType,
+    cErrorImplementation
   } Error;
 
   enum {
-    kMinStackSize = 16,  //< Size of the crabs stack.
-    kMinBufferSize = 2,  //< Min socket size.
+    cMinStaccSize = 16,  //< Size of the crabs stack.
+    cMinBufferSize = 2,  //< Min socket size.
   };
 
   SI4 size,            //< Offset to the BOut slot.
@@ -283,4 +283,4 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::Crabs* crabs) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_EXPR
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

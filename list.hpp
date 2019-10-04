@@ -1,15 +1,13 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /list.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /list.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
 #include <_config.h>
-
 #if SEAM >= SCRIPT2_LIST
 #ifndef INCLUDED_SCRIPTTLIST
 #define INCLUDED_SCRIPTTLIST
@@ -119,7 +117,7 @@ The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
 */
 template <typename SIZ = SIN, SIW largest_expected_type = sizeof(SIW)>
-constexpr SIZ CListSizeMin(SIZ count_max) {
+constexpr SIZ cListSizeMin(SIZ count_max) {
   return sizeof(TList<SIZ>) +
          SIZ(count_max * (largest_expected_type + sizeof(SIZ) + 1));
 }
@@ -137,12 +135,12 @@ inline CH1* TListValues(TList<SIZ>* list) {
 
 /* Returns the end byte of the data. */
 template <typename SIZ = SIN>
-inline CH1* TListDataEnd(TList<SIZ>* list, SIZ size) {
+inline CH1* TListEnd(TList<SIZ>* list, SIZ size) {
   return reinterpret_cast<CH1*>(list) + list->size_bytes;
 }
 template <typename SIZ = SIN>
-inline CH1* TListDataEnd(TList<SIZ>* list) {
-  return TListDataEnd<SIZ>(list, list->offsets->size);
+inline CH1* TListEnd(TList<SIZ>* list) {
+  return TListEnd<SIZ>(list, list->offsets->size);
 }
 
 /* Gets the first addrss in the Values section where you may be able to write
@@ -161,13 +159,13 @@ inline CH1* TListValuesEnd(TList<SIZ>* list) {
 template <typename SIZ = SIN>
 SIZ TListSize() {
   enum {
-    kMaxSIYes = sizeof(SIZ) == 1
+    cMaxSIYes = sizeof(SIZ) == 1
                     ? 120
                     : sizeof(SIZ) == 2
                           ? 8 * 1024
                           : sizeof(SIZ) == 4 ? 512 * 1024 * 1024 : 0,
   };
-  return kMaxSIYes;
+  return cMaxSIYes;
 }
 
 /* Deletes the list contents without wiping the contents. */
@@ -234,25 +232,25 @@ SIZ TListFind(TList<SIZ>* list, void* address) {
     if (*data_offsets++ == offset) return index;
     ++index;
   }
-  return CInvalidIndex<SIZ>();
+  return cInvalidIndex<SIZ>();
 }
 
 /* Adds a given POD type-value tuple at the given index and
 values_begin.
 @return CInvalidIndex<SIZ>() upon failure or the index upon success. */
 template <typename T, typename SIZ = SIN, typename DT = DT2>
-SIZ TListAdd(TList<SIZ>* list, T item, DT type, SIZ alignment_mask, SIZ index,
-             CH1* values_begin, CH1* values_end) {
+SIZ TListInsert(TList<SIZ>* list, T item, DT type, SIZ alignment_mask,
+                SIZ index, CH1* values_begin, CH1* values_end) {
   D_ASSERT(list);
   SIZ count = list->offsets.count, size = list->offsets.count_max;
   D_ASSERT(count >= 0 && values_begin < values_end);
   D_COUT("\nInserting " << TypeSTR(type) << ':' << item
                         << " into index:" << index << " count: " << count);
   if (index < 0 || index > count || count >= size || !TypeIsSupported(type))
-    return CInvalidIndex<SIZ>();
+    return cInvalidIndex<SIZ>();
 
   values_begin = TAlignUpPTR<CH1>(values_begin, alignment_mask);
-  if ((values_begin + sizeof(T)) > values_end) return CInvalidIndex<SIZ>();
+  if ((values_begin + sizeof(T)) > values_end) return cInvalidIndex<SIZ>();
   *reinterpret_cast<T*>(values_begin) = item;
 
   SIZ* offsets = TListOffsets<SIZ>(list);
@@ -265,176 +263,185 @@ SIZ TListAdd(TList<SIZ>* list, T item, DT type, SIZ alignment_mask, SIZ index,
   return count;
 }
 
-/* Pushes the item onto the List stack. */
+/* Searches for the first empty spot in the list that can fit the item and
+inserts the item to the list at the given index.
+@return An invalid index upon failure or the index of the index upon success. */
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, UI1 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI1, SIZ, DT>(list, item, kUI1, sizeof(UI1) - 1, index,
-                                values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, UI1 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI1, SIZ, DT>(list, item, cUI1, sizeof(UI1) - 1, index,
+                                   values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, CH1 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI1, SIZ, DT>(list, ToUnsigned(item), kCH1, sizeof(UI1) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, CH1 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI1, SIZ, DT>(list, ToUnsigned(item), cCH1,
+                                   sizeof(UI1) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, SI1 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI1, SIZ, DT>(list, ToUnsigned(item), kSI1, sizeof(UI1) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, SI1 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI1, SIZ, DT>(list, ToUnsigned(item), cSI1,
+                                   sizeof(UI1) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, UI2 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI2, SIZ, DT>(list, item, kUI2, sizeof(UI2) - 1, index,
-                                values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, UI2 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI2, SIZ, DT>(list, item, cUI2, sizeof(UI2) - 1, index,
+                                   values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, SI2 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI2, SIZ, DT>(list, ToUnsigned(item), kSI2, sizeof(UI2) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, SI2 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI2, SIZ, DT>(list, ToUnsigned(item), cSI2,
+                                   sizeof(UI2) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, CH2 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI2, SIZ>(list, ToUnsigned(item), kCH2, sizeof(UI2) - 1,
-                            index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, CH2 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI2, SIZ>(list, ToUnsigned(item), cCH2, sizeof(UI2) - 1,
+                               index, values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, BOL item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI2, SIZ, DT>(list, ToUnsigned(item), kBOL, sizeof(BOL) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, BOL item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI2, SIZ, DT>(list, ToUnsigned(item), cBOL,
+                                   sizeof(BOL) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, UI4 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI4, SIZ, DT>(list, item, kUI4, sizeof(UI4) - 1, index,
-                                values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, UI4 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI4, SIZ, DT>(list, item, cUI4, sizeof(UI4) - 1, index,
+                                   values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, SI4 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kSI4, sizeof(UI4) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, SI4 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI4, SIZ, DT>(list, ToUnsigned(item), cSI4,
+                                   sizeof(UI4) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, CH4 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kCH4, sizeof(UI4) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, CH4 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI4, SIZ, DT>(list, ToUnsigned(item), cCH4,
+                                   sizeof(UI4) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, FP4 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI4, SIZ, DT>(list, ToUnsigned(item), kFP4, sizeof(UI4) - 1,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, FP4 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI4, SIZ, DT>(list, ToUnsigned(item), cFP4,
+                                   sizeof(UI4) - 1, index, values_begin,
+                                   values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, UI8 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI8, SIZ, DT>(list, item, kUI8, kWordLSbMask, index,
-                                values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, UI8 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI8, SIZ, DT>(list, item, cUI8, cWordLSbMask, index,
+                                   values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, SI8 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI8, SIZ, DT>(list, ToUnsigned(item), kSI8, kWordLSbMask,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, SI8 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI8, SIZ, DT>(list, ToUnsigned(item), cSI8, cWordLSbMask,
+                                   index, values_begin, values_end);
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListAdd(TList<SIZ>* list, FP8 item, SIZ index, CH1* values_begin,
-                    CH1* values_end) {
-  return TListAdd<UI8, SIZ, DT>(list, ToUnsigned(item), kFP8, kWordLSbMask,
-                                index, values_begin, values_end);
+inline SIZ TListInsert(TList<SIZ>* list, FP8 item, SIZ index, CH1* values_begin,
+                       CH1* values_end) {
+  return TListInsert<UI8, SIZ, DT>(list, ToUnsigned(item), cFP8, cWordLSbMask,
+                                   index, values_begin, values_end);
 }
 
 /* Pushes the item onto the List stack. */
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, UI1 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, UI1 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, CH1 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, CH1 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, SI1 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, SI1 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, UI2 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, UI2 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, SI2 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, SI2 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, CH2 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, CH2 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, UI4 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, UI4 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, SI4 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, SI4 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, BOL item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, BOL item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, CH4 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, CH4 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, FP4 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, FP4 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, UI8 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, UI8 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, SI8 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, SI8 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 template <typename SIZ = SIN, typename DT = DT2>
-inline SIZ TListPush(TList<SIZ>* list, FP8 item) {
-  return TListAdd<SIZ, DT>(list, item, list->offsets.count_max,
-                           TListValuesTop<SIZ>(list),
-                           TListValuesEnd<SIZ>(list));
+inline SIZ TListInsert(TList<SIZ>* list, FP8 item) {
+  return TListInsert<SIZ, DT>(list, item, list->offsets.count_max,
+                              TListValuesTop<SIZ>(list),
+                              TListValuesEnd<SIZ>(list));
 }
 
 template <typename SIZ = SIN>
@@ -445,7 +452,7 @@ inline SIZ TSizeOf(void* value, DT2 type) {
 
 /* Removes the item at the given address from the list. */
 template <typename SIZ = SIN, typename DT = DT2>
-void* TListRemove(TList<SIZ>* list, SIZ index) {
+inline void* TListRemove(TList<SIZ>* list, SIZ index) {
   SIZ count = list->offsets.count;
   SIZ* offsets = TListOffsets<SIZ>(list);
   TStackRemove<SIZ, SIZ>(offsets, count, index);
@@ -455,7 +462,7 @@ void* TListRemove(TList<SIZ>* list, SIZ index) {
 
 /* Removes the item at the given address from the list. */
 template <typename SIZ = SIN>
-void* TListRemove(TList<SIZ>* list, void* address) {
+inline void* TListRemove(TList<SIZ>* list, void* address) {
   D_ASSERT(list);
   return TListRemove<SIZ>(list, TListFind(list, address));
 }
@@ -469,7 +476,7 @@ inline void* TListPop(TList<SIZ>* list) {
 /* Returns the value at the given index.
 @return Returns nil if the index is out of the count range. */
 template <typename SIZ = SIN>
-const void* TListValue(TList<SIZ>* list, SIZ index) {
+inline const void* TListValue(TList<SIZ>* list, SIZ index) {
   D_ASSERT(list);
   if (index < 0 || index >= list->count) return nullptr;
   return reinterpret_cast<CH1*>(list) + TListOffsets<SIZ>(list)[index];
@@ -488,16 +495,16 @@ UIW* TListNew(SIZ size_data, SIZ count_max, SocketFactory socket_factory) {
 }
 
 /* ASCII List that uses dynamic memory. */
-template <typename SIZ = SIN, SIZ kSizeBytes_ = 512, SIZ kCountMax_ = 32,
-          typename BUF = TUIB<kSizeBytes_, UI1, SIZ, Nil>, typename DT = DT2>
+template <typename SIZ = SIN, SIZ cSizeBytes_ = 512, SIZ kCountMax_ = 32,
+          typename BUF = TUIB<cSizeBytes_, UI1, SIZ, Nil>, typename DT = DT2>
 class AList {
   AArray<UI1, SIZ, BUF> obj_;  //< An Auto-array.
  public:
-  static constexpr DT Type() { return CTypeMap<DT>(CTypeSize<SIZ>()); }
+  static constexpr DT Type() { return cTypeMap<DT>(cTypeSize<SIZ>()); }
 
   /* Constructs a list with a given count_max with estimated size_bytes. */
   AList(SIZ count_max = kCountMax_)
-      : obj_(TListNew<SIZ, SIZ, DT>(kSizeBytes_, count_max,
+      : obj_(TListNew<SIZ, SIZ, DT>(cSizeBytes_, count_max,
                                     TRamFactory<Type()>().Init<BUF>()),
              TRamFactory<Type()>().Init<BUF>()) {}
 
@@ -507,13 +514,9 @@ class AList {
                                     TRamFactory<Type()>().Init<BUF>()),
              TRamFactory<Type()>().Init<BUF>()) {}
 
-  inline SIZ Push(SI4 type, const void* value) {
-    return TListAdd<SIZ, DT>(This(), type, value);
-  }
-
   /* Inserts the given type-value tuple in the list at the given index. */
   inline SIZ Insert(UI1 type, void* value, SIZ index) {
-    return TListAdd<SIZ, DT>(This(), type, value, index);
+    return TListInsert<SIZ, DT>(This(), type, value, index);
   }
 
   /* Maximum count of the item in the List. */
@@ -553,38 +556,42 @@ class AList {
   inserts the item to the list at the given index.
   @return An invalid index upon failure or the index of the index upon success.
   */
-  SIZ Add(UI1 item, SIZ index) { return TListAdd<UI1>(This(), item); }
-  SIZ Add(SI1 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(CH1 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(UI2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(SI2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(CH2 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(BOL item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(UI4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(SI4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(CH4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(FP4 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(UI8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(SI8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
-  SIZ Add(FP8 item, SIZ index) { return TListAdd<SIZ, DT>(This(), item); }
+  SIZ Insert(UI1 item, SIZ index) { return TListInsert<UI1>(This(), item); }
+  SIZ Insert(SI1 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(CH1 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(UI2 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(SI2 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(CH2 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(BOL item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(UI4 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(SI4 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(CH4 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(FP4 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(UI8 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(SI8 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
+  SIZ Insert(FP8 item, SIZ index) { return TListInsert<SIZ, DT>(This(), item); }
 
   /* Pushes the item onto the List stack.
   @return An invalid index upon failure or the index of the item in the list
   upon success. */
-  SIZ Push(UI1 item) { return TListAdd<UI1>(This(), item); }
-  SIZ Push(SI1 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(CH1 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(UI2 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(SI2 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(CH2 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(BOL item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(UI4 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(SI4 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(CH4 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(FP4 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(UI8 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(SI8 item) { return TListPush<SIZ>(This(), item); }
-  SIZ Push(FP8 item) { return TListPush<SIZ>(This(), item); }
+  SIZ Insert(UI1 item) { return TListInsert<UI1>(This(), item); }
+  SIZ Insert(SI1 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(CH1 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(UI2 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(SI2 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(CH2 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(BOL item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(UI4 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(SI4 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(CH4 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(FP4 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(UI8 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(SI8 item) { return TListInsert<SIZ>(This(), item); }
+  SIZ Insert(FP8 item) { return TListInsert<SIZ>(This(), item); }
+
+  inline SIZ Insert(DT type, const void* value) {
+    return TListInsert<SIZ, DT>(This(), type, value);
+  }
 
   /* Removes the last item from the list.
   @returns The address of the object just popped off the stack. */

@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /typevalue.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -60,60 +60,60 @@ const CH1* STRTypes() {
 const CH1* STRTrue() { return "true"; }
 const CH1* STRFalse() { return "false"; }
 
-TypeValue::TypeValue() : type_(kNIL), word_(0), word_2_(0) {}
-TypeValue::TypeValue(void* item) : type_(kPTR), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue() : type_(cNIL), word_(0), word_2_(0) {}
+TypeValue::TypeValue(void* item) : type_(cPTR), word_(UIW(item)), word_2_(0) {}
 TypeValue::TypeValue(const void* item)
-    : type_(kCNS_PTR), word_(UIW(item)), word_2_(0) {}
+    : type_(cCNS_PTR), word_(UIW(item)), word_2_(0) {}
 #if USING_UTF8 == YES_0
-TypeValue::TypeValue(CH1 item) : type_(kCH1), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(CH1 item) : type_(cCH1), word_(UIW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CH1* item)
-    : type_(kST1), word_(UIW(item)), word_2_(0) {}
+    : type_(cSTA), word_(UIW(item)), word_2_(0) {}
 #endif
 #if USING_UTF16 == YES_0
-TypeValue::TypeValue(CH2 item) : type_(kCH2), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(CH2 item) : type_(cCH2), word_(UIW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CH2* item)
-    : type_(kST2), word_(UIW(item)), word_2_(0) {}
+    : type_(cSTB), word_(UIW(item)), word_2_(0) {}
 #endif
 #if USING_UTF32 == YES_0
-TypeValue::TypeValue(CH4 item) : type_(kCH4), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(CH4 item) : type_(cCH4), word_(UIW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CH4* item)
-    : type_(kST3), word_(UIW(item)), word_2_(0) {}
+    : type_(cSTC), word_(UIW(item)), word_2_(0) {}
 #endif
-TypeValue::TypeValue(SI1 item) : type_(kSI1), word_(UIW(item)), word_2_(0) {}
-TypeValue::TypeValue(UI1 item) : type_(kUI1), word_(UIW(item)), word_2_(0) {}
-TypeValue::TypeValue(SI2 item) : type_(kSI2), word_(UIW(item)), word_2_(0) {}
-TypeValue::TypeValue(UI2 item) : type_(kUI2), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(SI1 item) : type_(cSI1), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(UI1 item) : type_(cUI1), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(SI2 item) : type_(cSI2), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(UI2 item) : type_(cUI2), word_(UIW(item)), word_2_(0) {}
 #if ALU_SIZE == ALU_16_BIT
-AValue::AValue(SI4 item) : type_(kSI4) {
+AValue::AValue(SI4 item) : type_(cSI4) {
   // @todo I don't know if this is going to be needed. In my mind the compiler
   // will push the word_ onto the program stack because of the *reintpret_cast.
   // This might however get optimized into just storing item. Dissassemble me!
   *reinterpret_cast<SI4*>(&word_) = item;
 }
 #else
-TypeValue::TypeValue(SI4 item) : type_(kSI4), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(SI4 item) : type_(cSI4), word_(UIW(item)), word_2_(0) {}
 #endif
 
 #if ALU_SIZE == ALU_16_BIT
-AValue::AValue(UI4 item) : type_(kUI4) {
+AValue::AValue(UI4 item) : type_(cUI4) {
   *reinterpret_cast<UI4*>(&word_) = item;
 }
 #else
-TypeValue::TypeValue(UI4 item) : type_(kUI4), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(UI4 item) : type_(cUI4), word_(UIW(item)), word_2_(0) {}
 #endif
 
 #if ALU_SIZE == ALU_64_BIT
-TypeValue::TypeValue(SI8 item) : type_(kSI8), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(SI8 item) : type_(cSI8), word_(UIW(item)), word_2_(0) {}
 #else
-AValue::AValue(SI8 item) : type_(kSI8) {
+AValue::AValue(SI8 item) : type_(cSI8) {
   *reinterpret_cast<SI8*>(&word_) = item;
 }
 #endif
 
 #if ALU_SIZE == ALU_64_BIT
-TypeValue::TypeValue(UI8 item) : type_(kUI8), word_(UIW(item)), word_2_(0) {}
+TypeValue::TypeValue(UI8 item) : type_(cUI8), word_(UIW(item)), word_2_(0) {}
 #else
-AValue::AValue(UI8 item) : type_(kUI8) {
+AValue::AValue(UI8 item) : type_(cUI8) {
   *reinterpret_cast<UI8*>(&word_) = item;
 }
 
@@ -121,9 +121,9 @@ AValue::AValue(UI8 item) : type_(kUI8) {
 #if USING_FP4 == YES_0
 #if ALU_SIZE == ALU_64_BIT
 TypeValue::TypeValue(FP4 item)
-    : type_(kFP4), word_(ToUnsigned(item)), word_2_(0) {}
+    : type_(cFP4), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FP4 item) : type_(kFP4) {
+AValue::AValue(FP4 item) : type_(cFP4) {
   *reinterpret_cast<FP4*>(&word_) = item;
 }
 #endif
@@ -132,16 +132,16 @@ AValue::AValue(FP4 item) : type_(kFP4) {
 #if USING_FP8 == YES_0
 #if ALU_SIZE == ALU_64_BIT
 TypeValue::TypeValue(FP8 item)
-    : type_(kFP8), word_(ToUnsigned(item)), word_2_(0) {}
+    : type_(cFP8), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FP8 item) : type_(kFP8) {
+AValue::AValue(FP8 item) : type_(cFP8) {
   *reinterpret_cast<FP8*>(&word_) = item;
 }
 #endif
 #endif
 
 TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
-  DTW pod_type = type & kTypePODMask;
+  DTW pod_type = type & cTypePODMask;
   if (type != pod_type) {
     word_ = reinterpret_cast<UIW>(item);
   } else if (pod_type <= 7) {
@@ -155,7 +155,7 @@ TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
     UI8* destination = reinterpret_cast<UI8*>(WordPTR());
     const UI8* source = reinterpret_cast<const UI8*>(item);
     *destination = *source;
-    if (pod_type >= kSIH) {
+    if (pod_type >= cSIH) {
       ++destination;
       ++source;
       *destination = *source;
@@ -205,86 +205,86 @@ UIW TypeValue::Word2() { return word_2_; }
 
 void TypeValue::SetWord(UIW value) { word_ = value; }
 void TypeValue::SetWord2(UIW value) { word_2_ = value; }
-void TypeValue::SetNIL() { type_ = word_ = kNIL; }
+void TypeValue::SetNIL() { type_ = word_ = cNIL; }
 void TypeValue::SetNIL(UIW value) {
-  type_ = kNIL;
+  type_ = cNIL;
   word_ = value;
 }
 #if USING_UTF8 == YES_0
 void TypeValue::Set(CH1 item) {
-  type_ = kCH1;
+  type_ = cCH1;
   word_ = UIW(item);
 }
 void TypeValue::Set(const CH1* item) {
-  type_ = CTypeMap(kST1, kCNS_PTR);
+  type_ = cTypeMap(cSTA, cCNS_PTR);
   word_ = reinterpret_cast<UIW>(item);
 }
 #endif
 #if USING_UTF16 == YES_0
 void TypeValue::Set(CH2 item) {
-  type_ = kCH2;
+  type_ = cCH2;
   word_ = UIW(item);
 }
 void TypeValue::Set(const CH2* item) {
-  type_ = kST2;
+  type_ = cSTB;
   word_ = reinterpret_cast<UIW>(item);
 }
 #endif
 #if USING_UTF32 == YES_0
 void TypeValue::Set(CH4 item) {
-  type_ = kCH4;
+  type_ = cCH4;
   word_ = UIW(item);
 }
 void TypeValue::Set(const CH4* item) {
-  type_ = kST3;
+  type_ = cSTC;
   word_ = reinterpret_cast<UIW>(item);
 }
 #endif
 void TypeValue::Set(SI1 item) {
-  type_ = kSI1;
+  type_ = cSI1;
   word_ = UIW(item);
 }
 void TypeValue::Set(UI1 item) {
-  type_ = kUI1;
+  type_ = cUI1;
   word_ = UIW(item);
 }
 void TypeValue::Set(SI2 item) {
-  type_ = kSI2;
+  type_ = cSI2;
   word_ = UIW(item);
 }
 void TypeValue::Set(UI2 item) {
-  type_ = kUI2;
+  type_ = cUI2;
   word_ = UIW(item);
 }
 void TypeValue::Set(BOL item) {
-  type_ = kBOL;
+  type_ = cBOL;
   word_ = UIW(item);
 }
 void TypeValue::Set(SI4 item) {
-  type_ = kSI4;
+  type_ = cSI4;
   word_ = UIW(item);
 }
 void TypeValue::Set(UI4 item) {
-  type_ = kUI4;
+  type_ = cUI4;
   word_ = UIW(item);
 }
 void TypeValue::Set(SI8 item) {
-  type_ = kSI8;
+  type_ = cSI8;
   word_ = UIW(item);
 }
 void TypeValue::Set(UI8 item) {
-  type_ = kUI8;
+  type_ = cUI8;
   word_ = UIW(item);
 }
 #if USING_FP4 == YES_0
 void TypeValue::Set(FP4 item) {
-  type_ = kFP4;
+  type_ = cFP4;
   word_ = UIW(item);
 }
 #endif
 #if USING_FP8 == YES_0
 void TypeValue::Set(FP8 item) {
-  type_ = kFP8;
+  type_ = cFP8;
   word_ = UIW(item);
 }
 #endif

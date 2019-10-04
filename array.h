@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /array.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -36,22 +36,22 @@ struct Autoject {
 };
 
 enum AsciiFactoryFunction {
-  kFactoryDelete = 0,  //< Factory function deletes an OBJ.
-  kFactoryNew = 1,     //< Factory function checks if the size can double.
-  kFactoryGrow = 2,    //< Factory function double OBJ size.
-  kFactoryClone = 3,   //< Factory function clones the OBJ.
-  kFactoryName = 4,    //< Factory function gets the info string.
-  kFactoryFunctionCount = 5,  //< Factory function count.
+  cFactoryDelete = 0,  //< Factory function deletes an OBJ.
+  cFactoryNew = 1,     //< Factory function checks if the size can double.
+  cFactoryGrow = 2,    //< Factory function double OBJ size.
+  cFactoryClone = 3,   //< Factory function clones the OBJ.
+  cFactoryName = 4,    //< Factory function gets the info string.
+  cFactoryFunctionCount = 5,  //< Factory function count.
 };
 
 enum AsciiFactoryError {
-  kFactorySuccess = 0,      //< Factory operation completed successfully error.
-  kFactoryNil = 1,          //< Factory missing error.
-  kFactoryNilOBJ = 2,       //< Factory found nil obj.origin pointer error.
-  kFactoryNilArg = 3,       //< Factory arg nil error.
-  kFactoryCantGrow = 4,     //< Factory can't grow.
-  kFactorySizeInvalid = 5,  //< Factory size invalid.
-  kFactoryErrorCount = 6,   //< Factory function count.
+  cFactorySuccess = 0,      //< Factory operation completed successfully error.
+  cFactoryNil = 1,          //< Factory missing error.
+  cFactoryNilOBJ = 2,       //< Factory found nil obj.origin pointer error.
+  cFactoryNilArg = 3,       //< Factory arg nil error.
+  cFactoryCantGrow = 4,     //< Factory can't grow.
+  cFactorySizeInvalid = 5,  //< Factory size invalid.
+  cFactoryErrorCount = 6,   //< Factory function count.
 };
 
 /* SocketFactory for Autojects on the heap that deletes a the buffer. */

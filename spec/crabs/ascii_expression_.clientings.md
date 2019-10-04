@@ -6,7 +6,7 @@
 
 
 
-```Script2
+```Script2™
   +-------------------------- Operation Push "=DIC2" is a function  
   |                           with address stuff that creates a
   |                           dictionary of size 64KB bytes with a
@@ -69,6 +69,6 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

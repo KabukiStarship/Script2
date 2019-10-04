@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /typevalue.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -102,10 +102,10 @@ class LIB_MEMBER TypeValue {
   /* Sets the second word to the value. */
   void SetWord2(UIW value);
 
-  /*Sets the type_ to kNIL with an indeterminite value. */
+  /*Sets the type_ to cNIL with an indeterminite value. */
   void SetNIL();
 
-  /*Sets the type_ to kNIL with an indeterminite value. */
+  /*Sets the type_ to cNIL with an indeterminite value. */
   void SetNIL(UIW value);
 
   /*Sets the word_ to the given item and updates the type. */

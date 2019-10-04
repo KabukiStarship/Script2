@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_library.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /library.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_LIBRARY_HEADER
 #define SCRIPT2_LIBRARY_HEADER
 
@@ -109,7 +109,7 @@ class Library : public Operand {
     switch (array_type) {
       case 0:
 #if SCRIPT2_MEMORY_PROFILE >= 16
-        /// Library format: { kUI1, kUI1, kUI2, kUI2 }
+        /// Library format: { cUI1, cUI1, cUI2, cUI2 }
         return size + sizeof(Library) + *(address + 1) * sizeof(UI1) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
 #else
@@ -117,7 +117,7 @@ class Library : public Operand {
 #endif
       case 1:
 #if SCRIPT2_MEMORY_PROFILE >= 32
-        /// Library format: { kUI1, kUI1, kUI2, kUI4 }
+        /// Library format: { cUI1, cUI1, cUI2, cUI4 }
         return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
@@ -125,7 +125,7 @@ class Library : public Operand {
 #endif
       case 2:
 #if SCRIPT2_MEMORY_PROFILE >= 64
-        /// Library format: { kUI2, kUI2, kUI4, kUI8 }
+        /// Library format: { cUI2, cUI2, cUI4, cUI8 }
         return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(UI1) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
@@ -184,8 +184,8 @@ class Library : public Operand {
 };
 
 /* Destructs the given bag. */
-template <typename TIndex, typename TKey, typename TData, UIN MaxStackSize>
-LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+template <typename TIndex, typename TKey, typename TData, UIN MaxStaccSize>
+LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CH1*>(r);
 }

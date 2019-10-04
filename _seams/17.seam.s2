@@ -14,9 +14,9 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, kSTR:32, kSI1, kSI2, kSI4>:<kNIL>
-   Bar <1, kSTR:32>:<3, kSI1, kSI2, kSI4>
-   FooBar <DIC2, kUI1>:<kNIL>
+   Foo <4, kSTR:32, cSI1, cSI2, cSI4>:<c_NIL>
+   Bar <1, kSTR:32>:<3, cSI1, cSI2, cSI4>
+   FooBar <DIC2, cUI1>:<c_NIL>
             ^     ^
             |     |
             |     +----- An 8-bit unsigned integer.
@@ -88,14 +88,15 @@ Parent1 {
      v      v    v   v         */
         += kSTR(item1 12 "ABC") -=
             Key item1 /*      Operation "-Key" removes "item1".
-
-+----------------------------- This is a function with key "kUI2".
+
+
++----------------------------- This is a function with key "c_UI2".
 |       +--------------------- henThis is a 16-bit unsigned SI4.
 |       |
 v       v */
-            += kSI1 item1 1 += kSI2(item2, 2) += kSI4 item3 1 -=
+            += cSI1 item1 1 += cSI2(item2, 2) += cSI4 item3 1 -=
             Index 2  //< Removes index 2:"item3".
-            += kSI2 item3 - 1 += kUI2 item4 1
+            += cSI2 item3 - 1 += cUI2 item4 1
             /*< We can't add item4 because we set the max elements to 3.
                 This won't generate an error but may generate an error
                 message. */
@@ -107,7 +108,7 @@ v       v */
     /* Return Address (kADR) Example.
 
         @fn =
-            @param <kNIL>:<kBSQ>
+            @param <c_NIL>:<kBSQ>
     */
 
   abc123:
@@ -126,9 +127,10 @@ v       v */
 
     /* Inter-process LISP Example.
         Functions
-        
+        
+
     */
 
-    xyz = kUI2(+kUI2(*2 3) 3 4)
+    xyz = cUI2(+c_UI2(*2 3) 3 4)
 
         FooWeNeedNewNames(return_address $xyz);

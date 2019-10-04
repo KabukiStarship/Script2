@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /object.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -69,8 +69,8 @@ namespace _ {
 
 UIW* RamFactoryStack(UIW* buffer, SIW size_bytes, DTW data_type) {
   if (size_bytes < 0) return (UIW*)data_type;
-  size_bytes += (-size_bytes) & kWordLSbMask;
-  return new UIW[size_bytes >> kWordBitCount];
+  size_bytes += (-size_bytes) & cWordLSbMask;
+  return new UIW[size_bytes >> cWordBitCount];
 }
 
 UIW* RamFactoryHeap(UIW* buffer, SIW size_bytes, DTW data_type) {
@@ -170,7 +170,7 @@ SIW ArrayShiftUp(void* origin, void* end, SIW count) {
   UIW* stop_word = reinterpret_cast<UIW*>(stop);
 
   // Align the pointer up.
-  value = AlignUp(value, lsb_mask);
+  value = cAlignUp(value, lsb_mask);
   UIW* start_word = reinterpret_cast<UIW*>(value);
 
   // Shift up the moddle portion.

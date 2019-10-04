@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /clock.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -29,12 +29,12 @@ struct LIB_MEMBER AClock {
       year;    //< Number of years since epoch [-1902, 1970] U [1970, 2038].
 };
 
-/* A sub-second timestamp composed of a kTM4 and a kUI4 tick.
+/* A sub-second timestamp composed of a kTM4 and a cUI4 tick.
 Operation of the TME is intended for two scenarios:
 1. Processor has a real microsecond timer stored as a 24-bit value.
 2. Processor is an x86 and timer gets updated with a tread or OS.
 In the real microsecond timer scenario the processor will just
-take the unsigned in value and copy it to the kUI4 member. In the
+take the unsigned in value and copy it to the cUI4 member. In the
 case of the OS having a variable Update tick period, the ticker will
 work best if the value gets incremented using the ++operator and you will
 need to use modulo updates_per_second unless the timer is set to 64 updates
@@ -47,24 +47,24 @@ struct LIB_MEMBER TME {
 };
 
 enum ClockConstants {
-  kClockEpochInit = 1970,                    //< Initial clock epoch.
-  kSecondsPerMinute = 60,                    //< Number of seconds in an minute.
-  kSecondsPerHour = 60 * kSecondsPerMinute,  //< Number of seconds in an hour.
-  kSecondsPerDay = 24 * kSecondsPerHour,     //< Number of seconds in an day.
-  kSecondsPerYear = kSecondsPerDay * 365,    //< Number of seconds in an year.
-  kSecondsPerEpoch = 10 * kSecondsPerYear,   //< Number of seconds in an year.
-  kDaysInJanuary = 31,                       //< Number of days in January.
-  kDaysInFebruary = 28,                      //< Number of days in February.
-  kDaysInMarch = 31,                         //< Number of days in March.
-  kDaysInApril = 30,                         //< Number of days in April.
-  kDaysInMay = 31,                           //< Number of days in May.
-  kDaysInJune = 30,                          //< Number of days in June.
-  kDaysInJuly = 31,                          //< Number of days in July.
-  kDaysInAugust = 31,                        //< Number of days in August.
-  kDaysInSeptember = 30,                     //< Number of days in September.
-  kDaysInOctober = 31,                       //< Number of days in October.
-  kDaysInNovember = 30,                      //< Number of days in November.
-  kDaysInDecember = 31,                      //< Number of days in December.
+  cClockEpochInit = 1970,                    //< Initial clock epoch.
+  cSecondsPerMinute = 60,                    //< Number of seconds in an minute.
+  cSecondsPerHour = 60 * cSecondsPerMinute,  //< Number of seconds in an hour.
+  cSecondsPerDay = 24 * cSecondsPerHour,     //< Number of seconds in an day.
+  cSecondsPerYear = cSecondsPerDay * 365,    //< Number of seconds in an year.
+  cSecondsPerEpoch = 10 * cSecondsPerYear,   //< Number of seconds in an year.
+  cDaysInJanuary = 31,                       //< Number of days in January.
+  cDaysInFebruary = 28,                      //< Number of days in February.
+  cDaysInMarch = 31,                         //< Number of days in March.
+  cDaysInApril = 30,                         //< Number of days in April.
+  cDaysInMay = 31,                           //< Number of days in May.
+  cDaysInJune = 30,                          //< Number of days in June.
+  cDaysInJuly = 31,                          //< Number of days in July.
+  cDaysInAugust = 31,                        //< Number of days in August.
+  cDaysInSeptember = 30,                     //< Number of days in September.
+  cDaysInOctober = 31,                       //< Number of days in October.
+  cDaysInNovember = 30,                      //< Number of days in November.
+  cDaysInDecember = 31,                      //< Number of days in December.
 };
 
 /* Gets the 32-bit kTM4 clock epoch. */
@@ -138,10 +138,10 @@ LIB_MEMBER SIN ClockCompare(const AClock& clock, SIN year, SIN month, SIN day,
 LIB_MEMBER void ClockZeroTime(AClock& seconds);
 
 /* Gets the array of days in each month. */
-LIB_MEMBER const SI2* ClockDaysInMonth();
+LIB_MEMBER const SI2* CloccDaysInMonth();
 
 /* Converts the month and year into days in the month. */
-LIB_MEMBER SIN ClockDaysInMonth(SIN month, SIN year);
+LIB_MEMBER SIN CloccDaysInMonth(SIN month, SIN year);
 
 /* Converts the year, month, and day to day of the year 1-365. */
 LIB_MEMBER SIN ClockDayOfYear(SIN year, SIN month, SIN day);

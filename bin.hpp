@@ -1,15 +1,15 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /bin.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@file    /bin.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
 #include "bout.h"
@@ -20,19 +20,19 @@ namespace _ {
 /* List of BIn States.
 @see SCRIPT Specification RFC. */
 typedef enum BInStates {
-  kBInStateAddress = 0,    //< State  0: Scanning address.
-  kBInStatePackedArgs,     //< State  1: Scanning arguments.
-  kBInStatePackedUTF8,     //< State  2: Scanning UTF-8 .
-  kBInStatePackedUTF16,    //< State  3: Scanning UTF-16 .
-  kBInStatePackedUTF32,    //< State  4: Scanning UTF-32 .
-  kBInStatePackedVarint,   //< State  5: Scanning varint.
-  kBInStatePackedObj,      //< State  6: 8-bit OB1 state.
-  kBInStateVerifyingHash,  //< State  7: Verifying the 32-bit hash.
-  kBInStateHandlingError,  //< State  8: Handling an error state.
-  kBInStateDisconnected,   //< State  9: Disconnected state.
-  kBInStateAck,            //< State 10: Awaiting connection ACK.
-  kBInStateLocked,         //< State 11: Locked state.
-  kBInStatePackedPod,      //< State 12: Scanning plain-old-data.
+  cBInStateAddress = 0,    //< State  0: Scanning address.
+  cBInStatePackedArgs,     //< State  1: Scanning arguments.
+  cBInStatePackedUTF8,     //< State  2: Scanning UTF-8 .
+  cBInStatePackedUTF16,    //< State  3: Scanning UTF-16 .
+  cBInStatePackedUTF32,    //< State  4: Scanning UTF-32 .
+  cBInStatePackedVarint,   //< State  5: Scanning varint.
+  cBInStatePackedObj,      //< State  6: 8-bit OB1 state.
+  cBInStateVerifyingHash,  //< State  7: Verifying the 32-bit hash.
+  cBInStateHandlingError,  //< State  8: Handling an error state.
+  cBInStateDisconnected,   //< State  9: Disconnected state.
+  cBInStateAck,            //< State 10: Awaiting connection ACK.
+  cBInStateLocked,         //< State 11: Locked state.
+  cBInStatePackedPod,      //< State 12: Scanning plain-old-data.
 } BInState;
 
 /* A*B B-Input Slot.
@@ -136,4 +136,4 @@ inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
 #endif
 
 #endif  //< INCLUDED_SCRIPT2_CBIN
-#endif  //> #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DIC

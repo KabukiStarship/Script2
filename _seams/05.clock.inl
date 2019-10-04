@@ -1,14 +1,11 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/05.clock.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
 
 #if SEAM >= SCRIPT2_CLOCK
 #include "../clock.hpp"
@@ -63,21 +60,21 @@ static const CH1* Clock(const CH1* args) {
 
   D_COUT("\n\nTesting more valid input...\n");
 
-  enum { kSize = 128 };
-  CH1 socket[kSize];
+  enum { cSize = 128 };
+  CH1 socket[cSize];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
-  ClockPrint(socket, socket + kSize, t);
+  ClockPrint(socket, socket + cSize, t);
   result = ScanTime(socket, t_found);
   A_ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  ClockPrint(socket, socket + kSize, t);
+  ClockPrint(socket, socket + cSize, t);
   result = ScanTime(socket, t_found);
   A_ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
-  ClockPrint(socket, socket + kSize, t);
+  ClockPrint(socket, socket + cSize, t);
   D_COUT("\n  Before:\"" << socket << '\"');
   result = TSScan<CH1>(socket, t_found);
   D_COUT("\n\n\nresult:\"" << TClock<SI4>(t_found) << "\"\"");

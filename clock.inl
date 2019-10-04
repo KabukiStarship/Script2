@@ -1,8 +1,8 @@
 /* SCRIPT Script @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /clock.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
 all right reserved (R). This Source Code Form is subject to the terms of the
 Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
 this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
@@ -52,7 +52,7 @@ SIN MonthByDay(SIN day, SIN year) {
   return 0;
 }
 
-SI2 ClockEpoch() { return kClockEpochInit; }
+SI2 ClockEpoch() { return cClockEpochInit; }
 
 AClock* ClockInit(AClock& clock, TM4 t) { return TClockInit<TM4>(clock, t); }
 
@@ -72,21 +72,21 @@ AClock* ClockInit(AClock& clock) {
 
 void ClockEpochUpdate() {
   // RoomLock();
-  // kClockEpochInit += 10;
+  // cClockEpochInit += 10;
   // RoomUnlock();
 }
 
 TM8 ClockNow() {
   time_t t;
   time(&t);
-  if (t > kSecondsPerEpoch) ClockEpochUpdate();
+  if (t > cSecondsPerEpoch) ClockEpochUpdate();
   return (TM8)t;
 }
 
 TM4 ClockSeconds(AClock& clock) {
-  return (clock.year - kClockEpochInit) * kSecondsPerYear +
-         (clock.day - 1) * kSecondsPerDay + clock.hour * kSecondsPerHour +
-         clock.minute * kSecondsPerMinute + clock.second;
+  return (clock.year - cClockEpochInit) * cSecondsPerYear +
+         (clock.day - 1) * cSecondsPerDay + clock.hour * cSecondsPerHour +
+         clock.minute * cSecondsPerMinute + clock.second;
 }
 
 TM4 ClockTM4(AClock& clock) { return ClockSeconds(clock); }
@@ -229,22 +229,22 @@ void ClockZeroTime(AClock& local_time) {
 
 TM4 TimeMake(AClock& time) { return (TM4)mktime(reinterpret_cast<tm*>(&time)); }
 
-const SI2* ClockDaysInMonth() {
-  static const SI2 kDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
+const SI2* CloccDaysInMonth() {
+  static const SI2 cDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
                                        31, 31, 30, 31, 30, 31};
-  return kDaysInMonth;
+  return cDaysInMonth;
 }
 
-SIN ClockDaysInMonth(SIN month, SIN year) {
+SIN CloccDaysInMonth(SIN month, SIN year) {
   if ((year & 3) == 0) {
     if (month == 4) return 29;
   }
   if (month < 1 || month > 12) return 0;
-  return ClockDaysInMonth()[month - 1];
+  return CloccDaysInMonth()[month - 1];
 }
 
 SIN ClockDayOfYear(SIN year, SIN month, SIN day) {
-  if (day < 1 || day > ClockDaysInMonth(month, year) || month < 1 || month > 12)
+  if (day < 1 || day > CloccDaysInMonth(month, year) || month < 1 || month > 12)
     return 0;
   if (month == 1) {
     return day;
