@@ -2,10 +2,10 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /morsecode.inl
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
@@ -16,10 +16,10 @@ universal Chinese Room Langauge. The problem is that it doesn't seem to feit
 anywhere in Kabuki Toolkit right now so it sits here. It's useful for
 transeiving debug messages via LED lights. */
 
-const CH1* ToMorseCode(CH1 code) {
-  static const CH1 space[] = {'0', NIL};  //<
+const CHA* ToMorseCode(CHA code) {
+  static const CHA space[] = {'0', NIL};  //<
 
-  static const CH1 cypher[91][10] = {
+  static const CHA cypher[91][10] = {
       {'.', '-', '.', '-', '.', NIL, NIL, NIL, NIL,
        NIL},  //< ASCII , Morse code: End of message.
       {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},  //< ASCII SOH.

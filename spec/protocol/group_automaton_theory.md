@@ -9,7 +9,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
 * Let an **automata** be composed of concurrent **automatons**.
 * Let a **Chinese Room** be an *Abstract Stack Machine (ASM)* able to reset to the **initial state** and run **automata** with **Script Operations** indexed by a single *Unicode character*.
 * Let **A** be a set of states in a *state machine* that composes a **Chinese Room**.
-* Let **B** be a set of *abstract parameters* in the form of a *UI1 stream* of **ASCII Data Types**.
+* Let **B** be a set of *abstract parameters* in the form of a *IUA stream* of **ASCII Data Types**.
 * Let * be an *abstract binary operation* on sets **A** and **B**.
 * Let **on** be a set of states where a **Chinese Room** is accepting **words**.
 * While in the **on** state, **A** = **A** * **B**.
@@ -28,6 +28,6 @@ Script, and all formal intelligence, can be recursively defined as follows:
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

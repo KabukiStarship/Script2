@@ -13,7 +13,7 @@ Once a valid Expression has been received, a room may then **Evaluate** that exp
 #### Hyphenated Script Expression Example
 
 ```Script2™
-/* typedef UI1 UIT;
+/* typedef IUA UIT;
    static const UIT in_params[]  = { 1, kUI4, kUI8 },
                        out_params[] = { 1, NILL, kNIL };
     static const Op kOp= { “Example-Function_with_hypens_and_underscores”,
@@ -85,7 +85,7 @@ const Op* Star (wchar_t index, Expression* crabs)  {
     if (!crabs) return &kOpExample;
 
     // Example RPC variables.
-    UI4 input_a,
+    IUC input_a,
              input_b,
              output_a = 1,
              output_b = 2;
@@ -141,7 +141,7 @@ Clears Expression Operation clears the current Expression Slots without deleting
 
 ###### Importance Operation
 
-**Importance Operation** performs  Raises the *Importance Level* for each consecutive ASCII '!' UI1.
+**Importance Operation** performs  Raises the *Importance Level* for each consecutive ASCII '!' IUA.
 
 ##### Division Operation
 
@@ -181,7 +181,7 @@ Script is whitespace delimited spaces may be skipped by the interpreter or inter
 
 ##### Interrupt Escape Sequence
 
-Each Room has a single **Interrupt Expression** in the index '/'. When an ESC interrupt UI1 is received the *Interrupt Expression* is pushed onto the stack. If this ESC returns a Result this Result must be inserted into the location of the ESC in the B-Stream.
+Each Room has a single **Interrupt Expression** in the index '/'. When an ESC interrupt IUA is received the *Interrupt Expression* is pushed onto the stack. If this ESC returns a Result this Result must be inserted into the location of the ESC in the B-Stream.
 
 ###### Mandatory Single Byte Interrupt Operations
 
@@ -224,6 +224,6 @@ Return values just need an address of an Operation to send the return value too.
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

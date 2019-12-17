@@ -4,7 +4,7 @@
 
 ### Data Types
 
-Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data Types are forward compatible with 2-byte Types. Given there are only 8, 16, 32, and 64-bit CPUs, the bit pattern of the data type is required to be laid out such that the bit_1 of the 4 bits required to represent these 4 byte depths shall be laid out across the boundary between a UI1 and UI2 type[].
+ASCII Data Types use 3-letter acronyms in all capital letters[1][2]. Whenever possible, the letters in the ASCII Data Type acronyms are such that like-types are grouped alphabetically, and 8, 16, 32, 64, and 128-bit types use the post fix A, B, C, D, and E, and an 8-bit unsigned integer is a IUA and a 16-bit one is a IUB. Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data Types are forward compatible with 2-byte Types. Given there are only 8, 16, 32, and 64-bit CPUs, the bit pattern of the data type is required to be laid out such that the bit_1 of the 4 bits required to represent these 4 byte depths shall be laid out across the boundary between a IUA and IUB type.
 
 #### POD Types Table
 
@@ -13,25 +13,25 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | ID | Type | C++/Alt Name | Width | Description |
 |:--:|:----:|:------------:|:-----:|:------------|
 |  0 | NIL  |     null     |   0   | Nil/null/void type. |
-|  1 | CH1  |     char     |   1   | 1-byte Unicode/ASCII character. |
-|  2 | SI1  |     int8_t   |   1   | 1-byte signed integer. |
-|  3 | UI1  |    uint8_t   |   1   | 1-byte unsigned integer. |
-|  4 | CH2  |   char16_t   |   2   | 2-byte Unicode character. |
-|  5 | SI2  |    int16_t   |   2   | 2-byte signed integer. |
-|  6 | UI2  |   uint16_t   |   2   | 2-byte unsigned integer. |
-|  7 | FP2  |     half     |   2   | 2-byte floating-point number. |
+|  1 | CHA  |     char     |   1   | 1-byte Unicode/ASCII character. |
+|  2 | ISA  |     int8_t   |   1   | 1-byte signed integer. |
+|  3 | IUA  |    uint8_t   |   1   | 1-byte unsigned integer. |
+|  4 | CHB  |   char16_t   |   2   | 2-byte Unicode character. |
+|  5 | ISB  |    int16_t   |   2   | 2-byte signed integer. |
+|  6 | IUB  |   uint16_t   |   2   | 2-byte unsigned integer. |
+|  7 | FPB  |     half     |   2   | 2-byte floating-point number. |
 |  8 | BOL  |     bool     |  2/4  | 2 or 4-byte boolean value. |
-|  9 | CH4  |   char32_t   |   4   | 4-byte Unicode character. |
-| 10 | SI4  |    int32_t   |   4   | 4-byte signed varint. |
-| 11 | UI4  |   uint32_t   |   4   | 4-byte unsigned integer. |
-| 12 | FP4  |    float     |   4   | 4-byte floating-point number. |
-| 13 | TME  |    int64_t   |   8   | SI4 seconds since epoch timestamp with a UI4 sub-second tick. |
-| 14 | SI8  |    int64_t   |   8   | 8-byte signed integer. |
-| 15 | UI8  |   uint64_t   |   8   | 8-byte unsigned integer. |
-| 16 | FP8  |    double    |   8   | 8-byte floating-point number. |
-| 17 | SIH  |   int128_t   |  16   | 16-byte (Hexadeca-byte) signed integer. |
-| 18 | UIH  |   uint128_t  |  16   | 16-byte (Hexadeca-byte) unsigned integer. |
-| 19 | FPH  |  float128_t  |  16   | 16-byte (Hexadeca-byte) floating-point number. |
+|  9 | CHC  |   char32_t   |   4   | 4-byte Unicode character. |
+| 10 | ISC  |    int32_t   |   4   | 4-byte signed varint. |
+| 11 | IUC  |   uint32_t   |   4   | 4-byte unsigned integer. |
+| 12 | FPC  |    float     |   4   | 4-byte floating-point number. |
+| 13 | TME  |    int64_t   |   8   | ISC seconds since epoch timestamp with a IUC sub-second tick. |
+| 14 | ISD  |    int64_t   |   8   | 8-byte signed integer. |
+| 15 | IUD  |   uint64_t   |   8   | 8-byte unsigned integer. |
+| 16 | FPD  |    double    |   8   | 8-byte floating-point number. |
+| 17 | ISE  |   int128_t   |  16   | 16-byte (Hexadeca-byte) signed integer. |
+| 18 | IUE  |   uint128_t  |  16   | 16-byte (Hexadeca-byte) unsigned integer. |
+| 19 | FPE  |  float128_t  |  16   | 16-byte (Hexadeca-byte) floating-point number. |
 | 20 | DTA  |  Data Type A |  xW   | Implementation-defined word-aligned Data Type A. |
 | 21 | DTB  |  Data Type B |  xW   | Implementation-defined word-aligned Data Type B. |
 | 22 | DTC  |  Data Type C |  xW   | Implementation-defined word-aligned Data Type C. |
@@ -96,7 +96,7 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 
 ##### Illegal Vector Types
 
-Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of SI2 with an SI1 size width. If the POD type is 8 or more bytes wide then the stack or array must use a SW8 (8-byte Size Width).
+Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of ISB with an ISA size width. If the POD type is 8 or more bytes wide then the stack or array must use a SW8 (8-byte Size Width).
 
 ```AsciiArt
 | Vector |                   POD Type 0-31 (1=Yes, 0=No)                    |
@@ -104,7 +104,7 @@ Extended types are created by the Illegal Types. The Illegal Types are types tha
 | SW:VET | I T T T H I I H I I P O H I I P  O M M M I I P I I P P D V G B S |
 | b8:b5  | L 1 2 3 1 1 1 2 2 2 2 2 4 4 4 4  4 4 E 8 8 8 8 H H H D J T N T T |
 +--------+------------------------------------------------------------------|
-| 00_VH1 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 00_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 00_ARY | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 00_STK | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 00_MAT | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
@@ -112,11 +112,11 @@ Extended types are created by the Illegal Types. The Illegal Types are types tha
 | 01_ARY | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 01_STK | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 01_MAT | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_VH4 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 10_VHB | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 10_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 10_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 | 10_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 11_VH4 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 11_VHC | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 11_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 11_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 11_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
@@ -160,8 +160,12 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 
 **[<< Previous Section:ASCII Data Specification >>](./readme.md)  |  [Next Section:Integers >>](integers.md)**
 
+## Requirements
+
+[1]: ../requirements#Optimal-transceiving
+
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship](https://kabukistarship.com)™.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

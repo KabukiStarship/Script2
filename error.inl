@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /errors.inl
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 #if SEAM >= SCRIPT2_DIC
@@ -13,8 +13,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-const CH1** ErrorStrands() {
-  static const CH1* cErrors[] = {
+const CHA** ErrorStrands() {
+  static const CHA* cErrors[] = {
       "Not an error",             //<  0
       "Unspecified",              //<  1
       "Input nil",                //<  2
@@ -50,7 +50,7 @@ const CH1** ErrorStrands() {
   return cErrors;
 }
 
-const CH1* ErrorStrand(Error error) {
+const CHA* ErrorStrand(Error error) {
   if (error >= cErrorImplementation) {
     return ErrorStrands()[cErrorImplementation];
   }

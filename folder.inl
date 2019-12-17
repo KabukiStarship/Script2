@@ -1,4 +1,5 @@
 #include "folder.h"
+#if SEAM >= SCRIPT2_FILECABINET
 using namespace _;
 
 Folder::Folder(const CHR* uri) : uri_(uri_) {}
@@ -15,7 +16,7 @@ const CHR* Folder::URISet(const CHR* uri) {
 
 BOL Folder::Exists() { return false; }
 
-#include <dirent>
+#include <dirent.h>
 DIR* dir;
 struct dirent* ent;
 if ((dir = opendir("c:\\src\\")) != NULL) {
@@ -29,3 +30,4 @@ if ((dir = opendir("c:\\src\\")) != NULL) {
   perror("");
   return EXIT_FAILURE;
 }
+#endif

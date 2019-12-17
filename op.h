@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /op.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -38,42 +38,42 @@ struct BOut;
         "Description", '}', ';', ' ', true, nullptr, "-", nullptr };
     @endcode */
 struct LIB_MEMBER Op {
-  const CH1* name;          //< Op name.
-  const SI4 *in,            //< Input kBSQ params or OpFirst.
+  const CHA* name;          //< Op name.
+  const ISC *in,            //< Input kBSQ params or OpFirst.
       *out;                 //< Output kBSQ params or OpLast.
-  const CH1* description;   //< Op description.
-  CH4 pop,                  //< Index of the Pop Operation.
+  const CHA* description;   //< Op description.
+  CHC pop,                  //< Index of the Pop Operation.
       close,                //< Index of the Close Operation.
       default_op;           //< Index of the Default Operation.
   BOL using_numbers;        //< Flag for if tokens may use numbers.
-  const CH1 *ignore_chars,  //< Strand of chars to ignore.
+  const CHA *ignore_chars,  //< Strand of chars to ignore.
       *allowed_chars;       //< Strand of allowed symbols.
   const BOut* evaluation;   //< Evaluated expression Slot.
 };
 
 /* Converts the given value to a pointer. */
-inline SIW OpCount(const Op& op) { return op.out - op.in; }
+inline ISW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpFirst(CH4 index) {
-  return reinterpret_cast<const SI4*>(index);
+inline const ISC* OpFirst(CHC index) {
+  return reinterpret_cast<const ISC*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CH4 OpFirst(const Op* op) {
+inline CHC OpFirst(const Op* op) {
   A_ASSERT(op);
-  return (CH4) reinterpret_cast<UIW>(op->in);
+  return (CHC) reinterpret_cast<UIW>(op->in);
 }
 
 /* Converts the given value to a pointer. */
-inline const SI4* OpLast(CH4 index) {
-  return reinterpret_cast<const SI4*>(index);
+inline const ISC* OpLast(CHC index) {
+  return reinterpret_cast<const ISC*>(index);
 }
 
 /* Converts the given value to a pointer. */
-inline CH4 OpLast(const Op* op) {
+inline CHC OpLast(const Op* op) {
   A_ASSERT(op);
-  return (CH4) reinterpret_cast<UIW>(op->out);
+  return (CHC) reinterpret_cast<UIW>(op->out);
 }
 
 #if USING_SCRIPT2_TEXT == YES_0

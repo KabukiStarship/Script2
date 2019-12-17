@@ -21,7 +21,7 @@ using namespace _;
 #endif
 
 namespace script2 {
-static const CH1* TestBook(const CH1* args) {
+static const CHA* TestBook(const CHA* args) {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
@@ -139,17 +139,17 @@ static const CH1* TestBook(const CH1* args) {
 #endif
 
 namespace script2 {
-static const CH1* Book(const CH1* args) {
+static const CHA* Book(const CHA* args) {
 #if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
-  TestBook<CH1, SI2>();
-  TestBook<CH1, SI4>();
+  TestBook<CHA, ISB>();
+  TestBook<CHA, ISC>();
 #if USING_UTF16 == YES_0
-  TestBook<CH2, SI2>();
-  TestBook<CH2, SI4>();
+  TestBook<CHB, ISB>();
+  TestBook<CHB, ISC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestBook<CH4, SI4>();
+  TestBook<CHC, ISC>();
 #endif
 #endif
   return nullptr;

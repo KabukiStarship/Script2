@@ -11,7 +11,7 @@ There are four Vector Types:
 3. [Vector](./vector.md); and
 4. [Matrix](./matrix).
 
-Array, Vector, and Matrix types store the element count of the data section as the first word, which is called the SIZ word. The first word means that the element width may be one size and the SIZ word might be another, such as an Array of CH1 with less than 2^15 elements.
+Array, Vector, and Matrix types store the element count of the data section as the first word, which is called the SIZ word. The first word means that the element width may be one size and the SIZ word might be another, such as an Array of CHA with less than 2^15 elements.
 
 ```AsciiArt
     +--------------+
@@ -34,6 +34,6 @@ inline SIW TSizeOf(SIZ size) {
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

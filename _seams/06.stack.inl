@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/06.stack.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_STACK
 #include "../stack.hpp"
@@ -20,15 +20,15 @@ using namespace _;
 namespace script2 {
 
 #if SEAM >= SCRIPT2_STACK
-template <typename T, typename SIZ>
-void TestStack(const CH1* args) {
-  D_COUT("Testing AStack<SI" << sizeof(T) << ",SI" << sizeof(SIZ) << ">...\n");
+template <typename T, typename ISZ>
+void TestStack(const CHA* args) {
+  D_COUT("Testing AStack<SI" << sizeof(T) << ",SI" << sizeof(ISZ) << ">...\n");
 
-  AStack<T, SIZ, 8> stack;
+  AStack<T, ISZ, 8> stack;
 
   D_COUT(Linef("\n+---\n| TUIB: size:")
          << stack.AJT().Buffer().Size() << " expected_size_bytes:"
-         << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<SIZ>)
+         << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<ISZ>)
          << " size_bytes:" << stack.AJT().Buffer().SizeBytes()
          << " size_words:" << stack.AJT().Buffer().SizeWords());
   D_COUT_OBJ(stack);
@@ -56,7 +56,7 @@ void TestStack(const CH1* args) {
 }
 #endif
 
-static const CH1* Stack(const CH1* args) {
+static const CHA* Stack(const CHA* args) {
 #if SEAM >= SCRIPT2_STACK
 
   D_COUT(Headingf("Test ArrayCopy and MemoryCompare"));
@@ -65,15 +65,15 @@ static const CH1* Stack(const CH1* args) {
     cTestCharsCount = 1024,
     cTestCharsOffsetCount = 16,
   };
-  CH1 test_chars[cTestCharsCount];
-  CH1 test_chars_result[cTestCharsCount + cTestCharsOffsetCount];
+  CHA test_chars[cTestCharsCount];
+  CHA test_chars_result[cTestCharsCount + cTestCharsOffsetCount];
 
   D_COUT("\ntest_chars[0]:0x" << Hexf(test_chars) << " test_chars_result[n]:0x"
                               << Hexf(test_chars_result));
 
-  for (SI4 i = 0; i < cTestCharsOffsetCount; ++i) {
-    for (SI4 j = 0; j < cTestCharsCount; ++j) test_chars[j] = (CH1)(j % 256);
-    CH1* result = ArrayCopy(test_chars_result + i, cTestCharsCount, test_chars,
+  for (ISC i = 0; i < cTestCharsOffsetCount; ++i) {
+    for (ISC j = 0; j < cTestCharsCount; ++j) test_chars[j] = (CHA)(j % 256);
+    CHA* result = ArrayCopy(test_chars_result + i, cTestCharsCount, test_chars,
                             cTestCharsCount);
     A_ASSERT(result);
     A_ASSERT(!ArrayCompare(test_chars + i, cTestCharsCount, test_chars_result,
@@ -82,10 +82,10 @@ static const CH1* Stack(const CH1* args) {
 
   A_TEST_BEGIN;
 
-  // TestStack<SI4, SI8>(args); is illegal
-  TestStack<SI4, SI4>(args);
-  TestStack<SI8, SI8>(args);
-  TestStack<SI8, SI4>(args);
+  // TestStack<ISC, ISD>(args); is illegal
+  TestStack<ISC, ISC>(args);
+  TestStack<ISD, ISD>(args);
+  TestStack<ISD, ISC>(args);
 #endif
   return nullptr;
 }

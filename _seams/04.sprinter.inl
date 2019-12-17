@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/04.sprinter.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_SPRINTER
 #include "../array.hpp"
@@ -20,10 +20,10 @@ using namespace _;
 
 namespace script2 {
 #if SEAM >= SCRIPT2_SPRINTER
-template <typename CHT = CHR, typename SIZ = SIN>
+template <typename CHT = CHR, typename ISZ = ISN>
 static const CHT* TestSPrinter() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",SI"
-                    << sizeof(SIZ) << ">\n\n"
+                    << sizeof(ISZ) << ">\n\n"
                     << Linef('-'));
 
   enum {
@@ -55,7 +55,7 @@ static const CHT* TestSPrinter() {
                                       {{'A', 'p', 'p', 'l', 'e', 's', NIL},
                                        {'A', 'p', 'p', 'l', 'e', 's', NIL}}};
   const CHT* cursor;
-  for (SI4 i = 0; i < cTestStrandsCount; ++i) {
+  for (ISC i = 0; i < cTestStrandsCount; ++i) {
     D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
     cursor = TSPrintString<CHT>(str_a, str_a + cCount, kTestStrands[i][0]);
     D_COUT(Charsf(str_a, 64));
@@ -125,9 +125,9 @@ static const CHT* TestSPrinter() {
       {' ', ' ', ' ', 'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL, NIL},
       {' ', ' ', ' ', ' ', 'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL}};
 
-  SI4 shift_right = 6;
-  for (SI4 i = 0; i < 12; ++i) {
-    D_ARRAY_WIPE(str_a, (SIW)(cCount * sizeof(CHT)));
+  ISC shift_right = 6;
+  for (ISC i = 0; i < 12; ++i) {
+    D_ARRAY_WIPE(str_a, (ISW)(cCount * sizeof(CHT)));
     cursor = TPrintRight<CHT>(str_a, str_a + cCount - 1, kTestingSpace, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
@@ -154,7 +154,7 @@ static const CHT* TestSPrinter() {
   static const CHT kNumbers[] = {'1', '2', '3', '4', '5',
                                   '6', '7', '8', '9', NIL};
 
-  for (SI4 i = 12; i >= 0; --i) {
+  for (ISC i = 12; i >= 0; --i) {
     D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
     cursor = TPrintCenter<CHT>(str_a, str_a + cCount - 1, kNumbers, i + 1);
     D_ASSERT_INDEX(cursor, i);
@@ -167,17 +167,17 @@ static const CHT* TestSPrinter() {
 }
 #endif  //< #if SEAM >= SCRIPT2_SPRINTER
 
-static const CH1* SPrinter(const CH1* args) {
+static const CHA* SPrinter(const CHA* args) {
 #if SEAM >= SCRIPT2_SPRINTER
   A_TEST_BEGIN;
 
-  if (TestSPrinter<CH1, SI4>()) return "Error testing UTF-8.";
+  if (TestSPrinter<CHA, ISC>()) return "Error testing UTF-8.";
 
 #if USING_UTF16 == YES_0
-  if (TestSPrinter<CH2, SI4>()) return "Error testing UTF-16.";
+  if (TestSPrinter<CHB, ISC>()) return "Error testing UTF-16.";
 #endif
 #if USING_UTF32 == YES_0
-  if (TestSPrinter<CH4, SI4>()) return "Error testing UTF-32.";
+  if (TestSPrinter<CHC, ISC>()) return "Error testing UTF-32.";
 #endif
 #endif
   return nullptr;

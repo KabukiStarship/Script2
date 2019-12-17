@@ -67,11 +67,11 @@
     <ClInclude Include="table.hpp" />
     <ClInclude Include="test.h" />
     <ClInclude Include="test.hpp" />
+    <ClInclude Include="tinydir.h" />
     <ClInclude Include="typevalue.h" />
     <ClInclude Include="typevalue.hpp" />
     <ClInclude Include="uniprinter.hpp" />
     <ClInclude Include="varint.h" />
-    <ClInclude Include="vk.h" />
     <ClInclude Include="wall.h" />
     <ClInclude Include="wall.hpp" />
     <ClInclude Include="_config.h" />
@@ -99,6 +99,7 @@
     <ClInclude Include="_seams\_config.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="01.uniscanner.inl" />
     <None Include="array.inl" />
     <None Include="bin.inl" />
     <None Include="bout.inl" />
@@ -124,7 +125,6 @@
     <None Include="stringf.inl" />
     <None Include="test.inl" />
     <None Include="typevalue.inl" />
-    <None Include="vk.inl" />
     <None Include="_config_footer.inl" />
     <None Include="_config_default.inl" />
     <None Include="_debug.inl" />

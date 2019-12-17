@@ -27,9 +27,9 @@ Please note that this Release for Comment (RFC) is a living document and not an 
 |         Abstract Simulation | A **thought experiment** under conceptually ideal environment and not a virtual or physical simulation. |
 |             Simulation Time | A period of time existing in a **abstract simulation** or **virtual simulation** that is not real-time. |
 |          Serial Byte Stream | A stream of octets of bits in real or simulation time. |
-|              Serial Devices | A *abstract device* that can communicate input and/or output with a *serial UI1 stream*. |
+|              Serial Devices | A *abstract device* that can communicate input and/or output with a *serial IUA stream*. |
 |    Serial Transmission Line | A connection between two *Serial Devices*. |
-|        Abstract Serial Port | A conceptually perfect *Serial Transmission Line* with infinite bandwidth and zero data corruption. A **ABS** is operated by writing a UI1 and reading a UI1 simultaneously. |
+|        Abstract Serial Port | A conceptually perfect *Serial Transmission Line* with infinite bandwidth and zero data corruption. A **ABS** is operated by writing a IUA and reading a IUA simultaneously. |
 |     Asynchronous B-Sequence | A B-Sequence that can be processed asynchronously. |
 |       Local Procedure Calls | (**LPC**) A procedure call executed on a local computer. |
 |      Remote Procedure Calls | (**RPC**) A procedure call executed on a foreign computer. |
@@ -43,6 +43,6 @@ Please note that this Release for Comment (RFC) is a living document and not an 
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

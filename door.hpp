@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /door.hpp
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -42,7 +42,7 @@ connection to multiple systems over a WiFi connection.
 
 @endcode
 */
-template <SI4 kDoorCount_, SI4 kSlotSizeDefault_>
+template <ISC kDoorCount_, ISC kSlotSizeDefault_>
 class TDoor : public Operand {
  public:
   enum {
@@ -60,7 +60,7 @@ class TDoor : public Operand {
   };
 
   /* A door in a Chinese room. */
-  TDoor(const CH1* roomName = nullptr, UIW* socket = nullptr,
+  TDoor(const CHA* roomName = nullptr, UIW* socket = nullptr,
         UIW size_bytes = cMinDoorSize) {
     if (!socket) {
       if (size_bytes < cMinDoorSize) {
@@ -84,30 +84,30 @@ class TDoor : public Operand {
   }
 
   /* Gets the BOut at the given index. */
-  BOut* GetSlot(SI4 index) { return slots_->Element(index); }
+  BOut* GetSlot(ISC index) { return slots_->Element(index); }
 
   /* Address the given crabs to the Door. */
-  SI4 AddSlot(SI4 slot) { return TStackPush<SI4, SI4, SI4>(slots_, slot); }
+  ISC AddSlot(ISC slot) { return TStackInsert<ISC, ISC, ISC>(slots_, slot); }
 
   /* Attempts to find a Slot or Door with the given address. */
   BOL Contains(void* address) {
-    return TStackContains<SI4, SI4, SI4>(slots_, address);
+    return TStackContains<ISC, ISC, ISC>(slots_, address);
   }
 
   /* Gets the Slot that contains the given address.
   @return Returns the doors_ stack count if the Door does not contain the given
   address. */
-  SI4 FindSlot(void* address) {
-    SI4 count = slots_->count;
-    for (SI4 i = 0; i < count; ++i) {
+  ISC FindSlot(void* address) {
+    ISC count = slots_->count;
+    for (ISC i = 0; i < count; ++i) {
       // Slot* slot = nullptr; //< @todo fix me!
 
-      if (TStackContains<SI4, SI4, SI4>(slots_, address)) return i;
+      if (TStackContains<ISC, ISC, ISC>(slots_, address)) return i;
     }
     return count;
   }
 
-  BIn* Slot(SI4 index) {
+  BIn* Slot(ISC index) {
     if (!slots_.InBounds(index)) return nullptr;
     return slots[i];
   }
@@ -115,12 +115,12 @@ class TDoor : public Operand {
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(Crabs* crabs) {
-    TMatrix<SI4, SI4, SI4>* slots = slots_;
-    SI4 scan_count_max = scan_count_max_;
-    for (SI4 i = 0; i < slots->Count(); ++i) {
+    TMatrix<ISC, ISC, ISC>* slots = slots_;
+    ISC scan_count_max = scan_count_max_;
+    for (ISC i = 0; i < slots->Count(); ++i) {
       BIn* bin = Slot(i);
-      for (SI4 count = scan_count_max; count > 0; --count) {
-        SI4 value = BInNextByte(bin);
+      for (ISC count = scan_count_max; count > 0; --count) {
+        ISC value = BInNextByte(bin);
         if (value < 0) break;
         const Op* result = crabs->SScan(value);
       }
@@ -129,7 +129,7 @@ class TDoor : public Operand {
   }
 
   /* Script2 operations. */
-  virtual const Op* Star(CH4 index, Crabs* crabs) {
+  virtual const Op* Star(CHC index, Crabs* crabs) {
     static const Op kThis = {
         "Door",
         OpFirst('A'),
@@ -146,24 +146,24 @@ class TDoor : public Operand {
       return CrabsQuery(crabs, kThis);
     }
     index -= ' ';
-    if (((SI4)index) >= slots_->count) {
+    if (((ISC)index) >= slots_->count) {
       return DoorResult(this, Door::c_ErrorInvalidOp);
     }
     return nullptr;
   }
 
  private:
-  SI4 size_bytes_,                 //< Door size in bytes.
+  ISC size_bytes_,                 //< Door size in bytes.
       scan_count_max_;             //< Max bytes to pull throught the slot.
   UIW* begin_;                     //< Pointer to dynamic socket.
-  TMatrix<SI4, SI4, SI4>* slots_;  //< Slots in the door.
-  CBIn* OffsetToBIn(SI4 offset) {
+  TMatrix<ISC, ISC, ISC>* slots_;  //< Slots in the door.
+  CBIn* OffsetToBIn(ISC offset) {
     return reinterpret_cast<CBIn*>(reinterpret_cast<UIW>(this) + offset);
   }
 };
 
 /* Initializes a Door at the beginning of the given socket.
-static Door* DoorInit (SI4* socket, SI4 slot_size) {
+static Door* DoorInit (ISC* socket, ISC slot_size) {
   if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
   Wall* wall = reinterpret_cast<Door*>(socket);

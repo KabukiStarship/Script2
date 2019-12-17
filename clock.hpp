@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /clock.hpp
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -37,23 +37,23 @@ AClock* TClockInit(AClock& clock, SI t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  SIN value = (SIN)(t / cSecondsPerYear);
+  ISN value = (ISN)(t / cSecondsPerYear);
   t -= SI(value) * cSecondsPerYear;
   clock.year = value + ClockEpoch();
-  value = (SIN)(t / cSecondsPerDay);
+  value = (ISN)(t / cSecondsPerDay);
   t -= SI(value) * cSecondsPerDay;
   clock.day = value;
-  value = (SIN)(t / cSecondsPerHour);
+  value = (ISN)(t / cSecondsPerHour);
   t -= SI(value) * cSecondsPerHour;
   clock.hour = value;
-  value = (SIN)(t / cSecondsPerMinute);
+  value = (ISN)(t / cSecondsPerMinute);
   clock.minute = value;
-  clock.second = (SIN)(t - SI(value) * cSecondsPerMinute);
+  clock.second = (ISN)(t - SI(value) * cSecondsPerMinute);
   return &clock;
 }
 
 template <typename SI>
-SI TClockTime(SIN year, SIN month, SIN day, SIN hour, SIN minute, SIN second) {
+SI TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
       return 0;
@@ -78,8 +78,8 @@ CHT* Print(CHT* cursor, CHT* stop, TME& t) {
 
 template <typename CHT = CHR>
 CHT* TSPrint(CHT* cursor, CHT* stop, const AClock& clock) {
-  // The way the utf functions are setup, we return a nil-term CH1 so we
-  // don't have to check to write a single CH1 in this
+  // The way the utf functions are setup, we return a nil-term CHA so we
+  // don't have to check to write a single CHA in this
   A_ASSERT(cursor);
   A_ASSERT(cursor < stop);
 
@@ -119,8 +119,8 @@ CHT* TClockPrint(CHT* cursor, CHT* stop, Time t) {
 
 template <typename CHT = CHR>
 CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
-  // The way the utf functions are setup, we return a nil-term CH1 so we
-  // don't have to check to write a single CH1 in this
+  // The way the utf functions are setup, we return a nil-term CHA so we
+  // don't have to check to write a single CHA in this
   A_ASSERT(cursor);
   A_ASSERT(cursor < stop);
 
@@ -142,15 +142,15 @@ Printer& TSPrint(Printer& o, TME& t) {
 
 /* Scans a time in seconds from the given string. */
 template <typename CHT = CHR>
-const CHT* TScanTime(const CHT* string, SI4& hour, SI4& minute, SI4& second) {
+const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   if (string == nullptr) return nullptr;
 
   D_COUT("\n\n    Scanning time:\"" << string << '\"');
   CHT c;  //< The current CHT.
-  SI4 h,   //< Hour.
+  ISC h,   //< Hour.
       m,   //< Minute.
       s;   //< Second.
-  if (!TScanSigned<SI4, UI4, CHT>(++string, h)) {
+  if (!TScanSigned<ISC, IUC, CHT>(++string, h)) {
     D_COUT("\nInvalid hour:" << h);
     return nullptr;
   }
@@ -206,7 +206,7 @@ const CHT* TScanTime(const CHT* string, SI4& hour, SI4& minute, SI4& second) {
       "\nCases HH:MM, HH::MMam, HH::MMpm, HH:MM:SS, HH:MM:SSam, and "
       "HH:MM:SSpm");
 
-  if (!TScanSigned<SI4, UI4, CHT>(string, m)) return nullptr;
+  if (!TScanSigned<ISC, IUC, CHT>(string, m)) return nullptr;
   string = TSTRSkipNumbers<CHT>(string);
   if (m < 0) {
     D_COUT("\nMinutes:" << m << " can't be negative!");
@@ -259,7 +259,7 @@ const CHT* TScanTime(const CHT* string, SI4& hour, SI4& minute, SI4& second) {
 
   D_COUT("\n    Cases HH:MM:SS, HH:MM:SSam, and HH:MM:SSpm");
 
-  if (!TScanSigned<SI4, UI4, CHT>(string, s)) return nullptr;
+  if (!TScanSigned<ISC, IUC, CHT>(string, s)) return nullptr;
   if (s < 0) {
     D_COUT("\nSeconds:" << s << " can't be negative!");
     return nullptr;
@@ -323,7 +323,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
       delimiter;     //< The delimiter.
   const CHT* stop;  //< Might not need
 
-  SI4 hour = 0, minute = 0, second = 0;
+  ISC hour = 0, minute = 0, second = 0;
 
   if (c == '@') {
     if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
@@ -347,13 +347,13 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
     return string + 1;
   }
 
-  SI4 value1,            //< The first date field scanned.
+  ISC value1,            //< The first date field scanned.
       value2,            //< The second date field scanned.
       value3,            //< The third date field scanned.
       is_last_year = 0;  //< Flag for if the date was last year or not.
 
   // SScan value1
-  if (!TScanSigned<SI4, UI4, CHT>(string, value1)) {
+  if (!TScanSigned<ISC, IUC, CHT>(string, value1)) {
     D_COUT("SScan error at value1");
     return nullptr;
   }
@@ -378,7 +378,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
   }
   // SScan value2.
   string = TSTRSkimodulear<CHT>(string, '0');
-  if (!TScanSigned<SI4, UI4, CHT>(string, value2)) {
+  if (!TScanSigned<ISC, IUC, CHT>(string, value2)) {
     D_COUT("\n    Failed scanning value2 of date.");
     return nullptr;
   }
@@ -459,7 +459,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
   string = TSTRSkimodulear<CHT>(++string, '0');
   c = *string;
   // Then there are 3 values and 2 delimiters.
-  if (!TIsDigit<CHT>(c) || !TScanSigned<SI4, UI4, CHT>(string, value3)) {
+  if (!TIsDigit<CHT>(c) || !TScanSigned<ISC, IUC, CHT>(string, value3)) {
     D_COUT("\n    SlotRead error reading value3 of date." << CHT(c) << ": ");
     return nullptr;  //< Invalid format!
   }
@@ -553,7 +553,7 @@ const CHT* TSScan(const CHT* origin, TME& result) {
     result.ticks = 0;
     return origin - 1;
   }
-  return TScanUnsigned<UI4, CHT>(origin, result.ticks);
+  return TScanUnsigned<IUC, CHT>(origin, result.ticks);
 }
 #endif  // #if USING_STR
 
@@ -569,16 +569,16 @@ SI TClockSet(AClock* clock, SI t) {
   //   f. Second.
   SI value = t / cSecondsPerYear;
   t -= value * cSecondsPerYear;
-  clock->year = (SI4)(value + ClockEpoch());
+  clock->year = (ISC)(value + ClockEpoch());
   value = t / cSecondsPerDay;
   t -= value * cSecondsPerDay;
-  clock->day = (SI4)value;
+  clock->day = (ISC)value;
   value = t / cSecondsPerHour;
   t -= value * cSecondsPerHour;
-  clock->hour = (SI4)value;
+  clock->hour = (ISC)value;
   value = t / cSecondsPerMinute;
-  clock->minute = (SI4)value;
-  clock->second = (SI4)(t - value * cSecondsPerMinute);
+  clock->minute = (ISC)value;
+  clock->second = (ISC)(t - value * cSecondsPerMinute);
   return t;
 }
 

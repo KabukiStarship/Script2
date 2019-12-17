@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /crabs.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -82,7 +82,7 @@ struct Crabs {
     cMinBufferSize = 2,  //< Min socket size.
   };
 
-  SI4 size,            //< Offset to the BOut slot.
+  ISC size,            //< Offset to the BOut slot.
       header_size,     //< The total size of the header.
       stack_count,     //< Stack Operand count.
       stack_size,      //< Stack Operand socket size.
@@ -90,16 +90,16 @@ struct Crabs {
       num_states,      //< Number of states on the state stack.
       bytes_left,      //< Countdown counter for parsing POD types.
       params_left;     //< Height of header and cursors stacks.
-  UI1 bout_state,      //< BOut streaming state.
+  IUA bout_state,      //< BOut streaming state.
       bin_state,       //< Slot streaming state.
       last_bin_state,  //< Last BIn state.
-      last_byte;       //< Last UI1 read.
-  CH4 current_char;    //< Current Unicode CH1 being scanned.
-  UI2 hash;            //< Packed BSQ hash.
-  UI4 timeout_us;      //< Timeout time in microseconds.
+      last_byte;       //< Last IUA read.
+  CHC current_char;    //< Current Unicode CHA being scanned.
+  IUB hash;            //< Packed BSQ hash.
+  IUC timeout_us;      //< Timeout time in microseconds.
   TM8 last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
-  const SI4 *header,   //< Pointer to the header being verified.
+  const ISC *header,   //< Pointer to the header being verified.
       *header_start;   //< Start of the header being verified.
   Operand *operand,    //< Current Script Operand.
       *root;           //< Root-level scope Operand.
@@ -111,7 +111,7 @@ struct Crabs {
 LIB_MEMBER UIW* CrabsBinAddress(Crabs* crabs);
 
 /* Gets the crabs's socket. */
-LIB_MEMBER CH1* CrabsBuffer(Crabs* crabs);
+LIB_MEMBER CHA* CrabsBuffer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
 LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
@@ -126,7 +126,7 @@ LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
 @param root The root-scope device.
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-LIB_MEMBER Crabs* CrabsInit(UIW* socket, SI4 buffer_size, SI4 stack_count,
+LIB_MEMBER Crabs* CrabsInit(UIW* socket, ISC buffer_size, ISC stack_count,
                             Operand* root, UIW* unpacked_buffer,
                             UIW unpacked_size);
 
@@ -138,23 +138,23 @@ inline Operand** CrabsStack(Crabs* crabs) {
 /* Returns true if the Stack uses dynamic memory. */
 // LIB_MEMBER BOL CrabsIsDynamic (Crabs* crabs);
 
-LIB_MEMBER CH1* CrabsEndAddress(Crabs* crabs);
+LIB_MEMBER CHA* CrabsEndAddress(Crabs* crabs);
 
 /* Resets this Stack to the new state. */
 LIB_MEMBER const Op* CrabsReset(Crabs* crabs);
 
 /* Pushes the operand at the given index of the current
 device control onto the stack.
-@return Returns nil upon success and a pointer to a CH1
+@return Returns nil upon success and a pointer to a CHA
 upon failure. */
 LIB_MEMBER const Op* Push(Crabs* crabs, Operand* operand);
 
 /* Attempts to pop an Star off the stack and returns a pointer to a
-    CH1 upon failure. */
+    CHA upon failure. */
 LIB_MEMBER const Op* Pop(Crabs* crabs);
 
 /* Exits the current state. */
-LIB_MEMBER UI1 CrabsExitState(Crabs* crabs);
+LIB_MEMBER IUA CrabsExitState(Crabs* crabs);
 
 /* Sets the new state onto the expression stack.
 LIB_MEMBER const Op* CrabsSetState (Crabs* crabs, BInState state); */
@@ -162,8 +162,8 @@ LIB_MEMBER const Op* CrabsSetState (Crabs* crabs, BInState state); */
 /* Saves the current bin_state and sets the bin_state to the new state. */
 LIB_MEMBER const Op* CrabsEnterState(Crabs* crabs, BInState state);
 
-/* Streams a B-Output UI1. */
-LIB_MEMBER UI1 CrabsStreamBOut(Crabs* crabs);
+/* Streams a B-Output IUA. */
+LIB_MEMBER IUA CrabsStreamBOut(Crabs* crabs);
 
 /* Scans the BIn socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
@@ -173,10 +173,10 @@ LIB_MEMBER const Op* CrabsScanBIn(Crabs* crabs);  // , Portal* io);
 LIB_MEMBER BOL CrabsContains(Crabs* crabs, void* address);
 
 /* Pushes a header onto the scan stack.*/
-LIB_MEMBER const Op* CrabsScanHeader(Crabs* crabs, const SI4* header);
+LIB_MEMBER const Op* CrabsScanHeader(Crabs* crabs, const ISC* header);
 
 /* Gets the base address of the header stack. */
-LIB_MEMBER const SI4* CrabsHeaderStack(Crabs* crabs);
+LIB_MEMBER const ISC* CrabsHeaderStack(Crabs* crabs);
 
 /* Closes the current crabs and cues it for execution. */
 LIB_MEMBER void CrabsClose(Crabs* crabs);
@@ -188,24 +188,24 @@ LIB_MEMBER void CrabsCancel(Crabs* crabs);
 LIB_MEMBER void CrabsClear(Crabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
-LIB_MEMBER void CrabsRingBell(Crabs* crabs, const CH1* address = "");
+LIB_MEMBER void CrabsRingBell(Crabs* crabs, const CHA* address = "");
 
 /* Script Ack-back Op replies an ACK to a Bell Op. */
-LIB_MEMBER void CrabsAckBack(Crabs* crabs, const CH1* address = "");
+LIB_MEMBER void CrabsAckBack(Crabs* crabs, const CHA* address = "");
 
 /* Disconnects the expression. */
 LIB_MEMBER const Op* CrabsForceDisconnect(Crabs* crabs, Error error);
 
 /* Reads the Crabs args from the crabs->slot.
-inline const Op* CrabsArgs (Crabs* crabs, const SI4* params, void** args) {
-   const CH1* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
+inline const Op* CrabsArgs (Crabs* crabs, const ISC* params, void** args) {
+   const CHA* cursor = ArgsParse (crabs->args_cursor, crabs->args_end,
                                    params, args);
    if (!cursor) {
    }
 }*/
 
 /* Pops the args off the Crabs Args Stack. */
-inline const Op* CrabsArgs(Crabs* crabs, const SI4* params, void** args) {
+inline const Op* CrabsArgs(Crabs* crabs, const ISC* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
   Slot slot(CrabsBIn(crabs));
@@ -232,7 +232,7 @@ inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args) {
 @param crabs The resulting expression.
 @param op   The Operation with result B-Sequence header.
 @param args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(Crabs* crabs, const SI4* params, void** args) {
+inline const Op* CrabsResult(Crabs* crabs, const ISC* params, void** args) {
   if (!params) {
     return nullptr;
   }

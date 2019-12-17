@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /operand.inl
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 #if SEAM >= SCRIPT2_DIC
@@ -20,7 +20,7 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-const CH1* OperandName(Operand* operand) {
+const CHA* OperandName(Operand* operand) {
   A_ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   A_ASSERT(op);
@@ -34,11 +34,11 @@ UIW OperandCount(Operand* operand) {
   return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
 }
 
-CH4 OperandIndex(Operand* operand, CH1* origin, CH1* stop) {
+CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
   A_ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   A_ASSERT(op);
-  CH4 index = OpFirst(op), last = OpLast(op);
+  CHC index = OpFirst(op), last = OpLast(op);
   A_ASSERT(index);
   for (; index <= last; ++index) {
     if (STREquals(origin, stop, operand->Star(index, nullptr)->name)) {
@@ -76,19 +76,19 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
   }
   utf << "\nOperand         :" << op->name << Line('-', 80);
   for (; op_num <= last_op; ++op_num) {
-    op = operand->Star((CH4)op_num, nullptr);
+    op = operand->Star((CHC)op_num, nullptr);
     utf << "\nOp \'" << op_num << "\':" << op_num << ' ' << op << Line('-', 80);
   }
   return utf;
 }
 
-Slot& OperandQuery(Operand* root, const CH1* address, Slot& slot) {
+Slot& OperandQuery(Operand* root, const CHA* address, Slot& slot) {
   A_ASSERT(address);
   A_ASSERT(root);
 
-  SI4 index = *address++;
+  ISC index = *address++;
   const Op* op = root->Star(index, nullptr);
-  CH1 socket[1024];
+  CHA socket[1024];
   D_COUT(op->name)
   index = *address++;
   while (index) {

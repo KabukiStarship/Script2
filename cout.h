@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cout.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -26,30 +26,30 @@ class LIB_MEMBER COut {
   COut();
 
   /* Prints the given item to the COut stream. */
-  COut(CH1 item);
-  COut(const CH1* item);
+  COut(CHA item);
+  COut(const CHA* item);
 
 #if USING_UTF16 == YES_0
-  COut(CH2 item);
-  COut(const CH2* item);
+  COut(CHB item);
+  COut(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-  COut(CH4 item);
-  COut(const CH4* item);
+  COut(CHC item);
+  COut(const CHC* item);
 #endif
-  COut(SI1 item);
-  COut(UI1 item);
-  COut(SI2 item);
-  COut(UI2 item);
-  COut(SI4 item);
-  COut(UI4 item);
-  COut(SI8 item);
-  COut(UI8 item);
-#if USING_FP4 == YES_0
-  COut(FP4 item);
+  COut(ISA item);
+  COut(IUA item);
+  COut(ISB item);
+  COut(IUB item);
+  COut(ISC item);
+  COut(IUC item);
+  COut(ISD item);
+  COut(IUD item);
+#if USING_FPC == YES_0
+  COut(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  COut(FP8 item);
+#if USING_FPD == YES_0
+  COut(FPD item);
 #endif
   COut(Hexf item);
   COut(Binaryf item);
@@ -61,38 +61,38 @@ class LIB_MEMBER COut {
   COut(Charsf item);
 
   /* Prints the given items to the COut stream. */
-  COut(CH1 item, CH1 second_item);
-  COut(CH1 item, const CH1* second_item);
-  COut(const CH1* item, CH1 second_item);
-  COut(const CH1* item, const CH1* second_item);
-  COut(CH1 item, CH1 second_item, CH1 third_item);
-  COut(CH1 item, CH1 second_item, const CH1* third_item);
-  COut(const CH1* item, const CH1* second_item, CH1 third_item);
-  COut(const CH1* item, const CH1* second_item, const CH1* third_item);
+  COut(CHA item, CHA second_item);
+  COut(CHA item, const CHA* second_item);
+  COut(const CHA* item, CHA second_item);
+  COut(const CHA* item, const CHA* second_item);
+  COut(CHA item, CHA second_item, CHA third_item);
+  COut(CHA item, CHA second_item, const CHA* third_item);
+  COut(const CHA* item, const CHA* second_item, CHA third_item);
+  COut(const CHA* item, const CHA* second_item, const CHA* third_item);
 
   /* Returns reference to this. */
   COut& Star();
 
   /* Prints the given item to the stdout. */
-  COut& Print(CH1 item);
-  COut& Print(const CH1* item);
+  COut& Print(CHA item);
+  COut& Print(const CHA* item);
 #if USING_UTF16 == YES_0
-  COut& Print(CH2 item);
-  COut& Print(const CH2* item);
+  COut& Print(CHB item);
+  COut& Print(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-  COut& Print(CH4 item);
-  COut& Print(const CH4* item);
+  COut& Print(CHC item);
+  COut& Print(const CHC* item);
 #endif
-  COut& Print(SI4 item);
-  COut& Print(UI4 item);
-  COut& Print(SI8 item);
-  COut& Print(UI8 item);
-#if USING_FP4 == YES_0
-  COut& Print(FP4 item);
+  COut& Print(ISC item);
+  COut& Print(IUC item);
+  COut& Print(ISD item);
+  COut& Print(IUD item);
+#if USING_FPC == YES_0
+  COut& Print(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  COut& Print(FP8 item);
+#if USING_FPD == YES_0
+  COut& Print(FPD item);
 #endif
   COut& Print(Hexf& item);
   COut& Print(Binaryf& item);
@@ -107,71 +107,71 @@ class LIB_MEMBER COut {
   COut& NL();
 
   /* Prints a new line followed by the given item to the stdout. */
-  COut& NL(CH1 item);
-  COut& NL(const CH1* item);
+  COut& NL(CHA item);
+  COut& NL(const CHA* item);
 #if USING_UTF16 == YES_0
-  COut& NL(CH2 item);
-  COut& NL(const CH2* item);
+  COut& NL(CHB item);
+  COut& NL(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-  COut& NL(CH4 item);
-  COut& NL(const CH4* item);
+  COut& NL(CHC item);
+  COut& NL(const CHC* item);
 #endif
-  COut& NL(SI4 item);
-  COut& NL(UI4 item);
-  COut& NL(SI8 item);
-  COut& NL(UI8 item);
-#if USING_FP4 == YES_0
-  COut& NL(FP4 item);
+  COut& NL(ISC item);
+  COut& NL(IUC item);
+  COut& NL(ISD item);
+  COut& NL(IUD item);
+#if USING_FPC == YES_0
+  COut& NL(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  COut& NL(FP8 item);
+#if USING_FPD == YES_0
+  COut& NL(FPD item);
 #endif
 
   /* Stores the given item to the buffer and store the size. */
   COut& Hex(const void* item);
-  COut& Hex(const void* item, SIW size);
+  COut& Hex(const void* item, ISW size);
   COut& Hex(const void* item, const void* item_stop);
-  COut& Hex(SI1 item);
-  COut& Hex(UI1 item);
-  COut& Hex(SI2 item);
-  COut& Hex(UI2 item);
-  COut& Hex(SI4 item);
-  COut& Hex(UI4 item);
-  COut& Hex(SI8 item);
-  COut& Hex(UI8 item);
-#if USING_FP4 == YES_0
-  COut& Hex(FP4 item);
+  COut& Hex(ISA item);
+  COut& Hex(IUA item);
+  COut& Hex(ISB item);
+  COut& Hex(IUB item);
+  COut& Hex(ISC item);
+  COut& Hex(IUC item);
+  COut& Hex(ISD item);
+  COut& Hex(IUD item);
+#if USING_FPC == YES_0
+  COut& Hex(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  COut& Hex(FP8 item);
+#if USING_FPD == YES_0
+  COut& Hex(FPD item);
 #endif
 
   /* Stores the given item to the buffer and store the size. */
   COut& Binary(const void* item);
-  COut& Binary(const void* item, SIW size);
+  COut& Binary(const void* item, ISW size);
   COut& Binary(const void* item, const void* item_stop);
-  COut& Binary(SI1 item);
-  COut& Binary(UI1 item);
-  COut& Binary(SI2 item);
-  COut& Binary(UI2 item);
-  COut& Binary(SI4 item);
-  COut& Binary(UI4 item);
-  COut& Binary(SI8 item);
-  COut& Binary(UI8 item);
-#if USING_FP4 == YES_0
-  COut& Binary(FP4 item);
+  COut& Binary(ISA item);
+  COut& Binary(IUA item);
+  COut& Binary(ISB item);
+  COut& Binary(IUB item);
+  COut& Binary(ISC item);
+  COut& Binary(IUC item);
+  COut& Binary(ISD item);
+  COut& Binary(IUD item);
+#if USING_FPC == YES_0
+  COut& Binary(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  COut& Binary(FP8 item);
+#if USING_FPD == YES_0
+  COut& Binary(FPD item);
 #endif
 
-  SIN PrintAndCount(const CH1* string);
+  ISN PrintAndCount(const CHA* string);
 #if USING_UTF16 == YES_0
-  SIN PrintAndCount(const CH2* string);
+  ISN PrintAndCount(const CHB* string);
 #endif
 #if USING_UTF32 == YES_0
-  SIN PrintAndCount(const CH4* string);
+  ISN PrintAndCount(const CHC* string);
 #endif
 };
 
@@ -180,26 +180,26 @@ scope without delcaring COut cout. */
 inline COut CPrint() { return COut(); }
 
 /* Prints the given item to the COut. */
-COut CPrint(CH1 item);
-COut CPrint(const CH1* item);
+COut CPrint(CHA item);
+COut CPrint(const CHA* item);
 #if USING_UTF16 == YES_0
-COut CPrint(CH2 item);
-COut CPrint(const CH2* item);
+COut CPrint(CHB item);
+COut CPrint(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-COut CPrint(CH4 item);
-COut CPrint(const CH4* item);
+COut CPrint(CHC item);
+COut CPrint(const CHC* item);
 #endif
 
-COut CPrint(SI4 item);
-COut CPrint(UI4 item);
-COut CPrint(SI8 item);
-COut CPrint(UI8 item);
-#if USING_FP4 == YES_0
-COut CPrint(FP4 item);
+COut CPrint(ISC item);
+COut CPrint(IUC item);
+COut CPrint(ISD item);
+COut CPrint(IUD item);
+#if USING_FPC == YES_0
+COut CPrint(FPC item);
 #endif
-#if USING_FP8 == YES_0
-COut CPrint(FP8 item);
+#if USING_FPD == YES_0
+COut CPrint(FPD item);
 #endif
 COut CPrint(Hexf& item);
 COut CPrint(Binaryf& item);
@@ -212,26 +212,26 @@ COut CPrint(Indentf& item);
 }  // namespace _
 
 /* Prints the given item to the COut. */
-_::COut& operator<<(_::COut& o, CH1 item);
-_::COut& operator<<(_::COut& o, const CH1* item);
+_::COut& operator<<(_::COut& o, CHA item);
+_::COut& operator<<(_::COut& o, const CHA* item);
 
 #if USING_UTF16 == YES_0
-_::COut& operator<<(_::COut& o, CH2 item);
-_::COut& operator<<(_::COut& o, const CH2* item);
+_::COut& operator<<(_::COut& o, CHB item);
+_::COut& operator<<(_::COut& o, const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-_::COut& operator<<(_::COut& o, CH4 item);
-_::COut& operator<<(_::COut& o, const CH4* item);
+_::COut& operator<<(_::COut& o, CHC item);
+_::COut& operator<<(_::COut& o, const CHC* item);
 #endif
-_::COut& operator<<(_::COut& o, SI4 item);
-_::COut& operator<<(_::COut& o, UI4 item);
-_::COut& operator<<(_::COut& o, SI8 item);
-_::COut& operator<<(_::COut& o, UI8 item);
-#if USING_FP4 == YES_0
-_::COut& operator<<(_::COut& o, FP4 item);
+_::COut& operator<<(_::COut& o, ISC item);
+_::COut& operator<<(_::COut& o, IUC item);
+_::COut& operator<<(_::COut& o, ISD item);
+_::COut& operator<<(_::COut& o, IUD item);
+#if USING_FPC == YES_0
+_::COut& operator<<(_::COut& o, FPC item);
 #endif
-#if USING_FP8 == YES_0
-_::COut& operator<<(_::COut& o, FP8 item);
+#if USING_FPD == YES_0
+_::COut& operator<<(_::COut& o, FPD item);
 #endif
 _::COut& operator<<(_::COut& o, _::Hexf item);
 _::COut& operator<<(_::COut& o, _::Binaryf item);

@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /typevalue.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -16,13 +16,13 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Gets the string representations of the given ASCII POD Type 0-31. */
-const CH1* STRTypes();
+const CHA* STRTypes();
 
 /* string that reads "true". */
-LIB_MEMBER const CH1* STRTrue();
+LIB_MEMBER const CHA* STRTrue();
 
 /* string that reads "false". */
-LIB_MEMBER const CH1* STRFalse();
+LIB_MEMBER const CHA* STRFalse();
 
 /* An ASCII Type-Value tuple.
 An TypeValue can only work with up to two CPU ALU words because when a CPU
@@ -43,30 +43,30 @@ class LIB_MEMBER TypeValue {
   explicit TypeValue(void* item);
   explicit TypeValue(const void* item);
 #if USING_UTF8 == YES_0
-  explicit TypeValue(CH1 item);
-  explicit TypeValue(const CH1* item);
+  explicit TypeValue(CHA item);
+  explicit TypeValue(const CHA* item);
 #endif
 #if USING_UTF16 == YES_0
-  explicit TypeValue(CH2 item);
-  explicit TypeValue(const CH2* item);
+  explicit TypeValue(CHB item);
+  explicit TypeValue(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-  explicit TypeValue(CH4 item);
-  explicit TypeValue(const CH4* item);
+  explicit TypeValue(CHC item);
+  explicit TypeValue(const CHC* item);
 #endif
-  explicit TypeValue(SI1 item);
-  explicit TypeValue(UI1 item);
-  explicit TypeValue(SI2 item);
-  explicit TypeValue(UI2 item);
-  explicit TypeValue(SI4 item);
-  explicit TypeValue(UI4 item);
-  explicit TypeValue(SI8 item);
-  explicit TypeValue(UI8 item);
-#if USING_FP4 == YES_0
-  explicit TypeValue(FP4 item);
+  explicit TypeValue(ISA item);
+  explicit TypeValue(IUA item);
+  explicit TypeValue(ISB item);
+  explicit TypeValue(IUB item);
+  explicit TypeValue(ISC item);
+  explicit TypeValue(IUC item);
+  explicit TypeValue(ISD item);
+  explicit TypeValue(IUD item);
+#if USING_FPC == YES_0
+  explicit TypeValue(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  explicit TypeValue(FP8 item);
+#if USING_FPD == YES_0
+  explicit TypeValue(FPD item);
 #endif
   TypeValue(const void* item, DTW type);
 
@@ -81,14 +81,14 @@ class LIB_MEMBER TypeValue {
 
   /* Gets the value as the return type. */
   void* ToPTR();
-  CH1* ToST1();
-  CH2* ToST2();
-  CH4* ToST3();
-  UI1 ToUI1();
-  UI2 ToUI2();
+  CHA* ToSTA();
+  CHB* ToSTB();
+  CHC* ToSTC();
+  IUA ToUIA();
+  IUB ToUI2();
   UIN ToUIN();
-  UI4 ToUI4();
-  UI8 ToUI8();
+  IUC ToUI4();
+  IUD ToUI8();
 
   /* Gets the first word of the word_. */
   UIW Word();
@@ -110,31 +110,31 @@ class LIB_MEMBER TypeValue {
 
   /*Sets the word_ to the given item and updates the type. */
 #if USING_UTF8 == YES_0
-  void Set(CH1 item);
-  void Set(const CH1* item);
+  void Set(CHA item);
+  void Set(const CHA* item);
 #endif
 #if USING_UTF16 == YES_0
-  void Set(CH2 item);
-  void Set(const CH2* item);
+  void Set(CHB item);
+  void Set(const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-  void Set(const CH4* item);
-  void Set(CH4 item);
+  void Set(const CHC* item);
+  void Set(CHC item);
 #endif
-  void Set(SI1 item);
-  void Set(UI1 item);
-  void Set(SI2 item);
-  void Set(UI2 item);
+  void Set(ISA item);
+  void Set(IUA item);
+  void Set(ISB item);
+  void Set(IUB item);
   void Set(BOL item);
-  void Set(SI4 item);
-  void Set(UI4 item);
-  void Set(SI8 item);
-  void Set(UI8 item);
-#if USING_FP4 == YES_0
-  void Set(FP4 item);
+  void Set(ISC item);
+  void Set(IUC item);
+  void Set(ISD item);
+  void Set(IUD item);
+#if USING_FPC == YES_0
+  void Set(FPC item);
 #endif
-#if USING_FP8 == YES_0
-  void Set(FP8 item);
+#if USING_FPD == YES_0
+  void Set(FPD item);
 #endif
 };
 

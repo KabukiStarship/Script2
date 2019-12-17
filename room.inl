@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /room.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 #if SEAM >= SCRIPT2_ROOM
@@ -23,26 +23,26 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-const CH1** RoomStateTexts() {
-  static const CH1* states[] = {"Initializing", "Waking up", "Running",
+const CHA** RoomStateTexts() {
+  static const CHA* states[] = {"Initializing", "Waking up", "Running",
                                 "Going to sleep", "Exiting"};
   return states;
 }
 
-const CH1** RequestTexts() {
-  static const CH1* RequestTexts[] = {"Open door", "Close door",
+const CHA** RequestTexts() {
+  static const CHA* RequestTexts[] = {"Open door", "Close door",
                                       "Invalid request"};
 
   return RequestTexts;
 }
 
-const CH1* RequestText(Request r) {
+const CHA* RequestText(Request r) {
   // if (r < 0 || r >= InvalidRequest)
   if (r >= InvalidRequest) return RequestTexts()[InvalidRequest];
   return RequestTexts()[r];
 }
 
-Room::Room(const CH1* room_name, SI4 state_count)
+Room::Room(const CHA* room_name, ISC state_count)
     : state_(1),
       state_count_(state_count < 1 ? 1 : state_count),
       name_(!room_name ? "Unnamed" : room_name),
@@ -53,11 +53,11 @@ Room::Room(const CH1* room_name, SI4 state_count)
 
 Room::~Room() {}
 
-SI4 Room::GetState() { return state_; }
+ISC Room::GetState() { return state_; }
 
-SI4 Room::GetStateCount() { return state_count_; }
+ISC Room::GetStateCount() { return state_count_; }
 
-BOL Room::SetState(SI4 new_state) {
+BOL Room::SetState(ISC new_state) {
   if (new_state < 0) {
     return false;
   }
@@ -68,9 +68,9 @@ BOL Room::SetState(SI4 new_state) {
   return true;
 }
 
-const CH1* Room::GetRoomName() { return name_; }
+const CHA* Room::GetRoomName() { return name_; }
 
-BOL Room::SetRoomName(const CH1* name) {
+BOL Room::SetRoomName(const CHA* name) {
   if (!name) {
     return false;
   }
@@ -86,7 +86,7 @@ void Room::ClearLog() {}
 void Room::ProcessLog() {}
 
 void Room::PrintErrors(BOut* bout) {
-  // SI4 errorHeader[] = { 0 };
+  // ISC errorHeader[] = { 0 };
   // return a.prints (errorHeader);
 }
 
@@ -115,11 +115,11 @@ const Op* Room::Loop() { return 0; }
 
 BOL Room::IsOn() { return true; }
 
-SI4 Room::Main(const CH1** args, SI4 args_count) {
+ISC Room::Main(const CHA** args, ISC args_count) {
   const Op* result = nullptr;
   D_COUT("\nInitializing Chinese Room with " << args_count << " args:");
 #if D_THIS
-  for (SI4 i = 0; i < args_count; ++i) {
+  for (ISC i = 0; i < args_count; ++i) {
     D_COUT('\n' << i << ":\"" << args[i] << '\"');
   }
 #endif
@@ -141,9 +141,9 @@ SI4 Room::Main(const CH1** args, SI4 args_count) {
   return 1;
 }
 
-CH1 Room::CommandNext() { return 0; }
+CHA Room::CommandNext() { return 0; }
 
-const Op* Room::Star(CH4 index, Crabs* crabs) {
+const Op* Room::Star(CHC index, Crabs* crabs) {
   static const Op kThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 
@@ -160,24 +160,24 @@ int_t Room::WallCount() { return walls_->count; }
 Wall* Room::GetWall(int_t wall_number) {
   if (wall_number < 0) return nullptr;
   if (wall_number >= walls_->count) return nullptr;
-  return TStackGet<Wall*, SI4, int_t>(walls_, wall_number);
+  return TStackGet<Wall*, ISC, int_t>(walls_, wall_number);
 }
 
 Wall* Room::AddWall(Wall* new_wall) {
   if (new_wall == nullptr) return nullptr;
   if (walls_->count >= walls_->count_max) return nullptr;
-  TStackPush<Wall*>(walls_, new_wall);
+  TStackInsert<Wall*>(walls_, new_wall);
   return new_wall;
 }
 
 BOL Room::RemoveWall(int_t wall_number) {
-  return TStackRemove<Wall*, SI4, int_t>(walls_, wall_number);
+  return TStackRemove<Wall*, ISC, int_t>(walls_, wall_number);
 }
 
 UIW Room::GetSizeBytes() {
   UIW count = kRoomFloorSize;
   for (int_t i = 0; i < walls_->count; ++i) {
-    count += TStackGet<Wall*, SI4, int_t>(walls_, i)->GetSizeBytes();
+    count += TStackGet<Wall*, ISC, int_t>(walls_, i)->GetSizeBytes();
   }
   // @todo Add all memory we used in bytes here.
   return count;

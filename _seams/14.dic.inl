@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/14.dic.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_DIC
 #include "../dic.hpp"
@@ -17,7 +17,7 @@ using namespace _;
 #endif
 
 namespace script2 {
-template <typename SIZ = SIN, typename UIZ = UIN, typename SIY = SIG,
+template <typename ISZ = ISN, typename IUZ = UIN, typename ISY = ISM,
           typename CHT = CHR>
 static void TestDic() {
 #if SEAM >= SCRIPT2_DIC
@@ -30,21 +30,21 @@ static void TestDic() {
 #endif
 
 namespace script2 {
-const CH1* Dic(const CH1* args) {
+const CHA* Dic(const CHA* args) {
 #if SEAM >= SCRIPT2_DIC
   A_TEST_BEGIN;
-  TestDic<SI2, UI2, SI1, CH1>();
-  TestDic<SI2, UI2, SI1, CH2>();
-  TestDic<SI2, UI2, SI1, CH4>();
+  TestDic<ISB, IUB, ISA, CHA>();
+  TestDic<ISB, IUB, ISA, CHB>();
+  TestDic<ISB, IUB, ISA, CHC>();
 #if USING_UTF16 == YES_0
-  TestDic<SI4, UI4, SI2, CH1>();
-  TestDic<SI4, UI4, SI2, CH2>();
-  TestDic<SI4, UI4, SI2, CH4>();
+  TestDic<ISC, IUC, ISB, CHA>();
+  TestDic<ISC, IUC, ISB, CHB>();
+  TestDic<ISC, IUC, ISB, CHC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestDic<SI8, UI8, SI2, CH1>();
-  TestDic<SI8, UI8, SI2, CH2>();
-  TestDic<SI8, UI8, SI2, CH4>();
+  TestDic<ISD, IUD, ISB, CHA>();
+  TestDic<ISD, IUD, ISB, CHB>();
+  TestDic<ISD, IUD, ISB, CHC>();
 #endif
 #endif
   return nullptr;

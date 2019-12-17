@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /stringf.hpp
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 /* There is a different set of string printing utilities because it's a little
 faster. */
@@ -22,28 +22,28 @@ faster. */
 
 namespace _ {
 
-inline SIN STRLength(UI1 value) {
+inline ISN STRLength(IUA value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   return 3;
 }
 
-inline SIN STRLength(SI1 value) {
-  if (value < 0) return STRLength((UI1)-value) + 1;
-  return STRLength((UI1)value);
+inline ISN STRLength(ISA value) {
+  if (value < 0) return STRLength((IUA)-value) + 1;
+  return STRLength((IUA)value);
 }
 
 /* Compares the two Strings up to the given delimiter.
 @param delimiter Delimiters in Script2 are equal to or less than.
 @return 0 if the Strings are equal or a non-zero delta upon failure. */
 template <typename CHT = CHR>
-SIN TSTRCompare(const CHT* string, const CHT* other_String, CHT delimiter = 0) {
+ISN TSTRCompare(const CHT* string, const CHT* other_String, CHT delimiter = 0) {
   if (!string || !other_String) return 0;
 
-  SIN a, b, result;
+  ISN a, b, result;
   if (!string) {
     if (!other_String) return 0;
-    return SIN(*string);
+    return ISN(*string);
   }
   if (!other_String) return 0 - *string;
 
@@ -63,7 +63,7 @@ SIN TSTRCompare(const CHT* string, const CHT* other_String, CHT delimiter = 0) {
     if (result) {
       return result;
     }
-    if (a <= (SI4)delimiter) {
+    if (a <= (ISC)delimiter) {
       return result;
     }
     ++string;
@@ -71,121 +71,133 @@ SIN TSTRCompare(const CHT* string, const CHT* other_String, CHT delimiter = 0) {
     a = *string;
     b = *other_String;
   }
-  if (a > (SI4)delimiter) {
+  if (a > (ISC)delimiter) {
     return b - a;
   }
   return 0;
 }
 
-/* Scrolls over to the next FP8 quote mark.
+/* Scrolls over to the next FPD quote mark.
 @warning This function is only safe to use on ROM Strings with a nil-term
-CH1. */
+CHA. */
 template <typename CHT = CHR>
-inline const CHT* TSTREnd(const CHT* string, CH1 delimiter = 0) {
-  while (*string++ != delimiter)
+inline const CHT* TSTREnd(const CHT* string) {
+  while (*string++)
     ;
   return string - 1;
 }
 
-/* Scrolls over to the next FP8 quote mark.
+/* Scrolls over to the next FPD quote mark.
 @warning This function is only safe to use on ROM Strings with a nil-term
-CH1. */
+CHA. */
 template <typename CHT = CHR>
-inline CHT* TSTREnd(CHT* string, CHT delimiter = 0) {
+inline CHT* TSTREnd(CHT* string) {
   return const_cast<CHT*>(
-      TSTREnd<CHT>(reinterpret_cast<const CHT*>(string), delimiter));
+      TSTREnd<CHT>(reinterpret_cast<const CHT*>(string)));
 }
 
-/* Gets the length of the given CH1.
-@return  Returns -1 if the text CH1 is nil.
-@warning This function is only safe to use on ROM Strings with a nil-term
-CH1. */
-template <typename CHT = CHR, typename SIZ = SIN>
-SIZ TSTRLength(const CHT* string) {
-  return (SIZ)(TSTREnd<CHT>(string) - string);
+/* Finds the last instance of the given token character in the string.. */
+template <typename CHT = CHR>
+inline const CHT* TSTRFindLast(const CHT* string, CHA token) {
+  CHT* last_instance = nullptr;
+  CHT c = *string;
+  while (c) {
+    if (c == token) last_instance = string;
+    c = *(++string);
+  }
+  return last_instance;
 }
 
-/* Gets the length of the given CH1.
-@return  Returns -1 if the text CH1 is nil.
+/* Gets the length of the given CHA.
+@return  Returns -1 if the text CHA is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
-CH1. */
-template <typename CHT = CHR, typename SIZ = SIN>
-inline SIZ TSTRLength(CHT* string) {
+CHA. */
+template <typename CHT = CHR, typename ISZ = ISN>
+ISZ TSTRLength(const CHT* string) {
+  return (ISZ)(TSTREnd<CHT>(string) - string);
+}
+
+/* Gets the length of the given CHA.
+@return  Returns -1 if the text CHA is nil.
+@warning This function is only safe to use on ROM Strings with a nil-term
+CHA. */
+template <typename CHT = CHR, typename ISZ = ISN>
+inline ISZ TSTRLength(CHT* string) {
   return TSTRLength<CHT>(reinterpret_cast<const CHT*>(string));
 }
 
 /* Scans a item from the string.
 @pre You must check if the string is nil before calling. */
-inline const CH1* SScan(const CH1* string, CH1& item) {
+inline const CHA* SScan(const CHA* string, CHA& item) {
   item = *string++;
   return string;
 }
-inline CH1* SScan(CH1* string, CH1& item) {
-  return const_cast<CH1*>(SScan(const_cast<const CH1*>(string), item));
+inline CHA* SScan(CHA* string, CHA& item) {
+  return const_cast<CHA*>(SScan(const_cast<const CHA*>(string), item));
 }
 
-inline const CH1* SScan(const CH1* string, CH2& item) {
-  CH4 result;
+inline const CHA* SScan(const CHA* string, CHB& item) {
+  CHC result;
   string = SScan(string, result);
   result = item;
 }
-inline CH1* SScan(CH1* string, CH2& item) {
-  return const_cast<CH1*>(SScan(const_cast<const CH1*>(string), item));
+inline CHA* SScan(CHA* string, CHB& item) {
+  return const_cast<CHA*>(SScan(const_cast<const CHA*>(string), item));
 }
 
-inline CH1* SScan(CH1* string, CH4& item) {
-  const CH1* const_string = const_cast<const CH1*>(string);
-  return const_cast<CH1*>(SScan(const_string, item));
+inline CHA* SScan(CHA* string, CHC& item) {
+  const CHA* const_string = const_cast<const CHA*>(string);
+  return const_cast<CHA*>(SScan(const_string, item));
 }
 
 #if USING_UTF16 == YES_0
-inline const CH2* SScan(const CH2* string, CH1& item) {
-  item = CH1(*string++);
+inline const CHB* SScan(const CHB* string, CHA& item) {
+  item = CHA(*string++);
   return string;
 }
-inline CH2* SScan(CH2* string, CH1& item) {
-  return const_cast<CH2*>(SScan(const_cast<const CH2*>(string), item));
+inline CHB* SScan(CHB* string, CHA& item) {
+  return const_cast<CHB*>(SScan(const_cast<const CHB*>(string), item));
 }
-inline const CH2* SScan(const CH2* string, CH2& c) {
+inline const CHB* SScan(const CHB* string, CHB& c) {
   c = *string++;
   return string;
 }
-inline CH2* SScan(CH2* string, CH2& item) {
-  return const_cast<CH2*>(SScan(const_cast<const CH2*>(string), item));
+inline CHB* SScan(CHB* string, CHB& item) {
+  return const_cast<CHB*>(SScan(const_cast<const CHB*>(string), item));
 }
-inline CH2* SScan(CH2* string, CH4& item) {
-  return const_cast<CH2*>(SScan(const_cast<const CH2*>(string), item));
+inline CHB* SScan(CHB* string, CHC& item) {
+  return const_cast<CHB*>(SScan(const_cast<const CHB*>(string), item));
 }
 #endif
 
 #if USING_UTF32 == YES_0
-// CH1* SScan (CH2* string, CH2& item) and
-// CH1* SScan (CH1* string, CH4& item) in cstring.h
+// CHA* SScan (CHB* string, CHB& item) and
+// CHA* SScan (CHA* string, CHC& item) in cstring.h
 
-inline const CH4* SScan(const CH4* string, CH1& result) {
-  result = CH1(*string++);
+inline const CHC* SScan(const CHC* string, CHA& result) {
+  result = CHA(*string++);
   return string;
 }
-inline CH4* SScan(CH4* string, CH1& item) {
-  const CH4* const_string = const_cast<const CH4*>(string);
-  return const_cast<CH4*>(SScan(const_string, item));
+inline CHC* SScan(CHC* string, CHA& item) {
+  const CHC* const_string = const_cast<const CHC*>(string);
+  return const_cast<CHC*>(SScan(const_string, item));
 }
 
-inline const CH4* SScan(const CH4* string, CH2& result) {
-  result = CH2(*string++);
+inline const CHC* SScan(const CHC* string, CHB& result) {
+  result = CHB(*string++);
   return string;
 }
-inline CH4* SScan(CH4* string, CH2& item) {
-  const CH4* const_string = const_cast<const CH4*>(string);
-  return const_cast<CH4*>(SScan(const_string, item));
+inline CHC* SScan(CHC* string, CHB& item) {
+  const CHC* const_string = const_cast<const CHC*>(string);
+  return const_cast<CHC*>(SScan(const_string, item));
 }
-inline const CH4* SScan(const CH4* string, CH4& result) {
+inline const CHC* SScan(const CHC* string, CHC& result) {
   result = *string++;
   return string;
 }
-inline CH4* SScan(CH4* string, CH4& item) {
-  const CH4* const_string = const_cast<const CH4*>(string);
-  return const_cast<CH4*>(SScan(const_string, item));
+inline CHC* SScan(CHC* string, CHC& item) {
+  const CHC* const_string = const_cast<const CHC*>(string);
+  return const_cast<CHC*>(SScan(const_string, item));
 }
 #endif
 
@@ -199,9 +211,9 @@ inline CHT TToLower(CHT c) {
   return c;
 }
 
-inline CH1 ToLower(CH1 value) { return TToLower<CH1>(value); }
-inline CH2 ToLower(CH2 value) { return TToLower<CH2>(value); }
-inline CH4 ToLower(CH4 value) { return TToLower<CH4>(value); }
+inline CHA ToLower(CHA value) { return TToLower<CHA>(value); }
+inline CHB ToLower(CHB value) { return TToLower<CHB>(value); }
+inline CHC ToLower(CHC value) { return TToLower<CHC>(value); }
 
 /* Checks if the given item is whitespace. */
 template <typename CHT = CHR>
@@ -210,10 +222,10 @@ inline BOL TIsWhitespace(CHT item) {
 }
 
 template <typename CHT>
-SIN TIsYesNo(const CHT* string) {
+ISN TIsYesNo(const CHT* string) {
   if (!string) return 0;
   CHT c = TToLower<CHT>(*string++);
-  SIN result;
+  ISN result;
   if (c == 'y')
     result = 1;
   else if (c == 'n')
@@ -223,13 +235,13 @@ SIN TIsYesNo(const CHT* string) {
   c = *string++;
   if (TIsWhitespace<CHT>(c)) return result;
   c = TToLower<CHT>(c);
-  if (c == 'o') return -(SIN)TIsWhitespace<CHT>(*string++);
+  if (c == 'o') return -(ISN)TIsWhitespace<CHT>(*string++);
   if (TToLower<CHT>(*string++) != 'e') return 0;
   if (TToLower<CHT>(*string++) != 's') return 0;
-  return (SIN)TIsWhitespace<CHT>(*string++);
+  return (ISN)TIsWhitespace<CHT>(*string++);
 }
 
-/* Checks if the given CH1 is a digit of a number_.
+/* Checks if the given CHA is a digit of a number_.
 @return True if it is a digit. */
 template <typename CHT = CHR>
 BOL TIsDigit(CHT c) {
@@ -240,7 +252,7 @@ BOL TIsDigit(CHT c) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename CHT = CHR>
+template <typename SI = ISW, typename UI = UIW, typename CHT = CHR>
 const CHT* TScanSigned(const CHT* string, SI& item) {
   if (!string) return nullptr;
   SI sign;
@@ -279,7 +291,7 @@ const CHT* TScanSigned(const CHT* string, SI& item) {
 @return Nil if there is no UI to scan.
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
-template <typename SI = SIW, typename UI = UIW, typename CHT = CHR>
+template <typename SI = ISW, typename UI = UIW, typename CHT = CHR>
 CHT* TScanSigned(CHT* string, SI& item) {
   const CHT* ptr = reinterpret_cast<const CHT*>(string);
   return const_cast<CHT*>(TScanSigned<SI, UI, CHT>(ptr, item));
@@ -290,36 +302,36 @@ CHT* TScanSigned(CHT* string, SI& item) {
 @param socket The beginning of the socket.
 @param item The SI to write the scanned SI. */
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, SI1& item) {
-  return TScanSigned<SI1, UI1, CHT>(string, item);
+const CHT* TSScan(const CHT* string, ISA& item) {
+  return TScanSigned<ISA, IUA, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, SI1& item) {
-  return TScanSigned<SI1, UI1, CHT>(string, item);
+CHT* TSScan(CHT* string, ISA& item) {
+  return TScanSigned<ISA, IUA, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, SI2& item) {
-  return TScanSigned<SI2, UI2, CHT>(string, item);
+const CHT* TSScan(const CHT* string, ISB& item) {
+  return TScanSigned<ISB, IUB, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, SI2& item) {
-  return TScanSigned<SI2, UI2, CHT>(string, item);
+CHT* TSScan(CHT* string, ISB& item) {
+  return TScanSigned<ISB, IUB, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, SI4& item) {
-  return TScanSigned<SI4, UI4, CHT>(string, item);
+const CHT* TSScan(const CHT* string, ISC& item) {
+  return TScanSigned<ISC, IUC, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, SI4& item) {
-  return TScanSigned<SI4, UI4, CHT>(string, item);
+CHT* TSScan(CHT* string, ISC& item) {
+  return TScanSigned<ISC, IUC, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, SI8& item) {
-  return TScanSigned<SI8, UI8, CHT>(string, item);
+const CHT* TSScan(const CHT* string, ISD& item) {
+  return TScanSigned<ISD, IUD, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, SI8& item) {
-  return TScanSigned<SI8, UI8, CHT>(string, item);
+CHT* TSScan(CHT* string, ISD& item) {
+  return TScanSigned<ISD, IUD, CHT>(string, item);
 }
 
 /* Scans the given socket for an unsigned integer (UI).
@@ -367,36 +379,36 @@ CHT* TScanUnsigned(CHT* string, UI& item) {
 /* Scans item from the string.
 @return Nil upon failure. */
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, UI1& item) {
-  return TScanUnsigned<UI1, CHT>(string, item);
+const CHT* TSScan(const CHT* string, IUA& item) {
+  return TScanUnsigned<IUA, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, UI1& item) {
-  return TScanUnsigned<UI1, CHT>(string, item);
+CHT* TSScan(CHT* string, IUA& item) {
+  return TScanUnsigned<IUA, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, UI2& item) {
-  return TScanUnsigned<UI2, CHT>(string, item);
+const CHT* TSScan(const CHT* string, IUB& item) {
+  return TScanUnsigned<IUB, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, UI2& item) {
-  return TScanUnsigned<UI2, CHT>(string, item);
+CHT* TSScan(CHT* string, IUB& item) {
+  return TScanUnsigned<IUB, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, UI4& item) {
-  return TScanUnsigned<UI4, CHT>(string, item);
+const CHT* TSScan(const CHT* string, IUC& item) {
+  return TScanUnsigned<IUC, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, UI4& item) {
-  return TScanUnsigned<UI4, CHT>(string, item);
+CHT* TSScan(CHT* string, IUC& item) {
+  return TScanUnsigned<IUC, CHT>(string, item);
 }
 template <typename CHT = CHR>
-const CHT* TSScan(const CHT* string, UI8& item) {
-  return TScanUnsigned<UI8, CHT>(string, item);
+const CHT* TSScan(const CHT* string, IUD& item) {
+  return TScanUnsigned<IUD, CHT>(string, item);
 }
 template <typename CHT = CHR>
-CHT* TSScan(CHT* string, UI8& item) {
-  return TScanUnsigned<UI8, CHT>(string, item);
+CHT* TSScan(CHT* string, IUD& item) {
+  return TScanUnsigned<IUD, CHT>(string, item);
 }
 
 /* Prints a Unicode CHT to the given socket.
@@ -405,7 +417,7 @@ CHT* TSScan(CHT* string, UI8& item) {
 @param count  The element count.
 @param item   The string to print. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* string, CHT* stop, CH1 item) {
+CHT* TSPrint(CHT* string, CHT* stop, CHA item) {
   if (!string || string >= stop) return nullptr;
   *string++ = item;
   *string = 0;
@@ -417,7 +429,7 @@ CHT* TSPrint(CHT* string, CHT* stop, CH1 item) {
 @param count  The element count.
 @param item   The string to print. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* string, SIW count, CH1 item) {
+CHT* TSPrint(CHT* string, ISW count, CHA item) {
   return SPrint(string, string + count - 1, item);
 }
 
@@ -427,7 +439,7 @@ CHT* TSPrint(CHT* string, SIW count, CH1 item) {
 @param count  The element count.
 @param item   The string to print. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* string, SIW count, CH2 item) {
+CHT* TSPrint(CHT* string, ISW count, CHB item) {
   return TSPrint<CHT>(string, string + count - 1, item);
 }
 
@@ -436,70 +448,70 @@ CHT* TSPrint(CHT* string, SIW count, CH2 item) {
 @param count  The number of Chars in the string buffer.
 @param item   The string to print. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* string, SIW count, CH4 item) {
+CHT* TSPrint(CHT* string, ISW count, CHC item) {
   return TSPrint<CHT>(string, string + count - 1, item);
 }
-inline CH1* SPrint(CH1* string, CH1* stop, CH1 item) {
+inline CHA* SPrint(CHA* string, CHA* stop, CHA item) {
   if (!string || string >= stop) return nullptr;
   *string++ = item;
   *string = 0;
   return string;
 }
 
-inline CH1* SPrint(CH1* string, SIW size, CH1 item) {
+inline CHA* SPrint(CHA* string, ISW size, CHA item) {
   return SPrint(string, string + size - 1, item);
 }
-inline CH1* SPrint(CH1* string, SIW size, CH2 item) {
+inline CHA* SPrint(CHA* string, ISW size, CHB item) {
   return SPrint(string, string + size - 1, item);
 }
-inline CH1* SPrint(CH1* string, SIW size, CH4 item) {
+inline CHA* SPrint(CHA* string, ISW size, CHC item) {
   return SPrint(string, string + size - 1, item);
 }
 
 #if USING_UTF16 == YES_0
-inline CH2* SPrint(CH2* string, CH2* stop, CH2 item) {
+inline CHB* SPrint(CHB* string, CHB* stop, CHB item) {
   if (!string || string >= stop) return nullptr;
   *string++ = item;
   *string = 0;
   return string;
 }
-inline CH2* SPrint(CH2* string, CH2* stop, CH1 item) {
-  return SPrint(string, stop, CH2(item));
+inline CHB* SPrint(CHB* string, CHB* stop, CHA item) {
+  return SPrint(string, stop, CHB(item));
 }
-inline CH2* SPrint(CH2* string, SIW size, CH1 item) {
+inline CHB* SPrint(CHB* string, ISW size, CHA item) {
   return SPrint(string, string + size - 1, item);
 }
-inline CH2* SPrint(CH2* string, SIW size, CH2 item) {
+inline CHB* SPrint(CHB* string, ISW size, CHB item) {
   return SPrint(string, string + size - 1, item);
 }
-inline CH2* SPrint(CH2* string, SIW size, CH4 item) {
+inline CHB* SPrint(CHB* string, ISW size, CHC item) {
   return SPrint(string, string + size - 1, item);
 }
 
 #endif  // #if USING_UTF16 == YES_0
 
 #if USING_UTF32 == YES_0
-inline CH4* SPrint(CH4* string, CH4* stop, CH4 item) {
+inline CHC* SPrint(CHC* string, CHC* stop, CHC item) {
   if (!string || string >= stop) return nullptr;
   *string++ = item;
   *string = 0;
   return string;
 }
-inline CH4* SPrint(CH4* string, SIW size, CH4 item) {
+inline CHC* SPrint(CHC* string, ISW size, CHC item) {
   return SPrint(string, string + size - 1, item);
 }
-inline CH4* SPrint(CH4* string, CH4* stop, CH1 item) {
-  return SPrint(string, stop, CH4(item));
+inline CHC* SPrint(CHC* string, CHC* stop, CHA item) {
+  return SPrint(string, stop, CHC(item));
 }
-inline CH4* SPrint(CH4* string, SIW size, CH1 item) {
-  return SPrint(string, size, CH4(item));
+inline CHC* SPrint(CHC* string, ISW size, CHA item) {
+  return SPrint(string, size, CHC(item));
 }
 
-inline CH4* SPrint(CH4* string, SIW size, CH2 item) {
-  return SPrint(string, size, CH4(item));
+inline CHC* SPrint(CHC* string, ISW size, CHB item) {
+  return SPrint(string, size, CHC(item));
 }
-inline CH4* SPrint(CH4* string, CH4* stop, CH2 item) {
-  return SPrint(string, stop, CH4(item));
+inline CHC* SPrint(CHC* string, CHC* stop, CHB item) {
+  return SPrint(string, stop, CHC(item));
 }
 
 #endif  //< USING_UTF32 == YES_0
@@ -513,7 +525,7 @@ template <typename CHX, typename CHY>
 CHX* TSPrintString(CHX* string, CHX* stop, const CHY* item) {
   if (!string || !item) return nullptr;
 
-  CHA c;
+  CHL c;
   item = SScan(item, c);
   while (c) {
     string = SPrint(string, stop, c);
@@ -525,8 +537,8 @@ CHX* TSPrintString(CHX* string, CHX* stop, const CHY* item) {
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, CHT* stop, const CH1* item) {
-  return TSPrintString<CHT, CH1>(start, stop, item);
+inline CHT* TSPrint(CHT* start, CHT* stop, const CHA* item) {
+  return TSPrintString<CHT, CHA>(start, stop, item);
 }
 
 #if USING_UTF16 == YES_0
@@ -538,11 +550,11 @@ inline CHT* TSPrint(CHT* start, CHT* stop, const CH1* item) {
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename CHT = CHR>
-CHT* TSPrintString(CHT* string, CHT* stop, const CH2* item) {
-  return TSPrintString<CHT, CH2>(string, stop, item);
+CHT* TSPrintString(CHT* string, CHT* stop, const CHB* item) {
+  return TSPrintString<CHT, CHB>(string, stop, item);
 }
 template <typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, CHT* stop, const CH2* item) {
+inline CHT* TSPrint(CHT* start, CHT* stop, const CHB* item) {
   return TSPrintString<CHT>(start, stop, item);
 }
 #endif
@@ -556,12 +568,12 @@ inline CHT* TSPrint(CHT* start, CHT* stop, const CH2* item) {
  @warning This algorithm is designed to fail if the socket is not a valid socket
  with one or more bytes in it, or if item is nil. */
 template <typename CHT = CHR>
-CHT* TSPrintString(CHT* start, CHT* stop, const CH4* item) {
-  return TSPrintString<CHT, CH4>(start, stop, item);
+CHT* TSPrintString(CHT* start, CHT* stop, const CHC* item) {
+  return TSPrintString<CHT, CHC>(start, stop, item);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, CHT* stop, const CH4* item) {
+inline CHT* TSPrint(CHT* start, CHT* stop, const CHC* item) {
   return TSPrintString<CHT>(start, stop, item);
 }
 #endif
@@ -574,7 +586,7 @@ inline CHT* TSPrint(CHT* start, CHT* stop, const CH4* item) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, SIW size, const CH1* item) {
+inline CHT* TSPrint(CHT* start, ISW size, const CHA* item) {
   return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
@@ -586,7 +598,7 @@ inline CHT* TSPrint(CHT* start, SIW size, const CH1* item) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* start, SIW size, const CH2* item) {
+CHT* TSPrint(CHT* start, ISW size, const CHB* item) {
   return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
@@ -598,14 +610,27 @@ CHT* TSPrint(CHT* start, SIW size, const CH2* item) {
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it, or if string is nil. */
 template <typename CHT = CHR>
-CHT* TSPrint(CHT* start, SIW size, const CH4* item) {
+CHT* TSPrint(CHT* start, ISW size, const CHC* item) {
   return TSPrintString<CHT>(start, start + size - 1, item);
+}
+
+template <typename CHT = CHR>
+CHT* TSConcat(CHT* start, CHT* stop, const CHT* item) {
+  if (!start) return;
+  return TSPrint<CHT*>(TSTREnd<CHT>(start), stop, item);
+
+}
+
+template<typename CHT = CHR>
+CHT* TSConcat(CHT* start, ISW size, const CHT* item) {
+  return TSConcat<CHT>(start, start + size - 1, item);
+
 }
 
 /* Finds the end of a decimal number of the given string.
 @return Nil if the string doesn't contain a decimal or is nil.
 @param start The start of the string to search. */
-template <typename CHT = const CH1>
+template <typename CHT = const CHA>
 const CHT* TSTRDecimalEnd(const CHT* start) {
   if (!start) return start;
   CHT c = *start++;
@@ -662,7 +687,7 @@ inline CHT* TSTRSkipNumbers(CHT* cursor) {
 
 /* Finds the stop of the decimals in the s, if there are any.
 @param cursor  The first CHT in the buffer. */
-template <typename CHT = const CH1>
+template <typename CHT = const CHA>
 CHT* TSTRDecimalEnd(CHT* start) {
   const CHT* ptr = reinterpret_cast<const CHT*>(start);
   return const_cast<CHT*>(TSTRDecimalEnd<CHT>(ptr));
@@ -700,16 +725,16 @@ inline CHT* TSTRDecimalEnd(CHT* cursor, CHT* stop) {
 }
 template <typename CHT>
 const CHT* TSTRFloatStop(const CHT* start) {
-  const CH1* stop = TSTRDecimalEnd<CH1>(start);
+  const CHA* stop = TSTRDecimalEnd<CHA>(start);
   if (!stop) return stop;
-  CH1 c = *stop++;
+  CHA c = *stop++;
   if (c == '.') {
-    stop = TSTRDecimalEnd<CH1>(start);
+    stop = TSTRDecimalEnd<CHA>(start);
     c = *stop++;
   }
   if (c == 'e' || c != 'E') {
     if (c == '-') c = *stop++;
-    return TSTRDecimalEnd<CH1>(start);
+    return TSTRDecimalEnd<CHA>(start);
   }
   return stop;
 }
@@ -732,38 +757,38 @@ const CHT* TSTRSkimodulear(const CHT* cursor, CHT skip_char) {
 }
 
 /* Converts the given hex nibble to lowercase hex. */
-inline CH1 HexNibbleToLowerCase(UI1 b) {
+inline CHA HexNibbleToLowerCase(IUA b) {
   b = b & 0xf;
   if (b > 9) return b + ('a' - 10);
   return b + '0';
 }
 
-/* Converts a UI1 a two-UI1 hex representation. */
-inline UI2 HexByteToLowerCase(UI1 b) {
-  UI2 value = HexNibbleToLowerCase(b & 0xf);
+/* Converts a IUA a two-IUA hex representation. */
+inline IUB HexByteToLowerCase(IUA b) {
+  IUB value = HexNibbleToLowerCase(b & 0xf);
   value = value << 8;
   value |= HexNibbleToLowerCase(b >> 4);
   return value;
 }
 
 /* Converts the given hex nibble to uppercase hex. */
-inline CH1 HexNibbleToUpperCase(UI1 nibble) {
+inline CHA HexNibbleToUpperCase(IUA nibble) {
   nibble = nibble & 0xf;
   if (nibble > 9) return nibble + ('A' - 10);
   return nibble + '0';
 }
 
-/* Converts a UI1 a two-UI1 hex representation. */
-inline UI2 HexByteToUpperCase(UI1 b) {
-  UI2 value = (UI2)HexNibbleToUpperCase(b & 0xf);
+/* Converts a IUA a two-IUA hex representation. */
+inline IUB HexByteToUpperCase(IUA b) {
+  IUB value = (IUB)HexNibbleToUpperCase(b & 0xf);
   value = value << 8;
-  UI2 second_nibble = HexNibbleToUpperCase(b >> 4);
+  IUB second_nibble = HexNibbleToUpperCase(b >> 4);
   value |= second_nibble;
   return value;
 }
 
 /* Converts a hex value to a byte. */
-inline SIN HexToByte(CH1 c) {
+inline ISN HexToByte(CHA c) {
   if (c < '0') {
     return -1;
   }
@@ -779,14 +804,14 @@ inline SIN HexToByte(CH1 c) {
   return c - '0';
 }
 
-/* Converts a single hex UI1 a UI1.
-@return Returns -1 if c is not a hex UI1. */
-inline SIN HexToByte(UI2 h) {
-  SIN lowerValue = HexToByte((CH1)(h >> 8));
+/* Converts a single hex IUA a IUA.
+@return Returns -1 if c is not a hex IUA. */
+inline ISN HexToByte(IUB h) {
+  ISN lowerValue = HexToByte((CHA)(h >> 8));
 
   if (lowerValue < 0) return -1;
 
-  SIN upper_value = HexToByte((CH1)h);
+  ISN upper_value = HexToByte((CHA)h);
   if (upper_value < 0) return -1;
 
   return lowerValue | (upper_value << 4);
@@ -816,12 +841,12 @@ void TPrint3(CHT* start, CHT token) {
 }*/
 
 template <typename T, typename CHT = CHR>
-CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, SIW size_bytes) {
+CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, ISW size_bytes) {
   CHT* end = start + (size_bytes * 2);
   if (!start || size_bytes <= 0 || end < start) return nullptr;
-  const UI1* cursor = reinterpret_cast<const UI1*>(origin);
+  const IUA* cursor = reinterpret_cast<const IUA*>(origin);
   while (size_bytes-- > 0) {
-    UI1 byte = *cursor++;
+    IUA byte = *cursor++;
     *start++ = HexNibbleToUpperCase(byte >> 4);
     *start++ = HexNibbleToUpperCase(byte & 0xf);
   }
@@ -839,9 +864,9 @@ CHT* TSPrintHex(CHT* start, CHT* stop, UI value) {
   *start++ = '0';
   *start++ = 'x';
   auto v = ToUnsigned(value);
-  for (SI4 num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+  for (ISC num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
-    *start++ = HexNibbleToUpperCase((UI1)(v >> num_bits_shift));
+    *start++ = HexNibbleToUpperCase((IUA)(v >> num_bits_shift));
   }
   *start = 0;
   return start;
@@ -849,55 +874,55 @@ CHT* TSPrintHex(CHT* start, CHT* stop, UI value) {
 
 /* Prints a hex value to a text socket. */
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, SI1 value) {
-  return TSPrintHex<CHT, UI1>(start, stop, (UI1)value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, ISA value) {
+  return TSPrintHex<CHT, IUA>(start, stop, (IUA)value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, UI1 value) {
-  return TSPrintHex<CHT, UI1>(start, stop, value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, IUA value) {
+  return TSPrintHex<CHT, IUA>(start, stop, value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, SI2 value) {
-  return TSPrintHex<CHT, UI2>(start, stop, (UI2)value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, ISB value) {
+  return TSPrintHex<CHT, IUB>(start, stop, (IUB)value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, UI2 value) {
-  return TSPrintHex<CHT, UI2>(start, stop, value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, IUB value) {
+  return TSPrintHex<CHT, IUB>(start, stop, value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, SI4 value) {
-  return TSPrintHex<CHT, UI4>(start, stop, (UI4)value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, ISC value) {
+  return TSPrintHex<CHT, IUC>(start, stop, (IUC)value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, UI4 value) {
-  return TSPrintHex<CHT, UI4>(start, stop, value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, IUC value) {
+  return TSPrintHex<CHT, IUC>(start, stop, value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, SI8 value) {
-  return TSPrintHex<CHT, UI8>(start, stop, (UI8)value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, ISD value) {
+  return TSPrintHex<CHT, IUD>(start, stop, (IUD)value);
 }
 
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, UI8 value) {
-  return TSPrintHex<CHT, UI8>(start, stop, value);
+inline CHT* TSPrintHex(CHT* start, CHT* stop, IUD value) {
+  return TSPrintHex<CHT, IUD>(start, stop, value);
 }
 
-#if USING_FP4 == YES_0
+#if USING_FPC == YES_0
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, FP4 value) {
-  return TSPrintHex<CHT, UI4>(start, stop, ToUnsigned(value));
+inline CHT* TSPrintHex(CHT* start, CHT* stop, FPC value) {
+  return TSPrintHex<CHT, IUC>(start, stop, ToUnsigned(value));
 }
 #endif
-#if USING_FP8 == YES_0
+#if USING_FPD == YES_0
 template <typename CHT = CHR>
-inline CHT* TSPrintHex(CHT* start, CHT* stop, FP8 value) {
-  return TSPrintHex<CHT, UI8>(start, stop, ToUnsigned(value));
+inline CHT* TSPrintHex(CHT* start, CHT* stop, FPD value) {
+  return TSPrintHex<CHT, IUD>(start, stop, ToUnsigned(value));
 }
 #endif
 
@@ -913,7 +938,7 @@ CHT* TPrintBinary(CHT* start, CHT* stop, UI value) {
     return nullptr;
   }
 
-  for (SI4 i = 0; i < sizeof(UI) * 8; ++i) {
+  for (ISC i = 0; i < sizeof(UI) * 8; ++i) {
     *start++ = (CHT)('0' + (value >> (sizeof(UI) * 8 - 1)));
     value = value << 1;
   }
@@ -923,64 +948,64 @@ CHT* TPrintBinary(CHT* start, CHT* stop, UI value) {
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, SI1 value) {
-  return TPrintBinary<CHT, UI1>(start, stop, (UI1)value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, ISA value) {
+  return TPrintBinary<CHT, IUA>(start, stop, (IUA)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, UI1 value) {
-  return TPrintBinary<CHT, UI1>(start, stop, value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, IUA value) {
+  return TPrintBinary<CHT, IUA>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, SI2 value) {
-  return TPrintBinary<CHT, UI2>(start, stop, (UI2)value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, ISB value) {
+  return TPrintBinary<CHT, IUB>(start, stop, (IUB)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, UI2 value) {
-  return TPrintBinary<CHT, UI2>(start, stop, value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, IUB value) {
+  return TPrintBinary<CHT, IUB>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, SI4 value) {
-  return TPrintBinary<CHT, UI4>(start, stop, (UI4)value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, ISC value) {
+  return TPrintBinary<CHT, IUC>(start, stop, (IUC)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, UI4 value) {
-  return TPrintBinary<CHT, UI4>(start, stop, value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, IUC value) {
+  return TPrintBinary<CHT, IUC>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, SI8 value) {
-  return TPrintBinary<CHT, UI8>(start, stop, (UI8)value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, ISD value) {
+  return TPrintBinary<CHT, IUD>(start, stop, (IUD)value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-inline CHT* TPrintBinary(CHT* start, CHT* stop, UI8 value) {
-  return TPrintBinary<CHT, UI8>(start, stop, value);
+inline CHT* TPrintBinary(CHT* start, CHT* stop, IUD value) {
+  return TPrintBinary<CHT, IUD>(start, stop, value);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-CHT* TPrintBinary(CHT* start, CHT* stop, FP4 value) {
-  UI4 ui = *reinterpret_cast<UI4*>(&value);
-  return TPrintBinary<CHT, UI4>(start, stop, ui);
+CHT* TPrintBinary(CHT* start, CHT* stop, FPC value) {
+  IUC ui = *reinterpret_cast<IUC*>(&value);
+  return TPrintBinary<CHT, IUC>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
-CHT* TPrintBinary(CHT* start, CHT* stop, FP8 value) {
-  UI8 ui = *reinterpret_cast<UI8*>(&value);
-  return TPrintBinary<CHT, UI8>(start, stop, ui);
+CHT* TPrintBinary(CHT* start, CHT* stop, FPD value) {
+  IUD ui = *reinterpret_cast<IUD*>(&value);
+  return TPrintBinary<CHT, IUD>(start, stop, ui);
 }
 
 /* Prints the given value to Binary. */
@@ -991,12 +1016,12 @@ CHT* TPrintBinary(CHT* start, CHT* stop, const void* ptr) {
 }
 
 template <typename CHT = CHR>
-CHT* TSScan(const CHT* start, FP4& result) {
+CHT* TSScan(const CHT* start, FPC& result) {
   return nullptr;
 }
 
 template <typename CHT = CHR>
-CHT* TSScan(const CHT* start, FP8& result) {
+CHT* TSScan(const CHT* start, FPD& result) {
   return nullptr;
 }
 
@@ -1008,9 +1033,9 @@ reinterpret_cast<const CHT*>(end); if (!start || start >= stop || !origin ||
 read > read_end) return nullptr;
 
   CHT* buffer_begin = start;
-  SIW size = read_end - read, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
+  ISW size = read_end - read, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
 
-  SIW num_bytes = 81 * (num_rows + 2);
+  ISW num_bytes = 81 * (num_rows + 2);
   if ((stop - start) <= num_bytes) {
     return nullptr;
   }
@@ -1023,7 +1048,7 @@ read > read_end) return nullptr;
   while (read < read_end) {
     *start++ = '\n';
     *start++ = '|';
-    for (SI4 i = 0; i < 64; ++i) {
+    for (ISC i = 0; i < 64; ++i) {
       c = *read++;
       if (read > read_end)
         c = 'x';
@@ -1062,7 +1087,7 @@ const CHT* TSTRError() {
   return kStrand;
 }
 
-/* Converts the given item to a printable CH1 if it's non-printable. */
+/* Converts the given item to a printable CHA if it's non-printable. */
 template <typename CHT = CHR>
 inline CHT TCharPrintable(CHT item) {
   if (item < 32 || item == 127) return ' ';
@@ -1080,7 +1105,7 @@ inline CHT* TSTRSet(CHT* string) {
 /* Searches fro the s line stop.
 @param cursor  The first CHT in the buffer. */
 template <typename CHT = CHR>
-const CHT* TSTRLineEnd(const CHT* cursor, SI4 column_count = cConsoleWidth) {
+const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = cConsoleWidth) {
   CHT c;
   // Scroll to the stop of the line.
   c = *cursor++;
@@ -1102,7 +1127,7 @@ const CHT* TSTRLineEnd(const CHT* cursor, SI4 column_count = cConsoleWidth) {
 @param cursor  The first CHT in the buffer.
 @param stop    The last CHT in the buffer. */
 template <typename CHT = CHR>
-CHT* TSTRLineEnd(CHT* cursor, SI4 column_count = cConsoleWidth) {
+CHT* TSTRLineEnd(CHT* cursor, ISC column_count = cConsoleWidth) {
   return const_cast<CHT*>(
       TSTRLineEnd(reinterpret_cast<const CHT*>(cursor), column_count));
 }
@@ -1113,7 +1138,7 @@ CHT* TSTRLineEnd(CHT* cursor, SI4 column_count = cConsoleWidth) {
 @param column_count In characters. */
 template <typename CHT = CHR>
 const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
-                       SI4 column_count = cConsoleWidth) {
+                       ISC column_count = cConsoleWidth) {
   if (!cursor) return nullptr;
   A_ASSERT(cursor < stop);
   CHT c;
@@ -1140,7 +1165,7 @@ const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
 @param column_coun In characters. */
 template <typename CHT = CHR>
 inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
-                        SI4 column_count = cConsoleWidth) {
+                        ISC column_count = cConsoleWidth) {
   return const_cast<const CHT*>(
       TSTRLineEnd<CHT>(reinterpret_cast<const CHT*>(cursor),
                        reinterpret_cast<const CHT*>(stop), column_count));
@@ -1370,14 +1395,14 @@ BOL TSTRIsntEmpty(CHT* cursor, const CHT* stop) {
 
 /* Prints the given item aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
-pointer to the nil-term CH1 upon success.
+pointer to the nil-term CHA upon success.
 @param cursor  The first CHT in the buffer.
 @param stop    The last CHT in the buffer.
 @param item  The item to utf.
 @param column_count The token_ of columns to align right to. */
 template <typename CHT = CHR>
 CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
-                 SI4 column_count = cConsoleWidth) {
+                 ISC column_count = cConsoleWidth) {
   if (!cursor || cursor + column_count > stop) {
     return nullptr;
   }
@@ -1385,13 +1410,13 @@ CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
   auto item_end = TSTREnd<CHT>(item);
   CHT c;  //< Temp variable.
   if (item == item_end) return cursor;
-  SIW length = item_end - item;
+  ISW length = item_end - item;
 
   // If the length is less than the column_count we need to print ".", "..",
   // "..." or nothing and chop off some of the item.
-  SIW count = column_count - length;
+  ISW count = column_count - length;
   if (count < 0) {
-    SIW dot_count = length + count;
+    ISW dot_count = length + count;
     if (dot_count <= 3) {
       while (dot_count-- > 0) {
         *cursor++ = '.';
@@ -1416,7 +1441,7 @@ CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
   // In order to keep the current cache lines we're going to utf
   // backwards back from the token_end.
   stop = cursor + column_count;
-  --item_end;   //< This is pointed at the nil-term CH1
+  --item_end;   //< This is pointed at the nil-term CHA
   *stop-- = 0;  //< and there is no need to load a 0.
   while (item_end >= item) {
     c = *item_end--;
@@ -1431,12 +1456,12 @@ CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
 /* Prints the given cursor center aligned to the given column_count. */
 template <typename CHT = CHR>
 CHT* TPrintCenter(CHT* cursor, CHT* stop, const CHT* string,
-                  SI4 column_count = cConsoleWidth) {
+                  ISC column_count = cConsoleWidth) {
   if (!cursor || cursor >= stop) return nullptr;
 
   // We need to leave at least one space to the left and right of
-  SI4 length = TSTRLength<CHT>(string);
-  SI4 delta;
+  ISC length = TSTRLength<CHT>(string);
+  ISC delta;
   if (length <= column_count) {
     delta = (column_count - length) >> 1;  //< >> 1 to /2
     length = column_count - length - delta;
@@ -1471,7 +1496,7 @@ CHT* TPrintCenter(CHT* cursor, CHT* stop, const CHT* string,
 
 /* Prints a line of the given column_count the given start. */
 template <typename CHT = CHR>
-CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, SIW count = cConsoleWidth,
+CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, ISW count = cConsoleWidth,
                  const CHT* header = TSTRNL<CHT>(),
                  const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
@@ -1489,7 +1514,7 @@ CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, SIW count = cConsoleWidth,
 /* Prints the given cursor repeated to make a line. */
 template <typename CHT = CHR>
 CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
-                 SIW count = cConsoleWidth, const CHT* header = TSTRNL<CHT>(),
+                 ISW count = cConsoleWidth, const CHT* header = TSTRNL<CHT>(),
                  const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
   if (!start || start <= stop || (start + count >= stop)) return nullptr;
@@ -1513,28 +1538,28 @@ CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
 /* Prints the given cursor repeated to make a line. */
 template <typename CHT = CHR>
 CHT* TPrintHeadingf(CHT* start, CHT* stop, CHT item,
-                    SIW count = cConsoleWidth) {
+                    ISW count = cConsoleWidth) {
   return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints the given cursor repeated to make a line. */
 template <typename CHT = CHR>
 CHT* TPrintHeadingf(CHT* start, CHT* stop, const CHT* item,
-                    SIW count = cConsoleWidth) {
+                    ISW count = cConsoleWidth) {
   return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints a cursor to the given buffer without */
 template <typename CHT = CHR>
 CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
-                SIW column_count = cConsoleWidth) {
+                ISW column_count = cConsoleWidth) {
   if (!cursor || cursor <= stop || !string) return nullptr;
   if (column_count < 2) return cursor;
 
   CHT c = *string++;
 
   while (c) {
-    for (SI4 i = column_count; i > 0; --i) {
+    for (ISC i = column_count; i > 0; --i) {
       *cursor++ = c;
       c = *string++;
       if (cursor >= stop) return nullptr;
@@ -1553,7 +1578,7 @@ CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
 }
 
 /* Templated string Printer. */
-template <typename CHT = CHR, typename SIZ = SIN>
+template <typename CHT = CHR, typename ISZ = ISN>
 struct TSPrinter {
   CHT *start,  //< Start address.
       *stop;   //< Stop address.
@@ -1564,7 +1589,7 @@ struct TSPrinter {
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
   @param count The number of CHT(s) in the buffer. */
-  TSPrinter(CHT* start, SIZ size) : start(start), stop(start + size - 1) {
+  TSPrinter(CHT* start, ISZ size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
@@ -1578,13 +1603,13 @@ struct TSPrinter {
       : start(other.start), stop(other.stop) {  // Nothing to do here!.
   }
 
-  UI1* End() { return reinterpret_cast<UI1*>(start) + (sizeof(CHT) - 1); }
+  IUA* End() { return reinterpret_cast<IUA*>(start) + (sizeof(CHT) - 1); }
 
-  SIZ SizeBytes() { return (SIZ)(stop - start + sizeof(CHT)); }
+  ISZ SizeBytes() { return (ISZ)(stop - start + sizeof(CHT)); }
 
   void Wipe() { ArrayFill(start, stop); }
 
-  /* Writes a nil-term CH1 at the start of the string. */
+  /* Writes a nil-term CHA at the start of the string. */
   inline CHT* Reset() {
     *start = 0;
     return start;
@@ -1598,8 +1623,8 @@ struct TSPrinter {
 
   /* Sets the start pointer to the new_pointer. */
   inline TSPrinter& Set(UIW* buffer) {
-    SIZ size = *reinterpret_cast<SIZ*>(buffer);
-    UIW ptr = reinterpret_cast<UIW>(buffer) + sizeof(SIZ);
+    ISZ size = *reinterpret_cast<ISZ*>(buffer);
+    UIW ptr = reinterpret_cast<UIW>(buffer) + sizeof(ISZ);
     CHT* start_ptr = reinterpret_cast<CHT*>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
@@ -1613,52 +1638,52 @@ struct TSPrinter {
   }
 
   /* Finds the length of the STR in Chars. */
-  inline SIZ SpaceLeft() { return (SIZ)(stop - start); }
+  inline ISZ SpaceLeft() { return (ISZ)(stop - start); }
 
   /* Calculates the max length of the string in Chars. */
-  inline SIZ LengthMax() { return stop - start; }
+  inline ISZ LengthMax() { return stop - start; }
 
   /* Prints a item to the string. */
-  inline TSPrinter& PrintChar(CH1 item) {
+  inline TSPrinter& PrintChar(CHA item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& PrintChar(CH2 item) {
+  inline TSPrinter& PrintChar(CHB item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& PrintChar(CH4 item) {
+  inline TSPrinter& PrintChar(CHC item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(CH1 item) { return PrintChar(item); }
-  inline TSPrinter& Print(CH2 item) { return PrintChar(item); }
-  inline TSPrinter& Print(CH4 item) { return PrintChar(item); }
-  inline TSPrinter& Print(const CH1* item) {
+  inline TSPrinter& Print(CHA item) { return PrintChar(item); }
+  inline TSPrinter& Print(CHB item) { return PrintChar(item); }
+  inline TSPrinter& Print(CHC item) { return PrintChar(item); }
+  inline TSPrinter& Print(const CHA* item) {
     return Set(_::TSPrintString<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(const CH2* item) {
+  inline TSPrinter& Print(const CHB* item) {
     return Set(_::TSPrintString<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(const CH4* item) {
+  inline TSPrinter& Print(const CHC* item) {
     return Set(_::TSPrintString<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(SI4 item) {
+  inline TSPrinter& Print(ISC item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(UI4 item) {
+  inline TSPrinter& Print(IUC item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(SI8 item) {
+  inline TSPrinter& Print(ISD item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-  inline TSPrinter& Print(UI8 item) {
+  inline TSPrinter& Print(IUD item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
-#if USING_FP4 == YES_0
-  inline TSPrinter& Print(FP4 item) {
+#if USING_FPC == YES_0
+  inline TSPrinter& Print(FPC item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
 #endif
-#if USING_FP8 == YES_0
-  inline TSPrinter& Print(FP8 item) {
+#if USING_FPD == YES_0
+  inline TSPrinter& Print(FPD item) {
     return Set(_::TSPrint<CHT>(start, stop, item));
   }
 #endif
@@ -1682,74 +1707,74 @@ struct TSPrinter {
   inline TSPrinter& Hex(Hexf item) {
     return TSPrintHex<CHT>(*this, item.element.ToPtr(), item.element.count);
   }
-  inline TSPrinter& Hex(SI1 item) {
+  inline TSPrinter& Hex(ISA item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(UI1 item) {
+  inline TSPrinter& Hex(IUA item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(SI2 item) {
+  inline TSPrinter& Hex(ISB item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(UI2 item) {
+  inline TSPrinter& Hex(IUB item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(SI4 item) {
+  inline TSPrinter& Hex(ISC item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(UI4 item) {
+  inline TSPrinter& Hex(IUC item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(SI8 item) {
+  inline TSPrinter& Hex(ISD item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-  inline TSPrinter& Hex(UI8 item) {
+  inline TSPrinter& Hex(IUD item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
-#if USING_FP4 == YES_0
-  inline TSPrinter& Hex(FP4 item) {
+#if USING_FPC == YES_0
+  inline TSPrinter& Hex(FPC item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
 #endif
-#if USING_FP8 == YES_0
-  inline TSPrinter& Hex(FP8 item) {
+#if USING_FPD == YES_0
+  inline TSPrinter& Hex(FPD item) {
     return Set(TSPrintHex<CHT>(start, stop, item));
   }
 #endif
   inline TSPrinter& Hex(const void* ptr) {
     return Set(TSPrintHex<CHT>(start, stop, ptr));
   }
-  inline TSPrinter& Binary(SI1 item) {
+  inline TSPrinter& Binary(ISA item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(UI1 item) {
+  inline TSPrinter& Binary(IUA item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(SI2 item) {
+  inline TSPrinter& Binary(ISB item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(UI2 item) {
+  inline TSPrinter& Binary(IUB item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(SI4 item) {
+  inline TSPrinter& Binary(ISC item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(UI4 item) {
+  inline TSPrinter& Binary(IUC item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(SI8 item) {
+  inline TSPrinter& Binary(ISD item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-  inline TSPrinter& Binary(UI8 item) {
+  inline TSPrinter& Binary(IUD item) {
     return Set(Binary<CHT>(start, stop, item));
   }
-#if USING_FP4 == YES_0
-  inline TSPrinter& Binary(FP4 item) {
+#if USING_FPC == YES_0
+  inline TSPrinter& Binary(FPC item) {
     return Set(Binary<CHT>(start, stop, item));
   }
 #endif
-#if USING_FP8 == YES_0
-  inline TSPrinter& Binary(FP8 item) {
+#if USING_FPD == YES_0
+  inline TSPrinter& Binary(FPD item) {
     return Set(Binary<CHT>(start, stop, item));
   }
 #endif
@@ -1761,7 +1786,7 @@ struct TSPrinter {
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    o << "\nTUTF<CH" << sizeof(CHT) << ", SI" << sizeof(SIZ) << ">{ start:";
+    o << "\nTUTF<CH" << sizeof(CHT) << ", SI" << sizeof(ISZ) << ">{ start:";
     TSPrintHex<Printer>(o, start);
     o << " stop:";
     TSPrintHex<Printer>(o, stop);
@@ -1775,9 +1800,9 @@ struct TSPrinter {
 
 /* Queries the given s for the given query. */
 template <typename CHT = CHR>
-SI4 TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
+ISC TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
   CHT a = *cursor, b = *query;
-  SI4 result;
+  ISC result;
 
   if (!cursor) {
     if (!query) return 0;
@@ -1825,88 +1850,88 @@ SI4 TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
 @param utf The utf.
 @param item   The item to utf. */
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH1 item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHA item) {
   return utf.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH1* item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHA* item) {
   return utf.Print(item);
 }
 
 #if USING_UTF16 == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH2 item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHB item) {
   return utf.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH2* item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHB* item) {
   return utf.Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CH4 item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHC item) {
   return utf.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CH4* item) {
-  return utf.Print(item);
-}
-#endif
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI1 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI1 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI2 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI2 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI4 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI4 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, SI8 item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, UI8 item) {
-  return utf.Print(item);
-}
-
-#if USING_FP4 == YES_0
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FP4 item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHC* item) {
   return utf.Print(item);
 }
 #endif
 
-#if USING_FP8 == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FP8 item) {
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISA item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUA item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISB item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUB item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISC item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUC item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISD item) {
+  return utf.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUD item) {
+  return utf.Print(item);
+}
+
+#if USING_FPC == YES_0
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FPC item) {
+  return utf.Print(item);
+}
+#endif
+
+#if USING_FPD == YES_0
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FPD item) {
   return utf.Print(item);
 }
 #endif

@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/01.itos.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_ITOS
 #include <cString>
@@ -24,7 +24,7 @@ using namespace _;
 
 namespace script2 {
 
-inline const CH1* ItoS(const CH1* args) {
+inline const CHA* ItoS(const CHA* args) {
 #if SEAM >= SCRIPT2_ITOS
   A_TEST_BEGIN;
   D_COUT(
@@ -34,27 +34,27 @@ inline const CH1* ItoS(const CH1* args) {
       "get tested first and you'll get some extra debug information.");
 
   D_COUT("\n\nTesting Pow10_UI2...");
-  UI2 pow10_ui2 = 1;
-  for (UI2 i = 0; i < cUI2DigitCountMax; ++i) {
+  IUB pow10_ui2 = 1;
+  for (IUB i = 0; i < cUI2DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
     pow10_ui2 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI4...");
-  UI4 pow10_ui4 = 1;
-  for (UI4 i = 0; i < cUI4DigitCountMax; ++i) {
+  IUC pow10_ui4 = 1;
+  for (IUC i = 0; i < cUI4DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
     pow10_ui4 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI8...");
-  UI8 pow10_ui8 = 1;
-  for (UI8 i = 0; i < cUI8DigitCountMax; ++i) {
+  IUD pow10_ui8 = 1;
+  for (IUD i = 0; i < cUI8DigitCountMax; ++i) {
     A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
     pow10_ui8 *= 10;
   }
 
-  static const UI8 edge_condition[] = {1,
+  static const IUD edge_condition[] = {1,
                                        12,
                                        123,
                                        1234,
@@ -101,34 +101,34 @@ inline const CH1* ItoS(const CH1* args) {
                                        Pow10_UI8()[9] + Pow10_UI8()[9] / 2,
                                        0};
 
-  static const UI8 problem_child[] = {9173263544803952, 827672716845, 0};
+  static const IUD problem_child[] = {9173263544803952, 827672716845, 0};
 
   enum { cProblemChildCount = 2, cSize = 23 };
 
-  CH1 text[cSize + 1], expecting[cSize + 1];
-  CH1 socket[cSize];
-  CH1* result;
-  UI8 result_ui8, expected_ui8;
+  CHA text[cSize + 1], expecting[cSize + 1];
+  CHA socket[cSize];
+  CHA* result;
+  IUD result_ui8, expected_ui8;
 
-  D_COUT("\nTesting ScanUnsigned<UI, CHT> (const CHT*, const CH1*, I);");
+  D_COUT("\nTesting ScanUnsigned<UI, CHT> (const CHT*, const CHA*, I);");
 
-  for (SIN i = 0; i < 1 << 6; ++i) {
+  for (ISN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
     sprintf_s(socket, cSize, "%llu", expected_ui8);
-    const CH1* test = TScanUnsigned<UI8, CH1>(socket, result_ui8);
+    const CHA* test = TScanUnsigned<IUD, CHA>(socket, result_ui8);
     A_ASSERT(test);
     A_AVOW(expected_ui8, result_ui8);
   }
 
   D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
 
-  SIN count = TSTRLength<UI8>(problem_child);
+  ISN count = TSTRLength<IUD>(problem_child);
   D_COUT("\n\nTesting %i problem children...\n\n" << count);
 
-  for (SIN i = 0; i < count; ++i) {
+  for (ISN i = 0; i < count; ++i) {
     expected_ui8 = problem_child[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
-    static const CH1 kPuffDebugHeader[] =
+    static const CHA kPuffDebugHeader[] =
         "\n\n    "
         "|6666555555555544444444443333333333222222222211111111110000000000|\n"
         "    "
@@ -138,8 +138,8 @@ inline const CH1* ItoS(const CH1* args) {
         "    |\0";
     D_COUT(kPuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
                             << i << ".) ");
-    SIN expected_length = TSTRLength<CH1>(expecting);
-    result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
+    ISN expected_length = TSTRLength<CHA>(expecting);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -148,14 +148,14 @@ inline const CH1* ItoS(const CH1* args) {
     D_AVOW(expecting, text);
   }
 
-  count = TSTRLength<UI8>(edge_condition);
+  count = TSTRLength<IUD>(edge_condition);
   D_COUT("\n\nTesting " << count << " edge conditions...\n\n");
-  for (SIW i = 0; i < count; ++i) {
+  for (ISW i = 0; i < count; ++i) {
     D_COUT(Linef('-'));
     expected_ui8 = edge_condition[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     D_COUT("\n\n" << i + 1 << ".) ");
-    result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -170,19 +170,19 @@ inline const CH1* ItoS(const CH1* args) {
 #endif
   /* The RNG some broke. I don't know what's wrong.
   D_COUT("\n\nTesting " << count << " random numbers of each length...\n\n");
-  SIN count_digits = STRLength(count);
+  ISN count_digits = STRLength(count);
   D_COUT("\n\ncount_digits:" << count_digits);
 
   // We don't want to do 1000 tests of length 1, so we're going to
 
-  for (SIN i = 0; i < 20; ++i) {
-    for (SIN j = 0; j < count; ++j) {
+  for (ISN i = 0; i < 20; ++i) {
+    for (ISN j = 0; j < count; ++j) {
       if (j >= Pow10_UI8()[i + i] - 1 - Pow10_UI8()[i]) break;
-      UI8 lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] - 1;
+      IUD lower_bounds = Pow10_UI8()[i], upper_bounds = Pow10_UI8()[i + 1] - 1;
       expected_ui8 = Random(lower_bounds, upper_bounds);
       sprintf_s(expecting, 24, "%llu", expected_ui8);
       D_COUT("\n\n" << i + 1);
-      result = TSPrintUnsigned<UI8, CH1>(text, text + cSize - 1, expected_ui8);
+      result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
       if (!result) {
         D_PAUSE("An error occurred :-(");
         break;

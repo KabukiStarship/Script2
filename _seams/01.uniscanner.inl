@@ -1,6 +1,7 @@
+#pragma once
 /* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/00.uniprinter.h
+@file    /_seams/00.uniscanner.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
 @license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -19,7 +20,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 using namespace _;
 
 namespace script2 {
-inline const CHA* Uniprinter(const CHA* args) {
+inline const CHA* Uniscanner(const CHA* args) {
 #if SEAM >= SCRIPT2_UNIPRINTER
   A_TEST_BEGIN;
 

@@ -1,4 +1,4 @@
-# SCRIPT Script
+# Script2 (TM)
 
 ```AsciiArt
  /\               MP""""""`MM                   oo            dP   d8888b.
@@ -13,10 +13,9 @@
 
 [![GitHub version](https://badge.fury.io/gh/kabuki-starship%2Fscript2.svg)](https://badge.fury.io/gh/kabuki-starship%2Fscript2)
 
-The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines the ASCII Data Types, the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and SCRIPT Script (Script2™). Script2 is an implementation of the SCRIPT Specification that provides:
+The Serial Chinese Room, Interprocess, and Telemetry Specification™ (SCRIPT Specification™), defines the ASCII Data Types, the Chinese Room Abstract Stack Machine™ (Crabs™), SCRIPT Protocol™, and Script2 (TM) (Script2™). Script2 is an implementation of the SCRIPT Specification that provides:
 
-* Cross-platform Modern Embedded-C++ replacement for C++ std library featuring optional dynamic memory.
-* Rapid compile time using Library translation unit and inline wrapper classes that hide templates and large header files.
+* Cross-platform Modern Embedded-C++ replacement for C++ std library featuring optional dynamic memory and simplified Kabuki Module format.
 * Interprocess communication and data serialization engine modeled after AI philosophy of the Chinese Room Thought Experiment and ASCII C0 Control Codes.
 * Ultra-fast Unicode string processing with the Uniprinter (Universal Printer), featuring the [Puff Algorithm](https://github.com/kabuki-starship/script2/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers) and template-friendly Stringf formatting utilities to replace printf, sprintf, and sscanf.
 * Unit test framework with low-cost in-order Seam tree tests for Agile, Test, and Issue Driven Development featuring debug information customized for each tree node.
@@ -26,10 +25,10 @@ The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defi
 ## Documentation
 
 * [SCRIPT Specification](./spec/readme.md) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [KabukiPress Cookbook Chapter on Script2™](https://github.com/kabuki-starship/kabuki.press.cookbook/tree/master/Script2) - *The official documentation for Script2.*
+* [KabukiPress Cookbook Chapter on Script2](https://github.com/kabuki-starship/kabuki.press.cookbook/tree/master/script2) - *The official documentation for Script2.*
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+This Source Code Form is subject to the terms of the v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

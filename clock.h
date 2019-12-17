@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /clock.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -21,7 +21,7 @@ the C++ standard library.
 Data structure is identical to std::tm with the execution that it has an
 additional microseconds from origin of second variable. */
 struct LIB_MEMBER AClock {
-  SIN second,  //< Second of the minute [0, 59].
+  ISN second,  //< Second of the minute [0, 59].
       minute,  //< Minute of the hour [0, 59].
       hour,    //< Hour of the day [0, 23].
       day,     //< Day of the month [1, 31].
@@ -29,12 +29,12 @@ struct LIB_MEMBER AClock {
       year;    //< Number of years since epoch [-1902, 1970] U [1970, 2038].
 };
 
-/* A sub-second timestamp composed of a kTM4 and a cUI4 tick.
+/* A sub-second timestamp composed of a kTM4 and a cIUC tick.
 Operation of the TME is intended for two scenarios:
 1. Processor has a real microsecond timer stored as a 24-bit value.
 2. Processor is an x86 and timer gets updated with a tread or OS.
 In the real microsecond timer scenario the processor will just
-take the unsigned in value and copy it to the cUI4 member. In the
+take the unsigned in value and copy it to the cIUC member. In the
 case of the OS having a variable Update tick period, the ticker will
 work best if the value gets incremented using the ++operator and you will
 need to use modulo updates_per_second unless the timer is set to 64 updates
@@ -43,7 +43,7 @@ tool of choice. For desktop operating systems other threads may hijack the
 OS scheduler. */
 struct LIB_MEMBER TME {
   TM4 seconds;  //< Seconds since epoch.
-  UI4 ticks;    //< Ticks since epoch.
+  IUC ticks;    //< Ticks since epoch.
 };
 
 enum ClockConstants {
@@ -68,16 +68,16 @@ enum ClockConstants {
 };
 
 /* Gets the 32-bit kTM4 clock epoch. */
-SI2 ClockEpoch();
+ISB ClockEpoch();
 
 /* Lookup table for converting from day-of-year to month. */
-const SI2* ClockLastDayOfMonth();
+const ISB* ClockLastDayOfMonth();
 
 /* Lookup table for converting from day-of-year to month. */
-const SI2* ClockLastDayOfMonthLeapYear();
+const ISB* ClockLastDayOfMonthLeapYear();
 
 /* Returns which month the given day is in based on the year. */
-SIN MonthByDay(SIN day, SIN year);
+ISN MonthByDay(ISN day, ISN year);
 
 /* Initializes the clock from the given timestamp. */
 LIB_MEMBER AClock* ClockInit(AClock& clock, TM4 time);
@@ -86,7 +86,7 @@ LIB_MEMBER AClock* ClockInit(AClock& clock, TM4 time);
 LIB_MEMBER AClock* ClockInit(AClock& clock, TM8 time);
 
 /* Initializes the clock from the given 64-bit microsecond timestamp. */
-LIB_MEMBER TME& StopwatchInit(TME& clock, TM4 t, UI4 ticks);
+LIB_MEMBER TME& StopwatchInit(TME& clock, TM4 t, IUC ticks);
 
 /* Initializes the clock from the given timestamp. */
 LIB_MEMBER AClock* ClockInit(AClock& clock);
@@ -107,87 +107,87 @@ TM8 ClockTM8(AClock& clock);
 
 /* Gets the number_ of days in a months.
     @todo Maybe get some open-source date utility? */
-LIB_MEMBER SIN ClockMonthDayCount(TM4 t);
+LIB_MEMBER ISN ClockMonthDayCount(TM4 t);
 
 /* Gets the number_ of days in a months.
 @param month The month index 0-11.
 @param year   */
-LIB_MEMBER SIN ClockMonthDayCount(SIN month, SIN year);
+LIB_MEMBER ISN ClockMonthDayCount(ISN month, ISN year);
 
-/* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-LIB_MEMBER const CH1* ClockWeekDay(SIN day_number);
+/* Gets the abbreviated day of the week CHA of the given day number_ 1-7. */
+LIB_MEMBER const CHA* ClockWeekDay(ISN day_number);
 
-/* Gets the abbreviated day of the week CH1 of the given day number_ 1-7. */
-LIB_MEMBER CH1 ClockDayOfWeekInitial(SIN day_number);
-
-/* Compares the two the time and prints the results. */
-LIB_MEMBER SIN ClockCompare(TM4 a, TM4 b);
+/* Gets the abbreviated day of the week CHA of the given day number_ 1-7. */
+LIB_MEMBER CHA ClockDayOfWeekInitial(ISN day_number);
 
 /* Compares the two the time and prints the results. */
-LIB_MEMBER SIN ClockCompare(TM4 a, TM4 b);
+LIB_MEMBER ISN ClockCompare(TM4 a, TM4 b);
 
 /* Compares the two the time and prints the results. */
-LIB_MEMBER SIN ClockCompare(const AClock& clock, const AClock& other);
+LIB_MEMBER ISN ClockCompare(TM4 a, TM4 b);
+
+/* Compares the two the time and prints the results. */
+LIB_MEMBER ISN ClockCompare(const AClock& clock, const AClock& other);
 
 /* Compares the given TM4 to the time and prints the results. */
-LIB_MEMBER SIN ClockCompare(const AClock& clock, SIN year, SIN month, SIN day,
-                            SIN hour, SIN minute, SIN second);
+LIB_MEMBER ISN ClockCompare(const AClock& clock, ISN year, ISN month, ISN day,
+                            ISN hour, ISN minute, ISN second);
 
 /* Zeros out the struct values.
 @param calendar_time A calendar time struct to zero out. */
 LIB_MEMBER void ClockZeroTime(AClock& seconds);
 
 /* Gets the array of days in each month. */
-LIB_MEMBER const SI2* CloccDaysInMonth();
+LIB_MEMBER const ISB* CloccDaysInMonth();
 
 /* Converts the month and year into days in the month. */
-LIB_MEMBER SIN CloccDaysInMonth(SIN month, SIN year);
+LIB_MEMBER ISN CloccDaysInMonth(ISN month, ISN year);
 
 /* Converts the year, month, and day to day of the year 1-365. */
-LIB_MEMBER SIN ClockDayOfYear(SIN year, SIN month, SIN day);
+LIB_MEMBER ISN ClockDayOfYear(ISN year, ISN month, ISN day);
 
 /* Creates a 32-bit seconds timestamp.  */
-LIB_MEMBER TM4 ClockTimeTMS(SIN year, SIN month, SIN day, SIN hour = 0,
-                            SIN minute = 0, SIN second = 0);
+LIB_MEMBER TM4 ClockTimeTMS(ISN year, ISN month, ISN day, ISN hour = 0,
+                            ISN minute = 0, ISN second = 0);
 
 /* Creates a 64-bit seconds timestamp.  */
-LIB_MEMBER TM8 ClockTimeTME(SIN year, SIN month, SIN day, SIN hour = 0,
-                            SIN minute = 0, SIN second = 0);
+LIB_MEMBER TM8 ClockTimeTME(ISN year, ISN month, ISN day, ISN hour = 0,
+                            ISN minute = 0, ISN second = 0);
 
 #if USING_UTF8 == YES_0
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* SPrint(CH1* origin, CH1* stop, const AClock& clock);
+LIB_MEMBER CHA* SPrint(CHA* origin, CHA* stop, const AClock& clock);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param stop   The stop of the write socket.
 @param t     The 64-bit stopwatch timestamp. */
-LIB_MEMBER CH1* SPrint(CH1* origin, CH1* stop, TME& t);
+LIB_MEMBER CHA* SPrint(CHA* origin, CHA* stop, TME& t);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* ClockPrint(CH1* origin, CH1* stop, TM4 time);
+LIB_MEMBER CHA* ClockPrint(CHA* origin, CHA* stop, TM4 time);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH1* ClockPrint(CH1* origin, CH1* stop, TM8 time);
+LIB_MEMBER CHA* ClockPrint(CHA* origin, CHA* stop, TM8 time);
 
-/* Reads a time or time delta from a a CH1 starting with an '@' sign.
+/* Reads a time or time delta from a a CHA starting with an '@' sign.
 @brief
 @code
 @4        (This is 4AM)
@@ -206,61 +206,61 @@ LIB_MEMBER CH1* ClockPrint(CH1* origin, CH1* stop, TM8 time);
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-LIB_MEMBER const CH1* ScanTime(const CH1* string, SIN& hour, SIN& minute,
-                               SIN& second);
+LIB_MEMBER const CHA* ScanTime(const CHA* string, ISN& hour, ISN& minute,
+                               ISN& second);
 
-/* Converts a keyboard input to CH1 and deletes the CH1.
-@return Nil upon socket failure or CH1 directly after the stop of the
+/* Converts a keyboard input to CHA and deletes the CHA.
+@return Nil upon socket failure or CHA directly after the stop of the
 timestamp upon success.
 */
-LIB_MEMBER const CH1* SScan(const CH1*, AClock& clock);
+LIB_MEMBER const CHA* SScan(const CHA*, AClock& clock);
 
 /* Converts a keyboard input to a TME. */
-LIB_MEMBER const CH1* SScan(const CH1*, TME& result);
+LIB_MEMBER const CHA* SScan(const CHA*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH1* ScanTime(const CH1*, TM4& result);
+LIB_MEMBER const CHA* ScanTime(const CHA*, TM4& result);
 
 /* Converts a keyboard input to a TM8. */
-LIB_MEMBER const CH1* ScanTime(const CH1*, TM8& result);
+LIB_MEMBER const CHA* ScanTime(const CHA*, TM8& result);
 
 #endif  //< #if USING_UTF8 == YES_0
 
 #if USING_UTF16 == YES_0
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* Print(CH2* origin, CH2* stop, AClock& clock);
+LIB_MEMBER CHB* Print(CHB* origin, CHB* stop, AClock& clock);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* Print(CH2* origin, CH2* stop, TME& t);
+LIB_MEMBER CHB* Print(CHB* origin, CHB* stop, TME& t);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* ClockPrint(CH2* origin, CH2* stop, TM4 time);
+LIB_MEMBER CHB* ClockPrint(CHB* origin, CHB* stop, TM4 time);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH2* ClockPrint(CH2* origin, CH2* stop, TM8 time);
+LIB_MEMBER CHB* ClockPrint(CHB* origin, CHB* stop, TM8 time);
 
-/* Reads a time or time delta from a a CH2 starting with an '@' sign.
+/* Reads a time or time delta from a a CHB starting with an '@' sign.
 
 # Legal Time Formats
 
@@ -277,63 +277,63 @@ LIB_MEMBER CH2* ClockPrint(CH2* origin, CH2* stop, TM8 time);
 @16:20:00
 @endcode
 
-@param input  The CH2 to parse.
+@param input  The CHB to parse.
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to. */
-LIB_MEMBER const CH2* ScanTime(const CH2*, SIN& hour, SIN& minute, SIN& second);
+LIB_MEMBER const CHB* ScanTime(const CHB*, ISN& hour, ISN& minute, ISN& second);
 
-/* Converts a keyboard input to CH2 and deletes the CH2.
-@return Nil upon socket failure or CH2 directly after the stop of the
+/* Converts a keyboard input to CHB and deletes the CHB.
+@return Nil upon socket failure or CHB directly after the stop of the
 timestamp upon success.
 */
-LIB_MEMBER const CH2* SScan(const CH2*, AClock& result);
+LIB_MEMBER const CHB* SScan(const CHB*, AClock& result);
 
 /* Converts a keyboard input to a TME. */
-LIB_MEMBER const CH2* SScan(const CH2*, TME& result);
+LIB_MEMBER const CHB* SScan(const CHB*, TME& result);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH2* ScanTime(const CH2*, TM4& result);
+LIB_MEMBER const CHB* ScanTime(const CHB*, TM4& result);
 
 /* Converts a keyboard input to a TM8. */
-LIB_MEMBER const CH2* ScanTime(const CH2*, TM8& result);
+LIB_MEMBER const CHB* ScanTime(const CHB*, TM8& result);
 
 #endif  //< #if USING_UTF16 == YES_0
 #if USING_UTF32 == YES_0
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* Print(CH4* origin, CH4* stop, AClock& clock);
+LIB_MEMBER CHC* Print(CHC* origin, CHC* stop, AClock& clock);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* Print(CH4* origin, CH4* stop, TME& time);
+LIB_MEMBER CHC* Print(CHC* origin, CHC* stop, TME& time);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* ClockPrint(CH4* origin, CH4* stop, TM4 time);
+LIB_MEMBER CHC* ClockPrint(CHC* origin, CHC* stop, TM4 time);
 
 /* Writes the given time to the text socket.
-@return Null upon failure or a pointer to the UI1 after the last
-UI1 written.
+@return Null upon failure or a pointer to the IUA after the last
+IUA written.
 @param origin The beginning of the write socket.
 @param time  The time to utf.
 @param stop   The stop of the write socket. */
-LIB_MEMBER CH4* ClockPrint(CH4* origin, CH4* stop, TM8 time);
+LIB_MEMBER CHC* ClockPrint(CHC* origin, CHC* stop, TM8 time);
 
-/* Reads a time or time delta from a a CH1 starting with an '@' sign..
-@param input  The CH1 to parse.
+/* Reads a time or time delta from a a CHA starting with an '@' sign..
+@param input  The CHA to parse.
 @param hour   The location to write the number_ of hours to.
 @param minute The location to write the number_ of minutes to.
 @param Second The location to write the number_ of seconds to.
@@ -352,21 +352,21 @@ LIB_MEMBER CH4* ClockPrint(CH4* origin, CH4* stop, TM8 time);
 @16:20:00
 @endcode
 */
-LIB_MEMBER const CH4* ScanTime(const CH4* input, SIN& hour, SIN& minute,
-                               SIN& second);
+LIB_MEMBER const CHC* ScanTime(const CHC* input, ISN& hour, ISN& minute,
+                               ISN& second);
 
-/* Converts a keyboard input to CH1 and deletes the CH1.
+/* Converts a keyboard input to CHA and deletes the CHA.
  */
-LIB_MEMBER const CH4* SScan(const CH4* input, AClock& time);
+LIB_MEMBER const CHC* SScan(const CHC* input, AClock& time);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH4* SScan(const CH4* input, TME& result);
+LIB_MEMBER const CHC* SScan(const CHC* input, TME& result);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH4* ScanTime(const CH4* input, TM4& result);
+LIB_MEMBER const CHC* ScanTime(const CHC* input, TM4& result);
 
 /* Converts a keyboard input to a TM4. */
-LIB_MEMBER const CH4* ScanTime(const CH4* input, TM8& result);
+LIB_MEMBER const CHC* ScanTime(const CHC* input, TM8& result);
 
 #endif  //< #if USING_UTF32 == YES_0
 }  // namespace _

@@ -18,7 +18,7 @@ stuff =DIC4 65536 3 {
     |       +------------------- This is a 16-bit unsigned int.
     |       |
     v       v */
-    +=UI2 item1 1
+    +=IUB item1 1
     +----------------------------------- Operation with key "+=DIC2" same as
     |                                    "=DIC4" except it creates a nested
     |                                    dictionary except that it takes a
@@ -36,12 +36,12 @@ stuff =DIC4 65536 3 {
          v      v    v    v */
         +=STR (item1 12 "ABC")
         -= "item1"                 //< Operation "-= STR" removes the key "item1"
-        +=UI2 item1 1
-        +=UI2 (item2, 2)
-        +=UI2 item3 1
+        +=IUB item1 1
+        +=IUB (item2, 2)
+        +=IUB item3 1
         -=Index 2                    //< Removes index 2:"item3".
         +=kSI2 item3 -1
-        +=UI2 item4 1
+        +=IUB item4 1
         /*< We can't add item4 because we set the max elements to 3.
         This won't generate an error but may generate an error message. */
         Shrink  //< We just shrunk the DIC4 (i.e. chopped off the whitespace).
@@ -50,7 +50,7 @@ stuff =DIC4 65536 3 {
 /** Using macros to pass return values as arguments.
     Do you have a better abbreviation for a dictionary?
     Example Function:
-    FooBar <DIC4, UI1>:<NIL>
+    FooBar <DIC4, IUA>:<NIL>
              ^     ^
              |     |
              |     +----- An 8-bit unsigned integer.
@@ -69,6 +69,6 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
 
 ## License
 
-Copyright 2014-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

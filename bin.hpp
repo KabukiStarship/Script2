@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bin.hpp
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -38,47 +38,47 @@ typedef enum BInStates {
 /* A*B B-Input Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct LIB_MEMBER BIn {
-  SI4 size,           //< The size of the socket.
+  ISC size,           //< The size of the socket.
       origin;         //< The starting index of the ring socket data.
-  volatile SI4 stop;  //< The stopping index of the ring socket data.
-  SI4 read;           //< The read variable.
+  volatile ISC stop;  //< The stopping index of the ring socket data.
+  ISC read;           //< The read variable.
 };
 
 /* Get's the B-Input's socket. */
-LIB_MEMBER inline CH1* BInBegin(BIn* bin);
+LIB_MEMBER inline CHA* BInBegin(BIn* bin);
 
-LIB_MEMBER inline CH1* BInEnd(BIn* bin);
+LIB_MEMBER inline CHA* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline SIW SlotLength(CH1* origin, CH1* stop, UIW size);
+LIB_MEMBER inline ISW SlotLength(CHA* origin, CHA* stop, UIW size);
 
 /* Calculates the space left in the given ring socket.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline SIW SlotSpace(CH1* origin, CH1* stop, UIW size);
+LIB_MEMBER inline ISW SlotSpace(CHA* origin, CHA* stop, UIW size);
 
 /* Gets the rx socket length. */
-LIB_MEMBER inline SI4 BInSpace(BIn* bin);
+LIB_MEMBER inline ISC BInSpace(BIn* bin);
 
-LIB_MEMBER inline SI4 BinBufferLength(BIn* bin);
+LIB_MEMBER inline ISC BinBufferLength(BIn* bin);
 
 #if USING_SCRIPT2_TEXT == YES_0
-/* Gets a a CH1 for printing out the bin_state. */
-LIB_MEMBER const CH1** STRBInStates();
+/* Gets a a CHA for printing out the bin_state. */
+LIB_MEMBER const CHA** STRBInStates();
 
 /* Pulls the keyboard input into the ring socket. */
 // LIB_MEMBER void BInKeyboard ()
 #endif
 
 /* Initializes the BIn struct LIB_MEMBER to an empty socket. */
-LIB_MEMBER BIn* BInInit(UIW* socket, SI4 size);
+LIB_MEMBER BIn* BInInit(UIW* socket, ISC size);
 
 /* Gets the stop address of the rx socket. */
-LIB_MEMBER CH1* BInEnd(BIn* bin);
+LIB_MEMBER CHA* BInEnd(BIn* bin);
 
 /* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */
@@ -93,9 +93,9 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number_ upon
               failure. */
-LIB_MEMBER const Op* BInRead(BIn* bin, const SI4* params, void** args);
+LIB_MEMBER const Op* BInRead(BIn* bin, const ISC* params, void** args);
 
-inline const Op* BOutRead(BOut* bout, const SI4* params, void** args) {
+inline const Op* BOutRead(BOut* bout, const ISC* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 

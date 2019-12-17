@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /wall.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2014-9 Kabuki Starship <kabukistarship.com>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -50,7 +50,7 @@ class Wall : public Operand {
 
   virtual ~Wall() {
     if (is_dynamic_) {
-      CH1* socket = reinterpret_cast<CH1*>(doors_);
+      CHA* socket = reinterpret_cast<CHA*>(doors_);
       delete[] socket;
     }
   }
@@ -58,10 +58,10 @@ class Wall : public Operand {
   Wall(TMap<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
-  Wall(SIW size_bytes = cMinSizeBytes) : is_dynamic_(true) {
-    size_bytes = size_bytes < cMinSizeBytes ? (SI4)cMinSizeBytes : size_bytes;
-    size_bytes = TAlignUpUnsigned<SI8, SIW>(size_bytes);
-    SIW size_words = (size_bytes >> sizeof(void*)) + 3;
+  Wall(ISW size_bytes = cMinSizeBytes) : is_dynamic_(true) {
+    size_bytes = size_bytes < cMinSizeBytes ? (ISC)cMinSizeBytes : size_bytes;
+    size_bytes = TAlignUpUnsigned<ISD, ISW>(size_bytes);
+    ISW size_words = (size_bytes >> sizeof(void*)) + 3;
     UIW *socket = new UIW[size_words],
         *aligned_buffer = AlignUpPointer8<UIW>(socket);
     //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
@@ -73,14 +73,14 @@ class Wall : public Operand {
   }
 
   /* Constructs a wall from the given socket. */
-  Wall(UIW* socket, SIW size_bytes) {
-    // CH1* ptr     = reinterpret_cast<CH1*> (socket);//,
-    //    * new_ptr = ptr + AlignOffset<UI8> (ptr),
+  Wall(UIW* socket, ISW size_bytes) {
+    // CHA* ptr     = reinterpret_cast<CHA*> (socket);//,
+    //    * new_ptr = ptr + AlignOffset<IUD> (ptr),
     //    * end_ptr = ptr + size_bytes;
     enum {
       cBitsShift = sizeof(UIW) == 2 ? 1 : sizeof(UIW) == 2 ? 2 : 3,
     };
-    // SI4 size_words = (size_bytes >> kBitsShift) + 3;
+    // ISC size_words = (size_bytes >> kBitsShift) + 3;
     //< Computer engineering voodoo for aligning to 64-bit boundary.
 
     UIW* aligned_buffer = AlignUpPointer8<UIW>(socket);
@@ -93,22 +93,22 @@ class Wall : public Operand {
   }
 
   /* Gets the size of the wall in bytes. */
-  SIW GetSizeBytes() {
+  ISW GetSizeBytes() {
     return size_bytes_;
 
     /* Gets a pointer to the array of pointers to Door(). */
     TMatrix<Door*>* Doors();
 
     /* Gets the Door from the Door at the given index. */
-    Door* GetDoor(SIN index) { return 0; }
+    Door* GetDoor(ISN index) { return 0; }
 
     /* Adds a Door to the slot.
     @return Returns nil if the Door is full and a pointer to the Door in the
             socket upon success. */
-    SI4 OpenDoor(Door * door) { return 0; }
+    ISC OpenDoor(Door * door) { return 0; }
 
     /* Deletes the Door from the Door at the given index. */
-    BOL CloseDoor(SIN index) { return false; }
+    BOL CloseDoor(ISN index) { return false; }
 
     /* Prints the given Door to the stream. */
     template <typename Printer>
@@ -118,7 +118,7 @@ class Wall : public Operand {
 
    private:
     BOL is_dynamic_;        //< Flag for if using dynamic memory.
-    SIW size_bytes_;        //< Size of the Wall in bytes.
+    ISW size_bytes_;        //< Size of the Wall in bytes.
     UIW* origin;            //< The Wall's socket.
     TSTack<Door*>* doors_;  //< The doors in the room.
   };
