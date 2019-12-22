@@ -1,21 +1,21 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_library.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@file    /library.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_LIBRARY_HEADER
 #define SCRIPT2_LIBRARY_HEADER
 
 namespace _ {
 #if USING_SCRIPT2_TEXT
-template <typename TIndex, typename TKey, typename TData, SI4 MaxStackHeight>
+template <typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
 class Library : public Operand {
  public:
   /* Creates an empty automata. */
@@ -32,20 +32,20 @@ class Library : public Operand {
   BOL HasHashTable() { return collisions_size_ != 0; }
 
   /* Gets the number_ of keys in the current scope. */
-  SI4 GetBagType() { return 0; }
+  ISC GetBagType() { return 0; }
 
   /* Gets the number_ of keys in the current scope. */
-  SI4 GetNumKeys() { return num_members_; }
+  ISC GetNumKeys() { return num_members_; }
 
   /* Gets the size of the header in bytes. */
-  SI4 GetHeaderSize() { return header_size_; }
+  ISC GetHeaderSize() { return header_size_; }
 
   /* Gets the data size in bytes. */
-  SI4 GetDataSize() { return data_size_; }
+  ISC GetDataSize() { return data_size_; }
 
   /* Attempts to add the Page data into the AArray at the given BaseAddress.
-  @return Returns nil upon success and an error CH1 upon failure. */
-  const Op* Add(UI1 type, const CH1* key, void* data) {
+  @return Returns nil upon success and an error CHA upon failure. */
+  const Op* Add(IUA type, const CHA* key, void* data) {
     TIndex size_of_type = GetSizeOfType(type);
     if (size_of_type == 0) {
       return 0;
@@ -54,8 +54,8 @@ class Library : public Operand {
   }
 
   /* Attempts to insert the Page data into the AArray at the given index.
-  @return Returns nil upon success and an error CH1 upon failure. */
-  const Op* Insert(UI1 type, const CH1* key, void* data, TIndex index = 0) {
+  @return Returns nil upon success and an error CHA upon failure. */
+  const Op* Insert(IUA type, const CHA* key, void* data, TIndex index = 0) {
     TIndex l_numOps = numNumbers;
     if (index > l_numOps) index = l_numOps;
 
@@ -63,28 +63,28 @@ class Library : public Operand {
   }
 
   /* Attempts to remove the Page data into the AArray at the given index.
-  @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CHA upon failure. */
   const Op* Remove(TIndex index) { return 0; }
 
   /* Attempts to clear the page at the given index.
-  @return Returns nil upon success and an error CH1 upon failure. */
+  @return Returns nil upon success and an error CHA upon failure. */
   const Op* Clear(TIndex index) { return 0; }
 
   /* Attempts to find the given op name.
   @return Returns an invalid index upon failure. */
-  TIndex Find(const CH1* key) { return 0; }
+  TIndex Find(const CHA* key) { return 0; }
 
   /* Searches for the given query and returns a bag of query results.  */
-  BOL Search(const CH1* query,
+  BOL Search(const CHA* query,
              Library<TIndex, TKey, TData, TData, MaxStackHeight>* results) {
     return false;
   }
 
   /* gets the size of the item at the given index. */
-  UI1 GetOpSize(TIndex index) { return 0; }
+  IUA GetOpSize(TIndex index) { return 0; }
 
   /* Sets the size of the item to the given index to the new_size. */
-  UI1 SetOpSize(TIndex index, TData new_size) { return 0; }
+  IUA SetOpSize(TIndex index, TData new_size) { return 0; }
 
   /* Returns the data address of the given op if it exists.
   @return Returns a pointer to one of the ChineseRoom error Strings upon
@@ -102,31 +102,31 @@ class Library : public Operand {
 
     Index_t size = 0;
 
-    UI1 type = (*address) & 0x1f;
+    IUA type = (*address) & 0x1f;
 
     UIN array_type = type >> 5;
 
     switch (array_type) {
       case 0:
 #if SCRIPT2_MEMORY_PROFILE >= 16
-        /// Library format: { kUI1, kUI1, kUI2, kUI2 }
-        return size + sizeof(Library) + *(address + 1) * sizeof(UI1) +
+        /// Library format: { cIUA, cIUA, cIUB, cIUB }
+        return size + sizeof(Library) + *(address + 1) * sizeof(IUA) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
 #else
         return 0;
 #endif
       case 1:
 #if SCRIPT2_MEMORY_PROFILE >= 32
-        /// Library format: { kUI1, kUI1, kUI2, kUI4 }
-        return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(UI1) +
+        /// Library format: { cIUA, cIUA, cIUB, cIUC }
+        return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
         return 0;
 #endif
       case 2:
 #if SCRIPT2_MEMORY_PROFILE >= 64
-        /// Library format: { kUI2, kUI2, kUI4, kUI8 }
-        return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(UI1) +
+        /// Library format: { cIUB, cIUB, cIUC, cIUD }
+        return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
         return 0;
@@ -146,7 +146,7 @@ class Library : public Operand {
   error_t ticket upon Read-Write failure.
   @param index The index of the expression.
   @param crabs  The Crabs to read and write from. */
-  virtual const Op* Star(CH4 index, Crabs* crabs) {
+  virtual const Op* Star(CHC index, Crabs* crabs) {
     static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
@@ -167,13 +167,13 @@ class Library : public Operand {
  private:
   // NONCOPYABLE (Library)
 
-  SI4 reserved_;       //< Reserved for 64-bit memory alignment.
+  ISC reserved_;       //< Reserved for 64-bit memory alignment.
   Library** root_;     //< Pointer to the dynamically allocated bags.
   Library* bag_;       //< Currently selected bag.
-  SI4 index_,          //< Index of the currently selected bag.
+  ISC index_,          //< Index of the currently selected bag.
       height_,         //< Number of bags on the stack.
       num_libraries_;  //< Number of libraries.
-  UI1 type_;           //< Current type of bag.
+  IUA type_;           //< Current type of bag.
   TIndex num_keys_,    //< Current number_ of Star members.
       buffer_size_;    //< Current size of the header and names socket in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
@@ -184,10 +184,10 @@ class Library : public Operand {
 };
 
 /* Destructs the given bag. */
-template <typename TIndex, typename TKey, typename TData, UIN MaxStackSize>
-LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStackSize>* r) {
+template <typename TIndex, typename TKey, typename TData, UIN MaxStaccSize>
+LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == nullptr) return;
-  delete reinterpret_cast<CH1*>(r);
+  delete reinterpret_cast<CHA*>(r);
 }
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
 }  // namespace _

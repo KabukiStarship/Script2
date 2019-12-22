@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](readme.md)
 
-Automaton Standard Code for Information Interchange (ASCII) Data Types are mimicked after the the American Standard Code for Information Interchange C0 Control Codes using 3 all capitol letters. There are 32 POD Data Types, mimicking the number of ASCII C0 Control Codes. Arrays, Stacks, multi-dimensional matrices, and 2, 3, and 4-homogenous-tuple (homo-tuple) types can be created using the Vector types bit. All data types are word-aligned leaving some illegal Vector types such as an 1-byte Array of 2-byte types. These illegal types are used in order to create 2, 3, and 4-tuple homogeneous Vectors of a type, such as a 4-tuple of 1-byte unsigned integers (UI1).
+Automaton Standard Code for Information Interchange (ASCII) Data Types are mimicked after the the American Standard Code for Information Interchange C0 Control Codes using 3 all capitol letters. There are 32 POD Data Types, mimicking the number of ASCII C0 Control Codes. Arrays, Stacks, multi-dimensional matrices, and 2, 3, and 4-homogenous-tuple (homo-tuple) types can be created using the Vector types bit. All data types are word-aligned leaving some illegal Vector types such as an 1-byte Array of 2-byte types. These illegal types are used in order to create 2, 3, and 4-tuple homogeneous Vectors of a type, such as a 4-tuple of 1-byte unsigned integers (IUA).
 
 The Automaton Standard Code for Information Interchange (ASCII) Data Specification provides:
 
@@ -27,6 +27,6 @@ The Automaton Standard Code for Information Interchange (ASCII) Data Specificati
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

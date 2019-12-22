@@ -1,20 +1,20 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /op.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "bsq.h"
 #include "op.h"
 #include "slot.h"
 #include "test.h"
 
-#if SEAM == SCRIPT2_DICTIONARY
+#if SEAM == SCRIPT2_DIC
 #include "_debug.inl"
 #else
 #include "_release.inl"
@@ -34,7 +34,7 @@ UTF1& Print(UTF1& utf, const Op* op) {
 #endif
 /*
 #if USING_SCRIPT2_TEXT
-Op OpInit (UIW* socket, SI4 buffer_size) {
+Op OpInit (UIW* socket, ISC buffer_size) {
     BOut* bout = BOutInit (socket, buffer_size);
     Op log;
     log.bout = bout;
@@ -44,22 +44,22 @@ Op OpInit (UIW* socket, SI4 buffer_size) {
 void Print (Op& log) {
     BIn    * bin = reinterpret_cast<BIn*> (log.bout);
     void   * args[1];
-    UI1     type = 0,
+    IUA     type = 0,
     ui1;
-    UI2 ui2;
-    UI4 ui4;
-    UI8 ui8;
-    //SI1   reserved,
-    SI1   si1;
-    UI2 si2;
-    UI4 si4;
-    UI8 si8;
-    FP4    flt;
-    FP8   dbl;
-    CH1   index;
+    IUB ui2;
+    IUC ui4;
+    IUD ui8;
+    //ISA   reserved,
+    ISA   si1;
+    IUB si2;
+    IUC si4;
+    IUD si8;
+    FPC    flt;
+    FPD   dbl;
+    CHA   index;
     //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
     //    return;
-    CH1 socket[DBL_MAX_10_EXP + 2];
+    CHA socket[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
             case kSTR: {
@@ -68,50 +68,50 @@ void Print (Op& log) {
                     return;
                 Write (socket);
             }
-            case kSI1: {
-                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
+            case cISA: {
+                if (BinRead (bin, Params<2, kADR, cISA> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case kUI1: {
-                if (BinRead (bin, Params<2, kADR, kUI1> (), Args (args, &ui1)))
+            case cIUA: {
+                if (BinRead (bin, Params<2, kADR, cIUA> (), Args (args, &ui1)))
                     return;
                 Write (si1);
             }
-            case kBOL: {
-                if (BinRead (bin, Params<2, kADR, kSI1> (), Args (args, &si1)))
+            case cBOL: {
+                if (BinRead (bin, Params<2, kADR, cISA> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
-            case kSI2: {
-                if (BinRead (bin, Params<2, kADR, kSI2> (), Args (args, &si2)))
+            case cISB: {
+                if (BinRead (bin, Params<2, kADR, cISB> (), Args (args, &si2)))
                     return;
                 Write (si1);
             }
-            case kUI2: {
-                if (BinRead (bin, Params<2, kADR, kUI2> (),
+            case cIUB: {
+                if (BinRead (bin, Params<2, kADR, cIUB> (),
                              Args (args, &ui2, socket)))
                     return;
                 Write (si1);
             }
-            case kSI4: {
-                if (BinRead (bin, Params<2, kADR, kSI4> (),
+            case cISC: {
+                if (BinRead (bin, Params<2, kADR, cISC> (),
                              Args (args, &si4, socket)))
                     return;
                 Write (si1;
             }
-            case kUI4: {
-                if (BinRead (bin, Params<2, kADR, kUI4> (), Args (args, &ui4)))
+            case cIUC: {
+                if (BinRead (bin, Params<2, kADR, cIUC> (), Args (args, &ui4)))
                     return;
                 Write (si1;
             }
-            case kSI8: {
-                if (BinRead (bin, Params<2, kADR, kSI8> (), Args (args, &si8)))
+            case cISD: {
+                if (BinRead (bin, Params<2, kADR, cISD> (), Args (args, &si8)))
                     return;
                 Write (si8;
             }
-            case kUI8: {
-                if (BinRead (bin, Params<2, kADR, kUI8> (), Args (args, &ui8)))
+            case cIUD: {
+                if (BinRead (bin, Params<2, kADR, cIUD> (), Args (args, &ui8)))
                  return;
                 Write (ui8;
             }
@@ -125,12 +125,12 @@ void Print (Op& log) {
                     return;
                 ClockPrintTimestamp (ui8);
             }
-            case kFP4: {
-                if (BinRead (bin, Params<2, kADR, kFP4> (), Args (args, &flt)))
+            case cFPC: {
+                if (BinRead (bin, Params<2, kADR, cFPC> (), Args (args, &flt)))
                     return;
                 Write (si1;
             }
-            case kFP8: {
+            case cFPD: {
                 if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;
@@ -142,4 +142,4 @@ void Print (Op& log) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //> #if SEAM >= SCRIPT2_DIC

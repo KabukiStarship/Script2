@@ -1,15 +1,15 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bsq.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_BSQ_C
 #define SCRIPT2_BSQ_C
 
@@ -19,57 +19,57 @@ namespace _ {
 
 /* Utility class for printing B-Sequences. */
 struct Bsq {
-  const SI4* params;  //< Bsq params.
+  const ISC* params;  //< Bsq params.
 
-  Bsq(const SI4* params) : params(params) {
+  Bsq(const ISC* params) : params(params) {
     // Nothing to do here! (:-)-+=<
   }
 };
 
 #if ALU_SIZE == ALU_16_BIT
-inline SI2 UnpackSVI(SI2 value) {
+inline ISB UnpackSVI(ISB value) {
   if (value < 0) {
-    UI2 result = 0x8000 return result | ~(value - 1);
+    IUB result = 0x8000 return result | ~(value - 1);
   }
   return value;
 }
 
-inline SI2 PackSVI(SI2 value) {
+inline ISB PackSVI(ISB value) {
   if (value < 0) {
-    UI2 result = 1 << 15;
+    IUB result = 1 << 15;
     return result | ((~value + 1) << 1);
   }
   return value;
 }
 #else
-inline SI4 UnpackSVI(SI4 value) {
+inline ISC UnpackSVI(ISC value) {
   if (value < 0) {
-    UI4 result = 0x80000000;
+    IUC result = 0x80000000;
     return result | ~(value - 1);
   }
   return value;
 }
 
-inline SI4 PackSVI(SI4 value) {
+inline ISC PackSVI(ISC value) {
   if (value < 0) {
-    SI4 result = 0x80000000;
+    ISC result = 0x80000000;
     return result | ((~value + 1) << 1);
   }
   return value;
 }
 #endif
 
-inline SI8 UnpackSV8(SI8 value) {
+inline ISD UnpackSV8(ISD value) {
   if (value < 0) {
-    SI8 result = 0x8000000000000000;
+    ISD result = 0x8000000000000000;
     return result | ~(value - 1);
   }
   return value;
 }
 
-inline SI8 PackSV8(SI8 value) {
+inline ISD PackSV8(ISD value) {
   if (value < 0) {
-    SI8 result = 0x8000000000000000;
+    ISD result = 0x8000000000000000;
     return result | ((~value + 1) << 1);
   }
   return value;
@@ -82,35 +82,35 @@ inline SI8 PackSV8(SI8 value) {
 //    return temp;
 //}
 
-constexpr SI4 BsqSize(const SI4* params) {
+constexpr ISC CBsqSize(const ISC* params) {
   if (!params) {
     return 0;
   }
-  SI4 size_bytes = sizeof(SI4), count = *params++;
+  ISC size_bytes = sizeof(ISC), count = *params++;
 
-  if (count > kParamsMax) {
+  if (count > cParamsMax) {
     return 0;
   }
 
   for (; count > 0; --count) {
-    SI4 param = *params++;
+    ISC param = *params++;
 
-    if (param == kNIL) {  // This is illegal.
+    if (param == cNIL) {  // This is illegal.
       return 0;
     }
     if (param <= kTKN) {
-      size_bytes += sizeof(SI4);
+      size_bytes += sizeof(ISC);
       ++params;
     }
-    if (param == kSIH) {
-      size_bytes += sizeof(SI4);
+    if (param == cISE) {
+      size_bytes += sizeof(ISC);
       ++params;
     }
-    if (param == kUIH) {
-      size_bytes += sizeof(SI4);
+    if (param == cIUE) {
+      size_bytes += sizeof(ISC);
       ++params;
     }
-    if (param >= kLST && param <= kMAP) {  // This is illegal.
+    if (param >= cLST && param <= kMAP) {  // This is illegal.
       return 0;
     }
     if (param > kMAP) {
@@ -122,7 +122,7 @@ constexpr SI4 BsqSize(const SI4* params) {
         params += param + 1;  // for the dimension count.
       }
     }
-    size_bytes += sizeof(SI4);
+    size_bytes += sizeof(ISC);
   }
   return size_bytes;
 }
@@ -130,21 +130,21 @@ constexpr SI4 BsqSize(const SI4* params) {
 /* Creates a immutable Script B-Sequence.
     C++11 variadic template to ensure only one copy in ROM
     and to eliminate some redundant typing. */
-template <const SI4... N>
-inline const SI4* Params() {
-  static const SI4 kSize = 0,  // BsqSize ({ N... })
+template <const ISC... N>
+inline const ISC* Params() {
+  static const ISC cSize = 0,  // BsqSize ({ N... })
       kList[sizeof...(N)] = {N...};
-  return &kSize;
+  return &cSize;
 }
 
 /* Prints out the kBSQ parameters. */
-LIB_MEMBER UTF1& PrintBsq(UTF1& printer, const SI4* params);
+LIB_MEMBER UTF1& PrintBsq(UTF1& printer, const ISC* params);
 
 /*  Prints out the parameters. */
-// LIB_MEMBER UTF& PrintBsq (const SI4* bsq, UTF& utf);
+// LIB_MEMBER UTF& PrintBsq (const ISC* bsq, UTF& utf);
 
 /*< Returns the requested parameter number_. */
-LIB_MEMBER SI4 BsqParamNumber(const SI4* bsq, SI4 param_number);
+LIB_MEMBER ISC BsqParamNumber(const ISC* bsq, ISC param_number);
 
 }  // namespace _
 
@@ -168,4 +168,4 @@ inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
 #endif  //< USING_UTF8 == YES_0
 
 #endif  //< SCRIPT2_BSQ_C
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

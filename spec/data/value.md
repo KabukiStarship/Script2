@@ -20,7 +20,7 @@ struct TypeValue {
 
 #### Type-String Tuples
 
-Types TS2, TS4, and TS8 are Type-String Tuples (TST) where the value is stored in UTF-8 format and the type is stored as a UI2. The TST is designed to be able to print a number up to twice the size of an ALU word. TS2 are designed for 16-bit systems that can print up to 32-bit numbers that are less than 10 characters long. TS4 is designed to print up to 64-bit numbers less than 22 characters long, and TS8 is designed to print up to 128-bit numbers less than 40 characters long.
+Types TS2, TS4, and TS8 are Type-String Tuples (TST) where the value is stored in UTF-8 format and the type is stored as a IUB. The TST is designed to be able to print a number up to twice the size of an ALU word. TS2 are designed for 16-bit systems that can print up to 32-bit numbers that are less than 10 characters long. TS4 is designed to print up to 64-bit numbers less than 22 characters long, and TS8 is designed to print up to 128-bit numbers less than 40 characters long.
 
 ```C++
 struct TypeString {
@@ -41,6 +41,6 @@ A TST may store a pointer to another string type or object using the second elem
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

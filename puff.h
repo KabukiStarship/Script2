@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /puff.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
@@ -15,31 +15,31 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* Lookup table of ASCII Char pairs for 00, 01, ..., 99. */
-const UI2* BinaryLUTDecimals();
+/* Lookup table of ASCII CHT pairs for 00, 01, ..., 99. */
+const IUB* BinaryLUTDecimals();
 
 enum {
-  kUI2DigitCountMax = 5,
-  kUI4DigitCountMax = 9,
-  kUI8DigitCountMax = 20,
+  cUI2DigitCountMax = 5,
+  cUI4DigitCountMax = 9,
+  cUI8DigitCountMax = 20,
 };
 
-const UI8* Pow10_UI8();
-UI8 Pow10(UI8 index);
+const IUD* Pow10_UI8();
+IUD Pow10(IUD index);
 
-const UI4* Pow10_UI4();
-UI4 Pow10(UI4 index);
+const IUC* Pow10_UI4();
+IUC Pow10(IUC index);
 
-const UI2* Pow10_UI2();
-UI2 Pow10(UI2 index);
+const IUB* Pow10_UI2();
+IUB Pow10(IUB index);
 
 /* Finds the string length of the given value. */
-LIB_MEMBER SI4 STRLength(UI2 value);
-LIB_MEMBER SI4 STRLength(SI2 value);
-LIB_MEMBER SI4 STRLength(UI4 value);
-LIB_MEMBER SI4 STRLength(SI4 value);
-LIB_MEMBER SI4 STRLength(UI8 value);
-LIB_MEMBER SI4 STRLength(SI8 value);
+LIB_MEMBER ISC STRLength(IUB value);
+LIB_MEMBER ISC STRLength(ISB value);
+LIB_MEMBER ISC STRLength(IUC value);
+LIB_MEMBER ISC STRLength(ISC value);
+LIB_MEMBER ISC STRLength(IUD value);
+LIB_MEMBER ISC STRLength(ISD value);
 
 #if SEAM >= SCRIPT2_FTOS
 
@@ -53,34 +53,34 @@ const void* Binary64Pow10IntegralPortions();
  */
 const void* BinaryPow10Exponents();
 
-#if USING_FP4 == YES_0
-/* Gets the maximum number_ of digits required to represent a FP4 as in
+#if USING_FPC == YES_0
+/* Gets the maximum number_ of digits required to represent a FPC as in
 ASCII. */
-LIB_MEMBER SI4 FloatDigitsMax();
+LIB_MEMBER ISC FloatDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsFinite(FP4 value);
+LIB_MEMBER BOL IsFinite(FPC value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsInfinite(FP4 value);
+LIB_MEMBER BOL IsInfinite(FPC value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER FP4 Ceiling(FP4 value);
+LIB_MEMBER FPC Ceiling(FPC value);
 #endif
 
-#if USING_FP8 == YES_0
-/* Gets the maximum number_ of digits required to represent a FP8 as in
+#if USING_FPD == YES_0
+/* Gets the maximum number_ of digits required to represent a FPD as in
 ASCII. */
-LIB_MEMBER SI4 DoubleDigitsMax();
+LIB_MEMBER ISC DoubleDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsFinite(FP8 value);
+LIB_MEMBER BOL IsFinite(FPD value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER BOL IsInfinite(FP8 value);
+LIB_MEMBER BOL IsInfinite(FPD value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER FP8 Ceiling(FP8 value);
+LIB_MEMBER FPD Ceiling(FPD value);
 #endif
 
 #endif

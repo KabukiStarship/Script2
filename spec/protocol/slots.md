@@ -59,7 +59,7 @@ A B-Output Slot, BOut, almost works similarly to the BIn except the BOut reserve
 struct API BOut {
     UIN          size;  //< Size of the B-Output.
     volatile UIT start; //< Starting index of the ring-buffer data.
-    UI4          stop,  //< Stopping index of the ring-buffer data.
+    IUC          stop,  //< Stopping index of the ring-buffer data.
                     read;  //< Address that the BOut device is reading from.
 };
 ```
@@ -99,6 +99,6 @@ Script implementations may implement a default BIn Slot named In (**in UpperCase
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

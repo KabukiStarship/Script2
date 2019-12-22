@@ -1,15 +1,15 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /address.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_CADDRESS
 #define SCRIPT2_CADDRESS 1
 
@@ -24,53 +24,53 @@ create data structures in ROM.
 Address<'A', 'B', 'C'> ()
 @endcode
 */
-template <const CH1... N>
-LIB_MEMBER const CH1* Address() {
-  static const CH1 path[sizeof...(N)] = {N...};
-  static const CH1 term_char = 0;
+template <const CHA... N>
+LIB_MEMBER const CHA* Address() {
+  static const CHA path[sizeof...(N)] = {N...};
+  static const CHA term_char = 0;
   return path;
 }
 
 /* Returns a pointer to static variable for writing the address { a, \0 } to.
  */
-inline UI2 PackAddress(UI1 a) { return ((1 << 8) | a); }
+inline IUB PackAddress(IUA a) { return ((1 << 8) | a); }
 
 /* Returns a pointer to static variable for writing the
     address { a, b, \0, \0 } to. */
-inline UI4 PackAddress(UI4 a, UI4 b) { return ((1 << 16) | a | (b << 8)); }
+inline IUC PackAddress(IUC a, IUC b) { return ((1 << 16) | a | (b << 8)); }
 
 /* Returns a pointer to static variable for writing the address { a, b, c, \0 }
     to. */
-inline UI4 PackAddress(UI4 a, UI4 b, UI4 c) {
+inline IUC PackAddress(IUC a, IUC b, IUC c) {
   return ((1 << 24) | a | (b << 8) | (c << 16));
 }
 
 /* Returns a pointer to static variable for writing the address { a, b, c, d,
     e, f, g, \0 } to. */
-inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d) {
-  UI8 one = 1;
+inline IUD PackAddress(IUD a, IUD b, IUD c, IUD d) {
+  IUD one = 1;
   return (one << 32 | a | (b << 8) | (c << 16) | (d << 24));
 }
 
 /* Returns a pointer to static variable for writing the address { a, b, c, d,
     e, f, g, \0 } to. */
-inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d, UI8 e) {
-  UI8 one = 1;
+inline IUD PackAddress(IUD a, IUD b, IUD c, IUD d, IUD e) {
+  IUD one = 1;
   return (one << 40 | a | (b << 8) | (c << 16) | (d << 24) | (e << 32));
 }
 
 /* Returns a pointer to static variable for writing the address
     { a, b, c, d, e, f, g, \0 } to. */
-inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d, UI8 e, UI8 f) {
-  UI8 one = 1;
+inline IUD PackAddress(IUD a, IUD b, IUD c, IUD d, IUD e, IUD f) {
+  IUD one = 1;
   return (one << 48 | a | (b << 8) | (c << 16) | (d << 24) | (e << 32) |
           (f << 40));
 }
 
 /* Returns a pointer to static variable for writing the address
     { a, b, c, d, e, f, g, \0 } to. */
-inline UI8 PackAddress(UI8 a, UI8 b, UI8 c, UI8 d, UI8 e, UI8 f, UI8 g) {
-  UI8 one = 1;
+inline IUD PackAddress(IUD a, IUD b, IUD c, IUD d, IUD e, IUD f, IUD g) {
+  IUD one = 1;
   return (one << 56 | a | (b << 8) | (c << 16) | (d << 24) | (e << 32) |
           (f << 40) | (g << 48));
 }

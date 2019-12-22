@@ -1,15 +1,15 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /slot.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
 #include "bin.h"
@@ -28,7 +28,7 @@ you may write packed data.
 
 */
 struct Slot {
-  CH1 *stop,    //< Stop of the data in the ring socket.
+  CHA *stop,    //< Stop of the data in the ring socket.
       *stop,    //< End of the ring socket.
       *origin,  //< Beginning of the ring socket.
       *origin;  //< Start of the data in the ring socket.
@@ -49,7 +49,7 @@ struct Slot {
       @param size  The size of the ring socket in bytes. */
   inline BOL Set(UIW* socket, UIW size) {
     if (!socket) return true;
-    CH1* l_begin = reinterpret_cast<CH1*>(socket);
+    CHA* l_begin = reinterpret_cast<CHA*>(socket);
     origin = origin = stop = l_begin;
     stop = l_begin + size;
     return false;
@@ -79,7 +79,7 @@ struct Slot {
   @param op   The Operation to get the in from.
   @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Read(const SI4* params, void** args);
+  const Op* Read(const ISC* params, void** args);
 
   /* Reads the given Operation input parameters from the slot to the args.
   @param slot The slot to read from.
@@ -93,7 +93,7 @@ struct Slot {
   @param op   The Operation to get the in from.
   @param args The args array of pointers to write to.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const SI4* params, void** args);
+  const Op* Write(const ISC* params, void** args);
 
   /* Writes the given Operation output parameters from the slot to the args.
   @param slot The slot to read from.
@@ -105,7 +105,7 @@ struct Slot {
   /* Writes a single  to the slot socket.
   @param message The  message to send.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const CH1* message);
+  const Op* Write(const CHA* message);
 
   /* Copies the contents of the other slot into the slot. */
   const Op* Write(Slot& other);
@@ -126,4 +126,4 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
 #endif
 
 #endif  //< SCRIPT2_SLOT
-#endif  //< #if SEAM >= SCRIPT2_DICTIONARY
+#endif  //< #if SEAM >= SCRIPT2_DIC

@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /puff.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -22,8 +22,8 @@ namespace _ {
 
 #if SEAM >= SCRIPT2_ITOS
 
-const UI8* Pow10_UI8() {
-  static const UI8 k10ToThe[20] = {
+const IUD* Pow10_UI8() {
+  static const IUD k10ToThe[20] = {
       1,                     //< 10^0
       10,                    //< 10^1
       100,                   //< 10^2
@@ -48,10 +48,10 @@ const UI8* Pow10_UI8() {
   return k10ToThe;
 }
 
-UI8 Pow10(UI8 index) { return (index > 19) ? 0 : Pow10_UI8()[index]; }
+IUD Pow10(IUD index) { return (index > 19) ? 0 : Pow10_UI8()[index]; }
 
-const UI4* Pow10_UI4() {
-  static const UI4 k10ToThe[20] = {
+const IUC* Pow10_UI4() {
+  static const IUC k10ToThe[20] = {
       1,           //< 10^0
       10,          //< 10^1
       100,         //< 10^2
@@ -66,10 +66,10 @@ const UI4* Pow10_UI4() {
   return k10ToThe;
 }
 
-UI4 Pow10(UI4 index) { return (index > 9) ? 0 : Pow10_UI4()[index]; }
+IUC Pow10(IUC index) { return (index > 9) ? 0 : Pow10_UI4()[index]; }
 
-const UI2* Pow10_UI2() {
-  static const UI2 k10ToThe[20] = {
+const IUB* Pow10_UI2() {
+  static const IUB k10ToThe[20] = {
       1,      //< 10^0
       10,     //< 10^1
       100,    //< 10^2
@@ -79,10 +79,10 @@ const UI2* Pow10_UI2() {
   return k10ToThe;
 }
 
-UI2 Pow10(UI2 index) { return (index > 4) ? 0 : Pow10_UI2()[index]; }
+IUB Pow10(IUB index) { return (index > 4) ? 0 : Pow10_UI2()[index]; }
 
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-static const UI2 kDigits00To99[100] = {
+static const IUB kDigits00To99[100] = {
     0x3030, 0x3130, 0x3230, 0x3330, 0x3430, 0x3530, 0x3630, 0x3730, 0x3830,
     0x3930, 0x3031, 0x3131, 0x3231, 0x3331, 0x3431, 0x3531, 0x3631, 0x3731,
     0x3831, 0x3931, 0x3032, 0x3132, 0x3232, 0x3332, 0x3432, 0x3532, 0x3632,
@@ -97,7 +97,7 @@ static const UI2 kDigits00To99[100] = {
     0x3939,
 };
 #else
-static const UI2 kDigits00To99[100] = {
+static const IUB kDigits00To99[100] = {
     0x3030, 0x3031, 0x3032, 0x3033, 0x3034, 0x3035, 0x3036, 0x3037, 0x3038,
     0x3039, 0x3130, 0x3131, 0x3132, 0x3133, 0x3134, 0x3135, 0x3136, 0x3137,
     0x3138, 0x3139, 0x3230, 0x3231, 0x3232, 0x3233, 0x3234, 0x3235, 0x3236,
@@ -112,39 +112,39 @@ static const UI2 kDigits00To99[100] = {
     0x3939};
 #endif
 
-const UI2* BinaryLUTDecimals() { return kDigits00To99; }
+const IUB* BinaryLUTDecimals() { return kDigits00To99; }
 
 // @todo This is not Puff and it should be. We really only want one that works
 // with one word. We also have to run on 16-bit systems so we have to provide
 // a lower memory cost overhead version of puff.
 
-SIN STRLength(UI2 value) {
+ISN STRLength(IUB value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
   if (value < 1000) return 3;
   if (value < 10000) return 4;
   return 5;
 }
-SIN STRLength(SI2 value) {
-  if (value < 0) return STRLength((UI2)-value) + 1;
-  return STRLength((UI2)value);
+ISN STRLength(ISB value) {
+  if (value < 0) return STRLength((IUB)-value) + 1;
+  return STRLength((IUB)value);
 }
 
-SIN STRLength(UI4 value) {
-  if ((value >> 16) == 0) return STRLength((UI2)value);
+ISN STRLength(IUC value) {
+  if ((value >> 16) == 0) return STRLength((IUB)value);
   if (value < 1000000) return 6;
   if (value < 10000000) return 7;
   if (value < 100000000) return 8;
   if (value < 1000000000) return 9;
   return 10;
 }
-SIN STRLength(SI4 value) {
-  if (value < 0) return STRLength((UI4)-value) + 1;
-  return STRLength((UI4)value);
+ISN STRLength(ISC value) {
+  if (value < 0) return STRLength((IUC)-value) + 1;
+  return STRLength((IUC)value);
 }
 
-SIN STRLength(UI8 value) {
-  if ((value >> 32) == 0) return STRLength((UI4)value);
+ISN STRLength(IUD value) {
+  if ((value >> 32) == 0) return STRLength((IUC)value);
   if (value < 100000000000) return 11;
   if (value < 1000000000000) return 12;
   if (value < 10000000000000) return 13;
@@ -156,28 +156,28 @@ SIN STRLength(UI8 value) {
   if (value < 10000000000000000000) return 19;
   return 20;
 }
-SIN STRLength(SI8 value) {
-  if (value < 0) return STRLength((UI8)-value) + 1;
-  return STRLength((UI8)value);
+ISN STRLength(ISD value) {
+  if (value < 0) return STRLength((IUD)-value) + 1;
+  return STRLength((IUD)value);
 }
 
 #endif
 
 #if SEAM >= SCRIPT2_FTOS
 
-UI8 TComputePow10(SI4 e, SI4 alpha, SI4 gamma) {
-  FP8 pow_10 = 0.30102999566398114,  //< 1/lg(10)
-      alpha_minus_e_plus_63 = static_cast<FP8>(SI8(alpha) - e + 63),
+IUD TComputePow10(ISC e, ISC alpha, ISC gamma) {
+  FPD pow_10 = 0.30102999566398114,  //< 1/lg(10)
+      alpha_minus_e_plus_63 = static_cast<FPD>(ISD(alpha) - e + 63),
       ceiling = Ceiling(alpha_minus_e_plus_63 * pow_10);
-  return *reinterpret_cast<UI8*>(&pow_10);
+  return *reinterpret_cast<IUD*>(&pow_10);
 }
 
-constexpr SIW IEEE754LutElementCount() { return 87; }
+constexpr ISW CIEEE754LutElementCount() { return 87; }
 
 /* Precomputed IEEE 754 base 2 powers of ten exponents:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const SI2 IEEE754Pow10E[] = {
+static const ISB IEEE754Pow10E[] = {
     -1220, -1193, -1166, -1140, -1113, -1087, -1060, -1034, -1007, -980, -954,
     -927,  -901,  -874,  -847,  -821,  -794,  -768,  -741,  -715,  -688, -661,
     -635,  -608,  -582,  -555,  -529,  -502,  -475,  -449,  -422,  -396, -369,
@@ -190,7 +190,7 @@ static const SI2 IEEE754Pow10E[] = {
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const UI8 kIEEE754Pow10F8[] = {
+static const IUD kIEEE754Pow10F8[] = {
     0xfa8fd5a0081c0288, 0xbaaee17fa23ebf76, 0x8b16fb203055ac76,
     0xcf42894a5dce35ea, 0x9a6bb0aa55653b2d, 0xe61acf033d1a45df,
     0xab70fe17c79ac6ca, 0xff77b1fcbebcdc4f, 0xbe5691ef416bd60c,
@@ -221,14 +221,14 @@ static const UI8 kIEEE754Pow10F8[] = {
     0xbf21e44003acdd2d, 0x8e679c2f5e44ff8f, 0xd433179d9c8cb841,
     0x9e19db92b4e31ba9, 0xeb96bf6ebadf77d9, 0xaf87023b9bf0ee6b};
 
-static const UI4 kPow10[] = {0,        1,         10,        100,
+static const IUC kPow10[] = {0,        1,         10,        100,
                              1000,     10000,     100000,    1000000,
                              10000000, 100000000, 1000000000};
 
 /* Precomputed IEEE 754 powers of ten integral portions:
 10^-348, 10^-340, ..., 10^340.
 Size bytes is 87 elements * 8 bytes/element = 696 bytes. */
-static const UI4 kIEEE754Pow10F4[] = {0};
+static const IUC kIEEE754Pow10F4[] = {0};
 
 const void* BinaryPow10Exponents() { return IEEE754Pow10E; }
 
@@ -236,22 +236,22 @@ const void* Binary32Pow10IntegralPortions() { return kIEEE754Pow10F4; }
 
 const void* Binary64Pow10IntegralPortions() { return kIEEE754Pow10F8; }
 
-BOL IsFinite(FP4 value) {
-  return static_cast<FP4>(isfinite(static_cast<FP8>(value)));
+BOL IsFinite(FPC value) {
+  return static_cast<FPC>(isfinite(static_cast<FPD>(value)));
 }
 
-BOL IsFinite(FP8 value) { return isfinite(value); }
+BOL IsFinite(FPD value) { return isfinite(value); }
 
-BOL IsInfinite(FP4 value) {
-  return static_cast<FP4>(isinf(static_cast<FP8>(value)));
+BOL IsInfinite(FPC value) {
+  return static_cast<FPC>(isinf(static_cast<FPD>(value)));
 }
 
-BOL IsInfinite(FP8 value) { return isinf(value); }
+BOL IsInfinite(FPD value) { return isinf(value); }
 
-FP8 Ceiling(FP8 value) { return ceil(value); }
+FPD Ceiling(FPD value) { return ceil(value); }
 
-FP4 Ceiling(FP4 value) {
-  return static_cast<FP4>(ceil(static_cast<FP8>(value)));
+FPC Ceiling(FPC value) {
+  return static_cast<FPC>(ceil(static_cast<FPD>(value)));
 }
 
 #endif

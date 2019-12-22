@@ -38,7 +38,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
 
 ####### B-Sequence Header Example
 
-```Script2
+```Script2™
 /*      +--------------- 4 input parameters
         |   +----------- A _::TStrand<> of max length 31.
         |   |       +--- A signed integer with 1-byte (8-bit) width.
@@ -46,9 +46,9 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v */
-   Foo <4, STR:32, SI1, SI2, SI4>:<NIL>
-   Bar <1, STR:32>:<3, SI1, SI2, SI4>
-   FooBar <DIC4, UI2>:<NIL>
+   Foo <4, STR:32, ISA, ISB, ISC>:<NIL>
+   Bar <1, STR:32>:<3, ISA, ISB, ISC>
+   FooBar <DIC4, IUB>:<NIL>
 /*          ^     ^
             |     |
             |     +----- An 16-bit unsigned integer.
@@ -62,6 +62,6 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

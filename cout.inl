@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /cout.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
@@ -33,29 +33,29 @@ namespace _ {
 
 COut::COut() {}
 
-COut::COut(CH1 item) { Print(item); }
-COut::COut(const CH1* item) { Print(item); }
+COut::COut(CHA item) { Print(item); }
+COut::COut(const CHA* item) { Print(item); }
 #if USING_UTF16 == YES_0
-COut::COut(CH2 item) { Print(item); }
-COut::COut(const CH2* item) { Print(item); }
+COut::COut(CHB item) { Print(item); }
+COut::COut(const CHB* item) { Print(item); }
 #endif
 #if USING_UTF32 == YES_0
-COut::COut(CH4 item) { Print(item); }
-COut::COut(const CH4* item) { Print(item); }
+COut::COut(CHC item) { Print(item); }
+COut::COut(const CHC* item) { Print(item); }
 #endif
-COut::COut(SI1 item) { Print(item); }
-COut::COut(UI1 item) { Print(item); }
-COut::COut(SI2 item) { Print(item); }
-COut::COut(UI2 item) { Print(item); }
-COut::COut(SI4 item) { Print(item); }
-COut::COut(UI4 item) { Print(item); }
-COut::COut(SI8 item) { Print(item); }
-COut::COut(UI8 item) { Print(item); }
-#if USING_FP4 == YES_0
-COut::COut(FP4 item) { Print(item); }
+COut::COut(ISA item) { Print(item); }
+COut::COut(IUA item) { Print(item); }
+COut::COut(ISB item) { Print(item); }
+COut::COut(IUB item) { Print(item); }
+COut::COut(ISC item) { Print(item); }
+COut::COut(IUC item) { Print(item); }
+COut::COut(ISD item) { Print(item); }
+COut::COut(IUD item) { Print(item); }
+#if USING_FPC == YES_0
+COut::COut(FPC item) { Print(item); }
 #endif
-#if USING_FP8 == YES_0
-COut::COut(FP8 item) { Print(item); }
+#if USING_FPD == YES_0
+COut::COut(FPD item) { Print(item); }
 #endif
 COut::COut(Hexf item) { Print(item); }
 COut::COut(Binaryf item) { Print(item); }
@@ -66,68 +66,68 @@ COut::COut(Headingf item) { Print(item); }
 COut::COut(Indentf item) { Print(item); }
 COut::COut(Charsf item) { Print(item); }
 
-COut::COut(const CH1* item, CH1 second_item) {
+COut::COut(const CHA* item, CHA second_item) {
   Print(item);
   Print(second_item);
 }
 
-COut::COut(const CH1* item, const CH1* second_item) {
+COut::COut(const CHA* item, const CHA* second_item) {
   Print(item);
   Print(second_item);
 }
-COut::COut(CH1 item, CH1 second_item) {
+COut::COut(CHA item, CHA second_item) {
   Print(item);
   Print(second_item);
 }
-COut::COut(CH1 item, const CH1* second_item) {
+COut::COut(CHA item, const CHA* second_item) {
   Print(item);
   Print(second_item);
 }
-COut::COut(CH1 item, CH1 second_item, CH1 third_item) {
-  Print(item);
-  Print(second_item);
-  Print(third_item);
-}
-COut::COut(CH1 item, CH1 second_item, const CH1* third_item) {
+COut::COut(CHA item, CHA second_item, CHA third_item) {
   Print(item);
   Print(second_item);
   Print(third_item);
 }
-COut::COut(const CH1* item, const CH1* second_item, CH1 third_item) {
+COut::COut(CHA item, CHA second_item, const CHA* third_item) {
   Print(item);
   Print(second_item);
   Print(third_item);
 }
-COut::COut(const CH1* item, const CH1* second_item, const CH1* third_item) {
+COut::COut(const CHA* item, const CHA* second_item, CHA third_item) {
+  Print(item);
+  Print(second_item);
+  Print(third_item);
+}
+COut::COut(const CHA* item, const CHA* second_item, const CHA* third_item) {
   Print(item);
   Print(second_item);
   Print(third_item);
 }
 COut& COut::Star() { return *this; }
 
-COut& COut::Print(CH1 item) {
+COut& COut::Print(CHA item) {
   STD_COUT << item;
   return *this;
 }
 
-COut& COut::Print(const CH1* item) {
-  return TSPrintString<COut, CH1>(*this, item);
+COut& COut::Print(const CHA* item) {
+  return TSPrintString<COut, CHA>(*this, item);
 }
 
 #if USING_UTF16 == YES_0
-COut& COut::Print(CH2 item) {
+COut& COut::Print(CHB item) {
   STD_COUT << (CHN)item;
   return *this;
 }
 
-COut& COut::Print(const CH2* item) {
-  return TSPrintString<COut, CH2>(*this, item);
+COut& COut::Print(const CHB* item) {
+  return TSPrintString<COut, CHB>(*this, item);
 }
 
 #endif
 #if USING_UTF32 == YES_0
-COut& COut::Print(CH4 item) {
-  if (item >= (CH4(1) << 9)) {
+COut& COut::Print(CHC item) {
+  if (item >= (CHC(1) << 9)) {
     STD_COUT << (CHN)(item & 0x3f) + 0xD800;
     STD_COUT << (CHN)((item >> 10) & 0x3f) + 0xDC00;
   } else {
@@ -135,88 +135,88 @@ COut& COut::Print(CH4 item) {
   }
   return *this;
 }
-COut& COut::Print(const CH4* item) {
-  return TSPrintString<COut, CH4>(*this, item);
+COut& COut::Print(const CHC* item) {
+  return TSPrintString<COut, CHC>(*this, item);
 }
 #endif
 
-COut& COut::Print(SI4 item) {
+COut& COut::Print(ISC item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
 #if ALU_SIZE == ALU_64_BIT
-  Print((SI8)item);
+  Print((ISD)item);
 #else
-  enum { kSize = 24 };
-  CH1 socket[kSize];
-  TSPrintSigned<SI8, UI8, CH1>(socket, kSize - 1, (SI8)value);
+  enum { cSize = 24 };
+  CHA socket[cSize];
+  TSPrintSigned<ISD, IUD, CHA>(socket, cSize - 1, (ISD)value);
   Print(socket);
 #endif
 #endif
   return *this;
 }
 
-COut& COut::Print(UI4 item) {
+COut& COut::Print(IUC item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
 #if ALU_SIZE == ALU_64_BIT
-  Print((UI8)item);
+  Print((IUD)item);
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintUnsigned<UI4, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CHA buffer[cSize];
+  TSPrintUnsigned<IUC, CHA>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
 #endif
   return *this;
 }
 
-COut& COut::Print(SI8 item) {
+COut& COut::Print(ISD item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintSigned<SI8, UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CHA buffer[cSize];
+  TSPrintSigned<ISD, IUD, CHA>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
 }
 
-COut& COut::Print(UI8 item) {
+COut& COut::Print(IUD item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TSPrintUnsigned<UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CHA buffer[cSize];
+  TSPrintUnsigned<IUD, CHA>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
 }
 
-#if USING_FP4 == YES_0
-COut& COut::Print(FP4 item) {
+#if USING_FPC == YES_0
+COut& COut::Print(FPC item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { kSize = 16 };
-  CH1 buffer[kSize];
-  TPrintFloat<FP4, UI4, CH1>(buffer, kSize, value);
+  enum { cSize = 16 };
+  CHA buffer[cSize];
+  TPrintFloat<FPC, IUC, CHA>(buffer, cSize, value);
   Print(buffer);
 #endif
   return *this;
 }
 #endif
-#if USING_FP8 == YES_0
-COut& COut::Print(FP8 item) {
+#if USING_FPD == YES_0
+COut& COut::Print(FPD item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { kSize = 24 };
-  CH1 buffer[kSize];
-  TPrintFloat<FP8, UI8, CH1>(buffer, kSize - 1, item);
+  enum { cSize = 24 };
+  CHA buffer[cSize];
+  TPrintFloat<FPD, IUD, CHA>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
@@ -252,151 +252,151 @@ COut& COut::Print(Charsf& item) {
 }  // namespace _
 
 COut& COut::NL() { return Print('\n'); }
-COut& COut::NL(CH1 item) {
+COut& COut::NL(CHA item) {
   NL();
   return Print(item);
 }
-COut& COut::NL(const CH1* item) {
+COut& COut::NL(const CHA* item) {
   NL();
   return Print(item);
 }
 #if USING_UTF16 == YES_0
-COut& COut::NL(CH2 item) {
+COut& COut::NL(CHB item) {
   NL();
   return Print(item);
 }
-COut& COut::NL(const CH2* item) {
+COut& COut::NL(const CHB* item) {
   NL();
   return Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
-COut& COut::NL(CH4 item) {
+COut& COut::NL(CHC item) {
   NL();
   return Print(item);
 }
-COut& COut::NL(const CH4* item) {
-  NL();
-  return Print(item);
-}
-#endif
-COut& COut::NL(SI4 item) {
-  NL();
-  return Print(item);
-}
-COut& COut::NL(UI4 item) {
-  NL();
-  return Print(item);
-}
-COut& COut::NL(SI8 item) {
-  NL();
-  return Print(item);
-}
-COut& COut::NL(UI8 item) {
-  NL();
-  return Print(item);
-}
-#if USING_FP4 == YES_0
-COut& COut::NL(FP4 item) {
+COut& COut::NL(const CHC* item) {
   NL();
   return Print(item);
 }
 #endif
-#if USING_FP8 == YES_0
-COut& COut::NL(FP8 item) {
+COut& COut::NL(ISC item) {
+  NL();
+  return Print(item);
+}
+COut& COut::NL(IUC item) {
+  NL();
+  return Print(item);
+}
+COut& COut::NL(ISD item) {
+  NL();
+  return Print(item);
+}
+COut& COut::NL(IUD item) {
+  NL();
+  return Print(item);
+}
+#if USING_FPC == YES_0
+COut& COut::NL(FPC item) {
+  NL();
+  return Print(item);
+}
+#endif
+#if USING_FPD == YES_0
+COut& COut::NL(FPD item) {
   NL();
   return Print(item);
 }
 #endif
 
 COut& COut::Hex(const void* item) { return TPrintHex<COut>(*this, item); }
-COut& COut::Hex(const void* item, SIW size) {
+COut& COut::Hex(const void* item, ISW size) {
   return TPrintHex<COut>(*this, item, size);
 }
 COut& COut::Hex(const void* item, const void* item_stop) {
   return TPrintHex<COut>(*this, item, item_stop);
 }
-COut& COut::Hex(SI1 item) { return TPrintHex<COut, SI1, UI1>(*this, item); }
-COut& COut::Hex(UI1 item) { return TPrintHex<COut, UI1>(*this, item); }
-COut& COut::Hex(SI2 item) { return TPrintHex<COut, SI2, UI2>(*this, item); }
-COut& COut::Hex(UI2 item) { return TPrintHex<COut, UI2>(*this, item); }
-COut& COut::Hex(SI4 item) { return TPrintHex<COut, SI4, UI4>(*this, item); }
-COut& COut::Hex(UI4 item) { return TPrintHex<COut, UI4>(*this, item); }
-COut& COut::Hex(SI8 item) { return TPrintHex<COut, SI8, UI8>(*this, item); }
-COut& COut::Hex(UI8 item) { return TPrintHex<COut, UI8>(*this, item); }
-#if USING_FP4 == YES_0
-COut& COut::Hex(FP4 item) { return TPrintHex<COut>(*this, item); }
+COut& COut::Hex(ISA item) { return TPrintHex<COut, ISA, IUA>(*this, item); }
+COut& COut::Hex(IUA item) { return TPrintHex<COut, IUA>(*this, item); }
+COut& COut::Hex(ISB item) { return TPrintHex<COut, ISB, IUB>(*this, item); }
+COut& COut::Hex(IUB item) { return TPrintHex<COut, IUB>(*this, item); }
+COut& COut::Hex(ISC item) { return TPrintHex<COut, ISC, IUC>(*this, item); }
+COut& COut::Hex(IUC item) { return TPrintHex<COut, IUC>(*this, item); }
+COut& COut::Hex(ISD item) { return TPrintHex<COut, ISD, IUD>(*this, item); }
+COut& COut::Hex(IUD item) { return TPrintHex<COut, IUD>(*this, item); }
+#if USING_FPC == YES_0
+COut& COut::Hex(FPC item) { return TPrintHex<COut>(*this, item); }
 #endif
-#if USING_FP8 == YES_0
-COut& COut::Hex(FP8 item) { return TPrintHex<COut>(*this, item); }
+#if USING_FPD == YES_0
+COut& COut::Hex(FPD item) { return TPrintHex<COut>(*this, item); }
 #endif
 
 /* Stores the given item to the buffer and store the size. */
 COut& COut::Binary(const void* item) { return TPrintBinary<COut>(*this, item); }
-COut& COut::Binary(const void* item, SIW size) {
+COut& COut::Binary(const void* item, ISW size) {
   return TPrintBinary<COut>(*this, item, size);
 }
 COut& COut::Binary(const void* start, const void* stop) {
   return TPrintBinary<COut>(
       *this, start,
-      reinterpret_cast<const CH1*>(stop) - reinterpret_cast<const CH1*>(start));
+      reinterpret_cast<const CHA*>(stop) - reinterpret_cast<const CHA*>(start));
 }
-COut& COut::Binary(SI1 item) {
-  return TPrintBinary<COut, SI1, UI1>(*this, item);
+COut& COut::Binary(ISA item) {
+  return TPrintBinary<COut, ISA, IUA>(*this, item);
 }
-COut& COut::Binary(UI1 item) { return TPrintBinary<COut, UI1>(*this, item); }
-COut& COut::Binary(SI2 item) {
-  return TPrintBinary<COut, SI2, UI2>(*this, item);
+COut& COut::Binary(IUA item) { return TPrintBinary<COut, IUA>(*this, item); }
+COut& COut::Binary(ISB item) {
+  return TPrintBinary<COut, ISB, IUB>(*this, item);
 }
-COut& COut::Binary(UI2 item) { return TPrintBinary<COut, UI2>(*this, item); }
-COut& COut::Binary(SI4 item) {
-  return TPrintBinary<COut, SI4, UI4>(*this, item);
+COut& COut::Binary(IUB item) { return TPrintBinary<COut, IUB>(*this, item); }
+COut& COut::Binary(ISC item) {
+  return TPrintBinary<COut, ISC, IUC>(*this, item);
 }
-COut& COut::Binary(UI4 item) { return TPrintBinary<COut, UI4>(*this, item); }
-COut& COut::Binary(SI8 item) {
-  return TPrintBinary<COut, SI8, UI8>(*this, item);
+COut& COut::Binary(IUC item) { return TPrintBinary<COut, IUC>(*this, item); }
+COut& COut::Binary(ISD item) {
+  return TPrintBinary<COut, ISD, IUD>(*this, item);
 }
-COut& COut::Binary(UI8 item) { return TPrintBinary<COut, UI8>(*this, item); }
-#if USING_FP4 == YES_0
-COut& COut::Binary(FP4 item) { return TPrintBinary<COut>(*this, item); }
+COut& COut::Binary(IUD item) { return TPrintBinary<COut, IUD>(*this, item); }
+#if USING_FPC == YES_0
+COut& COut::Binary(FPC item) { return TPrintBinary<COut>(*this, item); }
 #endif
-#if USING_FP8 == YES_0
-COut& COut::Binary(FP8 item) { return TPrintBinary<COut>(*this, item); }
+#if USING_FPD == YES_0
+COut& COut::Binary(FPD item) { return TPrintBinary<COut>(*this, item); }
 #endif
-SIN COut::PrintAndCount(const CH1* string) {
-  return TPrintAndCount<COut, CH1>(*this, string);
+ISN COut::PrintAndCount(const CHA* string) {
+  return TPrintAndCount<COut, CHA>(*this, string);
 }
 #if USING_UTF16 == YES_0
-SIN COut::PrintAndCount(const CH2* string) {
-  return TPrintAndCount<COut, CH2>(*this, string);
+ISN COut::PrintAndCount(const CHB* string) {
+  return TPrintAndCount<COut, CHB>(*this, string);
 }
 #endif
 #if USING_UTF32 == YES_0
-SIN COut::PrintAndCount(const CH4* string) {
-  return TPrintAndCount<COut, CH4>(*this, string);
+ISN COut::PrintAndCount(const CHC* string) {
+  return TPrintAndCount<COut, CHC>(*this, string);
 }
 #endif
 
-COut CPrint(CH1 item) { return COut(item); }
-COut CPrint(const CH1* item) { return COut(item); }
+COut CPrint(CHA item) { return COut(item); }
+COut CPrint(const CHA* item) { return COut(item); }
 #if USING_UTF16 == YES_0
-COut CPrint(CH2 item) { return COut(item); }
-COut CPrint(const CH2* item) { return COut(item); }
+COut CPrint(CHB item) { return COut(item); }
+COut CPrint(const CHB* item) { return COut(item); }
 #endif
 #if USING_UTF32 == YES_0
-COut CPrint(CH4 item) { return COut(item); }
-COut CPrint(const CH4* item) { return COut(item); }
+COut CPrint(CHC item) { return COut(item); }
+COut CPrint(const CHC* item) { return COut(item); }
 #endif
 
-COut CPrint(SI4 item) { return COut(item); }
-COut CPrint(UI4 item) { return COut(item); }
-COut CPrint(SI8 item) { return COut(item); }
-COut CPrint(UI8 item) { return COut(item); }
-#if USING_FP4 == YES_0
-COut CPrint(FP4 item) { return COut(item); }
+COut CPrint(ISC item) { return COut(item); }
+COut CPrint(IUC item) { return COut(item); }
+COut CPrint(ISD item) { return COut(item); }
+COut CPrint(IUD item) { return COut(item); }
+#if USING_FPC == YES_0
+COut CPrint(FPC item) { return COut(item); }
 #endif
-#if USING_FP8 == YES_0
-COut CPrint(FP8 item) { return COut(item); }
+#if USING_FPD == YES_0
+COut CPrint(FPD item) { return COut(item); }
 #endif
 COut CPrint(Hexf& item) { return COut(item); }
 COut CPrint(Binaryf& item) { return COut(item); }
@@ -408,25 +408,25 @@ COut CPrint(Indentf& item) { return COut(item); }
 
 }  // namespace _
 
-_::COut& operator<<(_::COut& o, CH1 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, const CH1* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CHA item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CHA* item) { return o.Print(item); }
 #if USING_UTF16 == YES_0
-_::COut& operator<<(_::COut& o, CH2 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, const CH2* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CHB item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CHB* item) { return o.Print(item); }
 #endif
 #if USING_UTF32 == YES_0
-_::COut& operator<<(_::COut& o, CH4 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, const CH4* item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, CHC item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, const CHC* item) { return o.Print(item); }
 #endif
-_::COut& operator<<(_::COut& o, SI4 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, UI4 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, SI8 item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, UI8 item) { return o.Print(item); }
-#if USING_FP4 == YES_0
-_::COut& operator<<(_::COut& o, FP4 item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, ISC item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, IUC item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, ISD item) { return o.Print(item); }
+_::COut& operator<<(_::COut& o, IUD item) { return o.Print(item); }
+#if USING_FPC == YES_0
+_::COut& operator<<(_::COut& o, FPC item) { return o.Print(item); }
 #endif
-#if USING_FP8 == YES_0
-_::COut& operator<<(_::COut& o, FP8 item) { return o.Print(item); }
+#if USING_FPD == YES_0
+_::COut& operator<<(_::COut& o, FPD item) { return o.Print(item); }
 #endif
 _::COut& operator<<(_::COut& o, _::Hexf item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, _::Binaryf item) { return o.Print(item); }

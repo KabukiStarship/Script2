@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /lock.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@file    /clock.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -37,68 +37,68 @@ AClock* TClockInit(AClock& clock, SI t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  SIN value = (SIN)(t / kSecondsPerYear);
-  t -= SI(value) * kSecondsPerYear;
+  ISN value = (ISN)(t / cSecondsPerYear);
+  t -= SI(value) * cSecondsPerYear;
   clock.year = value + ClockEpoch();
-  value = (SIN)(t / kSecondsPerDay);
-  t -= SI(value) * kSecondsPerDay;
+  value = (ISN)(t / cSecondsPerDay);
+  t -= SI(value) * cSecondsPerDay;
   clock.day = value;
-  value = (SIN)(t / kSecondsPerHour);
-  t -= SI(value) * kSecondsPerHour;
+  value = (ISN)(t / cSecondsPerHour);
+  t -= SI(value) * cSecondsPerHour;
   clock.hour = value;
-  value = (SIN)(t / kSecondsPerMinute);
+  value = (ISN)(t / cSecondsPerMinute);
   clock.minute = value;
-  clock.second = (SIN)(t - SI(value) * kSecondsPerMinute);
+  clock.second = (ISN)(t - SI(value) * cSecondsPerMinute);
   return &clock;
 }
 
 template <typename SI>
-SI TClockTime(SIN year, SIN month, SIN day, SIN hour, SIN minute, SIN second) {
+SI TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
       return 0;
   }
   if (month < 1 || month >= 12 || hour >= 23 || minute >= 60 || second >= 60)
     return 0;
-  return (SI)((year - ClockEpoch()) * kSecondsPerYear +
-              ClockDayOfYear(year, month, day) * kSecondsPerDay +
-              hour * kSecondsPerHour + minute * kSecondsPerMinute + second);
+  return (SI)((year - ClockEpoch()) * cSecondsPerYear +
+              ClockDayOfYear(year, month, day) * cSecondsPerDay +
+              hour * cSecondsPerHour + minute * cSecondsPerMinute + second);
 }
 
 /*
-template <typename Char = CHR>
-Char* Print(Char* cursor, Char* stop, TME& t) {
+template <typename CHT = CHR>
+CHT* Print(CHT* cursor, CHT* stop, TME& t) {
   AClock c (t.seconds);
-  cursor = TSPrint<Char>(cursor, stop, c);
-  cursor = TSPrint<Char>(cursor, stop, ':');
-  return TSPrint<Char>(cursor, stop, t.ticks);
+  cursor = TSPrint<CHT>(cursor, stop, c);
+  cursor = TSPrint<CHT>(cursor, stop, ':');
+  return TSPrint<CHT>(cursor, stop, t.ticks);
 }*/
 
 #if USING_STR
 
-template <typename Char = CHR>
-Char* TSPrint(Char* cursor, Char* stop, const AClock& clock) {
-  // The way the utf functions are setup, we return a nil-term CH1 so we
-  // don't have to check to write a single CH1 in this
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* cursor, CHT* stop, const AClock& clock) {
+  // The way the utf functions are setup, we return a nil-term CHA so we
+  // don't have to check to write a single CHA in this
   A_ASSERT(cursor);
   A_ASSERT(cursor < stop);
 
-  cursor = TSPrint<Char>(cursor, stop, clock.year + ClockEpoch());
+  cursor = TSPrint<CHT>(cursor, stop, clock.year + ClockEpoch());
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = TSPrint<Char>(cursor, stop, clock.month + 1);
+  cursor = TSPrint<CHT>(cursor, stop, clock.month + 1);
   if (!cursor) return nullptr;
   *cursor++ = '-';
-  cursor = TSPrint<Char>(cursor, stop, clock.day);
+  cursor = TSPrint<CHT>(cursor, stop, clock.day);
   if (!cursor) return nullptr;
   *cursor++ = '@';
-  cursor = TSPrint<Char>(cursor, stop, clock.hour);
+  cursor = TSPrint<CHT>(cursor, stop, clock.hour);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = TSPrint<Char>(cursor, stop, clock.minute);
+  cursor = TSPrint<CHT>(cursor, stop, clock.minute);
   if (!cursor) return nullptr;
   *cursor++ = ':';
-  cursor = TSPrint<Char>(cursor, stop, clock.second);
+  cursor = TSPrint<CHT>(cursor, stop, clock.second);
   if (!cursor) return nullptr;
   return cursor;
 }
@@ -110,25 +110,25 @@ Printer& TSPrint(Printer& o, const _::AClock& clock) {
            << clock.second;
 }
 
-template <typename Char = CHR, typename Time = TM8>
-Char* TClockPrint(Char* cursor, Char* stop, Time t) {
+template <typename CHT = CHR, typename Time = TM8>
+CHT* TClockPrint(CHT* cursor, CHT* stop, Time t) {
   AClock clock;
   ClockInit(clock, t);
-  return TSPrint<Char>(cursor, stop, clock);
+  return TSPrint<CHT>(cursor, stop, clock);
 }
 
-template <typename Char = CHR>
-Char* TSPrint(Char* cursor, Char* stop, TME& t) {
-  // The way the utf functions are setup, we return a nil-term CH1 so we
-  // don't have to check to write a single CH1 in this
+template <typename CHT = CHR>
+CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
+  // The way the utf functions are setup, we return a nil-term CHA so we
+  // don't have to check to write a single CHA in this
   A_ASSERT(cursor);
   A_ASSERT(cursor < stop);
 
   AClock clock;
   ClockInit(clock, t.seconds);
-  cursor = TSPrint<Char>(cursor, stop, clock);
+  cursor = TSPrint<CHT>(cursor, stop, clock);
   *cursor++ = ':';
-  cursor = TSPrint<Char>(cursor, stop, t.ticks);
+  cursor = TSPrint<CHT>(cursor, stop, t.ticks);
   if (!cursor) return nullptr;
   return cursor;
 }
@@ -141,20 +141,20 @@ Printer& TSPrint(Printer& o, TME& t) {
 }
 
 /* Scans a time in seconds from the given string. */
-template <typename Char = CHR>
-const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
+template <typename CHT = CHR>
+const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   if (string == nullptr) return nullptr;
 
   D_COUT("\n\n    Scanning time:\"" << string << '\"');
-  Char c;  //< The current Char.
-  SI4 h,   //< Hour.
+  CHT c;  //< The current CHT.
+  ISC h,   //< Hour.
       m,   //< Minute.
       s;   //< Second.
-  if (!TScanSigned<SI4, UI4, Char>(++string, h)) {
+  if (!TScanSigned<ISC, IUC, CHT>(++string, h)) {
     D_COUT("\nInvalid hour:" << h);
     return nullptr;
   }
-  string = TSTRSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<CHT>(string);
   if (h < 0) {
     D_COUT("\nHours:" << h << " can't be negative.");
     return nullptr;
@@ -165,19 +165,19 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   }
   D_COUT(h);
   c = *string++;
-  if (!c || TIsWhitespace<Char>(c)) {  // Case @HH
+  if (!c || TIsWhitespace<CHT>(c)) {  // Case @HH
     D_COUT(" HH ");
     // Then it's a single number_, so create a TM4 for the current
     // user-time hour..
     hour = h;
     return string;
   }
-  c = TToLower<Char>(c);
+  c = TToLower<CHT>(c);
   if (c == 'a') {  //
     D_COUT("\nCase @HHAm\n HHam ");
 
-    if (TToLower<Char>(c = *string++) == 'm') c = *string++;
-    if (c && !TIsWhitespace<Char>(c)) {
+    if (TToLower<CHT>(c = *string++) == 'm') c = *string++;
+    if (c && !TIsWhitespace<CHT>(c)) {
       D_COUT("\nInvalid am format.");
       return nullptr;
     }
@@ -188,8 +188,8 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'p') {
     D_COUT(" Case @HHpm ");
     c = *string++;
-    if (TToLower<Char>(c) == 'm') c = *string++;
-    if (c && !TIsWhitespace<Char>(c)) {
+    if (TToLower<CHT>(c) == 'm') c = *string++;
+    if (c && !TIsWhitespace<CHT>(c)) {
       D_COUT("\ninvalid pm format.");
       return nullptr;
     }
@@ -206,8 +206,8 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
       "\nCases HH:MM, HH::MMam, HH::MMpm, HH:MM:SS, HH:MM:SSam, and "
       "HH:MM:SSpm");
 
-  if (!TScanSigned<SI4, UI4, Char>(string, m)) return nullptr;
-  string = TSTRSkipNumbers<Char>(string);
+  if (!TScanSigned<ISC, IUC, CHT>(string, m)) return nullptr;
+  string = TSTRSkipNumbers<CHT>(string);
   if (m < 0) {
     D_COUT("\nMinutes:" << m << " can't be negative!");
     return nullptr;
@@ -218,22 +218,22 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   }
   D_COUT(':' << m);
 
-  string = TSTRSkipNumbers<Char>(string);
+  string = TSTRSkipNumbers<CHT>(string);
   c = *string++;
-  if (!c || TIsWhitespace<Char>(c)) {
+  if (!c || TIsWhitespace<CHT>(c)) {
     D_COUT(" HH:MM ");
     hour = h;
     minute = m;
     return string;
   }
-  c = TToLower<Char>(c);
+  c = TToLower<CHT>(c);
   if (c == 'a') {
     D_COUT(" HH:MMam ");
     c = *string++;
-    if (TToLower<Char>(c) == 'm') {  // The 'm' is optional.
+    if (TToLower<CHT>(c) == 'm') {  // The 'm' is optional.
       c = *string++;
     }
-    if (c && !TIsWhitespace<Char>(c)) {  // The space is not.
+    if (c && !TIsWhitespace<CHT>(c)) {  // The space is not.
       D_COUT("Invalid am in HH::MM AM");
       return nullptr;
     }
@@ -244,10 +244,10 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'p') {  //< Case HH:MM PM
     D_COUT(" HH:MMpm ");
     c = *string++;
-    if (TToLower<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TToLower<CHT>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
-    if (c && !TIsWhitespace<Char>(c)) {  //< The space is not.
+    if (c && !TIsWhitespace<CHT>(c)) {  //< The space is not.
       D_COUT("Invalid am in HH::MM PM");
       return nullptr;
     }
@@ -259,7 +259,7 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
 
   D_COUT("\n    Cases HH:MM:SS, HH:MM:SSam, and HH:MM:SSpm");
 
-  if (!TScanSigned<SI4, UI4, Char>(string, s)) return nullptr;
+  if (!TScanSigned<ISC, IUC, CHT>(string, s)) return nullptr;
   if (s < 0) {
     D_COUT("\nSeconds:" << s << " can't be negative!");
     return nullptr;
@@ -269,9 +269,9 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
     return nullptr;
   }
   D_COUT(':' << s);
-  string = TSTRSkipNumbers<Char>(string);
-  c = TToLower<Char>(*string);
-  if (!c || TIsWhitespace<Char>(c)) {
+  string = TSTRSkipNumbers<CHT>(string);
+  c = TToLower<CHT>(*string);
+  if (!c || TIsWhitespace<CHT>(c)) {
     D_COUT(" HH:MM:SS ");
     hour = h;
     minute = m;
@@ -281,10 +281,10 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
   if (c == 'a') {
     D_COUT(" HH:MM:SSam ");
     c = *string++;
-    if (TToLower<Char>(c) == 'm') {  //< The 'm' is optional.
+    if (TToLower<CHT>(c) == 'm') {  //< The 'm' is optional.
       c = *string++;
     }
-    if (!c || !TIsWhitespace<Char>(c)) {  //< The space is not.
+    if (!c || !TIsWhitespace<CHT>(c)) {  //< The space is not.
       D_COUT("\nInvalid am in HH::MM:SS AM");
       return nullptr;
     }
@@ -298,11 +298,11 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
     return nullptr;  // Format error!
   }
   D_COUT(" HH:MM:SSpm ");
-  c = TToLower<Char>(*string++);
+  c = TToLower<CHT>(*string++);
   if (c == 'm') {  //< The 'm' is optional.
     c = *string++;
   }
-  if (!c || !TIsWhitespace<Char>(c)) {  //< The space is not.
+  if (!c || !TIsWhitespace<CHT>(c)) {  //< The space is not.
     D_COUT("\nInvalid am in HH::MM:SS PM");
     return nullptr;
   }
@@ -313,20 +313,20 @@ const Char* TScanTime(const Char* string, SI4& hour, SI4& minute, SI4& second) {
 }
 
 /* Scans the given string for a timestamp. */
-template <typename Char = CHR>
-const Char* TSScan(const Char* string, AClock& clock) {
+template <typename CHT = CHR>
+const CHT* TSScan(const CHT* string, AClock& clock) {
   D_ASSERT(string);
   D_COUT("\n    Scanning AClock:\"" << string << "\n    Scanning: ");
 
-  string = TSTRSkimodulear<Char>(string, '0');
-  Char c = *string,  //< The current Char.
+  string = TSTRSkimodulear<CHT>(string, '0');
+  CHT c = *string,  //< The current CHT.
       delimiter;     //< The delimiter.
-  const Char* stop;  //< Might not need
+  const CHT* stop;  //< Might not need
 
-  SI4 hour = 0, minute = 0, second = 0;
+  ISC hour = 0, minute = 0, second = 0;
 
   if (c == '@') {
-    if (!(string = TScanTime<Char>(string, hour, minute, second))) {
+    if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
       D_COUT("\nCase @ invalid time");
       return nullptr;
     }
@@ -337,7 +337,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
     return string + 1;
   }
   if (c == '#') {
-    if (!(string = TScanTime<Char>(string, hour, minute, second))) {
+    if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
       D_COUT("\nCase @ invalid time");
     }
     clock.hour += hour;
@@ -347,13 +347,13 @@ const Char* TSScan(const Char* string, AClock& clock) {
     return string + 1;
   }
 
-  SI4 value1,            //< The first date field scanned.
+  ISC value1,            //< The first date field scanned.
       value2,            //< The second date field scanned.
       value3,            //< The third date field scanned.
       is_last_year = 0;  //< Flag for if the date was last year or not.
 
   // SScan value1
-  if (!TScanSigned<SI4, UI4, Char>(string, value1)) {
+  if (!TScanSigned<ISC, IUC, CHT>(string, value1)) {
     D_COUT("SScan error at value1");
     return nullptr;
   }
@@ -361,14 +361,14 @@ const Char* TSScan(const Char* string, AClock& clock) {
     D_COUT("Dates can't be negative.");
     return nullptr;
   }
-  string = TSTRDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<CHT>(string);
   if (!string) return nullptr;
   delimiter = *string++;
   D_COUT(value1);
   if (delimiter == '@') {
     D_COUT(" HH@ ");
 
-    if (!(string = TScanTime<Char>(string, hour, minute, second))) {
+    if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
       D_COUT("\nInvalid time DD@");
       return nullptr;
     }
@@ -377,8 +377,8 @@ const Char* TSScan(const Char* string, AClock& clock) {
     return string + 1;
   }
   // SScan value2.
-  string = TSTRSkimodulear<Char>(string, '0');
-  if (!TScanSigned<SI4, UI4, Char>(string, value2)) {
+  string = TSTRSkimodulear<CHT>(string, '0');
+  if (!TScanSigned<ISC, IUC, CHT>(string, value2)) {
     D_COUT("\n    Failed scanning value2 of date.");
     return nullptr;
   }
@@ -387,17 +387,17 @@ const Char* TSScan(const Char* string, AClock& clock) {
     return nullptr;  //< Invalid month and day.
   }
   D_COUT(value2);
-  string = TSTRDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<CHT>(string);
   c = *string;
   if (c != delimiter) {
     D_COUT("\n    Cases MM/DD and MM/YYyy");
     if (c == '@') {
-      if (!(string = TScanTime<Char>(string, hour, minute, second))) {
+      if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
         D_COUT(" invalid time ");
         return nullptr;
       }
     }
-    if (!c || TIsWhitespace<Char>(c)) {
+    if (!c || TIsWhitespace<CHT>(c)) {
       D_COUT("\n    Format is MM/DD and year is " << clock.year + ClockEpoch());
       // is_last_year = ((value1 >= std_tm.mon) &&
       //    (value2 >= std_tm.mday)) ? 0:1;
@@ -411,7 +411,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
 
       return string + 1;
     }
-    c = TToLower<Char>(c);
+    c = TToLower<CHT>(c);
     if ((value1 < 12) && (value2 > 0) &&
         (value2 <= ClockMonthDayCount(value1))) {
       D_COUT(" MM/DD ");
@@ -443,7 +443,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
       D_COUT(" MM/YYyy");
       clock.month = value1 - 1;
       clock.year = value2;
-      if (!(string = TScanTime<Char>(string, hour, minute, second))) {
+      if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
         D_COUT("\nInvalid MM / YYYY@ time");
         return nullptr;
       }
@@ -456,20 +456,20 @@ const Char* TSScan(const Char* string, AClock& clock) {
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
 
-  string = TSTRSkimodulear<Char>(++string, '0');
+  string = TSTRSkimodulear<CHT>(++string, '0');
   c = *string;
   // Then there are 3 values and 2 delimiters.
-  if (!TIsDigit<Char>(c) || !TScanSigned<SI4, UI4, Char>(string, value3)) {
-    D_COUT("\n    SlotRead error reading value3 of date." << Char(c) << ": ");
+  if (!TIsDigit<CHT>(c) || !TScanSigned<ISC, IUC, CHT>(string, value3)) {
+    D_COUT("\n    SlotRead error reading value3 of date." << CHT(c) << ": ");
     return nullptr;  //< Invalid format!
   }
-  string = TSTRDecimalEnd<Char>(string);
+  string = TSTRDecimalEnd<CHT>(string);
   D_COUT(c << value3);
   // Now we need to check what format it is in.
 
   c = *string;
   if (c == '@') {
-    if (!(stop = TScanTime<Char>(string, hour, minute, second))) {
+    if (!(stop = TScanTime<CHT>(string, hour, minute, second))) {
       D_COUT("Invalid YYyy/MM/DD@ time.");
       return nullptr;
     }
@@ -477,7 +477,7 @@ const Char* TSScan(const Char* string, AClock& clock) {
   clock.hour = hour;
   clock.minute = minute;
   clock.second = second;
-  if (TIsWhitespace<Char>(*(++string))) {
+  if (TIsWhitespace<CHT>(*(++string))) {
     D_COUT("No date found.");
     return nullptr;
   }
@@ -529,31 +529,31 @@ const Char* TSScan(const Char* string, AClock& clock) {
   return string + 1;
 }
 
-template <typename Char, typename SI>
-const Char* TScanTime(const Char* origin, TM4& result) {
+template <typename CHT, typename SI>
+const CHT* TScanTime(const CHT* origin, TM4& result) {
   AClock clock;
-  const Char* stop = TSScan<Char>(origin, clock);
+  const CHT* stop = TSScan<CHT>(origin, clock);
   result = (TM4)ClockSeconds(clock);
   return stop;
 }
 
-template <typename Char, typename SI>
-const Char* TScanTime(const Char* origin, TM8& result) {
+template <typename CHT, typename SI>
+const CHT* TScanTime(const CHT* origin, TM8& result) {
   AClock clock;
-  const Char* stop = TSScan<Char>(origin, clock);
+  const CHT* stop = TSScan<CHT>(origin, clock);
   result = (TM8)ClockSeconds(clock);
   return stop;
 }
 
-template <typename Char>
-const Char* TSScan(const Char* origin, TME& result) {
-  origin = TScanTime<Char, TM4>(origin, result.seconds);
+template <typename CHT>
+const CHT* TSScan(const CHT* origin, TME& result) {
+  origin = TScanTime<CHT, TM4>(origin, result.seconds);
   if (!origin) return nullptr;
   if (*origin++ != ':') {
     result.ticks = 0;
     return origin - 1;
   }
-  return TScanUnsigned<UI4, Char>(origin, result.ticks);
+  return TScanUnsigned<IUC, CHT>(origin, result.ticks);
 }
 #endif  // #if USING_STR
 
@@ -567,18 +567,18 @@ SI TClockSet(AClock* clock, SI t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  SI value = t / kSecondsPerYear;
-  t -= value * kSecondsPerYear;
-  clock->year = (SI4)(value + ClockEpoch());
-  value = t / kSecondsPerDay;
-  t -= value * kSecondsPerDay;
-  clock->day = (SI4)value;
-  value = t / kSecondsPerHour;
-  t -= value * kSecondsPerHour;
-  clock->hour = (SI4)value;
-  value = t / kSecondsPerMinute;
-  clock->minute = (SI4)value;
-  clock->second = (SI4)(t - value * kSecondsPerMinute);
+  SI value = t / cSecondsPerYear;
+  t -= value * cSecondsPerYear;
+  clock->year = (ISC)(value + ClockEpoch());
+  value = t / cSecondsPerDay;
+  t -= value * cSecondsPerDay;
+  clock->day = (ISC)value;
+  value = t / cSecondsPerHour;
+  t -= value * cSecondsPerHour;
+  clock->hour = (ISC)value;
+  value = t / cSecondsPerMinute;
+  clock->minute = (ISC)value;
+  clock->second = (ISC)(t - value * cSecondsPerMinute);
   return t;
 }
 

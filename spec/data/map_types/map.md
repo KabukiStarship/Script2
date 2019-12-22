@@ -13,7 +13,7 @@ A Map is a sparse array map of Sorted Domain Values to Codomain Mappings. Codoma
 The TMap data structure is identical to the TStack but the two classes are not interoperable due to Memory Layout Requirement.
 
 ```C++
-template <typename SIZ = SI4>
+template <typename SIZ = ISC>
 struct TMap {
   SIZ size,   //< Number of elements in the map.
       count;  //< Number of mappings.
@@ -38,10 +38,10 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 +-------------------------------+ 0x0
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:Book](./book.md) | [Next Section: Dictionary >>](./dictionaries.md)**
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

@@ -171,7 +171,7 @@ In most cases, continue to use the older style of function declaration where the
 
 ## Static Array Functions
 
-Static arrays in Script2 are handled using wrapper functions that hide the static data from the headers that get compiled into each translation unit. Whenever the size of the array is used in the software, the wrapper function shall return a pointer to the array and the reference to the size variable passed in as a parameter.
+Static arrays in Script2™ are handled using wrapper functions that hide the static data from the headers that get compiled into each translation unit. Whenever the size of the array is used in the software, the wrapper function shall return a pointer to the array and the reference to the size variable passed in as a parameter.
 
 ***Example***
 

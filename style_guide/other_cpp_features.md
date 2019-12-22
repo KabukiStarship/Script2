@@ -317,7 +317,7 @@ Prematurely marking something as constexpr may cause migration problems if later
 
 ### Integer Types
 
-Of the built-in C++ integer types, the only one used is `SIN`. If a program needs a variable of a different size, use a precise-width integer type from `<cstdint>`, such as `SI2`. If your variable represents a value that could ever be greater than or equal to 2^31 (2GiB), use a 64-bit type such as `SI8`. Keep in mind that even if your value won't ever be too large for an `SIN`, it may be used in intermediate calculations which may require a larger type. When in doubt, choose a larger type.
+Of the built-in C++ integer types, the only one used is `SIN`. If a program needs a variable of a different size, use a precise-width integer type from `<cstdint>`, such as `ISB`. If your variable represents a value that could ever be greater than or equal to 2^31 (2GiB), use a 64-bit type such as `ISD`. Keep in mind that even if your value won't ever be too large for an `SIN`, it may be used in intermediate calculations which may require a larger type. When in doubt, choose a larger type.
 
 ***Definition***
 
@@ -333,13 +333,13 @@ The sizes of integral types in C++ can vary based on compiler and architecture.
 
 ***Decision***
 
-`<cstdint>` defines types like `SI2`, `UI4`, `SI8`, etc. You should always use those in preference to `short`, `unsigned long long` and the like, when you need a guarantee on the size of an integer. Of the C integer types, only `SIN` should be used. When appropriate, you are welcome to use standard types like `size_t` and `ptrdiff_t`.
+`<cstdint>` defines types like `ISB`, `IUC`, `ISD`, etc. You should always use those in preference to `short`, `unsigned long long` and the like, when you need a guarantee on the size of an integer. Of the C integer types, only `SIN` should be used. When appropriate, you are welcome to use standard types like `size_t` and `ptrdiff_t`.
 
-We use `SIN` very often, for integers we know are not going to be too big, e.g., loop counters. Use plain old `SIN` for such things. You should assume that an `SIN` is at least 32 bits, but don't assume that it has more than 32 bits. If you need a 64-bit integer type, use `SI8` or `UI8`.
+We use `SIN` very often, for integers we know are not going to be too big, e.g., loop counters. Use plain old `SIN` for such things. You should assume that an `SIN` is at least 32 bits, but don't assume that it has more than 32 bits. If you need a 64-bit integer type, use `ISD` or `IUD`.
 
-For integers we know can be "big", use `SI8`.
+For integers we know can be "big", use `ISD`.
 
-You should not use the unsigned integer types such as `UI4`, unless there is a valid reason such as representing a bit pattern rather than a number, or you need defined overflow modulo 2^N. In particular, do not use unsigned types to say a number will never be negative. Instead, use assertions for this.
+You should not use the unsigned integer types such as `IUC`, unless there is a valid reason such as representing a bit pattern rather than a number, or you need defined overflow modulo 2^N. In particular, do not use unsigned types to say a number will never be negative. Instead, use assertions for this.
 
 If your code is a container that returns a size, be sure to use a type that will accommodate any possible usage of your container. When in doubt, use a larger type rather than a smaller type.
 
@@ -357,14 +357,14 @@ That said, mixing signedness of integer types is responsible for an equally larg
 
 Code should be 64-bit and 32-bit friendly. Bear in mind problems of printing, comparisons, and structure alignment.
 
-* Correct portable `printf()` conversion specifiers for some integral typedefs rely on macro expansions that we find unpleasant to use and impractical to require (the `PRI` macros from `<cinttypes>`). Unless there is no reasonable alternative for your particular case, try to avoid or even upgrade APIs that rely on the `printf` family. Instead use a library supporting typesafe numeric formatting, such as [`StrCat`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/str_cat.h) or [`Substitute`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/substitute.h) for fast simple conversions, or [`std::ostream`](#Streams). Unfortunately, the `PRI` macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g. `SI8`, `UI8`, `SI4`, `UI4`, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to `printf`-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t` (`z`), `ptrdiff_t` (`t`), and `maxint_t` (`j`).
+* Correct portable `printf()` conversion specifiers for some integral typedefs rely on macro expansions that we find unpleasant to use and impractical to require (the `PRI` macros from `<cinttypes>`). Unless there is no reasonable alternative for your particular case, try to avoid or even upgrade APIs that rely on the `printf` family. Instead use a library supporting typesafe numeric formatting, such as [`StrCat`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/str_cat.h) or [`Substitute`](https://github.com/abseil/abseil-cpp/blob/master/absl/strings/substitute.h) for fast simple conversions, or [`std::ostream`](#Streams). Unfortunately, the `PRI` macros are the only portable way to specify a conversion for the standard bitwidth typedefs (e.g. `ISD`, `IUD`, `ISC`, `IUC`, etc). Where possible, avoid passing arguments of types specified by bitwidth typedefs to `printf`-based APIs. Note that it is acceptable to use typedefs for which printf has dedicated length modifiers, such as `size_t` (`z`), `ptrdiff_t` (`t`), and `maxint_t` (`j`).
 *   Remember that `sizeof(void *)` != `sizeof(SIN)`. Use `SIW` if you want a pointer-sized integer.
-*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `SI8`/`UI8` member will by default end up being 8-UI1 aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
+*   You may need to be careful with structure alignments, particularly for structures being stored on disk. Any class/structure with a `ISD`/`IUD` member will by default end up being 8-IUA aligned on a 64-bit system. If you have such structures being shared on disk between 32-bit and 64-bit code, you will need to ensure that they are packed the same on both architectures. Most compilers offer a way to alter structure alignment. For gcc, you can use `__attribute__((packed))`. MSVC offers `#pragma pack()` and `__declspec(align())`.
 *   Use [braced-initialization](#Casting) as needed to create 64-bit constants. For example:
 
 ```C++
-SI8 my_value{0x123456789};
-UI8 my_mask{3ULL << 48};
+ISD my_value{0x123456789};
+IUD my_mask{3ULL << 48};
 ```
 
 ### Preprocessor Macros
@@ -794,7 +794,7 @@ C++11 contains [significant changes](https://en.wikipedia.org/wiki/C%2B%2B11) bo
 
 ***Pros***
 
-C++11 was the official standard until 2014, and is supported by most C++ compilers. It standardizes some common C++ extensions that we use already, allows shorthands for some operations, and has some performance and safety improvements.
+C++11 was the official standard until 2015, and is supported by most C++ compilers. It standardizes some common C++ extensions that we use already, allows shorthands for some operations, and has some performance and safety improvements.
 
 ***Cons***
 

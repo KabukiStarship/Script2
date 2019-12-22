@@ -1,14 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/05.stack.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_config.h>
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_STRAND
 #include "../strand.hpp"
@@ -22,17 +19,17 @@ using namespace _;
 
 namespace script2 {
 #if SEAM >= SCRIPT2_STRAND
-template <typename Char, typename SIZ>
+template <typename CHT = CHR, typename ISZ = ISN>
 void TestStrandN() {
-  static const Char kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CHT kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
   enum {
-    kStrandLoopCount = 3,
-    kCharSizeChar = '0' + sizeof(Char),
+    cStrandLoopCount = 3,
+    cCharSizeChar = '0' + sizeof(CHT),
   };
 
-  AStrand<Char, SIZ, 8> strand;
+  AStrand<CHT, ISZ, 8> strand;
   D_COUT_OBJ(strand);
   D_COUT("\nbuffer_size:" << strand.Array().Size() << " buffer_size_bytes:"
                           << strand.Array().SizeBytes() << " buffer_size_words:"
@@ -46,16 +43,16 @@ void TestStrandN() {
 }
 #endif
 
-static const CH1* Strand(const CH1* args) {
+static const CHA* Strand(const CHA* args) {
 #if SEAM >= SCRIPT2_STRAND
   A_TEST_BEGIN;
 
-  TestStrandN<CH1, SI4>();
+  TestStrandN<CHA, ISC>();
 #if USING_UTF16 == YES_0
-  TestStrandN<CH2, SI4>();
+  TestStrandN<CHB, ISC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestStrandN<CH4, SI4>();
+  TestStrandN<CHC, ISC>();
 #endif
 
 #endif

@@ -9,17 +9,17 @@ Script supports both traditional 8, 16, 32, and 64-bit, and n-byte signed 2's co
 #### 2.2.a Valid Integers Examples
 
 ```C++
-SI1 0
-UI1 255
-SI2 -32,000
-SI4 0xFFFF
+ISA 0
+IUA 255
+ISB -32,000
+ISC 0xFFFF
 ```
 
 #### 2.2.b Invalid Integer Examples
 
 ```C++
-SI1 256       ; Too big for size
-SI2 0xFFFFF   ; Too big for size
+ISA 256       ; Too big for size
+ISB 0xFFFFF   ; Too big for size
 ```
 
 #### 2.2.c Unsigned Not-a-Numbers
@@ -60,14 +60,14 @@ SI4_V -64 // = 0b0011_1111
 
 #### 2.2.f BigNum
 
-Unsigned Integer BigNum (UIB) is between 2 and 2048 bytes wide where the 5 LSb of the type are always 0. The width of the unsigned integer is found by shifting the type over 5 bits to the right and adding one[9].
+Unsigned Integer BigNum (IUB) is between 2 and 2048 bytes wide where the 5 LSb of the type are always 0. The width of the unsigned integer is found by shifting the type over 5 bits to the right and adding one[9].
 
 #### Example
 
 ```C++
-UIB_1 //< 1-byte UIB data type in Hex is 0x20.
-UIB_255 //< 1-byte UIB data type in Hex is 0x2000.
-UIB_2048 //< 2048-byte UIB data type in Hex is 0xFFE0.
+UIB_1 //< 1-byte IUB data type in Hex is 0x20.
+UIB_255 //< 1-byte IUB data type in Hex is 0x2000.
+UIB_2048 //< 2048-byte IUB data type in Hex is 0xFFE0.
 ```
 
 #### Boolean
@@ -90,16 +90,16 @@ BOL -129   //< Will require 2 bytes to transceive.
 Script supports, 16, 32, 64, and 128-bit floating-point numbers as defined, also called half, float, and double, and quadruple precision float-point numbers, as defined in the IEEE754 specification.
 
 ```C++
-FP2 0.0     // Use a HLF to save memory and bandwidth!
-FP4 0.1     // Wastes a lot of space!
-FP8 - 0.1;  // Wastes a whole lot of space!
-FPH 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
+FPB 0.0     // Use a HLF to save memory and bandwidth!
+FPC 0.1     // Wastes a lot of space!
+FPD - 0.1;  // Wastes a whole lot of space!
+FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 ```
 
 **[<< Previous Section:Data Types](./data_types.md) | [Next Section:Floating-point >>](./floating-point.md)**
 
 ## License
 
-Copyright 2014-9 (C) [Cale McCollough](https://calemccollough.github.io); all rights reserved (R).
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /test.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
@@ -16,49 +16,50 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-void TestFunctionLine(SIN line, const CH1* function, const CH1* file) {
-  static const CH1 kStrandIndex[] = "\0";
+void TestFunctionLine(ISN line, const CHA* function, const CHA* file) {
+  static const CHA kStrandIndex[] = "\0";
   COut("\n        Function:").Print(function)
       << "\n            Line:" << line << " in \"" << file << '\"';
 }
 
-BOL TestWarn(SIN line, const CH1* function, const CH1* file) {
+BOL TestWarn(ISN line, const CHA* function, const CHA* file) {
   TestFunctionLine(line, function, file);
   return true;
 }
 
-BOL TestFail(SIN line, const CH1* function, const CH1* file) {
+BOL TestFail(ISN line, const CHA* function, const CHA* file) {
   BOL result = TestWarn(line, function, file);
+  // Insert break-point here.
   return result;
 }
 
-const CH1* ArgsToString(SIN arg_count, CH1** args) {
+const CHA* ArgsToString(ISN arg_count, CHA** args) {
   if (!args || arg_count <= 1) return "";
   if (arg_count == 2) return args[1];
-  CH1 *origin = args[1], *stop = args[arg_count - 1] - 1;
+  CHA *origin = args[1], *stop = args[arg_count - 1] - 1;
   while (stop > origin) {
-    CH1 c = *stop;
+    CHA c = *stop;
     if (!c) *stop = ' ';
     --stop;
   }
   return origin;
 }
 
-const CH1* TestTree(const CH1* args, TestCase* tests, SIN count) {
+const CHA* TestTree(const CHA* args, TestCase* tests, ISN count) {
   if (!tests) return nullptr;
-  for (SIN i = 0; i < count; ++i) {
+  for (ISN i = 0; i < count; ++i) {
     TestCase test = tests[i];
     if (!test) {
       COut("\nError: seam node ").Print(i) << " is missing!";
       return "";
     }
-    const CH1* error = test(args);
+    const CHA* error = test(args);
     if (error) return error;
   }
   return nullptr;
 }
 
-SIN SeamResult(const CH1* result) {
+ISN SeamResult(const CHA* result) {
   if (result) {
     COut("\n\nError in seam ").Print(result);
     return APP_EXIT_FAILURE;
@@ -67,18 +68,18 @@ SIN SeamResult(const CH1* result) {
   return APP_EXIT_SUCCESS;
 }
 
-SIN SeamTreeTest(SIN arg_count, CH1** args, TestCase* tests, SIN test_count) {
+ISN SeamTreeTest(ISN arg_count, CHA** args, TestCase* tests, ISN test_count) {
   return SeamResult(TestTree(ArgsToString(arg_count, args), tests, test_count));
 }
 
 BOL Test(BOL condition) { return condition; }
 
-static const CH1 kSTRErrorExpecting[] = "\n\nERROR: Expecting:0x\0";
-static const CH1 kSTRFound[] = "\n           Found:0x\0";
-static const CH1 kSTRErrorNil[] = "\nERROR: value was nil!\0";
+static const CHA kSTRErrorExpecting[] = "\n\nERROR: Expecting:0x\0";
+static const CHA kSTRFound[] = "\n           Found:0x\0";
+static const CHA kSTRErrorNil[] = "\nERROR: value was nil!\0";
 
-BOL Test(const CH1* a, const CH1* b) {
-  SIN difference = TSTRCompare<CH1>(a, b);
+BOL Test(const CHA* a, const CHA* b) {
+  ISN difference = TSTRCompare<CHA>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
@@ -87,8 +88,8 @@ BOL Test(const CH1* a, const CH1* b) {
 }
 
 #if USING_UTF16 == YES_0
-BOL Test(const CH2* a, const CH2* b) {
-  SIN difference = TSTRCompare<CH2>(a, b);
+BOL Test(const CHB* a, const CHB* b) {
+  ISN difference = TSTRCompare<CHB>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
@@ -97,8 +98,8 @@ BOL Test(const CH2* a, const CH2* b) {
 }
 #endif
 #if USING_UTF32 == YES_0
-BOL Test(const CH4* a, const CH4* b) {
-  SIN difference = TSTRCompare<CH4>(a, b);
+BOL Test(const CHC* a, const CHC* b) {
+  ISN difference = TSTRCompare<CHC>(a, b);
   if (!difference) return true;
   COut("\n\nERROR: Expecting:\"").Print(a)
       << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
@@ -106,21 +107,21 @@ BOL Test(const CH4* a, const CH4* b) {
   return false;
 }
 #endif
-BOL Test(CH1 a, CH1 b) {
+BOL Test(CHA a, CHA b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(CH2 a, CH2 b) {
+BOL Test(CHB a, CHB b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(CH4 a, CH4 b) {
+BOL Test(CHC a, CHC b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
@@ -133,72 +134,72 @@ BOL Test(const void* a, const void* b) {
   return false;
 }
 
-BOL Test(UI1 a, UI1 b) {
+BOL Test(IUA a, IUA b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(SI1 a, SI1 b) {
+BOL Test(ISA a, ISA b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(UI2 a, UI2 b) {
+BOL Test(IUB a, IUB b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(SI2 a, SI2 b) {
+BOL Test(ISB a, ISB b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(UI4 a, UI4 b) {
+BOL Test(IUC a, IUC b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(SI4 a, SI4 b) {
+BOL Test(ISC a, ISC b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(UI8 a, UI8 b) {
+BOL Test(IUD a, IUD b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-BOL Test(SI8 a, SI8 b) {
+BOL Test(ISD a, ISD b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
-#if USING_FP4 == YES_0
-BOL Test(FP4 a, FP4 b) {
+#if USING_FPC == YES_0
+BOL Test(FPC a, FPC b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 #endif
-#if USING_FP8 == YES_0
-BOL Test(FP8 a, FP8 b) {
+#if USING_FPD == YES_0
+BOL Test(FPD a, FPD b) {
   if (a == b) return true;
   COut(kSTRErrorExpecting).Hex(a)
       << ':' << a << kSTRFound << Hexf(b) << ':' << b;
@@ -208,24 +209,24 @@ BOL Test(FP8 a, FP8 b) {
 
 BOL Test(const void* value) { return value != nullptr; }
 
-BOL Test(UI1 value) { return value != 0; }
+BOL Test(IUA value) { return value != 0; }
 
-BOL Test(SI1 value) { return value != 0; }
+BOL Test(ISA value) { return value != 0; }
 
-BOL Test(UI2 value) { return value != 0; }
+BOL Test(IUB value) { return value != 0; }
 
-BOL Test(SI2 value) { return value != 0; }
+BOL Test(ISB value) { return value != 0; }
 
-BOL Test(UI4 value) { return value != 0; }
+BOL Test(IUC value) { return value != 0; }
 
-BOL Test(SI4 value) { return value != 0; }
+BOL Test(ISC value) { return value != 0; }
 
-BOL Test(UI8 value) { return value != 0; }
+BOL Test(IUD value) { return value != 0; }
 
-BOL Test(SI8 value) { return value != 0; }
+BOL Test(ISD value) { return value != 0; }
 
-BOL Test(FP4 value) { return value != 0; }
+BOL Test(FPC value) { return value != 0; }
 
-BOL Test(FP8 value) { return value != 0; }
+BOL Test(FPD value) { return value != 0; }
 
 }  // namespace _

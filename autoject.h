@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /script2/c_array.h
+@file    /autoject.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -22,7 +22,7 @@ struct Autoject;
 @return A word-aligned buffer, rounding up if unaligned.
 @param obj  A block of word-aligned heap memory.
 @param size The size of the buffer to create in bytes. */
-typedef UIW* (*RamFactory)(UIW* obj, SIW size);
+typedef UIW* (*RamFactory)(UIW* obj, ISW size);
 
 namespace _ {
 
@@ -33,29 +33,29 @@ struct Autoject {
 };
 
 enum AsciiFactoryFunction {
-  kFactoryDelete = 0,  //< Factory function deletes an OBJ.
-  kFactoryNew = 1,     //< Factory function checks if the size can double.
-  kFactoryGrow = 2,    //< Factory function double OBJ size.
-  kFactoryClone = 3,   //< Factory function clones the OBJ.
-  kFactoryName = 4,    //< Factory function gets the info AString.
-  kFactoryFunctionCount = 5,  //< Factory function count.
+  cFactoryDelete = 0,  //< Factory function deletes an OBJ.
+  cFactoryNew = 1,     //< Factory function checks if the size can double.
+  cFactoryGrow = 2,    //< Factory function double OBJ size.
+  cFactoryClone = 3,   //< Factory function clones the OBJ.
+  cFactoryName = 4,    //< Factory function gets the info AString.
+  cFactoryFunctionCount = 5,  //< Factory function count.
 };
 
 enum AsciiFactoryError {
-  kFactorySuccess = 0,      //< Factory operation completed successfully error.
-  kFactoryNil = 1,          //< Factory missing error.
-  kFactoryNilOBJ = 2,       //< Factory found nil obj.begin pointer error.
-  kFactoryNilArg = 3,       //< Factory arg nil error.
-  kFactoryCantGrow = 4,     //< Factory can't grow.
-  kFactorySizeInvalid = 5,  //< Factory size invalid.
-  kFactoryErrorCount = 6,   //< Factory function count.
+  cFactorySuccess = 0,      //< Factory operation completed successfully error.
+  cFactoryNil = 1,          //< Factory missing error.
+  cFactoryNilOBJ = 2,       //< Factory found nil obj.begin pointer error.
+  cFactoryNilArg = 3,       //< Factory arg nil error.
+  cFactoryCantGrow = 4,     //< Factory can't grow.
+  cFactorySizeInvalid = 5,  //< Factory size invalid.
+  cFactoryErrorCount = 6,   //< Factory function count.
 };
 
 /* Creates or destroys a block of heap memory. */
-LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, SIW size);
+LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, ISW size);
 
 /* Creates a block of heap memory. */
-LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, SIW size);
+LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, ISW size);
 
 LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 
@@ -63,42 +63,42 @@ LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
 LIB_MEMBER void Delete(Autoject& obj);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayFill(void* begin, void* end, CH1 fill_char = 0);
+LIB_MEMBER CHA* ArrayFill(void* begin, void* end, CHA fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayFill(void* begin, SIW size, CH1 fill_char = 0);
+LIB_MEMBER CHA* ArrayFill(void* begin, ISW size, CHA fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayWipe(void* begin, void* end);
+LIB_MEMBER CHA* ArrayWipe(void* begin, void* end);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CH1* ArrayWipe(void* begin, SIW size);
+LIB_MEMBER CHA* ArrayWipe(void* begin, ISW size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin     The start of the write socket.
 @param  size      The stop of the write socket.
 @param  begin     The begin of the read socket.
 @param  read_size Number of bytes to copy.
-@return Pointer to the last UI1 written or nil upon failure. */
-LIB_MEMBER CH1* ArrayCopy(void* begin, SIW size, const void* read,
-                          SIW read_size);
+@return Pointer to the last IUA written or nil upon failure. */
+LIB_MEMBER CHA* ArrayCopy(void* begin, ISW size, const void* read,
+                          ISW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  begin The start of the write socket.
 @param  stop  The stop of the write socket.
 @param  begin The begin of the read socket.
 @param  size  Number of bytes to copy.
-@return Pointer to the last UI1 written or nil upon failure. */
-LIB_MEMBER CH1* ArrayCopy(void* start, void* stop, const void* begin,
-                          SIW read_size);
+@return Pointer to the last IUA written or nil upon failure. */
+LIB_MEMBER CHA* ArrayCopy(void* start, void* stop, const void* begin,
+                          ISW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param  start The start of the write socket.
 @param  stop  The stop of the write socket.
 @param  begin The begin of the read socket.
 @param  end   The end of the read socket.
-@return Pointer to the last UI1 written or nil upon failure. */
-LIB_INLINE CH1* ArrayCopy(void* start, void* stop, const void* begin,
+@return Pointer to the last IUA written or nil upon failure. */
+LIB_INLINE CHA* ArrayCopy(void* start, void* stop, const void* begin,
                           const void* end);
 
 /* Compares the two memory sockets.
@@ -117,7 +117,7 @@ LIB_MEMBER BOL ArrayCompare(const void* start, const void* stop,
 @param  size  The size of Socket B.
 @return True if they are the same and false if they are not. */
 LIB_MEMBER BOL ArrayCompare(const void* start, void* stop, const void* begin,
-                            SIW size);
+                            ISW size);
 
 /* Compares the two memory sockets.
 @param  start The start of socket a.
@@ -125,22 +125,22 @@ LIB_MEMBER BOL ArrayCompare(const void* start, void* stop, const void* begin,
 @param  start  The begin of socket b.
 @param  size_b The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, SIW size_a, const void* begin,
-                            SIW size_b);
+LIB_MEMBER BOL ArrayCompare(const void* start, ISW size_a, const void* begin,
+                            ISW size_b);
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param  begin       The begin UI1.
-@param  end         The end UI1.
-@param  count_bytes The UI1 count to shift up. */
-LIB_MEMBER SIW ArrayShiftUp(void* begin, void* end, SIW count_bytes);
+@param  begin       The begin IUA.
+@param  end         The end IUA.
+@param  count_bytes The IUA count to shift up. */
+LIB_MEMBER ISW ArrayShiftUp(void* begin, void* end, ISW count_bytes);
 
 /* Shifts the memory down by the given bytes_count.
 @return 0 upon failure and count upon success.
-@param  begin       The start UI1.
-@param  end         The end UI1.
-@param  count_bytes The UI1 count to shift up. */
-LIB_MEMBER SIW ArrayShiftDown(void* begin, void* end, SIW bytes_count);
+@param  begin       The start IUA.
+@param  end         The end IUA.
+@param  count_bytes The IUA count to shift up. */
+LIB_MEMBER ISW ArrayShiftDown(void* begin, void* end, ISW bytes_count);
 
 }  // namespace _
 #endif

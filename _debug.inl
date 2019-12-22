@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    \_debug.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@file    /_debug.inl
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include "_undef.inl"
 //
@@ -27,15 +27,15 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 #define D_COUT_FUNCTION_LINE \
   _::COut().NL();            \
   _::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
-#define D_COUT_ARRAY(item) TArrayPrint<COut, SIZ>(COut().Star(), item)
-#define D_COUT_STACK(item) TStackPrint<COut, T, SIZ>(COut().Star(), item)
-#define D_COUT_MATRIX(item) TMatrixPrint<COut, T, SIZ>(COut().Star(), item)
+#define D_COUT_ARRAY(item) TArrayPrint<COut, ISZ>(COut().Star(), item)
+#define D_COUT_STACK(item) TStackPrint<COut, T, ISZ>(COut().Star(), item)
+#define D_COUT_MATRIX(item) TMatrixPrint<COut, T, ISZ>(COut().Star(), item)
 #define D_COUT_TABLE(item) \
-  TTablePrint<_::COut, SIZ, HSH, Char>(COut().Star(), item)
-#define D_COUT_MAP(item) TMapPrint<COut, D, SIZ>(COut().Star(), item)
-#define D_COUT_BOOK(item) TBookPrint<COut, SIZ, SIY, HSH>(COut().Star(), item)
+  TTablePrint<_::COut, ISZ, HSH, CHT>(COut().Star(), item)
+#define D_COUT_MAP(item) TMapPrint<COut, D, ISZ>(COut().Star(), item)
+#define D_COUT_BOOK(item) TBookPrint<COut, ISZ, ISY, HSH>(COut().Star(), item)
 #define D_COUT_DICTIONARY(item) \
-  TArrayPrint<COut, SIZ, SIY, HSH>(COut().Star(), item)
+  TArrayPrint<COut, ISZ, ISY, HSH>(COut().Star(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
   Socket socket_to_print(origin, end_or_size)
 #define D_ARRAY_FILL(origin, end_or_size, c) \

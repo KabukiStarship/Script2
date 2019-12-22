@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /room.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
@@ -17,25 +17,25 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-/* A list of Requests that can be sent from Slot<SI4, TSizeBytes> to
-    Slot<SI4, TSizeBytes>.  */
+/* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to
+    Slot<ISC, TSizeBytes>.  */
 typedef enum Requests {
-  kOpenDoorRequest = 0,
-  kCloseDoorRequest,
-  kConnectionRequest,
-  kDisconnectRequest,
-  kInvalidRequest,
+  cOpenDoorRequest = 0,
+  cCloseDoorRequest,
+  cConnectionRequest,
+  cDisconnectRequest,
+  cInvalidRequest,
 } Request;
 
 /* Returns an array of pointers to Strings that describe the program states.
  */
-LIB_MEMBER const CH1** RoomStateTexts();
+LIB_MEMBER const CHA** RoomStateTexts();
 
 /* Returns a pointer to an array of pointers to the Request Strings. */
-LIB_MEMBER const CH1** RequestTexts();
+LIB_MEMBER const CHA** RequestTexts();
 
-/* Gets the response CH1 corresponding to the given request. */
-LIB_MEMBER const CH1* RequestText(Request r);
+/* Gets the response CHA corresponding to the given request. */
+LIB_MEMBER const CHA* RequestText(Request r);
 
 /* A Chinese Room.
 An Chinese Room works the same way as in the Chinese Room thought
@@ -122,19 +122,19 @@ class Room : public Operand {
 
  public:
   typedef enum States {
-    kStateBooting = 0,
-    kStateGoingToSleep,
-    kShutdown,
+    cStateBooting = 0,
+    cStateGoingToSleep,
+    cShutdown,
   } State;
 
   enum {
 #ifndef SCRIPT2_MAX_WALLS
-    kRoomFloorSize = 1024,
+    cRoomFloorSize = 1024,
 #else
-    kRoomFloorSize = SCRIPT2_MAX_WALLS,
+    cRoomFloorSize = SCRIPT2_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
-    kFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
+    cFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
   };
 
   /* Creates a Room with the given size.
@@ -142,21 +142,21 @@ class Room : public Operand {
                    enable dynamic memory.
       @param size  The room size that is bounded between the kMinRoomSize and
                    kMaxRoomSize. */
-  Room(const CH1* room_name = "chinese_room", SI4 num_states = 2);
+  Room(const CHA* room_name = "chinese_room", ISC num_states = 2);
 
   /* SocketFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */
-  SI4 GetState();
+  ISC GetState();
 
   /* Gets the Room state_. */
-  SI4 GetStateCount();
+  ISC GetStateCount();
 
-  const CH1* GetRoomName();
+  const CHA* GetRoomName();
 
   /* Sets the Room state_. */
-  virtual BOL SetRoomName(const CH1* name);
+  virtual BOL SetRoomName(const CHA* name);
 
   /* Processes a request from another Room.
       @return Returns false upon success and true if there is an error. */
@@ -215,16 +215,16 @@ class Room : public Operand {
 
   /* The default main function.
       Please feel free to override this with your own main function. */
-  virtual SI4 Main(const CH1** args, SI4 args_count);
+  virtual ISC Main(const CHA** args, ISC args_count);
 
   /* Handles Script Commands.
       @param text     Beginning of the Text socket.
       @param text_end End of the Text socket.
       @return Returns nil upon success and an error  upon failure. */
-  virtual CH1 CommandNext();
+  virtual CHA CommandNext();
 
   /* Script2 operations. */
-  virtual const Op* Star(CH4 index, Crabs* crabs);
+  virtual const Op* Star(CHC index, Crabs* crabs);
 
 #if USING_SCRIPT2_TEXT
   /* Prints the Room to the stdout. */
@@ -232,10 +232,10 @@ class Room : public Operand {
 #endif
 
  protected:
-  SI4 state_count_,                 //< Number of FSM states.
+  ISC state_count_,                 //< Number of FSM states.
       state_;                       //< Room state.
-  const CH1* name_;                 //< Room Name.
-  TMap<Wall*, SI4, int_t>* walls_;  //< Walls in the Room.
+  const CHA* name_;                 //< Room Name.
+  TMap<Wall*, ISC, int_t>* walls_;  //< Walls in the Room.
   Crabs* expr_;                     //< Current Crabs being executed.
                                     //< DC1: this.
   Door* this_;                      //< DC2: The Door to this room.
@@ -246,7 +246,7 @@ class Room : public Operand {
 
  private:
   /* Sets the Room state_. */
-  BOL SetState(SI4 new_state);
+  BOL SetState(ISC new_state);
 };
 
 /* Returns the Room-Level Script. */

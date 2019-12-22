@@ -1,29 +1,29 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
-@file    /t_collection.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@file    /set.hpp
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_config.h>
 #if SEAM >= SCRIPT2_BOOK
-#ifndef INCLUDED_F2_SET
-#define INCLUDED_F2_SET 1
+#ifndef SCRIPT2_BOOK
+#define SCRIPT2_BOOK 1
 
 #include "typevalue.h"
 
 namespace _ {
 /*
-    @code
-    ;
-    @endcode
+  @code
+  ;
+  @endcode
 */
-template <typename Index, typename TKey, typename SIZ, typename THash>
+template <typename Index, typename TKey, typename ISZ, typename THash>
 struct LIB_MEMBER TCollection {
-  SIZ size;          //< Total size of the set.
+  ISZ size;          //< Total size of the set.
   TKey table_size,   //< Size of the (optional) key Strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.
   Index item_count,  //< Number of items.
@@ -40,7 +40,7 @@ struct Tuple2 {
 struct Tuple3 {
   PODType type;    //< The tuple type.
   void* value;     //< The tuple value.
-  const CH1* key;  //< The Tuple key.
+  const CHA* key;  //< The Tuple key.
 };
 
 /* Interface for a Script Set.
@@ -49,7 +49,7 @@ Set Types:
 |-----------:|:----:|:--------------------------------------------|
 |      Array | ARY  | A packed c-style array of POD number_ types. |
 |      Stack | STK  | A stack of POD number_ types.                |
-|       List | kLST  | A stack of Type-Value tuples.               |
+|       List | cLST  | A stack of Type-Value tuples.               |
 |        Map | kMAP  | A one-to-one map of Id-Value tuples.        |
 |   Multimap | kDIC  | A multimap of Key-Value tuples.             |
 | Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |
@@ -66,7 +66,7 @@ struct Collection {
   virtual BOL Push(PODType type, void* value) = 0;
 
   /* Adds the given Tuple3 to this Set. */
-  virtual BOL Push(PODType type, void* value, const CH1* key) = 0;
+  virtual BOL Push(PODType type, void* value, const CHA* key) = 0;
 
   /* Merges the given Set into this one. */
   virtual BOL Merge(Collection* collection) = 0;
@@ -78,25 +78,25 @@ struct Collection {
   virtual BOL Remove(UIW) = 0;
 
   /* Removes the given key from this collection (if applicable.). */
-  virtual BOL Remove(const CH1* key) = 0;
+  virtual BOL Remove(const CHA* key) = 0;
 
   /* Gets the element at the given index. */
   virtual void* Get(UIW index) = 0;
 
   /* Searches for the data of the given type and returns a pointer to it.
       @return Returns nil if the Set does not contain the given data. */
-  virtual void* Get(const CH1* key) = 0;
+  virtual void* Get(const CHA* key) = 0;
 
   /* Returns true if this Set contains this given key. */
-  virtual UIW FindIndex(const CH1* key) = 0;
+  virtual UIW FindIndex(const CHA* key) = 0;
 
   /* Returns true if this Set contains this given Type-Value. */
   virtual UIW FindIndex(PODType type, void* value) = 0;
 
-  /* Gets the SIW of the object being stored. */
+  /* Gets the ISW of the object being stored. */
   virtual UIW Size() = 0;
 
-  /* Gets the SIW of the object being stored. */
+  /* Gets the ISW of the object being stored. */
   virtual UIW GetSizeWidth() = 0;
 };
 }  // namespace _

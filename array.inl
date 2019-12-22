@@ -1,11 +1,11 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /object.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
 
@@ -13,8 +13,8 @@ this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Creastes a CPU word from the repeated fill_char. */
-inline UIW FillWord(CH1 fill_char) {
-  UIW value = (UIW)(UI1)fill_char;
+inline UIW FillWord(CHA fill_char) {
+  UIW value = (UIW)(IUA)fill_char;
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
 #if ALU_SIZE == ALU_64_BIT
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
@@ -29,27 +29,27 @@ inline UIW FillWord(CH1 fill_char) {
 #endif
 }
 
-CH1* ArrayFill(void* origin, SIW count, CH1 fill_char) {
+CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
   if (!origin) return nullptr;
-  CH1* start = reinterpret_cast<CH1*>(origin);
-  if (count < 3 * sizeof(SIW)) {
+  CHA* start = reinterpret_cast<CHA*>(origin);
+  if (count < 3 * sizeof(ISW)) {
     while (--count > 0) *start++ = fill_char;
     return start;
   }
 
-  CH1* stop = start + count;
+  CHA* stop = start + count;
 
   UIW fill_word = FillWord(fill_char);
 
   // 1.) Align start pointer up to a word boundry and fill the unaligned bytes.
-  CH1 *success = stop, *aligned_pointer = TAlignUpPTR<>(start);
+  CHA *success = stop, *aligned_pointer = TAlignUpPTR<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
   UIW *words = reinterpret_cast<UIW*>(start),
       *words_end = TAlignDownPTR<UIW*>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
-  start = reinterpret_cast<CH1*>(words_end);
+  start = reinterpret_cast<CHA*>(words_end);
   while (start < stop) *start++ = fill_char;
 
   return success;
@@ -67,13 +67,15 @@ CH1* ArrayFill(void* origin, SIW count, CH1 fill_char) {
 
 namespace _ {
 
-UIW* RamFactoryStack(UIW* buffer, SIW size_bytes, DTW data_type) {
+UIW* RamFactoryStack(UIW* buffer, ISW size_bytes, DTW data_type) {
   if (size_bytes < 0) return (UIW*)data_type;
-  size_bytes += (-size_bytes) & kWordLSbMask;
-  return new UIW[size_bytes >> kWordBitCount];
+  size_bytes += (-size_bytes) & cWordLSbMask;
+  ISW size_words = size_bytes >> cWordBitCount;
+  UIW* socket = new UIW[size_words];
+  return socket;
 }
 
-UIW* RamFactoryHeap(UIW* buffer, SIW size_bytes, DTW data_type) {
+UIW* RamFactoryHeap(UIW* buffer, ISW size_bytes, DTW data_type) {
   if (buffer) {
     delete[] buffer;
     return nullptr;
@@ -81,8 +83,8 @@ UIW* RamFactoryHeap(UIW* buffer, SIW size_bytes, DTW data_type) {
   return RamFactoryStack(buffer, size_bytes, data_type);
 }
 
-CH1* ArrayCopy(void* destination, SIW destination_size, const void* source,
-               SIW source_size) {
+CHA* ArrayCopy(void* destination, ISW destination_size, const void* source,
+               ISW source_size) {
   if (source_size <= 0 || destination_size <= 0) return nullptr;
   A_ASSERT(destination);
   A_ASSERT(source);
@@ -90,13 +92,14 @@ CH1* ArrayCopy(void* destination, SIW destination_size, const void* source,
   // A_ASSERT(source_size > 0);
 
   if (destination_size < source_size) return nullptr;
-  CH1 *cursor = reinterpret_cast<CH1*>(destination),
+  CHA *cursor = reinterpret_cast<CHA*>(destination),
       *end_ptr = cursor + destination_size;
-  const CH1 *start_ptr = reinterpret_cast<const CH1*>(source),
+  const CHA *start_ptr = reinterpret_cast<const CHA*>(source),
             *stop_ptr = start_ptr + source_size;
 
   while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-  return cursor; /*
+  return cursor;
+  /* There was a bug in this code bug.
   if (source_size < (2 * sizeof(void*) + 1)) {
     // There is not enough bytes to copy in words.
     while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
@@ -113,10 +116,10 @@ CH1* ArrayCopy(void* destination, SIW destination_size, const void* source,
   // 3.) Align write_end pointer down and copy the unaligned bytes in the
   //     upper memory region.
   // 4.) Copy the word-aligned middle region.
-  CH1 *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
+  CHA *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
   D_COUT("\n  AlignUpPTR<> (origin):0x" << Hexf (aligned_pointer));
   while (cursor < aligned_pointer) *cursor++ = *start_ptr++;
-  aligned_pointer = TAlignDown<CH1*>(end_ptr);
+  aligned_pointer = TAlignDown<CHA*>(end_ptr);
   D_COUT("\n  AlignDownPointer<> (origin):0x" << aligned_pointer;
   while (end_ptr > aligned_pointer) *end_ptr-- = *stop_ptr--;
   D_COUT("\n  Down-stage pointers are now origin:0x" << Hexf(cursor) << "
@@ -132,84 +135,84 @@ CH1* ArrayCopy(void* destination, SIW destination_size, const void* source,
   return success;*/
 }
 
-BOL ArrayCompare(const void* begin_a, SIW size_a, const void* begin_b,
-                 SIW size_b) {
+BOL ArrayCompare(const void* begin_a, ISW size_a, const void* begin_b,
+                 ISW size_b) {
   if (size_a != size_b) return false;
-  const CH1 *cursor_a = reinterpret_cast<const CH1*>(begin_a),
+  const CHA *cursor_a = reinterpret_cast<const CHA*>(begin_a),
             *end_a = cursor_a + size_a,
-            *cursor_b = reinterpret_cast<const CH1*>(begin_b),
+            *cursor_b = reinterpret_cast<const CHA*>(begin_b),
             *end_b = cursor_b + size_b;
   while (cursor_a < end_a) {
-    CH1 a = *cursor_a++, b = *end_a++;
+    CHA a = *cursor_a++, b = *end_a++;
     if (a != b) return false;
   }
   return true;
 }
 
 Nil::Nil() {}
-constexpr SIW Nil::Size() { return 0; }
-constexpr SIW Nil::SizeBytes() { return 0; }
-constexpr SIW Nil::SizeWords() { return 0; }
+constexpr ISW Nil::Size() { return 0; }
+constexpr ISW Nil::SizeBytes() { return 0; }
+constexpr ISW Nil::SizeWords() { return 0; }
 UIW* Nil::Words() { return nullptr; }
 
-SIW ArrayShiftUp(void* origin, void* end, SIW count) {
+ISW ArrayShiftUp(void* origin, void* end, ISW count) {
   if (!origin || origin <= end || count <= 0) return 0;
-  CH1 *start = reinterpret_cast<CH1*>(origin),
-      *stop = reinterpret_cast<CH1*>(end);
+  CHA *start = reinterpret_cast<CHA*>(origin),
+      *stop = reinterpret_cast<CHA*>(end);
   if (count < 3 * sizeof(void*)) {
-    for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop;
+    for (ISC i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
   UIW lsb_mask = sizeof(UIW) - 1;
   // Align the pointer down.
   UIW value = reinterpret_cast<UIW>(stop);
-  CH1* pivot = reinterpret_cast<CH1*>(value - (value & lsb_mask));
+  CHA* pivot = reinterpret_cast<CHA*>(value - (value & lsb_mask));
 
   // Shift up the top portion.
-  for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop--;
+  for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
   UIW* stop_word = reinterpret_cast<UIW*>(stop);
 
   // Align the pointer up.
-  value = AlignUp(value, lsb_mask);
+  value = CAlignUp(value, lsb_mask);
   UIW* start_word = reinterpret_cast<UIW*>(value);
 
   // Shift up the moddle portion.
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
 
   // Shift up the bottom portion.
-  pivot = reinterpret_cast<CH1*>(stop_word + 1);
+  pivot = reinterpret_cast<CHA*>(stop_word + 1);
   while (pivot >= start) *(pivot + count) = *pivot--;
   return count;
 }
 
-SIW ArrayShiftDown(void* origin, void* end, SIW count) {
+ISW ArrayShiftDown(void* origin, void* end, ISW count) {
   if (!origin || origin <= end || count <= 0) return 0;
-  CH1 *start = reinterpret_cast<CH1*>(origin),
-      *stop = reinterpret_cast<CH1*>(end);
+  CHA *start = reinterpret_cast<CHA*>(origin),
+      *stop = reinterpret_cast<CHA*>(end);
   if (count < 3 * sizeof(void*)) {
-    for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop;
+    for (ISC i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
   UIW least_significant_bits_mask = sizeof(UIW) - 1;
   // Align the pointer down.
   UIW value = reinterpret_cast<UIW>(stop);
-  CH1* pivot =
-      reinterpret_cast<CH1*>(value - (value & least_significant_bits_mask));
+  CHA* pivot =
+      reinterpret_cast<CHA*>(value - (value & least_significant_bits_mask));
 
   // Shift up the top portion.
-  for (SI4 i = 0; i < count; ++i) *(stop + count) = *stop--;
+  for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
   UIW* stop_word = reinterpret_cast<UIW*>(stop);
 
   // Align the pointer up.
   value = reinterpret_cast<UIW>(start);
   UIW* start_word = reinterpret_cast<UIW*>(
-      value + ((-(SIW)value) & least_significant_bits_mask));
+      value + ((-(ISW)value) & least_significant_bits_mask));
 
   // Shift up the moddle portion.
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
 
   // Shift up the bottom portion.
-  pivot = reinterpret_cast<CH1*>(stop_word + 1);
+  pivot = reinterpret_cast<CHA*>(stop_word + 1);
   while (pivot >= start) *(pivot + count) = *pivot--;
   return count;
 }

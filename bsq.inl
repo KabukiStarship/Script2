@@ -1,26 +1,26 @@
-/* SCRIPT Script @version 0.x
+/* Script2 (TM) @version 0.x
 @link    https://github.com/kabuki-starship/script2.git
 @file    /bsq.inl
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2014-9 Cale McCollough <calemccollough.github.io>;
-all right reserved (R). This Source Code Form is subject to the terms of the
-Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with
-this file, You can obtain one at <https://mozilla.org/MPL/2.0/>. */
+@author  Cale McCollough <https://cale-mccollough.github.io>
+@license Copyright (C) 2015-9 Kabuki Starship (TM) <kabukistarship.com>.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DICTIONARY
+#if SEAM >= SCRIPT2_DIC
 #include "bsq.h"
 #include "test.h"
 
 namespace _ {
 
-SIN BsqParamNumber(const SIN* params, SIN param_number) {
+ISN BsqParamNumber(const ISN* params, ISN param_number) {
   if (!params) return 0;
-  SIN num_params = *params++;
-  if (param_number > num_params) return kNIL;
-  SIN i;
+  ISN num_params = *params++;
+  if (param_number > num_params) return cNIL;
+  ISN i;
   for (i = 0; i < param_number; ++i) {
-    SIN value = params[i];
+    ISN value = params[i];
     if (value == kSTR)
       ++param_number;
     else if (value > 31) {  // It's an array!
@@ -30,7 +30,7 @@ SIN BsqParamNumber(const SIN* params, SIN param_number) {
         break;
       } else if (value > 7) {  // Gratuitous explanation points!
         // D_COUT ("\nError");
-        return kNIL;
+        return cNIL;
       } else {
         param_number += params[i] + 1;
       }
@@ -40,11 +40,11 @@ SIN BsqParamNumber(const SIN* params, SIN param_number) {
 }
 
 template <typename Printer>
-Printer& PrintBsq(Printer& o, const SIN* params) {
-  SIN num_params = *params++, i, type, value = 0;
+Printer& PrintBsq(Printer& o, const ISN* params) {
+  ISN num_params = *params++, i, type, value = 0;
 
   o << "Param<";
-  if (num_params > kParamsMax) {
+  if (num_params > cParamsMax) {
     o << "\nInvalid num_params: " << num_params;
     return o;
   }
@@ -53,7 +53,7 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    o << STRType((SIN)value) << ", ";
+    o << STRType((ISN)value) << ", ";
     if (type >= kSTR) {
       if (value) {
         o << "\nError: arrays may only be created from POD "
@@ -76,32 +76,32 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
         }
         case 1: {
           value = *params++;
-          o << "kUI1:" << value << ", ";
+          o << "c_UIA:" << value << ", ";
           break;
         }
         case 2: {
           value = *params++;
-          o << "kUI2:" << value << ", ";
+          o << "c_UI2:" << value << ", ";
           break;
         }
         case 3: {
           value = *params++;
-          o << "kUI4:" << value << ", ";
+          o << "c_UI4:" << value << ", ";
           break;
         }
         case 4: {
           value = *params++;
-          o << "kUI8:" << value << ", ";
+          o << "c_UI8:" << value << ", ";
           break;
         }
         case 5: {
           value = *params++;
           if (value == 0) {
-            o << "kUI1:[0]";
+            o << "c_UIA:[0]";
             break;
           }
-          o << "kUI1:[" << value << ": ";
-          for (SIN i = value; i != 0; --i) {
+          o << "c_UIA:[" << value << ": ";
+          for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
           }
@@ -112,11 +112,11 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
         case 6: {
           value = *params++;
           if (value == 0) {
-            o << "kUI2:[0]";
+            o << "c_UI2:[0]";
             break;
           }
-          o << "kUI2:[" << value << ": ";
-          for (SIN i = value; i != 0; --i) {
+          o << "c_UI2:[" << value << ": ";
+          for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
           }
@@ -127,11 +127,11 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
         case 7: {
           value = *params++;
           if (value == 0) {
-            o << "kUI4:[0]";
+            o << "c_UI4:[0]";
             break;
           }
-          o << "kUI4:[" << value << ": ";
-          for (SIN i = value; i != 0; --i) {
+          o << "c_UI4:[" << value << ": ";
+          for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
           }
@@ -160,17 +160,17 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
       }
       case 1: {
         value = *params++;
-        o << "kUI1:" << value << ", ";
+        o << "c_UIA:" << value << ", ";
         break;
       }
       case 2: {
         value = *params++;
-        o << "kUI2:" << value << ", ";
+        o << "c_UI2:" << value << ", ";
         break;
       }
       case 3: {
         value = *params++;
-        o << "kUI4:" << value << ", ";
+        o << "c_UI4:" << value << ", ";
         break;
       }
       case 4: {
@@ -181,11 +181,11 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
       case 5: {
         value = *params++;
         if (value == 0) {
-          o << "kUI1:[0]";
+          o << "c_UIA:[0]";
           break;
         }
-        o << "kUI1:[" << value << ": ";
-        for (SIN i = value; i != 0; --i) {
+        o << "c_UIA:[" << value << ": ";
+        for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";
         }
@@ -196,11 +196,11 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
       case 6: {
         value = *params++;
         if (value == 0) {
-          o << "kUI2:[0]";
+          o << "c_UI2:[0]";
           break;
         }
-        o << "kUI2:[" << value << ": ";
-        for (SIN i = value; i != 0; --i) {
+        o << "c_UI2:[" << value << ": ";
+        for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";
         }
@@ -211,11 +211,11 @@ Printer& PrintBsq(Printer& o, const SIN* params) {
       case 7: {
         value = *params++;
         if (value == 0) {
-          o << "kUI4:[0]";
+          o << "c_UI4:[0]";
           break;
         }
-        o << "kUI4:[" << value << ": ";
-        for (SIN i = value; i != 0; --i) {
+        o << "c_UI4:[" << value << ": ";
+        for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";
         }

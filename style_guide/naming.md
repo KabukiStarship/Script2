@@ -140,11 +140,14 @@ See [Structs vs. Classes](#Structs_vs._Classes) for a discussion of when to use 
 
 ### Constant Names
 
-Variables declared constexpr or const, and whose value is fixed for the duration of the program, are named with a leading "k" followed by mixed case. Underscores can be used as separators in the rare cases where capitalization cannot be used for separation. For example:
+Variables declared constexpr or const, and whose value is fixed for the duration of the program, are named with a lowercase "c" prefix followed by mixed case. Underscores can be used as separators in the rare cases where capitalization cannot be used for separation. For example:
 
 ```C++
-const SIN kDaysInAWeek = 7;
-const SIN kAndroid8_0_0 = 24;  // Android 8.0.0
+const SIN cDaysInAWeek = 7;
+const SIN cAndroid8_0_0 = 24;  // Android 8.0.0
+template<typename T>
+constexpr T cFoo () { return (T)0; }
+constexpr SIN cBar () { return (SIN)0; }
 ```
 
 All such variables with static storage duration (i.e. statics and globals, see [Storage Duration](http://en.cppreference.com/w/cpp/language/storage_duration#Storage_duration) for details) should be named this way. This convention is optional for variables of other storage classes, e.g. automatic variables, otherwise the usual variable naming rules apply.
@@ -177,15 +180,15 @@ For `internal` namespaces, be wary of other code being added to the same `intern
 
 ### Enumerator Names
 
-Enumerators (for both scoped and unscoped enums) should be named _either_ like [constants](#Constant_Names) or like [macros](#Macro_Names): either `kEnumName` or `ENUM_NAME`.
+Enumerators (for both scoped and unscoped enums) are named like [constants](#Constant_Names), but may also include an additional [macro](#Macro_Names) in all caps: the should always start out as `cEnumName` but may be also be in the form `ENUM_NAME`.
 
-Preferably, the individual enumerators should be named like [constants](#Constant_Names). However, it is also acceptable to name them like [macros](#Macro_Names). The enumeration name, `UrlTableErrors` (and `AlternateUrlTableErrors`), is a type, and therefore mixed case.
+Individual enumerators should be named like [constants](#Constant_Names). However, it is also acceptable to name them like [macros](#Macro_Names). The enumeration name, `UrlTableErrors` (and `AlternateUrlTableErrors`), is a type, and therefore mixed case.
 
 ```C++
 enum UrlTableErrors {
-  kOK = 0,
-  kErrorOutOfMemory,
-  kErrorMalformedInput,
+  cOK = 0,
+  cErrorOutOfMemory,
+  cErrorMalformedInput,
 };
 
 enum AlternateUrlTableErrors {
