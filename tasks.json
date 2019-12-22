@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build script2",
+      "type": "shell",
+      "command": "g++",
+      "args": ["-g", "-o", "script2", "_seams/_main.cpp"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

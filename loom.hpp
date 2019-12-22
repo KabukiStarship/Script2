@@ -105,7 +105,7 @@ template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
           typename Printer>
 Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
-  o << "\nLoom<SI" << CHA('0' + sizeof(ISZ)) << "> size:" << loom->size
+  o << "\nLoom<IS" << CHA('0' + sizeof(ISZ)) << "> size:" << loom->size
     << " top:" << loom->top << " stack_size:" << loom->map.count_max
     << " count:" << count;
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
@@ -161,10 +161,11 @@ BOL TLoomClone(TLoom<ISZ, ISY>* loom, TLoom<ISZ, ISY>* destination,
       *clone_offsets = TStackStart<ISZ, ISY>(&destination->map);
 
   if (!count_additional) {
-    while (loom_offsets <= loom_offsets_end) *clone_offsets++ = (*loom_offsets++);
+    while (loom_offsets <= loom_offsets_end)
+      *clone_offsets++ = (*loom_offsets++);
   } else {
     while (loom_offsets <= loom_offsets_end)
-      *clone_offsets++ = (*loom_offsets++) + count_additional * sizeof (ISY);
+      *clone_offsets++ = (*loom_offsets++) + count_additional * sizeof(ISY);
   }
 
   // Copy the Strings.
@@ -193,14 +194,13 @@ BOL TLoomGrow(Autoject& obj) {
 #if D_THIS
   D_COUT("\n\nBefore:\n");
   TLoomPrint<TPARAMS, COut>(COut().Star(), loom);
-  D_COUT('\n');
-  D_COUT(Charsf(loom, loom->size));
+  D_COUT('\n' << Charsf(loom, loom->size));
 #endif
 
-  // Create a new block of memory.
-  UIW* growth_origin = obj.socket_factory(nullptr, size);
-  D_ARRAY_WIPE(growth_origin, size);
-  auto destination = TPtr<TLoom<ISZ, ISY>>(growth_origin);
+  // @see RamFactory for documentation on how to create a new block of memory.
+  UIW* growth = obj.socket_factory(nullptr, size << 1);
+  D_ARRAY_WIPE(growth, size);
+  auto destination = TPtr<TLoom<ISZ, ISY>>(growth);
 
   TLoomClone<TPARAMS>(loom, destination, count_max, count_max, size, size);
 #if D_THIS
@@ -211,7 +211,7 @@ BOL TLoomGrow(Autoject& obj) {
 #endif
 
   Delete(obj);
-  obj.origin = growth_origin;
+  obj.origin = growth;
   return true;
 }
 

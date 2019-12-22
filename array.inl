@@ -71,7 +71,8 @@ UIW* RamFactoryStack(UIW* buffer, ISW size_bytes, DTW data_type) {
   if (size_bytes < 0) return (UIW*)data_type;
   size_bytes += (-size_bytes) & cWordLSbMask;
   ISW size_words = size_bytes >> cWordBitCount;
-  return new UIW[size_words];
+  UIW* socket = new UIW[size_words];
+  return socket;
 }
 
 UIW* RamFactoryHeap(UIW* buffer, ISW size_bytes, DTW data_type) {
