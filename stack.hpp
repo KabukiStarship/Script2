@@ -288,7 +288,7 @@ T TStackPeek(TStack<ISZ>* stack) {
   return item;
 }
 
-/* Inserts the given item at the start of the elements.
+/* Inserts the given item at the start stack.
 @pre You must perform bounds checking before calling this function. */
 template <typename T>
 inline void TStackInsert(T* elements, T* elements_end, T item) {
@@ -301,29 +301,8 @@ inline void TStackInsert(T* elements, T* elements_end, T item) {
 /* Inserts the given item at the index index the elements of the given count.
 @pre You must perform bounds checking before calling this function. */
 template <typename T, typename ISZ = ISM>
-inline void TStackInsert(T* elements, ISZ count, ISZ index, T item) {
-  TStackInsert<T>(elements + index, elements + count, item);
-}
-
-/* Inserts the item into the obj at the given index.
-@param items Pointer to element 0 of the array.
-@param item  The item to insert.
-@param index The index to insert at.
-@return -1 if a is nil and -2 if the obj is full. */
-template <typename T = ISW, typename ISZ = ISN>
-inline ISZ TStackInsert(T* items, ISZ count, T item, ISZ index = cPush) {
-  A_ASSERT(items);
-  if (index < 0 || index > count) return -cErrorInvalidInput;
-  if (index == count) {
-    items[count] = item;
-    return count + 1;
-  }
-  if (count == 1) {
-    items[1] = items[0];
-    items[0] = item;
-    return 1;
-  }
-  return TStackInsert<T, ISZ>(T, count, item, index);
+inline void TStackInsert(T* items, ISZ count, ISZ index, T item) {
+  TStackInsert<T>(items + index, items + count, item);
 }
 
 /* Adds the given item to the stop of the obj.

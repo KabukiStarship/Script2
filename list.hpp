@@ -27,7 +27,7 @@ namespace _ {
 
 /* A collection of type-value tuples.
 @see ASCII Data Type Specification.
-@link file://./spec/data/map_types/map.md
+@link /spec/data/map_types/map.md
 @code
       List Memory Layout
 +----------------------------+
@@ -218,8 +218,8 @@ inline ISZ TListInsert(TList<ISZ>* list, T item) {
   CHA* values_begin = TListContains<ISZ>(list, sizeof(T));
 }
 
-template<typename ISZ = ISN>
-ISZ cInvalidIndex () {
+template <typename ISZ = ISN>
+ISZ cInvalidIndex() {
   return -1;
 }
 
