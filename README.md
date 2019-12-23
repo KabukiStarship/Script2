@@ -1,4 +1,4 @@
-# Script2 (TM)
+# [Script2](github.com/kabuki-starship/script2)
 
 ```AsciiArt
  /\               MP""""""`MM                   oo            dP   d8888b.
@@ -29,6 +29,6 @@ The Serial Chinese Room, Interprocess, and Telemetry Specification™ (SCRIPT Sp
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
