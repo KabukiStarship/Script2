@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification](./)
 
 ### String Types
 
@@ -9,13 +9,13 @@ ASCII Strings Types consists of 8-bit (CHA), 16-bit (CHB), and 32-bit (CHC) char
 ```C++
 TKN key                   //< No quotes needed for a TKN.
 ADR 123                   //< A ADR is a TKN.
-STR_1  "\"Hello world!\"" //< UTF-8 STR that reads "Hello world!" with double quotes.
+STA  "\"Hello world!\"" //< UTF-8 STR that reads "Hello world!" with double quotes.
 ARY_CH1_4 "Foo"           //< STR is shorthand for ARY_CH1_1/2/4.
-STR_2 "Hello world!"      //< This is a _::TStrand<> that is up to 64KB long.
-STR_4 "Hello world!"      //< This is a _::TStrand<> that is up to 4GB long.
+STA2 "Hello world!"      //< This is a _::TStrand<> that is up to 64KB long.
+STA4 "Hello world!"      //< This is a _::TStrand<> that is up to 4GB long.
 ```
 
-**[<< Previous Section:Timestamps](./timestamps.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:Timestamps](./timestamps) | [Next Section: >>](./)**
 
 ## License
 

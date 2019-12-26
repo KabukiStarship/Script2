@@ -37,12 +37,13 @@
     <ClInclude Include="cout.h" />
     <ClInclude Include="crabs.h" />
     <ClInclude Include="dic.hpp" />
-    <ClInclude Include="folder.h" />
     <ClInclude Include="door.hpp" />
     <ClInclude Include="error.h" />
     <ClInclude Include="event.h" />
     <ClInclude Include="file.h" />
+    <ClInclude Include="file.hpp" />
     <ClInclude Include="floor.h" />
+    <ClInclude Include="folder.h" />
     <ClInclude Include="interrupts.h" />
     <ClInclude Include="iterator.h" />
     <ClInclude Include="language.h" />
@@ -67,7 +68,6 @@
     <ClInclude Include="table.hpp" />
     <ClInclude Include="test.h" />
     <ClInclude Include="test.hpp" />
-    <ClInclude Include="tinydir.h" />
     <ClInclude Include="typevalue.h" />
     <ClInclude Include="typevalue.hpp" />
     <ClInclude Include="uniprinter.hpp" />
@@ -75,31 +75,12 @@
     <ClInclude Include="wall.h" />
     <ClInclude Include="wall.hpp" />
     <ClInclude Include="_config.h" />
-    <ClInclude Include="_seams\00.uniprinter.inl" />
-    <ClInclude Include="_seams\01.rng.inl" />
-    <ClInclude Include="_seams\02.itos.inl" />
-    <ClInclude Include="_seams\02.socket.inl" />
-    <ClInclude Include="_seams\03.ftos.inl" />
-    <ClInclude Include="_seams\04.sprinter.inl" />
-    <ClInclude Include="_seams\05.clock.inl" />
-    <ClInclude Include="_seams\06.stack.inl" />
-    <ClInclude Include="_seams\07.matrix.inl" />
-    <ClInclude Include="_seams\08.strand.inl" />
-    <ClInclude Include="_seams\09.loom.inl" />
-    <ClInclude Include="_seams\10.list.inl" />
-    <ClInclude Include="_seams\11.book.inl" />
-    <ClInclude Include="_seams\12.map.inl" />
-    <ClInclude Include="_seams\13.table.inl" />
-    <ClInclude Include="_seams\14.dic.inl" />
-    <ClInclude Include="_seams\15.expr.inl" />
-    <ClInclude Include="_seams\16.door.inl" />
-    <ClInclude Include="_seams\17.room.inl" />
-    <ClInclude Include="_seams\18.release.inl" />
+    <ClInclude Include="_seams\10.list.h" />
+    <ClInclude Include="_seams\11.book.h" />
     <ClInclude Include="_seams\test_words.h" />
     <ClInclude Include="_seams\_config.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="01.uniscanner.inl" />
     <None Include="array.inl" />
     <None Include="bin.inl" />
     <None Include="bout.inl" />
@@ -108,11 +89,11 @@
     <None Include="clock.inl" />
     <None Include="cout.inl" />
     <None Include="crabs.inl" />
-    <None Include="folder.inl" />
     <None Include="error.inl" />
     <None Include="event.inl" />
     <None Include="file.inl" />
     <None Include="floor.inl" />
+    <None Include="folder.inl" />
     <None Include="interrupts.inl" />
     <None Include="morsecode.inl" />
     <None Include="op.inl" />
@@ -123,19 +104,43 @@
     <None Include="room.inl" />
     <None Include="slot.inl" />
     <None Include="stringf.inl" />
+    <None Include="tasks.json" />
     <None Include="test.inl" />
     <None Include="typevalue.inl" />
-    <None Include="_config_footer.inl" />
     <None Include="_config_default.inl" />
+    <None Include="_config_footer.inl" />
+    <None Include="_config_header.inl" />
     <None Include="_debug.inl" />
     <None Include="_impl.inl" />
-    <None Include="_config_header.inl" />
     <None Include="_release.inl" />
+    <None Include="_seams\00.uniprinter.inl" />
+    <None Include="_seams\01.rng.inl" />
+    <None Include="_seams\01.uniscanner.inl" />
+    <None Include="_seams\02.itos.inl" />
+    <None Include="_seams\02.socket.inl" />
+    <None Include="_seams\03.ftos.inl" />
+    <None Include="_seams\04.sprinter.inl" />
+    <None Include="_seams\05.clock.inl" />
+    <None Include="_seams\06.stack.inl" />
+    <None Include="_seams\07.matrix.inl" />
+    <None Include="_seams\08.strand.inl" />
+    <None Include="_seams\09.loom.inl" />
+    <None Include="_seams\10.list.inl" />
+    <None Include="_seams\11.book.inl" />
+    <None Include="_seams\12.map.inl" />
+    <None Include="_seams\13.table.inl" />
+    <None Include="_seams\14.dic.inl" />
+    <None Include="_seams\15.expr.inl" />
+    <None Include="_seams\16.door.inl" />
+    <None Include="_seams\17.room.inl" />
     <None Include="_seams\17.seam.s2" />
+    <None Include="_seams\18.release.inl" />
+    <None Include="_seams\readme.md" />
     <None Include="_seams\_seams.inl" />
     <None Include="_undef.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt" />
     <Text Include="_seams\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>

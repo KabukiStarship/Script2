@@ -11,14 +11,14 @@ one at <https://mozilla.org/MPL/2.0/>. */
 //
 #include "test_words.h"
 using namespace _;
-#define TPARAMS ISZ, IUZ, ISY, CHT
+#define TPARAMS CHT, ISZ, ISY
 #if SEAM == SCRIPT2_BOOK
 #include "../_debug.inl"
 #else
 #include "../_release.inl"
 #endif
 namespace script2 {
-template <typename ISZ = ISN, typename IUZ = UIN, typename ISY = ISM,
+template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
           typename CHT = CHR>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
@@ -32,7 +32,7 @@ void TestBook() {
          << CHT('0' + sizeof(ISY)) << ",CH" << CHT('0' + sizeof(CHT))
          << "> with cSize:" << cSize << " and cCount:cCount");
 
-  ABook<TPARAMS, cSize, TUIB<cSize>> book(cCount);
+  ABook<TPARAMS, cSize> book(cCount);
 
   D_COUT("\n\nlist.Size():" << book.Size()
                             << " list.SizeBytes():" << book.SizeBytes()

@@ -116,7 +116,7 @@ inline HSH THashPrime(CHT value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
-template <typename HSH = UIN, typename CHT = CHR>
+template <typename HSH = IUN, typename CHT = CHR>
 inline HSH THashPrime(const CHT* str) {
   CHT c = (CHT)*str++;
   HSH hash = TPrimeMaxUnigned<HSH>();
@@ -187,7 +187,7 @@ inline CHT* TTableKeysStop(TTable<ISZ>* table, ISZ size_bytes) {
 
 #if USING_STR
 /* Prints this object out to the console. */
-template <typename Printer, typename ISZ = ISN, typename HSH = UIN,
+template <typename Printer, typename ISZ = ISN, typename HSH = IUN,
           typename CHT = CHR>
 Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
   D_ASSERT(table);
@@ -247,7 +247,7 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
 
 /* Creates a streamable hash table with enough socket space for the
 count_max. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 TTable<ISZ>* TTableInit(TTable<ISZ>* table, ISZ height, ISZ size_bytes) {
   D_ASSERT(table);
 
@@ -273,7 +273,7 @@ TTable<ISZ>* TTableInit(TTable<ISZ>* table, ISZ height, ISZ size_bytes) {
   return table;
 }
 
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 inline TTable<ISZ>* TTableInit(UIW* socket, HSH count_max, ISZ size) {
   auto table = reinterpret_cast<TTable<ISZ>*>(socket);
   return TTableInit<ISZ, HSH, CHT>(table, count_max, size);
@@ -281,7 +281,7 @@ inline TTable<ISZ>* TTableInit(UIW* socket, HSH count_max, ISZ size) {
 
 /* Adds the key to the table.
 @return An invalid index upon failure or valid index upon success. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
   D_ASSERT(table);
   D_ASSERT(key);
@@ -435,7 +435,7 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
 /* Attempts to find the given key.
 @return Returns TTableInvalidIndex<ISZ>() upon failure, and valid index upon
 success. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
   D_ASSERT(table);
   ISZ count = table->count, count_max = table->count_max;
@@ -540,7 +540,7 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
 
 /* Gets the given key.
 @return Returns the index it go inserted into. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 ISZ TTableGet(TTable<ISZ>* table, ISZ index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
@@ -559,7 +559,7 @@ ISZ TTableGet(TTable<ISZ>* table, ISZ index) {
 }
 
 /* Removes the string at the given index. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 ISZ TTableRemove(TTable<ISZ>* table, ISZ index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
@@ -586,17 +586,17 @@ ISZ TTableRemove(TTable<ISZ>* table, ISZ index) {
 }
 
 /* Removes the given key from the table. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR>
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
 ISZ TTableRemove(TTable<ISZ>* table, const CHT* key) {
   ISZ index = TTableFind<ISZ, HSH, CHT>(table, key);
   return TTableRemove<ISZ, HSH, CHT>(table, index);
 }
 
 /* An ASCII Table Autoject. */
-template <typename ISZ = ISN, typename HSH = UIN, typename CHT = CHR,
+template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR,
           ISZ kCountMax_ = 32,
           typename BUF =
-              TUIB<TTableSize<ISZ, CHT, kCountMax_>(), ISA, ISZ, TTable<ISZ>>>
+              TBUF<TTableSize<ISZ, CHT, kCountMax_>(), ISA, ISZ, TTable<ISZ>>>
 class ATable {
   AArray<CHT, ISZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:

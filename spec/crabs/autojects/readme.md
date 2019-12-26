@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
 ### Autojects
 
@@ -64,7 +64,7 @@ The ASCII Data Type of the Autoject is returned when nullptr and -1 are passed i
 DTW data_type_word = reinterpret_cast<DTW*>(ram_factory(buffer, -1));
 ```
 
-**[<< Previous Section:](./.md) | [Next Section: >>](./.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

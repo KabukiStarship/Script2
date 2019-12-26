@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [SCRIPT Protocol](readme.md)
+## [SCRIPT Protocol]()
 
 The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification consists of the Automaton Standard Code for Information Interchange Data Specification, the Universal Addressing Specification, and the Chinese Room Abstract Stack Machine (Crabs) Specification.
 
@@ -8,11 +8,11 @@ In the John Searle's famous Chinese Room Thought Experiment users may talk to th
 
 ### Content Table
 
-1. [ASCII Data Specification](./ascii_data/readme.md)
-1. [Universal Addressing Specification](./universal_addressing.md)
-1. [Crabs Specification](./crabs/readme.md)
+1. [ASCII Data Specification](./ascii_data/)
+1. [Universal Addressing Specification](./universal_addressing)
+1. [Crabs Specification](./crabs/)
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

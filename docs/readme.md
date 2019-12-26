@@ -1,11 +1,11 @@
-# [Script2™](../readme.md)
+# [Script2™](../)
 
 ## Documents
 
-* [Contributing](./contributing.md]
-* [Change Control Procedure](./change_control_procedure.md)
-* [Secure Coding Standards](./standard_for_secure_coding.md)
-* [The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification Release for Comment (RFC)](https://github.com/kabuki-starship/Script2™/blob/master/docs/script_specification.md);
+* [Contributing](./contributing]
+* [Change Control Procedure](./change_control_procedure)
+* [Secure Coding Standards](./standard_for_secure_coding)
+* [The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification Release for Comment (RFC)](https://github.com/kabuki-starship/Script2™/blob/master/docs/script_specification);
 * Some Script2™ Quick References;
 * The Doxygen config file;
 * `ASCII C++ Style Guide` in the `ascii_cpp_style_guide` folder;
@@ -18,7 +18,7 @@
   * Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) { Specification, Protocol, Script }.
 
 * Where is the RFC?
-  * The RFC is broken up into chapters and located in this directory with the Overview in [script_specification_rfc.md](script_specification_rfc.md).
+  * The RFC is broken up into chapters and located in this directory with the Overview in [script_specification_rfc](script_specification_rfc).
 
 * Does Script cost any money?
   * No: Script is licensed under the Mozilla Public License 2 (MPL2) License which welcomes closed-source commercial usage. The only thing we ask is that if you make useful modifications that you donate them back to our community via and Issue Ticket.

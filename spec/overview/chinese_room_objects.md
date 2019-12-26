@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Overview](./readme.md)
+## [Overview](./)
 
 ### Chinese Room Objects
 
@@ -23,7 +23,7 @@
 |      Table | TBL  | A Symbol Table implemented as a Set with no data. |
 |       Wall | WAL  | A Wall in a Chinese Room composed of a contiguous word-aligned block of memory. |
 
-**[<< Previous Section:Content Table](../readme.md)** | **[Next Section:ASCII Data Specification >>](../data/readme.md)**
+**[<< Previous Section:Content Table](../)** | **[Next Section:ASCII Data Specification >>](../data/)**
 
 ## License
 

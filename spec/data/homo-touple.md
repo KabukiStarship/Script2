@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Vector Types](./readme.md)
+### [Vector Types](./)
 
 #### Homo-vector
 
@@ -16,7 +16,7 @@ A Homo-vector (Homogenous Vector) is a Vector of homogeneous types of length 1, 
 |:-----:|:------:|:-----:|
 |  SW   |  VHT   |  0-31 |
 
-**[<< Previous Section:Vector Types](./readme.md) | [Next Section:Array >>](./array.md)**
+**[<< Previous Section:Vector Types](./) | [Next Section:Array >>](./array)**
 
 ## License
 

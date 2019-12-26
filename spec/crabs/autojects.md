@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Autojects](readme.md)
+### [Autojects]()
 
 Autojects (Automatic objects) are memory managed objects using the Socket Abstract Data Type and the SocketFactory.
 
@@ -56,7 +56,7 @@ The ASCII Data Type of the Autoject is returned when nullptr and -1 are passed i
 DTW data_type_word = reinterpret_cast<DTW*>(socket_factory(buffer, -1));
 ```
 
-**[<< Previous Section:](./.md) | [Next Section: >>](./.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

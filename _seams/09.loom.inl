@@ -29,10 +29,10 @@ void TestLoom() {
     cCount = 32,
   };
   D_COUT("Testing ALoom<CH"
-         << CHT('0' + sizeof(CHT)) << ",SI" << CHT('0' + sizeof(ISZ))
+         << CHT('@' + sizeof(CHT)) << ",IS" << CHT('@' + sizeof(ISZ))
          << "> with cSize:" << cSize << " and cCount:" << cCount);
 
-  ALoom<CHT, ISZ, ISY, cSize, TUIB<cSize>> loom(cCount);
+  ALoom<CHT, ISZ, ISY, cSize, TBUF<cSize>> loom(cCount);
 #if D_THIS
   D_COUT("\nPrinting empty loom:\n");
   loom.COut();

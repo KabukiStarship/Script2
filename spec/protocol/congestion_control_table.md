@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [SCRIPT Protocol](readme.md)
+## [SCRIPT Protocol]()
 
 ### Congestion Control Table
 
@@ -21,7 +21,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

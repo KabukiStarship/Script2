@@ -18,21 +18,20 @@ using namespace _;
 
 namespace script2 {
 
-template <typename ISZ, typename HSH, typename CHT>
+template <typename ISZ, typename IUZ, typename CHT>
 void TestTable() {
-  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<SI")
-         << CHT('0' + sizeof(ISZ)) << ",UI" << CHT('0' + sizeof(HSH)) << ",CH"
-         << CHT('0' + sizeof(CHT)) << ">\n"
+  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS")
+         << CH('@' + sizeof(ISZ)) << ",IU" << CHT('0' + sizeof(IUZ)) << ",CH"
+         << CH('@' + sizeof(CHT)) << ">\n"
          << Linef("+---\n\n"));
 
-  ATable<ISZ, HSH, CHT> table;
+  ATable<ISZ, IUZ, CHT> table;
 
   static const CHT a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
-                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
-                    bac[] = {'b', 'a', 'c', '\0'},
-                    cba[] = {'c', 'b', 'a', '\0'},
-                    cab[] = {'c', 'a', 'b', '\0'},
-                    test[] = {'t', 'e', 's', 't', '\0'};
+                   d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
+                   bac[] = {'b', 'a', 'c', '\0'}, cba[] = {'c', 'b', 'a', '\0'},
+                   cab[] = {'c', 'a', 'b', '\0'},
+                   test[] = {'t', 'e', 's', 't', '\0'};
 
   A_AVOW((ISZ)0, table.Add(a));
 

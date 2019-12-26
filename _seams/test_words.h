@@ -7,6 +7,13 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
+#pragma once
+
+#include <_config.h>
+
+#ifndef SCRIPT2_TESTWORDS
+#define SCRIPT2_TESTWORDS
+
 /* An array of 128 random words. */
 template <typename CHT = CHR>
 const CHT* TTestWords() {
@@ -141,3 +148,5 @@ const CHT* TTestWords() {
       {'f', 'o', 'o', 'l', 'i', 's', 'h'}};
   return &kWords[0][0];
 }
+
+#endif

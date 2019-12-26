@@ -1,6 +1,6 @@
-# [Script2™](../README.md)
+# [Script2™](../README)
 
-## [docs](./readme.md)
+## [docs](./)
 
 ### Contributor Covenant Code of Conduct
 

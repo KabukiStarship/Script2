@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Map Types](./readme.md)
+### [Map Types](./)
 
 ### Books
 
@@ -30,7 +30,7 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 
 * Sizes shown in bytes.
 
-**[<< Previous Section:Table](table.md) | [Next Section:Map >>](map.md)**
+**[<< Previous Section:Table](table) | [Next Section:Map >>](map)**
 
 ## License
 

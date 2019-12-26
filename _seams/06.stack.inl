@@ -26,7 +26,7 @@ void TestStack(const CHA* args) {
 
   AStack<T, ISZ, 8> stack;
 
-  D_COUT(Linef("\n+---\n| TUIB: size:")
+  D_COUT(Linef("\n+---\n| TBUF: size:")
          << stack.AJT().Buffer().Size() << " expected_size_bytes:"
          << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<ISZ>)
          << " size_bytes:" << stack.AJT().Buffer().SizeBytes()

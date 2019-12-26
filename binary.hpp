@@ -44,11 +44,11 @@ inline ISD ToSigned(FPD value) { return *reinterpret_cast<ISD*>(&value); }
 inline IUA ToUnsigned(CHA value) { return (IUA)value; }
 inline IUB ToUnsigned(CHB value) { return (IUB)value; }
 inline IUC ToUnsigned(CHC value) { return (IUC)value; }
-inline UIN ToUnsigned(CHN value) { return (UIN)value; }
+inline IUN ToUnsigned(CHN value) { return (IUN)value; }
 inline IUA ToUnsigned(ISA value) { return (IUA)value; }
 inline IUB ToUnsigned(ISB value) { return (IUB)value; }
 inline IUC ToUnsigned(ISC value) { return (IUC)value; }
-inline UIN ToUnsigned(BOL value) { return (UIN)value; }
+inline IUN ToUnsigned(BOL value) { return (IUN)value; }
 inline IUD ToUnsigned(ISD value) { return (IUD)value; }
 inline IUA ToUnsigned(IUA value) { return (IUA)value; }
 inline IUB ToUnsigned(IUB value) { return (IUB)value; }

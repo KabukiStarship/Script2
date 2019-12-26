@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification](./)
 
 ### Type Aliases
 
@@ -37,7 +37,7 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 |  xW   | Word-aligned word-sized type. |
 |  W/2  | Half-word type word-sized type. |
 
-**[<< Previous Section:Text](./text.md) | [Next Section:Value >>](./value.md)**
+**[<< Previous Section:Text](./text) | [Next Section:Value >>](./value)**
 
 ## License
 

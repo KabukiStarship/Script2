@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Map Types]./(readme.md)
+### [Map Types]./()
 
 #### Map
 
@@ -38,7 +38,7 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 +-------------------------------+ 0x0
 ```
 
-**[<< Previous Section:Book](./book.md) | [Next Section: Dictionary >>](./dictionaries.md)**
+**[<< Previous Section:Book](./book) | [Next Section: Dictionary >>](./dictionaries)**
 
 ## License
 

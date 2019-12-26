@@ -49,9 +49,9 @@ namespace _ {
 */
 template <typename ISZ = ISN>
 struct TList {
-  ISZ size_bytes,  //< Size of the List in bytes.
-      top;         //< Offset to the top of the data.
-  TStack<ISZ> offsets;
+  ISZ size_bytes,       //< Size of the List in bytes.
+      top;              //< Offset to the top of the data.
+  TStack<ISZ> offsets;  //< Stack of offsets to the list items.
 };
 
 /* Gets the base pointer to the Offsets. */
@@ -140,7 +140,7 @@ inline CHA* TListEnd(TList<ISZ>* list, ISZ size) {
 }
 template <typename ISZ = ISN>
 inline CHA* TListEnd(TList<ISZ>* list) {
-  return TListEnd<ISZ>(list, list->offsets->size);
+  return TListEnd<ISZ>(list, list->offsets.count_max);
 }
 
 /* Gets the first addrss in the Values section where you may be able to write
@@ -501,7 +501,7 @@ UIW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
 
 /* ASCII List that uses dynamic memory. */
 template <typename ISZ = ISN, ISZ cSizeBytes_ = 512, ISZ kCountMax_ = 32,
-          typename BUF = TUIB<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DT2>
+          typename BUF = TBUF<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DT2>
 class AList {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-array.
  public:

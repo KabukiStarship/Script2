@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Crabs](readme.md)
+## [Crabs]()
 
 ### ASCII Expression Mappings
 
@@ -65,7 +65,7 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
                    stuff things item3;
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

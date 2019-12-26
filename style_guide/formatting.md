@@ -1,4 +1,4 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Formatting
 
@@ -8,25 +8,25 @@ To help you format code correctly, we've created a [settings file for emacs](htt
 
 ### Section Content
 
-1. [Line Length](formatting.md#line-arguments)
-1. [Non-ASCII Characters](formatting.md#non-ascii-characters)
-1. [Spaces vs. Tabs](formatting.md#spaces-vs-tabs)
-1. [Function Declarations and Definitions](formatting.md#function-declarations-and-definitions)
-1. [Lambda Expressions](formatting.md#lambda-expressions)
-1. [Function Calls](formatting.md#function-calls)
-1. [Braced Initializer List Format](formatting.md#braces-initializer-list-format)
-1. [Conditionals](formatting.md#conditionals)
-1. [Loops and Switch Statements](formatting.md#loops-and-switch-statements)
-1. [Pointer and Reference Expressions](formatting.md#pointer-and-reference-expressions)
-1. [Boolean Expressions](formatting.md#boolean-expressions)
-1. [Return Values](formatting.md#return-values)
-1. [Variable and Array Initialization](formatting.md#variable-and-array-initalization)
-1. [Preprocessor Directives](formatting.md#preprocessor-directives)
-1. [Class Format](formatting.md#class-format)
-1. [Constructor Initializer Lists](formatting.md#constructor-initializer-lists)
-1. [Namespace Formatting](formatting.md#namespace-formatting)
-1. [Horizontal Whitespace](formatting.md#horizontal-whitespace)
-1. [Vertical Whitespace](formatting.md#vertical-whitespace)
+1. [Line Length](formatting#line-arguments)
+1. [Non-ASCII Characters](formatting#non-ascii-characters)
+1. [Spaces vs. Tabs](formatting#spaces-vs-tabs)
+1. [Function Declarations and Definitions](formatting#function-declarations-and-definitions)
+1. [Lambda Expressions](formatting#lambda-expressions)
+1. [Function Calls](formatting#function-calls)
+1. [Braced Initializer List Format](formatting#braces-initializer-list-format)
+1. [Conditionals](formatting#conditionals)
+1. [Loops and Switch Statements](formatting#loops-and-switch-statements)
+1. [Pointer and Reference Expressions](formatting#pointer-and-reference-expressions)
+1. [Boolean Expressions](formatting#boolean-expressions)
+1. [Return Values](formatting#return-values)
+1. [Variable and Array Initialization](formatting#variable-and-array-initalization)
+1. [Preprocessor Directives](formatting#preprocessor-directives)
+1. [Class Format](formatting#class-format)
+1. [Constructor Initializer Lists](formatting#constructor-initializer-lists)
+1. [Namespace Formatting](formatting#namespace-formatting)
+1. [Horizontal Whitespace](formatting#horizontal-whitespace)
+1. [Vertical Whitespace](formatting#vertical-whitespace)
 
 ### Line Length
 

@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Objects](readme.md)
+### [Objects]()
 
 #### Dictionaries
 
@@ -34,7 +34,7 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 |  4   |     2^13   |      0.1         | Ceiling (0.04*p*2^13) = 327.68 |
 |  8   |     2^29   |    10^-16        | Ceiling (0.04*p*2^29) = 327.68 |
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

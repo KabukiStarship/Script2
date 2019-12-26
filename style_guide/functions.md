@@ -1,15 +1,15 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Functions
 
 ### Section Content
 
-1. [Output Parameters](functions.md#output-parameters)
-1. [Write Short Functions](functions.md#write-short-functions)
-1. [Reference Arguments](functions.md#reference-arguments)
-1. [Function Overloading](functions.md#function-overloading)
-1. [Default Arguments](functions.md#default-arguments)
-1. [Trailing Return Type Syntax](functions.md#trailing-return-type-syntax)
+1. [Output Parameters](functions#output-parameters)
+1. [Write Short Functions](functions#write-short-functions)
+1. [Reference Arguments](functions#reference-arguments)
+1. [Function Overloading](functions#function-overloading)
+1. [Default Arguments](functions#default-arguments)
+1. [Trailing Return Type Syntax](functions#trailing-return-type-syntax)
 
 ### Output Parameters
 

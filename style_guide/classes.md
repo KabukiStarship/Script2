@@ -1,4 +1,4 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Classes
 
@@ -6,14 +6,14 @@ Classes are the fundamental unit of code in C++. Naturally, we use them extensiv
 
 ### Section Content
 
-1. [Doing Work in Constructors](classes.md#doing-work-in-constructors)
-1. [Implicit Conversions](classes.md#implicit-conversions)
-1. [Copyable and Movable Types](classes.md#copyable-and-movable-types)
-1. [Structs vs. Classes](classes.md#structs-vs-classes)
-1. [Inheritance](classes.md#inheritance)
-1. [Operator Overloading](classes.md#operator-overloading)
-1. [Access Control](classes.md#-access-control)
-1. [Declaration Order](classes.md#declaration-order)
+1. [Doing Work in Constructors](classes#doing-work-in-constructors)
+1. [Implicit Conversions](classes#implicit-conversions)
+1. [Copyable and Movable Types](classes#copyable-and-movable-types)
+1. [Structs vs. Classes](classes#structs-vs-classes)
+1. [Inheritance](classes#inheritance)
+1. [Operator Overloading](classes#operator-overloading)
+1. [Access Control](classes#-access-control)
+1. [Declaration Order](classes#declaration-order)
 
 ### Doing Work in Constructors
 

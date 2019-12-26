@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Universal Addressing Specification](readme.md)
+## [Universal Addressing Specification]()
 
 **Universal Addressing** or UA is a method of conveying physical addresses and Internet Protocol Addressing that works identically on every planet or spherical object. Before we talk about a UA it helps to see a map of the internet wires on Earth. Here is Earth's Internet Superhighway in the year 2017 center about 0 degrees longitude.
 
@@ -10,11 +10,11 @@ The method uses a minimum of a 96-bit IP Address that conveys latitude, longitud
 
 ### Content Table
 
-1. [Mathematical Definitions](mathmatical_definitions.md)
-1. [Universal Address Format](universal_address_format.md)
-1. [Polar Routing](polar_routing.md)
+1. [Mathematical Definitions](mathmatical_definitions)
+1. [Universal Address Format](universal_address_format)
+1. [Polar Routing](polar_routing)
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

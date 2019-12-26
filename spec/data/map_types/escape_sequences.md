@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Objects](readme.md)
+### [Objects]()
 
 ### Escape Sequence
 
@@ -30,7 +30,7 @@ Parent {
 } //< Code won't execute until you close the curly brackets or type ';'
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

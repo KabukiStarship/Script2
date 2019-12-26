@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Map Types](./readme.md)
+### [Map Types](./)
 
 #### Table
 
@@ -101,7 +101,7 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 }
 ```
 
-**[<< Previous Section:Map](map.md) | [Next Section:Book >>](book.md)**
+**[<< Previous Section:Map](map) | [Next Section:Book >>](book)**
 
 ## License
 

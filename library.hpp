@@ -104,7 +104,7 @@ class Library : public Operand {
 
     IUA type = (*address) & 0x1f;
 
-    UIN array_type = type >> 5;
+    IUN array_type = type >> 5;
 
     switch (array_type) {
       case 0:
@@ -184,7 +184,7 @@ class Library : public Operand {
 };
 
 /* Destructs the given bag. */
-template <typename TIndex, typename TKey, typename TData, UIN MaxStaccSize>
+template <typename TIndex, typename TKey, typename TData, IUN MaxStaccSize>
 LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == nullptr) return;
   delete reinterpret_cast<CHA*>(r);

@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification](./)
 
 ### Value
 
@@ -37,7 +37,7 @@ struct TypeString {
 
 A TST may store a pointer to another string type or object using the second element of the buffer.
 
-**[<< Previous Section:Platform-specific Types](./platform_specific_pod_types.md) | [Next Section:Vector Types >>](./vector_types/readme.md)**
+**[<< Previous Section:Platform-specific Types](./platform_specific_pod_types) | [Next Section:Vector Types >>](./vector_types/)**
 
 ## License
 

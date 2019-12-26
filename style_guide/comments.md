@@ -1,4 +1,4 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Comments
 
@@ -8,15 +8,15 @@ When writing your comments, write for your audience: the next contributor who wi
 
 ### Section Content
 
-1. [Comment Style](comments.md#comment-styles)
-1. [File Comments](comments.md#file-comments)
-1. [Class Comments](comments.md#class-comments)
-1. [Function Comments](comments.md#functions-comments)
-1. [Variable Comments](comments.md#variable-comments)
-1. [Implementation Comments](comments.md#implementation-comments)
-1. [Punctuation, Spelling and Grammar](comments.md#punctuation-spelling-and-grammar)
-1. [TODO Comments](comments.md#todo-comments)
-1. [Deprecation Comments](comments.md#depreciation-comments)
+1. [Comment Style](comments#comment-styles)
+1. [File Comments](comments#file-comments)
+1. [Class Comments](comments#class-comments)
+1. [Function Comments](comments#functions-comments)
+1. [Variable Comments](comments#variable-comments)
+1. [Implementation Comments](comments#implementation-comments)
+1. [Punctuation, Spelling and Grammar](comments#punctuation-spelling-and-grammar)
+1. [TODO Comments](comments#todo-comments)
+1. [Deprecation Comments](comments#depreciation-comments)
 
 ### Comment Style
 

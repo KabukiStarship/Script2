@@ -1,12 +1,12 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Crabs](readme.md)
+## [Crabs]()
 
 ### Authentication
 
 Authentication in Script shall be done using a sequence of Script Operations.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

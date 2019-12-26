@@ -1,14 +1,14 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Vector Types](readme.md)
+### [Vector Types]()
 
 There are four Vector Types:
 
-1. [Homogenous Vector](./homogeneous_vector.md);
-2. [Array](./array.md);
-3. [Vector](./vector.md); and
+1. [Homogenous Vector](./homogeneous_vector);
+2. [Array](./array);
+3. [Vector](./vector); and
 4. [Matrix](./matrix).
 
 Array, Vector, and Matrix types store the element count of the data section as the first word, which is called the SIZ word. The first word means that the element width may be one size and the SIZ word might be another, such as an Array of CHA with less than 2^15 elements.
@@ -30,7 +30,7 @@ inline SIW TSizeOf(SIZ size) {
 }
 ```
 
-**[<< Previous Section:ASCII Data Types Specification](../readme.md) | [Next Section:Homogeneous Vector >>](./homogeneous_vector.md)**
+**[<< Previous Section: ASCII Data Types Specification](../) | [Next Section: Homogeneous Vector >>](./homogeneous_vector)**
 
 ## License
 

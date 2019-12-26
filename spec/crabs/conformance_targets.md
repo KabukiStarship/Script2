@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Crabs](readme.md)
+## [Crabs]()
 
 ### Conformance Targets
 
@@ -14,9 +14,9 @@ The Target shall be certified to be a Script Automaton if the Target does not su
 
 The Target shall be certified as a Group Automata if the Target supports Script^2.
 
-[<< Universal Addressing Specification](universal_addressing_specification_rfc.md) **|** [Beginning >>](readme.md)
+[<< Universal Addressing Specification](universal_addressing_specification_rfc) **|** [Beginning >>]()
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 
