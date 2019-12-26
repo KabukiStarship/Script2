@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [SCRIPT Protocol](readme.md)
+## [SCRIPT Protocol]()
 
 ### Generic Handshake
 
@@ -23,7 +23,7 @@
     1. ☺└¿�☺B**☻�¿└**
 12. **host_a** and **host_b** are now connected.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

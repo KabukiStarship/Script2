@@ -17,7 +17,7 @@ using namespace _;
 #endif
 
 namespace script2 {
-template <typename ISZ = ISN, typename IUZ = UIN, typename ISY = ISM,
+template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
           typename CHT = CHR>
 static void TestDic() {
 #if SEAM >= SCRIPT2_DIC

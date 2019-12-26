@@ -240,7 +240,7 @@ ISY TLoomInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* item,
 template <TARGS>
 CHT* TLoomPop(TLoom<ISZ, ISY>* loom) {
   if (loom->map.count == 0) return nullptr;
-  ISZ offset = TStackPop<ISZ, ISZ>(loom->map), top = loom->top;
+  ISZ offset = TStackPop<ISZ, ISY>(&loom->map), top = loom->top;
   loom->top = offset;
   return reinterpret_cast<CHT*>(reinterpret_cast<ISW>(loom) + offset);
 }
@@ -248,17 +248,20 @@ CHT* TLoomPop(TLoom<ISZ, ISY>* loom) {
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
 template <TARGS>
-ISZ TLoomRemove(TLoom<ISZ, ISY>* loom, ISY index) {
-  ISZ count = loom->map.count;
-  if (index == count) return TLoomPop<TPARAMS>(loom);
+ISY TLoomRemove(TLoom<ISZ, ISY>* loom, ISY index) {
+  ISY count = ISY(loom->map.count);
+  if (index == count) {
+    if (!TLoomPop<TPARAMS>(loom)) return -1;
+    return count;
+  }
   if (index < 0 || index > count) return -1;
 
-  ISZ* offsets = TStackStart<ISZ, ISZ>(loom->map);
+  ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
   ISZ offset = offsets[index],        //
       offset_b = offsets[index + 1],  //
       delta = offset_b - offset;      //
 
-  TStackRemove<ISZ, ISZ>(loom->map, index);
+  TStackRemove<ISZ, ISY>(&loom->map, ISZ(index));
 
   // ArrayShiftDown(reinterpret_cast<CHA*>(loom) + offset, delta);
   return index;
@@ -281,7 +284,8 @@ ISZ TLoomFind(TLoom<ISZ, ISY>* loom, const CHT* string) {
 
 /* An ASCII Loom Autoject. */
 template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
-          ISZ cSize_ = 512, typename BUF = TUIB<cSize_, CHT, TStrand<ISN>>>
+          ISZ cSize_ = 512,
+          typename BUF = TBUF<cSize_, CHT, ISZ, TLoom<ISZ, ISY>>>
 class ALoom {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:

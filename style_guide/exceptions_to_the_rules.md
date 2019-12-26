@@ -1,11 +1,11 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Exceptions to the Rules
 
 The coding conventions described above are mandatory. However, like all good rules, these sometimes have exceptions, which we discuss here:
 
-1. [Existing Non-conformant Code](exceptions_to_the_rules.md#existing-non-conformant-code)
-1. [Windows Code](exceptions_to_the_rules.md#windows-code)
+1. [Existing Non-conformant Code](exceptions_to_the_rules#existing-non-conformant-code)
+1. [Windows Code](exceptions_to_the_rules#windows-code)
 
 ### Existing Non-conformant Code
 

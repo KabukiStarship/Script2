@@ -458,7 +458,7 @@ inline ISZ TStackSizeWords(ISZ count) {
 */
 template <typename T = ISW, typename ISZ = ISN,
           ISZ cSize_ = cStackCountMaxDefault,
-          typename BUF = TUIB<cSize_, T, ISZ, TStack<ISZ>>>
+          typename BUF = TBUF<cSize_, T, ISZ, TStack<ISZ>>>
 class AStack {
   AArray<T, ISZ, BUF> obj_;  //< An Auto-Array.
 

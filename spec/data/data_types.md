@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification]()
 
 ### Data Types
 
@@ -158,7 +158,7 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 |:-------:|:--------:|:-----:|:-----:|:-----:|
 |   MB    | Map type |  SW   |  VHT  |  POD  |
 
-**[<< Previous Section:ASCII Data Specification >>](./readme.md)  |  [Next Section:Integers >>](integers.md)**
+**[<< Previous Section:ASCII Data Specification >>](./)  |  [Next Section:Integers >>](integers)**
 
 ## Requirements
 

@@ -109,7 +109,7 @@ ISC BOutSpace(BOut* bout) {
     return 0;
   }
   CHA* txb_ptr = reinterpret_cast<CHA*>(bout);
-  return (UIN)SlotSpace(txb_ptr + bout->origin, txb_ptr + bout->stop,
+  return (IUN)SlotSpace(txb_ptr + bout->origin, txb_ptr + bout->stop,
                         bout->size);
 }
 
@@ -118,7 +118,7 @@ ISC BOutBufferLength(BOut* bout) {
     return 0;
   }
   CHA* origin = BOutBuffer(bout);
-  return (UIN)SlotLength(origin + bout->origin, origin + bout->stop,
+  return (IUN)SlotLength(origin + bout->origin, origin + bout->stop,
                          bout->size);
 }
 

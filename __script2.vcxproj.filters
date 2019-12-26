@@ -4,11 +4,23 @@
     <Filter Include="./">
       <UniqueIdentifier>{3aa804bd-2649-4725-b35b-24533a68cb94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="./\seams">
+    <Filter Include="./\_seams">
       <UniqueIdentifier>{c9aea5e0-8970-4946-b65f-adac3979ec01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="clock.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="cout.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="crabs.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="dic.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
     <ClInclude Include="door.hpp">
       <Filter>./</Filter>
     </ClInclude>
@@ -18,7 +30,16 @@
     <ClInclude Include="event.h">
       <Filter>./</Filter>
     </ClInclude>
+    <ClInclude Include="file.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="file.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
     <ClInclude Include="floor.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="folder.h">
       <Filter>./</Filter>
     </ClInclude>
     <ClInclude Include="interrupts.h">
@@ -111,6 +132,9 @@
     <ClInclude Include="wall.hpp">
       <Filter>./</Filter>
     </ClInclude>
+    <ClInclude Include="_config.h">
+      <Filter>./</Filter>
+    </ClInclude>
     <ClInclude Include="address.h">
       <Filter>./</Filter>
     </ClInclude>
@@ -153,98 +177,26 @@
     <ClInclude Include="clock.h">
       <Filter>./</Filter>
     </ClInclude>
-    <ClInclude Include="clock.hpp">
-      <Filter>./</Filter>
-    </ClInclude>
-    <ClInclude Include="cout.h">
-      <Filter>./</Filter>
-    </ClInclude>
-    <ClInclude Include="crabs.h">
-      <Filter>./</Filter>
+    <ClInclude Include="_seams\test_words.h">
+      <Filter>./\_seams</Filter>
     </ClInclude>
     <ClInclude Include="_seams\_config.h">
-      <Filter>./\seams</Filter>
+      <Filter>./\_seams</Filter>
     </ClInclude>
-    <ClInclude Include="_config.h">
-      <Filter>./</Filter>
+    <ClInclude Include="_seams\10.list.h">
+      <Filter>./\_seams</Filter>
     </ClInclude>
-    <ClInclude Include="dic.hpp">
-      <Filter>./</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\00.uniprinter.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\01.rng.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\02.itos.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\02.socket.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\03.ftos.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\04.sprinter.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\05.clock.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\06.stack.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\07.matrix.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\08.strand.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\09.loom.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\10.list.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\11.book.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\13.table.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\12.map.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\14.dic.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\15.expr.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\16.door.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\17.room.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\18.release.inl">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="_seams\test_words.h">
-      <Filter>./\seams</Filter>
-    </ClInclude>
-    <ClInclude Include="file.h">
-      <Filter>./</Filter>
-    </ClInclude>
-    <ClInclude Include="folder.h">
-      <Filter>./</Filter>
-    </ClInclude>
-    <ClInclude Include="tinydir.h">
-      <Filter>./</Filter>
+    <ClInclude Include="_seams\11.book.h">
+      <Filter>./\_seams</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="clock.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="cout.inl">
+      <Filter>./</Filter>
+    </None>
     <None Include="crabs.inl">
       <Filter>./</Filter>
     </None>
@@ -254,7 +206,13 @@
     <None Include="event.inl">
       <Filter>./</Filter>
     </None>
+    <None Include="file.inl">
+      <Filter>./</Filter>
+    </None>
     <None Include="floor.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="folder.inl">
       <Filter>./</Filter>
     </None>
     <None Include="interrupts.inl">
@@ -287,10 +245,22 @@
     <None Include="stringf.inl">
       <Filter>./</Filter>
     </None>
+    <None Include="tasks.json">
+      <Filter>./</Filter>
+    </None>
     <None Include="test.inl">
       <Filter>./</Filter>
     </None>
     <None Include="typevalue.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_config_default.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_config_footer.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_config_header.inl">
       <Filter>./</Filter>
     </None>
     <None Include="_debug.inl">
@@ -320,45 +290,90 @@
     <None Include="cin.inl">
       <Filter>./</Filter>
     </None>
-    <None Include="clock.inl">
-      <Filter>./</Filter>
-    </None>
-    <None Include="cout.inl">
-      <Filter>./</Filter>
-    </None>
-    <None Include="_seams\17.seam.s2">
-      <Filter>./\seams</Filter>
+    <None Include="_seams\readme.md">
+      <Filter>./\_seams</Filter>
     </None>
     <None Include="_seams\_seams.inl">
-      <Filter>./\seams</Filter>
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="file.inl">
-      <Filter>./</Filter>
+    <None Include="_seams\00.uniprinter.inl">
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="folder.inl">
-      <Filter>./</Filter>
+    <None Include="_seams\01.rng.inl">
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="_config_header.inl">
-      <Filter>./</Filter>
+    <None Include="_seams\01.uniscanner.inl">
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="_config_footer.inl">
-      <Filter>./</Filter>
+    <None Include="_seams\02.itos.inl">
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="_config_default.inl">
-      <Filter>./</Filter>
+    <None Include="_seams\02.socket.inl">
+      <Filter>./\_seams</Filter>
     </None>
-    <None Include="01.uniscanner.inl">
-      <Filter>./\seams</Filter>
+    <None Include="_seams\03.ftos.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\04.sprinter.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\05.clock.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\06.stack.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\07.matrix.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\08.strand.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\09.loom.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\10.list.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\11.book.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\12.map.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\13.table.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\14.dic.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\15.expr.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\16.door.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\17.room.inl">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\17.seam.s2">
+      <Filter>./\_seams</Filter>
+    </None>
+    <None Include="_seams\18.release.inl">
+      <Filter>./\_seams</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Text Include="CMakeLists.txt">
+      <Filter>./</Filter>
+    </Text>
     <Text Include="_seams\CMakeLists.txt">
-      <Filter>./\seams</Filter>
+      <Filter>./\_seams</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_seams\_main.cpp">
-      <Filter>./\seams</Filter>
+      <Filter>./\_seams</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

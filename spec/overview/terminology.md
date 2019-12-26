@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Overview](./readme.md)
+## [Overview](./)
 
 The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defines this Overview Specification, Automaton Standard Code for Information Interchange (ASCII) Data Types Specification, and the SCRIPT Protocol Specification, and Universal Polar Addressing. Script, which consists of the SCRIPT Protocol, Chinese Room Abstract Stack Machine (Crabs), and Script^2 is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical reference bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
 
@@ -39,7 +39,7 @@ Please note that this Release for Comment (RFC) is a living document and not an 
 |                        Read | The action of reading binary data from a buffer to the Program Stack without converting it. |
 |                        Scan | The action of converting a text representation of a number to a string or copying a string from one buffer to another. |
 
-**[<< Previous Section:Content Table](../readme.md)** | **[Next Section:Terminology >>](./terminology.md)**
+**[<< Previous Section:Content Table](../)** | **[Next Section:Terminology >>](./terminology)**
 
 ## License
 

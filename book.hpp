@@ -23,9 +23,8 @@ namespace _ {
 Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./spec/data/map_types/book.md */
 
-#define TPARAMS ISZ, IUZ, ISY, CHT
-#define TARGS \
-  typename ISZ = ISN, typename IUZ = UIN, typename ISY = ISM, typename CHT = CHR
+#define TPARAMS CHT, ISZ, ISY
+#define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
 
 /* A contiguous memory Associative List created from a List and a Loom.
 @ingroup Book
@@ -41,7 +40,7 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 */
 template <TARGS>
 struct TBook {
-  TLoom<ISZ, ISY>* keys;
+  TLoom<ISZ, ISY> keys;  //< The Loom of keys for the Associative List.
 };
 
 template <TARGS>
@@ -49,6 +48,7 @@ constexpr ISZ CBookCountMin() {
   return 8 / sizeof(ISZ);
 }
 
+/* The minimum size of a Book based on the cCountMin. */
 template <TARGS>
 constexpr ISZ CBookSizeMin() {
   enum {
@@ -80,19 +80,19 @@ inline CHT* TBookStart(TBook<TPARAMS>* book) {
 }
 
 template <TARGS>
-inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ count_max) {
+inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max) {
   D_ASSERT(book);
-  A_ASSERT((count_max >= CBookCountMin<TPARAMS>()));
+  if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
 
-  TLoomInit(book->keys, count_max);
+  TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
 
   return book;
 }
 
 template <TARGS>
 inline CHT* TBookEnd(TBook<TPARAMS>* book) {
-  CHT* list = TLoomEnd(book->keys);
-  return TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list));
+  CHT* list = TLoomEnd<TPARAMS>(&book->keys);
+  return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
 }
 
 template <TARGS>
@@ -102,31 +102,29 @@ inline TList<ISZ>* TBookList(TBook<TPARAMS>* book, ISZ size_bytes) {
 
 template <TARGS>
 inline TList<ISZ>* TBookList(TBook<TPARAMS>* book) {
-  return TBookList<TPARAMS>(book, book->keys->size);
+  return TBookList<TPARAMS>(book, book->keys.size);
 }
 
 /* Gets the element at the given index. */
 template <TARGS>
 inline CHT* TBookGet(TBook<TPARAMS>* book, ISY index) {
   D_ASSERT(book);
-  auto count = book->keys->map.count;
-  if (index < 0 || count) return nullptr;
-  return TPtr<CHT>(book, TStackStart<ISZ, ISZ>(&book->keys->map)[index]);
+  return TLoomGet<CHT, ISZ, ISY>(&book->keys, index);
 }
 
 template <TARGS>
 inline ISZ TBookSize(TBook<TPARAMS>* book) {
   TList<ISZ>* list = TBookList<TPARAMS>(book);
-  return book->keys->size + list->size_bytes;
+  return book->keys.size + list->size_bytes;
 }
 
 template <TARGS, typename Printer>
 Printer& TBookPrint(Printer& o, TBook<TPARAMS>* book) {
-  ISZ count = book->keys->map.count;
-  o << "\nBook<SI" << CHA('0' + sizeof(ISZ)) << ",UI" << CHA('0' + sizeof(IUZ))
-    << ",SI" << CHA('A' + sizeof(ISY)) << CHA('0' + sizeof(CHT))
-    << "> size:" << book->keys->size << " top:" << book->keys->top
-    << " stack_size:" << book->keys->map.count_max << " count:" << count;
+  ISY count = book->keys.map.count;
+  o << "\nBook<CH" << CHA('@' + sizeof(CHT)) << ",IS " << CHA('@' + sizeof(ISZ))
+    << ",IS " << CHA('@' + sizeof(ISY)) << "> size:" << book->keys.size
+    << " top:" << book->keys.top << " stack_size:" << book->keys.map.count_max
+    << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TBookList<TPARAMS>(book));
   for (ISY i = 0; i < count; ++i)
     o << '\n'
@@ -152,7 +150,7 @@ BOL TBookGrow(Autoject& obj) {
   A_ASSERT(book);
   ISZ size = TBookSize<TPARAMS>(book);
   if (!TCanGrow<ISZ>(size)) return false;
-  ISZ count_max = book->keys.offsets.count_max;
+  ISZ count_max = book->keys.map.count_max;
   if (!TCanGrow<ISZ>(count_max)) return false;
 
   size = size << 1;
@@ -178,7 +176,7 @@ BOL TBookGrow(Autoject& obj) {
 template <TARGS>
 void* TBookListRemove(TBook<TPARAMS>* book, ISY index) {
   TList<ISZ>* list = TBookList<TPARAMS>(book);
-  ISZ count = list->offsets.count;
+  ISY count = ISY(list->offsets.count);
   ISZ* offsets = TListOffsets<ISZ>(list);
   TStackRemove<ISZ, ISZ>(offsets, count, index);
   TStackRemove<DT2, ISZ>(TListTypes<ISZ, DT2>(list), count, index);
@@ -189,7 +187,8 @@ void* TBookListRemove(TBook<TPARAMS>* book, ISY index) {
 @return The index upon success or -1 upon failure. */
 template <TARGS>
 void* TBookRemove(TBook<TPARAMS>* book, ISY index) {
-  ISY index = TLoomRemove<CHT, ISZ>(book->keys, index);
+  ISY result = TLoomRemove<TPARAMS>(&book->keys, index);
+  if (!result) return nullptr;
   return TBookListRemove<TPARAMS>(book, index);
 }
 
@@ -207,7 +206,7 @@ void* TBookRemove(TBook<TPARAMS>* book, const CHT* key) {
 @return The index upon success or -1 upon failure. */
 template <TARGS>
 ISZ TBookPop(TBook<TPARAMS>* book) {
-  return TBookRemove<TPARAMS>(book, book->keys->map->count - 1);
+  return TBookRemove<TPARAMS>(book, book->keys.map->count - 1);
 }
 
 /* Adds a key-value tuple to the end of the Book.
@@ -218,13 +217,13 @@ inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, T item,
   A_ASSERT(book);
   if (!key) return cErrorNilInput;
   if (index == cAnywhere) {
-    index = TLoomInsert<CHT, ISY>(book->keys, key, index);
+    index = TLoomInsert<CHT, ISZ, ISY>(&book->keys, key, index);
   } else {
     if (index == cPush) index = book->keys.map.count - 1;
   }
   if (index < 0) return index;
   ISY result = ISY(TListInsert<ISZ, DT2>(TBookList<TPARAMS>(book), item));
-  if (result) TBookRemove<TPARAMS>(book, index, item);
+  if (result) TBookRemove<TPARAMS>(book, index);
   return result;
 }
 template <TARGS>
@@ -375,19 +374,19 @@ ISZ TBookFind(TBook<TPARAMS>* book, const CHT* string) {
 
 /* An ASCII Book Autoject. */
 template <TARGS, ISZ cSize_ = 512,
-          typename BUF = TUIB<cSize_, CHT, TStrand<ISN>>>
+          typename BUF = TBUF<cSize_, CHT, ISZ, TStrand<ISN>>>
 class ABook {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
   enum { cCountDefault = cSize_ / 16 };
   /* Constructs a Book. */
-  ABook(ISZ count_max = cCountDefault) {
+  ABook(ISY count_max = cCountDefault) {
     TBookInit<TPARAMS>(This(), count_max);
   }
 
   /* Constructs a Book subclass.
   @param factory SocketFactory to call when the Strand overflows. */
-  ABook(SocketFactory socket_factory, ISZ count = cCountDefault)
+  ABook(SocketFactory socket_factory, ISY count = cCountDefault)
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
   }
@@ -395,7 +394,7 @@ class ABook {
   /* Constructs a Book subclass.
   @param factory SocketFactory to call when the Strand overflows. */
   ABook(SocketFactory socket_factory, ISZ size = CBookSizeDefault<TPARAMS>(),
-        ISZ count = CBookCountDefault<TPARAMS>())
+        ISY count = CBookCountDefault<TPARAMS>())
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
   }

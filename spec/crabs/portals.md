@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Crabs](readme.md)
+## [Crabs]()
 
 ### Portals
 
@@ -46,7 +46,7 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

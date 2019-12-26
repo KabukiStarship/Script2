@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Distributed Nomination System](readme.md)
+## [Distributed Nomination System]()
 
 The **ICAN3 Distributed Nomination Systems** (**ICAN3 DNS**) is a technology for the fair promotion of unique key domains to the **Global Namespace** (i.e. ".com websites"). It's designed to make corporate control of the .com a domain a thing of the past. In ICAN3 DNS, keys without and .tags are Global in scopes, meaning they go to the DNS Authorities for that planet.
 
@@ -29,7 +29,7 @@ _________   _________   _________   _________
    ...         ...         ...         ...
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

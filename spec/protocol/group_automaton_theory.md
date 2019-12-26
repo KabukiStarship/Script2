@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [SCRIPT Protocol](readme.md)
+## [SCRIPT Protocol]()
 
 ### Group Automata Theorem
 
@@ -24,7 +24,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
     * *许多机器人作为一个*
     * *Xǔduō jīqìrén zuòwéi yīgè*
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

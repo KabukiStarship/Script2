@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Vector Types](readme.md)
+### [Vector Types]()
 
 #### Array
 
@@ -23,7 +23,7 @@ struct TArray {
 0xN +----------------+
 ```
 
-**[<< Previous Section:Vector Types](./readme.md) | [Next Section:Stack >>](./stack.md)**
+**[<< Previous Section:Vector Types](./) | [Next Section:Stack >>](./stack)**
 
 ## License
 

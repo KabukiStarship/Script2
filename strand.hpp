@@ -222,7 +222,7 @@ obj_.Factory () is nil then it will get replaced with the foo.
 #
 
 @code
-AStrand<> (TUIB<64>).Star ("Hello ") << "world!";
+AStrand<> (TBUF<64>).Star ("Hello ") << "world!";
 @endcode
 
 # Dynamic Allocated Strands
@@ -230,11 +230,11 @@ AStrand<> (TUIB<64>).Star ("Hello ") << "world!";
 Strands that use dynamic memory use the TC:
 
 @code
-AStrand<IUC, TUIB<64>> () << "Hello world!";
+AStrand<IUC, TBUF<64>> () << "Hello world!";
 @endcode
 */
 template <typename CHT = CHR, typename ISZ = ISN, ISZ cSize_ = cSTRCount,
-          typename BUF = TUIB<cSize_, CHT, ISZ, TStrand<ISZ>>>
+          typename BUF = TBUF<cSize_, CHT, ISZ, TStrand<ISZ>>>
 class AStrand {
   AArray<CHT, ISZ, BUF> obj_;  //< AutoArray of CHT(s).
   TSPrinter<CHT> sprinter_;    //< UTF for the strand.

@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Objects](readme.md)
+### [Objects]()
 
 #### List
 
@@ -28,7 +28,7 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
 +----------------------------+ 0xN
 ```
 
-**[<< Previous Section:Map](map.md) | [Next Section:Table >>](table.md)**
+**[<< Previous Section:Map](map) | [Next Section:Table >>](table)**
 
 ## License
 

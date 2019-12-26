@@ -22,37 +22,37 @@ namespace _ {
 const CHA* STRTypes() {
   static const CHA kStrings[64][4] = {
       {'N', 'I', 'L', NIL},  //< 00
-      {'S', 'T', '1', NIL},  //< 01
-      {'S', 'T', '2', NIL},  //< 02
-      {'S', 'T', '3', NIL},  //< 03
-      {'C', 'H', '1', NIL},  //< 04
-      {'S', 'I', '1', NIL},  //< 05
-      {'U', 'I', '1', NIL},  //< 06
-      {'C', 'H', '2', NIL},  //< 07
-      {'S', 'I', '2', NIL},  //< 08
-      {'U', 'I', '2', NIL},  //< 09
-      {'F', 'P', '2', NIL},  //< 10
-      {'B', 'O', '2', NIL},  //< 11
-      {'C', 'H', '4', NIL},  //< 12
-      {'S', 'I', '4', NIL},  //< 13
-      {'U', 'I', '4', NIL},  //< 14
-      {'F', 'P', '4', NIL},  //< 15
-      {'B', 'O', '4', NIL},  //< 16
-      {'T', 'M', '4', NIL},  //< 17
-      {'T', 'M', 'E', NIL},  //< 18
-      {'T', 'M', '8', NIL},  //< 19
-      {'S', 'I', '8', NIL},  //< 20
-      {'U', 'I', '8', NIL},  //< 21
-      {'F', 'P', '8', NIL},  //< 22
-      {'S', 'I', 'H', NIL},  //< 23
-      {'U', 'I', 'H', NIL},  //< 24
-      {'F', 'P', 'H', NIL},  //< 25
-      {'P', 'D', 'A', NIL},  //< 26
-      {'P', 'D', 'B', NIL},  //< 27
-      {'P', 'D', 'C', NIL},  //< 28
-      {'P', 'D', 'D', NIL},  //< 29
-      {'P', 'D', 'E', NIL},  //< 30
-      {'P', 'D', 'F', NIL},  //< 31
+      {'C', 'H', 'A', NIL},  //< 01
+      {'I', 'S', 'A', NIL},  //< 02
+      {'I', 'U', 'A', NIL},  //< 03
+      {'C', 'H', 'B', NIL},  //< 04
+      {'I', 'S', 'B', NIL},  //< 05
+      {'I', 'U', 'B', NIL},  //< 06
+      {'F', 'P', 'B', NIL},  //< 07
+      {'B', 'O', 'L', NIL},  //< 08
+      {'C', 'H', 'C', NIL},  //< 09
+      {'I', 'S', 'C', NIL},  //< 10
+      {'I', 'U', 'C', NIL},  //< 11
+      {'F', 'P', 'C', NIL},  //< 12
+      {'T', 'M', 'E', NIL},  //< 13
+      {'I', 'S', 'D', NIL},  //< 14
+      {'I', 'U', 'D', NIL},  //< 15
+      {'F', 'P', 'D', NIL},  //< 16
+      {'I', 'S', 'E', NIL},  //< 17
+      {'I', 'U', 'E', NIL},  //< 18
+      {'F', 'P', 'E', NIL},  //< 19
+      {'D', 'T', 'A', NIL},  //< 20
+      {'D', 'T', 'B', NIL},  //< 21
+      {'D', 'T', 'C', NIL},  //< 22
+      {'D', 'T', 'D', NIL},  //< 23
+      {'D', 'T', 'E', NIL},  //< 24
+      {'D', 'T', 'F', NIL},  //< 25
+      {'D', 'T', 'G', NIL},  //< 26
+      {'D', 'T', 'H', NIL},  //< 27
+      {'D', 'T', 'I', NIL},  //< 28
+      {'D', 'T', 'J', NIL},  //< 29
+      {'D', 'T', 'K', NIL},  //< 30
+      {'D', 'T', 'L', NIL},  //< 31
   };
   return &kStrings[0][0];
 }
@@ -178,7 +178,7 @@ CHB* TypeValue::ToSTB() { return reinterpret_cast<CHB*>(word_); }
 CHC* TypeValue::ToSTC() { return reinterpret_cast<CHC*>(word_); }
 IUA TypeValue::ToUIA() { return IUA(word_); }
 IUB TypeValue::ToUI2() { return IUB(word_); }
-UIN TypeValue::ToUIN() { return UIN(word_); }
+IUN TypeValue::ToUIN() { return IUN(word_); }
 IUC TypeValue::ToUI4() {
 #if ALU_SIZE == ALU_16_BIT
   // @todo Inspect dissassembly to check if we even need the #if #else here.

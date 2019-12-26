@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [SCRIPT Protocol](readme.md)
+## [SCRIPT Protocol]()
 
 ### Abnormal Behaviors
 
@@ -36,7 +36,7 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 
 Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

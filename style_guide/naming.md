@@ -1,4 +1,4 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Naming
 
@@ -6,16 +6,16 @@ The most important consistency rules are those that govern naming. The style of 
 
 Naming rules are pretty arbitrary, but we feel that consistency is more important than individual preferences in this area, so regardless of whether you find them sensible or not, the rules are the rules:
 
-1. [General Naming Rules](naming.md#general-naming-rules)
-1. [File Names](naming.md#file-names)
-1. [Type Names](naming.md#type-names)
-1. [Variable Names](naming.md#variable-names)
-1. [Constant Names](naming.md#constant-names)
-1. [Function Names](naming.md#function-names)
-1. [Namespace Names](naming.md#namespace-names)
-1. [Enumerator Names](naming.md#enumerator-names)
-1. [Macro Names](naming.md#macro-names)
-1. [Exceptions to Naming Rules](naming.md#exceptions-to-naming-rules)
+1. [General Naming Rules](naming#general-naming-rules)
+1. [File Names](naming#file-names)
+1. [Type Names](naming#type-names)
+1. [Variable Names](naming#variable-names)
+1. [Constant Names](naming#constant-names)
+1. [Function Names](naming#function-names)
+1. [Namespace Names](naming#namespace-names)
+1. [Enumerator Names](naming#enumerator-names)
+1. [Macro Names](naming#macro-names)
+1. [Exceptions to Naming Rules](naming#exceptions-to-naming-rules)
 
 ### General Naming Rules
 

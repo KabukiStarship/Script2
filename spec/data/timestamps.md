@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification](./)
 
 ### Timestamps
 
@@ -32,11 +32,11 @@ The 32-bit time epoch shall be set to 32 years[] starting at the January 1st of 
 
 `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
-**[<< Previous Section:Text](./text.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:Text](./text) | [Next Section: >>](./)**
 
 ## References
 
-* [10] ../overview/requirements.md
+* [10] ../overview/requirements
 
 ## License
 

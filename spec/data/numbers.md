@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification]()
 
 ### Integers
 
@@ -96,7 +96,7 @@ FPD - 0.1;  // Wastes a whole lot of space!
 FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 ```
 
-**[<< Previous Section:Data Types](./data_types.md) | [Next Section:Floating-point >>](./floating-point.md)**
+**[<< Previous Section:Data Types](./data_types) | [Next Section:Floating-point >>](./floating-point)**
 
 ## License
 

@@ -414,10 +414,10 @@ inline BOL ArrayCompare(const void* begin_a, void* end_a, const void* begin_b,
 /* A word-aligned array of cSize_ elements of T on the progam stack. */
 template <ISW cSize_ = cCpuCacheLineSize, typename T = IUA, typename ISZ = ISN,
           typename Class = Nil>
-class TUIB {
+class TBUF {
  public:
   /* Default destructor does nothing. */
-  TUIB() : words_() {}
+  TBUF() : words_() {}
 
   /* Returns the socket as a UIW*. */
   inline UIW* Words() { return words_; }
@@ -463,7 +463,7 @@ class TUIB {
   }
 
   /* The size in elements. */
-  static constexpr ISZ Size() { return (ISZ(cSize_) < 0) ? 0 : ISZ(cSize_); }
+  static constexpr ISZ Size() { return ISZ((cSize_ < 0) ? 0 : ISZ(cSize_)); }
 
   /* The size in bytes including the header. */
   static constexpr ISZ SizeBytes() {

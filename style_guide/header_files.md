@@ -1,4 +1,4 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Header Files
 
@@ -10,11 +10,11 @@ The following rules will guide you through the various pitfalls of using header 
 
 ### Section Content
 
-1. [Self-contained Headers](header_files.md#self-contained-headers)
-1. [The #define Guard](header_files.md#the-define-guard)
-1. [Forward Declarations](header_files.md#forward-declarations)
-1. [Inline Functions](header_files.md#inline-functions)
-1. [Names and Order of Includes](header_files.md#names-and-order-of-includes)
+1. [Self-contained Headers](header_files#self-contained-headers)
+1. [The #define Guard](header_files#the-define-guard)
+1. [Forward Declarations](header_files#forward-declarations)
+1. [Inline Functions](header_files#inline-functions)
+1. [Names and Order of Includes](header_files#names-and-order-of-includes)
 
 ### Self-contained Headers
 

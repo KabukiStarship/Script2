@@ -24,7 +24,7 @@ Floor* FloorInit(Floor* floor) {
 }
 
 inline Floor* Global() {
-  static TUIB<cFloorSize, cCpuCacheLineSize> floor_socket;
+  static TBUF<cFloorSize, cCpuCacheLineSize> floor_socket;
   return floor_socket.Start<Floor>();
 }
 

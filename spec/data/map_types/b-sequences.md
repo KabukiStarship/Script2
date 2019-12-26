@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Objects](readme.md)
+### [Objects]()
 
 #### B-Sequences
 
@@ -58,7 +58,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
                          on coworkers foreheads. :-) */
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

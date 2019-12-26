@@ -1,8 +1,8 @@
-# [SCRIPT Specification](../../readme.md)
+# [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../readme.md)
+## [ASCII Data Specification](../)
 
-### [Vector Types](./readme.md)
+### [Vector Types](./)
 
 ***C++ Header***
 
@@ -57,7 +57,7 @@ Matlab style Multi-dimensional matrix separator ---+   */
               N is the Dimension Count -----+  */
 ```
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

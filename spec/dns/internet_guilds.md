@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [Distributed Nomination System](readme.md)
+## [Distributed Nomination System]()
 
 ### Internet Guilds
 
@@ -32,7 +32,7 @@ In order to keep track of the change in IP Addresses, each Script Network must k
 
 Registering a *Internet Guild* requires a server computer with fixed *UP IP Address*. This server is responsible for resolving DNS Queries for the *guild*.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 

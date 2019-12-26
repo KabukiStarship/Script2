@@ -51,7 +51,7 @@ struct TMap {
       count;  //< Element count.
 };
 
-/* Utility class for creating an object with the TUIB. */
+/* Utility class for creating an object with the TBUF. */
 template <typename D = ISN, typename ISZ = ISW>
 struct TMapBuf {
   D domain_value;
@@ -120,7 +120,7 @@ inline void TMapClear(TMap<ISZ>* map) {
 }
 
 /* Prints the map to the Printer. */
-template <typename Printer, typename D = UIN, typename ISZ = ISW>
+template <typename Printer, typename D = IUN, typename ISZ = ISW>
 Printer& TMapPrint(Printer& o, const TMap<ISZ>* map) {
   enum {
     cSIZColumnWidth = 10,
@@ -309,7 +309,7 @@ ISZ TMapRemove(TMap<ISZ>* map, ISZ index) {
 CMapSizeBytes<D, ISZ>(cSize_)
 */
 template <typename D = ISN, typename ISZ = ISW, ISZ cSize_ = 16,
-          typename BUF = TUIB<cSize_, TMapBuf<D, ISZ>, ISZ, TMap<ISZ>>>
+          typename BUF = TBUF<cSize_, TMapBuf<D, ISZ>, ISZ, TMap<ISZ>>>
 class AMap {
   AArray<TMapBuf<D, ISZ>, ISZ, BUF> array_;
 

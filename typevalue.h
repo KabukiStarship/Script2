@@ -86,7 +86,7 @@ class LIB_MEMBER TypeValue {
   CHC* ToSTC();
   IUA ToUIA();
   IUB ToUI2();
-  UIN ToUIN();
+  IUN ToUIN();
   IUC ToUI4();
   IUD ToUI8();
 

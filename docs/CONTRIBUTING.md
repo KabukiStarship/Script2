@@ -1,4 +1,4 @@
-# [Script2™](../readme.md)
+# [Script2™](../)
 
 ## Contributing
 
@@ -6,13 +6,13 @@
 
 **1.** Ensure the bug was not already reported by by reading the [Issues](https://github.com/kabuki-starship/Script2™/issues).
 
-**2.** Open `/docs/bug_report_template.md` and copy it's contents to the clipboard.
+**2.** Open `/docs/bug_report_template` and copy it's contents to the clipboard.
 
 **3.** Create an issue, paste the template into the Issue body and fill it out.
 
 ### Feature Requests
 
-**1.** Same as the instructions for submitting a bug report except with using `/docs/feature_request.md`.
+**1.** Same as the instructions for submitting a bug report except with using `/docs/feature_request`.
 
 ### Completing Issues
 
@@ -32,7 +32,7 @@ git commit -m "module_id.Add feature XYZ. #123"
 git push origin Issue123
 ```
 
-**3.** Create a Pull Requesting using the `/docs/pull_request_template.md`
+**3.** Create a Pull Requesting using the `/docs/pull_request_template`
 
 **4.** Get others to inspect your changes and merge the branch to the master.
 

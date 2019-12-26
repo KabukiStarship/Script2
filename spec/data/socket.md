@@ -1,12 +1,12 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification]()
 
 ### Socket
 
 
 
-**[<< Previous Section:Timestamps](./timestamps.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:Timestamps](./timestamps) | [Next Section: >>](./)**
 
 ## License
 

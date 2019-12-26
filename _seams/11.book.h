@@ -20,19 +20,21 @@ using namespace _;
 #endif
 #endif
 
+#if SEAM >= SCRIPT2_BOOK
 namespace script2 {
-static const CHA* TestBook(const CHA* args) {
+template <typename CHT, typename ISZ, typename IUZ, typename ISY>
+void TTestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    kSize = 192 * sizeof(Char),
+    kSize = 192 * sizeof(CHT),
     kCount = 32,
   };
-  D_COUT("Testing ALoom<CH"
-         << Char('0' + sizeof(Char)) << ",SI" << Char('0' + sizeof(SIZ))
+  D_COUT("Testing ABook<CH"
+         << CHT('@' + sizeof(CHT)) << ",IS" << CHT('@' + sizeof(ISZ))
          << "> with kSize:" << kSize << " and kCount:kCount");
 
-  ALoom<Char, SIZ, kSize, TUIB<kSize>> book(kCount);
+  ALoom<CHT, ISZ, kSize, TBUF<kSize>> book(kCount);
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
@@ -42,26 +44,26 @@ static const CHA* TestBook(const CHA* args) {
     kLengthMax = (kSize << 2) - 1,
   };
 
-  Char string[kLengthMax + 1];
-  Char* String_end = &string[kLengthMax];
+  CHT string[kLengthMax + 1];
+  CHT* string_end = &string[kLengthMax];
 
   for (SIN i = 0; i < 32; ++i) {
-    TSPrint<Char>(string, String_end, i);
-    A_AVOW((SIZ)i, book.Add(string));
+    TSPrint<CHT>(string, string_end, i);
+    A_AVOW((ISZ)i, book.Add(string));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  TSPrint<Char>(string, String_end, 32);
-  A_AVOW((SIZ)32, book.Add(string));
+  TSPrint<CHT>(string, string_end, 32);
+  A_AVOW((ISZ)32, book.Add(string));
 
   for (SIN i = 33; i < 96; ++i) {
-    TSPrint<Char>(string, String_end, i);
-    A_AVOW((SIZ)(i), book.Add(string));
+    TSPrint<CHT>(string, string_end, i);
+    A_AVOW((ISZ)(i), book.Add(string));
   }
 
-  TSPrint<Char>(string, String_end, 96);
-  A_AVOW((SIZ)96, book.Add(string));
+  TSPrint<CHT>(string, string_end, 96);
+  A_AVOW((ISZ)96, book.Add(string));
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
@@ -69,11 +71,11 @@ static const CHA* TestBook(const CHA* args) {
 
   string[kLengthMax] = 0;
 
-  SIZ index = book.Add(string);
+  ISZ index = book.Add(string);
 #if D_THIS
   book.COut();
 #endif
-  A_AVOW((SIZ)97, index);
+  A_AVOW((ISZ)97, index);
 
 #if D_THIS
   D_COUT('\n');
@@ -83,49 +85,48 @@ static const CHA* TestBook(const CHA* args) {
 
   D_COUT("\nTesting TLoomFind...\n");
 
-  static const Char a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
-                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
-                    bac[] = {'b', 'a', 'c', '\0'},
-                    cba[] = {'c', 'b', 'a', '\0'},
-                    cab[] = {'c', 'a', 'b', '\0'},
-                    test[] = {'t', 'e', 's', 't', '\0'};
+  static const CHT a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
+                   d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
+                   bac[] = {'b', 'a', 'c', '\0'}, cba[] = {'c', 'b', 'a', '\0'},
+                   cab[] = {'c', 'a', 'b', '\0'},
+                   test[] = {'t', 'e', 's', 't', '\0'};
 
-  A_AVOW((SIZ)98, book.Add(d));
+  A_AVOW((ISZ)98, book.Add(d));
 
-  A_AVOW((SIZ)98, book.Find(d));
+  A_AVOW((ISZ)98, book.Find(d));
 
-  A_AVOW((SIZ)99, book.Add(c));
-  A_AVOW((SIZ)98, book.Find(d));
-  A_AVOW((SIZ)99, book.Find(c));
+  A_AVOW((ISZ)99, book.Add(c));
+  A_AVOW((ISZ)98, book.Find(d));
+  A_AVOW((ISZ)99, book.Find(c));
 
-  A_AVOW((SIZ)100, book.Add(b));
-  A_AVOW((SIZ)98, book.Find(d));
-  A_AVOW((SIZ)99, book.Find(c));
-  A_AVOW((SIZ)100, book.Find(b));
+  A_AVOW((ISZ)100, book.Add(b));
+  A_AVOW((ISZ)98, book.Find(d));
+  A_AVOW((ISZ)99, book.Find(c));
+  A_AVOW((ISZ)100, book.Find(b));
 
-  A_AVOW((SIZ)101, book.Add(a));
-  A_AVOW((SIZ)98, book.Find(d));
-  A_AVOW((SIZ)99, book.Find(c));
-  A_AVOW((SIZ)100, book.Find(b));
-  A_AVOW((SIZ)101, book.Find(a));
+  A_AVOW((ISZ)101, book.Add(a));
+  A_AVOW((ISZ)98, book.Find(d));
+  A_AVOW((ISZ)99, book.Find(c));
+  A_AVOW((ISZ)100, book.Find(b));
+  A_AVOW((ISZ)101, book.Find(a));
 
-  A_AVOW((SIZ)102, book.Add(abc));
-  A_AVOW((SIZ)102, book.Find(abc));
+  A_AVOW((ISZ)102, book.Add(abc));
+  A_AVOW((ISZ)102, book.Find(abc));
 
-  A_AVOW((SIZ)103, book.Add(bac));
-  A_AVOW((SIZ)102, book.Find(abc));
-  A_AVOW((SIZ)103, book.Find(bac));
+  A_AVOW((ISZ)103, book.Add(bac));
+  A_AVOW((ISZ)102, book.Find(abc));
+  A_AVOW((ISZ)103, book.Find(bac));
 
-  A_AVOW((SIZ)104, book.Add(cba));
-  A_AVOW((SIZ)102, book.Find(abc));
-  A_AVOW((SIZ)103, book.Find(bac));
-  A_AVOW((SIZ)104, book.Find(cba));
+  A_AVOW((ISZ)104, book.Add(cba));
+  A_AVOW((ISZ)102, book.Find(abc));
+  A_AVOW((ISZ)103, book.Find(bac));
+  A_AVOW((ISZ)104, book.Find(cba));
 
-  A_AVOW((SIZ)105, book.Add(cab));
-  A_AVOW((SIZ)102, book.Find(abc));
-  A_AVOW((SIZ)103, book.Find(bac));
-  A_AVOW((SIZ)104, book.Find(cba));
-  A_AVOW((SIZ)105, book.Find(cab));
+  A_AVOW((ISZ)105, book.Add(cab));
+  A_AVOW((ISZ)102, book.Find(abc));
+  A_AVOW((ISZ)103, book.Find(bac));
+  A_AVOW((ISZ)104, book.Find(cba));
+  A_AVOW((ISZ)105, book.Find(cab));
 
 #if D_THIS
   D_COUT('\n');
@@ -133,7 +134,7 @@ static const CHA* TestBook(const CHA* args) {
   D_COUT('\n');
 #endif
 
-  A_AVOW((SIZ)-1, book.Find(test));
+  A_AVOW((ISZ)-1, book.Find(test));
 }
 }  // namespace script2
 #endif
@@ -142,14 +143,15 @@ namespace script2 {
 static const CHA* Book(const CHA* args) {
 #if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
-  TestBook<CHA, ISB>();
-  TestBook<CHA, ISC>();
+  TTestBook<CHA, ISB, IUB, ISA>();
+  TTestBook<CHA, ISC, IUC, ISB>();
 #if USING_UTF16 == YES_0
-  TestBook<CHB, ISB>();
-  TestBook<CHB, ISC>();
+  TTestBook<CHB, ISB, IUB, ISA>();
+  TTestBook<CHB, ISC, IUC, ISB>();
 #endif
 #if USING_UTF32 == YES_0
-  TestBook<CHC, ISC>();
+  TTestBook<CHC, ISB, IUB, ISA>();
+  TTestBook<CHC, ISC, IUC, ISB>();
 #endif
 #endif
   return nullptr;

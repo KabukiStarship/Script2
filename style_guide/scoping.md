@@ -1,15 +1,15 @@
-# [ASCII C++ Style Guide](./readme.md)
+# [ASCII C++ Style Guide](./)
 
 ## Scoping
 
 ### Section Content
 
-1. [Namespaces](scoping.md#namespaces)
-1. [Unnamed Namespaces and Static Variables](scoping.md#unnamed-namespaces-and-static-variables)
-1. [Nonmember, Static Member, and Global Functions](scoping.md#nonmember-static-member-and-global-functions)
-1. [Local Variables](scoping.md#local-variables)
-1. [Static and Global Variables](scoping.md#static-and-global-variables)
-1. [thread_local Variables](scoping.md#thread-local-variables)
+1. [Namespaces](scoping#namespaces)
+1. [Unnamed Namespaces and Static Variables](scoping#unnamed-namespaces-and-static-variables)
+1. [Nonmember, Static Member, and Global Functions](scoping#nonmember-static-member-and-global-functions)
+1. [Local Variables](scoping#local-variables)
+1. [Static and Global Variables](scoping#static-and-global-variables)
+1. [thread_local Variables](scoping#thread-local-variables)
 
 ### Namespaces
 

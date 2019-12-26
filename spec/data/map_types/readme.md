@@ -1,6 +1,6 @@
-# [SCRIPT Specification](../readme.md)
+# [SCRIPT Specification](../)
 
-## [ASCII Data Specification](readme.md)
+## [ASCII Data Specification]()
 
 ### Map Types
 
@@ -29,7 +29,7 @@ need an 16-bit object. It is easy to imagine a complex AI software using
 more than 4GB RAM, or the need to attach a DVD ISO image as a key-value
 pair, so we need a 64-bit dictionary.
 
-**[<< Previous Section:](./readme.md) | [Next Section: >>](./readme.md)**
+**[<< Previous Section:](./) | [Next Section: >>](./)**
 
 ## License
 
