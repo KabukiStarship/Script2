@@ -11,3 +11,10 @@ The Change control procedure ensures that train wrecks don't happen when Major o
 7. Finished changes shall be reviewed by the Change control board using a Pull Request, at which time the Change ticket shall be moved into the Reviewing Kanban board.
 8. If the Pull Request contains any leftover artifacts from the Change or improper unit test coverage, the request shall be denied, requiring steps 7 and 8 to be repeated as many time as necessary.
 9. After a successful Pull Request, the Change ticket shall be moved into the Done Changes kanban board and closed.
+
+## License
+
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+

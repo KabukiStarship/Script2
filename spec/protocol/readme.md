@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [SCRIPT Protocol]()
+## [SCRIPT Protocol](./)
 
 The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification consists of the Automaton Standard Code for Information Interchange Data Specification, the Universal Addressing Specification, and the Chinese Room Abstract Stack Machine (Crabs) Specification.
 
@@ -12,10 +12,10 @@ In the John Searle's famous Chinese Room Thought Experiment users may talk to th
 1. [Universal Addressing Specification](./universal_addressing)
 1. [Crabs Specification](./crabs/)
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Group Automata >>](./group_automata)**
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

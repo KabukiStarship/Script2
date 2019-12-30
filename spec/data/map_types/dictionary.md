@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](../)
 
-### [Objects]()
+### [Map Types](./map_types)
 
 #### Dictionaries
 
@@ -34,10 +34,14 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 |  4   |     2^13   |      0.1         | Ceiling (0.04*p*2^13) = 327.68 |
 |  8   |     2^29   |    10^-16        | Ceiling (0.04*p*2^29) = 327.68 |
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Book](./book) | [Next Section: SCRIPT Specification >>](../../)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [SCRIPT Protocol]()
+## [SCRIPT Protocol Specification](./)
 
 ### Quality of Service
 
@@ -34,10 +34,14 @@ A slave device assumes that there is another Automaton or Automata performing th
 
 Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Terminals](./terminals) | [Next Section: Congestion Control >>](./congestion_control)**
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+## Requirements
+
+[1] http://google.com
+
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

@@ -39,10 +39,10 @@ Please note that this Release for Comment (RFC) is a living document and not an 
 |                        Read | The action of reading binary data from a buffer to the Program Stack without converting it. |
 |                        Scan | The action of converting a text representation of a number to a string or copying a string from one buffer to another. |
 
-**[<< Previous Section:Content Table](../)** | **[Next Section:Terminology >>](./terminology)**
+**[<< Previous Section: Requirements](./requirements)** | **[Next Section: Object Classes >>](./terminology)**
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

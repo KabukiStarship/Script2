@@ -1,12 +1,10 @@
 # [SCRIPT Specification](../)
 
-## [Crabs]()
+## [Crabs Specification](./)
 
-### ASCII Expression Mappings
+### Expressions
 
-
-
-```Script2™
+```Script2
   +-------------------------- Operation Push "=DIC2" is a function  
   |                           with address stuff that creates a
   |                           dictionary of size 64KB bytes with a
@@ -65,10 +63,14 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
                    stuff things item3;
 ```
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Messages](./messages) | [Next Section: SCRIPT Specification >>](../)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

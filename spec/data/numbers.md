@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [ASCII Data Specification]()
+## [ASCII Data Specification](./)
 
 ### Integers
 
@@ -96,10 +96,14 @@ FPD - 0.1;  // Wastes a whole lot of space!
 FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 ```
 
-**[<< Previous Section:Data Types](./data_types) | [Next Section:Floating-point >>](./floating-point)**
+**[<< Previous Section: Data Types](./data_types) | [Next Section: Timestamps >>](./timestamps)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

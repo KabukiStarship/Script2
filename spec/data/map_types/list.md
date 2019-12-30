@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](../)
 
-### [Objects]()
+### [Map Types](./)
 
 #### List
 
@@ -28,10 +28,14 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
 +----------------------------+ 0xN
 ```
 
-**[<< Previous Section:Map](map) | [Next Section:Table >>](table)**
+**[<< Previous Section: Map](./map) | [Next Section: Table >>](./table)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

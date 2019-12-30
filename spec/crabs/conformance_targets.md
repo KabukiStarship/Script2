@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [Crabs]()
+## [Crabs Specification](./)
 
 ### Conformance Targets
 
@@ -16,10 +16,14 @@ The Target shall be certified as a Group Automata if the Target supports Script^
 
 [<< Universal Addressing Specification](universal_addressing_specification_rfc) **|** [Beginning >>]()
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Room Contents](./room_contents) | [Next Section: Autojects >>](./autojects)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

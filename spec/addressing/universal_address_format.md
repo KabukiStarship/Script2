@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [Universal Addressing Specification]()
+## [Universal Addressing Specification](./)
 
 ### Universal Address Format
 
@@ -34,10 +34,14 @@ All address ranges with (longitude greater than +180 or less than -180) and (lat
 
 All off-planet signs are routed using the UAF Height Value of all logic level 1(s). For a 5-byte packet, this is a value of -16. When this Height is detected, the signal gets routed to one of 64800 possible directions based on 360 degrees longitude times 180 latitude. Currently, no starships exist for this task but they are being designed by the Kabuki Starship™ team; the open-source organization behind Script.
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section:Polar Routing](./polar_routing) | [Next Section: SCRIPT Specification >>](../)
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
