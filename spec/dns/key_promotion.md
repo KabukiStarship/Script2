@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [Distributed Nomination System Specification]()
+## [Distributed Nomination System Specification](./)
 
 ### Key Promotion
 
@@ -8,8 +8,12 @@ Keys are promoted through the *Internet Guilds*. Each registered entity gets a f
 
 **[<< Previous Section:](./) | [Next Section: >>](./)**
 
+## Requirements
+
+[1] http://google.com
+
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

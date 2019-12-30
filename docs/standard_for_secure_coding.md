@@ -13,3 +13,9 @@ All data from the outside world shall be sanitized using the Expr scanner, and e
 ## Interprocess Memory
 
 Unused interprocess memory sockets shall be set to all zeros upon completion of the construction and initial population of the object before the Slot becomes visible to the outside world in order to not expose stack data.
+
+## License
+
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
+
+This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

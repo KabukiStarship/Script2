@@ -14,10 +14,14 @@ The method uses a minimum of a 96-bit IP Address that conveys latitude, longitud
 1. [Universal Address Format](universal_address_format)
 1. [Polar Routing](polar_routing)
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Longitude and Latitude >>](./longitude_and_Latitude)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

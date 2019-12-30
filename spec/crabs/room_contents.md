@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [Crabs]()
+## [Crabs Specification](./)
 
 ### Room Contents
 
@@ -28,10 +28,10 @@ Back-doors are unknown entrances to the Room.
 
 **Mirrors** in a *Chinese Rooms* are *Contiguous Word-Aligned Memory Blocks* used for *Expressions* and *Interprocess IO Portals* that use *Word-Aligned Hashless B-Sequences*. When two one-way Mirrors are combined they create a duplex Slot called a **Window**. Mirror and Windows shall be used to for Interprocess Same-System Terminals.
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Portals](./portals) | [Next Section: Conformance Targets >>](./conformance_targets)**
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

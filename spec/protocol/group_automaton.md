@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [SCRIPT Protocol]()
+## [SCRIPT Protocol](./)
 
 ### Group Automata Theorem
 
@@ -24,10 +24,18 @@ Script, and all formal intelligence, can be recursively defined as follows:
     * *许多机器人作为一个*
     * *Xǔduō jīqìrén zuòwéi yīgè*
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: SCRIPT Protocol Specification](./) | [Next Section: Time >>](./time)**
+
+## Requirements
+
+[1] http://google.com
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

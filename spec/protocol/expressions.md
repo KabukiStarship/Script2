@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [SCRIPT Protocol]()
+## [SCRIPT Protocol](./)
 
 ### Expressions
 
@@ -220,10 +220,14 @@ Reset Operations are operations that required the slot in the Chinese Door to be
 
 Return values just need an address of an Operation to send the return value too. Return values shall be written to the BOut that leads to the initiating Operation's BIn in an automated process. In the case that a different Operation's return address is needed Rooms may pass the return address of the as an input parameter as a kTKN type.
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Slots](./slots) | [Next Section: Encryption >>](./encryption)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

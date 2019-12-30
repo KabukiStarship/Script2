@@ -1,28 +1,14 @@
-# Feature Request
+# [SCRIPT Specification](../)
 
-## Problem
+## [SCRIPT Protocol](./)
 
+### Terminals
 
+**[<< Previous Section: Terminals](./terminals) | [Next Section: Encryption >>](./encryption)**
 
-## Solution
+## Requirements
 
-
-
-## Cost
-
-
-
-## Benefit
-
-
-
-## Summary
-
-
-
-## Hierarchy
-
-* Flat
+[1] http://google.com
 
 ## License
 

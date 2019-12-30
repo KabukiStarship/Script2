@@ -6,7 +6,7 @@
 
 #### B-Sequences
 
-B-Sequences, as in the B in A/*B, is a data structure that describes byte sequences using the 32 ASCII Data Types. B-Sequences are composed of a header that defines the data and the actual byte stream itself. B-Sequences are similar *scanf* and *printf* format strings only you just use the % format tokens). B-Sequences are the ideal solution for serializing almost any type of data to save and load from drives, networks or any serial data stream. They are very easy to earn and nearly impossible to forget.
+B-Sequences, as in the B in ```A*B```, is a data structure that describes byte sequences using the 32 ASCII Data Types. B-Sequences are composed of a header that defines the data and the actual byte stream itself. B-Sequences are similar *scanf* and *printf* format strings only you just use the % format tokens). B-Sequences are the ideal solution for serializing almost any type of data to save and load from drives, networks or any serial data stream. They are very easy to earn and nearly impossible to forget.
 
 ##### B-Sequence Headers
 
@@ -58,10 +58,14 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
                          on coworkers foreheads. :-) */
 ```
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Strings](./strings) | [Next Section: Homo-tuples >>](./homo-tuples)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

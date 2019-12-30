@@ -1,8 +1,8 @@
 # [SCRIPT Specification](../../)
 
-## [ASCII Data Specification](../)
+## [Crabs Specification](./)
 
-### [Autojects]()
+### Autojects
 
 Autojects (Automatic objects) are memory managed objects using the Socket Abstract Data Type and the SocketFactory.
 
@@ -56,10 +56,14 @@ The ASCII Data Type of the Autoject is returned when nullptr and -1 are passed i
 DTW data_type_word = reinterpret_cast<DTW*>(socket_factory(buffer, -1));
 ```
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Conformance Targets](./conformance_targets) | [Next Section: SCRIPT Specification >>](./script_specification)**
+
+## Requirements
+
+[1] http://google.com
 
 ## License
 
-Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com); all rights reserved.
+Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
