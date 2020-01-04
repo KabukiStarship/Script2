@@ -20,7 +20,7 @@ This document is a Release for Comment (RFC) not an ISO Specification, there are
       1. [Array](./data/map_types/array)
       1. [Stack](./data/map_types/stack)
       1. [Matrix](./data/map_types/matrix)
-	  1. [Loom](./data/map_types/loom)
+      1. [Loom](./data/map_types/loom)
       1. [Map](./data/map_types/map)
       1. [List](./data/map_types/list)
       1. [Table](./data/map_types/table)
