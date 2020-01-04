@@ -68,6 +68,7 @@ constexpr ISZ CBookSizeDefault() {
   return (32 * CBookCountDefault<TPARAMS>() * sizeof(CHT)) & (sizeof(ISW) - 1);
 }
 
+/* Gets the start of the book as a templated-defined character. */
 template <TARGS>
 inline CHT* TBookStart(TBook<TPARAMS>* book, ISZ count_max) {
   ISZ* top = &TStackStart<ISZ, ISZ>(&book->offsets)[count_max];
@@ -118,20 +119,21 @@ inline ISZ TBookSize(TBook<TPARAMS>* book) {
   return book->keys.size + list->size_bytes;
 }
 
+/* Prints the book to the printer. */
 template <TARGS, typename Printer>
-Printer& TBookPrint(Printer& o, TBook<TPARAMS>* book) {
+Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
   ISY count = book->keys.map.count;
-  o << "\nBook<CH" << CHA('@' + sizeof(CHT)) << ",IS " << CHA('@' + sizeof(ISZ))
-    << ",IS " << CHA('@' + sizeof(ISY)) << "> size:" << book->keys.size
-    << " top:" << book->keys.top << " stack_size:" << book->keys.map.count_max
-    << " count:" << count;
+  printer << "\nBook<CH" << CHA('@' + sizeof(CHT)) << ",IS"
+          << CHA('@' + sizeof(ISZ)) << ",IS" << CHA('@' + sizeof(ISY))
+          << "> size:" << book->keys.size << " top:" << book->keys.top
+          << " stack_size:" << book->keys.map.count_max << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TBookList<TPARAMS>(book));
   for (ISY i = 0; i < count; ++i)
-    o << '\n'
-      << i << ".) \"" << TBookGet<TPARAMS>(book, i)
-      << "\" type:" << TPrintType<Printer, DT2>(o, *types++);
+    printer << '\n'
+            << i << ".) \"" << TBookGet<TPARAMS>(book, i)
+            << "\" type:" << TPrintType<Printer, DT2>(printer, *types++);
   D_COUT(Linef('-') << Charsf(book, TBookSize<TPARAMS>(book)));
-  return o << '\n';
+  return printer << '\n';
 }
 
 /* Doubles the size and count_max of the book.
@@ -144,9 +146,8 @@ BOL TBookGrow(Autoject& obj) {
   /* Grow Algoirhm.
   1. Check if we can grow and if so, create a new block of memory.
   2. Copy the Loom.
-  3. Copy the List.
-  */
-  auto book = reinterpret_cast<TBook<TPARAMS>*>(obj.origin);
+  3. Copy the List. */
+  auto book = TPtr<TBook<TPARAMS>>(obj.origin);
   A_ASSERT(book);
   ISZ size = TBookSize<TPARAMS>(book);
   if (!TCanGrow<ISZ>(size)) return false;
@@ -477,12 +478,14 @@ class ABook {
   /* Gets the ASCII Object. */
   inline TBook<TPARAMS>* This() { return obj_.OriginAs<TBook<TPARAMS>*>(); }
 
+  /* Prints this object to the Printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
     TBookPrint<TPARAMS, Printer>(o, This());
     return o;
   }
 
+  /* Prints this object to the stdout. */
   inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
 };
 

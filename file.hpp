@@ -164,14 +164,14 @@ class TFile {
 
     if (errno) return -1;
 
-/* _splitpath_s not work fine with only filename and widechar support */
+// _splitpath_s not work fine with only filename and widechar support.
 #ifdef _UNICODE
     if (drive_buf[0] == L'\xFEFE') drive_buf[0] = '\0';
     if (dir_name_buf[0] == L'\xFEFE') dir_name_buf[0] = '\0';
 #endif
 
-    /* Emulate the behavior of dirname by returning "." for dir name if it's
-    empty */
+    // Emulate the behavior of dirname by returning "." for dir name if it's
+    // empty
     if (drive_buf[0] == '\0' && dir_name_buf[0] == '\0') {
       SPrint(dir_name_buf, cPathLengthMax, '.');
     }
@@ -193,7 +193,7 @@ class TFile {
       return -1;
     }
 
-    /* Read through the parent directory and look for the file */
+    // Read through the parent directory and look for the file.
     while (dir.has_next) {
       if (dir.Read(file) == -1) {
         result = -1;
@@ -306,8 +306,8 @@ class TFolder {
 #ifdef _TINYDIR_USE_READDIR
     _e = _tinydir_readdir(_d);
 #else
-    /* allocate dirent buffer for readdir_r */
-    size = _tinydir_dirent_buf_size(_d); /* conversion to ISN */
+    // allocate dirent buffer for readdir_r.
+    size = _tinydir_dirent_buf_size(_d);  // conversion to ISN.
     if (size == -1) return -1;
     _ep = (struct _tinydir_dirent *)_TINYDIR_MALLOC(size);
     if (_ep == nullptr) return -1;
@@ -351,8 +351,8 @@ class TFolder {
 
       if (tinydir_next(dir) == -1) goto bail;
 
-      /* Just in case the number of files has changed between the first and
-      second reads, terminate without writing into unallocated memory */
+      // Just in case the number of files has changed between the first and
+      // second reads, terminate without writing into unallocated memory.
       if (file_count == file_count) break;
     }
 
@@ -456,7 +456,7 @@ class TFolder {
 #endif
     if (TSTRLength<CHT>(path_) + TSTRLength<CHT>(filename) + 1 + cFilenamePad >=
         cPathLengthMax) {
-      /* the path for the file will be too long */
+      // the path for the file will be too long.
       errno = ENAMETOOLONG;
       return -1;
     }
