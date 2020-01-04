@@ -28,15 +28,14 @@ void TestBook() {
     cCount = 32,
   };
   D_COUT("Testing ABook<SI"
-         << CHT('0' + sizeof(ISZ)) << ",UI" << CHT('0' + sizeof(ISZ)) << ",SI"
-         << CHT('0' + sizeof(ISY)) << ",CH" << CHT('0' + sizeof(CHT))
-         << "> with cSize:" << cSize << " and cCount:cCount");
+         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('@' + sizeof(ISZ)) << ",IS"
+         << CHT('@' + sizeof(ISY)) << ",CH" << CHT('@' + sizeof(CHT))
+         << "> with cSize:" << cSize << " and cCount:" << cCount);
 
   ABook<TPARAMS, cSize> book(cCount);
 
-  D_COUT("\n\nlist.Size():" << book.Size()
-                            << " list.SizeBytes():" << book.SizeBytes()
-                            << " list.SizeWords():" << book.SizeWords());
+  D_COUT("\n\nsize:" << book.Size() << " size_bytes:" << book.SizeBytes()
+                     << " size_words:" << book.SizeWords());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
