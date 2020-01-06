@@ -99,7 +99,7 @@ Script implementations may implement a default BIn Slot named In (**in UpperCase
 
 ## Requirements
 
-[1] http://google.comw
+[1] ./w
 
 ## License
 

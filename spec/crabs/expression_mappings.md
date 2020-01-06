@@ -67,7 +67,7 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

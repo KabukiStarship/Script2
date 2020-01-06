@@ -12,7 +12,7 @@ Crabs Messages beginning with a non-printable Unicode Character shall be IUA-enc
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

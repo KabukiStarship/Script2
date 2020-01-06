@@ -182,7 +182,7 @@ inline ISW TypeSizeOf(DTW type) {
 inline BOL TypeIsSupported(DTW type) { return true; }
 
 /* Gets one f the STRTypes. */
-inline const CHA* TypeSTR(DTW index) {
+inline const CHA* STRType(DTW index) {
   if (index < 0 || index >= cINV) index = 32;
   const CHA* Strings = STRTypes();
   return Strings + (index << 2);

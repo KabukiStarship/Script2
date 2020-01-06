@@ -20,11 +20,65 @@ namespace script2 {
 template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
           typename CHT = CHR>
 static void TestDic() {
-#if SEAM >= SCRIPT2_DIC
-  A_TEST_BEGIN;
+  D_COUT(Linef("\n\n---\n\n"));
 
+  enum {
+    cSize = 512 * sizeof(CHT),
+    cCount = 32,
+  };
+  D_COUT("Testing ADictionary<IS"
+         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('@' + sizeof(ISZ)) << ",IS"
+         << CHT('@' + sizeof(ISY)) << ",CH" << CHT('@' + sizeof(CHT))
+         << "> with cSize:" << cSize << " and cCount:" << cCount);
+
+  ABook<TPARAMS, cSize> dic(cCount);
+
+  D_COUT("\n\nsize:" << dic.Size() << " size_bytes:" << dic.SizeBytes()
+                     << " size_words:" << dic.SizeWords());
+#if D_THIS
+  D_COUT("\nPrinting empty dictionary:\n");
+  dic.COut();
 #endif
-  return nullptr;
+
+  D_COUT("\nPopulating " << cCount << " test words...");
+
+  const CHT *test_words = TTestWords<CHT>(), *word_cursor = test_words;
+
+  for (ISY i = 0; i < 4; ++i) {
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUA(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISB(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUB(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISC(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUC(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISD(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUD(++i)));
+  }
+
+  D_COUT("\n\nTesting Factory.Grow...\n");
+
+  for (ISY i = 32; i < 128; ++i) {
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUA(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISB(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUB(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISC(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUC(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISD(++i)));
+    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUD(++i)));
+  }
+
+  D_COUT("\n\nAttmpeting to add a very large string...\n");
+
+  CHT large_string[cSize];
+  CHT* cursor = large_string;
+  for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
+  *cursor = 0;
+  ISY index = dic.Insert(large_string, 1);
+
+#if D_THIS
+  dic.COut();
+#endif
 }
 }  // namespace script2
 #endif

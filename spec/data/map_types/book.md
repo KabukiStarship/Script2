@@ -34,7 +34,7 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

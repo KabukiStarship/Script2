@@ -8,53 +8,49 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_LIST
 #include "error.h"
 
 namespace _ {
 
-const CHA** ErrorStrands() {
+const CHA** STRErrors() {
   static const CHA* cErrors[] = {
-      "Not an error",             //<  0
-      "Unspecified",              //<  1
+      "Success",                  //<  0
+      "Invalid input",            //<  1
       "Input nil",                //<  2
-      "Input too low",            //<  3
-      "Input too high",           //<  4
-      "Buffer overflow",          //<  5
-      "Buffer underflow",         //<  6
-      "Varint overflow",          //<  7
-      "Invalid hash",             //<  8
-      "Invalid type",             //<  9
-      "Invalid index",            //< 10
-      "Invalid equerry",          //< 11
-      "Invalid argument number",  //< 12
-      "Invalid door",             //< 13
-      "Too many parameters",      //< 14
-      "Stack overflow",           //< 15
-      "Invalid subset",           //< 16
-      "Too many pops",            //< 17
-      "Text buffer overflow",     //< 18
-      "Invalid error handler",    //< 19
-      "Invalid op",               //< 20
-      "Array overflow",           //< 21
-      "Invalid Set",              //< 22
-      "Malformed UTF-8",          //< 23
-      "Malformed UTF-16",         //< 24
-      "Malformed UTF-32",         //< 25
-      "BIn Locked",               //< 26
-      "Invalid args",             //< 27
-      "Invalid credentials",      //< 28
-      "Object locked"             //< 29
-      "Implementation error",     //< 30
+      "Stack overflow",           //<  3
+      "Buffer overflow",          //<  4
+      "Buffer underflow",         //<  5
+      "Varint overflow",          //<  6
+      "Invalid hash",             //<  7
+      "Invalid type",             //<  8
+      "Invalid index",            //<  9
+      "Invalid equerry",          //< 10
+      "Invalid argument number",  //< 11
+      "Invalid door",             //< 12
+      "Too many parameters",      //< 13
+      "Too many pops",            //< 14
+      "Text buffer overflow",     //< 15
+      "Invalid error handler",    //< 16
+      "Invalid Oerand",           //< 17
+      "Array overflow",           //< 18
+      "Invalid Op",               //< 19
+      "Malformed UTF-8",          //< 20
+      "Malformed UTF-16",         //< 21
+      "Malformed UTF-32",         //< 22
+      "Obj Locked",               //< 23
+      "Invalid args",             //< 24
+      "Authentication error",     //< 25
+      "Room not found"            //< 26
+      "Implementation error",     //< 27
   };
   return cErrors;
 }
 
-const CHA* ErrorStrand(Error error) {
-  if (error >= cErrorImplementation) {
-    return ErrorStrands()[cErrorImplementation];
-  }
-  return ErrorStrands()[error];
+const CHA* STRError(ISN error) {
+  if (error < 0) error = -error;
+  if (error >= cErrorImplementation) error = cErrorImplementation;
+  return STRErrors()[error];
 }
 
 }  // namespace _

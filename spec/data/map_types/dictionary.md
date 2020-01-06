@@ -38,7 +38,7 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

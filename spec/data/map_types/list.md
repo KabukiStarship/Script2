@@ -32,7 +32,7 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

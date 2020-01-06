@@ -35,7 +35,7 @@ namespace _ {
     @param error The error type.
     @return Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error) {
-  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
+  std::cerr << "\nBOut " << STRError(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -47,7 +47,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
     @param address The address of the IUA in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
-  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
+  std::cerr << "\nBOut " << STRError(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -60,7 +60,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset) {
-  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
+  std::cerr << "\nBOut " << STRError(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -73,7 +73,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset, CHA* address) {
-  std::cerr << "\nBOut " << ErrorStrand(error) << " Error!";
+  std::cerr << "\nBOut " << STRError(error) << " Error!";
   return reinterpret_cast<const Op*>(1);
 }
 

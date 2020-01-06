@@ -40,7 +40,7 @@ Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 Copyright 2015-9 © [Kabuki Starship™](https://kabukistarship.com).
 

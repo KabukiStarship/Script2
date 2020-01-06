@@ -50,7 +50,7 @@ Inter-process communication is assumed to be a secure connection without data lo
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

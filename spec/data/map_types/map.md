@@ -42,7 +42,7 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -100,7 +100,7 @@ FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

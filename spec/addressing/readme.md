@@ -18,7 +18,7 @@ The method uses a minimum of a 96-bit IP Address that conveys latitude, longitud
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

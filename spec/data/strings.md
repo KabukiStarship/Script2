@@ -19,7 +19,7 @@ STA4 "Hello world!"      //< This is a _::TStrand<> that is up to 4GB long.
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

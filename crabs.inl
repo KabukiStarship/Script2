@@ -28,7 +28,7 @@ namespace _ {
 @return Returns a Static Error Op Result.
 @param error The error type. */
 inline const Op* CrabsError(Crabs* crabs, Error error) {
-  D_COUT("\nCrabs " << ErrorStrand(error) << " Error!");
+  D_COUT("\nCrabs " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -40,7 +40,7 @@ inline const Op* CrabsError(Crabs* crabs, Error error) {
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error. */
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
-  D_COUT("\nCrabs " << ErrorStrand(error) << " Error!");
+  D_COUT("\nCrabs " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -53,7 +53,7 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
 @param address The address of the IUA in error. */
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
                             IUA offset) {
-  D_COUT("\nCrabs " << ErrorStrand(error) << " Error!");
+  D_COUT("\nCrabs " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -66,7 +66,7 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
 @param address The address of the IUA in error. */
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
                             IUA offset, CHA* address) {
-  D_COUT("\nCrabs " << ErrorStrand(error) << " Error!");
+  D_COUT("\nCrabs " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 

@@ -27,7 +27,7 @@ The Automaton Standard Code for Information Interchange (ASCII) Data Specificati
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

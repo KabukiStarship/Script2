@@ -15,11 +15,13 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
+// @see conifg_header.inl for enum of error codes.
+
 /* Returns an array or  pointers for the KabukiError(s). */
-LIB_MEMBER const CHA** ErrorStrands();
+LIB_MEMBER const CHA** STRErrors();
 
 /* Returns one of the Errors () Strings. */
-LIB_MEMBER const CHA* ErrorStrand(Error error);
+LIB_MEMBER const CHA* STRError(ISN error);
 
 }  // namespace _
 #endif

@@ -25,7 +25,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -10,7 +10,7 @@ Authentication in Script shall be done using a sequence of Script Operations.
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

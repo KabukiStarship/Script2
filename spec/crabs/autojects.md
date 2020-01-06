@@ -60,7 +60,7 @@ DTW data_type_word = reinterpret_cast<DTW*>(socket_factory(buffer, -1));
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

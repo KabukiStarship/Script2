@@ -12,7 +12,7 @@ The Unix timestamp cycles around in the year 3038, so to ensure stability on 32-
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 
