@@ -40,7 +40,7 @@ Compromised Automata shall be reported to the Intergalactic Council of Artificia
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

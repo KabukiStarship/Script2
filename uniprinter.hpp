@@ -660,11 +660,11 @@ Printer& TPrintType(Printer& o, DT type) {
   if (pod_type == 0) return o << "BGN" << (type >> cTypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
-    return o << TypeSTR(vector_type) << '_' << TypeSTR(pod_type);
+    return o << STRType(vector_type) << '_' << STRType(pod_type);
   }
   DT map_type = TTypeMap<DT>(type);
   if (map_type) {
-    return o << TypeSTR(map_type) << '_' << TypeSTR(pod_type);
+    return o << STRType(map_type) << '_' << STRType(pod_type);
   }
   return o;
 }

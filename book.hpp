@@ -26,8 +26,8 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 #define TPARAMS CHT, ISZ, ISY
 #define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
 
-/* A contiguous memory Associative List created from a List and a Loom.
-@ingroup Book
+/* @ingroup Book
+@brief A contiguous memory Associative List created from a List and a Loom.
 @code
 +-----------------+
 |      List       |
@@ -36,19 +36,19 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 |-----------------|  ^ Up in addresses
 |  TBook Struct   |  |
 +-----------------+ 0xN
-@endcode
-*/
+@endcode */
 template <TARGS>
 struct TBook {
   TLoom<ISZ, ISY> keys;  //< The Loom of keys for the Associative List.
 };
 
+/* The minimum count a good with the given template parameters can have. */
 template <TARGS>
 constexpr ISZ CBookCountMin() {
   return 8 / sizeof(ISZ);
 }
 
-/* The minimum size of a Book based on the cCountMin. */
+/* The minimum size of a Book based on the CCountMin. */
 template <TARGS>
 constexpr ISZ CBookSizeMin() {
   enum {
@@ -58,11 +58,13 @@ constexpr ISZ CBookSizeMin() {
   return cSizeMin;
 }
 
+/* Gets the default count of a good with the given template parameters. */
 template <TARGS>
 constexpr ISZ CBookCountDefault() {
   return 32;
 }
 
+/* Gets the default size of a Book with the CBookCountDefault. */
 template <TARGS>
 constexpr ISZ CBookSizeDefault() {
   return (32 * CBookCountDefault<TPARAMS>() * sizeof(CHT)) & (sizeof(ISW) - 1);
@@ -75,11 +77,13 @@ inline CHT* TBookStart(TBook<TPARAMS>* book, ISZ count_max) {
   return reinterpret_cast<CHT*>(top);
 }
 
+/* Gets the start byte of the book. */
 template <TARGS>
 inline CHT* TBookStart(TBook<TPARAMS>* book) {
   return TBookStart<TPARAMS>(book, book->offsets.count_max);
 }
 
+/* Initializes the book to the given count_max using the CBookSizeDefault. */
 template <TARGS>
 inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max) {
   D_ASSERT(book);
@@ -90,6 +94,7 @@ inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max) {
   return book;
 }
 
+/* Gets the byte after the end of the book's contiguous memory block. */
 template <TARGS>
 inline CHT* TBookEnd(TBook<TPARAMS>* book) {
   CHT* list = TLoomEnd<TPARAMS>(&book->keys);
@@ -216,15 +221,25 @@ template <typename T, TARGS>
 inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, T item,
                        ISY index = cPush) {
   A_ASSERT(book);
-  if (!key) return cErrorNilInput;
-  if (index == cAnywhere) {
-    index = TLoomInsert<CHT, ISZ, ISY>(&book->keys, key, index);
-  } else {
-    if (index == cPush) index = book->keys.map.count - 1;
-  }
+  if (!key) return cErrorInputNil;
+
+  if (index == cAnywhere)
+    index = TLoomInsert<TPARAMS>(&book->keys, key, index);
+  else if (index == cPush)
+    index = (index <= 0) ? 0 : book->keys.map.count - 1;
+  D_COUT("\nAdding key:\"" << key << "\" item:" << item
+                           << " into index:" << index);
   if (index < 0) return index;
-  ISY result = ISY(TListInsert<ISZ, DT2>(TBookList<TPARAMS>(book), item));
-  if (result) TBookRemove<TPARAMS>(book, index);
+  auto list = TBookList<TPARAMS>(book);
+#if DEBUG_THIS
+  TListPrint<COut, ISY>(list);
+#endif
+  ISY result = ISY(TListInsert<ISZ, DT2>(list, item));
+  if (result < 0) {
+    D_COUT("\nFailed to insert with error " << result << ':'
+                                            << STRError(result));
+    TBookRemove<TPARAMS>(book, index);
+  }
   return result;
 }
 template <TARGS>
@@ -277,7 +292,7 @@ inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, FPD item) {
 template <typename T, typename BUF, TARGS>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                 ISY index = cPush) {
-  if (!key) return -cErrorNilInput;
+  if (!key) return -cErrorInputNil;
   auto book = obj.OriginAs<TBook<TPARAMS>*>();
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result = TBookInsert<T, TPARAMS>(book, key, item, index);
@@ -285,6 +300,8 @@ ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
     if (!TBookGrow<TPARAMS>(obj.AJT())) {
       D_COUT("\n\nFailed to grow.\n\n");
       return -cErrorBufferOverflow;
+    } else {
+      D_COUT("\nSuccesseded in growing.");
     }
     result = TBookInsert<T, TPARAMS>(book, key, item, index);
   }

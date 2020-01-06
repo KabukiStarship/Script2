@@ -87,7 +87,7 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
     ISZ data_offset = *data_offsets++;
     DT data_type = *data_types++;
     o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
-      << Centerf(TypeSTR(data_type), 10);
+      << Centerf(STRType(data_type), 10);
   }
   return o << Linef("\n+---");
 }
@@ -218,11 +218,6 @@ inline ISZ TListInsert(TList<ISZ>* list, T item) {
   CHA* values_begin = TListContains<ISZ>(list, sizeof(T));
 }
 
-template <typename ISZ = ISN>
-ISZ cInvalidIndex() {
-  return -1;
-}
-
 /* Finds a tuple  the given pointer. */
 template <typename ISZ = ISN>
 ISZ TListFind(TList<ISZ>* list, void* address) {
@@ -237,25 +232,25 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
     if (*data_offsets++ == offset) return index;
     ++index;
   }
-  return cInvalidIndex<ISZ>();
+  return -cErrorInvalidIndex;
 }
 
 /* Adds a given POD type-value tuple at the given index and
 values_begin.
-@return CInvalidIndex<ISZ>() upon failure or the index upon success. */
+@return cErrorInvalidIndex upon failure or the index upon success. */
 template <typename T, typename ISZ = ISN, typename DT = DT2>
 ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
                 ISZ index, CHA* values_begin, CHA* values_end) {
   D_ASSERT(list);
   ISZ count = list->offsets.count, size = list->offsets.count_max;
   D_ASSERT(count >= 0 && values_begin < values_end);
-  D_COUT("\nInserting " << TypeSTR(type) << ':' << item
+  D_COUT("\nInserting " << STRType(type) << ':' << item
                         << " into index:" << index << " count: " << count);
   if (index < 0 || index > count || count >= size || !TypeIsSupported(type))
-    return cInvalidIndex<ISZ>();
+    return -cErrorInvalidIndex;
 
   values_begin = TAlignUpPTR<CHA>(values_begin, alignment_mask);
-  if ((values_begin + sizeof(T)) > values_end) return cInvalidIndex<ISZ>();
+  if ((values_begin + sizeof(T)) > values_end) return -cErrorInvalidIndex;
   *reinterpret_cast<T*>(values_begin) = item;
 
   ISZ* offsets = TListOffsets<ISZ>(list);

@@ -33,7 +33,7 @@ _________   _________   _________   _________
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

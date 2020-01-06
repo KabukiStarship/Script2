@@ -30,7 +30,7 @@ struct TStack {
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

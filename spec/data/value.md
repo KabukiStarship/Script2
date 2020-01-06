@@ -41,7 +41,7 @@ A TST may store a pointer to another string type or object using the second elem
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

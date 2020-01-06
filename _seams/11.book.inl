@@ -24,10 +24,10 @@ void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    cSize = 192 * sizeof(CHT),
+    cSize = 256 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ABook<SI"
+  D_COUT("Testing ABook<IS"
          << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('@' + sizeof(ISZ)) << ",IS"
          << CHT('@' + sizeof(ISY)) << ",CH" << CHT('@' + sizeof(CHT))
          << "> with cSize:" << cSize << " and cCount:" << cCount);

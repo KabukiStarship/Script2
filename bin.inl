@@ -88,7 +88,7 @@ const CHA** STRBInStates() {
 @param error The error type.
 @return Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error) {
-  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
+  D_COUT("\nBIn " << STRError(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -100,7 +100,7 @@ inline const Op* BInError(BIn* bin, Error error) {
     @param address The address of the IUA in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const ISC* header) {
-  D_COUT("\nBIn %s error!", ErrorStrand(error));
+  D_COUT("\nBIn %s error!", STRError(error));
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -113,7 +113,7 @@ inline const Op* BInError(BIn* bin, Error error, const ISC* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const ISC* header,
                           ISC offset) {
-  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
+  D_COUT("\nBIn " << STRError(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 
@@ -126,7 +126,7 @@ inline const Op* BInError(BIn* bin, Error error, const ISC* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BInError(BIn* bin, Error error, const ISC* header, ISC offset,
                           CHA* address) {
-  D_COUT("\nBIn " << ErrorStrand(error) << " error!");
+  D_COUT("\nBIn " << STRError(error) << " error!");
   return reinterpret_cast<const Op*>(error);
 }
 

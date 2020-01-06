@@ -28,11 +28,11 @@ Script, and all formal intelligence, can be recursively defined as follows:
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -224,7 +224,7 @@ Return values just need an address of an Operation to send the return value too.
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -10,7 +10,7 @@ The **Local DNS Authority** (**LDNSA**) is located at address 0.0.0.0.1. In Chin
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -10,7 +10,7 @@ Keys are promoted through the *Internet Guilds*. Each registered entity gets a f
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

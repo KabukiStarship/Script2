@@ -62,7 +62,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

@@ -38,7 +38,7 @@ All off-planet signs are routed using the UAF Height Value of all logic level 1(
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

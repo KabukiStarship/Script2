@@ -105,7 +105,7 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

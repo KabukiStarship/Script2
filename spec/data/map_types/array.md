@@ -2,9 +2,11 @@
 
 ## [ASCII Data Specification](../)
 
-### [Vector Types]()
+### [Vector Types](./)
 
 #### Array
+
+ASCII Arrays are C-Style arrays where the number of elements is stored in the header of the array. The number of elements is referred to as the count. The size of the Array is stored in the number of elements rather to avoid use of division instructions to find the array count.
 
 ```C++
 template <typename SIZ = ISC>
@@ -27,7 +29,7 @@ struct TArray {
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 

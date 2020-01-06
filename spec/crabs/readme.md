@@ -8,7 +8,7 @@ The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine c
 
 ## Requirements
 
-[1] http://google.com
+[1] ./
 
 ## License
 
