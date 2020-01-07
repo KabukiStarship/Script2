@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /map.hpp
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (ISZ) 2015-9 Kabuki Starship <kabukistarship.com>;
+@license Copyright (ISZ) 2015-20 Kabuki Starship <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */

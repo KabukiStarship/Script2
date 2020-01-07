@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /test.h
 @author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2015-9 Cale McCollough <calemccollough.github.io>;
+@license Copyright (C) 2015-20 Cale McCollough <calemccollough.github.io>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
