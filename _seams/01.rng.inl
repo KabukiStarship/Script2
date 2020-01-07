@@ -2,7 +2,7 @@
 @link    https://github.com/kabuki-starship/script2.git
 @file    /_seams/01.rng.h
 @author  Cale McCollough <https://cale-mccollough.github.io>
-@license Copyright (C) 2015-9 Cale McCollough
+@license Copyright (C) 2015-20 Cale McCollough
 <<cale-mccollough.github.io>>; all right reserved (R). This Source Code
 Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 the MPL was not distributed with this file, You can obtain one at
