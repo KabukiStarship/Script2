@@ -22,7 +22,7 @@ namespace script2 {
 #if SEAM >= SCRIPT2_STACK
 template <typename T, typename ISZ>
 void TestStack(const CHA* args) {
-  D_COUT("Testing AStack<SI" << sizeof(T) << ",SI" << sizeof(ISZ) << ">...\n");
+  D_COUT("Testing AStack<IS" << sizeof(T) << ",IS" << sizeof(ISZ) << ">...\n");
 
   AStack<T, ISZ, 8> stack;
 

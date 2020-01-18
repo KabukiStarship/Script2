@@ -61,7 +61,6 @@ static void TestList() {
     }
   }
   D_COUT_OBJ(list);
-  Pausef();
   for (ISZ i = cTestCount - 1; i >= 0; --i) list.Pop();
 }
 }  // namespace script2

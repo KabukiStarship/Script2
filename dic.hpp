@@ -297,14 +297,14 @@ inline ISY TDicInsert(TDic<TPARAMS>* dic, const CHT* key, FPD item) {
 template <typename T, typename BUF, TARGS>
 ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                ISY index = cPush) {
-  if (!key) return -cErrorInputNil;
+  if (!key) return cErrorInputNil;
   auto dic = obj.OriginAs<TDic<TPARAMS>*>();
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result = TDicInsert<T, TPARAMS>(dic, key, item, index);
   while (result < 0) {
     if (!TDicGrow<TPARAMS>(obj.AJT())) {
       D_COUT("\n\nFailed to grow.\n\n");
-      return -cErrorBufferOverflow;
+      return cErrorBufferOverflow;
     } else {
       D_COUT("\nSuccesseded in growing.");
     }

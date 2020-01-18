@@ -18,13 +18,12 @@ using namespace _;
 #endif
 
 namespace script2 {
-
-template <typename SIZ>
+template <typename ISZ>
 static void TestList() {
-  D_COUT(Linef("\n\n\n\n+---\n Testing AList<SI")
-         << sizeof(SIZ) << Linef(">\n+---"));
+  D_COUT(Linef("\n\n\n\n+---\n Testing AList<IS")
+         << sizeof(ISZ) << Linef(">\n+---"));
 
-  AList<SIZ, 1024, 40> list;
+  AList<ISZ, 1024, 40> list;
   D_COUT("\n\nlist.Size():" << list.Size()
                             << " list.SizeBytes():" << list.SizeBytes()
                             << " list.SizeWords():" << list.SizeWords());
@@ -38,21 +37,21 @@ static void TestList() {
   const char* test_st1[] = {"A", "B", "C", "D"};
 
   enum { kTestCount = 1 };
-  SIZ count = 0;
-  for (SIZ i = 0; i < kTestCount; ++i) {
-    for (SIZ i = 0; i < 4; ++i) {
+  ISZ count = 0;
+  for (ISZ i = 0; i < kTestCount; ++i) {
+    for (ISZ i = 0; i < 4; ++i) {
       A_AVOW(count++, list.Push(test_ch1[i]));
     }
   }
   D_COUT_OBJ(list);
-  for (SIZ i = 0; i < kTestCount; ++i) {
-    for (SIZ i = 0; i < 4; ++i) {
+  for (ISZ i = 0; i < kTestCount; ++i) {
+    for (ISZ i = 0; i < 4; ++i) {
       A_AVOW(count++, list.Push(test_si4[i]));
     }
   }
   D_COUT_OBJ(list);
-  for (SIZ i = 0; i < kTestCount; ++i) {
-    for (SIZ i = 0; i < 4; ++i) {
+  for (ISZ i = 0; i < kTestCount; ++i) {
+    for (ISZ i = 0; i < 4; ++i) {
       A_AVOW(count++, list.Push(test_ch1[i]));
       A_AVOW(count++, list.Push(test_si4[i]));
       A_AVOW(count++, list.Push(test_fp4[i]));
@@ -60,9 +59,6 @@ static void TestList() {
       // A_AVOW(count++, list.Push(test_st1[i]));
     }
   }
-  D_COUT_OBJ(list);
-  Pausef();
-  for (SIZ i = kTestCount - 1; i >= 0; --i) list.Pop();
 }
 }  // namespace script2
 #endif
@@ -71,9 +67,9 @@ namespace script2 {
 static const CHA* List(const CHA* args) {
 #if SEAM >= SCRIPT2_LIST
   A_TEST_BEGIN;
-  TestList<ISB>();
+  /*TestList<ISB>();
   TestList<ISC>();
-  TestList<ISD>();
+  TestList<ISD>();*/
 #endif
   return nullptr;
 }

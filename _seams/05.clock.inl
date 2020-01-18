@@ -23,7 +23,7 @@ static const CHA* Clock(const CHA* args) {
 #if SEAM >= SCRIPT2_CLOCK
   A_TEST_BEGIN;
 
-  D_COUT(Headingf("\n\nTesting TScanTime..."));
+  D_COUT(Headingf("Testing TScanTime..."));
 
   TM4 t, t_found;
   const CHA* result;

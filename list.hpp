@@ -232,7 +232,7 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
     if (*data_offsets++ == offset) return index;
     ++index;
   }
-  return -cErrorInvalidIndex;
+  return cErrorInvalidIndex;
 }
 
 /* Adds a given POD type-value tuple at the given index and
@@ -247,10 +247,10 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
   D_COUT("\nInserting " << STRType(type) << ':' << item
                         << " into index:" << index << " count: " << count);
   if (index < 0 || index > count || count >= size || !TypeIsSupported(type))
-    return -cErrorInvalidIndex;
+    return cErrorInvalidIndex;
 
   values_begin = TAlignUpPTR<CHA>(values_begin, alignment_mask);
-  if ((values_begin + sizeof(T)) > values_end) return -cErrorInvalidIndex;
+  if ((values_begin + sizeof(T)) > values_end) return cErrorInvalidIndex;
   *reinterpret_cast<T*>(values_begin) = item;
 
   ISZ* offsets = TListOffsets<ISZ>(list);
