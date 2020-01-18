@@ -313,7 +313,7 @@ template <typename T = ISW, typename ISZ = ISN>
 ISZ TStackInsert(TStack<ISZ>* stack, T item, ISZ index = cPush) {
   D_ASSERT(stack);
   ISZ size = stack->count_max, count = stack->count;
-  if (count >= size) return -cErrorStackOverflow;
+  if (count >= size) return cErrorStackOverflow;
   if (index < 0) index = (count == 0) ? 0 : count - 1;
   D_COUT("  Pushing:" << item << " size:" << size << " count:" << count);
   D_COUT("\n| Before:" << Charsf(stack, TStackSizeOf<T, ISZ>(size)));
@@ -335,7 +335,7 @@ ISZ TStackInsert(AArray<T, ISZ, BUF>& obj, T item, ISZ index = cPush) {
 Insert:
   index = TStackInsert<T, ISZ>(stack, item, index);
   if (index < 0) {
-    if (index == -cErrorBufferOverflow) return index;
+    if (index == cErrorBufferOverflow) return index;
     D_COUT("\nStack overflow! Autogrowing...");
     TStackGrow<T, ISZ>(obj.AJT());
     stack = obj.OriginAs<TStack<ISZ>*>();

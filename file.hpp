@@ -255,11 +255,11 @@ class TFolder {
 
     if (!dir || !path || TSTRLength<CHT>(path) == 0) {
       errno = EINVAL;
-      return -cErrorInvalidInput;
+      return cErrorInvalidInput;
     }
     if (TSTRLength<CHT>(path) + cFilenamePad >= cPathLengthMax) {
       errno = ENAMETOOLONG;
-      return -cErrorInvalidInput;
+      return cErrorInvalidInput;
     }
 
     // initialize dir.

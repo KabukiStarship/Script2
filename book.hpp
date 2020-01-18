@@ -292,14 +292,14 @@ inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, FPD item) {
 template <typename T, typename BUF, TARGS>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                 ISY index = cPush) {
-  if (!key) return -cErrorInputNil;
+  if (!key) return cErrorInputNil;
   auto book = obj.OriginAs<TBook<TPARAMS>*>();
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result = TBookInsert<T, TPARAMS>(book, key, item, index);
   while (result < 0) {
     if (!TBookGrow<TPARAMS>(obj.AJT())) {
       D_COUT("\n\nFailed to grow.\n\n");
-      return -cErrorBufferOverflow;
+      return cErrorBufferOverflow;
     } else {
       D_COUT("\nSuccesseded in growing.");
     }

@@ -37,7 +37,7 @@ enum AsciiFactoryFunction {
   cFactoryNew = 1,     //< Factory function checks if the size can double.
   cFactoryGrow = 2,    //< Factory function double OBJ size.
   cFactoryClone = 3,   //< Factory function clones the OBJ.
-  cFactoryName = 4,    //< Factory function gets the info AString.
+  cFactoryName = 4,    //< Factory function gets the info AStrand.
   cFactoryFunctionCount = 5,  //< Factory function count.
 };
 

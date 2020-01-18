@@ -105,7 +105,7 @@ template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
           typename Printer>
 Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
-  o << "\nLoom<IS" << CHA('0' + sizeof(ISZ)) << "> size:" << loom->size
+  o << "\nLoom<IS" << CHA('@' + sizeof(ISZ)) << "> size:" << loom->size
     << " top:" << loom->top << " stack_size:" << loom->map.count_max
     << " count:" << count;
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
@@ -122,11 +122,37 @@ ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = cPush) {
   A_ASSERT(loom);
   if (!string || loom->map.count >= loom->map.count_max) return -1;
   ISY count = loom->map.count;
+  D_ASSERT(count >= 0);
+  CHT* cursor = nullptr;
   if (index < 0) {
-    index = count;
-    if (index < 0) index = 0;
+    if (index == cAnywhere) {
+      D_COUT("\n\nindex == cAnywhere\n\n");
+      if (count <= 1) {
+        index = count;
+      } else {
+        auto length = TSTRLength<CHT>(string);
+        for (ISN i = 0; i < count; ++i) {
+          if (i == count) {
+            index = count;
+            break;
+          }
+          cursor = TSTREnd<CHT>(TLoomGet<TPARAMS>(loom, i)) + 1;
+          CHT* start_next_string = TLoomGet<TPARAMS>(loom, i + i);
+          if (start_next_string - cursor > length) {
+            index = i;
+            break;
+          }
+          cursor = start_next_string;
+        }
+      }
+      if (index != count) {
+        index = TStackInsert<ISZ, ISY>(&loom->map, TDelta<ISZ>(loom, cursor), index);
+        cursor = TSPrintString<CHT>(cursor, TLoomEnd<TPARAMS>(loom), string);
+        return index;
+      }
+    }
   }
-  CHT* cursor = TPtr<CHT>(loom, loom->top);
+  cursor = TPtr<CHT>(loom, loom->top);
   cursor = TSPrintString<CHT>(cursor, TLoomEnd<TPARAMS>(loom), string);
   if (!cursor) return -1;
 
