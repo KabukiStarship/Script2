@@ -1,26 +1,26 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /list.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /List.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_LIST
-#ifndef INCLUDED_SCRIPTTLIST
-#define INCLUDED_SCRIPTTLIST
+#ifndef SCRIPT_LIST_CODE
+#define SCRIPT_LIST_CODE
 
-#include "binary.hpp"
-#include "set.hpp"
-#include "stack.hpp"
-#include "typevalue.hpp"
+#include "Binary.hpp"
+#include "Set.hpp"
+#include "Stack.hpp"
+#include "TypeValue.hpp"
 
 #if SEAM == SCRIPT2_LIST
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -72,13 +72,13 @@ DT* TListTypes(TList<ISZ>* list) {
   return TListTypes<ISZ, DT>(TListOffsets<ISZ>(list), list->offsets.count_max);
 }
 
-/* Prints the given AsciiList to the console. */
+/* Prints the list to the console. */
 template <typename Printer, typename ISZ = ISN, typename DT = DT2>
 Printer& TListPrint(Printer& o, TList<ISZ>* list) {
   D_ASSERT(list);
 
   ISZ count = list->offsets.count, count_max = list->offsets.count_max;
-  o << Linef("\n\n+---\n| List<SI") << CHA('0' + sizeof(ISZ))
+  o << Linef("\n\n+---\n| List<IS") << CHA('0' + sizeof(ISZ))
     << "> size:" << list->size_bytes << " size:" << count_max
     << " count:" << count << Linef("\n+---");
   ISZ* data_offsets = TListOffsets<ISZ>(list);
@@ -87,7 +87,9 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
     ISZ data_offset = *data_offsets++;
     DT data_type = *data_types++;
     o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
-      << Centerf(STRType(data_type), 10);
+      << Centerf(STRType(data_type), 10) << ' ';
+    const void* value = TPtr<CHA*>(list, TListOffsets<ISZ>(list)[index]);
+    TPrintValue<Printer, DT>(o, data_type, value);
   }
   return o << Linef("\n+---");
 }
@@ -175,6 +177,8 @@ void TListClear(TList<ISZ>* list) {
   list->count = 0;
 }
 
+/* I don't remember what this does, it looks like it might be erroneously
+labeled from a botched copy and replace in all files. */
 template <typename T, typename ISZ = ISN, typename DT = DT2>
 CHA* TListContains(TList<ISZ>* list, ISZ sizeof_value,
                    ISZ align_mask = sizeof(T) - 1) {
@@ -213,12 +217,8 @@ ISZ TListContains(TList<ISZ>* list, void* address) {
   if (TListValues<ISZ>(list)) return false;
   return true;
 }
-template <typename T, typename ISZ = ISN>
-inline ISZ TListInsert(TList<ISZ>* list, T item) {
-  CHA* values_begin = TListContains<ISZ>(list, sizeof(T));
-}
 
-/* Finds a tuple  the given pointer. */
+/* Finds a tuple that contains the given address. */
 template <typename ISZ = ISN>
 ISZ TListFind(TList<ISZ>* list, void* address) {
   D_ASSERT(list);
@@ -235,8 +235,7 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
   return cErrorInvalidIndex;
 }
 
-/* Adds a given POD type-value tuple at the given index and
-values_begin.
+/* Adds a given POD type-value tuple at the given index and values_begin.
 @return cErrorInvalidIndex upon failure or the index upon success. */
 template <typename T, typename ISZ = ISN, typename DT = DT2>
 ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
@@ -245,9 +244,19 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
   ISZ count = list->offsets.count, size = list->offsets.count_max;
   D_ASSERT(count >= 0 && values_begin < values_end);
   D_COUT("\nInserting " << STRType(type) << ':' << item
-                        << " into index:" << index << " count: " << count);
+         << " into index:" << index << " count: " << count);
+  if (index == cPush) {
+    // look for the first place in the stack to put the item.
+    ISZ* offsets = TListOffsets<ISZ>(list);
+    ISW base_addr = TDelta<ISW>(list);
+    for (ISZ i = 0; i <= count; ++i) {
+      ISZ offset = *offsets++;
+      ISW address = base_addr + offset;
+      // @todo Fix me!
+    }
+  }
   if (index < 0 || index > count || count >= size || !TypeIsSupported(type))
-    return cErrorInvalidIndex;
+    return cErrorInputInvalid;
 
   values_begin = TAlignUpPTR<CHA>(values_begin, alignment_mask);
   if ((values_begin + sizeof(T)) > values_end) return cErrorInvalidIndex;
@@ -444,6 +453,78 @@ inline ISZ TListInsert(TList<ISZ>* list, FPD item) {
                               TListValuesEnd<ISZ>(list));
 }
 
+/* Inserts the item into the list at the given index. */
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, IUA item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, CHA item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, ISA item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, IUB item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, ISB item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, CHB item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, IUC item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, ISC item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, BOL item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, CHC item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, FPC item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, IUD item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, ISD item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+template <typename ISZ = ISN, typename DT = DT2>
+inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index) {
+  return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
+                              TListValuesEnd<ISZ>(list));
+}
+
 template <typename ISZ = ISN>
 inline ISZ TSizeOf(void* value, DT2 type) {
   ISW size_bytes = TypeSizeOf(type);
@@ -484,18 +565,18 @@ inline const void* TListValue(TList<ISZ>* list, ISZ index) {
 
 /* Creates an Autoject buffer large enough to fit a List with the given. */
 template <typename ISZ = ISN, typename ISY = ISM, typename DT>
-UIW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
+IUW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
   ISZ count_max_align_lsb_mask = (sizeof(ISZ) / sizeof(DT)) - 1;
   count_max = AlignUp(count_max, count_max_align_lsb_mask);
   ISZ size_bytes = sizeof(TList<ISZ>) + count_max * (sizeof(ISZ) + sizeof(DT)) +
                    AlignUp(size_data);
-  UIW* buffer = socket_factory(nullptr, ISW(size_bytes));
+  IUW* buffer = socket_factory(nullptr, ISW(size_bytes));
   TList<ISZ>* list = reinterpret_cast<TList<ISZ>*>(buffer);
-  return reinterpret_cast<UIW*>(TListInit<ISZ>(list, size_bytes, count_max));
+  return reinterpret_cast<IUW*>(TListInit<ISZ>(list, size_bytes, count_max));
 }
 
 /* ASCII List that uses dynamic memory. */
-template <typename ISZ = ISN, ISZ cSizeBytes_ = 512, ISZ kCountMax_ = 32,
+template <typename ISZ = ISN, ISZ cSizeBytes_ = 512, ISZ cCountMax_ = 32,
           typename BUF = TBUF<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DT2>
 class AList {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-array.
@@ -503,7 +584,7 @@ class AList {
   static constexpr DT Type() { return CTypeMap<DT>(CTypeSize<ISZ>()); }
 
   /* Constructs a list with a given count_max with estimated size_bytes. */
-  AList(ISZ count_max = kCountMax_)
+  AList(ISZ count_max = cCountMax_)
       : obj_(TListNew<ISZ, ISZ, DT>(cSizeBytes_, count_max,
                                     TRamFactory<Type()>().Init<BUF>()),
              TRamFactory<Type()>().Init<BUF>()) {}

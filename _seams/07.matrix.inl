@@ -1,27 +1,27 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/07.matrix.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/07.Matrix.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_MATRIX
-#include "../matrix.hpp"
+#include "../Matrix.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_MATRIX
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 
-namespace script2 {
+namespace Script2 {
 
-template <typename SI, typename ISZ>
+template <typename IS, typename ISZ>
 void TestMatrixIntegers() {
   D_COUT(Linef("\n\n+---\n| ")
-         << "Testing AMatrix<SI" << sizeof(ISZ) << ">" << Linef("\n+---"));
+         << "Testing AMatrix<IS" << sizeof(ISZ) << ">" << Linef("\n+---"));
 
   static const ISC array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
@@ -34,10 +34,10 @@ void TestMatrixIntegers() {
     for (ISC y = 0; y < 2; ++y)
       for (ISC z = 0; z < 2; ++z) A_AVOW(w++, array_3d_exected[x][y][z]);
 }
-}  // namespace script2
+}  // namespace Script2
 #endif
 
-namespace script2 {
+namespace Script2 {
 static const CHA* Matrix(const CHA* args) {
 #if SEAM >= SCRIPT2_MATRIX
   A_TEST_BEGIN;
@@ -60,4 +60,4 @@ static const CHA* Matrix(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

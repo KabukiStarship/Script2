@@ -1,34 +1,34 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /clock.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Clock.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_CLOCK
 
 #ifndef INCLUDED_SCRIPT2_TCLOCK
 #define INCLUDED_SCRIPT2_TCLOCK
 
-#include "clock.h"
-#include "stringf.hpp"
-#include "test.h"
+#include "Clock.h"
+#include "Stringf.hpp"
+#include "Test.h"
 
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CORE
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
 
-template <typename SI>
-AClock* TClockInit(AClock& clock, SI t) {
+template <typename IS>
+AClock* TClockInit(AClock& clock, IS t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
   //   a. Year based on seconds per year.
@@ -38,29 +38,29 @@ AClock* TClockInit(AClock& clock, SI t) {
   //   e. Minute.
   //   f. Second.
   ISN value = (ISN)(t / cSecondsPerYear);
-  t -= SI(value) * cSecondsPerYear;
+  t -= IS(value) * cSecondsPerYear;
   clock.year = value + ClockEpoch();
   value = (ISN)(t / cSecondsPerDay);
-  t -= SI(value) * cSecondsPerDay;
+  t -= IS(value) * cSecondsPerDay;
   clock.day = value;
   value = (ISN)(t / cSecondsPerHour);
-  t -= SI(value) * cSecondsPerHour;
+  t -= IS(value) * cSecondsPerHour;
   clock.hour = value;
   value = (ISN)(t / cSecondsPerMinute);
   clock.minute = value;
-  clock.second = (ISN)(t - SI(value) * cSecondsPerMinute);
+  clock.second = (ISN)(t - IS(value) * cSecondsPerMinute);
   return &clock;
 }
 
-template <typename SI>
-SI TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
+template <typename IS>
+IS TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
       return 0;
   }
   if (month < 1 || month >= 12 || hour >= 23 || minute >= 60 || second >= 60)
     return 0;
-  return (SI)((year - ClockEpoch()) * cSecondsPerYear +
+  return (IS)((year - ClockEpoch()) * cSecondsPerYear +
               ClockDayOfYear(year, month, day) * cSecondsPerDay +
               hour * cSecondsPerHour + minute * cSecondsPerMinute + second);
 }
@@ -146,7 +146,7 @@ const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   if (string == nullptr) return nullptr;
 
   D_COUT("\n\n    Scanning time:\"" << string << '\"');
-  CHT c;  //< The current CHT.
+  CHT c;   //< The current CHT.
   ISC h,   //< Hour.
       m,   //< Minute.
       s;   //< Second.
@@ -529,7 +529,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
   return string + 1;
 }
 
-template <typename CHT, typename SI>
+template <typename CHT, typename IS>
 const CHT* TScanTime(const CHT* origin, TM4& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -537,7 +537,7 @@ const CHT* TScanTime(const CHT* origin, TM4& result) {
   return stop;
 }
 
-template <typename CHT, typename SI>
+template <typename CHT, typename IS>
 const CHT* TScanTime(const CHT* origin, TM8& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -557,8 +557,8 @@ const CHT* TSScan(const CHT* origin, TME& result) {
 }
 #endif  // #if USING_STR
 
-template <typename SI>
-SI TClockSet(AClock* clock, SI t) {
+template <typename IS>
+IS TClockSet(AClock* clock, IS t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
   //   a. Year based on seconds per year.
@@ -567,7 +567,7 @@ SI TClockSet(AClock* clock, SI t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  SI value = t / cSecondsPerYear;
+  IS value = t / cSecondsPerYear;
   t -= value * cSecondsPerYear;
   clock->year = (ISC)(value + ClockEpoch());
   value = t / cSecondsPerDay;
@@ -582,18 +582,18 @@ SI TClockSet(AClock* clock, SI t) {
   return t;
 }
 
-/* A time in seconds stored as either a 32-bit or 64-bit SI.
+/* A time in seconds stored as either a 32-bit or 64-bit IS.
 The difference between a TClock and AClock is that that TClock stores the AClock
 and the TM8 or TM4. */
-template <typename SI>
+template <typename IS>
 struct LIB_MEMBER TClock {
   AClock clock;  //< A human-readable clock.
 
   /* Constructs a clock from the given seconds timestamp. */
-  TClock(SI t) { ClockInit(clock, t); }
+  TClock(IS t) { ClockInit(clock, t); }
 
   /* Prints the given */
-  template <typename Printer, typename SI>
+  template <typename Printer, typename IS>
   Printer& Print(Printer& o) {
     return o << clock.Clock();
   }
@@ -606,8 +606,8 @@ inline _::COut& operator<<(_::COut& o, const _::AClock& item) {
   return _::TSPrint(o, item);
 }
 
-template <typename SI>
-_::COut& operator<<(_::COut& o, _::TClock<SI> item) {
+template <typename IS>
+_::COut& operator<<(_::COut& o, _::TClock<IS> item) {
   return o << item.clock;
 }
 #endif

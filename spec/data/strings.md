@@ -10,7 +10,7 @@ ASCII Strings Types consists of 8-bit (CHA), 16-bit (CHB), and 32-bit (CHC) char
 TKN key                   //< No quotes needed for a TKN.
 ADR 123                   //< A ADR is a TKN.
 STA  "\"Hello world!\""   //< UTF-8 STR that reads "Hello world!" with double quotes.
-ARY_CH1_4 "Foo"           //< STR is shorthand for ARY_CH1_1/2/4.
+ARY4_CHA4 "Foo"           //< STR is shorthand for ARY_CH1_1/2/4.
 STA2 "Hello world!"       //< This is a _::TStrand<> that is up to 64KB long.
 STA4 "Hello world!"       //< This is a _::TStrand<> that is up to 4GB long.
 ```
@@ -23,6 +23,6 @@ STA4 "Hello world!"       //< This is a _::TStrand<> that is up to 4GB long.
 
 ## License
 
-Copyright 2015-20 © [Kabuki Starship™](https://kabukistarship.com).
+Copyright 2015-20 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

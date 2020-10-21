@@ -1,27 +1,27 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /dic.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Dic.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_DIC
 
 #ifndef SCRIPT2_DIC_CODE
 #define SCRIPT2_DIC_CODE 1
 
-#include "binary.h"
-#include "typevalue.h"
+#include "Binary.hpp"
+#include "TypeValue.h"
 
 #if SEAM >= SCRIPT2_BOOK
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -38,9 +38,9 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 +-----------------+
 |      List       |
 |-----------------|
-|      Table       |
+|      Table      |
 |-----------------|  ^ Up in addresses
-|  TDic Struct   |  |
+|  TDic Struct    |  |
 +-----------------+ 0xN
 @endcode */
 template <TARGS>
@@ -133,8 +133,8 @@ inline ISZ TDicSize(TDic<TPARAMS>* dic) {
 template <TARGS, typename Printer>
 Printer& TDicPrint(Printer& printer, TDic<TPARAMS>* dic) {
   ISY count = dic->keys.map.count;
-  printer << "\nDic<CH" << CHA('@' + sizeof(CHT)) << ",IS"
-          << CHA('@' + sizeof(ISZ)) << ",IS" << CHA('@' + sizeof(ISY))
+  printer << "\nDic<CH" << CSizef<CHT> () << ",IS" << CSizef<ISZ>() << ",IS"
+          << CSizef<ISY>()
           << "> size:" << dic->keys.size << " top:" << dic->keys.top
           << " stack_size:" << dic->keys.map.count_max << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TDicList<TPARAMS>(dic));
@@ -175,7 +175,7 @@ BOL TDicGrow(Autoject& obj) {
   D_COUT(Charsf(dic, TDicEnd<TPARAMS>(dic)));
 #endif
 
-  UIW* new_begin = obj.socket_factory(nullptr, size);
+  IUW* new_begin = obj.socket_factory(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
   TTable<ISZ, ISY>* other = reinterpret_cast<TTable<ISZ, ISY>*>(new_begin);
 
@@ -397,7 +397,7 @@ ISZ TDicFind(TDic<TPARAMS>* dic, const CHT* string) {
 
 /* An ASCII Dic Autoject. */
 template <TARGS, ISZ cSize_ = 512,
-          typename BUF = TBUF<cSize_, CHT, ISZ, TStrand<ISN>>>
+          typename BUF = TBUF<cSize_, CHT, ISZ, TString<ISN>>>
 class ADic {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
@@ -406,14 +406,14 @@ class ADic {
   ADic(ISY count_max = cCountDefault) { TDicInit<TPARAMS>(This(), count_max); }
 
   /* Constructs a Dic subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ADic(SocketFactory socket_factory, ISY count = cCountDefault)
       : obj_(socket_factory) {
     TDicInit<TPARAMS>(This(), count);
   }
 
   /* Constructs a Dic subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ADic(SocketFactory socket_factory, ISZ size = CDicSizeDefault<TPARAMS>(),
        ISY count = CDicCountDefault<TPARAMS>())
       : obj_(socket_factory) {

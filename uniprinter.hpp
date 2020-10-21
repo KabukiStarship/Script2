@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /uniprinter.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Uniprinter.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #ifndef SCRIPT2_UNIPRINTER_CODE
 #define SCRIPT2_UNIPRINTER_CODE 1
 
-#include "stringf.h"
-#include "typevalue.hpp"
+#include "Stringf.h"
+#include "TypeValue.hpp"
 
 namespace _ {
 
@@ -48,11 +48,11 @@ ISN TPrintAndCount(Printer& o, const CHT* string) {
 }
 
 /* Prints the following item to the console in Hex. */
-template <typename Printer, typename UI>
-Printer& TPrintHex(Printer& o, UI item) {
-  enum { cHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+template <typename Printer, typename IU>
+Printer& TPrintHex(Printer& o, IU item) {
+  enum { cHexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
   auto ui = ToUnsigned(item);
-  for (ISC num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+  for (ISC num_bits_shift = sizeof(IU) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
     o << HexNibbleToUpperCase((IUA)(ui >> num_bits_shift));
   }
@@ -62,12 +62,12 @@ Printer& TPrintHex(Printer& o, UI item) {
 /* Prints the following item to the console in Hex. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* item) {
-  UIW ptr = reinterpret_cast<UIW>(item);
-  return TPrintHex<Printer, UIW>(o, ptr);
+  IUW ptr = reinterpret_cast<IUW>(item);
+  return TPrintHex<Printer, IUW>(o, ptr);
 }
-template <typename Printer, typename SI, typename UI>
-Printer& TPrintHex(Printer& o, SI item) {
-  return TPrintHex<Printer, UI>(o, UI(item));
+template <typename Printer, typename IS, typename IU>
+Printer& TPrintHex(Printer& o, IS item) {
+  return TPrintHex<Printer, IU>(o, IU(item));
 }
 #if USING_FPC == YES_0
 template <typename Printer>
@@ -159,9 +159,9 @@ inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
   return TPrintBinary<Printer>(o, start, reinterpret_cast<const void*>(delta));
 }
 
-template <typename Printer, typename UI>
-Printer& TPrintBinary(Printer& o, UI item) {
-  enum { cSize = sizeof(UI) * 8 };
+template <typename Printer, typename IU>
+Printer& TPrintBinary(Printer& o, IU item) {
+  enum { cSize = sizeof(IU) * 8 };
   auto ui = ToUnsigned(item);
   for (ISC i = cSize; i > 0; --i) {
     CHA c = CHA('0' + (ui >> (cSize - 1)));
@@ -171,9 +171,9 @@ Printer& TPrintBinary(Printer& o, UI item) {
   return o;
 }
 
-template <typename Printer, typename SI, typename UI>
-Printer& TPrintBinary(Printer& o, SI item) {
-  return TPrintBinary<Printer, UI>(o, (UI)item);
+template <typename Printer, typename IS, typename IU>
+Printer& TPrintBinary(Printer& o, IS item) {
+  return TPrintBinary<Printer, IU>(o, (IU)item);
 }
 #if USING_FPC == YES_0
 template <typename Printer>
@@ -195,7 +195,7 @@ Printer& TPrintAligned(Printer& o, const CHA* string, ISW char_count,
                        ISW left_count, ISW dot_count, ISW right_count) {
   while (--left_count > 0) o << ' ';
   while (--char_count > 0) {
-#if LARGEST_CHAR == 1 || SEAM < SCRIPT2_UNIPRINTER
+#if LARGEST_CHAR == 1 || SEAM < SCRIPT2_CORE
     o << *string++;
 #else
     CHL c;
@@ -252,7 +252,7 @@ Printer& TPrintAlignedHex(Printer& o, const void* origin, ISW byte_count,
   return o;
 }
 
-/* Prints th given Stringf centered unless it's count is less then 0, in which
+/* Prints th given item centered unless it's count is less then 0, in which
 case it will print the POD value stored in the first Word of the string. */
 template <typename Printer>
 Printer& TPrintCenter(Printer& o, Stringf& item) {
@@ -338,7 +338,7 @@ Printer& TPrintRight(Printer& o, const CHT* item, ISW column_count = 80) {
   return o;
 }
 
-/* Prints th given Stringf centered, printing it as hex if the item.Count() is
+/* Prints the given item centered, printing it as hex if the item.Count() is
 less than 0. */
 template <typename Printer>
 Printer& TPrintRight(Printer& o, Stringf& item) {
@@ -540,9 +540,9 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
 
 template <typename CHT = CHR>
 const CHT* TSTRHeadingf() {
-  static const CHT kStrand[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
+  static const CHT kString[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
                                 NIL,  '\n', '+', '-', '-', '-', '\n', NIL};
-  return kStrand;
+  return kString;
 }
 
 /* Prints a heading with the */
@@ -654,23 +654,92 @@ Printer& TPrintTypePOD(Printer& o, DT type) {
       map_type = TTypeMap<DT>(type);        //
 }
 
+/* Prints the given type to the printer. */
 template <typename Printer, typename DT = DT2>
-Printer& TPrintType(Printer& o, DT type) {
+Printer& TPrintType(Printer& printer, DT type) {
+  if (type == 0) return printer << "NIL";
   DT pod_type = type & cTypePODMask;
-  if (pod_type == 0) return o << "BGN" << (type >> cTypePODBitCount);
+  if (pod_type == 0) return printer << "BGN" << (type >> cTypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
-    return o << STRType(vector_type) << '_' << STRType(pod_type);
+    return printer << STRType(vector_type) << '_' << STRType(pod_type);
   }
   DT map_type = TTypeMap<DT>(type);
   if (map_type) {
-    return o << STRType(map_type) << '_' << STRType(pod_type);
+    return printer << STRType(map_type) << '_' << STRType(pod_type);
   }
-  return o;
+  return printer;
 }
 
 template <typename Printer, typename DT = DT2>
-Printer& TPrintValue(Printer& o, DT type, void* item) {}
+Printer& TPrintValue(Printer& printer, DT type, const void* item) {
+  switch (type) {
+    case cNIL:
+      return printer;
+    case cCHA:
+      printer << *TDelta<const CHA*>(item);
+      return printer;
+    case cISA:
+      printer << *TDelta<const ISA*>(item);
+      return printer;
+    case cIUA:
+      printer << *TDelta<const IUA*>(item);
+      return printer;
+    case cCHB:
+      printer << *TDelta<const CHB*>(item);
+      return printer;
+    case cISB:
+      printer << *TDelta<const ISB*>(item);
+      return printer;
+    case cIUB:
+      printer << *TDelta<const IUB*>(item);
+      return printer;
+    case cFPB:
+      printer << *TDelta<const FPB*>(item);
+      return printer;
+    case cBOL:
+      printer << *TDelta<const BOL*>(item);
+      return printer;
+    case cCHC:
+      printer << *TDelta<const CHC*>(item);
+      return printer;
+    case cISC:
+      printer << *TDelta<const ISC*>(item);
+      return printer;
+    case cIUC:
+      printer << *TDelta<const IUC*>(item);
+      return printer;
+    case cFPC:
+      printer << *TDelta<const FPC*>(item);
+      return printer;
+    case cTME:
+      printer << "TME Fix me!";
+      //printer << *TDelta<const TME*>(item);
+      return printer;
+    case cISD:
+      printer << *TDelta<const ISD*>(item);
+      return printer;
+    case cIUD:
+      printer << *TDelta<const IUD*>(item);
+      return printer;
+    case cFPD:
+      printer << *TDelta<const FPD*>(item);
+      return printer;
+    case cISE:
+      printer << "ISE Fix me!";
+      //printer << *TDelta<const ISE*>(item);
+      return printer;
+    case cIUE:
+      printer << "Fix me!";
+      //printer << *TDelta<const IUE*>(item);
+      return printer;
+    case cFPE:
+      printer << "Fix me!";
+      //printer << *TDelta<const FPE*>(item);
+      return printer;
+  }
+  return printer;
+}
 
 }  // namespace _
 

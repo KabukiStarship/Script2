@@ -1,30 +1,34 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /book.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Book.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_BOOK
 #ifndef SCRIPT2_BOOK_CODE
 #define SCRIPT2_BOOK_CODE
-#include "book.hpp"
-#include "list.hpp"
+#include "Book.hpp"
+#include "List.hpp"
 #if SEAM == SCRIPT2_BOOK
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 namespace _ {
 /* @ingroup Book
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/map_types/book.md */
+@link ./spec/data/map_types/book.md
 
-#define TPARAMS CHT, ISZ, ISY
-#define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
+Please see the ASCII List documentation for information about
+*/
+
+#define TPARAMS CHT, ISZ, ISY, DT
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DT2
 
 /* @ingroup Book
 @brief A contiguous memory Associative List created from a List and a Loom.
@@ -66,8 +70,9 @@ constexpr ISZ CBookCountDefault() {
 
 /* Gets the default size of a Book with the CBookCountDefault. */
 template <TARGS>
-constexpr ISZ CBookSizeDefault() {
-  return (32 * CBookCountDefault<TPARAMS>() * sizeof(CHT)) & (sizeof(ISW) - 1);
+constexpr ISZ CBookSizeDefault(ISY count_max = CBookCountDefault<TPARAMS>()) {
+  return (count_max * CBookCountDefault<TPARAMS>() * sizeof(CHT)) &
+         (sizeof(ISW) - 1);
 }
 
 /* Gets the start of the book as a templated-defined character. */
@@ -83,24 +88,6 @@ inline CHT* TBookStart(TBook<TPARAMS>* book) {
   return TBookStart<TPARAMS>(book, book->offsets.count_max);
 }
 
-/* Initializes the book to the given count_max using the CBookSizeDefault. */
-template <TARGS>
-inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max) {
-  D_ASSERT(book);
-  if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
-
-  TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
-
-  return book;
-}
-
-/* Gets the byte after the end of the book's contiguous memory block. */
-template <TARGS>
-inline CHT* TBookEnd(TBook<TPARAMS>* book) {
-  CHT* list = TLoomEnd<TPARAMS>(&book->keys);
-  return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
-}
-
 template <TARGS>
 inline TList<ISZ>* TBookList(TBook<TPARAMS>* book, ISZ size_bytes) {
   return TPtr<TList<ISZ>>(book, size_bytes);
@@ -109,6 +96,27 @@ inline TList<ISZ>* TBookList(TBook<TPARAMS>* book, ISZ size_bytes) {
 template <TARGS>
 inline TList<ISZ>* TBookList(TBook<TPARAMS>* book) {
   return TBookList<TPARAMS>(book, book->keys.size);
+}
+
+/* Gets the byte after the end of the book's contiguous memory block. */
+template <TARGS>
+inline CHT* TBookEnd(TBook<TPARAMS>* book) {
+  CHT* list = TLoomEnd<CHT, ISZ, ISY>(&book->keys);
+  return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
+}
+
+/* Initializes the book to the given count_max using the CBookSizeDefault. */
+template <TARGS>
+inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
+                                 ISY count_max) {
+  D_ASSERT(book);
+  if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
+
+  TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
+  auto keys_size = &book->keys.size;
+  auto list = TBookList<TPARAMS>(book);
+  TListInit<ISZ, DT>(list, size_bytes - book->keys.size, count_max);
+  return book;
 }
 
 /* Gets the element at the given index. */
@@ -128,16 +136,18 @@ inline ISZ TBookSize(TBook<TPARAMS>* book) {
 template <TARGS, typename Printer>
 Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
   ISY count = book->keys.map.count;
-  printer << "\nBook<CH" << CHA('@' + sizeof(CHT)) << ",IS"
-          << CHA('@' + sizeof(ISZ)) << ",IS" << CHA('@' + sizeof(ISY))
-          << "> size:" << book->keys.size << " top:" << book->keys.top
+  printer << "\nBook<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>() << ",IS"
+          << CSizef<ISY>() << "> size:" << book->keys.size
+          << " top:" << book->keys.top
           << " stack_size:" << book->keys.map.count_max << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TBookList<TPARAMS>(book));
-  for (ISY i = 0; i < count; ++i)
-    printer << '\n'
-            << i << ".) \"" << TBookGet<TPARAMS>(book, i)
-            << "\" type:" << TPrintType<Printer, DT2>(printer, *types++);
-  D_COUT(Linef('-') << Charsf(book, TBookSize<TPARAMS>(book)));
+  for (ISY i = 0; i < count; ++i) {
+    printer << '\n' << i << ".) \"" << TBookGet<TPARAMS>(book, i) << "\" type:";
+    auto type = *types++;
+    TPrintType<Printer, DT2>(printer, type);
+    D_COUT(" type:" << type << " 0b'" << Binaryf(type));
+  }
+  D_COUT(Linef('-') << ' ' << Charsf(book, TBookSize<TPARAMS>(book)));
   return printer << '\n';
 }
 
@@ -170,7 +180,7 @@ BOL TBookGrow(Autoject& obj) {
   D_COUT(Charsf(book, TBookEnd<TPARAMS>(book)));
 #endif
 
-  UIW* new_begin = obj.socket_factory(nullptr, size);
+  IUW* new_begin = obj.socket_factory(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
   TLoom<ISZ, ISY>* other = reinterpret_cast<TLoom<ISZ, ISY>*>(new_begin);
 
@@ -222,23 +232,19 @@ inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, T item,
                        ISY index = cPush) {
   A_ASSERT(book);
   if (!key) return cErrorInputNil;
-
-  if (index == cAnywhere)
-    index = TLoomInsert<TPARAMS>(&book->keys, key, index);
-  else if (index == cPush)
-    index = (index <= 0) ? 0 : book->keys.map.count - 1;
-  D_COUT("\nAdding key:\"" << key << "\" item:" << item
-                           << " into index:" << index);
-  if (index < 0) return index;
+  D_COUT("\nAdding key:\"" << key << "\" item:" << item << " into index:" << 
+         index);
+  ISY result = TLoomInsert<CHT, ISZ, ISY>(&book->keys, key, index);
+  D_COUT(" result:" << result);
+  if (result < 0) return index;
   auto list = TBookList<TPARAMS>(book);
-#if DEBUG_THIS
-  TListPrint<COut, ISY>(list);
-#endif
-  ISY result = ISY(TListInsert<ISZ, DT2>(list, item));
+  TListPrint<COut, ISZ, DT>(COut().Star(), list);
+
+  result = ISY(TListInsert<ISZ, DT>(list, item, result));
   if (result < 0) {
-    D_COUT("\nFailed to insert with error " << result << ':'
-                                            << STRError(result));
-    TBookRemove<TPARAMS>(book, index);
+    D_COUT("\nFailed to insert into List with error " << result << ':' <<
+           STRError(result));
+    TLoomRemove<CHT, ISZ, ISY>(&book->keys, index);
   }
   return result;
 }
@@ -392,37 +398,45 @@ ISZ TBookFind(TBook<TPARAMS>* book, const CHT* string) {
 
 /* An ASCII Book Autoject. */
 template <TARGS, ISZ cSize_ = 512,
-          typename BUF = TBUF<cSize_, CHT, ISZ, TStrand<ISN>>>
+          typename BUF = TBUF<cSize_, CHT, ISZ, TString<ISN>>>
 class ABook {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
-  enum { cCountDefault = cSize_ / 16 };
+  enum { cCountDefault = cSize_ / 16,
+    // 
+    cSizeDefault = CBookSizeDefault<TPARAMS>(),
+  };
+
   /* Constructs a Book. */
-  ABook(ISY count_max = cCountDefault) {
-    TBookInit<TPARAMS>(This(), count_max);
+  ABook(ISY count_max = cCountDefault, ISZ size = cSizeDefault) {
+    TBookInit<TPARAMS>(This(), size, count_max);
   }
 
   /* Constructs a Book subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ABook(SocketFactory socket_factory, ISY count = cCountDefault)
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
   }
 
   /* Constructs a Book subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ABook(SocketFactory socket_factory, ISZ size = CBookSizeDefault<TPARAMS>(),
         ISY count = CBookCountDefault<TPARAMS>())
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
   }
 
+  /* Returns the size in elements. */
   inline ISZ Size() { return obj_.Size(); }
 
+  /* Returns the size in bytes. */
   inline ISZ SizeBytes() { return obj_.SizeBytes(); }
 
+  /* Returns the size in words. */
   inline ISZ SizeWords() { return obj_.SizeWords(); }
 
+  /* Returns the number of keys. */
   inline ISY Count() { return This()->keys->map->count; }
 
   /* Inserts the key and item on into the Loom and List at the given index.
@@ -480,8 +494,7 @@ class ABook {
   inline CHT* Get(ISY index) { return TBookGet<TPARAMS>(This(), index); }
 
   /* Searches for the given string.
-  @return -1 if the Book doesn't contain the string or the index if it does.
-*/
+  @return -1 if the Book doesn't contain the string or the index if it does. */
   inline ISZ Find(const CHT* string) {
     return TBookFind<TPARAMS>(This(), string);
   }

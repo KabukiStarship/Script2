@@ -47,7 +47,7 @@ struct BIn {
 
 Finite State Machine uses a stack of state indexes for all states that have bidirectional arrows. Once the Crabs Message has been interpreted and the hash is verified, the data has thought to be in the correct format but has not been verified to be bound into determinant ranges (@see Bounding Escape Sequences).
 
-![B-Input Interpreter FSM](https://github.com/kabuki-starship/kabuki.toolkit/wiki/expression-scanner-fsm.jpg)
+![B-Input Interpreter FSM](https://github.com/KabukiStarship/kabuki.toolkit/wiki/expression-scanner-fsm.jpg)
 
 #### B-Output Slot
 
@@ -103,6 +103,6 @@ Script implementations may implement a default BIn Slot named In (**in UpperCase
 
 ## License
 
-Copyright 2015-20 © [Kabuki Starship™](https://kabukistarship.com).
+Copyright 2015-20 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

@@ -1,7 +1,7 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /stringf.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Stringf.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
@@ -11,14 +11,15 @@ one at <https://mozilla.org/MPL/2.0/>. */
 faster. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #ifndef SCRIPT2_STRING_CODE
 #define SCRIPT2_STRING_CODE 1
 
-#include "binary.hpp"
-#include "puff.hpp"
-#include "stringf.h"
+#include "Binary.hpp"
+#include "Puff.hpp"
+#include "TypeValue.hpp"
+#include "Stringf.h"
 
 namespace _ {
 
@@ -248,14 +249,14 @@ BOL TIsDigit(CHT c) {
   return (c >= '0') && (c <= '9');
 }
 
-/* Scans the given socket for an Signed Integer (SI).
-@return Nil if there is no UI to scan.
+/* Scans the given socket for an Signed Integer (IS).
+@return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
-@param item The SI to write the scanned SI. */
-template <typename SI = ISW, typename UI = UIW, typename CHT = CHR>
-const CHT* TScanSigned(const CHT* string, SI& item) {
+@param item The IS to write the scanned IS. */
+template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
+const CHT* TScanSigned(const CHT* string, IS& item) {
   if (!string) return nullptr;
-  SI sign;
+  IS sign;
   const CHT* cursor = string;
   CHT c = *cursor++;
   if (c == '-') {
@@ -273,13 +274,13 @@ const CHT* TScanSigned(const CHT* string, SI& item) {
   cursor -= 2;
 
   c = *cursor--;
-  UI value = UI(c) - '0';
-  UI pow_10_ui2 = 1;
+  IU value = IU(c) - '0';
+  IU pow_10_ui2 = 1;
 
   while (cursor >= string) {
     c = *cursor--;
     pow_10_ui2 *= 10;
-    UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
+    IU new_value = value + pow_10_ui2 * (((IU)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
   }
@@ -287,20 +288,20 @@ const CHT* TScanSigned(const CHT* string, SI& item) {
   return stop;
 }
 
-/* Scans the given socket for an Signed Integer (SI).
-@return Nil if there is no UI to scan.
+/* Scans the given socket for an Signed Integer (IS).
+@return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
-@param item The SI to write the scanned SI. */
-template <typename SI = ISW, typename UI = UIW, typename CHT = CHR>
-CHT* TScanSigned(CHT* string, SI& item) {
+@param item The IS to write the scanned IS. */
+template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
+CHT* TScanSigned(CHT* string, IS& item) {
   const CHT* ptr = reinterpret_cast<const CHT*>(string);
-  return const_cast<CHT*>(TScanSigned<SI, UI, CHT>(ptr, item));
+  return const_cast<CHT*>(TScanSigned<IS, IU, CHT>(ptr, item));
 }
 
-/* Scans the given socket for an Signed Integer (SI).
-@return Nil if there is no UI to scan.
+/* Scans the given socket for an Signed Integer (IS).
+@return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
-@param item The SI to write the scanned SI. */
+@param item The IS to write the scanned IS. */
 template <typename CHT = CHR>
 const CHT* TSScan(const CHT* string, ISA& item) {
   return TScanSigned<ISA, IUA, CHT>(string, item);
@@ -334,12 +335,12 @@ CHT* TSScan(CHT* string, ISD& item) {
   return TScanSigned<ISD, IUD, CHT>(string, item);
 }
 
-/* Scans the given socket for an unsigned integer (UI).
-@return Nil if there is no UI to scan.
+/* Scans the given socket for an unsigned integer (IU).
+@return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
-@param item The UI to write the scanned UI. */
-template <typename UI, typename CHT = CHR>
-const CHT* TScanUnsigned(const CHT* string, UI& item) {
+@param item The IU to write the scanned IU. */
+template <typename IU, typename CHT = CHR>
+const CHT* TScanUnsigned(const CHT* string, IU& item) {
   if (!string) return nullptr;
   const CHT* cursor = string;
   CHT c = *cursor++;
@@ -352,13 +353,13 @@ const CHT* TScanUnsigned(const CHT* string, UI& item) {
   cursor -= 2;
 
   c = *cursor--;
-  UI value = UI(c) - '0';
-  UI pow_10_ui2 = 1;
+  IU value = IU(c) - '0';
+  IU pow_10_ui2 = 1;
 
   while (cursor >= string) {
     c = *cursor--;
     pow_10_ui2 *= 10;
-    UI new_value = value + pow_10_ui2 * (((UI)c) - '0');
+    IU new_value = value + pow_10_ui2 * (((IU)c) - '0');
     if (new_value < value) return nullptr;
     value = new_value;
   }
@@ -366,14 +367,14 @@ const CHT* TScanUnsigned(const CHT* string, UI& item) {
   return stop;
 }
 
-/* Scans the given socket for an unsigned integer (UI).
-@return Nil if there is no UI to scan.
+/* Scans the given socket for an unsigned integer (IU).
+@return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
-@param item The UI to write the scanned UI. */
-template <typename UI, typename CHT = CHR>
-CHT* TScanUnsigned(CHT* string, UI& item) {
+@param item The IU to write the scanned IU. */
+template <typename IU, typename CHT = CHR>
+CHT* TScanUnsigned(CHT* string, IU& item) {
   const CHT* ptr = reinterpret_cast<const CHT*>(string);
-  return const_cast<CHT*>(TScanUnsigned<UI, CHT>(ptr, item));
+  return const_cast<CHT*>(TScanUnsigned<IU, CHT>(ptr, item));
 }
 
 /* Scans item from the string.
@@ -855,16 +856,16 @@ CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, ISW size_bytes) {
 }
 
 /* Prints a hex value to the Console. */
-template <typename CHT, typename UI>
-CHT* TSPrintHex(CHT* start, CHT* stop, UI value) {
-  enum { cHexStrandLengthSizeMax = sizeof(UI) * 2 + 3 };
+template <typename CHT, typename IU>
+CHT* TSPrintHex(CHT* start, CHT* stop, IU value) {
+  enum { cHexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
 
-  if (!start || start + cHexStrandLengthSizeMax >= stop) return nullptr;
+  if (!start || start + cHexStringLengthSizeMax >= stop) return nullptr;
 
   *start++ = '0';
   *start++ = 'x';
   auto v = ToUnsigned(value);
-  for (ISC num_bits_shift = sizeof(UI) * 8 - 4; num_bits_shift >= 0;
+  for (ISC num_bits_shift = sizeof(IU) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
     *start++ = HexNibbleToUpperCase((IUA)(v >> num_bits_shift));
   }
@@ -928,18 +929,18 @@ inline CHT* TSPrintHex(CHT* start, CHT* stop, FPD value) {
 
 template <typename CHT = CHR>
 inline CHT* TSPrintHex(CHT* start, CHT* stop, const void* ptr) {
-  return TSPrintHex<CHT, UIW>(start, stop, ToUnsigned(ptr));
+  return TSPrintHex<CHT, IUW>(start, stop, ToUnsigned(ptr));
 }
 
 /* Prints the given value to Binary. */
-template <typename CHT = CHR, typename UI>
-CHT* TPrintBinary(CHT* start, CHT* stop, UI value) {
-  if (start + sizeof(UI) * 8 >= stop) {
+template <typename CHT = CHR, typename IU>
+CHT* TPrintBinary(CHT* start, CHT* stop, IU value) {
+  if (start + sizeof(IU) * 8 >= stop) {
     return nullptr;
   }
 
-  for (ISC i = 0; i < sizeof(UI) * 8; ++i) {
-    *start++ = (CHT)('0' + (value >> (sizeof(UI) * 8 - 1)));
+  for (ISC i = 0; i < sizeof(IU) * 8; ++i) {
+    *start++ = (CHT)('0' + (value >> (sizeof(IU) * 8 - 1)));
     value = value << 1;
   }
   *start = 0;
@@ -1011,8 +1012,8 @@ CHT* TPrintBinary(CHT* start, CHT* stop, FPD value) {
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
 CHT* TPrintBinary(CHT* start, CHT* stop, const void* ptr) {
-  UIW address = *reinterpret_cast<UIW*>(&ptr);
-  return TPrintBinary<CHT, UIW>(start, stop, address);
+  IUW address = *reinterpret_cast<IUW*>(&ptr);
+  return TPrintBinary<CHT, IUW>(start, stop, address);
 }
 
 template <typename CHT = CHR>
@@ -1069,22 +1070,22 @@ read > read_end) return nullptr;
 /* An empty string. */
 template <typename CHT = CHR>
 const CHT* TSTREmpty() {
-  static const CHT kStrand[] = {NIL};
-  return kStrand;
+  static const CHT kString[] = {NIL};
+  return kString;
 }
 
 /* The new-line s. */
 template <typename CHT = CHR>
 const CHT* TSTRNL() {
-  static const CHT kStrand[] = {'\n'};
-  return kStrand;
+  static const CHT kString[] = {'\n'};
+  return kString;
 }
 
-/* Strand the reads "Error:". */
+/* String the reads "Error:". */
 template <typename CHT = CHR>
 const CHT* TSTRError() {
-  static const CHT kStrand[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
-  return kStrand;
+  static const CHT kString[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
+  return kString;
 }
 
 /* Converts the given item to a printable CHA if it's non-printable. */
@@ -1242,7 +1243,7 @@ inline CHT* TSTRFind(CHT* string, const CHT* query) {
                                         reinterpret_cast<const CHT*>(query)));
 }
 
-/* Strand skip spaces.
+/* String skip spaces.
 @return Nil if there are no spaces to skip. */
 template <typename CHT = CHR>
 const CHT* TSTRSkipSpaces(const CHT* cursor, const CHT* stop) {
@@ -1257,7 +1258,7 @@ const CHT* TSTRSkipSpaces(const CHT* cursor, const CHT* stop) {
   return cursor;
 }
 
-/* Strand skip spaces.
+/* String skip spaces.
 @return Nil if there are no spaces to skip.
 @param cursor  The first CHT in the buffer.
 @param stop    The last CHT in the buffer. */
@@ -1398,7 +1399,7 @@ BOL TSTRIsntEmpty(CHT* cursor, const CHT* stop) {
 pointer to the nil-term CHA upon success.
 @param cursor  The first CHT in the buffer.
 @param stop    The last CHT in the buffer.
-@param item  The item to utf.
+@param item  The item to printer.
 @param column_count The token_ of columns to align right to. */
 template <typename CHT = CHR>
 CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
@@ -1438,7 +1439,7 @@ CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
     *stop-- = c;
     return cursor + column_count;
   }
-  // In order to keep the current cache lines we're going to utf
+  // In order to keep the current cache lines we're going to printer
   // backwards back from the token_end.
   stop = cursor + column_count;
   --item_end;   //< This is pointed at the nil-term CHA
@@ -1598,7 +1599,7 @@ struct TSPrinter {
   @param stop   The stop of the array. */
   TSPrinter(CHT* start, CHT* stop) : start(start), stop(stop) { Reset(); }
 
-  /* Clones the other utf. */
+  /* Clones the other printer. */
   TSPrinter(const TSPrinter& other)
       : start(other.start), stop(other.stop) {  // Nothing to do here!.
   }
@@ -1622,9 +1623,9 @@ struct TSPrinter {
   }
 
   /* Sets the start pointer to the new_pointer. */
-  inline TSPrinter& Set(UIW* buffer) {
+  inline TSPrinter& Set(IUW* buffer) {
     ISZ size = *reinterpret_cast<ISZ*>(buffer);
-    UIW ptr = reinterpret_cast<UIW>(buffer) + sizeof(ISZ);
+    IUW ptr = reinterpret_cast<IUW>(buffer) + sizeof(ISZ);
     CHT* start_ptr = reinterpret_cast<CHT*>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
@@ -1780,13 +1781,13 @@ struct TSPrinter {
 #endif
   /* Prints the given pointer as binary. */
   inline TSPrinter& Binary(const void* ptr) {
-    UIW address = reinterpret_cast<UIW>(ptr);
+    IUW address = reinterpret_cast<IUW>(ptr);
     return Set(Binary<CHT>(start, stop, address));
   }
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    o << "\nTUTF<CH" << sizeof(CHT) << ", SI" << sizeof(ISZ) << ">{ start:";
+    o << "\nTUTF<CH" << sizeof(CHT) << ", IS" << sizeof(ISZ) << ">{ start:";
     TSPrintHex<Printer>(o, start);
     o << " stop:";
     TSPrintHex<Printer>(o, stop);
@@ -1846,148 +1847,152 @@ ISC TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
 }  // namespace _
 
 /* Prints the given item to the UTF.
-@return The utf.
-@param utf The utf.
-@param item   The item to utf. */
+@return The printer.
+@param printer The printer.
+@param item   The item to printer. */
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHA item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, CHA item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHA* item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, const CHA* item) {
+  return printer.Print(item);
 }
 
 #if USING_UTF16 == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHB item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, CHB item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHB* item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, const CHB* item) {
+  return printer.Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, CHC item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, CHC item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, const CHC* item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, const CHC* item) {
+  return printer.Print(item);
 }
 #endif
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISA item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, ISA item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUA item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, IUA item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISB item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, ISB item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUB item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, IUB item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISC item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, ISC item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUC item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, IUC item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, ISD item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, ISD item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, IUD item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, IUD item) {
+  return printer.Print(item);
 }
 
 #if USING_FPC == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FPC item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, FPC item) {
+  return printer.Print(item);
 }
 #endif
 
 #if USING_FPD == YES_0
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, FPD item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, FPD item) {
+  return printer.Print(item);
 }
 #endif
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Centerf item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Centerf item) {
+  return printer.Print(item);
 }
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Centerf& item) {
-  return utf.Print(item);
-}
-
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Rightf item) {
-  return utf.Print(item);
-}
-template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Rightf& item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Centerf& item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Linef item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Rightf item) {
+  return printer.Print(item);
 }
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Linef& item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Rightf& item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Headingf item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Linef item) {
+  return printer.Print(item);
 }
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf,
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Linef& item) {
+  return printer.Print(item);
+}
+
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Headingf item) {
+  return printer.Print(item);
+}
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer,
                                      _::Headingf& item) {
-  return utf.Print(item);
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Hexf item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Hexf item) {
+  return printer.Print(item);
 }
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Hexf& item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Hexf& item) {
+  return printer.Print(item);
 }
 
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Charsf item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Charsf item) {
+  return printer.Print(item);
 }
 template <typename CHT = CHR>
-inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf, _::Charsf& item) {
-  return utf.Print(item);
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Charsf& item) {
+  return printer.Print(item);
+}
+template <typename CHT = CHR>
+inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Sizef& item) {
+  return _::TSizefPrint<_::TSPrinter<CHT>>(printer, item);
 }
 #endif

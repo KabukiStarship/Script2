@@ -1,28 +1,28 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/01.itos.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/01.ItoS.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_ITOS
-#include <cString>
+#include <cstring>
 #include <cstdio>
 //
-#include "../puff.hpp"
-#include "../rng.h"
-#include "../stringf.hpp"
+#include "../Puff.hpp"
+#include "../RNG.h"
+#include "../Stringf.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_ITOS
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 #endif
 
-namespace script2 {
+namespace Script2 {
 
 inline const CHA* ItoS(const CHA* args) {
 #if SEAM >= SCRIPT2_ITOS
@@ -110,7 +110,7 @@ inline const CHA* ItoS(const CHA* args) {
   CHA* result;
   IUD result_ui8, expected_ui8;
 
-  D_COUT("\nTesting ScanUnsigned<UI, CHT> (const CHT*, const CHA*, I);");
+  D_COUT("\nTesting ScanUnsigned<IU, CHT> (const CHT*, const CHA*, I);");
 
   for (ISN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
@@ -195,4 +195,4 @@ inline const CHA* ItoS(const CHA* args) {
 #endif
   return 0;
 }
-}  // namespace script2
+}  // namespace Script2

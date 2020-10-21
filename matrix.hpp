@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /matrix.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Matrix.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_MATRIX
 #ifndef INCLUDED_SCRIPT2_MATRIX
 #define INCLUDED_SCRIPT2_MATRIX
 
-#include "stack.hpp"
+#include "Stack.hpp"
 
 namespace _ {
 
@@ -122,7 +122,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   ISZ dimension_count = *dimensions;
   if (dimension_count < 0) return nullptr;
   ISZ size = (ISZ)sizeof(TStack<ISZ>) + dimension_count * sizeof(T);
-  UIW* socket = new UIW[size >> cWordBitCount];
+  IUW* socket = new IUW[size >> cWordBitCount];
   TStack<ISZ>* stack = reinterpret_cast<TStack<ISZ>*>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
@@ -191,9 +191,9 @@ inline T* TMatrixElements(TMatrix<ISZ>* obj) {
 }
 
 /* Creates a immutable array of dimensions. */
-template <typename SI, const SI... N>
-inline const SI* TDim() {
-  static const SI cCount = (SI)sizeof...(N), kList[sizeof...(N)] = {N...};
+template <typename IS, const IS... N>
+inline const IS* TDim() {
+  static const IS cCount = (IS)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &cCount;
 }
 
@@ -224,13 +224,13 @@ inline ISZ TMatrixClone(TMatrix<ISZ>* matrix, SocketFactory socket_factory) {
 }
 
 template <typename T = ISW, typename ISZ = ISN>
-inline UIW* TMatrixClone(TMatrix<ISZ>* matrix, TMatrix<ISZ>* other,
+inline IUW* TMatrixClone(TMatrix<ISZ>* matrix, TMatrix<ISZ>* other,
                          SocketFactory socket_factory) {
   return nullptr;
 }
 
 template <typename T = ISW, typename ISZ = ISN>
-UIW* TMatrixNew(SocketFactory socket_factory) {}
+IUW* TMatrixNew(SocketFactory socket_factory) {}
 
 /* A multi-dimensional array Ascii Object. */
 template <typename T = ISW, typename ISZ = ISN, typename BUF = Nil>

@@ -1,14 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /array.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Array.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #ifndef SCRIPT2_ARRAY_CODLESS_HEADER
 #define SCRIPT2_ARRAY_CODLESS_HEADER
@@ -25,14 +25,14 @@ LIB_MEMBER CHA* ArrayFill(void* origin, ISW size_bytes, CHA fill_char = 0);
 @return A word-aligned buffer, rounding up if unaligned.
 @param obj  A block of word-aligned heap memory.
 @param size The size of the buffer to create in bytes. */
-typedef UIW* (*SocketFactory)(UIW* obj, ISW size);
+typedef IUW* (*SocketFactory)(IUW* obj, ISW size);
 
 namespace _ {
 
 /* ASCII OBJ and SocketFactory. */
 struct Autoject {
   SocketFactory socket_factory;  //< Autoject Factory function pointer.
-  UIW* origin;                   //< Pointer to the Autoject.
+  IUW* origin;                   //< Pointer to the Autoject.
 };
 
 enum AsciiFactoryFunction {
@@ -55,11 +55,11 @@ enum AsciiFactoryError {
 };
 
 /* SocketFactory for Autojects on the heap that deletes a the buffer. */
-LIB_MEMBER UIW* RamFactoryHeap(UIW* buffer, ISW size_bytes, DTW data_type);
+LIB_MEMBER IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes, DTW data_type);
 
 /* SocketFactory for Autojects on the program stack that doesn't delete the
 buffer. */
-LIB_MEMBER UIW* RamFactoryStack(UIW* buffer, ISW size_bytes, DTW data_type);
+LIB_MEMBER IUW* RamFactoryStack(IUW* buffer, ISW size_bytes, DTW data_type);
 
 class Nil {
  public:
@@ -76,7 +76,7 @@ class Nil {
   static constexpr ISW SizeWords();
 
   /* Gets the nil origin word address. */
-  UIW* Words();
+  IUW* Words();
 };
 
 /* Copies the source to the target functionally identical to memcpy.

@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /object.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Array.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 
-#include "binary.hpp"
+#include "Binary.hpp"
 namespace _ {
 
 /* Creastes a CPU word from the repeated fill_char. */
-inline UIW FillWord(CHA fill_char) {
-  UIW value = (UIW)(IUA)fill_char;
+inline IUW FillWord(CHA fill_char) {
+  IUW value = (IUW)(IUA)fill_char;
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
 #if ALU_SIZE == ALU_64_BIT
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
@@ -39,14 +39,14 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 
   CHA* stop = start + count;
 
-  UIW fill_word = FillWord(fill_char);
+  IUW fill_word = FillWord(fill_char);
 
   // 1.) Align start pointer up to a word boundry and fill the unaligned bytes.
   CHA *success = stop, *aligned_pointer = TAlignUpPTR<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
-  UIW *words = reinterpret_cast<UIW*>(start),
-      *words_end = TAlignDownPTR<UIW*>(stop);
+  IUW *words = reinterpret_cast<IUW*>(start),
+      *words_end = TAlignDownPTR<IUW*>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
   start = reinterpret_cast<CHA*>(words_end);
@@ -57,25 +57,25 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 }  // namespace _
 
 #if SEAM >= SCRIPT2_STACK
-#include "array.hpp"
+#include "Array.hpp"
 
-#if SEAM == SCRIPT2_STRAND
-#include "_debug.inl"
+#if SEAM == SCRIPT2_STRING
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
 
-UIW* RamFactoryStack(UIW* buffer, ISW size_bytes, DTW data_type) {
-  if (size_bytes < 0) return (UIW*)data_type;
+IUW* RamFactoryStack(IUW* buffer, ISW size_bytes, DTW data_type) {
+  if (size_bytes < 0) return (IUW*)data_type;
   size_bytes += (-size_bytes) & cWordLSbMask;
   ISW size_words = size_bytes >> cWordBitCount;
-  UIW* socket = new UIW[size_words];
+  IUW* socket = new IUW[size_words];
   return socket;
 }
 
-UIW* RamFactoryHeap(UIW* buffer, ISW size_bytes, DTW data_type) {
+IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes, DTW data_type) {
   if (buffer) {
     delete[] buffer;
     return nullptr;
@@ -126,9 +126,9 @@ CHA* ArrayCopy(void* destination, ISW destination_size, const void* source,
   end:0x"
   << Hexf(end_ptr));
 
-  UIW *words = reinterpret_cast<UIW*>(cursor),
-      *words_end = reinterpret_cast<UIW*>(end_ptr);
-  const UIW* read_word = reinterpret_cast<const UIW*>(start_ptr);
+  IUW *words = reinterpret_cast<IUW*>(cursor),
+      *words_end = reinterpret_cast<IUW*>(end_ptr);
+  const IUW* read_word = reinterpret_cast<const IUW*>(start_ptr);
 
   while (words < words_end) *words++ = *read_word++;
 
@@ -153,7 +153,7 @@ Nil::Nil() {}
 constexpr ISW Nil::Size() { return 0; }
 constexpr ISW Nil::SizeBytes() { return 0; }
 constexpr ISW Nil::SizeWords() { return 0; }
-UIW* Nil::Words() { return nullptr; }
+IUW* Nil::Words() { return nullptr; }
 
 ISW ArrayShiftUp(void* origin, void* end, ISW count) {
   if (!origin || origin <= end || count <= 0) return 0;
@@ -163,18 +163,18 @@ ISW ArrayShiftUp(void* origin, void* end, ISW count) {
     for (ISC i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
-  UIW lsb_mask = sizeof(UIW) - 1;
+  IUW lsb_mask = sizeof(IUW) - 1;
   // Align the pointer down.
-  UIW value = reinterpret_cast<UIW>(stop);
+  IUW value = reinterpret_cast<IUW>(stop);
   CHA* pivot = reinterpret_cast<CHA*>(value - (value & lsb_mask));
 
   // Shift up the top portion.
   for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
-  UIW* stop_word = reinterpret_cast<UIW*>(stop);
+  IUW* stop_word = reinterpret_cast<IUW*>(stop);
 
   // Align the pointer up.
   value = CAlignUp(value, lsb_mask);
-  UIW* start_word = reinterpret_cast<UIW*>(value);
+  IUW* start_word = reinterpret_cast<IUW*>(value);
 
   // Shift up the moddle portion.
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
@@ -193,19 +193,19 @@ ISW ArrayShiftDown(void* origin, void* end, ISW count) {
     for (ISC i = 0; i < count; ++i) *(stop + count) = *stop;
     return 0;
   }
-  UIW least_significant_bits_mask = sizeof(UIW) - 1;
+  IUW least_significant_bits_mask = sizeof(IUW) - 1;
   // Align the pointer down.
-  UIW value = reinterpret_cast<UIW>(stop);
+  IUW value = reinterpret_cast<IUW>(stop);
   CHA* pivot =
       reinterpret_cast<CHA*>(value - (value & least_significant_bits_mask));
 
   // Shift up the top portion.
   for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
-  UIW* stop_word = reinterpret_cast<UIW*>(stop);
+  IUW* stop_word = reinterpret_cast<IUW*>(stop);
 
   // Align the pointer up.
-  value = reinterpret_cast<UIW>(start);
-  UIW* start_word = reinterpret_cast<UIW*>(
+  value = reinterpret_cast<IUW>(start);
+  IUW* start_word = reinterpret_cast<IUW*>(
       value + ((-(ISW)value) & least_significant_bits_mask));
 
   // Shift up the moddle portion.

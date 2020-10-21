@@ -1,21 +1,85 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /typevalue.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /TypeValue.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
-#ifndef INCLUDED_T_ASCIIDATA
-#define INCLUDED_T_ASCIIDATA
+#ifndef INCLUDED_TYPEVALUE_CODE
+#define INCLUDED_TYPEVALUE_CODE
 
-#include "typevalue.h"
+#include "TypeValue.h"
 
 namespace _ {
+
+/* Gets the size of type T. */
+template<typename T>
+constexpr Sizef CSizef () {
+  Sizef result;
+  switch (sizeof(T)) {
+    case 1: {
+      result.size = -1;
+      break;
+    }
+    case 2: {
+      result.size = -2;
+      break;
+    }
+    case 4: {
+      result.size = -3;
+      break;
+    }
+    case 8: {
+      result.size = -4;
+      break;
+    }
+    case 16: {
+      result.size = -5;
+      break;
+    }
+    case 32: {
+      result.size = -6;
+      break;
+    }
+    case 64: {
+      result.size = -7;
+      break;
+    }
+    case 128: {
+      result.size = -8;
+      break;
+    }
+    default: {
+      result.size = sizeof(T);
+      break;
+    }
+  }
+  return result;
+}
+
+/* Prints the given sizef to the printer. */
+template<typename Printer>
+Printer& TSizefPrint(Printer& printer, Sizef sizef) {
+  auto value = sizef.size;
+  if (value < 0) return printer << CHA('@' + (-value));
+  return printer << value;
+}
+
+/* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
+template<typename DT>
+class TType {
+ public:
+
+  DT type;  //< The ASCII Data Type.
+
+  /* Stores teh type. */
+  TType(DT type) : type(type) {}
+};
 
 /* Extracts the Vector type. */
 template <typename DT = DT2>
@@ -70,7 +134,7 @@ constexpr DT CTypeChar() {
 template <typename ISZ = CHR, typename DT = DT2>
 constexpr DT CTypeSize() {
   return (sizeof(ISZ) == 1)
-             ? cSW1
+             ? cSW1 
              : (sizeof(ISZ) == 2)
                    ? cSW2
                    : (sizeof(ISZ) == 4) ? cSW4 : (sizeof(ISZ) == 8) ? cSW8 : 0;
@@ -89,14 +153,14 @@ inline DT TTypeSize(DT pod_type) {
 
 }  // namespace _
 
-#if SEAM >= SCRIPT2_UNIPRINTER
-#include "binary.hpp"
-#include "stringf.hpp"
+#if SEAM >= SCRIPT2_CORE
+#include "Binary.hpp"
+#include "Stringf.hpp"
 
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CORE
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -145,9 +209,9 @@ inline BOL TSizeIsValid(ISZ size) {
 /* An ROM  for one of the 32 types.
 C++11 variadic templates ensure there is only one copy in of the given in ROM.
 */
-template <CHA kCharA_, CHA kCharB_, CHA kCharC_>
+template <CHA CharA, CHA CharB, CHA CharC>
 inline IUC T() {
-  return ((IUC)kCharA_) & (((IUC)kCharB_) << 8) & (((IUC)kCharC_) << 16);
+  return ((IUC)CharA) & (((IUC)CharB) << 8) & (((IUC)CharC) << 16);
 }
 
 /* Gets the alignment mask for the given POD data type. */
@@ -178,7 +242,7 @@ inline ISW TypeSizeOf(DTW type) {
 }
 
 /* Checks if the given type is valid.
-@return False if the given type is an 1-byte cLST, kMAP, kBOK, or kDIC. */
+@return False if the given type is an 1-byte cLST, cMAP, kBOK, or kDIC. */
 inline BOL TypeIsSupported(DTW type) { return true; }
 
 /* Gets one f the STRTypes. */
@@ -216,6 +280,7 @@ inline ISN TypeSizeWidthCode(ISN type) { return type >> 6; }
 inline DTW TypeMap(DTW core_type, DTW map_type) {
   return core_type | (map_type << (cTypePODBitCount + 2));
 }
+
 inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
   return TypeMap(core_type, map_type) | (size_width << cTypePODBitCount);
 }

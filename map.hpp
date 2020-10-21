@@ -1,25 +1,25 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /map.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Map.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (ISZ) 2015-20 Kabuki Starship <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_MAP
 #ifndef SCRIPT2_MAP_CODE
 #define SCRIPT2_MAP_CODE
 
-#include "stack.hpp"
+#include "Stack.hpp"
 
 #if SEAM == SCRIPT2_MAP
-#include "_debug.inl"
+#include "_Debug.inl"
 #define D_COUT_MAP(map) TMapPrint<COut, D, ISZ>(COut().Star(), map)
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #define D_COUT_MAP(map)
 #endif
 
@@ -124,25 +124,25 @@ template <typename Printer, typename D = IUN, typename ISZ = ISW>
 Printer& TMapPrint(Printer& o, const TMap<ISZ>* map) {
   enum {
     cSIZColumnWidth = 10,
-    cDomainColums = 26,
-    cCodomainColumns = kDomainColums,
+    cDomainColumns = 26,
+    cCodomainColumns = cDomainColumns,
   };
 
   ISZ size = map->size, count = map->count;
 
-  o << Linef("\n+---\n| TMap<D") << sizeof(D) << ",SI" << CHA('0' + sizeof(ISZ))
+  o << Linef("\n+---\n| TMap<D") << sizeof(D) << ",IS" << CHA('0' + sizeof(ISZ))
     << "> size:" << size << " count:" << count << Linef("\n+---\n|  ")
     << Centerf("i", cSIZColumnWidth)
-    << Centerf("Sorted Domain Value", cDomainColums)
-    << Centerf("Codomain Mapping", cDomainColums) << Linef("\n+---");
+    << Centerf("Sorted Domain Value", cDomainColumns)
+    << Centerf("Codomain Mapping", cDomainColumns) << Linef("\n+---");
 
   const D* domain = TMapDomain<D, ISZ>(map);
   const ISZ* codomain = TMapCodomain<D, ISZ>(map, size);
 
   for (ISZ i = 0; i < count; ++i) {
     o << "\n| " << Centerf(i, cSIZColumnWidth)
-      << Centerf(*domain++, cDomainColums)
-      << Centerf(*codomain++, cDomainColums);
+      << Centerf(*domain++, cDomainColumns)
+      << Centerf(*codomain++, cDomainColumns);
   }
 #if D_THIS
   return o << Linef("\n+---\n");
@@ -239,7 +239,7 @@ constexpr ISZ CMapSizeBytes(ISZ size) {
   return size * (sizeof(D) + sizeof(ISZ)) + sizeof(TMap<ISZ>);
 }
 template <typename D = ISN, typename ISZ = ISW>
-inline ISZ CMapSizeBytes(ISZ size) {
+inline ISZ MapSizeBytes(ISZ size) {
   return size * (sizeof(D) + sizeof(ISZ)) + sizeof(TMap<ISZ>);
 }
 
@@ -395,7 +395,7 @@ class AMap {
 
   /* Gets a pointer to the object at the origin of the aarray_. */
   inline TMap<ISZ>* This() {
-    return reinterpret_cast<TMap<ISZ>*>(AJT().Begin());
+    return reinterpret_cast<TMap<ISZ>*>(AJT().Origin());
   }
 };
 }  // namespace _

@@ -1,22 +1,22 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /slot.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Slot.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
-#include "bin.h"
-#include "binary.h"
-#include "bout.h"
-#include "op.h"
-#include "uniprinter.hpp"
+#include "bin.hpp"
+#include "Binary.hpp"
+#include "BOut.h"
+#include "Op.h"
+#include "Uniprinter.hpp"
 
 namespace _ {
 
@@ -36,7 +36,7 @@ struct Slot {
   /* Initializes the ring socket with the given socket origin and size.
   @param origin Pointer to the beginning of the ring socket.
   @param size  The size of the ring socket in bytes. */
-  Slot(UIW* socket, UIW size);
+  Slot(IUW* socket, IUW size);
 
   /* Initializes the slot from the BIn. */
   Slot(BIn* bin);
@@ -47,7 +47,7 @@ struct Slot {
   /* Sets the ring socket to the given socket origin and size.
       @param origin Pointer to the beginning of the ring socket.
       @param size  The size of the ring socket in bytes. */
-  inline BOL Set(UIW* socket, UIW size) {
+  inline BOL Set(IUW* socket, IUW size) {
     if (!socket) return true;
     CHA* l_begin = reinterpret_cast<CHA*>(socket);
     origin = origin = stop = l_begin;

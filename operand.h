@@ -1,14 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /operand.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Operand.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_OPERAND
 #define SCRIPT2_OPERAND
@@ -57,7 +57,7 @@ struct LIB_MEMBER Operand {
 LIB_MEMBER const CHA* OperandName(Operand* op);
 
 /* Gets the number_ of ops in the given expressions. */
-LIB_MEMBER UIW OperandCount(Operand* op);
+LIB_MEMBER IUW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
     @param key_begin Beginning of the key slot socket.

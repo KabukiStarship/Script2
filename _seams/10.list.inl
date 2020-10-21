@@ -1,27 +1,27 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/10.list.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/10.List.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_LIST
-#include "../list.hpp"
-#include "../rng.h"
+#include "../List.hpp"
+#include "../RNG.h"
 using namespace _;
 #if SEAM == SCRIPT2_LIST
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 
-namespace script2 {
+namespace Script2 {
 
 template <typename ISZ>
 static void TestList() {
-  D_COUT(Linef("\n\n\n\n+---\n Testing AList<SI")
+  D_COUT(Linef("\n\n\n\n+---\n Testing AList<IS")
          << sizeof(ISZ) << Linef(">\n+---"));
 
   AList<ISZ, 1024, 40> list;
@@ -57,16 +57,16 @@ static void TestList() {
       A_AVOW(count++, list.Insert(test_si4[i]));
       A_AVOW(count++, list.Insert(test_fp4[i]));
       A_AVOW(count++, list.Insert(test_ui8[i]));
-      // A_AVOW(count++, list.Insert(test_st1[i]));
+      //A_AVOW(count++, list.Insert(test_st1[i]));
     }
   }
   D_COUT_OBJ(list);
   for (ISZ i = cTestCount - 1; i >= 0; --i) list.Pop();
 }
-}  // namespace script2
+}  // namespace Script2
 #endif
 
-namespace script2 {
+namespace Script2 {
 static const CHA* List(const CHA* args) {
 #if SEAM >= SCRIPT2_LIST
   A_TEST_BEGIN;
@@ -76,4 +76,4 @@ static const CHA* List(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

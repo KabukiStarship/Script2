@@ -12,7 +12,7 @@ Once a valid Expression has been received, a room may then **Evaluate** that exp
 
 #### Hyphenated Script Expression Example
 
-```Script2™
+```Script2
 /* typedef IUA UIT;
    static const UIT in_params[]  = { 1, kUI4, kUI8 },
                        out_params[] = { 1, NILL, kNIL };
@@ -228,6 +228,6 @@ Return values just need an address of an Operation to send the return value too.
 
 ## License
 
-Copyright 2015-20 © [Kabuki Starship™](https://kabukistarship.com).
+Copyright 2015-20 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

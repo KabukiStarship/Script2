@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /mirror.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Mirror.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_MIRROR
 #define SCRIPT2_MIRROR
 #include "bin.h"
 #include "bout.h"
-#include "op.h"
+#include "Op.h"
 
 namespace _ {
 
@@ -34,7 +34,7 @@ enum {
   cMirrorHeaderSize = 4 * sizeof(ISC)  //< Size of a Mirror Header.
 };
 
-static const UIW kMaxMirrorSize = ~((UIW)0);
+static const IUW kMaxMirrorSize = ~((IUW)0);
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.

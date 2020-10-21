@@ -1,21 +1,21 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /operand.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Operand.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#include "op.h"
-#include "operand.h"
+#include "Op.h"
+#include "Operand.h"
 
 #if SEAM == SCRIPT2_DIC
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -28,10 +28,10 @@ const CHA* OperandName(Operand* operand) {
   return op->name;
 }
 
-UIW OperandCount(Operand* operand) {
+IUW OperandCount(Operand* operand) {
   A_ASSERT(operand);
   const Op* op = operand->Star(0, nullptr);
-  return (op == nullptr) ? 0 : reinterpret_cast<UIW>(op->in);
+  return (op == nullptr) ? 0 : reinterpret_cast<IUW>(op->in);
 }
 
 CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
@@ -69,8 +69,8 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
 
   A_ASSERT(op);
 
-  UIW num_ops = reinterpret_cast<UIW>(op->in),
-      op_num = reinterpret_cast<UIW>(op->out), last_op = op_num + num_ops - 1;
+  IUW num_ops = reinterpret_cast<IUW>(op->in),
+      op_num = reinterpret_cast<IUW>(op->out), last_op = op_num + num_ops - 1;
   if (num_ops > cParamsMax) {
     return utf << "\nError: Too many parameters!";
   }

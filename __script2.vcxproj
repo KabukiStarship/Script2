@@ -19,132 +19,128 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="address.h" />
-    <ClInclude Include="args.h" />
-    <ClInclude Include="array.h" />
-    <ClInclude Include="array.hpp" />
-    <ClInclude Include="autoject.h" />
-    <ClInclude Include="avalue.hpp" />
-    <ClInclude Include="bin.hpp" />
-    <ClInclude Include="binary.hpp" />
-    <ClInclude Include="book.hpp" />
-    <ClInclude Include="bout.h" />
-    <ClInclude Include="bsq.h" />
-    <ClInclude Include="buffer.h" />
-    <ClInclude Include="cin.h" />
-    <ClInclude Include="clock.h" />
-    <ClInclude Include="clock.hpp" />
-    <ClInclude Include="cout.h" />
-    <ClInclude Include="crabs.h" />
-    <ClInclude Include="dic.hpp" />
-    <ClInclude Include="door.hpp" />
-    <ClInclude Include="error.h" />
-    <ClInclude Include="event.h" />
-    <ClInclude Include="file.h" />
-    <ClInclude Include="file.hpp" />
-    <ClInclude Include="floor.h" />
-    <ClInclude Include="folder.h" />
-    <ClInclude Include="interrupts.h" />
-    <ClInclude Include="iterator.h" />
-    <ClInclude Include="language.h" />
-    <ClInclude Include="library.hpp" />
-    <ClInclude Include="list.hpp" />
-    <ClInclude Include="loom.hpp" />
-    <ClInclude Include="map.hpp" />
-    <ClInclude Include="matrix.hpp" />
-    <ClInclude Include="mirror.h" />
-    <ClInclude Include="op.h" />
-    <ClInclude Include="operand.h" />
-    <ClInclude Include="puff.h" />
-    <ClInclude Include="puff.hpp" />
-    <ClInclude Include="rng.h" />
-    <ClInclude Include="room.h" />
-    <ClInclude Include="set.hpp" />
-    <ClInclude Include="slot.h" />
-    <ClInclude Include="stack.hpp" />
-    <ClInclude Include="strand.hpp" />
-    <ClInclude Include="stringf.h" />
-    <ClInclude Include="stringf.hpp" />
-    <ClInclude Include="table.hpp" />
-    <ClInclude Include="test.h" />
-    <ClInclude Include="test.hpp" />
-    <ClInclude Include="typevalue.h" />
-    <ClInclude Include="typevalue.hpp" />
-    <ClInclude Include="uniprinter.hpp" />
-    <ClInclude Include="varint.h" />
-    <ClInclude Include="wall.h" />
-    <ClInclude Include="wall.hpp" />
-    <ClInclude Include="_config.h" />
-    <ClInclude Include="_seams\10.list.h" />
-    <ClInclude Include="_seams\11.book.h" />
-    <ClInclude Include="_seams\test_words.h" />
-    <ClInclude Include="_seams\_config.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="array.inl" />
-    <None Include="bin.inl" />
-    <None Include="bout.inl" />
-    <None Include="bsq.inl" />
-    <None Include="cin.inl" />
-    <None Include="clock.inl" />
-    <None Include="cout.inl" />
-    <None Include="crabs.inl" />
-    <None Include="error.inl" />
-    <None Include="event.inl" />
-    <None Include="file.inl" />
-    <None Include="floor.inl" />
-    <None Include="folder.inl" />
-    <None Include="interrupts.inl" />
-    <None Include="morsecode.inl" />
-    <None Include="op.inl" />
-    <None Include="operand.inl" />
-    <None Include="puff.inl" />
-    <None Include="readme.md" />
-    <None Include="rng.inl" />
-    <None Include="room.inl" />
-    <None Include="slot.inl" />
-    <None Include="stringf.inl" />
-    <None Include="tasks.json" />
-    <None Include="test.inl" />
-    <None Include="typevalue.inl" />
-    <None Include="_config_default.inl" />
-    <None Include="_config_footer.inl" />
-    <None Include="_config_header.inl" />
-    <None Include="_debug.inl" />
-    <None Include="_impl.inl" />
-    <None Include="_release.inl" />
-    <None Include="_seams\00.uniprinter.inl" />
-    <None Include="_seams\01.rng.inl" />
-    <None Include="_seams\01.uniscanner.inl" />
-    <None Include="_seams\02.itos.inl" />
-    <None Include="_seams\02.socket.inl" />
-    <None Include="_seams\03.ftos.inl" />
-    <None Include="_seams\04.sprinter.inl" />
-    <None Include="_seams\05.clock.inl" />
-    <None Include="_seams\06.stack.inl" />
-    <None Include="_seams\07.matrix.inl" />
-    <None Include="_seams\08.strand.inl" />
-    <None Include="_seams\09.loom.inl" />
-    <None Include="_seams\10.list.inl" />
-    <None Include="_seams\11.book.inl" />
-    <None Include="_seams\12.map.inl" />
-    <None Include="_seams\13.table.inl" />
-    <None Include="_seams\14.dic.inl" />
-    <None Include="_seams\15.expr.inl" />
-    <None Include="_seams\16.door.inl" />
-    <None Include="_seams\17.room.inl" />
-    <None Include="_seams\17.seam.s2" />
-    <None Include="_seams\18.release.inl" />
-    <None Include="_seams\readme.md" />
-    <None Include="_seams\_seams.inl" />
-    <None Include="_undef.inl" />
+    <None Include="Array.inl" />
+    <None Include="BIn.inl" />
+    <None Include="BOut.inl" />
+    <None Include="BSeq.inl" />
+    <None Include="CIn.inl" />
+    <None Include="Clock.inl" />
+    <None Include="COut.inl" />
+    <None Include="Crabs.inl" />
+    <None Include="Error.inl" />
+    <None Include="Event.inl" />
+    <None Include="File.inl" />
+    <None Include="Floor.inl" />
+    <None Include="Folder.inl" />
+    <None Include="Interrupts.inl" />
+    <None Include="MorseCode.inl" />
+    <None Include="Op.inl" />
+    <None Include="Operand.inl" />
+    <None Include="Puff.inl" />
+    <None Include="ReadMe.md" />
+    <None Include="RNG.inl" />
+    <None Include="Room.inl" />
+    <None Include="Slot.inl" />
+    <None Include="Stringf.inl" />
+    <None Include="Tasks.json" />
+    <None Include="Test.inl" />
+    <None Include="TypeValue.inl" />
+    <None Include="_ConfigDefault.inl" />
+    <None Include="_ConfigFooter.inl" />
+    <None Include="_ConfigHeader.inl" />
+    <None Include="_Debug.inl" />
+    <None Include="_Release.inl" />
+    <None Include="_seams\00.Core.inl" />
+    <None Include="_seams\01.RNG.inl" />
+    <None Include="_seams\01.Uniscanner.inl" />
+    <None Include="_seams\02.ItoS.inl" />
+    <None Include="_seams\02.Socket.inl" />
+    <None Include="_seams\03.FtoS.inl" />
+    <None Include="_seams\04.SPrinter.inl" />
+    <None Include="_seams\05.Clock.inl" />
+    <None Include="_seams\06.Stack.inl" />
+    <None Include="_seams\07.Matrix.inl" />
+    <None Include="_seams\08.String.inl" />
+    <None Include="_seams\09.Loom.inl" />
+    <None Include="_seams\10.List.inl" />
+    <None Include="_seams\11.Book.inl" />
+    <None Include="_seams\12.Map.inl" />
+    <None Include="_seams\13.Table.inl" />
+    <None Include="_seams\14.Dic.inl" />
+    <None Include="_Seams\15.Crabs.inl" />
+    <None Include="_seams\16.Door.inl" />
+    <None Include="_seams\17.Room.inl" />
+    <None Include="_seams\17.Seam.s2" />
+    <None Include="_seams\18.Release.inl" />
+    <None Include="_seams\ReadMe.md" />
+    <None Include="_seams\_Seams.inl" />
+    <None Include="_Undef.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
     <Text Include="_seams\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="_seams\_main.cpp" />
+    <ClInclude Include="Address.h" />
+    <ClInclude Include="Args.h" />
+    <ClInclude Include="Array.h" />
+    <ClInclude Include="Array.hpp" />
+    <ClInclude Include="Autoject.h" />
+    <ClInclude Include="BIn.hpp" />
+    <ClInclude Include="Binary.hpp" />
+    <ClInclude Include="Book.hpp" />
+    <ClInclude Include="BOut.h" />
+    <ClInclude Include="BSeq.h" />
+    <ClInclude Include="Buffer.h" />
+    <ClInclude Include="CIn.h" />
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="Clock.hpp" />
+    <ClInclude Include="COut.h" />
+    <ClInclude Include="Crabs.h" />
+    <ClInclude Include="Dic.hpp" />
+    <ClInclude Include="Door.hpp" />
+    <ClInclude Include="Error.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="File.hpp" />
+    <ClInclude Include="Floor.h" />
+    <ClInclude Include="Folder.h" />
+    <ClInclude Include="Interrupts.h" />
+    <ClInclude Include="Iterator.h" />
+    <ClInclude Include="Language.h" />
+    <ClInclude Include="Library.hpp" />
+    <ClInclude Include="List.hpp" />
+    <ClInclude Include="Loom.hpp" />
+    <ClInclude Include="Map.hpp" />
+    <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="Mirror.h" />
+    <ClInclude Include="Op.h" />
+    <ClInclude Include="Operand.h" />
+    <ClInclude Include="Puff.h" />
+    <ClInclude Include="Puff.hpp" />
+    <ClInclude Include="RNG.h" />
+    <ClInclude Include="Room.h" />
+    <ClInclude Include="Set.hpp" />
+    <ClInclude Include="Slot.h" />
+    <ClInclude Include="Stack.hpp" />
+    <ClInclude Include="String.hpp" />
+    <ClInclude Include="Stringf.h" />
+    <ClInclude Include="Stringf.hpp" />
+    <ClInclude Include="Table.hpp" />
+    <ClInclude Include="Test.h" />
+    <ClInclude Include="Test.hpp" />
+    <ClInclude Include="TypeValue.h" />
+    <ClInclude Include="TypeValue.hpp" />
+    <ClInclude Include="Uniprinter.hpp" />
+    <ClInclude Include="Varint.h" />
+    <ClInclude Include="Wall.h" />
+    <ClInclude Include="Wall.hpp" />
+    <ClInclude Include="_Config.h" />
+    <ClInclude Include="_seams\TestWords.h" />
+    <ClInclude Include="_seams\_Config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="_seams\_Main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -152,7 +148,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>kabukisdkdata</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>script2</ProjectName>
+    <ProjectName>Script2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -236,6 +232,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir).\;$(ProjectDir)..\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

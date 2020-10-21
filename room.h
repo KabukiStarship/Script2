@@ -1,18 +1,18 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /room.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Room.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
-#if SEAM >= SCRIPT2_ROOM
-#ifndef SCRIPT2_ROOM
-#define SCRIPT2_ROOM
-#include "interrupts.h"
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
+#ifndef SCRIPT2_CRABS
+#define SCRIPT2_CRABS
+#include "Interrupts.h"
 #include "wall.h"
 
 namespace _ {
@@ -134,7 +134,7 @@ class Room : public Operand {
     cRoomFloorSize = SCRIPT2_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
-    cFloorSizeWords = kRoomFloorSize / sizeof(UIW) + 2,  //< +2 socket.
+    cFloorSizeWords = cRoomFloorSize / sizeof(IUW) + 2,  //< +2 socket.
   };
 
   /* Creates a Room with the given size.
@@ -187,7 +187,7 @@ class Room : public Operand {
   BOL RemoveWall(int_t wall_number);
 
   /* Gets the entire Room size, including dynamic memory, in bytes. */
-  UIW GetSizeBytes();
+  IUW GetSizeBytes();
 
   /* Function run every main loop cycle to check the system status. */
   virtual void DiagnoseProblems();
@@ -242,7 +242,7 @@ class Room : public Operand {
   Operand *xoff_,                   //< DC3: XOFF - XOFF handling device.
       *device_,                     //< DC4: the current device control.
       *devices_;                    //< Pointer to the current device control.
-  UIW origin[kFloorSizeWords];      //< Room Floor socket.
+  IUW origin[cFloorSizeWords];      //< Room Floor socket.
 
  private:
   /* Sets the Room state_. */

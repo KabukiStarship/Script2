@@ -1,14 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /binary.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Binary.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_SOCKET
 #ifndef SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
@@ -54,8 +54,8 @@ inline IUA ToUnsigned(IUA value) { return (IUA)value; }
 inline IUB ToUnsigned(IUB value) { return (IUB)value; }
 inline IUC ToUnsigned(IUC value) { return (IUC)value; }
 inline IUD ToUnsigned(IUD value) { return (IUD)value; }
-inline UIW ToUnsigned(const void* value) {
-  return reinterpret_cast<UIW>(value);
+inline IUW ToUnsigned(const void* value) {
+  return reinterpret_cast<IUW>(value);
 }
 #if USING_FPC == YES_0
 inline IUC ToUnsigned(FPC value) { return *reinterpret_cast<IUC*>(&value); }
@@ -69,9 +69,9 @@ inline FPC ToFloat(IUC value) { return *reinterpret_cast<FPC*>(&value); }
 inline FPD ToFloat(IUD value) { return *reinterpret_cast<FPD*>(&value); }
 
 /* Returns the maximum value of the given unsigned type. */
-template <typename UI>
-inline UI TNaNUnsigned() {
-  return ~((UI)0);
+template <typename IU>
+inline IU TNaNUnsigned() {
+  return ~((IU)0);
 }
 
 /* Returns the maximum value of the given signed type. */
@@ -80,10 +80,16 @@ constexpr ISZ CNaNSigned() {
   return (~ToUnsigned(ISZ)) >> 1;
 }
 
-template <typename SI = ISW>
-inline SI TDelta(const void* start, const void* stop) {
+template <typename IS = ISW>
+inline IS TDelta(const void* start) {
+  ISW delta = reinterpret_cast<ISW>(start);
+  return (IS)delta;
+}
+
+template <typename IS = ISW>
+inline IS TDelta(const void* start, const void* stop) {
   ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
-  return (SI)delta;
+  return (IS)delta;
 }
 
 enum {
@@ -201,7 +207,7 @@ inline void* AlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
   return reinterpret_cast<void*>(CAlignUp(address, mask));
 }
 inline const void* AlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
-  ISW value = reinterpret_cast<UIW>(pointer);
+  ISW value = reinterpret_cast<IUW>(pointer);
   return reinterpret_cast<void*>(CAlignUp(value, mask));
 }
 
@@ -311,9 +317,9 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = UIW>
+template <typename T = IUW>
 inline T TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
-  UIW value = reinterpret_cast<UIW>(ptr);
+  IUW value = reinterpret_cast<IUW>(ptr);
   return reinterpret_cast<T>(value - (value & mask));
 }
 
@@ -321,9 +327,9 @@ inline T TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = UIW>
+template <typename T = IUW>
 inline T TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
-  UIW value = reinterpret_cast<UIW>(ptr);
+  IUW value = reinterpret_cast<IUW>(ptr);
   return reinterpret_cast<const T>(value - (value & mask));
 }
 
@@ -331,7 +337,7 @@ inline T TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename ISZ = UIW>
+template <typename ISZ = IUW>
 inline ISZ TAlignDownI(ISZ value, ISZ mask = (ISZ)c_WordLSbMask) {
   return value & (~mask);
 }
@@ -339,8 +345,8 @@ inline ISZ TAlignDownI(ISZ value, ISZ mask = (ISZ)c_WordLSbMask) {
 /* Aligns the given size to a word-sized boundary. */
 template <typename ISZ>
 constexpr ISZ CSizeAlign(ISZ size) {
-  ISZ align_lsb_mask = sizeof(UIW) - 1;
-  if (size < sizeof(UIW)) return sizeof(UIW);
+  ISZ align_lsb_mask = sizeof(IUW) - 1;
+  if (size < sizeof(IUW)) return sizeof(IUW);
   ISZ size_max = ~align_lsb_mask;
   if (size > size_max) return size;
   return size + (-size) & align_lsb_mask;
@@ -382,25 +388,25 @@ inline T* TSet(void* address, T value) {
 }
 
 /* Masks off the lower bits. */
-template <typename UI>
-inline UI TMaskLSb(UI value, UI msb_zero_count) {
-  UI mask = (~UI(0)) >> msb_zero_count;
+template <typename IU>
+inline IU TMaskLSb(IU value, IU msb_zero_count) {
+  IU mask = (~IU(0)) >> msb_zero_count;
   return value & mask;
 }
 
 /* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
-template <typename UI>
-inline UI TUnsignedNaN() {
-  return (~UI(0));
+template <typename IU>
+inline IU TUnsignedNaN() {
+  return (~IU(0));
 }
-template <typename UI>
-inline UI CUnsignedNaN() {
-  return (~UI(0));
+template <typename IU>
+inline IU CUnsignedNaN() {
+  return (~IU(0));
 }
 
 /* Returns the minimum signed value.
 @param one Parameter allows the compiler to detect which SignedMin function to
-call, else we would need to use a UI template parameter for TSignedMin<SI,UI>().
+call, else we would need to use a IU template parameter for TSignedMin<IS,IU>().
 ***Example***
 @code
 ISA signed_min_si1 = SignedMin(ISA(1));
@@ -423,28 +429,28 @@ constexpr ISC CSignedMin(ISC one) {
 constexpr ISD CSignedMin(ISD one) {
   return ISD(IUD(one) << (sizeof(ISD) * 8 - 1));
 }
-template <typename SI>
-inline SI TSignedMin() {
-  return SignedMin(SI(1));
+template <typename IS>
+inline IS TSignedMin() {
+  return SignedMin(IS(1));
 }
-template <typename SI>
-constexpr SI CSignedMin() {
-  return CSignedMin(SI(1));
+template <typename IS>
+constexpr IS CSignedMin() {
+  return CSignedMin(IS(1));
 }
 
 /* ASCII Signed Not-a-Number is the lowest possible signed integer value. */
-template <typename SI>
-inline SI TSignedNaN() {
-  return TSignedMin<SI>() - 1;
+template <typename IS>
+inline IS TSignedNaN() {
+  return TSignedMin<IS>() - 1;
 }
-template <typename SI>
-constexpr SI CSignedNaN() {
-  return TSignedNaN<SI>();
+template <typename IS>
+constexpr IS CSignedNaN() {
+  return TSignedNaN<IS>();
 }
 
 /* Returns the maximum unsigned value.
 @param zero Parameter used for the SignedMax, TSignedMax, and CSignedMax
-functions to avoid TSignedMax<SI,UI> syntax.
+functions to avoid TSignedMax<IS,IU> syntax.
 ***Example***
 @code
 IUA max_ui1 = UnsignedMax(IU1(0));
@@ -455,22 +461,22 @@ inline IUA UnsignedMax(ISA zero) { return ~IUA(zero); }
 inline IUB UnsignedMax(ISB zero) { return ~IUB(zero); }
 inline IUC UnsignedMax(ISC zero) { return ~IUC(zero); }
 inline IUD UnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename UI>
-inline UI TUnsignedMax() {
-  return UnsignedMax(UI(0));
+template <typename IU>
+inline IU TUnsignedMax() {
+  return UnsignedMax(IU(0));
 }
 constexpr IUA CUnsignedMax(ISA zero) { return ~IUA(zero); }
 constexpr IUB CUnsignedMax(ISB zero) { return ~IUB(zero); }
 constexpr IUC CUnsignedMax(ISC zero) { return ~IUC(zero); }
 constexpr IUD CUnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename SI>
-constexpr SI CUnsignedMax() {
-  return CUnsignedMax(SI(0));
+template <typename IS>
+constexpr IS CUnsignedMax() {
+  return CUnsignedMax(IS(0));
 }
 
 /* Returns the minimum signed value.
 @param zero Parameter allows the compiler to detect which SignedMax function to
-call, else we would need to use a UI template parameter for TSignedMax<SI,UI>().
+call, else we would need to use a IU template parameter for TSignedMax<IS,IU>().
 ***Example***
 @code
 ISA signed_max_si1 = SignedMax(ISA(0));
@@ -481,18 +487,18 @@ inline ISA SignedMax(ISA zero) { return ISA(UnsignedMax(zero) >> 1); }
 inline ISB SignedMax(ISB zero) { return ISB(UnsignedMax(zero) >> 1); }
 inline ISC SignedMax(ISC zero) { return ISC(UnsignedMax(zero) >> 1); }
 inline ISD SignedMax(ISD zero) { return ISD(UnsignedMax(zero) >> 1); }
-template <typename SI>
-inline SI TSignedMax() {
-  return SignedMax(SI(0));
+template <typename IS>
+inline IS TSignedMax() {
+  return SignedMax(IS(0));
 }
 constexpr ISA CSignedMax(ISA zero) { return ISA(CUnsignedMax(zero) >> 1); }
 constexpr ISB CSignedMax(ISB zero) { return ISB(CUnsignedMax(zero) >> 1); }
 constexpr ISC CSignedMax(ISC zero) { return ISC(CUnsignedMax(zero) >> 1); }
 constexpr ISD CSignedMax(ISD zero) { return ISD(CUnsignedMax(zero) >> 1); }
 
-template <typename SI>
-constexpr SI CSignedMax() {
-  return CSignedMax(SI(0));
+template <typename IS>
+constexpr IS CSignedMax() {
+  return CSignedMax(IS(0));
 }
 
 /* Checsk if the value is Not-a-Number. */
@@ -506,13 +512,13 @@ inline BOL IsNaN(ISD value) { return value == TSignedNaN<ISD>(); }
 inline BOL IsNaN(IUD value) { return value == TUnsignedNaN<IUD>(); }
 
 /* Gets the number of bits in the exponent of a floating-point number. */
-template <typename UI>
-inline UI TFloatExponentBitCount() {
-  return (sizeof(UI) == 2)
+template <typename IU>
+inline IU TFloatExponentBitCount() {
+  return (sizeof(IU) == 2)
              ? 5
-             : (sizeof(UI) == 4)
+             : (sizeof(IU) == 4)
                    ? 4
-                   : (sizeof(UI) == 8) ? 11 : (sizeof(UI) == 10) ? 15 : 0;
+                   : (sizeof(IU) == 8) ? 11 : (sizeof(IU) == 10) ? 15 : 0;
 }
 
 /* Creates a floatingpoint NaN from CPu instructions.
@@ -528,10 +534,10 @@ x << 2  4: 0 00000000000 1111111111111111111111111111111111111111111111111100
 ~x      5: 1 11111111111 0000000000000000000000000000000000000000000000000011
 x >> 1  6: 0 11111111111 1000000000000000000000000000000000000000000000000001
 */
-template <typename UI>
-inline UI TNaNFloatMask() {
-  UI y = sizeof(UI) * 8 - TFloatExponentBitCount<UI>() + 2;
-  return (~(((~UI(0)) >> y) << 2)) << 1;
+template <typename IU>
+inline IU TNaNFloatMask() {
+  IU y = sizeof(IU) * 8 - TFloatExponentBitCount<IU>() + 2;
+  return (~(((~IU(0)) >> y) << 2)) << 1;
 }
 
 /* Checks if the value is Not-a-Number (NaN). */
@@ -561,36 +567,36 @@ manually if you wish to do so.
 @param value The value to mask.
 @param left_bits Number of bits to shift left.
 @param right_bits Number of bits to shift right. */
-template <typename UI>
-inline UI TShiftLeftRight(UI value, ISC left_bits, ISC right_bits) {
+template <typename IU>
+inline IU TShiftLeftRight(IU value, ISC left_bits, ISC right_bits) {
   value = value << left_bits;
   return value >> right_bits;
 }
 
 /* Aligns the given pointer down to the given least_significant_bits_max. */
-inline CHA* AlignDown(CHA* pointer, UIW least_significant_bits_max) {
+inline CHA* AlignDown(CHA* pointer, IUW least_significant_bits_max) {
   return TAlignDownPTR<CHA*>(pointer);
 }
 inline const CHA* AlignDown(const CHA* pointer,
-                            UIW least_significant_bits_max) {
+                            IUW least_significant_bits_max) {
   return TAlignDownPTR<const CHA*>(pointer);
 }
-inline const UIW* AlignDown(const UIW* pointer,
-                            UIW least_significant_bits_max) {
-  return TAlignDownPTR<const UIW*>(pointer);
+inline const IUW* AlignDown(const IUW* pointer,
+                            IUW least_significant_bits_max) {
+  return TAlignDownPTR<const IUW*>(pointer);
 }
-inline UIW* AlignDown(UIW* pointer, UIW least_significant_bits_max) {
-  return const_cast<UIW*>(
-      AlignDown(const_cast<const UIW*>(pointer), least_significant_bits_max));
+inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
+  return const_cast<IUW*>(
+      AlignDown(const_cast<const IUW*>(pointer), least_significant_bits_max));
 }
 
 /* Aligns the given pointer up to the given least_significant_bits_max. */
-inline const CHA* AlignUp(const CHA* pointer, UIW least_significant_bits_max) {
+inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
   return TAlignUpPTR<const CHA>(pointer, least_significant_bits_max);
 }
 
 /* Aligns up a number to the given kPowerOf2_.
-This funciton is for those not familiar with how Script2 does pointer alignment.
+This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template <typename I = ISW, I kPowerOf2_ = CBitCount<I>()>
@@ -599,7 +605,7 @@ I TAlignUp(I value) {
 }
 
 /* Aligns up a number to the given kPowerOf2_.
-This funciton is for those not familiar with how Script2 does pointer alignment.
+This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template <typename T = void*, ISW kPowerOf2_>
@@ -608,7 +614,7 @@ const T* TAlignUpPointer(const void* value) {
 }
 
 /* Aligns up a number to the given kPowerOf2_.
-This funciton is for those not familiar with how Script2 does pointer alignment.
+This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template <typename T = void*, ISW kPowerOf2_>
@@ -616,9 +622,9 @@ T* TAlignUpPointer(void* value) {
   return AlignUpPTR(value, kPowerOf2_ - 1);
 }
 
-inline void* ToPTR(UIW value) { return reinterpret_cast<void*>(value); }
+inline void* ToPTR(IUW value) { return reinterpret_cast<void*>(value); }
 
-inline const void* ToPTC(UIW value) {
+inline const void* ToPTC(IUW value) {
   return reinterpret_cast<const void*>(value);
 }
 

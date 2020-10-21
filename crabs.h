@@ -1,23 +1,23 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /crabs.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Crabs.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 #ifndef INCLUDED_SCRIPT2_EXPR
 #define INCLUDED_SCRIPT2_EXPR
-#include "args.h"
-#include "bin.h"
-#include "bout.h"
-#include "bsq.h"
-#include "error.h"
-#include "operand.h"
+#include "Args.h"
+#include "BIn.hpp"
+#include "BOut.h"
+#include "BSeq.h"
+#include "Error.h"
+#include "Operand.h"
 
 namespace _ {
 
@@ -99,16 +99,16 @@ struct Crabs {
   IUC timeout_us;      //< Timeout time in microseconds.
   TM8 last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
-  const ISC *header,   //< Pointer to the header being verified.
-      *header_start;   //< Start of the header being verified.
-  Operand *operand,    //< Current Script Operand.
-      *root;           //< Root-level scope Operand.
+  const ISC* header,   //< Pointer to the header being verified.
+      * header_start;  //< Start of the header being verified.
+  Operand* operand,    //< Current Script Operand.
+      * root;          //< Root-level scope Operand.
   Slot& args;          //< Arguments slot for running.
   Slot slot;           //< Slot for unpacking B-Sequences to.
 };
 
 /* Gets a pointer to the BIn slot. */
-LIB_MEMBER UIW* CrabsBinAddress(Crabs* crabs);
+LIB_MEMBER IUW* CrabsBinAddress(Crabs* crabs);
 
 /* Gets the crabs's socket. */
 LIB_MEMBER CHA* CrabsBuffer(Crabs* crabs);
@@ -117,7 +117,7 @@ LIB_MEMBER CHA* CrabsBuffer(Crabs* crabs);
 LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-LIB_MEMBER UIW* CrabsBOutAddress(Crabs* crabs);
+LIB_MEMBER IUW* CrabsBOutAddress(Crabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
 LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
@@ -126,9 +126,9 @@ LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
 @param root The root-scope device.
 @param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-LIB_MEMBER Crabs* CrabsInit(UIW* socket, ISC buffer_size, ISC stack_count,
-                            Operand* root, UIW* unpacked_buffer,
-                            UIW unpacked_size);
+LIB_MEMBER Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_count,
+                            Operand* root, IUW* unpacked_buffer,
+                            IUW unpacked_size);
 
 /* Gets the base address of the device stack. */
 inline Operand** CrabsStack(Crabs* crabs) {

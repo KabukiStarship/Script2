@@ -1,28 +1,28 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/13.table.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/13.Table.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_TABLE
-#include "../table.hpp"
+#include "../Table.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_TABLE
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 
-namespace script2 {
+namespace Script2 {
 
 template <typename ISZ, typename IUZ, typename CHT>
 void TestTable() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS")
-         << CH('@' + sizeof(ISZ)) << ",IU" << CHT('0' + sizeof(IUZ)) << ",CH"
-         << CH('@' + sizeof(CHT)) << ">\n"
+         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('0' + sizeof(IUZ)) << ",CH"
+         << CHT('@' + sizeof(CHT)) << ">\n"
          << Linef("+---\n\n"));
 
   ATable<ISZ, IUZ, CHT> table;
@@ -80,10 +80,10 @@ void TestTable() {
 
   // D_PAUSE("");
 }
-}  // namespace script2
+}  // namespace Script2
 #endif
 
-namespace script2 {
+namespace Script2 {
 static const CHA* Table(const CHA* args) {
 #if SEAM >= SCRIPT2_TABLE
   A_TEST_BEGIN;
@@ -101,4 +101,4 @@ static const CHA* Table(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

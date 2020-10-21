@@ -1,24 +1,24 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /slot.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Slot.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#include "slot.h"
+#include "Slot.h"
 
-#include "binary.h"
-#include "strand.hpp"
-#include "typevalue.h"
+#include "Binary.hpp"
+#include "String.hpp"
+#include "TypeValue.h"
 
 #if SEAM == SCRIPT2_DIC
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -44,9 +44,9 @@ const Op* ReturnError(Slot* slot, Error error, const ISC* header, ISC offset,
   return reinterpret_cast<const Op*>(error);
 }
 
-Slot::Slot(UIW* socket, ISC size) {
+Slot::Slot(IUW* socket, ISC size) {
   A_ASSERT(socket);
-  A_ASSERT(size >= kSlotSizeMin);
+  A_ASSERT(size >= cSlotSizeMin);
   CHA* l_begin = reinterpret_cast<CHA*>(socket);
   origin = l_begin;
   origin = l_begin;
@@ -195,8 +195,8 @@ const Op* Slot::Read(const ISC* params, void** args) {
     switch (type) {
       case cNIL:
         return ReturnError(this, cErrorInvalidType);
-      case kADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
-      case kSTR:
+      case cADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
+      case cSTR:
         // Load buffered-type argument length and increment the
         // index.
         count = *param;
@@ -273,7 +273,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Read2ByteType:{
         // Word-align
         offset = AlignUpOffset2(l_start);
-        if ((UIW)length < offset + 2) {
+        if ((IUW)length < offset + 2) {
           return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
@@ -317,7 +317,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Read4ByteType:{
         // Word-align
         offset = AlignUpOffset4(l_start);
-        if ((UIW)length < offset + 4) {
+        if ((IUW)length < offset + 4) {
           return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
@@ -352,7 +352,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Read8ByteType:{
         // Word-align
         offset = AlignUpOffset8(l_start);
-        if ((UIW)length < offset + sizeof(ISD)) {
+        if ((IUW)length < offset + sizeof(ISD)) {
           return ReturnError(this, cErrorBufferUnderflow, params, index,
                              l_start);
         }
@@ -394,11 +394,11 @@ const Op* Slot::Read(const ISC* params, void** args) {
         switch (count) {
           case 0: {  // It's a 8-bit count.
             if (type >= cLST) {
-              // cLST, kBOK, kDIC, and kMAP can't be 8-bit!
+              // cLST, kBOK, kDIC, and cMAP can't be 8-bit!
               return ReturnError(this, cErrorInvalidType, params, index,
                                  l_start);
             }
-            count = (UIW)*ui1_ptr;
+            count = (IUW)*ui1_ptr;
             break;
           }
           case 1: {  // It's a 16-bit count.
@@ -408,7 +408,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
             }
             count -= 2;
             ui2_ptr = reinterpret_cast<IUB*>(ui1_ptr);
-            count = (UIW)*ui2_ptr;
+            count = (IUW)*ui2_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
@@ -422,7 +422,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
             }
             count -= 4;
             ui4_ptr = reinterpret_cast<IUC*>(ui1_ptr);
-            count = (UIW)*ui4_ptr;
+            count = (IUW)*ui4_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
@@ -436,7 +436,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
             }
             count -= 8;
             ui8_ptr = reinterpret_cast<IUD*>(ui1_ptr);
-            count = (UIW)*ui8_ptr;
+            count = (IUW)*ui8_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);

@@ -1,19 +1,19 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /string.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Stringf.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
-#ifndef SCRIPT2_StringF_CODLESS_HEADER
-#define SCRIPT2_StringF_CODLESS_HEADER 1
+#ifndef SCRIPT2_STRINGF_CODLESS_HEADER
+#define SCRIPT2_STRINGF_CODLESS_HEADER 1
 
-#include "typevalue.h"
+#include "TypeValue.h"
 
 namespace _ {
 
@@ -117,7 +117,7 @@ struct LIB_MEMBER Valuef {
   CHA* ToSTA();
   CHB* ToSTB();
   CHC* ToSTC();
-  UIW ToWord();
+  IUW ToWord();
 };
 
 /* Utility class for printing a POD type in hex. */
@@ -205,7 +205,7 @@ class LIB_MEMBER Stringf {
   const void* String_;  // Pointer to a string or the buffer_.
   ISW count_;           //< The count.
   DTW type_;            //< The ASCII string Type, 1-3, of the String_.
-  UIW buffer_[cBufferWordCount];  //< Strand buffer for the token.
+  IUW buffer_[cBufferWordCount];  //< String buffer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
@@ -263,7 +263,7 @@ class LIB_MEMBER Stringf {
 #endif
   Stringf(TypeValue item, ISW count = cConsoleWidth);
 
-  UIW Word();
+  IUW Word();
 
   /* Gets a void pointer to the value_. */
   void* Value();

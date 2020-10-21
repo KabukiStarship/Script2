@@ -14,8 +14,8 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, kSTR:32, cISA, cISB, cISC>:<c_NIL>
-   Bar <1, kSTR:32>:<3, cISA, cISB, cISC>
+   Foo <4, cSTR:32, cISA, cISB, cISC>:<c_NIL>
+   Bar <1, cSTR:32>:<3, cISA, cISB, cISC>
    FooBar <DIC2, cIUA>:<c_NIL>
             ^     ^
             |     |
@@ -33,7 +33,7 @@ Parent Child1 Foo "Hello world!" 1 2 3      //< There is no pop instruction here
 
 Parent {
   Child1{Foo("Hello world!", 1, 2, 3)
-             Foo("Hello world!", 1, 2, 3)  //< Strand operations together!
+             Foo("Hello world!", 1, 2, 3)  //< String operations together!
          Bar("Lets go!")} Child2 {
     Foo("Hello world!" 1, 2, 3)
   }
@@ -80,13 +80,13 @@ Parent1 {
           |          |       +---------------- This reserves 3 dictionary
          members. |          |       | v          v       v              */
       += DIC_4(nested, 1024, 3) { /* This is a nested dictionary.
-     +------------------------------ This is a operation with key "kSTR"
+     +------------------------------ This is a operation with key "cSTR"
      |      +----------------------- Dictionary key.
      |      |    +------------------ Max length 12.
-     |      |    |   +-------------- kSTR value.
+     |      |    |   +-------------- cSTR value.
      |      |    |   |
      v      v    v   v         */
-        += kSTR(item1 12 "ABC") -=
+        += cSTR(item1 12 "ABC") -=
             Key item1 /*      Operation "-Key" removes "item1".
 
 
@@ -108,13 +108,13 @@ v       v */
     /* Return Address (kADR) Example.
 
         @fn =
-            @param <c_NIL>:<kBSQ>
+            @param <c_NIL>:<cBSQ>
     */
 
   abc123:
     = {1 2 3}
       /*< Operand "=$" default takes a Unicode CHA.
-          and returns a kBSQ token 123.
+          and returns a cBSQ token 123.
                   +------ Then we pass the return address as a input parameter
                   |       using the $ operator which is similar to static const.
                   |       Had $ not been here we would evaluate

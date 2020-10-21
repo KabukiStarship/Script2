@@ -1,17 +1,17 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /library.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Library.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_LIBRARY_HEADER
-#define SCRIPT2_LIBRARY_HEADER
+#ifndef SCRIPT2_LIBRARY_CODE_HEADER
+#define SCRIPT2_LIBRARY_CODE_HEADER
 
 namespace _ {
 #if USING_SCRIPT2_TEXT
@@ -147,12 +147,12 @@ class Library : public Operand {
   @param index The index of the expression.
   @param crabs  The Crabs to read and write from. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
-    static const Op kThis = {"Library", OpFirst('A'), OpLast('A'),
+    static const Op cThis = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
     switch (index) {
       case '?':
-        return ExprEnquiry(crabs, kThis);
+        return ExprEnquiry(crabs, cThis);
       case 'A': {
         static const Op This = {"Foo", Params<0>(), Params<0>(), "Foo.",
                                 '(',   ')',         nullptr};

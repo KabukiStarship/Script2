@@ -1,25 +1,27 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/11.book.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/11.Book.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_BOOK
-#include "../book.hpp"
+#include "../Book.hpp"
 //
-#include "test_words.h"
+#include "TestWords.h"
 using namespace _;
-#define TPARAMS CHT, ISZ, ISY
+#define TPARAMS CHT, ISZ, ISY, DT
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DT2
 #if SEAM == SCRIPT2_BOOK
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
-namespace script2 {
+namespace Script2 {
 template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
-          typename CHT = CHR>
+          typename CHT = CHR, typename DT = DT2>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
@@ -27,15 +29,15 @@ void TestBook() {
     cSize = 256 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ABook<IS"
-         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('@' + sizeof(ISZ)) << ",IS"
-         << CHT('@' + sizeof(ISY)) << ",CH" << CHT('@' + sizeof(CHT))
-         << "> with cSize:" << cSize << " and cCount:" << cCount);
+
+  D_COUT("Testing ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
+         << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSize:" << cSize 
+         << " and cCount:" << cCount);
 
   ABook<TPARAMS, cSize> book(cCount);
 
   D_COUT("\n\nsize:" << book.Size() << " size_bytes:" << book.SizeBytes()
-                     << " size_words:" << book.SizeWords());
+         << " size_words:" << book.SizeWords());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
@@ -43,7 +45,7 @@ void TestBook() {
 
   D_COUT("\nPopulating " << cCount << " test words...");
 
-  const CHT *test_words = TTestWords<CHT>(), *word_cursor = test_words;
+  const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
 
   for (ISY i = 0; i < 4; ++i) {
     A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISA(i)));
@@ -81,11 +83,11 @@ void TestBook() {
   book.COut();
 #endif
 }
-}  // namespace script2
+}  // namespace Script2
 #undef TPARAMS
 #endif
 
-namespace script2 {
+namespace Script2 {
 const CHA* Book(const CHA* args) {
 #if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
@@ -105,4 +107,4 @@ const CHA* Book(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

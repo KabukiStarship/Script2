@@ -1,21 +1,21 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /bout.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /BOut.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 
 #ifndef INCLUDED_SCRIPT2_BOUT
 #define INCLUDED_SCRIPT2_BOUT
 
-#include "op.h"
+#include "Op.h"
 
 namespace _ {
 
@@ -23,10 +23,10 @@ namespace _ {
 typedef enum BOutStates {
   cBOutStateDisconnected = 0,  //< BOut State 0: BOut locked.
   cBOutStateWriting,           //< BOut State 1: Most common state.
-  cBOutStateWritingBsc,        //< BOut State 2: Writing kBSQ.
+  cBOutStateWritingBsc,        //< BOut State 2: Writing cBSQ.
 } BOutState;
 
-/* B-Output ring socket socket. */
+/* Byte-ring output socket. */
 struct LIB_MEMBER BOut {
   ISC size;             //< Size of the B-Output.
   volatile ISC origin;  //< Starting index of the ring-socket data.
@@ -34,18 +34,18 @@ struct LIB_MEMBER BOut {
       read;             //< Address that the BOut device is reading from.
 };
 
-/* Get's the B-Output's socket.*/
+/* Gets the B-Output's socket.*/
 LIB_MEMBER CHA* BOutBuffer(BOut* bout);
 
 #if USING_SCRIPT2_TEXT == YES_0
 
 /* Gets a a CHA for printing out the bout_state. */
-LIB_MEMBER const CHA** BOutStateStrands();
+LIB_MEMBER const CHA** BOutStateStrings();
 
 #endif
 
 /* Initializes the B-Output socket with the given socket size. */
-LIB_MEMBER BOut* BOutInit(UIW* socket, ISC size);
+LIB_MEMBER BOut* BOutInit(IUW* socket, ISC size);
 
 /* Calculates the space left in the given ring socket.
     @param bout The B-Output socket. */
@@ -98,4 +98,4 @@ inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
 
 #endif  //< INCLUDED_SCRIPT2_BOUT
 #undef DEBUG_SCRIPT2_BOUT
-#endif  //< #if SEAM >= SCRIPT2_DIC
+#endif
