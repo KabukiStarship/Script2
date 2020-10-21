@@ -1,22 +1,22 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /puff.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Puff.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_ITOS
 
 #ifndef SCRIPT2_PUFF_HEADER_WITH_TEMPLATES
 #define SCRIPT2_PUFF_HEADER_WITH_TEMPLATES 1
 
-#include "binary.hpp"
-#include "puff.h"
+#include "Binary.hpp"
+#include "Puff.h"
 #if SEAM == SCRIPT2_ITOS
 #include <iostream>
 #define D_COUT(item) std::cout << item
@@ -160,8 +160,8 @@ inline IUC ToUI4(IUD value) { return (IUC)value; }
 success.
 @param cursor The beginning of the socket.
 @param stop    The stop address of the socket. */
-template <typename UI = UIW, typename CHT = CHR>
-CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, UI value) {
+template <typename IU = IUW, typename CHT = CHR>
+CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
   BEGIN_ITOS_ALGORITHM;
 
   if (!cursor || cursor >= stop) return nullptr;
@@ -318,7 +318,7 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, UI value) {
       return TPrintNil<CHT>(nil_ptr);
     } else {
       IUC comparator = 100000000;  // 10^8
-      UI msd =
+      IU msd =
           (value >= (~(IUC)0)) ? value / comparator : ToUI4(value) / comparator;
       IUC lsd = (IUC)(value - comparator * msd), middle_sd;
       if (msd >= comparator) {
@@ -401,9 +401,9 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, UI value) {
   return nullptr;  //< Unreachable.
 }
 
-template <typename UI = IUD, typename CHT = CHR>
-inline CHT* TSPrintUnsigned(CHT* socket, ISW size, UI value) {
-  return TSPrintUnsigned<UI, CHT>(socket, socket + size - 1, value);
+template <typename IU = IUD, typename CHT = CHR>
+inline CHT* TSPrintUnsigned(CHT* socket, ISW size, IU value) {
+  return TSPrintUnsigned<IU, CHT>(socket, socket + size - 1, value);
 }
 
 template <typename CHT = CHR>
@@ -443,13 +443,13 @@ inline CHT* TSPrint(CHT* start, ISW size, IUC value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename SI = ISD, typename UI = IUD, typename CHT = CHR>
-inline CHT* TSPrintSigned(CHT* start, CHT* stop, SI value) {
+template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
+inline CHT* TSPrintSigned(CHT* start, CHT* stop, IS value) {
   if (value >= 0) {
-    return TSPrintUnsigned<UI, CHT>(start, stop, (UI)value);
+    return TSPrintUnsigned<IU, CHT>(start, stop, (IU)value);
   }
   *start++ = '-';
-  return TSPrintUnsigned<UI, CHT>(start, stop, (UI)(-(SI)value));
+  return TSPrintUnsigned<IU, CHT>(start, stop, (IU)(-(IS)value));
 }
 
 /* Writes the give value to the given socket as an ASCII string.
@@ -457,9 +457,9 @@ inline CHT* TSPrintSigned(CHT* start, CHT* stop, SI value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename SI = ISD, typename UI = IUD, typename CHT = CHR>
-inline CHT* TSPrintSigned(CHT* start, ISW size, SI value) {
-  return TSPrintSigned<SI, UI, CHT>(start, start + size - 1, value);
+template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
+inline CHT* TSPrintSigned(CHT* start, ISW size, IS value) {
+  return TSPrintSigned<IS, IU, CHT>(start, start + size - 1, value);
 }
 
 template <typename CHT = CHR>
@@ -495,13 +495,13 @@ inline CHT* TSPrint(CHT* start, ISW size, ISC value) {
 
 #if SEAM >= SCRIPT2_FTOS
 #if SEAM == SCRIPT2_FTOS
-#include "_debug.inl"
+#include "_Debug.inl"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count) \
   Print("\nBinary:\"");                                       \
   TPrintBinary(value);                                        \
   PrintNL()
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 
@@ -562,21 +562,21 @@ ISZ TMiddleBits(ISZ value) {
 
 /* Searches for the highest MSb asserted.
 @return -1 */
-template <typename UI>
-ISC TMSbAssertedReverse(UI value) {
-  for (ISC i = sizeof(UI) * 8 - 1; i > 0; --i)
+template <typename IU>
+ISC TMSbAssertedReverse(IU value) {
+  for (ISC i = sizeof(IU) * 8 - 1; i > 0; --i)
     if ((value >> i) != 0) return i;
   return -1;
 }
 
 /* A decimal number in floating-point format.
-To use this class the sizeof (Float) must equal the sizeof (UI) and sizeof
-(SI).
+To use this class the sizeof (Float) must equal the sizeof (IU) and sizeof
+(IS).
 */
-template <typename Float = FPW, typename SI = ISC, typename UI = UIW>
+template <typename Float = FPW, typename IS = ISC, typename IU = IUW>
 class TBinary {
-  UI f;
-  SI e;
+  IU f;
+  IS e;
 
  public:
   enum {
@@ -584,7 +584,7 @@ class TBinary {
     cSize = sizeof(Float) >= cSizeMax ? 0 : sizeof(Float),
     cSizeBits = cSize * 8,
     cMSb = cSizeBits - 1,
-    cStrandLengthMax = 24,
+    cStringLengthMax = 24,
     cExponentSizeBits =
         (sizeof(Float) == 2)
             ? 5
@@ -602,18 +602,18 @@ class TBinary {
   // Constructs an uninitialized floating-point number_.
   TBinary() : f(0), e(0) {}
 
-  inline static UI Coefficient(UI decimal) {
+  inline static IU Coefficient(IU decimal) {
     return (decimal << (cExponentSizeBits + 1)) >> (cExponentSizeBits + 1);
   }
 
   // Converts a Float to a TBinary
   TBinary(Float value) {
-    UI ui = *reinterpret_cast<UI*>(&value);
+    IU ui = *reinterpret_cast<IU*>(&value);
 
-    UI biased_e = TMiddleBits<UI, cMSb - 1, cMantissaSize - 1>(ui);
-    UI coefficient = Coefficient(ui);
+    IU biased_e = TMiddleBits<IU, cMSb - 1, cMantissaSize - 1>(ui);
+    IU coefficient = Coefficient(ui);
     if (biased_e != 0) {
-      f = coefficient + (((UI)1) << cExponentSizeBits);
+      f = coefficient + (((IU)1) << cExponentSizeBits);
       e = biased_e - cExponentBias;
     } else {
       f = coefficient;
@@ -621,9 +621,9 @@ class TBinary {
     }
   }
 
-  TBinary(UI f, SI e) : f(f), e(e) {}
+  TBinary(IU f, IS e) : f(f), e(e) {}
 
-  inline static UI Exponent(UI decimal) {
+  inline static IU Exponent(IU decimal) {
     return (decimal << (cExponentSizeBits + 1)) >> (cExponentSizeBits + 1);
   }
 
@@ -641,8 +641,8 @@ class TBinary {
     }
     if (IsInfinite(value)) {
       if (stop - socket < 4) return nullptr;
-      UI f = *reinterpret_cast<UI*>(&value);
-      socket[0] = (f >> (sizeof(UI) * 8 - 1)) ? '-' : '+';
+      IU f = *reinterpret_cast<IU*>(&value);
+      socket[0] = (f >> (sizeof(IU) * 8 - 1)) ? '-' : '+';
       socket[1] = 'i';
       socket[2] = 'n';
       socket[3] = 'f';
@@ -657,36 +657,36 @@ class TBinary {
       *socket++ = '-';
       value = -value;
     }
-    SI k;
+    IS k;
     CHT* cursor = Print<CHT>(socket, stop, value, k);
     if (!cursor) return cursor;
     return Standardize<CHT>(socket, stop, cursor - socket, k);
   }
 
-  static TBinary IEEE754Pow10(SI e, SI& k) {
-    // SI k = static_cast<SI>(ceil((-61 - e) *
+  static TBinary IEEE754Pow10(IS e, IS& k) {
+    // IS k = static_cast<IS>(ceil((-61 - e) *
     // 0.30102999566398114))
 
     // + 374; dk must be positive to perform ceiling function on positive
     // values.
     Float scalar = sizeof(Float) == 8 ? 0.30102999566398114 : 0.301029995f,
           dk = (-61 - e) * scalar + 347;
-    k = static_cast<SI>(dk);
+    k = static_cast<IS>(dk);
     if (k != dk) ++k;
 
-    SI index = (k >> 3) + 1;
+    IS index = (k >> 3) + 1;
 
-    k = -(-((SI)348) + (index << 3));
+    k = -(-((IS)348) + (index << 3));
     // decimal exponent no need lookup table.
 
     D_ASSERT(index < 87);
 
-    const UI* f_lut = Pow10IntegralLUT();
+    const IU* f_lut = Pow10IntegralLUT();
     const ISB* e_lut = reinterpret_cast<const ISB*>(BinaryPow10Exponents());
     return TBinary(f_lut[index], e_lut[index]);
   }
 
-  TBinary Minus(const TBinary<Float, SI, UI>& value) const {
+  TBinary Minus(const TBinary<Float, IS, IU>& value) const {
     D_ASSERT(e == value.e);
     D_ASSERT(f >= value.f);
     return TBinary(f - value.f, e);
@@ -695,7 +695,7 @@ class TBinary {
 #if D_THIS
   static void PrintDebugInfo() {
     D_COUT("\nkSize:" << cSize << " cSizeBits:" << cSizeBits << " cMSbIndex:"
-                      << cMSb << " cStrandLengthMax:" << cStrandLengthMax
+                      << cMSb << " cStringLengthMax:" << cStringLengthMax
                       << "\nkExponentSizeBits:" << cExponentSizeBits
                       << " cCoefficientSize:" << cCoefficientSize
                       << " cMantissaSize:" << cMantissaSize
@@ -770,12 +770,12 @@ class TBinary {
     return (sizeof(Float) == 4) ? 83 : (sizeof(Float) == 8) ? 83 : 0;
   }
 
-  static const UI* Pow10IntegralLUT() {
+  static const IU* Pow10IntegralLUT() {
     const void* ptr =
-        (sizeof(UI) == 4)
+        (sizeof(IU) == 4)
             ? Binary32Pow10IntegralPortions()
-            : (sizeof(UI) == 8) ? Binary64Pow10IntegralPortions() : nullptr;
-    return reinterpret_cast<const UI*>(ptr);
+            : (sizeof(IU) == 8) ? Binary64Pow10IntegralPortions() : nullptr;
+    return reinterpret_cast<const IU*>(ptr);
   }
 
   static void AlignLUT(CHA* origin, ISW size) {
@@ -795,12 +795,12 @@ class TBinary {
     for (ISC i = 0; i < 87; ++i) *ui2_ptr = e_lut[i];
 
     IUD* ui8_ptr = reinterpret_cast<IUD*>(ui2_ptr);
-    const UI* f_lut = Pow10IntegralLUT();
+    const IU* f_lut = Pow10IntegralLUT();
     for (ISC i = 0; i < 87; ++i) *ui8_ptr = f_lut[i];
   }
 
   template <typename CHT = CHR>
-  static CHT* Print(CHT* socket, CHT* stop, Float value, SI& k) {
+  static CHT* Print(CHT* socket, CHT* stop, Float value, IS& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
     v.NormalizedBoundaries(lower_estimate, upper_estimate);
@@ -816,7 +816,7 @@ class TBinary {
   }
 
   TBinary NormalizeBoundary() const {
-    // SI msba = MSbAsserted(0);
+    // IS msba = MSbAsserted(0);
 #if defined(_MSC_VER) && defined(_M_AMD64)
     unsigned long index;  //< This is Microsoft's fault.
     _BitScanReverse64(&index, f);
@@ -824,7 +824,7 @@ class TBinary {
     return TBinary(f << (cMSb - index), e - msb_minus_index);
 #else
     TBinary res = *this;
-    UI cDpHiddenBit = ((UI)1) << cMantissaSize;  // 0x0010000000000000;
+    IU cDpHiddenBit = ((IU)1) << cMantissaSize;  // 0x0010000000000000;
     while (!(res.f & (kDpHiddenBit << 1))) {
       res.f <<= 1;
       --res.e;
@@ -835,16 +835,16 @@ class TBinary {
 #endif
   }
 
-  // static const UI  cDpExponentMask = 0x7FF0000000000000,
+  // static const IU  cDpExponentMask = 0x7FF0000000000000,
   //   cDpSignificandMask = 0x000FFFFFFFFFFFFF,
 
   // Normalizes the boundaries.
   void NormalizedBoundaries(TBinary& m_minus, TBinary& m_plus) const {
-    UI l_f = f,   //< Local copy of f.
+    IU l_f = f,   //< Local copy of f.
         l_e = e;  //< Local copy of e.
-    TBinary pl = TBinary((l_f << 1) + 1, ((SI)l_e) - 1).NormalizeBoundary();
+    TBinary pl = TBinary((l_f << 1) + 1, ((IS)l_e) - 1).NormalizeBoundary();
     ISC cShiftCount = (cMantissaSize >= 8) ? 0 : cMantissaSize;
-    const UI cHiddenBit = ((UI)1) << cShiftCount;
+    const IU cHiddenBit = ((IU)1) << cShiftCount;
     TBinary mi = (f == cHiddenBit) ? TBinary((l_f << 2) - 1, e - 2)
                                    : TBinary((l_f << 1) - 1, e - 1);
     mi.f <<= mi.e - pl.e;
@@ -854,7 +854,7 @@ class TBinary {
   }
 
   // Rounds the Grisu estimation closer to the inside of the squeeze.
-  static IUC Round(IUC lsd, UI delta, UI rest, UI ten_kappa, UI wp_w) {
+  static IUC Round(IUC lsd, IU delta, IU rest, IU ten_kappa, IU wp_w) {
     while (rest < wp_w && (delta - rest) >= ten_kappa &&
            (rest + ten_kappa < wp_w ||  /// closer
             (wp_w - rest) > (rest + ten_kappa - wp_w))) {
@@ -966,13 +966,13 @@ class TBinary {
   @return Nil upon failure or a pointer to the nil-term CHT upon success. */
   template <typename CHT = CHR>
   static CHT* DigitGen(CHT* start, CHT* stop, const TBinary& w,
-                       const TBinary& m_plus, UI delta, SI& k) {
-    TBinary one(((UI)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
+                       const TBinary& m_plus, IU delta, IS& k) {
+    TBinary one(((IU)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
     IUC d, pow_10, p_1 = static_cast<IUC>(m_plus.f >> -one.e);
-    UI p_2 = m_plus.f & (one.f - 1);
-    SI kappa;
+    IU p_2 = m_plus.f & (one.f - 1);
+    IS kappa;
     pow_10 = Pow10(p_1, kappa);
-    const UI* f_lut = Pow10IntegralLUT();
+    const IU* f_lut = Pow10IntegralLUT();
     while (kappa > 0) {
       IUC d;
       d = p_1 / pow_10;
@@ -983,11 +983,11 @@ class TBinary {
       if (d) start = TSPrintDecimal<CHT>(start, d);
 
       --kappa;
-      UI tmp = (static_cast<UI>(p_1) << -one.e) + p_2;
+      IU tmp = (static_cast<IU>(p_1) << -one.e) + p_2;
 
       if (tmp <= delta) {
         k += kappa;
-        UI pow_10_f = f_lut[kappa];
+        IU pow_10_f = f_lut[kappa];
         d = Round(d, delta, tmp, pow_10_f << -one.e, wp_w.f);
         return start;
       }
@@ -1003,7 +1003,7 @@ class TBinary {
       --kappa;
       if (p_2 < delta) {
         k += kappa;
-        UI pow_10_f = f_lut[-kappa];
+        IU pow_10_f = f_lut[-kappa];
         d = Round(d, delta, p_2, one.f, wp_w.f * pow_10_f);
         return start;
       }
@@ -1054,7 +1054,7 @@ class TBinary {
 
   /* Converts the Grisu2 output to a standardized/easier-to-read format. */
   template <typename CHT = CHR>
-  static CHT* Standardize(CHT* start, CHT* stop, ISW length, SI k) {
+  static CHT* Standardize(CHT* start, CHT* stop, ISW length, IS k) {
     const ISW kk = length + k;  // 10^(kk-1) <= v < 10^kk
     CHT* nil_term_char;
     if (length <= kk && kk <= 21) {  // 1234e7 -> 12340000000
@@ -1082,14 +1082,14 @@ class TBinary {
     } else if (length == 1) {
       // 1e30
       start[1] = 'e';
-      return TSPrintSigned<ISW, UIW, CHT>(start + 2, stop, kk - 1);
+      return TSPrintSigned<ISW, IUW, CHT>(start + 2, stop, kk - 1);
     }
     // else 1234e30 -> 1.234e33
     ShiftUp(&start[2], length - 1);
 
     *(++start)++ = '.';
     *start++ = 'e';
-    return TSPrintSigned<ISW, UIW, CHT>(start + length + 2, stop, kk - 1);
+    return TSPrintSigned<ISW, IUW, CHT>(start + length + 2, stop, kk - 1);
   }
 };
 

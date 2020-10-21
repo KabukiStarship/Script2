@@ -1,10 +1,10 @@
-# [Script2™](../)
+# [Script2](../)
 
 ## Contributing
 
 ### Bug reports
 
-**1.** Ensure the bug was not already reported by by reading the [Issues](https://github.com/kabuki-starship/Script2™/issues).
+**1.** Ensure the bug was not already reported by by reading the [Issues](https://github.com/KabukiStarship/Script2/issues).
 
 **2.** Open `/docs/bug_report_template` and copy it's contents to the clipboard.
 
@@ -19,8 +19,8 @@
 **1.** Clone the repo and create a branch for the IssueNumber:
 
 ```Console
-git clone https://github.com/kabuki-starship/Script2™.git
-cd Script2™
+git clone https://github.com/KabukiStarship/Script2.git
+cd Script2
 git checkout -b Issue123
 ```
 

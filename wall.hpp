@@ -1,21 +1,21 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /wall.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Wall.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_WALL
-#define SCRIPT2_WALL
-#include "door.h"
-#include "op.h"
-#incude "array.h"
+#ifndef SCRIPT2_WALL_CODE
+#define SCRIPT2_WALL_CODE
+#include "Door.h"
+#include "Op.h"
+#incude "Array.h"
 
 namespace _ {
 
@@ -51,7 +51,7 @@ class Wall {
   Wall(ISW size_bytes = kMinSizeBytes);
 
   /* Constructs a wall from the given socket. */
-  Wall(UIW* socket, ISW size_bytes);
+  Wall(IUW* socket, ISW size_bytes);
 
   /* Gets the size of the wall in bytes. */
   ISW GetSizeBytes();
@@ -76,7 +76,7 @@ class Wall {
  private:
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
   ISW size_bytes_;         //< Size of the Wall in bytes.
-  UIW* origin;             //< The Wall's socket.
+  IUW* origin;             //< The Wall's socket.
   TMatrix<Door*>* doors_;  //< The doors in the room.
 };
 

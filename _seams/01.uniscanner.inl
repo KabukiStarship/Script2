@@ -1,27 +1,27 @@
 #pragma once
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/00.uniscanner.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/00.Uniscanner.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#if SEAM >= SCRIPT2_UNIPRINTER
-#include "../stringf.hpp"
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "../_debug.inl"
+#if SEAM >= SCRIPT2_CORE
+#include "../Stringf.hpp"
+#if SEAM == SCRIPT2_CORE
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 #endif
 
 using namespace _;
 
-namespace script2 {
+namespace Script2 {
 inline const CHA* Uniscanner(const CHA* args) {
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= SCRIPT2_CORE
   A_TEST_BEGIN;
 
   D_COUT(Headingf("Testing ArgsToString"));
@@ -103,4 +103,4 @@ inline const CHA* Uniscanner(const CHA* args) {
 #endif
   return 0;
 }
-}  // namespace script2
+}  // namespace Script2

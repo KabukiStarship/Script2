@@ -1,17 +1,17 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /typevalue.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /TypeValue.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
-#ifndef SCRIPT2_ASCIIDATA_C
-#define SCRIPT2_ASCIIDATA_C
+#ifndef SCRIPT2_TYPEVALUE
+#define SCRIPT2_TYPEVALUE
 
 namespace _ {
 
@@ -24,6 +24,15 @@ LIB_MEMBER const CHA* STRTrue();
 /* string that reads "false". */
 LIB_MEMBER const CHA* STRFalse();
 
+/* Utility class for printing an ASCII type. */
+struct Typef {
+  DTW type;     //< The item type.
+  CHA* string; //< The ASCII type string.
+};
+
+
+Typef TypefOf();
+
 /* An ASCII Type-Value tuple.
 An TypeValue can only work with up to two CPU ALU words because when a CPU
 multiplies two integers together the result is two ALU-sized words and thus the
@@ -32,7 +41,7 @@ words wide the word_ stores a pointer to that type in memory and a struct will
 be needed to work with the type. */
 class LIB_MEMBER TypeValue {
   DTW type_;    //< ASCII Data type.
-  UIW word_,    //< First data word.
+  IUW word_,    //< First data word.
       word_2_;  //< Second data word.
 
  public:
@@ -91,22 +100,22 @@ class LIB_MEMBER TypeValue {
   IUD ToUI8();
 
   /* Gets the first word of the word_. */
-  UIW Word();
+  IUW Word();
 
   /* Gets the second word of the value if the type is two words wide. */
-  UIW Word2();
+  IUW Word2();
 
   /* Sets the word to the value. */
-  void SetWord(UIW value);
+  void SetWord(IUW value);
 
   /* Sets the second word to the value. */
-  void SetWord2(UIW value);
+  void SetWord2(IUW value);
 
   /*Sets the type_ to cNIL with an indeterminite value. */
   void SetNIL();
 
   /*Sets the type_ to cNIL with an indeterminite value. */
-  void SetNIL(UIW value);
+  void SetNIL(IUW value);
 
   /*Sets the word_ to the given item and updates the type. */
 #if USING_UTF8 == YES_0
@@ -138,11 +147,10 @@ class LIB_MEMBER TypeValue {
 #endif
 };
 
-struct AType {
-  DTW type;  //< The ASCII Data Type.
-
-  /* Stores teh type. */
-  AType(DTW type);
+/* Utility class for printing the size of ASCII TypeValues.
+@see CSizef */
+struct Sizef {
+  ISW size;  //< The item who's size this is.
 };
 
 }  // namespace _

@@ -1,13 +1,13 @@
 /* Script @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /morsecode.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /MorseCode.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 
 namespace _ {
 
@@ -49,7 +49,7 @@ const CHA* ToMorseCode(CHA code) {
       {'-', '.', '.', '-', '-', '-', NIL, NIL, NIL,
        NIL},  //< ASCII SO,  Morse code: Change to Wabun Mores code.
       {'.', '-', '-', '.', '.', '.', NIL, NIL, NIL,
-       NIL},  //< ASCII SI,  Morse code: Non-standard return to Western Mores
+       NIL},  //< ASCII IS,  Morse code: Non-standard return to Western Mores
               // code
       {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},  //< ASCII DLE
       {NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},  //< ASCII DC1

@@ -1,22 +1,22 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /stack.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Stack.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_TSTACK
 #define SCRIPT2_TSTACK 1
-#include "binary.hpp"
-#include "strand.hpp"
+#include "Binary.hpp"
+#include "String.hpp"
 #if SEAM == SCRIPT2_STACK
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -146,7 +146,7 @@ template <typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TStackPrint(Printer& o, TStack<ISZ>* stack) {
   D_ASSERT(stack);
   ISZ size = stack->count_max, count = stack->count;
-  o << Linef("\n+---\n| TStack<T") << sizeof(T) << ",SI"
+  o << Linef("\n+---\n| TStack<T") << sizeof(T) << ",IS"
     << CHA('0' + sizeof(ISZ)) << ">: size_bytes:" << TStackSizeOf<T, ISZ>(size)
     << " size: " << size << " count:" << count << Linef("\n+---");
 
@@ -164,21 +164,21 @@ Printer& TStackPrint(Printer& o, TStack<ISZ>* stack) {
 /* Returns the other Stack to the preallocated stack's buffer.
 @return An autoject buffer. */
 template <typename T = ISW, typename ISZ = ISN>
-UIW* TStackClone(TStack<ISZ>* stack, ISZ count_max, TStack<ISZ>* other,
+IUW* TStackClone(TStack<ISZ>* stack, ISZ count_max, TStack<ISZ>* other,
                  ISZ other_count_max, ISZ other_count) {
   if (count_max < other_count_max) return nullptr;
-  UIW *source = TPtr<UIW>(stack), *destination = TPtr<UIW>(stack);
+  IUW *source = TPtr<IUW>(stack), *destination = TPtr<IUW>(stack);
   ISZ word_count =
       (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> cWordBitCount;
   size -= word_count;
   while (word_count-- > 0) *destination++ = *source++;
-  return reinterpret_cast<UIW*>(stack);
+  return reinterpret_cast<IUW*>(stack);
 }
 
 /* Returns the other Stack to the preallocated stack's buffer.
 @return An autoject buffer. */
 template <typename T = ISW, typename ISZ = ISN>
-inline UIW* TStackClone(TStack<ISZ>* stack, TStack<ISZ>* other) {
+inline IUW* TStackClone(TStack<ISZ>* stack, TStack<ISZ>* other) {
   A_ASSERT(stack);
   return TStackClone<T, ISZ>(stack, other, stack->count);
 }
@@ -186,11 +186,11 @@ inline UIW* TStackClone(TStack<ISZ>* stack, TStack<ISZ>* other) {
 /* Returns a clone on the heap.
 @return An autoject buffer. */
 template <typename T = ISW, typename ISZ = ISN>
-UIW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
+IUW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
   A_ASSERT(stack);
   ISZ size = stack->count_max;
-  UIW* other_buffer = socket_factory(nullptr, size);
-  UIW *source = reinterpret_cast<UIW*>(stack),  //
+  IUW* other_buffer = socket_factory(nullptr, size);
+  IUW *source = reinterpret_cast<IUW*>(stack),  //
       *destination = other_buffer;
   ISZ data_amount =
       (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> cWordBitCount;
@@ -203,14 +203,14 @@ UIW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
 @return Nil upon failure or a pointer to the cloned object upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename T = IUA, typename ISZ = ISN>
-UIW* TStackClone(Autoject& obj) {
+IUW* TStackClone(Autoject& obj) {
   SocketFactory factory = obj.socket_factory;
-  UIW* origin = obj.origin;
+  IUW* origin = obj.origin;
   if (!factory || !origin) return nullptr;
 
   TStack<ISZ>* o = reinterpret_cast<TStack<ISZ>*>(origin);
   ISZ count = o->count;
-  UIW* clone = TArrayNew<T, ISZ, TStack<ISZ>>(count);
+  IUW* clone = TArrayNew<T, ISZ, TStack<ISZ>>(count);
   ISW size_bytes = (ISW)TStackSizeOf<T, ISZ>(count);
   if (!ArrayCopy(clone, count, origin, size_bytes)) return nullptr;
   TSizeSet<ISZ>(origin, count);
@@ -234,7 +234,7 @@ BOL TStackGrow(Autoject& obj) {
   ISW size_bytes = TStackSizeOf<T, ISZ>(stack->count);
   size = size << 1;
   ISZ new_size_bytes = TStackSizeOf<T, ISZ>(size);
-  UIW* new_begin = obj.socket_factory(nullptr, new_size_bytes);
+  IUW* new_begin = obj.socket_factory(nullptr, new_size_bytes);
   TStack<ISZ>* other = reinterpret_cast<TStack<ISZ>*>(new_begin);
   other->count_max = size;
   other->count = stack->count;
@@ -435,7 +435,7 @@ BOL TStackContains(TStack<ISZ>* stack, void* address) {
 /* The obj size in words. */
 template <typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSizeWords(ISZ count) {
-  return TStackSizeMin<T, ISZ>(count) / sizeof(UIW);
+  return TStackSizeMin<T, ISZ>(count) / sizeof(IUW);
 }
 
 /* An ASCII Stack Autoject.
@@ -503,7 +503,7 @@ class AStack {
   ~AStack() {}
 
   /* Creates a dynamically allocated clone. */
-  inline UIW* TClone() { TStackClone<T, ISZ>(AJT()); }
+  inline IUW* TClone() { TStackClone<T, ISZ>(AJT()); }
 
   /* Clones the other object.
   @return true upon success and false upon failure. */

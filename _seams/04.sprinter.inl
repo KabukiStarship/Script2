@@ -1,28 +1,28 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/04.sprinter.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/04.SPrinter.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_SPRINTER
-#include "../array.hpp"
-#include "../stringf.hpp"
+#include "../Array.hpp"
+#include "../Stringf.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_SPRINTER
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 #endif
 
-namespace script2 {
+namespace Script2 {
 #if SEAM >= SCRIPT2_SPRINTER
 template <typename CHT = CHR, typename ISZ = ISN>
 static const CHT* TestSPrinter() {
-  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",SI"
+  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",IS"
                     << sizeof(ISZ) << ">\n\n"
                     << Linef('-'));
 
@@ -32,19 +32,19 @@ static const CHT* TestSPrinter() {
 
   CHT str_a[cCount];
 
-  static const CHT kTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CHT cTesting123[] = { 'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
 
   D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
-  TSPrint<CHT>(str_a, cCount, kTesting123);
+  TSPrint<CHT>(str_a, cCount, cTesting123);
   D_COUT(Charsf(str_a, 64));
 
   TSPrinter<CHT> utf(str_a, cCount);
 
-  enum { cTestStrandsCount = 4 };
+  enum { cTestStringsCount = 4 };
 
-  const CHT kTestStrands[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
+  const CHT kTestStrings[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                        {NIL, NIL, NIL, NIL, NIL, NIL, NIL}},
                                       {{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                        {'?', NIL, NIL, NIL, NIL, NIL, NIL}},
@@ -55,17 +55,17 @@ static const CHT* TestSPrinter() {
                                       {{'A', 'p', 'p', 'l', 'e', 's', NIL},
                                        {'A', 'p', 'p', 'l', 'e', 's', NIL}}};
   const CHT* cursor;
-  for (ISC i = 0; i < cTestStrandsCount; ++i) {
+  for (ISC i = 0; i < cTestStringsCount; ++i) {
     D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
-    cursor = TSPrintString<CHT>(str_a, str_a + cCount, kTestStrands[i][0]);
+    cursor = TSPrintString<CHT>(str_a, str_a + cCount, kTestStrings[i][0]);
     D_COUT(Charsf(str_a, 64));
     Test(cursor);
-    cursor = TSTREquals<CHT>(str_a, kTestStrands[i][0]);
+    cursor = TSTREquals<CHT>(str_a, kTestStrings[i][0]);
     Test(cursor);
   }
 
   D_COUT(Headingf("Testing TSPrinter<CHT>")
-         << "\n\nExpecting \"" << kTesting123 << '\"');
+         << "\n\nExpecting \"" << cTesting123 << '\"');
   static const CHT kCommaSpace[] = {',', ' ', NIL};
 
   const CHT kTestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
@@ -82,22 +82,22 @@ static const CHT* TestSPrinter() {
 
   utf.Set(str_a) << kTestingSpace << 1 << kCommaSpace << 2 << ", " << 3 << '.';
   D_COUT(Charsf(str_a, 64));
-  A_AVOW(kTesting123, str_a);
+  A_AVOW(cTesting123, str_a);
 
   D_COUT("\n\nTesting TSTREquals<CHT>");
 
-  const CHT kCompareStrands[4][9] = {
+  const CHT kCompareStrings[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 's', 't', 'i', 'n', 'g', '@', NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', '@', NIL},
   };
 
-  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[1]));
-  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[3]));
-  A_ASSERT(TSTREquals<CHT>(kCompareStrands[0], kCompareStrands[0]));
-  A_ASSERT(!TSTREquals<CHT>(kCompareStrands[2], kCompareStrands[3]));
-  A_ASSERT(TSTREquals<CHT>(kCompareStrands[2], kCompareStrands[2]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrings[0], kCompareStrings[1]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrings[0], kCompareStrings[3]));
+  A_ASSERT(TSTREquals<CHT>(kCompareStrings[0], kCompareStrings[0]));
+  A_ASSERT(!TSTREquals<CHT>(kCompareStrings[2], kCompareStrings[3]));
+  A_ASSERT(TSTREquals<CHT>(kCompareStrings[2], kCompareStrings[2]));
 
   const CHT k1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
   A_AVOW(9, TSTRLength<CHT>(k1to9));
@@ -106,8 +106,8 @@ static const CHT* TestSPrinter() {
 
   const CHT kOne[] = {'1', ',', NIL};
   const CHT kThreePeriod[] = {'3', '.', NIL};
-  A_ASSERT(TSTRFind<CHT>(kTesting123, kOne));
-  A_ASSERT(TSTRFind<CHT>(kTesting123, kThreePeriod));
+  A_ASSERT(TSTRFind<CHT>(cTesting123, kOne));
+  A_ASSERT(TSTRFind<CHT>(cTesting123, kThreePeriod));
 
   D_COUT(Headingf("Testing TPrintRight<CHT>"));
 
@@ -182,4 +182,4 @@ static const CHA* SPrinter(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

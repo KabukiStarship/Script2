@@ -1,24 +1,24 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /room.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Room.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
-#if SEAM >= SCRIPT2_ROOM
-#include "bsq.h"
-#include "door.h"
-#include "room.h"
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
+#include "BSeq.h"
+#include "Door.h"
+#include "Room.h"
 #include "stack.h"
-#include "strand.hpp"
+#include "String.hpp"
 
-#if SEAM == SCRIPT2_ROOM
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CRABS
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -75,7 +75,7 @@ BOL Room::SetRoomName(const CHA* name) {
     return false;
   }
   delete name_;
-  name_ = StrandClone(name);
+  name_ = StringClone(name);
   return true;
 }
 
@@ -144,12 +144,12 @@ ISC Room::Main(const CHA** args, ISC args_count) {
 CHA Room::CommandNext() { return 0; }
 
 const Op* Room::Star(CHC index, Crabs* crabs) {
-  static const Op kThis = {
+  static const Op cThis = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0};
 
   switch (index) {
     case '?': {
-      return ExprQuery(crabs, kThis);
+      return ExprQuery(crabs, cThis);
     }
   }
   return 0;
@@ -174,8 +174,8 @@ BOL Room::RemoveWall(int_t wall_number) {
   return TStackRemove<Wall*, ISC, int_t>(walls_, wall_number);
 }
 
-UIW Room::GetSizeBytes() {
-  UIW count = kRoomFloorSize;
+IUW Room::GetSizeBytes() {
+  IUW count = cRoomFloorSize;
   for (int_t i = 0; i < walls_->count; ++i) {
     count += TStackGet<Wall*, ISC, int_t>(walls_, i)->GetSizeBytes();
   }

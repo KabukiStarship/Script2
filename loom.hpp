@@ -1,21 +1,22 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /loom.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Loom.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_LOOM
 #ifndef SCRIPT2_LOOM_TEMPLATES
 #define SCRIPT2_LOOM_TEMPLATES
-#include "stack.hpp"
+#include "Stack.hpp"
+#include "TypeValue.hpp"
 #if SEAM == SCRIPT2_LOOM
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 #define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
 #define TPARAMS CHT, ISZ, ISY
@@ -29,7 +30,7 @@ template <typename ISZ = ISN, typename ISY = ISM>
 struct TLoom {
   ISZ size,         //< Size of the Loom in bytes.
       top;          //< Offset to the top of the string stack.
-  TStack<ISY> map;  //< A Stack of offsets to strands.
+  TStack<ISY> map;  //< A Stack of offsets to strings.
 };
 
 template <TARGS>
@@ -67,11 +68,11 @@ inline CHT* TLoomStart(TLoom<ISZ, ISY>* loom) {
   return TLoomStart<TPARAMS>(loom, loom->map.count_max);
 }
 
+/* Initializes the loom with the given count_max. */
 template <TARGS>
 inline TLoom<ISZ, ISY>* TLoomInit(TLoom<ISZ, ISY>* loom, ISY count_max) {
   A_ASSERT(loom);
   A_ASSERT(count_max >= CLoomCountMin<TPARAMS>());
-
   D_ARRAY_WIPE(&loom->top, loom->size - sizeof(ISZ));
 
   // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
@@ -105,7 +106,7 @@ template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
           typename Printer>
 Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
-  o << "\nLoom<IS" << CHA('@' + sizeof(ISZ)) << "> size:" << loom->size
+  o << "\nLoom<IS" << CSizef<ISZ>() << "> size:" << loom->size
     << " top:" << loom->top << " stack_size:" << loom->map.count_max
     << " count:" << count;
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
@@ -224,7 +225,7 @@ BOL TLoomGrow(Autoject& obj) {
 #endif
 
   // @see RamFactory for documentation on how to create a new block of memory.
-  UIW* growth = obj.socket_factory(nullptr, size << 1);
+  IUW* growth = obj.socket_factory(nullptr, size << 1);
   D_ARRAY_WIPE(growth, size);
   auto destination = TPtr<TLoom<ISZ, ISY>>(growth);
 
@@ -302,7 +303,7 @@ ISZ TLoomFind(TLoom<ISZ, ISY>* loom, const CHT* string) {
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
   for (ISZ i = 0; i < loom->map.count; ++i) {
     ISZ offset = offsets[i];
-    CHT* other = reinterpret_cast<CHT*>(reinterpret_cast<UIW>(loom) + offset);
+    CHT* other = reinterpret_cast<CHT*>(reinterpret_cast<IUW>(loom) + offset);
     if (!TSTRCompare<CHT>(string, other)) return i;
   }
   return -1;
@@ -322,14 +323,14 @@ class ALoom {
   }
 
   /* Constructs a Loom subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ALoom(SocketFactory socket_factory, ISY count = cCountDefault)
       : obj_(socket_factory) {
     TLoomInit<TPARAMS>(This(), count);
   }
 
   /* Constructs a Loom subclass.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ALoom(SocketFactory socket_factory, ISZ size = CLoomSizeDefault<TPARAMS>(),
         ISZ count = CLoomCountDefault<TPARAMS>())
       : obj_(socket_factory) {

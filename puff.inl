@@ -1,18 +1,18 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /puff.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Puff.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 //
 #include <cmath>
 //
-#include "puff.hpp"
+#include "Puff.hpp"
 
 // Because some of y'all will try to make this a single file header, just
 // keep in mind that the static data will get duplicated in each library

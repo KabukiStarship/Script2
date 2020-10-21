@@ -1,19 +1,19 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /bin.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /BIn.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
-#if SEAM >= SCRIPT2_DIC
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
-#include "bout.h"
-#include "op.h"
+#include "BOut.h"
+#include "Op.h"
 
 namespace _ {
 
@@ -35,13 +35,13 @@ typedef enum BInStates {
   cBInStatePackedPod,      //< State 12: Scanning plain-old-data.
 } BInState;
 
-/* A*B B-Input Slot.
+/* B-Input ring buffer Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct LIB_MEMBER BIn {
   ISC size,           //< The size of the socket.
       origin;         //< The starting index of the ring socket data.
   volatile ISC stop;  //< The stopping index of the ring socket data.
-  ISC read;           //< The read variable.
+  ISC read;           //< The read variable to memory align the socket.
 };
 
 /* Get's the B-Input's socket. */
@@ -53,13 +53,13 @@ LIB_MEMBER inline CHA* BInEnd(BIn* bin);
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline ISW SlotLength(CHA* origin, CHA* stop, UIW size);
+LIB_MEMBER inline ISW SlotLength(CHA* origin, CHA* stop, IUW size);
 
 /* Calculates the space left in the given ring socket.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline ISW SlotSpace(CHA* origin, CHA* stop, UIW size);
+LIB_MEMBER inline ISW SlotSpace(CHA* origin, CHA* stop, IUW size);
 
 /* Gets the rx socket length. */
 LIB_MEMBER inline ISC BInSpace(BIn* bin);
@@ -75,7 +75,7 @@ LIB_MEMBER const CHA** STRBInStates();
 #endif
 
 /* Initializes the BIn struct LIB_MEMBER to an empty socket. */
-LIB_MEMBER BIn* BInInit(UIW* socket, ISC size);
+LIB_MEMBER BIn* BInInit(IUW* socket, ISC size);
 
 /* Gets the stop address of the rx socket. */
 LIB_MEMBER CHA* BInEnd(BIn* bin);
@@ -135,5 +135,5 @@ inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
 }
 #endif
 
-#endif  //< INCLUDED_SCRIPT2_CBIN
-#endif  //> #if SEAM >= SCRIPT2_DIC
+#endif
+#endif

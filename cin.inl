@@ -1,13 +1,13 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /cout.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /COut.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 
 #if USING_CONSOLE == YES_0
 //
@@ -16,36 +16,36 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <cstdio>
 #include <iostream>
 
-#include "cin.h"
-#include "stringf.hpp"
+#include "CIn.h"
+#include "Stringf.hpp"
 
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CORE
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
 
-template <typename SI = ISW>
+template <typename IS = ISW>
 constexpr ISW CSignedDigitsMax() {
   enum {
     cBufferSize =
-        (sizeof(SI) == 1)
+        (sizeof(IS) == 1)
             ? 4
-            : (sizeof(SI) == 2)
+            : (sizeof(IS) == 2)
                   ? 5
-                  : (sizeof(SI) == 4) ? 16 : (sizeof(SI) == 8) ? 24 : 32
+                  : (sizeof(IS) == 4) ? 16 : (sizeof(IS) == 8) ? 24 : 32
   };
   return cBufferSize;
 }
 
-template <typename SI, typename UI>
-BOL TCInSigned(SI& result) {
-  CHA buffer[CSignedDigitsMax<SI>()];
+template <typename IS, typename IU>
+BOL TCInSigned(IS& result) {
+  CHA buffer[CSignedDigitsMax<IS>()];
   ISN c;
   ISW state = CIn::cStateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<SI>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::cStateSuccess) {
     if (state == CIn::cStateBaseSign) {
       c = CIn::ScanKey();
@@ -60,14 +60,14 @@ BOL TCInSigned(SI& result) {
       if (!c) break;
     }
   }
-  return TScanSigned<SI, UI, CHA>(buffer, result) != 0;
+  return TScanSigned<IS, IU, CHA>(buffer, result) != 0;
 }
 
-template <typename UI>
-BOL TCInUnsigned(UI& result) {
-  CHA buffer[CSignedDigitsMax<UI>()];
+template <typename IU>
+BOL TCInUnsigned(IU& result) {
+  CHA buffer[CSignedDigitsMax<IU>()];
   ISN c, state = CIn::cStateBaseValue;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<UI>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IU>();
   while (state != CIn::cStateSuccess) {
     if (cursor++ >= end) return false;
     c = (CHA)CIn::ScanKey();
@@ -75,7 +75,7 @@ BOL TCInUnsigned(UI& result) {
     *cursor++ = (CHA)c;
     if (!c) break;
   }
-  return TScanUnsigned<UI, CHA>(buffer, result) != 0;
+  return TScanUnsigned<IU, CHA>(buffer, result) != 0;
 }
 
 template <typename CHT>
@@ -91,13 +91,13 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
   return true;
 }
 
-template <typename FP = FPW, typename SI = ISW, typename UI = UIW,
+template <typename FP = FPW, typename IS = ISW, typename IU = IUW,
           typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CHA buffer[CSignedDigitsMax<SI>()];
+  CHA buffer[CSignedDigitsMax<IS>()];
   ISN c;
   ISW state = CIn::cStateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<SI>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::cStateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
@@ -135,7 +135,7 @@ inline BOL TCInFloatingPoint(FP& result) {
       }
     }
   }
-  return false;  // TScanFloat<FP, SI, UI, CHA>(buffer, result) != 0;
+  return false;  // TScanFloat<FP, IS, IU, CHA>(buffer, result) != 0;
 }
 
 ISN IsYesNo(const CHA* string) { return TIsYesNo<CHA>(string); }

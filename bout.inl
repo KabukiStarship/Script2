@@ -1,30 +1,30 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /bout.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /BOut.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
-#if SEAM >= SCRIPT2_DIC
-#include "args.h"
-#include "binary.h"
-#include "bout.h"
-#include "bsq.h"
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
+#include "Args.h"
+#include "Binary.hpp"
+#include "BOut.h"
+#include "BSeq.h"
 #include "hash.h"
-#include "slot.h"
-#include "test.h"
-#include "typevalue.h"
-#include "utf.h"
+#include "Slot.h"
+#include "Test.h"
+#include "TypeValue.h"
+#include "Uniprinter.hpp"
 
-#if SEAM == SCRIPT2_DIC
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CRABS
+#include "_Debug.inl"
 #define D_COUT_BOUT(header, bout) \
   Console<>().Out() << "\n" << header << '\n' << bout;
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #define D_COUT_BOUT(header, bout)
 #endif
 
@@ -77,7 +77,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
   return reinterpret_cast<const Op*>(1);
 }
 
-const CHA** BOutStateStrands() {
+const CHA** BOutStateStrings() {
   static const CHA* Strings[] = {"WritingState", "cBInStateLocked"};
   return Strings;
 }
@@ -87,8 +87,8 @@ CHA* BOutBuffer(BOut* bout) {
   return reinterpret_cast<CHA*>(bout) + sizeof(BOut);
 }
 
-BOut* BOutInit(UIW* socket, ISC size) {
-  if (size < kSlotSizeMin) return nullptr;
+BOut* BOutInit(IUW* socket, ISC size) {
+  if (size < cSlotSizeMin) return nullptr;
   if (socket == nullptr) return nullptr;
 
   BOut* bout = reinterpret_cast<BOut*>(socket);
@@ -135,7 +135,7 @@ ISC BOutStreamByte(BOut* bout) {
                                     : (stop - origin) + (open - origin) + 2;
 
   if (length < 1) {
-    BOutError(bout, cErrorBufferOverflow, Params<1, kSTR>(), 2, origin);
+    BOutError(bout, cErrorBufferOverflow, Params<1, cSTR>(), 2, origin);
     return -1;
   }
   // IUA b = *cursor;
@@ -145,7 +145,7 @@ ISC BOutStreamByte(BOut* bout) {
 }
 
 const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
-  D_COUT_BSQ("\n\nWriting ", params)
+  D_COUT_BSQ("\n\nWriting ", params);
   enum {
     cBOutBufferSize = 1024,
     cBOutBufferSizeWords = cBOutBufferSize >> cWordBitCount
@@ -185,7 +185,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   size = bout->size;
   const ISC* param =
       params;  //< Pointer to the current param.
-               //* bsc_param;          //< Pointer to the current kBSQ param.
+               //* bsc_param;          //< Pointer to the current cBSQ param.
   // Convert the socket offsets to pointers.
   CHA *origin = BOutBuffer(bout),           //< Beginning of the socket.
       *stop = origin + size,                //< End of the socket.
@@ -201,7 +201,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 #if USING_SCRIPT2_8_BYTE_TYPES
   const IUD* ui8_ptr;  //< Pointer to a 8-IUA type.
 #endif
-  IUB hash = kPrime2Unsigned;  //< Reset hash to largest 16-bit prime.
+  IUB hash = PRIME_LARGEST_IUB;
 
   space = (ISC)SlotSpace(origin, stop, size);
 
@@ -222,7 +222,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         break;
 
       case kADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
-      case kSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
+      case cSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
         if (space == 0)
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         if (type != kADR) {
@@ -242,7 +242,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         while (ui1 != 0) {
           if (space-- == 0)
             return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
 
           *stop = ui1;  // Write IUA
           if (++stop >= stop) stop -= size;
@@ -250,7 +250,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 = *ui1_ptr;  // Read IUA.
         }
         if (type != kADR) {  //< 1 is faster to compare than 2
-                             // More likely to have kADR than kSTR
+                             // More likely to have kADR than cSTR
           *stop = 0;         // Write nil-term CHA.
           if (++stop >= stop) stop -= size;
           break;
@@ -271,7 +271,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 
         // Write data.
         *stop = ui1;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
         if (++stop >= stop) stop -= size;
         break;
 #else
@@ -297,13 +297,13 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         ui1 = (IUA)ui2;
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
 
         // Byte 2
         ui1 = (IUA)(ui2 >> 8);
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
         break;
 #else
         return BOutError(bout, cErrorInvalidType);
@@ -337,12 +337,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
 
         // Byte 2
         if (--space == 0)
@@ -353,12 +353,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
 
         // Byte 3
         if (--space == 0)
@@ -367,7 +367,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         ui1 |= 0x80;
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
       } break;
 #else
       case SVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
@@ -391,12 +391,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
         // This wont happen I don't think.
         // if (--ui2 == 0)
         //    return BOutError (cErrorVarintOverflow, params, index,
@@ -425,7 +425,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           // Byte 1
           ui1 = (IUA)ui4;
           *stop = ui1;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           if (++stop >= stop) stop -= size;
         }
         break;
@@ -450,7 +450,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         for (value = sizeof(ISD); value > 0; --value) {
           // Byte 1
           ui1 = (IUA)ui8;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           *stop = ui1;
           if (++stop >= stop) stop -= size;
         }
@@ -475,7 +475,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 = ui8 & 0xFF;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           break;
         }
         ui1 = ui8 & 0x7f;  //< Take 7 bits at a time.
@@ -484,12 +484,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           ui1 |= 0x80;
           *stop = ui1;
           if (++stop >= stop) stop -= size;
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           break;
         }
         *stop = ui1;
         if (++stop >= stop) stop -= size;
-        hash = HashPrime16(ui1, hash);
+        hash = HashIUB(ui1, hash);
 
         goto WriteVarint8;
       } break;
@@ -564,14 +564,14 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         if (origin + length >= stop) {
           for (; size - length > 0; --length) {
             ui1 = *(ui1_ptr++);
-            hash = HashPrime16(ui1, hash);
+            hash = HashIUB(ui1, hash);
             *stop = ui1;
             ++stop;
           }
           stop = origin - 1;
           for (; length > 0; --length) {
             ui1 = *(ui1_ptr++);
-            hash = HashPrime16(ui1, hash);
+            hash = HashIUB(ui1, hash);
             *stop = ui1;
             ++stop;
           }
@@ -579,7 +579,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         }
         for (; length > 0; --length) {
           ui1 = *(ui1_ptr++);
-          hash = HashPrime16(ui1, hash);
+          hash = HashIUB(ui1, hash);
           *stop = ui1;
           ++stop;
         }
@@ -710,7 +710,7 @@ CHA* Print (BOut* bout, CHA* socket, CHA* buffer_end) {
     }
     ISC size = bout->size;
     UTF& utf (socket, buffer_end);
-    utf << "\nBOut:" << Hex<UIW> (bout)
+    utf << "\nBOut:" << Hex<IUW> (bout)
           << " size:" << size
           << " origin:" << bout->origin << " stop:" << bout->stop
           << " read:"  << bout->read
@@ -732,4 +732,4 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
 
 }  // namespace _
 
-#endif  //> #if SEAM >= SCRIPT2_DIC
+#endif

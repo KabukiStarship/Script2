@@ -1,14 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /autoject.h
-@author  Cale McCollough <https://calemccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Autoject.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_AUTOJECT_HEADER
@@ -22,14 +22,14 @@ struct Autoject;
 @return A word-aligned buffer, rounding up if unaligned.
 @param obj  A block of word-aligned heap memory.
 @param size The size of the buffer to create in bytes. */
-typedef UIW* (*RamFactory)(UIW* obj, ISW size);
+typedef IUW* (*RamFactory)(IUW* obj, ISW size);
 
 namespace _ {
 
 /* ASCII OBJ and RamFactory. */
 struct Autoject {
   RamFactory ram_factory;  //< Autoject Factory function pointer.
-  UIW* begin;              //< Pointer to the Autoject.
+  IUW* begin;              //< Pointer to the Autoject.
 };
 
 enum AsciiFactoryFunction {
@@ -37,7 +37,7 @@ enum AsciiFactoryFunction {
   cFactoryNew = 1,     //< Factory function checks if the size can double.
   cFactoryGrow = 2,    //< Factory function double OBJ size.
   cFactoryClone = 3,   //< Factory function clones the OBJ.
-  cFactoryName = 4,    //< Factory function gets the info AStrand.
+  cFactoryName = 4,    //< Factory function gets the info AString.
   cFactoryFunctionCount = 5,  //< Factory function count.
 };
 
@@ -52,12 +52,12 @@ enum AsciiFactoryError {
 };
 
 /* Creates or destroys a block of heap memory. */
-LIB_MEMBER UIW* RamFactoryHeap(UIW* obj, ISW size);
+LIB_MEMBER IUW* RamFactoryHeap(IUW* obj, ISW size);
 
 /* Creates a block of heap memory. */
-LIB_MEMBER UIW* RamFactoryStack(UIW* ptr, ISW size);
+LIB_MEMBER IUW* RamFactoryStack(IUW* ptr, ISW size);
 
-LIB_INLINE UIW* AutojectBeginSet(Autoject& obj, void* buffer);
+LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* buffer);
 
 /* Deletes the given obj using the obj.factory. */
 LIB_MEMBER void Delete(Autoject& obj);

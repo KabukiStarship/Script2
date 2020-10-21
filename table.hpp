@@ -1,28 +1,28 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /table.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Table.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #if SEAM >= SCRIPT2_TABLE
 
 #ifndef SCRIPTT2_TABLE_T
 #define SCRIPTT2_TABLE_T
 
-#include "array.hpp"
-#include "binary.hpp"
-#include "uniprinter.hpp"
+#include "Array.hpp"
+#include "Binary.hpp"
+#include "Uniprinter.hpp"
 
 #if SEAM == SCRIPT2_TABLE
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #define D_COUT_TABLE(item)
 #endif
 
@@ -83,22 +83,22 @@ enum {
   cMinTableSize = 64,  //< Min size of a Table
 };
 
-/* Returns the highest signed prime that can fit in type SI.
-@return 0 if the sizeof (SI) is not 1, 2, 4, or 8.  */
-template <typename SI>
-inline SI PrimeMaxSigned() {
-  SI prime = (sizeof(SI) == 1)
+/* Returns the highest signed prime that can fit in type IS.
+@return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */
+template <typename IS>
+inline IS PrimeMaxSigned() {
+  IS prime = (sizeof(IS) == 1)
                  ? 127
-                 : (sizeof(SI) == 2)
+                 : (sizeof(IS) == 2)
                        ? 32767
-                       : (sizeof(SI) == 4)
+                       : (sizeof(IS) == 4)
                              ? 2147483647
-                             : (sizeof(SI) == 8) ? 9223372036854775783 : 0;
+                             : (sizeof(IS) == 8) ? 9223372036854775783 : 0;
   return prime;
 }
 
-/* Returns the highest signed prime that can fit in type UI.
-@return 0 if the sizeof (UI) is not 1, 2, 4, or 8. */
+/* Returns the highest signed prime that can fit in type IU.
+@return 0 if the sizeof (IU) is not 1, 2, 4, or 8. */
 template <typename HSH>
 inline HSH TPrimeMaxUnigned() {
   HSH prime = sizeof(HSH) == 1
@@ -127,14 +127,14 @@ inline HSH THashPrime(const CHT* str) {
   return hash;
 }
 
-inline IUB Hash16UI2(IUB value, IUB hash) {
+inline IUB HashIUB(IUB value, IUB hash) {
   IUB prime = TPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = ((value >> 8) * prime) + hash;
   return hash;
 }
 
-inline IUB Hash16UI4(IUC value, IUB hash) {
+inline IUB HashIUB(IUC value, IUB hash) {
   IUB prime = TPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
@@ -143,7 +143,7 @@ inline IUB Hash16UI4(IUC value, IUB hash) {
   return hash;
 }
 
-inline IUB Hash16UI8(IUD value, IUB hash) {
+inline IUB HashIUB(IUD value, IUB hash) {
   IUB prime = TPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
@@ -167,17 +167,17 @@ inline ISZ TTableEntryOverhead() {
   return 4 * sizeof(ISZ);
 }
 
-template <typename ISZ = ISN, typename CHT = CHR, ISZ kCountMax = 32,
-          ISZ kAverageStringLength = 16>
+template <typename ISZ = ISN, typename CHT = CHR, ISZ cCountMax = 32,
+          ISZ cAverageStringLength = 16>
 constexpr ISZ CTableSize() {
-  return sizeof(TTable<ISZ>) + 4 * kCountMax * sizeof(ISZ) +
-         kCountMax * (kAverageStringLength + 1);
+  return sizeof(TTable<ISZ>) + 4 * cCountMax * sizeof(ISZ) +
+         cCountMax * (cAverageStringLength + 1);
 }
 
 template <typename ISZ = ISN, typename CHT = CHR>
-constexpr ISZ CTableSize(ISZ count_max, ISZ average_String_length = 24) {
+constexpr ISZ CTableSize(ISZ count_max, ISZ average_string_length = 24) {
   return sizeof(TTable<ISZ>) + 4 * count_max * sizeof(ISZ) +
-         count_max * (average_String_length + 1);
+         count_max * (average_string_length + 1);
 }
 
 template <typename ISZ = ISN, typename CHT = CHR>
@@ -202,13 +202,13 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
 
   ISN count_length_max = STRLength(count_max);
   count_length_max = (count_length_max < 2 ? 2 : count_length_max);
-  o << Linef("\n+---\n| Table<SI") << CHA('0' + sizeof(ISZ)) << ",UI"
+  o << Linef("\n+---\n| Table<IS") << CHA('0' + sizeof(ISZ)) << ",IU"
     << CHA('0' + sizeof(HSH)) << ",CH" << CHA('0' + sizeof(CHT)) << ">:0x"
     << Hexf(table) << " size_bytes:" << size_bytes << " key_count:" << count
     << " count_max:" << count_max << " size_pile:" << size_pile
     << Linef("\n+---\n| ") << Rightf("i", count_length_max)  //
-    << Centerf("hash_e", kHashWidth - 2) << Centerf("hash_u", kHashWidth - 2)
-    << Centerf("hash_s", kHashWidth - 2) << Centerf("index_u", kHashWidth)
+    << Centerf("hash_e", cHashWidth - 2) << Centerf("hash_u", cHashWidth - 2)
+    << Centerf("hash_s", cHashWidth - 2) << Centerf("index_u", cHashWidth)
     << Centerf("offset", 8) << Linef(" \"Key\":{Collissions}\n+---");
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
@@ -219,10 +219,10 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
 
   for (ISZ i = 0; i < count; ++i) {
     o << "\n| " << Rightf(i, count_length_max)  //
-      << Centerf().Hex(THashPrime<HSH, CHT>(keys - key_offsets[i]), kHashWidth)
-      << Centerf().Hex(hashes[unsorted_indexes[i]], kHashWidth)
-      << Centerf().Hex(hashes[i], kHashWidth)
-      << Centerf(unsorted_indexes[i], kHashWidth) << Centerf(key_offsets[i], 8)
+      << Centerf().Hex(THashPrime<HSH, CHT>(keys - key_offsets[i]), cHashWidth)
+      << Centerf().Hex(hashes[unsorted_indexes[i]], cHashWidth)
+      << Centerf().Hex(hashes[i], cHashWidth)
+      << Centerf(unsorted_indexes[i], cHashWidth) << Centerf(key_offsets[i], 8)
       << " \"" << (keys - key_offsets[i]) << "\":{";
 
     collision_pile_index = collision_indexes[i];
@@ -274,7 +274,7 @@ TTable<ISZ>* TTableInit(TTable<ISZ>* table, ISZ height, ISZ size_bytes) {
 }
 
 template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-inline TTable<ISZ>* TTableInit(UIW* socket, HSH count_max, ISZ size) {
+inline TTable<ISZ>* TTableInit(IUW* socket, HSH count_max, ISZ size) {
   auto table = reinterpret_cast<TTable<ISZ>*>(socket);
   return TTableInit<ISZ, HSH, CHT>(table, count_max, size);
 }
@@ -293,10 +293,10 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
     return CInvalidIndex<ISZ>();  //< We're out of buffered indexes.
 
   HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
-  ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
-      *collision_indexes = key_offsets + count_max,
-      *unsorted_indexes = collision_indexes + count_max,
-      *collision_pile = unsorted_indexes + count_max;
+  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
+     * collision_indexes = key_offsets + count_max,
+     * unsorted_indexes = collision_indexes + count_max,
+     * collision_pile = unsorted_indexes + count_max;
   CHT *keys = TPtr<CHT>(table, size_bytes) - 1, *destination;
   HSH hash = THashPrime<HSH, CHT>(key), current_hash;
   ISZ key_length = TSTRLength<CHT, ISZ>(key);
@@ -594,26 +594,26 @@ ISZ TTableRemove(TTable<ISZ>* table, const CHT* key) {
 
 /* An ASCII Table Autoject. */
 template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR,
-          ISZ kCountMax_ = 32,
+          ISZ cCountMax = 32,
           typename BUF =
-              TBUF<TTableSize<ISZ, CHT, kCountMax_>(), ISA, ISZ, TTable<ISZ>>>
+              TBUF<CTableSize<ISZ, CHT, cCountMax>(), ISA, ISZ, TTable<ISZ>>>
 class ATable {
   AArray<CHT, ISZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:
   /* Constructs a Table.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ATable() {
-    ISZ size_bytes = TTableSize<ISZ, CHT, kCountMax_>();
-    D_ARRAY_WIPE(obj_.Begin(), size_bytes);
-    TTableInit<ISZ, HSH, CHT>(obj_.Begin(), kCountMax_, size_bytes);
+    ISZ size_bytes = CTableSize<ISZ, CHT, cCountMax>();
+    D_ARRAY_WIPE(obj_.Origin(), size_bytes);
+    TTableInit<ISZ, HSH, CHT>(obj_.Origin(), cCountMax, size_bytes);
   }
 
   /* Constructs a Table.
-  @param factory SocketFactory to call when the Strand overflows. */
+  @param factory SocketFactory to call when the String overflows. */
   ATable(ISZ count_max) {
-    ISZ size_bytes = TTableSize<ISZ, CHT, count_max>();
-    D_ARRAY_WIPE(obj_.Begin(), size_bytes);
-    TTableInit<ISZ, HSH, CHT>(obj_.Begin(), count_max, size_bytes);
+    ISZ size_bytes = CTableSize<ISZ, CHT, count_max>();
+    D_ARRAY_WIPE(obj_.Origin(), size_bytes);
+    TTableInit<ISZ, HSH, CHT>(obj_.Origin(), count_max, size_bytes);
   }
 
   /* Deep copies the given string into the Table.

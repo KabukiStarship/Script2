@@ -1,21 +1,21 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /door.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Door.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
-#if SEAM >= SCRIPT2_EXPR
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
 #ifndef SCRIPT2_DOOR
 #define SCRIPT2_DOOR
-#include "crabs.h"
+#include "Crabs.h"
 #include "slot.h"
-#include "stack.hpp"
-#include "strand.hpp"
+#include "Stack.hpp"
+#include "String.hpp"
 
 namespace _ {
 
@@ -42,12 +42,12 @@ connection to multiple systems over a WiFi connection.
 
 @endcode
 */
-template <ISC kDoorCount_, ISC kSlotSizeDefault_>
+template <ISC cDoorCount_, ISC cSlotSizeDefault_>
 class TDoor : public Operand {
  public:
   enum {
-    cDoorCount = kDoorCount_,              //< Initial (or static) Door count.
-    cSlotSizeDefault = kSlotSizeDefault_,  //< Default.
+    cDoorCount = cDoorCount_,              //< Initial (or static) Door count.
+    cSlotSizeDefault = cSlotSizeDefault_,  //< Default.
   };
 
   typedef enum Errors {
@@ -60,8 +60,8 @@ class TDoor : public Operand {
   };
 
   /* A door in a Chinese room. */
-  TDoor(const CHA* roomName = nullptr, UIW* socket = nullptr,
-        UIW size_bytes = cMinDoorSize) {
+  TDoor(const CHA* roomName = nullptr, IUW* socket = nullptr,
+        IUW size_bytes = cMinDoorSize) {
     if (!socket) {
       if (size_bytes < cMinDoorSize) {
         size_bytes = cMinDoorSize;
@@ -130,20 +130,21 @@ class TDoor : public Operand {
 
   /* Script2 operations. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
-    static const Op kThis = {
-        "Door",
-        OpFirst('A'),
-        OpFirst('A' + slots_->count),
-        "A door in a Chinese room with a bunch of slots in it where "
-        "messages are passed.",
-        '}',
-        ';',
-        ' ',
-        false,
-        nullptr,
-        nullptr};
+    static const Op cThis = {
+      "Door",
+      OpFirst('A'),
+      OpFirst('A' + slots_->count),
+      "A door in a Chinese room with a bunch of slots in it where "
+      "messages are passed.",
+      '}',
+      ';',
+      ' ',
+      false,
+      nullptr,
+      nullptr
+    };
     if (index == '?') {
-      return CrabsQuery(crabs, kThis);
+      return CrabsQuery(crabs, cThis);
     }
     index -= ' ';
     if (((ISC)index) >= slots_->count) {
@@ -155,10 +156,10 @@ class TDoor : public Operand {
  private:
   ISC size_bytes_,                 //< Door size in bytes.
       scan_count_max_;             //< Max bytes to pull throught the slot.
-  UIW* begin_;                     //< Pointer to dynamic socket.
+  IUW* begin_;                     //< Pointer to dynamic socket.
   TMatrix<ISC, ISC, ISC>* slots_;  //< Slots in the door.
   CBIn* OffsetToBIn(ISC offset) {
-    return reinterpret_cast<CBIn*>(reinterpret_cast<UIW>(this) + offset);
+    return reinterpret_cast<CBIn*>(reinterpret_cast<IUW>(this) + offset);
   }
 };
 

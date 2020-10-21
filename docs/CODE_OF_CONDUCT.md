@@ -1,4 +1,4 @@
-# [Script2™](../README)
+# [Script2](../README)
 
 ## [docs](./)
 

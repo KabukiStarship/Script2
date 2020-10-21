@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /op.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Op.h
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= SCRIPT2_CRABS
 #ifndef INCLUDED_SCRIPT2_OP
 #define INCLUDED_SCRIPT2_OP 1
 
-#include "strand.hpp"
+#include "String.hpp"
 
 namespace _ {
 
@@ -29,7 +29,7 @@ struct BOut;
 /* An expression Operation with name key, multiple input params,
     result, and optional description of a data set.
     @code
-    static const Op kThis = { "Key",
+    static const Op cThis = { "Key",
         Params<1, 2>::Header, Params<1, 2>::Header,
         "Description", '}', ';', ' ', nullptr, "-", nullptr };
 
@@ -39,15 +39,15 @@ struct BOut;
     @endcode */
 struct LIB_MEMBER Op {
   const CHA* name;          //< Op name.
-  const ISC *in,            //< Input kBSQ params or OpFirst.
-      *out;                 //< Output kBSQ params or OpLast.
+  const ISC *in,            //< Input cBSQ params or OpFirst.
+      *out;                 //< Output cBSQ params or OpLast.
   const CHA* description;   //< Op description.
   CHC pop,                  //< Index of the Pop Operation.
       close,                //< Index of the Close Operation.
       default_op;           //< Index of the Default Operation.
   BOL using_numbers;        //< Flag for if tokens may use numbers.
-  const CHA *ignore_chars,  //< Strand of chars to ignore.
-      *allowed_chars;       //< Strand of allowed symbols.
+  const CHA *ignore_chars,  //< String of chars to ignore.
+      *allowed_chars;       //< String of allowed symbols.
   const BOut* evaluation;   //< Evaluated expression Slot.
 };
 
@@ -62,7 +62,7 @@ inline const ISC* OpFirst(CHC index) {
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
   A_ASSERT(op);
-  return (CHC) reinterpret_cast<UIW>(op->in);
+  return (CHC) reinterpret_cast<IUW>(op->in);
 }
 
 /* Converts the given value to a pointer. */
@@ -73,7 +73,7 @@ inline const ISC* OpLast(CHC index) {
 /* Converts the given value to a pointer. */
 inline CHC OpLast(const Op* op) {
   A_ASSERT(op);
-  return (CHC) reinterpret_cast<UIW>(op->out);
+  return (CHC) reinterpret_cast<IUW>(op->out);
 }
 
 #if USING_SCRIPT2_TEXT == YES_0

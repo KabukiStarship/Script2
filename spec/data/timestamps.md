@@ -32,7 +32,7 @@ The 32-bit time epoch shall be set to 32 years[] starting at the January 1st of 
 
 `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
-**[<< Previous Section:Text](./text) | [Next Section: >>](./)**
+**[<< Previous Section: Text](./text) | [Next Section: Strings >>](./strings)**
 
 ## References
 
@@ -40,6 +40,6 @@ The 32-bit time epoch shall be set to 32 years[] starting at the January 1st of 
 
 ## License
 
-Copyright 2015-20 © [Kabuki Starship™](https://kabukistarship.com).
+Copyright 2015-20 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

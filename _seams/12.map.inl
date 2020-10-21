@@ -1,24 +1,24 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/12.map.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/12.Map.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (ISZ) 2015-20 Kabuki Starship <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_MAP
-#include "../map.hpp"
+#include "../Map.hpp"
 //
-#include "../rng.h"
+#include "../RNG.h"
 using namespace _;
 #if SEAM == SCRIPT2_MAP
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 
-namespace script2 {
+namespace Script2 {
 template <typename D, D kDomainMin_, D kDomainMax, typename ISZ,
           ISZ kCodomainMin_, ISZ kCodomainMax_, ISZ cSize_>
 void TestMap() {
@@ -66,10 +66,10 @@ void TestMap() {
     A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
   D_COUT_OBJ(map);
 }
-}  // namespace script2
+}  // namespace Script2
 #endif
 
-namespace script2 {
+namespace Script2 {
 const CHA* Map(const CHA* args) {
 #if SEAM >= SCRIPT2_MAP
   A_TEST_BEGIN;
@@ -98,4 +98,4 @@ const CHA* Map(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

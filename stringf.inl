@@ -1,18 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /stringf.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Stringf.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
-#include <_config.h>
-//
-#include "stringf.hpp"
-
+#include <_Config.h>
+#include "Stringf.hpp"
 namespace _ {
-
 const CHA* STRPrintCharsHeader() {
   return "\n|0       8       16      24      32      40      48      56      |"
          " Begin address:";
@@ -35,11 +31,11 @@ const CHA* STRPrintHexBorder() {
 
 }  // namespace _
 
-#if SEAM >= SCRIPT2_UNIPRINTER
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "_debug.inl"
+#if SEAM >= SCRIPT2_CORE
+#if SEAM == SCRIPT2_CORE
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -272,11 +268,11 @@ CHA* Valuef::ToSTA() { return value.ToSTA(); }
 CHB* Valuef::ToSTB() { return value.ToSTB(); }
 CHC* Valuef::ToSTC() { return value.ToSTC(); }
 
-UIW Valuef::ToWord() { return value.Word(); }
+IUW Valuef::ToWord() { return value.Word(); }
 
 Hexf::Hexf(const void* origin, ISW size) : element(origin, size) {}
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-Hexf::Hexf(const void* item) : element(UIW(item), -ISW(sizeof(const void*))) {}
+Hexf::Hexf(const void* item) : element(IUW(item), -ISW(sizeof(const void*))) {}
 Hexf::Hexf(CHA item) : element(item, -ISW(sizeof(ISA))) {}
 Hexf::Hexf(ISA item) : element(item, -ISW(sizeof(ISA))) {}
 Hexf::Hexf(IUA item) : element(item, -ISW(sizeof(IUA))) {}
@@ -297,7 +293,7 @@ Hexf::Hexf(FPD item) : element(item, -ISW(sizeof(FPD))) {}
 
 Binaryf::Binaryf(const void* origin, ISW size) : element(origin, size) {}
 Binaryf::Binaryf(const void* item)
-    : element(UIW(item), -ISW(sizeof(const void*))) {}
+    : element(IUW(item), -ISW(sizeof(const void*))) {}
 Binaryf::Binaryf(ISA item) : element(item, -ISW(sizeof(ISA))) {}
 Binaryf::Binaryf(IUA item) : element(item, -ISW(sizeof(IUA))) {}
 Binaryf::Binaryf(ISB item) : element(item, -ISW(sizeof(ISB))) {}
@@ -422,7 +418,7 @@ Stringf::Stringf(TypeValue item, ISW count) : String_(buffer_), count_(count) {
   Print(item);
 }
 
-UIW Stringf::Word() { return buffer_[0]; }
+IUW Stringf::Word() { return buffer_[0]; }
 
 void* Stringf::Value() { return buffer_; }
 
@@ -901,9 +897,9 @@ Indentf::Indentf(ISW indent_count) : indent_count(indent_count) {}
 
 #if SEAM >= SCRIPT2_FTOS
 #if SEAM == SCRIPT2_FTOS
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 #include <cstdio>  // For sprintf_s

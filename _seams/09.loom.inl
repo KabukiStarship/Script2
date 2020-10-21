@@ -1,25 +1,25 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/09.loom.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/09.Loom.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Cale McCollough
-<<cale-mccollough.github.io>>; all right reserved (R). This Source Code
+<<cookingwithcale.org>>; all right reserved (R). This Source Code
 Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 the MPL was not distributed with this file, You can obtain one at
 <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_LOOM
-#include "../loom.hpp"
+#include "../Loom.hpp"
 //
-#include "test_words.h"
+#include "TestWords.h"
 using namespace _;
 #if SEAM == SCRIPT2_LOOM
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 
-namespace script2 {
+namespace Script2 {
 template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
@@ -28,8 +28,7 @@ void TestLoom() {
     cSize = 192 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ALoom<CH"
-         << CHT('@' + sizeof(CHT)) << ",IS" << CHT('@' + sizeof(ISZ))
+  D_COUT("Testing ALoom<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>()
          << "> with cSize:" << cSize << " and cCount:" << cCount);
 
   ALoom<CHT, ISZ, ISY, cSize, TBUF<cSize>> loom(cCount);
@@ -134,10 +133,10 @@ void TestLoom() {
 
   A_AVOW(ISY(-1), loom.Find(test));
 }
-}  // namespace script2
+}  // namespace Script2
 #endif
 
-namespace script2 {
+namespace Script2 {
 static const CHA* Loom(const CHA* args) {
 #if SEAM >= SCRIPT2_LOOM
   A_TEST_BEGIN;
@@ -153,4 +152,4 @@ static const CHA* Loom(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

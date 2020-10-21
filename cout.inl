@@ -1,30 +1,30 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /cout.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /COut.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 
 #if USING_CONSOLE == YES_0
 
-#include "cout.h"
+#include "COut.h"
 //
-#include "puff.hpp"
-#include "stringf.hpp"
-#include "typevalue.h"
-#include "uniprinter.hpp"
+#include "Puff.hpp"
+#include "Stringf.hpp"
+#include "TypeValue.hpp"
+#include "Uniprinter.hpp"
 
 //#include <cstdio>
 #include <iostream>
 
-#if SEAM == SCRIPT2_UNIPRINTER
-#include "_debug.inl"
+#if SEAM == SCRIPT2_CORE
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 #define STD_COUT std::wcerr
@@ -203,7 +203,7 @@ COut& COut::Print(FPC item) {
 #else
   enum { cSize = 16 };
   CHA buffer[cSize];
-  TPrintFloat<FPC, IUC, CHA>(buffer, cSize, value);
+  TSPrint<CHA>(buffer, cSize, item);
   Print(buffer);
 #endif
   return *this;
@@ -216,7 +216,7 @@ COut& COut::Print(FPD item) {
 #else
   enum { cSize = 24 };
   CHA buffer[cSize];
-  TPrintFloat<FPD, IUD, CHA>(buffer, cSize - 1, item);
+  TSPrint<CHA>(buffer, cSize - 1, item);
   Print(buffer);
 #endif
   return *this;
@@ -437,5 +437,8 @@ _::COut& operator<<(_::COut& o, _::Headingf item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, _::Indentf item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, _::Charsf item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, _::COut item) { return o; }
+_::COut& operator<<(_::COut& o, _::Sizef item) {
+  return _::TSizefPrint<_::COut>(o, item);
+}
 
 #endif

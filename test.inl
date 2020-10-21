@@ -1,25 +1,24 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /test.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Test.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 
-#include "test.h"
+#include "Test.h"
 //
-#include "cout.h"
-#include "stringf.hpp"
+#include "COut.h"
+#include "Stringf.hpp"
 
 namespace _ {
 
 void TestFunctionLine(ISN line, const CHA* function, const CHA* file) {
-  static const CHA kStrandIndex[] = "\0";
-  COut("\n        Function:").Print(function)
-      << "\n            Line:" << line << " in \"" << file << '\"';
+  COut("\n        Function:").Print(function) <<
+       "\n            Line:" << line << " in \"" << file << '\"';
 }
 
 BOL TestWarn(ISN line, const CHA* function, const CHA* file) {

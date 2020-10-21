@@ -1,23 +1,23 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/02.rng.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/02.Socket.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_RNG
-#include "../binary.hpp"
+#include "../Binary.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_RNG
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 #endif
 
-namespace script2 {
+namespace Script2 {
 static const CHA* _02_Socket(const CHA* args) {
 #if SEAM >= SCRIPT2_RNG
   A_TEST_BEGIN;
@@ -55,4 +55,4 @@ static const CHA* _02_Socket(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

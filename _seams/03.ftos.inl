@@ -1,24 +1,24 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /_seams/03.ftos.h
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /_Seams/03.FtoS.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_FTOS
-//#include "../rng.h"
+//#include "../RNG.h"
 using namespace std;
 using namespace _;
 #if SEAM == SCRIPT2_FTOS
-#include "../_debug.inl"
+#include "../_Debug.inl"
 #else
-#include "../_release.inl"
+#include "../_Release.inl"
 #endif
 #endif
 
-namespace script2 {
+namespace Script2 {
 const CHA* FtoS(const CHA* args) {
 #if SEAM >= SCRIPT2_FTOS
   A_TEST_BEGIN;
@@ -35,7 +35,7 @@ const CHA* FtoS(const CHA* args) {
   IUD value;
   FPD dbl_expected, dbl_found;
 
-  D_COUT("\n\nTesting Float Ceiling<Float, UI> (Float)...\n");
+  D_COUT("\n\nTesting Float Ceiling<Float, IU> (Float)...\n");
 
   for (ISC i = 0; i < cTestCount; ++i) {
     do {
@@ -78,4 +78,4 @@ const CHA* FtoS(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace script2
+}  // namespace Script2

@@ -1,20 +1,20 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /array.hpp
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Array.hpp
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #ifndef SCRIPT2_ARRAY_CODE
 #define SCRIPT2_ARRAY_CODE 1
 
-#include "array.h"
-#include "typevalue.hpp"
+#include "Array.h"
+#include "TypeValue.hpp"
 
 namespace _ {
 /* Overwrites the memory with fill_char; functionally equivalent to memset. */
@@ -27,9 +27,9 @@ inline CHA* ArrayFill(void* start, void* stop, CHA fill_char) {
 /* The maximum autoject size.
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
-template <typename SI>
-inline SI TArraySizeMax() {
-  SI count_max = 0;
+template <typename IS>
+inline IS TArraySizeMax() {
+  IS count_max = 0;
   return (~count_max) - 15;
 }
 /* The upper bounds defines exactly how many elements can fit into a space
@@ -37,17 +37,17 @@ in memory. */
 template <typename T = ISW, typename ISZ = ISN, typename Class>
 inline ISZ TArraySizeMax() {
   ISZ max_value = ISZ((~ISZ(0)) >> 1);
-  return max_value - ISZ(sizeof(UIW) - 1 - sizeof(Class) / sizeof(T));
+  return max_value - ISZ(sizeof(IUW) - 1 - sizeof(Class) / sizeof(T));
 }
 }  // namespace _
 
 #if SEAM >= SCRIPT2_STACK
-#include "binary.hpp"
+#include "Binary.hpp"
 
 #if SEAM == SCRIPT2_STACK
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -56,8 +56,8 @@ namespace _ {
 //  cWordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
 //};
 
-inline UIW* AutojectBeginSet(Autoject& obj, void* buffer) {
-  UIW* ptr = reinterpret_cast<UIW*>(buffer);
+inline IUW* AutojectBeginSet(Autoject& obj, void* buffer) {
+  IUW* ptr = reinterpret_cast<IUW*>(buffer);
   if (!ptr) return ptr;
   obj.origin = ptr;
   return ptr;
@@ -92,9 +92,9 @@ struct TArray {
 
 /* Checks if the given autoject count is in the min max bounds of an ASCII
 Object. */
-template <typename T, typename SI>
-inline BOL TArrayCountIsValid(SI index, SI count_min) {
-  return (index >= count_min) && (index < TArraySizeMax<T, SI>());
+template <typename T, typename IS>
+inline BOL TArrayCountIsValid(IS index, IS count_min) {
+  return (index >= count_min) && (index < TArraySizeMax<T, IS>());
 }
 
 /* Gets the first byte of the ASCII Object data section. */
@@ -108,7 +108,7 @@ inline T* TArrayStart(Class* autoject) {
 template <typename T, typename ISZ, typename Printer>
 Printer& TArrayPrint(Printer& o, TArray<ISZ>* item) {
   ISZ size = item->size;
-  o << Linef("\n+---\nTArray<SI") << (char)('0' + sizeof(ISZ))
+  o << Linef("\n+---\nTArray<IS") << (char)('0' + sizeof(ISZ))
     << "> size:" << size;
   if (size == 0) return o;
   T* items = TArrayStart<T, ISZ>(item);
@@ -120,15 +120,15 @@ Printer& TArrayPrint(Printer& o, TArray<ISZ>* item) {
 }
 
 /* Calculates the size in bytes of an array with given element_count. */
-template <typename T, typename SI>
-inline SI TSizeOf(SI element_count) {
+template <typename T, typename IS>
+inline IS TSizeOf(IS element_count) {
   return sizeof(T) * element_count;
 }
 
 /* Calculates the size in bytes of an array with given element_count including
 the Class header. */
-template <typename T, typename SI, typename Class>
-inline SI TSizeOf(SI size) {
+template <typename T, typename IS, typename Class>
+inline IS TSizeOf(IS size) {
   return sizeof(T) * size + sizeof(Class);
 }
 
@@ -140,7 +140,7 @@ constexpr ISZ CSizeMin() {
 
 /* Sets the size to the new_size*/
 template <typename ISZ>
-inline UIW* TSizeSet(UIW* origin, ISZ new_size) {
+inline IUW* TSizeSet(IUW* origin, ISZ new_size) {
   *reinterpret_cast<ISZ*>(origin) = new_size;
   return origin;
 }
@@ -152,7 +152,7 @@ inline ISZ TSizeSet(Autoject& autoject, ISZ new_size) {
 
 /* Gets the ASCII Autoject size. */
 template <typename ISZ>
-inline ISZ TSize(UIW* origin) {
+inline ISZ TSize(IUW* origin) {
   return *reinterpret_cast<ISZ*>(origin);
 }
 
@@ -168,7 +168,7 @@ inline ISZ TSizeBytes(ISZ size) {
   return sizeof(Class) + sizeof(T) * size;
 }
 template <typename T, typename ISZ, typename Class>
-inline ISZ TSizeBytes(UIW* origin) {
+inline ISZ TSizeBytes(IUW* origin) {
   return TSizeBytes<T, ISZ, Class>(TSize<ISZ>(origin));
 }
 template <typename T, typename ISZ, typename Class>
@@ -183,7 +183,7 @@ inline ISZ TSizeWords(ISZ size) {
   return size_aligned_up >> cWordBitCount;
 }
 template <typename T, typename ISZ, typename Class>
-inline ISZ TSizeWords(UIW* origin) {
+inline ISZ TSizeWords(IUW* origin) {
   return TSizeWords<T, ISZ, Class>(TSize<ISZ>(origin));
 }
 template <typename T, typename ISZ, typename Class>
@@ -195,8 +195,8 @@ inline ISZ TSizeWords(Autoject& autoject) {
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename T, typename ISZ = ISN, typename Class>
-UIW* TArrayNew(SocketFactory factory, ISZ size) {
-  UIW* origin = factory(nullptr, TSizeBytes<T, ISZ, Class>(size));
+IUW* TArrayNew(SocketFactory factory, ISZ size) {
+  IUW* origin = factory(nullptr, TSizeBytes<T, ISZ, Class>(size));
   TSizeSet<ISZ>(origin, size);
   return origin;
 }
@@ -204,7 +204,7 @@ UIW* TArrayNew(SocketFactory factory, ISZ size) {
 /* Writes the size to the given word-aligned-down socket, making a new one if
 required. */
 template <typename T, typename ISZ>
-inline UIW* TArrayInit(Autoject& obj, UIW* buffer, ISZ size,
+inline IUW* TArrayInit(Autoject& obj, IUW* buffer, ISZ size,
                        SocketFactory socket_factory) {
   D_ASSERT(socket_factory);
   D_ASSERT(size >= CSizeMin<ISZ>());
@@ -255,25 +255,25 @@ TArray<ISZ>* TArrayWrite(TArray<ISZ>* destination, TArray<ISZ>* source,
 }
 
 template <typename T = IUA, typename ISZ = ISN, typename Class>
-UIW* TArrayWrite(UIW* destination, UIW* source, ISZ size) {
+IUW* TArrayWrite(IUW* destination, IUW* source, ISZ size) {
   TArray<ISZ>* result =
       TArrayWrite<T, ISZ, Class>(reinterpret_cast<TArray<ISZ>*>(destination),
                                  reinterpret_cast<TArray<ISZ>*>(source), size);
-  return reinterpret_cast<UIW*>(result);
+  return reinterpret_cast<IUW*>(result);
 }
 
 /* Clones the other ASCII Autoject including possibly unused autoject space.
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename T = IUA, typename ISZ = ISN, typename Class>
-UIW* TArrayClone(Autoject& obj) {
+IUW* TArrayClone(Autoject& obj) {
   SocketFactory factory = obj.socket_factory;
-  UIW* origin = obj.origin;
+  IUW* origin = obj.origin;
   // if (!factory || !origin) return nullptr;
 
   TArray<ISZ>* o = reinterpret_cast<TArray<ISZ>*>(origin);
   ISZ size = o->size;
-  UIW* clone = TArrayNew<T, ISZ, TArray<ISZ>>(size);
+  IUW* clone = TArrayNew<T, ISZ, TArray<ISZ>>(size);
   return TArrayWrite<T, ISZ, Class>(clone, origin, size);
 }
 
@@ -289,7 +289,7 @@ BOL TCanGrow(ISZ size) {
 template <typename T, typename ISZ, typename Class>
 BOL TArrayResize(Autoject& obj, ISZ new_size) {
   D_COUT("\nResizing Array to new_size:" << new_size);
-  UIW* buffer = obj.origin;
+  IUW* buffer = obj.origin;
   if (!buffer) return false;
   ISZ size = TSizeBytes<ISZ>(buffer);
   if (size < new_size) {
@@ -297,7 +297,7 @@ BOL TArrayResize(Autoject& obj, ISZ new_size) {
     TSizeSet<ISZ>(buffer, new_size);
     return true;
   }
-  UIW* new_begin = obj.socket_factory(nullptr, new_size);
+  IUW* new_begin = obj.socket_factory(nullptr, new_size);
   TSizeSet<ISZ>(new_begin, new_size);
   TArrayWrite<T, ISZ, Class>(new_begin, buffer, new_size);
   obj.origin = new_begin;
@@ -321,7 +321,7 @@ word-align to produce a valid result, which is 3 bytes on 32-bit systems and
 7 bytes on 64-bit systems. */
 template <typename ISZ>
 inline CHA* TArrayEnd(Autoject stack) {
-  UIW* socket = stack.origin;
+  IUW* socket = stack.origin;
   A_ASSERT(socket);
   ISZ size = *reinterpret_cast<ISZ*>(socket);
   return reinterpret_cast<CHA*>(socket) + size;
@@ -330,7 +330,7 @@ inline CHA* TArrayEnd(Autoject stack) {
 /* Gets the last IUA in the ASCII Object. */
 template <typename ISZ>
 inline const CHA* TArrayEnd(const Autoject stack) {
-  UIW* socket = stack.origin;
+  IUW* socket = stack.origin;
   ISZ size = *reinterpret_cast<ISZ*>(socket);
   return reinterpret_cast<const CHA*>(socket) + size;
 }
@@ -338,13 +338,13 @@ inline const CHA* TArrayEnd(const Autoject stack) {
 /* Returns the start of the OBJ. */
 template <typename T = CHA, typename ISZ, typename Class>
 inline T* TArrayStart(TArray<ISZ>* obj) {
-  UIW start = reinterpret_cast<UIW>(obj) + sizeof(Class);
+  IUW start = reinterpret_cast<IUW>(obj) + sizeof(Class);
   return reinterpret_cast<T*>(start);
 }
 
 /* Returns the start of the OBJ. */
 template <typename T = CHA, typename ISZ>
-inline T* TArrayStart(UIW* obj) {
+inline T* TArrayStart(IUW* obj) {
   return TArrayStart<T, ISZ>(reinterpret_cast<TArray<ISZ>*>(obj));
 }
 
@@ -356,15 +356,15 @@ inline T* TArrayStop(TArray<ISZ>* ary) {
 
 /* Returns the stop of the OBJ. */
 template <typename T = CHA, typename ISZ>
-inline T* TArrayStop(UIW* obj) {
+inline T* TArrayStop(IUW* obj) {
   return TArrayStop<T, ISZ>(reinterpret_cast<TArray<ISZ>*>(obj));
 }
 
 /* Prints this autoject to the COut. */
 template <typename ISZ, typename Printer>
 Printer& TArrayPrint(Printer& o, Autoject& obj) {
-  o << "\nAutoject<SI" << CHA('0' + sizeof(ISZ)) << '>';
-  UIW* origin = obj.origin;
+  o << "\nAutoject<IS" << CHA('0' + sizeof(ISZ)) << '>';
+  IUW* origin = obj.origin;
   if (origin) {
     ISZ size = *reinterpret_cast<ISZ*>(origin);
     o << " size:" << (ISW)size;
@@ -419,14 +419,14 @@ class TBUF {
   /* Default destructor does nothing. */
   TBUF() : words_() {}
 
-  /* Returns the socket as a UIW*. */
-  inline UIW* Words() { return words_; }
+  /* Returns the socket as a IUW*. */
+  inline IUW* Words() { return words_; }
 
   /* Gets the end word of the socket. */
-  inline UIW* WordsEnd() { return &words_[SizeWords()]; }
+  inline IUW* WordsEnd() { return &words_[SizeWords()]; }
 
   /* Gets the stop word of the socket. */
-  inline UIW* WordsStop() { return WordsEnd() - 1; }
+  inline IUW* WordsStop() { return WordsEnd() - 1; }
 
   /* Gets the origin element of the socket. */
   template <typename T = CHA>
@@ -437,7 +437,7 @@ class TBUF {
   /* Returns the first element of the ASCII Object data section. */
   template <typename RT = T>
   inline RT* Start() {
-    ISW address = reinterpret_cast<UIW>(words_);
+    ISW address = reinterpret_cast<IUW>(words_);
     return reinterpret_cast<RT*>(address + sizeof(Class));
   }
 
@@ -456,7 +456,7 @@ class TBUF {
 
   /* Sets the size to the new value. */
   template <typename ISW>
-  inline UIW* SetSize(ISW size) {
+  inline IUW* SizeSet(ISW size) {
     A_ASSERT((size & cWordLSbMask) == 0)
     *reinterpret_cast<ISW*>(words_) = size;
     return words_;
@@ -474,21 +474,21 @@ class TBUF {
   static constexpr ISZ SizeWords() { return CSizeWords<ISZ>(SizeBytes()); }
 
  private:
-  UIW words_[SizeWords()];  //< The word-aligned socket.
+  IUW words_[SizeWords()];  //< The word-aligned socket.
 };
 
 /* Creates */
 template <DT2 kType_>
 class TRamFactory {
   /* SocketFactory for the Stack deletes a non-nil buffer. */
-  static UIW* RamFactoryHeap(UIW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (UIW*)RamFactoryHeap;
+  static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
+    if (size_bytes == 0) return (IUW*)RamFactoryHeap;
     return _::RamFactoryHeap(buffer, size_bytes, kType_);
   }
 
   /* SocketFactory for the Stack doesn't delete a non-nil buffer. */
-  static UIW* RamFactoryStack(UIW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (UIW*)RamFactoryHeap;
+  static IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
+    if (size_bytes == 0) return (IUW*)RamFactoryHeap;
     return _::RamFactoryStack(buffer, size_bytes, kType_);
   }
 
@@ -546,7 +546,7 @@ class AArray {
   }
 
   /* Stores the origin and socket_factory to the obj_. */
-  AArray(UIW* origin, SocketFactory socket_factory) {
+  AArray(IUW* origin, SocketFactory socket_factory) {
     obj_.origin = origin;
     obj_.socket_factory = socket_factory;
   }
@@ -558,7 +558,7 @@ class AArray {
   inline BUF& Buffer() { return buffer_; }
 
   /* Returns the buffer_. */
-  inline UIW* Origin() { return obj_.origin; }
+  inline IUW* Origin() { return obj_.origin; }
 
   template <typename T = TStack<ISZ>>
   inline T OriginAs() {
@@ -567,7 +567,7 @@ class AArray {
 
   /* Sets the origin to the given pointer.
   @return Nil if the input is nil. */
-  inline UIW* OriginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
+  inline IUW* OriginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
 
   /* Gets the ASCII Object size in elements. */
   inline ISZ Size() { return TSize<ISZ>(obj_.origin); }
@@ -586,7 +586,7 @@ class AArray {
 
   /* Returns the start of the OBJ. */
   inline T* Start() {
-    UIW ptr = reinterpret_cast<UIW>(obj_.origin) + sizeof(TArray<ISZ>);
+    IUW ptr = reinterpret_cast<IUW>(obj_.origin) + sizeof(TArray<ISZ>);
     return reinterpret_cast<T*>(ptr);
   }
 

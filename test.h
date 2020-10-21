@@ -1,14 +1,14 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /test.h
-@author  Cale McCollough <https://calemccollough.github.io>
-@license Copyright (C) 2015-20 Cale McCollough <calemccollough.github.io>;
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Test.h
+@author  Cale McCollough <https://cookingwithcale.org>
+@license Copyright (C) 2015-20 Cale McCollough <cookingwithcale.org>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
-#include <_config.h>
+#include <_Config.h>
 
 #ifndef SCRIPT2_C_TEST
 #define SCRIPT2_C_TEST 1

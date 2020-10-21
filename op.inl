@@ -1,23 +1,23 @@
 /* Script2 (TM) @version 0.x
-@link    https://github.com/kabuki-starship/script2.git
-@file    /op.inl
-@author  Cale McCollough <https://cale-mccollough.github.io>
+@link    https://github.com/KabukiStarship/Script2.git
+@file    /Op.inl
+@author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
-#include <_config.h>
+#include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#include "bsq.h"
-#include "op.h"
-#include "slot.h"
-#include "test.h"
+#include "BSeq.h"
+#include "Op.h"
+#include "Slot.h"
+#include "Test.h"
 
 #if SEAM == SCRIPT2_DIC
-#include "_debug.inl"
+#include "_Debug.inl"
 #else
-#include "_release.inl"
+#include "_Release.inl"
 #endif
 
 namespace _ {
@@ -34,7 +34,7 @@ UTF1& Print(UTF1& utf, const Op* op) {
 #endif
 /*
 #if USING_SCRIPT2_TEXT
-Op OpInit (UIW* socket, ISC buffer_size) {
+Op OpInit (IUW* socket, ISC buffer_size) {
     BOut* bout = BOutInit (socket, buffer_size);
     Op log;
     log.bout = bout;
@@ -62,8 +62,8 @@ void Print (Op& log) {
     CHA socket[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
-            case kSTR: {
-                if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &ui1,
+            case cSTR: {
+                if (BinRead (bin, Params<2, kADR, cSTR> (), Args (args, &ui1,
                              socket)))
                     return;
                 Write (socket);
@@ -131,7 +131,7 @@ void Print (Op& log) {
                 Write (si1;
             }
             case cFPD: {
-                if (BinRead (bin, Params<2, kADR, kSTR> (), Args (args, &dbl)))
+                if (BinRead (bin, Params<2, kADR, cSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;
             }
