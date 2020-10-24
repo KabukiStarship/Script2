@@ -8,13 +8,12 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #include "BSeq.h"
-#include "Test.h"
 
 namespace _ {
 
-ISN BSQParamNumber(const ISN* params, ISN param_number) {
+ISN BSeqParamNumber(const ISN* params, ISN param_number) {
   if (!params) return 0;
   ISN num_params = *params++;
   if (param_number > num_params) return cNIL;
@@ -40,7 +39,7 @@ ISN BSQParamNumber(const ISN* params, ISN param_number) {
 }
 
 template <typename Printer>
-Printer& PrintBSQ(Printer& o, const ISN* params) {
+Printer& TPrintBSQ(Printer& o, const ISN* params) {
   ISN num_params = *params++, i, type, value = 0;
 
   o << "Param<";
@@ -56,8 +55,7 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
     o << STRType((ISN)value) << ", ";
     if (type >= cSTR) {
       if (value) {
-        o << "\nError: arrays may only be created from POD "
-             "types.";
+        o << "\nError: arrays may only be created from POD types.";
         return o;
       }
       // Print out the max length of the .
@@ -76,17 +74,17 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
         }
         case 1: {
           value = *params++;
-          o << "UIA:" << value << ", ";
+          o << "IUA:" << value << ", ";
           break;
         }
         case 2: {
           value = *params++;
-          o << "UI2:" << value << ", ";
+          o << "IUB:" << value << ", ";
           break;
         }
         case 3: {
           value = *params++;
-          o << "UI4:" << value << ", ";
+          o << "IUC:" << value << ", ";
           break;
         }
         case 4: {
@@ -97,10 +95,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
         case 5: {
           value = *params++;
           if (value == 0) {
-            o << "UIA:[0]";
+            o << "IUA:[0]";
             break;
           }
-          o << "UIA:[" << value << ": ";
+          o << "IUA:[" << value << ": ";
           for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
@@ -112,10 +110,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
         case 6: {
           value = *params++;
           if (value == 0) {
-            o << "UI2:[0]";
+            o << "IUB:[0]";
             break;
           }
-          o << "UI2:[" << value << ": ";
+          o << "IUB:[" << value << ": ";
           for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
@@ -127,10 +125,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
         case 7: {
           value = *params++;
           if (value == 0) {
-            o << "UI4:[0]";
+            o << "IUC:[0]";
             break;
           }
-          o << "UI4:[" << value << ": ";
+          o << "IUC:[" << value << ": ";
           for (ISN i = value; i != 0; --i) {
             value = *params++;
             o << value << ", ";
@@ -160,17 +158,17 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
       }
       case 1: {
         value = *params++;
-        o << "UIA:" << value << ", ";
+        o << "IUA:" << value << ", ";
         break;
       }
       case 2: {
         value = *params++;
-        o << "UI2:" << value << ", ";
+        o << "IUB:" << value << ", ";
         break;
       }
       case 3: {
         value = *params++;
-        o << "UI4:" << value << ", ";
+        o << "IUC:" << value << ", ";
         break;
       }
       case 4: {
@@ -181,10 +179,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
       case 5: {
         value = *params++;
         if (value == 0) {
-          o << "UIA:[0]";
+          o << "IUA:[0]";
           break;
         }
-        o << "UIA:[" << value << ": ";
+        o << "IUA:[" << value << ": ";
         for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";
@@ -196,10 +194,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
       case 6: {
         value = *params++;
         if (value == 0) {
-          o << "UI2:[0]";
+          o << "IUB:[0]";
           break;
         }
-        o << "UI2:[" << value << ": ";
+        o << "IUB:[" << value << ": ";
         for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";
@@ -211,10 +209,10 @@ Printer& PrintBSQ(Printer& o, const ISN* params) {
       case 7: {
         value = *params++;
         if (value == 0) {
-          o << "UI4:[0]";
+          o << "IUC:[0]";
           break;
         }
-        o << "UI4:[" << value << ": ";
+        o << "IUC:[" << value << ": ";
         for (ISN i = value; i != 0; --i) {
           value = *params++;
           o << value << ", ";

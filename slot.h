@@ -9,14 +9,12 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #ifndef SCRIPT2_SLOT
 #define SCRIPT2_SLOT
-#include "bin.hpp"
-#include "Binary.hpp"
+#include "BIn.hpp"
 #include "BOut.h"
 #include "Op.h"
-#include "Uniprinter.hpp"
 
 namespace _ {
 
@@ -28,15 +26,15 @@ you may write packed data.
 
 */
 struct Slot {
-  CHA *stop,    //< Stop of the data in the ring socket.
-      *stop,    //< End of the ring socket.
-      *origin,  //< Beginning of the ring socket.
-      *origin;  //< Start of the data in the ring socket.
+  CHA *origin,  //< Beginning of the ring socket.
+      *start,   //< Start of the data in the ring socket.
+      *stop,    //< Stop of the data in the ring socket.
+      *end;     //< End of the ring socket.
 
   /* Initializes the ring socket with the given socket origin and size.
   @param origin Pointer to the beginning of the ring socket.
   @param size  The size of the ring socket in bytes. */
-  Slot(IUW* socket, IUW size);
+  Slot(IUW* socket, ISW size);
 
   /* Initializes the slot from the BIn. */
   Slot(BIn* bin);
@@ -107,23 +105,11 @@ struct Slot {
   @return Nil upon success and an Error Operation upon failure. */
   const Op* Write(const CHA* message);
 
-  /* Copies the contents of the other slot into the slot. */
-  const Op* Write(Slot& other);
-
-#if USING_SCRIPT2_TEXT
-  /* Prints a  rep of this object to the printer. */
-  UTF1& Print(UTF1& printer);
-#endif
+  /* Copies the contents of the target slot into the slot. */
+  const Op* Write(Slot& target);
 };
 
 }  // namespace _
 
-#if USING_SCRIPT2_TEXT
-/* Prints out the bin to the text. */
-inline _::UTF1& operator<<(_::UTF1& printer, _::Slot& slot) {
-  return slot.Print(printer);
-}
 #endif
-
-#endif  //< SCRIPT2_SLOT
-#endif  //< #if SEAM >= SCRIPT2_DIC
+#endif

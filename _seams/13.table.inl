@@ -15,17 +15,20 @@ using namespace _;
 #else
 #include "../_Release.inl"
 #endif
+#define TPARAMS CHT, ISZ, ISY, HSH
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
 
 namespace Script2 {
 
-template <typename ISZ, typename IUZ, typename CHT>
+template <TARGS>
 void TestTable() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS")
-         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('0' + sizeof(IUZ)) << ",CH"
+         << CHT('@' + sizeof(ISZ)) << ",IU" << CHT('0' + sizeof(HSH)) << ",CH"
          << CHT('@' + sizeof(CHT)) << ">\n"
          << Linef("+---\n\n"));
 
-  ATable<ISZ, IUZ, CHT> table;
+  ATable<TPARAMS> table;
 
   static const CHT a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
@@ -33,50 +36,50 @@ void TestTable() {
                    cab[] = {'c', 'a', 'b', '\0'},
                    test[] = {'t', 'e', 's', 't', '\0'};
 
-  A_AVOW((ISZ)0, table.Add(a));
+  A_AVOW((ISY)0, table.Add(a));
 
-  A_AVOW((ISZ)0, table.Find(a));
+  A_AVOW((ISY)0, table.Find(a));
 
-  A_AVOW((ISZ)1, table.Add(b));
-  A_AVOW((ISZ)0, table.Find(a));
-  A_AVOW((ISZ)1, table.Find(b));
+  A_AVOW((ISY)1, table.Add(b));
+  A_AVOW((ISY)0, table.Find(a));
+  A_AVOW((ISY)1, table.Find(b));
 
-  A_AVOW((ISZ)2, table.Add(c));
-  A_AVOW((ISZ)0, table.Find(a));
-  A_AVOW((ISZ)1, table.Find(b));
-  A_AVOW((ISZ)2, table.Find(c));
+  A_AVOW((ISY)2, table.Add(c));
+  A_AVOW((ISY)0, table.Find(a));
+  A_AVOW((ISY)1, table.Find(b));
+  A_AVOW((ISY)2, table.Find(c));
 
-  A_AVOW((ISZ)3, table.Add(d));
-  A_AVOW((ISZ)0, table.Find(a));
-  A_AVOW((ISZ)1, table.Find(b));
-  A_AVOW((ISZ)2, table.Find(c));
-  A_AVOW((ISZ)3, table.Find(d));
+  A_AVOW((ISY)3, table.Add(d));
+  A_AVOW((ISY)0, table.Find(a));
+  A_AVOW((ISY)1, table.Find(b));
+  A_AVOW((ISY)2, table.Find(c));
+  A_AVOW((ISY)3, table.Find(d));
 
-  A_AVOW(CInvalidIndex<ISZ>(), table.Add(a));
-  A_AVOW(CInvalidIndex<ISZ>(), table.Add(b));
-  A_AVOW(CInvalidIndex<ISZ>(), table.Add(c));
-  A_AVOW(CInvalidIndex<ISZ>(), table.Add(d));
+  A_AVOW(CInvalidIndex<ISY>(), table.Add(a));
+  A_AVOW(CInvalidIndex<ISY>(), table.Add(b));
+  A_AVOW(CInvalidIndex<ISY>(), table.Add(c));
+  A_AVOW(CInvalidIndex<ISY>(), table.Add(d));
 
-  A_AVOW((ISZ)4, table.Add(abc));
-  A_AVOW((ISZ)4, table.Find(abc));
+  A_AVOW((ISY)4, table.Add(abc));
+  A_AVOW((ISY)4, table.Find(abc));
 
-  A_AVOW((ISZ)5, table.Add(bac));
-  A_AVOW((ISZ)4, table.Find(abc));
-  A_AVOW((ISZ)5, table.Find(bac));
+  A_AVOW((ISY)5, table.Add(bac));
+  A_AVOW((ISY)4, table.Find(abc));
+  A_AVOW((ISY)5, table.Find(bac));
 
-  A_AVOW((ISZ)6, table.Add(cba));
-  A_AVOW((ISZ)4, table.Find(abc));
-  A_AVOW((ISZ)5, table.Find(bac));
-  A_AVOW((ISZ)6, table.Find(cba));
+  A_AVOW((ISY)6, table.Add(cba));
+  A_AVOW((ISY)4, table.Find(abc));
+  A_AVOW((ISY)5, table.Find(bac));
+  A_AVOW((ISY)6, table.Find(cba));
 
-  A_AVOW((ISZ)7, table.Add(cab));
-  A_AVOW((ISZ)4, table.Find(abc));
-  A_AVOW((ISZ)5, table.Find(bac));
-  A_AVOW((ISZ)6, table.Find(cba));
-  A_AVOW((ISZ)7, table.Find(cab));
+  A_AVOW((ISY)7, table.Add(cab));
+  A_AVOW((ISY)4, table.Find(abc));
+  A_AVOW((ISY)5, table.Find(bac));
+  A_AVOW((ISY)6, table.Find(cba));
+  A_AVOW((ISY)7, table.Find(cab));
 
   D_COUT_OBJ(table);
-  A_AVOW(CInvalidIndex<ISZ>(), table.Find(test));
+  A_AVOW(CInvalidIndex<ISY>(), table.Find(test));
 
   // D_PAUSE("");
 }
@@ -88,17 +91,19 @@ static const CHA* Table(const CHA* args) {
 #if SEAM >= SCRIPT2_TABLE
   A_TEST_BEGIN;
 
-  TestTable<ISB, IUB, CHA>();
-  TestTable<ISC, IUC, CHA>();
+  TestTable<CHA, ISB, IUB>();
+  TestTable<CHA, ISC, IUC>();
 #if USING_UTF16 == YES_0
-  TestTable<ISB, IUB, CHB>();
-  TestTable<ISC, IUC, CHB>();
+  TestTable<CHB, ISB, IUB>();
+  TestTable<CHB, ISC, IUC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestTable<ISB, IUB, CHC>();
-  TestTable<ISC, IUC, CHC>();
+  TestTable<CHC, ISB, IUB>();
+  TestTable<CHC, ISC, IUC>();
 #endif
 #endif
   return nullptr;
 }
 }  // namespace Script2
+#undef TARGS
+#undef TPARAMS

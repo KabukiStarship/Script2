@@ -133,7 +133,7 @@ inline ISZ TBookSize(TBook<TPARAMS>* book) {
 }
 
 /* Prints the book to the printer. */
-template <TARGS, typename Printer>
+template <typename Printer, TARGS>
 Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
   ISY count = book->keys.map.count;
   printer << "\nBook<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>() << ",IS"
@@ -166,7 +166,7 @@ BOL TBookGrow(Autoject& obj) {
   A_ASSERT(book);
   ISZ size = TBookSize<TPARAMS>(book);
   if (!TCanGrow<ISZ>(size)) return false;
-  ISZ count_max = book->keys.map.count_max;
+  ISY count_max = book->keys.map.count_max;
   if (!TCanGrow<ISZ>(count_max)) return false;
 
   size = size << 1;
@@ -176,7 +176,7 @@ BOL TBookGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TBookPrint<TPARAMS, COut>(COut().Star(), book);
+  TBookPrint<COut, TPARAMS>(COut().Star(), book);
   D_COUT(Charsf(book, TBookEnd<TPARAMS>(book)));
 #endif
 
@@ -295,7 +295,7 @@ inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, FPD item) {
 
 /* Adds a string to the end of the Book, auto-growing if neccissary.
 @return The index upon success or -1 if the obj can't grow anymore. */
-template <typename T, typename BUF, TARGS>
+template <typename T, TARGS, typename BUF>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                 ISY index = cPush) {
   if (!key) return cErrorInputNil;
@@ -313,58 +313,58 @@ ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
   }
   return result;
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISA item,
                        ISY index) {
-  return TBookInsert<ISA, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISA, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUA item,
                        ISY index) {
-  return TBookInsert<ISA, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISA, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISB item,
                        ISY index) {
-  return TBookInsert<ISB, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISB, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUB item,
                        ISY index) {
-  return TBookInsert<ISB, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISB, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISC item,
                        ISY index = cPush) {
-  return TBookInsert<ISC, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISC, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUC item,
                        ISY index = cPush) {
-  return TBookInsert<ISC, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISC, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISD item,
                        ISY index = cPush) {
-  return TBookInsert<ISD, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<ISD, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUD item,
                        ISY index = cPush) {
-  return TBookInsert<IUD, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<IUD, TPARAMS, BUF>(obj, key, item, index);
 }
 #if USING_FPC == YES_0
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPC item,
                        ISY index = cPush) {
-  return TBookInsert<FPC, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<FPC, TPARAMS, BUF>(obj, key, item, index);
 }
 #endif
 #if USING_FPD == YES_0
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPD item,
                        ISY index = cPush) {
-  return TBookInsert<FPD, BUF, TPARAMS>(obj, key, item, index);
+  return TBookInsert<FPD, TPARAMS, BUF>(obj, key, item, index);
 }
 #endif
 
@@ -397,12 +397,12 @@ ISZ TBookFind(TBook<TPARAMS>* book, const CHT* string) {
 }
 
 /* An ASCII Book Autoject. */
-template <TARGS, ISZ cSize_ = 512,
-          typename BUF = TBUF<cSize_, CHT, ISZ, TString<ISN>>>
+template <TARGS, ISZ cSize = 512,
+          typename BUF = TBUF<cSize, CHT, ISZ, TString<ISN>>>
 class ABook {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
-  enum { cCountDefault = cSize_ / 16,
+  enum { cCountDefault = cSize / 16,
     // 
     cSizeDefault = CBookSizeDefault<TPARAMS>(),
   };
@@ -442,41 +442,41 @@ class ABook {
   /* Inserts the key and item on into the Loom and List at the given index.
   @return The index of the string in the Book. */
   inline ISY Insert(const CHT* key, ISA item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUA item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISB item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUB item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISC item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUC item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISD item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUD item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #if USING_FPC == YES_0
   inline ISY Insert(const CHT* key, FPC item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
 #if USING_FPD == YES_0
   inline ISY Insert(const CHT* key, FPD item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
   inline ISY Insert(const CHT* key, const CHT* item, ISY index = cPush) {
-    return TBookInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TBookInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 
   /* Removes the string at the given index from the Book. */
@@ -511,7 +511,7 @@ class ABook {
   /* Prints this object to the Printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    TBookPrint<TPARAMS, Printer>(o, This());
+    TBookPrint<Printer, TPARAMS>(o, This());
     return o;
   }
 

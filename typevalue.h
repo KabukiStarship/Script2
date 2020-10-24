@@ -93,11 +93,11 @@ class LIB_MEMBER TypeValue {
   CHA* ToSTA();
   CHB* ToSTB();
   CHC* ToSTC();
-  IUA ToUIA();
-  IUB ToUI2();
-  IUN ToUIN();
-  IUC ToUI4();
-  IUD ToUI8();
+  IUA ToIUA();
+  IUB ToIUB();
+  IUN ToIUN();
+  IUC ToIUC();
+  IUD ToUID();
 
   /* Gets the first word of the word_. */
   IUW Word();

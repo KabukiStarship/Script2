@@ -20,7 +20,7 @@ struct TTestWords {
   };
   /* An array of 128 random words. */
   static const CHT* Words() {
-    static const CHT kWords[cWordsMax][cCharsMax] = {
+    static const CHT cWords[cWordsMax][cCharsMax] = {
       {'w', 'h', 'i', 'p'},
       {'j', 'u', 'm', 'b', 'l', 'e', 'd'},
       {'e', 'n', 'e', 'r', 'g', 'e', 't', 'i', 'c'},
@@ -150,7 +150,7 @@ struct TTestWords {
       {'b', 'r', 'i', 'd', 'g', 'e'},
       {'f', 'o', 'o', 'l', 'i', 's', 'h'}
     };
-    return &kWords[0][0];
+    return &cWords[0][0];
   }
 
   /* Gets a test word. */

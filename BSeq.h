@@ -9,19 +9,19 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_BSQ_DELC
-#define SCRIPT2_BSQ_DELC
+#if SEAM >= SCRIPT2_CRABS
+#ifndef SCRIPT2_BSEQ_DELC
+#define SCRIPT2_BSEQ_DELC
 
 #include "TypeValue.h"
 
 namespace _ {
 
 /* Utility class for printing B-Sequences. */
-struct Bsq {
-  const ISC* params;  //< Bsq params.
+struct BSeq {
+  const ISC* params;  //< BSeq params.
 
-  Bsq(const ISC* params) : params(params) {
+  BSeq(const ISC* params) : params(params) {
     // Nothing to do here! (:-)-+=<
   }
 };
@@ -82,7 +82,7 @@ inline ISD PackSV8(ISD value) {
 //    return temp;
 //}
 
-constexpr ISC CBsqSize(const ISC* params) {
+constexpr ISC CBSeqSize(const ISC* params) {
   if (!params) {
     return 0;
   }
@@ -98,10 +98,10 @@ constexpr ISC CBsqSize(const ISC* params) {
     if (param == cNIL) {  // This is illegal.
       return 0;
     }
-    if (param <= cTKN) {
-      size_bytes += sizeof(ISC);
-      ++params;
-    }
+    //if (param <= cTKN) {
+    //  size_bytes += sizeof(ISC);
+    //  ++params;
+    //}
     if (param == cISE) {
       size_bytes += sizeof(ISC);
       ++params;
@@ -110,18 +110,18 @@ constexpr ISC CBsqSize(const ISC* params) {
       size_bytes += sizeof(ISC);
       ++params;
     }
-    if (param >= cLST && param <= cMAP) {  // This is illegal.
-      return 0;
-    }
-    if (param > cMAP) {
-      if (param >> 8) {  // This is an error.
-        return 0;
-      }
-      if (param & 0x20) {     // It's a multi-dimensional array so
-        param = *params;      // add the number_ of dimensions + 1;
-        params += param + 1;  // for the dimension count.
-      }
-    }
+    //if (param >= cLST && param <= cMAP) {  // This is illegal.
+    //  return 0;
+    //}
+    //if (param > cMAP) {
+    //  if (param >> 8) {  // This is an error.
+    //    return 0;
+    //  }
+    //  if (param & 0x20) {     // It's a multi-dimensional array so
+    //    param = *params;      // add the number_ of dimensions + 1;
+    //    params += param + 1;  // for the dimension count.
+    //  }
+    //}
     size_bytes += sizeof(ISC);
   }
   return size_bytes;
@@ -137,35 +137,10 @@ inline const ISC* Params() {
   return &cSize;
 }
 
-/* Prints out the cBSQ parameters. */
-LIB_MEMBER UTF1& PrintBSQ(UTF1& printer, const ISC* params);
-
-/*  Prints out the parameters. */
-// LIB_MEMBER UTF& PrintBSQ (const ISC* bsq, UTF& utf);
-
 /*< Returns the requested parameter number_. */
-LIB_MEMBER ISC BSQParamNumber(const ISC* bsq, ISC param_number);
+LIB_MEMBER ISC BSeqParamNumber(const ISN* bsq, ISN param_number);
 
 }  // namespace _
-
-#if USING_UTF8 == YES_0
-/*  Prints out the parameters. */
-inline _::UTF1& operator<<(_::UTF1& printer, _::Bsq bsq) {
-  return _::PrintBSQ(printer, bsq.params);
-}
-#endif  //< USING_UTF8
-#if USING_UTF16 == YES_0
-/*  Prints out the parameters. */
-inline _::UTF2& operator<<(_::UTF2& printer, _::Bsq bsq) {
-  return _::PrintBSQ(printer, bsq.params);
-}
-#endif  //< USING_UTF16
-#if USING_UTF32 == YES_0
-/*  Prints out the parameters. */
-inline _::UTF4& operator<<(_::UTF4& printer, _::Bsq bsq) {
-  return _::PrintBSQ(printer, bsq.params);
-}
-#endif  //< USING_UTF8 == YES_0
 
 #endif
 #endif

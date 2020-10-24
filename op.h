@@ -61,7 +61,6 @@ inline const ISC* OpFirst(CHC index) {
 
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
-  A_ASSERT(op);
   return (CHC) reinterpret_cast<IUW>(op->in);
 }
 
@@ -72,7 +71,6 @@ inline const ISC* OpLast(CHC index) {
 
 /* Converts the given value to a pointer. */
 inline CHC OpLast(const Op* op) {
-  A_ASSERT(op);
   return (CHC) reinterpret_cast<IUW>(op->out);
 }
 

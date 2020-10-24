@@ -287,6 +287,7 @@ inline ISZ TSizeWords(ISZ size) {
   return AlignUp(size) >> cWordBitCount;
 }
 
+
 template <typename ISZ>
 constexpr ISZ CSizeWords(ISZ size) {
   ISZ size_aligned = size + ((-size) & cWordLSbMask);
@@ -303,7 +304,7 @@ inline ISZ TWordCount(ISZ size) {
 }
 
 /* Utility function for converting to two's complement and back with templates.
- */
+*/
 inline ISA Negative(ISA value) { return -value; }
 inline IUA Negative(IUA value) { return IUA(Negative(ISA(value))); }
 inline ISB Negative(ISB value) { return -value; }
@@ -595,31 +596,31 @@ inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
   return TAlignUpPTR<const CHA>(pointer, least_significant_bits_max);
 }
 
-/* Aligns up a number to the given kPowerOf2_.
+/* Aligns up a number to the given PowerOf2.
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = ISW, I kPowerOf2_ = CBitCount<I>()>
+template <typename I = ISW, I PowerOf2 = CBitCount<I>()>
 I TAlignUp(I value) {
-  return ALignUp(value, kPowerOf2_ - 1);
+  return AlignUp(value, PowerOf2 - 1);
 }
 
-/* Aligns up a number to the given kPowerOf2_.
+/* Aligns up a number to the given PowerOf2.
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename T = void*, ISW kPowerOf2_>
+template <typename T = void*, ISW PowerOf2>
 const T* TAlignUpPointer(const void* value) {
-  return AlignUpPTR(value, kPowerOf2_ - 1);
+  return AlignUpPTR(value, PowerOf2 - 1);
 }
 
-/* Aligns up a number to the given kPowerOf2_.
+/* Aligns up a number to the given PowerOf2.
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename T = void*, ISW kPowerOf2_>
+template <typename T = void*, ISW PowerOf2>
 T* TAlignUpPointer(void* value) {
-  return AlignUpPTR(value, kPowerOf2_ - 1);
+  return AlignUpPTR(value, PowerOf2 - 1);
 }
 
 inline void* ToPTR(IUW value) { return reinterpret_cast<void*>(value); }

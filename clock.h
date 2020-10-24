@@ -47,7 +47,6 @@ struct LIB_MEMBER TME {
 };
 
 enum ClockConstants {
-  cClockEpochInit = 1970,                    //< Initial clock epoch.
   cSecondsPerMinute = 60,                    //< Number of seconds in an minute.
   cSecondsPerHour = 60 * cSecondsPerMinute,  //< Number of seconds in an hour.
   cSecondsPerDay = 24 * cSecondsPerHour,     //< Number of seconds in an day.

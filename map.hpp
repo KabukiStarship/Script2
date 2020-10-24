@@ -399,6 +399,8 @@ class AMap {
   }
 };
 }  // namespace _
+#undef TARGS
+#undef TPARAMS
 
 #endif
 #endif

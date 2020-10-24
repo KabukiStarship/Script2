@@ -1,6 +1,6 @@
 /* Script2 (TM) @version 0.x
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /Dic.h
+@file    /Dic.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -18,7 +18,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Binary.hpp"
 #include "TypeValue.h"
 
-#if SEAM >= SCRIPT2_BOOK
+#if SEAM == SCRIPT2_DIC
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -27,10 +27,10 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* @ingroup Dic
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/map_types/dic.md */
-
-#define TPARAMS CHT, ISZ, ISY
-#define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
+@link ./Spec/Data/MapTypes/Dictionary.md */
+#define TPARAMS CHT, ISZ, ISY, HSH
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
 
 /* @ingroup Dic
 @brief A contiguous memory Associative List created from a List and a Table.
@@ -45,12 +45,12 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 @endcode */
 template <TARGS>
 struct TDic {
-  TTable<ISZ, ISY> keys;  //< The Table of keys for the Associative List.
+  TTable<ISZ, ISY> keys;   //< The Table of keys for the Associative List.
 };
 
 /* The minimum count a good with the given template parameters can have. */
 template <TARGS>
-constexpr ISZ CDicCountMin() {
+constexpr ISY CDicCountMin() {
   return 8 / sizeof(ISZ);
 }
 
@@ -66,7 +66,7 @@ constexpr ISZ CDicSizeMin() {
 
 /* Gets the default count of a good with the given template parameters. */
 template <TARGS>
-constexpr ISZ CDicCountDefault() {
+constexpr ISY CDicCountDefault() {
   return 32;
 }
 
@@ -95,7 +95,7 @@ inline TDic<TPARAMS>* TDicInit(TDic<TPARAMS>* dic, ISY count_max) {
   D_ASSERT(dic);
   if (count_max < CDicCountMin<TPARAMS>()) return nullptr;
 
-  TTableInit<CHT, ISZ, ISY>(&dic->keys, count_max);
+  TTableInit<TPARAMS>(&dic->keys, count_max, CDicSizeDefault<TPARAMS>());
 
   return dic;
 }
@@ -103,8 +103,8 @@ inline TDic<TPARAMS>* TDicInit(TDic<TPARAMS>* dic, ISY count_max) {
 /* Gets the byte after the end of the dic's contiguous memory block. */
 template <TARGS>
 inline CHT* TDicEnd(TDic<TPARAMS>* dic) {
-  CHT* list = TTableEnd<TPARAMS>(&dic->keys);
-  return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
+  CHT* list = TPtr<CHT>(TTableEnd<TPARAMS>(&dic->keys));
+  return TPtr<CHT>(TListEnd<ISZ>(TPtr<TList<ISZ>>(list)));
 }
 template <TARGS>
 inline TList<ISZ>* TDicList(TDic<TPARAMS>* dic, ISZ size_bytes) {
@@ -112,36 +112,32 @@ inline TList<ISZ>* TDicList(TDic<TPARAMS>* dic, ISZ size_bytes) {
 }
 template <TARGS>
 inline TList<ISZ>* TDicList(TDic<TPARAMS>* dic) {
-  return TDicList<TPARAMS>(dic, dic->keys.size);
-}
-
-/* Gets the element at the given index. */
-template <TARGS>
-inline CHT* TDicGet(TDic<TPARAMS>* dic, ISY index) {
-  D_ASSERT(dic);
-  return TTableGet<CHT, ISZ, ISY>(&dic->keys, index);
+  return TDicList<TPARAMS>(dic, dic->keys.size_bytes);
 }
 
 /* The size of the dic. */
 template <TARGS>
 inline ISZ TDicSize(TDic<TPARAMS>* dic) {
   TList<ISZ>* list = TDicList<TPARAMS>(dic);
-  return dic->keys.size + list->size_bytes;
+  return dic->keys.size_bytes + list->size_bytes;
 }
 
 /* Prints the dic to the printer. */
-template <TARGS, typename Printer>
+template <typename Printer, TARGS>
 Printer& TDicPrint(Printer& printer, TDic<TPARAMS>* dic) {
-  ISY count = dic->keys.map.count;
+  ISY count = dic->keys.count;
   printer << "\nDic<CH" << CSizef<CHT> () << ",IS" << CSizef<ISZ>() << ",IS"
           << CSizef<ISY>()
-          << "> size:" << dic->keys.size << " top:" << dic->keys.top
-          << " stack_size:" << dic->keys.map.count_max << " count:" << count;
+          << "> size_bytes:" << dic->keys.size_bytes
+          << " count_max:" << dic->keys.count_max << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TDicList<TPARAMS>(dic));
-  for (ISY i = 0; i < count; ++i)
+  for (ISY i = 0; i < count; ++i) {
+    auto foo = TTableGet<TPARAMS>(&dic->keys, i);
     printer << '\n'
-            << i << ".) \"" << TDicGet<TPARAMS>(dic, i)
+            << i << ".) \""
+            << "here"
             << "\" type:" << TPrintType<Printer, DT2>(printer, *types++);
+  }
   D_COUT(Linef('-') << Charsf(dic, TDicSize<TPARAMS>(dic)));
   return printer << '\n';
 }
@@ -161,7 +157,7 @@ BOL TDicGrow(Autoject& obj) {
   A_ASSERT(dic);
   ISZ size = TDicSize<TPARAMS>(dic);
   if (!TCanGrow<ISZ>(size)) return false;
-  ISZ count_max = dic->keys.map.count_max;
+  ISZ count_max = dic->keys.count_max;
   if (!TCanGrow<ISZ>(count_max)) return false;
 
   size = size << 1;
@@ -171,7 +167,7 @@ BOL TDicGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TDicPrint<TPARAMS, COut>(COut().Star(), dic);
+  TDicPrint<COut, TPARAMS>(COut().Star(), dic);
   D_COUT(Charsf(dic, TDicEnd<TPARAMS>(dic)));
 #endif
 
@@ -229,11 +225,11 @@ inline ISY TDicInsert(TDic<TPARAMS>* dic, const CHT* key, T item,
   if (!key) return cErrorInputNil;
 
   if (index == cAnywhere)
-    index = TTableInsert<TPARAMS>(&dic->keys, key, index);
+    index = TTableAdd<TPARAMS>(&dic->keys, key);
   else if (index == cPush)
-    index = (index <= 0) ? 0 : dic->keys.map.count - 1;
-  D_COUT("\nAdding key:\"" << key << "\" item:" << item
-                           << " into index:" << index);
+    index = (index <= 0) ? 0 : dic->keys.count - 1;
+  //D_COUT("\nAdding key:\"" << key << "\" item:" << item << 
+  //       " into index:" << index);
   if (index < 0) return index;
   auto list = TDicList<TPARAMS>(dic);
 #if DEBUG_THIS
@@ -294,7 +290,7 @@ inline ISY TDicInsert(TDic<TPARAMS>* dic, const CHT* key, FPD item) {
 
 /* Adds a string to the end of the Dic, auto-growing if neccissary.
 @return The index upon success or -1 if the obj can't grow anymore. */
-template <typename T, typename BUF, TARGS>
+template <typename T, TARGS, typename BUF>
 ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                ISY index = cPush) {
   if (!key) return cErrorInputNil;
@@ -312,58 +308,58 @@ ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
   }
   return result;
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISA item,
                       ISY index) {
-  return TDicInsert<ISA, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISA, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUA item,
                       ISY index) {
-  return TDicInsert<ISA, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISA, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISB item,
                       ISY index) {
-  return TDicInsert<ISB, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISB, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUB item,
                       ISY index) {
-  return TDicInsert<ISB, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISB, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISC item,
                       ISY index = cPush) {
-  return TDicInsert<ISC, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISC, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUC item,
                       ISY index = cPush) {
-  return TDicInsert<ISC, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISC, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISD item,
                       ISY index = cPush) {
-  return TDicInsert<ISD, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<ISD, TPARAMS, BUF>(obj, key, item, index);
 }
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUD item,
                       ISY index = cPush) {
-  return TDicInsert<IUD, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<IUD, TPARAMS, BUF>(obj, key, item, index);
 }
 #if USING_FPC == YES_0
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPC item,
                       ISY index = cPush) {
-  return TDicInsert<FPC, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<FPC, TPARAMS, BUF>(obj, key, item, index);
 }
 #endif
 #if USING_FPD == YES_0
-template <typename BUF, TARGS>
+template <TARGS, typename BUF>
 inline ISY TDicInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPD item,
                       ISY index = cPush) {
-  return TDicInsert<FPD, BUF, TPARAMS>(obj, key, item, index);
+  return TDicInsert<FPD, TPARAMS, BUF>(obj, key, item, index);
 }
 #endif
 
@@ -396,12 +392,12 @@ ISZ TDicFind(TDic<TPARAMS>* dic, const CHT* string) {
 }
 
 /* An ASCII Dic Autoject. */
-template <TARGS, ISZ cSize_ = 512,
-          typename BUF = TBUF<cSize_, CHT, ISZ, TString<ISN>>>
+template <TARGS, ISZ cSize = 512,
+          typename BUF = TBUF<cSize, CHT, ISZ, TString<ISN>>>
 class ADic {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
-  enum { cCountDefault = cSize_ / 16 };
+  enum { cCountDefault = cSize / 16 };
   /* Constructs a Dic. */
   ADic(ISY count_max = cCountDefault) { TDicInit<TPARAMS>(This(), count_max); }
 
@@ -420,52 +416,56 @@ class ADic {
     TDicInit<TPARAMS>(This(), count);
   }
 
+  /* Gets the max number of associative array elements. */
   inline ISZ Size() { return obj_.Size(); }
 
+  /* Gets the size of the Dictionary in bytes. */
   inline ISZ SizeBytes() { return obj_.SizeBytes(); }
 
+  /* Gets the size of the Dictionary in words. */
   inline ISZ SizeWords() { return obj_.SizeWords(); }
 
+  /* Gets the number of elements in the dictionary. */
   inline ISY Count() { return This()->keys->map->count; }
 
   /* Inserts the key and item on into the Table and List at the given index.
   @return The index of the string in the Dic. */
   inline ISY Insert(const CHT* key, ISA item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUA item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISB item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUB item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISC item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUC item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, ISD item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
   inline ISY Insert(const CHT* key, IUD item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #if USING_FPC == YES_0
   inline ISY Insert(const CHT* key, FPC item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
 #if USING_FPD == YES_0
   inline ISY Insert(const CHT* key, FPD item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
   inline ISY Insert(const CHT* key, const CHT* item, ISY index = cPush) {
-    return TDicInsert<BUF, TPARAMS>(AJT_ARY(), key, item, index);
+    return TDicInsert<TPARAMS, BUF>(AJT_ARY(), key, item, index);
   }
 
   /* Removes the string at the given index from the Dic. */
@@ -480,7 +480,7 @@ class ADic {
   inline ISZ Pop() { return TDicRemove<TPARAMS>(This()); }
 
   /* Gets the string at the given index. */
-  inline CHT* Get(ISY index) { return TDicGet<TPARAMS>(This(), index); }
+  inline CHT* Get(ISY index) { return TTableGet<TPARAMS>(This(), index); }
 
   /* Searches for the given string.
   @return -1 if the Dic doesn't contain the string or the index if it does.
@@ -501,7 +501,7 @@ class ADic {
   /* Prints this object to the Printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    TDicPrint<TPARAMS, Printer>(o, This());
+    TDicPrint<Printer, TPARAMS>(o, This());
     return o;
   }
 
@@ -510,5 +510,7 @@ class ADic {
 };
 
 }  // namespace _
+#undef TARGS
+#undef TPARAMS
 #endif
 #endif

@@ -234,7 +234,7 @@ BOL CInState(ISC vk_code) { return false; }
 
 const IUA* KeyboardHIDToNative() {
 #if SCRIPT2_PLATFORM == OS_WINDOWS
-  static const IUA kHIDToNative[256] = {
+  static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
       76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
       49,  50,  51,  52,  53,  54,  55,  56,  57,  48,  13,  27,  8,   9,   32,
@@ -253,9 +253,8 @@ const IUA* KeyboardHIDToNative() {
       16,  18,  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-  return kHIDToNative;
 #elif SCRIPT2_PLATFORM == MAC
-  static const IUA kHIDToNative[256] = {
+  static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 0,   11,  8,   2,   14,  3,   5,   4,   34,  38,  40,
       37,  46,  45,  31,  35,  12,  15,  1,   17,  32,  9,   13,  7,   16,  6,
       18,  19,  20,  21,  23,  22,  26,  28,  25,  29,  36,  53,  51,  48,  49,
@@ -274,9 +273,8 @@ const IUA* KeyboardHIDToNative() {
       56,  58,  55,  62,  60,  61,  54,  255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-  return kHIDToNative;
 #elif SCRIPT2_PLATFORM == EVDEV
-  static const IUA kHIDToNative[256] = {
+  static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 38,  56,  54,  40,  26,  41,  42,  43,  31,  44,  45,
       46,  58,  57,  32,  33,  24,  27,  39,  28,  30,  55,  25,  53,  29,  52,
       10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  36,  9,   22,  23,  65,
@@ -295,13 +293,13 @@ const IUA* KeyboardHIDToNative() {
       50,  64,  133, 105, 62,  108, 134, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-  return kHIDToNative;
 #endif
+  return cHIDToNative;
 }
 
 const IUA* KeyboardNativeToHID() {
 #if SCRIPT2_PLATFORM == OS_WINDOWS
-  static const IUA kNativeToHID[256] = {
+  static const IUA cNativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 42,  43,  255, 255, 255, 40,  255,
       255, 225, 224, 226, 72,  57,  255, 255, 255, 255, 255, 255, 41,  255, 255,
       255, 255, 44,  75,  78,  77,  74,  80,  82,  79,  81,  255, 255, 255, 70,
@@ -320,9 +318,8 @@ const IUA* KeyboardNativeToHID() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-  return kNativeToHID;
 #elif SCRIPT2_PLATFORM == MAC
-  static const IUA kNativeToHID[128] = {
+  static const IUA cNativeToHID[128] = {
       4,   22,  7,   9,   11,  10,  29,  27,  6,   25,  255, 5,   20,  26,  8,
       21,  28,  23,  30,  31,  32,  33,  35,  34,  46,  38,  36,  45,  37,  39,
       48,  18,  24,  47,  12,  19,  40,  15,  13,  52,  14,  51,  49,  54,  56,
@@ -332,9 +329,8 @@ const IUA* KeyboardNativeToHID() {
       111, 96,  97,  255, 255, 255, 62,  63,  64,  60,  65,  66,  255, 68,  255,
       104, 107, 105, 255, 67,  255, 69,  255, 106, 117, 74,  75,  76,  61,  77,
       59,  78,  58,  80,  79,  81,  82,  255};
-  return kNativeToHID;
 #elif SCRIPT2_PLATFORM == EVDEV
-  static const IUA kNativeToHID[256] = {
+  static const IUA cNativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 41,  30,  31,  32,  33,  34,
       35,  36,  37,  38,  39,  45,  46,  42,  43,  20,  26,  8,   21,  23,  28,
       24,  12,  18,  19,  47,  48,  40,  224, 4,   22,  7,   9,   10,  11,  13,
@@ -353,8 +349,8 @@ const IUA* KeyboardNativeToHID() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-  return kNativeToHID;
 #endif
+  return cNativeToHID;
 }
 
 const CHA* KeyIdName() {
@@ -374,7 +370,7 @@ const CHA* KeyIdName() {
 }
 
 const ISB* KeyIdOffset() {
-  static const ISB kKeyIdOffset[256] = {
+  static const ISB cKeyIdOffset[256] = {
       -1,  -1,  -1,  -1,  20,  22,  34,  51,  79,  105, 194, 202, 214, 223, 225,
       339, 396, 409, 426, 428, 471, 479, 542, 577, 583, 588, 590, 592, 594, 596,
       2,   4,   6,   8,   10,  12,  14,  16,  18,  0,   85,  98,  53,  579, 571,
@@ -393,12 +389,12 @@ const ISB* KeyIdOffset() {
       386, 346, 378, 509, 531, 487, 522, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
       -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
       -1};
-  return kKeyIdOffset;
+  return cKeyIdOffset;
   return nullptr;
 }
 
 inline const IUA* KeyIdOrder() {
-  static const IUA kKeyIdOrder[119] = {
+  static const IUA cKeyIdOrder[119] = {
       39,  30,  31,  32,  33,  34,  35,  36,  37,  38,  4,   5,   49,  6,   57,
       54,  7,   42,  76,  81,  8,   77,  40,  46,  41,  9,   58,  67,  68,  69,
       104, 105, 106, 107, 108, 109, 110, 59,  111, 112, 113, 114, 115, 60,  61,
@@ -407,7 +403,7 @@ inline const IUA* KeyIdOrder() {
       99,  86,  15,  80,  226, 47,  224, 227, 225, 16,  118, 45,  17,  100, 18,
       19,  78,  75,  72,  55,  70,  20,  52,  21,  79,  230, 48,  228, 231, 229,
       22,  71,  51,  56,  44,  23,  43,  24,  82,  25,  26,  27,  28,  29};
-  return kKeyIdOrder;
+  return cKeyIdOrder;
 }
 
 ISC KeyIdCodeFromName(const CHA* name) {

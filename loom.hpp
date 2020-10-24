@@ -102,8 +102,7 @@ CHT* TLoomGet(TLoom<ISZ, ISY>* loom, ISY index) {
   return TPtr<CHT>(loom, TStackStart<ISZ, ISY>(&loom->map)[index]);
 }
 
-template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
-          typename Printer>
+template <typename Printer, TARGS>
 Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
   o << "\nLoom<IS" << CSizef<ISZ>() << "> size:" << loom->size
@@ -220,7 +219,7 @@ BOL TLoomGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TLoomPrint<TPARAMS, COut>(COut().Star(), loom);
+  TLoomPrint<COut, TPARAMS>(COut().Star(), loom);
   D_COUT('\n' << Charsf(loom, loom->size));
 #endif
 
@@ -232,7 +231,7 @@ BOL TLoomGrow(Autoject& obj) {
   TLoomClone<TPARAMS>(loom, destination, count_max, count_max, size, size);
 #if D_THIS
   D_COUT("\n\nAfter:\n");
-  TLoomPrint<TPARAMS, COut>(COut().Star(), destination);
+  TLoomPrint<COut, TPARAMS>(COut().Star(), destination);
   D_COUT('\n');
   D_COUT(Charsf(destination, destination->size));
 #endif
@@ -369,7 +368,7 @@ class ALoom {
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    TLoomPrint<TPARAMS, Printer>(o, This());
+    TLoomPrint<Printer, TPARAMS>(o, This());
     return o;
   }
 

@@ -134,7 +134,7 @@ Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
   // ISC offset    = sizeof (Crabs) + total_stack_size - sizeof (void*);
   // bin_offset       = sizeof (BIn) + total_stack_size + offset;
   crabs->header_size = sizeof(Crabs) + 2 * sizeof(void*) * stack_size;
-  crabs->hash = PRIME_LARGEST_UI2;
+  crabs->hash = PRIME_LARGEST_IUB;
   crabs->result = nullptr;
   crabs->header = nullptr;
   crabs->header_start = nullptr;
@@ -408,8 +408,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         D_COUT("\nhash:" << Hexf(hash));
 
         // Switch to next state
-        if (type <= kADR) {
-          if (type < kADR) {  // Address type.
+        if (type <= cADR) {
+          if (type < cADR) {  // Address type.
             D_COUT("\nScanning address.");
             CrabsError(crabs, cErrorInvalidType);
             CrabsEnterState(crabs, cBInStateLocked);
@@ -479,7 +479,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         } else {  // It's not a POD type.
           D_COUT("\nScanning AArray.");
           // Multi-dimension arrays are parsed just like any other
-          // kOBJ.
+          // cOBJ.
           array_type &= 0x3;
           bytes_left = b;
           if (array_type == 0) {
@@ -524,7 +524,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           // Check if there is another argument to scan.
           CrabsExitState(crabs);
           bin_state = cBInStatePackedArgs;
-          //< We can't go back from kOBJ to POD for Text Types.
+          //< We can't go back from cOBJ to POD for Text Types.
           // Setup to read next type.
           type = *(++crabs->header);
           if (crabs->params_left == 0) {
@@ -630,7 +630,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           D_COUT_HEX(found_hash);
           return CrabsForceDisconnect(crabs, cErrorInvalidHash);
         }
-        hash = PRIME_LARGEST_UI2;  //< Reset hash to largest 16-bit prime.
+        hash = PRIME_LARGEST_IUB;  //< Reset hash to largest 16-bit prime.
         D_COUT(
             "\nSuccess reading hash!"
             "\nResetting hash.\n");
@@ -858,7 +858,7 @@ Printer& Print(Printer& o, Crabs* crabs) {
     << "\nbout_state : " << BOutStateStrings()[crabs->bout_state]
     << "\nnum_states : " << crabs->num_states
     << "\nheader_size: " << crabs->header_size << Line('-', 80)
-    << crabs->operand << "\nheader     : " << Bsq(crabs->header_start)
+    << crabs->operand << "\nheader     : " << BSeq(crabs->header_start)
     << Line('-', 80);
   PrintCrabsStack(utf, crabs);
   utf << Line('~', 80);

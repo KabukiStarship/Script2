@@ -9,23 +9,25 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
-#include "Args.h"
-#include "Binary.hpp"
 #include "BOut.h"
-#include "BSeq.h"
-#include "hash.h"
-#include "Slot.h"
-#include "Test.h"
-#include "TypeValue.h"
-#include "Uniprinter.hpp"
+//
+//#include "Args.h"
+#include "Binary.hpp"
+//#include "BSeq.h"
+#include "Error.h"
+#include "Hash.hpp"
+//#include "Slot.h"
+//#include "TypeValue.h"
+//#include "Uniprinter.hpp"
 
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
-#define D_COUT_BOUT(header, bout) \
-  Console<>().Out() << "\n" << header << '\n' << bout;
+#define D_COUT_BOUT(message, bout) \
+  _::CPrint().Star() << message;   \
+  _::TBOutPrint<COut>(COut().Star(), bout)
 #else
 #include "_Release.inl"
-#define D_COUT_BOUT(header, bout)
+#define D_COUT_BOUT(message, bout)
 #endif
 
 namespace _ {
@@ -35,7 +37,7 @@ namespace _ {
     @param error The error type.
     @return Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error) {
-  std::cerr << "\nBOut " << STRError(error) << " Error!";
+  D_COUT("\nBOut " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -47,7 +49,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
     @param address The address of the IUA in error.
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
-  std::cerr << "\nBOut " << STRError(error) << " Error!";
+  D_COUT("\nBOut " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -60,7 +62,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset) {
-  std::cerr << "\nBOut " << STRError(error) << " Error!";
+  D_COUT("\nBOut " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -73,7 +75,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
     @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset, CHA* address) {
-  std::cerr << "\nBOut " << STRError(error) << " Error!";
+  D_COUT("\nBOut " << STRError(error) << " Error!");
   return reinterpret_cast<const Op*>(1);
 }
 
@@ -83,7 +85,6 @@ const CHA** BOutStateStrings() {
 }
 
 CHA* BOutBuffer(BOut* bout) {
-  A_ASSERT(bout);
   return reinterpret_cast<CHA*>(bout) + sizeof(BOut);
 }
 
@@ -109,7 +110,7 @@ ISC BOutSpace(BOut* bout) {
     return 0;
   }
   CHA* txb_ptr = reinterpret_cast<CHA*>(bout);
-  return (IUN)SlotSpace(txb_ptr + bout->origin, txb_ptr + bout->stop,
+  return TSocketSpace <IUN>(txb_ptr + bout->origin, txb_ptr + bout->stop,
                         bout->size);
 }
 
@@ -118,8 +119,8 @@ ISC BOutBufferLength(BOut* bout) {
     return 0;
   }
   CHA* origin = BOutBuffer(bout);
-  return (IUN)SlotLength(origin + bout->origin, origin + bout->stop,
-                         bout->size);
+  return TSocketLength<IUN>(origin + bout->origin, origin + bout->stop,
+                            bout->size);
 }
 
 CHA* BOutEndAddress(BOut* bout) {
@@ -139,13 +140,14 @@ ISC BOutStreamByte(BOut* bout) {
     return -1;
   }
   // IUA b = *cursor;
-  bout->stop = (++origin > stop) ? static_cast<ISC>(Size(origin, stop))
-                                 : static_cast<ISC>(Size(origin, origin));
+  bout->stop = (++origin > stop) ? TDelta<ISC>(origin, stop)
+                                 : TDelta<ISC>(origin, origin);
   return 0;
 }
 
 const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
-  D_COUT_BSQ("\n\nWriting ", params);
+  D_COUT("\n\nWriting ");
+  D_COUT_BSQ(params);
   enum {
     cBOutBufferSize = 1024,
     cBOutBufferSizeWords = cBOutBufferSize >> cWordBitCount
@@ -158,15 +160,15 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 
   // Temp variables packed into groups of 8 bytes for memory alignment.
   IUA  // type,
-      ui1;
+      iua;
 #if USING_SCRIPT2_2_BYTE_TYPES
-  IUB ui2;
+  IUB iub;
 #endif
 #if USING_SCRIPT2_4_BYTE_TYPES
-  IUC ui4;
+  IUC iuc;
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
-  IUD ui8;
+  IUD iud;
 #endif
 
   ISC num_params,  //< Num params in the b-sequence.
@@ -191,19 +193,17 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       *stop = origin + size,                //< End of the socket.
           *origin = origin + bout->origin,  //< Start of the data.
               *stop = origin + bout->stop;  //< Stop of the data.
-  const CHA* ui1_ptr;                       //< Pointer to a 1-IUA type.
-#if USING_SCRIPT2_2_BYTE_TYPES
-  const IUB* ui2_ptr;  //< Pointer to a 2-IUA type.
-#endif
+  const CHA* iua_ptr;
+  const IUB* iub_ptr;  //< Pointer to a 2-IUA type.
 #if USING_SCRIPT2_4_BYTE_TYPES
-  const IUC* ui4_ptr;  //< Pointer to a 4-IUA type.
+  const IUC* iuc_ptr;  //< Pointer to a 4-IUA type.
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
-  const IUD* ui8_ptr;  //< Pointer to a 8-IUA type.
+  const IUD* iud_ptr;  //< Pointer to a 8-IUA type.
 #endif
   IUB hash = PRIME_LARGEST_IUB;
 
-  space = (ISC)SlotSpace(origin, stop, size);
+  space = TSocketSpace <ISC>(origin, stop, size);
 
   // Check if the socket has enough room.
   if (space == 0) return BOutError(bout, cErrorBufferOverflow);
@@ -221,12 +221,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       case cNIL:
         break;
 
-      case kADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
+      case cADR:  //< _W_r_i_t_e__A_d_d_r_e_s_s__S_t_r_i_n_g___________
       case cSTR:  //< _W_r_i_t_e__U_T_F_-_8__S_t_r_i_n_g______________
         if (space == 0)
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-        if (type != kADR) {
-          // We might not need to write anything if it's an kADR with
+        if (type != cADR) {
+          // We might not need to write anything if it's an cADR with
           // nil .
           length = params[++index];  //< Load the max CHA length.
           ++num_params;
@@ -234,23 +234,23 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           length = cAddressLengthMax;
         }
         // Load the source data pointer and increment args.fs
-        ui1_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
-        D_COUT('\"' << Hexf(ui1_ptr));
+        iua_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
+        D_COUT('\"' << Hexf(iua_ptr));
 
         // We know we will always have at least one nil-term CHA.
-        ui1 = *ui1_ptr;
-        while (ui1 != 0) {
+        iua = *iua_ptr;
+        while (iua != 0) {
           if (space-- == 0)
             return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
 
-          *stop = ui1;  // Write IUA
+          *stop = iua;  // Write IUA
           if (++stop >= stop) stop -= size;
-          ++ui1_ptr;
-          ui1 = *ui1_ptr;  // Read IUA.
+          ++iua_ptr;
+          iua = *iua_ptr;  // Read IUA.
         }
-        if (type != kADR) {  //< 1 is faster to compare than 2
-                             // More likely to have kADR than cSTR
+        if (type != cADR) {  //< 1 is faster to compare than 2
+                             // More likely to have cADR than cSTR
           *stop = 0;         // Write nil-term CHA.
           if (++stop >= stop) stop -= size;
           break;
@@ -266,12 +266,12 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
 
         // Load pointer and read data to write.
-        ui1_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
-        ui1 = *ui1_ptr;
+        iua_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
+        iua = *iua_ptr;
 
         // Write data.
-        *stop = ui1;
-        hash = HashIUB(ui1, hash);
+        *stop = iua;
+        hash = HashIUB(iua, hash);
         if (++stop >= stop) stop -= size;
         break;
 #else
@@ -288,117 +288,117 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         space -= sizeof(IUB);
 
         // Load pointer and value to write.
-        ui2_ptr = reinterpret_cast<IUB*>(args[arg_index]);
-        ui2 = *ui2_ptr;
+        iub_ptr = reinterpret_cast<IUB*>(args[arg_index]);
+        iub = *iub_ptr;
 
         // Write data.
 
         // Byte 1
-        ui1 = (IUA)ui2;
-        *stop = ui1;
+        iua = (IUA)iub;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
 
         // Byte 2
-        ui1 = (IUA)(ui2 >> 8);
-        *stop = ui1;
+        iua = (IUA)(iub >> 8);
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
         break;
 #else
         return BOutError(bout, cErrorInvalidType);
 #endif  // USING_SCRIPT2_2_BYTE_TYPES
 #if ALU_SIZE <= 16
-      case SVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
+      case cSVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
-        ui2_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
-        ui2 = *ui2_ptr;
+        iub_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
+        iub = *iub_ptr;
         // We are using the same code to utf both signed and unsigned
         // varints. In order to convert from a negative 2's complement
         // signed integer to a transmittable format, we need to invert
         // the bits and add 1. Then we just shift the bits left one and
         // put the sign bit in the LSB.
-        ui2 = TypePackVarint<IUB>(ui2);
+        iub = TypePackVarint<IUB>(iub);
         goto WriteVarint2;
-      case UVI:  //< _W_r_i_t_e__2_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
+      case cUVI:  //< _W_r_i_t_e__2_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load next pointer value to write.
-        ui2_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
-        if (ui2_ptr == nullptr)
+        iub_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
+        if (iub_ptr == nullptr)
           return BOutError(bout, cErrorImplementation, params, index, origin);
-        ui2 = *ui2_ptr;
+        iub = *iub_ptr;
 
       WriteVarint2 : {
         // Byte 1
         if (space-- == 0)
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-        ui1 = ui2 & 0x7f;
-        ui2 = ui2 >> 7;
-        if (ui2 == 0) {
-          ui1 |= 0x80;
-          *stop = ui1;
+        iua = iub & 0x7f;
+        iub = iub >> 7;
+        if (iub == 0) {
+          iua |= 0x80;
+          *stop = iua;
           if (++stop >= stop) stop -= size;
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
           break;
         }
-        *stop = ui1;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
 
         // Byte 2
         if (--space == 0)
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-        ui1 = ui2 & 0x7f;
-        ui2 = ui2 >> 7;
-        if (ui2 == 0) {
-          ui1 |= 0x80;
-          *stop = ui1;
+        iua = iub & 0x7f;
+        iub = iub >> 7;
+        if (iub == 0) {
+          iua |= 0x80;
+          *stop = iua;
           if (++stop >= stop) stop -= size;
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
           break;
         }
-        *stop = ui1;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
 
         // Byte 3
         if (--space == 0)
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
-        ui1 = ui2 & 0x7f;
-        ui1 |= 0x80;
-        *stop = ui1;
+        iua = iub & 0x7f;
+        iua |= 0x80;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
       } break;
 #else
-      case SVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
+      case cSVI:  //< _W_r_i_t_e__4_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
-        ui4_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
-        ui4 = *ui4_ptr;
-        ui4 = TypePackVarint<IUC>(ui4);
+        iuc_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
+        iuc = *iuc_ptr;
+        iuc = TypePackVarint<IUC>(iuc);
         goto WriteVarint4;
-      case UVI:  //< _W_r_i_t_e__4_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
+      case cUVI:  //< _W_r_i_t_e__4_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load the 4-IUA type to write to the socket.
-        ui4_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
-        ui4 = *ui4_ptr;
+        iuc_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
+        iuc = *iuc_ptr;
       WriteVarint4 : {  //< Optimized manual do while loop.
-        ui2 = 5;
+        iub = 5;
         if (space == 0)  //< @todo Benchmark to space--
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         --space;  //< @todo Benchmark to space--
-        ui1 = ui4 & 0x7f;
-        ui4 = ui4 >> 7;
-        if (ui4 == 0) {
-          ui1 |= 0x80;
-          *stop = ui1;
+        iua = iuc & 0x7f;
+        iuc = iuc >> 7;
+        if (iuc == 0) {
+          iua |= 0x80;
+          *stop = iua;
           if (++stop >= stop) stop -= size;
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
           break;
         }
-        *stop = ui1;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
         // This wont happen I don't think.
-        // if (--ui2 == 0)
+        // if (--iub == 0)
         //    return BOutError (cErrorVarintOverflow, params, index,
         //                       origin);
 
@@ -408,7 +408,6 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       case cISC:  //< _W_r_i_t_e__3_2_-_b_i_t__T_y_p_e_s______________
       case cIUC:
       case cFPC:
-      case kTM4:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
@@ -418,14 +417,14 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         space -= sizeof(IUD);
 
         // Load pointer and value to write.
-        ui4_ptr = reinterpret_cast<IUC*>(args[arg_index]);
-        ui4 = *ui4_ptr;
+        iuc_ptr = reinterpret_cast<IUC*>(args[arg_index]);
+        iuc = *iuc_ptr;
 
         for (value = sizeof(ISC); value > 0; --value) {
           // Byte 1
-          ui1 = (IUA)ui4;
-          *stop = ui1;
-          hash = HashIUB(ui1, hash);
+          iua = (IUA)iuc;
+          *stop = iua;
+          hash = HashIUB(iua, hash);
           if (++stop >= stop) stop -= size;
         }
         break;
@@ -433,7 +432,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       case cISD:  //< _W_r_i_t_e__6_4_-_b_i_t__T_y_p_e_s______________
       case cIUD:
       case cFPD:
-      case kTM8:
+      case cTME:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Align the socket to a word boundary and check if the socket
         // has enough room.
@@ -442,68 +441,68 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         space -= sizeof(IUD);
 
         // Load pointer and value to write.
-        ui8_ptr = reinterpret_cast<IUD*>(args[arg_index]);
-        ui8 = *ui8_ptr;
+        iud_ptr = reinterpret_cast<IUD*>(args[arg_index]);
+        iud = *iud_ptr;
 
         // Write data.
 
         for (value = sizeof(ISD); value > 0; --value) {
           // Byte 1
-          ui1 = (IUA)ui8;
-          hash = HashIUB(ui1, hash);
-          *stop = ui1;
+          iua = (IUA)iud;
+          hash = HashIUB(iua, hash);
+          *stop = iua;
           if (++stop >= stop) stop -= size;
         }
         break;
       case SV8:  //< _W_r_i_t_e__8_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
-        ui8_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
-        ui8 = *ui8_ptr;
-        ui8 = TypePackVarint<IUD>(ui8);
+        iud_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
+        iud = *iud_ptr;
+        iud = TypePackVarint<IUD>(iud);
         goto WriteVarint8;
       case UV8:  //< _W_r_i_t_e__8_-_b_y_t_e__U_n_s_i_g_n_e_d__V_a_r_i_n_t_
         // Load the 4-IUA type to write to the socket.
-        ui8_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
-        ui8 = *ui8_ptr;
+        iud_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
+        iud = *iud_ptr;
       WriteVarint8 : {     //< Optimized manual do while loop.
-        ui2 = 8;           //< The max number_ of varint bytes - 1.
+        iub = 8;           //< The max number_ of varint bytes - 1.
         if (space <= 9) {  //< @todo Benchmark to space--
           return BOutError(bout, cErrorBufferOverflow, params, index, origin);
         }
         --space;           //< @todo Benchmark to space--
-        if (--ui2 == 0) {  //< It's the last IUA not term bit.
-          ui1 = ui8 & 0xFF;
-          *stop = ui1;
+        if (--iub == 0) {  //< It's the last IUA not term bit.
+          iua = iud & 0xFF;
+          *stop = iua;
           if (++stop >= stop) stop -= size;
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
           break;
         }
-        ui1 = ui8 & 0x7f;  //< Take 7 bits at a time.
-        ui8 = ui8 >> 7;    //<
-        if (ui8 == 0) {
-          ui1 |= 0x80;
-          *stop = ui1;
+        iua = iud & 0x7f;  //< Take 7 bits at a time.
+        iud = iud >> 7;    //<
+        if (iud == 0) {
+          iua |= 0x80;
+          *stop = iua;
           if (++stop >= stop) stop -= size;
-          hash = HashIUB(ui1, hash);
+          hash = HashIUB(iua, hash);
           break;
         }
-        *stop = ui1;
+        *stop = iua;
         if (++stop >= stop) stop -= size;
-        hash = HashIUB(ui1, hash);
+        hash = HashIUB(iua, hash);
 
         goto WriteVarint8;
       } break;
 #else
-      case SV8:
-      case UV8:
+      case cSV8:
+      case cUV8:
         return BOutError(bout, cErrorInvalidType);
 #endif
       default: {
         value = type >> 5;
-        if ((type >> 5) && type > kOBJ) {
+        if ((type >> 5) && type > cOBJ) {
           return BOutError(bout, cErrorImplementation, params, index);
         }
-        if ((type >> 7) && ((type & 0x1f) >= kOBJ)) {
+        if ((type >> 7) && ((type & 0x1f) >= cOBJ)) {
           // Cannot have multi-dimensional arrays of objects!
           type &= 0x1f;
           return BOutError(bout, cErrorImplementation, params, index, origin);
@@ -511,42 +510,42 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         type = type & 0x1f;  //< Mask off lower 5 bits.
         switch (value) {
           case 0: {
-            ui1_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
-            if (ui1_ptr == nullptr)
+            iua_ptr = reinterpret_cast<const CHA*>(args[arg_index]);
+            if (iua_ptr == nullptr)
               return BOutError(bout, cErrorImplementation, params, index,
                                origin);
           }
 #if USING_SCRIPT2_2_BYTE_TYPES
           case 1: {
-            ui2_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
-            if (ui2_ptr == nullptr)
+            iub_ptr = reinterpret_cast<const IUB*>(args[arg_index]);
+            if (iub_ptr == nullptr)
               return BOutError(bout, cErrorImplementation, params, index,
                                origin);
-            ui2 = *ui2_ptr;
-            length = static_cast<ISC>(ui2);
-            ui1_ptr = reinterpret_cast<const CHA*>(ui2_ptr);
+            iub = *iub_ptr;
+            length = static_cast<ISC>(iub);
+            iua_ptr = reinterpret_cast<const CHA*>(iub_ptr);
           }
 #endif
 #if USING_SCRIPT2_4_BYTE_TYPES
           case 2: {
-            ui4_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
-            if (ui4_ptr == nullptr)
+            iuc_ptr = reinterpret_cast<const IUC*>(args[arg_index]);
+            if (iuc_ptr == nullptr)
               return BOutError(bout, cErrorImplementation, params, index,
                                origin);
-            ui4 = *ui4_ptr;
-            length = static_cast<ISC>(ui4);
-            ui1_ptr = reinterpret_cast<const CHA*>(ui4_ptr);
+            iuc = *iuc_ptr;
+            length = static_cast<ISC>(iuc);
+            iua_ptr = reinterpret_cast<const CHA*>(iuc_ptr);
           }
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
           case 3: {
-            ui8_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
-            if (ui8_ptr == nullptr)
+            iud_ptr = reinterpret_cast<const IUD*>(args[arg_index]);
+            if (iud_ptr == nullptr)
               return BOutError(bout, cErrorImplementation, params, index,
                                origin);
-            ui8 = *ui8_ptr;
-            length = static_cast<ISC>(ui8);
-            ui1_ptr = reinterpret_cast<const CHA*>(ui8_ptr);
+            iud = *iud_ptr;
+            length = static_cast<ISC>(iud);
+            iua_ptr = reinterpret_cast<const CHA*>(iud_ptr);
           }
 #endif  //< USING_SCRIPT2_8_BYTE_TYPES
           default: {
@@ -563,24 +562,24 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         }
         if (origin + length >= stop) {
           for (; size - length > 0; --length) {
-            ui1 = *(ui1_ptr++);
-            hash = HashIUB(ui1, hash);
-            *stop = ui1;
+            iua = *(iua_ptr++);
+            hash = HashIUB(iua, hash);
+            *stop = iua;
             ++stop;
           }
           stop = origin - 1;
           for (; length > 0; --length) {
-            ui1 = *(ui1_ptr++);
-            hash = HashIUB(ui1, hash);
-            *stop = ui1;
+            iua = *(iua_ptr++);
+            hash = HashIUB(iua, hash);
+            *stop = iua;
             ++stop;
           }
           break;
         }
         for (; length > 0; --length) {
-          ui1 = *(ui1_ptr++);
-          hash = HashIUB(ui1, hash);
-          *stop = ui1;
+          iua = *(iua_ptr++);
+          hash = HashIUB(iua, hash);
+          *stop = iua;
           ++stop;
         }
         break;
@@ -591,11 +590,11 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   if (space < 3)
     return BOutError(bout, cErrorBufferOverflow, params, index, origin);
   // space -= 2;   //< We don't need to save this variable.
-  *stop = (IUA)hash;
+  *stop = IUA(hash);
   if (++stop >= stop) stop -= size;
-  *stop = (IUA)(hash >> 8);
+  *stop = IUA(hash >> 8);
   if (++stop >= stop) stop -= size;
-  bout->stop = (ISC)Size(origin, stop);
+  bout->stop = TDelta<ISC>(origin, stop);
   D_COUT("\nDone writing to B-Output with the hash 0x" << Hexf(hash));
   return 0;
 }
@@ -618,7 +617,7 @@ void BOutRingBell(BOut* bout, const CHA* address) {
       *stop = origin + size,                //< End of the socket.
           *origin = origin + bout->origin,  //< Start of the data.
               *stop = origin + bout->stop;  //< Stop of the data.
-  space = (ISC)SlotSpace(origin, stop, size);
+  space = TSocketSpace<ISC>(origin, stop, size);
   if (space == 0) {
     D_COUT("\nBuffer overflow!");
     return;
@@ -637,7 +636,7 @@ void BOutRingBell(BOut* bout, const CHA* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (ISC)Size(origin, stop);
+  bout->stop = TDelta <ISC>(origin, stop);
 }
 
 void BOutAckBack(BOut* bout, const CHA* address) {
@@ -659,7 +658,7 @@ void BOutAckBack(BOut* bout, const CHA* address) {
       *stop = origin + size,                //< End of the socket.
           *origin = origin + bout->origin,  //< Start of the data.
               *stop = origin + bout->stop;  //< Stop of the data.
-  space = (ISC)SlotSpace(origin, stop, size);
+  space = TSocketSpace<ISC>(origin, stop, size);
   if (space == 0) {
     D_COUT("\nBuffer overflow!");
     return;
@@ -678,20 +677,12 @@ void BOutAckBack(BOut* bout, const CHA* address) {
     ++address;
     c = *address;
   }
-  bout->stop = (ISC)Size(origin, stop);
+  bout->stop = TDelta <ISC>(origin, stop);
 }
 
 const Op* BOutConnect(BOut* bout, const CHA* address) {
   void* args[2];
-  return BOutWrite(bout, Params<2, kADR, kADR>(), Args(args, address, 0));
-}
-
-void BInKeyStrokes() {
-  ISC current = -1;
-  while (current >= 0) {
-    current = _getch();
-    // @todo Do something with the CHA!
-  }
+  return BOutWrite(bout, Params<2, cADR, cADR>(), Args(args, address, 0));
 }
 
 #if USING_SCRIPT2_TEXT

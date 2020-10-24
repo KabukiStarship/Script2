@@ -152,8 +152,8 @@ inline void TPrint8or16Decimals(CHT* cursor, IUC lsd, const IUB* lut,
   }
 }
 
-inline IUC ToUI4(IUC value) { return value; }
-inline IUC ToUI4(IUD value) { return (IUC)value; }
+inline IUC ToIUC(IUC value) { return value; }
+inline IUC ToIUC(IUD value) { return (IUC)value; }
 
 /* Prints the give value to the given socket as a Unicode string.
 @return Nil upon socket overflow and a pointer to the nil-term CHT upon
@@ -252,7 +252,7 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
       D_COUT("\n    Range:[10000, 65535] length:5");
       nil_ptr = cursor + delta + 5;
       if (nil_ptr >= stop) return nullptr;
-      IUC value_ui4 = ToUI4(value);
+      IUC value_ui4 = ToIUC(value);
       pow_10_ui2 = 10000;
       CHT digit6 = (IUA)(value_ui4 / pow_10_ui2);
       value_ui4 -= pow_10_ui2 * digit6;
@@ -296,14 +296,14 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
       pow_10_ui4 = 10000000;  //< 10^7
       if (value >= pow_10_ui4) {
         D_COUT("\n    Range:[10000000, 16777216] length:8");
-        return TPrint8Decimals<CHT>(cursor, ToUI4(value), lut);
+        return TPrint8Decimals<CHT>(cursor, ToIUC(value), lut);
       }
     Print7:
       D_COUT("\n    Range:[1048576, 9999999] length:7");
       nil_ptr = cursor + delta + 7;
       if (nil_ptr >= stop) return nullptr;
       IUB pow_10_ui2 = 10000;
-      IUC value_ui4 = ToUI4(value);
+      IUC value_ui4 = ToIUC(value);
       IUB digits6and5 = value_ui4 / pow_10_ui2,
           digits2and1 = value_ui4 - pow_10_ui2 * digits6and5;
       pow_10_ui2 = 100;
@@ -319,12 +319,12 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
     } else {
       IUC comparator = 100000000;  // 10^8
       IU msd =
-          (value >= (~(IUC)0)) ? value / comparator : ToUI4(value) / comparator;
+          (value >= (~(IUC)0)) ? value / comparator : ToIUC(value) / comparator;
       IUC lsd = (IUC)(value - comparator * msd), middle_sd;
       if (msd >= comparator) {
         delta = 16;
         value = msd / comparator;
-        middle_sd = ToUI4(msd - value * comparator);
+        middle_sd = ToIUC(msd - value * comparator);
         D_COUT("\n    Printing " << value << '_' << middle_sd << '_' << lsd);
       } else {
         value = msd;
@@ -388,7 +388,7 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
         comparator = 10000000;
         if (value >= comparator) {
           D_COUT("\n    Length:16");
-          TPrint8Decimals<CHT>(cursor, ToUI4(value), lut);
+          TPrint8Decimals<CHT>(cursor, ToIUC(value), lut);
           TPrint8Decimals<CHT>(cursor + 8, lsd, lut);
           return TPrintNil<CHT>(cursor + 16);
         }
@@ -782,21 +782,21 @@ class TBinary {
     D_ASSERT(size);
     ISW lut_count = LUTCount();
     if (size != ((100 + lut_count) * 2 + lut_count * 8)) return;
-    IUB* ui2_ptr = reinterpret_cast<IUB*>(origin);
+    IUB* iub_ptr = reinterpret_cast<IUB*>(origin);
 
     for (CHA tens = '0'; tens <= '9'; ++tens)
       for (ISN ones = '0'; ones <= '9'; ++ones)
 #if ENDIAN == LITTLE
-        *ui2_ptr++ = (tens << 8) | ones;
+        *iub_ptr++ = (tens << 8) | ones;
 #else
-        *ui2_ptr++ = (ones << 8) | tens;
+        *iub_ptr++ = (ones << 8) | tens;
 #endif
     const IUB* e_lut = BinaryPow10Exponents();
-    for (ISC i = 0; i < 87; ++i) *ui2_ptr = e_lut[i];
+    for (ISC i = 0; i < 87; ++i) *iub_ptr = e_lut[i];
 
-    IUD* ui8_ptr = reinterpret_cast<IUD*>(ui2_ptr);
+    IUD* iud_ptr = reinterpret_cast<IUD*>(iub_ptr);
     const IU* f_lut = Pow10IntegralLUT();
-    for (ISC i = 0; i < 87; ++i) *ui8_ptr = f_lut[i];
+    for (ISC i = 0; i < 87; ++i) *iud_ptr = f_lut[i];
   }
 
   template <typename CHT = CHR>

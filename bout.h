@@ -23,7 +23,7 @@ namespace _ {
 typedef enum BOutStates {
   cBOutStateDisconnected = 0,  //< BOut State 0: BOut locked.
   cBOutStateWriting,           //< BOut State 1: Most common state.
-  cBOutStateWritingBsc,        //< BOut State 2: Writing cBSQ.
+  cBOutStateWritingBSeq,       //< BOut State 2: Writing cBSQ.
 } BOutState;
 
 /* Byte-ring output socket. */
@@ -79,22 +79,7 @@ LIB_MEMBER void BOutAckBack(BOut* bout, const CHA* address);
 /* . */
 LIB_MEMBER void BInKeyStrokes();
 
-#if USING_SCRIPT2_TEXT == YES_0
-/* Prints the BIn to the Text.
-    @param bout The bout to utf.
-    @param text The Text to utf to the bout.
-    @return The slot. */
-LIB_MEMBER UTF1& PrintBOut(UTF1& printer, BOut* bout);
-#endif
-
 }  // namespace _
-
-#if USING_SCRIPT2_TEXT == YES_0
-/* Prints out the bin to the text. */
-inline _::UTF1& operator<<(_::UTF1& utf, _::BOut* bout) {
-  return _::PrintBOut(utf, bout);
-}
-#endif
 
 #endif  //< INCLUDED_SCRIPT2_BOUT
 #undef DEBUG_SCRIPT2_BOUT

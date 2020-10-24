@@ -6,25 +6,22 @@
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
 #include <_Config.h>
-
 #if SEAM >= SCRIPT2_TABLE
-
 #ifndef SCRIPTT2_TABLE_T
 #define SCRIPTT2_TABLE_T
-
 #include "Array.hpp"
-#include "Binary.hpp"
-#include "Uniprinter.hpp"
-
+#include "Hash.hpp"
 #if SEAM == SCRIPT2_TABLE
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #define D_COUT_TABLE(item)
 #endif
+#define TPARAMS CHT, ISZ, ISY, HSH
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
 
 namespace _ {
 
@@ -68,14 +65,14 @@ from lower address up.
 |      | Sorted Hash 1                 |
 +--------------------------------------+  ^ Up in addresses.
 |            TTable Header             |  |
-+-------------------------------------+ 0x0
++--------------------------------------+ 0x0
 @endcode
 */
-template <typename ISZ>
+template <typename ISZ, typename ISY>
 struct TTable {
   ISZ size_bytes,  //< Size of this object in bytes.
-      size_pile,   //< Size of the collision table pile.
-      count,       //< Number of keys.
+      size_pile;   //< Size of the collision table pile.
+  ISY count,       //< Number of keys.
       count_max;   //< Number of buffered indexes.
 };
 
@@ -83,127 +80,56 @@ enum {
   cMinTableSize = 64,  //< Min size of a Table
 };
 
-/* Returns the highest signed prime that can fit in type IS.
-@return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */
-template <typename IS>
-inline IS PrimeMaxSigned() {
-  IS prime = (sizeof(IS) == 1)
-                 ? 127
-                 : (sizeof(IS) == 2)
-                       ? 32767
-                       : (sizeof(IS) == 4)
-                             ? 2147483647
-                             : (sizeof(IS) == 8) ? 9223372036854775783 : 0;
-  return prime;
-}
-
-/* Returns the highest signed prime that can fit in type IU.
-@return 0 if the sizeof (IU) is not 1, 2, 4, or 8. */
-template <typename HSH>
-inline HSH TPrimeMaxUnigned() {
-  HSH prime = sizeof(HSH) == 1
-                  ? 251
-                  : sizeof(HSH) == 2
-                        ? 65535
-                        : sizeof(HSH) == 4
-                              ? 4294967291
-                              : sizeof(HSH) == 8 ? 18446744073709551557 : 0;
-  return prime;
-}
-
-template <typename HSH, typename CHT = CHR>
-inline HSH THashPrime(CHT value, HSH hash) {
-  return hash + hash * (HSH)value;
-}
-
-template <typename HSH = IUN, typename CHT = CHR>
-inline HSH THashPrime(const CHT* str) {
-  CHT c = (CHT)*str++;
-  HSH hash = TPrimeMaxUnigned<HSH>();
-  while (c) {
-    hash = THashPrime<HSH, CHT>(c, hash);
-    c = *str++;
-  }
-  return hash;
-}
-
-inline IUB HashIUB(IUB value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
-  hash = ((value & 0xff) * prime) + hash;
-  hash = ((value >> 8) * prime) + hash;
-  return hash;
-}
-
-inline IUB HashIUB(IUC value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
-  hash = ((value & 0xff) * prime) + hash;
-  hash = (((value >> 8) & 0xff) * prime) + hash;
-  hash = (((value >> 16) & 0xff) * prime) + hash;
-  hash = (((value >> 24) & 0xff) * prime) + hash;
-  return hash;
-}
-
-inline IUB HashIUB(IUD value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
-  hash = ((value & 0xff) * prime) + hash;
-  hash = (((value >> 8) & 0xff) * prime) + hash;
-  hash = (((value >> 16) & 0xff) * prime) + hash;
-  hash = (((value >> 24) & 0xff) * prime) + hash;
-  hash = (((value >> 32) & 0xff) * prime) + hash;
-  hash = (((value >> 40) & 0xff) * prime) + hash;
-  hash = (((value >> 48) & 0xff) * prime) + hash;
-  hash = (((value >> 56) & 0xff) * prime) + hash;
-  return hash;
-}
-
 /* Checks of the given index is valid. */
-template <typename ISZ>
-inline BOL TIndexIsValid(ISZ index) {
+template <typename ISY>
+inline BOL TIndexIsValid(ISY index) {
   return index >= 0;
 }
 
-template <typename ISZ = ISN>
+template <typename ISZ = ISN, typename ISY = ISM>
 inline ISZ TTableEntryOverhead() {
-  return 4 * sizeof(ISZ);
+  return 2 * (sizeof(ISZ) + sizeof(ISY));
 }
 
-template <typename ISZ = ISN, typename CHT = CHR, ISZ cCountMax = 32,
-          ISZ cAverageStringLength = 16>
+template <TARGS, ISZ cCountMax = 32, ISZ cAverageStringLength = 16>
 constexpr ISZ CTableSize() {
-  return sizeof(TTable<ISZ>) + 4 * cCountMax * sizeof(ISZ) +
+  return sizeof(TTable<ISZ, ISY>) + 
+         2 * cCountMax * (sizeof(ISZ) + sizeof(ISY)) + 
          cCountMax * (cAverageStringLength + 1);
 }
 
-template <typename ISZ = ISN, typename CHT = CHR>
+template <TARGS>
 constexpr ISZ CTableSize(ISZ count_max, ISZ average_string_length = 24) {
-  return sizeof(TTable<ISZ>) + 4 * count_max * sizeof(ISZ) +
+  return sizeof(TTable<ISZ, ISY>) + 
+         2 * count_max * (sizeof(ISZ) + sizeof(ISY)) +
          count_max * (average_string_length + 1);
 }
 
-template <typename ISZ = ISN, typename CHT = CHR>
-inline CHT* TTableKeysStop(TTable<ISZ>* table, ISZ size_bytes) {
+template <TARGS>
+inline CHT* TTableKeysStop(TTable<ISZ, ISY>* table, ISZ size_bytes) {
   return TPtr<CHT>(table, size_bytes) - 1;
 }
 
 #if USING_STR
 /* Prints this object out to the console. */
-template <typename Printer, typename ISZ = ISN, typename HSH = IUN,
-          typename CHT = CHR>
-Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
+template <typename Printer, TARGS>
+Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
   D_ASSERT(table);
   enum {
     cHashWidth = (sizeof(HSH) * 2) < 10 ? 10 : (sizeof(HSH) * 2),
   };
-  ISZ count = table->count,            //
-      count_max = table->count_max,    //
-      collision_pile_index,            //
+  ISY count = table->count,            //
+      count_max = table->count_max;    //
+  ISZ collision_pile_index,            //
       size_bytes = table->size_bytes,  //
       size_pile = table->size_pile;    //
 
   ISN count_length_max = STRLength(count_max);
   count_length_max = (count_length_max < 2 ? 2 : count_length_max);
-  o << Linef("\n+---\n| Table<IS") << CHA('0' + sizeof(ISZ)) << ",IU"
-    << CHA('0' + sizeof(HSH)) << ",CH" << CHA('0' + sizeof(CHT)) << ">:0x"
+  o << Linef("\n+---\n| Table<IS") << CHA('0' + sizeof(ISZ)) 
+    << ",IS" << CHA('0' + sizeof(HSH))
+    << ",IU" << CHA('0' + sizeof(HSH)) 
+    << ",CH" << CHA('0' + sizeof(CHT)) << ">:0x"
     << Hexf(table) << " size_bytes:" << size_bytes << " key_count:" << count
     << " count_max:" << count_max << " size_pile:" << size_pile
     << Linef("\n+---\n| ") << Rightf("i", count_length_max)  //
@@ -211,13 +137,13 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
     << Centerf("hash_s", cHashWidth - 2) << Centerf("index_u", cHashWidth)
     << Centerf("offset", 8) << Linef(" \"Key\":{Collissions}\n+---");
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
-  ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
-      *collision_indexes = key_offsets + count_max,
-      *unsorted_indexes = collision_indexes + count_max;
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
+     * unsorted_indexes = collision_indexes + count_max;
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 
-  for (ISZ i = 0; i < count; ++i) {
+  for (ISY i = 0; i < count; ++i) {
     o << "\n| " << Rightf(i, count_length_max)  //
       << Centerf().Hex(THashPrime<HSH, CHT>(keys - key_offsets[i]), cHashWidth)
       << Centerf().Hex(hashes[unsorted_indexes[i]], cHashWidth)
@@ -226,14 +152,14 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
       << " \"" << (keys - key_offsets[i]) << "\":{";
 
     collision_pile_index = collision_indexes[i];
-    if (TIndexIsValid<ISZ>(collision_pile_index) && (i < count)) {
-      ISZ *collision_pile = unsorted_indexes + count_max,
+    if (TIndexIsValid<ISY>(collision_pile_index) && (i < count)) {
+      ISY *collision_pile = unsorted_indexes + count_max,
           *collision_begin = collision_pile + collision_pile_index;
-      ISZ collision = *collision_begin++;
+      ISY collision = *collision_begin++;
       o << collision;
-      while (TIndexIsValid<ISZ>(collision)) {
+      while (TIndexIsValid<ISY>(collision)) {
         collision = *collision_begin++;
-        if (TIndexIsValid<ISZ>(collision)) o << ", " << collision;
+        if (TIndexIsValid<ISY>(collision)) o << ", " << collision;
       }
     }
     o << '}';
@@ -247,11 +173,11 @@ Printer& TTablePrint(Printer& o, TTable<ISZ>* table) {
 
 /* Creates a streamable hash table with enough socket space for the
 count_max. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-TTable<ISZ>* TTableInit(TTable<ISZ>* table, ISZ height, ISZ size_bytes) {
+template <TARGS>
+TTable<ISZ, ISY>* TTableInit(TTable<ISZ, ISY>* table, ISY height, ISZ size_bytes) {
   D_ASSERT(table);
 
-  ISZ array_sizes = height * TTableEntryOverhead<ISZ>() + sizeof(TTable<ISZ>),
+  ISZ array_sizes = ISZ(height) * TTableEntryOverhead<ISZ>() + sizeof(TTable<ISZ, ISY>),
       min_required_size = 2 * height;
   min_required_size += array_sizes;
   D_COUT("\nCreating a TTable<> with size_bytes:"
@@ -273,28 +199,28 @@ TTable<ISZ>* TTableInit(TTable<ISZ>* table, ISZ height, ISZ size_bytes) {
   return table;
 }
 
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-inline TTable<ISZ>* TTableInit(IUW* socket, HSH count_max, ISZ size) {
-  auto table = reinterpret_cast<TTable<ISZ>*>(socket);
-  return TTableInit<ISZ, HSH, CHT>(table, count_max, size);
+template <TARGS>
+inline TTable<ISZ, ISY>* TTableInit(IUW* socket, ISY count_max, ISZ size) {
+  auto table = reinterpret_cast<TTable<ISZ, ISY>*>(socket);
+  return TTableInit<TPARAMS>(table, count_max, size);
 }
 
 /* Adds the key to the table.
 @return An invalid index upon failure or valid index upon success. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
+template <TARGS>
+ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
   D_ASSERT(table);
   D_ASSERT(key);
 
-  ISZ count = table->count, count_max = table->count_max,
-      size_bytes = table->size_bytes;
+  ISY count = table->count, count_max = table->count_max;
+  ISZ size_bytes = table->size_bytes;
 
   if (count >= count_max)
-    return CInvalidIndex<ISZ>();  //< We're out of buffered indexes.
+    return CInvalidIndex<ISY>();  //< We're out of buffered indexes.
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
-  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
-     * collision_indexes = key_offsets + count_max,
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
      * unsorted_indexes = collision_indexes + count_max,
      * collision_pile = unsorted_indexes + count_max;
   CHT *keys = TPtr<CHT>(table, size_bytes) - 1, *destination;
@@ -315,7 +241,7 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
 
   if (count == 0) {
     *hashes = hash;
-    *collision_indexes = CInvalidIndex<ISZ>();
+    *collision_indexes = CInvalidIndex<ISY>();
     *unsorted_indexes = 0;
     destination = keys - key_length;
     D_COUT("\n      destination:" << TDelta<>(table, destination) <<  //
@@ -323,7 +249,7 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
 
     if (!TSPrintString<CHT>(destination, keys, key)) {
       D_COUT("\nKey buffer overflow printing string when count:0");
-      return CInvalidIndex<ISZ>();
+      return CInvalidIndex<ISY>();
     }
     ISZ key_offset = ISZ(keys - destination);
     key_offsets[count] = key_offset;
@@ -343,13 +269,13 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
   ISZ key_offset = ISZ(keys - destination);
   if (!TSPrintString<CHT>(destination, keys, key)) {
     D_COUT("\nKey buffer overflow printing key.");
-    return CInvalidIndex<ISZ>();
+    return CInvalidIndex<ISY>();
   }
   key_offsets[count] = key_offset;
   D_COUT("\n       key_offset:" << key_offset <<  //
          "\n\nFinding insert location... ");
 
-  ISZ low = 0, mid = 0, high = count;
+  ISY low = 0, mid = 0, high = count;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
@@ -363,16 +289,16 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
     } else if (current_hash < hash) {
       low = mid + 1;
     } else {
-      ISZ unsorted_index = unsorted_indexes[mid],
+      ISY unsorted_index = unsorted_indexes[mid],
           collision_index = collision_indexes[unsorted_index];
       D_COUT(" Found hash at unsorted_index:"
              << unsorted_index << " collision_index:" << collision_index);
-      if (TIndexIsValid<ISZ>(collision_index)) {
+      if (TIndexIsValid<ISY>(collision_index)) {
         D_COUT("\n       Found collision. Checking the collision_pile...");
 
-        ISZ* collision_pile = unsorted_indexes + count_max;
-        ISZ* collision_cursor = collision_pile + collision_index;
-        ISZ collision = *collision_cursor++;
+        ISY* collision_pile = unsorted_indexes + count_max;
+        ISY* collision_cursor = collision_pile + collision_index;
+        ISY collision = *collision_cursor++;
         while (collision < 0) {
           ISZ offset = key_offsets[collision];
           D_COUT("comparing to \"" << keys - offset << "\". ");
@@ -384,7 +310,7 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
         }
         D_COUT("\n    New collision detected. Updating the collision_pile...");
         ISZ size_pile = table->size_pile;
-        TStackInsert<ISZ>(collision_pile, count, collision_index, size_pile);
+        TStackInsert<ISY>(collision_pile, count, collision_index, ISY(size_pile));
         table->size_pile = size_pile + 1;
         collision_indexes[count] = collision_index;
         unsorted_indexes[count] = count;
@@ -404,13 +330,13 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
         D_COUT("\n       New collision with unsorted_index:"
                << unsorted_index << " size_pile:" << size_pile
                << " count:" << count);
-        collision_indexes[unsorted_index] = size_pile;
-        collision_indexes[count] = size_pile;
-        ISZ* collision_pile_top = collision_pile + size_pile;
+        collision_indexes[unsorted_index] = ISY(size_pile);
+        collision_indexes[count] = ISY(size_pile);
+        ISY* collision_pile_top = collision_pile + size_pile;
 
         *collision_pile_top++ = unsorted_index;
         *collision_pile_top++ = count;
-        *collision_pile_top = CInvalidIndex<ISZ>();
+        *collision_pile_top = CInvalidIndex<ISY>();
 
         table->size_pile = size_pile + 3;
         table->count = count + 1;
@@ -418,36 +344,36 @@ ISZ TTableAdd(TTable<ISZ>* table, const CHT* key) {
         return count;
       }
       D_COUT("\nTable already contains the key.");
-      return CInvalidIndex<ISZ>();
+      return CInvalidIndex<ISY>();
     }
   }
   D_COUT("\n\nHash not found. Inserting into mid:" << mid << " before hash:0x"
                                                    << Hexf(hashes[mid]));
 
   TStackInsert<HSH>(hashes, count, mid, hash);
-  collision_indexes[count] = CInvalidIndex<ISZ>();
-  TStackInsert<ISZ>(unsorted_indexes, count, mid, count);
+  collision_indexes[count] = CInvalidIndex<ISY>();
+  TStackInsert<ISY>(unsorted_indexes, count, mid, count);
   table->count = count + 1;
   D_COUT_TABLE(table);
   return count;
 }
 
 /* Attempts to find the given key.
-@return Returns TTableInvalidIndex<ISZ>() upon failure, and valid index upon
+@return Returns TTableInvalidIndex<ISY>() upon failure, and valid index upon
 success. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
+template <TARGS>
+ISY TTableFind(const TTable<ISZ, ISY>* table, const CHT* key) {
   D_ASSERT(table);
-  ISZ count = table->count, count_max = table->count_max;
+  ISY count = table->count, count_max = table->count_max;
 
-  if (!key || count == 0) return CInvalidIndex<ISZ>();
+  if (!key || count == 0) return CInvalidIndex<ISY>();
 
   ISZ size_bytes = table->size_bytes;
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
-  ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
-      *collision_indexes = key_offsets + count_max,
-      *unsorted_indexes = collision_indexes + count_max;
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
+     * unsorted_indexes = collision_indexes + count_max;
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
 
   HSH hash = THashPrime<HSH, CHT>(key);
@@ -464,7 +390,7 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
     }
     if (!TSTREquals<CHT>(key, keys - offset)) {
       D_COUT("key not found.");
-      return CInvalidIndex<ISZ>();
+      return CInvalidIndex<ISY>();
     }
     D_COUT("Found key:\"" << key << '\"' << Linef('-'));
     return 0;
@@ -472,7 +398,7 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
 
   // Perform a binary search to find the hash. If the mid is odd, we need to
   // subtract the sizeof (HSH*) in order to get the right pointer address.
-  ISZ low = 0, mid, high = count - 1;
+  ISY low = 0, mid, high = count - 1;
 
   while (low <= high) {
     mid = (low + high) >> 1;  //< >> 1 to /2
@@ -485,13 +411,13 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
     } else if (current_hash < hash) {
       low = mid + 1;
     } else {
-      ISZ unsorted_index = unsorted_indexes[mid],
+      ISY unsorted_index = unsorted_indexes[mid],
           collision_index = collision_indexes[unsorted_index];
       D_COUT("\n    Found hash[" << mid << "]:0x" << Hexf(hashes[mid])
                                  << " unsorted_index:" << unsorted_index
                                  << " collision_index:" << collision_index);
 
-      if (TIndexIsValid<ISZ>(collision_index)) {
+      if (TIndexIsValid<ISY>(collision_index)) {
         D_COUT("\n    Collision detected at collision_index:"
                << collision_index << ". Checking the collision_pile...");
 
@@ -500,12 +426,12 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
         // invalid index, so the collision_pile is searched from
         // lower address up.
 
-        ISZ *collision_pile = unsorted_indexes + count_max,
+        ISY *collision_pile = unsorted_indexes + count_max,
             *collision_cursor =
                 collision_pile + collision_indexes[unsorted_index];
         collision_index = *collision_cursor++;
 
-        while (TIndexIsValid<ISZ>(collision_index)) {
+        while (TIndexIsValid<ISY>(collision_index)) {
           ISZ key_offset = key_offsets[collision_index];
           D_COUT("\n      Comparing to:\"" << keys - key_offset
                                            << "\" at offset:" << key_offset);
@@ -517,7 +443,7 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
           collision_index = *collision_cursor++;
         }
         D_COUT(Linef("\n      collision_pile does not contain the key.\n---"));
-        return CInvalidIndex<ISZ>();
+        return CInvalidIndex<ISY>();
       }
 
       ISZ key_offset = key_offsets[unsorted_index];
@@ -526,7 +452,7 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
 
       if (!TSTREquals<CHT>(key, other_key)) {
         D_COUT("\n    Table does not contain key.");
-        return CInvalidIndex<ISZ>();
+        return CInvalidIndex<ISY>();
       }
 
       D_COUT("\n    Found key at unsorted_index:" << unsorted_index);
@@ -535,42 +461,38 @@ ISZ TTableFind(const TTable<ISZ>* table, const CHT* key) {
   }
   D_COUT(Linef("\nTable does not contain the hash.\n---"));
 
-  return CInvalidIndex<ISZ>();
+  return CInvalidIndex<ISY>();
 }
 
 /* Gets the given key.
 @return Returns the index it go inserted into. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-ISZ TTableGet(TTable<ISZ>* table, ISZ index) {
-  D_ASSERT(table);
-  D_COUT("\nBefore:");
-  D_COUT_TABLE(table);
-
-  ISZ count = table->count;
-  if (index < 0 || index >= count) return CInvalidIndex<ISZ>();
-
-  ISZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
-
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
-  ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
-      *collision_indexes = key_offsets + count_max,
-      *unsorted_indexes = collision_indexes + count_max;
+template <TARGS>
+inline CHT* TTableGet(TTable<ISZ, ISY>* table, ISY index) {
+  ISY count = table->count;
+  if (index < 0 || index >= count) return nullptr;
+  ISZ size_bytes = table->size_bytes;
+  ISY count_max = table->count_max;
+  HSH* hashes =
+      reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
+  return keys - key_offsets[index];
 }
 
 /* Removes the string at the given index. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-ISZ TTableRemove(TTable<ISZ>* table, ISZ index) {
+template <TARGS>
+ISY TTableRemove(TTable<ISZ, ISY>* table, ISY index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
   D_COUT_TABLE(table);
 
-  ISZ count = table->count;
-  if (index < 0 || index >= count) return CInvalidIndex<ISZ>();
+  ISY count = table->count;
+  if (index < 0 || index >= count) return CInvalidIndex<ISY>();
 
-  ISZ size_bytes = table->size_bytes, count_max = table->count_max, temp;
+  ISZ size_bytes = table->size_bytes;
+  ISY count_max = table->count_max;
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ>)));
+  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
   ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
@@ -585,64 +507,69 @@ ISZ TTableRemove(TTable<ISZ>* table, ISZ index) {
   return count;
 }
 
+template <TARGS>
+CHA* TTableEnd(TTable<ISZ, ISY>* table) {
+  return TPtr<CHA>(table) + table->size_bytes;
+}
+
 /* Removes the given key from the table. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR>
-ISZ TTableRemove(TTable<ISZ>* table, const CHT* key) {
-  ISZ index = TTableFind<ISZ, HSH, CHT>(table, key);
-  return TTableRemove<ISZ, HSH, CHT>(table, index);
+template <TARGS>
+ISY TTableRemove(TTable<ISZ, ISY>* table, const CHT* key) {
+  ISY index = TTableFind<TPARAMS>(table, key);
+  return TTableRemove<TPARAMS>(table, index);
 }
 
 /* An ASCII Table Autoject. */
-template <typename ISZ = ISN, typename HSH = IUN, typename CHT = CHR,
-          ISZ cCountMax = 32,
+template <TARGS,
+          ISY cCountMax = 32,
           typename BUF =
-              TBUF<CTableSize<ISZ, CHT, cCountMax>(), ISA, ISZ, TTable<ISZ>>>
+              TBUF<CTableSize<TPARAMS, cCountMax>(), ISA, ISZ, TTable<ISZ, ISY>>>
 class ATable {
   AArray<CHT, ISZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:
   /* Constructs a Table.
   @param factory SocketFactory to call when the String overflows. */
   ATable() {
-    ISZ size_bytes = CTableSize<ISZ, CHT, cCountMax>();
+    ISZ size_bytes = CTableSize<TPARAMS, cCountMax>();
     D_ARRAY_WIPE(obj_.Origin(), size_bytes);
-    TTableInit<ISZ, HSH, CHT>(obj_.Origin(), cCountMax, size_bytes);
+    TTableInit<TPARAMS>(obj_.Origin(), cCountMax, size_bytes);
   }
 
   /* Constructs a Table.
   @param factory SocketFactory to call when the String overflows. */
-  ATable(ISZ count_max) {
-    ISZ size_bytes = CTableSize<ISZ, CHT, count_max>();
+  ATable(ISY count_max) {
+    ISZ size_bytes = CTableSize<TPARAMS, count_max>();
     D_ARRAY_WIPE(obj_.Origin(), size_bytes);
-    TTableInit<ISZ, HSH, CHT>(obj_.Origin(), count_max, size_bytes);
+    TTableInit<TPARAMS>(obj_.Origin(), count_max, size_bytes);
   }
 
   /* Deep copies the given string into the Table.
   @return The index of the string in the Table. */
-  inline ISZ Add(const CHT* string) {
-    return TTableAdd<ISZ, HSH, CHT>(This(), string);
+  inline ISY Add(const CHT* string) {
+    return TTableAdd<TPARAMS>(This(), string);
   }
 
   /* Removes the string at the given index from the Table. */
-  inline ISZ Remove(ISZ index) {
-    return TTableRemove<ISZ, HSH, CHT>(This(), index);
+  inline ISY Remove(ISY index) {
+    return TTableRemove<TPARAMS>(This(), index);
   }
 
   /* Removes the string at the given index from the Table. */
-  inline ISZ Remove(const CHT* key) {
-    return TTableRemove<ISZ, HSH, CHT>(This(), key);
+  inline ISY Remove(const CHT* key) {
+    return TTableRemove<TPARAMS>(This(), key);
   }
 
   /* Gets the string at the given index. */
-  inline CHT* Get(ISZ index) {
-    return TTableGet<ISZ, HSH, CHT>(This(), index);
+  inline CHT* Get(ISY index) {
+    return TTableGet<TPARAMS>(This(), index);
   }
 
-  inline ISZ Find(const CHT* string) {
-    return TTableFind<ISZ, HSH, CHT>(This(), string);
+  inline ISY Find(const CHT* string) {
+    return TTableFind<TPARAMS>(This(), string);
   }
 
   /* Gets the ASCII Object. */
-  inline TTable<ISZ>* This() { return obj_.OriginAs<TTable<ISZ>*>(); }
+  inline TTable<ISZ, ISY>* This() { return obj_.OriginAs<TTable<ISZ, ISY>*>(); }
 
   /* Gets the Auto-Array. */
   inline AArray<CHT, ISZ, BUF>& Array() { return obj_; }
@@ -650,7 +577,7 @@ class ATable {
 #if USING_STR
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TTablePrint<Printer, ISZ, HSH, CHT>(o, This());
+    return TTablePrint<Printer, TPARAMS>(o, This());
   }
 
   inline void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
@@ -658,6 +585,8 @@ class ATable {
 };
 
 }  // namespace _
+#undef TARGS
+#undef TPARAMS
 #undef D_COUT_TABLE
 #endif
 #endif

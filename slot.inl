@@ -8,14 +8,14 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #include "Slot.h"
 
 #include "Binary.hpp"
 #include "String.hpp"
 #include "TypeValue.h"
 
-#if SEAM == SCRIPT2_DIC
+#if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -44,7 +44,7 @@ const Op* ReturnError(Slot* slot, Error error, const ISC* header, ISC offset,
   return reinterpret_cast<const Op*>(error);
 }
 
-Slot::Slot(IUW* socket, ISC size) {
+Slot::Slot(IUW* socket, ISW size) {
   A_ASSERT(socket);
   A_ASSERT(size >= cSlotSizeMin);
   CHA* l_begin = reinterpret_cast<CHA*>(socket);
@@ -147,18 +147,18 @@ BOL Slot::IsReadable() { return origin != stop; }
 const Op* Slot::Read(const ISC* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
-  IUA ui1;  //< Temp variable to load most types.
-  IUB ui2;  //< Temp variable for working with cIUB types.
+  IUA iua;  //< Temp variable to load most types.
+  IUB iub;  //< Temp variable for working with cIUB types.
 #if USING_SCRIPT2_4_BYTE_TYPES
-  IUC ui4;
+  IUC iuc;
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
-  IUD ui8;  //< Temp cIUD variable.
+  IUD iud;  //< Temp cIUD variable.
 #endif
-  CHA* ui1_ptr;              //< Pointer to a cIUA.
-  IUB* ui2_ptr;              //< Pointer to a cIUB.
-  IUC* ui4_ptr;              //< Pointer to a cIUC.
-  IUD* ui8_ptr;              //< Pointer to a cIUD.
+  CHA* iua_ptr;              //< Pointer to a cIUA.
+  IUB* iub_ptr;              //< Pointer to a cIUB.
+  IUC* iuc_ptr;              //< Pointer to a cIUC.
+  IUD* iud_ptr;              //< Pointer to a cIUD.
   ISC type,                  //< Current type being read.
       index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
@@ -205,33 +205,33 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // std::cout << "\nReading CHA with max length " << count;
 
         // Load next pointer and increment args.
-        ui1_ptr = reinterpret_cast<CHA*>(args[index]);
-        if (!ui1_ptr) {
+        iua_ptr = reinterpret_cast<CHA*>(args[index]);
+        if (!iua_ptr) {
           break;
         }
 
         // Read from slot and write to the slot:
-        ui1 = *l_start;
+        iua = *l_start;
         if (++l_start > l_end) l_start -= size;
-        *ui1_ptr = ui1;
-        ++ui1_ptr;
+        *iua_ptr = iua;
+        ++iua_ptr;
 
-        while (ui1 && count) {
+        while (iua && count) {
           if (count-- == 0)
             return ReturnError(this, cErrorBufferUnderflow, params, index,
                                l_start);
-          D_COUT(ui1);
+          D_COUT(iua);
 
-          ui1 = *l_start;  // Read IUA from ring-socket.
+          iua = *l_start;  // Read IUA from ring-socket.
           if (++l_start > l_end) l_start -= size;
-          *ui1_ptr = ui1;  // Write IUA to destination.
-          ++ui1_ptr;
+          *iua_ptr = iua;  // Write IUA to destination.
+          ++iua_ptr;
         }
 
         D_COUT(" done!\n");
 
         if (type == 0) {
-          *ui1_ptr = ui1;
+          *iua_ptr = iua;
         }
         break;
       case cISA:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
@@ -245,16 +245,16 @@ const Op* Slot::Read(const ISC* params, void** args) {
         --length;
 
         // Read from socket and write to the stack:
-        ui1 = *l_start;
+        iua = *l_start;
         if (++l_start > l_end) {
           l_start -= size;
         }
         // Load next pointer and increment args.
-        ui1_ptr = reinterpret_cast<CHA*>(args[index]);
-        if (!ui1_ptr) {
+        iua_ptr = reinterpret_cast<CHA*>(args[index]);
+        if (!iua_ptr) {
           break;
         }
-        *ui1_ptr = ui1;  //< Write
+        *iua_ptr = iua;  //< Write
         if (++l_start > l_end) {
           l_start -= size;
         }
@@ -283,18 +283,18 @@ const Op* Slot::Read(const ISC* params, void** args) {
           l_start -= size;
         }
         // Read from socket and write to the stack:
-        ui2_ptr = reinterpret_cast<IUB*>(l_start);
-        ui2 = *ui2_ptr;
+        iub_ptr = reinterpret_cast<IUB*>(l_start);
+        iub = *iub_ptr;
         l_start += sizeof(IUB);
         if (l_start > l_end) {
           l_start -= size;
         }
         // Load next pointer and increment args.
-        ui2_ptr = reinterpret_cast<IUB*>(args[index]);
-        if (!ui2_ptr) {
+        iub_ptr = reinterpret_cast<IUB*>(args[index]);
+        if (!iub_ptr) {
           break;
         }
-        *ui2_ptr = ui2;
+        *iub_ptr = iub;
         //}
         break;
 #else
@@ -327,18 +327,18 @@ const Op* Slot::Read(const ISC* params, void** args) {
           l_start -= size;  //< Bound
         }
         // Read from socket and write to the stack:
-        ui4_ptr = reinterpret_cast<IUC*>(l_start);
-        ui4 = *ui4_ptr;          //< Read
+        iuc_ptr = reinterpret_cast<IUC*>(l_start);
+        iuc = *iuc_ptr;          //< Read
         l_start += sizeof(ISC);  //< Increment
         if (l_start > l_end) {
           l_start -= size;  //< Bound
         }
         // Load next pointer and increment args.
-        ui4_ptr = reinterpret_cast<IUC*>(args[index]);
-        if (!ui4_ptr) {
+        iuc_ptr = reinterpret_cast<IUC*>(args[index]);
+        if (!iuc_ptr) {
           break;
         }
-        *ui4_ptr = ui1;  //< Write
+        *iuc_ptr = iua;  //< Write
         break;
 //}
 #else
@@ -362,16 +362,16 @@ const Op* Slot::Read(const ISC* params, void** args) {
           l_start -= size;  //< Bound
         }
         // Read from socket and write to the stack:
-        ui8_ptr = reinterpret_cast<IUD*>(l_start);
-        ui8 = *ui8_ptr;          //< Read
+        iud_ptr = reinterpret_cast<IUD*>(l_start);
+        iud = *iud_ptr;          //< Read
         l_start += sizeof(IUD);  //< Increment
         if (l_start > l_end) {
           l_start -= size;  //< Bound
         }
         // Load next pointer and increment args.
-        ui8_ptr = reinterpret_cast<IUD*>(args[index]);
-        if (ui8_ptr == 0) break;
-        *ui8_ptr = ui8;  //< Write.
+        iud_ptr = reinterpret_cast<IUD*>(args[index]);
+        if (iud_ptr == 0) break;
+        *iud_ptr = iud;  //< Write.
         break;
 //}
 #else
@@ -381,13 +381,13 @@ const Op* Slot::Read(const ISC* params, void** args) {
 #if USING_SCRIPT2_OBJ
         count = type >> 5;  //< count is now the array type bits.
         type &= 0x1f;       //< Now type is the type 0-31
-        if (count && (type >= kOBJ)) {
+        if (count && (type >= cOBJ)) {
           // Can't make arrays out of objects!
           return ReturnError(this, cErrorInvalidType, params, index, l_start);
         }
         // We don't care if it's a multidimensional array anymore.
-        ui1_ptr = reinterpret_cast<CHA*>(args[index]);
-        if (ui1_ptr == nullptr)
+        iua_ptr = reinterpret_cast<CHA*>(args[index]);
+        if (iua_ptr == nullptr)
           return ReturnError(this, cErrorImplementation, params, index,
                              l_start);
         count &= 0x3;
@@ -398,7 +398,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
               return ReturnError(this, cErrorInvalidType, params, index,
                                  l_start);
             }
-            count = (IUW)*ui1_ptr;
+            count = (IUW)*iua_ptr;
             break;
           }
           case 1: {  // It's a 16-bit count.
@@ -407,8 +407,8 @@ const Op* Slot::Read(const ISC* params, void** args) {
                                  l_start);
             }
             count -= 2;
-            ui2_ptr = reinterpret_cast<IUB*>(ui1_ptr);
-            count = (IUW)*ui2_ptr;
+            iub_ptr = reinterpret_cast<IUB*>(iua_ptr);
+            count = (IUW)*iub_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
@@ -421,8 +421,8 @@ const Op* Slot::Read(const ISC* params, void** args) {
                                  l_start);
             }
             count -= 4;
-            ui4_ptr = reinterpret_cast<IUC*>(ui1_ptr);
-            count = (IUW)*ui4_ptr;
+            iuc_ptr = reinterpret_cast<IUC*>(iua_ptr);
+            count = (IUW)*iuc_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
@@ -435,8 +435,8 @@ const Op* Slot::Read(const ISC* params, void** args) {
                                  l_start);
             }
             count -= 8;
-            ui8_ptr = reinterpret_cast<IUD*>(ui1_ptr);
-            count = (IUW)*ui8_ptr;
+            iud_ptr = reinterpret_cast<IUD*>(iua_ptr);
+            count = (IUW)*iud_ptr;
             if (count > length) {
               return ReturnError(this, cErrorBufferOverflow, params, index,
                                  l_start);
@@ -458,31 +458,31 @@ const Op* Slot::Read(const ISC* params, void** args) {
         }
         if (l_start + count >= l_end) {
           for (; size - count > 0; --count) {
-            ui1 = *l_start;
+            iua = *l_start;
             if (++l_start > l_end) {
               l_start -= size;
             }
-            *ui1_ptr = ui1;
-            ++ui1_ptr;
+            *iua_ptr = iua;
+            ++iua_ptr;
           }
           l_stop = l_begin - 1;
           for (; count > 0; --count) {
-            ui1 = *l_start;
+            iua = *l_start;
             if (++l_start > l_end) {
               l_start -= size;
             }
-            *ui1_ptr = ui1;
-            ++ui1_ptr;
+            *iua_ptr = iua;
+            ++iua_ptr;
           }
           break;
         }
         for (; count > 0; --count) {
-          ui1 = *l_start;
+          iua = *l_start;
           if (++l_start > l_end) {
             l_start -= size;
           }
-          *ui1_ptr = ui1;
-          ++ui1_ptr;
+          *iua_ptr = iua;
+          ++iua_ptr;
         }
         break;
 #endif
