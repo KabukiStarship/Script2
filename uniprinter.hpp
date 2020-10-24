@@ -561,7 +561,7 @@ Printer& TPrintHeadingf(Printer& o, const CHT* element,
   return o;
 }
 
-/* Prints the given  */
+/* Prints the a formatted header. */
 template <typename Printer>
 Printer& TPrintHeadingf(Printer& o, Headingf& item) {
   switch (_::TypeTextFormat(item.element.Type())) {
@@ -649,9 +649,9 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
 
 template <typename Printer, typename DT = DT2>
 Printer& TPrintTypePOD(Printer& o, DT type) {
-  DT pod_type = type & cTypePODMask,        //
-      vector_type = TTypeVector<DT>(type),  //
-      map_type = TTypeMap<DT>(type);        //
+  DT pod_type    = type & cTypePODMask,    //
+     vector_type = TTypeVector<DT>(type),  //
+     map_type    = TTypeMap<DT>(type);     //
 }
 
 /* Prints the given type to the printer. */

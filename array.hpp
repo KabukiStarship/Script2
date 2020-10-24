@@ -477,19 +477,19 @@ class TBUF {
   IUW words_[SizeWords()];  //< The word-aligned socket.
 };
 
-/* Creates */
-template <DT2 kType_>
+/* A Block of heap. */
+template <DT2 cType>
 class TRamFactory {
   /* SocketFactory for the Stack deletes a non-nil buffer. */
   static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    return _::RamFactoryHeap(buffer, size_bytes, kType_);
+    return _::RamFactoryHeap(buffer, size_bytes, cType);
   }
 
   /* SocketFactory for the Stack doesn't delete a non-nil buffer. */
   static IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    return _::RamFactoryStack(buffer, size_bytes, kType_);
+    return _::RamFactoryStack(buffer, size_bytes, cType);
   }
 
   /* Gets the initial SocketFactory for the program stack or heap. */
@@ -524,9 +524,6 @@ class AArray {
   BUF buffer_;    //< Optional buffer on the program stack.
 
  public:
-  enum {
-
-  };
   /* Gets the ASCII Data Type. */
   static constexpr DT1 Type() { return CTypeSize<ISZ, DT1>(cARY); }
 

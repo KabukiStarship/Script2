@@ -39,9 +39,6 @@
     <None Include="Error.inl">
       <Filter>./</Filter>
     </None>
-    <None Include="Event.inl">
-      <Filter>./</Filter>
-    </None>
     <None Include="File.inl">
       <Filter>./</Filter>
     </None>
@@ -356,6 +353,9 @@
       <Filter>./</Filter>
     </ClInclude>
     <ClInclude Include="COut.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash.hpp">
       <Filter>./</Filter>
     </ClInclude>
   </ItemGroup>

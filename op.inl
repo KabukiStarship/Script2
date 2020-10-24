@@ -27,8 +27,8 @@ UTF1& Print(UTF1& utf, const Op* op) {
   if (!op) {
     return utf << "\nOp: nil";
   }
-  return utf << "\nOp      :" << op->name << "\nBSQ     :" << Bsq(op->in)
-             << "\nResult: :" << Bsq(op->out)
+  return utf << "\nOp      :" << op->name << "\nBSQ     :" << BSeq(op->in)
+             << "\nResult: :" << BSeq(op->out)
              << "\nMetadata:" << op->description;
 }
 #endif
@@ -45,10 +45,10 @@ void Print (Op& log) {
     BIn    * bin = reinterpret_cast<BIn*> (log.bout);
     void   * args[1];
     IUA     type = 0,
-    ui1;
-    IUB ui2;
-    IUC ui4;
-    IUD ui8;
+    iua;
+    IUB iub;
+    IUC iuc;
+    IUD iud;
     //ISA   reserved,
     ISA   si1;
     IUB si2;
@@ -63,75 +63,75 @@ void Print (Op& log) {
     while (index ) {
         switch (type) {
             case cSTR: {
-                if (BinRead (bin, Params<2, kADR, cSTR> (), Args (args, &ui1,
+                if (BinRead (bin, Params<2, cADR, cSTR> (), Args (args, &iua,
                              socket)))
                     return;
                 Write (socket);
             }
             case cISA: {
-                if (BinRead (bin, Params<2, kADR, cISA> (), Args (args, &si1)))
+                if (BinRead (bin, Params<2, cADR, cISA> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
             case cIUA: {
-                if (BinRead (bin, Params<2, kADR, cIUA> (), Args (args, &ui1)))
+                if (BinRead (bin, Params<2, cADR, cIUA> (), Args (args, &iua)))
                     return;
                 Write (si1);
             }
             case cBOL: {
-                if (BinRead (bin, Params<2, kADR, cISA> (), Args (args, &si1)))
+                if (BinRead (bin, Params<2, cADR, cISA> (), Args (args, &si1)))
                     return;
                 Write (si1);
             }
             case cISB: {
-                if (BinRead (bin, Params<2, kADR, cISB> (), Args (args, &si2)))
+                if (BinRead (bin, Params<2, cADR, cISB> (), Args (args, &si2)))
                     return;
                 Write (si1);
             }
             case cIUB: {
-                if (BinRead (bin, Params<2, kADR, cIUB> (),
-                             Args (args, &ui2, socket)))
+                if (BinRead (bin, Params<2, cADR, cIUB> (),
+                             Args (args, &iub, socket)))
                     return;
                 Write (si1);
             }
             case cISC: {
-                if (BinRead (bin, Params<2, kADR, cISC> (),
+                if (BinRead (bin, Params<2, cADR, cISC> (),
                              Args (args, &si4, socket)))
                     return;
                 Write (si1;
             }
             case cIUC: {
-                if (BinRead (bin, Params<2, kADR, cIUC> (), Args (args, &ui4)))
+                if (BinRead (bin, Params<2, cADR, cIUC> (), Args (args, &iuc)))
                     return;
                 Write (si1;
             }
             case cISD: {
-                if (BinRead (bin, Params<2, kADR, cISD> (), Args (args, &si8)))
+                if (BinRead (bin, Params<2, cADR, cISD> (), Args (args, &si8)))
                     return;
                 Write (si8;
             }
             case cIUD: {
-                if (BinRead (bin, Params<2, kADR, cIUD> (), Args (args, &ui8)))
+                if (BinRead (bin, Params<2, cADR, cIUD> (), Args (args, &iud)))
                  return;
-                Write (ui8;
+                Write (iud;
             }
             case kTM4: {
-                if (BinRead (bin, Params<2, kADR, kTM4> (), Args (args, &ui4)))
+                if (BinRead (bin, Params<2, cADR, kTM4> (), Args (args, &iuc)))
                     return;
-                ClockPrintTime (ui4);
+                ClockPrintTime (iuc);
             }
             case kTM8: {
-                if (BinRead (bin, Params<2, kADR, kTM8> (), Args (args, &ui8)))
+                if (BinRead (bin, Params<2, cADR, kTM8> (), Args (args, &iud)))
                     return;
-                ClockPrintTimestamp (ui8);
+                ClockPrintTimestamp (iud);
             }
             case cFPC: {
-                if (BinRead (bin, Params<2, kADR, cFPC> (), Args (args, &flt)))
+                if (BinRead (bin, Params<2, cADR, cFPC> (), Args (args, &flt)))
                     return;
                 Write (si1;
             }
             case cFPD: {
-                if (BinRead (bin, Params<2, kADR, cSTR> (), Args (args, &dbl)))
+                if (BinRead (bin, Params<2, cADR, cSTR> (), Args (args, &dbl)))
                     return;
                 Write (si1;
             }

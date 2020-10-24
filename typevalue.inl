@@ -20,7 +20,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 const CHA* STRTypes() {
-  static const CHA kStrings[64][4] = {
+  static const CHA cStrings[64][4] = {
       {'N', 'I', 'L', NIL},  //< 00
       {'C', 'H', 'A', NIL},  //< 01
       {'I', 'S', 'A', NIL},  //< 02
@@ -54,7 +54,7 @@ const CHA* STRTypes() {
       {'D', 'T', 'K', NIL},  //< 30
       {'D', 'T', 'L', NIL},  //< 31
   };
-  return &kStrings[0][0];
+  return &cStrings[0][0];
 }
 
 const CHA* STRTrue() { return "true"; }
@@ -183,10 +183,10 @@ void* TypeValue::ToPTR() { return reinterpret_cast<void*>(word_); }
 CHA* TypeValue::ToSTA() { return reinterpret_cast<CHA*>(word_); }
 CHB* TypeValue::ToSTB() { return reinterpret_cast<CHB*>(word_); }
 CHC* TypeValue::ToSTC() { return reinterpret_cast<CHC*>(word_); }
-IUA TypeValue::ToUIA() { return IUA(word_); }
-IUB TypeValue::ToUI2() { return IUB(word_); }
-IUN TypeValue::ToUIN() { return IUN(word_); }
-IUC TypeValue::ToUI4() {
+IUA TypeValue::ToIUA() { return IUA(word_); }
+IUB TypeValue::ToIUB() { return IUB(word_); }
+IUN TypeValue::ToIUN() { return IUN(word_); }
+IUC TypeValue::ToIUC() {
 #if ALU_SIZE == ALU_16_BIT
   // @todo Inspect dissassembly to check if we even need the #if #else here.
   // I have a feeling the compiler will optmize away memory copies I think
@@ -196,7 +196,7 @@ IUC TypeValue::ToUI4() {
   return IUC(word_);
 #endif
 }
-IUD TypeValue::ToUI8() {
+IUD TypeValue::ToUID() {
 #if ALU_SIZE == ALU_64_BIT
   return word_;
 #else

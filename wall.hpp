@@ -30,7 +30,7 @@ needed a new Wall may be created and destroyed dynamically.
 |    Buffer    |
 |^^^^^^^^^^^^^^|
 |      ^       |
-|  TSTack of   |
+|  TStack of   |
 |    Doors     |
 |   Offsets    |
 |--------------|

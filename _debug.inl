@@ -21,21 +21,22 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define D_COUT_ERROR(message)                           \
   _::CPrint().Star() << "\nERROR: " << message << '.'); \
   _::TestWarn(__LINE__, __FUNCTION__, __FILE__)
-#define D_COUT_BSQ(bsq) _::COut(header) << '\n' << Bsq(bsq)
+#define D_COUT_BSQ(item) _::TBSQPrint<COut>(COut().Star(), item)
 #define D_COUT_OBJ(obj) obj.PrintTo<COut>(COut().Star())
 #define D_COUT_FUNCTION _::COut("\n", __FUNCTION__)
 #define D_COUT_FUNCTION_LINE \
   _::COut().NL();            \
   _::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
-#define D_COUT_ARRAY(item) TArrayPrint<COut, ISZ>(COut().Star(), item)
-#define D_COUT_STACK(item) TStackPrint<COut, T, ISZ>(COut().Star(), item)
-#define D_COUT_MATRIX(item) TMatrixPrint<COut, T, ISZ>(COut().Star(), item)
+#define D_COUT_ARRAY(item) _::TArrayPrint<COut, ISZ>(COut().Star(), item)
+#define D_COUT_STACK(item) _::TStackPrint<COut, T, ISZ>(COut().Star(), item)
+#define D_COUT_MATRIX(item) _::TMatrixPrint<COut, T, ISZ>(COut().Star(), item)
 #define D_COUT_TABLE(item) \
-  TTablePrint<_::COut, ISZ, HSH, CHT>(COut().Star(), item)
-#define D_COUT_MAP(item) TMapPrint<COut, D, ISZ>(COut().Star(), item)
-#define D_COUT_BOOK(item) TBookPrint<COut, ISZ, ISY, HSH>(COut().Star(), item)
+  TTablePrint<_::COut, CHT, ISZ, ISY, HSH>(COut().Star(), item)
+#define D_COUT_MAP(item) _::TMapPrint<COut, D, ISZ>(COut().Star(), item)
+#define D_COUT_BOOK(item) \
+  _::TBookPrint<COut, CHT, ISZ, ISY>(COut().Star(), item)
 #define D_COUT_DICTIONARY(item) \
-  TArrayPrint<COut, ISZ, ISY, HSH>(COut().Star(), item)
+  _::TDicPrint<_::COut, CHT, ISZ, ISY, HSH>(COut().Star(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
   Socket socket_to_print(origin, end_or_size)
 #define D_ARRAY_FILL(origin, end_or_size, c) \

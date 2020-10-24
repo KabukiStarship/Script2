@@ -543,51 +543,51 @@ void Stringf::Print(TypeValue item) {
       // CHC c = 2205; // Empty-set Unicode character.
       return;
     case cCHA:
-      Print(CHA(item.ToUIA()));
+      Print(CHA(item.ToIUA()));
       return;
     case cISA:
-      Print(ISA(item.ToUIA()));
+      Print(ISA(item.ToIUA()));
       return;
     case cIUA:
-      Print((item.ToUIA()));
+      Print((item.ToIUA()));
       return;
     case cCHB:
-      Print(CHB(item.ToUI2()));
+      Print(CHB(item.ToIUB()));
       return;
     case cISB:
-      Print(ISB(item.ToUI2()));
+      Print(ISB(item.ToIUB()));
       return;
     case cIUB:
-      Print(item.ToUI2());
+      Print(item.ToIUB());
       return;
     case cFPB:
-      Print(item.ToUI2());
+      Print(item.ToIUB());
       return;
     case cCHC:
-      Print(CHC(item.ToUI4()));
+      Print(CHC(item.ToIUC()));
       return;
     case cISC:
-      Print(ISC(item.ToUI4()));
+      Print(ISC(item.ToIUC()));
       return;
     case cIUC:
-      Print(IUC(item.ToUI4()));
+      Print(IUC(item.ToIUC()));
       return;
     case cFPC:
 #if USING_FPC == YES_0
-      Print(ToFloat(item.ToUI4()));
+      Print(ToFloat(item.ToIUC()));
 #endif
       return;
     case cTME:
       PrintTME(ISC(item.Word()), IUC(item.Word2()));
     case cISD:
-      Print(ISD(item.ToUI8()));
+      Print(ISD(item.ToUID()));
       return;
     case cIUD:
-      Print(item.ToUI8());
+      Print(item.ToUID());
       return;
     case cFPD:
 #if USING_FPD == YES_0
-      Print(ToFloat(item.ToUI8()));
+      Print(ToFloat(item.ToUID()));
 #endif
       return;
   }

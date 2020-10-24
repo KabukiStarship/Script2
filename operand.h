@@ -9,7 +9,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 #pragma once
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #ifndef SCRIPT2_OPERAND
 #define SCRIPT2_OPERAND
 #include "slot.h"
@@ -93,5 +93,5 @@ inline _::UTF1& operator<<(_::UTF1& printer, _::Operand* operand) {
 }
 
 #endif
-#endif  //< SCRIPT2_OPERAND
-#endif  //< #if SEAM >= SCRIPT2_DIC
+#endif
+#endif

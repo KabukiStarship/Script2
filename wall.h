@@ -19,8 +19,8 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "_Release.inl"
 #endif
 
-#include "Door.h"
-#include "Op.h"
+#include "Door.hpp"
+#include "Operand.h"
 
 namespace _ {
 
@@ -36,7 +36,7 @@ needed a new Wall may be created and destroyed dynamically.
 |    Buffer    |
 |^^^^^^^^^^^^^^|
 |      ^       |
-|  TSTack of   |
+|  TStack of   |
 |    Doors     |
 |   Offsets    |
 |--------------|
@@ -121,7 +121,7 @@ class Wall : public Operand {
     BOL is_dynamic_;        //< Flag for if using dynamic memory.
     ISW size_bytes_;        //< Size of the Wall in bytes.
     IUW* origin;            //< The Wall's socket.
-    TSTack<Door*>* doors_;  //< The doors in the room.
+    TStack<Door*>* doors_;  //< The doors in the room.
   };
 
 }  // namespace _

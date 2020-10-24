@@ -8,17 +8,19 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_DIC
-#include "../dic.hpp"
+#include "../Dic.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_DIC
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
+#define TPARAMS CHT, ISZ, ISY, HSH
+#define TARGS \
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
 
 namespace Script2 {
-template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
-          typename CHT = CHR>
+template <TARGS>
 static void TestDic() {
   D_COUT(Linef("\n\n---\n\n"));
 
@@ -26,12 +28,12 @@ static void TestDic() {
     cSize = 512 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ADictionary<IS"
+  D_COUT("Testing ADic<IS"
          << CSizef<ISZ> () << ",IU" << CSizef<ISZ> () << ",IS" << CSizef<ISY>() << ",CH"
                                   << CSizef<CHT>()
          << "> with cSize:" << cSize << " and cCount:" << cCount);
 
-  ABook<TPARAMS, cSize> dic(cCount);
+  ADic<TPARAMS, cSize> dic(cCount);
 
   D_COUT("\n\nsize:" << dic.Size() << " size_bytes:" << dic.SizeBytes()
                      << " size_words:" << dic.SizeWords());
@@ -42,30 +44,30 @@ static void TestDic() {
 
   D_COUT("\nPopulating " << cCount << " test words...");
 
-  const CHT *test_words = TTestWords<CHT>(), *word_cursor = test_words;
+  const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
 
-  for (ISY i = 0; i < 4; ++i) {
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUA(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISB(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUB(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISC(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUC(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISD(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUD(++i)));
+  for (ISY i = -1; i < 32; ++i) {
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISD(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUD(i)));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = 32; i < 128; ++i) {
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUA(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISB(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUB(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISC(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUC(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, ISD(++i)));
-    A_AVOW(ISY(i), dic.Insert(word_cursor += 16, IUD(++i)));
+  for (ISY i = 31; i < 128; ++i) {
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISD(i)));
+    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUD(i)));
   }
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
@@ -87,20 +89,22 @@ namespace Script2 {
 const CHA* Dic(const CHA* args) {
 #if SEAM >= SCRIPT2_DIC
   A_TEST_BEGIN;
-  TestDic<ISB, IUB, ISA, CHA>();
-  TestDic<ISB, IUB, ISA, CHB>();
-  TestDic<ISB, IUB, ISA, CHC>();
+  TestDic<CHA, ISB, ISA, IUB>();
+  TestDic<CHB, ISB, ISA, IUB>();
+  TestDic<CHC, ISB, ISA, IUB>();
 #if USING_UTF16 == YES_0
-  TestDic<ISC, IUC, ISB, CHA>();
-  TestDic<ISC, IUC, ISB, CHB>();
-  TestDic<ISC, IUC, ISB, CHC>();
+  TestDic<CHA, ISC, ISB, IUC>();
+  TestDic<CHB, ISC, ISB, IUC>();
+  TestDic<CHC, ISC, ISB, IUC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestDic<ISD, IUD, ISB, CHA>();
-  TestDic<ISD, IUD, ISB, CHB>();
-  TestDic<ISD, IUD, ISB, CHC>();
+  TestDic<CHA, ISD, ISB, IUD>();
+  TestDic<CHB, ISD, ISB, IUD>();
+  TestDic<CHC, ISD, ISB, IUD>();
 #endif
 #endif
   return nullptr;
 }
 }  // namespace Script2
+#undef TARGS
+#undef TPARAMS

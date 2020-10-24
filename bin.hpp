@@ -12,7 +12,6 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_CRABS
 #ifndef INCLUDED_SCRIPT2_CBIN
 #define INCLUDED_SCRIPT2_CBIN 1
-#include "BOut.h"
 #include "Op.h"
 
 namespace _ {
@@ -22,9 +21,9 @@ namespace _ {
 typedef enum BInStates {
   cBInStateAddress = 0,    //< State  0: Scanning address.
   cBInStatePackedArgs,     //< State  1: Scanning arguments.
-  cBInStatePackedUTF8,     //< State  2: Scanning UTF-8 .
-  cBInStatePackedUTF16,    //< State  3: Scanning UTF-16 .
-  cBInStatePackedUTF32,    //< State  4: Scanning UTF-32 .
+  cBInStatePackedUTF8,     //< State  2: Scanning UTF-8.
+  cBInStatePackedUTF16,    //< State  3: Scanning UTF-16.
+  cBInStatePackedUTF32,    //< State  4: Scanning UTF-32.
   cBInStatePackedVarint,   //< State  5: Scanning varint.
   cBInStatePackedObj,      //< State  6: 8-bit OB1 state.
   cBInStateVerifyingHash,  //< State  7: Verifying the 32-bit hash.
@@ -46,6 +45,16 @@ struct LIB_MEMBER BIn {
 
 /* Get's the B-Input's socket. */
 LIB_MEMBER inline CHA* BInBegin(BIn* bin);
+
+/* Print the BIn to the printer. */
+template<typename Printer>
+Printer& TBInPrint(Printer& printer, BIn* bin) {
+  ISC size = bin->size;
+  return printer << Linef('_', 80) << " size:" << bin->size
+                 << " start:" << bin->origin << " stop:" << bin->stop
+                 << " read:" << bin->read;
+                 //<< Socketf(BInBegin(bin), size + sizeof(BIn));
+}
 
 LIB_MEMBER inline CHA* BInEnd(BIn* bin);
 
@@ -98,42 +107,6 @@ LIB_MEMBER const Op* BInRead(BIn* bin, const ISC* params, void** args);
 inline const Op* BOutRead(BOut* bout, const ISC* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
-
-#if USING_UTF8 == YES_0
-/* Prints the BIn to the Text.
-@param bin The pin to utf.
-@param text The Text to utf the bin to.
-@return The text. */
-LIB_MEMBER UTF1& Print(UTF1& printer, BIn* bin);
-
-#endif  //< #if USING_UTF8 == YES_0
-#if USING_UTF16 == YES_0
-
-/* Prints the BIn to the Text.
-@param bin The pin to utf.
-@param text The Text to utf the bin to.
-@return The text. */
-LIB_MEMBER UTF2& Print(UTF2& printer, BIn* bin);
-
-#endif  //< #if USING_UTF16 == YES_0
-#if USING_UTF32 == YES_0
-
-/* Prints the BIn to the Text.
-@param bin The pin to utf.
-@param text The Text to utf the bin to.
-@return The text. */
-LIB_MEMBER UTF4& Print(UTF4& printer, BIn* bin);
-
-#endif  //< #if USING_UTF32 == YES_0
-
-}  // namespace _
-
-#if USING_SCRIPT2_TEXT == YES_0
-/* Prints out the bin to the text. */
-inline _::UTF1& operator<<(_::UTF1& utf, _::BIn* bin) {
-  return Print(utf, bin);
-}
-#endif
 
 #endif
 #endif

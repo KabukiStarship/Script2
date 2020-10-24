@@ -18,6 +18,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "BSeq.h"
 #include "Error.h"
 #include "Operand.h"
+#include "Slot.h"
 
 namespace _ {
 
@@ -263,24 +264,7 @@ LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op& header);
 @return Returns the header if crabs is nil. */
 LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op* op);
 
-#if USING_SCRIPT2_TEXT == YES_0
-
-/* Prints the Crabs stack to the Text socket */
-LIB_MEMBER UTF1& PrintCrabs(UTF1& printer, Crabs* crabs);
-
-/* Prints the Crabs stack to the Text socket */
-LIB_MEMBER UTF1& PrintCrabsStack(UTF1& printer, Crabs* crabs);
-#endif
-
 }  // namespace _
 
-#if USING_SCRIPT2_TEXT == YES_0
-
-/* Prints the given Crabs to the Text socket. */
-inline _::UTF1& operator<<(_::UTF1& printer, _::Crabs* crabs) {
-  return _::PrintCrabs(printer, crabs);
-}
 #endif
-
-#endif  //< INCLUDED_SCRIPT2_EXPR
-#endif  //< #if SEAM >= SCRIPT2_DIC
+#endif

@@ -1,6 +1,6 @@
 /* Script2 (TM) @version 0.x
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/15.Expr.inl
+@file    /_Seams/15.Crabs.inl
 @author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
 This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -8,7 +8,7 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_CRABS
-#include "../Room.h"
+#include "../Crabs.h"
 using namespace _;
 #if SEAM == SCRIPT2_CRABS
 #include "../_Debug.inl"
@@ -33,20 +33,20 @@ static const CHA* Crabs(const CHA* args) {
 
   This a;
 
-  Expr* crabs = ExprInit(buffer, cBufferSize, cStackHeight, &a,
+  Crabs* crabs = CrabsInit(buffer, cBufferSize, cStackHeight, &a,
                                     unpacked_expr, cBufferSize);
-  ExprPrint(crabs);
+  CrabsPrint(crabs);
 
   D_COUT("\n|    Testing Root (@see \"a.h\")...\n");
 
   void* args[4];
   uint8_t io_number_ = 98;  //< ASCII:'b'
-  Bin* bin = ExprBin(crabs);
-  Bout* bout = ExprBout(crabs);
+  Bin* bin = CrabsBin(crabs);
+  Bout* bout = CrabsBout(crabs);
 
-  const Operation* result;
-  ExprRingBell(crabs);
-  ExprAckBack(crabs);
+  const Op* result;
+  CrabsRingBell(crabs);
+  CrabsAckBack(crabs);
   result =
       BoutWrite(bout, Params<4, ADR, IUA, CHA*, Parent::cTextBufferSize, ADR>(),
                 Args(args, Address<'A', 'A', 'A'>(), &io_number_, Const("Test"),
@@ -54,12 +54,12 @@ static const CHA* Crabs(const CHA* args) {
   BoutPrint(bout);
   A_ASSERT(!result);
 
-  ExprPrint(crabs);
+  CrabsPrint(crabs);
 
   // Mirror mirror (bin, bout);
   // Bypass handshake for testing purposes.
-  ExprScan(crabs);  //, &mirror);
-  ExprPrint(crabs);
+  CrabsScan(crabs);  //, &mirror);
+  CrabsPrint(crabs);
   D_COUT("\n| Done with Operation tests.");
 #endif
   return nullptr;

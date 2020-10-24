@@ -8,11 +8,11 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #include "Op.h"
 #include "Operand.h"
 
-#if SEAM == SCRIPT2_DIC
+#if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -52,7 +52,7 @@ CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
 /*
 UTF& Print (UTF& utf, const Operand* op) {
     utf << "\n Op:\n" << op->name << "\nparams_in:"
-          << Bsq (op->in)
+          << BSeq (op->in)
           << "\nparams_out:" << op->out
           << "\npop:" << op->pop  << " close:" << op->close
           << " default_op:"       << op->default_op

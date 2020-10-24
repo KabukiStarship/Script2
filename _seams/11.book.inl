@@ -47,28 +47,28 @@ void TestBook() {
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
 
-  for (ISY i = 0; i < 4; ++i) {
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUA(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISB(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUB(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISC(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUC(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISD(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUD(++i)));
+  for (ISY i = -1; i < 32; ++i) {
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = 32; i < 128; ++i) {
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUA(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISB(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUB(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISC(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUC(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, ISD(++i)));
-    A_AVOW(ISY(i), book.Insert(word_cursor += 16, IUD(++i)));
+  for (ISY i = 31; i < 128; ++i) {
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
   }
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
