@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="./">
+      <UniqueIdentifier>{3aa804bd-2649-4725-b35b-24533a68cb94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="./\_Seams">
+      <UniqueIdentifier>{c9aea5e0-8970-4946-b65f-adac3979ec01}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_ConfigDefault.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_ConfigFooter.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_ConfigHeader.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_Debug.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_Package.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_Release.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_Undef.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Array.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="BIn.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="BOut.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="BSeq.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="CIn.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Clock.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="COut.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Crabs.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Error.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="File.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Floor.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Folder.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Interrupts.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="MorseCode.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Op.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Operand.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Puff.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="ReadMe.md">
+      <Filter>./</Filter>
+    </None>
+    <None Include="RNG.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Room.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Slot.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Stringf.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Tasks.json">
+      <Filter>./</Filter>
+    </None>
+    <None Include="Test.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="TypeValue.inl">
+      <Filter>./</Filter>
+    </None>
+    <None Include="_Seams\_Seams.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\00.Core.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\01.RNG.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\01.Uniscanner.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\02.ItoS.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\02.Socket.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\03.FtoS.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\04.SPrinter.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\05.Clock.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\06.Stack.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\07.Matrix.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\08.String.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\09.Loom.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\10.List.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\11.Book.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\12.Map.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\13.Table.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\14.Dic.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\15.Crabs.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\16.Door.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\17.Room.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\17.Seam.s2">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\18.Release.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\ReadMe.md">
+      <Filter>./\_Seams</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Address.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Args.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Autoject.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BIn.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BIn.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Binary.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Book.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BOut.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BOut.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BSeq.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="BSeq.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="CIn.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Clock.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="COut.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Crabs.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Dic.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Error.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="File.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Folder.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Hash.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Interrupts.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Iterator.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Language.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Library.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="List.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Loom.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Mirror.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Op.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Op.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Operand.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Puff.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Puff.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="RNG.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Set.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Slot.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Slot.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="String.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Stringf.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Stringf.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeValue.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeValue.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Uniprinter.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Varint.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="_Config.h">
+      <Filter>./</Filter>
+    </ClInclude>
+    <ClInclude Include="_Seams\TestWords.h">
+      <Filter>./\_Seams</Filter>
+    </ClInclude>
+    <ClInclude Include="_Seams\_Config.h">
+      <Filter>./\_Seams</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt">
+      <Filter>./</Filter>
+    </Text>
+    <Text Include="_Seams\CMakeLists.txt">
+      <Filter>./\_Seams</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="_Seams\_Main.cpp">
+      <Filter>./\_Seams</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,165 @@
+﻿  _Main.cpp
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigFooter.inl(178,11): error C2065: 'cARY': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigFooter.inl(178,20): error C2065: 'cTypePODBitCount': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigFooter.inl(178,45): error C2065: 'cCHA': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigFooter.inl(178,49): error C2056: illegal expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\Op.h(47,81): warning C4312: 'reinterpret_cast': conversion from 'Error' to 'const _::Op *' of greater size
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(85,3): warning C4002: too many arguments for function-like macro invocation 'D_COUT'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(131,8): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(128): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(199,1): error C2065: 'start': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(341,12): error C2065: 'cSVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(341,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(341,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(342,12): error C2065: 'cUVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(342,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(342,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(353,9): error C2065: 'temp': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(361,37): error C2065: 'temp': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(364,11): error C2065: 'temp': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(370,21): error C2065: 'cSVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(370,33): error C2065: 'TTypeUnpackVarint': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(370,51): error C2275: 'IUC': illegal use of this type as an expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigHeader.inl(77): message : see declaration of 'IUC'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(405,12): error C2065: 'cSV8': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(405,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(405,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(406,12): error C2065: 'cUV8': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(406,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(406,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(441,21): error C2065: 'cSV8': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(441,33): error C2065: 'TTypeUnpackVarint': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(441,51): error C2275: 'IUD': illegal use of this type as an expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigHeader.inl(81): message : see declaration of 'IUD'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(444,12): error C2065: 'cBSQ': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(444,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(444,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(307,12): error C2196: case value '0' already used
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(341,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(342,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(405,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(406,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.inl(444,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.hpp(20,48): error C2760: syntax error: unexpected token '>', expected 'expression'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BSeq.hpp(15,10): error C2995: 'Printer &_::TBSeqPrint(Printer &,const ISN *)': function template has already been defined
+C:\Users\calem\Workspace\KabukiStarship\Script2\BSeq.hpp(15): message : see declaration of '_::TBSeqPrint'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(129,43): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(128): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(130,8): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(128): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(147,3): error C2065: 'TBSeqPrint': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(190,8): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(188): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(191,8): error C2374: 'stop': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(189): message : see declaration of 'stop'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(271,12): error C2065: 'cSVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(271,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(271,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(280,15): error C2065: 'TypePackVarint': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(280,30): error C2275: 'IUB': illegal use of this type as an expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigHeader.inl(74): message : see declaration of 'IUB'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(282,12): error C2065: 'cUVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(282,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(282,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(455,12): error C2065: 'cSVD': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(455,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(455,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(456,12): error C2065: 'cUVD': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(456,12): error C2131: expression did not evaluate to a constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(456,12): message : a non-constant (sub-)expression was encountered
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(462,27): error C2065: 'ARY': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(501,35): error C2065: 'cOBJ': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(504,46): error C2065: 'cOBJ': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(271,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(282,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(455,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(456,1): error C2051: case expression not constant
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(617,12): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(615): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(618,16): error C2374: 'stop': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(616): message : see declaration of 'stop'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(658,12): error C2374: 'origin': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(656): message : see declaration of 'origin'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(659,16): error C2374: 'stop': redefinition; multiple initialization
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(657): message : see declaration of 'stop'
+C:\Users\calem\Workspace\KabukiStarship\Script2\BOut.inl(684,52): error C3861: 'Args': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Clock.inl(91,25): error C2440: 'type cast': cannot convert from 'time_t' to '_::TME'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Clock.inl(91,25): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Users\calem\Workspace\KabukiStarship\Script2\Clock.inl(93,21): error C2678: binary '<<': no operator found which takes a left-hand operand of type '_::TME' (or there is no acceptable conversion)
+C:\Users\calem\Workspace\KabukiStarship\Script2\Clock.hpp(599,17): message : could be '_::COut &operator <<(_::COut &,const _::AClock &)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\CIn.inl(438,10): message : or       '_::COut &operator <<(_::COut &,_::Pausef &)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\CIn.inl(436,10): message : or       '_::COut &operator <<(_::COut &,_::CIn &)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\CIn.inl(435,10): message : or       '_::COut &operator <<(_::COut &,_::CIn)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(240,10): message : or       '_::COut &operator <<(_::COut &,_::COut)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(239,10): message : or       '_::COut &operator <<(_::COut &,_::Sizef)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(238,10): message : or       '_::COut &operator <<(_::COut &,_::Charsf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(237,10): message : or       '_::COut &operator <<(_::COut &,_::Indentf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(236,10): message : or       '_::COut &operator <<(_::COut &,_::Headingf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(235,10): message : or       '_::COut &operator <<(_::COut &,_::Linef)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(234,10): message : or       '_::COut &operator <<(_::COut &,_::Rightf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(233,10): message : or       '_::COut &operator <<(_::COut &,_::Centerf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(232,10): message : or       '_::COut &operator <<(_::COut &,_::Binaryf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(231,10): message : or       '_::COut &operator <<(_::COut &,_::Hexf)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(229,10): message : or       '_::COut &operator <<(_::COut &,FPD)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(226,10): message : or       '_::COut &operator <<(_::COut &,FPC)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(224,10): message : or       '_::COut &operator <<(_::COut &,IUD)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(223,10): message : or       '_::COut &operator <<(_::COut &,ISD)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(222,10): message : or       '_::COut &operator <<(_::COut &,IUC)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(221,10): message : or       '_::COut &operator <<(_::COut &,ISC)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(219,10): message : or       '_::COut &operator <<(_::COut &,const CHC *)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(218,10): message : or       '_::COut &operator <<(_::COut &,CHC)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(215,10): message : or       '_::COut &operator <<(_::COut &,const CHB *)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(214,10): message : or       '_::COut &operator <<(_::COut &,CHB)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(211,10): message : or       '_::COut &operator <<(_::COut &,const CHA *)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\COut.h(210,10): message : or       '_::COut &operator <<(_::COut &,CHA)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Clock.inl(93,21): message : while trying to match the argument list '(_::TME, int)'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(105,7): error C2143: syntax error: missing ';' before '&'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(105,7): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(105,13): error C2238: unexpected token(s) preceding ';'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(106,12): error C3646: 'slot': unknown override specifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(106,12): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(210,3): error C2065: 'Slot': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(210,8): error C2146: syntax error: missing ';' before identifier 'slot'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(210,8): error C3861: 'slot': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(211,10): error C2065: 'slot': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(218,3): error C2065: 'Slot': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(218,8): error C2146: syntax error: missing ';' before identifier 'slot'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(218,8): error C3861: 'slot': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(219,10): error C2065: 'slot': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(141,10): error C2039: 'slot': is not a member of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(65): message : see declaration of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(177,3): error C2275: '_::BInState': illegal use of this type as an expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\BIn.h(33): message : see declaration of '_::BInState'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(187,3): error C2676: binary '[': '_::BInState' does not define this operator or a conversion to a type acceptable to the predefined operator
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(270,23): error C2039: 'slot': is not a member of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(65): message : see declaration of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(271,23): error C2039: 'slot': is not a member of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(65): message : see declaration of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(272,22): error C2039: 'slot': is not a member of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(65): message : see declaration of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(273,21): error C2039: 'slot': is not a member of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.h(65): message : see declaration of '_::Crabs'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(311,1): error C2059: syntax error: '<'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(384,1): error C3861: 'TypeAlign': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(387,24): error C2065: 'TypeAlignUpPointer': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(387,43): error C2275: 'CHA': illegal use of this type as an expression
+C:\Users\calem\Workspace\KabukiStarship\Script2\_ConfigHeader.inl(66): message : see declaration of 'CHA'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(428,24): error C3861: 'TypeFixedSize': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(437,1): error C3861: 'TypeAlign': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(440,26): error C2065: 'TypeAlignUpPointer': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(440,45): error C2059: syntax error: '>'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(446,27): error C2065: 'UVI': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(448,24): error C3861: 'TypeFixedSize': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(517,9): error C3861: 'D_COUT_HEX': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(532,1): error C3861: 'TypeAlign': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(535,24): error C2065: 'TypeAlignUpPointer': undeclared identifier
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(535,43): error C2059: syntax error: '>'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(544,9): error C3861: 'D_COUT_HEX': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(544,25): error C2059: syntax error: ')'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(551,9): error C3861: 'D_COUT_HEX': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(558,9): error C3861: 'D_COUT_HEX': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(589,1): error C3861: 'TypeAlign': identifier not found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(594,24): error C2672: '_::TAlignUpPointer': no matching overloaded function found
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(594,63): error C2780: 'T *_::TAlignUpPointer(void *)': expects 1 arguments - 2 provided
+C:\Users\calem\Workspace\KabukiStarship\Script2\Binary.hpp(622): message : see declaration of '_::TAlignUpPointer'
+C:\Users\calem\Workspace\KabukiStarship\Script2\Crabs.inl(594,63): fatal error C1003: error count exceeds 100; stopping compilation
