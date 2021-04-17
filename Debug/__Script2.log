@@ -1,2 +1,0 @@
-﻿  _main.cpp
-C:\Users\calem\Workspace\KabukiStarship\Script2\_seams\_main.cpp(46,1): fatal error C1010: unexpected end of file while looking for precompiled header. Did you forget to add '#include "pch.h"' to your source?
