@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Room.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -147,6 +147,18 @@ const Op* Room::Star(CHC index, Crabs* crabs) {
   switch (index) {
     case '?': {
       return ExprQuery(crabs, cThis);
+      case 'a': {
+        static const Op cThis = {
+          "FuncionA",
+          OpFirst('A'),
+          OpLast('A'),
+          "Description of function a.",
+          ';',
+          '}',
+          0
+        };
+        return OpPush(this, crabs);
+      }
     }
   }
   return 0;
@@ -184,6 +196,6 @@ IUW Room::GetSizeBytes() {
 UTF1& Room::Print(UTF1& utf) { return utf << "\nRoom: "; }
 #endif
 
-}  // namespace _
+}  //< namespace _
 
 #endif

@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Array.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -52,7 +52,7 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 
   return success;
 }
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_STACK
 #include "Array.hpp"
@@ -215,5 +215,5 @@ ISW ArrayShiftDown(void* origin, void* end, ISW count) {
   return count;
 }
 
-}  // namespace _
+}  //< namespace _
 #endif

@@ -2,17 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Puff.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
+#pragma once
+#ifndef SCRIPT2_PUFF_DECL
+#define SCRIPT2_PUFF_DECL
 #include <_Config.h>
-
 #if SEAM >= SCRIPT2_ITOS
-#ifndef SCRIPT2_PUFF
-#define SCRIPT2_PUFF 1
-
 namespace _ {
 
 /* Lookup table of ASCII CHT pairs for 00, 01, ..., 99. */
@@ -84,6 +82,6 @@ LIB_MEMBER FPD Ceiling(FPD value);
 #endif
 
 #endif
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

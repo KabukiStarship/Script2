@@ -2,14 +2,14 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Op.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
 #ifndef INCLUDED_SCRIPT2_OP_DECL
-#define INCLUDED_SCRIPT2_OP_DECL 1
+#define INCLUDED_SCRIPT2_OP_DECL
+#include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "String.hpp"
 namespace _ {
@@ -47,7 +47,7 @@ struct LIB_MEMBER Op {
 inline const Op* OpError(Error error) { return reinterpret_cast<const Op*>(error); }
 
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

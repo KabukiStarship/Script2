@@ -121,6 +121,7 @@
     <ClInclude Include="Puff.hpp" />
     <ClInclude Include="RNG.h" />
     <ClInclude Include="Room.h" />
+    <ClInclude Include="Room.hpp" />
     <ClInclude Include="Set.hpp" />
     <ClInclude Include="Slot.h" />
     <ClInclude Include="Slot.hpp" />
@@ -222,7 +223,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>_config.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir).\_seams\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)./_Seams</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

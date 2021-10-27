@@ -2,22 +2,19 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Operand.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "Op.h"
 #include "Operand.h"
-
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #endif
-
 namespace _ {
 
 const CHA* OperandName(Operand* operand) {
@@ -100,7 +97,7 @@ Slot& OperandQuery(Operand* root, const CHA* address, Slot& slot) {
   slot.Write(socket);
   return slot;
 }
-#endif
-}  // namespace _
 
+#endif
+}  //< namespace _
 #endif

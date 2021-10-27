@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /BIn.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -338,8 +338,8 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
           // No need to hash 0.
         }
         break;
-      case cSVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
-      case cUVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
+      //case cSVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
+      //case cUVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
 #if ALU_SIZE <= 16
                  // Load next pointer and increment args.
         iub_ptr = TPtr<IUB>(args[arg_index]);
@@ -350,7 +350,7 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
         if (++origin >= stop) origin -= size;
         hash = HashIUB(iua, hash);
         iub = iua;
-        temp = 7;   //< Number of bits to shift iua to the left.
+        IUC temp = 7;   //< Number of bits to shift iua to the left.
         count = 5;  //< The max number_ of Varint4 bytes.
         while (iua >> 7 == 0) {
           if (length-- == 0)
@@ -598,6 +598,6 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
   return 0;
 }
 
-}  // namespace _
+}  //< namespace _
 
 #endif

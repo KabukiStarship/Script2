@@ -2,14 +2,14 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /File.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
-#if SEAM >= SCRIPT2_FILECABINET
 #ifndef SCRIPT2_FILE_TEMPLATES
 #define SCRIPT2_FILE_TEMPLATES
+#if SEAM >= SCRIPT2_FILECABINET
 #include "Stringf.hpp"
 //
 #include <errno.h>
@@ -542,7 +542,7 @@ class TFolder {
 
     return 0;
   }
-};  // namespace _
-}  // namespace _
+};  //< namespace _
+}  //< namespace _
 #endif
 #endif

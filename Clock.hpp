@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Clock.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CLOCK
-#ifndef INCLUDED_SCRIPT2_CLOCK_DECIMPL
-#define INCLUDED_SCRIPT2_CLOCK_DECIMPL
+#ifndef INCLUDED_SCRIPT2_CLOCK_TEMPLATES
+#define INCLUDED_SCRIPT2_CLOCK_TEMPLATES
 #include "Clock.h"
 #include "Stringf.hpp"
 #include "Test.h"
@@ -104,7 +104,7 @@ Printer& TSPrint(Printer& o, const _::AClock& clock) {
            << clock.second;
 }
 
-template <typename CHT = CHR, typename Time = TM8>
+template <typename CHT = CHR, typename Time = TMD>
 CHT* TClockPrint(CHT* cursor, CHT* stop, Time t) {
   AClock clock;
   ClockInit(clock, t);
@@ -161,7 +161,7 @@ const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   c = *string++;
   if (!c || TIsWhitespace<CHT>(c)) {  // Case @HH
     D_COUT(" HH ");
-    // Then it's a single number_, so create a TM4 for the current
+    // Then it's a single number_, so create a TMC for the current
     // user-time hour..
     hour = h;
     return string;
@@ -524,24 +524,24 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
 }
 
 template <typename CHT, typename IS>
-const CHT* TScanTime(const CHT* origin, TM4& result) {
+const CHT* TScanTime(const CHT* origin, TMC& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
-  result = (TM4)ClockSeconds(clock);
+  result = (TMC)ClockSeconds(clock);
   return stop;
 }
 
 template <typename CHT, typename IS>
-const CHT* TScanTime(const CHT* origin, TM8& result) {
+const CHT* TScanTime(const CHT* origin, TMD& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
-  result = (TM8)ClockSeconds(clock);
+  result = (TMD)ClockSeconds(clock);
   return stop;
 }
 
 template <typename CHT>
 const CHT* TSScan(const CHT* origin, TME& result) {
-  origin = TScanTime<CHT, TM4>(origin, result.seconds);
+  origin = TScanTime<CHT, TMC>(origin, result.seconds);
   if (!origin) return nullptr;
   if (*origin++ != ':') {
     result.ticks = 0;
@@ -578,7 +578,7 @@ IS TClockSet(AClock* clock, IS t) {
 
 /* A time in seconds stored as either a 32-bit or 64-bit IS.
 The difference between a TClock and AClock is that that TClock stores the AClock
-and the TM8 or TM4. */
+and the TMD or TMC. */
 template <typename IS>
 struct LIB_MEMBER TClock {
   AClock clock;  //< A human-readable clock.
@@ -593,7 +593,7 @@ struct LIB_MEMBER TClock {
   }
 };
 
-}  // namespace _
+}  //< namespace _
 #if USING_CONSOLE == YES_0
 
 inline _::COut& operator<<(_::COut& o, const _::AClock& item) {

@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Stringf.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -29,7 +29,7 @@ const CHA* STRPrintHexBorder() {
          " ";
 }
 
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_CORE
 #if SEAM == SCRIPT2_CORE
@@ -220,7 +220,7 @@ const CHB* SScan(const CHB* string, CHC& item) {
 }
 #endif
 
-}  // namespace _
+}  //< namespace _
 #endif
 
 namespace _ {
@@ -525,11 +525,11 @@ void Stringf::Print(FPD item) {
 }
 #endif
 
-void Stringf::PrintTM4(TM4 item) {}
+void Stringf::PrintTMC(TMC item) {}
 
-void Stringf::PrintTME(TM4 item, IUC subsecond_tick) {}
+void Stringf::PrintTME(TMC item, IUC subsecond_tick) {}
 
-void Stringf::PrintTM8(TM8 item) {}
+void Stringf::PrintTMD(TMD item) {}
 
 void Stringf::Print(TypeValue item) {
   DTW type = item.Type();
@@ -893,7 +893,7 @@ Charsf::Charsf(const CHC* start, ISW count) : element(start, count) {}
 
 Indentf::Indentf(ISW indent_count) : indent_count(indent_count) {}
 
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_FTOS
 #if SEAM == SCRIPT2_FTOS
@@ -935,5 +935,5 @@ const CHA* SScan(const CHA* start, FPD& value) {
   ISC count = sscanf_s(start, "%lf", &value);
   return TSTRFloatStop<CHA>(start);
 }
-}  // namespace _
+}  //< namespace _
 #endif

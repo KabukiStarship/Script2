@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Hash.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -10,18 +10,16 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
 #ifndef SCRIPT2_HASH_HEADER_IMPL
 #define SCRIPT2_HASH_HEADER_IMPL
-
+namespace _ {
 /* Returns the highest signed prime that can fit in type IS.
 @return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */
 template <typename IS>
 inline IS PrimeMaxSigned() {
-  IS prime = (sizeof(IS) == 1)
-                 ? 127
-                 : (sizeof(IS) == 2)
-                       ? 32767
-                       : (sizeof(IS) == 4)
-                             ? 2147483647
-                             : (sizeof(IS) == 8) ? 9223372036854775783 : 0;
+  IS prime = (sizeof(IS) == 1)   ? 127
+             : (sizeof(IS) == 2) ? 32767
+             : (sizeof(IS) == 4) ? 2147483647
+             : (sizeof(IS) == 8) ? 9223372036854775783
+                                 : 0;
   return prime;
 }
 
@@ -29,13 +27,11 @@ inline IS PrimeMaxSigned() {
 @return 0 if the sizeof (IU) is not 1, 2, 4, or 8. */
 template <typename HSH>
 inline HSH TPrimeMaxUnigned() {
-  HSH prime = sizeof(HSH) == 1
-                  ? 251
-                  : sizeof(HSH) == 2
-                        ? 65535
-                        : sizeof(HSH) == 4
-                              ? 4294967291
-                              : sizeof(HSH) == 8 ? 18446744073709551557 : 0;
+  HSH prime = sizeof(HSH) == 1   ? 251
+              : sizeof(HSH) == 2 ? 65535
+              : sizeof(HSH) == 4 ? 4294967291
+              : sizeof(HSH) == 8 ? 18446744073709551557
+                                 : 0;
   return prime;
 }
 
@@ -83,4 +79,5 @@ inline IUB HashIUBD(IUD value, IUB hash) {
   hash = (((value >> 56) & 0xff) * prime) + hash;
   return hash;
 }
+}  // namespace _
 #endif

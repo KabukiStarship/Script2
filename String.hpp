@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /String.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -481,7 +481,7 @@ using String2 = TString<CHB>;
 using String4 = TString<CHC>;
 #endif*/
 
-}  // namespace _
+}  //< namespace _
 
 template <typename CHT = CHR, typename ISZ = ISN, ISZ cSize_, typename BUF>
 inline _::AString<CHT, ISZ, cSize_, BUF>& operator<<(

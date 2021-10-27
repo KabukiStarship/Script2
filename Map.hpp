@@ -7,10 +7,10 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
+#ifndef SCRIPT2_MAP_TEMPLATES
+#define SCRIPT2_MAP_TEMPLATES
 #include <_Config.h>
 #if SEAM >= SCRIPT2_MAP
-#ifndef SCRIPT2_MAP_CODE
-#define SCRIPT2_MAP_CODE
 #include "Stack.hpp"
 #if SEAM == SCRIPT2_MAP
 #include "_Debug.inl"
@@ -394,7 +394,7 @@ class AMap {
     return reinterpret_cast<TMap<ISZ>*>(AJT().Origin());
   }
 };
-}  // namespace _
+}  //< namespace _
 #undef TARGS
 #undef TPARAMS
 

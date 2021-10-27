@@ -1,14 +1,11 @@
 /* Script2 (TM) @version 0.x
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /Op.h
+@file    /Op.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-#pragma once
-#ifndef INCLUDED_SCRIPT2_OP
-#define INCLUDED_SCRIPT2_OP 1
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "Op.h"
@@ -49,7 +46,7 @@ inline CHC OpLast(const Op* op) {
   return (CHC) reinterpret_cast<IUW>(op->out);
 }
 
-}  // namespace _
+}  //< namespace _
 
 template <typename CHT>
 inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf,
@@ -57,5 +54,4 @@ inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& utf,
   return _::Print(utf, op);
 }
 
-#endif
 #endif

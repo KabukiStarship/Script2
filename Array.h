@@ -2,20 +2,20 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Array.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
 #ifndef SCRIPT2_ARRAY_DECL
 #define SCRIPT2_ARRAY_DECL
+#include <_Config.h>
 namespace _ {
 
 struct Autoject;
 /* Fills the array with the given fill_char identical to memset. */
 LIB_MEMBER CHA* ArrayFill(void* origin, ISW size_bytes, CHA fill_char = 0);
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_STACK
 
@@ -109,6 +109,6 @@ LIB_MEMBER ISW ArrayShiftUp(void* origin, void* end, ISW count_bytes);
 @param count_bytes The IUA count to shift up. */
 LIB_MEMBER ISW ArrayShiftDown(void* origin, void* end, ISW bytes_count);
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

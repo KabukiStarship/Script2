@@ -2,15 +2,13 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Folder.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
 #include "File.h"
 #if SEAM >= SCRIPT2_FILECABINET
-using namespace _;
-
 #include <sys/stat.h>
 #include <sys/types.h>
 #ifndef WIN32
@@ -20,6 +18,7 @@ using namespace _;
 #define stat _stat
 #endif
 
+namespace {
 File::File(const CHR* uri) : uri_(uri_) {}
 
 const CHR* File::URI() { return uri_; }
@@ -32,7 +31,7 @@ const CHR* File::URISet(const CHR* uri) {
   return uri;
 }
 
-TMS File::LastTimeModified() { 
+TMS File::LastTimeModified() {
   struct stat result;
   if (stat(uri_, &result) == 0) {
     return result.st_mtime;
@@ -54,6 +53,8 @@ BOL File::IsOpen() { return false; }
 ISN File::Open() { return 0; }
 
 void File::Close() {}
+
+}  // namespace
 
 _::File& operator<<(_::File& o, CHA item) { return o.Print(item); }
 _::File& operator<<(_::File& o, const CHA* item) { return o.Print(item); }

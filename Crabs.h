@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Crabs.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_CRABS_DECL
 #define SCRIPT2_CRABS_DECL
+#include <_Config.h>
+#if SEAM >= SCRIPT2_DIC
 #include "Args.h"
 #include "BIn.hpp"
 #include "BOut.h"
@@ -96,7 +96,7 @@ struct Crabs {
   CHC current_char;    //< Current Unicode CHA being scanned.
   IUB hash;            //< Packed BSQ hash.
   IUC timeout_us;      //< Timeout time in microseconds.
-  TM8 last_time;       //< Last time the Stack was scanned.
+  TMD last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
   const ISC* header,   //< Pointer to the header being verified.
       * header_start;  //< Start of the header being verified.
@@ -262,7 +262,7 @@ LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op& header);
 @return Returns the header if crabs is nil. */
 LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op* op);
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

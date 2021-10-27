@@ -2,17 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Address.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
+#ifndef SCRIPT2_ADDRESS
+#define SCRIPT2_ADDRESS
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_ADDRESS
-#define SCRIPT2_ADDRESS 1
-
 namespace _ {
 
 /* C++11 constexpr function for creating Script addresses headers with less
@@ -75,6 +73,6 @@ inline IUD PackAddress(IUD a, IUD b, IUD c, IUD d, IUD e, IUD f, IUD g) {
           (f << 40) | (g << 48));
 }
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

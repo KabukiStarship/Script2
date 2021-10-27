@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Iterator.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
+#ifndef SCRIPT2_ITERATOR_DECL
+#define SCRIPT2_ITERATOR_DECL
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_ITERATOR_H
-#define SCRIPT2_ITERATOR_H
 // Dependencies:
 // End dependencies.
 namespace _ {
@@ -30,6 +30,6 @@ struct LIB_MEMBER Iterator {
   virtual BOL IsDone() = 0;
 };
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

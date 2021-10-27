@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Op.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -102,13 +102,13 @@ void Print (Op& log) {
                  return;
                 Write (iud;
             }
-            case kTM4: {
-                if (BinRead (bin, Params<2, cADR, kTM4> (), Args (args, &iuc)))
+            case kTMC: {
+                if (BinRead (bin, Params<2, cADR, kTMC> (), Args (args, &iuc)))
                     return;
                 ClockPrintTime (iuc);
             }
-            case kTM8: {
-                if (BinRead (bin, Params<2, cADR, kTM8> (), Args (args, &iud)))
+            case kTMD: {
+                if (BinRead (bin, Params<2, cADR, kTMD> (), Args (args, &iud)))
                     return;
                 ClockPrintTimestamp (iud);
             }
@@ -127,6 +127,6 @@ void Print (Op& log) {
 }
 #endif */
 
-}  // namespace _
+}  //< namespace _
 
 #endif  //> #if SEAM >= SCRIPT2_DIC

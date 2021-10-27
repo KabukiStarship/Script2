@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Language.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -16,11 +16,11 @@ namespace langauge {
 
 enum {
   cEnUppercaseBegin = 'A',
-  cEnUppercaseEnd = 'Z',
+  cEnUppercaseEnd   = 'Z',
   cEnLowercaseBegin = 'a',
-  cEnLowercaseEnd = 'z',
+  cEnLowercaseEnd   = 'z',
 };
-}  // namespace langauge
+}  //< namespace langauge
 
 /* A spoken language Unicode character range.
 
@@ -32,6 +32,6 @@ struct Language {
       lowercase_end;    //< Last lowercase Unicode CHA index.
 };
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

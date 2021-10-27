@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /List.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if SEAM >= SCRIPT2_LIST
 #ifndef SCRIPT_LIST_CODE
 #define SCRIPT_LIST_CODE
+#include <_Config.h>
+#if SEAM >= SCRIPT2_LIST
 #include "Binary.hpp"
 #include "Set.hpp"
 #include "Stack.hpp"
@@ -24,7 +24,7 @@ namespace _ {
 
 /* A collection of type-value tuples.
 @see ASCII Data Type Specification.
-@link /spec/data/map_types/map.md
+@link /Spec/Data/MapTypes/Map.md
 @code
       List Memory Layout
 +----------------------------+
@@ -693,7 +693,7 @@ class AList {
   }
 };
 
-}  // namespace _
+}  //< namespace _
 
 template <typename ISZ>
 inline _::TList<ISZ>& operator<<(_::TList<ISZ>& list, CHA item) {

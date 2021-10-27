@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Table.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -169,7 +169,7 @@ Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
 #endif
   return o << Linef("\n+---\n");
 #endif
-}  // namespace _
+}  //< namespace _
 
 /* Creates a streamable hash table with enough socket space for the
 count_max. */
@@ -584,7 +584,7 @@ class ATable {
 #endif
 };
 
-}  // namespace _
+}  //< namespace _
 #undef TARGS
 #undef TPARAMS
 #undef D_COUT_TABLE

@@ -2,11 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/00.Core.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #if SEAM >= SCRIPT2_CORE
 #include "../Stringf.hpp"
 #if SEAM == SCRIPT2_CORE
@@ -15,10 +14,9 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "../_Release.inl"
 #endif
 #endif
-
 using namespace _;
-
 namespace Script2 {
+
 inline const CHA* Core(const CHA* args) {
 #if SEAM >= SCRIPT2_CORE
   A_TEST_BEGIN;
@@ -102,4 +100,5 @@ inline const CHA* Core(const CHA* args) {
 #endif
   return 0;
 }
-}  // namespace Script2
+
+}  //< namespace Script2

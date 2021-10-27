@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/_Main.cpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-20 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -37,5 +37,5 @@ inline const CHA* Script2Tests(const CHA* args) {
                    Script2::Matrix, Script2::String, Script2::Loom, 
                    Script2::List, Script2::Book, Script2::Map, Script2::Table, 
                    Script2::Dic, Script2::Crabs, Script2::Door, Script2::Room>(
-      arg_count, args);
+      args);
 }

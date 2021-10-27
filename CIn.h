@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /CIn.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if USING_CONSOLE == YES_0
 #ifndef SCRIPT2_CIN_DECL
 #define SCRIPT2_CIN_DECL
+#include <_Config.h>
+#if USING_CONSOLE == YES_0
 #include "COut.h"
 namespace _ {
 
@@ -294,7 +294,7 @@ struct KeyId {
   void ReprogramConsole();
 };
 
-}  // namespace _
+}  //< namespace _
 
 _::COut& operator<<(_::COut& o, _::CIn i);
 _::COut& operator<<(_::COut& o, _::CIn& i);

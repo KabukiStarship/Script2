@@ -2,19 +2,14 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /TypeValue.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
-#include <_Config.h>
-
 #ifndef INCLUDED_TYPEVALUE_CODE
 #define INCLUDED_TYPEVALUE_CODE
-
 #include "TypeValue.h"
-
 namespace _ {
 
 /* Gets the size of type T. */
@@ -151,7 +146,7 @@ inline DT TTypeSize(DT pod_type) {
   return pod_type | (CTypeSize<T>() << 7);
 }
 
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_CORE
 #include "Binary.hpp"
@@ -289,7 +284,7 @@ inline BOL TypeIsPOD(DT2 type) {
   return !((type >> 5) || ((type & cTypePODMask)));
 }
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

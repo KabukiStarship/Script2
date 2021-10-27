@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/05.Clock.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -25,7 +25,7 @@ static const CHA* Clock(const CHA* args) {
 
   D_COUT(Headingf("Testing TScanTime..."));
 
-  TM4 t, t_found;
+  TMC t, t_found;
   const CHA* result;
 
   // @note The following dates must be the current day to work right in order
@@ -53,7 +53,7 @@ static const CHA* Clock(const CHA* args) {
 
   for (ISC i = 0; i < 18; ++i) {
     D_COUT(Linef('-') << "\n    " << i);
-    TM4 t = 0;
+    TMC t = 0;
     result = ScanTime(Strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }
@@ -89,4 +89,4 @@ static const CHA* Clock(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Stack.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -439,7 +439,7 @@ inline ISZ TStackSizeWords(ISZ count) {
 
 /* An ASCII Stack Autoject.
 @see ASCII Data Type Specification.
-@link ./spec/data/map_types/table.md
+@link ./Spec/Data/MapTypes/Table.md
 
 @code
  Stack Memory Map
@@ -611,9 +611,9 @@ class AStack {
 
   /* Gets a const reference to the given element index. */
   inline const T& operator[](ISZ index) const { return Start()[index]; }
-};  // namespace _
+};  //< namespace _
 
-}  // namespace _
+}  //< namespace _
 
 template <typename T = ISW, typename ISZ = ISN, typename BUF = _::Nil>
 _::AArray<T, ISZ, BUF>& operator<<(_::AArray<T, ISZ, BUF>& obj, T item) {
