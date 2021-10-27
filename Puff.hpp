@@ -2,19 +2,12 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Puff.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
-#include <_Config.h>
-
 #if SEAM >= SCRIPT2_ITOS
-
-#ifndef SCRIPT2_PUFF_HEADER_WITH_TEMPLATES
-#define SCRIPT2_PUFF_HEADER_WITH_TEMPLATES 1
-
 #include "Binary.hpp"
 #include "Puff.h"
 #if SEAM == SCRIPT2_ITOS
@@ -38,7 +31,7 @@ CHT* TPrintPrinted(CHT* start = nullptr) {
   std::cout << '\"';
 }
 
-}  // namespace _
+}  //< namespace _
 
 #define BEGIN_ITOS_ALGORITHM                               \
   auto String_length = STRLength(value);                   \
@@ -490,7 +483,7 @@ inline CHT* TSPrint(CHT* start, ISW size, ISC value) {
   return TSPrint<CHT>(start, size, (ISD)value);
 }
 #endif
-}  // namespace _
+}  //< namespace _
 #endif
 
 #if SEAM >= SCRIPT2_FTOS
@@ -1133,7 +1126,7 @@ inline CHC* SPrint(CHC* string, CHC* stop, FPD value) {
   return TBinary<FPD, ISD, IUD>::template Print<CHC>(string, stop, value);
 }
 #endif
-}  // namespace _
+
+}  //< namespace _
 #endif
 #undef D_COUT
-#endif

@@ -2,17 +2,17 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Mirror.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
+#ifndef SCRIPT2_MIRROR_DECL
+#define SCRIPT2_MIRROR_DECL
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_MIRROR
-#define SCRIPT2_MIRROR
-#include "bin.h"
-#include "bout.h"
+#include "BIn.h"
+#include "BOut.h"
 #include "Op.h"
 namespace _ {
 
@@ -127,6 +127,6 @@ LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error,
 LIB_MEMBER const Op* MirrorResult(Mirror* mirror, Error error,
                                   const ISC* header, ISC offset, CHA* address);
 
-}  // namespace _
-#endif  //< SCRIPT2_MIRROR
+}  //< namespace _
 #endif  //< #if SEAM >= SCRIPT2_DIC
+#endif

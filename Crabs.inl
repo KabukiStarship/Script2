@@ -2,11 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Crabs.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "Crabs.h"
@@ -253,7 +252,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
       b;             //< Current IUA being verified.
   IUB hash,          //< Expected hash of the B-Sequence.
       found_hash;    //< Found B-Sequence hash.
-  TM8 timestamp,     //< Last time when the expression ran.
+  TMD timestamp,     //< Last time when the expression ran.
       delta_t;       //< Time delta between the last timestamp.
   const Op* op;      //< Current operation.
   Operand* operand;  //< The operand.
@@ -864,6 +863,6 @@ Printer& Print(Printer& o, Crabs* crabs) {
 
 #endif
 
-}  // namespace _
+}  //< namespace _
 
 #endif

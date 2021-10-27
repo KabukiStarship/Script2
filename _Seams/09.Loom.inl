@@ -133,7 +133,7 @@ void TestLoom() {
 
   A_AVOW(ISY(-1), loom.Find(test));
 }
-}  // namespace Script2
+}  //< namespace Script2
 #endif
 
 namespace Script2 {
@@ -152,4 +152,4 @@ static const CHA* Loom(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

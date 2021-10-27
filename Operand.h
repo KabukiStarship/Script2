@@ -2,18 +2,16 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Operand.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
+#ifndef SCRIPT2_OPERAND_DECL
+#define SCRIPT2_OPERAND_DECL
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
-#ifndef SCRIPT2_OPERAND
-#define SCRIPT2_OPERAND
 #include "Slot.h"
-
 namespace _ {
 
 struct LIB_MEMBER Crabs;
@@ -26,7 +24,7 @@ Let B be a set of bytes in a set of Abstract Serial Ports.
 @code
 +----------- Result: The set of finite states
 | +--------- Op
-| | +------- Set of finite states
+| | +------- Set of finite state machine states
 | | | +----- Star Op
 | | | | +--- Operands (input values)
 | | | | |
@@ -44,7 +42,7 @@ functions of this object via the Data Controller (DC).
 @see Console for example of how to use Operand interface.
 */
 
-struct LIB_MEMBER Operand {
+struct Operand {
   /* Script2 Operations.
   @param index The index of the expression.
   @param crabs The Crabs to read and write from.
@@ -78,7 +76,7 @@ LIB_MEMBER const Op* OperandQuery (Crabs* crabs, const Op* op);*/
 Slot& OperandQuery(Operand* root, const CHA* address, Slot& key);
 #endif
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

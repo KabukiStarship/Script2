@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /COut.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if USING_CONSOLE == YES_0
 #ifndef SCRIPT2_COUT_DECL
 #define SCRIPT2_COUT_DECL
+#include <_Config.h>
+#if USING_CONSOLE == YES_0
 #include "Stringf.h"
 namespace _ {
 
@@ -204,7 +204,7 @@ COut CPrint(Linef& item);
 COut CPrint(Headingf& item);
 COut CPrint(Indentf& item);
 
-}  // namespace _
+}  //< namespace _
 
 /* Prints the given item to the COut. */
 _::COut& operator<<(_::COut& o, CHA item);

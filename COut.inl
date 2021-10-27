@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /COut.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -242,7 +242,7 @@ COut& COut::Print(Indentf& item) {
 
 COut& COut::Print(Charsf& item) {
   return _::TPrintChars<COut>(*this, item);
-}  // namespace _
+}  //< namespace _
 
 COut& COut::NL() { return Print('\n'); }
 COut& COut::NL(CHA item) {
@@ -399,7 +399,7 @@ COut CPrint(Linef& item) { return COut(item); }
 COut CPrint(Headingf& item) { return COut(item); }
 COut CPrint(Indentf& item) { return COut(item); }
 
-}  // namespace _
+}  //< namespace _
 
 _::COut& operator<<(_::COut& o, CHA item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, const CHA* item) { return o.Print(item); }

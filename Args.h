@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Args.h
 @author  Cale McCollough <https://cookingwithcale.org>.
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
 #ifndef SCRIPT2_ARGS
 #define SCRIPT2_ARGS
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
 #include "BSeq.h"
 namespace _ {
 
@@ -1201,7 +1201,7 @@ inline void** Args(void** ptrs, const void* a, const void* b, const void* c,
   return const_cast<void**>(const_ptrs);
 }
 
-}  // namespace _
+}  //< namespace _
 
 #endif  //< SCRIPT2_ARGS
 #endif  //< #if SEAM >= SCRIPT2_DIC

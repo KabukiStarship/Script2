@@ -6,7 +6,7 @@
 
 #### B-Sequences
 
-B-Sequences, as in the B in ```A*B```, is a data structure that describes byte sequences using the 32 ASCII Data Types. B-Sequences are composed of a header that defines the data and the actual byte stream itself. B-Sequences are similar *scanf* and *printf* format strings only you just use the % format tokens). B-Sequences are the ideal solution for serializing almost any type of data to save and load from drives, networks or any serial data stream. They are very easy to earn and nearly impossible to forget.
+B-Sequences, as in the B in `A*B`, is a data structure that describes byte sequences using the 32 ASCII Data Types. B-Sequences are composed of a header that defines the data and the actual byte stream itself. B-Sequences are similar *scanf* and *printf* format strings only you just use the % format tokens). B-Sequences are the ideal solution for serializing almost any type of data to save and load from drives, networks or any serial data stream. They are very easy to earn and nearly impossible to forget.
 
 ##### B-Sequence Headers
 
@@ -58,7 +58,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
                          on coworkers foreheads. :-) */
 ```
 
-**[<< Previous Section: Strings](./strings) | [Next Section: Homo-tuples >>](./homo-tuples)**
+**[<< Previous Section: Strings](./Strings) | [Next Section: Homo-tuples >>](./HomoTuples)**
 
 ## Requirements
 

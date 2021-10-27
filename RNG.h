@@ -2,14 +2,14 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /RNG.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
 #ifndef SCRIPT2_RNG_DECL
 #define SCRIPT2_RNG_DECL
+#include <_Config.h>
 namespace _ {
 
 /* Gets a random generator device seed. */
@@ -90,5 +90,5 @@ LIB_MEMBER void RandomNumber(IUD& result);
 /* Gets a random 64-bit/8-IUA signed integer. */
 LIB_MEMBER void RandomNumber(ISD& result);
 
-}  // namespace _
+}  //< namespace _
 #endif  //< INCLUDED_SCRIPTCRNG

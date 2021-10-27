@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /BSeq.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
 #ifndef SCRIPT2_BSEQ_DELC
 #define SCRIPT2_BSEQ_DELC
+#include <_Config.h>
+#if SEAM >= SCRIPT2_CRABS
 #include "TypeValue.h"
 namespace _ {
 
@@ -137,7 +137,7 @@ inline const ISC* TParams() {
 /*< Returns the requested parameter number_. */
 LIB_MEMBER ISC BSeqParamNumber(const ISN* bsq, ISN param_number);
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

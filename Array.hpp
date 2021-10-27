@@ -2,13 +2,12 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Array.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #ifndef SCRIPT2_ARRAY_DECIMPL
-#include <_Config.h>
 #define SCRIPT2_ARRAY_DECIMPL
 #include "Array.h"
 //
@@ -35,7 +34,7 @@ inline ISZ TArraySizeMax() {
   ISZ max_value = ISZ((~ISZ(0)) >> 1);
   return max_value - ISZ(sizeof(IUW) - 1 - sizeof(Class) / sizeof(T));
 }
-}  // namespace _
+}  //< namespace _
 
 #if SEAM >= SCRIPT2_STACK
 #include "Binary.hpp"
@@ -618,7 +617,7 @@ class AArray {
   void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
 };
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/10.List.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -63,7 +63,7 @@ static void TestList() {
   D_COUT_OBJ(list);
   for (ISZ i = cTestCount - 1; i >= 0; --i) list.Pop();
 }
-}  // namespace Script2
+}  //< namespace Script2
 #endif
 
 namespace Script2 {
@@ -76,4 +76,4 @@ static const CHA* List(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

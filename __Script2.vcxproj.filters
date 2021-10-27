@@ -368,6 +368,9 @@
     <ClInclude Include="_Seams\_Config.h">
       <Filter>./\_Seams</Filter>
     </ClInclude>
+    <ClInclude Include="Room.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt">

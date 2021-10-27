@@ -66,7 +66,7 @@ void TestMap() {
     A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
   D_COUT_OBJ(map);
 }
-}  // namespace Script2
+}  //< namespace Script2
 #endif
 
 namespace Script2 {
@@ -98,4 +98,4 @@ const CHA* Map(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

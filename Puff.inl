@@ -2,24 +2,18 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Puff.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
-#pragma once
-#include <_Config.h>
+#include "Puff.hpp"
 //
 #include <cmath>
 //
-#include "Puff.hpp"
-
 // Because some of y'all will try to make this a single file header, just
 // keep in mind that the static data will get duplicated in each library
 // you build.
-
 namespace _ {
-
 #if SEAM >= SCRIPT2_ITOS
 
 const IUD* Pow10_UI8() {
@@ -255,4 +249,4 @@ FPC Ceiling(FPC value) {
 }
 
 #endif
-}  // namespace _
+}  //< namespace _

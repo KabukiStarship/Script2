@@ -195,6 +195,6 @@ LIB_MEMBER BOL Test(FPC a, FPC b);
 @param b Parameter b. */
 LIB_MEMBER BOL Test(FPD a, FPD b);
 
-}  // namespace _
+}  //< namespace _
 
 #endif

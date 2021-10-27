@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Library.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
+#ifndef SCRIPT2_LIBRARY_CODE_TEMPLATES
+#define SCRIPT2_LIBRARY_CODE_TEMPLATES
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
-#ifndef SCRIPT2_LIBRARY_CODE_HEADER
-#define SCRIPT2_LIBRARY_CODE_HEADER
 namespace _ {
 #if USING_SCRIPT2_TEXT
 template <typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
@@ -188,6 +188,7 @@ LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   delete TPtr<CHA>(r);
 }
 #endif  //< SCRIPT2_MEMORY_PROFILE > 2
-}  // namespace _
+
+}  //< namespace _
 #endif
 #endif

@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/04.SPrinter.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -25,16 +25,13 @@ static const CHT* TestSPrinter() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",IS"
                     << sizeof(ISZ) << ">\n\n"
                     << Linef('-'));
-
   enum {
     cCount = 512,
   };
-
   CHT str_a[cCount];
-
   static const CHT cTesting123[] = { 'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
-                                     ',', ' ', '3', '.', NIL};
+                                     ',', ' ', '3', '.', NIL };
 
   D_ARRAY_WIPE(str_a, cCount * sizeof(CHT));
   TSPrint<CHT>(str_a, cCount, cTesting123);
@@ -182,4 +179,4 @@ static const CHA* SPrinter(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

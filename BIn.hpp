@@ -2,16 +2,16 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /BIn.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
+#ifndef SCRIPT2_BIN_DECIMPL
+#define SCRIPT2_BIN_DECIMPL
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
-#ifndef SCRIPT2_BIN_DECIMPL
 #include "BIn.h"
-#define SCRIPT2_BIN_DECIMPL
 namespace _ {
 
 /* Print the BIn to the printer. */
@@ -30,7 +30,7 @@ inline const Op* BOutRead(BOut* bout, const ISC* params, void** args) {
   return BInRead(reinterpret_cast<BIn*>(bout), params, args);
 }
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #endif

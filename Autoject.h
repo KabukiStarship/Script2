@@ -2,15 +2,15 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Autoject.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
-#if SEAM >= SCRIPT2_STACK
 #ifndef SCRIPT2_AUTOJECT_HEADER
 #define SCRIPT2_AUTOJECT_HEADER
+#include <_Config.h>
+#if SEAM >= SCRIPT2_STACK
 namespace _ {
 
 struct Autoject;
@@ -140,6 +140,6 @@ LIB_MEMBER ISW ArrayShiftUp(void* begin, void* end, ISW count_bytes);
 @param  count_bytes The IUA count to shift up. */
 LIB_MEMBER ISW ArrayShiftDown(void* begin, void* end, ISW bytes_count);
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

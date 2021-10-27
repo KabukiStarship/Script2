@@ -2,21 +2,16 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /TypeValue.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
-#include <_Config.h>
-
 #include "TypeValue.hpp"
-
 #if SEAM == SCRIPT2_CORE
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #endif
-
 namespace _ {
 
 const CHA* STRTypes() {
@@ -180,7 +175,7 @@ DTW TypeValue::UnicodeFormat() { return TypeTextFormat(type_); }
 void* TypeValue::WordPTR() { return &word_; }
 
 void* TypeValue::ToPTR() { return reinterpret_cast<void*>(word_); }
-CHA* TypeValue::ToSTA() { return TPtr<CHA>(word_); }
+CHA* TypeValue::ToSTA() { return reinterpret_cast<CHA*>(word_); }
 CHB* TypeValue::ToSTB() { return reinterpret_cast<CHB*>(word_); }
 CHC* TypeValue::ToSTC() { return reinterpret_cast<CHC*>(word_); }
 IUA TypeValue::ToIUA() { return IUA(word_); }
@@ -296,4 +291,4 @@ void TypeValue::Set(FPD item) {
 }
 #endif
 
-}  // namespace _
+}  //< namespace _

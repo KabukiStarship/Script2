@@ -2,11 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/07.Matrix.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #if SEAM >= SCRIPT2_MATRIX
 #include "../Matrix.hpp"
 using namespace _;
@@ -15,7 +14,6 @@ using namespace _;
 #else
 #include "../_Release.inl"
 #endif
-
 namespace Script2 {
 
 template <typename IS, typename ISZ>
@@ -34,7 +32,7 @@ void TestMatrixIntegers() {
     for (ISC y = 0; y < 2; ++y)
       for (ISC z = 0; z < 2; ++z) A_AVOW(w++, array_3d_exected[x][y][z]);
 }
-}  // namespace Script2
+}  //< namespace Script2
 #endif
 
 namespace Script2 {
@@ -60,4 +58,4 @@ static const CHA* Matrix(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

@@ -35,4 +35,4 @@ static const CHA* RNG(const CHA* args) {
 #endif
   return nullptr;
 }
-}  // namespace Script2
+}  //< namespace Script2

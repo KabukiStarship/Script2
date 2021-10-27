@@ -2,22 +2,21 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Room.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #pragma once
-#include <_Config.h>
 #ifndef SCRIPT2_CRABS_DECL
 #define SCRIPT2_CRABS_DECL
+#include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "Interrupts.h"
 #include "wall.h"
 namespace _ {
 
-/* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to
-    Slot<ISC, TSizeBytes>.  */
+/* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to 
+Slot<ISC, TSizeBytes>.  */
 typedef enum Requests {
   cOpenDoorRequest = 0,
   cCloseDoorRequest,
@@ -41,7 +40,7 @@ An Chinese Room works the same way as in the Chinese Room thought
 experiment. An Room receives a message through a slot in the door, the man
 in the room reads does manual optical character recognition with a pen and
 paper stack, some filing cabinets, and a library of multimaps.
-  The size of the Crabs Stack is defined by the Script Protocol to be a
+  The size of the Crabs Stack is defined by the Script Spec to be a
 a maximum of 2^15-1 expressions tall.
 # Memory Layout
 Some systems have the stack grow up from the bottom and heap grow up and
@@ -57,7 +56,7 @@ vice versa.
     |     Unused Memory     |
     |^^^^^^^^^^^^^^^^^^^^^^^|
     |     Program Stack     |
-+/- |-----------------------|
+ +  |-----------------------|
  |  | Floor (Static Memory) |
 0xN +-----------------------+
 @endcode
@@ -65,14 +64,13 @@ vice versa.
 # ASCII Mappings
 
 The mapping of the layout of the Chinese Room can be seen in the following
-super cute ASCII houses:
+super cute ASCII house:
 
 @code
  _________
 /_________\
 [_#_]@[_#_]
 @endcode
-
 
 # Room Connections
 
@@ -114,7 +112,7 @@ Actors: Jo  - The app developer.
     16. Host receives login attempt from Sam and opens a Door for him.
 17. Sam needs to get the values Jo stored in step 11 so Same sends a
     Dictionary GET request.
-    @endcode
+@endcode
 */
 class Room : public Operand {
   // NONCOPYABLE (Room) //< Not sure why this isn't working?
@@ -137,10 +135,10 @@ class Room : public Operand {
   };
 
   /* Creates a Room with the given size.
-      @param floor Buffer used to create the Wall Stack. Set to nullptr to
-                   enable dynamic memory.
-      @param size  The room size that is bounded between the kMinRoomSize and
-                   kMaxRoomSize. */
+  @param floor Buffer used to create the Wall Stack. Set to nullptr to
+  enable dynamic memory.
+  @param size  The room size that is bounded between the kMinRoomSize and
+  RoomCountMax. */
   Room(const CHA* room_name = "chinese_room", ISC num_states = 2);
 
   /* SocketFactory. */
@@ -234,23 +232,24 @@ class Room : public Operand {
   ISC state_count_,                 //< Number of FSM states.
       state_;                       //< Room state.
   const CHA* name_;                 //< Room Name.
-  TMap<Wall*, ISC, int_t>* walls_;  //< Walls in the Room.
+  Autoject walls_;                  //< Walls in the Room.
   Crabs* expr_;                     //< Current Crabs being executed.
                                     //< DC1: this.
   Door* this_;                      //< DC2: The Door to this room.
   Operand *xoff_,                   //< DC3: XOFF - XOFF handling device.
       *device_,                     //< DC4: the current device control.
       *devices_;                    //< Pointer to the current device control.
-  IUW origin[cFloorSizeWords];      //< Room Floor socket.
+  IUW origin_[cFloorSizeWords];     //< Room Floor socket.
 
- private:
+  private:
+
   /* Sets the Room state_. */
   BOL SetState(ISC new_state);
 };
 
 /* Returns the Room-Level Script. */
-// LIB_MEMBER Room* ChineseRoom (Room* room = nullptr);
+//LIB_MEMBER Room* ChineseRoom (Room* room = nullptr);
 
-}  // namespace _
+}  //< namespace _
 #endif
 #endif

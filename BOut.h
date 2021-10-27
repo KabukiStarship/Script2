@@ -2,14 +2,14 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /BOut.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#include <_Config.h>
 #ifndef INCLUDED_SCRIPT2_BOUT_DECL
 #define INCLUDED_SCRIPT2_BOUT_DECL
+#include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "Op.h"
 namespace _ {
@@ -71,7 +71,7 @@ LIB_MEMBER void BOutRingBell(BOut* bout, const CHA* address);
 /* Sends a connection message to the given address. */
 LIB_MEMBER void BOutAckBack(BOut* bout, const CHA* address);
 
-}  // namespace _
+}  //< namespace _
 
 #endif
 #undef DEBUG_SCRIPT2_BOUT

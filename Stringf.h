@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Stringf.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -307,9 +307,9 @@ class LIB_MEMBER Stringf {
 #endif
 
   /* Prints a timestamp to the buffer_. */
-  void PrintTM4(TM4 item);
-  void PrintTME(TM4 item, IUC subsecond_tick);
-  void PrintTM8(TM8 item);
+  void PrintTMC(TMC item);
+  void PrintTME(TMC item, IUC subsecond_tick);
+  void PrintTMD(TMD item);
 
   void Print(TypeValue item);
 
@@ -486,6 +486,6 @@ struct LIB_MEMBER Indentf {
   Indentf(ISW indent_count);
 };
 
-}  // namespace _
+}  //< namespace _
 
 #endif

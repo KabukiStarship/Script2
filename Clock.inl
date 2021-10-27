@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Clock.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>.
+@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -48,11 +48,11 @@ ISN MonthByDay(ISN day, ISN year) {
 
 ISB ClockEpoch() { return cClockEpochInit; }
 
-AClock* ClockInit(AClock& clock, TM4 t) { return TClockInit<TM4>(clock, t); }
+AClock* ClockInit(AClock& clock, TMC t) { return TClockInit<TMC>(clock, t); }
 
-AClock* ClockInit(AClock& clock, TM8 t) { return TClockInit<TM8>(clock, t); }
+AClock* ClockInit(AClock& clock, TMD t) { return TClockInit<TMD>(clock, t); }
 
-TME& StopwatchInit(TME& tss, TM4 t, IUC ticks) {
+TME& StopwatchInit(TME& tss, TMC t, IUC ticks) {
   tss.seconds = t;
   tss.ticks = ticks;
   return tss;
@@ -70,31 +70,25 @@ void ClockEpochUpdate() {
   // RoomUnlock();
 }
 
-TM8 ClockNow() {
+TMD ClockNow() {
   time_t t;
   time(&t);
   if (t > cSecondsPerEpoch) ClockEpochUpdate();
-  return (TM8)t;
+  return (TMD)t;
 }
 
-TM4 ClockSeconds(AClock& clock) {
+TMC ClockSeconds(AClock& clock) {
   return (clock.year - cClockEpochInit) * cSecondsPerYear +
          (clock.day - 1) * cSecondsPerDay + clock.hour * cSecondsPerHour +
          clock.minute * cSecondsPerMinute + clock.second;
 }
 
-TM4 ClockTM4(AClock& clock) { return ClockSeconds(clock); }
+TMC ClockTMC(AClock& clock) { return ClockSeconds(clock); }
 
-TM8 ClockTM8(AClock& clock) { return (TM8)ClockSeconds(clock); }
+TMD ClockTMD(AClock& clock) { return (TMD)ClockSeconds(clock); }
 
-TME ClockTME(time_t time) {
-  TME result = (TME)time;
-  if (sizeof(time_t) == 4) return result;
-  return result << 4;
-}
-
-ISN ClockMonthDayCount(TM4 t) {
-  TClock<TM4> date(t);
+ISN ClockMonthDayCount(TMC t) {
+  TClock<TMC> date(t);
   static const CHA days_per_month[12] = {31, 28, 31, 30, 31, 30,
                                          31, 31, 30, 31, 30, 31};
   AClock& clock = date.clock;
@@ -118,12 +112,12 @@ ISN ClockMonthDayCount(ISN month, ISN year) {
 const CHA* ClockWeekDay(ISN day_number) {
   static const CHA* days[] = {"Sunday",   "Monday", "Tuesday", "Wednesday",
                               "Thursday", "Friday", "Saturday"};
-  static const CHA kInvalidText[] = "Invalid\0";
+  static const CHA cInvalidText[] = "Invalid\0";
   if (day_number < 0) {
-    return kInvalidText;
+    return cInvalidText;
   }
   if (day_number >= 7) {
-    return kInvalidText;
+    return cInvalidText;
   }
   return days[day_number];
 }
@@ -170,7 +164,7 @@ ISN ClockCompare(const AClock& date_a, const AClock& date_b) {
   return 0;
 }
 
-ISN ClockCompare(TM4 time_a, TM4 time_b) {
+ISN ClockCompare(TMC time_a, TMC time_b) {
   AClock a, b;
   ClockInit(a, time_a);
   ClockInit(b, time_b);
@@ -227,7 +221,7 @@ void ClockZeroTime(AClock& local_time) {
   local_time.year = 0;
 }
 
-TM4 TimeMake(AClock& time) { return (TM4)mktime(reinterpret_cast<tm*>(&time)); }
+TMC TimeMake(AClock& time) { return (TMC)mktime(reinterpret_cast<tm*>(&time)); }
 
 const ISB* CloccDaysInMonth() {
   static const ISB cDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
@@ -253,14 +247,14 @@ ISN ClockDayOfYear(ISN year, ISN month, ISN day) {
   return ClockLastDayOfMonth()[month - 2] + 1 + day;
 }
 
-TM4 ClockTimeTMS(ISN year, ISN month, ISN day, ISN hour, ISN minute,
+TMC ClockTimeTMS(ISN year, ISN month, ISN day, ISN hour, ISN minute,
                  ISN second) {
-  return TClockTime<TM4>(year, month, day, hour, minute, second);
+  return TClockTime<TMC>(year, month, day, hour, minute, second);
 }
 
-TM8 ClockTimeTME(ISN year, ISN month, ISN day, ISN hour, ISN minute,
+TMD ClockTimeTME(ISN year, ISN month, ISN day, ISN hour, ISN minute,
                  ISN second) {
-  return TClockTime<TM4>(year, month, day, hour, minute, second);
+  return TClockTime<TMC>(year, month, day, hour, minute, second);
 }
 
 #if USING_UTF8 == YES_0
@@ -268,17 +262,17 @@ CHA* SPrint(CHA* origin, CHA* stop, const AClock& clock) {
   return TSPrint<CHA>(origin, stop, clock);
 }
 
-CHA* Print(CHA* origin, CHA* stop, TME& t) {
+CHA* Print(CHA* origin, CHA* stop, TMC& t) {
   return TSPrint<CHA>(origin, stop, t);
 }
 
-CHA* ClockPrint(CHA* origin, CHA* stop, TM4 t) {
+CHA* ClockPrint(CHA* origin, CHA* stop, TMC t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHA>(origin, stop, clock);
 }
 
-CHA* ClockPrint(CHA* origin, CHA* stop, TM8 t) {
+CHA* ClockPrint(CHA* origin, CHA* stop, TMD t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHA>(origin, stop, clock);
@@ -292,14 +286,14 @@ const CHA* SScan(const CHA* string, AClock& clock) {
   return TSScan<CHA>(string, clock);
 }
 
-const CHA* SScan(const CHA* string, TME& t) { return TSScan<CHA>(string, t); }
+const CHA* SScan(const CHA* string, TMC& t) { return TSScan<CHA>(string, t); }
 
-const CHA* ScanTime(const CHA* string, TM4& t) {
-  return TScanTime<CHA, TM4>(string, t);
+const CHA* ScanTime(const CHA* string, TMC& t) {
+  return TScanTime<CHA, TMC>(string, t);
 }
 
-const CHA* ScanTime(const CHA* string, TM8& t) {
-  return TScanTime<CHA, TM8>(string, t);
+const CHA* ScanTime(const CHA* string, TMD& t) {
+  return TScanTime<CHA, TMD>(string, t);
 }
 
 #endif
@@ -309,16 +303,16 @@ CHB* SPrint(CHB* origin, CHB* stop, AClock& clock) {
   return TSPrint<CHB>(origin, stop, clock);
 }
 
-CHB* SPrint(CHB* origin, CHB* stop, TME& t) {
+CHB* SPrint(CHB* origin, CHB* stop, TMC& t) {
   return TSPrint<CHB>(origin, stop, t);
 }
 
-CHB* ClockPrint(CHB* origin, CHB* stop, TM4 t) {
-  return TClockPrint<CHB, TM4>(origin, stop, t);
+CHB* ClockPrint(CHB* origin, CHB* stop, TMC t) {
+  return TClockPrint<CHB, TMC>(origin, stop, t);
 }
 
-CHB* ClockPrint(CHB* origin, CHB* stop, TM8 t) {
-  return TClockPrint<CHB, TM8>(origin, stop, t);
+CHB* ClockPrint(CHB* origin, CHB* stop, TMD t) {
+  return TClockPrint<CHB, TMD>(origin, stop, t);
 }
 
 const CHB* SScan(const CHB* string, AClock& clock) {
@@ -329,16 +323,16 @@ const CHB* ScanTime(const CHB* string, ISN& hour, ISN& minute, ISN& second) {
   return TScanTime<CHB>(string, hour, minute, second);
 }
 
-const CHB* SScan(const CHB* string, TME& result) {
+const CHB* SScan(const CHB* string, TMC& result) {
   return TSScan<CHB>(string, result);
 }
 
-const CHB* ScanTime(const CHB* string, TM4& result) {
-  return TScanTime<CHB, TM4>(string, result);
+const CHB* ScanTime(const CHB* string, TMC& result) {
+  return TScanTime<CHB, TMC>(string, result);
 }
 
-const CHB* ScanTime(const CHB* string, TM8& result) {
-  return TScanTime<CHB, TM8>(string, result);
+const CHB* ScanTime(const CHB* string, TMD& result) {
+  return TScanTime<CHB, TMD>(string, result);
 }
 #endif
 
@@ -348,16 +342,16 @@ CHC* SPrint(CHC* origin, CHC* stop, AClock& clock) {
   return TSPrint<CHC>(origin, stop, clock);
 }
 
-CHC* SPrint(CHC* origin, CHC* stop, TME& t) {
+CHC* SPrint(CHC* origin, CHC* stop, TMC& t) {
   return TSPrint<CHC>(origin, stop, t);
 }
 
-CHC* ClockPrint(CHC* origin, CHC* stop, TM4 t) {
-  return TClockPrint<CHC, TM4>(origin, stop, t);
+CHC* ClockPrint(CHC* origin, CHC* stop, TMC t) {
+  return TClockPrint<CHC, TMC>(origin, stop, t);
 }
 
-CHC* ClockPrint(CHC* origin, CHC* stop, TM8 t) {
-  return TClockPrint<CHC, TM8>(origin, stop, t);
+CHC* ClockPrint(CHC* origin, CHC* stop, TMD t) {
+  return TClockPrint<CHC, TMD>(origin, stop, t);
 }
 
 const CHC* ScanTime(const CHC* string, ISN& hour, ISN& minute, ISN& second) {
@@ -368,20 +362,20 @@ const CHC* SScan(const CHC* string, AClock& time) {
   return TSScan<CHC>(string, time);
 }
 
-const CHC* SScan(const CHC* string, TME& result) {
+const CHC* SScan(const CHC* string, TMC& result) {
   return TSScan<CHC>(string, result);
 }
 
-const CHC* ScanTime(const CHC* string, TM4& result) {
-  return TScanTime<CHC, TM4>(string, result);
+const CHC* ScanTime(const CHC* string, TMC& result) {
+  return TScanTime<CHC, TMC>(string, result);
 }
 
-const CHC* ScanTime(const CHC* string, TM8& result) {
-  return TScanTime<CHC, TM8>(string, result);
+const CHC* ScanTime(const CHC* string, TMD& result) {
+  return TScanTime<CHC, TMD>(string, result);
 }
 
 #endif
 
-}  // namespace _
+}  //< namespace _
 
 #endif  //< #if SEAM >= SCRIPT2_CLOCK
