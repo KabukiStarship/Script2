@@ -58,7 +58,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
                          on coworkers foreheads. :-) */
 ```
 
-**[<< Previous Section: Strings](Strings) | [Next Section: Homo-tuples >>](HomoTuples)**
+**[<< Previous Section: Strings](Strings.md) | [Next Section: Homo-tuples >>](HomoTuples.md)**
 
 ## Requirements
 

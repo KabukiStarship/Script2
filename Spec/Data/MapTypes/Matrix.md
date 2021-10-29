@@ -57,7 +57,7 @@ Matlab style Multi-dimensional matrix separator ---+   */
               N is the Dimension Count -----+  */
 ```
 
-**[<< Previous Section: Stack](Stack) | [Next Section: Map >>](Map)**
+**[<< Previous Section: Stack](Stack.md) | [Next Section: Map >>](Map.md)**
 
 ## Requirements
 

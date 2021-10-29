@@ -96,7 +96,7 @@ FPD - 0.1;  // Wastes a whole lot of space!
 FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 ```
 
-**[<< Previous Section: Data Types](DataTypes) | [Next Section: Timestamps >>](Timestamps)**
+**[<< Previous Section: Data Types](DataTypes.md) | [Next Section: Timestamps >>](Timestamps.md)**
 
 ## Requirements
 

@@ -14,9 +14,9 @@ The Target shall be certified to be a Script Automaton if the Target does not su
 
 The Target shall be certified as a Group Automata if the Target supports Script^2.
 
-[<< Universal Addressing Specification](universal_addressing_specification_rfc) **|** [Beginning >>]()
+[<< Universal Addressing Specification](../Addressing) **|** [Beginning >>]()
 
-**[<< Previous Section: Room Contents](./RoomContents) | [Next Section: Autojects >>](./Autojects)**
+**[<< Previous Section: Room Contents](./RoomContents.md) | [Next Section: Autojects >>](./Autojects.md)**
 
 ## Requirements
 

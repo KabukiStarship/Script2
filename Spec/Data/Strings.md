@@ -15,7 +15,7 @@ STB "Hello world!"       //< This is a _::TStrand<> that is up to 64KB long.
 STC "Hello world!"       //< This is a _::TStrand<> that is up to 4GB long.
 ```
 
-**[<< Previous Section:Timestamps](Timestamps) | [Next Section: B-Sequences >>](BSequences)**
+**[<< Previous Section:Timestamps](Timestamps.md) | [Next Section: B-Sequences >>](BSequences.md)**
 
 ## Requirements
 

@@ -23,7 +23,7 @@
     1. ☺└¿�☺B**☻�¿└**
 12. **host_a** and **host_b** are now connected.
 
-**[<< Previous Section: Operations](Operations) | [Next Section: Encryption >>](Encryption)**
+**[<< Previous Section: Operations](Operations.md) | [Next Section: Encryption >>](Encryption.md)**
 
 ## Requirements
 

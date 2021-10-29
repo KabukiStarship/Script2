@@ -12,7 +12,7 @@ The solution that I'm addressing on this mission is...
 
 * #1
 
-#### IssueTags
+#### Tags
 
 Bug, FeatureRequest, FAQ, etc
 

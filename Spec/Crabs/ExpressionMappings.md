@@ -63,7 +63,7 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
                    stuff things item3;
 ```
 
-**[<< Previous Section: Messages](./Messages) | [Next Section: SCRIPT Specification >>](../)**
+**[<< Previous Section: Messages](./Messages.md) | [Next Section: SCRIPT Specification >>](../)**
 
 ## Requirements
 

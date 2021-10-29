@@ -6,7 +6,7 @@ The Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification defi
 
 , and Script^2 is best described as a combination of Lua, JavaScript, Python, and LISP that is suitable for embedded purposes and is portable to almost any microprocessor and pen and paper computer. Script works over almost any serial communication protocol or encryption method and has its own multi-master physical reference bus using a series-parallel RS-485 connection over grounded 9-wire Ethernet cable.
 
-**[<< Previous Section:Content Table](../) | [Next Section:Requirements >>](Requirements)**
+**[<< Previous Section:Content Table](../) | [Next Section:Requirements >>](Requirements.md)**
 
 ## License
 
