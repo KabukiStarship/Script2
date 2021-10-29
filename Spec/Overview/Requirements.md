@@ -15,7 +15,7 @@ Script devices shall be required to:
 9. to be useful in a more contexts;
 10. decode, encode, load, store, and transceive data as quickly as possible.
 
-**[<< Previous Section:Overview](./) | [Next Section:Terminology >>](./terminology)**
+**[<< Previous Section:Overview](./) | [Next Section:Terminology >>](Terminology)**
 
 ## License
 

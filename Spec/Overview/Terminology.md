@@ -39,7 +39,7 @@ Please note that this Release for Comment (RFC) is a living document and not an 
 |                        Read | The action of reading binary data from a buffer to the Program Stack without converting it. |
 |                        Scan | The action of converting a text representation of a number to a string or copying a string from one buffer to another. |
 
-**[<< Previous Section: Requirements](./requirements)** | **[Next Section: Object Classes >>](./terminology)**
+**[<< Previous Section: Requirements](Requirements)** | **[Next Section: Object Classes >>](Terminology)**
 
 ## License
 

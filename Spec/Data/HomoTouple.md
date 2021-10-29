@@ -14,7 +14,7 @@ A Homo-vector (Homogenous Vector) is a Vector of homogeneous types of length 1, 
 |:-----:|:------:|:-----:|
 |  SW   |  VHT   |  0-31 |
 
-**[<< Previous Section: B-Sequences](./b-sequences) | [Next Section: Map Types >>](./map_types)**
+**[<< Previous Section: B-Sequences](BSequences) | [Next Section: Map Types >>](MapTypes)**
 
 ## Requirements
 

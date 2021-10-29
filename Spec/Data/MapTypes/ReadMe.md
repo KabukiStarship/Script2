@@ -29,7 +29,7 @@ need an 16-bit object. It is easy to imagine a complex AI software using
 more than 4GB RAM, or the need to attach a DVD ISO image as a key-value
 pair, so we need a 64-bit dictionary.
 
-**[<< Previous Section: Homo-tuples](./homo-tuples) | [Next Section: Array >>](./array)**
+**[<< Previous Section: Homo-tuples](HomoTuples) | [Next Section: Array >>](Array)**
 
 ## License
 

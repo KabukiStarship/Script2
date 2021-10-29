@@ -167,3 +167,5 @@ Sometimes, system-specific code needs conditional includes. Such code can put co
 #include <initializer_list>
 #endif  // LANG_CXX11
 ```
+
+**[<< Previous Section: ASCII C++ Style Guide](../) | [Next Section: Scoping >>](Scoping)**

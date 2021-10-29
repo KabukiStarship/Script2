@@ -32,7 +32,7 @@ The 32-bit time epoch shall be set to 32 years[] starting at the January 1st of 
 
 `(+/-) ((2^62)-1)/(60*60*24*365) = (+/-) 146,235,604,338 years`
 
-**[<< Previous Section: Text](./text) | [Next Section: Strings >>](./strings)**
+**[<< Previous Section: Text](Text) | [Next Section: Strings >>](Strings)**
 
 ## References
 

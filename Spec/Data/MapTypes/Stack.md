@@ -26,7 +26,7 @@ struct TStack {
 0xN +---------------+
 ```
 
-**[<< Previous Section: Array](./array) | [Next Section: Matrix >>](./matrix)**
+**[<< Previous Section: Array](Array) | [Next Section: Matrix >>](Matrix)**
 
 ## Requirements
 

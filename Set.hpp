@@ -9,14 +9,14 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
 #if SEAM >= SCRIPT2_BOOK
-#ifndef SCRIPT2_BOOK_DECIMPL
-#define SCRIPT2_BOOK_DECIMPL 1
+#ifndef SCRIPT2_BOOK_TEMPLATES
+#define SCRIPT2_BOOK_TEMPLATES 1
 #include "TypeValue.h"
 namespace _ {
 /*
-  @code
-  ;
-  @endcode
+@code
+;
+@endcode
 */
 template <typename Index, typename TKey, typename ISZ, typename THash>
 struct LIB_MEMBER TCollection {
@@ -29,28 +29,28 @@ struct LIB_MEMBER TCollection {
 
 /* A Type-Value Tuple. */
 struct Tuple2 {
-  PODType type;  //< The tuple type.
-  void* value;   //< The tuple value.
+  PODType type;      //< The tuple type.
+  void* value;       //< The tuple value.
 };
 
 /* A Type-Value Tuple. */
 struct Tuple3 {
-  PODType type;    //< The tuple type.
-  void* value;     //< The tuple value.
-  const CHA* key;  //< The Tuple key.
+  PODType type;      //< The tuple type.
+  void* value;       //< The tuple value.
+  const CHA* key;    //< The Tuple key.
 };
 
 /* Interface for a Script Set.
 Set Types:
-| Name       | Code | Description                                 |
-|-----------:|:----:|:--------------------------------------------|
-|      Array | ARY  | A packed c-style array of POD number_ types. |
+| Name       | Code | Description                                  |
+|-----------:|:----:|:---------------------------------------------|
+|      Array | ARY  | A packed c-style array of POD number types. |
 |      Stack | STK  | A stack of POD number_ types.                |
-|       List | cLST  | A stack of Type-Value tuples.               |
-|        Map | cMAP  | A one-to-one map of Id-Value tuples.        |
-|   Multimap | kDIC  | A multimap of Key-Value tuples.             |
-| Dictionary | kDIC  | A one-to-one map of Key-Value tuples.       |
-|   Observer | STC  | A Observer with Subscriber List.            |
+|       List | LST  | A stack of Type-Value tuples.                |
+|        Map | MAP  | A one-to-one map of Id-Value tuples.         |
+|   Multimap | DIC  | A multimap of Key-Value tuples.              |
+| Dictionary | DIC  | A one-to-one map of Key-Value tuples.        |
+|   Observer | STC  | A Observer with Subscriber List.             |
 */
 struct Collection {
   /* Clears the Set without wiping the memory. */

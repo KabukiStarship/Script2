@@ -7,8 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#ifndef SCRIPT2_DIC_DECIMPL
-#define SCRIPT2_DIC_DECIMPL
+#ifndef SCRIPT2_DIC_TEMPLATES
+#define SCRIPT2_DIC_TEMPLATES
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 #include "Binary.hpp"

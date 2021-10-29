@@ -284,3 +284,5 @@ A deprecation comment must include simple, clear directions for people to fix th
 Marking an interface point `DEPRECATED` will not magically cause any callsites to change. If you want people to actually stop using the deprecated facility, you will have to fix the callsites yourself or recruit a crew to help you.
 
 New code should not contain calls to deprecated interface points. Use the new interface point instead. If you cannot understand the directions, find the person who created the deprecation and ask them for help using the new interface point.
+
+**[<< Previous Section: Naming](Naming) | [Next Section: Formatting >>](Formatting)**

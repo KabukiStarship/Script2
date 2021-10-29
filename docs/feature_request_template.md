@@ -1,31 +1,39 @@
-# Feature Request
+### Feature Request
 
-## Problem
+#### Problem
 
+The problem I am addressing with on this requested feature is...
 
+#### Solution
 
-## Solution
+The solution that I'm addressing on this requested feature is...
 
-
-
-## Cost
-
-
-
-## Benefit
+##### Cost
 
 
 
-## Summary
+##### Benefit
 
 
 
-## Hierarchy
+##### Summary
 
-* Flat
+
+
+#### IssueTags
+
+FeatureRequest, FeeStyleTag, etc
+
+#### Hierarchy
+
+* #1
+
+#### Session
+
+1. CookingWithCale/CookingWithCale#1
 
 ## License
 
-Copyright 2015-21 © [Kabuki Starship](https://kabukistarship.com).
+Copyright 2021 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

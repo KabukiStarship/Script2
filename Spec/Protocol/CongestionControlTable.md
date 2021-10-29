@@ -21,7 +21,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
 
-**[<< Previous Section: Quality of Service](./quality_of_service) | [Next Section: Abnormal Behavior >>](./abnormal_behavior)**
+**[<< Previous Section: Quality of Service](QualityOfService) | [Next Section: Abnormal Behavior >>](AbnormalBehavior)**
 
 ## Requirements
 

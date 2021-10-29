@@ -36,7 +36,7 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 
 Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
 
-**[<< Previous Section: Congestion Control](./congestion_control) | [Next Section: SCRIPT Specification >>](../)**
+**[<< Previous Section: Congestion Control](./CongestionControl) | [Next Section: SCRIPT Specification >>](../)**
 
 ## Requirements
 

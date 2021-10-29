@@ -9,8 +9,8 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
 #if SEAM >= SCRIPT2_TABLE
-#ifndef SCRIPTT2_TABLE_DECIMPL
-#define SCRIPTT2_TABLE_DECIMPL
+#ifndef SCRIPTT2_TABLE_TEMPLATES
+#define SCRIPTT2_TABLE_TEMPLATES
 #include "Array.hpp"
 #include "Hash.hpp"
 #if SEAM == SCRIPT2_TABLE
@@ -27,7 +27,7 @@ namespace _ {
 
 /* A dense key-index map.
 @see ASCII Data Type Specification.
-@link ./spec/data/map_types/table.md
+@link ./Spec/Data/MapTypes/table.md
 
 # Collision Table
 

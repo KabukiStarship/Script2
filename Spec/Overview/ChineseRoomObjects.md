@@ -23,7 +23,7 @@
 |      Table | TBL  | A Symbol Table implemented as a Set with no data. |
 |       Wall | WAL  | A Wall in a Chinese Room composed of a contiguous word-aligned block of memory. |
 
-**[<< Previous Section: Terminology](./terminology)** | **[Next Section: ASCII Data Specification >>](../data/)**
+**[<< Previous Section: Terminology](Terminology)** | **[Next Section: ASCII Data Specification >>](../Data/)**
 
 ## Requirements
 

@@ -8,7 +8,7 @@ A **Crabs Message** is similar to an internet datagram and may be enclosed in a 
 
 Crabs Messages beginning with a non-printable Unicode Character shall be IUA-encoded with the data immediately following it be a Packed B-Stream. All Crabs Messages beginning in a printable Unicode char shall be Script^2.
 
-**[<< Previous Section: Autojects](./autojects) | [Next Section: Expression Mappings >>](./expression_mappings)**
+**[<< Previous Section: Autojects](./Autojects) | [Next Section: Expression Mappings >>](./ExpressionMappings)**
 
 ## Requirements
 

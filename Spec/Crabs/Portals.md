@@ -46,7 +46,7 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
 
-**[<< Previous Section: Authentication](./authentication) | [Next Section: Room Contents >>](./room_contents)**
+**[<< Previous Section: Authentication](./Authentication) | [Next Section: Room Contents >>](./RoomContents)**
 
 ## Requirements
 

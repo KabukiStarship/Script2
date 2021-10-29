@@ -34,7 +34,7 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 |  4   |     2^13   |      0.1         | Ceiling (0.04*p*2^13) = 327.68 |
 |  8   |     2^29   |    10^-16        | Ceiling (0.04*p*2^29) = 327.68 |
 
-**[<< Previous Section: Book](./book) | [Next Section: SCRIPT Specification >>](../../)**
+**[<< Previous Section: Book](./Book) | [Next Section: SCRIPT Specification >>](../../)**
 
 ## Requirements
 

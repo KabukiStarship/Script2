@@ -23,7 +23,7 @@ The Automaton Standard Code for Information Interchange (ASCII) Data Specificati
   * Dictionary - A dictionary of heterogeneous types with a Table.
   * Book - A key-value dictionary of heterogeneous types with a Loom rather than a Table for fastest push-back performance and later conversion to a Table.
 
-**[<< Previous Section: SCRIPT Specification](../)  |  [Next Section: Data Types >>](./data_types)**
+**[<< Previous Section: SCRIPT Specification](../)  |  [Next Section: Data Types >>](./DataTypes)**
 
 ## Requirements
 

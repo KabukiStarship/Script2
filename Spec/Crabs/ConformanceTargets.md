@@ -16,7 +16,7 @@ The Target shall be certified as a Group Automata if the Target supports Script^
 
 [<< Universal Addressing Specification](universal_addressing_specification_rfc) **|** [Beginning >>]()
 
-**[<< Previous Section: Room Contents](./room_contents) | [Next Section: Autojects >>](./autojects)**
+**[<< Previous Section: Room Contents](./RoomContents) | [Next Section: Autojects >>](./Autojects)**
 
 ## Requirements
 

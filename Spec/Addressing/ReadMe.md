@@ -10,11 +10,11 @@ The method uses a minimum of a 96-bit IP Address that conveys latitude, longitud
 
 ### Content Table
 
-1. [Mathematical Definitions](mathmatical_definitions)
-1. [Universal Address Format](universal_address_format)
-1. [Polar Routing](polar_routing)
+1. [Mathematical Definitions](MathmaticalDefinitions)
+1. [Universal Address Format](UniversalAddressFormat)
+1. [Polar Routing](PolarRouting)
 
-**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Longitude and Latitude >>](./longitude_and_Latitude)**
+**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Longitude and Latitude >>](./LongitudeAndLatitude)**
 
 ## Requirements
 

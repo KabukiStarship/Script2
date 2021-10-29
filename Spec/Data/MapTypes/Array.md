@@ -25,7 +25,7 @@ struct TArray {
 0xN +----------------+
 ```
 
-**[<< Previous Section: Socket](./socket) | [Next Section: Stack >>](./stack)**
+**[<< Previous Section: Socket](./Socket) | [Next Section: Stack >>](./Stack)**
 
 ## Requirements
 

@@ -158,11 +158,11 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 |:-------:|:--------:|:-----:|:-----:|:-----:|
 |   MB    | Map type |  SW   |  VHT  |  POD  |
 
-**[<< Previous Section: ASCII Data Specification Overview >>](./)  |  [Next Section: Numbers >>](./Numbers)**
+**[<< Previous Section: ASCII Data Specification Overview >>](./)  |  [Next Section: Numbers >>](Numbers)**
 
 ## Requirements
 
-[1]: ../requirements#Optimal-transceiving
+[1]: ../Requirements#Optimal-Transceiving
 
 ## License
 
