@@ -4,7 +4,7 @@
 
 ### Terminals
 
-**[<< Previous Section: Terminals](./terminals) | [Next Section: Encryption >>](./encryption)**
+**[<< Previous Section: Terminals](Terminals) | [Next Section: Encryption >>](Encryption)**
 
 ## Requirements
 

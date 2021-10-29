@@ -30,7 +30,7 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 
 * Sizes shown in bytes.
 
-**[<< Previous Section: Table](./table) | [Next Section: Dictionary >>](./dictionary)**
+**[<< Previous Section: Table](./Table) | [Next Section: Dictionary >>](./Dictionary)**
 
 ## Requirements
 

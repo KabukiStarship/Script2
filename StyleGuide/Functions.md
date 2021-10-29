@@ -194,3 +194,5 @@ This method can help reduce bugs when using multiple libraries with static data,
 ***Cons***
 
 It requires some more typing in some circumstances.
+
+**[<< Previous Section: Classes](Classes) | [Next Section: Other C++ Features >>](OtherCPPFeatures)**

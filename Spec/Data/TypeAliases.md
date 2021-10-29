@@ -37,7 +37,7 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 |  xW   | Word-aligned word-sized type. |
 |  W/2  | Half-word type word-sized type. |
 
-**[<< Previous Section:Text](./text) | [Next Section:Value >>](./value)**
+**[<< Previous Section:Text](Text) | [Next Section:Value >>](Value)**
 
 ## License
 

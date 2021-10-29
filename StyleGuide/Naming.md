@@ -232,3 +232,5 @@ If you are naming something that is analogous to an existing C or C++ entity the
 Though a pain to write, comments are absolutely vital to keeping our code readable. The following rules describe what you should comment and where. But remember: while comments are very important, the best code is self-documenting. Giving sensible names to types and variables is much better than using obscure names that you must then explain through comments.
 
 When writing your comments, write for your audience: the next contributor who will need to understand your code. Be generous — the next one may be you!
+
+**[<< Previous Section: Other C++ Features](OtherCPPFeatures) | [Next Section: Comments >>](Comments)**

@@ -264,7 +264,7 @@ inline ISA TypeTextFormat(DTW type) {
 }
 
 /* Masks off the primary type. */
-inline ISA PODType(DTW value) { return value & 0x1f; }
+inline ISA PODTypeMask(DTW value) { return value & 0x1f; }
 
 /* Returns true if the given type is an Array type. */
 inline BOL TypeIsArray(DTW type) { return type >= cTypeCount; }

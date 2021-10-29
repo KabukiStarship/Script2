@@ -382,3 +382,5 @@ ABSL_CONST_INIT thread_local Foo foo = ...;
 ```
 
 `thread_local` should be preferred over other mechanisms for defining thread-local data.
+
+**[<< Previous Section: Header Files](HeaderFiles) | [Next Section: Scoping >>](Scoping)**

@@ -28,7 +28,7 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
 +----------------------------+ 0xN
 ```
 
-**[<< Previous Section: Map](./map) | [Next Section: Table >>](./table)**
+**[<< Previous Section: Map](Map) | [Next Section: Table >>](Table)**
 
 ## Requirements
 

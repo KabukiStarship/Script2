@@ -23,7 +23,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* @ingroup Loom
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/map_types/loom.md */
+@link ./Spec/Data/MapTypes/Loom.md */
 
 /* An array of Strings. */
 template <typename ISZ = ISN, typename ISY = ISM>

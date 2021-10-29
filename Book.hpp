@@ -21,7 +21,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* @ingroup Book
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/map_types/book.md
+@link ./Spec/Data/MapTypes/book.md
 
 Please see the ASCII List documentation for information about
 */
@@ -56,7 +56,7 @@ constexpr ISZ CBookCountMin() {
 template <TARGS>
 constexpr ISZ CBookSizeMin() {
   enum {
-    cCountMin = TBookCountMin(),
+    cCountMin = CBookCountMin(),
     cSizeMin = sizeof(TBook<TPARAMS>) + cCountMin * (sizeof(ISZ) + 2),
   };
   return cSizeMin;
@@ -138,7 +138,7 @@ Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
   ISY count = book->keys.map.count;
   printer << "\nBook<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>() << ",IS"
           << CSizef<ISY>() << "> size:" << book->keys.size
-          << " top:" << book->keys.top
+          << " top:" << book->keys.top 
           << " stack_size:" << book->keys.map.count_max << " count:" << count;
   auto types = TListTypes<ISZ, DT2>(TBookList<TPARAMS>(book));
   for (ISY i = 0; i < count; ++i) {

@@ -38,7 +38,7 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 +-------------------------------+ 0x0
 ```
 
-**[<< Previous Section:Book](./book) | [Next Section: Dictionary >>](./dictionaries)**
+**[<< Previous Section:Book](Book) | [Next Section: Dictionary >>](Dictionaries)**
 
 ## Requirements
 

@@ -8,8 +8,8 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_STACK_DECIMPL
-#define SCRIPT2_STACK_DECIMPL
+#ifndef SCRIPT2_STACK_TEMPLATES
+#define SCRIPT2_STACK_TEMPLATES
 #if SEAM >= SCRIPT2_STACK
 #include "Binary.hpp"
 #include "String.hpp"
@@ -24,11 +24,11 @@ namespace _ {
 
 /* ASCII Stack
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/vector_types/stack.md */
+@link ./Spec/Data/vector_types/stack.md */
 
 /* An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/vector_types/stack.md
+@link ./Spec/Data/vector_types/stack.md
 
 # Stack Memory Layout
 

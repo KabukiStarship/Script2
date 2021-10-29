@@ -6,7 +6,7 @@
 
 
 
-**[<< Previous Section: Map Types](./) | [Next Section: Array >>](./array)**
+**[<< Previous Section: Map Types](./) | [Next Section: Array >>](Array)**
 
 ## Requirements
 

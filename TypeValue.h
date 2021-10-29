@@ -24,9 +24,8 @@ LIB_MEMBER const CHA* STRFalse();
 /* Utility class for printing an ASCII type. */
 struct Typef {
   DTW type;     //< The item type.
-  CHA* string; //< The ASCII type string.
+  CHA* string;  //< The ASCII type string.
 };
-
 
 Typef TypefOf();
 

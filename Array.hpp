@@ -7,10 +7,9 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#ifndef SCRIPT2_ARRAY_DECIMPL
-#define SCRIPT2_ARRAY_DECIMPL
+#ifndef SCRIPT2_ARRAY_TEMPLATES
+#define SCRIPT2_ARRAY_TEMPLATES
 #include "Array.h"
-//
 #include "TypeValue.hpp"
 namespace _ {
   
@@ -38,13 +37,11 @@ inline ISZ TArraySizeMax() {
 
 #if SEAM >= SCRIPT2_STACK
 #include "Binary.hpp"
-
 #if SEAM == SCRIPT2_STACK
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #endif
-
 namespace _ {
 
 // enum {
@@ -60,7 +57,7 @@ inline IUW* AutojectBeginSet(Autoject& obj, void* buffer) {
 
 /* @ingroup AsciiArray
 Please see the ASCII Data Specification for DRY documentation.
-@link ./spec/data/vector_types/array.md */
+@link ./Spec/Data/vector_types/array.md */
 
 /* Deletes the given obj using the obj.factory. */
 inline void Delete(Autoject obj) {
@@ -70,7 +67,7 @@ inline void Delete(Autoject obj) {
 
 /* An ASCII Array.
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/vector_types/array.md
+@link ./Spec/Data/vector_types/array.md
 
 @code
 +-----------------+

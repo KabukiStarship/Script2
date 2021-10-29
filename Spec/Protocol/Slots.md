@@ -95,11 +95,11 @@ Windows combine a BIn and BOut in contiguous memory. The ring buffers function s
 Script implementations may implement a default BIn Slot named In (**in UpperCaseCamel**)
  and default BOut Slot named Out (**in UpperCaseCamel**). In shall stream bytes from a Text keyboard, BOut Slot or Text display input. Out stream bytes to a Abstract text display, BIn Slot, or Abstract serial output.
 
-**[<< Previous Section: Time](./time) | [Next Section: Expressions >>](./expressions)**
+**[<< Previous Section: Time](Time) | [Next Section: Expressions >>](Expressions)**
 
 ## Requirements
 
-[1] ./w
+[1] ./
 
 ## License
 

@@ -254,3 +254,5 @@ A class definition should usually start with a `public:` section, followed by `p
 Within each section, generally prefer grouping similar kinds of declarations together, and generally prefer the following order: types (including `typedef`, `using`, and nested structs and classes), constants, factory functions, constructors, assignment operators, destructor, all other methods, data members.
 
 Do not put large method definitions inline in the class definition. Usually, only trivial or performance-critical, and very short, methods may be defined inline. See [Inline Functions](#Inline_Functions) for more details.
+
+**[<< Previous Section: Scoping](Scoping) | [Next Section: Functions >>](Functions)**

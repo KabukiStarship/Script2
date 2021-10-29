@@ -31,3 +31,5 @@ However, there are just a few rules that we occasionally need to break on Window
 * Although you should not use exceptions in your own code, they are used extensively in the ATL and some STLs, including the one that comes with Visual C++. When using the ATL, you should define `_ATL_NO_EXCEPTIONS` to disable exceptions. You should investigate whether you can also disable exceptions in your STL, but if not, it is OK to turn on exceptions in the compiler. (Note that this is only to get the STL to compile. You should still not write exception handling code yourself.)
 * The usual way of working with precompiled headers is to include a header file at the top of each source file, typically with a name like `StdAfx.h` or `precompile.h`. To make your code easier to share with other projects, avoid including this file explicitly (except in `precompile.cc`), and use the `/FI` compiler option to include the file automatically.
 * Resource headers, which are usually named `resource.h` and contain only macros, do not need to conform to these style guidelines.
+
+**[<< Previous Section: Functions](Functions) | [Next Section: ASCII C++ Style Guide >>](../)**

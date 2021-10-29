@@ -515,7 +515,7 @@ _::TArray<_::TStrand<>> v = {"foo", "bar"};
 auto p = new _::TArray<_::TStrand<>>{"foo", "bar"};
 
 // A map can take a list of pairs. Nested braced-init-lists work.
-_::TMap<SIN, _::TStrand<>> m = {{1, "one"}, {2, "2"}};
+_::TMap<SIN, _::TStrand<> m = {{1, "one"}, {2, "2"}};
 
 // A braced-init-list can be implicitly converted to a return type.
 _::TArray<SIN> test_function() { return {1, 2, 3}; }
@@ -533,7 +533,8 @@ A user-defined type can also define a constructor and/or assignment operator tha
 ```C++
 
 class MyType {
- public:
+  public:
+  
   // std::initializer_list references the underlying init list.
   // It should be passed by value.
   MyType(std::initializer_list<SIN> init_list) {
@@ -911,3 +912,5 @@ However, local convenience aliases are fine in function definitions, private sec
 // In a .cc file
 using foo::Bar;
 ```
+
+**[<< Previous Section: Functions](Functions) | [Next Section: Naming >>](Naming)**

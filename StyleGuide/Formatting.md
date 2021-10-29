@@ -806,3 +806,5 @@ Some rules of thumb to help when blank lines may be useful:
 * Blank lines at the beginning or end of a function do not help readability.
 * Blank lines inside a chain of if-else blocks may well help readability.
 * A blank line before a comment line usually helps readability — the introduction of a new comment suggests the start of a new thought, and the blank line makes it clear that the comment goes with the following thing instead of the preceding.
+
+**[<< Previous Section: Comments](Comments) | [Next Section: Formatting >>](Formatting)**

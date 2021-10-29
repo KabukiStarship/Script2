@@ -7,8 +7,8 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#ifndef SCRIPT2_BIN_DECIMPL
-#define SCRIPT2_BIN_DECIMPL
+#ifndef SCRIPT2_BIN_TEMPLATES
+#define SCRIPT2_BIN_TEMPLATES
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
 #include "BIn.h"

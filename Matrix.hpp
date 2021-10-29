@@ -16,12 +16,12 @@ namespace _ {
 
 /* @ingroup AsciiMatrix
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/vector_types/matrix.md
+@link ./Spec/Data/vector_types/matrix.md
 */
 
 /* A multi-dimensional array of homogeneous types with a Stack of dimensions.
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./spec/data/vector_types/matrix.md
+@link ./Spec/Data/vector_types/matrix.md
 
 ***Memory Layout***
 

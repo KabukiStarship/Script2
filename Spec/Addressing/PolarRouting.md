@@ -36,7 +36,7 @@ Haversine Formula's is used to calculate 3D arc lengths using polar coordinates 
 * Let c = 2 * atan2 ( sqrt(a), sqrt(1 - a) )
 * Let d = R * c
 
-**[<< Previous Section: Universal Addressing Specification](./) | [Next Section: Universal Address Format>>](./universal_address_format)**
+**[<< Previous Section: Universal Addressing Specification](./) | [Next Section: Universal Address Format>>](./UniversalAddressFormat)**
 
 ## Requirements
 
