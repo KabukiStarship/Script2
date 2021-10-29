@@ -56,7 +56,7 @@ The ASCII Data Type of the Autoject is returned when nullptr and -1 are passed i
 DTW data_type_word = reinterpret_cast<DTW*>(socket_factory(buffer, -1));
 ```
 
-**[<< Previous Section: Conformance Targets](./ConformanceTargets) | [Next Section: SCRIPT Specification >>](./ScriptSpecification)**
+**[<< Previous Section: Conformance Targets](./ConformanceTargets.md) | [Next Section: SCRIPT Specification >>](./ScriptSpecification.md)**
 
 ## Requirements
 

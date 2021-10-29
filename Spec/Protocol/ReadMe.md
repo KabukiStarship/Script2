@@ -12,7 +12,7 @@ In the John Searle's famous Chinese Room Thought Experiment users may talk to th
 1. [Universal Addressing Specification](./universal_addressing)
 1. [Crabs Specification](./crabs/)
 
-**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Group Automata >>](./GroupAutomata)**
+**[<< Previous Section: SCRIPT Specification](../) | [Next Section: Group Automata >>](./GroupAutomata.md)**
 
 ## License
 

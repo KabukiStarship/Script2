@@ -34,7 +34,7 @@ A slave device assumes that there is another Automaton or Automata performing th
 
 Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
 
-**[<< Previous Section: Terminals](Terminals) | [Next Section: Congestion Control >>](CongestionControl)**
+**[<< Previous Section: Terminals](Terminals.md) | [Next Section: Congestion Control >>](CongestionControl.md)**
 
 ## License
 

@@ -4,7 +4,7 @@
 
 ### Abnormal Behavior
 
-**[<< Previous Section: Congestion control](CongestionControl) | [Next Section: Crabs Specification >>](./CrabsSpecification)**
+**[<< Previous Section: Congestion control](CongestionControl.md) | [Next Section: Crabs Specification >>](./CrabsSpecification.md)**
 
 ## Requirements
 

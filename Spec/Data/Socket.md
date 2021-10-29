@@ -6,7 +6,7 @@
 
 
 
-**[<< Previous Section: Map Types](./) | [Next Section: Array >>](Array)**
+**[<< Previous Section: Map Types](./) | [Next Section: Array >>](Array.md)**
 
 ## Requirements
 

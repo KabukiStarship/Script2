@@ -6,7 +6,7 @@
 
 Authentication in Script shall be done using a sequence of Script Operations.
 
-**[<< Previous Section: Crabs Specification](./) | [Next Section: Portals >>](./Portals)**
+**[<< Previous Section: Crabs Specification](./) | [Next Section: Portals >>](./Portals.md)**
 
 ## Requirements
 

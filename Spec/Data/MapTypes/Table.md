@@ -101,7 +101,7 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 }
 ```
 
-**[<< Previous Section: List](List) | [Next Section: Book >>](Book)**
+**[<< Previous Section: List](List.md) | [Next Section: Book >>](Book.md)**
 
 ## Requirements
 
