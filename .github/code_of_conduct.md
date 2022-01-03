@@ -10,7 +10,7 @@ We will never be #woke lib-tard authoritarian trash who spout off critical race 
 
 #### Our Standards
 
-You can take yoru Code of Conduct and shove it up your ass!
+You can take your Code of Conduct and shove it up your ass!
 
 #### Our Responsibilities
 
