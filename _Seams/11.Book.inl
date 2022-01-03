@@ -37,7 +37,8 @@ void TestBook() {
   ABook<TPARAMS, cSize> book(cCount);
 
   D_COUT("\n\nsize:" << book.Size() << " size_bytes:" << book.SizeBytes()
-         << " size_words:" << book.SizeWords());
+         << " size_words:" << book.SizeWords() << "\n\nKeys\n");
+  TListPrint<COut, ISZ, DT>(COut().Star(), book.List());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();

@@ -2,29 +2,29 @@
 
 ## Other C++ Features
 
-1. [Rvalue References](other_cpp_features#rvalue-references)
-1. [Friends](other_cpp_features#friends)
-1. [Exceptions](other_cpp_features#exceptions)
-1. [noexcept](other_cpp_features#noexcept)
-1. [Run-Time Type Information (RTTI)](other_cpp_features#run-time-type-information-rtti)
-1. [CastingStreams](other_cpp_features#castingstreams)
-1. [Preincrement and Predecrement](other_cpp_features#preincrement-andpredecrement)
-1. [Use of const](other_cpp_features#use-of-const)
-1. [Use of constexpr](other_cpp_features#use-of-constexpr)
-1. [Integer Types](other_cpp_features#integer-types)
-1. [64-bit Portability](other_cpp_features#64-bit-portability)
-1. [Preprocessor Macros](other_cpp_features#preprocessor-macros)
-1. [0 and nullptr/NULL](other_cpp_features#0-and-nullptr-null)
-1. [sizeof](other_cpp_features#sizeof)
-1. [auto](other_cpp_features#auto)
-1. [Braced Initializer List](other_cpp_features#braced-initializer-list)
-1. [Lambda expressions](other_cpp_features#lambda-expressions)
-1. [Template metaprogramming](other_cpp_features#template-metaprogramming)
-1. [Boost](other_cpp_features#boost)
-1. [std::hash](other_cpp_features#std-hash)
-1. [C++11](other_cpp_features#c-11)
-1. [Nonstandard Extensions](other_cpp_features#nonstandard-extensions)
-1. [Aliases](other_cpp_features#aliases)
+1. [Rvalue References](OtherCppFeatures#rvalue-references)
+1. [Friends](OtherCppFeatures#friends)
+1. [Exceptions](OtherCppFeatures#exceptions)
+1. [noexcept](OtherCppFeatures#noexcept)
+1. [Run-Time Type Information (RTTI)](OtherCppFeatures#run-time-type-information-rtti)
+1. [CastingStreams](OtherCppFeatures#castingstreams)
+1. [Preincrement and Predecrement](OtherCppFeatures#preincrement-andpredecrement)
+1. [Use of const](OtherCppFeatures#use-of-const)
+1. [Use of constexpr](OtherCppFeatures#use-of-constexpr)
+1. [Integer Types](OtherCppFeatures#integer-types)
+1. [64-bit Portability](OtherCppFeatures#64-bit-portability)
+1. [Preprocessor Macros](OtherCppFeatures#preprocessor-macros)
+1. [0 and nullptr/NULL](OtherCppFeatures#0-and-nullptr-null)
+1. [sizeof](OtherCppFeatures#sizeof)
+1. [auto](OtherCppFeatures#auto)
+1. [Braced Initializer List](OtherCppFeatures#braced-initializer-list)
+1. [Lambda expressions](OtherCppFeatures#lambda-expressions)
+1. [Template metaprogramming](OtherCppFeatures#template-metaprogramming)
+1. [Boost](OtherCppFeatures#boost)
+1. [std::hash](OtherCppFeatures#std-hash)
+1. [C++11](OtherCppFeatures#c-11)
+1. [Nonstandard Extensions](OtherCppFeatures#nonstandard-extensions)
+1. [Aliases](OtherCppFeatures#aliases)
 
 ### Rvalue References
 
@@ -515,7 +515,7 @@ _::TArray<_::TStrand<>> v = {"foo", "bar"};
 auto p = new _::TArray<_::TStrand<>>{"foo", "bar"};
 
 // A map can take a list of pairs. Nested braced-init-lists work.
-_::TMap<SIN, _::TStrand<> m = {{1, "one"}, {2, "2"}};
+_::TMap<SIN, _::TStrand<>> m = {{1, "one"}, {2, "2"}};
 
 // A braced-init-list can be implicitly converted to a return type.
 _::TArray<SIN> test_function() { return {1, 2, 3}; }
