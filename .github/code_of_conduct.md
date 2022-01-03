@@ -1,20 +1,16 @@
-# [Script2](../README)
+# Freedom Government Code of Conduct
 
-## [docs](./)
-
-### Contributor Covenant Code of Conduct
-
-#### Our Pledge
+## Our Pledge
 
 We will never be #woke lib-tard authoritarian trash who spout off critical race and gender theory nonsense. Only 3% of open-source contributions are from women. Our pledge is to not burn the people who do contribute to try to make girls who don't contribute like us.
 
-#### Our Standards
+## Our Standards
 
 You can take your Code of Conduct and shove it up your ass!
 
-#### Our Responsibilities
+## Our Responsibilities
 
-You ain't responsible for shit. We're responsible to ensure an environement that fosters free speech, free association, free press, free religion, and open expression of ideas. This includes ideas you don't like. You are responsible to not be a drama queen and get butt hurt and flip a wig whenever you encounter ideas that contracdict your cultural conditioning and preconceptions.
+We ain't responsible for shit. I'm responsible to ensure an environement that fosters free speech, free association, free press, free religion, and open expression of ideas. This includes ideas you don't like. You are responsible to not be a drama queen and get butt hurt and flip a wig whenever you encounter ideas that contracdict your cultural conditioning and preconceptions.
 
 #### Scope
 
@@ -30,4 +26,4 @@ Jesus.
 
 ## License
 
-Copyright 2022 © [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright 2022 © [Kabuki Starship](https://kabukistarship.com); permision granted to us for pretty much whatever the fuck you want except open-source theft.
