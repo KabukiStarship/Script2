@@ -31,8 +31,9 @@ RequestFeature
 
 #### Sessions
 
-* CookingWithCale/CookingWithCale#1
+* #2
+* CookingWithCale/CookingWithCale#2
 
 ## License
 
-Copyright 2022 © [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
