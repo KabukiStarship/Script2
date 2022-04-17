@@ -4,7 +4,6 @@ about: A mission with a problem-solution analysis
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 ### A
@@ -35,4 +34,4 @@ Mission
 
 ## License
 
-Copyright 2022 © [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

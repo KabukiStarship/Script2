@@ -62,4 +62,4 @@ RequestFeature
 
 ## License
 
-Copyright 2022 © [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
