@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Book.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright (C) 2015-22 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -21,7 +21,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* @ingroup Book
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./Spec/Data/MapTypes/book.md
+@link ./Spec/Data/MapTypes/Book.md
 
 Please see the ASCII List documentation for information about
 */
@@ -113,9 +113,10 @@ inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
   if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
 
   TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
-  auto keys_size = &book->keys.size;
-  auto list = TBookList<TPARAMS>(book);
-  TListInit<ISZ, DT>(list, size_bytes - book->keys.size, count_max);
+  D_COUT("\n\nssize_bytes: " << size_bytes << " book->keys.size:" <<
+         book->keys.size << "\n\n");
+  TListInit<ISZ, DT>(TBookList<TPARAMS>(book), size_bytes - book->keys.size,
+                     count_max);
   return book;
 }
 
@@ -511,12 +512,14 @@ class ABook {
   /* Prints this object to the Printer. */
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    TBookPrint<Printer, TPARAMS>(o, This());
-    return o;
+    return TBookPrint<Printer, TPARAMS>(o, This());
   }
 
   /* Prints this object to the stdout. */
   inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
+
+  /* */
+  inline TList<ISZ>* List() { return TBookList<TPARAMS>(This()); }
 };
 
 }  //< namespace _

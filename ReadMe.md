@@ -25,10 +25,10 @@ The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Speci
 ## Documentation
 
 * [SCRIPT Specification](./Spec/) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [KabukiPress Cookbook Chapter on Script2](https://github.com/CookingWithCale/KabukiPressookbook/tree/master/Script2) - *The official documentation for Script2.*
+* [KabukiPress Cookbook Chapter on Script2](https://github.com/CookingWithCale/KabukiPressCookbook/tree/master/Script2) - *The official documentation for Script2.*
 
 ## License
 
-Copyright 2015-21 © [Kabuki Starship](https://kabukistarship.com).
+Copyright 2015-22 © [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
