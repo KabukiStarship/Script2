@@ -75,7 +75,7 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
   D_ASSERT(list);
 
   ISZ count = list->offsets.count, count_max = list->offsets.count_max;
-  o << Linef("\n\n+---\n| List<IS") << CHA('0' + sizeof(ISZ))
+  o << Linef("\n\n+---\n| List<IS") << CHA('A' + sizeof(ISZ))
     << "> size:" << list->size_bytes << " size:" << count_max
     << " count:" << count << Linef("\n+---");
   ISZ* data_offsets = TListOffsets<ISZ>(list);

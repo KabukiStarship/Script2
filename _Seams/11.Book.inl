@@ -30,14 +30,17 @@ void TestBook() {
     cCount = 32,
   };
 
+  D_COUT("\n\n!!!CBookSizeDefault: " << CBookSizeDefault<TPARAMS>() << "\n\n");
+
   D_COUT("Testing ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
          << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSize:" << cSize 
          << " and cCount:" << cCount);
 
   ABook<TPARAMS, cSize> book(cCount);
 
-  D_COUT("\n\nsize:" << book.Size() << " size_bytes:" << book.SizeBytes()
-         << " size_words:" << book.SizeWords() << "\nKeys\n");
+  D_COUT("\n\nAfter ABook\nsize:" << book.Size() << " size_bytes:" 
+         << book.SizeBytes() << " size_words:" << book.SizeWords() 
+         << "\nKeys\n");
   TListPrint<COut, ISZ, DT>(COut().Star(), book.List());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");

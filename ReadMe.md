@@ -19,8 +19,8 @@ The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Speci
 * Interprocess communication and data serialization engine modeled after AI philosophy of the Chinese Room Thought Experiment and ASCII C0 Control Codes.
 * Ultra-fast Unicode string processing with the Uniprinter (Universal Printer), featuring the [Puff Algorithm](https://github.com/KabukiStarship/Script2/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers) and template-friendly Stringf formatting utilities to replace printf, sprintf, and sscanf.
 * Unit test framework with low-cost in-order Seam tree tests for Agile, Test, and Issue Driven Development featuring debug information customized for each tree node.
-* The [Automaton Standard Code for Information Interchange (ASCII) Data Specification](./spec/data/) is an Abstract Data Type Specification that defines a contiguous memory layout and test suite optimized for CPU cache performance.
-* The [ASCII C++ Style Guide](./style_guide/) is a divergent fork of the Google C++ Style Guide that uses ASCII Data Types and intelligent rules to dramatically reduced clutter and improved readability.
+* The [Automaton Standard Code for Information Interchange (ASCII) Data Specification](./_Spec/data/) is an Abstract Data Type Specification that defines a contiguous memory layout and test suite optimized for CPU cache performance.
+* The [ASCII C++ Style Guide](./_StyleGuide/) is a divergent fork of the Google C++ Style Guide that uses ASCII Data Types and intelligent rules to dramatically reduced clutter and improved readability.
 
 ## Status and Help Wanted
 
