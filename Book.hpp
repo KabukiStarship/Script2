@@ -113,7 +113,7 @@ inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
   if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
 
   TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
-  D_COUT("\n\nssize_bytes: " << size_bytes << " book->keys.size:" <<
+  D_COUT("\n\nsize_bytes: " << size_bytes << " book->keys.size:" <<
          book->keys.size << "\n\n");
   TListInit<ISZ, DT>(TBookList<TPARAMS>(book), size_bytes - book->keys.size,
                      count_max);

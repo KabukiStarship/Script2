@@ -22,6 +22,10 @@ The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Speci
 * The [Automaton Standard Code for Information Interchange (ASCII) Data Specification](./spec/data/) is an Abstract Data Type Specification that defines a contiguous memory layout and test suite optimized for CPU cache performance.
 * The [ASCII C++ Style Guide](./style_guide/) is a divergent fork of the Google C++ Style Guide that uses ASCII Data Types and intelligent rules to dramatically reduced clutter and improved readability.
 
+## Status and Help Wanted
+
+I need help debugging contiguous memory data structures. Right now (2022-04-17) we're working on an XML parser and RSS reader. We are working with C++11 and C++20. The best way for you to help out is to help us with test coverage of the data structure. I'm currently working on the Book data structure trying to get up to our custom stream reader and writer that is built on our Uniprinter Unicode library. You can switch seams to the Book seam in the `_Seams/_Config.h`. You can find a list of the seams in the `_Seams/_Seams.inl` file. You will need to Fork this repo to contribute and debug in your own fork, then push the changes to your fork and then merge with the master branch from there.
+
 ## Documentation
 
 * [SCRIPT Specification](./Spec/) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
