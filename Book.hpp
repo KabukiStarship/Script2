@@ -62,17 +62,29 @@ constexpr ISZ CBookSizeMin() {
   return cSizeMin;
 }
 
-/* Gets the default count of a good with the given template parameters. */
+/* Gets the default defaults number of characters in a book entry. */
 template <TARGS>
-constexpr ISZ CBookCountDefault() {
+constexpr ISZ CBookDefaultEntrySize() {
   return 32;
 }
 
-/* Gets the default size of a Book with the CBookCountDefault. */
+/* Gets the default count of a good with the given template parameters. */
 template <TARGS>
-constexpr ISZ CBookSizeDefault(ISY count_max = CBookCountDefault<TPARAMS>()) {
-  return (count_max * CBookCountDefault<TPARAMS>() * sizeof(CHT)) &
-         (sizeof(ISW) - 1);
+constexpr ISZ CBookDefaultCount() {
+  return 32;
+}
+
+/* Gets the default size of a Book with the CBookDefaultCount. */
+template <TARGS>
+constexpr ISZ CBookSizeDefault(ISY count_max = CBookDefaultCount<TPARAMS>()) {
+  if (count_max < 1) return -1;
+  ISZ foo_baby_yeah_isms = count_max * CBookDefaultEntrySize<TPARAMS>() 
+        * sizeof(CHT);
+  return foo_baby_yeah_isms;
+  //return foo_baby_yeah_isms + (-foo_baby_yeah_isms) & (sizeof(ISW) - 1);
+  //auto foo_baby_yeah_isms = count_max * CBookDefaultCount<TPARAMS>() * sizeof(CHT);
+  //return foo_baby_yeah_isms +
+  //  (foo_baby_yeah_isms) & (sizeof(ISW) - 1);
 }
 
 /* Gets the start of the book as a templated-defined character. */
@@ -111,9 +123,11 @@ inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
                                  ISY count_max) {
   D_ASSERT(book);
   if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
+  D_COUT("\n\Before\nsize_bytes: " << size_bytes << " book->keys.size:" <<
+    book->keys.size << "\n\n");
 
   TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
-  D_COUT("\n\nsize_bytes: " << size_bytes << " book->keys.size:" <<
+  D_COUT("\n\nTBookInit\nsize_bytes: " << size_bytes << " book->keys.size:" <<
          book->keys.size << "\n\n");
   TListInit<ISZ, DT>(TBookList<TPARAMS>(book), size_bytes - book->keys.size,
                      count_max);
@@ -423,7 +437,7 @@ class ABook {
   /* Constructs a Book subclass.
   @param factory SocketFactory to call when the String overflows. */
   ABook(SocketFactory socket_factory, ISZ size = CBookSizeDefault<TPARAMS>(),
-        ISY count = CBookCountDefault<TPARAMS>())
+        ISY count = CBookDefaultCount<TPARAMS>())
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
   }

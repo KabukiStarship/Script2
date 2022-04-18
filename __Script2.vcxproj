@@ -222,7 +222,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>_config.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>_Config.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)./_Seams</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
