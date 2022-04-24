@@ -13,10 +13,8 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 ```AsciiArt
 +-----------------+
 |      List       |
-|-----------------|
-|      Loom       |
 |-----------------|  ^ Up in addresses
-|  TBook Struct   |  |
+|      Loom       |  |
 +-----------------+ 0xN
 ```
 

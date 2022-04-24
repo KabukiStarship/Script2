@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/11.Book.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright (C) 2015-22 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -11,9 +11,11 @@ one at <https://mozilla.org/MPL/2.0/>. */
 //
 #include "TestWords.h"
 using namespace _;
-#define TPARAMS CHT, ISZ, ISY, DT
+#undef  TARGS
 #define TARGS \
   typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DT2
+#undef  TPARAMS
+#define TPARAMS CHT, ISZ, ISY, DT
 #if SEAM == SCRIPT2_BOOK
 #include "../_Debug.inl"
 #else
@@ -30,13 +32,14 @@ void TestBook() {
     cCount = 32,
   };
 
-  D_COUT("\n\n!!!CBookSizeDefault: " << CBookSizeDefault<TPARAMS>() << "\n\n");
+  D_COUT("\n\nAttempting to make a Book of size:" << cSize << 
+         " TBookSizeMin: " << CBookSizeMin<TPARAMS>(cCount) << "\n\n");
 
   D_COUT("Testing ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
          << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSize:" << cSize 
          << " and cCount:" << cCount);
 
-  ABook<TPARAMS, cSize> book(cCount);
+  ABook<TPARAMS, cSize> book(cCount, cSize);
 
   D_COUT("\n\nAfter ABook\nsize:" << book.Size() << " size_bytes:" 
          << book.SizeBytes() << " size_words:" << book.SizeWords() 
@@ -60,6 +63,7 @@ void TestBook() {
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
+    D_COUT("\n\nFoo baby\n\n");
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
@@ -73,6 +77,7 @@ void TestBook() {
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
+    D_COUT("\n\nFoo dady\n\n");
   }
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");

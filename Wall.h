@@ -12,6 +12,10 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_WALL_HEADER
 #define SCRIPT2_WALL_HEADER
+#undef  TARGS
+#define TARGS
+#undef  TPARAMS
+#define TPARAMS
 
 #if SEAM == SCRIPT2_CRABS
 #include "_Release.inl"

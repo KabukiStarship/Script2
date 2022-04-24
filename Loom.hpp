@@ -18,12 +18,35 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #else
 #include "_Release.inl"
 #endif
+#undef  TARGS
 #define TARGS typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM
+#undef  TPARAMS
 #define TPARAMS CHT, ISZ, ISY
 namespace _ {
 /* @ingroup Loom
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./Spec/Data/MapTypes/Loom.md */
+@link ./Spec/Data/MapTypes/Loom.md
+
+# Memory Layout
+
++============================+
+|_______ Buffer              |
+|_______ ...                 | <-- top
+|_______ String N            |
+|_______ ...                 |
+|_______ String 0            |
++----------------------------+
+|_______ count_max           |
+|_______ ...                 |
+|_______ String offset N     |
+|_______ ...                 |
+|        String offset 1     |
++============================+  ^ Up in
+|       Loom Header          |  |
++============================+  + 0xN
+
+@todo Look into adding variable for average UTF-8 and UTF-16 character length.
+*/
 
 /* An array of Strings. */
 template <typename ISZ = ISN, typename ISY = ISM>
@@ -47,14 +70,54 @@ constexpr ISZ CLoomSizeMin() {
   return cSizeMin;
 }
 
+/* Calculates the minimum size of a Loom of empty strings with the given 
+count_max. */
+template<TARGS>
+ISZ TLoomSizeMin(ISZ count_max, ISZ average_string_length_min = 0) {
+  return sizeof(TLoom<ISZ, ISY>) + 
+    count_max * (sizeof(ISY) + (average_string_length_min + 1) * sizeof(CHT));
+}
+
+/* The default average length of a key. */
+template <TARGS>
+constexpr ISZ CLoomLengthDefault() {
+  return 32;
+}
+
+/* Default number of strings in a Loom. */
 template <TARGS>
 constexpr ISZ CLoomCountDefault() {
   return 32;
 }
 
+/* The default size of a Loom when no paramters are specified. */
 template <TARGS>
 constexpr ISZ CLoomSizeDefault() {
-  return (32 * CLoomCountDefault<TPARAMS>() * sizeof(CHT)) & (sizeof(ISW) - 1);
+  return (CLoomLengthDefault<TPARAMS>() *
+    CLoomCountDefault<TPARAMS>() * sizeof(CHT)) & (sizeof(ISW) - 1);
+}
+
+/* The default size of a Loom when no paramters are specified. */
+template <TARGS>
+constexpr ISZ TLoomSize(ISY count_max, ISZ string_length_average = 
+                         CLoomLengthDefault<TPARAMS>()) {
+  return count_max * ((string_length_average + 1) * sizeof(CHT) +
+          sizeof(ISY)) + sizeof(TLoom<ISZ, ISY>);
+}
+
+/* Gets the default defaults number of characters in a loom string. */
+template <TARGS>
+constexpr ISZ CLoomDefaultLengthString() {
+  return 32;
+}
+
+/* Calculates the default size of a Loom with the given average string
+length. */
+template<TARGS>
+inline ISZ TLoomKeysSize(ISY count_max, ISZ average_length_string =
+  CLoomDefaultLengthString<TPARAMS>()) {
+  return count_max * sizeof(CHT) * (average_length_string + 1) +
+          count_max * sizeof(ISY) + sizeof(TLoom<TPARAMS>);
 }
 
 template <TARGS>
@@ -68,14 +131,15 @@ inline CHT* TLoomStart(TLoom<ISZ, ISY>* loom) {
   return TLoomStart<TPARAMS>(loom, loom->map.count_max);
 }
 
-/* Initializes the loom with the given count_max. */
+/* Initializes the loom with the given count_max.
+@pre The size in bytes must be the first ISZ of the data. */
 template <TARGS>
 inline TLoom<ISZ, ISY>* TLoomInit(TLoom<ISZ, ISY>* loom, ISY count_max) {
   A_ASSERT(loom);
   A_ASSERT(count_max >= CLoomCountMin<TPARAMS>());
   D_ARRAY_WIPE(&loom->top, loom->size - sizeof(ISZ));
 
-  // count_max -= count_max & 3; // @todo Ensure the values are word-aligned.
+  // count_max -= count_max & 3; // @todo Ensure the values are word-aligned?
   loom->top = TDelta<ISZ>(loom, TLoomStart<TPARAMS>(loom, count_max));
   loom->map.count_max = count_max;
   loom->map.count = 0;
@@ -119,7 +183,7 @@ Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
 @return The index upon success or -1 upon failure. */
 template <TARGS>
 ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = cPush) {
-  A_ASSERT(loom);
+  D_ASSERT(loom);
   if (!string || loom->map.count >= loom->map.count_max) return -1;
   ISY count = loom->map.count;
   D_ASSERT(count >= 0);
@@ -330,7 +394,7 @@ class ALoom {
 
   /* Constructs a Loom subclass.
   @param factory SocketFactory to call when the String overflows. */
-  ALoom(SocketFactory socket_factory, ISZ size = CLoomSizeDefault<TPARAMS>(),
+  ALoom(SocketFactory socket_factory, ISZ size_bytes = CLoomSizeDefault<TPARAMS>(),
         ISZ count = CLoomCountDefault<TPARAMS>())
       : obj_(socket_factory) {
     TLoomInit<TPARAMS>(This(), count);
@@ -375,7 +439,5 @@ class ALoom {
   inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
 };
 }  //< namespace _
-#undef TPARAMS
-#undef TARGS
 #endif
 #endif

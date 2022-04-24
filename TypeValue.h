@@ -29,6 +29,13 @@ struct Typef {
 
 Typef TypefOf();
 
+/* Stores a pointer to the ASCII data type and it's value. */
+template<typename DT>
+struct TTypeValue {
+  DT type;      //< The ASCII data type word.
+  void* value;  //< Pointer to the value of the type.
+};
+
 /* An ASCII Type-Value tuple.
 An TypeValue can only work with up to two CPU ALU words because when a CPU
 multiplies two integers together the result is two ALU-sized words and thus the

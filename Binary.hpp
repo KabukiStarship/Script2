@@ -228,6 +228,20 @@ inline T* TAlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
   return reinterpret_cast<T*>(value + ((-value) & mask));
 }
 
+/* Aligns the given pointer up to the given least_significant_bits_max. */
+inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
+  return TAlignUpPTR<const CHA>(pointer, least_significant_bits_max);
+}
+
+/* Aligns up a number to the given PowerOf2.
+This function is for those not familiar with how Script2 does pointer alignment.
+It's faster to align the pointer using the max for the power of 2 rather than
+power of 2. The only difference is the mask is one less than the power of 2. */
+template <typename I = ISW, I PowerOf2 = CBitCount<I>()>
+I TAlignUp(I value) {
+  return AlignUp(value, PowerOf2 - 1);
+}
+
 /* Aligns th given value down to the given word goundary. */
 inline ISA AlignDown(ISA value, ISA align_lsb_mask) {
   return value + (value & align_lsb_mask);
@@ -586,20 +600,6 @@ inline const IUW* AlignDown(const IUW* pointer,
 inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
   return const_cast<IUW*>(
       AlignDown(const_cast<const IUW*>(pointer), least_significant_bits_max));
-}
-
-/* Aligns the given pointer up to the given least_significant_bits_max. */
-inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
-  return TAlignUpPTR<const CHA>(pointer, least_significant_bits_max);
-}
-
-/* Aligns up a number to the given PowerOf2.
-This function is for those not familiar with how Script2 does pointer alignment.
-It's faster to align the pointer using the max for the power of 2 rather than
-power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = ISW, I PowerOf2 = CBitCount<I>()>
-I TAlignUp(I value) {
-  return AlignUp(value, PowerOf2 - 1);
 }
 
 /* Aligns up a number to the given PowerOf2.

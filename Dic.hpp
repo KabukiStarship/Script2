@@ -22,7 +22,9 @@ namespace _ {
 /* @ingroup Dic
 Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./Spec/Data/MapTypes/Dictionary.md */
+#undef  TPARAMS
 #define TPARAMS CHT, ISZ, ISY, HSH
+#undef  TARGS
 #define TARGS \
   typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
 
@@ -504,7 +506,5 @@ class ADic {
 };
 
 }  //< namespace _
-#undef TARGS
-#undef TPARAMS
 #endif
 #endif

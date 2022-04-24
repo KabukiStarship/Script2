@@ -20,6 +20,10 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #else
 #include "_Release.inl"
 #endif
+#undef  TARGS
+#define TARGS  typename ISZ = ISN, typename DT = DT2
+#undef  TPARAMS
+#define TPARAMS ISZ, DT
 namespace _ {
 
 /* A collection of type-value tuples.
@@ -27,7 +31,7 @@ namespace _ {
 @link /Spec/Data/MapTypes/Map.md
 @code
       List Memory Layout
-+----------------------------+
++============================+
 |_______   Buffer            |
 |_______ ^ Value N           |
 |        | Value 0           |
@@ -39,9 +43,9 @@ namespace _ {
 |_______   Buffer            |
 |_______ ^ Offset to Value N |
 |        | Offset to Value 1 |
-|----------------------------|  ^ Up in addresses.
++============================+  ^  Up in addresses.
 |        TList Struct        |  |
-+----------------------------+ 0xN
++============================+ 0xN Base address
 @endcode
 */
 template <typename ISZ = ISN>
@@ -51,6 +55,12 @@ struct TList {
   TStack<ISZ> offsets;  //< Stack of offsets to the list items.
 };
 
+/* Calculates the minimum size of a List with all nil objects. s*/
+template<typename ISZ = ISN, typename DT>
+ISZ TListSizeMin(ISZ count_max) {
+  return sizeof(TList<ISZ>) + count_max * (sizeof(ISZ) + sizeof(DT));
+}
+
 /* Gets the base pointer to the Offsets. */
 template <typename ISZ = ISN>
 ISZ* TListOffsets(TList<ISZ>* list) {
@@ -58,13 +68,13 @@ ISZ* TListOffsets(TList<ISZ>* list) {
 }
 
 /* Calculates the data_types pointer from the data_offsets and the count. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline DT* TListTypes(ISZ* data_offsets, ISZ list_size) {
   return reinterpret_cast<DT*>(data_offsets + list_size);
 }
 
 /* Returns the type bytes array. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 DT* TListTypes(TList<ISZ>* list) {
   return TListTypes<ISZ, DT>(TListOffsets<ISZ>(list), list->offsets.count_max);
 }
@@ -86,7 +96,7 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
     o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
       << Centerf(STRType(data_type), 10) << ' ';
     const void* value = TPtr<CHA*>(list, TListOffsets<ISZ>(list)[index]);
-    TPrintValue<Printer, DT>(o, data_type, value);
+    TPrintTypeValue<Printer, DT>(o, data_type, value);
   }
   return o << Linef("\n+---");
 }
@@ -100,7 +110,7 @@ ISZ TListCountMaxBoundsLower() {
 /* Initializes a AsciiList from preallocated memory.
 count_max must be in multiples of 4. Given there is a fixed size, both the
 count_max and size will be downsized to a multiple of 4 automatically. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 TList<ISZ>* TListInit(TList<ISZ>* list, ISZ size_bytes, ISZ count_max) {
   D_ASSERT(list);
   D_ARRAY_WIPE(list, size_bytes);
@@ -122,7 +132,7 @@ constexpr ISZ CListSizeMin(ISZ count_max) {
 }
 
 /* Gets origin byte of the of the data. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline CHA* TListValues(TList<ISZ>* list, ISZ size) {
   return TPtr<CHA>(TListTypes<ISZ, DT>(list, size) +
                                 list->offsets.count_max);
@@ -172,6 +182,29 @@ template <typename ISZ = ISN>
 void TListClear(TList<ISZ>* list) {
   D_ASSERT(list);
   list->count = 0;
+}
+
+template<typename ISZ = ISN, typename T>
+T* TListBase(TList<ISZ>* list) {
+  ISA* base = TPtr<ISA>(list) + sizeof(TList<ISZ>) + 
+              list->offsets.count_max * sizeof(ISZ);
+}
+
+/* Gets a points to the element of the Book by index. */
+template<typename ISZ>
+ISA* TListGetPtr(TList<ISZ>* list, ISZ index) {
+  if (index < 0 || index >= list->offsets.count) return nullptr;
+  return TPtr<ISA>(list, TStackStart<ISA, ISZ>(&list->offsets)[index]);
+}
+
+/* Gets an element of the Book by index. */
+template<typename ISZ, typename DT>
+TTypeValue<DT> TListGet(TList<ISZ>* list, ISZ index) {
+  if (index < 0 || index >= list->offsets.count) return nullptr;
+  DT type = *TPtr<DT>(list, sizeof(TList<ISZ>) +
+    list->offsets.count_max * sizeof(ISZ) + index * sizeof(DT));
+  void* value = TPtr<void>(list, TStackStart<ISZ, ISZ>(&list->offsets)[index]);
+  return { type, value };
 }
 
 /* I don't remember what this does, it looks like it might be erroneously
@@ -232,6 +265,18 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
   return cErrorInvalidIndex;
 }
 
+template <TARGS>
+TArray<ISZ>* TListAllocate(TList<ISZ>* list, ISZ size_bytes_new) {
+  ISZ top_aligned_up = AlignUp(list->top);
+  if (list->offsets.count < list->offsets.count_max ||
+      list->size_bytes - top_aligned_up - size_bytes_new) return nullptr;
+  TStackInsert<ISZ, ISZ>(&list->offsets, top_aligned_up);
+  ISZ top_new = top_aligned_up + size_bytes_new;
+  list->top = top_new;
+  return TPtr<TArray<ISZ>>(list, top_new);
+}
+
+
 /* Adds a given POD type-value tuple at the given index and values_begin.
 @return cErrorInvalidIndex upon failure or the index upon success. */
 template <typename T, typename ISZ = ISN, typename DT = DT2>
@@ -272,92 +317,92 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
 /* Searches for the first empty spot in the list that can fit the item and
 inserts the item to the list at the given index.
 @return An invalid index upon failure or the index of the index upon success. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUA item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUA, ISZ, DT>(list, item, cIUA, sizeof(IUA) - 1, index,
                                    values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHA item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUA, ISZ, DT>(list, ToUnsigned(item), cCHA,
                                    sizeof(IUA) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISA item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUA, ISZ, DT>(list, ToUnsigned(item), cISA,
                                    sizeof(IUA) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUB item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, ISZ, DT>(list, item, cIUB, sizeof(IUB) - 1, index,
                                    values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISB item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, ISZ, DT>(list, ToUnsigned(item), cISB,
                                    sizeof(IUB) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHB item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, ISZ>(list, ToUnsigned(item), cCHB, sizeof(IUB) - 1,
                                index, values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, BOL item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, ISZ, DT>(list, ToUnsigned(item), cBOL,
                                    sizeof(BOL) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUC item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, ISZ, DT>(list, item, cIUC, sizeof(IUC) - 1, index,
                                    values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISC item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, ISZ, DT>(list, ToUnsigned(item), cISC,
                                    sizeof(IUC) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHC item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, ISZ, DT>(list, ToUnsigned(item), cCHC,
                                    sizeof(IUC) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPC item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, ISZ, DT>(list, ToUnsigned(item), cFPC,
                                    sizeof(IUC) - 1, index, values_begin,
                                    values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, ISZ, DT>(list, item, cIUD, cWordLSbMask, index,
                                    values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cISD, cWordLSbMask,
                                    index, values_begin, values_end);
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cFPD, cWordLSbMask,
@@ -365,85 +410,85 @@ inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index, CHA* values_begin,
 }
 
 /* Pushes the item onto the List stack. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUA item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHA item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISA item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUB item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISB item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHB item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUC item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISC item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, BOL item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHC item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPC item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUD item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISD item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count,
                               TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPD item) {
   return TListInsert<ISZ, DT>(list, item, list->offsets.count_max,
                               TListValuesTop<ISZ>(list),
@@ -451,72 +496,72 @@ inline ISZ TListInsert(TList<ISZ>* list, FPD item) {
 }
 
 /* Inserts the item into the list at the given index. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUA item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHA item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISA item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUB item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISB item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHB item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUC item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISC item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, BOL item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, CHC item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPC item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUD item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISD item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
 }
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index) {
   return TListInsert<ISZ, DT>(list, item, index, TListValuesTop<ISZ>(list),
                               TListValuesEnd<ISZ>(list));
@@ -529,7 +574,7 @@ inline ISZ TSizeOf(void* value, DT2 type) {
 }
 
 /* Removes the item at the given address from the list. */
-template <typename ISZ = ISN, typename DT = DT2>
+template <TARGS>
 inline void* TListRemove(TList<ISZ>* list, ISZ index) {
   ISZ count = list->offsets.count;
   ISZ* offsets = TListOffsets<ISZ>(list);
@@ -561,7 +606,7 @@ inline const void* TListValue(TList<ISZ>* list, ISZ index) {
 }
 
 /* Creates an Autoject buffer large enough to fit a List with the given. */
-template <typename ISZ = ISN, typename ISY = ISM, typename DT>
+template <typename ISZ = ISN, typename DT>
 IUW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
   ISZ count_max_align_lsb_mask = (sizeof(ISZ) / sizeof(DT)) - 1;
   count_max = AlignUp(count_max, count_max_align_lsb_mask);
@@ -582,13 +627,13 @@ class AList {
 
   /* Constructs a list with a given count_max with estimated size_bytes. */
   AList(ISZ count_max = cCountMax_)
-      : obj_(TListNew<ISZ, ISZ, DT>(cSizeBytes_, count_max,
+      : obj_(TListNew<ISZ, DT>(cSizeBytes_, count_max,
                                     TRamFactory<Type()>().Init<BUF>()),
              TRamFactory<Type()>().Init<BUF>()) {}
 
   /* Constructs a List with the given size_bytes and count_max. */
   AList(ISZ count_max, ISZ size_bytes)
-      : obj_(TListNew<ISZ, ISZ, DT>(size_bytes, count_max,
+      : obj_(TListNew<ISZ, DT>(size_bytes, count_max,
                                     TRamFactory<Type()>().Init<BUF>()),
              TRamFactory<Type()>().Init<BUF>()) {}
 

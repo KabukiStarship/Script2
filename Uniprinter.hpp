@@ -668,7 +668,7 @@ Printer& TPrintType(Printer& printer, DT type) {
 }
 
 template <typename Printer, typename DT = DT2>
-Printer& TPrintValue(Printer& printer, DT type, const void* item) {
+Printer& TPrintTypeValue(Printer& printer, DT type, const void* item) {
   switch (type) {
     case cNIL:
       return printer;
@@ -737,6 +737,11 @@ Printer& TPrintValue(Printer& printer, DT type, const void* item) {
   return printer;
 }
 
+
+template <typename Printer, typename DT = DT2>
+Printer& TPrintTypeValueSummary(Printer& printer, DT type, const void* item) {
+  return printer << "Your mom";
+}
 }  //< namespace _
 
 #endif
