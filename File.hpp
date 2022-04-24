@@ -9,7 +9,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
 #ifndef SCRIPT2_FILE_TEMPLATES
 #define SCRIPT2_FILE_TEMPLATES
-#if SEAM >= SCRIPT2_FILECABINET
+#if SEAM >= SCRIPT2_FILE
 #include "Stringf.hpp"
 //
 #include <errno.h>

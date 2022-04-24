@@ -10,10 +10,14 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_FILE_DEFINITIONS
 #define SCRIPT2_FILE_DEFINITIONS
 #include <_Config.h>
-#if SEAM >= SCRIPT2_FILECABINET
+#if SEAM >= SCRIPT2_FILE
 #include "Stringf.hpp"
 namespace _ {
 
+#undef  TARGS
+#define TARGS
+#undef  TPARAMS
+#define TPARAMS
 /* A file in a filesystem. */
 class File {
  public:

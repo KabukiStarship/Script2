@@ -28,7 +28,8 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "15.Crabs.inl"
 #include "16.Door.inl"
 #include "17.Room.inl"
-#include "18.Release.inl"
+#include "18.File.inl"
+#include "19.Release.inl"
 using namespace _;
 
 inline const CHA* Script2Tests(const CHA* args) {
@@ -36,6 +37,7 @@ inline const CHA* Script2Tests(const CHA* args) {
                    Script2::SPrinter, Script2::Clock, Script2::Stack, 
                    Script2::Matrix, Script2::String, Script2::Loom, 
                    Script2::List, Script2::Book, Script2::Map, Script2::Table, 
-                   Script2::Dic, Script2::Crabs, Script2::Door, Script2::Room>(
+                   Script2::Dic, Script2::Crabs, Script2::Door, Script2::Room,
+                   Script2::File>(
       args);
 }

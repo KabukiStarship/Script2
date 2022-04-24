@@ -11,7 +11,6 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_BOOK_CODE
 #include <_Config.h>
 #if SEAM >= SCRIPT2_BOOK
-#include "Book.hpp"
 #include "List.hpp"
 #if SEAM == SCRIPT2_BOOK
 #include "_Debug.inl"
@@ -20,30 +19,51 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 /* @ingroup Book
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Book.md
 
 Please see the ASCII List documentation for information about
 */
 
+#undef  TPARAMS
 #define TPARAMS CHT, ISZ, ISY, DT
+#undef  TARGS
 #define TARGS \
   typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DT2
 
 /* @ingroup Book
-@brief A contiguous memory Associative List created from a List and a Loom.
+@brief A contiguous memory Associative List composed of a Loom and list.
+The Loom datatype stores the size_bytes, which includes the size of the 
+Keys Loom and the Values List. The Keys Loom is an array of strings that 
+stores the Book Keys. The Values List is a list of type-value tupes that 
+correspond to the key indexes.
+
+The first element of every List ist a Loom (Array of Strings) that stores
+the keys.
+
 @code
-+-----------------+
-|      List       |
-|-----------------|
-|      Loom       |
-|-----------------|  ^ Up in addresses
-|  TBook Struct   |  |
-+-----------------+ 0xN
++==============================+
+|_______   Buffer              |
+|_______ ^ Value N-1           |
+|        | Value 0             |
+|        |  Keys Loom          | 
+|------------------------------|
+|_______   Buffer              |
+|_______ ^ Type of Value N-1   |
+|        | Type of Value 0     |
+|        |  ASCII Loom Type    |
+|------------------------------|
+|_______   Buffer              |
+|_______ ^ Offset to Value N-1 |
+|        | Offset to Value 0   |
+|        |    Keys Loom        |
++==============================+  ^ Up in
+|         TList Struct         |  |
++==============================+  + 0xN
 @endcode */
 template <TARGS>
 struct TBook {
-  TLoom<ISZ, ISY> keys;  //< The Loom of keys for the Associative List.
+  TList<ISZ> values;  //< The type-value list that corresponsd to the key indexes.
 };
 
 /* The minimum count a good with the given template parameters can have. */
@@ -54,18 +74,27 @@ constexpr ISZ CBookCountMin() {
 
 /* The minimum size of a Book based on the CCountMin. */
 template <TARGS>
-constexpr ISZ CBookSizeMin() {
-  enum {
-    cCountMin = CBookCountMin(),
-    cSizeMin = sizeof(TBook<TPARAMS>) + cCountMin * (sizeof(ISZ) + 2),
-  };
-  return cSizeMin;
+constexpr ISZ CBookSizeMin(ISY count_max) {
+  return sizeof(TBook<TPARAMS>) + count_max * (sizeof(ISZ) + 2);
 }
 
-/* Gets the default defaults number of characters in a book entry. */
+/* The minimum size of a Book based on the CCountMin. */
 template <TARGS>
-constexpr ISZ CBookDefaultEntrySize() {
-  return 32;
+constexpr ISZ CBookSizeMin() {
+  return CBookSizeMin<TPARAMS>(CBookCountMin<TPARAMS>());
+}
+
+/* Calculates the minimum size of a Book with */
+template<TARGS>
+ISZ TBookSizeMin(TBook<TPARAMS>* book) {
+  return 0;
+}
+
+/* Gets the default average string length.
+@note Pulled number out of a hat. */
+template <TARGS>
+constexpr ISZ TBookDefaultAverageStringLength() {
+  return 15;
 }
 
 /* Gets the default count of a good with the given template parameters. */
@@ -76,9 +105,9 @@ constexpr ISZ CBookDefaultCount() {
 
 /* Gets the default size of a Book with the CBookDefaultCount. */
 template <TARGS>
-constexpr ISZ CBookSizeDefault(ISY count_max = CBookDefaultCount<TPARAMS>()) {
+constexpr ISZ CBookDefaultSize(ISY count_max = CBookDefaultCount<TPARAMS>()) {
   if (count_max < 1) return -1;
-  ISZ foo_baby_yeah_isms = count_max * CBookDefaultEntrySize<TPARAMS>() 
+  ISZ foo_baby_yeah_isms = count_max * TBookDefaultAverageStringLength<TPARAMS>() 
         * sizeof(CHT);
   return foo_baby_yeah_isms;
   //return foo_baby_yeah_isms + (-foo_baby_yeah_isms) & (sizeof(ISW) - 1);
@@ -100,16 +129,6 @@ inline CHT* TBookStart(TBook<TPARAMS>* book) {
   return TBookStart<TPARAMS>(book, book->offsets.count_max);
 }
 
-template <TARGS>
-inline TList<ISZ>* TBookList(TBook<TPARAMS>* book, ISZ size_bytes) {
-  return TPtr<TList<ISZ>>(book, size_bytes);
-}
-
-template <TARGS>
-inline TList<ISZ>* TBookList(TBook<TPARAMS>* book) {
-  return TBookList<TPARAMS>(book, book->keys.size);
-}
-
 /* Gets the byte after the end of the book's contiguous memory block. */
 template <TARGS>
 inline CHT* TBookEnd(TBook<TPARAMS>* book) {
@@ -117,52 +136,82 @@ inline CHT* TBookEnd(TBook<TPARAMS>* book) {
   return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
 }
 
-/* Initializes the book to the given count_max using the CBookSizeDefault. */
+/* Initializes the book to the given count_max using the CBookDefaultSize.
+@param loom_size_count If this number is positive then the value is size of the
+                       keys Loom in bytes. If the value is negative then it is 
+                       the default length of a key. */
 template <TARGS>
 inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
-                                 ISY count_max) {
+                                 ISY count_max, ISZ size_keys = 
+                                  -CLoomDefaultLengthString<CHT, ISZ, ISY>()) {
+  D_COUT("\n\nTBookInit\nsize_bytes: " << size_bytes << " count_max:" <<
+    count_max << "\n\n");
   D_ASSERT(book);
-  if (count_max < CBookCountMin<TPARAMS>()) return nullptr;
-  D_COUT("\n\Before\nsize_bytes: " << size_bytes << " book->keys.size:" <<
-    book->keys.size << "\n\n");
-
-  TLoomInit<CHT, ISZ, ISY>(&book->keys, count_max);
-  D_COUT("\n\nTBookInit\nsize_bytes: " << size_bytes << " book->keys.size:" <<
-         book->keys.size << "\n\n");
-  TListInit<ISZ, DT>(TBookList<TPARAMS>(book), size_bytes - book->keys.size,
-                     count_max);
+  D_ASSERT(size_keys < size_bytes);
+  if (size_keys < 0)
+    size_keys = TLoomSize<CHT, ISZ, ISY>(count_max, size_keys);
+  ISZ size_list = size_bytes - size_keys;
+  if (size_keys - size_list > size_bytes || 
+      count_max < CBookCountMin<TPARAMS>()) return nullptr;
+  // Good to go.
+  TList<ISZ>* list = &book->values;
+  TListInit<ISZ, DT>(list, size_list, count_max);
+  
+  // Allocate memory for the Keys.
+  TArray<ISZ>* buffer = TListAllocate(list, size_keys);
+  TLoomInit<CHT, ISZ, ISY>(TPtr<TLoom<ISZ, ISY>>(buffer),
+    count_max);
+  D_COUT("\n\nTBookInit Init Post\nsize_bytes: " << size_bytes << 
+         " count_max:" << count_max << "\n\n");
   return book;
+}
+
+/* Gets the keys Loom (Array of Strings). */
+template <TARGS>
+inline TLoom<ISZ, ISY>* TBookKeys(TBook<TPARAMS>* book) {
+  ISZ count_max = book->values.offsets.count_max;
+  D_ASSERT(count_max > 0);
+  ISA* keys = TPtr<ISA>(book, sizeof(TBook<TPARAMS>)) +
+    count_max * (sizeof(ISZ) + sizeof(DT));
+  return TPtr<TLoom<ISZ, ISY>>(keys);
 }
 
 /* Gets the element at the given index. */
 template <TARGS>
-inline CHT* TBookGet(TBook<TPARAMS>* book, ISY index) {
-  D_ASSERT(book);
-  return TLoomGet<CHT, ISZ, ISY>(&book->keys, index);
+inline ISA* TBookGetPtr(TBook<TPARAMS>* book, ISY index) {
+  return TListGetPtr<ISZ, T>(book->values, index);
 }
 
+/* Gets the TypeValue tuple the given index.
+@param tuple Reference to the return type passed in by reference. */
 template <TARGS>
-inline ISZ TBookSize(TBook<TPARAMS>* book) {
-  TList<ISZ>* list = TBookList<TPARAMS>(book);
-  return book->keys.size + list->size_bytes;
+inline TTypeValue<DT> TBookGet(TBook<TPARAMS>* book, ISY index) {
+  return TListGet<ISZ, DT>(book->values, index);
+}
+
+/* Gets the size of the Book in bytes. */
+template <TARGS>
+inline ISZ TBookCountMax(TBook<TPARAMS>* book) {
+  return book->values.offsets.count_max;
 }
 
 /* Prints the book to the printer. */
 template <typename Printer, TARGS>
 Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
-  ISY count = book->keys.map.count;
+  ISZ count = book->values.offsets.count;
   printer << "\nBook<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>() << ",IS"
-          << CSizef<ISY>() << "> size:" << book->keys.size
-          << " top:" << book->keys.top 
-          << " stack_size:" << book->keys.map.count_max << " count:" << count;
-  auto types = TListTypes<ISZ, DT2>(TBookList<TPARAMS>(book));
+          << CSizef<ISY>() << "> size:" << book->values.size_bytes
+          << " stack_size:" << book->values.offsets.count_max << " count:" 
+          << count;
+  auto types = TListTypes<ISZ, DT2>(&book->values);
   for (ISY i = 0; i < count; ++i) {
-    printer << '\n' << i << ".) \"" << TBookGet<TPARAMS>(book, i) << "\" type:";
+    printer << '\n' << i << ".) \"" << TListGet<ISZ, DT>(book->values, i) 
+            << "\" type:";
     auto type = *types++;
     TPrintType<Printer, DT2>(printer, type);
     D_COUT(" type:" << type << " 0b'" << Binaryf(type));
   }
-  D_COUT(Linef('-') << ' ' << Charsf(book, TBookSize<TPARAMS>(book)));
+  D_COUT(Linef('-') << ' ' << Charsf(book, TBookCountMax<TPARAMS>(book)));
   return printer << '\n';
 }
 
@@ -179,9 +228,9 @@ BOL TBookGrow(Autoject& obj) {
   3. Copy the List. */
   auto book = TPtr<TBook<TPARAMS>>(obj.origin);
   A_ASSERT(book);
-  ISZ size = TBookSize<TPARAMS>(book);
+  ISZ size = TBookCountMax<TPARAMS>(book);
   if (!TCanGrow<ISZ>(size)) return false;
-  ISY count_max = book->keys.map.count_max;
+  ISZ count_max = book->values.offsets.count_max;
   if (!TCanGrow<ISZ>(count_max)) return false;
 
   size = size << 1;
@@ -206,7 +255,7 @@ BOL TBookGrow(Autoject& obj) {
 @return The index upon success or -1 upon failure. */
 template <TARGS>
 void* TBookListRemove(TBook<TPARAMS>* book, ISY index) {
-  TList<ISZ>* list = TBookList<TPARAMS>(book);
+  TList<ISZ>* list = &book->values;
   ISY count = ISY(list->offsets.count);
   ISZ* offsets = TListOffsets<ISZ>(list);
   TStackRemove<ISZ, ISZ>(offsets, count, index);
@@ -237,7 +286,7 @@ void* TBookRemove(TBook<TPARAMS>* book, const CHT* key) {
 @return The index upon success or -1 upon failure. */
 template <TARGS>
 ISZ TBookPop(TBook<TPARAMS>* book) {
-  return TBookRemove<TPARAMS>(book, book->keys.map->count - 1);
+  return TBookRemove<TPARAMS>(book, book->values.offsets.count - 1);
 }
 
 /* Adds a key-value tuple to the end of the Book.
@@ -245,21 +294,23 @@ ISZ TBookPop(TBook<TPARAMS>* book) {
 template <typename T, TARGS>
 inline ISY TBookInsert(TBook<TPARAMS>* book, const CHT* key, T item,
                        ISY index = cPush) {
+  ++index;
   A_ASSERT(book);
   if (!key) return cErrorInputNil;
   D_COUT("\nAdding key:\"" << key << "\" item:" << item << " into index:" << 
          index);
-  ISY result = TLoomInsert<CHT, ISZ, ISY>(&book->keys, key, index);
+  auto keys = TBookKeys<TPARAMS>(book);
+  ISY result = TLoomInsert<CHT, ISZ, ISY>(keys, key, index);
   D_COUT(" result:" << result);
   if (result < 0) return index;
-  auto list = TBookList<TPARAMS>(book);
+  auto list = &book->values;
   TListPrint<COut, ISZ, DT>(COut().Star(), list);
 
   result = ISY(TListInsert<ISZ, DT>(list, item, result));
   if (result < 0) {
     D_COUT("\nFailed to insert into List with error " << result << ':' <<
            STRError(result));
-    TLoomRemove<CHT, ISZ, ISY>(&book->keys, index);
+    TLoomRemove<CHT, ISZ, ISY>(keys, index);
   }
   return result;
 }
@@ -419,7 +470,7 @@ class ABook {
  public:
   enum { cCountDefault = cSize / 16,
     // 
-    cSizeDefault = CBookSizeDefault<TPARAMS>(),
+    cSizeDefault = CBookDefaultSize<TPARAMS>(),
   };
 
   /* Constructs a Book. */
@@ -436,7 +487,7 @@ class ABook {
 
   /* Constructs a Book subclass.
   @param factory SocketFactory to call when the String overflows. */
-  ABook(SocketFactory socket_factory, ISZ size = CBookSizeDefault<TPARAMS>(),
+  ABook(SocketFactory socket_factory, ISZ size = CBookDefaultSize<TPARAMS>(),
         ISY count = CBookDefaultCount<TPARAMS>())
       : obj_(socket_factory) {
     TBookInit<TPARAMS>(This(), count);
@@ -532,12 +583,13 @@ class ABook {
   /* Prints this object to the stdout. */
   inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
 
-  /* */
-  inline TList<ISZ>* List() { return TBookList<TPARAMS>(This()); }
+  /* Shorthand way to get the TBook->values List. */
+  inline TList<ISZ>* List() { return &This()->values; }
+
+  /* Gets the Keys struct. */
+  inline TBook<ISZ>* Keys() { return TBookKeys<TPARAMS>(This()); }
 };
 
 }  //< namespace _
-#undef TARGS
-#undef TPARAMS
 #endif
 #endif

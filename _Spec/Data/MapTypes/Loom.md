@@ -11,33 +11,21 @@ ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash 
 ##### Sequence Memory Layout
 
 ```AsciiArt
-+--------------------------+ -----------
-|_______ Strings 0         |  Strings   |
-|_______ ...               |   |     |
-|_______ Data N            |   v     |
-|_______ ...               |   |     |
-|_______ Buffer            |   ^     ^
-+--------------------------+ -----   |
-|_______ count_max         |   ^     |
-|_______ ...               |   |     |
-|_______ Sorted Mappings N |   |     |
-|_______ ...               |   |     |
-|        Sorted Mappings 1 |   |     |
-+--------------------------+   |     |
-|_______ count_max         |   |    Size
-|_______ ...               |   |     |
-|_______ Data Offset N     |   |     |
-|_______ ...               | Header  |
-|        Data Offset 1     |   |     |
-+--------------------------+   |     |
-|_______ count_max         |   |     |
-|_______ ...               |   |     |
-|_______ Type byte N       |   |     |
-|_______ ...               |   |     |
-|        Type byte 1       |   |     |   ^ Up in addresses.
-+--------------------------+   |     |   |
-|       Loom Header        |   v     v   ^
-+==========================+ ----------- ^ 0xN
++--------------------------+
+|_______ Buffer            |
+|_______ ...               |
+|_______ String N          |
+|_______ ...               |
+|_______ String 0          |
++--------------------------+
+|_______ count_max         |
+|_______ ...               |
+|_______ String offset N   |
+|_______ ...               |
+|        String offset 1   |
++--------------------------+
+|       Loom Header        |
++==========================+ ^ 0xN
 ```
 
 **[<< Previous Section: Matrix](Matrix.md) | [Next Section: Map >>](Map.md)**

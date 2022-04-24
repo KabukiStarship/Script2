@@ -13,6 +13,10 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_CRABS
 #include "Interrupts.h"
 #include "wall.h"
+#undef  TARGS
+#define TARGS
+#undef  TPARAMS
+#define TPARAMS
 namespace _ {
 
 /* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to 

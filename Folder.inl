@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include "Folder.h"
-#if SEAM >= SCRIPT2_FILECABINET
+#if SEAM >= SCRIPT2_FILE
 namespace _ {
 
 Folder::Folder(const CHR* uri) : uri_(uri_) {}

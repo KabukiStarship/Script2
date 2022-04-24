@@ -171,10 +171,16 @@
     <None Include="_Seams\17.Seam.s2">
       <Filter>./\_Seams</Filter>
     </None>
-    <None Include="_Seams\18.Release.inl">
+    <None Include="_Seams\19.Release.inl">
       <Filter>./\_Seams</Filter>
     </None>
     <None Include="_Seams\ReadMe.md">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\18.File.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\_Tests.inl">
       <Filter>./\_Seams</Filter>
     </None>
   </ItemGroup>

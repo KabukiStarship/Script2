@@ -239,4 +239,9 @@ _::COut& operator<<(_::COut& o, _::Charsf item);
 _::COut& operator<<(_::COut& o, _::Sizef item);
 _::COut& operator<<(_::COut& o, _::COut item);
 #endif
+
+template<typename ISZ, typename DT>
+_::COut& operator<<(_::COut& o, _::TTypeValue<DT> item) {
+  return o;
+}
 #endif

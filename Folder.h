@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_FOLDER_DECL
 #define SCRIPT2_FOLDER_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_FILECABINET
+#if SEAM >= SCRIPT2_FILE
 namespace _ {
 
 struct CFolder {

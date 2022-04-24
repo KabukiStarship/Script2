@@ -8,7 +8,7 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
 #include "File.h"
-#if SEAM >= SCRIPT2_FILECABINET
+#if SEAM >= SCRIPT2_FILE
 #include <sys/stat.h>
 #include <sys/types.h>
 #ifndef WIN32
