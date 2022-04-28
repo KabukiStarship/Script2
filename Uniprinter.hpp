@@ -658,11 +658,11 @@ Printer& TPrintType(Printer& printer, DT type) {
   if (pod_type == 0) return printer << "BGN" << (type >> cTypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
-    return printer << STRType(vector_type) << '_' << STRType(pod_type);
+    return printer << STRTypePOD(vector_type) << '_' << STRTypePOD(pod_type);
   }
   DT map_type = TTypeMap<DT>(type);
   if (map_type) {
-    return printer << STRType(map_type) << '_' << STRType(pod_type);
+    return printer << STRTypePOD(map_type) << '_' << STRTypePOD(pod_type);
   }
   return printer;
 }

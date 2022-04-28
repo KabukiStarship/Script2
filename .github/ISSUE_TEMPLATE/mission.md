@@ -16,7 +16,7 @@ The problem I am addressing on this mission is...
 
 The solution that I'm addressing on this mission is...
 
-##### File Affected
+##### Files Affected
 
 1. `*.*`
 

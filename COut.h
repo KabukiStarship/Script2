@@ -97,6 +97,7 @@ class LIB_MEMBER COut {
   COut& Print(Headingf& item);
   COut& Print(Indentf& item);
   COut& Print(Charsf& item);
+  COut& Print(TypeWordValue item);
 
   /* Prints a new line followed by the given item to the stdout. */
   COut& NL();
@@ -240,8 +241,5 @@ _::COut& operator<<(_::COut& o, _::Sizef item);
 _::COut& operator<<(_::COut& o, _::COut item);
 #endif
 
-template<typename ISZ, typename DT>
-_::COut& operator<<(_::COut& o, _::TTypeValue<DT> item) {
-  return o;
-}
+_::COut& operator<<(_::COut& o, _::TypeWordValue item);
 #endif

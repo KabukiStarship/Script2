@@ -41,7 +41,7 @@ void TestBook() {
 
   ABook<TPARAMS, cSize> book(cCount, cSize);
 
-  D_COUT("\n\nAfter ABook\nsize:" << book.Size() << " size_bytes:" 
+  D_COUT("\n\nAfter TBookInit\nsize:" << book.Size() << " size_bytes:" 
          << book.SizeBytes() << " size_words:" << book.SizeWords() 
          << "\nKeys\n");
   TListPrint<COut, ISZ, DT>(COut().Star(), book.List());

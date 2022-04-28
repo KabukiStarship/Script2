@@ -53,9 +53,9 @@ Variants are MSb variant are compressed using MSB-encoded signed and unsigned 1-
 Both Signed and Unsigned Varints must use the most significant bit asserted is used to marks if another byte is loaded. All Script implementations shall represent signed varints as uncomplemented integers with the sign bit in the LSb.
 
 ```C++
-UI2_V 128 // = 0b0000_0001_1000_0000
-UI4_V 255 // = 0b0000_0001_1111_1111
-SI4_V -64 // = 0b0011_1111
+IUB_V 128 // = 0b0000_0001_1000_0000
+IUC_V 255 // = 0b0000_0001_1111_1111
+SID_V -64 // = 0b0011_1111
 ```
 
 #### 2.2.f BigNum
@@ -65,9 +65,9 @@ Unsigned Integer BigNum (IUB) is between 2 and 2048 bytes wide where the 5 LSb o
 #### Example
 
 ```C++
-UIB_1 //< 1-byte IUB data type in Hex is 0x20.
-UIB_255 //< 1-byte IUB data type in Hex is 0x2000.
-UIB_2048 //< 2048-byte IUB data type in Hex is 0xFFE0.
+IUB_1 //< 1-byte IUB data type in Hex is 0x20.
+IUB_255 //< 1-byte IUB data type in Hex is 0x2000.
+IUB_2048 //< 2048-byte IUB data type in Hex is 0xFFE0.
 ```
 
 #### Boolean

@@ -94,7 +94,7 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
     ISZ data_offset = *data_offsets++;
     DT data_type = *data_types++;
     o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
-      << Centerf(STRType(data_type), 10) << ' ';
+      << Centerf(STRTypePOD(data_type), 10) << ' ';
     const void* value = TPtr<CHA*>(list, TListOffsets<ISZ>(list)[index]);
     TPrintTypeValue<Printer, DT>(o, data_type, value);
   }
@@ -199,10 +199,10 @@ ISA* TListGetPtr(TList<ISZ>* list, ISZ index) {
 
 /* Gets an element of the Book by index. */
 template<typename ISZ, typename DT>
-TTypeValue<DT> TListGet(TList<ISZ>* list, ISZ index) {
-  if (index < 0 || index >= list->offsets.count) return nullptr;
-  DT type = *TPtr<DT>(list, sizeof(TList<ISZ>) +
-    list->offsets.count_max * sizeof(ISZ) + index * sizeof(DT));
+TypeWordValue TListGet(TList<ISZ>* list, ISZ index) {
+  if (index < 0 || index >= list->offsets.count) return { cNIL, nullptr };
+  DTW type = DTW(*TPtr<DT>(list, sizeof(TList<ISZ>) +
+    list->offsets.count_max * sizeof(ISZ) + index * sizeof(DT)));
   void* value = TPtr<void>(list, TStackStart<ISZ, ISZ>(&list->offsets)[index]);
   return { type, value };
 }
@@ -285,7 +285,7 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
   D_ASSERT(list);
   ISZ count = list->offsets.count, size = list->offsets.count_max;
   D_ASSERT(count >= 0 && values_begin < values_end);
-  D_COUT("\nInserting " << STRType(type) << ':' << item
+  D_COUT("\nInserting " << STRTypePOD(type) << ':' << item
          << " into index:" << index << " count: " << count);
   if (index == cPush) {
     // look for the first place in the stack to put the item.

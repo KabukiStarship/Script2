@@ -13,8 +13,12 @@ one at <https://mozilla.org/MPL/2.0/>. */
 using namespace _;
 #if SEAM == SCRIPT2_LIST
 #include "../_Debug.inl"
+#define TEST_MIN 0
+#define TEST_MAX 0xffff
 #else
 #include "../_Release.inl"
+#define TEST_MIN 0
+#define TEST_MAX 0xffff
 #endif
 
 namespace Script2 {
@@ -73,7 +77,14 @@ static const CHA* List(const CHA* args) {
   TestList<ISB>();
   TestList<ISC>();
   TestList<ISD>();
+  D_COUT("\n\nTesting TTypePrint...\n");
+  for (ISC type = TEST_MIN; type < TEST_MAX; ++type) {
+    D_COUT('\n' << type << ".) ");
+    D_COUT(TTypePrint<COut>(COut().Star(), type));
+  }
 #endif
   return nullptr;
 }
 }  //< namespace Script2
+#undef TEST_MIN
+#undef TEST_MAX
