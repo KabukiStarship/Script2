@@ -8,7 +8,7 @@ Values are POD types used to store or point to one of the other other types. The
 
 #### Type-Value Tuple
 
-Types TV2, TV4, or TV8  are Binary-Form Type-Value Tuples referred to as TVT. TVT are designed to work wtih up POD types with up to two ALU Words. The type is stored as word for memory alignment purposes. Please note, the following reference TVT data structure is not listed in template format because each system should only have one instance of the TVT struct.
+Types TV2, TV4, or TV8  are Binary-Form Type-Value Tuples referred to as TVT. TVT are designed to work with up POD types with up to two ALU Words. The type is stored as word for memory alignment purposes. Please note, the following reference TVT data structure is not listed in template format because each system should only have one instance of the TVT struct.
 
 ```C++
 struct TypeValue {
@@ -31,13 +31,13 @@ struct TypeString {
     kLengthMax = kBufferWordCount * sizeof(void*) - 1,
   };
   DTW type_;
-  UIW buffer_[kBufferWordCount];
+  UIW buffer_[cBufferWordCount];
 };
 ```
 
 A TST may store a pointer to another string type or object using the second element of the buffer.
 
-**[<< Previous Section:Platform-specific Types](PlatformSpecificPODTypes.md) | [Next Section:Map Types >>](./MapTypes/)**
+**[<< Previous Section:Platform-specific Types](PlatformSpecificPODTypes) | [Next Section:Map Types >>](./MapTypes/)**
 
 ## Requirements
 

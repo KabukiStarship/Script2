@@ -7,10 +7,10 @@
 #### Stack
 
 ```C++
-template <typename SIZ = SIN>
+template <typename ISZ = ISN>
 struct TStack {
-  SIZ size,   //< Size of the Array in elements.
-      count;  //< Element count.
+  ISZ count_max,  //< Size of the Array in elements.
+      count;      //< Element count.
 };
 ```
 

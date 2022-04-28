@@ -59,10 +59,87 @@ constexpr Sizef CSizef () {
 
 /* Prints the given sizef to the printer. */
 template<typename Printer>
-Printer& TSizefPrint(Printer& printer, Sizef sizef) {
-  auto value = sizef.size;
+Printer& TSizefPrint(Printer& printer, Sizef item) {
+  auto value = item.size;
   if (value < 0) return printer << CHA('@' + (-value));
   return printer << value;
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypePOD(DTW index) {
+  if (index < 0 || index >= cINV) index = 32;
+  return STRTypesPOD() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypeVector(DTW index) {
+  if (index < 0 || index >= 4) index = 0;
+  return STRTypesVector() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypeModifier(DTW index) {
+  if (index < 0 || index >= 4) index = 0;
+  return STRTypesModifier() + (index << 2); // << 2 to * 4
+}
+
+/* Prints a string represntation of an ASCII Data Type. */
+template<typename Printer>
+Printer& TTypePrint(Printer& printer, DTW item) {
+  if (item < 32) return printer << STRTypePOD(item); // POD Type
+  DTW type_pod = item & 0x1f,
+      type_vector = (item & cDTVHT) >> 5;
+  if (item >> 8 == 0) { // 8-bit data type.
+    // | b7 |    b6:b5    | b4:b0 |
+    // |:--:|:-----------:|:-----:|
+    // | SW | Vector Type |  POD  |
+    if (item >> 7) { // SW bit asserted, there is a 16-bit size_width
+      return printer << STRTypeVector(type_vector) << 'B' << '_' 
+                     << STRTypePOD(type_pod);
+    }
+
+    return printer << STRTypeVector(type_vector) << 'A' << '_'
+      << STRTypePOD(type_pod);
+  }
+  DTW size_width = (item & cDTBSW) >> 7;
+  if (item >> 16 == 0) { // 16-bit data type.
+    // | b15:b14 |  b13:b9  | b8:b7 | b6:b5 | b4:b0 |
+    // |:-------:|:--------:|:-----:|:-----:|:-----:|
+    // |   MB    | Map type |  SW   |  VHT  |  POD  |
+    if (type_pod == 0) {
+      printer << "NIL" << CHA('A' + ((item >> 5) & 0xf)) << " or ";
+    }
+    DTW modifiers = item >> 14;
+    if (modifiers) printer << STRTypeModifier(modifiers) << '_';
+
+    DTW size_width = (item & 0x180) >> 7;
+    if (size_width) { // SW bits b8:b7 asserted
+      return printer << STRTypeVector(type_vector) 
+                     << CHA('A' + size_width) << '_'
+                     << STRTypePOD(type_pod);
+    }
+
+    DTW type_map = (item & 0x3E00) >> 9;
+    if (type_map) 
+      return printer << "MAP_" << STRTypePOD(type_map) << '_' << STRTypePOD(type_pod);
+
+    return printer << "ERROR: You done messed up A-A-ron.";
+  }
+#if ALU_SIZE >= ALU_32_BIT // CPU is 32-bit or 64-bit
+#endif
+#if ALU_SIZE == ALU_64_BIT
+  if (item & ~IUW(0xffffffff)) { // 64-bit data type.
+    return printer << "Error dfjaisdfas89fasd0af9sd0";
+  }
+#endif
+
+  return printer << "Error 4u910j414lj4l24";
+}
+
+/* Prints a summary of the type-value tuple with word-sized Data Type. */
+template<typename Printer>
+Printer& TTypePrint(Printer& printer, TypeWordValue item) {
+  return TTypePrint<Printer>(printer, item.type);
 }
 
 /* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
@@ -239,13 +316,6 @@ inline ISW TypeSizeOf(DTW type) {
 /* Checks if the given type is valid.
 @return False if the given type is an 1-byte cLST, cMAP, kBOK, or kDIC. */
 inline BOL TypeIsSupported(DTW type) { return true; }
-
-/* Gets one f the STRTypes. */
-inline const CHA* STRType(DTW index) {
-  if (index < 0 || index >= cINV) index = 32;
-  const CHA* Strings = STRTypes();
-  return Strings + (index << 2);
-}
 
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */

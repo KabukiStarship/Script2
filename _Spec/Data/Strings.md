@@ -10,7 +10,7 @@ ASCII Strings Types consists of 8-bit (CHA), 16-bit (CHB), and 32-bit (CHC) char
 TKN key                   //< No quotes needed for a TKN.
 ADR 123                   //< A ADR is a TKN.
 STA  "\"Hello world!\""   //< UTF-8 STR that reads "Hello world!" with double quotes.
-ARC_CHC "Foo"             //< STR is shorthand for ARY_CH1_1/2/4.
+ARC_CHC "Foo"             //< STR is shorthand for ARY_CHA_1/2/4.
 STB "Hello world!"       //< This is a _::TStrand<> that is up to 64KB long.
 STC "Hello world!"       //< This is a _::TStrand<> that is up to 4GB long.
 ```

@@ -242,7 +242,11 @@ COut& COut::Print(Indentf& item) {
 
 COut& COut::Print(Charsf& item) {
   return _::TPrintChars<COut>(*this, item);
-}  //< namespace _
+}
+
+COut& COut::Print(TypeWordValue item) {
+  return _::TTypePrint<COut>(*this, item);
+}
 
 COut& COut::NL() { return Print('\n'); }
 COut& COut::NL(CHA item) {
@@ -432,6 +436,10 @@ _::COut& operator<<(_::COut& o, _::Charsf item) { return o.Print(item); }
 _::COut& operator<<(_::COut& o, _::COut item) { return o; }
 _::COut& operator<<(_::COut& o, _::Sizef item) {
   return _::TSizefPrint<_::COut>(o, item);
+}
+
+_::COut& operator<<(_::COut& o, _::TypeWordValue item) {
+  return o.Print(item);
 }
 
 #endif

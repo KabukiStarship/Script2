@@ -14,7 +14,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 
-const CHA* STRTypes() {
+const CHA* STRTypesPOD() {
   static const CHA cStrings[64][4] = {
       {'N', 'I', 'L', NIL},  //< 00
       {'C', 'H', 'A', NIL},  //< 01
@@ -48,6 +48,27 @@ const CHA* STRTypes() {
       {'D', 'T', 'J', NIL},  //< 29
       {'D', 'T', 'K', NIL},  //< 30
       {'D', 'T', 'L', NIL},  //< 31
+      {'I', 'N', 'V', NIL},  //< 32
+  };
+  return &cStrings[0][0];
+}
+
+const CHA* STRTypesVector() {
+  static const CHA cStrings[4][4] = {
+      {'V', 'H', 'T', NIL},  //< 00
+      {'A', 'R', 'Y', NIL},  //< 01
+      {'S', 'T', 'K', NIL},  //< 02
+      {'M', 'A', 'T', NIL},  //< 03
+  };
+  return &cStrings[0][0];
+}
+
+const CHA* STRTypesModifier() {
+  static const CHA cStrings[4][4] = {
+      {'P', 'O', 'D', NIL},  //< 00
+      {'P', 'T', 'R', NIL},  //< 01
+      {'C', 'N', 'S', NIL},  //< 02
+      {'P', 'T', 'C', NIL},  //< 03
   };
   return &cStrings[0][0];
 }

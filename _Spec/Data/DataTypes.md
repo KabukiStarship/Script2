@@ -55,7 +55,7 @@ The POD Types table is laid out such that the types are grouped into groups by w
 
 #### Vector Types
 
-The Vector types are stored in b6:b5 for 1, 2, and 4-byte Data Types. All Data Types are memory aligned thus creating a number of illegal data types, such as an 1-byte Array of 2-byte data types.
+The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types. All Data Types are memory aligned thus creating a number of illegal data types, such as an 1-byte Array of 2-byte data types.
 
 | Value | Type | Description                              |
 |:-----:|:----:|:----------------------------------------:|
@@ -99,27 +99,27 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of ISB with an ISA size width. If the POD type is 8 or more bytes wide then the stack or array must use a SW8 (8-byte Size Width).
 
 ```AsciiArt
-| Vector |                   POD Type 0-31 (1=Yes, 0=No)                    |
+| Vector |                POD Type 0-31 (1=Valid, 0=Invalid)                |
 |  Type  | N C I I F C I I F C I I T I I F  F I I F D D D D D D D D D D D D |
 | SW:VET | I H S U P H S U P H S U M S U P  P S U P T T T T T T T T T T T T |
 | b8:b5  | L A A A B B B B C C C C E D D D  E E E E A B C D E F G H I J K L |
 +--------+------------------------------------------------------------------|
 | 00_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 00_ARY | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 00_STK | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 00_MAT | 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_VHT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 01_ARY | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_STK | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_MAT | 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_VHB | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 10_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_STK | 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 11_VHC | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_ARY | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_STK | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_MAT | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 00_ARY | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 00_STK | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 00_MAT | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 01_VHT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 01_ARY | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 01_STK | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 01_MAT | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 10_VHB | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 10_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 10_STK | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 10_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 11_VHC | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 11_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 11_STK | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 11_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 +--------+------------------------------------------------------------------|
 | Total  | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1  1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 |
 |  512   |      Type 0-31      0 1 2 3 4 5  6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 |
@@ -152,11 +152,16 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 
 ##### 2-byte Type Bit Pattern
 
-2-byte types can be used created a POD Type or a map one POD Type to another such as a ST1_FP4 (char*-to-float in C++) map or a CH1_BOL (char-to-bool in C++) map. To create a single POD type set the Map type to 0.
+2-byte types can be used created a POD Type or a map one POD Type to another such as a STA_FPC (char*-to-float in C++) map or a CHA_BOL (char-to-bool in C++) map. To create a single POD type set the Map type to 0.
 
 | b15:b14 |  b13:b9  | b8:b7 | b6:b5 | b4:b0 |
 |:-------:|:--------:|:-----:|:-----:|:-----:|
 |   MB    | Map type |  SW   |  VHT  |  POD  |
+
+###### Map Type Bits
+
+A Map Type maps from a set with  mappings of one POD type to other set, such as a Dictionary that maps a string an integer or an unsigned has integer to an integer offset. Map Types are covered in the [Map Types](MapTypes) section.
+
 
 **[<< Previous Section: ASCII Data Specification Overview >>](./)  |  [Next Section: Numbers >>](Numbers.md)**
 

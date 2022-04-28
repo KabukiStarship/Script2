@@ -17,18 +17,18 @@ namespace _ {
 @brief Misc binary and pointer function. */
 
 /* Converts the given value to a signed value of the same width. */
-inline ISA ToSigned(CHA value) { return (ISA)value; }
-inline ISB ToSigned(CHB value) { return (ISB)value; }
-inline ISC ToSigned(CHC value) { return (ISC)value; }
-inline ISN ToSigned(CHN value) { return (ISN)value; }
-inline ISA ToSigned(IUA value) { return (ISA)value; }
-inline ISB ToSigned(IUB value) { return (ISB)value; }
-inline ISC ToSigned(IUC value) { return (ISC)value; }
-inline ISD ToSigned(IUD value) { return (ISD)value; }
-inline ISA ToSigned(ISA value) { return (ISA)value; }
-inline ISB ToSigned(ISB value) { return (ISB)value; }
-inline ISC ToSigned(ISC value) { return (ISC)value; }
-inline ISD ToSigned(ISD value) { return (ISD)value; }
+inline ISA ToSigned(CHA value) { return ISA(value); }
+inline ISB ToSigned(CHB value) { return ISB(value); }
+inline ISC ToSigned(CHC value) { return ISC(value); }
+inline ISN ToSigned(CHN value) { return ISN(value); }
+inline ISA ToSigned(IUA value) { return ISA(value); }
+inline ISB ToSigned(IUB value) { return ISB(value); }
+inline ISC ToSigned(IUC value) { return ISC(value); }
+inline ISD ToSigned(IUD value) { return ISD(value); }
+inline ISA ToSigned(ISA value) { return ISA(value); }
+inline ISB ToSigned(ISB value) { return ISB(value); }
+inline ISC ToSigned(ISC value) { return ISC(value); }
+inline ISD ToSigned(ISD value) { return ISD(value); }
 inline ISW ToSigned(const void* value) { return reinterpret_cast<ISW>(value); }
 #if USING_FPC == YES_0
 inline ISC ToSigned(FPC value) { return *reinterpret_cast<ISC*>(&value); }
@@ -38,19 +38,19 @@ inline ISD ToSigned(FPD value) { return *reinterpret_cast<ISD*>(&value); }
 #endif
 
 /* Converts the given value to a unsigned value of the same width. */
-inline IUA ToUnsigned(CHA value) { return (IUA)value; }
-inline IUB ToUnsigned(CHB value) { return (IUB)value; }
-inline IUC ToUnsigned(CHC value) { return (IUC)value; }
-inline IUN ToUnsigned(CHN value) { return (IUN)value; }
-inline IUA ToUnsigned(ISA value) { return (IUA)value; }
-inline IUB ToUnsigned(ISB value) { return (IUB)value; }
-inline IUC ToUnsigned(ISC value) { return (IUC)value; }
-inline IUN ToUnsigned(BOL value) { return (IUN)value; }
-inline IUD ToUnsigned(ISD value) { return (IUD)value; }
-inline IUA ToUnsigned(IUA value) { return (IUA)value; }
-inline IUB ToUnsigned(IUB value) { return (IUB)value; }
-inline IUC ToUnsigned(IUC value) { return (IUC)value; }
-inline IUD ToUnsigned(IUD value) { return (IUD)value; }
+inline IUA ToUnsigned(CHA value) { return IUA(value); }
+inline IUB ToUnsigned(CHB value) { return IUB(value); }
+inline IUC ToUnsigned(CHC value) { return IUC(value); }
+inline IUN ToUnsigned(CHN value) { return IUN(value); }
+inline IUA ToUnsigned(ISA value) { return IUA(value); }
+inline IUB ToUnsigned(ISB value) { return IUB(value); }
+inline IUC ToUnsigned(ISC value) { return IUC(value); }
+inline IUN ToUnsigned(BOL value) { return IUN(value); }
+inline IUD ToUnsigned(ISD value) { return IUD(value); }
+inline IUA ToUnsigned(IUA value) { return IUA(value); }
+inline IUB ToUnsigned(IUB value) { return IUB(value); }
+inline IUC ToUnsigned(IUC value) { return IUC(value); }
+inline IUD ToUnsigned(IUD value) { return IUD(value); }
 inline IUW ToUnsigned(const void* value) {
   return reinterpret_cast<IUW>(value);
 }
@@ -68,7 +68,7 @@ inline FPD ToFloat(IUD value) { return *reinterpret_cast<FPD*>(&value); }
 /* Returns the maximum value of the given unsigned type. */
 template <typename IU>
 inline IU TNaNUnsigned() {
-  return ~((IU)0);
+  return ~IU(0);
 }
 
 /* Returns the maximum value of the given signed type. */
@@ -80,13 +80,13 @@ constexpr ISZ CNaNSigned() {
 template <typename IS = ISW>
 inline IS TDelta(const void* start) {
   ISW delta = reinterpret_cast<ISW>(start);
-  return (IS)delta;
+  return IS(delta);
 }
 
 template <typename IS = ISW>
 inline IS TDelta(const void* start, const void* stop) {
   ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
-  return (IS)delta;
+  return IS(delta);
 }
 
 enum {

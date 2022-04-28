@@ -13,7 +13,13 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Gets the string representations of the given ASCII POD Type 0-31. */
-const CHA* STRTypes();
+const CHA* STRTypesPOD();
+
+/* Gets the string representations of the b6:b5 Vector type. */
+const CHA* STRTypesVector();
+
+/* Gets the string representations of the b15:b14 modifier bits. */
+const CHA* STRTypesModifier();
 
 /* string that reads "true". */
 LIB_MEMBER const CHA* STRTrue();
@@ -30,9 +36,8 @@ struct Typef {
 Typef TypefOf();
 
 /* Stores a pointer to the ASCII data type and it's value. */
-template<typename DT>
-struct TTypeValue {
-  DT type;      //< The ASCII data type word.
+struct TypeWordValue {
+  DTW type;     //< The ASCII data type word.
   void* value;  //< Pointer to the value of the type.
 };
 

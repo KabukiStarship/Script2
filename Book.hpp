@@ -129,10 +129,20 @@ inline CHT* TBookStart(TBook<TPARAMS>* book) {
   return TBookStart<TPARAMS>(book, book->offsets.count_max);
 }
 
+/* Gets the keys Loom (Array of Strings). */
+template <TARGS>
+inline TLoom<ISZ, ISY>* TBookKeys(TBook<TPARAMS>* book) {
+  ISZ count_max = book->values.offsets.count_max;
+  D_ASSERT(count_max > 0);
+  ISA* keys = TPtr<ISA>(book, sizeof(TBook<TPARAMS>)) +
+    count_max * (sizeof(ISZ) + sizeof(DT));
+  return TPtr<TLoom<ISZ, ISY>>(keys);
+}
+
 /* Gets the byte after the end of the book's contiguous memory block. */
 template <TARGS>
 inline CHT* TBookEnd(TBook<TPARAMS>* book) {
-  CHT* list = TLoomEnd<CHT, ISZ, ISY>(&book->keys);
+  CHT* list = TLoomEnd<CHT, ISZ, ISY>(TBookKeys<TPARAMS>(book));
   return TPtr<CHT>(TListEnd<ISZ>(reinterpret_cast<TList<ISZ>*>(list)));
 }
 
@@ -159,21 +169,10 @@ inline TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISZ size_bytes,
   
   // Allocate memory for the Keys.
   TArray<ISZ>* buffer = TListAllocate(list, size_keys);
-  TLoomInit<CHT, ISZ, ISY>(TPtr<TLoom<ISZ, ISY>>(buffer),
-    count_max);
+  TLoomInit<CHT, ISZ, ISY>(TBookKeys<TPARAMS>(book), count_max);
   D_COUT("\n\nTBookInit Init Post\nsize_bytes: " << size_bytes << 
          " count_max:" << count_max << "\n\n");
   return book;
-}
-
-/* Gets the keys Loom (Array of Strings). */
-template <TARGS>
-inline TLoom<ISZ, ISY>* TBookKeys(TBook<TPARAMS>* book) {
-  ISZ count_max = book->values.offsets.count_max;
-  D_ASSERT(count_max > 0);
-  ISA* keys = TPtr<ISA>(book, sizeof(TBook<TPARAMS>)) +
-    count_max * (sizeof(ISZ) + sizeof(DT));
-  return TPtr<TLoom<ISZ, ISY>>(keys);
 }
 
 /* Gets the element at the given index. */
@@ -185,7 +184,7 @@ inline ISA* TBookGetPtr(TBook<TPARAMS>* book, ISY index) {
 /* Gets the TypeValue tuple the given index.
 @param tuple Reference to the return type passed in by reference. */
 template <TARGS>
-inline TTypeValue<DT> TBookGet(TBook<TPARAMS>* book, ISY index) {
+inline TypeWordValue TBookGet(TBook<TPARAMS>* book, ISY index) {
   return TListGet<ISZ, DT>(book->values, index);
 }
 
@@ -205,7 +204,7 @@ Printer& TBookPrint(Printer& printer, TBook<TPARAMS>* book) {
           << count;
   auto types = TListTypes<ISZ, DT2>(&book->values);
   for (ISY i = 0; i < count; ++i) {
-    printer << '\n' << i << ".) \"" << TListGet<ISZ, DT>(book->values, i) 
+    printer << '\n' << i << ".) \"" << TListGet<ISZ, DT>(&book->values, i) 
             << "\" type:";
     auto type = *types++;
     TPrintType<Printer, DT2>(printer, type);

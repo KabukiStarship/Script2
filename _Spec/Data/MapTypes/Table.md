@@ -43,6 +43,16 @@ The memory layout shall be optimized by need to minimize lookup time, which star
 +--------------------------------------+ 0x0
 ```
 
+```C++
+template <typename ISZ, typename ISY>
+struct TTable {
+  ISZ size_bytes,  //< Size of this object in bytes.
+      size_pile;   //< Size of the collision table pile.
+  ISY count,       //< Number of keys.
+      count_max;   //< Number of buffered indexes.
+};
+```
+
 ##### Hash Function
 
 **@warning** *Hash function used may change to use an XOR method*.
