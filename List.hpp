@@ -21,7 +21,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "_Release.inl"
 #endif
 #undef  TARGS
-#define TARGS  typename ISZ = ISN, typename DT = DT2
+#define TARGS  typename ISZ = ISN, typename DT = DTB
 #undef  TPARAMS
 #define TPARAMS ISZ, DT
 namespace _ {
@@ -79,14 +79,14 @@ DT* TListTypes(TList<ISZ>* list) {
   return TListTypes<ISZ, DT>(TListOffsets<ISZ>(list), list->offsets.count_max);
 }
 
-/* Prints the list to the console. */
-template <typename Printer, typename ISZ = ISN, typename DT = DT2>
+/* Prints the list to the output stream. */
+template <typename Printer, typename ISZ = ISN, typename DT = DTB>
 Printer& TListPrint(Printer& o, TList<ISZ>* list) {
   D_ASSERT(list);
 
   ISZ count = list->offsets.count, count_max = list->offsets.count_max;
-  o << Linef("\n\n+---\n| List<IS") << CHA('A' + sizeof(ISZ))
-    << "> size:" << list->size_bytes << " size:" << count_max
+  o << Linef("\n\n+---\n| List<IS") << CSizef<ISZ>()
+    << "> size_bytes:" << list->size_bytes << " count_max:" << count_max
     << " count:" << count << Linef("\n+---");
   ISZ* data_offsets = TListOffsets<ISZ>(list);
   DT* data_types = TListTypes<ISZ, DT>(data_offsets, count_max);
@@ -146,6 +146,8 @@ inline CHA* TListValues(TList<ISZ>* list) {
 template <typename ISZ = ISN>
 inline CHA* TListEnd(TList<ISZ>* list, ISZ size) {
   return TPtr<CHA>(list) + list->size_bytes;
+  //return TPtr<CHA>(list) + sizeof(TList<ISZ>) + list->size_bytes;
+  //@Todo Why does this not add the size of the struct like the Array?
 }
 template <typename ISZ = ISN>
 inline CHA* TListEnd(TList<ISZ>* list) {
@@ -209,7 +211,7 @@ TypeWordValue TListGet(TList<ISZ>* list, ISZ index) {
 
 /* I don't remember what this does, it looks like it might be erroneously
 labeled from a botched copy and replace in all files. */
-template <typename T, typename ISZ = ISN, typename DT = DT2>
+template <typename T, typename ISZ = ISN, typename DT = DTB>
 CHA* TListContains(TList<ISZ>* list, ISZ sizeof_value,
                    ISZ align_mask = sizeof(T) - 1) {
   ISZ size = list->offsets.count_max, count = list->offsets.count;
@@ -265,21 +267,35 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
   return cErrorInvalidIndex;
 }
 
-template <TARGS>
-TArray<ISZ>* TListAllocate(TList<ISZ>* list, ISZ size_bytes_new) {
-  ISZ top_aligned_up = AlignUp(list->top);
-  if (list->offsets.count < list->offsets.count_max ||
-      list->size_bytes - top_aligned_up - size_bytes_new) return nullptr;
-  TStackInsert<ISZ, ISZ>(&list->offsets, top_aligned_up);
-  ISZ top_new = top_aligned_up + size_bytes_new;
-  list->top = top_new;
-  return TPtr<TArray<ISZ>>(list, top_new);
+/* Gets the pointer to the base of the Data Types array. */
+template<TARGS>
+DT* TListDataTypes(TList<ISZ>* list) {
+  ISZ offset = sizeof(TList<ISZ>) + list->offsets.count_max * sizeof(ISZ) +
+    list->offsets.count * sizeof(DT);
+  return TPtr<DT>(list, offset);
 }
 
+/* Pushes a an ASCII Array onto the List stack. */
+template <TARGS>
+TArray<ISZ>* TListPush(TList<ISZ>* list, ISZ size_bytes_new) {
+  // Offset to the value pointer.
+  ISZ value_offset = TAlignUp<ISZ>(list->top),
+    size_buffer = list->size_bytes - value_offset;
+  ISZ count = list->offsets.count;
+  if (count >= list->offsets.count_max ||
+      size_buffer < size_bytes_new) return nullptr;
+  TStackPushFast<ISZ, ISZ>(&list->offsets, value_offset, count);
+  list->top = value_offset + size_bytes_new;
+  auto ary = TPtr<TArray<ISZ>>(list, value_offset);
+  ary->size = size_bytes_new;
+  // Push the DT onto the Data Types stack.
+  TListDataTypes<TPARAMS>(list)[count] = cARYMask | cCHA;
+  return ary;
+}
 
 /* Adds a given POD type-value tuple at the given index and values_begin.
 @return cErrorInvalidIndex upon failure or the index upon success. */
-template <typename T, typename ISZ = ISN, typename DT = DT2>
+template <typename T, typename ISZ = ISN, typename DT = DTB>
 ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
                 ISZ index, CHA* values_begin, CHA* values_end) {
   D_ASSERT(list);
@@ -568,7 +584,7 @@ inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index) {
 }
 
 template <typename ISZ = ISN>
-inline ISZ TSizeOf(void* value, DT2 type) {
+inline ISZ TSizeOf(void* value, DTB type) {
   ISW size_bytes = TypeSizeOf(type);
   if (size_bytes != 0) return size_bytes;
 }
@@ -619,7 +635,7 @@ IUW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
 
 /* ASCII List that uses dynamic memory. */
 template <typename ISZ = ISN, ISZ cSizeBytes_ = 512, ISZ cCountMax_ = 32,
-          typename BUF = TBUF<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DT2>
+          typename BUF = TBUF<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DTB>
 class AList {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-array.
  public:

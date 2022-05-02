@@ -16,7 +16,7 @@ template <typename CHT = CHR>
 struct TTestWords {
   enum {
     cCharsMax = 16,   //< The max characters in a word including term char.
-    cWordsMax = 128,  //< The max word count.
+    cWordsMax = 129,  //< The max word count.
   };
   /* An array of 128 random words. */
   static const CHT* Words() {
@@ -148,7 +148,8 @@ struct TTestWords {
       {'g', 'u', 'e', 's', 's'},
       {'d', 'r', 'a', 'i', 'n'},
       {'b', 'r', 'i', 'd', 'g', 'e'},
-      {'f', 'o', 'o', 'l', 'i', 's', 'h'}
+      { 'f', 'o', 'o', 'l', 'i', 's', 'h' },
+      { 't', 'r', 'u', 'm', 'p', '2', '0', '2', '4' } // BABY!!!
     };
     return &cWords[0][0];
   }

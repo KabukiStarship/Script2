@@ -144,10 +144,11 @@ inline T* TStackTop(TStack<ISZ>* stack) {
 template <typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TStackPrint(Printer& o, TStack<ISZ>* stack) {
   D_ASSERT(stack);
-  ISZ size = stack->count_max, count = stack->count;
-  o << Linef("\n+---\n| TStack<T") << sizeof(T) << ",IS"
-    << CHA('0' + sizeof(ISZ)) << ">: size_bytes:" << TStackSizeOf<T, ISZ>(size)
-    << " size: " << size << " count:" << count << Linef("\n+---");
+  ISZ count_max = stack->count_max, count = stack->count;
+  o << Linef("\n+---\n| TStack<T") << CHA('@' + sizeof(T)) << ",IS"
+    << CHA('@' + sizeof(ISZ)) << ">: size_bytes:"
+    << TStackSizeOf<T, ISZ>(count_max) << " count_max: " 
+    << count_max << " count:" << count << Linef("\n+---");
 
   T* elements = TStackStart<T, ISZ>(stack);
   for (ISC i = 0; i < count; ++i) o << "\n| " << i << ".) " << elements[i];
@@ -309,19 +310,28 @@ inline void TStackInsert(T* items, ISZ count, ISZ index, T item) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template <typename T = ISW, typename ISZ = ISN>
+inline void TStackPushFast(TStack<ISZ>* stack, T item, ISZ count) {
+  T* elements = TStackStart<T, ISZ>(stack);
+  elements[count] = item;
+  stack->count = count + 1;
+}
+
+/* Adds the given item to the stop of the obj.
+@return The index of the newly stacked item or -1 upon failure.
+@param stack The Ascii Object base poiner.
+@param item  The item to push onto the obj. */
+template <typename T = ISW, typename ISZ = ISN>
 ISZ TStackInsert(TStack<ISZ>* stack, T item, ISZ index = cPush) {
   D_ASSERT(stack);
-  ISZ size = stack->count_max, count = stack->count;
-  if (count >= size) return cErrorStackOverflow;
-  if (index < 0) index = (count == 0) ? 0 : count - 1;
-  D_COUT("  Pushing:" << item << " size:" << size << " count:" << count);
-  D_COUT("\n| Before:" << Charsf(stack, TStackSizeOf<T, ISZ>(size)));
-
-  T* elements = TStackStart<T, ISZ>(stack);
-  elements[count++] = item;
-  stack->count = count;
-  D_COUT("\n| After:" << Charsf(stack, TStackSizeOf<T, ISZ>(size)));
-  return count - 1;
+  ISZ count_max = stack->count_max, count = stack->count;
+  if (count >= count_max) return cErrorStackOverflow;
+  if (index < 0) index = count;
+  D_COUT("  Pushing:" << item << " count_max:" << count_max << " count:" << 
+         count);
+  D_COUT("\n| Before:" << Charsf(stack, TStackSizeOf<T, ISZ>(count_max)));
+  TStackPushFast<T, ISZ>(stack, item, count);
+  D_COUT("\n| After:" << Charsf(stack, TStackSizeOf<T, ISZ>(count_max)));
+  return count;
 }
 
 /* Adds the given item to the stop of the obj.
@@ -330,17 +340,18 @@ ISZ TStackInsert(TStack<ISZ>* stack, T item, ISZ index = cPush) {
 @param item  The item to push onto the obj. */
 template <typename T = ISW, typename ISZ = ISN, typename BUF = Nil>
 ISZ TStackInsert(AArray<T, ISZ, BUF>& obj, T item, ISZ index = cPush) {
-  TStack<ISZ>* stack = obj.OriginAs<TStack<ISZ>*>();
+  auto stack = obj.OriginAs<TStack<ISZ>*>();
 Insert:
-  index = TStackInsert<T, ISZ>(stack, item, index);
-  if (index < 0) {
-    if (index == cErrorBufferOverflow) return index;
-    D_COUT("\nStack overflow! Autogrowing...");
+  ISZ result = TStackInsert<T, ISZ>(stack, item, index);
+  if (result < 0) {
+    if (result == cErrorBufferOverflow) return index;
+    D_COUT("\n\nStack overflow! index:" << index << " result:" << result << 
+           " Autogrowing...");
     TStackGrow<T, ISZ>(obj.AJT());
     stack = obj.OriginAs<TStack<ISZ>*>();
     goto Insert;
   }
-  return index;
+  return result;
 }
 
 /* Adds the given items to the stop of the obj.

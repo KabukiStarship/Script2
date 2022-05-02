@@ -67,11 +67,12 @@ inline void Delete(Autoject obj) {
 
 /* An ASCII Array.
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./Spec/Data/vector_types/array.md
+@link ./Spec/Data/VectorTypes/Array.md
 
 @code
 +-----------------+
 |  C-Style Array  |
+|  255-byte array | size=255, requires 8-bits.
 |-----------------|  ^
 |  TArray Header  |  |
 +-----------------+ 0xN
@@ -100,7 +101,7 @@ inline T* TArrayStart(Class* autoject) {
 template <typename T, typename ISZ, typename Printer>
 Printer& TArrayPrint(Printer& o, TArray<ISZ>* item) {
   ISZ size = item->size;
-  o << Linef("\n+---\nTArray<IS") << (char)('0' + sizeof(ISZ))
+  o << Linef("\n+---\nTArray<IS") << CSizef<ISZ>()
     << "> size:" << size;
   if (size == 0) return o;
   T* items = TArrayStart<T, ISZ>(item);
@@ -470,7 +471,7 @@ class TBUF {
 };
 
 /* A Block of heap. */
-template <DT2 cType>
+template <DTB cType>
 class TRamFactory {
   /* SocketFactory for the Stack deletes a non-nil buffer. */
   static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
@@ -517,7 +518,7 @@ class AArray {
 
  public:
   /* Gets the ASCII Data Type. */
-  static constexpr DT1 Type() { return CTypeSize<ISZ, DT1>(cARY); }
+  static constexpr DTA Type() { return CTypeSize<ISZ, DTA>(cARY); }
 
   /* Constructs. */
   AArray() {

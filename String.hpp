@@ -235,7 +235,7 @@ class AString {
   TSPrinter<CHT> sprinter_;    //< UTF for the string.
 
  public:
-  static constexpr DT2 Type() {
+  static constexpr DTB Type() {
     return CTypeVector(CTypeChar<CHT>(), cARY, CTypeSize<ISZ>());
   }
 

@@ -65,7 +65,7 @@ Printer& TSizefPrint(Printer& printer, Sizef item) {
   return printer << value;
 }
 
-/* Gets one f the STRTypes. */
+/* Gets one of the STRTypes. */
 inline const CHA* STRTypePOD(DTW index) {
   if (index < 0 || index >= cINV) index = 32;
   return STRTypesPOD() + (index << 2); // << 2 to * 4
@@ -115,7 +115,7 @@ Printer& TTypePrint(Printer& printer, DTW item) {
     DTW size_width = (item & 0x180) >> 7;
     if (size_width) { // SW bits b8:b7 asserted
       return printer << STRTypeVector(type_vector) 
-                     << CHA('A' + size_width) << '_'
+                     << CHA('@' + size_width) << '_'
                      << STRTypePOD(type_pod);
     }
 
@@ -154,48 +154,48 @@ class TType {
 };
 
 /* Extracts the Vector type. */
-template <typename DT = DT2>
+template <typename DT = DTB>
 inline DT TTypeVector(DTW type) {
   return DT((type >> 5) & 3);
 }
-template <typename DT = DT2>
+template <typename DT = DTB>
 constexpr DT CTypeVector(DTW type) {
   return DT((type >> 5) & 3);
 }
 
 /* Extracts the Map type 0-3 of the type. */
-template <typename DT = DT2>
+template <typename DT = DTB>
 inline DT TTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
-template <typename DT = DT2>
+template <typename DT = DTB>
 constexpr DT CTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
 
 /* Creates an ASCII Vector Data Type. */
-template <typename DT = DT2>
+template <typename DT = DTB>
 inline DT TTypeVector(DTW pod_type, DTW vector_type, DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
-template <typename DT = DT2>
+template <typename DT = DTB>
 constexpr DT CTypeVector(DTW pod_type, DTW vector_type,
                          DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
 
 /* Creates an ASCII Map Type. */
-template <typename DT = DT2>
+template <typename DT = DTB>
 constexpr DT CTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
-template <typename DT = DT2>
+template <typename DT = DTB>
 inline DT TTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 
 /* The ASCII Data Type for the given CHT, cCHA, cCHB, or cCHC. */
-template <typename CHT = CHR, typename DT = DT2>
+template <typename CHT = CHR, typename DT = DTB>
 constexpr DT CTypeChar() {
   return DT((sizeof(CHT) == 1)
                 ? cCHA
@@ -203,7 +203,7 @@ constexpr DT CTypeChar() {
 }
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
-template <typename ISZ = CHR, typename DT = DT2>
+template <typename ISZ = CHR, typename DT = DTB>
 constexpr DT CTypeSize() {
   return (sizeof(ISZ) == 1)
              ? cSW1 
@@ -213,12 +213,12 @@ constexpr DT CTypeSize() {
 }
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
-template <typename T, typename DT = DT2>
+template <typename T, typename DT = DTB>
 constexpr DT CTypeSize(DT pod_type) {
   return pod_type | (CTypeSize<T>() << 7);
 }
 
-template <typename T, typename DT = DT2>
+template <typename T, typename DT = DTB>
 inline DT TTypeSize(DT pod_type) {
   return pod_type | (CTypeSize<T>() << 7);
 }
@@ -350,7 +350,7 @@ inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
   return TypeMap(core_type, map_type) | (size_width << cTypePODBitCount);
 }
 
-inline BOL TypeIsPOD(DT2 type) {
+inline BOL TypeIsPOD(DTB type) {
   return !((type >> 5) || ((type & cTypePODMask)));
 }
 

@@ -22,7 +22,8 @@ namespace Script2 {
 #if SEAM >= SCRIPT2_STACK
 template <typename T, typename ISZ>
 void TestStack(const CHA* args) {
-  D_COUT("Testing AStack<IS" << sizeof(T) << ",IS" << sizeof(ISZ) << ">...\n");
+  D_COUT("Testing AStack<IS" << CHA('@' + sizeof(T)) << 
+         ",IS" << CHA('@' + sizeof(ISZ)) << ">...\n");
 
   AStack<T, ISZ, 8> stack;
 
@@ -33,24 +34,28 @@ void TestStack(const CHA* args) {
          << " size_words:" << stack.AJT().Buffer().SizeWords());
   D_COUT_OBJ(stack);
 
-  enum { cTestCount = 32, cOffset = '0' };
+  enum { cTestCount = 32 };
   D_COUT("\n\nPushing " << cTestCount << " items on to the Stack...\n");
-  for (T i = cOffset; i <= cTestCount + cOffset; ++i) {
-    D_COUT("\n| Before calling push:"
-           << Charsf(stack.AJT().Origin(), stack.AJT().SizeBytes())
-           << Linef("\n\n+---\n| ") << i << ".) ");
-    stack.Push(i);
-    D_COUT("\n| Result:");
-    D_COUT_OBJ(stack);
+  T i;
+  for (i = 0; i < cTestCount; ++i) {
+    D_COUT("\n| " << i << ".) count:" <<
+           stack.Count());
+    //D_COUT("\n| Before calling push:"
+    //       << Charsf(stack.AJT().Origin(), stack.AJT().SizeBytes())
+    //       << Linef("\n\n+---\n| ") << i << ".) ");
+    stack.Push('0' + i);
+    //D_COUT("\n| Result:");
+    //D_COUT_OBJ(stack);
   }
 
-  D_COUT(Headingf("\n\nPopping items off the Stack...\n"));
-
-  for (T test_count = cTestCount + cOffset; test_count >= cOffset;
-       --test_count) {
-    D_COUT_OBJ(stack);
-    A_AVOW_INDEX(test_count, stack.Pop(), test_count);
+  D_COUT(Headingf("\n\nPopping items off the Stack... ") << "i:" << i << 'n');
+  for (i=i-1; i >= 0; --i) {
+    //D_COUT_OBJ(stack);
+    A_AVOW_INDEX(i, stack.Pop() - '0', i);
+    D_COUT("\n| " << i << ".) Popping count:" << stack.Count());
   }
+  D_COUT("\n\nEnding stack.Count(): " << stack.Count() << " i: " << 
+         i << '\n');
   D_COUT_OBJ(stack);
   A_ASSERT(stack.Count() == 0);
 }

@@ -101,7 +101,7 @@ ISN size_words = size_bytes >> CBitCount<ISN> ()
 @endcode
 */
 template <typename ISZ = ISW>
-constexpr ISC CBitCount() {
+constexpr ISC CByteCount() {
   return (sizeof(ISZ) == 1)
              ? 0
              : (sizeof(ISZ) == 2)
@@ -233,13 +233,42 @@ inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
   return TAlignUpPTR<const CHA>(pointer, least_significant_bits_max);
 }
 
+
+/* Multiplies a signed 2-complement integer by -1, converting to IU to IS and
+back. */
+inline ISA TwosComplementInvert(ISA value) {
+  return -value;
+}
+inline IUA TwosComplementInvert(IUA value) {
+  return IUA(-ISA(value));
+}
+inline ISB TwosComplementInvert(ISB value) {
+  return -value;
+}
+inline IUB TwosComplementInvert(IUB value) {
+  return IUB(-ISB(value));
+}
+inline ISC TwosComplementInvert(ISC value) {
+  return -value;
+}
+inline IUC TwosComplementInvert(IUC value) {
+  return IUC(-ISC(value));
+}
+inline ISD TwosComplementInvert(ISD value) {
+  return -value;
+}
+inline IUD TwosComplementInvert(IUD value) {
+  return IUD(-ISD(value));
+}
+
 /* Aligns up a number to the given PowerOf2.
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = ISW, I PowerOf2 = CBitCount<I>()>
+template <typename I = ISW, I PowerOf2 = CByteCount<I>()>
 I TAlignUp(I value) {
-  return AlignUp(value, PowerOf2 - 1);
+  return value + (TwosComplementInvert(value) & (PowerOf2 - 1));
+  //return AlignUp(value, PowerOf2 - 1);
 }
 
 /* Aligns th given value down to the given word goundary. */
@@ -311,7 +340,7 @@ template <typename ISZ = ISW>
 inline ISZ TWordCount(ISZ size) {
   ISZ align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
-  return size >> CBitCount<ISW>();
+  return size >> CByteCount<ISW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
