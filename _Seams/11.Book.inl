@@ -13,7 +13,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 using namespace _;
 #undef  TARGS
 #define TARGS \
-  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DT2
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DTB
 #undef  TPARAMS
 #define TPARAMS CHT, ISZ, ISY, DT
 #if SEAM == SCRIPT2_BOOK
@@ -23,66 +23,63 @@ using namespace _;
 #endif
 namespace Script2 {
 template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
-          typename CHT = CHR, typename DT = DT2>
+          typename CHT = CHR, typename DT = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    cSize = 256 * sizeof(CHT),
-    cCount = 32,
+    cSizeBytes = 256 * sizeof(CHT)
   };
 
-  D_COUT("\n\nAttempting to make a Book of size:" << cSize << 
-         " TBookSizeMin: " << CBookSizeMin<TPARAMS>(cCount) << "\n\n");
-
   D_COUT("Testing ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
-         << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSize:" << cSize 
-         << " and cCount:" << cCount);
+         << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSizeBytes:" 
+         << cSizeBytes);
 
-  ABook<TPARAMS, cSize> book(cCount, cSize);
+  ABook<TPARAMS, cSizeBytes> book;
 
-  D_COUT("\n\nAfter TBookInit\nsize:" << book.Size() << " size_bytes:" 
-         << book.SizeBytes() << " size_words:" << book.SizeWords() 
-         << "\nKeys\n");
+  D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes()
+         << " book.Count():" << book.Count()
+         << " book.CountMax():" << book.CountMax());
   TListPrint<COut, ISZ, DT>(COut().Star(), book.List());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
 #endif
 
-  D_COUT("\nPopulating " << cCount << " test words...");
+  D_COUT("\nPopulating " << book.CountMax() << " test words...");
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
+  ISY word_step = TTestWords<CHT>::cCharsMax;
 
   for (ISY i = -1; i < 32; ++i) {
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
     D_COUT("\n\nFoo baby\n\n");
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = 31; i < 128; ++i) {
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, ISD(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += 16, IUD(i)));
+  for (ISY i = 31; i < TTestWords<CHT>::cWordsMax; ++i) {
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUB(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
+    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
     D_COUT("\n\nFoo dady\n\n");
   }
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
-  CHT large_string[cSize];
+  CHT large_string[cSizeBytes];
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;

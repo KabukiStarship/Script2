@@ -5,33 +5,32 @@ title: ''
 labels: ''
 assignees: ''
 ---
+##### A
 
-### A
-
-#### Problem
+###### Problem
 
 The problem I am addressing on this mission is...
 
-#### Solution
+###### Solution
 
 The solution that I'm addressing on this mission is...
 
-##### Files Affected
+####### Files Affected
 
 1. `*.*`
 
-#### Hierarchy
-
-* #1
-
-#### Tags
-
-Mission
-
-#### Sessions
+###### Sessions
 
 * CookingWithCale/CookingWithCale#1
 
-## License
+###### Hierarchy
+
+* #1
+
+###### Tags
+
+Mission
+
+### License
 
 Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

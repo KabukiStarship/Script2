@@ -54,7 +54,7 @@ constexpr ISY CDicCountMin() {
 template <TARGS>
 constexpr ISZ CDicSizeMin() {
   enum {
-    cCountMin = TDicCountMin(),
+    cCountMin = CDicCountMin<TPARAMS>(),
     cSizeMin = sizeof(TDic<TPARAMS>) + cCountMin * (sizeof(ISZ) + 2),
   };
   return cSizeMin;
@@ -126,13 +126,13 @@ Printer& TDicPrint(Printer& printer, TDic<TPARAMS>* dic) {
           << CSizef<ISY>()
           << "> size_bytes:" << dic->keys.size_bytes
           << " count_max:" << dic->keys.count_max << " count:" << count;
-  auto types = TListTypes<ISZ, DT2>(TDicList<TPARAMS>(dic));
+  auto types = TListTypes<ISZ, DTB>(TDicList<TPARAMS>(dic));
   for (ISY i = 0; i < count; ++i) {
     auto foo = TTableGet<TPARAMS>(&dic->keys, i);
     printer << '\n'
             << i << ".) \""
             << "here"
-            << "\" type:" << TPrintType<Printer, DT2>(printer, *types++);
+            << "\" type:" << TPrintType<Printer, DTB>(printer, *types++);
   }
   D_COUT(Linef('-') << Charsf(dic, TDicSize<TPARAMS>(dic)));
   return printer << '\n';
@@ -182,7 +182,7 @@ void* TDicListRemove(TDic<TPARAMS>* dic, ISY index) {
   ISY count = ISY(list->offsets.count);
   ISZ* offsets = TListOffsets<ISZ>(list);
   TStackRemove<ISZ, ISZ>(offsets, count, index);
-  TStackRemove<DT2, ISZ>(TListTypes<ISZ, DT2>(list), count, index);
+  TStackRemove<DTB, ISZ>(TListTypes<ISZ, DTB>(list), count, index);
   return offsets + index;
 }
 
@@ -231,7 +231,7 @@ inline ISY TDicInsert(TDic<TPARAMS>* dic, const CHT* key, T item,
 #if DEBUG_THIS
   TListPrint<COut, ISY>(list);
 #endif
-  ISY result = ISY(TListInsert<ISZ, DT2>(list, item));
+  ISY result = ISY(TListInsert<ISZ, DTB>(list, item));
   if (result < 0) {
     D_COUT("\nFailed to insert with error " << result << ':'
                                             << STRError(result));

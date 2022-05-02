@@ -67,7 +67,7 @@ namespace _ {
 
 IUW* RamFactoryStack(IUW* buffer, ISW size_bytes, DTW data_type) {
   if (size_bytes < 0) return (IUW*)data_type;
-  size_bytes += (-size_bytes) & cWordLSbMask;
+  size_bytes += (-size_bytes) & cWordLSbMask; //< Word align up.
   ISW size_words = size_bytes >> cWordBitCount;
   IUW* socket = new IUW[size_words];
   return socket;

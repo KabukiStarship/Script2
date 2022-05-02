@@ -643,7 +643,7 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
       o, TPtr<CHA>(element.Value()), count);
 }
 
-template <typename Printer, typename DT = DT2>
+template <typename Printer, typename DT = DTB>
 Printer& TPrintTypePOD(Printer& o, DT type) {
   DT pod_type    = type & cTypePODMask,    //
      vector_type = TTypeVector<DT>(type),  //
@@ -651,7 +651,7 @@ Printer& TPrintTypePOD(Printer& o, DT type) {
 }
 
 /* Prints the given type to the printer. */
-template <typename Printer, typename DT = DT2>
+template <typename Printer, typename DT = DTB>
 Printer& TPrintType(Printer& printer, DT type) {
   if (type == 0) return printer << "NIL";
   DT pod_type = type & cTypePODMask;
@@ -667,7 +667,7 @@ Printer& TPrintType(Printer& printer, DT type) {
   return printer;
 }
 
-template <typename Printer, typename DT = DT2>
+template <typename Printer, typename DT = DTB>
 Printer& TPrintTypeValue(Printer& printer, DT type, const void* item) {
   switch (type) {
     case cNIL:
@@ -738,7 +738,7 @@ Printer& TPrintTypeValue(Printer& printer, DT type, const void* item) {
 }
 
 
-template <typename Printer, typename DT = DT2>
+template <typename Printer, typename DT = DTB>
 Printer& TPrintTypeValueSummary(Printer& printer, DT type, const void* item) {
   return printer << "Your mom";
 }
