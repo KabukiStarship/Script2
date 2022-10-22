@@ -95,6 +95,28 @@ inline const CHA* Core(const CHA* args) {
     D_ASSERT_INDEX(str2_result, IUC(ch4_expected));
     A_AVOW_INDEX(ch4_expected, ch4_found, ISC(ch4_expected));
   }
+  
+  D_COUT(Headingf("Testing Hex functions"));
+  for (ISC i = 0; i < 16; ++i) {
+    ISC value = HexToByte(HexNibbleToLowerCase(i));
+    Test(i, value);
+    // D_COUT("\n    " << i << ".) " >> value);
+    value = HexToByte(HexNibbleToUpperCase(i));
+    // D_COUT(" Result:" << value);
+    Test(i, value);
+  }
+
+  for (ISC i = 0; i < 256; ++i) {
+    IUB c = HexByteToLowerCase(i);
+    // D_COUT('\n' << i << ".) Expecting:" << Hexf(i)
+    //             << "        HexByteToLowerCase:" << CHA(c) << CHA(c >> 8));
+    ISC value = HexToByte(c);
+    // D_COUT("        HexToByte:" << value);
+    A_AVOW(i, value);
+    value = HexToByte(HexByteToUpperCase(i));
+    // D_COUT(" Result:" << value);
+    Test(i, value);
+  }
 #endif
 
 #endif

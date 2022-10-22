@@ -13,7 +13,7 @@ Types TV2, TV4, or TV8  are Binary-Form Type-Value Tuples referred to as TVT. TV
 ```C++
 struct TypeValue {
   DTW type_;    //< ASCII Data type stored as a word.
-  UIW word_,    //< Lower ALU register word.
+  IUW word_,    //< Lower ALU register word.
       word_2_;  //< Upper ALU register word.
 };
 ```
@@ -31,7 +31,7 @@ struct TypeString {
     kLengthMax = kBufferWordCount * sizeof(void*) - 1,
   };
   DTW type_;
-  UIW buffer_[cBufferWordCount];
+  IUW buffer_[cBufferWordCount];
 };
 ```
 

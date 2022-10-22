@@ -38,6 +38,5 @@ inline const CHA* Script2Tests(const CHA* args) {
                    Script2::Matrix, Script2::String, Script2::Loom, 
                    Script2::List, Script2::Book, Script2::Map, Script2::Table, 
                    Script2::Dic, Script2::Crabs, Script2::Door, Script2::Room,
-                   Script2::File>(
-      args);
+                   Script2::File>(args);
 }

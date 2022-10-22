@@ -116,7 +116,9 @@ struct LIB_MEMBER Valuef {
   IUW ToWord();
 };
 
-/* Utility class for printing a POD type in hex. */
+/* Utility class for printing a POD type in hex.
+@todo: Why is this storing the value as a negative?
+*/
 struct Hexf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 

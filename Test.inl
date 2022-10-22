@@ -6,14 +6,11 @@
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-
 #include <_Config.h>
-
 #include "Test.h"
 //
 #include "COut.h"
 #include "Stringf.hpp"
-
 namespace _ {
 
 void TestFunctionLine(ISN line, const CHA* function, const CHA* file) {
@@ -73,9 +70,9 @@ ISN SeamTreeTest(ISN arg_count, CHA** args, TestCase* tests, ISN test_count) {
 
 BOL Test(BOL condition) { return condition; }
 
-static const CHA kSTRErrorExpecting[] = "\n\nERROR: Expecting:0x\0";
-static const CHA kSTRFound[] = "\n           Found:0x\0";
-static const CHA kSTRErrorNil[] = "\nERROR: value was nil!\0";
+static const CHA cSTRErrorExpecting[] = "\n\nERROR: Expecting:0x\0";
+static const CHA cSTRFound[] = "\n           Found:0x\0";
+static const CHA cSTRErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL Test(const CHA* a, const CHA* b) {
   ISN difference = TSTRCompare<CHA>(a, b);
@@ -108,100 +105,100 @@ BOL Test(const CHC* a, const CHC* b) {
 #endif
 BOL Test(CHA a, CHA b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(CHB a, CHB b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(CHC a, CHC b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(const void* a, const void* b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a) << kSTRFound << Hexf(b);
+  COut(cSTRErrorExpecting).Hex(a) << cSTRFound << Hexf(b);
   return false;
 }
 
 BOL Test(IUA a, IUA b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(ISA a, ISA b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(IUB a, IUB b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(ISB a, ISB b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(IUC a, IUC b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(ISC a, ISC b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(IUD a, IUD b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 BOL Test(ISD a, ISD b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 
 #if USING_FPC == YES_0
 BOL Test(FPC a, FPC b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 #endif
 #if USING_FPD == YES_0
 BOL Test(FPD a, FPD b) {
   if (a == b) return true;
-  COut(kSTRErrorExpecting).Hex(a)
-      << ':' << a << kSTRFound << Hexf(b) << ':' << b;
+  COut(cSTRErrorExpecting).Hex(a)
+      << ':' << a << cSTRFound << Hexf(b) << ':' << b;
   return false;
 }
 #endif

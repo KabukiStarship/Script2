@@ -249,10 +249,10 @@ BOL TIsDigit(CHT c) {
 @return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
 @param item The IS to write the scanned IS. */
-template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
-const CHT* TScanSigned(const CHT* string, IS& item) {
+template <typename ISZ = ISW, typename IU = IUW, typename CHT = CHR>
+const CHT* TScanSigned(const CHT* string, ISZ& item) {
   if (!string) return nullptr;
-  IS sign;
+  ISZ sign;
   const CHT* cursor = string;
   CHT c = *cursor++;
   if (c == '-') {
@@ -288,10 +288,10 @@ const CHT* TScanSigned(const CHT* string, IS& item) {
 @return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
 @param item The IS to write the scanned IS. */
-template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
-CHT* TScanSigned(CHT* string, IS& item) {
+template <typename ISZ = ISW, typename IU = IUW, typename CHT = CHR>
+CHT* TScanSigned(CHT* string, ISZ& item) {
   const CHT* ptr = reinterpret_cast<const CHT*>(string);
-  return const_cast<CHT*>(TScanSigned<IS, IU, CHT>(ptr, item));
+  return const_cast<CHT*>(TScanSigned<ISZ, IU, CHT>(ptr, item));
 }
 
 /* Scans the given socket for an Signed Integer (IS).

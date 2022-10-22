@@ -29,7 +29,7 @@ I need help debugging contiguous memory data structures. Right now (2022-04-17) 
 ## Documentation
 
 * [SCRIPT Specification](./Spec/) - *Release for Comment for Serial Chinese Room, Interprocess, and Telemetry (SCRIPT) Specification.*
-* [KabukiPress Cookbook Chapter on Script2](https://github.com/CookingWithCale/KabukiPressCookbook/tree/master/Script2) - *The official documentation for Script2.*
+* [KabukiPress Cookbook Chapter on Script2](https://github.com/CookingWithCale/KabukiPressCookbook/tree/master/Script2) - *The official documentation for Script2.*l
 
 ## License
 

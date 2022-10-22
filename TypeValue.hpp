@@ -12,7 +12,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "TypeValue.h"
 namespace _ {
 
-/* Gets the size of type T. */
+/* Gets the log_b. */
 template<typename T>
 constexpr Sizef CSizef () {
   Sizef result;

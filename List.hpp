@@ -32,7 +32,7 @@ namespace _ {
 @code
       List Memory Layout
 +============================+
-|_______   Buffer            |
+|_______   Buffer            |<--- top
 |_______ ^ Value N           |
 |        | Value 0           |
 |----------------------------|
@@ -119,6 +119,46 @@ TList<ISZ>* TListInit(TList<ISZ>* list, ISZ size_bytes, ISZ count_max) {
   list->offsets.count_max = count_max;
   list->top = TDelta<ISZ>(list, TListTypes<ISZ, DT>(list) + count_max);
   return list;
+}
+
+/* Copies an ASCII List from the origin to the destination
+* template <typename ISZ = ISN>
+struct TList {
+  ISZ size_bytes,       //< Size of the List in bytes.
+      top;              //< Offset to the top of the data.
+  TStack<ISZ> offsets;  //< Stack of offsets to the list items.
+};
+      List Memory Layout
++============================+
+|_______   Buffer            |
+|_______ ^ Value N           |
+|        | Value 0           |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Type of Value N   |
+|        | Type of Value 1   |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Offset to Value N |
+|        | Offset to Value 1 |
++============================+  ^  Up in addresses.
+|        TList Struct        |  |
++============================+ 0xN Base address
+*/
+template<TARGS>
+TList<ISZ>* TListCopy(TList<ISZ>* origin, TList<ISZ>* destination) {
+  if (destination->size_bytes < origin->size_bytes) return nullptr;
+  ISZ origin_count = origin->offsets.count,
+    delta = TDelta<ISZ>(origin, destination);
+  // 1. Copy Offsets.
+  CHA* cursor = TPtr<CHA>(&destination->top);
+  ISZ size_bytes = sizeof(TStack<ISZ>) + sizeof(ISZ) + origin_count * sizeof(ISZ);
+  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
+  // 2. Copy Types.
+  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
+  // 3. Copy Values.
+  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
+  return void;
 }
 
 /* Returns the min size of an ASCII List with the given count_max.

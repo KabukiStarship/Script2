@@ -49,11 +49,12 @@ enum AsciiFactoryError {
   cFactoryErrorCount = 6,   //< Factory function count.
 };
 
-/* Creates or destroys a block of heap memory. */
-LIB_MEMBER IUW* RamFactoryHeap(IUW* obj, ISW size);
+/* Creates or destroys a block of heap memory.
+@pre size_bytes > 0 */
+LIB_MEMBER IUW* RamFactoryHeap(IUW* obj, ISW size_bytes);
 
 /* Creates a block of heap memory. */
-LIB_MEMBER IUW* RamFactoryStack(IUW* ptr, ISW size);
+LIB_MEMBER IUW* RamFactoryStack(IUW* ptr, ISW size_bytes);
 
 LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* buffer);
 
@@ -105,8 +106,8 @@ LIB_INLINE CHA* ArrayCopy(void* start, void* stop, const void* begin,
 @param  begin  The begin of Socket B.
 @param  end    The end of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, const void* stop,
-                            const void* begin, const void* end);
+LIB_MEMBER const void* ArrayCompare(const void* start, const void* stop,
+                                    const void* begin, const void* end);
 
 /* Compares the two memory sockets.
 @param  start The start of Socket A.
@@ -114,8 +115,8 @@ LIB_MEMBER BOL ArrayCompare(const void* start, const void* stop,
 @param  begin The begin of Socket B.
 @param  size  The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, void* stop, const void* begin,
-                            ISW size);
+LIB_MEMBER const void* ArrayCompare(const void* start, void* stop, 
+                                    const void* begin, ISW size);
 
 /* Compares the two memory sockets.
 @param  start The start of socket a.
@@ -123,8 +124,8 @@ LIB_MEMBER BOL ArrayCompare(const void* start, void* stop, const void* begin,
 @param  start  The begin of socket b.
 @param  size_b The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, ISW size_a, const void* begin,
-                            ISW size_b);
+LIB_MEMBER const void* ArrayCompare(const void* start, ISW size_a,
+                                    const void* begin, ISW size_b);
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.

@@ -21,9 +21,9 @@ LIB_MEMBER CHA* ArrayFill(void* origin, ISW size_bytes, CHA fill_char = 0);
 
 /* SocketFactory manages memory for ASCII Objects.
 @return A word-aligned buffer, rounding up if unaligned.
-@param obj  A block of word-aligned heap memory.
-@param size The size of the buffer to create in bytes. */
-typedef IUW* (*SocketFactory)(IUW* obj, ISW size);
+@param autoject   A contiguous memory auto-object.
+@param size_bytes Autoject size in bytes. */
+typedef IUW* (*SocketFactory)(IUW* autoject, ISW size);
 
 namespace _ {
 
@@ -53,11 +53,11 @@ enum AsciiFactoryError {
 };
 
 /* SocketFactory for Autojects on the heap that deletes a the buffer. */
-LIB_MEMBER IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes, DTW data_type);
+LIB_MEMBER IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes);
 
 /* SocketFactory for Autojects on the program stack that doesn't delete the
 buffer. */
-LIB_MEMBER IUW* RamFactoryStack(IUW* buffer, ISW size_bytes, DTW data_type);
+LIB_MEMBER IUW* RamFactoryStack(IUW* buffer, ISW size_bytes);
 
 class Nil {
  public:
@@ -77,27 +77,32 @@ class Nil {
   IUW* Words();
 };
 
+/* Copies the block of memory without doing any error checking. */
+LIB_MEMBER ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes);
+
 /* Copies the source to the target functionally identical to memcpy.
-@param origin     The start of the write socket.
+@param write     The start of the write socket.
 @param size      The stop of the write socket.
-@param origin     The origin of the read socket.
+@param origin    The origin of the read socket.
 @param read_size Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
-LIB_MEMBER CHA* ArrayCopy(void* origin, ISW size, const void* read,
+LIB_MEMBER ISW ArrayCopy(void* write, ISW size, const void* read,
                           ISW read_size);
 
 /* Compares the two memory sockets.
-@param start The start of socket a.
-@param size_a The size of Array A .
-@param start  The origin of socket b.
-@param size_b The size of Array B.
-@return True if they are the same and false if they are not. */
-LIB_MEMBER BOL ArrayCompare(const void* start, ISW size_a, const void* origin,
-                            ISW size_b);
+@param a            The start of socket a.
+@param a_size_bytes The size of socket a in bytes.
+@param b            The start of socket b.
+@param b_size_bytes The size of socket b in bytes.
+@return a_size_bytes if a is identical to b, or if a and b are not identical 
+the return will be -1 times the number of bytes that were identical in a and 
+b. */
+LIB_MEMBER ISW ArrayCompare(const void* a, ISW a_size_bytes,
+                            const void* b, ISW b_size_bytes);
 
 /* Shifts the memory up by the given count in bytes.
 @return 0 upon failure and count upon success.
-@param origin       The origin IUA.
+@param origin      The origin byte address.
 @param end         The end IUA.
 @param count_bytes The IUA count to shift up. */
 LIB_MEMBER ISW ArrayShiftUp(void* origin, void* end, ISW count_bytes);

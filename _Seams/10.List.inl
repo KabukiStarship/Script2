@@ -82,6 +82,11 @@ static const CHA* List(const CHA* args) {
     D_COUT('\n' << type << ".) ");
     D_COUT(TTypePrint<COut>(COut().Star(), type));
   }
+
+  D_COUT("\n\nTTypePrint: ARY_CHA");
+#if SEAM == SCRIPT2_LIST
+  TTypePrint<COut>(COut().Star(), cARY | cCHA);
+#endif
 #endif
   return nullptr;
 }

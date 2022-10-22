@@ -31,7 +31,7 @@ void TestBook() {
     cSizeBytes = 256 * sizeof(CHT)
   };
 
-  D_COUT("Testing ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
+  D_COUT("\n\nTesting ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
          << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSizeBytes:" 
          << cSizeBytes);
 
@@ -40,18 +40,17 @@ void TestBook() {
   D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes()
          << " book.Count():" << book.Count()
          << " book.CountMax():" << book.CountMax());
-  TListPrint<COut, ISZ, DT>(COut().Star(), book.List());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
 #endif
 
-  D_COUT("\nPopulating " << book.CountMax() << " test words...");
+  ISZ count_max = book.CountMax();
+  D_COUT("\nPopulating " << count_max << " test words...");
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
-  ISY word_step = TTestWords<CHT>::cCharsMax;
-
-  for (ISY i = -1; i < 32; ++i) {
+  ISZ word_step = TTestWords<CHT>::cCharsMax;
+  for (ISY i = 0; i < count_max; ++i) {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
@@ -60,12 +59,13 @@ void TestBook() {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
-    D_COUT("\n\nFoo baby\n\n");
+    D_COUT("\n\nFoo baby!\n\n");
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = 31; i < TTestWords<CHT>::cWordsMax; ++i) {
+  for (ISY i = ISY(count_max - 1); i < ISY(TTestWords<CHT>::cWordsMax) - count_max;
+       ++i) {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
@@ -83,7 +83,7 @@ void TestBook() {
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;
-  ISY index = book.Insert(large_string, 1);
+  ISZ index = book.Insert(large_string, 1);
 
 #if D_THIS
   book.COut();

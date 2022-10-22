@@ -44,7 +44,7 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
   IUW *words = reinterpret_cast<IUW*>(start),
-      *words_end = TAlignDownPTR<IUW*>(stop);
+      *words_end = TAlignDownPTR<IUW>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
   start = TPtr<CHA>(words_end);
@@ -57,7 +57,7 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 #if SEAM >= SCRIPT2_STACK
 #include "Array.hpp"
 
-#if SEAM == SCRIPT2_STRING
+#if SEAM == SCRIPT2_STACK
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -65,86 +65,152 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 
 namespace _ {
 
-IUW* RamFactoryStack(IUW* buffer, ISW size_bytes, DTW data_type) {
-  if (size_bytes < 0) return (IUW*)data_type;
+IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
   size_bytes += (-size_bytes) & cWordLSbMask; //< Word align up.
   ISW size_words = size_bytes >> cWordBitCount;
   IUW* socket = new IUW[size_words];
+  // @todo Check if the memory was created successfully.
   return socket;
 }
 
-IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes, DTW data_type) {
+IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
   if (buffer) {
     delete[] buffer;
     return nullptr;
   }
-  return RamFactoryStack(buffer, size_bytes, data_type);
+  return RamFactoryStack(buffer, size_bytes);
 }
 
-CHA* ArrayCopy(void* destination, ISW destination_size, const void* source,
-               ISW source_size) {
-  if (source_size <= 0 || destination_size <= 0) return nullptr;
-  A_ASSERT(destination);
-  A_ASSERT(source);
-  // A_ASSERT(destination_size > 0);
-  // A_ASSERT(source_size > 0);
+ISW ArrayCopySlow(void* write, const void* read, ISW size_bytes) {
+  CHA* cursor = TPtr<CHA>(write);
+  const CHA* start = TPtr<CHA>(read),
+    * stop = start + size_bytes;
+  while (start < stop) *cursor++ = *start++;
+  return size_bytes;
+}
 
-  if (destination_size < source_size) return nullptr;
-  CHA *cursor = TPtr<CHA>(destination),
-      *end_ptr = cursor + destination_size;
-  const CHA *start_ptr = reinterpret_cast<const CHA*>(source),
-            *stop_ptr = start_ptr + source_size;
-
-  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-  return cursor;
-  /* There was a bug in this code bug.
-  if (source_size < (2 * sizeof(void*) + 1)) {
-    // There is not enough bytes to copy in words.
-    while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-    return cursor;
-  }
-
-  D_COUT("\nCopying " << stop_ptr - start_ptr << " bytes from " << Hexf(cursor)
-                      << " and writing to " << Hexf (stop_ptr));
-
+ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes) {
   // Algorithm:
-  // 1.) Save return value.
-  // 2.) Align write pointer up and copy the unaligned bytes in the lower
-  //     memory region.
-  // 3.) Align write_end pointer down and copy the unaligned bytes in the
-  //     upper memory region.
-  // 4.) Copy the word-aligned middle region.
-  CHA *success = end_ptr, *aligned_pointer = TAlignUp<>(cursor);
-  D_COUT("\n  AlignUpPTR<> (origin):0x" << Hexf (aligned_pointer));
-  while (cursor < aligned_pointer) *cursor++ = *start_ptr++;
-  aligned_pointer = TAlignDown<CHA*>(end_ptr);
-  D_COUT("\n  AlignDownPointer<> (origin):0x" << aligned_pointer;
-  while (end_ptr > aligned_pointer) *end_ptr-- = *stop_ptr--;
-  D_COUT("\n  Down-stage pointers are now origin:0x" << Hexf(cursor) << "
-  end:0x"
-  << Hexf(end_ptr));
+  // 64-bit Memory Layout that grows 3 bytes: 
+  // b=byte bbbbbbbb_=64-bit word x=illegal memory address ?=legal memory byte
+  //       0xN   v---cursor
+  // Write: xxxxxbbb_bbbbbbbb_bbbbbbbb_bbbbbbbb_bbb?????
+  //       0xN+M     begin_word        end_word
+  //  Read: xxxxxxxb_bbbbbbbb_bbbbbbbb_bbbbbbbb_bb??????
+  //               ^--start                stop--^
+  // 
+  // Step 1: Copy to the unaligned lower write bytes.
+  // We start out with a socket full of memory taht we're not allowed to access
+  // any of the x memory bytes else the compiler will yell at us.
+  CHA* cursor = TPtr<CHA>(write);
+  const CHA* start = TPtr<CHA>(read),
+    * stop = start + size_bytes;
+  IUW* write_begin_word = TAlignUpPTR<IUW>(cursor),
+     * write_end_word = TAlignDownPTR<IUW>(cursor + size_bytes);
+  const IUW* read_begin_word  = TAlignUpPTR<IUW>(start),
+           * read_end_word = TAlignDownPTR<IUW>(stop);
+  ISW  offset_read      = TDelta<ISW>(cursor, write_begin_word),
+       offset_lower     = TDelta<ISW>(read_begin_word, start + offset_read),
+       offset_upper     = sizeof(IUW) - offset_lower;
+  while (cursor < TPtr<CHA>(write_begin_word)) *cursor++ = *start++;
 
-  IUW *words = reinterpret_cast<IUW*>(cursor),
-      *words_end = reinterpret_cast<IUW*>(end_ptr);
-  const IUW* read_word = reinterpret_cast<const IUW*>(start_ptr);
+  // Step 2: Copy the Word aligned data.
+  // Write: bbbbbbbb_bbbbbbbb_bbbbbbbb_bbb?????
+  //     -->  <-- offset_lower=2
+  //  Read: ??bbbbbb_bbbbbbbb_bbbbbbbb_bb??????
+  //       -->      <-- offset_upper=6
+  IUW word_upper, word_lower;
+  word_upper = *read_begin_word++;
+  while(write_begin_word < write_end_word) {
+    word_lower = word_upper >> offset_lower;
+    word_upper  = *read_begin_word++;
+    word_lower |= word_upper << offset_upper;
+    *write_begin_word++ = word_lower;
+    word_upper = word_lower;
+  }
 
-  while (words < words_end) *words++ = *read_word++;
-
-  return success;*/
+  // Stop 3: Copy the unaligned upper bytes.
+  //  Write: bbbbbbbb_bbbbbbbb_bbbbbbbb
+  start = TPtr<CHA>(read_end_word);
+  while (start < stop) *cursor++ = *start++;
+  return size_bytes;
 }
 
-BOL ArrayCompare(const void* begin_a, ISW size_a, const void* begin_b,
-                 ISW size_b) {
-  if (size_a != size_b) return false;
-  const CHA *cursor_a = reinterpret_cast<const CHA*>(begin_a),
-            *end_a = cursor_a + size_a,
-            *cursor_b = reinterpret_cast<const CHA*>(begin_b),
-            *end_b = cursor_b + size_b;
-  while (cursor_a < end_a) {
-    CHA a = *cursor_a++, b = *end_a++;
-    if (a != b) return false;
+ISW ArrayCopy(void* destination, ISW destination_size, const void* source,
+               ISW source_size) {
+  if (source_size <= 0 || destination_size < source_size) return 0;
+  return ArrayCopySlow(destination, source, source_size);
+}
+
+ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
+                     ISW b_size_bytes) {
+                                                                                                                            
+  return a_size_bytes;
+}
+
+ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
+                 ISW b_size_bytes) {
+  if (a_size_bytes != b_size_bytes || a_size_bytes == 0) return 0;
+  const CHA *a_cursor = TPtr<const CHA>(a),
+            *a_end = a_cursor + a_size_bytes,
+            *b_cursor = TPtr<const CHA>(b),
+            *b_end = b_cursor + b_size_bytes;
+  // Algoirhm: (@see ArrayCopy)  @todo Test me!
+  // Step 1: Compare the unaligned lower write bytes.
+  const CHA* cursor = TPtr<CHA>(a),
+           * start  = TPtr<CHA>(b),
+           * stop   = start + a_size_bytes;
+  const IUW* a_begin_word = TAlignUpPTR<IUW>(cursor),
+           * b_begin_word = TAlignUpPTR<IUW>(start);
+  D_COUT("\na:0x" << Hexf(a) <<
+         "\n :0x" << Hexf(a_begin_word) << 
+         "\nb:0x" << Hexf(b) <<
+         "\n :0x" << Hexf(b_begin_word));
+  ISW offset_read  = TDelta<ISW>(cursor, a_begin_word),
+      offset_lower = TDelta<ISW>(b_begin_word, start + offset_read),
+      offset_upper = sizeof(IUW) - offset_lower;
+  while (cursor < TPtr<CHA>(a_begin_word))
+    if(*cursor++ != *start++)
+      return -TDelta<>(a, cursor);
+  // Step 2: Compare the Word aligned data.
+  const IUW* a_end_word = TAlignDownPTR<IUW>(cursor + a_size_bytes),
+           * b_end_word = TAlignDownPTR<IUW>(stop);
+  IUW b_word, b_word_upper = *b_begin_word++;
+  while (a_begin_word < a_end_word) {
+    b_word = b_word_upper >> offset_lower;
+    b_word_upper = *b_begin_word++;
+    b_word |= b_word_upper << offset_upper;
+    IUW a_word = *a_begin_word++;
+    D_COUT("\na_word:0x" << Hexf(a_word) << 
+           "\nb_word:0x" << Hexf(b_word));
+    if (a_word != b_word) {
+      //       word:0xff00ff00
+      // word_lower:0xffff0000
+      // word ^ word_lower: 00ffff00
+      a_word ^= b_word;
+      D_COUT("\n  ^   :0x" << Hexf(a_word));
+      IUA word_byte = a_word & 0xff;
+      IUA r = 0;
+      while (!word_byte) {
+        a_word >>= 8;
+        word_byte = a_word & 0xff;
+        ++r;
+      }
+      D_COUT(" r:" << r);
+      return -(TDelta<>(a, a_begin_word - 1)) + r;
+;   }
+    b_word_upper = *b_begin_word++;
   }
-  return true;
+  D_COUT("\n\nYour mom\n\n");
+  // Stop 3: Compare the unaligned upper bytes.
+  start = TPtr<CHA>(b_end_word);
+  while (start < stop) if (*cursor++ != *start++) return -TDelta<>(a, cursor);
+  return a_size_bytes;
+}
+
+ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
+  ISW b_size_bytes) {
+  return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
 
 Nil::Nil() {}

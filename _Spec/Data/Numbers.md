@@ -27,7 +27,7 @@ ISB 0xFFFFF   ; Too big for size
 Unsigned Not-a-Number (U-NaN) is the bit pattern with all ones as in the following example:
 
 ```C++
-template<typename UI = UIW>
+template<typename UI = IUW>
 inline UI NaNUnsigned () {
   UI nan = 0;
   return ~nan;

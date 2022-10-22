@@ -189,20 +189,14 @@ TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max,
   D_COUT("\n\nTBookInit size_bytes: " << size_bytes << " count_max:" <<
          count_max << " size_keys:" << size_keys << "\n\n");
   D_ASSERT(book);
-  if (size_keys < 0) size_keys = size_bytes >> (-size_keys);
-  if (count_max < 0) count_max = size_bytes >> (-count_max);
+  if (size_keys < 0) size_keys = ISY(size_bytes >> (-size_keys));
+  if (count_max < 0) count_max = ISY(size_bytes >> (-count_max));
   TList<ISZ>* list = &book->values;
   TListInit<ISZ, DT>(list, size_bytes, count_max);
   if (!list) {
     D_COUT("\nBook List size_bytes not large enough!");
     return nullptr;
   }
-  D_COUT("\n\nTBookInit Mid size_bytes: " << size_bytes <<
-    " count_max:" << count_max << " size_keys:" << size_keys << '\n');
-  auto descriptive_variable_name = TListPrint<COut, ISZ, DT>(COut().Star(), 
-                                                             list);
-  D_COUT(descriptive_variable_name << "\n\n");
-  
   // Allocate memory for the Keys.
   TArray<ISZ>* buffer = TListPush<ISZ, DT>(list, size_keys);
   if (!buffer) {
@@ -223,6 +217,33 @@ TBook<TPARAMS>* TBookInit(TBook<TPARAMS>* book, ISY count_max,
   D_COUT(foo);
   if (!result) return nullptr;
   return book;
+}
+
+
+
+/* Copies an ASCII Book from the origin to the destination. */
+template<TARGS>
+CHA* TBookCopy(TStack<ISZ>* origin, TStack<ISZ>* destination) {
+  return ArrayCopy(&origin->count, sizeof(ISZ) + origin->count * sizeof(T),
+                   &destination->count, 
+                   sizeof(ISZ) + destination->count_max * sizeof(T));
+}
+
+IUW* BookFactoryStack(IUW* buffer, ISW size_bytes) {
+  if (size_bytes < 0) return nullptr;
+  size_bytes += (-size_bytes) & cWordLSbMask; //< Word align up.
+  ISW size_words = size_bytes >> cWordBitCount;
+  IUW* socket = new IUW[size_words];
+  // @todo Check if the memory was created successfully.
+  return socket;
+}
+
+IUW* BookFactoryHeap(IUW* buffer, ISW size_bytes) {
+  if (buffer) {
+    delete[] buffer;
+    return nullptr;
+  }
+  return BookFactoryStack(buffer, size_bytes);
 }
 
 /* Gets the element at the given index. */

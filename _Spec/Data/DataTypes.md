@@ -87,10 +87,10 @@ The difference between a 4-byte and a 2-byte data type are that the 4-byte data 
 
 The Size width (SW) bits stores the number of bits uses to store the Object Array Size. If the the number of bits is zero then it is a POD Data Type.
 
-| Value | Type | Description |
-|:-----:|:----:|:------------|
-|   0   | VHT  | 1, 2, 3, and 4-tuple of POD types 0-31. |
-|   1   | SWB  | 2-byte (2-byte) size-width type, or String Type 1 (UTF-8). |
+| Value | Type | Description                                                 |
+|:-----:|:----:|:------------------------------------------------------------|
+|   0   | VHT  | 1, 2, 3, and 4-tuple of POD types 0-31.                     |
+|   1   | SWB  | 2-byte (2-byte) size-width type, or String Type 1 (UTF-8).  |
 |   2   | SWC  | 4-byte (4-byte) size-width type, or String Type 2 (UTF-16). |
 |   3   | SWD  | 8-byte (8-byte) size-width type, or String Type 3 (UTF-32). |
 
@@ -138,7 +138,6 @@ Extended Types are created from the Illegal Types.
 | 43  |   BOU   |  B-Output  | A Byte-output ring buffer socket. |
 | 44  |   BIO   |    B-IO    | A BIn and BOut. |
 | 45  |   XPR   | Expression | A SCRIPT Script. |
-
 ##### Modifier Bits
 
 The Modifier Bits (MB) allow for the creation of pointers and const pointers to POD and Vector types.
@@ -162,8 +161,7 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 
 A Map Type maps from a set with  mappings of one POD type to other set, such as a Dictionary that maps a string an integer or an unsigned has integer to an integer offset. Map Types are covered in the [Map Types](MapTypes) section.
 
-
-**[<< Previous Section: ASCII Data Specification Overview >>](./)  |  [Next Section: Numbers >>](Numbers.md)**
+**[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Numbers >>](Numbers.md)**
 
 ## Requirements
 

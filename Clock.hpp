@@ -21,8 +21,8 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 
-template <typename IS>
-AClock* TClockInit(AClock& clock, IS t) {
+template <typename ISZ>
+AClock* TClockInit(AClock& clock, ISZ t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
   //   a. Year based on seconds per year.
@@ -32,29 +32,29 @@ AClock* TClockInit(AClock& clock, IS t) {
   //   e. Minute.
   //   f. Second.
   ISN value = (ISN)(t / cSecondsPerYear);
-  t -= IS(value) * cSecondsPerYear;
+  t -= ISZ(value) * cSecondsPerYear;
   clock.year = value + ClockEpoch();
   value = (ISN)(t / cSecondsPerDay);
-  t -= IS(value) * cSecondsPerDay;
+  t -= ISZ(value) * cSecondsPerDay;
   clock.day = value;
   value = (ISN)(t / cSecondsPerHour);
-  t -= IS(value) * cSecondsPerHour;
+  t -= ISZ(value) * cSecondsPerHour;
   clock.hour = value;
   value = (ISN)(t / cSecondsPerMinute);
   clock.minute = value;
-  clock.second = (ISN)(t - IS(value) * cSecondsPerMinute);
+  clock.second = (ISN)(t - ISZ(value) * cSecondsPerMinute);
   return &clock;
 }
 
-template <typename IS>
-IS TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
+template <typename ISZ>
+ISZ TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
       return 0;
   }
   if (month < 1 || month >= 12 || hour >= 23 || minute >= 60 || second >= 60)
     return 0;
-  return (IS)((year - ClockEpoch()) * cSecondsPerYear +
+  return (ISZ)((year - ClockEpoch()) * cSecondsPerYear +
               ClockDayOfYear(year, month, day) * cSecondsPerDay +
               hour * cSecondsPerHour + minute * cSecondsPerMinute + second);
 }
@@ -523,7 +523,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
   return string + 1;
 }
 
-template <typename CHT, typename IS>
+template <typename CHT, typename ISZ>
 const CHT* TScanTime(const CHT* origin, TMC& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -531,7 +531,7 @@ const CHT* TScanTime(const CHT* origin, TMC& result) {
   return stop;
 }
 
-template <typename CHT, typename IS>
+template <typename CHT, typename ISZ>
 const CHT* TScanTime(const CHT* origin, TMD& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -551,8 +551,8 @@ const CHT* TSScan(const CHT* origin, TME& result) {
 }
 #endif  // #if USING_STR
 
-template <typename IS>
-IS TClockSet(AClock* clock, IS t) {
+template <typename ISZ>
+ISZ TClockSet(AClock* clock, ISZ t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
   //   a. Year based on seconds per year.
@@ -561,7 +561,7 @@ IS TClockSet(AClock* clock, IS t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  IS value = t / cSecondsPerYear;
+  ISZ value = t / cSecondsPerYear;
   t -= value * cSecondsPerYear;
   clock->year = (ISC)(value + ClockEpoch());
   value = t / cSecondsPerDay;
@@ -579,15 +579,15 @@ IS TClockSet(AClock* clock, IS t) {
 /* A time in seconds stored as either a 32-bit or 64-bit IS.
 The difference between a TClock and AClock is that that TClock stores the AClock
 and the TMD or TMC. */
-template <typename IS>
+template <typename ISZ>
 struct LIB_MEMBER TClock {
   AClock clock;  //< A human-readable clock.
 
   /* Constructs a clock from the given seconds timestamp. */
-  TClock(IS t) { ClockInit(clock, t); }
+  TClock(ISZ t) { ClockInit(clock, t); }
 
   /* Prints the given */
-  template <typename Printer, typename IS>
+  template <typename Printer, typename ISZ>
   Printer& Print(Printer& o) {
     return o << clock.Clock();
   }
@@ -600,8 +600,8 @@ inline _::COut& operator<<(_::COut& o, const _::AClock& item) {
   return _::TSPrint(o, item);
 }
 
-template <typename IS>
-_::COut& operator<<(_::COut& o, _::TClock<IS> item) {
+template <typename ISZ>
+_::COut& operator<<(_::COut& o, _::TClock<ISZ> item) {
   return o << item.clock;
 }
 #endif

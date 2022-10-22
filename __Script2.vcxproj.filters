@@ -105,45 +105,6 @@
     <None Include="TypeValue.inl">
       <Filter>./</Filter>
     </None>
-    <None Include="_Seams\_Seams.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\00.Core.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\01.RNG.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\01.Uniscanner.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\02.ItoS.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\02.Socket.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\03.FtoS.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\04.SPrinter.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\05.Clock.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\06.Stack.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\07.Matrix.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\08.String.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
-    <None Include="_Seams\09.Loom.inl">
-      <Filter>./\_Seams</Filter>
-    </None>
     <None Include="_Seams\10.List.inl">
       <Filter>./\_Seams</Filter>
     </None>
@@ -171,16 +132,52 @@
     <None Include="_Seams\17.Seam.s2">
       <Filter>./\_Seams</Filter>
     </None>
+    <None Include="_Seams\18.File.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
     <None Include="_Seams\19.Release.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\desktop.ini">
       <Filter>./\_Seams</Filter>
     </None>
     <None Include="_Seams\ReadMe.md">
       <Filter>./\_Seams</Filter>
     </None>
-    <None Include="_Seams\18.File.inl">
+    <None Include="_Seams\_Seams.inl">
       <Filter>./\_Seams</Filter>
     </None>
     <None Include="_Seams\_Tests.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\00.Core.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\01.RNG.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\02.ItoS.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\03.FtoS.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\04.SPrinter.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\05.Clock.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\06.Stack.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\07.Matrix.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\08.String.inl">
+      <Filter>./\_Seams</Filter>
+    </None>
+    <None Include="_Seams\09.Loom.inl">
       <Filter>./\_Seams</Filter>
     </None>
   </ItemGroup>
@@ -368,14 +365,14 @@
     <ClInclude Include="_Config.h">
       <Filter>./</Filter>
     </ClInclude>
+    <ClInclude Include="Room.hpp">
+      <Filter>./</Filter>
+    </ClInclude>
     <ClInclude Include="_Seams\TestWords.h">
       <Filter>./\_Seams</Filter>
     </ClInclude>
     <ClInclude Include="_Seams\_Config.h">
       <Filter>./\_Seams</Filter>
-    </ClInclude>
-    <ClInclude Include="Room.hpp">
-      <Filter>./</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
