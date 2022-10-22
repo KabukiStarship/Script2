@@ -436,13 +436,13 @@ inline CHT* TSPrint(CHT* start, ISW size, IUC value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
-inline CHT* TSPrintSigned(CHT* start, CHT* stop, IS value) {
+template <typename ISZ = ISD, typename IU = IUD, typename CHT = CHR>
+inline CHT* TSPrintSigned(CHT* start, CHT* stop, ISZ value) {
   if (value >= 0) {
     return TSPrintUnsigned<IU, CHT>(start, stop, (IU)value);
   }
   *start++ = '-';
-  return TSPrintUnsigned<IU, CHT>(start, stop, (IU)(-(IS)value));
+  return TSPrintUnsigned<IU, CHT>(start, stop, (IU)(-(ISZ)value));
 }
 
 /* Writes the give value to the given socket as an ASCII string.
@@ -450,9 +450,9 @@ inline CHT* TSPrintSigned(CHT* start, CHT* stop, IS value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
-inline CHT* TSPrintSigned(CHT* start, ISW size, IS value) {
-  return TSPrintSigned<IS, IU, CHT>(start, start + size - 1, value);
+template <typename ISZ = ISD, typename IU = IUD, typename CHT = CHR>
+inline CHT* TSPrintSigned(CHT* start, ISW size, ISZ value) {
+  return TSPrintSigned<ISZ, IU, CHT>(start, start + size - 1, value);
 }
 
 template <typename CHT = CHR>
@@ -566,10 +566,10 @@ ISC TMSbAssertedReverse(IU value) {
 To use this class the sizeof (Float) must equal the sizeof (IU) and sizeof
 (IS).
 */
-template <typename Float = FPW, typename IS = ISC, typename IU = IUW>
+template <typename Float = FPW, typename ISZ = ISC, typename IU = IUW>
 class TBinary {
   IU f;
-  IS e;
+  ISZ e;
 
  public:
   enum {
@@ -614,7 +614,7 @@ class TBinary {
     }
   }
 
-  TBinary(IU f, IS e) : f(f), e(e) {}
+  TBinary(IU f, ISZ e) : f(f), e(e) {}
 
   inline static IU Exponent(IU decimal) {
     return (decimal << (cExponentSizeBits + 1)) >> (cExponentSizeBits + 1);
@@ -650,13 +650,13 @@ class TBinary {
       *socket++ = '-';
       value = -value;
     }
-    IS k;
+    ISZ k;
     CHT* cursor = Print<CHT>(socket, stop, value, k);
     if (!cursor) return cursor;
     return Standardize<CHT>(socket, stop, cursor - socket, k);
   }
 
-  static TBinary IEEE754Pow10(IS e, IS& k) {
+  static TBinary IEEE754Pow10(ISZ e, ISZ& k) {
     // IS k = static_cast<IS>(ceil((-61 - e) *
     // 0.30102999566398114))
 
@@ -664,12 +664,12 @@ class TBinary {
     // values.
     Float scalar = sizeof(Float) == 8 ? 0.30102999566398114 : 0.301029995f,
           dk = (-61 - e) * scalar + 347;
-    k = static_cast<IS>(dk);
+    k = static_cast<ISZ>(dk);
     if (k != dk) ++k;
 
-    IS index = (k >> 3) + 1;
+    ISZ index = (k >> 3) + 1;
 
-    k = -(-((IS)348) + (index << 3));
+    k = -(-((ISZ)348) + (index << 3));
     // decimal exponent no need lookup table.
 
     D_ASSERT(index < 87);
@@ -679,7 +679,7 @@ class TBinary {
     return TBinary(f_lut[index], e_lut[index]);
   }
 
-  TBinary Minus(const TBinary<Float, IS, IU>& value) const {
+  TBinary Minus(const TBinary<Float, ISZ, IU>& value) const {
     D_ASSERT(e == value.e);
     D_ASSERT(f >= value.f);
     return TBinary(f - value.f, e);
@@ -793,7 +793,7 @@ class TBinary {
   }
 
   template <typename CHT = CHR>
-  static CHT* Print(CHT* socket, CHT* stop, Float value, IS& k) {
+  static CHT* Print(CHT* socket, CHT* stop, Float value, ISZ& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
     v.NormalizedBoundaries(lower_estimate, upper_estimate);
@@ -835,7 +835,7 @@ class TBinary {
   void NormalizedBoundaries(TBinary& m_minus, TBinary& m_plus) const {
     IU l_f = f,   //< Local copy of f.
         l_e = e;  //< Local copy of e.
-    TBinary pl = TBinary((l_f << 1) + 1, ((IS)l_e) - 1).NormalizeBoundary();
+    TBinary pl = TBinary((l_f << 1) + 1, ((ISZ)l_e) - 1).NormalizeBoundary();
     ISC cShiftCount = (cMantissaSize >= 8) ? 0 : cMantissaSize;
     const IU cHiddenBit = ((IU)1) << cShiftCount;
     TBinary mi = (f == cHiddenBit) ? TBinary((l_f << 2) - 1, e - 2)
@@ -959,11 +959,11 @@ class TBinary {
   @return Nil upon failure or a pointer to the nil-term CHT upon success. */
   template <typename CHT = CHR>
   static CHT* DigitGen(CHT* start, CHT* stop, const TBinary& w,
-                       const TBinary& m_plus, IU delta, IS& k) {
+                       const TBinary& m_plus, IU delta, ISZ& k) {
     TBinary one(((IU)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
     IUC d, pow_10, p_1 = static_cast<IUC>(m_plus.f >> -one.e);
     IU p_2 = m_plus.f & (one.f - 1);
-    IS kappa;
+    ISZ kappa;
     pow_10 = Pow10(p_1, kappa);
     const IU* f_lut = Pow10IntegralLUT();
     while (kappa > 0) {
@@ -1047,7 +1047,7 @@ class TBinary {
 
   /* Converts the Grisu2 output to a standardized/easier-to-read format. */
   template <typename CHT = CHR>
-  static CHT* Standardize(CHT* start, CHT* stop, ISW length, IS k) {
+  static CHT* Standardize(CHT* start, CHT* stop, ISW length, ISZ k) {
     const ISW kk = length + k;  // 10^(kk-1) <= v < 10^kk
     CHT* nil_term_char;
     if (length <= kk && kk <= 21) {  // 1234e7 -> 12340000000

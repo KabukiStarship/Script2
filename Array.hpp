@@ -12,7 +12,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Array.h"
 #include "TypeValue.hpp"
 namespace _ {
-  
+
 /* Overwrites the memory with fill_char; functionally equivalent to memset. */
 inline CHA* ArrayFill(void* start, void* stop, CHA fill_char) {
   return ArrayFill(start, TPtr<CHA>(stop) - TPtr<CHA>(start) + 1, fill_char);
@@ -21,9 +21,9 @@ inline CHA* ArrayFill(void* start, void* stop, CHA fill_char) {
 /* The maximum autoject size.
 The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
-template <typename IS>
-inline IS TArraySizeMax() {
-  IS count_max = 0;
+template <typename ISZ>
+inline ISZ TArraySizeMax() {
+  ISZ count_max = 0;
   return (~count_max) - 15;
 }
 /* The upper bounds defines exactly how many elements can fit into a space
@@ -85,9 +85,9 @@ struct TArray {
 
 /* Checks if the given autoject count is in the min max bounds of an ASCII
 Object. */
-template <typename T, typename IS>
-inline BOL TArrayCountIsValid(IS index, IS count_min) {
-  return (index >= count_min) && (index < TArraySizeMax<T, IS>());
+template <typename T, typename ISZ>
+inline BOL TArrayCountIsValid(ISZ index, ISZ count_min) {
+  return (index >= count_min) && (index < TArraySizeMax<T, ISZ>());
 }
 
 /* Gets the first byte of the ASCII Object data section. */
@@ -113,15 +113,15 @@ Printer& TArrayPrint(Printer& o, TArray<ISZ>* item) {
 }
 
 /* Calculates the size in bytes of an array with given element_count. */
-template <typename T, typename IS>
-inline IS TSizeOf(IS element_count) {
+template <typename T, typename ISZ>
+inline ISZ TSizeOf(ISZ element_count) {
   return sizeof(T) * element_count;
 }
 
 /* Calculates the size in bytes of an array with given element_count including
 the Class header. */
-template <typename T, typename IS, typename Class>
-inline IS TSizeOf(IS size) {
+template <typename T, typename ISZ, typename Class>
+inline ISZ TSizeOf(ISZ size) {
   return sizeof(T) * size + sizeof(Class);
 }
 
@@ -218,7 +218,7 @@ inline IUW* TArrayInit(Autoject& obj, IUW* buffer, ISZ size,
 @param origin The origin of the read socket.
 @param size  Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
-inline CHA* ArrayCopy(void* origin, void* stop, const void* read_start,
+inline ISW ArrayCopy(void* origin, void* stop, const void* read_start,
                       ISW read_size) {
   return ArrayCopy(origin, SizeOf(origin, stop), read_start, read_size);
 }
@@ -229,7 +229,7 @@ inline CHA* ArrayCopy(void* origin, void* stop, const void* read_start,
 @param origin The origin of the read socket.
 @param size  Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
-inline CHA* ArrayCopy(void* origin, void* stop, const void* read_start,
+inline ISW ArrayCopy(void* origin, void* stop, const void* read_start,
                       const void* read_stop) {
   return ArrayCopy(origin, SizeOf(origin, stop), read_start,
                    SizeOf(read_start, read_stop));
@@ -386,10 +386,10 @@ ISZ TArrayFind(const T* elements, ISZ element_count, const T& item) {
 @param origin  The origin of Array B.
 @param end    The end of Array B.
 @return True if they are the same and false if they are not. */
-inline BOL ArrayCompare(const void* begin_a, const void* end_a,
-                        const void* begin_b, const void* end_b) {
-  return ArrayCompare(begin_a, SizeOf(begin_a, end_a), begin_b,
-                      SizeOf(begin_b, end_b));
+inline ISW ArrayCompare(const void* a_begin, const void* end_a,
+                        const void* b_begin, const void* end_b) {
+  return ArrayCompare(a_begin, SizeOf(a_begin, end_a), b_begin,
+                      SizeOf(b_begin, end_b));
 }
 
 /* Compares the two memory sockets.
@@ -398,10 +398,24 @@ inline BOL ArrayCompare(const void* begin_a, const void* end_a,
 @param origin The origin of Array B.
 @param size  The size of Array B.
 @return True if they are the same and false if they are not. */
-inline BOL ArrayCompare(const void* begin_a, void* end_a, const void* begin_b,
-                        ISW size_b) {
-  return ArrayCompare(begin_a, end_a, begin_a,
-                      reinterpret_cast<const CHA*>(begin_b) + size_b);
+inline ISW ArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
+                        ISW b_size_bytes) {
+  return ArrayCompare(a_begin, a_end, a_begin,
+                      reinterpret_cast<const CHA*>(b_begin) + b_size_bytes);
+}
+
+/* Casts ArrayCompare to type T. */
+template<typename T>
+inline T* TArrayCompare(void* a_begin, void* a_end, void* b_begin,
+                        ISW b_size_bytes) {
+  return TPtr<T*>(ArrayCompare(a_begin, a_end, b_begin, b_size_bytes));
+}
+
+/* Casts ArrayCompare to type T. */
+template<typename T>
+inline const T* TArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
+  ISW b_size_bytes) {
+  return TPtr<const T*>(ArrayCompare(a_begin, a_end, b_begin, b_size_bytes));
 }
 
 /* A word-aligned array of cSize_ elements of T on the progam stack. */
@@ -476,13 +490,15 @@ class TRamFactory {
   /* SocketFactory for the Stack deletes a non-nil buffer. */
   static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    return _::RamFactoryHeap(buffer, size_bytes, cType);
+    if (size_bytes < 0) return TPtr<IUW>(IUW(cType));
+    return _::RamFactoryHeap(buffer, size_bytes);
   }
 
   /* SocketFactory for the Stack doesn't delete a non-nil buffer. */
   static IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    return _::RamFactoryStack(buffer, size_bytes, cType);
+    if (size_bytes < 0) return TPtr<IUW>(cType);
+    return _::RamFactoryStack(buffer, size_bytes);
   }
 
   /* Gets the initial SocketFactory for the program stack or heap. */

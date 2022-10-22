@@ -14,7 +14,7 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 | ISG  |     SI       |   W/2   | Half-word sized signed integer. |
 | IUG  |     UI       |   W/2   | Half-word sized unsigned integer. |
 | FPG  |     FP       |    W    | Floating-point number the half the size of the size of the host CPU's FPU. |
-| SIW  |   intptr_t   |    W    | Signed integer of the size of the host CPU's ALU. |
+| ISW  |   intptr_t   |    W    | Signed integer of the size of the host CPU's ALU. |
 | IUW  |  uintptr_t   |    W    | Unsigned integer of the size of the host CPU's ALU. |
 | FLW  |  floatptr_t  |    W    | Floating-point number the size of the size of the host CPU's FPU. |
 | ISD  |     SI       |   2W    | Double-word sized signed integer. |

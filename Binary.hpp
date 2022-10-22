@@ -77,16 +77,16 @@ constexpr ISZ CNaNSigned() {
   return (~ToUnsigned(ISZ)) >> 1;
 }
 
-template <typename IS = ISW>
-inline IS TDelta(const void* start) {
+template <typename ISZ = ISW>
+inline ISZ TDelta(const void* start) {
   ISW delta = reinterpret_cast<ISW>(start);
-  return IS(delta);
+  return ISZ(delta);
 }
 
-template <typename IS = ISW>
-inline IS TDelta(const void* start, const void* stop) {
+template <typename ISZ = ISW>
+inline ISZ TDelta(const void* start, const void* stop) {
   ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
-  return IS(delta);
+  return ISZ(delta);
 }
 
 enum {
@@ -359,9 +359,9 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
-inline T TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
+inline T* TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
   IUW value = reinterpret_cast<IUW>(ptr);
-  return reinterpret_cast<T>(value - (value & mask));
+  return reinterpret_cast<T*>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -369,9 +369,9 @@ inline T TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
-inline T TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
+inline const T* TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
   IUW value = reinterpret_cast<IUW>(ptr);
-  return reinterpret_cast<const T>(value - (value & mask));
+  return reinterpret_cast<const T*>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -400,17 +400,23 @@ inline T* TPtr(void* ptr) {
 }
 
 /* Syntactical sugar for reinterpret_cast using templates. */
+template <typename T = IUW>
+inline T* TPtr(ISN value) {
+  return reinterpret_cast<T*>(value);
+}
+
+/* Syntactical sugar for reinterpret_cast using templates. */
 template <typename T>
-inline T* TPtr(const void* ptr) {
-  return reinterpret_cast<T*>(ptr);
+inline const T* TPtr(const void* ptr) {
+  return reinterpret_cast<const T*>(ptr);
 }
 
 /* Creates a T pointer from a base pointer plus the offset.
 @param base The base address.
 @param offset The offset in bytes. */
 template <typename T = void>
-inline T* TPtr(const void* origin, ISW offset) {
-  return reinterpret_cast<T*>(reinterpret_cast<ISW>(origin) + offset);
+inline const T* TPtr(const void* origin, ISW offset) {
+  return reinterpret_cast<const T*>(reinterpret_cast<ISW>(origin) + offset);
 }
 
 /* Gets a value of type T. */
@@ -470,23 +476,23 @@ constexpr ISC CSignedMin(ISC one) {
 constexpr ISD CSignedMin(ISD one) {
   return ISD(IUD(one) << (sizeof(ISD) * 8 - 1));
 }
-template <typename IS>
-inline IS TSignedMin() {
-  return SignedMin(IS(1));
+template <typename ISZ>
+inline ISZ TSignedMin() {
+  return SignedMin(ISZ(1));
 }
-template <typename IS>
-constexpr IS CSignedMin() {
-  return CSignedMin(IS(1));
+template <typename ISZ>
+constexpr ISZ CSignedMin() {
+  return CSignedMin(ISZ(1));
 }
 
 /* ASCII Signed Not-a-Number is the lowest possible signed integer value. */
-template <typename IS>
-inline IS TSignedNaN() {
-  return TSignedMin<IS>() - 1;
+template <typename ISZ>
+inline ISZ TSignedNaN() {
+  return TSignedMin<ISZ>() - 1;
 }
-template <typename IS>
-constexpr IS CSignedNaN() {
-  return TSignedNaN<IS>();
+template <typename ISZ>
+constexpr ISZ CSignedNaN() {
+  return TSignedNaN<ISZ>();
 }
 
 /* Returns the maximum unsigned value.
@@ -510,9 +516,9 @@ constexpr IUA CUnsignedMax(ISA zero) { return ~IUA(zero); }
 constexpr IUB CUnsignedMax(ISB zero) { return ~IUB(zero); }
 constexpr IUC CUnsignedMax(ISC zero) { return ~IUC(zero); }
 constexpr IUD CUnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename IS>
-constexpr IS CUnsignedMax() {
-  return CUnsignedMax(IS(0));
+template <typename ISZ>
+constexpr ISZ CUnsignedMax() {
+  return CUnsignedMax(ISZ(0));
 }
 
 /* Returns the minimum signed value.
@@ -528,18 +534,18 @@ inline ISA SignedMax(ISA zero) { return ISA(UnsignedMax(zero) >> 1); }
 inline ISB SignedMax(ISB zero) { return ISB(UnsignedMax(zero) >> 1); }
 inline ISC SignedMax(ISC zero) { return ISC(UnsignedMax(zero) >> 1); }
 inline ISD SignedMax(ISD zero) { return ISD(UnsignedMax(zero) >> 1); }
-template <typename IS>
-inline IS TSignedMax() {
-  return SignedMax(IS(0));
+template <typename ISZ>
+inline ISZ TSignedMax() {
+  return SignedMax(ISZ(0));
 }
 constexpr ISA CSignedMax(ISA zero) { return ISA(CUnsignedMax(zero) >> 1); }
 constexpr ISB CSignedMax(ISB zero) { return ISB(CUnsignedMax(zero) >> 1); }
 constexpr ISC CSignedMax(ISC zero) { return ISC(CUnsignedMax(zero) >> 1); }
 constexpr ISD CSignedMax(ISD zero) { return ISD(CUnsignedMax(zero) >> 1); }
 
-template <typename IS>
-constexpr IS CSignedMax() {
-  return CSignedMax(IS(0));
+template <typename ISZ>
+constexpr ISZ CSignedMax() {
+  return CSignedMax(ISZ(0));
 }
 
 /* Checsk if the value is Not-a-Number. */
@@ -616,15 +622,15 @@ inline IU TShiftLeftRight(IU value, ISC left_bits, ISC right_bits) {
 
 /* Aligns the given pointer down to the given least_significant_bits_max. */
 inline CHA* AlignDown(CHA* pointer, IUW least_significant_bits_max) {
-  return TAlignDownPTR<CHA*>(pointer);
+  return TAlignDownPTR<CHA>(pointer);
 }
 inline const CHA* AlignDown(const CHA* pointer,
                             IUW least_significant_bits_max) {
-  return TAlignDownPTR<const CHA*>(pointer);
+  return TAlignDownPTR<const CHA>(pointer);
 }
 inline const IUW* AlignDown(const IUW* pointer,
                             IUW least_significant_bits_max) {
-  return TAlignDownPTR<const IUW*>(pointer);
+  return TAlignDownPTR<const IUW>(pointer);
 }
 inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
   return const_cast<IUW*>(

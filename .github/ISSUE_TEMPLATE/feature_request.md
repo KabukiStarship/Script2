@@ -4,7 +4,6 @@ about: Suggest an idea for this project
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 ### A
@@ -31,8 +30,7 @@ RequestFeature
 
 #### Sessions
 
-* #2
-* CookingWithCale/CookingWithCale#2
+* CookingWithCale/CookingWithCale#1
 
 ## License
 

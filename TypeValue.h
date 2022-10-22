@@ -158,7 +158,7 @@ class LIB_MEMBER TypeValue {
 /* Utility class for printing the size of ASCII TypeValues.
 @see CSizef */
 struct Sizef {
-  ISW size;  //< The item who's size this is.
+  ISW size;  //< The size of the item in ?
 };
 
 }  //< namespace _

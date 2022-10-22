@@ -48,6 +48,45 @@ struct TStack {
       count;      //< Element count.
 };
 
+/* Copies an ASCII Stack from the origin to the destination. */
+template<typename T = ISW, typename ISZ = ISN>
+CHA* TStackCopy(TStack<ISZ>* origin, TStack<ISZ>* destination) {
+  return ArrayCopy(&origin->count, sizeof(ISZ) + origin->count * sizeof(T),
+                   &destination->count, 
+                   sizeof(ISZ) + destination->count_max * sizeof(T));
+}
+
+template<typename ISZ = ISN, typename DT = DTB, DT cType = cSTK>
+IUW* TStackFactoryStack(IUW* buffer, ISW size_bytes) {
+  ISZ buffer_size_bytes, buffer_size_bytes_new;
+  if (size_bytes < 0) {
+    if (size_bytes == -1) return TPtr<>(cType);
+    if (size_bytes == -2) { // Autogrow 2X
+      buffer_size_bytes = *TPtr<ISZ>(buffer);
+      buffer_size_bytes_new = buffer_size_bytes << 1; // <<1 to *2.
+    }
+    if (size_bytes == -3) { // Clone
+
+    }
+  }
+  IUW* buffer = RamFactoryStack(buffer, size_bytes);
+  if (!buffer) return buffer;
+  *TPtr<ISZ*>(buffer) = ISZ(size_bytes);
+  return buffer;
+}
+
+template<typename ISZ = ISN, DTA cPODType>
+IUW* TStackFactoryHeap(IUW* buffer, ISW size_bytes) {
+  enum { cISZSizeBitCount = sizeof(ISZ) == 2 ? 1 : sizeof(ISZ) == 4 ? 2 : 3,
+    // The ASCII Data Type word
+    cType = cPODType | cSTK << cTypePODBitCount | 
+            cISZSizeBitCount << cTypeVECBitCount,
+  };
+  if (size_bytes < 0) return TPtr<>(cType);
+  *TPtr<ISZ*>(buffer) = ISZ(size_bytes);
+  return RamFactoryHeap(buffer, size_bytes);
+}
+
 /* Gets the size of a Stack with the given count_max. */
 template <typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSize(ISZ count_max) {
@@ -143,7 +182,6 @@ inline T* TStackTop(TStack<ISZ>* stack) {
 /* Prints the given obj to the console. */
 template <typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TStackPrint(Printer& o, TStack<ISZ>* stack) {
-  D_ASSERT(stack);
   ISZ count_max = stack->count_max, count = stack->count;
   o << Linef("\n+---\n| TStack<T") << CHA('@' + sizeof(T)) << ",IS"
     << CHA('@' + sizeof(ISZ)) << ">: size_bytes:"

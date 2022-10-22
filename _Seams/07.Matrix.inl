@@ -16,10 +16,10 @@ using namespace _;
 #endif
 namespace Script2 {
 
-template <typename IS, typename ISZ>
+template <typename ISZ, typename T>
 void TestMatrixIntegers() {
-  D_COUT(Linef("\n\n+---\n| ")
-         << "Testing AMatrix<IS" << sizeof(ISZ) << ">" << Linef("\n+---"));
+  D_COUT(Linef("\n\n+---\n| Testing AMatrix<IS" << CSizef<ISZ>() << ">"
+         << Linef("\n+---"));
 
   static const ISC array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};

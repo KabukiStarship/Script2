@@ -187,9 +187,9 @@ inline T* TMatrixElements(TMatrix<ISZ>* obj) {
 }
 
 /* Creates a immutable array of dimensions. */
-template <typename IS, const IS... N>
-inline const IS* TDim() {
-  static const IS cCount = (IS)sizeof...(N), kList[sizeof...(N)] = {N...};
+template <typename ISZ, const ISZ... N>
+inline const ISZ* TDim() {
+  static const ISZ cCount = (ISZ)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &cCount;
 }
 

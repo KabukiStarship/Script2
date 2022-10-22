@@ -52,9 +52,7 @@
     <None Include="_Release.inl" />
     <None Include="_Seams\00.Core.inl" />
     <None Include="_Seams\01.RNG.inl" />
-    <None Include="_Seams\01.Uniscanner.inl" />
     <None Include="_Seams\02.ItoS.inl" />
-    <None Include="_Seams\02.Socket.inl" />
     <None Include="_Seams\03.FtoS.inl" />
     <None Include="_Seams\04.SPrinter.inl" />
     <None Include="_Seams\05.Clock.inl" />
@@ -69,10 +67,11 @@
     <None Include="_Seams\14.Dic.inl" />
     <None Include="_Seams\15.Crabs.inl" />
     <None Include="_Seams\16.Door.inl" />
-    <None Include="_Seams\18.File.inl" />
     <None Include="_Seams\17.Room.inl" />
     <None Include="_Seams\17.Seam.s2" />
+    <None Include="_Seams\18.File.inl" />
     <None Include="_Seams\19.Release.inl" />
+    <None Include="_Seams\desktop.ini" />
     <None Include="_Seams\ReadMe.md" />
     <None Include="_Seams\_Seams.inl" />
     <None Include="_Seams\_Tests.inl" />
