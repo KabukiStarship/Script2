@@ -5,15 +5,13 @@ title: ''
 labels: ''
 assignees: ''
 ---
+#
 
-
-### A
-
-#### Problem
+## Problem
 
 The bug I am reporting is...
 
-##### Reproduction
+### Reproduction
 
 Steps to reproduce the behavior:
 
@@ -22,43 +20,43 @@ Steps to reproduce the behavior:
 3. Scroll down to '....'
 4. See error
 
-##### ExpectedBehavior
+### ExpectedBehavior
 
 A clear and concise description of what you expected to happen.
 
-##### Screenshots
+### Screenshots
 
 If applicable, add screenshots to help explain your problem.
 
-##### Platform
+### Platform
 
  - OS: [e.g. Windows 10 2004]
  - Version [e.g. 0.6.1]
 
-##### Context
+### Context
 
 Add any other context about the problem here.
 
-#### Solution
+## Solution
 
 The solution to the bug is...
 
-##### File Affected
+### File Affected
 
 1. `*.*`
 
-#### Hierarchy
+## Hierarchy
 
 * #1
 
-#### Tags
+## Tags
 
 RequestFeature
 
-#### Sessions
+## Sessions
 
-* CookingWithCale/CookingWithCale#1
+* CookingWithCale/CookingWithCale#9
 
 ## License
 
-Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

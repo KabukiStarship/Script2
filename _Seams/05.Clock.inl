@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/05.Clock.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-21 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -31,24 +31,24 @@ static const CHA* Clock(const CHA* args) {
   // @note The following dates must be the current day to work right in order
   // to auto-detect the year.
   const CHA* Strings[] = {
-      "1/19",
-      "01/19",
-      "1/9/19",
-      "1/19/19",
-      "1/9/2019",
-      "1/19/2019",
-      "1/19/2019",
-      "01/19/2019",
-      "1/19/2019@00",
-      "1.19.2019@00AM",
-      "1/19/2019@00:00",
-      "1/19/19@00:0AM",
-      "1/19/2019@00:00:00",
-      "1/19/2019@00:00:00AM",
-      "2019-01-19@00:00:00AM",
-      "2019-01-19@00:00:00am",
-      "2019-01-19@00:00:00A",
-      "2019-01-19@00:00:00a ",
+    "1/19",
+    "01/19",
+    "1/9/19",
+    "1/19/19",
+    "1/9/2019",
+    "1/19/2019",
+    "1/19/2019",
+    "01/19/2019",
+    "1/19/2019@00",
+    "1.19.2019@00AM",
+    "1/19/2019@00:00",
+    "1/19/19@00:0AM",
+    "1/19/2019@00:00:00",
+    "1/19/2019@00:00:00AM",
+    "2019-01-19@00:00:00AM",
+    "2019-01-19@00:00:00am",
+    "2019-01-19@00:00:00A",
+    "2019-01-19@00:00:00a ",
   };
 
   for (ISC i = 0; i < 18; ++i) {

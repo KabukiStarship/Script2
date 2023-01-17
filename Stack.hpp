@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Stack.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-22 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -71,7 +71,7 @@ IUW* TStackFactoryStack(IUW* buffer, ISW size_bytes) {
   }
   IUW* buffer = RamFactoryStack(buffer, size_bytes);
   if (!buffer) return buffer;
-  *TPtr<ISZ*>(buffer) = ISZ(size_bytes);
+  *TPtr<ISZ>(buffer) = ISZ(size_bytes);
   return buffer;
 }
 
@@ -83,7 +83,7 @@ IUW* TStackFactoryHeap(IUW* buffer, ISW size_bytes) {
             cISZSizeBitCount << cTypeVECBitCount,
   };
   if (size_bytes < 0) return TPtr<>(cType);
-  *TPtr<ISZ*>(buffer) = ISZ(size_bytes);
+  *TPtr<ISZ>(buffer) = ISZ(size_bytes);
   return RamFactoryHeap(buffer, size_bytes);
 }
 

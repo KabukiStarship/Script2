@@ -2,7 +2,7 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Test.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-22 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -26,7 +26,7 @@ BOL TestWarn(ISN line, const CHA* function, const CHA* file) {
 BOL TestFail(ISN line, const CHA* function, const CHA* file) {
   BOL result = TestWarn(line, function, file);
   // Insert break-point here.
-  return result;
+    return result;
 }
 
 const CHA* ArgsToString(ISN arg_count, CHA** args) {
