@@ -5,15 +5,20 @@ title: 'Artifact'
 labels: ''
 assignees: 'CookingWithCale'
 ---
+# 
 
-# Artifact Description
+## Artifact Description
 
-
+The artifact that is left over from a change is...
 
 ## Files Affected
 
 1. `*.*
 
+## A
+
+
+
 ## License
 
-Copyright ©2022 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
