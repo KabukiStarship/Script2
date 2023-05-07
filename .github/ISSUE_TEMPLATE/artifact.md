@@ -5,9 +5,9 @@ title: 'Artifact'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-# 
+# Artifact
 
-## Artifact Description
+## Description
 
 The artifact that is left over from a change is...
 
@@ -21,4 +21,4 @@ The artifact that is left over from a change is...
 
 ## License
 
-Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright 2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

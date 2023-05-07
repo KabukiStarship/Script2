@@ -1,12 +1,11 @@
 ---
 name: Incident
 about: A Incident Command System incident; i.e. a real-world event with time, place, etc.
-title: 'Incident. @2023-'
+title: 'Incident @2023-'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-
-# 
+# Incident
 
 
 
@@ -31,4 +30,4 @@ assignees: 'CookingWithCale'
 
 ## License
 
-Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright 2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

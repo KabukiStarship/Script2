@@ -24,6 +24,33 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define STD_COUT std::wcerr
 namespace _ {
 
+BOL CIsPrintable(CHA item) {
+  if (item < ' ') {
+    if (item == 9) return true; // TAB
+    return false;
+  }
+  if (item == 127) return false;
+  return true;
+}
+
+BOL CIsPrintable(CHB item) {
+  if (item < ' ') {
+    if (item == 9) return true; // TAB
+    return false;
+  }
+  if (item == 127) return false;
+  return true;
+}
+
+BOL CIsPrintable(CHC item) {
+  if (item < ' ') {
+    if (item == 9) return true; // TAB
+    return false;
+  }
+  if (item == 127) return false;
+  return true;
+}
+
 COut::COut() {}
 
 COut::COut(CHA item) { Print(item); }
