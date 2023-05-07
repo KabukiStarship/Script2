@@ -137,7 +137,7 @@ static const CHA* Stack(const CHA* args) {
 
         D_COUT("\n\nsource:" << Charsf(source, cBufferSizeBytes) << 
           "\n\ndestination:" << Charsf(destination, cBufferSizeBytes));
-        A_ASSERT(result > 0);
+        A_ASSERT(result <= 0);
       }
     }
   }

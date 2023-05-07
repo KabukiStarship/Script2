@@ -5,7 +5,7 @@ title: ''
 labels: ''
 assignees: ''
 ---
-# 
+# Mission
 
 ## Problem
 
@@ -33,8 +33,8 @@ Mission
 
 ### Sessions
 
-* CookingWithCale/CookingWithCale#9
+* CookingWithCale/.github#9
 
 ## License
 
-Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright 2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

@@ -14,6 +14,11 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Stringf.h"
 namespace _ {
 
+/* Returns true if the item is printable*/
+BOL CIsPrintable(CHA item);
+BOL CIsPrintable(CHB item);
+BOL CIsPrintable(CHC item);
+
 /* Utility class for printing to the stdout. */
 class LIB_MEMBER COut {
  public:

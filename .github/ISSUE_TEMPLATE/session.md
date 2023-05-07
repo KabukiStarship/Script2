@@ -5,10 +5,10 @@ title: 'Session @2023-'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-#
+# Session
 
-1. CookingWithCale/CookingWithCale#9
+1. CookingWithCale/.github#9
 
 ## License
 
-Copyright ©2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright 2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.

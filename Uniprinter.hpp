@@ -606,6 +606,7 @@ Printer& TPrintChars(Printer& o, const CHT* start, const CHT* stop) {
         address_to_print = start;
         c += cPrintC0Offset;
       }
+      if (c == 127) c = 174;
       o << c;
     }
     o << "| " << Hexf(address_to_print - 1);
