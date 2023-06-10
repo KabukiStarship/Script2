@@ -8,6 +8,7 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include "Array.hpp"
 #include "Binary.hpp"
+#include <typeinfo>
 namespace _ {
 
 /* Creates a CPU word from the repeated fill_char. */
@@ -137,74 +138,108 @@ ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes) {
 }
 
 ISW ArrayCopy(void* destination, ISW destination_size, const void* source,
-               ISW source_size) {
+              ISW source_size) {
   if (source_size <= 0 || destination_size < source_size) return 0;
   return ArrayCopySlow(destination, source, source_size);
 }
 
+/* Compares the two blocks of memory byte by byte to check if they're identical.
+@return a_size_bytes if the two blocks of memory are idential, 0 if either the
+pointers are null or the size in bytes are not the same, and any negative result
+is the index + 1 of the first byte that was not the same. */
 ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
                      ISW b_size_bytes) {
-                                                                                                                            
+  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
+  const CHA* a_cursor = TPtr<CHA>(a),
+    * a_stop = a_cursor + a_size_bytes,
+    * b_cursor = TPtr<CHA>(b);
+  while (a_cursor < a_stop) {
+    if (*a_cursor++ != *b_cursor++)
+      return -TDelta<>(a, a_cursor);
+  }
   return a_size_bytes;
 }
 
+/* Compares the two blocks of memory in words see if they're identical
+@return a_size_bytes if the two blocks of memory are idential, 0 if either the 
+pointers are null or the size in bytes are not the same, and any negative result
+is the index + 1 of the first byte that was not the same. */
 ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
                  ISW b_size_bytes) {
-  if (a_size_bytes != b_size_bytes || a_size_bytes == 0) return 0;
+  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
   const CHA *a_cursor = TPtr<const CHA>(a),
             *a_end = a_cursor + a_size_bytes,
             *b_cursor = TPtr<const CHA>(b),
             *b_end = b_cursor + b_size_bytes;
-  // Algoirhm: (@see ArrayCopy)  @todo Test me!
-  // Step 1: Compare the unaligned lower write bytes.
-  const CHA* cursor = TPtr<CHA>(a),
-           * start  = TPtr<CHA>(b),
-           * stop   = start + a_size_bytes;
-  const IUW* a_begin_word = TAlignUpPTR<IUW>(cursor),
-           * b_begin_word = TAlignUpPTR<IUW>(start);
-  D_COUT("\na:0x" << Hexf(a) <<
-         "\n :0x" << Hexf(a_begin_word) << 
-         "\nb:0x" << Hexf(b) <<
-         "\n :0x" << Hexf(b_begin_word));
-  ISW offset_read  = TDelta<ISW>(cursor, a_begin_word),
-      offset_lower = TDelta<ISW>(b_begin_word, start + offset_read),
-      offset_upper = sizeof(IUW) - offset_lower;
-  while (cursor < TPtr<CHA>(a_begin_word))
-    if(*cursor++ != *start++)
-      return -TDelta<>(a, cursor);
-  // Step 2: Compare the Word aligned data.
-  const IUW* a_end_word = TAlignDownPTR<IUW>(cursor + a_size_bytes),
-           * b_end_word = TAlignDownPTR<IUW>(stop);
-  IUW b_word, b_word_upper = *b_begin_word++;
-  while (a_begin_word < a_end_word) {
-    b_word = b_word_upper >> offset_lower;
-    b_word_upper = *b_begin_word++;
-    b_word |= b_word_upper << offset_upper;
-    IUW a_word = *a_begin_word++;
-    D_COUT("\na_word:0x" << Hexf(a_word) << 
-           "\nb_word:0x" << Hexf(b_word));
-    if (a_word != b_word) {
-      //       word:0xff00ff00
-      // word_lower:0xffff0000
-      // word ^ word_lower: 00ffff00
-      a_word ^= b_word;
-      D_COUT("\n  ^   :0x" << Hexf(a_word));
-      IUA word_byte = a_word & 0xff;
-      IUA r = 0;
-      while (!word_byte) {
-        a_word >>= 8;
-        word_byte = a_word & 0xff;
-        ++r;
-      }
-      D_COUT(" r:" << r);
-      return -(TDelta<>(a, a_begin_word - 1)) + r;
-;   }
-    b_word_upper = *b_begin_word++;
+  // 16-byte Example:
+  // v-- 0x0
+  // xABCDEFG_HIJKLMN_P                  <- a_offset = 1
+  // xxxxABCD_EFGHIJK_LMNP               <- b_offset = 4
+  // 26-byte Example:              v------- a_end
+  // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
+  // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
+  if(a_size_bytes < 2 * WordByteCount) {
+    while (a_cursor < a_end) {
+      if (*a_cursor++ != *b_cursor++)
+        return -TDelta<>(a, a_cursor);
+    }
+    return a_size_bytes;  
   }
-  D_COUT("\n\nYour mom\n\n");
-  // Stop 3: Compare the unaligned upper bytes.
-  start = TPtr<CHA>(b_end_word);
-  while (start < stop) if (*cursor++ != *start++) return -TDelta<>(a, cursor);
+  D_COUT("\n\nStep 1: Compare the words... ");
+  const IUW* a_begin_word = TAlignDownPTR<IUW>(a_cursor),
+           * b_begin_word = TAlignDownPTR<IUW>(b_cursor);
+  const ISW a_offset = TDelta(a_begin_word, a_cursor),
+            b_offset = TDelta(b_begin_word, b_cursor),
+            a_offset_msb = WordByteCount - a_offset,
+            b_offset_msb = WordByteCount - b_offset;
+  IUW a_lsb = *a_begin_word,
+      b_lsb = *b_begin_word;
+  a_cursor = (CHA*)a_begin_word;
+  b_cursor = (CHA*)b_begin_word;
+  D_COUT("\na_offset: " << a_offset << " b_offset: " << b_offset);
+  while (a_cursor < a_end - a_offset) {
+    D_COUT("!");
+    a_cursor += WordByteCount;
+    b_cursor += WordByteCount;
+    const IUW a_msb  = *(IUW*)a_cursor,
+              b_msb  = *(IUW*)b_cursor,
+              a_lsb_shifted = a_lsb >> a_offset,
+              b_lsb_shifted = b_lsb >> b_offset,
+              a_msb_shifted = a_msb << a_offset_msb,
+              b_msb_shifted = b_msb << b_offset_msb,
+              a_word = (a_lsb >> a_offset) | (a_msb << a_offset_msb),
+              b_word = (b_lsb >> b_offset) | (b_msb << b_offset_msb);
+    //0x00ff00
+    // >>
+    //0x0000ff
+    // <<
+    //0xff0000
+    if (a_word != b_word) {
+      D_COUT("\nFound naughty word!" <<
+             "\n0x" << Hexf(a_word) << "\n0x" << Hexf(b_word) <<
+             "\na_lsb: " << Hexf(a_lsb) << "\nb_lsb: " << Hexf(b_lsb) << 
+             "\na_lsb_shifted: " << Hexf(a_lsb_shifted) <<
+             "\nb_lsb_shifted: " << Hexf(b_lsb_shifted) <<
+             "\ntypeid_a: " << typeid(a_lsb_shifted).name() <<
+             "\na_msb: " << Hexf(a_msb) << "\nb_msb: " << Hexf(b_msb) <<
+             "\na_msb_shifted: " << Hexf(a_msb_shifted) <<
+             "\nb_msb_shifted: " << Hexf(b_msb_shifted) <<
+             "\nTDelta(a, a_curosor): " << TDelta(a, a_cursor) <<
+            " \nTDelta(b, b_curosor): " << TDelta(b, b_cursor));
+      IUW index = 0;
+      while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
+      return -TDelta<>(a, a_cursor - WordByteCount + index);
+    }
+    a_lsb = a_msb;
+    b_lsb = b_msb;
+  }
+  D_COUT("\n\nStep 2: Compare the MSB.");
+  a_cursor -= a_offset;
+  b_cursor -= b_offset;
+  while (a_cursor < a_end) {
+    if(*a_cursor++ != *b_cursor)
+      return -TDelta<>(a, a_begin_word - 1);
+  }
   return a_size_bytes;
 }
 
