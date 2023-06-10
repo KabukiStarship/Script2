@@ -31,10 +31,10 @@ void TestStack(const CHA* args) {
          << " size_words:" << stack.AJT().Buffer().SizeWords());
   D_COUT_OBJ(stack);
 
-  enum { cTestCount = 32 };
-  D_COUT("\n\nPushing " << cTestCount << " items on to the Stack...\n");
+  enum { TestCount = 32 };
+  D_COUT("\n\nPushing " << TestCount << " items on to the Stack...\n");
   T i;
-  for (i = 0; i < cTestCount; ++i) {
+  for (i = 0; i < TestCount; ++i) {
     D_COUT("\n| " << i << ".) count:" <<
            stack.Count());
     //D_COUT("\n| Before calling push:" << 
@@ -62,7 +62,7 @@ static const CHA* Stack(const CHA* args) {
 #if SEAM >= SCRIPT2_STACK
   A_TEST_BEGIN;
 
-  D_COUT(Headingf("Testing ArrayCopy with offset sequential arrays..."));
+  D_COUT(Headingf("Testing ArrayCompare with offset sequential arrays..."));
 
   enum {
     cOffset = 2 * sizeof(IUW),
@@ -71,8 +71,11 @@ static const CHA* Stack(const CHA* args) {
   };
   for (ISN i = 0; i < cOffset; ++i) {
     // Create an array of bytes valued sequentially 0 through 255.
+    // i is the offset of the source array and j is the offset of the 
+    // desination array so we can check all memory alignment configurations.
     IUW source[cBufferSizeWords];
     IUA* cursor = TPtr<IUA>(source), * end = cursor + cBufferSizeBytes;
+    // @todo We only need to zero out the i-j bytes
     for (ISN j = i; j > 0; --j) *cursor++ = 0;
     for (ISN j = 0; j < 256; ++j) *cursor++ = ISA(j);
     while (cursor < end) *cursor++ = 0;
@@ -81,63 +84,62 @@ static const CHA* Stack(const CHA* args) {
     // memory layout variation modulo the word size.
     IUW destination[cBufferSizeWords];
     for (ISN j = 0; j < cOffset; ++j) {
-      D_COUT("\n\ni:" << i << "j:" << j);
       ArrayFill(destination, cBufferSizeBytes, 0);
-      IUA* source_start = TPtr<IUA>(source) + j, 
-         * destination_start = TPtr<IUA>(destination) + j;
-      auto result = ArrayCopy(destination_start, cBufferSizeBytes,
+      IUA* a_start = TPtr<IUA>(source) + i, 
+         * b_start = TPtr<IUA>(destination) + j;
+      auto result = ArrayCopy(b_start, cBufferSizeBytes,
                               TPtr<IUA>(source) + i, 256);
-      if (!result) {
+      if (result == 0) {
         D_COUT("\n\nArrayCopy failed!\nsource:\n" << 
                Charsf(source, 256));
         D_COUT("\ndestination:\n" << Charsf(destination, 256));
+        D_ASSERT(result != 0);
       }
       result =
-        ArrayCompareSlow(source_start, 256, destination_start, 256);
-      D_ASSERT(result > 0);
+        ArrayCompareSlow(a_start, 256, b_start, 256);
       if (result <= 0) {
-        D_COUT("\n\nArrayCompareSlow failed with code " << result);
-        result *= -1;
-        D_COUT("\nsource_start[" << result - 1 << "]:0x" <<
-               Hexf(*(source_start + result - 1)) <<
-               " destination_start[" << result - 1 << "]:0x" <<
-               Hexf(*(destination_start + result - 1)) <<
-                
-               "\nsource_start[" << result << "]:0x" <<
-               Hexf(*(source_start + result)) <<
-               " destination_start[" << result << "]:0x" <<
-               Hexf(*(destination_start + result)) <<
+        result = result * -1 - 1;
+        D_COUT("\n\nArrayCompareSlow failed at byte " << result << 
+               " with i:" << i << " j:" << j);
+        D_COUT("\na_cursor[-1]:0x" <<
+               Hexf(*(a_start + result - 1)) <<
+               " b_cursor[-1]:0x" <<
+               Hexf(*(b_start + result - 1)) <<
+               "\na_cursor[ 0]:0x" <<
+               Hexf(*(a_start + result)) <<
+               " b_cursor[ 0]:0x" <<
+               Hexf(*(b_start + result)) <<
+               "\na_cursor[+1]:0x" <<
+               Hexf(*(a_start + result + 1)) <<
+               " b_cursor[+1]:0x" <<
+               Hexf(*(b_start + result + 1)));
 
-               "\nsource_start[" << result + 1 << "]:0x" <<
-               Hexf(*(source_start + result + 1)) <<
-               " destination_start[" << result + 1 << "]:0x" <<
-               Hexf(*(destination_start + result + 1)));
-        A_ASSERT(result > 0);
+        D_COUT("\n\nsource:" << Charsf(source, cBufferSizeBytes) <<
+          "\n\ndestination:" << Charsf(destination, cBufferSizeBytes));
+        A_ASSERT(result <= -1);
       }
-
       result = 
-        ArrayCompareFast(source_start, 256, destination_start, 256);
+        ArrayCompareFast(a_start, 256, b_start, 256);
       if (result <= 0) {
-        D_COUT("\n\nArrayCompareFast failed with result " << result);
-        result *= -1;
-        D_COUT("\nsource_start[" << result - 1 << "]:0x" <<
-                Hexf(*(source_start + result - 1)) <<
-                " destination_start[" << result - 1 << "]:0x" <<
-                Hexf(*(destination_start + result - 1)) <<
-
-                "\nsource_start[" << result << "]:0x" <<
-                Hexf(*(source_start + result)) <<
-                " destination_start[" << result << "]:0x" <<
-                Hexf(*(destination_start + result)) <<
-
-                "\nsource_start[" << result + 1 << "]:0x" <<
-                Hexf(*(source_start + result + 1)) <<
-                " destination_start[" << result + 1 << "]:0x" <<
-                Hexf(*(destination_start + result + 1)));
+        result = result * -1 - 1;
+        D_COUT("\n\nArrayCompareFast failed at byte " << result <<
+               " with i:" << i << " j:" << j);
+        D_COUT("\na_cursor[-1]:0x" <<
+               Hexf(*(a_start + result - 1)) <<
+               " b_cursor[-1]:0x" <<
+               Hexf(*(b_start + result - 1)) <<
+               "\na_cursor[ 0]:0x" <<
+               Hexf(*(a_start + result)) <<
+               " b_cursor[ 0]:0x" <<
+               Hexf(*(b_start + result)) <<
+               "\na_cursor[+1]:0x" <<
+               Hexf(*(a_start + result + 1)) <<
+               " b_cursor[+1]:0x" <<
+               Hexf(*(b_start + result + 1)));
 
         D_COUT("\n\nsource:" << Charsf(source, cBufferSizeBytes) << 
           "\n\ndestination:" << Charsf(destination, cBufferSizeBytes));
-        A_ASSERT(result <= 0);
+        A_ASSERT(result > 0);
       }
     }
   }

@@ -909,8 +909,8 @@ namespace _ {
 CHA* SPrint(CHA* string, CHA* stop, FPC value) {
   if (!string || string >= stop) return nullptr;
   ISW size = stop - string;
-  D_COUT("\nString:" << Hexf(string) << " end:" << Hexf(stop)
-                     << " size:" << size << "\nExpecting:" << value);
+  D_COUT("\nString:" << Hexf(string) << " end:" << Hexf(stop) << 
+         " size:" << size << "\nExpecting:" << value);
   ISC count = sprintf_s(string, stop - string, "%f", value);
   if (count <= 0) return nullptr;
   return string + count;
