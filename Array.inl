@@ -119,13 +119,6 @@ ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
   // 26-byte Example:              v------- a_end
   // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
   // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
-  if(a_size_bytes < 2 * WordByteCount) {
-    while (a_cursor < a_end) {
-      if (*a_cursor++ != *b_cursor++)
-        return -TDelta<>(a, a_cursor);
-    }
-    return a_size_bytes;  
-  }
   // Step 1: Compare the words...
   const IUW* a_begin_word = TAlignDownPTR<IUW>(a_cursor),
            * b_begin_word = TAlignDownPTR<IUW>(b_cursor);
