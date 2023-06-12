@@ -8,7 +8,6 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include "Array.hpp"
 #include "Binary.hpp"
-#include <typeinfo>
 namespace _ {
 
 /* Creates a CPU word from the repeated fill_char. */
@@ -68,7 +67,7 @@ namespace _ {
 
 IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
   size_bytes += (-size_bytes) & cWordLSbMask; //< Word align up.
-  ISW size_words = size_bytes >> cWordBitCount;
+  ISW size_words = size_bytes >> WordBitCount;
   IUW* socket = new IUW[size_words];
   // @todo Check if the memory was created successfully.
   return socket;
@@ -80,6 +79,150 @@ IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
     return nullptr;
   }
   return RamFactoryStack(buffer, size_bytes);
+}
+
+/* Compares the two blocks of memory byte by byte to check if they're identical.
+@return a_size_bytes if the two blocks of memory are idential, 0 if either the
+pointers are null or the size in bytes are not the same, and any negative result
+is the index + 1 of the first byte that was not the same. */
+ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
+                     ISW b_size_bytes) {
+  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
+  const CHA* a_cursor = TPtr<CHA>(a),
+    * a_stop = a_cursor + a_size_bytes,
+    * b_cursor = TPtr<CHA>(b);
+  while (a_cursor < a_stop) {
+    if (*a_cursor++ != *b_cursor++)
+      return -TDelta<>(a, a_cursor);
+  }
+  return a_size_bytes;
+}
+
+/* Compares the two blocks of memory in words see if they're identical
+@return a_size_bytes if the two blocks of memory are idential, 0 if either the 
+pointers are null or the size in bytes are not the same, and any negative result
+is the index + 1 of the first byte that was not the same. */
+ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
+                 ISW b_size_bytes) {
+  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
+  const IUA* a_cursor = TPtr<const IUA>(a),
+           * a_end    = a_cursor + a_size_bytes,
+           * b_cursor = TPtr<const IUA>(b),
+           * b_end    = b_cursor + b_size_bytes;
+  // 18-byte Examples:
+  // v-- 0x0   v--------------------------- a_offset_msb
+  // xABCDEFG_HIJKLMNP_QR                <- a_offset = 1
+  // xxxxABCD_EFGHIJKL_MNPQR             <- b_offset = 4
+  //               v----------------------- a_offset_msb
+  // xxxABCDE_FGHIJKLM_NPQR              <- a_offset = 4
+  // xABCDEFG_HIJKLMNP_QR                <- b_offset = 1
+  // 26-byte Example:              v------- a_end
+  // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
+  // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
+  if(a_size_bytes < 2 * WordByteCount) {
+    while (a_cursor < a_end) {
+      if (*a_cursor++ != *b_cursor++)
+        return -TDelta<>(a, a_cursor);
+    }
+    return a_size_bytes;  
+  }
+  // Step 1: Compare the words...
+  const IUW* a_begin_word = TAlignDownPTR<IUW>(a_cursor),
+           * b_begin_word = TAlignDownPTR<IUW>(b_cursor);
+  const IUA* a_end_word = TAlignDownPTR<const IUA>(a_end);
+  IUW        a_offset = TDelta(a_begin_word, a_cursor) * 8,
+             b_offset = TDelta(b_begin_word, b_cursor) * 8,
+             a_offset_msb = WordByteCount * 8 - a_offset,
+             b_offset_msb = WordByteCount * 8 - b_offset;
+  a_cursor = (IUA*)a_begin_word;
+  b_cursor = (IUA*)b_begin_word;
+  IUW a_lsb = *(IUW*)a_cursor, b_lsb = *(IUW*)b_cursor;
+  while (a_cursor < a_end_word - WordByteCount) {
+    a_cursor += WordByteCount;
+    b_cursor += WordByteCount;
+    const IUW a_msb         = *(IUW*)a_cursor,
+              b_msb         = *(IUW*)b_cursor,
+              a_lsb_shifted = a_lsb >> a_offset,
+              a_msb_shifted = a_offset == 0 ? 0 : a_msb << a_offset_msb,
+              b_lsb_shifted = b_lsb >> b_offset,
+              b_msb_shifted = b_offset == 0 ? 0 : b_msb << b_offset_msb,
+              a_word        = a_lsb_shifted | a_msb_shifted,
+              b_word        = b_lsb_shifted | b_msb_shifted;
+    if (a_word != b_word) {
+      D_COUT("\n\nStep 1 failed!" <<
+             "\na_offset       : " << a_offset << 
+             "\nb_offset    : "    << b_offset <<
+             "\na_offset_msb   : " << a_offset_msb << 
+             "  b_offset_msb: " << b_offset_msb << 
+             "\na_word         : " << Hexf(a_word) << 
+             "\nb_word         : " << Hexf(b_word) <<
+             "\na_lsb          : " << Hexf(a_lsb) <<
+             "\na_lsb_shifted  : " << Hexf(a_lsb_shifted) <<
+             "\na_msb          : " << Hexf(a_msb) <<
+             "\na_msb_shifted  : " << Hexf(a_msb_shifted) << 
+             "\nb_lsb          : " << Hexf(b_lsb) << 
+             "\nb_lsb_shifted  : " << Hexf(b_lsb_shifted) <<
+             "\nb_msb          : " << Hexf(b_msb) <<
+             "\nb_msb_shifted: " << Hexf(b_msb_shifted) << 
+             "\nTDelta<>(a, a_cursor    ): " << TDelta<>(a, a_cursor    ) << 
+             "\nTDelta<>(a_cursor, a_end): " << TDelta<>(a_cursor, a_end) << 
+             "\nTDelta<>(b, b_cursor    ): " << TDelta<>(b, b_cursor    ) << 
+             "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));
+      IUW index = 0;
+      while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
+      return -TDelta<>(a, a_cursor - WordByteCount + index);
+    }
+    a_lsb = a_msb;
+    b_lsb = b_msb;
+  }
+  if (a_cursor == a_end) return a_size_bytes;
+  a_cursor += WordByteCount;
+  b_cursor += WordByteCount;
+  // Step 2: Compare the MSB.
+  const IUW a_msb         = *(IUW*)a_cursor,
+            b_msb         = *(IUW*)b_cursor,
+            a_lsb_shifted = a_lsb >> a_offset,
+            a_msb_shifted = a_offset == 0 ? 0 : a_msb << a_offset_msb,
+            b_lsb_shifted = b_lsb >> b_offset,
+            b_msb_shifted = b_offset == 0 ? 0 : b_msb << b_offset_msb,
+            word_mask     = (~0) >> (WordByteCount - TDelta(a_cursor, a_end)),
+            a_word        = (a_lsb_shifted | a_msb_shifted) & word_mask,
+            b_word        = (b_lsb_shifted | b_msb_shifted) & word_mask;
+  if (a_word != b_word) {
+    D_COUT("\n\nStep 2 failed!" <<
+           "\na_offset     : "  << a_offset << 
+           "  a_offset_msb : "  << a_offset_msb << 
+           "\nb_offset     : "  << b_offset << 
+           "  b_offset_msb : "  << b_offset_msb << 
+           "\nword_mask    : "  << Hexf(word_mask) << 
+           "\na_lsb        : "  << Hexf(a_lsb) << 
+           "  b_lsb        : "  << Hexf(b_lsb) << 
+           "\na_msb        : "  << Hexf(a_msb) << 
+           "  b_msb        : "  << Hexf(b_msb) << 
+           "\na_lsb_shifted: "  << Hexf(a_lsb_shifted) << 
+           "  b_lsb_shifted: "  << Hexf(b_lsb_shifted) << 
+           "\na_msb_shifted: "  << Hexf(a_msb_shifted) << 
+           "  b_msb_shifted: "  << Hexf(b_msb_shifted) << 
+           "\na_word       : "  << Hexf(a_word) << 
+           "  b_word       : "  << Hexf(b_word) << 
+           "\na_cursor[-1] : " << Hexf(*(a_cursor - 1)) << 
+           "  b_cursor[-1] : " << Hexf(*(b_cursor - 1)) << 
+           "\na_cursor[ 0] : " << Hexf(*(a_cursor    )) << 
+           "  b_cursor[ 0] : " << Hexf(*(b_cursor    )) << 
+           "\na_cursor[+1] : " << Hexf(*(a_cursor + 1)) << 
+           "  b_cursor[+1] : " << Hexf(*(b_cursor + 1)) << 
+           "\nTDelta<>(a, a_cursor    ): " << TDelta<>(a, a_cursor    ) << 
+           "\nTDelta<>(a_cursor, a_end): " << TDelta<>(a_cursor, a_end) << 
+           "\nTDelta<>(b, b_cursor    ): " << TDelta<>(b, b_cursor    ) << 
+           "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));
+    return -TDelta<>(a, a_cursor);
+  }
+  return a_size_bytes;
+}
+
+ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
+  ISW b_size_bytes) {
+  return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
 
 ISW ArrayCopySlow(void* write, const void* read, ISW size_bytes) {
@@ -105,13 +248,13 @@ ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes) {
   // any of the x memory bytes else the compiler will yell at us.
   CHA* cursor = TPtr<CHA>(write);
   const CHA* start = TPtr<CHA>(read),
-    * stop = start + size_bytes;
+           * stop  = start + size_bytes;
   IUW* write_begin_word = TAlignUpPTR<IUW>(cursor),
      * write_end_word = TAlignDownPTR<IUW>(cursor + size_bytes);
   const IUW* read_begin_word  = TAlignUpPTR<IUW>(start),
            * read_end_word = TAlignDownPTR<IUW>(stop);
-  ISW  offset_read      = TDelta<ISW>(cursor, write_begin_word),
-       offset_lower     = TDelta<ISW>(read_begin_word, start + offset_read),
+  IUW  offset_read      = TDelta(cursor, write_begin_word),
+       offset_lower     = TDelta(read_begin_word, start + offset_read),
        offset_upper     = sizeof(IUW) - offset_lower;
   while (cursor < TPtr<CHA>(write_begin_word)) *cursor++ = *start++;
 
@@ -141,111 +284,6 @@ ISW ArrayCopy(void* destination, ISW destination_size, const void* source,
               ISW source_size) {
   if (source_size <= 0 || destination_size < source_size) return 0;
   return ArrayCopySlow(destination, source, source_size);
-}
-
-/* Compares the two blocks of memory byte by byte to check if they're identical.
-@return a_size_bytes if the two blocks of memory are idential, 0 if either the
-pointers are null or the size in bytes are not the same, and any negative result
-is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
-                     ISW b_size_bytes) {
-  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
-  const CHA* a_cursor = TPtr<CHA>(a),
-    * a_stop = a_cursor + a_size_bytes,
-    * b_cursor = TPtr<CHA>(b);
-  while (a_cursor < a_stop) {
-    if (*a_cursor++ != *b_cursor++)
-      return -TDelta<>(a, a_cursor);
-  }
-  return a_size_bytes;
-}
-
-/* Compares the two blocks of memory in words see if they're identical
-@return a_size_bytes if the two blocks of memory are idential, 0 if either the 
-pointers are null or the size in bytes are not the same, and any negative result
-is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
-                 ISW b_size_bytes) {
-  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
-  const CHA *a_cursor = TPtr<const CHA>(a),
-            *a_end = a_cursor + a_size_bytes,
-            *b_cursor = TPtr<const CHA>(b),
-            *b_end = b_cursor + b_size_bytes;
-  // 16-byte Example:
-  // v-- 0x0
-  // xABCDEFG_HIJKLMN_P                  <- a_offset = 1
-  // xxxxABCD_EFGHIJK_LMNP               <- b_offset = 4
-  // 26-byte Example:              v------- a_end
-  // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
-  // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
-  if(a_size_bytes < 2 * WordByteCount) {
-    while (a_cursor < a_end) {
-      if (*a_cursor++ != *b_cursor++)
-        return -TDelta<>(a, a_cursor);
-    }
-    return a_size_bytes;  
-  }
-  D_COUT("\n\nStep 1: Compare the words... ");
-  const IUW* a_begin_word = TAlignDownPTR<IUW>(a_cursor),
-           * b_begin_word = TAlignDownPTR<IUW>(b_cursor);
-  const ISW a_offset = TDelta(a_begin_word, a_cursor),
-            b_offset = TDelta(b_begin_word, b_cursor),
-            a_offset_msb = WordByteCount - a_offset,
-            b_offset_msb = WordByteCount - b_offset;
-  IUW a_lsb = *a_begin_word,
-      b_lsb = *b_begin_word;
-  a_cursor = (CHA*)a_begin_word;
-  b_cursor = (CHA*)b_begin_word;
-  D_COUT("\na_offset: " << a_offset << " b_offset: " << b_offset);
-  while (a_cursor < a_end - a_offset) {
-    D_COUT("!");
-    a_cursor += WordByteCount;
-    b_cursor += WordByteCount;
-    const IUW a_msb  = *(IUW*)a_cursor,
-              b_msb  = *(IUW*)b_cursor,
-              a_lsb_shifted = a_lsb >> a_offset,
-              b_lsb_shifted = b_lsb >> b_offset,
-              a_msb_shifted = a_msb << a_offset_msb,
-              b_msb_shifted = b_msb << b_offset_msb,
-              a_word = (a_lsb >> a_offset) | (a_msb << a_offset_msb),
-              b_word = (b_lsb >> b_offset) | (b_msb << b_offset_msb);
-    //0x00ff00
-    // >>
-    //0x0000ff
-    // <<
-    //0xff0000
-    if (a_word != b_word) {
-      D_COUT("\nFound naughty word!" <<
-             "\n0x" << Hexf(a_word) << "\n0x" << Hexf(b_word) <<
-             "\na_lsb: " << Hexf(a_lsb) << "\nb_lsb: " << Hexf(b_lsb) << 
-             "\na_lsb_shifted: " << Hexf(a_lsb_shifted) <<
-             "\nb_lsb_shifted: " << Hexf(b_lsb_shifted) <<
-             "\ntypeid_a: " << typeid(a_lsb_shifted).name() <<
-             "\na_msb: " << Hexf(a_msb) << "\nb_msb: " << Hexf(b_msb) <<
-             "\na_msb_shifted: " << Hexf(a_msb_shifted) <<
-             "\nb_msb_shifted: " << Hexf(b_msb_shifted) <<
-             "\nTDelta(a, a_curosor): " << TDelta(a, a_cursor) <<
-            " \nTDelta(b, b_curosor): " << TDelta(b, b_cursor));
-      IUW index = 0;
-      while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
-      return -TDelta<>(a, a_cursor - WordByteCount + index);
-    }
-    a_lsb = a_msb;
-    b_lsb = b_msb;
-  }
-  D_COUT("\n\nStep 2: Compare the MSB.");
-  a_cursor -= a_offset;
-  b_cursor -= b_offset;
-  while (a_cursor < a_end) {
-    if(*a_cursor++ != *b_cursor)
-      return -TDelta<>(a, a_begin_word - 1);
-  }
-  return a_size_bytes;
-}
-
-ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
-  ISW b_size_bytes) {
-  return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
 
 Nil::Nil() {}
