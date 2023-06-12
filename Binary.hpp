@@ -324,14 +324,14 @@ constexpr IUD CAlignDown(IUD value, IUD align_lsb_mask = cWordLSbMask) {
 /* Calculates the size_bytes in size_words. */
 template <typename ISZ>
 inline ISZ TSizeWords(ISZ size) {
-  return AlignUp(size) >> cWordBitCount;
+  return AlignUp(size) >> WordBitCount;
 }
 
 
 template <typename ISZ>
 constexpr ISZ CSizeWords(ISZ size) {
   ISZ size_aligned = size + ((-size) & cWordLSbMask);
-  size_aligned = size_aligned >> cWordBitCount;
+  size_aligned = size_aligned >> WordBitCount;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
 

@@ -207,7 +207,7 @@ IUW* TStackClone(TStack<ISZ>* stack, ISZ count_max, TStack<ISZ>* other,
   if (count_max < other_count_max) return nullptr;
   IUW *source = TPtr<IUW>(stack), *destination = TPtr<IUW>(stack);
   ISZ word_count =
-      (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> cWordBitCount;
+      (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> WordBitCount;
   size -= word_count;
   while (word_count-- > 0) *destination++ = *source++;
   return reinterpret_cast<IUW*>(stack);
@@ -231,7 +231,7 @@ IUW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
   IUW *source = reinterpret_cast<IUW*>(stack),  //
       *destination = other_buffer;
   ISZ data_amount =
-      (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> cWordBitCount;
+      (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> WordBitCount;
   size -= data_amount;
   while (data_amount-- > 0) *destination++ = *source++;
   return destination;

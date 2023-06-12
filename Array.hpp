@@ -173,7 +173,7 @@ inline ISZ TSizeBytes(Autoject& autoject) {
 template <typename T, typename ISZ, typename Class>
 inline ISZ TSizeWords(ISZ size) {
   ISZ size_aligned_up = AlignUp(TSizeBytes<T, ISZ, Class>(size));
-  return size_aligned_up >> cWordBitCount;
+  return size_aligned_up >> WordBitCount;
 }
 template <typename T, typename ISZ, typename Class>
 inline ISZ TSizeWords(IUW* origin) {
