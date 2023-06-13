@@ -261,7 +261,6 @@ ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
   if (r_offset == 0) {
     //D_COUT("\nr_offset == 0  w_stop_word - w_start_word: " << 
     //       w_stop_word - w_start_word);
-    r_offset -= w_offset;
     while (w_start_word < w_stop_word)
       *w_start_word++ = *r_start_word++;
   } else {
@@ -298,7 +297,7 @@ ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
   w_cursor = TPtr<IUA>(w_start_word);
   //D_COUT("\nr_start: " << Hexf(r_start) << "  r_stop:" << Hexf(r_stop));
   while (r_start < r_stop) {
-    //D_COUT("!");
+    D_COUT("!");
     *w_cursor++ = *r_start++;
   }
   return r_size_bytes;
