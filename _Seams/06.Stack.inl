@@ -65,68 +65,65 @@ static const CHA* Stack(const CHA* args) {
   D_COUT(Headingf("Testing ArrayCompare with offset sequential arrays..."));
 
   enum {
-    Offset = 2 * sizeof(IUW),
+    OffsetMax = 2 * WordByteCount,
     TestByteCount = 256,
-    BufferSizeBytes = TestByteCount + 2 * Offset,
+    BufferSizeBytes = TestByteCount + 2 * OffsetMax,
     BufferSizeWords = BufferSizeBytes >> WordBitCount,
   };
-  for (ISN a_offset = 0; a_offset < Offset; ++a_offset) {
+  for (ISN s_offset = 0; s_offset < OffsetMax; ++s_offset) {
     // Create an array of bytes valued sequentially 0 through 255.
-    // i is the offset of the source array and b_offset is the offset of the 
+    // i is the offset of the source array and d_offset is the offset of the 
     // desination array so we can check all memory alignment configurations.
     IUW source[BufferSizeWords];
-    IUA* cursor = TPtr<IUA>(source), * end = cursor + BufferSizeBytes;
-    // @todo We only need to zero out the i-b_offset bytes
-    for (ISN b_offset = a_offset; b_offset > 0; --b_offset) *cursor++ = 0;
-    for (ISN b_offset = 0; b_offset < TestByteCount; ++b_offset)
-      *cursor++ = ISA(b_offset);
-    while (cursor < end) *cursor++ = 0;
+    IUA* cursor = TPtr<IUA>(source),
+       * s_end   = cursor + BufferSizeBytes,
+       * s_start = TPtr<IUA>(source) + s_offset;
+    // @todo We only need to zero out the i-d_offset bytes
+    while (cursor < s_start) *cursor++ = 0;
+    for (ISN i = 0; i < TestByteCount; ++i) *cursor++ = ISA(i);
+    while (cursor < s_end) *cursor++ = 0;
     //D_COUT(Charsf(source, cBufferSizeBytes));
     // Copy those bytes into a buffer with an offset to exaustly test each 
     // memory layout variation modulo the word size.
     IUW destination[BufferSizeWords];
-    for (ISN b_offset = 0; b_offset < Offset; ++b_offset) {
-      //D_COUT("\na_offset: " << a_offset << " b_offset: " << b_offset);
-      ArrayFill(destination, BufferSizeBytes, 0);
-      IUA* a_start = TPtr<IUA>(source) + a_offset, 
-         * b_start = TPtr<IUA>(destination) + b_offset;
-      auto result = ArrayCopy(b_start, BufferSizeBytes,
-                              TPtr<IUA>(source) + a_offset, TestByteCount);
-      if (result == 0) {
-        D_COUT("\n\nArrayCopy failed!\nsource:\n" << 
-               Charsf(source, TestByteCount));
-        D_COUT("\ndestination:\n" << Charsf(destination, TestByteCount));
-        D_ASSERT(result != 0);
-      }
-      result = ArrayCompareSlow(a_start, TestByteCount, b_start, TestByteCount);
+    for (ISN d_offset = 0; d_offset < OffsetMax; ++d_offset) {
+      cursor = TPtr<IUA>(destination);
+      IUA *d_start = cursor + d_offset,
+         * d_end = d_start + BufferSizeBytes;
+      while (cursor < d_start) *cursor++ = 0;
+      for (ISN i = 0; i < TestByteCount; ++i)
+        *cursor++ = ISA(i);
+      while (cursor < d_end) *cursor++ = 0;
+
+      ISW result = ArrayCompareSlow(s_start, TestByteCount, d_start, TestByteCount);
       if (result <= 0) {
         result = result * -1 - 1;
         D_COUT("\n\nArrayCompareSlow failed at byte " << result << 
-               " with i:" << a_offset << " b_offset:" << b_offset <<
-               "\na_cursor[-1]: " << Hexf(*(a_start + result - 1)) <<
-               "  b_cursor[-1]: " << Hexf(*(b_start + result - 1)) <<
-               "\na_cursor[ 0]: " << Hexf(*(a_start + result    )) <<
-               "  b_cursor[ 0]: " << Hexf(*(b_start + result    )) <<
-               "\na_cursor[+1]: " << Hexf(*(a_start + result + 1)) <<
-               "  b_cursor[+1]: " << Hexf(*(b_start + result + 1)) <<
+               " with s_offset:" << s_offset << " d_offset:" << d_offset <<
+               "\na_cursor[-1]: " << Hexf(*(s_start + result - 1)) <<
+               "  b_cursor[-1]: " << Hexf(*(d_start + result - 1)) <<
+               "\na_cursor[ 0]: " << Hexf(*(s_start + result    )) <<
+               "  b_cursor[ 0]: " << Hexf(*(d_start + result    )) <<
+               "\na_cursor[+1]: " << Hexf(*(s_start + result + 1)) <<
+               "  b_cursor[+1]: " << Hexf(*(d_start + result + 1)) <<
                "\n\nsource:"      << Charsf(source, BufferSizeBytes) <<
                "\n\ndestination:" << Charsf(destination, BufferSizeBytes));
         A_ASSERT(result < 0);
       }
       for (ISN k = TestByteCount - 1; k > 0; --k) {
-        result = ArrayCompareFast(a_start, TestByteCount - k, b_start,
+        result = ArrayCompareFast(s_start, TestByteCount - k, d_start,
                                   TestByteCount - k);
         if (result <= 0) {
           result = result * -1 - 1;
           D_COUT(
               "\n\nArrayCompareFast failed at byte " << result << 
-              " with a_offset:" << a_offset << " b_offset:" << b_offset << 
-              "\na_cursor[-1]: " << Hexf(*(a_start + result - 1)) << 
-              "  b_cursor[-1]: " << Hexf(*(b_start + result - 1)) << 
-              "\na_cursor[ 0]: " << Hexf(*(a_start + result    )) << 
-              "  b_cursor[ 0]: " << Hexf(*(b_start + result    )) << 
-              "\na_cursor[+1]: " << Hexf(*(a_start + result + 1)) << 
-              "  b_cursor[+1]: " << Hexf(*(b_start + result + 1)) << 
+              " with s_offset:" << s_offset << " d_offset:" << d_offset << 
+              "\na_cursor[-1]: " << Hexf(*(s_start + result - 1)) << 
+              "  b_cursor[-1]: " << Hexf(*(d_start + result - 1)) << 
+              "\na_cursor[ 0]: " << Hexf(*(s_start + result    )) << 
+              "  b_cursor[ 0]: " << Hexf(*(d_start + result    )) << 
+              "\na_cursor[+1]: " << Hexf(*(s_start + result + 1)) << 
+              "  b_cursor[+1]: " << Hexf(*(d_start + result + 1)) << 
               "\n\nsource:"      << Charsf(source, BufferSizeBytes) << 
               "\n\ndestination:" << Charsf(destination, BufferSizeBytes));
           A_ASSERT(result < 0);
@@ -135,37 +132,38 @@ static const CHA* Stack(const CHA* args) {
     }
   }
 
-  D_COUT(Headingf("Test ArrayCopy and MemoryCompare"));
+  D_COUT(Headingf("Test ArrayCopy"));
 
-  IUA source[TestByteCount + Offset],
-      destination[TestByteCount + Offset];
+  IUA source[TestByteCount + OffsetMax],
+      destination[TestByteCount + OffsetMax];
+  for (IUW s_offset = 0; s_offset < OffsetMax; ++s_offset) {
+    for (IUW d_offset = 0; d_offset < OffsetMax; ++d_offset) {
+      //D_COUT("\n\ns_offset1: " << s_offset << "  d_offset1: " << d_offset);
+      IUA* cursor = source;
 
-  for (IUW s_offset = 0; s_offset < Offset; 
-      ++s_offset) {
-    for (IUW d_offset = 0; d_offset < Offset;
-         ++d_offset) {
-      IUA* a_cursor = source;
-      for (IUW i = 0; i < s_offset; ++i) *a_cursor++ = 0;
-      for (IUW i = 0; i < TestByteCount; ++i) *a_cursor++ = IUA(i);
-      for (IUW i = 0; i < Offset - s_offset; ++i)
-        *a_cursor++ = 0;
-
-      IUA* s_start = source + s_offset, 
+      for (IUW i = 0; i < s_offset; ++i) *cursor++ = 0;
+      for (IUW i = 0; i < TestByteCount; ++i) *cursor++ = IUA(i);
+      for (IUW i = 0; i < OffsetMax - s_offset; ++i) *cursor++ = 0;
+      cursor = destination;
+      while (cursor < destination + TestByteCount + OffsetMax) *cursor++ = 0;
+      IUA* s_start = source + s_offset,
          * d_start = destination + d_offset;
-      ISW result = ArrayCopySlow(s_start, d_start, TestByteCount);
+      
+      ISW result = ArrayCopyFast(d_start, TestByteCount, s_start, TestByteCount);
       A_ASSERT(result == TestByteCount);
-      result = ArrayCompareSlow(source + s_offset, TestByteCount,
-                                destination, TestByteCount);
+      //D_COUT("\n\nsource:" << Charsf(source, TestByteCount + OffsetMax) << 
+      //       "\n\ndestination:" << Charsf(destination, TestByteCount + OffsetMax));
+      result = ArrayCompareSlow(s_start, TestByteCount, d_start, TestByteCount);
       if (result <= 0) {
         D_COUT("\n\nArrayCompareFast failed at byte: " << result << 
-               "\n\nsource:" << Charsf(source, TestByteCount + Offset) << 
-               "\n\ndestination:" << Charsf(destination, TestByteCount + Offset));
+               "\n\nsource:" << Charsf(source, TestByteCount + OffsetMax) << 
+               "\n\ndestination:" << Charsf(destination, TestByteCount + OffsetMax));
         A_ASSERT(result >= 0);
       }
     }
   }
-
   D_COUT(Headingf("TestStack"));
+  D_ASSERT(false);
 
   // TestStack<ISC, ISD>(args); is illegal
   TestStack<ISC, ISC>(args);

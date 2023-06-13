@@ -73,7 +73,7 @@ IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
   return socket;
 }
 
-IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
+IUW* RamFactoryHeap(IUW* buffer, const ISW size_bytes) {
   if (buffer) {
     delete[] buffer;
     return nullptr;
@@ -85,16 +85,16 @@ IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
 @return a_size_bytes if the two blocks of memory are idential, 0 if either the
 pointers are null or the size in bytes are not the same, and any negative result
 is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
-                     ISW b_size_bytes) {
+ISW ArrayCompareSlow(const void* a, const ISW a_size_bytes, const void* b,
+                     const ISW b_size_bytes) {
   if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
   const CHA* a_cursor = TPtr<CHA>(a),
-    * a_stop = a_cursor + a_size_bytes,
-    * b_cursor = TPtr<CHA>(b);
-  while (a_cursor < a_stop) {
-    if (*a_cursor++ != *b_cursor++)
+           * a_end    = a_cursor + a_size_bytes,
+           * b_cursor = TPtr<CHA>(b);
+  while (a_cursor < a_end)
+    if (*a_cursor++ != *b_cursor++) {
       return -TDelta<>(a, a_cursor);
-  }
+    }
   return a_size_bytes;
 }
 
@@ -102,8 +102,8 @@ ISW ArrayCompareSlow(const void* a, ISW a_size_bytes, const void* b,
 @return a_size_bytes if the two blocks of memory are idential, 0 if either the 
 pointers are null or the size in bytes are not the same, and any negative result
 is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
-                 ISW b_size_bytes) {
+ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
+                     const ISW b_size_bytes) {
   if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
   const IUA* a_cursor = TPtr<const IUA>(a),
            * a_end    = a_cursor + a_size_bytes,
@@ -214,19 +214,26 @@ ISW ArrayCompareFast(const void* a, ISW a_size_bytes, const void* b,
 }
 
 ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
-  ISW b_size_bytes) {
+                 const ISW b_size_bytes) {
   return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
 
-ISW ArrayCopySlow(void* write, const void* read, ISW size_bytes) {
-  CHA* cursor = TPtr<CHA>(write);
-  const CHA* start = TPtr<CHA>(read),
-    * stop = start + size_bytes;
-  while (start < stop) *cursor++ = *start++;
-  return size_bytes;
+ISW ArrayCopySlow(void* write, ISW w_size_bytes, const void* read, 
+                  const ISW r_size_bytes) {
+  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes)
+    return 0;
+  CHA* w_cursor = TPtr<CHA>(write);
+  const CHA* r_cursor = TPtr<const CHA>(read);
+  while (r_cursor < r_cursor + r_size_bytes) *w_cursor++ = *r_cursor++;
+  return r_size_bytes;
 }
 
-ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes) {
+ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
+                  const ISW r_size_bytes) {
+  if (r_size_bytes < WordByteCount)
+    return ArrayCopySlow(write, w_size_bytes, read, r_size_bytes);
+  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes)
+    return 0;
   // Algorithm:
   // 64-bit Memory Layout that grows 3 bytes: 
   // b=byte bbbbbbbb_=64-bit word x=illegal memory address ?=legal memory byte
@@ -239,44 +246,82 @@ ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes) {
   // Step 1: Copy to the unaligned lower write bytes.
   // We start out with a socket full of memory taht we're not allowed to access
   // any of the x memory bytes else the compiler will yell at us.
-  CHA* cursor = TPtr<CHA>(write);
-  const CHA* start = TPtr<CHA>(read),
-           * stop  = start + size_bytes;
-  IUW* write_begin_word = TAlignUpPTR<IUW>(cursor),
-     * write_end_word = TAlignDownPTR<IUW>(cursor + size_bytes);
-  const IUW* read_begin_word  = TAlignUpPTR<IUW>(start),
-           * read_end_word = TAlignDownPTR<IUW>(stop);
-  IUW  offset_read      = TDelta(cursor, write_begin_word),
-       offset_lower     = TDelta(read_begin_word, start + offset_read),
-       offset_upper     = sizeof(IUW) - offset_lower;
-  while (cursor < TPtr<CHA>(write_begin_word)) *cursor++ = *start++;
+  const IUA* r_start      = TPtr<IUA>(read),
+           * r_stop       = r_start + r_size_bytes;
+  IUA      * w_cursor     = TPtr<IUA>(write);
+  IUW      * w_start_word = TAlignUpPTR<IUW>(w_cursor);
 
-  // Step 2: Copy the Word aligned data.
-  // Write: bbbbbbbb_bbbbbbbb_bbbbbbbb_bbb?????
-  //     -->  <-- offset_lower=2
-  //  Read: ??bbbbbb_bbbbbbbb_bbbbbbbb_bb??????
-  //       -->      <-- offset_upper=6
-  IUW word_upper, word_lower;
-  word_upper = *read_begin_word++;
-  while(write_begin_word < write_end_word) {
-    word_lower = word_upper >> offset_lower;
-    word_upper  = *read_begin_word++;
-    word_lower |= word_upper << offset_upper;
-    *write_begin_word++ = word_lower;
-    word_upper = word_lower;
+  while (w_cursor < TPtr<IUA>(w_start_word)) *w_cursor++ = *r_start++;
+
+  IUW* w_stop_word = TAlignDownPTR<IUW>(w_cursor + r_size_bytes);
+  const IUW *r_start_word = TAlignDownPTR<const IUW>(r_start);
+  IUW w_offset = TDelta(w_cursor, w_start_word),
+      r_offset = TDelta(r_start_word, r_start);
+
+  if (r_offset == 0) {
+    //D_COUT("\nr_offset == 0  w_stop_word - w_start_word: " << 
+    //       w_stop_word - w_start_word);
+    r_offset -= w_offset;
+    while (w_start_word < w_stop_word)
+      *w_start_word++ = *r_start_word++;
+  } else {
+
+    // Step 2: Copy the Word aligned data.
+    // Write: bbbbbbbb_bbbbbbbb_bbbbbbbb_bbb?????
+    //     -->  <-- offset_lower=2
+    //  Read: ??bbbbbb_bbbbbbbb_bbbbbbbb_bb??????
+    //       -->      <-- offset_upper=6
+    /*
+    D_COUT("\nStep 1 wrote "  << TDelta(write, w_cursor) << " bytes." <<
+           "\nr_offset    : " << r_offset << 
+           "\nw_start_word: " << Hexf(w_start_word) << 
+           "  w_stop_word: "  << Hexf(w_stop_word) << 
+           "  delta: "        << TDelta(w_start_word, w_stop_word));*/
+
+    IUW       r_word_lsb   = *r_start_word++;
+    const IUW r_offset_lsb = r_offset * 8,
+              r_offset_msb = (WordByteCount - r_offset) * 8;
+
+    while (w_start_word < w_stop_word) {
+      const IUW r_word_msb = *r_start_word++;
+      IUW r_lsb = r_word_lsb >> r_offset_lsb,
+          r_msb = r_word_msb << r_offset_msb,
+          word = r_lsb | r_msb;
+      //D_COUT("\nr_lsb: " << Hexf(r_lsb) << "  r_msb: " << Hexf(r_msb));
+      *w_start_word++ = word;
+      r_word_lsb = r_word_msb;
+    }
   }
-
-  // Stop 3: Copy the unaligned upper bytes.
+  // Step 3: Copy the unaligned upper bytes.
   //  Write: bbbbbbbb_bbbbbbbb_bbbbbbbb
-  start = TPtr<CHA>(read_end_word);
-  while (start < stop) *cursor++ = *start++;
-  return size_bytes;
+  r_start = TPtr<const IUA>(r_start_word) + r_offset;
+  w_cursor = TPtr<IUA>(w_start_word);
+  //D_COUT("\nr_start: " << Hexf(r_start) << "  r_stop:" << Hexf(r_stop));
+  while (r_start < r_stop) {
+    //D_COUT("!");
+    *w_cursor++ = *r_start++;
+  }
+  return r_size_bytes;
 }
 
 ISW ArrayCopy(void* destination, ISW destination_size, const void* source,
-              ISW source_size) {
-  if (source_size <= 0 || destination_size < source_size) return 0;
-  return ArrayCopySlow(destination, source, source_size);
+              const ISW source_size) {
+  return ArrayCopySlow(destination, destination_size, source, source_size);
+}
+/*
+inline ISW ArrayCopy(void* write, void* write_end, const void* read,
+                     const ISW r_size_bytes) {
+  return ArrayCopy(write, TDelta(write, write_end), read, r_size_bytes);
+}*/
+
+inline ISW ArrayCopyFast(void* write, void* write_end, const void* read,
+                         const ISW r_size_bytes) {
+  return ArrayCopyFast(write, TDelta(write, write_end), read, r_size_bytes);
+}
+
+inline ISW ArrayCopySlow(void* write, void* write_end, const void* read,
+                         const ISW r_size_bytes) {
+  return ArrayCopySlow(write, TDelta(write, write_end), read, r_size_bytes);
 }
 
 Nil::Nil() {}
