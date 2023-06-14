@@ -422,11 +422,11 @@ IUW Stringf::Word() { return buffer_[0]; }
 
 void* Stringf::Value() { return buffer_; }
 
-void* Stringf::Ptr() { return reinterpret_cast<void*>(buffer_[0]); }
+void* Stringf::Ptr() { return TPtr<void>(buffer_[0]); }
 
-const CHA* Stringf::STA() { return reinterpret_cast<const CHA*>(String_); }
-const CHB* Stringf::STB() { return reinterpret_cast<const CHB*>(String_); }
-const CHC* Stringf::STC() { return reinterpret_cast<const CHC*>(String_); }
+const CHA* Stringf::STA() { return TPtr<const CHA>(String_); }
+const CHB* Stringf::STB() { return TPtr<const CHB>(String_); }
+const CHC* Stringf::STC() { return TPtr<const CHC>(String_); }
 
 ISW Stringf::Type() const { return type_; }
 
@@ -601,31 +601,31 @@ void Stringf::Hex(CHA item, ISW count) {
 }
 #if USING_UTF16 == YES_0
 void Stringf::Hex(CHB item, ISW count) {
-  *reinterpret_cast<CHB*>(buffer_) = item;
+  *TPtr<CHB>(buffer_) = item;
   type_ = cCHB;
   count_ = -count;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Hex(CHC item, ISW count) {
-  *reinterpret_cast<CHC*>(buffer_) = item;
+  *TPtr<CHC>(buffer_) = item;
   type_ = cCHC;
   count_ = -count;
 }
 #endif
 void Stringf::Hex(ISA item, ISW count) {
-  *reinterpret_cast<ISA*>(buffer_) = item;
+  *TPtr<ISA>(buffer_) = item;
   type_ = cISA;
   count_ = -count;
 }
 void Stringf::Hex(IUA item, ISW count) {
-  *reinterpret_cast<IUA*>(buffer_) = item;
+  *TPtr<IUA>(buffer_) = item;
   type_ = cIUA;
   count_ = -count;
 }
 
 void Stringf::Hex(ISB item, ISW count) {
-  *reinterpret_cast<ISB*>(buffer_) = item;
+  *TPtr<ISB>(buffer_) = item;
   type_ = cISB;
   count_ = -count;
 }
@@ -637,7 +637,7 @@ void Stringf::Hex(IUB item, ISW count) {
 }
 
 void Stringf::Hex(ISC item, ISW count) {
-  *reinterpret_cast<ISC*>(buffer_) = item;
+  *TPtr<ISC>(buffer_) = item;
   type_ = cISC;
   count_ = -count;
 }
@@ -648,7 +648,7 @@ void Stringf::Hex(IUC item, ISW count) {
 }
 
 void Stringf::Hex(ISD item, ISW count) {
-  *reinterpret_cast<ISD*>(buffer_) = item;
+  *TPtr<ISD>(buffer_) = item;
   type_ = cISD;
   count_ = -count;
 }
@@ -661,7 +661,7 @@ void Stringf::Hex(IUD item, ISW count) {
 
 #if USING_FPC == YES_0
 void Stringf::Hex(FPC item, ISW count) {
-  *reinterpret_cast<FPC*>(buffer_) = item;
+  *TPtr<FPC>(buffer_) = item;
   type_ = cFPC;
   count_ = -count;
 }
@@ -669,7 +669,7 @@ void Stringf::Hex(FPC item, ISW count) {
 
 #if USING_FPD == YES_0
 void Stringf::Hex(FPD item, ISW count) {
-  *reinterpret_cast<FPD*>(buffer_) = item;
+  *TPtr<FPD>(buffer_) = item;
   type_ = cFPD;
   count_ = -count;
 }
@@ -874,11 +874,10 @@ Headingf::Headingf(const CHA* caption1, const CHA* caption2,
       caption3(caption3) {}
 
 Charsf::Charsf(const void* start, const void* stop)
-    : element(reinterpret_cast<const CHA*>(start),
-              reinterpret_cast<const CHA*>(stop) -
-                  reinterpret_cast<const CHA*>(start)) {}
+    : element(TPtr<const CHA>(start),
+              TPtr<const CHA>(stop) - TPtr<const CHA>(start)) {}
 Charsf::Charsf(const void* start, ISW count)
-    : element(reinterpret_cast<const CHA*>(start), count) {}
+    : element(TPtr<const CHA>(start), count) {}
 
 #if USING_UTF16 == YES_0
 Charsf::Charsf(const CHB* start, const CHB* stop)

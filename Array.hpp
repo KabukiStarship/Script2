@@ -49,7 +49,7 @@ namespace _ {
 //};
 
 inline IUW* AutojectBeginSet(Autoject& obj, void* buffer) {
-  IUW* ptr = reinterpret_cast<IUW*>(buffer);
+  IUW* ptr = TPtr<IUW>(buffer);
   if (!ptr) return ptr;
   obj.origin = ptr;
   return ptr;
@@ -93,8 +93,8 @@ inline BOL TArrayCountIsValid(ISZ index, ISZ count_min) {
 /* Gets the first byte of the ASCII Object data section. */
 template <typename Class, typename T>
 inline T* TArrayStart(Class* autoject) {
-  ISW address = reinterpret_cast<ISW>(autoject);
-  return reinterpret_cast<T*>(address + sizeof(Class));
+  ISW address = ISW(autoject);
+  return TPtr<T>(address + ISW(sizeof(Class)));
 }
 
 /* Prints the item to the printer*/
@@ -134,7 +134,7 @@ constexpr ISZ CSizeMin() {
 /* Sets the size to the new_size*/
 template <typename ISZ>
 inline IUW* TSizeSet(IUW* origin, ISZ new_size) {
-  *reinterpret_cast<ISZ*>(origin) = new_size;
+  *TPtr<ISZ>(origin) = new_size;
   return origin;
 }
 
@@ -146,7 +146,7 @@ inline ISZ TSizeSet(Autoject& autoject, ISZ new_size) {
 /* Gets the ASCII Autoject size. */
 template <typename ISZ>
 inline ISZ TSize(IUW* origin) {
-  return *reinterpret_cast<ISZ*>(origin);
+  return *TPtr<ISZ>(origin);
 }
 
 /* Gets the ASCII Autoject size. */
@@ -250,9 +250,9 @@ TArray<ISZ>* TArrayWrite(TArray<ISZ>* destination, TArray<ISZ>* source,
 template <typename T = IUA, typename ISZ = ISN, typename Class>
 IUW* TArrayWrite(IUW* destination, IUW* source, ISZ size) {
   TArray<ISZ>* result =
-      TArrayWrite<T, ISZ, Class>(reinterpret_cast<TArray<ISZ>*>(destination),
-                                 reinterpret_cast<TArray<ISZ>*>(source), size);
-  return reinterpret_cast<IUW*>(result);
+      TArrayWrite<T, ISZ, Class>(TPtr<TArray<ISZ>>(destination),
+                                 TPtr<TArray<ISZ>>(source), size);
+  return TPtr<IUW>(result);
 }
 
 /* Clones the other ASCII Autoject including possibly unused autoject space.
@@ -264,7 +264,7 @@ IUW* TArrayClone(Autoject& obj) {
   IUW* origin = obj.origin;
   // if (!factory || !origin) return nullptr;
 
-  TArray<ISZ>* o = reinterpret_cast<TArray<ISZ>*>(origin);
+  TArray<ISZ>* o = TPtr<TArray<ISZ>>(origin);
   ISZ size = o->size;
   IUW* clone = TArrayNew<T, ISZ, TArray<ISZ>>(size);
   return TArrayWrite<T, ISZ, Class>(clone, origin, size);
@@ -316,7 +316,7 @@ template <typename ISZ>
 inline CHA* TArrayEnd(Autoject stack) {
   IUW* socket = stack.origin;
   A_ASSERT(socket);
-  ISZ size = *reinterpret_cast<ISZ*>(socket);
+  ISZ size = *TPtr<ISZ>(socket);
   return TPtr<CHA>(socket) + size;
 }
 
@@ -324,21 +324,21 @@ inline CHA* TArrayEnd(Autoject stack) {
 template <typename ISZ>
 inline const CHA* TArrayEnd(const Autoject stack) {
   IUW* socket = stack.origin;
-  ISZ size = *reinterpret_cast<ISZ*>(socket);
-  return reinterpret_cast<const CHA*>(socket) + size;
+  ISZ size = *TPtr<ISZ>(socket);
+  return TPtr<const CHA>(socket) + size;
 }
 
 /* Returns the start of the OBJ. */
 template <typename T = CHA, typename ISZ, typename Class>
 inline T* TArrayStart(TArray<ISZ>* obj) {
-  IUW start = reinterpret_cast<IUW>(obj) + sizeof(Class);
-  return reinterpret_cast<T*>(start);
+  IUW start = IUW(obj) + sizeof(Class);
+  return TPtr<T>(start);
 }
 
 /* Returns the start of the OBJ. */
 template <typename T = CHA, typename ISZ>
 inline T* TArrayStart(IUW* obj) {
-  return TArrayStart<T, ISZ>(reinterpret_cast<TArray<ISZ>*>(obj));
+  return TArrayStart<T, ISZ>(TPtr<TArray<ISZ>>(obj));
 }
 
 /* Gets the stop of the TArray. */
@@ -350,7 +350,7 @@ inline T* TArrayStop(TArray<ISZ>* ary) {
 /* Returns the stop of the OBJ. */
 template <typename T = CHA, typename ISZ>
 inline T* TArrayStop(IUW* obj) {
-  return TArrayStop<T, ISZ>(reinterpret_cast<TArray<ISZ>*>(obj));
+  return TArrayStop<T, ISZ>(TPtr<TArray<ISZ>>(obj));
 }
 
 /* Prints this autoject to the COut. */
@@ -359,7 +359,7 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
   o << "\nAutoject<IS" << CHA('0' + sizeof(ISZ)) << '>';
   IUW* origin = obj.origin;
   if (origin) {
-    ISZ size = *reinterpret_cast<ISZ*>(origin);
+    ISZ size = *TPtr<ISZ>(origin);
     o << " size:" << (ISW)size;
   }
   return o;
@@ -401,7 +401,7 @@ inline ISW ArrayCompare(const void* a_begin, const void* end_a,
 inline ISW ArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
                         ISW b_size_bytes) {
   return ArrayCompare(a_begin, a_end, a_begin,
-                      reinterpret_cast<const CHA*>(b_begin) + b_size_bytes);
+                      TPtr<const CHA>(b_begin) + b_size_bytes);
 }
 
 /* Casts ArrayCompare to type T. */
@@ -438,14 +438,14 @@ class TBUF {
   /* Gets the origin element of the socket. */
   template <typename T = CHA>
   inline T* Begin() {
-    return reinterpret_cast<T*>(words_);
+    return TPtr<T>(words_);
   }
 
   /* Returns the first element of the ASCII Object data section. */
   template <typename RT = T>
   inline RT* Start() {
-    ISW address = reinterpret_cast<IUW>(words_);
-    return reinterpret_cast<RT*>(address + sizeof(Class));
+    ISW address = IUW(words_);
+    return TPtr<RT>(address + sizeof(Class));
   }
 
   /* Gets the end element of the socket. */
@@ -465,7 +465,7 @@ class TBUF {
   template <typename ISW>
   inline IUW* SizeSet(ISW size) {
     A_ASSERT((size & cWordLSbMask) == 0)
-    *reinterpret_cast<ISW*>(words_) = size;
+    *TPtr<ISW>(words_) = size;
     return words_;
   }
 
@@ -592,8 +592,8 @@ class AArray {
 
   /* Returns the start of the OBJ. */
   inline T* Start() {
-    IUW ptr = reinterpret_cast<IUW>(obj_.origin) + sizeof(TArray<ISZ>);
-    return reinterpret_cast<T*>(ptr);
+    IUW ptr = IUW(obj_.origin) + sizeof(TArray<ISZ>);
+    return TPtr<T>(ptr);
   }
 
   /* Gets the stop of the OBJ. */
@@ -606,7 +606,7 @@ class AArray {
 
   /* Gets the TArray<ISZ> for this object. */
   inline TArray<ISZ>* Array() {
-    return reinterpret_cast<TArray<ISZ>*>(obj_.origin);
+    return TPtr<TArray<ISZ>>(obj_.origin);
   }
 
   /* Attempts to grow the this autoject.

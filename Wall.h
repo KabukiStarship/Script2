@@ -73,7 +73,7 @@ class Wall : public Operand {
     //< on 16 and 32-bit systems.
     size_bytes -= sizeof(IUW) * (aligned_buffer - socket);
     origin = socket;
-    doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
+    doors_ = TPtr<TMatrix<Door*>>(aligned_buffer);
     TStackInit(socket, size_bytes >> sizeof(IUW));
   }
 
@@ -93,7 +93,7 @@ class Wall : public Operand {
     //< on 16 and 32-bit systems.
     size_bytes -= sizeof(IUW) * (aligned_buffer - socket);
     origin = socket;
-    doors_ = reinterpret_cast<TMatrix<Door*>*>(aligned_buffer);
+    doors_ = TPtr<TMatrix<Door*>>(aligned_buffer);
     TStackInit(socket, size_bytes >> sizeof(IUW));
   }
 

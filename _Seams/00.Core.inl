@@ -81,7 +81,7 @@ inline const CHA* Core(const CHA* args) {
   };
   CHB str2[cSTRBCount];
   CHB* str2_cursor = str2;
-  str2_cursor = SPrint(str2, cSTRBCount - 1, CHC(0));
+  str2_cursor = SPrint(str2, ISW(cSTRBCount) - 1, CHC(0));
   D_COUT(Hexf(str2) << TPtr<CHA>(str2 + 3) - 1);
   A_ASSERT(str2_cursor);
   const CHB* str2_result = SScan(str2, ch4_found);

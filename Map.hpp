@@ -68,7 +68,7 @@ inline ISZ* TMapDomain(TMap<ISZ>* map, ISZ index) {
 /* Returns the start of the codomain. */
 template <typename D = ISN, typename ISZ = ISW>
 inline const ISZ* TMapCodomain(const D* domain, ISZ size) {
-  return reinterpret_cast<const ISZ*>(domain + size);
+  return TPtr<const ISZ>(domain + size);
 }
 template <typename D = ISN, typename ISZ = ISW>
 inline ISZ* TMapCodomain(D* domain, ISZ size) {
@@ -390,8 +390,7 @@ class AMap {
   inline AArray<TMapBuf<D, ISZ>, ISZ, BUF>& AJT() { return array_; }
 
   /* Gets a pointer to the object at the origin of the aarray_. */
-  inline TMap<ISZ>* This() {
-    return reinterpret_cast<TMap<ISZ>*>(AJT().Origin());
+  inline TMap<ISZ>* This() { return TPtr<TMap<ISZ>>(AJT().Origin());
   }
 };
 }  //< namespace _

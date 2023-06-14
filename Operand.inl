@@ -28,7 +28,7 @@ const CHA* OperandName(Operand* operand) {
 IUW OperandCount(Operand* operand) {
   A_ASSERT(operand);
   const Op* op = operand->Star(0, nullptr);
-  return (op == nullptr) ? 0 : reinterpret_cast<IUW>(op->in);
+  return (op == nullptr) ? 0 : IUW(op->in);
 }
 
 CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
@@ -66,8 +66,8 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
 
   A_ASSERT(op);
 
-  IUW num_ops = reinterpret_cast<IUW>(op->in),
-      op_num = reinterpret_cast<IUW>(op->out), last_op = op_num + num_ops - 1;
+  IUW num_ops = IUW(op->in),
+      op_num = IUW(op->out), last_op = op_num + num_ops - 1;
   if (num_ops > cParamsMax) {
     return utf << "\nError: Too many parameters!";
   }

@@ -115,7 +115,7 @@ inline const Op* BInError(BIn* bin, Error error, const ISC* header, ISC offset,
 BIn* BInInit(IUW* socket, ISC size) {
   D_ASSERT(size >= cSlotSizeMin);
 
-  BIn* bin = reinterpret_cast<BIn*>(socket);
+  BIn* bin = TPtr<BIn>(socket);
   bin->size = size - sizeof(BIn);
   bin->origin = 0;
   bin->stop = 0;

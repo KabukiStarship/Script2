@@ -123,7 +123,7 @@ inline ISZ TLoomKeysSize(ISY count_max, ISZ average_length_string =
 template <TARGS>
 inline CHT* TLoomStart(TLoom<ISZ, ISY>* loom, ISY count_max) {
   ISZ* top = &TStackStart<ISZ, ISY>(&loom->map)[count_max];
-  return reinterpret_cast<CHT*>(top);
+  return TPtr<CHT>(top);
 }
 
 template <TARGS>
@@ -148,14 +148,14 @@ inline TLoom<ISZ, ISY>* TLoomInit(TLoom<ISZ, ISY>* loom, ISY count_max) {
 
 template <TARGS>
 CHA* TLoomEnd(TLoom<ISZ, ISY>* loom) {
-  ISW address = reinterpret_cast<ISW>(loom) + loom->size_bytes;
-  return reinterpret_cast<CHA*>(address);
+  ISW address = ISW(loom) + loom->size_bytes;
+  return TPtr<CHA>(address);
 }
 
 template <TARGS>
 CHT* TLoomStop(TLoom<ISZ, ISY>* loom) {
-  ISW address = reinterpret_cast<ISW>(loom) + loom->top;
-  return reinterpret_cast<CHT*>(address);
+  ISW address = ISW(loom) + loom->top;
+  return TPtr<CHT>(address);
 }
 
 /* Gets the element at the given index. */
@@ -334,7 +334,7 @@ CHT* TLoomPop(TLoom<ISZ, ISY>* loom) {
   if (loom->map.count == 0) return nullptr;
   ISZ offset = TStackPop<ISZ, ISY>(&loom->map), top = loom->top;
   loom->top = offset;
-  return reinterpret_cast<CHT*>(reinterpret_cast<ISW>(loom) + offset);
+  return TPtr<CHT>(ISW(loom) + offset);
 }
 
 /* Adds a string to the end of the Loom.
@@ -368,7 +368,7 @@ ISZ TLoomFind(TLoom<ISZ, ISY>* loom, const CHT* string) {
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
   for (ISZ i = 0; i < loom->map.count; ++i) {
     ISZ offset = offsets[i];
-    CHT* other = reinterpret_cast<CHT*>(reinterpret_cast<IUW>(loom) + offset);
+    CHT* other = TPtr<CHT>(IUW(loom) + offset);
     if (!TSTRCompare<CHT>(string, other)) return i;
   }
   return -1;

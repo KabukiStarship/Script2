@@ -43,7 +43,7 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
   CHA *success = stop, *aligned_pointer = TAlignUpPTR<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
-  IUW *words = reinterpret_cast<IUW*>(start),
+  IUW *words = TPtr<IUW>(start),
       *words_end = TAlignDownPTR<IUW>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
@@ -125,11 +125,12 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
   const IUA* a_end_word = TAlignDownPTR<const IUA>(a_end);
   IUW        a_offset = TDelta(a_begin_word, a_cursor) * 8,
              b_offset = TDelta(b_begin_word, b_cursor) * 8,
-             a_offset_msb = WordByteCount * 8 - a_offset,
-             b_offset_msb = WordByteCount * 8 - b_offset;
+             a_offset_msb = IUW(WordByteCount) * 8 - a_offset,
+             b_offset_msb = IUW(WordByteCount) * 8 - b_offset;
   a_cursor = (IUA*)a_begin_word;
   b_cursor = (IUA*)b_begin_word;
-  IUW a_lsb = *(IUW*)a_cursor, b_lsb = *(IUW*)b_cursor;
+  IUW a_lsb = *TPtr<IUW>(a_cursor), 
+      b_lsb = *TPtr<IUW>(b_cursor);
   while (a_cursor < a_end_word - WordByteCount) {
     a_cursor += WordByteCount;
     b_cursor += WordByteCount;
@@ -142,6 +143,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
               a_word        = a_lsb_shifted | a_msb_shifted,
               b_word        = b_lsb_shifted | b_msb_shifted;
     if (a_word != b_word) {
+      /*
       D_COUT("\n\nStep 1 failed!" <<
              "\na_offset       : " << a_offset << 
              "\nb_offset    : "    << b_offset <<
@@ -160,7 +162,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
              "\nTDelta<>(a, a_cursor    ): " << TDelta<>(a, a_cursor    ) << 
              "\nTDelta<>(a_cursor, a_end): " << TDelta<>(a_cursor, a_end) << 
              "\nTDelta<>(b, b_cursor    ): " << TDelta<>(b, b_cursor    ) << 
-             "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));
+             "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));*/
       IUW index = 0;
       while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
       return -TDelta<>(a, a_cursor - WordByteCount + index);
@@ -178,11 +180,13 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
             a_msb_shifted = a_offset == 0 ? 0 : a_msb << a_offset_msb,
             b_lsb_shifted = b_lsb >> b_offset,
             b_msb_shifted = b_offset == 0 ? 0 : b_msb << b_offset_msb,
-            word_mask     = (~0) >> (WordByteCount - TDelta(a_cursor, a_end)),
+            word_mask     = ~IUW(0) >> (WordByteCount - TDelta(a_cursor, a_end)),
             a_word        = (a_lsb_shifted | a_msb_shifted) & word_mask,
             b_word        = (b_lsb_shifted | b_msb_shifted) & word_mask;
   if (a_word != b_word) {
-    D_COUT("\n\nStep 2 failed!" <<
+    /* D_COUT(
+        "\n\nStep 2 failed!"
+        <<
            "\na_offset     : "  << a_offset << 
            "  a_offset_msb : "  << a_offset_msb << 
            "\nb_offset     : "  << b_offset << 
@@ -207,7 +211,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
            "\nTDelta<>(a, a_cursor    ): " << TDelta<>(a, a_cursor    ) << 
            "\nTDelta<>(a_cursor, a_end): " << TDelta<>(a_cursor, a_end) << 
            "\nTDelta<>(b, b_cursor    ): " << TDelta<>(b, b_cursor    ) << 
-           "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));
+           "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));*/
     return -TDelta<>(a, a_cursor);
   }
   return a_size_bytes;
@@ -339,16 +343,16 @@ ISW ArrayShiftUp(void* origin, void* end, ISW count) {
   }
   IUW lsb_mask = sizeof(IUW) - 1;
   // Align the pointer down.
-  IUW value = reinterpret_cast<IUW>(stop);
-  CHA* pivot = reinterpret_cast<CHA*>(value - (value & lsb_mask));
+  IUW value = IUW(stop);
+  CHA* pivot = TPtr<CHA>(value - (value & lsb_mask));
 
   // Shift up the top portion.
   for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
-  IUW* stop_word = reinterpret_cast<IUW*>(stop);
+  IUW* stop_word = TPtr<IUW>(stop);
 
   // Align the pointer up.
   value = CAlignUp(value, lsb_mask);
-  IUW* start_word = reinterpret_cast<IUW*>(value);
+  IUW* start_word = TPtr<IUW>(value);
 
   // Shift up the moddle portion.
   while (stop_word >= start_word) *(stop_word + count) = *stop_word--;
@@ -369,17 +373,16 @@ ISW ArrayShiftDown(void* origin, void* end, ISW count) {
   }
   IUW least_significant_bits_mask = sizeof(IUW) - 1;
   // Align the pointer down.
-  IUW value = reinterpret_cast<IUW>(stop);
-  CHA* pivot =
-      reinterpret_cast<CHA*>(value - (value & least_significant_bits_mask));
+  IUW value = IUW(stop);
+  CHA* pivot = TPtr<CHA>(value - (value & least_significant_bits_mask));
 
   // Shift up the top portion.
   for (ISC i = 0; i < count; ++i) *(stop + count) = *stop--;
-  IUW* stop_word = reinterpret_cast<IUW*>(stop);
+  IUW* stop_word = TPtr<IUW>(stop);
 
   // Align the pointer up.
-  value = reinterpret_cast<IUW>(start);
-  IUW* start_word = reinterpret_cast<IUW*>(
+  value = IUW(start);
+  IUW* start_word = TPtr<IUW>(
       value + ((-(ISW)value) & least_significant_bits_mask));
 
   // Shift up the moddle portion.

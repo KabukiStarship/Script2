@@ -27,7 +27,7 @@ Printer& TBInPrint(Printer& printer, BIn* bin) {
 inline CHA* BInBegin(BIn* bin) { return TPtr<CHA>(bin) + sizeof(BIn); }
 
 inline const Op* BOutRead(BOut* bout, const ISC* params, void** args) {
-  return BInRead(reinterpret_cast<BIn*>(bout), params, args);
+  return BInRead(TPtr<BIn>(bout), params, args);
 }
 
 }  //< namespace _

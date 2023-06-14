@@ -77,7 +77,7 @@ const CHA* STRTrue() { return "true"; }
 const CHA* STRFalse() { return "false"; }
 
 Typef TypefOf() {
-  Typef typef;
+  Typef typef = {0, 0}; //< I don't want to init this but the compiler is barking.
   typef.type = 0;
   typef.string = nullptr;
   return typef;
@@ -111,7 +111,7 @@ AValue::AValue(ISC item) : type_(cISC) {
   // @todo I don't know if this is going to be needed. In my mind the compiler
   // will push the word_ onto the program stack because of the *reintpret_cast.
   // This might however get optimized into just storing item. Dissassemble me!
-  *reinterpret_cast<ISC*>(&word_) = item;
+  *TPtr<ISC>(&word_) = item;
 }
 #else
 TypeValue::TypeValue(ISC item) : type_(cISC), word_(IUW(item)), word_2_(0) {}
@@ -128,9 +128,7 @@ TypeValue::TypeValue(IUC item) : type_(cIUC), word_(IUW(item)), word_2_(0) {}
 #if ALU_SIZE == ALU_64_BIT
 TypeValue::TypeValue(ISD item) : type_(cISD), word_(IUW(item)), word_2_(0) {}
 #else
-AValue::AValue(ISD item) : type_(cISD) {
-  *reinterpret_cast<ISD*>(&word_) = item;
-}
+AValue::AValue(ISD item) : type_(cISD) { *TPtr<ISD>(&word_) = item; }
 #endif
 
 #if ALU_SIZE == ALU_64_BIT
@@ -146,9 +144,7 @@ AValue::AValue(IUD item) : type_(cIUD) {
 TypeValue::TypeValue(FPC item)
     : type_(cFPC), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FPC item) : type_(cFPC) {
-  *reinterpret_cast<FPC*>(&word_) = item;
-}
+AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
 #endif
 #endif
 
@@ -157,16 +153,14 @@ AValue::AValue(FPC item) : type_(cFPC) {
 TypeValue::TypeValue(FPD item)
     : type_(cFPD), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FPD item) : type_(cFPD) {
-  *reinterpret_cast<FPD*>(&word_) = item;
-}
+AValue::AValue(FPD item) : type_(cFPD) { *TPtr<FPD>(&word_) = item; }
 #endif
 #endif
 
 TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
   DTW pod_type = type & cTypePODMask;
   if (type != pod_type) {
-    word_ = reinterpret_cast<IUW>(item);
+    word_ = IUW(item);
   } else if (pod_type <= 7) {
     word_ = TGet<IUA>(item);
   } else if (pod_type <= 15) {
@@ -176,7 +170,7 @@ TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
   } else {
 #if ALU_SIZE != ALU_16_BIT
     IUD* destination = TPtr<IUD>(WordPTR());
-    const IUD* source = reinterpret_cast<const IUD*>(item);
+    const IUD* source = TPtr<const IUD>(item);
     *destination = *source;
     if (pod_type >= cISE) {
       ++destination;
@@ -195,10 +189,10 @@ DTW TypeValue::UnicodeFormat() { return TypeTextFormat(type_); }
 
 void* TypeValue::WordPTR() { return &word_; }
 
-void* TypeValue::ToPTR() { return reinterpret_cast<void*>(word_); }
-CHA* TypeValue::ToSTA() { return reinterpret_cast<CHA*>(word_); }
-CHB* TypeValue::ToSTB() { return reinterpret_cast<CHB*>(word_); }
-CHC* TypeValue::ToSTC() { return reinterpret_cast<CHC*>(word_); }
+void* TypeValue::ToPTR() { return TPtr<void>(word_); }
+CHA* TypeValue::ToSTA() { return TPtr<CHA>(word_); }
+CHB* TypeValue::ToSTB() { return TPtr<CHB>(word_); }
+CHC* TypeValue::ToSTC() { return TPtr<CHC>(word_); }
 IUA TypeValue::ToIUA() { return IUA(word_); }
 IUB TypeValue::ToIUB() { return IUB(word_); }
 IUN TypeValue::ToIUN() { return IUN(word_); }
@@ -240,7 +234,7 @@ void TypeValue::Set(CHA item) {
 }
 void TypeValue::Set(const CHA* item) {
   type_ = CTypeMap(cSTA, cCNS_PTR);
-  word_ = reinterpret_cast<IUW>(item);
+  word_ = IUW(item);
 }
 #endif
 #if USING_UTF16 == YES_0
@@ -250,7 +244,7 @@ void TypeValue::Set(CHB item) {
 }
 void TypeValue::Set(const CHB* item) {
   type_ = cSTB;
-  word_ = reinterpret_cast<IUW>(item);
+  word_ = IUW(item);
 }
 #endif
 #if USING_UTF32 == YES_0
@@ -260,7 +254,7 @@ void TypeValue::Set(CHC item) {
 }
 void TypeValue::Set(const CHC* item) {
   type_ = cSTC;
-  word_ = reinterpret_cast<IUW>(item);
+  word_ = IUW(item);
 }
 #endif
 void TypeValue::Set(ISA item) {

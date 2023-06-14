@@ -32,11 +32,11 @@ struct TString {
 
 template <typename T, typename ISZ>
 inline ISZ TSizeBytes(TString<ISZ>* string) {
-  return TSizeBytes<T, ISZ, TString<ISZ>*>(reinterpret_cast<IUW*>(string));
+  return TSizeBytes<T, ISZ, TString<ISZ>*>(TPtr<IUW>(string));
 }
 template <typename T, typename ISZ>
 inline ISZ TSizeWords(TString<ISZ>* string) {
-  return TSizeWords<T, ISZ, TString<ISZ>*>(reinterpret_cast<IUW*>(string));
+  return TSizeWords<T, ISZ, TString<ISZ>*>(TPtr<IUW>(string));
 }
 
 /* Gets the first character in the string. */
@@ -46,21 +46,21 @@ inline CHT* TSTRStart(TString<ISZ>* string) {
 }
 template <typename CHT = CHR, typename ISZ = ISN>
 inline CHT* TSTRStart(IUW* origin) {
-  return TSTRStart<CHT, ISZ>(reinterpret_cast<TString<ISZ>*>(origin));
+  return TSTRStart<CHT, ISZ>(TPtr<TString<ISZ>>(origin));
 }
 
 /* Searches for the stop of the string. */
 template <typename CHT = CHR, typename ISZ = ISN>
 inline CHT* TSTRStop(void* origin) {
-  ISZ size = reinterpret_cast<TString<ISZ>*>(origin)->size;
-  CHT* start = TSTRStart<CHT, ISZ>(reinterpret_cast<TString<ISZ>*>(origin));
+  ISZ size = TPtr<TString<ISZ>>(origin)->size;
+  CHT* start = TSTRStart<CHT, ISZ>(TPtr<TString<ISZ>>(origin));
   return start + size - 1;
 }
 
 /* Gets the stop char of the string. */
 template <typename CHT = CHR, typename ISZ = ISN>
 inline CHT* TSTRStop(void* origin, ISW size) {
-  CHT* ptr = reinterpret_cast<CHT*>(TSTRStart<CHT, ISZ>(origin));
+  CHT* ptr = TPtr<CHT>(TSTRStart<CHT, ISZ>(origin));
   return ptr + size - 1;
 }
 
@@ -83,7 +83,7 @@ inline TString<ISZ>* TStringInit(TString<ISZ>* string, ISZ size) {
 /* Initializes an ASCII String. */
 template <typename CHT = CHR, typename ISZ = ISN>
 inline CHT* TStringInit(IUW* obj, ISZ size) {
-  return TStringInit<ISZ, CHT>(reinterpret_cast<TString<ISZ>*>(obj), size);
+  return TStringInit<ISZ, CHT>(TPtr<TString<ISZ>>(obj), size);
 }
 
 /* Prints this object to the given printer. */
@@ -115,7 +115,7 @@ PrintBottomLine:
 template <typename Printer, typename CHT = CHR, typename ISZ = ISN>
 inline Printer& TStringPrint(Printer& o, Autoject autoject) {
   return TStringPrint<Printer, CHT, ISZ>(
-      o, reinterpret_cast<TString<ISZ>*>(autoject.origin));
+      o, TPtr<TString<ISZ>>(autoject.origin));
 }
 
 template <typename CHT = CHR, typename ISZ = ISN>
@@ -135,7 +135,7 @@ IUW* TStringClone(Autoject& obj) {
 /* Gets the size from the string at the given origin address. */
 template <typename ISZ = ISN>
 inline ISZ TStringSize(IUW* origin) {
-  return reinterpret_cast<TString<ISZ>*>(origin)->size;
+  return TPtr<TString<ISZ>>(origin)->size;
 }
 
 template <typename CHT = CHR, typename ISZ = ISN>

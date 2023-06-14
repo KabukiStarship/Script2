@@ -62,6 +62,7 @@ IUW* TStackFactoryStack(IUW* buffer, ISW size_bytes) {
   if (size_bytes < 0) {
     if (size_bytes == -1) return TPtr<>(cType);
     if (size_bytes == -2) { // Autogrow 2X
+      D_COUT("\nHello world!");
       buffer_size_bytes = *TPtr<ISZ>(buffer);
       buffer_size_bytes_new = buffer_size_bytes << 1; // <<1 to *2.
     }
@@ -75,14 +76,14 @@ IUW* TStackFactoryStack(IUW* buffer, ISW size_bytes) {
   return buffer;
 }
 
-template<typename ISZ = ISN, DTA cPODType>
+template<typename ISZ = ISN, DTA PODType>
 IUW* TStackFactoryHeap(IUW* buffer, ISW size_bytes) {
-  enum { cISZSizeBitCount = sizeof(ISZ) == 2 ? 1 : sizeof(ISZ) == 4 ? 2 : 3,
+  enum { ISZSizeBitCount = sizeof(ISZ) == 2 ? 1 : sizeof(ISZ) == 4 ? 2 : 3,
     // The ASCII Data Type word
-    cType = cPODType | cSTK << cTypePODBitCount | 
-            cISZSizeBitCount << cTypeVECBitCount,
+    Type = PODType | cSTK << TypePODBitCount | 
+           ISZSizeBitCount << TypeVECBitCount,
   };
-  if (size_bytes < 0) return TPtr<>(cType);
+  if (size_bytes < 0) return TPtr<>(Type);
   *TPtr<ISZ>(buffer) = ISZ(size_bytes);
   return RamFactoryHeap(buffer, size_bytes);
 }
@@ -90,8 +91,8 @@ IUW* TStackFactoryHeap(IUW* buffer, ISW size_bytes) {
 /* Gets the size of a Stack with the given count_max. */
 template <typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSize(ISZ count_max) {
-  enum { cCountMaxMin = sizeof(IUD) / sizeof(T) };
-  if (count_max < cCountMaxMin) count_max = cCountMaxMin;
+  enum { CountMaxMin = sizeof(IUD) / sizeof(T) };
+  if (count_max < CountMaxMin) count_max = CountMaxMin;
   return sizeof(TStack<ISZ>) + sizeof(T) * count_max;
 }
 
@@ -99,10 +100,10 @@ inline ISZ TStackSize(ISZ count_max) {
 template <typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSizeMin() {
   enum {
-    cStackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
-    cStackCountMaxMin = sizeof(TStack<ISZ>) + sizeof(T) * cStackCountMin,
+    StackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
+    StackCountMaxMin = sizeof(TStack<ISZ>) + sizeof(T) * StackCountMin,
   };
-  return cStackCountMaxMin;
+  return StackCountMaxMin;
 }
 
 /* Gets the max number_ of elements in an obj with the specific index
@@ -170,7 +171,7 @@ T* TStackStart(TStack<ISZ>* stack) {
 /* Returns the last element of the stack. */
 template <typename T = ISW, typename ISZ = ISN, typename Type = T>
 inline Type TStackEnd(TStack<ISZ>* stack) {
-  return reinterpret_cast<Type>(TStackStart<T, ISZ>(stack) + stack->count);
+  return TPtr<Type>(TStackStart<T, ISZ>(stack) + stack->count);
 }
 
 /* Returns the first empty element of the stack. */
@@ -210,7 +211,7 @@ IUW* TStackClone(TStack<ISZ>* stack, ISZ count_max, TStack<ISZ>* other,
       (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> WordBitCount;
   size -= word_count;
   while (word_count-- > 0) *destination++ = *source++;
-  return reinterpret_cast<IUW*>(stack);
+  return TPtr<IUW>(stack);
 }
 
 /* Returns the other Stack to the preallocated stack's buffer.
@@ -228,7 +229,7 @@ IUW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
   A_ASSERT(stack);
   ISZ size = stack->count_max;
   IUW* other_buffer = socket_factory(nullptr, size);
-  IUW *source = reinterpret_cast<IUW*>(stack),  //
+  IUW *source = TPtr<IUW>(stack),  //
       *destination = other_buffer;
   ISZ data_amount =
       (stack->count * sizeof(T) + sizeof(TStack<ISZ>)) >> WordBitCount;
@@ -246,7 +247,7 @@ IUW* TStackClone(Autoject& obj) {
   IUW* origin = obj.origin;
   if (!factory || !origin) return nullptr;
 
-  TStack<ISZ>* o = reinterpret_cast<TStack<ISZ>*>(origin);
+  TStack<ISZ>* o = TPtr<TStack<ISZ>>(origin);
   ISZ count = o->count;
   IUW* clone = TArrayNew<T, ISZ, TStack<ISZ>>(count);
   ISW size_bytes = (ISW)TStackSizeOf<T, ISZ>(count);
@@ -261,7 +262,7 @@ can fit in type ISW, the unaltered socket pointer if the Stack has grown to the
 size upper bounds, or a new dynamically allocated socket upon failure. */
 template <typename T = ISW, typename ISZ = ISN>
 BOL TStackGrow(Autoject& obj) {
-  TStack<ISZ>* stack = reinterpret_cast<TStack<ISZ>*>(obj.origin);
+  TStack<ISZ>* stack = TPtr<TStack<ISZ>>(obj.origin);
   A_ASSERT(stack);
 #if D_THIS
   D_COUT("\nAuto-growing Stack...\nBefore:");
@@ -273,7 +274,7 @@ BOL TStackGrow(Autoject& obj) {
   size = size << 1;
   ISZ new_size_bytes = TStackSizeOf<T, ISZ>(size);
   IUW* new_begin = obj.socket_factory(nullptr, new_size_bytes);
-  TStack<ISZ>* other = reinterpret_cast<TStack<ISZ>*>(new_begin);
+  TStack<ISZ>* other = TPtr<TStack<ISZ>>(new_begin);
   other->count_max = size;
   other->count = stack->count;
   D_COUT(" copying data...");
@@ -291,7 +292,7 @@ BOL TStackGrow(Autoject& obj) {
 @return Nil upon failure. */
 template <typename T = ISW, typename ISZ = ISN>
 BOL TStackResize(Autoject& obj, ISZ new_count) {
-  TStack<ISZ> stack = *reinterpret_cast<TStack<ISZ>*>(obj.origin);
+  TStack<ISZ> stack = *TPtr<TStack<ISZ>>(obj.origin);
   ISZ count = stack.count, count_max = TStackSizeMax<T, ISZ>();
   if (count > count_max || count == new_count) return false;
 }
@@ -640,7 +641,7 @@ class AStack {
 
   /* Gets this ASCII Object. */
   inline TStack<ISZ>* This() {
-    return reinterpret_cast<TStack<ISZ>*>(obj_.Origin());
+    return TPtr<TStack<ISZ>>(obj_.Origin());
   }
 
   /* Gets this AArray. */

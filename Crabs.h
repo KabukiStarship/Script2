@@ -131,7 +131,7 @@ LIB_MEMBER Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_count,
 
 /* Gets the base address of the device stack. */
 inline Operand** CrabsStack(Crabs* crabs) {
-  return reinterpret_cast<Operand**>(&crabs->root);
+  return TPtr<Operand*>(&crabs->root);
 }
 
 /* Returns true if the Stack uses dynamic memory. */

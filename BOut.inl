@@ -35,7 +35,7 @@ namespace _ {
 @return Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error) {
   D_COUT("\nBOut " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Output.
@@ -47,7 +47,7 @@ inline const Op* BOutError(BOut* bout, Error error) {
 @return         Returns a Static Error Op Result. */
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
   D_COUT("\nBOut " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Output.
@@ -60,7 +60,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header) {
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset) {
   D_COUT("\nBOut " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Output.
@@ -73,7 +73,7 @@ inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
 inline const Op* BOutError(BOut* bout, Error error, const ISC* header,
                            ISC offset, CHA* address) {
   D_COUT("\nBOut " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 const CHA** BOutStateStrings() {
@@ -89,7 +89,7 @@ BOut* BOutInit(IUW* socket, ISC size) {
   if (size < cSlotSizeMin) return nullptr;
   if (socket == nullptr) return nullptr;
 
-  BOut* bout = reinterpret_cast<BOut*>(socket);
+  BOut* bout = TPtr<BOut>(socket);
   // bout->size  = size - sizeof (BIn); //< Not sure why I did that?
   bout->size = size;
   bout->origin = 0;
