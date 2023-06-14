@@ -157,7 +157,7 @@ class TDoor : public Operand {
   IUW* begin_;                     //< Pointer to dynamic socket.
   TMatrix<ISC, ISC, ISC>* slots_;  //< Slots in the door.
   CBIn* OffsetToBIn(ISC offset) {
-    return reinterpret_cast<CBIn*>(reinterpret_cast<IUW>(this) + offset);
+    return TPtr<CBIn>(IUW(this) + offset);
   }
 };
 
@@ -165,7 +165,7 @@ class TDoor : public Operand {
 static Door* DoorInit (ISC* socket, ISC slot_size) {
   if (socket == nullptr) return nullptr;
   if (slot_size < kMinSlotSize) return nullptr;
-  Wall* wall = reinterpret_cast<Door*>(socket);
+  Wall* wall = TPtr<Door>(socket);
   w->is_dynamic = 0;
   w->num_doors = 0;
   w->max_num_doors;

@@ -89,8 +89,7 @@ inline const CHT* TSTREnd(const CHT* string) {
 CHA. */
 template <typename CHT = CHR>
 inline CHT* TSTREnd(CHT* string) {
-  return const_cast<CHT*>(
-      TSTREnd<CHT>(reinterpret_cast<const CHT*>(string)));
+  return const_cast<CHT*>(TSTREnd<CHT>(TPtr<const CHT>(string)));
 }
 
 /* Finds the last instance of the given token character in the string.. */
@@ -120,7 +119,7 @@ ISZ TSTRLength(const CHT* string) {
 CHA. */
 template <typename CHT = CHR, typename ISZ = ISN>
 inline ISZ TSTRLength(CHT* string) {
-  return TSTRLength<CHT>(reinterpret_cast<const CHT*>(string));
+  return TSTRLength<CHT>(TPtr<const CHT>(string));
 }
 
 /* Scans a item from the string.
@@ -290,7 +289,7 @@ const CHT* TScanSigned(const CHT* string, ISZ& item) {
 @param item The IS to write the scanned IS. */
 template <typename ISZ = ISW, typename IU = IUW, typename CHT = CHR>
 CHT* TScanSigned(CHT* string, ISZ& item) {
-  const CHT* ptr = reinterpret_cast<const CHT*>(string);
+  const CHT* ptr = TPtr<const CHT>(string);
   return const_cast<CHT*>(TScanSigned<ISZ, IU, CHT>(ptr, item));
 }
 
@@ -369,7 +368,7 @@ const CHT* TScanUnsigned(const CHT* string, IU& item) {
 @param item The IU to write the scanned IU. */
 template <typename IU, typename CHT = CHR>
 CHT* TScanUnsigned(CHT* string, IU& item) {
-  const CHT* ptr = reinterpret_cast<const CHT*>(string);
+  const CHT* ptr = TPtr<const CHT>(string);
   return const_cast<CHT*>(TScanUnsigned<IU, CHT>(ptr, item));
 }
 
@@ -665,28 +664,27 @@ given range.
 @param upper bounds*/
 template <typename CHT = CHR>
 CHT* TSTRSkimodulearsInRange(CHT* cursor, CHT lower_bounds, CHT upper_bounds) {
-  return const_cast<CHT*>(TSTRSkimodulearsInRange(
-      reinterpret_cast<const CHT*>(cursor), lower_bounds, upper_bounds));
+  return const_cast<CHT*>(TSTRSkimodulearsInRange(TPtr<const CHT>(cursor),
+                                                  lower_bounds, upper_bounds));
 }
 
 /* Skips the numbers in the given range. */
 template <typename CHT = CHR>
 inline const CHT* TSTRSkipNumbers(const CHT* cursor) {
-  return const_cast<CHT*>(TSTRSkimodulearsInRange<CHT>(
-      reinterpret_cast<const CHT*>(cursor), '0', '9'));
+  return const_cast<CHT*>(TSTRSkimodulearsInRange<CHT>(TPtr<const CHT>(cursor), 
+                                                       '0', '9'));
 }
 /* Skips the numbers in the given range. */
 template <typename CHT = CHR>
 inline CHT* TSTRSkipNumbers(CHT* cursor) {
-  return const_cast<CHT*>(
-      TSTRSkipNumbers<CHT>(reinterpret_cast<const CHT*>(cursor)));
+  return const_cast<CHT*>(TSTRSkipNumbers<CHT>(TPtr<const CHT>(cursor)));
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
 @param cursor  The first CHT in the buffer. */
 template <typename CHT = const CHA>
 CHT* TSTRDecimalEnd(CHT* start) {
-  const CHT* ptr = reinterpret_cast<const CHT*>(start);
+  const CHT* ptr = TPtr<const CHT>(start);
   return const_cast<CHT*>(TSTRDecimalEnd<CHT>(ptr));
 }
 
@@ -716,9 +714,8 @@ const CHT* TSTRDecimalEnd(const CHT* cursor, const CHT* stop) {
 @param stop    The last CHT in the buffer. */
 template <typename CHT = CHR>
 inline CHT* TSTRDecimalEnd(CHT* cursor, CHT* stop) {
-  return const_cast<CHT*>(
-      TSTRDecimalEnd<CHT>(reinterpret_cast<const CHT*>(cursor),
-                          reinterpret_cast<const CHT*>(stop)));
+  return const_cast<CHT*>(TSTRDecimalEnd<CHT>(
+      TPtr<const CHT>(cursor), TPtr<const CHT>(stop)));
 }
 template <typename CHT>
 const CHT* TSTRFloatStop(const CHT* start) {
@@ -819,7 +816,7 @@ inline ISN HexToByte(IUB h) {
 template <typename CHT = CHR>
 inline CHT* TSTRSkimodulear(CHT* cursor, CHT skip_char) {
   return const_cast<const CHT*>(
-      TSTRSkimodulear<CHT>(reinterpret_cast<const CHT*>(cursor), skip_char));
+      TSTRSkimodulear<CHT>(TPtr<const CHT>(cursor), skip_char));
 }
 
 template <typename CHT>
@@ -841,7 +838,7 @@ template <typename T, typename CHT = CHR>
 CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, ISW size_bytes) {
   CHT* end = start + (size_bytes * 2);
   if (!start || size_bytes <= 0 || end < start) return nullptr;
-  const IUA* cursor = reinterpret_cast<const IUA*>(origin);
+  const IUA* cursor = TPtr<const IUA>(origin);
   while (size_bytes-- > 0) {
     IUA byte = *cursor++;
     *start++ = HexNibbleToUpperCase(byte >> 4);
@@ -1008,7 +1005,7 @@ CHT* TPrintBinary(CHT* start, CHT* stop, FPD value) {
 /* Prints the given value to Binary. */
 template <typename CHT = CHR>
 CHT* TPrintBinary(CHT* start, CHT* stop, const void* ptr) {
-  IUW address = *reinterpret_cast<IUW*>(&ptr);
+  IUW address = *TPtr<IUW>(&ptr);
   return TPrintBinary<CHT, IUW>(start, stop, address);
 }
 
@@ -1025,9 +1022,9 @@ CHT* TSScan(const CHT* start, FPD& result) {
 /* Prints the given socket to the COut.
 template <typename CHT = CHR>
 CHT* TPrintChars(CHT* start, CHT* stop, const void* origin, const void* end)
-{ const CHT *read = reinterpret_cast<const CHT*>(origin), *read_end =
-reinterpret_cast<const CHT*>(end); if (!start || start >= stop || !origin ||
-read > read_end) return nullptr;
+{ const CHT *read = TPtr<const CHT>(origin), *read_end =
+  TPtr<const CHT*>(end); 
+  if (!start || start >= stop || !origin || read > read_end) return nullptr;
 
   CHT* buffer_begin = start;
   ISW size = read_end - read, num_rows = size / 64 + (size % 64 != 0) ? 1 : 0;
@@ -1125,8 +1122,7 @@ const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = cConsoleWidth) {
 @param stop    The last CHT in the buffer. */
 template <typename CHT = CHR>
 CHT* TSTRLineEnd(CHT* cursor, ISC column_count = cConsoleWidth) {
-  return const_cast<CHT*>(
-      TSTRLineEnd(reinterpret_cast<const CHT*>(cursor), column_count));
+  return const_cast<CHT*>(TSTRLineEnd(TPtr<const CHT>(cursor), column_count));
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
@@ -1164,8 +1160,7 @@ template <typename CHT = CHR>
 inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
                         ISC column_count = cConsoleWidth) {
   return const_cast<const CHT*>(
-      TSTRLineEnd<CHT>(reinterpret_cast<const CHT*>(cursor),
-                       reinterpret_cast<const CHT*>(stop), column_count));
+      TSTRLineEnd<CHT>(TPtr<const CHT>(cursor), TPtr<const CHT>(stop), column_count));
 }
 
 /* Scrolls over any whitespace.
@@ -1235,8 +1230,7 @@ const CHT* TSTRFind(const CHT* start, const CHT* query) {
 @return Nil upon failed search or a pointer to the stop of the . */
 template <typename CHT = CHR>
 inline CHT* TSTRFind(CHT* string, const CHT* query) {
-  return const_cast<CHT*>(TSTRFind<CHT>(reinterpret_cast<const CHT*>(string),
-                                        reinterpret_cast<const CHT*>(query)));
+  return const_cast<CHT*>(TSTRFind<CHT>(TPtr<const CHT>(string), TPtr<const CHT>(query)));
 }
 
 /* String skip spaces.
@@ -1260,9 +1254,8 @@ const CHT* TSTRSkipSpaces(const CHT* cursor, const CHT* stop) {
 @param stop    The last CHT in the buffer. */
 template <typename CHT = CHR>
 inline CHT* TSTRSkipSpaces(CHT* cursor, CHT* stop) {
-  return const_cast<CHT*>(
-      TSTRSkipSpaces<CHT>(reinterpret_cast<const CHT*>(cursor),
-                          reinterpret_cast<const CHT*>(stop)));
+  return const_cast<CHT*>(TSTRSkipSpaces<CHT>(
+      TPtr<const CHT>(cursor), TPtr<const CHT>(stop)));
 }
 
 /* Checks if the two Strings are the same.
@@ -1293,9 +1286,8 @@ equivalent s upon success.
 */
 template <typename CHT = CHR>
 inline CHT* TSTREquals(CHT* String_a, const CHT* String_b) {
-  return const_cast<CHT*>(
-      TSTREquals<CHT>(reinterpret_cast<const CHT*>(String_a),
-                      reinterpret_cast<const CHT*>(String_b)));
+  return const_cast<CHT*>(TSTREquals<CHT>(
+      TPtr<const CHT>(String_a), TPtr<const CHT>(String_b)));
 }
 
 /* Compares the two Strings to see if the are equal.
@@ -1326,9 +1318,8 @@ const CHT* TSTREquals(const CHT* cursor, const CHT* stop, const CHT* query) {
 s upon success. */
 template <typename CHT = CHR>
 CHT* TSTREquals(CHT* cursor, CHT* stop, const CHT* query) {
-  return const_cast<CHT*>(TSTREquals(reinterpret_cast<const CHT*>(cursor),
-                                     reinterpret_cast<const CHT*>(stop),
-                                     query));
+  return const_cast<CHT*>(TSTREquals(
+      TPtr<const CHT>(cursor), TPtr<const CHT>(stop), query));
 }
 
 /* Checks if the given s isn't empty.
@@ -1352,7 +1343,7 @@ BOL TSTRIsntEmpty(const CHT* cursor) {
 @desc A s is defined as empty if it is NIL or all whitespace. */
 template <typename CHT = CHR>
 BOL TSTRIsntEmpty(CHT* cursor) {
-  return TSTRIsntEmpty<CHT>(reinterpret_cast<const CHT*>(cursor));
+  return TSTRIsntEmpty<CHT>(TPtr<const CHT>(cursor));
 }
 
 /* Checks to see if the cursor isn't empty or whitespace.
@@ -1386,8 +1377,7 @@ BOL TSTRIsntEmpty(const CHT* cursor, const CHT* stop) {
 @param stop    The last CHT in the buffer. */
 template <typename CHT = CHR>
 BOL TSTRIsntEmpty(CHT* cursor, const CHT* stop) {
-  return TSTRIsntEmpty(reinterpret_cast<const CHT*>(cursor),
-                       reinterpret_cast<const CHT*>(stop));
+  return TSTRIsntEmpty(TPtr<const CHT>(cursor), TPtr<const CHT>(stop));
 }
 
 /* Prints the given item aligned right the given column_count.
@@ -1600,7 +1590,7 @@ struct TSPrinter {
       : start(other.start), stop(other.stop) {  // Nothing to do here!.
   }
 
-  IUA* End() { return reinterpret_cast<IUA*>(start) + (sizeof(CHT) - 1); }
+  IUA* End() { return TPtr<IUA>(start) + (sizeof(CHT) - 1); }
 
   ISZ SizeBytes() { return (ISZ)(stop - start + sizeof(CHT)); }
 
@@ -1620,9 +1610,9 @@ struct TSPrinter {
 
   /* Sets the start pointer to the new_pointer. */
   inline TSPrinter& Set(IUW* buffer) {
-    ISZ size = *reinterpret_cast<ISZ*>(buffer);
-    IUW ptr = reinterpret_cast<IUW>(buffer) + sizeof(ISZ);
-    CHT* start_ptr = reinterpret_cast<CHT*>(ptr);
+    ISZ size = *TPtr<ISZ>(buffer);
+    IUW ptr = IUW(buffer) + sizeof(ISZ);
+    CHT* start_ptr = TPtr<CHT>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
     return *this;
@@ -1777,7 +1767,7 @@ struct TSPrinter {
 #endif
   /* Prints the given pointer as binary. */
   inline TSPrinter& Binary(const void* ptr) {
-    IUW address = reinterpret_cast<IUW>(ptr);
+    IUW address = IUW(ptr);
     return Set(Binary<CHT>(start, stop, address));
   }
 

@@ -24,7 +24,7 @@ namespace _ {
 @param error The error type. */
 inline const Op* CrabsError(Crabs* crabs, Error error) {
   D_COUT("\nCrabs " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
@@ -36,7 +36,7 @@ inline const Op* CrabsError(Crabs* crabs, Error error) {
 @param address The address of the IUA in error. */
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
   D_COUT("\nCrabs " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
@@ -49,7 +49,7 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
                             IUA offset) {
   D_COUT("\nCrabs " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 /* Used to return an erroneous result from a B-Input.
@@ -62,12 +62,12 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
 inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
                             IUA offset, CHA* address) {
   D_COUT("\nCrabs " << STRError(error) << " Error!");
-  return reinterpret_cast<const Op*>(1);
+  return TPtr<const Op>(1);
 }
 
 IUW* CrabsBinAddress(Crabs* crabs) {
   if (!crabs) return nullptr;
-  return reinterpret_cast<IUW*>(crabs) + crabs->header_size;
+  return TPtr<IUW>(crabs) + crabs->header_size;
 }
 
 CHA* CrabsBuffer(Crabs* crabs) {
@@ -76,18 +76,18 @@ CHA* CrabsBuffer(Crabs* crabs) {
 }
 
 BIn* CrabsBIn(Crabs* crabs) {
-  return reinterpret_cast<BIn*>(CrabsBinAddress(crabs));
+  return TPtr<BIn>(CrabsBinAddress(crabs));
 }
 
 IUW* CrabsBOutAddress(Crabs* crabs) {
   if (!crabs) {
     return nullptr;
   }
-  return reinterpret_cast<IUW*>(crabs) + crabs->header_size;
+  return TPtr<IUW>(crabs) + crabs->header_size;
 }
 
 BOut* CrabsBOut(Crabs* crabs) {
-  return reinterpret_cast<BOut*>(CrabsBOutAddress(crabs));
+  return TPtr<BOut>(CrabsBOutAddress(crabs));
 }
 
 Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
@@ -110,7 +110,7 @@ Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
     return nullptr;
   }
 
-  Crabs* crabs = reinterpret_cast<Crabs*>(socket);
+  Crabs* crabs = TPtr<Crabs>(socket);
 
   ISC total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
   // Calculate the size of the Slot and Stack.
@@ -135,8 +135,7 @@ Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
   crabs->header = nullptr;
   crabs->header_start = nullptr;
   crabs->root = root;
-  IUW* base_ptr =
-      reinterpret_cast<IUW*>(crabs) + sizeof(Crabs) + stack_size * sizeof(ISC);
+  IUW* base_ptr = TPtr<IUW>(crabs) + sizeof(Crabs) + stack_size * sizeof(ISC);
   crabs->slot.Set(base_ptr, unpacked_size);
   D_COUT("crabs->op:0x" << Hexf(crabs->operand));
   BInInit(CrabsBinAddress(crabs), size);
@@ -355,7 +354,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           return CrabsForceDisconnect(crabs, cErrorInvalidOperand);
         }
         const ISC* params = op->in;
-        IUW num_ops = reinterpret_cast<IUW>(params);
+        IUW num_ops = IUW(params);
         if (num_ops > cParamsMax) {
           // It's an Op.
           // The software implementer pushes the Op on the stack.
@@ -700,7 +699,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
 }
 
 BOL CrabsContains(Crabs* crabs, void* address) {
-  if (address < reinterpret_cast<IUW*>(crabs)) return false;
+  if (address < TPtr<IUW>(crabs)) return false;
   if (address > CrabsEndAddress(crabs)) return false;
   return true;
 }
@@ -715,8 +714,8 @@ const Op* CrabsScanHeader(Crabs* crabs, const ISC* header) {
 }
 
 const ISC* CrabsHeaderStack(Crabs* crabs) {
-  return reinterpret_cast<const ISC*>(TPtr<CHA>(crabs) +
-                                      sizeof(Crabs) + crabs->stack_count);
+  return TPtr<const ISC>(TPtr<CHA>(crabs) +
+                         sizeof(Crabs) + crabs->stack_count);
 }
 
 void CrabsClose(Crabs* crabs) {
@@ -797,7 +796,7 @@ IUW* CrabsBaseAddress(void* ptr, ISC rx_tx_offset) {
     //< Offset to the origin of the ring socket.
   };
   CHA* result = TPtr<CHA>(ptr) + rx_tx_offset + cSlotHeaderSize;
-  return reinterpret_cast<IUW*>(result);
+  return TPtr<IUW>(result);
 }
 
 CHA* CrabsEndAddress(BIn* bin) {

@@ -44,7 +44,7 @@ struct LIB_MEMBER Op {
   const BOut* evaluation;   //< Evaluated expression Slot.
 };
 
-inline const Op* OpError(Error error) { return reinterpret_cast<const Op*>(error); }
+inline const Op* OpError(Error error) { return TPtr<const Op>(error); }
 
 
 }  //< namespace _

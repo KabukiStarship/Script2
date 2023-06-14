@@ -137,8 +137,8 @@ Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
     << Centerf("hash_s", cHashWidth - 2) << Centerf("index_u", cHashWidth)
     << Centerf("offset", 8) << Linef(" \"Key\":{Collissions}\n+---");
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
   ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
      * unsorted_indexes = collision_indexes + count_max;
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
@@ -201,7 +201,7 @@ TTable<ISZ, ISY>* TTableInit(TTable<ISZ, ISY>* table, ISY height, ISZ size_bytes
 
 template <TARGS>
 inline TTable<ISZ, ISY>* TTableInit(IUW* socket, ISY count_max, ISZ size) {
-  auto table = reinterpret_cast<TTable<ISZ, ISY>*>(socket);
+  auto table = TPtr<TTable<ISZ, ISY>>(socket);
   return TTableInit<TPARAMS>(table, count_max, size);
 }
 
@@ -218,15 +218,15 @@ ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
   if (count >= count_max)
     return CInvalidIndex<ISY>();  //< We're out of buffered indexes.
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
   ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
      * unsorted_indexes = collision_indexes + count_max,
      * collision_pile = unsorted_indexes + count_max;
   CHT *keys = TPtr<CHT>(table, size_bytes) - 1, *destination;
   HSH hash = THashPrime<HSH, CHT>(key), current_hash;
   ISZ key_length = TSTRLength<CHT, ISZ>(key);
-  CHT* bottom = reinterpret_cast<CHT*>(collision_pile + table->size_pile) + 1;
+  CHT* bottom = TPtr<CHT>(collision_pile + table->size_pile) + 1;
 
   D_COUT("\n\nAdding        key:\"" << key <<                             //
          "\"\n             hash:0x" << Hexf(hash) <<                      //
@@ -370,8 +370,8 @@ ISY TTableFind(const TTable<ISZ, ISY>* table, const CHT* key) {
 
   ISZ size_bytes = table->size_bytes;
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
   ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
      * unsorted_indexes = collision_indexes + count_max;
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
@@ -472,9 +472,8 @@ inline CHT* TTableGet(TTable<ISZ, ISY>* table, ISY index) {
   if (index < 0 || index >= count) return nullptr;
   ISZ size_bytes = table->size_bytes;
   ISY count_max = table->count_max;
-  HSH* hashes =
-      reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = reinterpret_cast<ISZ*>(hashes + count_max);
+  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
   return keys - key_offsets[index];
 }
@@ -492,8 +491,8 @@ ISY TTableRemove(TTable<ISZ, ISY>* table, ISY index) {
   ISZ size_bytes = table->size_bytes;
   ISY count_max = table->count_max;
 
-  HSH* hashes = reinterpret_cast<HSH*>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ *key_offsets = reinterpret_cast<ISZ*>(hashes + count_max),
+  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
+  ISZ *key_offsets = TPtr<ISZ>(hashes + count_max),
       *collision_indexes = key_offsets + count_max,
       *unsorted_indexes = collision_indexes + count_max;
   CHT* keys = TPtr<CHT>(table, size_bytes) - 1;

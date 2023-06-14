@@ -363,7 +363,7 @@ COut& COut::Binary(const void* item, ISW size) {
 COut& COut::Binary(const void* start, const void* stop) {
   return TPrintBinary<COut>(
       *this, start,
-      reinterpret_cast<const CHA*>(stop) - reinterpret_cast<const CHA*>(start));
+      TPtr<const CHA>(stop) - TPtr<const CHA>(start));
 }
 COut& COut::Binary(ISA item) {
   return TPrintBinary<COut, ISA, IUA>(*this, item);

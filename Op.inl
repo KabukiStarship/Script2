@@ -29,7 +29,7 @@ Op OpInit (IUW* socket, ISC buffer_size) {
 }
 
 void Print (Op& log) {
-    BIn    * bin = reinterpret_cast<BIn*> (log.bout);
+    BIn    * bin = TPtr<BIn> (log.bout);
     void   * args[1];
     IUA     type = 0,
     iua;
@@ -44,7 +44,7 @@ void Print (Op& log) {
     FPC    flt;
     FPD   dbl;
     CHA   index;
-    //if (BinReadChar (reinterpret_cast<BIn*> (log.bout), index))
+    //if (BinReadChar (TPtr<BIn> (log.bout), index))
     //    return;
     CHA socket[DBL_MAX_10_EXP + 2];
     while (index ) {

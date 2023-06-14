@@ -76,7 +76,7 @@ constexpr ISZ CDicSizeDefault() {
 template <TARGS>
 inline CHT* TDicStart(TDic<TPARAMS>* dic, ISZ count_max) {
   ISZ* top = &TStackStart<ISZ, ISZ>(&dic->offsets)[count_max];
-  return reinterpret_cast<CHT*>(top);
+  return TPtr<CHT>(top);
 }
 
 /* Gets the start byte of the dic. */
@@ -169,7 +169,7 @@ BOL TDicGrow(Autoject& obj) {
 
   IUW* new_begin = obj.socket_factory(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
-  TTable<ISZ, ISY>* other = reinterpret_cast<TTable<ISZ, ISY>*>(new_begin);
+  TTable<ISZ, ISY>* other = TPtr<TTable<ISZ, ISY>>(new_begin);
 
   return true;
 }
@@ -375,7 +375,7 @@ CHT* TDicPop(TDic<TPARAMS>* dic) {
   if (dic->offsets.count == 0) return nullptr;
   ISZ offset = TStackPop<ISZ, ISZ>(dic->offsets), top = dic->top;
   dic->top = offset;
-  return reinterpret_cast<CHT*>(reinterpret_cast<ISW>(dic) + offset);
+  return TPtr<CHT>(ISW(dic) + offset);
 }
 
 /* Searches for the given string in the dic.

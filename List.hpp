@@ -70,7 +70,7 @@ ISZ* TListOffsets(TList<ISZ>* list) {
 /* Calculates the data_types pointer from the data_offsets and the count. */
 template <TARGS>
 inline DT* TListTypes(ISZ* data_offsets, ISZ list_size) {
-  return reinterpret_cast<DT*>(data_offsets + list_size);
+  return TPtr<DT>(data_offsets + list_size);
 }
 
 /* Returns the type bytes array. */
@@ -258,7 +258,7 @@ CHA* TListContains(TList<ISZ>* list, ISZ sizeof_value,
   if (count >= size) return nullptr;
   ISZ *offsets = TListOffsets<ISZ>(list, size),  //
       *offsets_end = offsets + size;
-  DT* types = reinterpret_cast<DT*>(offsets_end);
+  DT* types = TPtr<DT>(offsets_end);
   if (offsets == offsets_end) return nullptr;
   CHA* previous_begin = 0;
 
@@ -358,7 +358,7 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
 
   values_begin = TAlignUpPTR<CHA>(values_begin, alignment_mask);
   if ((values_begin + sizeof(T)) > values_end) return cErrorInvalidIndex;
-  *reinterpret_cast<T*>(values_begin) = item;
+  *TPtr<T>(values_begin) = item;
 
   ISZ* offsets = TListOffsets<ISZ>(list);
   DT* types = TListTypes<ISZ, DT>(list);
@@ -669,8 +669,8 @@ IUW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
   ISZ size_bytes = sizeof(TList<ISZ>) + count_max * (sizeof(ISZ) + sizeof(DT)) +
                    AlignUp(size_data);
   IUW* buffer = socket_factory(nullptr, ISW(size_bytes));
-  TList<ISZ>* list = reinterpret_cast<TList<ISZ>*>(buffer);
-  return reinterpret_cast<IUW*>(TListInit<ISZ>(list, size_bytes, count_max));
+  TList<ISZ>* list = TPtr<TList<ISZ>>(buffer);
+  return TPtr<IUW>(TListInit<ISZ>(list, size_bytes, count_max));
 }
 
 /* ASCII List that uses dynamic memory. */
@@ -783,8 +783,7 @@ class AList {
   inline AArray<IUA, ISZ>& AJT_ARY() { return obj_; }
 
   /* Returns the contiguous ASCII List buffer_. */
-  inline TList<ISZ>* This() {
-    return reinterpret_cast<TList<ISZ>*>(AJT().origin);
+  inline TList<ISZ>* This() { return TPtr<TList<ISZ>>(AJT().origin);
   }
 
   /* Prints This object to the printer. */

@@ -299,7 +299,7 @@ inline ISW TypeAlignmentMask(DTW type) {
 template <typename T = CHA>
 T* TTypeAlignUp(void* pointer, ISW type) {
   ISW align_mask = TypeAlignmentMask(type & cTypePODMask);
-  return reinterpret_cast<T*>(AlignUpPTR(pointer, align_mask));
+  return TPtr<T>(AlignUpPTR(pointer, align_mask));
 }
 
 /* Gets the size of the type in bytes.
@@ -343,11 +343,11 @@ inline ISN TypeSizeWidthCode(ISN type) { return type >> 6; }
 
 /* Extracts the Map Type. */
 inline DTW TypeMap(DTW core_type, DTW map_type) {
-  return core_type | (map_type << (cTypePODBitCount + 2));
+  return core_type | (map_type << (TypePODBitCount + 2));
 }
 
 inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
-  return TypeMap(core_type, map_type) | (size_width << cTypePODBitCount);
+  return TypeMap(core_type, map_type) | (size_width << TypePODBitCount);
 }
 
 inline BOL TypeIsPOD(DTB type) {

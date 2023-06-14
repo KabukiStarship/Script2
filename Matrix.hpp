@@ -119,7 +119,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   if (dimension_count < 0) return nullptr;
   ISZ size = (ISZ)sizeof(TStack<ISZ>) + dimension_count * sizeof(T);
   IUW* socket = new IUW[size >> cWordBitCount];
-  TStack<ISZ>* stack = reinterpret_cast<TStack<ISZ>*>(socket);
+  TStack<ISZ>* stack = TPtr<TStack<ISZ>>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   stack->count_max = dimension_count;
@@ -182,8 +182,7 @@ inline TMatrix<ISZ>* TMatrixNew(const ISZ* dimensions) {
 @return Pointer to the first element in the array. */
 template <typename T, typename ISZ = ISN>
 inline T* TMatrixElements(TMatrix<ISZ>* obj) {
-  return reinterpret_cast<T*>(TStackStart<ISZ, ISZ>(&obj->dimensions) +
-                              obj->size);
+  return TPtr<T>(TStackStart<ISZ, ISZ>(&obj->dimensions) + obj->size);
 }
 
 /* Creates a immutable array of dimensions. */
@@ -298,8 +297,7 @@ class AMatrix {
   inline Autoject& AJT() { return obj_.AJT(); }
 
   /* Returns the Autoject::origin cased as a TMap<ISZ>. */
-  inline TMatrix<ISZ>* This() {
-    return reinterpret_cast<TMatrix<ISZ>*>(AJT().origin);
+  inline TMatrix<ISZ>* This() { return TPtr<TMatrix<ISZ>>(AJT().origin);
   }
 
   /* Returns the Auto-Array. */

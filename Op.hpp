@@ -27,23 +27,19 @@ Printer& TOpPrint(Printer& printer, const Op* op) {
 inline ISW OpCount(const Op& op) { return op.out - op.in; }
 
 /* Converts the given value to a pointer. */
-inline const ISC* OpFirst(CHC index) {
-  return reinterpret_cast<const ISC*>(index);
-}
+inline const ISC* OpFirst(CHC index) { return TPtr<const ISC>(index); }
 
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
-  return (CHC) reinterpret_cast<IUW>(op->in);
+  return (CHC) IUW(op->in);
 }
 
 /* Converts the given value to a pointer. */
-inline const ISC* OpLast(CHC index) {
-  return reinterpret_cast<const ISC*>(index);
-}
+inline const ISC* OpLast(CHC index) { return TPtr<const ISC>(index); }
 
 /* Converts the given value to a pointer. */
 inline CHC OpLast(const Op* op) {
-  return (CHC) reinterpret_cast<IUW>(op->out);
+  return CHC(IUW(op->out));
 }
 
 }  //< namespace _

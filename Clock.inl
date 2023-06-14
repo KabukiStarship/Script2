@@ -221,7 +221,7 @@ void ClockZeroTime(AClock& local_time) {
   local_time.year = 0;
 }
 
-TMC TimeMake(AClock& time) { return (TMC)mktime(reinterpret_cast<tm*>(&time)); }
+TMC TimeMake(AClock& time) { return (TMC)mktime(TPtr<tm>(&time)); }
 
 const ISB* CloccDaysInMonth() {
   static const ISB cDaysInMonth[12] = {31, 28, 31, 30, 31, 30,

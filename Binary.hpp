@@ -13,6 +13,32 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_SOCKET
 namespace _ {
 
+/* Syntactical sugar for reinterpret_cast using templates. */
+template <typename T>
+inline T* TPtr(void* ptr) {
+  return reinterpret_cast<T*>(ptr);
+}
+
+/* Syntactical sugar for reinterpret_cast using templates. */
+template <typename T = IUW>
+inline T* TPtr(ISW value) {
+  return reinterpret_cast<T*>(value);
+}
+
+/* Syntactical sugar for reinterpret_cast using templates. */
+template <typename T>
+inline const T* TPtr(const void* ptr) {
+  return reinterpret_cast<const T*>(ptr);
+}
+
+/* Creates a T pointer from a base pointer plus the offset.
+@param base The base address.
+@param offset The offset in bytes. */
+template <typename T = void>
+inline const T* TPtr(const void* origin, ISW offset) {
+  return reinterpret_cast<const T*>(ISW(origin) + offset);
+}
+
 /* @ingroup Binary
 @brief Misc binary and pointer function. */
 
@@ -29,12 +55,12 @@ inline ISA ToSigned(ISA value) { return ISA(value); }
 inline ISB ToSigned(ISB value) { return ISB(value); }
 inline ISC ToSigned(ISC value) { return ISC(value); }
 inline ISD ToSigned(ISD value) { return ISD(value); }
-inline ISW ToSigned(const void* value) { return reinterpret_cast<ISW>(value); }
+inline ISW ToSigned(const void* value) { return ISW(value); }
 #if USING_FPC == YES_0
-inline ISC ToSigned(FPC value) { return *reinterpret_cast<ISC*>(&value); }
+inline ISC ToSigned(FPC value) { return *TPtr<ISC>(&value); }
 #endif
 #if USING_FPD == YES_0
-inline ISD ToSigned(FPD value) { return *reinterpret_cast<ISD*>(&value); }
+inline ISD ToSigned(FPD value) { return *TPtr<ISD>(&value); }
 #endif
 
 /* Converts the given value to a unsigned value of the same width. */
@@ -52,18 +78,18 @@ inline IUB ToUnsigned(IUB value) { return IUB(value); }
 inline IUC ToUnsigned(IUC value) { return IUC(value); }
 inline IUD ToUnsigned(IUD value) { return IUD(value); }
 inline IUW ToUnsigned(const void* value) {
-  return reinterpret_cast<IUW>(value);
+  return IUW(value);
 }
 #if USING_FPC == YES_0
-inline IUC ToUnsigned(FPC value) { return *reinterpret_cast<IUC*>(&value); }
+inline IUC ToUnsigned(FPC value) { return *TPtr<IUC>(&value); }
 #endif
 #if USING_FPD == YES_0
-inline IUD ToUnsigned(FPD value) { return *reinterpret_cast<IUD*>(&value); }
+inline IUD ToUnsigned(FPD value) { return *TPtr<IUD>(&value); }
 #endif
 
 /* Converts the value to a floating-point number. */
-inline FPC ToFloat(IUC value) { return *reinterpret_cast<FPC*>(&value); }
-inline FPD ToFloat(IUD value) { return *reinterpret_cast<FPD*>(&value); }
+inline FPC ToFloat(IUC value) { return *TPtr<FPC>(&value); }
+inline FPD ToFloat(IUD value) { return *TPtr<FPD>(&value); }
 
 /* Returns the maximum value of the given unsigned type. */
 template <typename IU>
@@ -79,13 +105,13 @@ constexpr ISZ CNaNSigned() {
 
 template <typename ISZ = ISW>
 inline ISZ TDelta(const void* start) {
-  ISW delta = reinterpret_cast<ISW>(start);
+  ISW delta = ISW(start);
   return ISZ(delta);
 }
 
 template <typename ISZ = ISW>
 inline ISZ TDelta(const void* start, const void* stop) {
-  ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
+  ISW delta = ISW(stop) - ISW(start);
   return ISZ(delta);
 }
 
@@ -200,12 +226,12 @@ constexpr IUD CAlignUp(IUD value, IUD align_lsb_mask = cWordLSbMask) {
 }
 
 inline void* AlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
-  ISW address = reinterpret_cast<ISW>(pointer);
-  return reinterpret_cast<void*>(CAlignUp(address, mask));
+  ISW address = ISW(pointer);
+  return TPtr<void>(CAlignUp(address, mask));
 }
 inline const void* AlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
-  ISW value = reinterpret_cast<IUW>(pointer);
-  return reinterpret_cast<void*>(CAlignUp(value, mask));
+  ISW value = IUW(pointer);
+  return TPtr<void>(CAlignUp(value, mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -214,8 +240,8 @@ inline const void* AlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CHA>
 inline T* TAlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
-  ISW value = reinterpret_cast<ISW>(pointer);
-  return reinterpret_cast<T*>(value + ((-value) & mask));
+  ISW value = ISW(pointer);
+  return TPtr<T>(value + ((-value) & mask));
 }
 
 /* Aligns the given pointer to a power of two boundary.
@@ -224,8 +250,8 @@ inline T* TAlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CHA>
 inline T* TAlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
-  ISW value = reinterpret_cast<ISW>(pointer);
-  return reinterpret_cast<T*>(value + ((-value) & mask));
+  ISW value = ISW(pointer);
+  return TPtr<T>(value + ((-value) & mask));
 }
 
 /* Aligns the given pointer up to the given least_significant_bits_max. */
@@ -360,8 +386,8 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
 inline T* TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
-  IUW value = reinterpret_cast<IUW>(ptr);
-  return reinterpret_cast<T*>(value - (value & mask));
+  IUW value = IUW(ptr);
+  return TPtr<T>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -370,8 +396,8 @@ inline T* TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
 inline const T* TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
-  IUW value = reinterpret_cast<IUW>(ptr);
-  return reinterpret_cast<const T*>(value - (value & mask));
+  IUW value = IUW(ptr);
+  return TPtr<const T>(value - (value & mask));
 }
 
 /* Aligns the given pointer to the sizeof (WordBoundary) down.
@@ -393,43 +419,17 @@ constexpr ISZ CSizeAlign(ISZ size) {
   return size + (-size) & align_lsb_mask;
 }
 
-/* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T>
-inline T* TPtr(void* ptr) {
-  return reinterpret_cast<T*>(ptr);
-}
-
-/* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T = IUW>
-inline T* TPtr(ISN value) {
-  return reinterpret_cast<T*>(value);
-}
-
-/* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T>
-inline const T* TPtr(const void* ptr) {
-  return reinterpret_cast<const T*>(ptr);
-}
-
-/* Creates a T pointer from a base pointer plus the offset.
-@param base The base address.
-@param offset The offset in bytes. */
-template <typename T = void>
-inline const T* TPtr(const void* origin, ISW offset) {
-  return reinterpret_cast<const T*>(reinterpret_cast<ISW>(origin) + offset);
-}
-
 /* Gets a value of type T. */
 template <typename T>
 inline T TGet(const void* ptr) {
-  return *reinterpret_cast<const T*>(ptr);
+  return *TPtr<const T>(ptr);
 }
 
 /* Writes the value to the address.
 @pre User must ensure start is never nil. */
 template <typename T = CHA>
 inline T* TSet(void* address, T value) {
-  T* cursor = reinterpret_cast<T*>(address);
+  T* cursor = TPtr<T>(address);
   *cursor = value;
   return cursor;
 }
@@ -655,10 +655,10 @@ T* TAlignUpPointer(void* value) {
   return AlignUpPTR(value, PowerOf2 - 1);
 }
 
-inline void* ToPTR(IUW value) { return reinterpret_cast<void*>(value); }
+inline void* ToPTR(IUW value) { return TPtr<void>(value); }
 
 inline const void* ToPTC(IUW value) {
-  return reinterpret_cast<const void*>(value);
+  return TPtr<const void>(value);
 }
 
 inline ISW Delta(void* start, void* stop) {

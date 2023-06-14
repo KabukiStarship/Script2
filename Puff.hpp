@@ -60,7 +60,7 @@ inline CHT* TPrintNil(CHT* start) {
 @warning This function DOES NOT do any error checking!  */
 template <typename CHT = CHR>
 inline CHT* TSPrintDecimal(CHT* cursor, CHT value) {
-  *reinterpret_cast<CHT*>(cursor) = '0' + value;
+  *TPtr<CHT>(cursor) = '0' + value;
   D_PRINT_PRINTED;
   return cursor;
 }
@@ -601,7 +601,7 @@ class TBinary {
 
   // Converts a Float to a TBinary
   TBinary(Float value) {
-    IU ui = *reinterpret_cast<IU*>(&value);
+    IU ui = *TPtr<IU>(&value);
 
     IU biased_e = TMiddleBits<IU, cMSb - 1, cMantissaSize - 1>(ui);
     IU coefficient = Coefficient(ui);
@@ -634,7 +634,7 @@ class TBinary {
     }
     if (IsInfinite(value)) {
       if (stop - socket < 4) return nullptr;
-      IU f = *reinterpret_cast<IU*>(&value);
+      IU f = *TPtr<IU>(&value);
       socket[0] = (f >> (sizeof(IU) * 8 - 1)) ? '-' : '+';
       socket[1] = 'i';
       socket[2] = 'n';
@@ -675,7 +675,7 @@ class TBinary {
     D_ASSERT(index < 87);
 
     const IU* f_lut = Pow10IntegralLUT();
-    const ISB* e_lut = reinterpret_cast<const ISB*>(BinaryPow10Exponents());
+    const ISB* e_lut = TPtr<const ISB>(BinaryPow10Exponents());
     return TBinary(f_lut[index], e_lut[index]);
   }
 
@@ -768,7 +768,7 @@ class TBinary {
         (sizeof(IU) == 4)
             ? Binary32Pow10IntegralPortions()
             : (sizeof(IU) == 8) ? Binary64Pow10IntegralPortions() : nullptr;
-    return reinterpret_cast<const IU*>(ptr);
+    return TPtr<const IU>(ptr);
   }
 
   static void AlignLUT(CHA* origin, ISW size) {

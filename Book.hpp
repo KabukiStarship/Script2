@@ -119,7 +119,7 @@ constexpr ISZ CBookDefaultSize(ISY count_max = CBookDefaultCount<TPARAMS>()) {
 template <TARGS>
 inline CHT* TBookStart(TBook<TPARAMS>* book, ISZ count_max) {
   ISZ* top = &TStackStart<ISZ, ISZ>(&book->offsets)[count_max];
-  return reinterpret_cast<CHT*>(top);
+  return TPtr<CHT>(top);
 }
 
 /* Gets the start byte of the book. */
@@ -290,7 +290,7 @@ BOL TBookGrow(Autoject& obj) {
 
   IUW* new_begin = obj.socket_factory(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
-  TLoom<ISZ, ISY>* other = reinterpret_cast<TLoom<ISZ, ISY>*>(new_begin);
+  TLoom<ISZ, ISY>* other = TPtr<TLoom<ISZ, ISY>>(new_begin);
 
   return true;
 }
@@ -494,7 +494,7 @@ CHT* TBookPop(TBook<TPARAMS>* book) {
   if (book->offsets.count == 0) return nullptr;
   ISZ offset = TStackPop<ISZ, ISZ>(book->offsets), top = book->top;
   book->top = offset;
-  return reinterpret_cast<CHT*>(reinterpret_cast<ISW>(book) + offset);
+  return TPtr<CHT>(ISW(book) + offset);
 }
 
 /* Searches for the given string in the book.

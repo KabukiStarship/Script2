@@ -58,7 +58,7 @@ Printer& TPrintHex(Printer& o, IU item) {
 /* Prints the following item to the console in Hex. */
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* item) {
-  IUW ptr = reinterpret_cast<IUW>(item);
+  IUW ptr = IUW(item);
   return TPrintHex<Printer, IUW>(o, ptr);
 }
 template <typename Printer, typename ISZ, typename IU>
@@ -92,7 +92,7 @@ template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* origin, ISW byte_count) {
   if (!origin) return o;
   ISW delta;
-  const IUA* cursor = reinterpret_cast<const IUA*>(origin);
+  const IUA* cursor = TPtr<const IUA>(origin);
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   // We have to print the hex value backwards.
   if (byte_count < 0) {
@@ -119,7 +119,7 @@ Printer& TPrintHex(Printer& o, const void* origin, ISW byte_count) {
 
 template <typename Printer>
 Printer& TPrintHex(Printer& o, const void* start, const void* stop) {
-  ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
+  ISW delta = ISW(stop) - ISW(start);
   return TPrintHex<Printer>(o, start, delta);
 }
 
@@ -127,7 +127,7 @@ Printer& TPrintHex(Printer& o, const void* start, const void* stop) {
 template <typename Printer>
 Printer& TPrintBinary(Printer& o, const void* start, ISW byte_count) {
   if (!start) return o;
-  const IUA* cursor = reinterpret_cast<const IUA*>(start);
+  const IUA* cursor = TPtr<const IUA>(start);
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   ISA delta;
   if (byte_count < 0) {
@@ -151,8 +151,8 @@ Printer& TPrintBinary(Printer& o, const void* start, ISW byte_count) {
 
 template <typename Printer>
 inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
-  ISW delta = reinterpret_cast<ISW>(stop) - reinterpret_cast<ISW>(start);
-  return TPrintBinary<Printer>(o, start, reinterpret_cast<const void*>(delta));
+  ISW delta = ISW(stop) - ISW(start);
+  return TPrintBinary<Printer>(o, start, TPtr<const void>(delta));
 }
 
 template <typename Printer, typename IU>
@@ -239,7 +239,7 @@ Printer& TPrintCenter(Printer& o, const CHT* item, ISW column_count = 80) {
 template <typename Printer>
 Printer& TPrintAlignedHex(Printer& o, const void* origin, ISW byte_count,
                           ISW left_count, ISW dot_count, ISW right_count) {
-  const CHA* cursor = reinterpret_cast<const CHA*>(origin);
+  const CHA* cursor = TPtr<const CHA>(origin);
   while (--left_count > 0) o << ' ';
   // TPrintHex<Printer>(o, origin, byte_count >> 1);
   TPrintHex<Printer>(o, cursor, -byte_count);
@@ -499,8 +499,7 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
 #endif
 #if USING_UTF32 == YES_0
     case cSTC: {
-      const CHC* start =
-          reinterpret_cast<const CHC*>(item.element.value.ToPTR());
+      const CHC* start = TPtr<const CHC>(item.element.value.ToPTR());
       _::TPrintLinef<Printer, CHC>(o, item.element.ToSTC(), item.element.count);
       break;
     }
@@ -656,7 +655,7 @@ template <typename Printer, typename DT = DTB>
 Printer& TPrintType(Printer& printer, DT type) {
   if (type == 0) return printer << "NIL";
   DT pod_type = type & cTypePODMask;
-  if (pod_type == 0) return printer << "BGN" << (type >> cTypePODBitCount);
+  if (pod_type == 0) return printer << "BGN" << (type >> TypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
     return printer << STRTypePOD(vector_type) << '_' << STRTypePOD(pod_type);
