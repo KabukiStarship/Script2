@@ -31,10 +31,10 @@ inline const CHA* Core(const CHA* args) {
 
   CHA* test_args[] = {arg_string, arg_string + 11, arg_string + 16,
                       arg_string + 26};
-  const ISC cArgCount = 4;
+  const ISC ArgCount = 4;
 
   D_COUT("\nArguments:\n");
-  for (ISC i = 0; i < cArgCount; ++i) {
+  for (ISC i = 0; i < ArgCount; ++i) {
     CHA* arg = test_args[i];
     if (arg) {
       D_COUT("\n" << i << ".)\"" << arg << "\" delta:" << arg - arg_string);
@@ -44,7 +44,7 @@ inline const CHA* Core(const CHA* args) {
   }
   D_COUT("\n\nRunning ArgsToString... ");
 
-  D_ASSERT(ArgsToString(cArgCount, test_args));
+  D_ASSERT(ArgsToString(ArgCount, test_args));
 
   D_COUT("Result:\"");
   D_COUT(test_args[1]);

@@ -20,10 +20,10 @@ using namespace _;
 
 namespace Script2 {
 #if SEAM >= SCRIPT2_SPRINTER
-template <typename CHT = CHR, typename ISZ = ISN>
+template <typename CHT = CHR, typename IS = ISN>
 static const CHT* TestSPrinter() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",IS"
-                    << sizeof(ISZ) << ">\n\n"
+                    << sizeof(IS) << ">\n\n"
                     << Linef('-'));
   enum {
     cCount = 512,

@@ -8,7 +8,7 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_STACK
 #include "../Stack.hpp"
-using namespace _; 
+using namespace _;
 #if SEAM == SCRIPT2_STACK
 #include "../_Debug.inl"
 #else
@@ -18,16 +18,16 @@ using namespace _;
 namespace Script2 {
 
 #if SEAM >= SCRIPT2_STACK
-template <typename T, typename ISZ>
+template <typename T, typename IS>
 void TestStack(const CHA* args) {
   D_COUT("Testing AStack<IS" << CHA('@' + sizeof(T)) << ",IS" << 
-         CHA('@' + sizeof(ISZ)) << ">...\n");
+         CHA('@' + sizeof(IS)) << ">...\n");
 
-  AStack<T, ISZ, 8> stack;
+  AStack<T, IS, 8> stack;
 
   D_COUT(Linef("\n+---\n| TBUF: size:")
          << stack.AJT().Buffer().Size() << " expected_size_bytes:"
-         << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<ISZ>)
+         << stack.AJT().Buffer().Size() * sizeof(T) + sizeof(TStack<IS>)
          << " size_bytes:" << stack.AJT().Buffer().SizeBytes()
          << " size_words:" << stack.AJT().Buffer().SizeWords());
   D_COUT_OBJ(stack);
@@ -72,7 +72,7 @@ static const CHA* Stack(const CHA* args) {
     BufferSizeWords = BufferSizeBytes >> WordBitCount,
   };
   IUW source[BufferSizeWords],
-      destination[BufferSizeWords];
+      destination[BufferSizeWords + OffsetMax];
   for (ISN s_offset = 0; s_offset < OffsetMax; ++s_offset) {
     // Create an array of bytes valued sequentially 0 through 255.
     // i is the offset of the source array and d_offset is the offset of the 
@@ -113,8 +113,8 @@ static const CHA* Stack(const CHA* args) {
         A_ASSERT(result < 0);
       }
       for (ISN k = TestByteCount - 1; k > 0; --k) {
-        result = ArrayCompareFast(s_start, TestByteCount - k, d_start,
-                                  TestByteCount - k);
+        result = ArrayCompareFast(s_start, ISW(TestByteCount) - k, d_start,
+                                  ISW(TestByteCount) - k);
         if (result <= 0) {
           result = result * -1 - 1;
           D_COUT("\n\nArrayCompareFast failed at byte " << result << 

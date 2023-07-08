@@ -60,9 +60,9 @@ void RandomNumber(IUD& result) { result = RandomUI8(); }
 
 void RandomNumber(ISD& result) { result = RandomSID(); }
 
-template <typename ISZ>
-ISZ TRandom(ISZ min, ISZ max) {
-  std::uniform_int_distribution<ISZ> dist(min, max);
+template <typename IS>
+IS TRandom(IS min, IS max) {
+  std::uniform_int_distribution<IS> dist(min, max);
   return dist(rng);
 }
 

@@ -26,7 +26,7 @@ BOL TestWarn(ISN line, const CHA* function, const CHA* file) {
 BOL TestFail(ISN line, const CHA* function, const CHA* file) {
   BOL result = TestWarn(line, function, file);
   // Insert break-point here.
-      return result;
+  return result;
 }
 
 const CHA* ArgsToString(ISN arg_count, CHA** args) {

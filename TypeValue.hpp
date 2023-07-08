@@ -203,13 +203,13 @@ constexpr DT CTypeChar() {
 }
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
-template <typename ISZ = CHR, typename DT = DTB>
+template <typename IS = CHR, typename DT = DTB>
 constexpr DT CTypeSize() {
-  return (sizeof(ISZ) == 1)
+  return (sizeof(IS) == 1)
              ? cSW1 
-             : (sizeof(ISZ) == 2)
+             : (sizeof(IS) == 2)
                    ? cSW2
-                   : (sizeof(ISZ) == 4) ? cSW4 : (sizeof(ISZ) == 8) ? cSW8 : 0;
+                   : (sizeof(IS) == 4) ? cSW4 : (sizeof(IS) == 8) ? cSW8 : 0;
 }
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
@@ -273,9 +273,9 @@ inline DTW TypeOf(const CHA* item) { return cCNS_STA; }
 inline DTW TypeOf(void* item) { return cPTR; }
 inline DTW TypeOf(const void* item) { return cCNS_PTR; }
 
-template <typename ISZ>
-inline BOL TSizeIsValid(ISZ size) {
-  return (size & (sizeof(ISZ) - 1)) == 0;
+template <typename IS>
+inline BOL TSizeIsValid(IS size) {
+  return (size & (sizeof(IS) - 1)) == 0;
 }
 
 /* An ROM  for one of the 32 types.
