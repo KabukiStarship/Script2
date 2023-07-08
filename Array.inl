@@ -65,20 +65,18 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 
 namespace _ {
 
-IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
-  size_bytes += (-size_bytes) & cWordLSbMask; //< Word align up.
-  ISW size_words = size_bytes >> WordBitCount;
+IUW* RamFactoryStack(IUW* origin, ISW size_bytes) {
+  if (size_bytes <= 0) return nullptr;
+  size_bytes += (-size_bytes) & cWordLSbMask;  //< Word align up.
+  ISW size_words = size_bytes >> WordBitCount; 
   IUW* socket = new IUW[size_words];
-  // @todo Check if the memory was created successfully.
   return socket;
 }
 
-IUW* RamFactoryHeap(IUW* buffer, const ISW size_bytes) {
-  if (buffer) {
-    delete[] buffer;
-    return nullptr;
-  }
-  return RamFactoryStack(buffer, size_bytes);
+IUW* RamFactoryHeap(IUW* origin, ISW size_bytes) {
+  if (!origin) return RamFactoryStack(origin, size_bytes);
+  delete[] origin;
+  return nullptr;
 }
 
 /* Compares the two blocks of memory byte by byte to check if they're identical.
@@ -224,11 +222,13 @@ ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
 
 ISW ArrayCopySlow(void* write, ISW w_size_bytes, const void* read, 
                   const ISW r_size_bytes) {
-  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes)
+  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes || 
+      w_size_bytes < r_size_bytes)
     return 0;
   CHA* w_cursor = TPtr<CHA>(write);
-  const CHA* r_cursor = TPtr<const CHA>(read);
-  while (r_cursor < r_cursor + r_size_bytes) *w_cursor++ = *r_cursor++;
+  const CHA* r_cursor = TPtr<const CHA>(read),
+           * r_end = r_cursor + r_size_bytes;
+  while (r_cursor < r_end) *w_cursor++ = *r_cursor++;
   return r_size_bytes;
 }
 

@@ -61,8 +61,8 @@ Printer& TPrintHex(Printer& o, const void* item) {
   IUW ptr = IUW(item);
   return TPrintHex<Printer, IUW>(o, ptr);
 }
-template <typename Printer, typename ISZ, typename IU>
-Printer& TPrintHex(Printer& o, ISZ item) {
+template <typename Printer, typename IS, typename IU>
+Printer& TPrintHex(Printer& o, IS item) {
   return TPrintHex<Printer, IU>(o, IU(item));
 }
 #if USING_FPC == YES_0
@@ -167,8 +167,8 @@ Printer& TPrintBinary(Printer& o, IU item) {
   return o;
 }
 
-template <typename Printer, typename ISZ, typename IU>
-Printer& TPrintBinary(Printer& o, ISZ item) {
+template <typename Printer, typename IS, typename IU>
+Printer& TPrintBinary(Printer& o, IS item) {
   return TPrintBinary<Printer, IU>(o, (IU)item);
 }
 #if USING_FPC == YES_0

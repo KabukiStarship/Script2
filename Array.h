@@ -15,6 +15,7 @@ namespace _ {
 struct Autoject;
 /* Fills the array with the given fill_char identical to memset. */
 LIB_MEMBER CHA* ArrayFill(void* origin, ISW size_bytes, CHA fill_char = 0);
+
 }  //< namespace _
 
 #if SEAM >= SCRIPT2_STACK
@@ -29,7 +30,7 @@ namespace _ {
 
 /* ASCII OBJ and SocketFactory. */
 struct Autoject {
-  SocketFactory socket_factory;  //< Autoject Factory function pointer.
+  SocketFactory ram;  //< Autoject Factory function pointer.
   IUW* origin;                   //< Pointer to the Autoject.
 };
 
@@ -78,7 +79,7 @@ class Nil {
 };
 
 /* Copies the block of memory without doing any error checking. */
-LIB_MEMBER ISW ArrayCopyFast(void* write, const void* read, ISW size_bytes);
+LIB_MEMBER ISW ArrayCopyFast(void* write, ISW write_size, const void* read, ISW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
 @param write     The start of the write socket.

@@ -21,25 +21,25 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <iostream>
 namespace _ {
 
-template <typename ISZ = ISW>
+template <typename IS = ISW>
 constexpr ISW CSignedDigitsMax() {
   enum {
     cBufferSize =
-        (sizeof(ISZ) == 1)
+        (sizeof(IS) == 1)
             ? 4
-            : (sizeof(ISZ) == 2)
+            : (sizeof(IS) == 2)
                   ? 5
-                  : (sizeof(ISZ) == 4) ? 16 : (sizeof(ISZ) == 8) ? 24 : 32
+                  : (sizeof(IS) == 4) ? 16 : (sizeof(IS) == 8) ? 24 : 32
   };
   return cBufferSize;
 }
 
-template <typename ISZ, typename IU>
-BOL TCInSigned(ISZ& result) {
-  CHA buffer[CSignedDigitsMax<ISZ>()];
+template <typename IS, typename IU>
+BOL TCInSigned(IS& result) {
+  CHA buffer[CSignedDigitsMax<IS>()];
   ISN c;
   ISW state = CIn::cStateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<ISZ>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::cStateSuccess) {
     if (state == CIn::cStateBaseSign) {
       c = CIn::ScanKey();
@@ -54,7 +54,7 @@ BOL TCInSigned(ISZ& result) {
       if (!c) break;
     }
   }
-  return TScanSigned<ISZ, IU, CHA>(buffer, result) != 0;
+  return TScanSigned<IS, IU, CHA>(buffer, result) != 0;
 }
 
 template <typename IU>
@@ -85,13 +85,13 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
   return true;
 }
 
-template <typename FP = FPW, typename ISZ = ISW, typename IU = IUW,
+template <typename FP = FPW, typename IS = ISW, typename IU = IUW,
           typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CHA buffer[CSignedDigitsMax<ISZ>()];
+  CHA buffer[CSignedDigitsMax<IS>()];
   ISN c;
   ISW state = CIn::cStateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<ISZ>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::cStateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();

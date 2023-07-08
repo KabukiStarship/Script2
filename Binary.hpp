@@ -97,22 +97,22 @@ inline IU TNaNUnsigned() {
   return ~IU(0);
 }
 
-/* Returns the maximum value of the given signed type. */
-template <typename ISZ>
-constexpr ISZ CNaNSigned() {
-  return (~ToUnsigned(ISZ)) >> 1;
+/* Returns the minimum value of the given signed type (i.e. 0x100...0). */
+template <typename IS>
+constexpr IS TNaNSigned() {
+  return IS(1) << (sizeof(IS) * 8 - 1);
 }
 
-template <typename ISZ = ISW>
-inline ISZ TDelta(const void* start) {
+template <typename IS = ISW>
+inline IS TDelta(const void* start) {
   ISW delta = ISW(start);
-  return ISZ(delta);
+  return IS(delta);
 }
 
-template <typename ISZ = ISW>
-inline ISZ TDelta(const void* start, const void* stop) {
+template <typename IS = ISW>
+inline IS TDelta(const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
-  return ISZ(delta);
+  return IS(delta);
 }
 
 enum {
@@ -126,15 +126,35 @@ ISN size_bytes = 32;
 ISN size_words = size_bytes >> CBitCount<ISN> ()
 @endcode
 */
-template <typename ISZ = ISW>
-constexpr ISC CByteCount() {
-  return (sizeof(ISZ) == 1)
-             ? 0
-             : (sizeof(ISZ) == 2)
-                   ? 1
-                   : (sizeof(ISZ) == 4)
-                         ? 2
-                         : (sizeof(ISZ) == 8) ? 3 : (sizeof(ISZ) == 16) ? 4 : 0;
+template <typename IS = ISW>
+constexpr ISN TBitCode() {
+  return (sizeof(IS) ==  1) ? 0
+       : (sizeof(IS) ==  2) ? 1
+       : (sizeof(IS) ==  4) ? 2
+       : (sizeof(IS) ==  8) ? 3 
+       : (sizeof(IS) == 16) ? 4 : 0;
+}
+
+template <typename DT = DTB, DT dt>
+constexpr ISN TBitCode() {
+  return (dt >= cCHA && dt < cIUA) ? 0
+       : (dt >= cCHB && dt < cFPB) ? 1
+       : (dt >= cCHC && dt < cFPC) ? 2
+       : (dt >= cTME && dt < cFPD) ? 3
+       : (dt >= cISE && dt < cFPE) ? 4
+       : (dt == cDTA) ? cDTASize
+       : (dt == cDTB) ? cDTBSize
+       : (dt == cDTC) ? cDTCSize
+       : (dt == cDTD) ? cDTDSize
+       : (dt == cDTE) ? cDTESize
+       : (dt == cDTF) ? cDTFSize
+       : (dt == cDTG) ? cDTGSize
+       : (dt == cDTH) ? cDTHSize
+       : (dt == cDTI) ? cDTISize
+       : (dt == cDTJ) ? cDTJSize
+       : (dt == cDTK) ? cDTKSize
+       : (dt == cDTL) ? cDTLSize
+       : 0;
 }
 
 /* Aligns the given value up to a sizeof (T) boundary.
@@ -291,7 +311,7 @@ inline IUD TwosComplementInvert(IUD value) {
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = ISW, I PowerOf2 = CByteCount<I>()>
+template <typename I = ISW, I PowerOf2 = TBitCode<I>()>
 I TAlignUp(I value) {
   return value + (TwosComplementInvert(value) & (PowerOf2 - 1));
   //return AlignUp(value, PowerOf2 - 1);
@@ -348,25 +368,25 @@ constexpr IUD CAlignDown(IUD value, IUD align_lsb_mask = cWordLSbMask) {
 }
 
 /* Calculates the size_bytes in size_words. */
-template <typename ISZ>
-inline ISZ TSizeWords(ISZ size) {
+template <typename IS>
+inline IS TSizeWords(IS size) {
   return AlignUp(size) >> WordBitCount;
 }
 
 
-template <typename ISZ>
-constexpr ISZ CSizeWords(ISZ size) {
-  ISZ size_aligned = size + ((-size) & cWordLSbMask);
+template <typename IS>
+constexpr IS CSizeWords(IS size) {
+  IS size_aligned = size + ((-size) & cWordLSbMask);
   size_aligned = size_aligned >> WordBitCount;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
 
 /* Converts the given size into CPU word count. */
-template <typename ISZ = ISW>
-inline ISZ TWordCount(ISZ size) {
-  ISZ align_offset = (-size) & (sizeof(ISW) - 1);
+template <typename IS = ISW>
+inline IS TWordCount(IS size) {
+  IS align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
-  return size >> CByteCount<ISW>();
+  return size >> TBitCode<ISW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -404,17 +424,17 @@ inline const T* TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename ISZ = IUW>
-inline ISZ TAlignDownI(ISZ value, ISZ mask = (ISZ)cWordLSbMask) {
+template <typename IS = IUW>
+inline IS TAlignDownI(IS value, IS mask = (IS)cWordLSbMask) {
   return value & (~mask);
 }
 
 /* Aligns the given size to a word-sized boundary. */
-template <typename ISZ>
-constexpr ISZ CSizeAlign(ISZ size) {
-  ISZ align_lsb_mask = sizeof(IUW) - 1;
+template <typename IS>
+constexpr IS CSizeAlign(IS size) {
+  IS align_lsb_mask = sizeof(IUW) - 1;
   if (size < sizeof(IUW)) return sizeof(IUW);
-  ISZ size_max = ~align_lsb_mask;
+  IS size_max = ~align_lsb_mask;
   if (size > size_max) return size;
   return size + (-size) & align_lsb_mask;
 }
@@ -476,23 +496,23 @@ constexpr ISC CSignedMin(ISC one) {
 constexpr ISD CSignedMin(ISD one) {
   return ISD(IUD(one) << (sizeof(ISD) * 8 - 1));
 }
-template <typename ISZ>
-inline ISZ TSignedMin() {
-  return SignedMin(ISZ(1));
+template <typename IS>
+inline IS TSignedMin() {
+  return SignedMin(IS(1));
 }
-template <typename ISZ>
-constexpr ISZ CSignedMin() {
-  return CSignedMin(ISZ(1));
+template <typename IS>
+constexpr IS CSignedMin() {
+  return CSignedMin(IS(1));
 }
 
 /* ASCII Signed Not-a-Number is the lowest possible signed integer value. */
-template <typename ISZ>
-inline ISZ TSignedNaN() {
-  return TSignedMin<ISZ>() - 1;
+template <typename IS>
+inline IS TSignedNaN() {
+  return TSignedMin<IS>() - 1;
 }
-template <typename ISZ>
-constexpr ISZ CSignedNaN() {
-  return TSignedNaN<ISZ>();
+template <typename IS>
+constexpr IS CSignedNaN() {
+  return TSignedNaN<IS>();
 }
 
 /* Returns the maximum unsigned value.
@@ -516,9 +536,9 @@ constexpr IUA CUnsignedMax(ISA zero) { return ~IUA(zero); }
 constexpr IUB CUnsignedMax(ISB zero) { return ~IUB(zero); }
 constexpr IUC CUnsignedMax(ISC zero) { return ~IUC(zero); }
 constexpr IUD CUnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename ISZ>
-constexpr ISZ CUnsignedMax() {
-  return CUnsignedMax(ISZ(0));
+template <typename IS>
+constexpr IS CUnsignedMax() {
+  return CUnsignedMax(IS(0));
 }
 
 /* Returns the minimum signed value.
@@ -534,18 +554,18 @@ inline ISA SignedMax(ISA zero) { return ISA(UnsignedMax(zero) >> 1); }
 inline ISB SignedMax(ISB zero) { return ISB(UnsignedMax(zero) >> 1); }
 inline ISC SignedMax(ISC zero) { return ISC(UnsignedMax(zero) >> 1); }
 inline ISD SignedMax(ISD zero) { return ISD(UnsignedMax(zero) >> 1); }
-template <typename ISZ>
-inline ISZ TSignedMax() {
-  return SignedMax(ISZ(0));
+template <typename IS>
+inline IS TSignedMax() {
+  return SignedMax(IS(0));
 }
 constexpr ISA CSignedMax(ISA zero) { return ISA(CUnsignedMax(zero) >> 1); }
 constexpr ISB CSignedMax(ISB zero) { return ISB(CUnsignedMax(zero) >> 1); }
 constexpr ISC CSignedMax(ISC zero) { return ISC(CUnsignedMax(zero) >> 1); }
 constexpr ISD CSignedMax(ISD zero) { return ISD(CUnsignedMax(zero) >> 1); }
 
-template <typename ISZ>
-constexpr ISZ CSignedMax() {
-  return CSignedMax(ISZ(0));
+template <typename IS>
+constexpr IS CSignedMax() {
+  return CSignedMax(IS(0));
 }
 
 /* Checsk if the value is Not-a-Number. */

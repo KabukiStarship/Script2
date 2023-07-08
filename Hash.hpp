@@ -13,12 +13,12 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* Returns the highest signed prime that can fit in type IS.
 @return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */
-template <typename ISZ>
-inline ISZ PrimeMaxSigned() {
-  ISZ prime = (sizeof(ISZ) == 1)   ? 127
-             : (sizeof(ISZ) == 2) ? 32767
-             : (sizeof(ISZ) == 4) ? 2147483647
-             : (sizeof(ISZ) == 8) ? 9223372036854775783
+template <typename IS>
+inline IS PrimeMaxSigned() {
+  IS prime = (sizeof(IS) == 1)   ? 127
+             : (sizeof(IS) == 2) ? 32767
+             : (sizeof(IS) == 4) ? 2147483647
+             : (sizeof(IS) == 8) ? 9223372036854775783
                                  : 0;
   return prime;
 }

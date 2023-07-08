@@ -108,17 +108,17 @@ inline const CHT* TSTRFindLast(const CHT* string, CHA token) {
 @return  Returns -1 if the text CHA is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CHA. */
-template <typename CHT = CHR, typename ISZ = ISN>
-ISZ TSTRLength(const CHT* string) {
-  return (ISZ)(TSTREnd<CHT>(string) - string);
+template <typename CHT = CHR, typename IS = ISN>
+IS TSTRLength(const CHT* string) {
+  return (IS)(TSTREnd<CHT>(string) - string);
 }
 
 /* Gets the length of the given CHA.
 @return  Returns -1 if the text CHA is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CHA. */
-template <typename CHT = CHR, typename ISZ = ISN>
-inline ISZ TSTRLength(CHT* string) {
+template <typename CHT = CHR, typename IS = ISN>
+inline IS TSTRLength(CHT* string) {
   return TSTRLength<CHT>(TPtr<const CHT>(string));
 }
 
@@ -248,10 +248,10 @@ BOL TIsDigit(CHT c) {
 @return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
 @param item The IS to write the scanned IS. */
-template <typename ISZ = ISW, typename IU = IUW, typename CHT = CHR>
-const CHT* TScanSigned(const CHT* string, ISZ& item) {
+template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
+const CHT* TScanSigned(const CHT* string, IS& item) {
   if (!string) return nullptr;
-  ISZ sign;
+  IS sign;
   const CHT* cursor = string;
   CHT c = *cursor++;
   if (c == '-') {
@@ -287,10 +287,10 @@ const CHT* TScanSigned(const CHT* string, ISZ& item) {
 @return Nil if there is no IU to scan.
 @param socket The beginning of the socket.
 @param item The IS to write the scanned IS. */
-template <typename ISZ = ISW, typename IU = IUW, typename CHT = CHR>
-CHT* TScanSigned(CHT* string, ISZ& item) {
+template <typename IS = ISW, typename IU = IUW, typename CHT = CHR>
+CHT* TScanSigned(CHT* string, IS& item) {
   const CHT* ptr = TPtr<const CHT>(string);
-  return const_cast<CHT*>(TScanSigned<ISZ, IU, CHT>(ptr, item));
+  return const_cast<CHT*>(TScanSigned<IS, IU, CHT>(ptr, item));
 }
 
 /* Scans the given socket for an Signed Integer (IS).
@@ -1565,7 +1565,7 @@ CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
 }
 
 /* Templated string Printer. */
-template <typename CHT = CHR, typename ISZ = ISN>
+template <typename CHT = CHR, typename IS = ISN>
 struct TSPrinter {
   CHT *start,  //< Start address.
       *stop;   //< Stop address.
@@ -1576,7 +1576,7 @@ struct TSPrinter {
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
   @param count The number of CHT(s) in the buffer. */
-  TSPrinter(CHT* start, ISZ size) : start(start), stop(start + size - 1) {
+  TSPrinter(CHT* start, IS size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
@@ -1592,7 +1592,7 @@ struct TSPrinter {
 
   IUA* End() { return TPtr<IUA>(start) + (sizeof(CHT) - 1); }
 
-  ISZ SizeBytes() { return (ISZ)(stop - start + sizeof(CHT)); }
+  IS SizeBytes() { return (IS)(stop - start + sizeof(CHT)); }
 
   void Wipe() { ArrayFill(start, stop); }
 
@@ -1610,8 +1610,8 @@ struct TSPrinter {
 
   /* Sets the start pointer to the new_pointer. */
   inline TSPrinter& Set(IUW* buffer) {
-    ISZ size = *TPtr<ISZ>(buffer);
-    IUW ptr = IUW(buffer) + sizeof(ISZ);
+    IS size = *TPtr<IS>(buffer);
+    IUW ptr = IUW(buffer) + sizeof(IS);
     CHT* start_ptr = TPtr<CHT>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
@@ -1625,10 +1625,10 @@ struct TSPrinter {
   }
 
   /* Finds the length of the STR in Chars. */
-  inline ISZ SpaceLeft() { return (ISZ)(stop - start); }
+  inline IS SpaceLeft() { return (IS)(stop - start); }
 
   /* Calculates the max length of the string in Chars. */
-  inline ISZ LengthMax() { return stop - start; }
+  inline IS LengthMax() { return stop - start; }
 
   /* Prints a item to the string. */
   inline TSPrinter& PrintChar(CHA item) {
@@ -1773,7 +1773,7 @@ struct TSPrinter {
 
   template <typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    o << "\nTUTF<CH" << sizeof(CHT) << ", IS" << sizeof(ISZ) << ">{ start:";
+    o << "\nTUTF<CH" << sizeof(CHT) << ", IS" << sizeof(IS) << ">{ start:";
     TSPrintHex<Printer>(o, start);
     o << " stop:";
     TSPrintHex<Printer>(o, stop);
