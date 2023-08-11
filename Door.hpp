@@ -76,7 +76,7 @@ class TDoor : public Operand {
     //  aTalkbaccSize);
   }
 
-  /* SocketFactory. */
+  /* RAMFactory. */
   virtual ~TDoor() {
     if (origin) delete[] origin;
   }

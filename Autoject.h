@@ -16,17 +16,17 @@ namespace _ {
 struct Autoject;
 }
 
-/* RamFactory manages memory for ASCII Objects.
+/* RAMFactory manages memory for ASCII Objects.
 @return A word-aligned buffer, rounding up if unaligned.
 @param obj  A block of word-aligned heap memory.
 @param size The size of the buffer to create in bytes. */
-typedef IUW* (*RamFactory)(IUW* obj, ISW size);
+typedef IUW* (*RAMFactory)(IUW* obj, ISW size);
 
 namespace _ {
 
-/* ASCII OBJ and RamFactory. */
+/* ASCII OBJ and RAMFactory. */
 struct Autoject {
-  RamFactory ram_factory;  //< Autoject Factory function pointer.
+  RAMFactory ram_factory;  //< Autoject Factory function pointer.
   IUW* begin;              //< Pointer to the Autoject.
 };
 

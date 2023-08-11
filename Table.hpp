@@ -527,7 +527,7 @@ class ATable {
   AArray<CHT, ISZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:
   /* Constructs a Table.
-  @param factory SocketFactory to call when the String overflows. */
+  @param factory RAMFactory to call when the String overflows. */
   ATable() {
     ISZ size_bytes = CTableSize<TPARAMS, cCountMax>();
     D_ARRAY_WIPE(obj_.Origin(), size_bytes);
@@ -535,7 +535,7 @@ class ATable {
   }
 
   /* Constructs a Table.
-  @param factory SocketFactory to call when the String overflows. */
+  @param factory RAMFactory to call when the String overflows. */
   ATable(ISY count_max) {
     ISZ size_bytes = CTableSize<TPARAMS, count_max>();
     D_ARRAY_WIPE(obj_.Origin(), size_bytes);

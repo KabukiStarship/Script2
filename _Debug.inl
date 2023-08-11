@@ -17,6 +17,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
   cout << Headingf("Testing ", __FUNCTION__, nullptr, nullptr, 80)
 #define D_COUT(item) _::CPrint().Star() << item
 #define D_COUT_NL _::CPrint().Star().NL()
+#define D_LINEF(item) _::CPrint().Star() << Linef(item)
 #define D_PAUSE(message) _::Pausef(message)
 #define D_COUT_ERROR(message)                           \
   _::CPrint().Star() << "\nERROR: " << message << '.'); \

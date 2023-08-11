@@ -45,7 +45,7 @@ inline IS TArraySizeMax() {
 namespace _ {
 
 // enum {
-//  cWordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
+//  WordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
 //};
 
 inline IUW* AutojectBeginSet(Autoject& obj, void* buffer) {
@@ -61,8 +61,8 @@ Please see the ASCII Data Specification for DRY documentation.
 
 /* Deletes the given obj using the obj.factory. */
 inline void Delete(Autoject obj) {
-  SocketFactory socket_factory = obj.ram;
-  if (socket_factory) socket_factory(obj.origin, 0);
+  RAMFactory ram = obj.ram;
+  if (ram) ram(obj.origin, 0);
 }
 
 /* An ASCII Array.
@@ -188,7 +188,7 @@ inline IS TSizeWords(Autoject& autoject) {
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
 template <typename T, typename IS = ISN, typename Class>
-IUW* TArrayNew(SocketFactory factory, IS size) {
+IUW* TArrayNew(RAMFactory factory, IS size) {
   IUW* origin = factory(nullptr, TSizeBytes<T, IS, Class>(size));
   TSizeSet<IS>(origin, size);
   return origin;
@@ -198,41 +198,18 @@ IUW* TArrayNew(SocketFactory factory, IS size) {
 required. */
 template <typename T, typename IS>
 inline IUW* TArrayInit(Autoject& obj, IUW* buffer, IS size,
-                       SocketFactory socket_factory) {
-  D_ASSERT(socket_factory);
+                       RAMFactory ram) {
+  D_ASSERT(ram);
   D_ASSERT(size >= CSizeMin<IS>());
-  obj.ram = socket_factory;
+  obj.ram = ram;
   if (!buffer) {
     IS buffer_size = AlignUp(IS(size * sizeof(T) + sizeof(TArray<IS>)));
-    buffer = socket_factory(nullptr, buffer_size);
+    buffer = ram(nullptr, buffer_size);
   }
   D_ARRAY_WIPE(buffer, size * sizeof(T) + sizeof(TArray<IS>));
   TSizeSet<IS>(buffer, size);
   obj.origin = buffer;
   return buffer;
-}
-
-/* Copies the source to the target functionally equivalent to memcpy.
-@param destination The start of the write socket.
-@param stop  The stop of the write socket.
-@param origin The origin of the read socket.
-@param size  Number of bytes to copy.
-@return Pointer to the last IUA written or nil upon failure. */
-inline ISW ArrayCopy(void* destination, void* d_stop, const void* read_start,
-                      ISW read_size) {
-  return ArrayCopy(destination, SizeOf(destination, d_stop), read_start, read_size);
-}
-
-/* Copies the source to the target functionally equivalent to memcpy.
-@param destination The start of the write socket.
-@param stop  The stop of the destination write socket.
-@param origin The origin of the read socket.
-@param size  Number of bytes to copy.
-@return Pointer to the last IUA written or nil upon failure. */
-inline ISW ArrayCopy(void* destination, void* d_stop, const void* read_start,
-                      const void* read_stop) {
-  return ArrayCopy(destination, SizeOf(destination, d_stop), read_start,
-                   SizeOf(read_start, read_stop));
 }
 
 /* Writes the source TArray to the destination. */
@@ -260,7 +237,7 @@ IUW* TArrayWrite(IUW* destination, IUW* source, IS size) {
 @param socket A raw ASCII Socket to clone. */
 template <typename T = IUA, typename IS = ISN, typename Class>
 IUW* TArrayClone(Autoject& obj) {
-  SocketFactory factory = obj.ram;
+  RAMFactory factory = obj.ram;
   IUW* origin = obj.origin;
   // if (!factory || !origin) return nullptr;
 
@@ -401,7 +378,7 @@ inline ISW ArrayCompare(const void* a_begin, const void* end_a,
 inline ISW ArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
                         ISW b_size_bytes) {
   return ArrayCompare(a_begin, a_end, a_begin,
-                      TPtr<const CHA>(b_begin) + b_size_bytes);
+                      TPtr<CHA>(b_begin) + b_size_bytes);
 }
 
 /* Casts ArrayCompare to type T. */
@@ -464,7 +441,7 @@ class TBUF {
   /* Sets the size to the new value. */
   template <typename ISW>
   inline IUW* SizeSet(ISW size) {
-    A_ASSERT((size & cWordLSbMask) == 0)
+    A_ASSERT((size & WordLSbMask) == 0)
     *TPtr<ISW>(words_) = size;
     return words_;
   }
@@ -487,23 +464,23 @@ class TBUF {
 /* A Block of heap. */
 template <DTB cType>
 class TRamFactory {
-  /* SocketFactory for the Stack deletes a non-nil buffer. */
+  /* RAMFactory for the Stack deletes a non-nil buffer. */
   static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
     if (size_bytes < 0) return TPtr<IUW>(IUW(cType));
     return _::RamFactoryHeap(buffer, size_bytes);
   }
 
-  /* SocketFactory for the Stack doesn't delete a non-nil buffer. */
+  /* RAMFactory for the Stack doesn't delete a non-nil buffer. */
   static IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
     if (size_bytes == 0) return (IUW*)RamFactoryHeap;
     if (size_bytes < 0) return TPtr<IUW>(cType);
     return _::RamFactoryStack(buffer, size_bytes);
   }
 
-  /* Gets the initial SocketFactory for the program stack or heap. */
+  /* Gets the initial RAMFactory for the program stack or heap. */
   template <typename BUF>
-  static constexpr SocketFactory RamFactoryInit() {
+  static constexpr RAMFactory RamFactoryInit() {
     return (sizeof(BUF) == 0) ? RamFactoryHeap : RamFactoryStack;
   }
 
@@ -511,15 +488,15 @@ class TRamFactory {
   /* Does nothing. */
   TRamFactory() {}
 
-  /* Gets the SocketFactory to use upon construction. */
+  /* Gets the RAMFactory to use upon construction. */
   template <typename BUF>
-  inline SocketFactory Init() {
+  inline RAMFactory Init() {
     return RamFactoryInit<BUF>();
   }
 
-  /* Gets the SocketFactory to use upon construction. */
+  /* Gets the RAMFactory to use upon construction. */
   template <typename BUF>
-  inline SocketFactory Init(SocketFactory factory) {
+  inline RAMFactory Init(RAMFactory factory) {
     return (!factory) ? RamFactoryInit<BUF>() : factory;
   }
 };
@@ -546,18 +523,18 @@ class AArray {
   memory based on the size can fit in the buffer_. If the buffer_ is
   statically allocated but the size can't fit in the buffer a new block of
   dynamic memory will be created. */
-  AArray(IS size, SocketFactory socket_factory = nullptr) {
+  AArray(IS size, RAMFactory ram = nullptr) {
     TArrayInit<T, IS>(obj_, buffer_.Words(), size,
-                       TRamFactory<Type()>().Init<BUF>(socket_factory));
+                       TRamFactory<Type()>().Init<BUF>(ram));
   }
 
-  /* Stores the origin and socket_factory to the obj_. */
-  AArray(IUW* origin, SocketFactory socket_factory) {
+  /* Stores the origin and ram to the obj_. */
+  AArray(IUW* origin, RAMFactory ram) {
     obj_.origin = origin;
-    obj_.ram = socket_factory;
+    obj_.ram = ram;
   }
 
-  /* Destructor calls the SocketFactory factory. */
+  /* Destructor calls the RAMFactory factory. */
   ~AArray() { Delete(obj_); }
 
   /* Gets the buffer_. */

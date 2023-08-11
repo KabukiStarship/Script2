@@ -409,7 +409,7 @@ inline CHT* TSPrint(CHT* start, ISW size, IUD value) {
   return TSPrintUnsigned<IUD, CHT>(start, size, value);
 }
 
-#if ALU_SIZE < 64
+#if CPU_SIZE < 64
 template <typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, IUC value) {
   return TSPrintUnsigned<IUC, CHT>(start, stop, value);
@@ -464,7 +464,7 @@ inline CHT* TSPrint(CHT* start, ISW size, ISD value) {
   return TSPrintSigned<ISD, IUD, CHT>(start, size, value);
 }
 
-#if ALU_SIZE < 64
+#if CPU_SIZE < 64
 template <typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, ISC value) {
   return TSPrintSigned<ISC, IUC, CHT>(start, stop, value);

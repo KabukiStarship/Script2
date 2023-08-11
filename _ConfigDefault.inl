@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define ASSEMBLY_TYPE ASSEMBLE_EXE 1
 #define SCRIPT2_RUN_TESTS YES_0
 
-#define ALU_SIZE ALU_64_BIT
+#define CPU_SIZE CPU_8_BYTE
 #define CPU_ENDIAN CPU_ENDIAN_LITTLE
 
 #define USING_CONSOLE YES_0

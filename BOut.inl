@@ -147,7 +147,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   D_COUT_BSQ(params);
   enum {
     cBOutBufferSize = 1024,
-    cBOutBufferSizeWords = cBOutBufferSize >> cWordBitCount
+    cBOutBufferSizeWords = cBOutBufferSize >> WordBitCount
   };
   D_COUT_BOUT(" to B-Output:", bout);
 
@@ -267,7 +267,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 #else
         return BOutError(bout, cErrorInvalidType);
 #endif  // USING_SCRIPT2_2_BYTE_TYPES
-#if ALU_SIZE <= 16
+#if CPU_SIZE <= 16
       case cSVI:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
         // Load number_ to write and increment args.
         iub_ptr = TPtr<const IUB>(args[arg_index]);

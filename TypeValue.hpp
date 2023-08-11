@@ -125,9 +125,9 @@ Printer& TTypePrint(Printer& printer, DTW item) {
 
     return printer << "ERROR: You done messed up A-A-ron.";
   }
-#if ALU_SIZE >= ALU_32_BIT // CPU is 32-bit or 64-bit
+#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit
 #endif
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
   if (item & ~IUW(0xffffffff)) { // 64-bit data type.
     return printer << "Error dfjaisdfas89fasd0af9sd0";
   }
@@ -251,8 +251,8 @@ inline DTW AlignmentMask(FPC item) { return 3; }
 inline DTW AlignmentMask(ISD item) { return 7; }
 inline DTW AlignmentMask(IUD item) { return 7; }
 inline DTW AlignmentMask(FPD item) { return 7; }
-inline DTW AlignmentMask(void* item) { return cWordLSbMask; }
-inline DTW AlignmentMask(const void* item) { return cWordLSbMask; }
+inline DTW AlignmentMask(void* item) { return WordLSbMask; }
+inline DTW AlignmentMask(const void* item) { return WordLSbMask; }
 
 /* Gets the type of the given item. */
 inline DTW TypeOf(CHA item) { return cCHA; }
@@ -288,7 +288,7 @@ inline IUC T() {
 
 /* Gets the alignment mask for the given POD data type. */
 inline ISW TypeAlignmentMask(DTW type) {
-  if (type == 0) return cWordLSbMask;
+  if (type == 0) return WordLSbMask;
   if (type <= cIUA) return 0;
   if (type <= cFPB) return 1;
   if (type <= cTME) sizeof(ISN) - 1;
@@ -306,7 +306,7 @@ T* TTypeAlignUp(void* pointer, ISW type) {
 @return A postivie size_bytes if the type is a POD type; 0 if the type is an
 Object type; or -1 if the value is a STR. */
 inline ISW TypeSizeOf(DTW type) {
-  if (type == 0) return cWordLSbMask;
+  if (type == 0) return WordLSbMask;
   if (type <= cIUA) return 0;
   if (type <= cFPB) return 1;
   if (type <= cTME) sizeof(ISN) - 1;

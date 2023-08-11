@@ -145,7 +145,7 @@ class Room : public Operand {
   RoomCountMax. */
   Room(const CHA* room_name = "chinese_room", ISC num_states = 2);
 
-  /* SocketFactory. */
+  /* RAMFactory. */
   virtual ~Room();
 
   /* Gets the Room state_. */

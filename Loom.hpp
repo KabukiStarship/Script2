@@ -182,9 +182,9 @@ Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
 template <TARGS>
-ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = cPush) {
+ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = STKPush) {
   D_ASSERT(loom);
-  if (!string || loom->map.count >= loom->map.count_max) return -1;
+  if (!string || loom->map.count >= loom->map.count_max) return -2;
   ISY count = loom->map.count;
   D_ASSERT(count >= 0);
   CHT* cursor = nullptr;
@@ -289,8 +289,8 @@ BOL TLoomGrow(Autoject& obj) {
   D_COUT('\n' << Charsf(loom, loom->size_bytes));
 #endif
 
-  // @see RamFactory for documentation on how to create a new block of memory.
-  IUW* growth = obj.socket_factory(nullptr, size_bytes << 1);
+  // @see RAMFactory for documentation on how to create a new block of memory.
+  IUW* growth = obj.ram(nullptr, size_bytes << 1);
   D_ARRAY_WIPE(growth, size_bytes);
   auto destination = TPtr<TLoom<ISZ, ISY>>(growth);
 
@@ -311,7 +311,7 @@ BOL TLoomGrow(Autoject& obj) {
 @return The index upon success or -1 if the obj can't grow anymore. */
 template <TARGS, typename BUF>
 ISY TLoomInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* item,
-                ISY index = cPush) {
+                ISY index = STKPush) {
   if (!item) return -1;
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result =
@@ -388,17 +388,17 @@ class ALoom {
   }
 
   /* Constructs a Loom subclass.
-  @param factory SocketFactory to call when the String overflows. */
-  ALoom(SocketFactory socket_factory, ISY count = cCountDefault)
-      : obj_(socket_factory) {
+  @param factory RAMFactory to call when the String overflows. */
+  ALoom(RAMFactory ram, ISY count = cCountDefault)
+      : obj_(ram) {
     TLoomInit<TPARAMS>(This(), count);
   }
 
   /* Constructs a Loom subclass.
-  @param factory SocketFactory to call when the String overflows. */
-  ALoom(SocketFactory socket_factory, ISZ size_bytes = CLoomSizeDefault<TPARAMS>(),
+  @param factory RAMFactory to call when the String overflows. */
+  ALoom(RAMFactory ram, ISZ size_bytes = CLoomSizeDefault<TPARAMS>(),
         ISZ count = CLoomCountDefault<TPARAMS>())
-      : obj_(socket_factory) {
+      : obj_(ram) {
     TLoomInit<TPARAMS>(This(), count);
   }
 
@@ -406,7 +406,7 @@ class ALoom {
 
   /* Deep copies the given string into the Loom.
   @return The index of the string in the Loom. */
-  inline ISZ Insert(const CHT* string, ISY index = cPush) {
+  inline ISZ Insert(const CHT* string, ISY index = STKPush) {
     return TLoomInsert<TPARAMS, BUF>(AJT_ARY(), string, index);
   }
 

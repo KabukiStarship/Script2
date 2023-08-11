@@ -18,16 +18,18 @@ namespace Script2 {
 
 template <typename ISZ, typename T>
 void TestMatrixIntegers() {
-  D_COUT(Linef("\n\n+---\n| Testing AMatrix<IS" << CSizef<ISZ>() << ">"
-         << Linef("\n+---"));
+  //D_LINEF("\n\n+---\n| Testing AMatrix<IS" << CSizef<ISZ>() << ">\n+---");
+  D_LINEF("\n\n+---\n| Testing AMatrix<IS");
+  D_COUT(CSizef<ISZ>());
+  D_LINEF(">\n+---"); //< @todo Find a better way to do this.
 
   static const ISC array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},
                                                 {{4, 5}, {6, 7}}};
-  const ISC* dimensions = TStack4<2, 2, 2>();
+  const ISC* dimensions = TDimC<2, 2, 2>();
   AMatrix<ISC> matrix(2, 2, 2, &array_3d_exected[0][0][0]);
   D_COUT_OBJ(matrix);
   ISC w = 0;
-  ISC* array_base = matrix.Elements();
+  ISC* array_base = matrix.Start();
   for (ISC x = 0; x < 2; ++x)
     for (ISC y = 0; y < 2; ++y)
       for (ISC z = 0; z < 2; ++z) A_AVOW(w++, array_3d_exected[x][y][z]);
