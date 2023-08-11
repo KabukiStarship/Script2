@@ -20,17 +20,17 @@ LIB_MEMBER CHA* ArrayFill(void* origin, ISW size_bytes, CHA fill_char = 0);
 
 #if SEAM >= SCRIPT2_STACK
 
-/* SocketFactory manages memory for ASCII Objects.
+/* RAMFactory manages memory for ASCII Objects.
 @return A word-aligned buffer, rounding up if unaligned.
 @param autoject   A contiguous memory auto-object.
 @param size_bytes Autoject size in bytes. */
-typedef IUW* (*SocketFactory)(IUW* autoject, ISW size);
+typedef IUW* (*RAMFactory)(IUW* autoject, ISW size);
 
 namespace _ {
 
-/* ASCII OBJ and SocketFactory. */
+/* ASCII OBJ and RAMFactory. */
 struct Autoject {
-  SocketFactory ram;  //< Autoject Factory function pointer.
+  RAMFactory ram;  //< Autoject Factory function pointer.
   IUW* origin;                   //< Pointer to the Autoject.
 };
 
@@ -53,10 +53,10 @@ enum AsciiFactoryError {
   cFactoryErrorCount = 6,   //< Factory function count.
 };
 
-/* SocketFactory for Autojects on the heap that deletes a the buffer. */
+/* RAMFactory for Autojects on the heap that deletes a the buffer. */
 LIB_MEMBER IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes);
 
-/* SocketFactory for Autojects on the program stack that doesn't delete the
+/* RAMFactory for Autojects on the program stack that doesn't delete the
 buffer. */
 LIB_MEMBER IUW* RamFactoryStack(IUW* buffer, ISW size_bytes);
 
@@ -78,9 +78,6 @@ class Nil {
   IUW* Words();
 };
 
-/* Copies the block of memory without doing any error checking. */
-LIB_MEMBER ISW ArrayCopyFast(void* write, ISW write_size, const void* read, ISW read_size);
-
 /* Copies the source to the target functionally identical to memcpy.
 @param write     The start of the write socket.
 @param size      The stop of the write socket.
@@ -88,7 +85,7 @@ LIB_MEMBER ISW ArrayCopyFast(void* write, ISW write_size, const void* read, ISW 
 @param read_size Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
 LIB_MEMBER ISW ArrayCopy(void* write, ISW size, const void* read,
-                          ISW read_size);
+                         ISW read_size);
 
 /* Compares the two memory sockets.
 @param a            The start of socket a.

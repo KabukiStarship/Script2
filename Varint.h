@@ -16,7 +16,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 
 namespace _ {
 
-#if ALU_SIZE == ALU_16_BIT
+#if CPU_SIZE == CPU_2_BYTE
 inline ISB UnpackSVI(ISB value) {
   if (value < 0) {
     IUB result = 0x8000 return result | ~(value - 1);

@@ -262,7 +262,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
       case cISB:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case cIUB:
       case cFPB:
-#if ALU_SIZE <= 16
+#if CPU_SIZE <= 16
       case SVI:
       case UVI:
 #endif
@@ -302,7 +302,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
 #else
         return ReturnError(this, cErrorInvalidType);
 #endif
-#if ALU_SIZE > 16
+#if CPU_SIZE > 16
       case SVI:
       case UVI:
 #endif

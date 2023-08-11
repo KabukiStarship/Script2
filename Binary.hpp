@@ -35,6 +35,11 @@ inline const T* TPtr(const void* ptr) {
 @param base The base address.
 @param offset The offset in bytes. */
 template <typename T = void>
+inline T* TPtr(void* origin, ISW offset) {
+  return reinterpret_cast<T*>(ISW(origin) + offset);
+}
+
+template <typename T = void>
 inline const T* TPtr(const void* origin, ISW offset) {
   return reinterpret_cast<const T*>(ISW(origin) + offset);
 }
@@ -127,12 +132,17 @@ ISN size_words = size_bytes >> CBitCount<ISN> ()
 @endcode
 */
 template <typename IS = ISW>
-constexpr ISN TBitCode() {
+constexpr ISN TBitCount() {
   return (sizeof(IS) ==  1) ? 0
-       : (sizeof(IS) ==  2) ? 1
-       : (sizeof(IS) ==  4) ? 2
-       : (sizeof(IS) ==  8) ? 3 
-       : (sizeof(IS) == 16) ? 4 : 0;
+       : (sizeof(IS) <=  2) ? 1
+       : (sizeof(IS) <=  4) ? 2
+       : (sizeof(IS) <=  8) ? 3 
+       : (sizeof(IS) <= 16) ? 4 
+       : (sizeof(IS) <= 32) ? 5 
+       : (sizeof(IS) <= 64) ? 6 
+       : (sizeof(IS) <= 128) ? 7 
+       : (sizeof(IS) <= 256) ? 8 
+       : (sizeof(IS) <= 512) ? 9 : 10;
 }
 
 template <typename DT = DTB, DT dt>
@@ -195,61 +205,60 @@ unsgiend_example = AlignUp<ISC, IUB, IUB> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (ISA) - 1) = value
 @endcode */
-
-inline ISA AlignUp(ISA value, ISA align_lsb_mask = cWordLSbMask) {
+inline ISA AlignUp(ISA value, ISA align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline IUA AlignUp(IUA value, IUA align_lsb_mask = cWordLSbMask) {
+inline IUA AlignUp(IUA value, IUA align_lsb_mask = WordLSbMask) {
   return IUA(AlignUp(ISA(value), ISA(align_lsb_mask)));
 }
-inline ISB AlignUp(ISB value, ISB align_lsb_mask = cWordLSbMask) {
+inline ISB AlignUp(ISB value, ISB align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline IUB AlignUp(IUB value, IUB align_lsb_mask = cWordLSbMask) {
+inline IUB AlignUp(IUB value, IUB align_lsb_mask = WordLSbMask) {
   return value + (IUB(-ISB(value)) & align_lsb_mask);
 }
-inline ISC AlignUp(ISC value, ISC align_lsb_mask = cWordLSbMask) {
+inline ISC AlignUp(ISC value, ISC align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline IUC AlignUp(IUC value, IUC align_lsb_mask = cWordLSbMask) {
+inline IUC AlignUp(IUC value, IUC align_lsb_mask = WordLSbMask) {
   return value + (IUC(-ISC(value)) & align_lsb_mask);
 }
-inline ISD AlignUp(ISD value, ISD align_lsb_mask = cWordLSbMask) {
+inline ISD AlignUp(ISD value, ISD align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-inline IUD AlignUp(IUD value, IUD align_lsb_mask = cWordLSbMask) {
+inline IUD AlignUp(IUD value, IUD align_lsb_mask = WordLSbMask) {
   return value + (IUD(-ISD(value)) & align_lsb_mask);
 }
-constexpr ISA CAlignUp(ISA value, ISA align_lsb_mask = cWordLSbMask) {
+constexpr ISA CAlignUp(ISA value, ISA align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr IUA CAlignUp(IUA value, IUA align_lsb_mask = cWordLSbMask) {
+constexpr IUA CAlignUp(IUA value, IUA align_lsb_mask = WordLSbMask) {
   return IUA(CAlignUp(ISA(value), ISA(align_lsb_mask)));
 }
-constexpr ISB CAlignUp(ISB value, ISB align_lsb_mask = cWordLSbMask) {
+constexpr ISB CAlignUp(ISB value, ISB align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr IUB CAlignUp(IUB value, IUB align_lsb_mask = cWordLSbMask) {
+constexpr IUB CAlignUp(IUB value, IUB align_lsb_mask = WordLSbMask) {
   return value + (IUB(-ISB(value)) & align_lsb_mask);
 }
-constexpr ISC CAlignUp(ISC value, ISC align_lsb_mask = cWordLSbMask) {
+constexpr ISC CAlignUp(ISC value, ISC align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr IUC CAlignUp(IUC value, IUC align_lsb_mask = cWordLSbMask) {
+constexpr IUC CAlignUp(IUC value, IUC align_lsb_mask = WordLSbMask) {
   return value + (IUC(-ISC(value)) & align_lsb_mask);
 }
-constexpr ISD CAlignUp(ISD value, ISD align_lsb_mask = cWordLSbMask) {
+constexpr ISD CAlignUp(ISD value, ISD align_lsb_mask = WordLSbMask) {
   return value + ((-value) & align_lsb_mask);
 }
-constexpr IUD CAlignUp(IUD value, IUD align_lsb_mask = cWordLSbMask) {
+constexpr IUD CAlignUp(IUD value, IUD align_lsb_mask = WordLSbMask) {
   return value + (IUD(-ISD(value)) & align_lsb_mask);
 }
 
-inline void* AlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
+inline void* AlignUpPTR(void* pointer, ISW mask = WordLSbMask) {
   ISW address = ISW(pointer);
   return TPtr<void>(CAlignUp(address, mask));
 }
-inline const void* AlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
+inline const void* AlignUpPTR(const void* pointer, ISW mask = WordLSbMask) {
   ISW value = IUW(pointer);
   return TPtr<void>(CAlignUp(value, mask));
 }
@@ -259,7 +268,7 @@ inline const void* AlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CHA>
-inline T* TAlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
+inline T* TAlignUpPTR(void* pointer, ISW mask = WordLSbMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -269,9 +278,66 @@ inline T* TAlignUpPTR(void* pointer, ISW mask = cWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = CHA>
-inline T* TAlignUpPTR(const void* pointer, ISW mask = cWordLSbMask) {
+inline T* TAlignUpPTR(const void* pointer, ISW mask = WordLSbMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
+}
+
+inline ISA AlignUpArray(ISA count) { AlignUp(count); }
+
+inline IUA AlignUpArray(IUA count) { AlignUp(count); }
+
+inline ISB AlignUpArray(ISB count) {
+#if CPU_SIZE == 1 || CPU_SIZE == 2
+  return count;
+#elif CPU_SIZE == 4
+  return count + count & 0x1;
+#else  // CPU_SIZE == 8
+  return AlignUp(count, ISB(0x3));
+#endif
+}
+
+inline IUB AlignUpArray(IUB count) {
+#if CPU_SIZE == 1 || CPU_SIZE == 2
+  return count;
+#elif CPU_SIZE == 4
+  return count + count & 0x1;
+#else  // CPU_SIZE == 8
+  return AlignUp(count, IUB(0x3));
+#endif
+}
+
+/* Not sure where this came from.?.?.?
+inline ISC AlignUpArray(ISC count) {
+#if CPU_SIZE == 1 || CPU_SIZE == 2 || CPU_SIZE == 4
+  return count + count & 0x1;
+#else  // CPU_SIZE == 8
+  return count + count & 0x1;
+#endif
+}*/
+
+inline ISC AlignUpArray(ISC count) {
+#if CPU_SIZE == 1 || CPU_SIZE == 2 || CPU_SIZE == 4
+  return count + count & 0x1;
+#else  // CPU_SIZE == 8
+  return count + count & 0x1;
+#endif
+}
+
+inline IUC AlignUpArray(IUC count) {
+#if CPU_SIZE == 1 || CPU_SIZE == 2 || CPU_SIZE == 4
+  return count + count & 0x1;
+#else  // CPU_SIZE == 8
+  return count + count & 0x1;
+#endif
+}
+
+inline ISD AlignUpArray(ISD count) { return count; }
+inline IUD AlignUpArray(IUD count) { return count; }
+
+template<typename T, typename I>
+inline I TAlignUpArray(I count) {
+  return AlignUpArray(count);
 }
 
 /* Aligns the given pointer up to the given least_significant_bits_max. */
@@ -307,17 +373,20 @@ inline IUD TwosComplementInvert(IUD value) {
   return IUD(-ISD(value));
 }
 
-/* Aligns up a number to the given PowerOf2.
-This function is for those not familiar with how Script2 does pointer alignment.
-It's faster to align the pointer using the max for the power of 2 rather than
-power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename I = ISW, I PowerOf2 = TBitCode<I>()>
+/* Aligns up a number to the given aligned word boundary in bytes.
+Cannot align to DT structs that are not a power of 2.
+@code
+ISW a = TAlignUp(foo, sizeof(ISA)), //< Can't align up to a 8-bit word boundary.
+    b = TAlignUp(foo, sizeof(ISB)), //< Aligns to a 16-bit word boundary.
+    c = TAlignUp(foo, sizeof(ISC)), //< Aligns to a 32-bit word boundary.
+    d = TAlignUp(foo, sizeof(ISD)); //< Aligns to a 64-bit word boundary.
+@endcode */
+template <typename I = ISW, typename DT = ISW>
 I TAlignUp(I value) {
-  return value + (TwosComplementInvert(value) & (PowerOf2 - 1));
-  //return AlignUp(value, PowerOf2 - 1);
+  return value + (TwosComplementInvert(value) & (sizeof(DT) - 1));
 }
 
-/* Aligns th given value down to the given word goundary. */
+/* Aligns th given value down to the given word boundary. */
 inline ISA AlignDown(ISA value, ISA align_lsb_mask) {
   return value + (value & align_lsb_mask);
 }
@@ -342,28 +411,28 @@ inline ISD AlignDown(ISD value, ISD align_lsb_mask) {
 inline IUD AlignDown(IUD value, IUD align_lsb_mask) {
   return value - (value & align_lsb_mask);
 }
-constexpr ISA CAlignDown(ISA value, ISA align_lsb_mask = cWordLSbMask) {
+constexpr ISA CAlignDown(ISA value, ISA align_lsb_mask = WordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr IUA CAlignDown(IUA value, IUA align_lsb_mask = cWordLSbMask) {
+constexpr IUA CAlignDown(IUA value, IUA align_lsb_mask = WordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr ISB CAlignDown(ISB value, ISB align_lsb_mask = cWordLSbMask) {
+constexpr ISB CAlignDown(ISB value, ISB align_lsb_mask = WordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr IUB CAlignDown(IUB value, IUB align_lsb_mask = cWordLSbMask) {
+constexpr IUB CAlignDown(IUB value, IUB align_lsb_mask = WordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr ISC CAlignDown(ISC value, ISC align_lsb_mask = cWordLSbMask) {
+constexpr ISC CAlignDown(ISC value, ISC align_lsb_mask = WordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr IUC CAlignDown(IUC value, IUC align_lsb_mask = cWordLSbMask) {
+constexpr IUC CAlignDown(IUC value, IUC align_lsb_mask = WordLSbMask) {
   return value + (value & align_lsb_mask);
 }
-constexpr ISD CAlignDown(ISD value, ISD align_lsb_mask = cWordLSbMask) {
+constexpr ISD CAlignDown(ISD value, ISD align_lsb_mask = WordLSbMask) {
   return value - (value & align_lsb_mask);
 }
-constexpr IUD CAlignDown(IUD value, IUD align_lsb_mask = cWordLSbMask) {
+constexpr IUD CAlignDown(IUD value, IUD align_lsb_mask = WordLSbMask) {
   return value + (value & align_lsb_mask);
 }
 
@@ -376,7 +445,7 @@ inline IS TSizeWords(IS size) {
 
 template <typename IS>
 constexpr IS CSizeWords(IS size) {
-  IS size_aligned = size + ((-size) & cWordLSbMask);
+  IS size_aligned = size + ((-size) & WordLSbMask);
   size_aligned = size_aligned >> WordBitCount;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
@@ -386,7 +455,7 @@ template <typename IS = ISW>
 inline IS TWordCount(IS size) {
   IS align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
-  return size >> TBitCode<ISW>();
+  return size >> TBitCount<ISW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -405,7 +474,7 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
-inline T* TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
+inline T* TAlignDownPTR(void* ptr, ISW mask = WordLSbMask) {
   IUW value = IUW(ptr);
   return TPtr<T>(value - (value & mask));
 }
@@ -415,7 +484,7 @@ inline T* TAlignDownPTR(void* ptr, ISW mask = cWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename T = IUW>
-inline const T* TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
+inline const T* TAlignDownPTR(const void* ptr, ISW mask = WordLSbMask) {
   IUW value = IUW(ptr);
   return TPtr<const T>(value - (value & mask));
 }
@@ -425,7 +494,7 @@ inline const T* TAlignDownPTR(const void* ptr, ISW mask = cWordLSbMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template <typename IS = IUW>
-inline IS TAlignDownI(IS value, IS mask = (IS)cWordLSbMask) {
+inline IS TAlignDownI(IS value, IS mask = (IS)WordLSbMask) {
   return value & (~mask);
 }
 

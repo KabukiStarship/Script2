@@ -45,6 +45,10 @@ inline CHT* TSTRStart(TString<ISZ>* string) {
   return TPtr<CHT>(string, sizeof(TString<ISZ>));
 }
 template <typename CHT = CHR, typename ISZ = ISN>
+inline const CHT* TSTRStart(const TString<ISZ>* string) {
+  return TPtr<CHT>(string, sizeof(TString<ISZ>));
+}
+template <typename CHT = CHR, typename ISZ = ISN>
 inline CHT* TSTRStart(IUW* origin) {
   return TSTRStart<CHT, ISZ>(TPtr<TString<ISZ>>(origin));
 }
@@ -96,7 +100,7 @@ Printer& TStringPrint(Printer& o, TString<ISZ>* string) {
     << CHT('0' + sizeof(ISZ)) << "> size:" << size << Linef("\n+---\n| \"");
   ISW column_count = cConsoleWidth;
   ISZ length = 0;
-  CHL c;
+  CHL c = 0;
   const CHT* cursor = SScan(start, c);
   while (c) {
     ISW column = 2;
@@ -147,7 +151,7 @@ BOL TStringGrow(Autoject& obj, TSPrinter<CHT, ISZ>& utf) {
   size = new_size;
   D_COUT(" new_size:" << new_size << " new_size_bytes:" << new_size_bytes);
 
-  IUW* new_begin = TArrayNew<CHT, ISZ, TString<ISZ>>(obj.socket_factory, size);
+  IUW* new_begin = TArrayNew<CHT, ISZ, TString<ISZ>>(obj.ram, size);
   if (!new_begin) return false;
   D_COUT(" new size:" << new_size_bytes);
 
@@ -173,8 +177,8 @@ void TStringSPrint(Autoject& obj, TSPrinter<CHT>& sprinter, T item) {
   if (!cursor) {
     *start = 0;  //< Replace the delimiter so we can copy the string.
     do {
-      SocketFactory factory = obj.socket_factory,  //
-          factory_heap = (SocketFactory)factory(nullptr, 0);
+      RAMFactory factory = obj.ram,  //
+          factory_heap = (RAMFactory)factory(nullptr, 0);
       D_ASSERT(factory);
       D_COUT(
           "\nPrint failed, attempting to auto-grow from "
@@ -184,7 +188,7 @@ void TStringSPrint(Autoject& obj, TSPrinter<CHT>& sprinter, T item) {
 
       if (factory != factory_heap) {
         factory = factory_heap;
-        obj.socket_factory = factory;
+        obj.ram = factory;
       }
 
       cursor = _::TSPrint<CHT>(sprinter.start, sprinter.stop, item);
@@ -210,7 +214,7 @@ in the opposite order then where called.
 # Initialization
 
 A String may be initialed to print to the socket or to a dynamically allocated
-string. This behavior is configured with the constructors. The SocketFactory can
+string. This behavior is configured with the constructors. The RAMFactory can
 either be configured using the class template argument cFactory1_. If the
 obj_.Factory () is nil then it will get replaced with the foo.
 
@@ -240,7 +244,7 @@ class AString {
   }
 
   /* Constructs a String that auto-grows from stack to heap.
-  @param factory SocketFactory to call when the String overflows. */
+  @param factory RAMFactory to call when the String overflows. */
   AString() : obj_(cSize_, TRamFactory<Type()>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();

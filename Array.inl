@@ -14,10 +14,10 @@ namespace _ {
 inline IUW FillWord(CHA fill_char) {
   IUW value = (IUW)(IUA)fill_char;
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
   return value | (value << 8) | (value << 16) | (value << 24) | (value << 32) |
          (value << 48) | (value << 56);
-#elif ALU_SIZE == ALU_32_BIT
+#elif CPU_SIZE == CPU_4_BYTE
   return value | (value << 8) | (value << 16) | (value << 24);
 #else
   return value | (value << 8);
@@ -67,7 +67,7 @@ namespace _ {
 
 IUW* RamFactoryStack(IUW* origin, ISW size_bytes) {
   if (size_bytes <= 0) return nullptr;
-  size_bytes += (-size_bytes) & cWordLSbMask;  //< Word align up.
+  size_bytes += (-size_bytes) & WordLSbMask;  //< Word align up.
   ISW size_words = size_bytes >> WordBitCount; 
   IUW* socket = new IUW[size_words];
   return socket;
@@ -220,23 +220,23 @@ ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
   return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
 
-ISW ArrayCopySlow(void* write, ISW w_size_bytes, const void* read, 
-                  const ISW r_size_bytes) {
-  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes || 
-      w_size_bytes < r_size_bytes)
+ISW ArrayCopySlow(void* write, ISW w_size, const void* read, 
+                  const ISW r_size) {
+  if (!write || !read || r_size <= 0 || w_size < r_size)
     return 0;
   CHA* w_cursor = TPtr<CHA>(write);
   const CHA* r_cursor = TPtr<const CHA>(read),
-           * r_end = r_cursor + r_size_bytes;
+           * r_end = r_cursor + r_size;
   while (r_cursor < r_end) *w_cursor++ = *r_cursor++;
-  return r_size_bytes;
+  return r_size;
 }
 
-ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
-                  const ISW r_size_bytes) {
-  if (r_size_bytes < WordByteCount)
-    return ArrayCopySlow(write, w_size_bytes, read, r_size_bytes);
-  if (!write || !read || r_size_bytes <= 0 || w_size_bytes < r_size_bytes)
+/* Copies the block of memory in word-sized chunks. */
+ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
+                  const ISW r_size) {
+  if (r_size < WordByteCount)
+    return ArrayCopySlow(write, w_size, read, r_size);
+  if (!write || !read || r_size <= 0 || w_size < r_size)
     return 0;
   // Algorithm:
   // 64-bit Memory Layout that grows 3 bytes: 
@@ -251,13 +251,13 @@ ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
   // We start out with a socket full of memory taht we're not allowed to access
   // any of the x memory bytes else the compiler will yell at us.
   const IUA* r_start      = TPtr<IUA>(read),
-           * r_stop       = r_start + r_size_bytes;
+           * r_stop       = r_start + r_size;
   IUA      * w_cursor     = TPtr<IUA>(write);
   IUW      * w_start_word = TAlignUpPTR<IUW>(w_cursor);
 
   while (w_cursor < TPtr<IUA>(w_start_word)) *w_cursor++ = *r_start++;
 
-  IUW* w_stop_word = TAlignDownPTR<IUW>(w_cursor + r_size_bytes);
+  IUW* w_stop_word = TAlignDownPTR<IUW>(w_cursor + r_size);
   const IUW *r_start_word = TAlignDownPTR<const IUW>(r_start);
   IUW w_offset = TDelta(w_cursor, w_start_word),
       r_offset = TDelta(r_start_word, r_start);
@@ -304,27 +304,37 @@ ISW ArrayCopyFast(void* write, ISW w_size_bytes, const void* read,
     D_COUT("!");
     *w_cursor++ = *r_start++;
   }
-  return r_size_bytes;
+  return r_size;
 }
 
-ISW ArrayCopy(void* destination, ISW destination_size, const void* source,
-              const ISW source_size) {
-  return ArrayCopySlow(destination, destination_size, source, source_size);
+ISW ArrayCopy(void* write, ISW w_size, const void* source,
+              const ISW s_size) {
+  return ArrayCopySlow(write, w_size, source, s_size);
+}
+
+inline ISW ArrayCopy(void* write, void* w_end, const void* read,
+                     ISW read_size) {
+  return ArrayCopy(write, TDelta<ISW>(write, w_end), read, read_size);
+}
+
+inline ISW ArrayCopy(void* write, ISW r_size, const void* read,
+                     const void* r_end) {
+  return ArrayCopy(write, r_size, read, TDelta<ISW>(read, r_end));
 }
 /*
 inline ISW ArrayCopy(void* write, void* write_end, const void* read,
-                     const ISW r_size_bytes) {
-  return ArrayCopy(write, TDelta(write, write_end), read, r_size_bytes);
+                     const ISW r_size) {
+  return ArrayCopy(write, TDelta(write, write_end), read, r_size);
 }*/
 
-inline ISW ArrayCopyFast(void* write, void* write_end, const void* read,
-                         const ISW r_size_bytes) {
-  return ArrayCopyFast(write, TDelta(write, write_end), read, r_size_bytes);
+inline ISW ArrayCopyFast(void* write, void* w_end, const void* read,
+                         const ISW r_size) {
+  return ArrayCopyFast(write, TDelta(write, w_end), read, r_size);
 }
 
-inline ISW ArrayCopySlow(void* write, void* write_end, const void* read,
-                         const ISW r_size_bytes) {
-  return ArrayCopySlow(write, TDelta(write, write_end), read, r_size_bytes);
+inline ISW ArrayCopySlow(void* write, void* w_end, const void* read,
+                         const ISW r_size) {
+  return ArrayCopySlow(write, TDelta(write, w_end), read, r_size);
 }
 
 Nil::Nil() {}

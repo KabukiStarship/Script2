@@ -106,7 +106,7 @@ TypeValue::TypeValue(ISA item) : type_(cISA), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(IUA item) : type_(cIUA), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(ISB item) : type_(cISB), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(IUB item) : type_(cIUB), word_(IUW(item)), word_2_(0) {}
-#if ALU_SIZE == ALU_16_BIT
+#if CPU_SIZE == CPU_2_BYTE
 AValue::AValue(ISC item) : type_(cISC) {
   // @todo I don't know if this is going to be needed. In my mind the compiler
   // will push the word_ onto the program stack because of the *reintpret_cast.
@@ -117,7 +117,7 @@ AValue::AValue(ISC item) : type_(cISC) {
 TypeValue::TypeValue(ISC item) : type_(cISC), word_(IUW(item)), word_2_(0) {}
 #endif
 
-#if ALU_SIZE == ALU_16_BIT
+#if CPU_SIZE == CPU_2_BYTE
 AValue::AValue(IUC item) : type_(cIUC) {
   *TPtr<IUC>(&word_) = item;
 }
@@ -125,13 +125,13 @@ AValue::AValue(IUC item) : type_(cIUC) {
 TypeValue::TypeValue(IUC item) : type_(cIUC), word_(IUW(item)), word_2_(0) {}
 #endif
 
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(ISD item) : type_(cISD), word_(IUW(item)), word_2_(0) {}
 #else
 AValue::AValue(ISD item) : type_(cISD) { *TPtr<ISD>(&word_) = item; }
 #endif
 
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(IUD item) : type_(cIUD), word_(IUW(item)), word_2_(0) {}
 #else
 AValue::AValue(IUD item) : type_(cIUD) {
@@ -140,7 +140,7 @@ AValue::AValue(IUD item) : type_(cIUD) {
 
 #endif
 #if USING_FPC == YES_0
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(FPC item)
     : type_(cFPC), word_(ToUnsigned(item)), word_2_(0) {}
 #else
@@ -149,7 +149,7 @@ AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
 #endif
 
 #if USING_FPD == YES_0
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(FPD item)
     : type_(cFPD), word_(ToUnsigned(item)), word_2_(0) {}
 #else
@@ -168,7 +168,7 @@ TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
   } else if (pod_type <= 15) {
     word_ = TGet<IUC>(item);
   } else {
-#if ALU_SIZE != ALU_16_BIT
+#if CPU_SIZE != CPU_2_BYTE
     IUD* destination = TPtr<IUD>(WordPTR());
     const IUD* source = TPtr<const IUD>(item);
     *destination = *source;
@@ -197,7 +197,7 @@ IUA TypeValue::ToIUA() { return IUA(word_); }
 IUB TypeValue::ToIUB() { return IUB(word_); }
 IUN TypeValue::ToIUN() { return IUN(word_); }
 IUC TypeValue::ToIUC() {
-#if ALU_SIZE == ALU_16_BIT
+#if CPU_SIZE == CPU_2_BYTE
   // @todo Inspect dissassembly to check if we even need the #if #else here.
   // I have a feeling the compiler will optmize away memory copies I think
   // I'm avoiding.
@@ -207,7 +207,7 @@ IUC TypeValue::ToIUC() {
 #endif
 }
 IUD TypeValue::ToUID() {
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
   return word_;
 #else
   // @todo Inspect dissassembly to check if we even need the #if #else here.

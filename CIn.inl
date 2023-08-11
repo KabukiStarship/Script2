@@ -36,7 +36,7 @@ constexpr ISW CSignedDigitsMax() {
 
 template <typename IS, typename IU>
 BOL TCInSigned(IS& result) {
-  CHA buffer[CSignedDigitsMax<IS>()];
+  CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::cStateBaseSign;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
@@ -59,7 +59,7 @@ BOL TCInSigned(IS& result) {
 
 template <typename IU>
 BOL TCInUnsigned(IU& result) {
-  CHA buffer[CSignedDigitsMax<IU>()];
+  CHA buffer[CSignedDigitsMax<IU>()] = {};
   ISN c, state = CIn::cStateBaseValue;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IU>();
   while (state != CIn::cStateSuccess) {
@@ -88,7 +88,7 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
 template <typename FP = FPW, typename IS = ISW, typename IU = IUW,
           typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CHA buffer[CSignedDigitsMax<IS>()];
+  CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::cStateBaseSign;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();

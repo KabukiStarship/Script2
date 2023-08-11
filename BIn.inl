@@ -340,7 +340,7 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
         break;
       //case cSVI:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
       //case cUVI:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
-#if ALU_SIZE <= 16
+#if CPU_SIZE <= 16
                  // Load next pointer and increment args.
         iub_ptr = TPtr<IUB>(args[arg_index]);
         if (iub_ptr == nullptr)

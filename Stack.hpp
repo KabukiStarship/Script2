@@ -103,7 +103,7 @@ inline CHA* TStackCopy(TStack<IS>* destination, IS destination_size,
 // Calculates the size of a TStack<IS> in bytes based on the count.
 template<typename T, typename IS = ISN, typename ISR=ISW>
 inline ISR TStackSize(IS count) {
-  return ISR(count) * sizeof(T) + sizeof(TStack<IS>);
+  return sizeof(TStack<IS>) + ISR(count) * sizeof(T);
 }
 
 // Utility to cast Autoject origin to TStack<IS>*.
@@ -226,7 +226,7 @@ inline IS TStackSizeMin() {
 width. */
 template <typename T = ISW, typename IS = ISN>
 inline IS TStackSizeMax() {
-  return (IS)((((~(IS)0) - cWordLSbMask) - (IS)sizeof(TStack<IS>)) /
+  return (IS)((((~(IS)0) - WordLSbMask) - (IS)sizeof(TStack<IS>)) /
                (IS)sizeof(T));
 }
 
@@ -350,7 +350,7 @@ inline void TStackPushFast(TStack<IS>* stack, T item, IS count) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template <typename T = ISW, typename IS = ISN>
-IS TStackInsert(TStack<IS>* stack, T item, IS index = cPush) {
+IS TStackInsert(TStack<IS>* stack, T item, IS index = STKPush) {
   D_ASSERT(stack);
   IS count = stack->count,
      count_max = stack->count_max;
@@ -369,7 +369,7 @@ IS TStackInsert(TStack<IS>* stack, T item, IS index = cPush) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template <typename T = ISW, typename IS = ISN, typename BUF = Nil>
-IS TStackInsert(AArray<T, IS, BUF>& obj, T item, IS index = cPush) {
+IS TStackInsert(AArray<T, IS, BUF>& obj, T item, IS index = STKPush) {
   auto stack = obj.OriginAs<TStack<IS>*>();
 Insert:
   IS result = TStackInsert<T, IS>(stack, item, index);
@@ -501,12 +501,12 @@ template <typename T = ISW, typename IS = ISN,
 class AStack {
   AArray<T, IS, BUF> obj_;  //< An Auto-Array.
 
-  constexpr SocketFactory InitRamFactory() {
+  constexpr RAMFactory InitRamFactory() {
     return sizeof(BUF) == 0 ? TRamFactory<IS>::StackHeap
                             : TRamFactory<IS>::StackStack;
   }
 
-  inline SocketFactory InitRamFactory(SocketFactory factory) {
+  inline RAMFactory InitRamFactory(RAMFactory factory) {
     return !factory ? InitRamFactory() : factory;
   }
 
@@ -702,10 +702,10 @@ inline IUW* TStackClone(TStack<ISZ>* stack, TStack<ISZ>* other) {
 /* Returns a clone on the heap.
 @return An autoject buffer.
 template <typename T = ISW, typename ISZ = ISN>
-IUW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
+IUW* TStackClone(TStack<ISZ>* stack, RAMFactory ram) {
   A_ASSERT(stack);
   ISZ size = stack->count_max;
-  IUW* other_buffer = socket_factory(nullptr, size);
+  IUW* other_buffer = ram(nullptr, size);
   IUW *source = TPtr<IUW>(stack),  //
       *destination = other_buffer;
   ISZ data_amount =
@@ -720,7 +720,7 @@ IUW* TStackClone(TStack<ISZ>* stack, SocketFactory socket_factory) {
 @param socket A raw ASCII Socket to clone.
 template <typename T = IUA, typename ISZ = ISN>
 IUW* TStackClone(Autoject& obj) {
-  SocketFactory factory = obj.socket_factory;
+  RAMFactory factory = obj.ram;
   IUW* origin = obj.origin;
   if (!factory || !origin) return nullptr;
 

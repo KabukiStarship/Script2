@@ -49,16 +49,36 @@ void TestBook() {
   D_COUT("\nPopulating " << count_max << " test words...");
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
-  ISZ word_step = TTestWords<CHT>::cCharsMax;
+  ISZ word_step = TTestWords<CHT>::CharsMax;
+  D_COUT("Step 0:\n");
+  D_COUT(Charsf(book.This(), book.SizeBytes()));
   for (ISY i = 0; i < count_max; ++i) {
+    D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
+    book.COut();
+    D_COUT("\nStep 2:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
+    book.COut();
+    D_COUT("\nStep 3:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
+    book.COut();
+    D_COUT("\nStep 4:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUB(i)));
+    book.COut();
+    D_COUT("\nStep 5:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
+    book.COut();
+    D_COUT("\nStep 6:\n" << Charsf(book.This(), book.SizeBytes()));
+    D_COUT("\nLoom size: " << book.This()->values->size_bytes);
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
+    book.COut();
+    D_COUT("\nStep 7:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
+    book.COut();
+    D_COUT("\nStep 8:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
+    book.COut();
+    D_COUT("\nStep 9:\n" << Charsf(book.This(), book.SizeBytes()));
     D_COUT("\n\nFoo baby!\n\n");
   }
 
@@ -79,7 +99,7 @@ void TestBook() {
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
-  CHT large_string[cSizeBytes];
+  CHT large_string[cSizeBytes] = {0};
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;

@@ -15,12 +15,12 @@ one at <https://mozilla.org/MPL/2.0/>. */
 template <typename CHT = CHR>
 struct TTestWords {
   enum {
-    cCharsMax = 16,   //< The max characters in a word including term char.
+    CharsMax = 16,   //< The max characters in a word including term char.
     cWordsMax = 129,  //< The max word count.
   };
   /* An array of 128 random words. */
   static const CHT* Words() {
-    static const CHT cWords[cWordsMax][cCharsMax] = {
+    static const CHT cWords[cWordsMax][CharsMax] = {
       {'w', 'h', 'i', 'p'},
       {'j', 'u', 'm', 'b', 'l', 'e', 'd'},
       {'e', 'n', 'e', 'r', 'g', 'e', 't', 'i', 'c'},

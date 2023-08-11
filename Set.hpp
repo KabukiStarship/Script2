@@ -13,6 +13,9 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_BOOK_TEMPLATES 1
 #include "TypeValue.h"
 namespace _ {
+
+typedef IUW PODType;
+
 /*
 @code
 ;

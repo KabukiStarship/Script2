@@ -225,6 +225,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>_Config.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)./_Seams</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

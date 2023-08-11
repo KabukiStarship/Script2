@@ -67,16 +67,36 @@ ISZ* TListOffsets(TList<ISZ>* list) {
   return TStackStart<ISZ, ISZ>(&list->offsets);
 }
 
-/* Calculates the data_types pointer from the data_offsets and the count. */
-template <TARGS>
-inline DT* TListTypes(ISZ* data_offsets, ISZ list_size) {
-  return TPtr<DT>(data_offsets + list_size);
-}
-
 /* Returns the type bytes array. */
 template <TARGS>
 DT* TListTypes(TList<ISZ>* list) {
-  return TListTypes<ISZ, DT>(TListOffsets<ISZ>(list), list->offsets.count_max);
+  return TPtr<DT>(TListOffsets<ISZ>(list) + list->offsets.count_max);
+}
+
+/*
+template <TARGS>
+T* TListBase(TList<ISZ>* list) {
+  D_ASSERT(list);
+  return TPtr<T>(list, sizeof(TList<ISZ>) +
+                  list->offsets.count_max * (sizeof(ISZ) + sizeof(DT));
+}*/
+
+/* Gets the base pointer to the values. */
+template <TARGS>
+inline CHA* TListValues(TList<ISZ>* list, ISZ size) {
+  D_ASSERT(list);
+  return TPtr<CHA>(TListTypes<ISZ, DT>(list, size) + list->offsets.count_max);
+}
+template <typename ISZ = ISN>
+inline CHA* TListValues(TList<ISZ>* list) {
+  D_ASSERT(list);
+  return TListValues<ISZ>(list, list->offsets->size);
+}
+
+template<typename ISZ>
+void* TListTop(TList<ISZ>* list) {
+  D_ASSERT(list);
+  return TPtr<void*>(list, list->top);
 }
 
 /* Prints the list to the output stream. */
@@ -89,10 +109,10 @@ Printer& TListPrint(Printer& o, TList<ISZ>* list) {
     << "> size_bytes:" << list->size_bytes << " count_max:" << count_max
     << " count:" << count << Linef("\n+---");
   ISZ* data_offsets = TListOffsets<ISZ>(list);
-  DT* data_types = TListTypes<ISZ, DT>(data_offsets, count_max);
+  DT* dt_offsets = TPtr<DT>(data_offsets + count_max);
   for (ISZ index = 0; index < count; ++index) {
     ISZ data_offset = *data_offsets++;
-    DT data_type = *data_types++;
+    DT data_type = *dt_offsets++;
     o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
       << Centerf(STRTypePOD(data_type), 10) << ' ';
     const void* value = TPtr<CHA*>(list, TListOffsets<ISZ>(list)[index]);
@@ -121,46 +141,6 @@ TList<ISZ>* TListInit(TList<ISZ>* list, ISZ size_bytes, ISZ count_max) {
   return list;
 }
 
-/* Copies an ASCII List from the origin to the destination
-* template <typename ISZ = ISN>
-struct TList {
-  ISZ size_bytes,       //< Size of the List in bytes.
-      top;              //< Offset to the top of the data.
-  TStack<ISZ> offsets;  //< Stack of offsets to the list items.
-};
-      List Memory Layout
-+============================+
-|_______   Buffer            |
-|_______ ^ Value N           |
-|        | Value 0           |
-|----------------------------|
-|_______   Buffer            |
-|_______ ^ Type of Value N   |
-|        | Type of Value 1   |
-|----------------------------|
-|_______   Buffer            |
-|_______ ^ Offset to Value N |
-|        | Offset to Value 1 |
-+============================+  ^  Up in addresses.
-|        TList Struct        |  |
-+============================+ 0xN Base address
-*/
-template<TARGS>
-TList<ISZ>* TListCopy(TList<ISZ>* origin, TList<ISZ>* destination) {
-  if (destination->size_bytes < origin->size_bytes) return nullptr;
-  ISZ origin_count = origin->offsets.count,
-    delta = TDelta<ISZ>(origin, destination);
-  // 1. Copy Offsets.
-  CHA* cursor = TPtr<CHA>(&destination->top);
-  ISZ size_bytes = sizeof(TStack<ISZ>) + sizeof(ISZ) + origin_count * sizeof(ISZ);
-  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-  // 2. Copy Types.
-  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-  // 3. Copy Values.
-  while (start_ptr < stop_ptr) *cursor++ = *start_ptr++;
-  return void;
-}
-
 /* Returns the min size of an ASCII List with the given count_max.
 The min size is defined as enough memory to store the given count_max with
 the largest_expected_type.
@@ -171,26 +151,17 @@ constexpr ISZ CListSizeMin(ISZ count_max) {
          ISZ(count_max * (largest_expected_type + sizeof(ISZ) + 1));
 }
 
-/* Gets origin byte of the of the data. */
-template <TARGS>
-inline CHA* TListValues(TList<ISZ>* list, ISZ size) {
-  return TPtr<CHA>(TListTypes<ISZ, DT>(list, size) +
-                                list->offsets.count_max);
-}
-template <typename ISZ = ISN>
-inline CHA* TListValues(TList<ISZ>* list) {
-  return TListValues<ISZ>(list, list->offsets->size);
-}
-
 /* Returns the end byte of the data. */
 template <typename ISZ = ISN>
 inline CHA* TListEnd(TList<ISZ>* list, ISZ size) {
+  D_ASSERT(list);
   return TPtr<CHA>(list) + list->size_bytes;
   //return TPtr<CHA>(list) + sizeof(TList<ISZ>) + list->size_bytes;
   //@Todo Why does this not add the size of the struct like the Array?
 }
 template <typename ISZ = ISN>
 inline CHA* TListEnd(TList<ISZ>* list) {
+  D_ASSERT(list);
   return TListEnd<ISZ>(list, list->offsets.count_max);
 }
 
@@ -198,11 +169,13 @@ inline CHA* TListEnd(TList<ISZ>* list) {
 too. */
 template <typename ISZ = ISN>
 inline CHA* TListValuesTop(TList<ISZ>* list) {
+  D_ASSERT(list);
   return TPtr<CHA>(list, list->top);
 }
 
 template <typename ISZ = ISN>
 inline CHA* TListValuesEnd(TList<ISZ>* list) {
+  D_ASSERT(list);
   return TPtr<CHA>(list, list->size_bytes);
 }
 
@@ -224,17 +197,13 @@ template <typename ISZ = ISN>
 void TListClear(TList<ISZ>* list) {
   D_ASSERT(list);
   list->count = 0;
-}
-
-template<typename ISZ = ISN, typename T>
-T* TListBase(TList<ISZ>* list) {
-  ISA* base = TPtr<ISA>(list) + sizeof(TList<ISZ>) + 
-              list->offsets.count_max * sizeof(ISZ);
+  list->top = sizeof(TList<ISZ>) + list->offsets.count_max * sizeof(ISZ);
 }
 
 /* Gets a points to the element of the Book by index. */
 template<typename ISZ>
 ISA* TListGetPtr(TList<ISZ>* list, ISZ index) {
+  D_ASSERT(list);
   if (index < 0 || index >= list->offsets.count) return nullptr;
   return TPtr<ISA>(list, TStackStart<ISA, ISZ>(&list->offsets)[index]);
 }
@@ -307,21 +276,13 @@ ISZ TListFind(TList<ISZ>* list, void* address) {
   return cErrorInvalidIndex;
 }
 
-/* Gets the pointer to the base of the Data Types array. */
-template<TARGS>
-DT* TListDataTypes(TList<ISZ>* list) {
-  ISZ offset = sizeof(TList<ISZ>) + list->offsets.count_max * sizeof(ISZ) +
-    list->offsets.count * sizeof(DT);
-  return TPtr<DT>(list, offset);
-}
-
 /* Pushes a an ASCII Array onto the List stack. */
 template <TARGS>
 TArray<ISZ>* TListPush(TList<ISZ>* list, ISZ size_bytes_new) {
   // Offset to the value pointer.
-  ISZ value_offset = TAlignUp<ISZ>(list->top),
-    size_buffer = list->size_bytes - value_offset;
-  ISZ count = list->offsets.count;
+  ISZ value_offset = TAlignUp<ISZ, ISZ>(list->top),
+      size_buffer  = list->size_bytes - value_offset,
+      count        = list->offsets.count;
   if (count >= list->offsets.count_max ||
       size_buffer < size_bytes_new) return nullptr;
   TStackPushFast<ISZ, ISZ>(&list->offsets, value_offset, count);
@@ -329,7 +290,7 @@ TArray<ISZ>* TListPush(TList<ISZ>* list, ISZ size_bytes_new) {
   auto ary = TPtr<TArray<ISZ>>(list, value_offset);
   ary->size = size_bytes_new;
   // Push the DT onto the Data Types stack.
-  TListDataTypes<TPARAMS>(list)[count] = cARYMask | cCHA;
+  TListTypes<TPARAMS>(list)[count] = cARYMask | cCHA;
   return ary;
 }
 
@@ -343,7 +304,7 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
   D_ASSERT(count >= 0 && values_begin < values_end);
   D_COUT("\nInserting " << STRTypePOD(type) << ':' << item
          << " into index:" << index << " count: " << count);
-  if (index == cPush) {
+  if (index == STKPush) {
     // look for the first place in the stack to put the item.
     ISZ* offsets = TListOffsets<ISZ>(list);
     ISW base_addr = TDelta<ISW>(list);
@@ -368,6 +329,52 @@ ISZ TListInsert(TList<ISZ>* list, T item, DT type, ISZ alignment_mask,
   TStackInsert<DT, ISZ>(types, count, index, type);
   list->offsets.count = count + 1;
   return count;
+}
+
+/* Copies an ASCII List from the origin to the destination
+* template <typename ISZ = ISN>
+struct TList {
+  ISZ size_bytes,       //< Size of the List in bytes.
+      top;              //< Offset to the top of the data.
+  TStack<ISZ> offsets;  //< Stack of offsets to the list items.
+};
+      List Memory Layout
++============================+
+|_______   Buffer            |
+|_______ ^ Value N           |
+|        | Value 0           |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Type of Value N   |
+|        | Type of Value 1   |
+|----------------------------|
+|_______   Buffer            |
+|_______ ^ Offset to Value N |
+|        | Offset to Value 1 |
++============================+  ^  Up in addresses.
+|        TList Struct        |  |
++============================+ 0xN Base address
+
+@todo research if it's faster to just copy the Buffer.
+*/
+template <TARGS>
+TList<ISZ>* TListCopy(const TList<ISZ>* origin, TList<ISZ>* destination) {
+  ISZ size_bytes = origin->size_bytes;
+  if (destination->size_bytes < size_bytes) return nullptr;
+  ISZ origin_count = origin->offsets.count,
+      delta = TDelta<ISZ>(origin, destination);
+  // 1. Copy Offsets.
+  ArrayCopy(destination, size_bytes, origin,
+            TStackTop<T, ISZ>(origin->offsets));
+  // 2. Copy Types.
+  ISZ r_start = TDelta<ISZ>(origin, TListTypes<ISZ, DT>(origin)),
+      size = origin_count * sizeof(DT);
+  ArrayCopy(TPtr<>(destination, r_start), size, TPtr<>(origin, r_start), size);
+  // 3. Copy Values.
+  r_start = TDelta<ISZ>(origin, TListValues<ISZ, DT>(origin)),
+  size = TDelta<ISZ>(origin, destination->top);
+  ArrayCopy(TPtr<>(destination, r_start), size, TPtr<>(origin, r_start), size);
+  return destination;
 }
 
 /* Searches for the first empty spot in the list that can fit the item and
@@ -449,19 +456,19 @@ inline ISZ TListInsert(TList<ISZ>* list, FPC item, ISZ index, CHA* values_begin,
 template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, IUD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, item, cIUD, cWordLSbMask, index,
+  return TListInsert<IUD, ISZ, DT>(list, item, cIUD, WordLSbMask, index,
                                    values_begin, values_end);
 }
 template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, ISD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cISD, cWordLSbMask,
+  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cISD, WordLSbMask,
                                    index, values_begin, values_end);
 }
 template <TARGS>
 inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cFPD, cWordLSbMask,
+  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), cFPD, WordLSbMask,
                                    index, values_begin, values_end);
 }
 
@@ -663,12 +670,12 @@ inline const void* TListValue(TList<ISZ>* list, ISZ index) {
 
 /* Creates an Autoject buffer large enough to fit a List with the given. */
 template <typename ISZ = ISN, typename DT>
-IUW* TListNew(ISZ size_data, ISZ count_max, SocketFactory socket_factory) {
+IUW* TListNew(ISZ size_data, ISZ count_max, RAMFactory ram) {
   ISZ count_max_align_lsb_mask = (sizeof(ISZ) / sizeof(DT)) - 1;
   count_max = AlignUp(count_max, count_max_align_lsb_mask);
   ISZ size_bytes = sizeof(TList<ISZ>) + count_max * (sizeof(ISZ) + sizeof(DT)) +
                    AlignUp(size_data);
-  IUW* buffer = socket_factory(nullptr, ISW(size_bytes));
+  IUW* buffer = ram(nullptr, ISW(size_bytes));
   TList<ISZ>* list = TPtr<TList<ISZ>>(buffer);
   return TPtr<IUW>(TListInit<ISZ>(list, size_bytes, count_max));
 }

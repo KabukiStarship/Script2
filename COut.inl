@@ -164,7 +164,7 @@ COut& COut::Print(ISC item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
   Print((ISD)item);
 #else
   enum { cSize = 24 };
@@ -180,7 +180,7 @@ COut& COut::Print(IUC item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-#if ALU_SIZE == ALU_64_BIT
+#if CPU_SIZE == CPU_8_BYTE
   Print((IUD)item);
 #else
   enum { cSize = 24 };

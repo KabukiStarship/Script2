@@ -167,7 +167,7 @@ BOL TDicGrow(Autoject& obj) {
   D_COUT(Charsf(dic, TDicEnd<TPARAMS>(dic)));
 #endif
 
-  IUW* new_begin = obj.socket_factory(nullptr, size);
+  IUW* new_begin = obj.ram(nullptr, size);
   D_ARRAY_WIPE(new_begin, size);
   TTable<ISZ, ISY>* other = TPtr<TTable<ISZ, ISY>>(new_begin);
 
@@ -398,17 +398,17 @@ class ADic {
   ADic(ISY count_max = cCountDefault) { TDicInit<TPARAMS>(This(), count_max); }
 
   /* Constructs a Dic subclass.
-  @param factory SocketFactory to call when the String overflows. */
-  ADic(SocketFactory socket_factory, ISY count = cCountDefault)
-      : obj_(socket_factory) {
+  @param factory RAMFactory to call when the String overflows. */
+  ADic(RAMFactory ram, ISY count = cCountDefault)
+      : obj_(ram) {
     TDicInit<TPARAMS>(This(), count);
   }
 
   /* Constructs a Dic subclass.
-  @param factory SocketFactory to call when the String overflows. */
-  ADic(SocketFactory socket_factory, ISZ size = CDicSizeDefault<TPARAMS>(),
+  @param factory RAMFactory to call when the String overflows. */
+  ADic(RAMFactory ram, ISZ size = CDicSizeDefault<TPARAMS>(),
        ISY count = CDicCountDefault<TPARAMS>())
-      : obj_(socket_factory) {
+      : obj_(ram) {
     TDicInit<TPARAMS>(This(), count);
   }
 

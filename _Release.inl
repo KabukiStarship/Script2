@@ -16,6 +16,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define D_PAUSE(message)
 #define D_COUT(item)
 #define D_COUT_NL
+#define D_LINEF(item)
 #define D_COUT_ERROR(message)
 #define D_COUT_OBJ(stack)
 #define D_COUT_FUNCTION

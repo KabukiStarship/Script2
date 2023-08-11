@@ -12,6 +12,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #undef D_PAUSE
 #undef D_COUT
 #undef D_COUT_NL
+#undef D_LINEF
 #undef D_COUT_ERROR
 #undef D_COUT_OBJ
 #undef D_COUT_FUNCTION
