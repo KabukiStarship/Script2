@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /COut.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -12,7 +12,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 //
 #include "Puff.hpp"
 #include "Stringf.hpp"
-#include "TypeValue.hpp"
+#include "Types.hpp"
 #include "Uniprinter.hpp"
 //#include <cstdio>
 #include <iostream>
@@ -50,6 +50,8 @@ BOL CIsPrintable(CHC item) {
   if (item == 127) return false;
   return true;
 }
+
+inline COut& StdOut() { return COut().Star(); }
 
 COut::COut() {}
 

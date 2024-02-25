@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /CIn.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -21,7 +21,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <iostream>
 namespace _ {
 
-template <typename IS = ISW>
+template<typename IS = ISW>
 constexpr ISW CSignedDigitsMax() {
   enum {
     cBufferSize =
@@ -34,7 +34,7 @@ constexpr ISW CSignedDigitsMax() {
   return cBufferSize;
 }
 
-template <typename IS, typename IU>
+template<typename IS, typename IU>
 BOL TCInSigned(IS& result) {
   CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
@@ -57,7 +57,7 @@ BOL TCInSigned(IS& result) {
   return TScanSigned<IS, IU, CHA>(buffer, result) != 0;
 }
 
-template <typename IU>
+template<typename IU>
 BOL TCInUnsigned(IU& result) {
   CHA buffer[CSignedDigitsMax<IU>()] = {};
   ISN c, state = CIn::cStateBaseValue;
@@ -72,7 +72,7 @@ BOL TCInUnsigned(IU& result) {
   return TScanUnsigned<IU, CHA>(buffer, result) != 0;
 }
 
-template <typename CHT>
+template<typename CHT>
 inline BOL TCInString(CHT* result, ISW buffer_size) {
   if (!result) return false;
   ISN c = -1;
@@ -85,7 +85,7 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
   return true;
 }
 
-template <typename FP = FPW, typename IS = ISW, typename IU = IUW,
+template<typename FP = FPW, typename IS = ISW, typename IU = IUW,
           typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
   CHA buffer[CSignedDigitsMax<IS>()] = {};

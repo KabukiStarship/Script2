@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /RNG.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -60,7 +60,7 @@ void RandomNumber(IUD& result) { result = RandomUI8(); }
 
 void RandomNumber(ISD& result) { result = RandomSID(); }
 
-template <typename IS>
+template<typename IS>
 IS TRandom(IS min, IS max) {
   std::uniform_int_distribution<IS> dist(min, max);
   return dist(rng);

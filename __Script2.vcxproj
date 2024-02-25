@@ -43,7 +43,7 @@
     <None Include="Stringf.inl" />
     <None Include="Tasks.json" />
     <None Include="Test.inl" />
-    <None Include="TypeValue.inl" />
+    <None Include="Types.inl" />
     <None Include="_ConfigDefault.inl" />
     <None Include="_ConfigFooter.inl" />
     <None Include="_ConfigHeader.inl" />
@@ -133,8 +133,8 @@
     <ClInclude Include="Table.hpp" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Test.hpp" />
-    <ClInclude Include="TypeValue.h" />
-    <ClInclude Include="TypeValue.hpp" />
+    <ClInclude Include="Types.h" />
+    <ClInclude Include="Types.hpp" />
     <ClInclude Include="Uniprinter.hpp" />
     <ClInclude Include="Varint.h" />
     <ClInclude Include="Wall.h" />
@@ -156,7 +156,8 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>kabukisdkdata</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Script2</ProjectName>
+    <ProjectName>
+    </ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

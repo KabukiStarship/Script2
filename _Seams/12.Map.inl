@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/12.Map.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (ISZ) 2015-2023 Kabuki Starship <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_MAP
 #include "../Map.hpp"
@@ -19,7 +19,7 @@ using namespace _;
 #endif
 
 namespace Script2 {
-template <typename D, D kDomainMin_, D kDomainMax, typename ISZ,
+template<typename D, D kDomainMin_, D kDomainMax, typename ISZ,
           ISZ kCodomainMin_, ISZ kCodomainMax_, ISZ cSize_>
 void TestMap() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting AMap<D")

@@ -13,7 +13,7 @@
 
 [![GitHub version](https://badge.fury.io/gh/KabukiStarship%2Fscript2.svg)](https://badge.fury.io/gh/KabukiStarship%2Fscript2)
 
-The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Specification), defines the ASCII Data Types, the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and Script2 (TM) (Script2). Script2 is an implementation of the SCRIPT Specification that provides:
+The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Specification), defines the ASCII Data Types, the Chinese Room Abstract Stack Machine (Crabs), SCRIPT Protocol, and Script2™ (Script2). Script2 is an implementation of the SCRIPT Specification that provides:
 
 * Cross-platform Modern Embedded-C++ replacement for C++ std library featuring optional dynamic memory and simplified Kabuki Module format.
 * Interprocess communication and data serialization engine modeled after AI philosophy of the Chinese Room Thought Experiment and ASCII C0 Control Codes.
@@ -33,6 +33,6 @@ I need help debugging the ASCII Data Types contiguous-memory data structures. Ri
 
 ## License
 
-Copyright 2015-2023 Â© [Kabuki Starship](https://kabukistarship.com).
+Copyright [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

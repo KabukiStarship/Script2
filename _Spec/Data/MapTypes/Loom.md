@@ -6,7 +6,7 @@
 
 #### Loom
 
-ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash table. Strings lengths in Script are capped at type int, which gives a maximum length of 2^31 array elements; in cases where strings grow beyond this length, which is defined as extremely rare, a 64-bit Loom shall be used and the Loom shall be treated as a single long _::TStrand<>.
+ASCII Loom (LOM) is an array of UTF-8, UTF-16, or UTF-32 strings without a hash table. Strings lengths in Script are capped at type int, which gives a maximum length of 2^31 array elements; in cases where strings grow beyond this length, which is defined as extremely rare, a 64-bit Loom shall be used and the Loom shall be treated as a single long _::TString<>.
 
 ##### Sequence Memory Layout
 

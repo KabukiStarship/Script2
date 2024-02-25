@@ -11,11 +11,24 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 #### Book Memory Layout
 
 ```AsciiArt
-+-----------------+
-|      List       |
-|-----------------|  ^ Up in addresses
-|      Loom       |  |
-+-----------------+ 0xN
++====================================+
+|_______   Buffer                    |
+|_______ ^ List Value N              |
+|_______ | List Value 1              |
+|        | Keys Loom (Value 0)       |
+|------------------------------------|
+|_______   Buffer                    |
+|_______ ^ List Value N Type         |
+|_______ | List Value 1 Type         |
+|        | Loom Type (Type 0)        |
+|------------------------------------|
+|_______   Buffer                    |
+|_______   Offset to Value N         |
+|_______ ^ Offset to Value 1         |
+|        | Offset to Keys (Offset 0) |
++====================================+  ^ Up in
+|          TList Struct              |  |
++====================================+  + 0xN
 ```
 
 ##### Memory Overhead

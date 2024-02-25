@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/06.Stack.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_STACK
 #include "../Stack.hpp"
 using namespace _;
@@ -18,7 +18,7 @@ using namespace _;
 namespace Script2 {
 
 #if SEAM >= SCRIPT2_STACK
-template <typename T, typename IS>
+template<typename T, typename IS>
 void TestStack(const CHA* args) {
   D_COUT("Testing AStack<IS" << CHA('@' + sizeof(T)) << ",IS" << 
          CHA('@' + sizeof(IS)) << ">...\n");

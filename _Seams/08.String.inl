@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/05.String.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_STRING
 #include "../String.hpp"
@@ -19,14 +19,14 @@ using namespace _;
 
 namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
-template <typename CHT = CHR, typename ISZ = ISN>
+template<typename CHT = CHR, typename ISZ = ISN>
 void TestStringN() {
   static const CHT cTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
   enum {
-    cStringLoopCount = 3,
-    cCharSizeChar = '0' + sizeof(CHT),
+    StringLoopCount = 3,
+    SizeChar = '0' + sizeof(CHT),
   };
 
   AString<CHT, ISZ, 8> str;

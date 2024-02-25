@@ -1,21 +1,21 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /TypeValue.hpp
+@file    /Types.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #ifndef INCLUDED_TYPEVALUE_CODE
 #define INCLUDED_TYPEVALUE_CODE
-#include "TypeValue.h"
+#include "Types.h"
 namespace _ {
 
 /* Gets the log_b. */
 template<typename T>
-constexpr Sizef CSizef () {
-  Sizef result;
+constexpr Sizef TSizef () {
+  Sizef result = {0};
   switch (sizeof(T)) {
     case 1: {
       result.size = -1;
@@ -67,7 +67,7 @@ Printer& TSizefPrint(Printer& printer, Sizef item) {
 
 /* Gets one of the STRTypes. */
 inline const CHA* STRTypePOD(DTW index) {
-  if (index < 0 || index >= cINV) index = 32;
+  if (index < 0 || index >= Invalid) index = 32;
   return STRTypesPOD() + (index << 2); // << 2 to * 4
 }
 
@@ -83,12 +83,12 @@ inline const CHA* STRTypeModifier(DTW index) {
   return STRTypesModifier() + (index << 2); // << 2 to * 4
 }
 
-/* Prints a string represntation of an ASCII Data Type. */
+/* Prints a string represntation of an ASCII Data Type to the printer. */
 template<typename Printer>
 Printer& TTypePrint(Printer& printer, DTW item) {
   if (item < 32) return printer << STRTypePOD(item); // POD Type
   DTW type_pod = item & 0x1f,
-      type_vector = (item & cDTVHT) >> 5;
+      type_vector = (item & DTVHT) >> 5;
   if (item >> 8 == 0) { // 8-bit data type.
     // | b7 |    b6:b5    | b4:b0 |
     // |:--:|:-----------:|:-----:|
@@ -101,31 +101,31 @@ Printer& TTypePrint(Printer& printer, DTW item) {
     return printer << STRTypeVector(type_vector) << 'A' << '_'
       << STRTypePOD(type_pod);
   }
-  DTW size_width = (item & cDTBSW) >> 7;
+  DTW size_width = (item & DTBSW) >> 7;
   if (item >> 16 == 0) { // 16-bit data type.
-    // | b15:b14 |  b13:b9  | b8:b7 | b6:b5 | b4:b0 |
-    // |:-------:|:--------:|:-----:|:-----:|:-----:|
-    // |   MB    | Map type |  SW   |  VHT  |  POD  |
+    // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+    // |:-------:|:------:|:-----:|:-----:|:-----:|
+    // |   MOD   |   MT   |  SW   |  VT   |  POD  |
     if (type_pod == 0) {
       printer << "NIL" << CHA('A' + ((item >> 5) & 0xf)) << " or ";
     }
     DTW modifiers = item >> 14;
     if (modifiers) printer << STRTypeModifier(modifiers) << '_';
+  }
+  DTW map_type = (item & DTBMT) >> 9;
+  if (map_type)
+    return printer << "MAP_" << STRTypePOD(map_type) << '_'
+    << STRTypePOD(type_pod);
 
-    DTW size_width = (item & 0x180) >> 7;
-    if (size_width) { // SW bits b8:b7 asserted
+    size_width = (item & 0x180) >> 7;
+    if (size_width) { // SW bits b8:b7 asserted.
       return printer << STRTypeVector(type_vector) 
                      << CHA('@' + size_width) << '_'
                      << STRTypePOD(type_pod);
-    }
-
-    DTW type_map = (item & 0x3E00) >> 9;
-    if (type_map) 
-      return printer << "MAP_" << STRTypePOD(type_map) << '_' << STRTypePOD(type_pod);
 
     return printer << "ERROR: You done messed up A-A-ron.";
   }
-#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit
+#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit.
 #endif
 #if CPU_SIZE == CPU_8_BYTE
   if (item & ~IUW(0xffffffff)) { // 64-bit data type.
@@ -133,7 +133,12 @@ Printer& TTypePrint(Printer& printer, DTW item) {
   }
 #endif
 
-  return printer << "Error 4u910j414lj4l24";
+  return printer << "Error: 32-bit types not implemented yet!";
+}
+
+template<typename Printer, typename DT>
+Printer& TTypePrint(Printer& printer, DT type) {
+  return TTypePrint(printer, DTW(type));
 }
 
 /* Prints a summary of the type-value tuple with word-sized Data Type. */
@@ -154,73 +159,111 @@ class TType {
 };
 
 /* Extracts the Vector type. */
-template <typename DT = DTB>
+template<typename DT = DTB>
 inline DT TTypeVector(DTW type) {
   return DT((type >> 5) & 3);
 }
-template <typename DT = DTB>
+template<typename DT = DTB>
 constexpr DT CTypeVector(DTW type) {
   return DT((type >> 5) & 3);
 }
 
 /* Extracts the Map type 0-3 of the type. */
-template <typename DT = DTB>
+template<typename DT = DTB>
 inline DT TTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
-template <typename DT = DTB>
+template<typename DT = DTB>
 constexpr DT CTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
 
 /* Creates an ASCII Vector Data Type. */
-template <typename DT = DTB>
+template<typename DT = DTB>
 inline DT TTypeVector(DTW pod_type, DTW vector_type, DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
-template <typename DT = DTB>
+template<typename DT = DTB>
 constexpr DT CTypeVector(DTW pod_type, DTW vector_type,
                          DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
 
 /* Creates an ASCII Map Type. */
-template <typename DT = DTB>
+template<typename DT = DTB>
 constexpr DT CTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
-template <typename DT = DTB>
+template<typename DT = DTB>
 inline DT TTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 
-/* The ASCII Data Type for the given CHT, cCHA, cCHB, or cCHC. */
-template <typename CHT = CHR, typename DT = DTB>
-constexpr DT CTypeChar() {
-  return DT((sizeof(CHT) == 1)
-                ? cCHA
-                : (sizeof(CHT) == 2) ? cCHB : (sizeof(CHT) == 4) ? cCHC : 0);
-}
-
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
-template <typename IS = CHR, typename DT = DTB>
+template<typename IS = CHR, typename DT = DTB>
 constexpr DT CTypeSize() {
-  return (sizeof(IS) == 1)
-             ? cSW1 
-             : (sizeof(IS) == 2)
-                   ? cSW2
-                   : (sizeof(IS) == 4) ? cSW4 : (sizeof(IS) == 8) ? cSW8 : 0;
+  return (sizeof(IS) ==  1) ? _SWA 
+       : (sizeof(IS) ==  2) ? _SWB
+       : (sizeof(IS) ==  4) ? _SWC
+       : (sizeof(IS) ==  8) ? _SWD 
+       : (sizeof(IS) == 16) ? _SWE : 0;
 }
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
-template <typename T, typename DT = DTB>
+template<typename T, typename DT = DTB>
 constexpr DT CTypeSize(DT pod_type) {
   return pod_type | (CTypeSize<T>() << 7);
 }
 
-template <typename T, typename DT = DTB>
+template<typename T, typename DT = DTB>
 inline DT TTypeSize(DT pod_type) {
   return pod_type | (CTypeSize<T>() << 7);
+}
+
+/* Returns the ASCII Type for the given floating-point type FP.
+FPB:  4   0b00100   (0b001 << 2) | 0b00
+FPC:  8   0b01000   (0b010 << 2) | 0b00
+FPD: 12   0b01100   (0b011 << 2) | 0b00
+FPE: 16   0b10000   (0b100 << 2) | 0b00
+*/
+template<typename FP, typename DT = DTB>
+constexpr DT CTypeFP() {
+  return (CTypeSize<FP, DT>() << 2);
+}
+
+/* Returns the ASCII Type for the given unsigned integer type IS.
+IUA:  1   0b00001   (0b000 << 2) | 0b01
+IUB:  5   0b00101   (0b001 << 2) | 0b01
+IUC:  9   0b01001   (0b010 << 2) | 0b01
+IUD: 13   0b01101   (0b011 << 2) | 0b01
+IUE: 17   0b10001   (0b100 << 2) | 0b01
+*/
+template<typename IU, typename DT = DTB>
+constexpr DT CTypeIU() {
+  return (CTypeSize<IU, DT>() << 2) | 1;
+}
+
+/* Returns the ASCII Type for the given signed integer type IS.
+ISA:  2   0b00010   (0b000 << 2) | 0b10
+ISB:  6   0b00110   (0b001 << 2) | 0b10
+ISC: 10   0b01010   (0b010 << 2) | 0b10
+ISD: 14   0b01110   (0b011 << 2) | 0b10
+ISE: 18   0b10010   (0b100 << 2) | 0b10
+*/
+template<typename IS, typename DT = DTB>
+constexpr DT CTypeIS() {
+  return (CTypeSize<IS, DT>() << 2) | 2;
+}
+
+/* Returns the ASCII Type for the given character type CH.
+CHB:  3   0b0011   (0b00 << 2) | 0b11
+CHC:  7   0b0111   (0b01 << 2) | 0b11
+CHD: 11   0b1011   (0b10 << 2) | 0b11
+CHE: 15   0b1111   (0b11 << 2) | 0b11
+*/
+template<typename CH, typename DT = DTB>
+constexpr DT CTypeCH() {
+  return (CTypeSize<CH, DT>() << 2) | 3;
 }
 
 }  //< namespace _
@@ -255,25 +298,25 @@ inline DTW AlignmentMask(void* item) { return WordLSbMask; }
 inline DTW AlignmentMask(const void* item) { return WordLSbMask; }
 
 /* Gets the type of the given item. */
-inline DTW TypeOf(CHA item) { return cCHA; }
-inline DTW TypeOf(ISA item) { return cISA; }
-inline DTW TypeOf(IUA item) { return cIUA; }
-inline DTW TypeOf(CHB item) { return cCHB; }
-inline DTW TypeOf(ISB item) { return cISB; }
-inline DTW TypeOf(IUB item) { return cIUB; }
-inline DTW TypeOf(CHC item) { return cCHB; }
-inline DTW TypeOf(ISC item) { return cISC; }
-inline DTW TypeOf(IUC item) { return cIUC; }
-inline DTW TypeOf(FPC item) { return cFPC; }
-inline DTW TypeOf(ISD item) { return cISD; }
-inline DTW TypeOf(IUD item) { return cIUD; }
-inline DTW TypeOf(FPD item) { return cFPD; }
-inline DTW TypeOf(CHA* item) { return cSTA; }
-inline DTW TypeOf(const CHA* item) { return cCNS_STA; }
-inline DTW TypeOf(void* item) { return cPTR; }
-inline DTW TypeOf(const void* item) { return cCNS_PTR; }
+inline DTW TypeOf(CHA item) { return _CHA; }
+inline DTW TypeOf(ISA item) { return _ISA; }
+inline DTW TypeOf(IUA item) { return _IUA; }
+inline DTW TypeOf(CHB item) { return _CHB; }
+inline DTW TypeOf(ISB item) { return _ISB; }
+inline DTW TypeOf(IUB item) { return _IUB; }
+inline DTW TypeOf(CHC item) { return _CHB; }
+inline DTW TypeOf(ISC item) { return _ISC; }
+inline DTW TypeOf(IUC item) { return _IUC; }
+inline DTW TypeOf(FPC item) { return _FPC; }
+inline DTW TypeOf(ISD item) { return _ISD; }
+inline DTW TypeOf(IUD item) { return _IUD; }
+inline DTW TypeOf(FPD item) { return _FPD; }
+inline DTW TypeOf(CHA* item) { return _STA; }
+inline DTW TypeOf(const CHA* item) { return _CNS_STA; }
+inline DTW TypeOf(void* item) { return _PTR; }
+inline DTW TypeOf(const void* item) { return _CNS_PTR; }
 
-template <typename IS>
+template<typename IS>
 inline BOL TSizeIsValid(IS size) {
   return (size & (sizeof(IS) - 1)) == 0;
 }
@@ -281,7 +324,7 @@ inline BOL TSizeIsValid(IS size) {
 /* An ROM  for one of the 32 types.
 C++11 variadic templates ensure there is only one copy in of the given in ROM.
 */
-template <CHA CharA, CHA CharB, CHA CharC>
+template<CHA CharA, CHA CharB, CHA CharC>
 inline IUC T() {
   return ((IUC)CharA) & (((IUC)CharB) << 8) & (((IUC)CharC) << 16);
 }
@@ -289,16 +332,16 @@ inline IUC T() {
 /* Gets the alignment mask for the given POD data type. */
 inline ISW TypeAlignmentMask(DTW type) {
   if (type == 0) return WordLSbMask;
-  if (type <= cIUA) return 0;
-  if (type <= cFPB) return 1;
-  if (type <= cTME) sizeof(ISN) - 1;
+  if (type <= _IUA) return 0;
+  if (type <= _FPB) return 1;
+  if (type <= _TME) sizeof(ISN) - 1;
   return sizeof(ISW) - 1;
 }
 
 /* Aligns the pointer up to the word boundry required by the type. */
-template <typename T = CHA>
+template<typename T = CHA>
 T* TTypeAlignUp(void* pointer, ISW type) {
-  ISW align_mask = TypeAlignmentMask(type & cTypePODMask);
+  ISW align_mask = TypeAlignmentMask(type & PODTypeMask);
   return TPtr<T>(AlignUpPTR(pointer, align_mask));
 }
 
@@ -307,9 +350,9 @@ T* TTypeAlignUp(void* pointer, ISW type) {
 Object type; or -1 if the value is a STR. */
 inline ISW TypeSizeOf(DTW type) {
   if (type == 0) return WordLSbMask;
-  if (type <= cIUA) return 0;
-  if (type <= cFPB) return 1;
-  if (type <= cTME) sizeof(ISN) - 1;
+  if (type <= _IUA) return 0;
+  if (type <= _FPB) return 1;
+  if (type <= _TME) sizeof(ISN) - 1;
   return sizeof(ISW) - 1;
 }
 
@@ -320,24 +363,24 @@ inline BOL TypeIsSupported(DTW type) { return true; }
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
 inline ISA TypeTextFormat(DTW type) {
-  DTW core_type = type & cTypePODMask;
+  DTW core_type = type & PODTypeMask;
   if (core_type == 0) return -1;  //< then core_type < 32
-  if (core_type <= cSTC) {
-    if (core_type == cNIL) return -1;
+  if (core_type <= _STC) {
+    if (core_type == _NIL) return -1;
     return ISA(type);
   }
   if (core_type == type) return -1;  //< then core_type < 32
-  if (core_type == cCHA) return 1;
-  if (core_type == cCHB) return 2;
-  if (core_type <= cCHC) return 3;
+  if (core_type == _CHA) return 1;
+  if (core_type == _CHB) return 2;
+  if (core_type <= _CHC) return 3;
   return -1;
 }
 
 /* Masks off the primary type. */
-inline ISA PODTypeMask(DTW value) { return value & 0x1f; }
+inline ISA TypePODMask(DTW value) { return value & 0x1f; }
 
 /* Returns true if the given type is an Array type. */
-inline BOL TypeIsArray(DTW type) { return type >= cTypeCount; }
+inline BOL TypeIsArray(DTW type) { return type >= PODTypeCount; }
 
 inline ISN TypeSizeWidthCode(ISN type) { return type >> 6; }
 
@@ -351,7 +394,7 @@ inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
 }
 
 inline BOL TypeIsPOD(DTB type) {
-  return !((type >> 5) || ((type & cTypePODMask)));
+  return !((type >> 5) || ((type & PODTypeMask)));
 }
 
 }  //< namespace _

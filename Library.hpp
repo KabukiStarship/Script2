@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Library.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -13,7 +13,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_DIC
 namespace _ {
 #if USING_SCRIPT2_TEXT
-template <typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
+template<typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
 class Library : public Operand {
  public:
   /* Creates an empty automata. */
@@ -182,7 +182,7 @@ class Library : public Operand {
 };
 
 /* Destructs the given bag. */
-template <typename TIndex, typename TKey, typename TData, IUN MaxStaccSize>
+template<typename TIndex, typename TKey, typename TData, IUN MaxStaccSize>
 LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == nullptr) return;
   delete TPtr<CHA>(r);

@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Errors.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -47,7 +47,7 @@ const CHA** STRErrors() {
 
 const CHA* STRError(ISN error) {
   if (error < 0) error = -error;
-  ISN error_max = -cErrorImplementation;
+  ISN error_max = -ErrorImplementation;
   if (error > error_max) error = error_max;
   return STRErrors()[error];
 }

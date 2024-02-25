@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Hash.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -13,7 +13,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 /* Returns the highest signed prime that can fit in type IS.
 @return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */
-template <typename IS>
+template<typename IS>
 inline IS PrimeMaxSigned() {
   IS prime = (sizeof(IS) == 1)   ? 127
              : (sizeof(IS) == 2) ? 32767
@@ -25,7 +25,7 @@ inline IS PrimeMaxSigned() {
 
 /* Returns the highest signed prime that can fit in type IU.
 @return 0 if the sizeof (IU) is not 1, 2, 4, or 8. */
-template <typename HSH>
+template<typename HSH>
 inline HSH TPrimeMaxUnigned() {
   HSH prime = sizeof(HSH) == 1   ? 251
               : sizeof(HSH) == 2 ? 65535
@@ -35,12 +35,12 @@ inline HSH TPrimeMaxUnigned() {
   return prime;
 }
 
-template <typename HSH, typename CHT = CHR>
+template<typename HSH, typename CHT = CHR>
 inline HSH THashPrime(CHT value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
-template <typename HSH = IUN, typename CHT = CHR>
+template<typename HSH = IUN, typename CHT = CHR>
 inline HSH THashPrime(const CHT* str) {
   CHT c = (CHT)*str++;
   HSH hash = TPrimeMaxUnigned<HSH>();

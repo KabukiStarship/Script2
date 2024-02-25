@@ -1,12 +1,12 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /TypeValue.inl
+@file    /Types.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-#include "TypeValue.hpp"
+#include "Types.hpp"
 #if SEAM == SCRIPT2_CORE
 #include "_Debug.inl"
 #else
@@ -15,27 +15,27 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 const CHA* STRTypesPOD() {
-  static const CHA cStrings[64][4] = {
+  static const CHA Strings[64][4] = {
       {'N', 'I', 'L', NIL},  //< 00
-      {'C', 'H', 'A', NIL},  //< 01
+      {'I', 'U', 'A', NIL},  //< 01
       {'I', 'S', 'A', NIL},  //< 02
-      {'I', 'U', 'A', NIL},  //< 03
-      {'C', 'H', 'B', NIL},  //< 04
-      {'I', 'S', 'B', NIL},  //< 05
-      {'I', 'U', 'B', NIL},  //< 06
-      {'F', 'P', 'B', NIL},  //< 07
-      {'B', 'O', 'L', NIL},  //< 08
-      {'C', 'H', 'C', NIL},  //< 09
+      {'C', 'H', 'A', NIL},  //< 03
+      {'F', 'P', 'B', NIL},  //< 04
+      {'I', 'U', 'B', NIL},  //< 05
+      {'I', 'S', 'B', NIL},  //< 06
+      {'C', 'H', 'B', NIL},  //< 07
+      {'F', 'P', 'C', NIL},  //< 08
+      {'I', 'U', 'C', NIL},  //< 09
       {'I', 'S', 'C', NIL},  //< 10
-      {'I', 'U', 'C', NIL},  //< 11
-      {'F', 'P', 'C', NIL},  //< 12
-      {'T', 'M', 'E', NIL},  //< 13
+      {'C', 'H', 'C', NIL},  //< 11
+      {'F', 'P', 'D', NIL},  //< 12
+      {'I', 'U', 'D', NIL},  //< 13
       {'I', 'S', 'D', NIL},  //< 14
-      {'I', 'U', 'D', NIL},  //< 15
-      {'F', 'P', 'D', NIL},  //< 16
-      {'I', 'S', 'E', NIL},  //< 17
-      {'I', 'U', 'E', NIL},  //< 18
-      {'F', 'P', 'E', NIL},  //< 19
+      {'T', 'M', 'E', NIL},  //< 15
+      {'F', 'P', 'E', NIL},  //< 16
+      {'I', 'U', 'E', NIL},  //< 17
+      {'I', 'S', 'E', NIL},  //< 18
+      {'B', 'O', 'L', NIL},  //< 19
       {'D', 'T', 'A', NIL},  //< 20
       {'D', 'T', 'B', NIL},  //< 21
       {'D', 'T', 'C', NIL},  //< 22
@@ -50,27 +50,27 @@ const CHA* STRTypesPOD() {
       {'D', 'T', 'L', NIL},  //< 31
       {'I', 'N', 'V', NIL},  //< 32
   };
-  return &cStrings[0][0];
+  return &Strings[0][0];
 }
 
 const CHA* STRTypesVector() {
-  static const CHA cStrings[4][4] = {
+  static const CHA Strings[4][4] = {
       {'V', 'H', 'T', NIL},  //< 00
       {'A', 'R', 'Y', NIL},  //< 01
       {'S', 'T', 'K', NIL},  //< 02
       {'M', 'A', 'T', NIL},  //< 03
   };
-  return &cStrings[0][0];
+  return &Strings[0][0];
 }
 
 const CHA* STRTypesModifier() {
-  static const CHA cStrings[4][4] = {
+  static const CHA Strings[4][4] = {
       {'P', 'O', 'D', NIL},  //< 00
       {'P', 'T', 'R', NIL},  //< 01
       {'C', 'N', 'S', NIL},  //< 02
       {'P', 'T', 'C', NIL},  //< 03
   };
-  return &cStrings[0][0];
+  return &Strings[0][0];
 }
 
 const CHA* STRTrue() { return "true"; }
@@ -83,29 +83,29 @@ Typef TypefOf() {
   return typef;
 }
 
-TypeValue::TypeValue() : type_(cNIL), word_(0), word_2_(0) {}
-TypeValue::TypeValue(void* item) : type_(cPTR), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue() : type_(_NIL), word_(0), word_2_(0) {}
+TypeValue::TypeValue(void* item) : type_(_PTR), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(const void* item)
-    : type_(cCNS_PTR), word_(IUW(item)), word_2_(0) {}
+    : type_(_CNS_PTR), word_(IUW(item)), word_2_(0) {}
 #if USING_UTF8 == YES_0
-TypeValue::TypeValue(CHA item) : type_(cCHA), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(CHA item) : type_(_CHA), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CHA* item)
-    : type_(cSTA), word_(IUW(item)), word_2_(0) {}
+    : type_(_STA), word_(IUW(item)), word_2_(0) {}
 #endif
 #if USING_UTF16 == YES_0
-TypeValue::TypeValue(CHB item) : type_(cCHB), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(CHB item) : type_(_CHB), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CHB* item)
-    : type_(cSTB), word_(IUW(item)), word_2_(0) {}
+    : type_(_STB), word_(IUW(item)), word_2_(0) {}
 #endif
 #if USING_UTF32 == YES_0
-TypeValue::TypeValue(CHC item) : type_(cCHC), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(CHC item) : type_(_CHC), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(const CHC* item)
-    : type_(cSTC), word_(IUW(item)), word_2_(0) {}
+    : type_(_STC), word_(IUW(item)), word_2_(0) {}
 #endif
-TypeValue::TypeValue(ISA item) : type_(cISA), word_(IUW(item)), word_2_(0) {}
-TypeValue::TypeValue(IUA item) : type_(cIUA), word_(IUW(item)), word_2_(0) {}
-TypeValue::TypeValue(ISB item) : type_(cISB), word_(IUW(item)), word_2_(0) {}
-TypeValue::TypeValue(IUB item) : type_(cIUB), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(ISA item) : type_(_ISA), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(IUA item) : type_(_IUA), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(ISB item) : type_(_ISB), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(IUB item) : type_(_IUB), word_(IUW(item)), word_2_(0) {}
 #if CPU_SIZE == CPU_2_BYTE
 AValue::AValue(ISC item) : type_(cISC) {
   // @todo I don't know if this is going to be needed. In my mind the compiler
@@ -114,7 +114,7 @@ AValue::AValue(ISC item) : type_(cISC) {
   *TPtr<ISC>(&word_) = item;
 }
 #else
-TypeValue::TypeValue(ISC item) : type_(cISC), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(ISC item) : type_(_ISC), word_(IUW(item)), word_2_(0) {}
 #endif
 
 #if CPU_SIZE == CPU_2_BYTE
@@ -122,17 +122,17 @@ AValue::AValue(IUC item) : type_(cIUC) {
   *TPtr<IUC>(&word_) = item;
 }
 #else
-TypeValue::TypeValue(IUC item) : type_(cIUC), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(IUC item) : type_(_IUC), word_(IUW(item)), word_2_(0) {}
 #endif
 
 #if CPU_SIZE == CPU_8_BYTE
-TypeValue::TypeValue(ISD item) : type_(cISD), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(ISD item) : type_(_ISD), word_(IUW(item)), word_2_(0) {}
 #else
 AValue::AValue(ISD item) : type_(cISD) { *TPtr<ISD>(&word_) = item; }
 #endif
 
 #if CPU_SIZE == CPU_8_BYTE
-TypeValue::TypeValue(IUD item) : type_(cIUD), word_(IUW(item)), word_2_(0) {}
+TypeValue::TypeValue(IUD item) : type_(_IUD), word_(IUW(item)), word_2_(0) {}
 #else
 AValue::AValue(IUD item) : type_(cIUD) {
   *TPtr<IUD>(&word_) = item;
@@ -142,7 +142,7 @@ AValue::AValue(IUD item) : type_(cIUD) {
 #if USING_FPC == YES_0
 #if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(FPC item)
-    : type_(cFPC), word_(ToUnsigned(item)), word_2_(0) {}
+    : type_(_FPC), word_(ToUnsigned(item)), word_2_(0) {}
 #else
 AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
 #endif
@@ -151,14 +151,14 @@ AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
 #if USING_FPD == YES_0
 #if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(FPD item)
-    : type_(cFPD), word_(ToUnsigned(item)), word_2_(0) {}
+    : type_(_FPD), word_(ToUnsigned(item)), word_2_(0) {}
 #else
 AValue::AValue(FPD item) : type_(cFPD) { *TPtr<FPD>(&word_) = item; }
 #endif
 #endif
 
 TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
-  DTW pod_type = type & cTypePODMask;
+  DTW pod_type = type & PODTypeMask;
   if (type != pod_type) {
     word_ = IUW(item);
   } else if (pod_type <= 7) {
@@ -172,7 +172,7 @@ TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
     IUD* destination = TPtr<IUD>(WordPTR());
     const IUD* source = TPtr<const IUD>(item);
     *destination = *source;
-    if (pod_type >= cISE) {
+    if (pod_type >= _ISE) {
       ++destination;
       ++source;
       *destination = *source;
@@ -222,86 +222,86 @@ IUW TypeValue::Word2() { return word_2_; }
 
 void TypeValue::SetWord(IUW value) { word_ = value; }
 void TypeValue::SetWord2(IUW value) { word_2_ = value; }
-void TypeValue::SetNIL() { type_ = word_ = cNIL; }
+void TypeValue::SetNIL() { type_ = word_ = _NIL; }
 void TypeValue::SetNIL(IUW value) {
-  type_ = cNIL;
+  type_ = _NIL;
   word_ = value;
 }
 #if USING_UTF8 == YES_0
 void TypeValue::Set(CHA item) {
-  type_ = cCHA;
+  type_ = _CHA;
   word_ = IUW(item);
 }
 void TypeValue::Set(const CHA* item) {
-  type_ = CTypeMap(cSTA, cCNS_PTR);
+  type_ = CTypeMap(_STA, _CNS_PTR);
   word_ = IUW(item);
 }
 #endif
 #if USING_UTF16 == YES_0
 void TypeValue::Set(CHB item) {
-  type_ = cCHB;
+  type_ = _CHB;
   word_ = IUW(item);
 }
 void TypeValue::Set(const CHB* item) {
-  type_ = cSTB;
+  type_ = _STB;
   word_ = IUW(item);
 }
 #endif
 #if USING_UTF32 == YES_0
 void TypeValue::Set(CHC item) {
-  type_ = cCHC;
+  type_ = _CHC;
   word_ = IUW(item);
 }
 void TypeValue::Set(const CHC* item) {
-  type_ = cSTC;
+  type_ = _STC;
   word_ = IUW(item);
 }
 #endif
 void TypeValue::Set(ISA item) {
-  type_ = cISA;
+  type_ = _ISA;
   word_ = IUW(item);
 }
 void TypeValue::Set(IUA item) {
-  type_ = cIUA;
+  type_ = _IUA;
   word_ = IUW(item);
 }
 void TypeValue::Set(ISB item) {
-  type_ = cISB;
+  type_ = _ISB;
   word_ = IUW(item);
 }
 void TypeValue::Set(IUB item) {
-  type_ = cIUB;
+  type_ = _IUB;
   word_ = IUW(item);
 }
 void TypeValue::Set(BOL item) {
-  type_ = cBOL;
+  type_ = _BOL;
   word_ = IUW(item);
 }
 void TypeValue::Set(ISC item) {
-  type_ = cISC;
+  type_ = _ISC;
   word_ = IUW(item);
 }
 void TypeValue::Set(IUC item) {
-  type_ = cIUC;
+  type_ = _IUC;
   word_ = IUW(item);
 }
 void TypeValue::Set(ISD item) {
-  type_ = cISD;
+  type_ = _ISD;
   word_ = IUW(item);
 }
 void TypeValue::Set(IUD item) {
-  type_ = cIUD;
+  type_ = _IUD;
   word_ = IUW(item);
 }
 #if USING_FPC == YES_0
 void TypeValue::Set(FPC item) {
-  type_ = cFPC;
+  type_ = _FPC;
   word_ = IUW(item);
 }
 #endif
 #if USING_FPD == YES_0
 void TypeValue::Set(FPD item) {
-  type_ = cFPD;
+  type_ = _FPD;
   word_ = IUW(item);
 }
 #endif

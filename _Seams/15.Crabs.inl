@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/15.Crabs.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_CRABS
 #include "../Crabs.h"
@@ -23,18 +23,18 @@ static const CHA* Crabs(const CHA* args) {
   A_TEST_BEGIN;
 
   enum {
-    cBufferSize = 2048,
-    cBufferWords = cBufferSize / sizeof(IUW),
-    cStackHeight = 8,
+    BufferSize = 2048,
+    BufferWords = BufferSize / sizeof(IUW),
+    StackHeight = 8,
   };
-  IUW buffer[cBufferWords], unpacked_expr[cBufferWords];
+  IUW buffer[BufferWords], unpacked_expr[BufferWords];
   D_COUT("\n|  - Running OperationTests in address ranges: [0x"
-         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[cBufferWords - 1]));
+         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[BufferWords - 1]));
 
   This a;
 
-  Crabs* crabs = CrabsInit(buffer, cBufferSize, cStackHeight, &a,
-                                    unpacked_expr, cBufferSize);
+  Crabs* crabs = CrabsInit(buffer, BufferSize, StackHeight, &a,
+                                    unpacked_expr, BufferSize);
   CrabsPrint(crabs);
 
   D_COUT("\n|    Testing Root (@see \"a.h\")...\n");

@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Slot.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -19,7 +19,7 @@ namespace _ {
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-template <typename T>
+template<typename T>
 inline T TSlotLength(CHA* origin, CHA* stop, IUW size) {
   return TPtr<T>(stop - origin);
 }
@@ -28,7 +28,7 @@ inline T TSlotLength(CHA* origin, CHA* stop, IUW size) {
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-template <typename T>
+template<typename T>
 inline T TSlotSpace(CHA* origin, CHA* stop, IUW size) {
   return TPtr<T>(size - (stop - origin));
 }

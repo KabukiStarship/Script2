@@ -13,25 +13,25 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | ID | Type | C++/Alt Name | Width | Description |
 |:--:|:----:|:------------:|:-----:|:------------|
 |  0 | NIL  |     null     |   0   | Nil/null/void type. |
-|  1 | CHA  |     char     |   1   | 1-byte Unicode/ASCII character. |
+|  1 | IUA  |    uint8_t   |   1   | 1-byte unsigned integer. |
 |  2 | ISA  |     int8_t   |   1   | 1-byte signed integer. |
-|  3 | IUA  |    uint8_t   |   1   | 1-byte unsigned integer. |
-|  4 | CHB  |   char16_t   |   2   | 2-byte Unicode character. |
-|  5 | ISB  |    int16_t   |   2   | 2-byte signed integer. |
-|  6 | IUB  |   uint16_t   |   2   | 2-byte unsigned integer. |
-|  7 | FPB  |     half     |   2   | 2-byte floating-point number. |
-|  8 | BOL  |     bool     |  2/4  | 2 or 4-byte boolean value. |
-|  9 | CHC  |   char32_t   |   4   | 4-byte Unicode character. |
-| 10 | ISC  |    int32_t   |   4   | 4-byte signed varint. |
-| 11 | IUC  |   uint32_t   |   4   | 4-byte unsigned integer. |
-| 12 | FPC  |    float     |   4   | 4-byte floating-point number. |
-| 13 | TME  |    int64_t   |   8   | ISC seconds since epoch timestamp with a IUC sub-second tick. |
+|  3 | CHA  |     char     |   1   | 1-byte Unicode/ASCII character. |
+|  4 | FPB  |     half     |   2   | 2-byte floating-point number. |
+|  5 | IUB  |   uint16_t   |   2   | 2-byte unsigned integer. |
+|  6 | ISB  |    int16_t   |   2   | 2-byte signed integer. |
+|  7 | CHB  |   char16_t   |   2   | 2-byte Unicode character. |
+|  8 | FPC  |    float     |   4   | 4-byte floating-point number. |
+|  9 | IUC  |   uint32_t   |   4   | 4-byte unsigned integer. |
+| 10 | ISC  |    int32_t   |   4   | 4-byte signed integer. |
+| 11 | CHC  |   char32_t   |   4   | 4-byte Unicode character. |
+| 12 | FPD  |    double    |   8   | 8-byte floating-point number. |
+| 13 | IUD  |   uint64_t   |   8   | 8-byte unsigned integer. |
 | 14 | ISD  |    int64_t   |   8   | 8-byte signed integer. |
-| 15 | IUD  |   uint64_t   |   8   | 8-byte unsigned integer. |
-| 16 | FPD  |    double    |   8   | 8-byte floating-point number. |
-| 17 | ISE  |   int128_t   |  16   | 16-byte (Hexadeca-byte) signed integer. |
-| 18 | IUE  |   uint128_t  |  16   | 16-byte (Hexadeca-byte) unsigned integer. |
-| 19 | FPE  |  float128_t  |  16   | 16-byte (Hexadeca-byte) floating-point number. |
+| 15 | TME  |    int64_t   |   8   | ISC seconds since epoch timestamp with a IUC sub-second tick. |
+| 16 | FPE  |  float128_t  |  16   | 16-byte floating-point number. |
+| 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
+| 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
+| 19 | BOL  |     bool     | 1/2/4 | Implementation-defined 1-bit or 1, 2, or 4-byte boolean value. |
 | 20 | DTA  |  Data Type A |  xW   | Implementation-defined word-aligned Data Type A. |
 | 21 | DTB  |  Data Type B |  xW   | Implementation-defined word-aligned Data Type B. |
 | 22 | DTC  |  Data Type C |  xW   | Implementation-defined word-aligned Data Type C. |
@@ -53,24 +53,46 @@ The POD Types table is laid out such that the types are grouped into groups by w
 |   x   | The numbers 0, 1, 2, 4, 8, and 16 are the number of bytes in the type. |
 |   xW  | Word-aligned size determined by implementation. |
 
-#### Vector Types
+##### Justification for Ordering
 
-The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types. All Data Types are memory aligned thus creating a number of illegal data types, such as an 1-byte Array of 2-byte data types.
+The table logic is based on the fact that there are only three types of Unicode character types, 8-bit, 16-bit, and 32-bit, and there are only four main types of floating-point numbers, 16-bit, 32-bit, 64-bit, and 128-bit. We always know that 0 will be nil, so thus we may conclude that FPB must be in index 4 because there is no such thing as an 8-bit floating-point number.
 
-| Value | Type | Description                              |
-|:-----:|:----:|:----------------------------------------:|
-|   0   | VHT  | Vector of 1, 2, 3, or 4 POD types 0-31.  |
-|   1   | ARY  | Array of homogenous types.               |
-|   2   | STK  | Stack (vector) of homogenous types.      |
-|   3   | MAT  | Matrix of homogenous types.              |
+It doesn't make sense to start out with FPx, CHx, ISx, IUx, so it must start out either FPx, ISx, IUx, or FPx, IUx, ISx, but you cannot create a signed integer without an unsigned inter, and thus the unsigned integers must come first, yielding the order FPx, IUx, ISx CHx,.
+
+We require a special type for a 64-bit timestamp. With the above order packing there is no room for a 4-bit timestamp, but there is no 64-bit Unicode character value, and thus we may conclude that TME is required to be Type 15.
+
+This leaves one type left we can use to store our BOL type, which is Type 19. After that are all implementation-defined types the user can place any other types where they see fit; and it's arguable that you really actually need any other POD data types for the vast majority of foreseeable of applications.
+
+#### VT Bits
+
+The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types. All Data Types are word aligned creating a number of illegal data types, such as an 1-byte Array of 2-byte data types.
+
+| Value | Type | Description                                       |
+|:-----:|:----:|:-------------------------------------------------:|
+|   0   | VHT  | Vector of 1, 2, 3, or 4 POD types 0-31.           |
+|   1   | ARY  | Array of homogenous types.                        |
+|   2   | STK  | Stack (vector) of homogenous types.               |
+|   3   | MAT  | Matrix (n-dimensional array) of homogenous types. |
+
+#### Homotuples
+
+A Homotuple (Homogenous Tuple) is a Vector of homogeneous types of length 1, 2, 3, or 4. Homotuples are created when the Vector bits are set to zero where the number of homogenous types in the set are determined by the SW (Size Width) one is added to the SW value to store the number of vector elements.
+
+***Bit Pattern***
+
+2-byte types can be used created a Core Type or a map one Core Type to another such as a ST1_FP4 (UTF-8 string-to-float) map or a CH1_BOL (char-to-bool) map. To create a single core type set the Size Width (SW) bits of the ASCII Data Types word to 1:
+
+| b8:b7 | b6:b5  | b4:b0 |
+|:-----:|:------:|:-----:|
+|  SW   |  VHT   |  0-31 |
 
 #### One-byte Data Type Bit Pattern
 
 1-byte types only support 2-byte Size Width and are intended for memory constrained processors.
 
-| b7 |    b6:b5    | b4:b0 |
-|:--:|:-----------:|:-----:|
-| SW | Vector Type |  POD  |
+| b7 |      b6:b5       | b4:b0 |
+|:--:|:----------------:|:-----:|
+| SW | Vector Type (VT) |  POD  |
 
 ##### Size Width Pattern b7
 
@@ -83,7 +105,7 @@ The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types
 
 The difference between a 4-byte and a 2-byte data type are that the 4-byte data type can support heterogeneous tuples. 1 and 2-byte data types both support up to 4 heterogeneous types
 
-##### Size Width Bit Pattern b8:b7
+##### SW Bits
 
 The Size width (SW) bits stores the number of bits uses to store the Object Array Size. If the the number of bits is zero then it is a POD Data Type.
 
@@ -96,7 +118,7 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 
 ##### Illegal Vector Types
 
-Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of ISB with an ISA size width. If the POD type is 8 or more bytes wide then the stack or array must use a SW8 (8-byte Size Width).
+Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of ISB with an ISA size width. If the POD type is 8 or more bytes wide then the stack or array must use a SWA (8-byte Size Width).
 
 ```AsciiArt
 | Vector |                POD Type 0-31 (1=Valid, 0=Invalid)                |
@@ -138,9 +160,14 @@ Extended Types are created from the Illegal Types.
 | 43  |   BOU   |  B-Output  | A Byte-output ring buffer socket. |
 | 44  |   BIO   |    B-IO    | A BIn and BOut. |
 | 45  |   XPR   | Expression | A SCRIPT Script. |
-##### Modifier Bits
 
-The Modifier Bits (MB) allow for the creation of pointers and const pointers to POD and Vector types.
+##### MT Bits
+
+A Map Type maps from of one POD type to other set, such as a Dictionary that maps a string, an integer hash, or floating-point number to an unsigned integer offset. Map Types are covered in the [Map Types](MapTypes) section. MT Bits are one of the 32 POD types.
+
+##### MOD Bits
+
+The Modifier Bits (MOD) allow for the creation of pointers and const pointers to POD and Vector types.
 
 | Value | Type | Description     |
 |:-----:|:----:|:----------------|
@@ -149,17 +176,19 @@ The Modifier Bits (MB) allow for the creation of pointers and const pointers to 
 |   2   | CNS  | Const.          |
 |   3   | PTC  | Const Pointer.  |
 
-##### 2-byte Type Bit Pattern
+#### Two-byte Type Bit Pattern
 
-2-byte types can be used created a POD Type or a map one POD Type to another such as a STA_FPC (char*-to-float in C++) map or a CHA_BOL (char-to-bool in C++) map. To create a single POD type set the Map type to 0.
+2-byte types can be used created a POD Type or a map one POD Type to another such as a STA_FPC (string-to-float in C++) map or a CHA_BOL (char-to-bool in C++) map. To create a single POD type set the Map type to 0.
 
-| b15:b14 |  b13:b9  | b8:b7 | b6:b5 | b4:b0 |
-|:-------:|:--------:|:-----:|:-----:|:-----:|
-|   MB    | Map type |  SW   |  VHT  |  POD  |
+| b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+|:-------:|:------:|:-----:|:-----:|:-----:|
+|   MOD   |   MT   |  SW   |  VT   |  POD  |
 
-###### Map Type Bits
-
-A Map Type maps from a set with  mappings of one POD type to other set, such as a Dictionary that maps a string an integer or an unsigned has integer to an integer offset. Map Types are covered in the [Map Types](MapTypes) section.
+1. POD: Plain Old Data bits
+2. VT: Vector Type bits
+3. SW: Size Width bits
+4. MT: Map Type bits
+5. MOD: Modifier bits
 
 **[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Numbers >>](Numbers.md)**
 

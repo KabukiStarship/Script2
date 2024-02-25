@@ -1,26 +1,26 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/TestWords.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_TESTWORDS
 #define SCRIPT2_TESTWORDS
 
 /* A basic list of test words. */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 struct TTestWords {
   enum {
     CharsMax = 16,   //< The max characters in a word including term char.
-    cWordsMax = 129,  //< The max word count.
+    WordsMax = 129,  //< The max word count.
   };
   /* An array of 128 random words. */
   static const CHT* Words() {
-    static const CHT cWords[cWordsMax][CharsMax] = {
+    static const CHT Strings[WordsMax][CharsMax] = {
       {'w', 'h', 'i', 'p'},
       {'j', 'u', 'm', 'b', 'l', 'e', 'd'},
       {'e', 'n', 'e', 'r', 'g', 'e', 't', 'i', 'c'},
@@ -151,15 +151,15 @@ struct TTestWords {
       { 'f', 'o', 'o', 'l', 'i', 's', 'h' },
       { 't', 'r', 'u', 'm', 'p', '2', '0', '2', '4' } // BABY!!!
     };
-    return &cWords[0][0];
+    return &Strings[0][0];
   }
 
   /* Gets a test word. */
   static const CHT* Word(ISN index) {
     if (index < 0)
       index = 0;
-    else if (index >= cWordsMax)
-      index = cWordsMax;
+    else if (index >= WordsMax)
+      index = WordsMax;
     return Words()[index];
   }
 };
