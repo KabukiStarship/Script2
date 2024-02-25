@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Puff.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -14,7 +14,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <iostream>
 #define D_COUT(item) std::cout << item
 namespace _ {
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TPrintPrinted(CHT* start = nullptr) {
   static CHT* buffer_begin = 0;
   if (start) {
@@ -50,7 +50,7 @@ CHT* TPrintPrinted(CHT* start = nullptr) {
 namespace _ {
 /* Prints two chars to the console.
 @warning This function DOES NOT do any error checking! */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TPrintNil(CHT* start) {
   *start = 0;
   return start;
@@ -58,7 +58,7 @@ inline CHT* TPrintNil(CHT* start) {
 
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking!  */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrintDecimal(CHT* cursor, CHT value) {
   *TPtr<CHT>(cursor) = '0' + value;
   D_PRINT_PRINTED;
@@ -67,7 +67,7 @@ inline CHT* TSPrintDecimal(CHT* cursor, CHT value) {
 
 /* Prints a single decimal to the socket.
 @warning This function DOES NOT do any error checking! */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TWriteChar(CHT* cursor, CHT value) {
   *cursor++ = value;
   D_PRINT_PRINTED;
@@ -84,7 +84,7 @@ inline CHC* Write(CHC* cursor, CHC c) { return TWriteChar<CHC>(cursor, c); }
 /* Prints a two decimals to the socket.
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TPrint2Decimals(CHT* socket, IUB decimal_pair) {
   enum { cSizeBits = sizeof(CHT) * 8 };
   socket[0] = (CHT)(decimal_pair >> 8);
@@ -114,7 +114,7 @@ inline void PrintCharPair(CHC* cursor, IUB decimal_pair) {
 }
 
 /* Prints 8 decimals to the given socket with given LUT.*/
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TPrint8Decimals(CHT* cursor, IUC value, const IUB* lut) {
   D_COUT("\n    Printing 8 decimals:" << value);
   IUB pow_10_ui2 = 10000, digits6and5 = (IUB)(value / pow_10_ui2),
@@ -132,7 +132,7 @@ CHT* TPrint8Decimals(CHT* cursor, IUC value, const IUB* lut) {
   return cursor + 8;
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline void TPrint8or16Decimals(CHT* cursor, IUC lsd, const IUB* lut,
                                 IUC middle_sd, IUC delta) {
   if (delta == 8) {
@@ -153,7 +153,7 @@ inline IUC ToIUC(IUD value) { return (IUC)value; }
 success.
 @param cursor The beginning of the socket.
 @param stop    The stop address of the socket. */
-template <typename IU = IUW, typename CHT = CHR>
+template<typename IU = IUW, typename CHT = CHR>
 CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
   BEGIN_ITOS_ALGORITHM;
 
@@ -394,38 +394,38 @@ CHT* TSPrintUnsigned(CHT* cursor, CHT* stop, IU value) {
   return nullptr;  //< Unreachable.
 }
 
-template <typename IU = IUD, typename CHT = CHR>
+template<typename IU = IUD, typename CHT = CHR>
 inline CHT* TSPrintUnsigned(CHT* socket, ISW size, IU value) {
   return TSPrintUnsigned<IU, CHT>(socket, socket + size - 1, value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, IUD value) {
   return TSPrintUnsigned<IUD, CHT>(start, stop, value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, IUD value) {
   return TSPrintUnsigned<IUD, CHT>(start, size, value);
 }
 
 #if CPU_SIZE < 64
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, IUC value) {
   return TSPrintUnsigned<IUC, CHT>(start, stop, value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, IUC value) {
   return TSPrintUnsigned<IUC, CHT>(start, size, value);
 }
 #else
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, IUC value) {
   return TSPrint<CHT>(start, stop, (IUD)value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, IUC value) {
   return TSPrint<CHT>(start, size, (IUD)value);
 }
@@ -436,7 +436,7 @@ inline CHT* TSPrint(CHT* start, ISW size, IUC value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
+template<typename IS = ISD, typename IU = IUD, typename CHT = CHR>
 inline CHT* TSPrintSigned(CHT* start, CHT* stop, IS value) {
   if (value >= 0) {
     return TSPrintUnsigned<IU, CHT>(start, stop, (IU)value);
@@ -450,35 +450,35 @@ inline CHT* TSPrintSigned(CHT* start, CHT* stop, IS value) {
 success.
 @param utf The text formatter to utf to.
 @param value The value to write. */
-template <typename IS = ISD, typename IU = IUD, typename CHT = CHR>
+template<typename IS = ISD, typename IU = IUD, typename CHT = CHR>
 inline CHT* TSPrintSigned(CHT* start, ISW size, IS value) {
   return TSPrintSigned<IS, IU, CHT>(start, start + size - 1, value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, ISD value) {
   return TSPrintSigned<ISD, IUD, CHT>(start, stop, value);
 }
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, ISD value) {
   return TSPrintSigned<ISD, IUD, CHT>(start, size, value);
 }
 
 #if CPU_SIZE < 64
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, ISC value) {
   return TSPrintSigned<ISC, IUC, CHT>(start, stop, value);
 }
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, ISC value) {
   return TSPrintSigned<ISC, IUC, CHT>(start, size, value);
 }
 #else
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, ISC value) {
   return TSPrint<CHT>(start, stop, (ISD)value);
 }
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, ISW size, ISC value) {
   return TSPrint<CHT>(start, size, (ISD)value);
 }
@@ -523,7 +523,7 @@ inline void FloatBytes(FPD value, CHA& byte_0, CHA& byte_1, CHA& byte_2,
   byte_7 = (CHA)(ui_value >> 56);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TPrint3(CHT* string, CHT* stop, CHT a, CHT b, CHT c) {
   if (!string || string + 3 >= stop) return nullptr;
   *string++ = a;
@@ -533,7 +533,7 @@ CHT* TPrint3(CHT* string, CHT* stop, CHT a, CHT b, CHT c) {
 }
 
 /* Masks off the given bits starting at b0. */
-template <typename IS, ISN cMSb_, ISN cLSb_>
+template<typename IS, ISN cMSb_, ISN cLSb_>
 IS TMiddleBits(IS value) {
   // The goal is to not allow for undefined shifting behavior and not pay for
   // the error checking.
@@ -555,7 +555,7 @@ IS TMiddleBits(IS value) {
 
 /* Searches for the highest MSb asserted.
 @return -1 */
-template <typename IU>
+template<typename IU>
 ISC TMSbAssertedReverse(IU value) {
   for (ISC i = sizeof(IU) * 8 - 1; i > 0; --i)
     if ((value >> i) != 0) return i;
@@ -566,7 +566,7 @@ ISC TMSbAssertedReverse(IU value) {
 To use this class the sizeof (Float) must equal the sizeof (IU) and sizeof
 (IS).
 */
-template <typename Float = FPW, typename IS = ISC, typename IU = IUW>
+template<typename Float = FPW, typename IS = ISC, typename IU = IUW>
 class TBinary {
   IU f;
   IS e;
@@ -620,7 +620,7 @@ class TBinary {
     return (decimal << (cExponentSizeBits + 1)) >> (cExponentSizeBits + 1);
   }
 
-  template <typename CHT = CHR>
+  template<typename CHT = CHR>
   static CHT* Print(CHT* socket, CHT* stop, Float value) {
     // Not handling NaN and inf
 
@@ -792,7 +792,7 @@ class TBinary {
     for (ISC i = 0; i < 87; ++i) *iud_ptr = f_lut[i];
   }
 
-  template <typename CHT = CHR>
+  template<typename CHT = CHR>
   static CHT* Print(CHT* socket, CHT* stop, Float value, IS& k) {
     TBinary v(value);
     TBinary lower_estimate, upper_estimate;
@@ -957,7 +957,7 @@ class TBinary {
 
   /* Prints the integer portion of the floating-point number_.
   @return Nil upon failure or a pointer to the nil-term CHT upon success. */
-  template <typename CHT = CHR>
+  template<typename CHT = CHR>
   static CHT* DigitGen(CHT* start, CHT* stop, const TBinary& w,
                        const TBinary& m_plus, IU delta, IS& k) {
     TBinary one(((IU)1) << (-m_plus.e), m_plus.e), wp_w = m_plus.Minus(w);
@@ -1039,14 +1039,14 @@ class TBinary {
   }
 
   /* Shifts the given string up by given char_count. */
-  template <typename CHT = CHR>
+  template<typename CHT = CHR>
   static void ShiftUp(CHT* start, ISW char_count) {
     CHT* stop = start + char_count;
     while (char_count) *stop++ = *start++;
   }
 
   /* Converts the Grisu2 output to a standardized/easier-to-read format. */
-  template <typename CHT = CHR>
+  template<typename CHT = CHR>
   static CHT* Standardize(CHT* start, CHT* stop, ISW length, IS k) {
     const ISW kk = length + k;  // 10^(kk-1) <= v < 10^kk
     CHT* nil_term_char;
@@ -1089,20 +1089,20 @@ class TBinary {
 using Binary32 = TBinary<FPC, ISC, IUC>;
 using Binary64 = TBinary<FPD, ISC, IUD>;
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* start, CHT* stop, FPC value) {
   return TBinary<FPC, ISC, IUC>::template Print<CHT>(start, stop, value);
 }
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* start, ISW size, FPC value) {
   return TSPrint<CHT>(start, start + size - 1, value);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* start, CHT* stop, FPD value) {
   return TBinary<FPD, ISD, IUD>::template Print<CHT>(start, stop, value);
 }
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* start, ISW size, FPD value) {
   return TSPrint<CHT>(start, start + size - 1, value);
 }

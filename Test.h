@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Test.h
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Cale McCollough <cookingwithcale.org>;
+@license Copyright Cale McCollough <cookingwithcale.org>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */

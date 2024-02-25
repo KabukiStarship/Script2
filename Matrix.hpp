@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Matrix.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -35,14 +35,14 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 0xN +-----------------+
 @endcode
 */
-template <typename ISZ = ISN>
+template<typename ISZ = ISN>
 struct TMatrix {
   ISZ size;                //< Number of elements in the Matrix.
   TStack<ISZ> dimensions;  //< The stack of dimensions.
 };
 
 /* Max number of elements that can fit in the given ISZ. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 constexpr ISZ TMatrixElementCountMax() {
   return (TSignedMax<ISZ>() - sizeof(TStack<ISZ>)) / sizeof(T);
 }
@@ -54,13 +54,13 @@ inline I TMatrixHeaderSize(I dimensions_count_max) {
 }
 
 // Checks if the 
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 inline ISZ TMatrixArraySizeMax(ISZ dimensions_count_max) {
   return ~ISW(0) - TMatrixHeaderSize<ISZ>(dimensions_count_max);
 }
 
 /* Prints the TMatrix to the UTF. */
-template <typename Printer, typename T = ISW, typename ISZ = ISN>
+template<typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TMatrixPrint(Printer& o, TMatrix<ISZ>* matrix) {
   A_ASSERT(matrix);
   ISZ size = matrix->size, 
@@ -87,7 +87,7 @@ Printer& TMatrixPrint(Printer& o, TMatrix<ISZ>* matrix) {
 }
 
 /* Returns the required size of the given array. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixElementCount(const ISZ* dimensions) {
   D_ASSERT(dimensions);
   ISZ dimension_count = *dimensions++, 
@@ -103,7 +103,7 @@ ISZ TMatrixElementCount(const ISZ* dimensions) {
 
 /* Returns the size in bytes of the given matrix dimensions.
 @return -1 if the dimension_count or dimensions are < 0, >=0 othersize. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixSize(const ISZ* dimensions) {
   D_ASSERT(dimensions);
   ISZ dimension_count = *dimensions++;
@@ -121,7 +121,7 @@ ISZ TMatrixSize(const ISZ* dimensions) {
 
 /* Returns the required size of the given array.
 @return -1 if the dimension_count or dimensions are < 0, >=0 othersize. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixSize(const ISZ* dimensions, const ISZ* delta) {
   D_ASSERT(dimensions);
   ISZ dimension_count = *dimensions++;
@@ -139,7 +139,7 @@ ISZ TMatrixSize(const ISZ* dimensions, const ISZ* delta) {
 }
 
 /* Returns the required size of the given array. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
   D_ASSERT(matrix);
   return ISZ(sizeof(TMatrix<ISZ>)) + matrix->size * sizeof(T) + 
@@ -148,11 +148,11 @@ ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
 
 template<typename T, typename ISZ>
 inline ISZ TMatrixDimensionCountMax(ISZ count_max) {
-  count_max += sizeof(TStack<ISZ>) >> TBitCount<ISZ>();
+  count_max += sizeof(TStack<ISZ>) >> CBitWidth<ISZ>();
   return TAlignUpArray<ISZ>(count_max);
 }
 
-template <typename T, typename ISZ, ISZ AlignementMask = sizeof(T) - 1>
+template<typename T, typename ISZ, ISZ AlignementMask = sizeof(T) - 1>
 ISZ TMatrixSize(ISZ dimension_count_max, ISZ element_count) {
   ISZ size_bytes = TMatrixHeaderSize<ISZ>(dimension_count_max) +
                    sizeof(T) * element_count;
@@ -161,7 +161,7 @@ ISZ TMatrixSize(ISZ dimension_count_max, ISZ element_count) {
 
 /* Initializes an stack of n elements of the given type.
 @param socket An stack of bytes large enough to fit the stack. */
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   A_ASSERT(dimensions);
   ISZ dimension_count = *dimensions;
@@ -179,40 +179,40 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
 /* Gets the address of the packed array.
 @param obj ASCII Array data structure.
 @return Pointer to the first element in the array. */
-template <typename T, typename ISZ = ISN>
+template<typename T, typename ISZ = ISN>
 inline T* TMatrixStart(TMatrix<ISZ>* obj) {
   return TPtr<T>(TStackStart<ISZ, ISZ>(&obj->dimensions) + obj->size);
 }
 
 /* Creates a immutable array of dimensions. */
-template <typename ISZ, const ISZ... N>
+template<typename ISZ, const ISZ... N>
 inline const ISZ* TDim() {
   static const ISZ Count = (ISZ)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a immutable array of ISB dimensions. */
-template <const ISB... N>
+template<const ISB... N>
 inline const ISB* TDimB() {
   static const ISB Count = (ISB)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a immutable array of ISC dimensions. */
-template <const ISC... N>
+template<const ISC... N>
 inline const ISC* TDimC() {
   static const ISC Count = (ISC)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a static array of ISD dimensions. */
-template <const ISD... N>
+template<const ISD... N>
 inline const ISD* TDimD() {
   static const ISD Count = (ISD)sizeof...(N), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
-template <typename ISZ>
+template<typename ISZ>
 inline TMatrix<ISZ>* TMatrixPtr(IUW* origin) {
   return TPtr<TMatrix<ISZ>>(origin);
 }
@@ -230,13 +230,13 @@ inline void TMatrixWriteDims(TMatrix<ISZ>* matrix, const ISZ* dims,
   while (dim_count > 0) *cursor++ = *dims++;
 }
 
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 inline TMatrix<ISZ>* TMatrixClone(T* start_a, ISZ dim_count_a, const ISZ* dim_a,
                                   T* start_b, ISZ dim_count_b, const ISZ* dim_b) {
   
 }
 
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 inline TMatrix<ISZ>* TMatrixCloneDelta(Autoject& ajt, 
   const ISZ* dimensions_delta) {
   auto matrix = TMatrixPtr<ISZ>(ajt);
@@ -280,7 +280,7 @@ inline TMatrix<ISZ>* TMatrixCloneDelta(Autoject& ajt,
   return TMatrixPtr<ISZ>(origin_new);
 }
 
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 inline TMatrix<ISZ>* TMatrixResize(Autoject& ajt, const ISZ* dimensions_delta) {
   auto matrix = TMatrixCloneDelta<ISZ>(ajt, dimensions_delta);
   if (!matrix) return matrix;
@@ -288,7 +288,7 @@ inline TMatrix<ISZ>* TMatrixResize(Autoject& ajt, const ISZ* dimensions_delta) {
   return matrix;
 }
 
-template <typename T = ISW, typename ISZ = ISN>
+template<typename T = ISW, typename ISZ = ISN>
 inline IUW* TMatrixCopy(TMatrix<ISZ>* destination, TMatrix<ISZ>* source) {
   ISZ size_destination = TMatrixSize<T, ISZ>(destination),
       size_source      = TMatrixSize<T, ISZ>(source);
@@ -308,7 +308,7 @@ inline IUW* TMatrixCopy(TMatrix<ISZ>* destination, TMatrix<ISZ>* source) {
 }
 
 /* A multi-dimensional array Ascii Object. */
-template <typename T = ISW, typename ISZ = ISN, typename BUF = Nil>
+template<typename T = ISW, typename ISZ = ISN, typename BUF = Nil>
 class AMatrix {
   AArray<ISZ> obj_;  //< The Auto-array.
 
@@ -384,7 +384,7 @@ class AMatrix {
   /* Returns the Auto-Array. */
   inline AArray<T, ISZ, BUF>& Array() { return obj_; }
 
-  template <typename Printer = COut>
+  template<typename Printer = COut>
   inline Printer& PrintTo(Printer& o) {
     return TMatrixPrint<Printer, T, ISZ>(o, This());
   }

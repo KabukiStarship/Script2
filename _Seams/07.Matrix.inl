@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/07.Matrix.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_MATRIX
 #include "../Matrix.hpp"
 using namespace _;
@@ -16,11 +16,11 @@ using namespace _;
 #endif
 namespace Script2 {
 
-template <typename ISZ, typename T>
+template<typename ISZ, typename T>
 void TestMatrixIntegers() {
   //D_LINEF("\n\n+---\n| Testing AMatrix<IS" << CSizef<ISZ>() << ">\n+---");
   D_LINEF("\n\n+---\n| Testing AMatrix<IS");
-  D_COUT(CSizef<ISZ>());
+  D_COUT(TSizef<ISZ>());
   D_LINEF(">\n+---"); //< @todo Find a better way to do this.
 
   static const ISC array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},

@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Binary.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -14,19 +14,19 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T>
+template<typename T = void>
 inline T* TPtr(void* ptr) {
   return reinterpret_cast<T*>(ptr);
 }
 
 /* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T = IUW>
+template<typename T = void>
 inline T* TPtr(ISW value) {
   return reinterpret_cast<T*>(value);
 }
 
 /* Syntactical sugar for reinterpret_cast using templates. */
-template <typename T>
+template<typename T = void>
 inline const T* TPtr(const void* ptr) {
   return reinterpret_cast<const T*>(ptr);
 }
@@ -34,12 +34,12 @@ inline const T* TPtr(const void* ptr) {
 /* Creates a T pointer from a base pointer plus the offset.
 @param base The base address.
 @param offset The offset in bytes. */
-template <typename T = void>
+template<typename T = void>
 inline T* TPtr(void* origin, ISW offset) {
   return reinterpret_cast<T*>(ISW(origin) + offset);
 }
 
-template <typename T = void>
+template<typename T = void>
 inline const T* TPtr(const void* origin, ISW offset) {
   return reinterpret_cast<const T*>(ISW(origin) + offset);
 }
@@ -97,24 +97,24 @@ inline FPC ToFloat(IUC value) { return *TPtr<FPC>(&value); }
 inline FPD ToFloat(IUD value) { return *TPtr<FPD>(&value); }
 
 /* Returns the maximum value of the given unsigned type. */
-template <typename IU>
+template<typename IU>
 inline IU TNaNUnsigned() {
   return ~IU(0);
 }
 
 /* Returns the minimum value of the given signed type (i.e. 0x100...0). */
-template <typename IS>
+template<typename IS>
 constexpr IS TNaNSigned() {
   return IS(1) << (sizeof(IS) * 8 - 1);
 }
 
-template <typename IS = ISW>
+template<typename IS = ISW>
 inline IS TDelta(const void* start) {
   ISW delta = ISW(start);
   return IS(delta);
 }
 
-template <typename IS = ISW>
+template<typename IS = ISW>
 inline IS TDelta(const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
   return IS(delta);
@@ -125,14 +125,29 @@ enum {
   cHeap = 1,   //< Flag for using heap memory.
 };
 
-/* Returns the N in 2^N for the sizeof (I) to speed up dividing by powers of 2.
+/* Calculates the number of bits in the given type T. */
+template<typename T>
+constexpr T TBitCount() {
+  return sizeof(T) * 8;
+}
+
+/* Returns the Log_2(N) for the sizeof (I).
 @code
 ISN size_bytes = 32;
-ISN size_words = size_bytes >> CBitCount<ISN> ()
+ISN size_words = size_bytes >> TBitCount<ISN> ()
 @endcode
 */
-template <typename IS = ISW>
-constexpr ISN TBitCount() {
+template<typename T, typename IS = ISW>
+constexpr IS CBitWidth() {
+  /*
+  IS bit_count = 0,
+     value = 1;
+  while (sizeof(IS) <= value) {
+    ++bit_count;
+    value = value << 1;
+  }
+  return bit_count;
+  */
   return (sizeof(IS) ==  1) ? 0
        : (sizeof(IS) <=  2) ? 1
        : (sizeof(IS) <=  4) ? 2
@@ -145,25 +160,25 @@ constexpr ISN TBitCount() {
        : (sizeof(IS) <= 512) ? 9 : 10;
 }
 
-template <typename DT = DTB, DT dt>
+template<typename DT = DTB, DT dt>
 constexpr ISN TBitCode() {
-  return (dt >= cCHA && dt < cIUA) ? 0
-       : (dt >= cCHB && dt < cFPB) ? 1
-       : (dt >= cCHC && dt < cFPC) ? 2
-       : (dt >= cTME && dt < cFPD) ? 3
-       : (dt >= cISE && dt < cFPE) ? 4
-       : (dt == cDTA) ? cDTASize
-       : (dt == cDTB) ? cDTBSize
-       : (dt == cDTC) ? cDTCSize
-       : (dt == cDTD) ? cDTDSize
-       : (dt == cDTE) ? cDTESize
-       : (dt == cDTF) ? cDTFSize
-       : (dt == cDTG) ? cDTGSize
-       : (dt == cDTH) ? cDTHSize
-       : (dt == cDTI) ? cDTISize
-       : (dt == cDTJ) ? cDTJSize
-       : (dt == cDTK) ? cDTKSize
-       : (dt == cDTL) ? cDTLSize
+  return (dt >= _CHA && dt < _IUA) ? 0
+       : (dt >= _CHB && dt < _FPB) ? 1
+       : (dt >= _CHC && dt < _FPC) ? 2
+       : (dt >= _TME && dt < _FPD) ? 3
+       : (dt >= _ISE && dt < _FPE) ? 4
+       : (dt == _DTA) ? DTASize
+       : (dt == _DTB) ? DTBSize
+       : (dt == _DTC) ? DTCSize
+       : (dt == _DTD) ? DTDSize
+       : (dt == _DTE) ? DTESize
+       : (dt == _DTF) ? DTFSize
+       : (dt == _DTG) ? DTGSize
+       : (dt == _DTH) ? DTHSize
+       : (dt == _DTI) ? DTISize
+       : (dt == _DTJ) ? DTJSize
+       : (dt == _DTK) ? DTKSize
+       : (dt == _DTL) ? DTLSize
        : 0;
 }
 
@@ -205,53 +220,53 @@ unsgiend_example = AlignUp<ISC, IUB, IUB> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (ISA) - 1) = value
 @endcode */
-inline ISA AlignUp(ISA value, ISA align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+inline ISA AlignUp(ISA value, ISA align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-inline IUA AlignUp(IUA value, IUA align_lsb_mask = WordLSbMask) {
-  return IUA(AlignUp(ISA(value), ISA(align_lsb_mask)));
+inline IUA AlignUp(IUA value, IUA align_mask = WordLSbMask) {
+  return IUA(AlignUp(ISA(value), ISA(align_mask)));
 }
-inline ISB AlignUp(ISB value, ISB align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+inline ISB AlignUp(ISB value, ISB align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-inline IUB AlignUp(IUB value, IUB align_lsb_mask = WordLSbMask) {
-  return value + (IUB(-ISB(value)) & align_lsb_mask);
+inline IUB AlignUp(IUB value, IUB align_mask = WordLSbMask) {
+  return value + (IUB(-ISB(value)) & align_mask);
 }
-inline ISC AlignUp(ISC value, ISC align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+inline ISC AlignUp(ISC value, ISC align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-inline IUC AlignUp(IUC value, IUC align_lsb_mask = WordLSbMask) {
-  return value + (IUC(-ISC(value)) & align_lsb_mask);
+inline IUC AlignUp(IUC value, IUC align_mask = WordLSbMask) {
+  return value + (IUC(-ISC(value)) & align_mask);
 }
-inline ISD AlignUp(ISD value, ISD align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+inline ISD AlignUp(ISD value, ISD align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-inline IUD AlignUp(IUD value, IUD align_lsb_mask = WordLSbMask) {
-  return value + (IUD(-ISD(value)) & align_lsb_mask);
+inline IUD AlignUp(IUD value, IUD align_mask = WordLSbMask) {
+  return value + (IUD(-ISD(value)) & align_mask);
 }
-constexpr ISA CAlignUp(ISA value, ISA align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+constexpr ISA CAlignUp(ISA value, ISA align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-constexpr IUA CAlignUp(IUA value, IUA align_lsb_mask = WordLSbMask) {
-  return IUA(CAlignUp(ISA(value), ISA(align_lsb_mask)));
+constexpr IUA CAlignUp(IUA value, IUA align_mask = WordLSbMask) {
+  return IUA(CAlignUp(ISA(value), ISA(align_mask)));
 }
-constexpr ISB CAlignUp(ISB value, ISB align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+constexpr ISB CAlignUp(ISB value, ISB align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-constexpr IUB CAlignUp(IUB value, IUB align_lsb_mask = WordLSbMask) {
-  return value + (IUB(-ISB(value)) & align_lsb_mask);
+constexpr IUB CAlignUp(IUB value, IUB align_mask = WordLSbMask) {
+  return value + (IUB(-ISB(value)) & align_mask);
 }
-constexpr ISC CAlignUp(ISC value, ISC align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+constexpr ISC CAlignUp(ISC value, ISC align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-constexpr IUC CAlignUp(IUC value, IUC align_lsb_mask = WordLSbMask) {
-  return value + (IUC(-ISC(value)) & align_lsb_mask);
+constexpr IUC CAlignUp(IUC value, IUC align_mask = WordLSbMask) {
+  return value + (IUC(-ISC(value)) & align_mask);
 }
-constexpr ISD CAlignUp(ISD value, ISD align_lsb_mask = WordLSbMask) {
-  return value + ((-value) & align_lsb_mask);
+constexpr ISD CAlignUp(ISD value, ISD align_mask = WordLSbMask) {
+  return value + ((-value) & align_mask);
 }
-constexpr IUD CAlignUp(IUD value, IUD align_lsb_mask = WordLSbMask) {
-  return value + (IUD(-ISD(value)) & align_lsb_mask);
+constexpr IUD CAlignUp(IUD value, IUD align_mask = WordLSbMask) {
+  return value + (IUD(-ISD(value)) & align_mask);
 }
 
 inline void* AlignUpPTR(void* pointer, ISW mask = WordLSbMask) {
@@ -267,7 +282,7 @@ inline const void* AlignUpPTR(const void* pointer, ISW mask = WordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = CHA>
+template<typename T = CHA>
 inline T* TAlignUpPTR(void* pointer, ISW mask = WordLSbMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
@@ -277,7 +292,7 @@ inline T* TAlignUpPTR(void* pointer, ISW mask = WordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = CHA>
+template<typename T = CHA>
 inline T* TAlignUpPTR(const void* pointer, ISW mask = WordLSbMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
@@ -381,69 +396,69 @@ ISW a = TAlignUp(foo, sizeof(ISA)), //< Can't align up to a 8-bit word boundary.
     c = TAlignUp(foo, sizeof(ISC)), //< Aligns to a 32-bit word boundary.
     d = TAlignUp(foo, sizeof(ISD)); //< Aligns to a 64-bit word boundary.
 @endcode */
-template <typename I = ISW, typename DT = ISW>
+template<typename I = ISW, typename DT = ISW>
 I TAlignUp(I value) {
   return value + (TwosComplementInvert(value) & (sizeof(DT) - 1));
 }
 
 /* Aligns th given value down to the given word boundary. */
-inline ISA AlignDown(ISA value, ISA align_lsb_mask) {
-  return value + (value & align_lsb_mask);
+inline ISA AlignDown(ISA value, ISA align_mask) {
+  return value + (value & align_mask);
 }
-inline IUA AlignDown(IUA value, IUA align_lsb_mask) {
-  return IUA(AlignDown(ISA(value), ISA(align_lsb_mask)));
+inline IUA AlignDown(IUA value, IUA align_mask) {
+  return IUA(AlignDown(ISA(value), ISA(align_mask)));
 }
-inline ISB AlignDown(ISB value, ISB align_lsb_mask) {
-  return value - (value & align_lsb_mask);
+inline ISB AlignDown(ISB value, ISB align_mask) {
+  return value - (value & align_mask);
 }
-inline IUB AlignDown(IUB value, IUB align_lsb_mask) {
-  return value - (value & align_lsb_mask);
+inline IUB AlignDown(IUB value, IUB align_mask) {
+  return value - (value & align_mask);
 }
-inline ISC AlignDown(ISC value, ISC align_lsb_mask) {
-  return value + (value & align_lsb_mask);
+inline ISC AlignDown(ISC value, ISC align_mask) {
+  return value + (value & align_mask);
 }
-inline IUC AlignDown(IUC value, IUC align_lsb_mask) {
-  return value - (value & align_lsb_mask);
+inline IUC AlignDown(IUC value, IUC align_mask) {
+  return value - (value & align_mask);
 }
-inline ISD AlignDown(ISD value, ISD align_lsb_mask) {
-  return value - (value & align_lsb_mask);
+inline ISD AlignDown(ISD value, ISD align_mask) {
+  return value - (value & align_mask);
 }
-inline IUD AlignDown(IUD value, IUD align_lsb_mask) {
-  return value - (value & align_lsb_mask);
+inline IUD AlignDown(IUD value, IUD align_mask) {
+  return value - (value & align_mask);
 }
-constexpr ISA CAlignDown(ISA value, ISA align_lsb_mask = WordLSbMask) {
-  return value - (value & align_lsb_mask);
+constexpr ISA CAlignDown(ISA value, ISA align_mask = WordLSbMask) {
+  return value - (value & align_mask);
 }
-constexpr IUA CAlignDown(IUA value, IUA align_lsb_mask = WordLSbMask) {
-  return value + (value & align_lsb_mask);
+constexpr IUA CAlignDown(IUA value, IUA align_mask = WordLSbMask) {
+  return value + (value & align_mask);
 }
-constexpr ISB CAlignDown(ISB value, ISB align_lsb_mask = WordLSbMask) {
-  return value + (value & align_lsb_mask);
+constexpr ISB CAlignDown(ISB value, ISB align_mask = WordLSbMask) {
+  return value + (value & align_mask);
 }
-constexpr IUB CAlignDown(IUB value, IUB align_lsb_mask = WordLSbMask) {
-  return value + (value & align_lsb_mask);
+constexpr IUB CAlignDown(IUB value, IUB align_mask = WordLSbMask) {
+  return value + (value & align_mask);
 }
-constexpr ISC CAlignDown(ISC value, ISC align_lsb_mask = WordLSbMask) {
-  return value - (value & align_lsb_mask);
+constexpr ISC CAlignDown(ISC value, ISC align_mask = WordLSbMask) {
+  return value - (value & align_mask);
 }
-constexpr IUC CAlignDown(IUC value, IUC align_lsb_mask = WordLSbMask) {
-  return value + (value & align_lsb_mask);
+constexpr IUC CAlignDown(IUC value, IUC align_mask = WordLSbMask) {
+  return value + (value & align_mask);
 }
-constexpr ISD CAlignDown(ISD value, ISD align_lsb_mask = WordLSbMask) {
-  return value - (value & align_lsb_mask);
+constexpr ISD CAlignDown(ISD value, ISD align_mask = WordLSbMask) {
+  return value - (value & align_mask);
 }
-constexpr IUD CAlignDown(IUD value, IUD align_lsb_mask = WordLSbMask) {
-  return value + (value & align_lsb_mask);
+constexpr IUD CAlignDown(IUD value, IUD align_mask = WordLSbMask) {
+  return value + (value & align_mask);
 }
 
 /* Calculates the size_bytes in size_words. */
-template <typename IS>
+template<typename IS>
 inline IS TSizeWords(IS size) {
   return AlignUp(size) >> WordBitCount;
 }
 
 
-template <typename IS>
+template<typename IS>
 constexpr IS CSizeWords(IS size) {
   IS size_aligned = size + ((-size) & WordLSbMask);
   size_aligned = size_aligned >> WordBitCount;
@@ -451,11 +466,11 @@ constexpr IS CSizeWords(IS size) {
 }
 
 /* Converts the given size into CPU word count. */
-template <typename IS = ISW>
+template<typename IS = ISW>
 inline IS TWordCount(IS size) {
   IS align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
-  return size >> TBitCount<ISW>();
+  return size >> CBitWidth<ISW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -473,7 +488,7 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = IUW>
+template<typename T = IUW>
 inline T* TAlignDownPTR(void* ptr, ISW mask = WordLSbMask) {
   IUW value = IUW(ptr);
   return TPtr<T>(value - (value & mask));
@@ -483,7 +498,7 @@ inline T* TAlignDownPTR(void* ptr, ISW mask = WordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename T = IUW>
+template<typename T = IUW>
 inline const T* TAlignDownPTR(const void* ptr, ISW mask = WordLSbMask) {
   IUW value = IUW(ptr);
   return TPtr<const T>(value - (value & mask));
@@ -493,30 +508,30 @@ inline const T* TAlignDownPTR(const void* ptr, ISW mask = WordLSbMask) {
 @return The aligned value.
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
-template <typename IS = IUW>
+template<typename IS = IUW>
 inline IS TAlignDownI(IS value, IS mask = (IS)WordLSbMask) {
   return value & (~mask);
 }
 
 /* Aligns the given size to a word-sized boundary. */
-template <typename IS>
+template<typename IS>
 constexpr IS CSizeAlign(IS size) {
-  IS align_lsb_mask = sizeof(IUW) - 1;
+  IS align_mask = sizeof(IUW) - 1;
   if (size < sizeof(IUW)) return sizeof(IUW);
-  IS size_max = ~align_lsb_mask;
+  IS size_max = ~align_mask;
   if (size > size_max) return size;
-  return size + (-size) & align_lsb_mask;
+  return size + (-size) & align_mask;
 }
 
 /* Gets a value of type T. */
-template <typename T>
+template<typename T>
 inline T TGet(const void* ptr) {
   return *TPtr<const T>(ptr);
 }
 
 /* Writes the value to the address.
 @pre User must ensure start is never nil. */
-template <typename T = CHA>
+template<typename T = CHA>
 inline T* TSet(void* address, T value) {
   T* cursor = TPtr<T>(address);
   *cursor = value;
@@ -524,18 +539,18 @@ inline T* TSet(void* address, T value) {
 }
 
 /* Masks off the lower bits. */
-template <typename IU>
+template<typename IU>
 inline IU TMaskLSb(IU value, IU msb_zero_count) {
   IU mask = (~IU(0)) >> msb_zero_count;
   return value & mask;
 }
 
 /* Unsigned Not-a-number_ is any number_ that can't be aligned up properly. */
-template <typename IU>
+template<typename IU>
 inline IU TUnsignedNaN() {
   return (~IU(0));
 }
-template <typename IU>
+template<typename IU>
 inline IU CUnsignedNaN() {
   return (~IU(0));
 }
@@ -565,21 +580,21 @@ constexpr ISC CSignedMin(ISC one) {
 constexpr ISD CSignedMin(ISD one) {
   return ISD(IUD(one) << (sizeof(ISD) * 8 - 1));
 }
-template <typename IS>
+template<typename IS>
 inline IS TSignedMin() {
   return SignedMin(IS(1));
 }
-template <typename IS>
+template<typename IS>
 constexpr IS CSignedMin() {
   return CSignedMin(IS(1));
 }
 
 /* ASCII Signed Not-a-Number is the lowest possible signed integer value. */
-template <typename IS>
+template<typename IS>
 inline IS TSignedNaN() {
   return TSignedMin<IS>() - 1;
 }
-template <typename IS>
+template<typename IS>
 constexpr IS CSignedNaN() {
   return TSignedNaN<IS>();
 }
@@ -597,7 +612,7 @@ inline IUA UnsignedMax(ISA zero) { return ~IUA(zero); }
 inline IUB UnsignedMax(ISB zero) { return ~IUB(zero); }
 inline IUC UnsignedMax(ISC zero) { return ~IUC(zero); }
 inline IUD UnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename IU>
+template<typename IU>
 inline IU TUnsignedMax() {
   return UnsignedMax(IU(0));
 }
@@ -605,7 +620,7 @@ constexpr IUA CUnsignedMax(ISA zero) { return ~IUA(zero); }
 constexpr IUB CUnsignedMax(ISB zero) { return ~IUB(zero); }
 constexpr IUC CUnsignedMax(ISC zero) { return ~IUC(zero); }
 constexpr IUD CUnsignedMax(ISD zero) { return ~IUD(zero); }
-template <typename IS>
+template<typename IS>
 constexpr IS CUnsignedMax() {
   return CUnsignedMax(IS(0));
 }
@@ -623,7 +638,7 @@ inline ISA SignedMax(ISA zero) { return ISA(UnsignedMax(zero) >> 1); }
 inline ISB SignedMax(ISB zero) { return ISB(UnsignedMax(zero) >> 1); }
 inline ISC SignedMax(ISC zero) { return ISC(UnsignedMax(zero) >> 1); }
 inline ISD SignedMax(ISD zero) { return ISD(UnsignedMax(zero) >> 1); }
-template <typename IS>
+template<typename IS>
 inline IS TSignedMax() {
   return SignedMax(IS(0));
 }
@@ -632,7 +647,7 @@ constexpr ISB CSignedMax(ISB zero) { return ISB(CUnsignedMax(zero) >> 1); }
 constexpr ISC CSignedMax(ISC zero) { return ISC(CUnsignedMax(zero) >> 1); }
 constexpr ISD CSignedMax(ISD zero) { return ISD(CUnsignedMax(zero) >> 1); }
 
-template <typename IS>
+template<typename IS>
 constexpr IS CSignedMax() {
   return CSignedMax(IS(0));
 }
@@ -648,7 +663,7 @@ inline BOL IsNaN(ISD value) { return value == TSignedNaN<ISD>(); }
 inline BOL IsNaN(IUD value) { return value == TUnsignedNaN<IUD>(); }
 
 /* Gets the number of bits in the exponent of a floating-point number. */
-template <typename IU>
+template<typename IU>
 inline IU TFloatExponentBitCount() {
   return (sizeof(IU) == 2)
              ? 5
@@ -670,7 +685,7 @@ x << 2  4: 0 00000000000 1111111111111111111111111111111111111111111111111100
 ~x      5: 1 11111111111 0000000000000000000000000000000000000000000000000011
 x >> 1  6: 0 11111111111 1000000000000000000000000000000000000000000000000001
 */
-template <typename IU>
+template<typename IU>
 inline IU TNaNFloatMask() {
   IU y = sizeof(IU) * 8 - TFloatExponentBitCount<IU>() + 2;
   return (~(((~IU(0)) >> y) << 2)) << 1;
@@ -703,7 +718,7 @@ manually if you wish to do so.
 @param value The value to mask.
 @param left_bits Number of bits to shift left.
 @param right_bits Number of bits to shift right. */
-template <typename IU>
+template<typename IU>
 inline IU TShiftLeftRight(IU value, ISC left_bits, ISC right_bits) {
   value = value << left_bits;
   return value >> right_bits;
@@ -730,7 +745,7 @@ inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename T = void*, ISW PowerOf2>
+template<typename T = void*, ISW PowerOf2>
 const T* TAlignUpPointer(const void* value) {
   return AlignUpPTR(value, PowerOf2 - 1);
 }
@@ -739,7 +754,7 @@ const T* TAlignUpPointer(const void* value) {
 This function is for those not familiar with how Script2 does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
-template <typename T = void*, ISW PowerOf2>
+template<typename T = void*, ISW PowerOf2>
 T* TAlignUpPointer(void* value) {
   return AlignUpPTR(value, PowerOf2 - 1);
 }

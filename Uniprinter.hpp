@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Uniprinter.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -11,14 +11,14 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_UNIPRINTER_TEMPLATES
 #define SCRIPT2_UNIPRINTER_TEMPLATES
 #include "Stringf.h"
-#include "TypeValue.hpp"
+#include "Types.hpp"
 namespace _ {
 
 /* Prints the given string to the Printer. */
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 Printer& TSPrintString(Printer& o, const CHT* string) {
   if (!string) return o;
-  CHL c;
+  CHL c = 0;
   string = SScan(string, c);
   while (c) {
     o << c;
@@ -29,11 +29,11 @@ Printer& TSPrintString(Printer& o, const CHT* string) {
 
 /* Prints the given string to the Printer and returns the count of characters
 printed. */
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 ISN TPrintAndCount(Printer& o, const CHT* string) {
   if (!string) return 0;
   ISN print_count = 0;
-  CHL c;
+  CHL c = 0;
   string = SScan(string, c);
   while (c) {
     o << c;
@@ -44,7 +44,7 @@ ISN TPrintAndCount(Printer& o, const CHT* string) {
 }
 
 /* Prints the following item to the console in Hex. */
-template <typename Printer, typename IU>
+template<typename Printer, typename IU>
 Printer& TPrintHex(Printer& o, IU item) {
   enum { cHexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
   auto ui = ToUnsigned(item);
@@ -56,24 +56,24 @@ Printer& TPrintHex(Printer& o, IU item) {
 }
 
 /* Prints the following item to the console in Hex. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHex(Printer& o, const void* item) {
   IUW ptr = IUW(item);
   return TPrintHex<Printer, IUW>(o, ptr);
 }
-template <typename Printer, typename IS, typename IU>
+template<typename Printer, typename IS, typename IU>
 Printer& TPrintHex(Printer& o, IS item) {
   return TPrintHex<Printer, IU>(o, IU(item));
 }
 #if USING_FPC == YES_0
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHex(Printer& o, FPC item) {
   IUC value = *TPtr<IUC>(&item);
   return TPrintHex<Printer, IUC>(o, value);
 }
 #endif
 #if USING_FPD == YES_0
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHex(Printer& o, FPD item) {
   IUD value = *TPtr<IUD>(&item);
   return TPrintHex<Printer, IUD>(o, value);
@@ -88,7 +88,7 @@ little endian is that it's easier to read the hex values when you print them,
 which is frutrating because of how simple the conversion code is. If the
 byte_count is greater than zero then the memory will be printed sequentially
 one byte at a time. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHex(Printer& o, const void* origin, ISW byte_count) {
   if (!origin) return o;
   ISW delta;
@@ -117,14 +117,14 @@ Printer& TPrintHex(Printer& o, const void* origin, ISW byte_count) {
   return o;
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHex(Printer& o, const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
   return TPrintHex<Printer>(o, start, delta);
 }
 
 /* Prints the memory beginning at start to the Printer. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintBinary(Printer& o, const void* start, ISW byte_count) {
   if (!start) return o;
   const IUA* cursor = TPtr<const IUA>(start);
@@ -149,13 +149,13 @@ Printer& TPrintBinary(Printer& o, const void* start, ISW byte_count) {
   return o;
 }
 
-template <typename Printer>
+template<typename Printer>
 inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
   return TPrintBinary<Printer>(o, start, TPtr<const void>(delta));
 }
 
-template <typename Printer, typename IU>
+template<typename Printer, typename IU>
 Printer& TPrintBinary(Printer& o, IU item) {
   enum { cSize = sizeof(IU) * 8 };
   auto ui = ToUnsigned(item);
@@ -167,26 +167,26 @@ Printer& TPrintBinary(Printer& o, IU item) {
   return o;
 }
 
-template <typename Printer, typename IS, typename IU>
+template<typename Printer, typename IS, typename IU>
 Printer& TPrintBinary(Printer& o, IS item) {
   return TPrintBinary<Printer, IU>(o, (IU)item);
 }
 #if USING_FPC == YES_0
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintBinary(Printer& o, FPC item) {
   IUC value = *TPtr<IUC>(&item);
   return TPrintBinary<Printer, IUC>(o, value);
 }
 #endif
 #if USING_FPC == YES_0
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintBinary(Printer& o, FPD item) {
   IUD value = *TPtr<IUD>(&item);
   return TPrintBinary<Printer, IUD>(o, value);
 }
 #endif
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintAligned(Printer& o, const CHA* string, ISW char_count,
                        ISW left_count, ISW dot_count, ISW right_count) {
   while (--left_count > 0) o << ' ';
@@ -210,7 +210,7 @@ Printer& TPrintAligned(Printer& o, const CHA* string, ISW char_count,
 pointer to the nil-term CHA upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 Printer& TPrintCenter(Printer& o, const CHT* item, ISW column_count = 80) {
   if (!item || column_count < 1) return o;
 
@@ -236,7 +236,7 @@ Printer& TPrintCenter(Printer& o, const CHT* item, ISW column_count = 80) {
   return o;
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintAlignedHex(Printer& o, const void* origin, ISW byte_count,
                           ISW left_count, ISW dot_count, ISW right_count) {
   const CHA* cursor = TPtr<const CHA>(origin);
@@ -250,7 +250,7 @@ Printer& TPrintAlignedHex(Printer& o, const void* origin, ISW byte_count,
 
 /* Prints th given item centered unless it's count is less then 0, in which
 case it will print the POD value stored in the first Word of the string. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintCenter(Printer& o, Stringf& item) {
   ISW column_count = item.Count();
   if (column_count < 0) {  // Print hex.
@@ -304,7 +304,7 @@ Printer& TPrintCenter(Printer& o, Stringf& item) {
 pointer to the nil-term CHA upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 Printer& TPrintRight(Printer& o, const CHT* item, ISW column_count = 80) {
   if (!item || column_count < 1) return o;
 
@@ -336,7 +336,7 @@ Printer& TPrintRight(Printer& o, const CHT* item, ISW column_count = 80) {
 
 /* Prints the given item centered, printing it as hex if the item.Count() is
 less than 0. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintRight(Printer& o, Stringf& item) {
   ISW column_count = item.Count();
   if (column_count < 0) {  // Print hex.
@@ -382,20 +382,20 @@ Printer& TPrintRight(Printer& o, Stringf& item) {
   return o;
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintIndent(Printer& o, ISW indent_count) {
   o << '\n';
   while (--indent_count >= 0) o << ' ';
   return o;
 }
 
-template <typename Printer, typename CHT>
+template<typename Printer, typename CHT>
 Printer& TPrintRepeat(Printer& o, CHT c, ISW count) {
   while (--count >= 0) o << c;
   return o;
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 const CHT* TSTRLinef() {
   static const CHT kString[] = {'\n', '\n', '-', '-', '-', '\n', NIL};
   return kString;
@@ -427,7 +427,7 @@ TPrintBreak<CHA> ("- \n---\n---\n\n   Foo\n\n---\n---", 10);
 //>>> -----------
 @endcode
 */
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 const CHT* TPrintLinef(Printer& o, const CHT* style = nullptr,
                        ISW column_count = 80) {
   enum {
@@ -473,55 +473,55 @@ const CHT* TPrintLinef(Printer& o, const CHT* style = nullptr,
   return style;
 }
 
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 Printer& TPrintLine(Printer& o, CHT token = '-', ISW column_count = 80) {
   o << '\n';
   TPrintRepeat<Printer, CHT>(o, token, column_count);
   return o << '\n';
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintLinef(Printer& o, Linef& item) {
   ISW type = item.element.value.Type(),  //
       utf_format = _::TypeTextFormat(type);
   switch (utf_format) {
 #if USING_UTF8 == YES_0
-    case cSTA: {
+    case _STA: {
       _::TPrintLinef<Printer, CHA>(o, item.element.ToSTA(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF16 == YES_0
-    case cSTB: {
+    case _STB: {
       _::TPrintLinef<Printer, CHB>(o, item.element.ToSTB(), item.element.count);
       break;
     }
 #endif
 #if USING_UTF32 == YES_0
-    case cSTC: {
+    case _STC: {
       const CHC* start = TPtr<const CHC>(item.element.value.ToPTR());
       _::TPrintLinef<Printer, CHC>(o, item.element.ToSTC(), item.element.count);
       break;
     }
 #endif
     case -1: {
-      switch (type & cTypePODMask) {
+      switch (type & PODTypeMask) {
 #if USING_UTF8 == YES_0
-        case cCHA: {
+        case _CHA: {
           CHA c = (CHA)item.element.value.Word();
           _::TPrintLine<Printer, CHA>(o, c, item.element.count);
           break;
         }
 #endif
 #if USING_UTF16 == YES_0
-        case cCHB: {
+        case _CHB: {
           CHB c = (CHB)item.element.value.Word();
           _::TPrintLine<Printer, CHB>(o, c, item.element.count);
           break;
         }
 #endif
 #if USING_UTF32 == YES_0
-        case cCHC: {
+        case _CHC: {
           CHC c = (CHC)item.element.value.Word();
           _::TPrintLine<Printer, CHC>(o, c, item.element.count);
           break;
@@ -533,7 +533,7 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
   return o;
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 const CHT* TSTRHeadingf() {
   static const CHT kString[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
                                 NIL,  '\n', '+', '-', '-', '-', '\n', NIL};
@@ -541,7 +541,7 @@ const CHT* TSTRHeadingf() {
 }
 
 /* Prints a heading with the */
-template <typename Printer, typename CHT>
+template<typename Printer, typename CHT>
 Printer& TPrintHeadingf(Printer& o, const CHT* element,
                         const CHA* style = nullptr, ISW column_count = 80,
                         const CHA* caption2 = nullptr,
@@ -557,7 +557,7 @@ Printer& TPrintHeadingf(Printer& o, const CHT* element,
 }
 
 /* Prints the a formatted header. */
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintHeadingf(Printer& o, Headingf& item) {
   switch (_::TypeTextFormat(item.element.Type())) {
 #if USING_UTF8 == YES_0
@@ -585,7 +585,7 @@ Printer& TPrintHeadingf(Printer& o, Headingf& item) {
   return o;
 }
 
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 Printer& TPrintChars(Printer& o, const CHT* start, const CHT* stop) {
   if (!start || start >= stop) return o;
 
@@ -613,12 +613,12 @@ Printer& TPrintChars(Printer& o, const CHT* start, const CHT* stop) {
   return o << STRPrintCharsBorder() << "Chars printed:" << size_bytes;
 }
 
-template <typename Printer, typename CHT = CHR>
+template<typename Printer, typename CHT = CHR>
 inline Printer& TPrintChars(Printer& o, const CHT* start, ISW count) {
   return TPrintChars<Printer, CHT>(o, start, start + count - 1);
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TPrintChars(Printer& o, Charsf& item) {
   Valuef& element = item.element;
   ISW count = element.Count();
@@ -643,18 +643,18 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
       o, TPtr<CHA>(element.Value()), count);
 }
 
-template <typename Printer, typename DT = DTB>
+template<typename Printer, typename DT = DTB>
 Printer& TPrintTypePOD(Printer& o, DT type) {
-  DT pod_type    = type & cTypePODMask,    //
+  DT pod_type    = type & PODTypeMask,    //
      vector_type = TTypeVector<DT>(type),  //
      map_type    = TTypeMap<DT>(type);     //
 }
 
-/* Prints the given type to the printer. */
-template <typename Printer, typename DT = DTB>
+/* Prints the given type to the printer. #duplicate
+template<typename Printer, typename DT = DTB>
 Printer& TPrintType(Printer& printer, DT type) {
   if (type == 0) return printer << "NIL";
-  DT pod_type = type & cTypePODMask;
+  DT pod_type = type & PODTypeMask;
   if (pod_type == 0) return printer << "BGN" << (type >> TypePODBitCount);
   DT vector_type = TTypeVector<DT>(type);
   if (vector_type) {
@@ -665,80 +665,80 @@ Printer& TPrintType(Printer& printer, DT type) {
     return printer << STRTypePOD(map_type) << '_' << STRTypePOD(pod_type);
   }
   return printer;
-}
+} */
 
-template <typename Printer, typename DT = DTB>
+template<typename Printer, typename DT = DTB>
 Printer& TPrintTypeValue(Printer& printer, DT type, const void* item) {
   switch (type) {
-    case cNIL:
+    case _NIL:
       return printer;
-    case cCHA:
-      printer << *TDelta<const CHA*>(item);
+    case _CHA:
+      printer << *TPtr<const CHA>(item);
       return printer;
-    case cISA:
-      printer << *TDelta<const ISA*>(item);
+    case _ISA:
+      printer << *TPtr<const ISA>(item);
       return printer;
-    case cIUA:
-      printer << *TDelta<const IUA*>(item);
+    case _IUA:
+      printer << *TPtr<const IUA>(item);
       return printer;
-    case cCHB:
-      printer << *TDelta<const CHB*>(item);
+    case _CHB:
+      printer << *TPtr<const CHB>(item);
       return printer;
-    case cISB:
-      printer << *TDelta<const ISB*>(item);
+    case _ISB:
+      printer << *TPtr<const ISB>(item);
       return printer;
-    case cIUB:
-      printer << *TDelta<const IUB*>(item);
+    case _IUB:
+      printer << *TPtr<const IUB>(item);
       return printer;
-    case cFPB:
-      printer << *TDelta<const FPB*>(item);
+    case _FPB:
+      printer << *TPtr<const FPB>(item);
       return printer;
-    case cBOL:
-      printer << *TDelta<const BOL*>(item);
+    case _BOL:
+      printer << *TPtr<const BOL>(item);
       return printer;
-    case cCHC:
-      printer << *TDelta<const CHC*>(item);
+    case _CHC:
+      printer << *TPtr<const CHC>(item);
       return printer;
-    case cISC:
-      printer << *TDelta<const ISC*>(item);
+    case _ISC:
+      printer << *TPtr<const ISC>(item);
       return printer;
-    case cIUC:
-      printer << *TDelta<const IUC*>(item);
+    case _IUC:
+      printer << *TPtr<const IUC>(item);
       return printer;
-    case cFPC:
-      printer << *TDelta<const FPC*>(item);
+    case _FPC:
+      printer << *TPtr<const FPC>(item);
       return printer;
-    case cTME:
+    case _TME:
       printer << "TME Fix me!";
-      //printer << *TDelta<const TME*>(item);
+      //printer << *TPtr<const TME>(item);
       return printer;
-    case cISD:
-      printer << *TDelta<const ISD*>(item);
+    case _ISD:
+      printer << *TPtr<const ISD>(item);
       return printer;
-    case cIUD:
-      printer << *TDelta<const IUD*>(item);
+    case _IUD:
+      printer << *TPtr<const IUD>(item);
       return printer;
-    case cFPD:
-      printer << *TDelta<const FPD*>(item);
+    case _FPD:
+      printer << *TPtr<const FPD>(item);
       return printer;
-    case cISE:
+    case _ISE:
       printer << "ISE Fix me!";
-      //printer << *TDelta<const ISE*>(item);
+      //printer << *TPtr<const ISE>(item);
       return printer;
-    case cIUE:
+    case _IUE:
       printer << "Fix me!";
-      //printer << *TDelta<const IUE*>(item);
+      //printer << *TPtr<const IUE>(item);
       return printer;
-    case cFPE:
+    case _FPE:
       printer << "Fix me!";
-      //printer << *TDelta<const FPE*>(item);
+      //printer << *TPtr<const FPE>(item);
       return printer;
   }
   return printer;
 }
 
 
-template <typename Printer, typename DT = DTB>
+template<typename Printer, typename DT = DTB>
 Printer& TPrintTypeValueSummary(Printer& printer, DT type, const void* item) {
   return printer << "Your mom";
 }

@@ -37,4 +37,4 @@ Mission
 
 ## License
 
-Copyright 2023 [Kabuki Starship](https://kabukistarship.com); all rights reserved.
+Copyright [Kabuki Starship](https://kabukistarship.com); all rights reserved.

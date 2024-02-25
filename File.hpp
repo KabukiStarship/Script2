@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /File.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -99,7 +99,7 @@ enum { cFilenameLengthMax = 256 };
 #define _TINYDIR_FREE(_ptr) free(_ptr)
 #endif /* !defined(_TINYDIR_MALLOC) */
 
-template <typename CHT>
+template<typename CHT>
 class TFile {
   CHR *extension;
   ISN is_directory_,  //< flag for if this is a directory.
@@ -220,7 +220,7 @@ class TFile {
   }
 };
 
-template <typename CHT>
+template<typename CHT>
 class TFolder {
   CHR path_[cPathLengthMax];
   ISN has_next_;

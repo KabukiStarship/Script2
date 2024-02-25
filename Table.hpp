@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Table.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -68,7 +68,7 @@ from lower address up.
 +--------------------------------------+ 0x0
 @endcode
 */
-template <typename ISZ, typename ISY>
+template<typename ISZ, typename ISY>
 struct TTable {
   ISZ size_bytes,  //< Size of this object in bytes.
       size_pile;   //< Size of the collision table pile.
@@ -81,38 +81,38 @@ enum {
 };
 
 /* Checks of the given index is valid. */
-template <typename ISY>
+template<typename ISY>
 inline BOL TIndexIsValid(ISY index) {
   return index >= 0;
 }
 
-template <typename ISZ = ISN, typename ISY = ISM>
+template<typename ISZ = ISN, typename ISY = ISM>
 inline ISZ TTableEntryOverhead() {
   return 2 * (sizeof(ISZ) + sizeof(ISY));
 }
 
-template <TARGS, ISZ cCountMax = 32, ISZ cAverageStringLength = 16>
+template<TARGS, ISZ cCountMax = 32, ISZ cAverageStringLength = 16>
 constexpr ISZ CTableSize() {
   return sizeof(TTable<ISZ, ISY>) + 
          2 * cCountMax * (sizeof(ISZ) + sizeof(ISY)) + 
          cCountMax * (cAverageStringLength + 1);
 }
 
-template <TARGS>
+template<TARGS>
 constexpr ISZ CTableSize(ISZ count_max, ISZ average_string_length = 24) {
   return sizeof(TTable<ISZ, ISY>) + 
          2 * count_max * (sizeof(ISZ) + sizeof(ISY)) +
          count_max * (average_string_length + 1);
 }
 
-template <TARGS>
+template<TARGS>
 inline CHT* TTableKeysStop(TTable<ISZ, ISY>* table, ISZ size_bytes) {
   return TPtr<CHT>(table, size_bytes) - 1;
 }
 
 #if USING_STR
 /* Prints this object out to the console. */
-template <typename Printer, TARGS>
+template<typename Printer, TARGS>
 Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
   D_ASSERT(table);
   enum {
@@ -173,7 +173,7 @@ Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
 
 /* Creates a streamable hash table with enough socket space for the
 count_max. */
-template <TARGS>
+template<TARGS>
 TTable<ISZ, ISY>* TTableInit(TTable<ISZ, ISY>* table, ISY height, ISZ size_bytes) {
   D_ASSERT(table);
 
@@ -199,7 +199,7 @@ TTable<ISZ, ISY>* TTableInit(TTable<ISZ, ISY>* table, ISY height, ISZ size_bytes
   return table;
 }
 
-template <TARGS>
+template<TARGS>
 inline TTable<ISZ, ISY>* TTableInit(IUW* socket, ISY count_max, ISZ size) {
   auto table = TPtr<TTable<ISZ, ISY>>(socket);
   return TTableInit<TPARAMS>(table, count_max, size);
@@ -207,7 +207,7 @@ inline TTable<ISZ, ISY>* TTableInit(IUW* socket, ISY count_max, ISZ size) {
 
 /* Adds the key to the table.
 @return An invalid index upon failure or valid index upon success. */
-template <TARGS>
+template<TARGS>
 ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
   D_ASSERT(table);
   D_ASSERT(key);
@@ -361,7 +361,7 @@ ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
 /* Attempts to find the given key.
 @return Returns TTableInvalidIndex<ISY>() upon failure, and valid index upon
 success. */
-template <TARGS>
+template<TARGS>
 ISY TTableFind(const TTable<ISZ, ISY>* table, const CHT* key) {
   D_ASSERT(table);
   ISY count = table->count, count_max = table->count_max;
@@ -466,7 +466,7 @@ ISY TTableFind(const TTable<ISZ, ISY>* table, const CHT* key) {
 
 /* Gets the given key.
 @return Returns the index it go inserted into. */
-template <TARGS>
+template<TARGS>
 inline CHT* TTableGet(TTable<ISZ, ISY>* table, ISY index) {
   ISY count = table->count;
   if (index < 0 || index >= count) return nullptr;
@@ -479,7 +479,7 @@ inline CHT* TTableGet(TTable<ISZ, ISY>* table, ISY index) {
 }
 
 /* Removes the string at the given index. */
-template <TARGS>
+template<TARGS>
 ISY TTableRemove(TTable<ISZ, ISY>* table, ISY index) {
   D_ASSERT(table);
   D_COUT("\nBefore:");
@@ -506,20 +506,20 @@ ISY TTableRemove(TTable<ISZ, ISY>* table, ISY index) {
   return count;
 }
 
-template <TARGS>
+template<TARGS>
 CHA* TTableEnd(TTable<ISZ, ISY>* table) {
   return TPtr<CHA>(table) + table->size_bytes;
 }
 
 /* Removes the given key from the table. */
-template <TARGS>
+template<TARGS>
 ISY TTableRemove(TTable<ISZ, ISY>* table, const CHT* key) {
   ISY index = TTableFind<TPARAMS>(table, key);
   return TTableRemove<TPARAMS>(table, index);
 }
 
 /* An ASCII Table Autoject. */
-template <TARGS,
+template<TARGS,
           ISY cCountMax = 32,
           typename BUF =
               TBUF<CTableSize<TPARAMS, cCountMax>(), ISA, ISZ, TTable<ISZ, ISY>>>
@@ -574,7 +574,7 @@ class ATable {
   inline AArray<CHT, ISZ, BUF>& Array() { return obj_; }
 
 #if USING_STR
-  template <typename Printer>
+  template<typename Printer>
   inline Printer& PrintTo(Printer& o) {
     return TTablePrint<Printer, TPARAMS>(o, This());
   }

@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/04.SPrinter.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_SPRINTER
 #include "../Array.hpp"
@@ -20,7 +20,7 @@ using namespace _;
 
 namespace Script2 {
 #if SEAM >= SCRIPT2_SPRINTER
-template <typename CHT = CHR, typename IS = ISN>
+template<typename CHT = CHR, typename IS = ISN>
 static const CHT* TestSPrinter() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",IS"
                     << sizeof(IS) << ">\n\n"

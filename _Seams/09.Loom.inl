@@ -1,11 +1,10 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/09.Loom.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-20 Cale McCollough
-<<cookingwithcale.org>>; all right reserved (R). This Source Code
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
 Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at
+the MPL was not distributed with this file, You can obtain one at 
 <https://mozilla.org/MPL/2.0/>. */
 
 #if SEAM >= SCRIPT2_LOOM
@@ -20,7 +19,7 @@ using namespace _;
 #endif
 
 namespace Script2 {
-template <typename CHT = CHR, typename ISZ = ISN, typename ISY = ISN>
+template<typename CHT = CHR, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
 
@@ -28,7 +27,7 @@ void TestLoom() {
     cSize = 192 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ALoom<CH" << CSizef<CHT>() << ",IS" << CSizef<ISZ>()
+  D_COUT("Testing ALoom<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>()
          << "> with cSize:" << cSize << " and cCount:" << cCount);
 
   ALoom<CHT, ISZ, ISY, cSize, TBUF<cSize>> loom(cCount);

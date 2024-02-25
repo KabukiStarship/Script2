@@ -1,11 +1,11 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /_Seams/11.Book.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_BOOK
 #include "../Book.hpp"
 //
@@ -22,37 +22,37 @@ using namespace _;
 #include "../_Release.inl"
 #endif
 namespace Script2 {
-template <typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
-          typename CHT = CHR, typename DT = DTB>
+template<typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
+         typename CHT = CHR, typename  DT = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    cSizeBytes = 256 * sizeof(CHT)
+    SizeBytes = 512 * sizeof(CHT)
   };
 
-  D_COUT("\n\nTesting ABook<IS" << CSizef<ISZ>() << ",IU" << CSizef<IUZ>() << ",IS"
-         << CSizef<ISY>() << ",CH" << CSizef<CHT>() << "> with cSizeBytes:" 
-         << cSizeBytes);
+  D_COUT("\n\nTesting ABook<IS" << TSizef<ISZ>() << ",IU" << TSizef<IUZ>() << 
+         ",IS" << TSizef<ISY>() << ",CH" << TSizef<CHT>() << 
+         "> with SizeBytes:" << SizeBytes);
 
-  ABook<TPARAMS, cSizeBytes> book;
+  ABook<TPARAMS, SizeBytes> book;
 
-  D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes()
-         << " book.Count():" << book.Count()
-         << " book.CountMax():" << book.CountMax());
+  D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes() << 
+         " book.Count():" << book.Count() << 
+         " book.CountMax():" << book.CountMax());
 #if D_THIS
   D_COUT("\nPrinting empty book:\n");
   book.COut();
 #endif
 
-  ISZ count_max = book.CountMax();
-  D_COUT("\nPopulating " << count_max << " test words...");
+  ISZ test_word_count = book.CountMax();
+  D_COUT("\nPopulating " << test_word_count << " test words...");
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
   ISZ word_step = TTestWords<CHT>::CharsMax;
   D_COUT("Step 0:\n");
   D_COUT(Charsf(book.This(), book.SizeBytes()));
-  for (ISY i = 0; i < count_max; ++i) {
+  for (ISY i = 0; i < test_word_count; ++i) {
     D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
     book.COut();
@@ -69,7 +69,6 @@ void TestBook() {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
     book.COut();
     D_COUT("\nStep 6:\n" << Charsf(book.This(), book.SizeBytes()));
-    D_COUT("\nLoom size: " << book.This()->values->size_bytes);
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
     book.COut();
     D_COUT("\nStep 7:\n" << Charsf(book.This(), book.SizeBytes()));
@@ -78,14 +77,12 @@ void TestBook() {
     D_COUT("\nStep 8:\n" << Charsf(book.This(), book.SizeBytes()));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
     book.COut();
-    D_COUT("\nStep 9:\n" << Charsf(book.This(), book.SizeBytes()));
-    D_COUT("\n\nFoo baby!\n\n");
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = ISY(count_max - 1); i < ISY(TTestWords<CHT>::cWordsMax) - count_max;
-       ++i) {
+  for (ISY i = ISY(test_word_count - 1); 
+       i < ISY(TTestWords<CHT>::WordsMax) - test_word_count; ++i) {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
@@ -99,7 +96,7 @@ void TestBook() {
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
-  CHT large_string[cSizeBytes] = {0};
+  CHT large_string[SizeBytes] = {0};
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;

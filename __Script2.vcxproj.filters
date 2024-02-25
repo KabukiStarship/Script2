@@ -102,7 +102,7 @@
     <None Include="Test.inl">
       <Filter>./</Filter>
     </None>
-    <None Include="TypeValue.inl">
+    <None Include="Types.inl">
       <Filter>./</Filter>
     </None>
     <None Include="_Seams\10.List.inl">
@@ -344,10 +344,10 @@
     <ClInclude Include="Test.hpp">
       <Filter>./</Filter>
     </ClInclude>
-    <ClInclude Include="TypeValue.h">
+    <ClInclude Include="Types.h">
       <Filter>./</Filter>
     </ClInclude>
-    <ClInclude Include="TypeValue.hpp">
+    <ClInclude Include="Types.hpp">
       <Filter>./</Filter>
     </ClInclude>
     <ClInclude Include="Uniprinter.hpp">

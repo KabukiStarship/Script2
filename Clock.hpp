@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Clock.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -21,7 +21,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 
-template <typename IS>
+template<typename IS>
 AClock* TClockInit(AClock& clock, IS t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
@@ -46,7 +46,7 @@ AClock* TClockInit(AClock& clock, IS t) {
   return &clock;
 }
 
-template <typename IS>
+template<typename IS>
 IS TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   if (year >= (ClockEpoch() + 10)) {
     if (month >= 1 && day >= 19 && hour >= 3 && minute >= 14 && second >= 7)
@@ -60,7 +60,7 @@ IS TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
 }
 
 /*
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* Print(CHT* cursor, CHT* stop, TME& t) {
   AClock c (t.seconds);
   cursor = TSPrint<CHT>(cursor, stop, c);
@@ -70,7 +70,7 @@ CHT* Print(CHT* cursor, CHT* stop, TME& t) {
 
 #if USING_STR
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* cursor, CHT* stop, const AClock& clock) {
   // The way the utf functions are setup, we return a nil-term CHA so we
   // don't have to check to write a single CHA in this
@@ -97,21 +97,21 @@ CHT* TSPrint(CHT* cursor, CHT* stop, const AClock& clock) {
   return cursor;
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TSPrint(Printer& o, const _::AClock& clock) {
   return o << clock.year + ClockEpoch() << '-' << clock.month + 1 << '-'
            << clock.day << '@' << clock.hour << ':' << clock.minute << ':'
            << clock.second;
 }
 
-template <typename CHT = CHR, typename Time = TMD>
+template<typename CHT = CHR, typename Time = TMD>
 CHT* TClockPrint(CHT* cursor, CHT* stop, Time t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHT>(cursor, stop, clock);
 }
 
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
   // The way the utf functions are setup, we return a nil-term CHA so we
   // don't have to check to write a single CHA in this
@@ -127,7 +127,7 @@ CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
   return cursor;
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& TSPrint(Printer& o, TME& t) {
   AClock clock;
   ClockInit(clock, t.seconds);
@@ -135,7 +135,7 @@ Printer& TSPrint(Printer& o, TME& t) {
 }
 
 /* Scans a time in seconds from the given string. */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   if (string == nullptr) return nullptr;
 
@@ -307,7 +307,7 @@ const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
 }
 
 /* Scans the given string for a timestamp. */
-template <typename CHT = CHR>
+template<typename CHT = CHR>
 const CHT* TSScan(const CHT* string, AClock& clock) {
   D_ASSERT(string);
   D_COUT("\n    Scanning AClock:\"" << string << "\n    Scanning: ");
@@ -523,7 +523,7 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
   return string + 1;
 }
 
-template <typename CHT, typename IS>
+template<typename CHT, typename IS>
 const CHT* TScanTime(const CHT* origin, TMC& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -531,7 +531,7 @@ const CHT* TScanTime(const CHT* origin, TMC& result) {
   return stop;
 }
 
-template <typename CHT, typename IS>
+template<typename CHT, typename IS>
 const CHT* TScanTime(const CHT* origin, TMD& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
@@ -539,7 +539,7 @@ const CHT* TScanTime(const CHT* origin, TMD& result) {
   return stop;
 }
 
-template <typename CHT>
+template<typename CHT>
 const CHT* TSScan(const CHT* origin, TME& result) {
   origin = TScanTime<CHT, TMC>(origin, result.seconds);
   if (!origin) return nullptr;
@@ -551,7 +551,7 @@ const CHT* TSScan(const CHT* origin, TME& result) {
 }
 #endif  // #if USING_STR
 
-template <typename IS>
+template<typename IS>
 IS TClockSet(AClock* clock, IS t) {
   // Algorithm:
   // 1. Using manual modulo convert in the following order:
@@ -579,7 +579,7 @@ IS TClockSet(AClock* clock, IS t) {
 /* A time in seconds stored as either a 32-bit or 64-bit IS.
 The difference between a TClock and AClock is that that TClock stores the AClock
 and the TMD or TMC. */
-template <typename IS>
+template<typename IS>
 struct LIB_MEMBER TClock {
   AClock clock;  //< A human-readable clock.
 
@@ -587,7 +587,7 @@ struct LIB_MEMBER TClock {
   TClock(IS t) { ClockInit(clock, t); }
 
   /* Prints the given */
-  template <typename Printer, typename IS>
+  template<typename Printer, typename IS>
   Printer& Print(Printer& o) {
     return o << clock.Clock();
   }
@@ -600,7 +600,7 @@ inline _::COut& operator<<(_::COut& o, const _::AClock& item) {
   return _::TSPrint(o, item);
 }
 
-template <typename IS>
+template<typename IS>
 _::COut& operator<<(_::COut& o, _::TClock<IS> item) {
   return o << item.clock;
 }

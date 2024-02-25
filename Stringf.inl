@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Stringf.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -344,7 +344,7 @@ Binaryf::Binaryf(FPD item) : valuef(item, sizeof(FPD)) {}
 #endif
 
 // Stringf::Stringf () {}
-Stringf::Stringf() : type_(cNIL), count_(0), buffer_() {
+Stringf::Stringf() : type_(_NIL), count_(0), buffer_() {
   String_ = &buffer_[0];
   *buffer_ = 0;
 }
@@ -433,18 +433,18 @@ ISW Stringf::Type() const { return type_; }
 ISW Stringf::Count() const { return count_; }
 
 void Stringf::Print(const CHA* item) {
-  type_ = cSTA;
+  type_ = _STA;
   String_ = item;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Print(const CHB* item) {
-  type_ = cSTB;
+  type_ = _STB;
   String_ = item;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(const CHC* item) {
-  type_ = cSTC;
+  type_ = _STC;
   String_ = item;
 }
 #endif
@@ -452,7 +452,7 @@ void Stringf::Print(const CHC* item) {
 void Stringf::Print(CHA item) {
   CHA* buffer = TPtr<CHA>(buffer_);
   _::SPrint(buffer, buffer + cLengthMax, item);
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer_;
 }
 
@@ -460,7 +460,7 @@ void Stringf::Print(CHA item) {
 void Stringf::Print(CHB item) {
   CHA* buffer = TPtr<CHA>(buffer_);
   _::SPrint(buffer, buffer + cLengthMax, item);
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer_;
 }
 #endif
@@ -468,7 +468,7 @@ void Stringf::Print(CHB item) {
 void Stringf::Print(CHC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
   _::SPrint(buffer, buffer + cLengthMax, item);
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 #endif
@@ -477,7 +477,7 @@ void Stringf::Print(ISC item) {
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 
@@ -486,7 +486,7 @@ void Stringf::Print(IUC item) {
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 
@@ -495,7 +495,7 @@ void Stringf::Print(ISD item) {
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 
@@ -504,7 +504,7 @@ void Stringf::Print(IUD item) {
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
 #endif
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 
@@ -512,7 +512,7 @@ void Stringf::Print(IUD item) {
 void Stringf::Print(FPC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 #endif
@@ -520,7 +520,7 @@ void Stringf::Print(FPC item) {
 void Stringf::Print(FPD item) {
   CHA* buffer = TPtr<CHA>(buffer_);
   _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
-  type_ = cSTA;
+  type_ = _STA;
   String_ = buffer;
 }
 #endif
@@ -535,57 +535,57 @@ void Stringf::Print(TypeValue item) {
   DTW type = item.Type();
   type_ = type;
   static const CHA kNotSupported[] = "Not supported\0";
-  DTW pod_type = type & cTypePODMask;
+  DTW pod_type = type & PODTypeMask;
   if (type != pod_type) {  // It's not a POD type.
   }
   switch (type) {
-    case cNIL:
+    case _NIL:
       // CHC c = 2205; // Empty-set Unicode character.
       return;
-    case cCHA:
+    case _CHA:
       Print(CHA(item.ToIUA()));
       return;
-    case cISA:
+    case _ISA:
       Print(ISA(item.ToIUA()));
       return;
-    case cIUA:
+    case _IUA:
       Print((item.ToIUA()));
       return;
-    case cCHB:
+    case _CHB:
       Print(CHB(item.ToIUB()));
       return;
-    case cISB:
+    case _ISB:
       Print(ISB(item.ToIUB()));
       return;
-    case cIUB:
+    case _IUB:
       Print(item.ToIUB());
       return;
-    case cFPB:
+    case _FPB:
       Print(item.ToIUB());
       return;
-    case cCHC:
+    case _CHC:
       Print(CHC(item.ToIUC()));
       return;
-    case cISC:
+    case _ISC:
       Print(ISC(item.ToIUC()));
       return;
-    case cIUC:
+    case _IUC:
       Print(IUC(item.ToIUC()));
       return;
-    case cFPC:
+    case _FPC:
 #if USING_FPC == YES_0
       Print(ToFloat(item.ToIUC()));
 #endif
       return;
-    case cTME:
+    case _TME:
       PrintTME(ISC(item.Word()), IUC(item.Word2()));
-    case cISD:
+    case _ISD:
       Print(ISD(item.ToUID()));
       return;
-    case cIUD:
+    case _IUD:
       Print(item.ToUID());
       return;
-    case cFPD:
+    case _FPD:
 #if USING_FPD == YES_0
       Print(ToFloat(item.ToUID()));
 #endif
@@ -596,73 +596,73 @@ void Stringf::Print(TypeValue item) {
 
 void Stringf::Hex(CHA item, ISW count) {
   *TPtr<CHA>(buffer_) = item;
-  type_ = cCHA;
+  type_ = _CHA;
   count_ = -count;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Hex(CHB item, ISW count) {
   *TPtr<CHB>(buffer_) = item;
-  type_ = cCHB;
+  type_ = _CHB;
   count_ = -count;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Hex(CHC item, ISW count) {
   *TPtr<CHC>(buffer_) = item;
-  type_ = cCHC;
+  type_ = _CHC;
   count_ = -count;
 }
 #endif
 void Stringf::Hex(ISA item, ISW count) {
   *TPtr<ISA>(buffer_) = item;
-  type_ = cISA;
+  type_ = _ISA;
   count_ = -count;
 }
 void Stringf::Hex(IUA item, ISW count) {
   *TPtr<IUA>(buffer_) = item;
-  type_ = cIUA;
+  type_ = _IUA;
   count_ = -count;
 }
 
 void Stringf::Hex(ISB item, ISW count) {
   *TPtr<ISB>(buffer_) = item;
-  type_ = cISB;
+  type_ = _ISB;
   count_ = -count;
 }
 
 void Stringf::Hex(IUB item, ISW count) {
   *TPtr<IUB>(buffer_) = item;
-  type_ = cIUB;
+  type_ = _IUB;
   count_ = -count;
 }
 
 void Stringf::Hex(ISC item, ISW count) {
   *TPtr<ISC>(buffer_) = item;
-  type_ = cISC;
+  type_ = _ISC;
   count_ = -count;
 }
 
 void Stringf::Hex(IUC item, ISW count) {
   *TPtr<IUC>(buffer_) = item;
-  type_ = cIUC;
+  type_ = _IUC;
 }
 
 void Stringf::Hex(ISD item, ISW count) {
   *TPtr<ISD>(buffer_) = item;
-  type_ = cISD;
+  type_ = _ISD;
   count_ = -count;
 }
 
 void Stringf::Hex(IUD item, ISW count) {
   *TPtr<IUD>(buffer_) = item;
-  type_ = cIUD;
+  type_ = _IUD;
   count_ = -count;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Hex(FPC item, ISW count) {
   *TPtr<FPC>(buffer_) = item;
-  type_ = cFPC;
+  type_ = _FPC;
   count_ = -count;
 }
 #endif
@@ -670,7 +670,7 @@ void Stringf::Hex(FPC item, ISW count) {
 #if USING_FPD == YES_0
 void Stringf::Hex(FPD item, ISW count) {
   *TPtr<FPD>(buffer_) = item;
-  type_ = cFPD;
+  type_ = _FPD;
   count_ = -count;
 }
 #endif

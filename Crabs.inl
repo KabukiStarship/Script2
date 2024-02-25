@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Crabs.inl
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -842,7 +842,7 @@ UTF1& PrintCrabsStack(UTF1& utf, Crabs* crabs) {
   return utf << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
-template <typename Printer>
+template<typename Printer>
 Printer& Print(Printer& o, Crabs* crabs) {
   o << Line('~', 80) << "\nStack:    " << Hexf(crabs) << '\n'
     << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left

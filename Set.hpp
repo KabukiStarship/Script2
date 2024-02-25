@@ -1,8 +1,8 @@
-/* Script2 (TM) @version 0.x
+/* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Set.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (C) 2015-2023 Kabuki Starship (TM) <kabukistarship.com>;
+@license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
@@ -11,7 +11,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_BOOK
 #ifndef SCRIPT2_BOOK_TEMPLATES
 #define SCRIPT2_BOOK_TEMPLATES 1
-#include "TypeValue.h"
+#include "Types.h"
 namespace _ {
 
 typedef IUW PODType;
@@ -21,7 +21,7 @@ typedef IUW PODType;
 ;
 @endcode
 */
-template <typename Index, typename TKey, typename ISZ, typename THash>
+template<typename Index, typename TKey, typename ISZ, typename THash>
 struct LIB_MEMBER TCollection {
   ISZ size;          //< Total size of the set.
   TKey table_size,   //< Size of the (optional) key Strings in bytes.
