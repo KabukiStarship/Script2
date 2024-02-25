@@ -11,6 +11,8 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+*.vcxproj.filters
+
 # Node.js files
 /node_modules
 /.pnp
