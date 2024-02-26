@@ -169,28 +169,28 @@ inline BOL TBookSizesAreValid(ISZ size_bytes, ISZ size_keys, ISZ count_max) {
 
 /* Prints the book to the stream. */
 template<typename Printer, BOK_A>
-Printer& TBookPrint(Printer& printer, TBook<BOK_P>* book) {
+Printer& TBookPrint(Printer& o, TBook<BOK_P>* book) {
   auto values = TBookValues<BOK_P>(book);
   auto map    = &values->map;
   ISZ  count  = map->count;
   auto keys   = TBookKeys<BOK_P>(book);
   auto types  = TListTypes<ISZ, DTB>(values);
   TLoomPrint<COut, LOM_P>(COut().Star(), keys);
-  printer << "\nBook<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>() << ",IS"
+  o << "\nBook<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>() << ",IS"
           << TSizef<ISY>() << "> size_bytes:" << values->size_bytes
           << " count_max:" << values->map.count_max << " count:" << count
           << " keys_free_space:" << TLoomFreeSpace<LOM_P>(keys) 
           << " keys.top:" << keys->top
           << " values_free_space:" << TListFreeSpace<ISZ>(values);
   for (ISY i = 0; i < count; ++i) {
-    printer << '\n' << i << ".) \"" << TListGet<ISZ, DT>(values, i)
-            << "\" type:";
+    o << '\n' << i << ".) \"" << TLoomGet<CHT, ISZ, ISY>(keys, i) << "\" "
+      << " type:";
     auto type = *types++;
-    TTypePrint<Printer, DTB>(printer, type);
-    D_COUT(" type:" << type << " 0b'" << Binaryf(type));
+    TPrintType<Printer, DTB>(o, type);
+    o << " value:" << TListPrintValue<Printer, ISZ, DT>(o, values, i);
   }
   D_COUT(Linef('-') << ' ' << Charsf(book, book->values.size_bytes));
-  return printer << '\n';
+  return o << '\n';
 }
 
 /* ASCII Data Type for the given templated BOK.
@@ -210,7 +210,7 @@ constexpr DT CBookKeysType() {
     PODBits = CTypeChar<CHR, DT>(),
     VTBits  = 1 << TypeVTBit0,
     SWBits  = CBitWidth<ISZ>() << TypeSWBit0,
-    MTBits  = CTypeIU<ISZ>() << TypeMTBit0
+    MTBits  = CTypeIS<ISZ>() << TypeMTBit0
   };
   return MTBits | SWBits | VTBits | PODBits;
 }
@@ -423,7 +423,7 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
   if (result < 0) {
     D_COUT("\nFailed to insert into List with error " << result << ':' <<
            STRError(result));
-    TLoomRemove<LOM_P>(keys, index);
+    TLoomPop<LOM_P>(keys);
   }
   return result;
 }

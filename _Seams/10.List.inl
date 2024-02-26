@@ -80,7 +80,7 @@ static const CHA* List(const CHA* args) {
   D_COUT("\n\nTesting TTypePrint...\n");
   for (ISC type = TEST_MIN; type < TEST_MAX; ++type) {
     D_COUT('\n' << type << ".) ");
-    D_COUT(TTypePrint<COut>(COut().Star(), type));
+    D_COUT(TPrintType<COut>(COut().Star(), type));
   }
 
   D_COUT("\n\nTTypePrint: ARY_CHA");

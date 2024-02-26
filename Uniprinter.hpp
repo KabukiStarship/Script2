@@ -43,11 +43,11 @@ ISN TPrintAndCount(Printer& o, const CHT* string) {
   return print_count;
 }
 
-/* Prints the following item to the console in Hex. */
+/* Prints the following value to the console in Hex. */
 template<typename Printer, typename IU>
-Printer& TPrintHex(Printer& o, IU item) {
+Printer& TPrintHex(Printer& o, IU value) {
   enum { cHexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
-  auto ui = ToUnsigned(item);
+  auto ui = ToUnsigned(value);
   for (ISC num_bits_shift = sizeof(IU) * 8 - 4; num_bits_shift >= 0;
        num_bits_shift -= 4) {
     o << HexNibbleToUpperCase((IUA)(ui >> num_bits_shift));
@@ -55,28 +55,26 @@ Printer& TPrintHex(Printer& o, IU item) {
   return o;
 }
 
-/* Prints the following item to the console in Hex. */
+/* Prints the following value to the console in Hex. */
 template<typename Printer>
-Printer& TPrintHex(Printer& o, const void* item) {
-  IUW ptr = IUW(item);
+Printer& TPrintHex(Printer& o, const void* value) {
+  IUW ptr = IUW(value);
   return TPrintHex<Printer, IUW>(o, ptr);
 }
 template<typename Printer, typename IS, typename IU>
-Printer& TPrintHex(Printer& o, IS item) {
-  return TPrintHex<Printer, IU>(o, IU(item));
+Printer& TPrintHex(Printer& o, IS value) {
+  return TPrintHex<Printer, IU>(o, IU(value));
 }
 #if USING_FPC == YES_0
 template<typename Printer>
-Printer& TPrintHex(Printer& o, FPC item) {
-  IUC value = *TPtr<IUC>(&item);
-  return TPrintHex<Printer, IUC>(o, value);
+Printer& TPrintHex(Printer& o, FPC value) {
+  return TPrintHex<Printer, IUC>(o, *TPtr<IUC>(&value));
 }
 #endif
 #if USING_FPD == YES_0
 template<typename Printer>
-Printer& TPrintHex(Printer& o, FPD item) {
-  IUD value = *TPtr<IUD>(&item);
-  return TPrintHex<Printer, IUD>(o, value);
+Printer& TPrintHex(Printer& o, FPD value) {
+  return TPrintHex<Printer, IUD>(o, *TPtr<IUD>(&value));
 }
 #endif
 /* Prints the given hex memory block or POD value depending on the sign of the
@@ -156,9 +154,9 @@ inline Printer& TPrintBinary(Printer& o, const void* start, const void* stop) {
 }
 
 template<typename Printer, typename IU>
-Printer& TPrintBinary(Printer& o, IU item) {
+Printer& TPrintBinary(Printer& o, IU value) {
   enum { cSize = sizeof(IU) * 8 };
-  auto ui = ToUnsigned(item);
+  auto ui = ToUnsigned(value);
   for (ISC i = cSize; i > 0; --i) {
     CHA c = CHA('0' + (ui >> (cSize - 1)));
     o << c;
@@ -168,21 +166,19 @@ Printer& TPrintBinary(Printer& o, IU item) {
 }
 
 template<typename Printer, typename IS, typename IU>
-Printer& TPrintBinary(Printer& o, IS item) {
-  return TPrintBinary<Printer, IU>(o, (IU)item);
+Printer& TPrintBinary(Printer& o, IS value) {
+  return TPrintBinary<Printer, IU>(o, (IU)value);
 }
 #if USING_FPC == YES_0
 template<typename Printer>
-Printer& TPrintBinary(Printer& o, FPC item) {
-  IUC value = *TPtr<IUC>(&item);
-  return TPrintBinary<Printer, IUC>(o, value);
+Printer& TPrintBinary(Printer& o, FPC value) {
+  return TPrintBinary<Printer, IUC>(o, *TPtr<IUC>(&value));
 }
 #endif
 #if USING_FPC == YES_0
 template<typename Printer>
-Printer& TPrintBinary(Printer& o, FPD item) {
-  IUD value = *TPtr<IUD>(&item);
-  return TPrintBinary<Printer, IUD>(o, value);
+Printer& TPrintBinary(Printer& o, FPD value) {
+  return TPrintBinary<Printer, IUD>(o, *TPtr<IUD>(&value));
 }
 #endif
 
@@ -211,18 +207,18 @@ pointer to the nil-term CHA upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
 template<typename Printer, typename CHT = CHR>
-Printer& TPrintCenter(Printer& o, const CHT* item, ISW column_count = 80) {
-  if (!item || column_count < 1) return o;
+Printer& TPrintCenter(Printer& o, const CHT* value, ISW column_count = 80) {
+  if (!value || column_count < 1) return o;
 
-  const CHT* token_end = TSTREnd<CHT>(item);
-  if (item == token_end) return o;
-  ISW length = token_end - item, space_count = column_count - length;
+  const CHT* token_end = TSTREnd<CHT>(value);
+  if (value == token_end) return o;
+  ISW length = token_end - value, space_count = column_count - length;
 
   if (space_count > 0) {
     ISW half_count = space_count >> 1;
     space_count -= half_count;
     while (half_count-- > 0) o << ' ';
-    o << item;
+    o << value;
     while (space_count-- > 0) o << ' ';
     return o;
   }
@@ -230,7 +226,7 @@ Printer& TPrintCenter(Printer& o, const CHT* item, ISW column_count = 80) {
   if (length < 0) {
     while (--length > 0) o << '.';
   } else {
-    while (length > 0) o << *item++;
+    while (length > 0) o << *value++;
     o << "...";
   }
   return o;
@@ -248,14 +244,14 @@ Printer& TPrintAlignedHex(Printer& o, const void* origin, ISW byte_count,
   return o;
 }
 
-/* Prints th given item centered unless it's count is less then 0, in which
+/* Prints th given value centered unless it's count is less then 0, in which
 case it will print the POD value stored in the first Word of the string. */
 template<typename Printer>
-Printer& TPrintCenter(Printer& o, Stringf& item) {
-  ISW column_count = item.Count();
+Printer& TPrintCenter(Printer& o, Stringf& value) {
+  ISW column_count = value.Count();
   if (column_count < 0) {  // Print hex.
     column_count = -column_count;
-    ISW byte_count = TypeSizeOf(item.Type()), left_count, dot_count;
+    ISW byte_count = TypeSizeOf(value.Type()), left_count, dot_count;
     if (byte_count < 0) return o;
     byte_count = byte_count << 1;
     ISW right_count;
@@ -275,24 +271,24 @@ Printer& TPrintCenter(Printer& o, Stringf& item) {
         "\n      left_count:" << left_count <<
         "\n       dot_count:" << dot_count <<
         "\n     right_count:" << right_count);*/
-    return TPrintAlignedHex<Printer>(o, item.Value(), byte_count >> 1,
+    return TPrintAlignedHex<Printer>(o, value.Value(), byte_count >> 1,
                                      left_count, dot_count, right_count);
   }
-  ISW utf_format = _::TypeTextFormat(item.Type());
+  ISW utf_format = _::TypeTextFormat(value.Type());
   switch (utf_format) {
 #if USING_UTF8 == YES_0
     case 1: {
-      return _::TPrintCenter<Printer, CHA>(o, item.STA(), column_count);
+      return _::TPrintCenter<Printer, CHA>(o, value.STA(), column_count);
     }
 #endif
 #if USING_UTF16 == YES_0
     case 2: {
-      return _::TPrintCenter<_::COut, CHB>(o, item.STB(), column_count);
+      return _::TPrintCenter<_::COut, CHB>(o, value.STB(), column_count);
     }
 #endif
 #if USING_UTF32 == YES_0
     case 3: {
-      return _::TPrintCenter<Printer, CHC>(o, item.STC(), column_count);
+      return _::TPrintCenter<Printer, CHC>(o, value.STC(), column_count);
     }
 #endif
   }
@@ -305,16 +301,16 @@ pointer to the nil-term CHA upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
 template<typename Printer, typename CHT = CHR>
-Printer& TPrintRight(Printer& o, const CHT* item, ISW column_count = 80) {
-  if (!item || column_count < 1) return o;
+Printer& TPrintRight(Printer& o, const CHT* value, ISW column_count = 80) {
+  if (!value || column_count < 1) return o;
 
-  const CHT* token_end = TSTREnd<CHT>(item);
-  if (item == token_end) return o;
-  ISW length = token_end - item, space_count = column_count - length;
+  const CHT* token_end = TSTREnd<CHT>(value);
+  if (value == token_end) return o;
+  ISW length = token_end - value, space_count = column_count - length;
 
   if (space_count > 0) {
     while (space_count-- > 0) o << ' ';
-    o << item;
+    o << value;
     return o;
   }
   length = (-length) - 3;
@@ -328,20 +324,20 @@ Printer& TPrintRight(Printer& o, const CHT* item, ISW column_count = 80) {
         o << "...";
     }
   } else {
-    while (length > 0) o << *item++;
+    while (length > 0) o << *value++;
     o << "...";
   }
   return o;
 }
 
-/* Prints the given item centered, printing it as hex if the item.Count() is
+/* Prints the given value centered, printing it as hex if the value.Count() is
 less than 0. */
 template<typename Printer>
-Printer& TPrintRight(Printer& o, Stringf& item) {
-  ISW column_count = item.Count();
+Printer& TPrintRight(Printer& o, Stringf& value) {
+  ISW column_count = value.Count();
   if (column_count < 0) {  // Print hex.
     column_count = -column_count;
-    ISW char_count = TypeSizeOf(item.Type());
+    ISW char_count = TypeSizeOf(value.Type());
     if (char_count < 0) return o;
 
     ISW left_count, dot_count;
@@ -358,24 +354,24 @@ Printer& TPrintRight(Printer& o, Stringf& item) {
       left_count = column_count - char_count;
       dot_count = 0;
     }
-    return TPrintAlignedHex<Printer>(o, item.STA(), char_count, left_count,
+    return TPrintAlignedHex<Printer>(o, value.STA(), char_count, left_count,
                                      dot_count, 0);
   }
-  ISW count = item.Count();
-  switch (_::TypeTextFormat(item.Type())) {
+  ISW count = value.Count();
+  switch (_::TypeTextFormat(value.Type())) {
 #if USING_UTF8 == YES_0
     case 1: {
-      return _::TPrintRight<Printer, CHA>(o, item.STA(), count);
+      return _::TPrintRight<Printer, CHA>(o, value.STA(), count);
     }
 #endif
 #if USING_UTF16 == YES_0
     case 2: {
-      return _::TPrintRight<Printer, CHB>(o, item.STB(), count);
+      return _::TPrintRight<Printer, CHB>(o, value.STB(), count);
     }
 #endif
 #if USING_UTF32 == YES_0
     case 3: {
-      return _::TPrintRight<Printer, CHC>(o, item.STC(), count);
+      return _::TPrintRight<Printer, CHC>(o, value.STC(), count);
     }
 #endif
   }
@@ -481,26 +477,26 @@ Printer& TPrintLine(Printer& o, CHT token = '-', ISW column_count = 80) {
 }
 
 template<typename Printer>
-Printer& TPrintLinef(Printer& o, Linef& item) {
-  ISW type = item.element.value.Type(),  //
+Printer& TPrintLinef(Printer& o, Linef& value) {
+  ISW type = value.element.value.Type(),  //
       utf_format = _::TypeTextFormat(type);
   switch (utf_format) {
 #if USING_UTF8 == YES_0
     case _STA: {
-      _::TPrintLinef<Printer, CHA>(o, item.element.ToSTA(), item.element.count);
+      _::TPrintLinef<Printer, CHA>(o, value.element.ToSTA(), value.element.count);
       break;
     }
 #endif
 #if USING_UTF16 == YES_0
     case _STB: {
-      _::TPrintLinef<Printer, CHB>(o, item.element.ToSTB(), item.element.count);
+      _::TPrintLinef<Printer, CHB>(o, value.element.ToSTB(), value.element.count);
       break;
     }
 #endif
 #if USING_UTF32 == YES_0
     case _STC: {
-      const CHC* start = TPtr<const CHC>(item.element.value.ToPTR());
-      _::TPrintLinef<Printer, CHC>(o, item.element.ToSTC(), item.element.count);
+      const CHC* start = TPtr<const CHC>(value.element.value.ToPTR());
+      _::TPrintLinef<Printer, CHC>(o, value.element.ToSTC(), value.element.count);
       break;
     }
 #endif
@@ -508,22 +504,22 @@ Printer& TPrintLinef(Printer& o, Linef& item) {
       switch (type & PODTypeMask) {
 #if USING_UTF8 == YES_0
         case _CHA: {
-          CHA c = (CHA)item.element.value.Word();
-          _::TPrintLine<Printer, CHA>(o, c, item.element.count);
+          CHA c = (CHA)value.element.value.Word();
+          _::TPrintLine<Printer, CHA>(o, c, value.element.count);
           break;
         }
 #endif
 #if USING_UTF16 == YES_0
         case _CHB: {
-          CHB c = (CHB)item.element.value.Word();
-          _::TPrintLine<Printer, CHB>(o, c, item.element.count);
+          CHB c = (CHB)value.element.value.Word();
+          _::TPrintLine<Printer, CHB>(o, c, value.element.count);
           break;
         }
 #endif
 #if USING_UTF32 == YES_0
         case _CHC: {
-          CHC c = (CHC)item.element.value.Word();
-          _::TPrintLine<Printer, CHC>(o, c, item.element.count);
+          CHC c = (CHC)value.element.value.Word();
+          _::TPrintLine<Printer, CHC>(o, c, value.element.count);
           break;
         }
 #endif
@@ -558,27 +554,27 @@ Printer& TPrintHeadingf(Printer& o, const CHT* element,
 
 /* Prints the a formatted header. */
 template<typename Printer>
-Printer& TPrintHeadingf(Printer& o, Headingf& item) {
-  switch (_::TypeTextFormat(item.element.Type())) {
+Printer& TPrintHeadingf(Printer& o, Headingf& value) {
+  switch (_::TypeTextFormat(value.element.Type())) {
 #if USING_UTF8 == YES_0
     case 1: {
-      return _::TPrintHeadingf<Printer, CHA>(o, item.element.STA(), item.style,
-                                             item.element.Count(),
-                                             item.caption2, item.caption3);
+      return _::TPrintHeadingf<Printer, CHA>(o, value.element.STA(), value.style,
+                                             value.element.Count(),
+                                             value.caption2, value.caption3);
     }
 #endif
 #if USING_UTF16 == YES_0
     case 2: {
-      return _::TPrintHeadingf<Printer, CHB>(o, item.element.STB(), item.style,
-                                             item.element.Count(),
-                                             item.caption2, item.caption3);
+      return _::TPrintHeadingf<Printer, CHB>(o, value.element.STB(), value.style,
+                                             value.element.Count(),
+                                             value.caption2, value.caption3);
     }
 #endif
 #if USING_UTF32 == YES_0
     case 3: {
-      return _::TPrintHeadingf<Printer, CHC>(o, item.element.STC(), item.style,
-                                             item.element.Count(),
-                                             item.caption2, item.caption3);
+      return _::TPrintHeadingf<Printer, CHC>(o, value.element.STC(), value.style,
+                                             value.element.Count(),
+                                             value.caption2, value.caption3);
     }
 #endif
   }
@@ -619,8 +615,8 @@ inline Printer& TPrintChars(Printer& o, const CHT* start, ISW count) {
 }
 
 template<typename Printer>
-Printer& TPrintChars(Printer& o, Charsf& item) {
-  Valuef& element = item.element;
+Printer& TPrintChars(Printer& o, Charsf& value) {
+  Valuef& element = value.element;
   ISW count = element.Count();
   switch (_::TypeTextFormat(element.Type())) {
 #if USING_UTF8 == YES_0
@@ -643,104 +639,164 @@ Printer& TPrintChars(Printer& o, Charsf& item) {
       o, TPtr<CHA>(element.Value()), count);
 }
 
+/* Prints a string represntation of an ASCII Data Type to the printer. */
+template<typename Printer>
+Printer& TPrintType(Printer& printer, DTW item) {
+  if (item < 32) return printer << STRTypePOD(item); // POD Type
+  DTW type_pod = item & 0x1f,
+    type_vector = (item & DTVHT) >> 5;
+  if (item >> 8 == 0) { // 8-bit data type.
+    // | b7 |    b6:b5    | b4:b0 |
+    // |:--:|:-----------:|:-----:|
+    // | SW | Vector Type |  POD  |
+    if (item >> 7) { // SW bit asserted, there is a 16-bit size_width
+      return printer << STRTypeVector(type_vector) << 'B' << '_'
+        << STRTypePOD(type_pod);
+    }
+
+    return printer << STRTypeVector(type_vector) << 'A' << '_'
+      << STRTypePOD(type_pod);
+  }
+  DTW size_width = (item & DTBSW) >> 7;
+  if (item >> 16 == 0) { // 16-bit data type.
+    // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+    // |:-------:|:------:|:-----:|:-----:|:-----:|
+    // |   MOD   |   MT   |  SW   |  VT   |  POD  |
+    if (type_pod == 0) {
+      printer << "NIL" << CHA('A' + ((item >> 5) & 0xf)) << " or ";
+    }
+    DTW modifiers = item >> 14;
+    if (modifiers) printer << STRTypeModifier(modifiers) << '_';
+  }
+  DTW map_type = (item & DTBMT) >> 9;
+  if (map_type)
+    return printer << "MAP_" << STRTypePOD(map_type) << '_'
+    << STRTypePOD(type_pod);
+
+  size_width = (item & 0x180) >> 7;
+  if (size_width) { // SW bits b8:b7 asserted.
+    return printer << STRTypeVector(type_vector)
+      << CHA('@' + size_width) << '_'
+      << STRTypePOD(type_pod);
+
+    return printer << "ERROR: You done messed up A-A-ron.";
+  }
+#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit.
+#endif
+#if CPU_SIZE == CPU_8_BYTE
+  if (item & ~IUW(0xffffffff)) { // 64-bit data type.
+    return printer << "Error dfjaisdfas89fasd0af9sd0";
+  }
+#endif
+
+  return printer << "Error: 32-bit types not implemented yet!";
+}
+
+// Prints an ASCII POD type to the printer.
 template<typename Printer, typename DT = DTB>
 Printer& TPrintTypePOD(Printer& o, DT type) {
-  DT pod_type    = type & PODTypeMask,    //
-     vector_type = TTypeVector<DT>(type),  //
-     map_type    = TTypeMap<DT>(type);     //
+  DT pod_type = type & PODTypeMask,    //
+    vector_type = TTypeVector<DT>(type),  //
+    map_type = TTypeMap<DT>(type);     //
 }
 
-/* Prints the given type to the printer. #duplicate
-template<typename Printer, typename DT = DTB>
+template<typename Printer, typename DT>
 Printer& TPrintType(Printer& printer, DT type) {
-  if (type == 0) return printer << "NIL";
-  DT pod_type = type & PODTypeMask;
-  if (pod_type == 0) return printer << "BGN" << (type >> TypePODBitCount);
-  DT vector_type = TTypeVector<DT>(type);
-  if (vector_type) {
-    return printer << STRTypePOD(vector_type) << '_' << STRTypePOD(pod_type);
-  }
-  DT map_type = TTypeMap<DT>(type);
-  if (map_type) {
-    return printer << STRTypePOD(map_type) << '_' << STRTypePOD(pod_type);
-  }
-  return printer;
-} */
+  return TPrintType(printer, DTW(type));
+}
 
+/* Prints a summary of the type-value tuple with word-sized Data Type. */
+template<typename Printer>
+Printer& TPrintType(Printer& printer, TypeWordValue item) {
+  return TPrintType<Printer>(printer, item.type);
+}
+
+// Prints the value of the given type-value tuple.
 template<typename Printer, typename DT = DTB>
-Printer& TPrintTypeValue(Printer& printer, DT type, const void* item) {
+Printer& TPrintValue(Printer& o, DT type, const void* value) {
   switch (type) {
     case _NIL:
-      return printer;
-    case _CHA:
-      printer << *TPtr<const CHA>(item);
-      return printer;
-    case _ISA:
-      printer << *TPtr<const ISA>(item);
-      return printer;
+      return o;
     case _IUA:
-      printer << *TPtr<const IUA>(item);
-      return printer;
-    case _CHB:
-      printer << *TPtr<const CHB>(item);
-      return printer;
-    case _ISB:
-      printer << *TPtr<const ISB>(item);
-      return printer;
-    case _IUB:
-      printer << *TPtr<const IUB>(item);
-      return printer;
+      o << *TPtr<const IUA>(value);
+      return o;
+    case _ISA:
+      o << *TPtr<const ISA>(value);
+      return o;
+    case _CHA:
+      o << *TPtr<const CHA>(value);
     case _FPB:
-      printer << *TPtr<const FPB>(item);
-      return printer;
+      o << *TPtr<const FPB>(value);
+      return o;
+    case _IUB:
+      o << *TPtr<const IUB>(value);
+      return o;
+    case _ISB:
+      o << *TPtr<const ISB>(value);
+      return o;
+    case _CHB:
+      o << *TPtr<const CHB>(value);
+      return o;
+      return o;
     case _BOL:
-      printer << *TPtr<const BOL>(item);
-      return printer;
-    case _CHC:
-      printer << *TPtr<const CHC>(item);
-      return printer;
-    case _ISC:
-      printer << *TPtr<const ISC>(item);
-      return printer;
-    case _IUC:
-      printer << *TPtr<const IUC>(item);
-      return printer;
+      o << *TPtr<const BOL>(value);
+      return o;
     case _FPC:
-      printer << *TPtr<const FPC>(item);
-      return printer;
-    case _TME:
-      printer << "TME Fix me!";
-      //printer << *TPtr<const TME>(item);
-      return printer;
-    case _ISD:
-      printer << *TPtr<const ISD>(item);
-      return printer;
-    case _IUD:
-      printer << *TPtr<const IUD>(item);
-      return printer;
+      o << *TPtr<const FPC>(value);
+      return o;
+    case _IUC:
+      o << *TPtr<const IUC>(value);
+      return o;
+    case _ISC:
+      o << *TPtr<const ISC>(value);
+      return o;
+    case _CHC:
+      o << *TPtr<const CHC>(value);
+      return o;
     case _FPD:
-      printer << *TPtr<const FPD>(item);
-      return printer;
-    case _ISE:
-      printer << "ISE Fix me!";
-      //printer << *TPtr<const ISE>(item);
-      return printer;
-    case _IUE:
-      printer << "Fix me!";
-      //printer << *TPtr<const IUE>(item);
-      return printer;
+      o << *TPtr<const FPD>(value);
+      return o;
+    case _IUD:
+      o << *TPtr<const IUD>(value);
+      return o;
+    case _ISD:
+      o << *TPtr<const ISD>(value);
+      return o;
+    case _TME:
+      o << "TME Fix me!";
+      //o << *TPtr<const TME>(value);
+      return o;
     case _FPE:
-      printer << "Fix me!";
-      //printer << *TPtr<const FPE>(item);
-      return printer;
+      o << "Fix me!";
+      //o << *TPtr<const FPE>(value);
+      return o;
+    case _IUE:
+      o << "Fix me!";
+      //o << *TPtr<const IUE>(value);
+      return o;
+    case _ISE:
+      o << "ISE Fix me!";
+      //o << *TPtr<const ISE>(value);
+      return o;
   }
-  return printer;
+  return o;
 }
 
+// Prints the value of the given type-value tuple.
+template<typename Printer, typename DT, typename IS>
+Printer& TPrintValue(Printer& o, TTypeValue<DT> type_value) {
+  return TPrintValue<Printer, DT>(o, type_value.type, type_value.value);
+}
+
+// Prints ASCII type and the value tuple.
+template<typename Printer, typename DT = DTB>
+Printer& TPrintTypeValue(Printer& o, DT type, const void* value) {
+  o << TPrintType<DT>(type) << ':' << TPrintValue<Printer, DT>(o, type, value);
+}
 
 template<typename Printer, typename DT = DTB>
-Printer& TPrintTypeValueSummary(Printer& printer, DT type, const void* item) {
-  return printer << "Your mom";
+Printer& TPrintTypeValueSummary(Printer& o, DT type, const void* value) {
+  return o << "Your mom";
 }
 }  //< namespace _
 

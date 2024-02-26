@@ -12,6 +12,20 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Types.h"
 namespace _ {
 
+/* Stores an ASCII type and pointer to it's value. */
+template<typename DT = DTW>
+struct TTypeValue {
+  DT type;      //< The ASCII data type word.
+  void* value;  //< POint to the value of the type.
+};
+
+/* Stores an offset to the ASCII data type and it's value. */
+template<typename IS = ISW, typename DT = DTW>
+struct TTypeValueOffset {
+  DT type;      //< The ASCII data type word.
+  IS value;     //< Offset to the value of the type.
+};
+
 /* Gets the log_b. */
 template<typename T>
 constexpr Sizef TSizef () {
@@ -57,14 +71,6 @@ constexpr Sizef TSizef () {
   return result;
 }
 
-/* Prints the given sizef to the printer. */
-template<typename Printer>
-Printer& TSizefPrint(Printer& printer, Sizef item) {
-  auto value = item.size;
-  if (value < 0) return printer << CHA('@' + (-value));
-  return printer << value;
-}
-
 /* Gets one of the STRTypes. */
 inline const CHA* STRTypePOD(DTW index) {
   if (index < 0 || index >= Invalid) index = 32;
@@ -81,70 +87,6 @@ inline const CHA* STRTypeVector(DTW index) {
 inline const CHA* STRTypeModifier(DTW index) {
   if (index < 0 || index >= 4) index = 0;
   return STRTypesModifier() + (index << 2); // << 2 to * 4
-}
-
-/* Prints a string represntation of an ASCII Data Type to the printer. */
-template<typename Printer>
-Printer& TTypePrint(Printer& printer, DTW item) {
-  if (item < 32) return printer << STRTypePOD(item); // POD Type
-  DTW type_pod = item & 0x1f,
-      type_vector = (item & DTVHT) >> 5;
-  if (item >> 8 == 0) { // 8-bit data type.
-    // | b7 |    b6:b5    | b4:b0 |
-    // |:--:|:-----------:|:-----:|
-    // | SW | Vector Type |  POD  |
-    if (item >> 7) { // SW bit asserted, there is a 16-bit size_width
-      return printer << STRTypeVector(type_vector) << 'B' << '_' 
-                     << STRTypePOD(type_pod);
-    }
-
-    return printer << STRTypeVector(type_vector) << 'A' << '_'
-      << STRTypePOD(type_pod);
-  }
-  DTW size_width = (item & DTBSW) >> 7;
-  if (item >> 16 == 0) { // 16-bit data type.
-    // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
-    // |:-------:|:------:|:-----:|:-----:|:-----:|
-    // |   MOD   |   MT   |  SW   |  VT   |  POD  |
-    if (type_pod == 0) {
-      printer << "NIL" << CHA('A' + ((item >> 5) & 0xf)) << " or ";
-    }
-    DTW modifiers = item >> 14;
-    if (modifiers) printer << STRTypeModifier(modifiers) << '_';
-  }
-  DTW map_type = (item & DTBMT) >> 9;
-  if (map_type)
-    return printer << "MAP_" << STRTypePOD(map_type) << '_'
-    << STRTypePOD(type_pod);
-
-    size_width = (item & 0x180) >> 7;
-    if (size_width) { // SW bits b8:b7 asserted.
-      return printer << STRTypeVector(type_vector) 
-                     << CHA('@' + size_width) << '_'
-                     << STRTypePOD(type_pod);
-
-    return printer << "ERROR: You done messed up A-A-ron.";
-  }
-#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit.
-#endif
-#if CPU_SIZE == CPU_8_BYTE
-  if (item & ~IUW(0xffffffff)) { // 64-bit data type.
-    return printer << "Error dfjaisdfas89fasd0af9sd0";
-  }
-#endif
-
-  return printer << "Error: 32-bit types not implemented yet!";
-}
-
-template<typename Printer, typename DT>
-Printer& TTypePrint(Printer& printer, DT type) {
-  return TTypePrint(printer, DTW(type));
-}
-
-/* Prints a summary of the type-value tuple with word-sized Data Type. */
-template<typename Printer>
-Printer& TTypePrint(Printer& printer, TypeWordValue item) {
-  return TTypePrint<Printer>(printer, item.type);
 }
 
 /* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
