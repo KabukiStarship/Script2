@@ -1830,6 +1830,14 @@ ISC TSTRQuery(const CHT* cursor, const CHT* stop, const CHT* query) {
   return 0;
 }
 
+/* Prints the given sizef to the printer. */
+template<typename Printer>
+Printer& TPrintSizef(Printer& printer, Sizef item) {
+  auto value = item.size;
+  if (value < 0) return printer << CHA('@' + (-value));
+  return printer << value;
+}
+
 }  //< namespace _
 
 /* Prints the given item to the UTF.
@@ -1979,6 +1987,6 @@ inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Charsf& item
 }
 template<typename CHT = CHR>
 inline _::TSPrinter<CHT>& operator<<(_::TSPrinter<CHT>& printer, _::Sizef& item) {
-  return _::TSizefPrint<_::TSPrinter<CHT>>(printer, item);
+  return _::TPrintSizef<_::TSPrinter<CHT>>(printer, item);
 }
 #endif
