@@ -35,22 +35,27 @@ void TestStack(const CHA* args) {
   enum { TestCount = 32 };
   D_COUT("\n\nPushing " << TestCount << " items on to the Stack...\n");
   T i;
+  auto count_start = stack.Count();
   for (i = 0; i < TestCount; ++i) {
-    D_COUT("\n| " << i << ".) count:" <<
-           stack.Count());
-    //D_COUT("\n| Before calling push:" << 
-    //       Charsf(stack.AJT().Origin(), stack.AJT().SizeBytes()) << 
-    //       Linef("\n\n+---\n| ") << i << ".) ");
-    stack.Push('0' + i);
-    //D_COUT("\n| Result:");
-    //D_COUT_OBJ(stack);
+    D_COUT("\n| " << i << ".) count:" << stack.Count());
+    D_COUT("\n| Before calling push:" << 
+           Charsf(stack.AJT().Origin(), stack.AJT().SizeBytes()) << 
+           Linef("\n\n+---\n| ") << i << ".) ");
+    auto result = stack.Push('0' + i);
+    D_COUT("\n| Result:" << result);
+    D_COUT_OBJ(stack);
+    D_AVOW(IS(count_start + i), result);
   }
 
   D_COUT(Headingf("\n\nPopping items off the Stack... ") << "i:" << i << 'n');
+  #if SEAM == SCRIPT2_STACK
+  TStackPrint<COut, T, IS>(COut().Star(), stack.This());
+  #endif
   for (i=i-1; i >= 0; --i) {
     //D_COUT_OBJ(stack);
-    A_AVOW_INDEX(i, stack.Pop() - '0', i);
-    D_COUT("\n| " << i << ".) Popping count:" << stack.Count());
+    auto value = stack.Pop();
+    A_AVOW_INDEX(i, value - '0', i);
+    D_COUT("\n| " << i << ".) Popping " << value << " count:" << stack.Count());
   }
   D_COUT("\n\nEnding stack.Count(): " << stack.Count() << " i: " << 
          i << '\n');

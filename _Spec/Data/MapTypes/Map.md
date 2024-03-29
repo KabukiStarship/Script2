@@ -6,7 +6,7 @@
 
 #### Map
 
-A Map is a sparse array map of Sorted Domain Values to Codomain Mappings. Codomain mappings always unsigned integers starting where the highest value integer, 0xF...F or -1 in 2's complement, is always an illegal mapping index. Domain types shall be integer or floating-point types.
+A Map is a sparse array map of Sorted Domain Values to Codomain Mappings. Codomain mappings always unsigned integers starting where the highest value integer, 0xF...F or -1 in 2's complement, is always an illegal mapping index. Domain types shall be integer or floating-point types (oh really).
 
 ##### Set C++ Data Structure
 
@@ -46,6 +46,6 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 
 ## License
 
-Copyright 2015-22 © [Kabuki Starship](https://kabukistarship.com).
+Copyright [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

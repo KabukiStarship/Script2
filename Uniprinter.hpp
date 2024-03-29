@@ -501,7 +501,7 @@ Printer& TPrintLinef(Printer& o, Linef& value) {
     }
 #endif
     case -1: {
-      switch (type & PODTypeMask) {
+      switch (type & ATypePODMask) {
 #if USING_UTF8 == YES_0
         case _CHA: {
           CHA c = (CHA)value.element.value.Word();
@@ -599,7 +599,7 @@ Printer& TPrintChars(Printer& o, const CHT* start, const CHT* stop) {
         c = 'x';
       } else if (c < ' ') {
         address_to_print = start;
-        c += cPrintC0Offset;
+        c += APrintC0Offset;
       }
       if (c == 127) c = ' ';
       o << c;
@@ -639,147 +639,225 @@ Printer& TPrintChars(Printer& o, Charsf& value) {
       o, TPtr<CHA>(element.Value()), count);
 }
 
-/* Prints a string represntation of an ASCII Data Type to the printer. */
+/* Prints a string represntation of an 8-bit ASCII Data Type to the printer. */
 template<typename Printer>
-Printer& TPrintType(Printer& printer, DTW item) {
-  if (item < 32) return printer << STRTypePOD(item); // POD Type
-  DTW type_pod = item & 0x1f,
-    type_vector = (item & DTVHT) >> 5;
-  if (item >> 8 == 0) { // 8-bit data type.
-    // | b7 |    b6:b5    | b4:b0 |
-    // |:--:|:-----------:|:-----:|
-    // | SW | Vector Type |  POD  |
-    if (item >> 7) { // SW bit asserted, there is a 16-bit size_width
-      return printer << STRTypeVector(type_vector) << 'B' << '_'
-        << STRTypePOD(type_pod);
-    }
-
-    return printer << STRTypeVector(type_vector) << 'A' << '_'
+Printer& TPrintType(Printer& o, DTA type) {
+  if (type < 32) return o << STRTypePOD(type); // POD Type
+  DTW type_pod = type & 0x1f,
+    type_vector = (type & DTVHT) >> 5;
+  // |     b7     |    b6:b5    |   b4:b0   |
+  // |:----------:|:-----------:|:---------:|
+  // | Size Width | Vector Type |  POD Type |
+  if (type >> 7) { // SW bit asserted, there is a 16-bit size_width
+    return o << STRTypeVector(type_vector) << 'B' << '_'
       << STRTypePOD(type_pod);
   }
-  DTW size_width = (item & DTBSW) >> 7;
-  if (item >> 16 == 0) { // 16-bit data type.
-    // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
-    // |:-------:|:------:|:-----:|:-----:|:-----:|
-    // |   MOD   |   MT   |  SW   |  VT   |  POD  |
-    if (type_pod == 0) {
-      printer << "NIL" << CHA('A' + ((item >> 5) & 0xf)) << " or ";
-    }
-    DTW modifiers = item >> 14;
-    if (modifiers) printer << STRTypeModifier(modifiers) << '_';
-  }
-  DTW map_type = (item & DTBMT) >> 9;
-  if (map_type)
-    return printer << "MAP_" << STRTypePOD(map_type) << '_'
+
+  return o << STRTypeVector(type_vector) << 'A' << '_'
     << STRTypePOD(type_pod);
+}
 
-  size_width = (item & 0x180) >> 7;
-  if (size_width) { // SW bits b8:b7 asserted.
-    return printer << STRTypeVector(type_vector)
-      << CHA('@' + size_width) << '_'
-      << STRTypePOD(type_pod);
+template<typename Printer>
+Printer& TPrintTypeVector(Printer& o, DTB type) {
+  if (type >> 9 != 0) return o;
+}
 
-    return printer << "ERROR: You done messed up A-A-ron.";
+/* Prints a string represntation of an ASCII Data Type to the printer.
+16-bit ASCII Bit Pattern:
+| b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+|:-------:|:------:|:-----:|:-----:|:-----:|
+|   MOD   |   MT   |  SW   |  VT   |  POD  | */
+template<typename Printer>
+Printer& TPrintType(Printer& o, DTB type) {
+  // Processing from MOD to POD/left to right.
+  o << "0b" << Binaryf(type) << ' ';
+  auto mod_bits    = type >> ATypeMODBit0;
+  if (mod_bits != 0) {
+    o << STRTypeModifier(mod_bits) << '_';
+    type ^= mod_bits << ATypeMODBit0;
   }
-#if CPU_SIZE >= CPU_4_BYTE // CPU is 32-bit or 64-bit.
-#endif
-#if CPU_SIZE == CPU_8_BYTE
-  if (item & ~IUW(0xffffffff)) { // 64-bit data type.
-    return printer << "Error dfjaisdfas89fasd0af9sd0";
+  auto map_type = type >> ATypeMTBit0;
+  if (map_type != 0) {
+    o << STRTypePOD(map_type) << "_";
+    type ^= map_type << ATypeMTBit0;
   }
-#endif
+  if (type < ATypePODCount) return o << STRTypePOD(type); // POD Type
+  auto size_width = type >> ATypeSWBit0;
+  type ^= size_width << ATypeSWBit0;
+  auto vector_type = type >> ATypeVTBit0;
+  type ^= vector_type << ATypeVTBit0;
+  if (!vector_type && !size_width) // Vector of Homo-tuple.
+    o << STRTypeVector(vector_type) << '_';
+  if (ATypeIsCH(type)) { // Then it's a string, loom, or 
+    
+  }
+  return o << STRTypePOD(type);
+}
+template<typename Printer>
+Printer& TPrintType(Printer& o, DTC type) {
+  BOL first_time = true;
+  ISN count = sizeof(DTC) / sizeof(DTB);
+  while(count-- > 0) {
+    if (!first_time) {
+      o << ' ';
+      first_time = false;
+    }
+    TPrintType<Printer>(o, DTB(type));
+    type = type >> 16;
+  }
+  return o;
+}
+template<typename Printer>
+Printer& TPrintType(Printer& o, DTD type) {
+  BOL first_time = true;
+  ISN count = sizeof(DTC) / sizeof(DTB);
+  while (count-- > 0) {
+    if (!first_time) {
+      o << '-';
+      first_time = false;
+    }
+    TPrintType<Printer>(o, DTB(type));
+    type = type >> 16;
+  }
+  return o;
+}
 
-  return printer << "Error: 32-bit types not implemented yet!";
+/* Prints a summary of the type-value tuple with word-sized Data Type. */
+template<typename Printer>
+Printer& TPrintType(Printer& o, TypeWordValue item) {
+  return TPrintType<Printer>(o, item.type);
 }
 
 // Prints an ASCII POD type to the printer.
 template<typename Printer, typename DT = DTB>
 Printer& TPrintTypePOD(Printer& o, DT type) {
-  DT pod_type = type & PODTypeMask,    //
+  DT pod_type = type & ATypePODMask,    //
     vector_type = TTypeVector<DT>(type),  //
     map_type = TTypeMap<DT>(type);     //
 }
 
-template<typename Printer, typename DT>
-Printer& TPrintType(Printer& printer, DT type) {
-  return TPrintType(printer, DTW(type));
-}
-
-/* Prints a summary of the type-value tuple with word-sized Data Type. */
-template<typename Printer>
-Printer& TPrintType(Printer& printer, TypeWordValue item) {
-  return TPrintType<Printer>(printer, item.type);
-}
-
 // Prints the value of the given type-value tuple.
-template<typename Printer, typename DT = DTB>
-Printer& TPrintValue(Printer& o, DT type, const void* value) {
+template<typename Printer>
+Printer& TPrintValuePOD(Printer& o, DTB type, const void* value) {
   switch (type) {
     case _NIL:
       return o;
     case _IUA:
-      o << *TPtr<const IUA>(value);
-      return o;
+      return o << *TPtr<const IUA>(value);
     case _ISA:
-      o << *TPtr<const ISA>(value);
-      return o;
+      return o << *TPtr<const ISA>(value);
     case _CHA:
-      o << *TPtr<const CHA>(value);
+      return o << *TPtr<const CHA>(value);
     case _FPB:
-      o << *TPtr<const FPB>(value);
-      return o;
+      return o << *TPtr<const FPB>(value);
     case _IUB:
-      o << *TPtr<const IUB>(value);
-      return o;
+      return o << *TPtr<const IUB>(value);
     case _ISB:
-      o << *TPtr<const ISB>(value);
-      return o;
+      return o << *TPtr<const ISB>(value);
     case _CHB:
-      o << *TPtr<const CHB>(value);
-      return o;
-      return o;
-    case _BOL:
-      o << *TPtr<const BOL>(value);
-      return o;
+      return o << *TPtr<const CHB>(value);
     case _FPC:
-      o << *TPtr<const FPC>(value);
-      return o;
+      return o << *TPtr<const FPC>(value);
     case _IUC:
-      o << *TPtr<const IUC>(value);
-      return o;
+      return o << *TPtr<const IUC>(value);
     case _ISC:
-      o << *TPtr<const ISC>(value);
-      return o;
+      return o << *TPtr<const ISC>(value);
     case _CHC:
-      o << *TPtr<const CHC>(value);
-      return o;
+      return o << *TPtr<const CHC>(value);
     case _FPD:
-      o << *TPtr<const FPD>(value);
-      return o;
+      return o << *TPtr<const FPD>(value);
     case _IUD:
-      o << *TPtr<const IUD>(value);
-      return o;
+      return o << *TPtr<const IUD>(value);
     case _ISD:
-      o << *TPtr<const ISD>(value);
-      return o;
+      return o << *TPtr<const ISD>(value);
     case _TME:
-      o << "TME Fix me!";
+      return o << "TME not implemented";
       //o << *TPtr<const TME>(value);
-      return o;
     case _FPE:
-      o << "Fix me!";
+      return o << "FPE not implemented";
       //o << *TPtr<const FPE>(value);
-      return o;
     case _IUE:
-      o << "Fix me!";
+      return o << "IUE not implemented";
       //o << *TPtr<const IUE>(value);
-      return o;
     case _ISE:
-      o << "ISE Fix me!";
+      return o << "ISE not implemented";
       //o << *TPtr<const ISE>(value);
-      return o;
+    case _BOL:
+      return o << *TPtr<const BOL>(value);
   }
   return o;
+}
+
+// Prints the value of the given type-value tuple.
+//| b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+//|:-------:|:------:|:-----:|:-----:|:-----:|
+//|   MOD   |   MT   |  SW   |  VTS  |  POD  |
+template<typename Printer, typename DT = DTB>
+Printer& TPrintValue(Printer & o, DT type, const void* value) {
+  if (type < ATypePODCount) return TPrintValuePOD<Printer>(o, DTB(type), value);
+  auto mod_bits = type >> ATypeMODBit0;
+  type ^= mod_bits << ATypeMODBit0;
+  auto map_type = type >> ATypeMTBit0;
+  type ^= map_type << ATypeMTBit0;
+  if (map_type > 0) {
+    if (type < ATypePODCount) { // Map of one POD type to another.
+      return o << STRTypePOD(type);
+    }
+  }
+  auto size_width = type >> ATypeSWBit0;
+  type ^= size_width << ATypeSWBit0;
+  auto vector_type = type >> ATypeVTBit0;
+  type ^= vector_type << ATypeVTBit0;
+  o << "count_max:";
+  if (vector_type == _ARY) {
+    if      (size_width == 0) o << *(ISA*)(value);
+    else if (size_width == 1) o << *(ISB*)(value);
+    else if (size_width == 2) o << *(ISC*)(value);
+    else if (size_width == 3) o << *(ISD*)(value);
+    return o;
+  } else if (vector_type == _STK) {
+    if (size_width == 0) {
+      auto cursor = TPtr<const ISA>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 1) {
+      auto cursor = TPtr<const ISB>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 2) {
+      auto cursor = TPtr<const ISC>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 3) {
+      auto cursor = TPtr<const ISD>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+  }
+  else if (vector_type == _MAT) {
+    if (size_width == 0) {
+      auto cursor = TPtr<const ISA>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 1) {
+      auto cursor = TPtr<const ISB>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 2) {
+      auto cursor = TPtr<const ISC>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+    else if (size_width == 3) {
+      auto cursor = TPtr<const ISD>(value);
+      o << *cursor++ << " count:" << *cursor;
+    }
+  }
+  return o;
+}
+
+// Prints the value of the given type-value tuple.
+template<typename Printer, typename DT = DTB, typename IS = ISW>
+Printer& TPrintValue(Printer& o, DT type, const void* base_ptr, IS offset) {
+  return TPrintValue<Printer, DT>(o, type, TPtr<void>(base_ptr, offset));
 }
 
 // Prints the value of the given type-value tuple.
@@ -791,13 +869,16 @@ Printer& TPrintValue(Printer& o, TTypeValue<DT> type_value) {
 // Prints ASCII type and the value tuple.
 template<typename Printer, typename DT = DTB>
 Printer& TPrintTypeValue(Printer& o, DT type, const void* value) {
-  o << TPrintType<DT>(type) << ':' << TPrintValue<Printer, DT>(o, type, value);
+  return o << TPrintType<Printer>(o, type) << ':' 
+           << TPrintValue<Printer, DT>(o, type, value);
 }
 
-template<typename Printer, typename DT = DTB>
-Printer& TPrintTypeValueSummary(Printer& o, DT type, const void* value) {
-  return o << "Your mom";
+// Prints ASCII type and the value tuple.
+template<typename Printer, typename DT = DTB, typename IS = ISW>
+Printer& TPrintTypeValue(Printer& o, DT type, const void* base_ptr, IS offset) {
+  return TPrintTypeValue<Printer, DT>(o, type, TPtr<void>(base_ptr, offset));
 }
+
 }  //< namespace _
 
 #endif

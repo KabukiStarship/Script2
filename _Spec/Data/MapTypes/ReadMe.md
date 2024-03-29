@@ -15,6 +15,7 @@ ASCII Map Types shall be composed of contiguous memory and begin with an 16, 32 
 |   B-Sequence    |     Metadata   |
 |    B-Stream     |       Set      |
 |      List       |       Set      |
+|      Loom       |       Set      |
 |      Book       |       Set      |
 |   Dictionary    |       Set      |
 |      Map        |       Set      |
@@ -34,6 +35,6 @@ pair, so we need a 64-bit dictionary.
 
 ## License
 
-Copyright 2015-22 © [Kabuki Starship](https://kabukistarship.com).
+Copyright [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

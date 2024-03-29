@@ -2,10 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Array.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #ifndef SCRIPT2_ARRAY_TEMPLATES
 #define SCRIPT2_ARRAY_TEMPLATES
@@ -396,7 +396,7 @@ inline const T* TArrayCompare(const void* a_begin, void* a_end, const void* b_be
 }
 
 /* A word-aligned array of cSize_ elements of T on the progam stack. */
-template<ISW cSize_ = cCpuCacheLineSize, typename T = IUA, typename IS = ISN,
+template<ISW cSize_ = CRCpuCacheLineSize, typename T = IUA, typename IS = ISN,
           typename Class = Nil>
 class TBUF {
  public:

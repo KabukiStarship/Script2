@@ -46,7 +46,7 @@ ISN MonthByDay(ISN day, ISN year) {
   return 0;
 }
 
-ISB ClockEpoch() { return cClockEpochInit; }
+ISB ClockEpoch() { return AClockEpochInit; }
 
 AClock* ClockInit(AClock& clock, TMC t) { return TClockInit<TMC>(clock, t); }
 
@@ -78,9 +78,9 @@ TMD ClockNow() {
 }
 
 TMC ClockSeconds(AClock& clock) {
-  return (clock.year - cClockEpochInit) * cSecondsPerYear +
-         (clock.day - 1) * cSecondsPerDay + clock.hour * cSecondsPerHour +
-         clock.minute * cSecondsPerMinute + clock.second;
+  return (clock.year - AClockEpochInit) * SecondsPerYear +
+         (clock.day - 1) * cSecondsPerDay + clock.hour * SecondsPerHour +
+         clock.minute * SecondsPerMinute + clock.second;
 }
 
 TMC ClockTMC(AClock& clock) { return ClockSeconds(clock); }

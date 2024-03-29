@@ -38,6 +38,7 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 template<typename ISZ = ISN>
 struct TMatrix {
   ISZ size;                //< Number of elements in the Matrix.
+  ISZ neo_from_the_Matrix; //< Agent Smith bruh.
   TStack<ISZ> dimensions;  //< The stack of dimensions.
 };
 

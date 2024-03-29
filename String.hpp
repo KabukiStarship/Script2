@@ -112,7 +112,7 @@ Printer& TStringPrint(Printer& o, TString<ISZ>* string) {
   ISZ size = string->size;
   o << Linef("\n+---\n| TString<CH") << CHT('0' + sizeof(CHT)) << ",IS"
     << CHT('0' + sizeof(ISZ)) << "> size:" << size << Linef("\n+---\n| \"");
-  ISW column_count = cConsoleWidth;
+  ISW column_count = AConsoleWidth;
   ISZ length = 0;
   CHL c = 0;
   const CHT* cursor = SScan(start, c);
@@ -246,7 +246,7 @@ Strings that use dynamic memory use the TC:
 AString<IUC, TBUF<64>> () << "Hello world!";
 @endcode
 */
-template<typename CHT = CHR, typename ISZ = ISN, ISZ cSize_ = cSTRCount,
+template<typename CHT = CHR, typename ISZ = ISN, ISZ cSize_ = ASTRCount,
           typename BUF = TBUF<cSize_, CHT, ISZ, TString<ISZ>>>
 class AString {
   AArray<CHT, ISZ, BUF> obj_;  //< AutoArray of CHT(s).
@@ -487,17 +487,6 @@ class AString {
 
   inline void CPrint() { PrintTo<COut>(COut().Star()); }
 };
-
-/*
-#if USING_UTF1 == YES_0
-using String1 = TString<CHA>;
-#endif
-#if USING_UTF2 == YES_0
-using String2 = TString<CHB>;
-#endif
-#if USING_UTF4 == YES_0
-using String4 = TString<CHC>;
-#endif*/
 
 }  //< namespace _
 

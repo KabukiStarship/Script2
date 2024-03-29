@@ -19,6 +19,70 @@ faster. */
 
 namespace _ {
 
+template<typename IS>
+const CHA* TSTRTypesPOD(IS type) {
+  auto strings = STRTypesPOD();
+  auto count_max = ATypePODCount;
+  type = (type < 0 || type >= count_max) ? count_max : type;
+  return &strings[type];
+}
+
+template<typename IS>
+const CHA* TSTRTypesVector(IS value) {
+  auto strings = STRTypesVector();
+  auto value_max = 3;
+  value = (value < 0 || value >= value_max) ? value_max : value;
+  return &strings[value];
+}
+
+template<typename IS>
+const CHA* TSTRTypesVectorClass(IS value) {
+  auto strings = STRTypesVectorClass();
+  auto value_max = 3;
+  value = (value < 0 || value >= value_max) ? value_max : value;
+  return &strings[value];
+}
+
+template<typename IS>
+const CHA* TSTRTypesModifier(IS value) {
+  auto strings = STRTypesModifier();
+  auto value_max = 3;
+  value = (value < 0 || value >= value_max) ? value_max : value;
+  return &strings[value];
+}
+
+template<typename IS>
+const CHA* TSTRTypesString(IS value) {
+  auto strings = STRTypesString();
+  auto value_max = 3;
+  value = (value < 0 || value >= value_max) ? value_max : value;
+  return &strings[value];
+}
+
+/* Gets one of the STRTypes. */
+inline const CHA* STRTypePOD(DTW index) {
+  if (index < 0 || index >= Invalid) index = 32;
+  return STRTypesPOD() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypeVector(DTW index) {
+  if (index < 0 || index >= 4) index = 0;
+  return STRTypesVector() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypeVectorClasses(DTW index) {
+  if (index < 0 || index >= 16) index = 16;
+  return STRTypesVectorClass() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRTypes. */
+inline const CHA* STRTypeModifier(DTW index) {
+  if (index < 0 || index >= 4) index = 0;
+  return STRTypesModifier() + (index << 2); // << 2 to * 4
+}
+
 inline ISN STRLength(IUA value) {
   if (value < 10) return 1;
   if (value < 100) return 2;
@@ -105,9 +169,8 @@ inline const CHT* TSTRFindLast(const CHT* string, CHA token) {
 }
 
 /* Gets the length of the given CHA.
-@return  Returns -1 if the text CHA is nil.
-@warning This function is only safe to use on ROM Strings with a nil-term
-CHA. */
+@todo    Update function for UTF-8 and UTF-16.
+@return  Returns -1 if the text CHA is nil.*/
 template<typename CHT = CHR, typename IS = ISN>
 IS TSTRLength(const CHT* string) {
   return (IS)(TSTREnd<CHT>(string) - string);
@@ -1063,25 +1126,25 @@ CHT* TPrintChars(CHT* start, CHT* stop, const void* origin, const void* end)
 /* An empty string. */
 template<typename CHT = CHR>
 const CHT* TSTREmpty() {
-  static const CHT kString[] = {NIL};
+  static const CHT kString[] = "";
   return kString;
 }
 
-/* The new-line s. */
+// A string that contains only a new line char.
 template<typename CHT = CHR>
 const CHT* TSTRNL() {
   static const CHT kString[] = {'\n'};
   return kString;
 }
 
-/* String the reads "Error:". */
+// String the reads "Error:".
 template<typename CHT = CHR>
 const CHT* TSTRError() {
   static const CHT kString[] = {'\n', 'E', 'r', 'r', 'o', 'r', ':', NIL};
   return kString;
 }
 
-/* Converts the given item to a printable CHA if it's non-printable. */
+// Converts the given item to a printable CHA if it's non-printable.
 template<typename CHT = CHR>
 inline CHT TCharPrintable(CHT item) {
   if (item < 32 || item == 127) return ' ';
@@ -1099,7 +1162,7 @@ inline CHT* TSTRSet(CHT* string) {
 /* Searches fro the s line stop.
 @param cursor  The first CHT in the buffer. */
 template<typename CHT = CHR>
-const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = cConsoleWidth) {
+const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = AConsoleWidth) {
   CHT c;
   // Scroll to the stop of the line.
   c = *cursor++;
@@ -1121,7 +1184,7 @@ const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = cConsoleWidth) {
 @param cursor  The first CHT in the buffer.
 @param stop    The last CHT in the buffer. */
 template<typename CHT = CHR>
-CHT* TSTRLineEnd(CHT* cursor, ISC column_count = cConsoleWidth) {
+CHT* TSTRLineEnd(CHT* cursor, ISC column_count = AConsoleWidth) {
   return const_cast<CHT*>(TSTRLineEnd(TPtr<const CHT>(cursor), column_count));
 }
 
@@ -1131,7 +1194,7 @@ CHT* TSTRLineEnd(CHT* cursor, ISC column_count = cConsoleWidth) {
 @param column_count In characters. */
 template<typename CHT = CHR>
 const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
-                       ISC column_count = cConsoleWidth) {
+                       ISC column_count = AConsoleWidth) {
   if (!cursor) return nullptr;
   A_ASSERT(cursor < stop);
   CHT c;
@@ -1158,7 +1221,7 @@ const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
 @param column_coun In characters. */
 template<typename CHT = CHR>
 inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
-                        ISC column_count = cConsoleWidth) {
+                        ISC column_count = AConsoleWidth) {
   return const_cast<const CHT*>(
       TSTRLineEnd<CHT>(TPtr<const CHT>(cursor), TPtr<const CHT>(stop), column_count));
 }
@@ -1389,7 +1452,7 @@ pointer to the nil-term CHA upon success.
 @param column_count The token_ of columns to align right to. */
 template<typename CHT = CHR>
 CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
-                 ISC column_count = cConsoleWidth) {
+                 ISC column_count = AConsoleWidth) {
   if (!cursor || cursor + column_count > stop) {
     return nullptr;
   }
@@ -1443,7 +1506,7 @@ CHT* TPrintRight(CHT* cursor, CHT* stop, const CHT* item,
 /* Prints the given cursor center aligned to the given column_count. */
 template<typename CHT = CHR>
 CHT* TPrintCenter(CHT* cursor, CHT* stop, const CHT* string,
-                  ISC column_count = cConsoleWidth) {
+                  ISC column_count = AConsoleWidth) {
   if (!cursor || cursor >= stop) return nullptr;
 
   // We need to leave at least one space to the left and right of
@@ -1483,7 +1546,7 @@ CHT* TPrintCenter(CHT* cursor, CHT* stop, const CHT* string,
 
 /* Prints a line of the given column_count the given start. */
 template<typename CHT = CHR>
-CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, ISW count = cConsoleWidth,
+CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, ISW count = AConsoleWidth,
                  const CHT* header = TSTRNL<CHT>(),
                  const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
@@ -1501,7 +1564,7 @@ CHT* TPrintLinef(CHT* start, CHT* stop, CHT item, ISW count = cConsoleWidth,
 /* Prints the given cursor repeated to make a line. */
 template<typename CHT = CHR>
 CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
-                 ISW count = cConsoleWidth, const CHT* header = TSTRNL<CHT>(),
+                 ISW count = AConsoleWidth, const CHT* header = TSTRNL<CHT>(),
                  const CHT* footer = nullptr) {
   if (header) start = SPrint(start, stop, header);
   if (!start || start <= stop || (start + count >= stop)) return nullptr;
@@ -1525,21 +1588,21 @@ CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
 /* Prints the given cursor repeated to make a line. */
 template<typename CHT = CHR>
 CHT* TPrintHeadingf(CHT* start, CHT* stop, CHT item,
-                    ISW count = cConsoleWidth) {
+                    ISW count = AConsoleWidth) {
   return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints the given cursor repeated to make a line. */
 template<typename CHT = CHR>
 CHT* TPrintHeadingf(CHT* start, CHT* stop, const CHT* item,
-                    ISW count = cConsoleWidth) {
+                    ISW count = AConsoleWidth) {
   return TPrintLinef<CHT>(start, stop, item, count, nullptr, nullptr);
 }
 
 /* Prints a cursor to the given buffer without */
 template<typename CHT = CHR>
 CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
-                ISW column_count = cConsoleWidth) {
+                ISW column_count = AConsoleWidth) {
   if (!cursor || cursor <= stop || !string) return nullptr;
   if (column_count < 2) return cursor;
 

@@ -27,3 +27,31 @@ the MPL was not distributed with this file, You can obtain one at
 #define USING_FPD YES_0
 
 #define USING_16_BYTE_POD_TYPES NO_0
+
+#define BOL_SIZE_BITS 32
+#define DTA_SIZE 0
+#define DTB_SIZE 0
+#define DTC_SIZE 0
+#define DTD_SIZE 0
+#define DTE_SIZE 0
+#define DTF_SIZE 0
+#define DTG_SIZE 0
+#define DTH_SIZE 0
+#define DTI_SIZE 0
+#define DTJ_SIZE 0
+#define DTK_SIZE 0
+#define DTL_SIZE 0
+
+#define BOL_ALIGN_MASK 3
+#define DTA_ALIGN_MASK 0
+#define DTB_ALIGN_MASK 0
+#define DTC_ALIGN_MASK 0
+#define DTD_ALIGN_MASK 0
+#define DTE_ALIGN_MASK 0
+#define DTF_ALIGN_MASK 0
+#define DTG_ALIGN_MASK 0
+#define DTH_ALIGN_MASK 0
+#define DTI_ALIGN_MASK 0
+#define DTJ_ALIGN_MASK 0
+#define DTK_ALIGN_MASK 0
+#define DTL_ALIGN_MASK 0

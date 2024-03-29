@@ -27,7 +27,6 @@ template<typename ISZ>
 static void TestList() {
   D_COUT(Linef("\n\n\n\n+---\n Testing AList<IS")
          << sizeof(ISZ) << Linef(">\n+---"));
-
   AList<ISZ, 1024, 40> list;
   D_COUT("\n\nlist.Size():" << list.Size()
                             << " list.SizeBytes():" << list.SizeBytes()
@@ -35,37 +34,48 @@ static void TestList() {
   D_COUT_OBJ(list);
   D_COUT("\n\nPushing items on to the List stack...\n");
 
-  const CHA test_ch1[] = {'a', 'b', 'c', 'd'};
-  const ISC test_si4[] = {'0', '1', '2', '3'};
-  const FPC test_fp4[] = {1.0f, 2.0f, 3.0f, 4.0f};
-  const IUD test_ui8[] = {'w', 'x', 'y', 'z'};
-  const char* test_st1[] = {"A", "B", "C", "D"};
+  const CHA test_cha[] = {'a', 'b', 'c', 'd'};
+  const ISC test_isc[] = {'0', '1', '2', '3'};
+  const FPC test_fpc[] = {1.0f, 2.0f, 3.0f, 4.0f};
+  const IUD test_iud[] = {'w', 'x', 'y', 'z'};
+  const char* test_sta[] = {"A", "B", "C", "D"};
 
-  enum { cTestCount = 1 };
+  enum { TestCount = 1 };
   ISZ count = 0;
-  for (ISZ i = 0; i < cTestCount; ++i) {
-    for (ISZ i = 0; i < 4; ++i) {
-      A_AVOW(count++, list.Insert(test_ch1[i]));
+  for (ISZ i = 0; i < TestCount; ++i) {
+    for (ISZ j = 0; j < 4; ++j) {
+      A_AVOW(count++, list.Insert(test_cha[j]));
+    }
+  }
+  
+  D_COUT_OBJ(list);
+  for (ISZ i = 0; i < TestCount; ++i) {
+    for (ISZ j = 0; j < 4; ++j) {
+      A_AVOW(count++, list.Insert(test_isc[j]));
     }
   }
   D_COUT_OBJ(list);
-  for (ISZ i = 0; i < cTestCount; ++i) {
-    for (ISZ i = 0; i < 4; ++i) {
-      A_AVOW(count++, list.Insert(test_si4[i]));
+  for (ISZ i = 0; i < TestCount; ++i) {
+    for (ISZ j = 0; j < 4; ++j) {
+      A_AVOW(count++, list.Insert(test_cha[j]));
+      A_AVOW(count++, list.Insert(test_isc[j]));
+      A_AVOW(count++, list.Insert(test_fpc[j]));
+      A_AVOW(count++, list.Insert(test_iud[j]));
     }
   }
   D_COUT_OBJ(list);
-  for (ISZ i = 0; i < cTestCount; ++i) {
-    for (ISZ i = 0; i < 4; ++i) {
-      A_AVOW(count++, list.Insert(test_ch1[i]));
-      A_AVOW(count++, list.Insert(test_si4[i]));
-      A_AVOW(count++, list.Insert(test_fp4[i]));
-      A_AVOW(count++, list.Insert(test_ui8[i]));
-      //A_AVOW(count++, list.Insert(test_st1[i]));
-    }
-  }
-  D_COUT_OBJ(list);
-  for (ISZ i = cTestCount - 1; i >= 0; --i) list.Pop();
+  for (ISZ i = TestCount - 1; i >= 0; --i) list.Pop();
+  
+  D_COUT("\n\nTesting STKPack...");
+  list.Clear();
+  count = 0;
+
+  //for (ISZ j = 0; j < 3; ++j)
+  //  A_AVOW(count++, list.Insert(test_cha[j]));
+  //A_AVOW(ISZ(3), list.Insert(test_isc[0]));
+  //D_COUT_OBJ(list);
+  //A_AVOW(ISZ(3), list.Insert(test_cha[3], STKPack));
+  // @todo Add more STKPack test cases.
 }
 }  //< namespace Script2
 #endif
@@ -78,14 +88,14 @@ static const CHA* List(const CHA* args) {
   TestList<ISC>();
   TestList<ISD>();
   D_COUT("\n\nTesting TTypePrint...\n");
-  for (ISC type = TEST_MIN; type < TEST_MAX; ++type) {
+  for (DTB type = TEST_MIN; type < TEST_MAX; ++type) {
     D_COUT('\n' << type << ".) ");
     D_COUT(TPrintType<COut>(COut().Star(), type));
   }
 
   D_COUT("\n\nTTypePrint: ARY_CHA");
 #if SEAM == SCRIPT2_LIST
-  TTypePrint<COut>(COut().Star(), cARY | cCHA);
+  TPrintType<COut>(COut().Star(), DTB(_ARY | _CHA));
 #endif
 #endif
   return nullptr;

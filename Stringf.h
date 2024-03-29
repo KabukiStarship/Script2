@@ -10,7 +10,6 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
 #ifndef SCRIPT2_STRINGF_CODLESS_DECL
 #define SCRIPT2_STRINGF_CODLESS_DECL 1
-#include "Types.h"
 namespace _ {
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
@@ -24,6 +23,54 @@ LIB_MEMBER const CHA* STRPrintHexHeader();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
 LIB_MEMBER const CHA* STRPrintHexBorder();
+
+/* Gets the string representations of the given ASCII POD Type 0-31. */
+LIB_MEMBER const CHA* STRTypesPOD();
+LIB_MEMBER const CHA* STRTypesPOD(ISA type);
+LIB_MEMBER const CHA* STRTypesPOD(ISB type);
+LIB_MEMBER const CHA* STRTypesPOD(ISC type);
+LIB_MEMBER const CHA* STRTypesPOD(ISD type);
+
+/* Gets the string representations of the b6:b5 Vector type. */
+LIB_MEMBER const CHA* STRTypesVector();
+LIB_MEMBER const CHA* STRTypesVector(ISA index);
+LIB_MEMBER const CHA* STRTypesVector(ISB index);
+LIB_MEMBER const CHA* STRTypesVector(ISC index);
+LIB_MEMBER const CHA* STRTypesVector(ISD index);
+
+/* Gets the string representations of the b6:b5 Vector types classes.
+Classes are VHT, ARY, STK, and MAT. */
+LIB_MEMBER const CHA* STRTypesVectorClass();
+LIB_MEMBER const CHA* STRTypesVectorClass(ISA index);
+LIB_MEMBER const CHA* STRTypesVectorClass(ISB index);
+LIB_MEMBER const CHA* STRTypesVectorClass(ISC index);
+LIB_MEMBER const CHA* STRTypesVectorClass(ISD index);
+
+/* Gets the string representations of the b15:b14 modifier bits. */
+LIB_MEMBER const CHA* STRTypesModifier();
+LIB_MEMBER const CHA* STRTypesModifier(ISA index);
+LIB_MEMBER const CHA* STRTypesModifier(ISB index);
+LIB_MEMBER const CHA* STRTypesModifier(ISC index);
+LIB_MEMBER const CHA* STRTypesModifier(ISD index);
+
+/* Gets the string representations of the b15:b14 modifier bits. */
+LIB_MEMBER const CHA* STRTypesString();
+LIB_MEMBER const CHA* STRTypesString(ISA index);
+LIB_MEMBER const CHA* STRTypesString(ISB index);
+LIB_MEMBER const CHA* STRTypesString(ISC index);
+LIB_MEMBER const CHA* STRTypesString(ISD index);
+
+// Returns true if the given type is a CHA, CHB, or CHC.
+LIB_MEMBER BOL ATypeIsCH(DTB type);
+
+/* string that reads "true". */
+LIB_MEMBER const CHA* STRTrue();
+
+/* String that reads "false". */
+LIB_MEMBER const CHA* STRFalse();
+
+/* SCRIPT Specification error strings. */
+const CHA* STRError(ISA error_number);
 
 /* Converts a IUA into a two-IUA hex representation.
 @return Returns -1 if c is not a hex IUA. */
@@ -259,7 +306,7 @@ class LIB_MEMBER Stringf {
 #if USING_FPD == YES_0
   Stringf(FPD item, ISW count);
 #endif
-  Stringf(TypeValue item, ISW count = cConsoleWidth);
+  Stringf(TypeValue item, ISW count = AConsoleWidth);
 
   IUW Word();
 
@@ -348,27 +395,27 @@ struct LIB_MEMBER Centerf {
   Centerf();
 
   /* Prints the item to the value. */
-  Centerf(CHA item, ISW count = cConsoleWidth);
-  Centerf(const CHA* start, ISW count = cConsoleWidth);
+  Centerf(CHA item, ISW count = AConsoleWidth);
+  Centerf(const CHA* start, ISW count = AConsoleWidth);
 #if USING_UTF16 == YES_0
-  Centerf(CHB item, ISW count = cConsoleWidth);
-  Centerf(const CHB* item, ISW count = cConsoleWidth);
+  Centerf(CHB item, ISW count = AConsoleWidth);
+  Centerf(const CHB* item, ISW count = AConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Centerf(CHC item, ISW count = cConsoleWidth);
-  Centerf(const CHC* item, ISW count = cConsoleWidth);
+  Centerf(CHC item, ISW count = AConsoleWidth);
+  Centerf(const CHC* item, ISW count = AConsoleWidth);
 #endif
-  Centerf(ISC item, ISW count = cConsoleWidth);
+  Centerf(ISC item, ISW count = AConsoleWidth);
 
-  Centerf(IUC item, ISW count = cConsoleWidth);
-  Centerf(ISD item, ISW count = cConsoleWidth);
-  Centerf(IUD item, ISW count = cConsoleWidth);
+  Centerf(IUC item, ISW count = AConsoleWidth);
+  Centerf(ISD item, ISW count = AConsoleWidth);
+  Centerf(IUD item, ISW count = AConsoleWidth);
 
 #if USING_FPC == YES_0
-  Centerf(FPC item, ISW count = cConsoleWidth);
+  Centerf(FPC item, ISW count = AConsoleWidth);
 #endif
 #if USING_FPD == YES_0
-  Centerf(FPD item, ISW count = cConsoleWidth);
+  Centerf(FPD item, ISW count = AConsoleWidth);
 #endif
 
   /* Stores the item to the first word of the buffer and the negative of the
@@ -404,26 +451,26 @@ struct LIB_MEMBER Rightf {
   Rightf();
 
   /* Prints the item to the value. */
-  Rightf(CHA item, ISW count = cConsoleWidth);
-  Rightf(const CHA* item, ISW count = cConsoleWidth);
+  Rightf(CHA item, ISW count = AConsoleWidth);
+  Rightf(const CHA* item, ISW count = AConsoleWidth);
 #if USING_UTF16 == YES_0
-  Rightf(CHB item, ISW count = cConsoleWidth);
-  Rightf(const CHB* item, ISW count = cConsoleWidth);
+  Rightf(CHB item, ISW count = AConsoleWidth);
+  Rightf(const CHB* item, ISW count = AConsoleWidth);
 #endif
 #if USING_UTF32 == YES_0
-  Rightf(CHC item, ISW count = cConsoleWidth);
-  Rightf(const CHC* item, ISW count = cConsoleWidth);
+  Rightf(CHC item, ISW count = AConsoleWidth);
+  Rightf(const CHC* item, ISW count = AConsoleWidth);
 #endif
-  Rightf(ISC item, ISW count = cConsoleWidth);
-  Rightf(IUC item, ISW count = cConsoleWidth);
-  Rightf(ISD item, ISW count = cConsoleWidth);
-  Rightf(IUD item, ISW count = cConsoleWidth);
+  Rightf(ISC item, ISW count = AConsoleWidth);
+  Rightf(IUC item, ISW count = AConsoleWidth);
+  Rightf(ISD item, ISW count = AConsoleWidth);
+  Rightf(IUD item, ISW count = AConsoleWidth);
 
 #if USING_FPC == YES_0
-  Rightf(FPC item, ISW count = cConsoleWidth);
+  Rightf(FPC item, ISW count = AConsoleWidth);
 #endif
 #if USING_FPD == YES_0
-  Rightf(FPD item, ISW count = cConsoleWidth);
+  Rightf(FPD item, ISW count = AConsoleWidth);
 #endif
 
   /* Stores the item to the first word of the buffer and the negative of the
@@ -457,10 +504,10 @@ struct LIB_MEMBER Linef {
   CHA string[5];   //< Used to create a string in Linef(CHA,ISW).
 
   /* Constructors a horizontal line of the character. */
-  Linef(CHA item, ISW count = cConsoleWidth);
+  Linef(CHA item, ISW count = AConsoleWidth);
 
   /* Constructors a horizontal line of the given string. */
-  Linef(const CHA* start = nullptr, ISW count = cConsoleWidth);
+  Linef(const CHA* start = nullptr, ISW count = AConsoleWidth);
 };
 
 /* Utility class for printing a Heading with formatting with operator<<. */
@@ -477,7 +524,7 @@ struct LIB_MEMBER Headingf {
   /* Saves the parameters to the corresponding data members. */
   Headingf(const CHA* caption, const CHA* caption2,
            const CHA* caption3 = nullptr, const CHA* style = nullptr,
-           ISW count = cConsoleWidth);
+           ISW count = AConsoleWidth);
 };
 
 /* Utility class for indenting text with operator<<. */

@@ -14,73 +14,117 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 
-const CHA* STRTypesPOD() {
-  static const CHA Strings[64][4] = {
-      {'N', 'I', 'L', NIL},  //< 00
-      {'I', 'U', 'A', NIL},  //< 01
-      {'I', 'S', 'A', NIL},  //< 02
-      {'C', 'H', 'A', NIL},  //< 03
-      {'F', 'P', 'B', NIL},  //< 04
-      {'I', 'U', 'B', NIL},  //< 05
-      {'I', 'S', 'B', NIL},  //< 06
-      {'C', 'H', 'B', NIL},  //< 07
-      {'F', 'P', 'C', NIL},  //< 08
-      {'I', 'U', 'C', NIL},  //< 09
-      {'I', 'S', 'C', NIL},  //< 10
-      {'C', 'H', 'C', NIL},  //< 11
-      {'F', 'P', 'D', NIL},  //< 12
-      {'I', 'U', 'D', NIL},  //< 13
-      {'I', 'S', 'D', NIL},  //< 14
-      {'T', 'M', 'E', NIL},  //< 15
-      {'F', 'P', 'E', NIL},  //< 16
-      {'I', 'U', 'E', NIL},  //< 17
-      {'I', 'S', 'E', NIL},  //< 18
-      {'B', 'O', 'L', NIL},  //< 19
-      {'D', 'T', 'A', NIL},  //< 20
-      {'D', 'T', 'B', NIL},  //< 21
-      {'D', 'T', 'C', NIL},  //< 22
-      {'D', 'T', 'D', NIL},  //< 23
-      {'D', 'T', 'E', NIL},  //< 24
-      {'D', 'T', 'F', NIL},  //< 25
-      {'D', 'T', 'G', NIL},  //< 26
-      {'D', 'T', 'H', NIL},  //< 27
-      {'D', 'T', 'I', NIL},  //< 28
-      {'D', 'T', 'J', NIL},  //< 29
-      {'D', 'T', 'K', NIL},  //< 30
-      {'D', 'T', 'L', NIL},  //< 31
-      {'I', 'N', 'V', NIL},  //< 32
-  };
-  return &Strings[0][0];
+BOL ATypeIsCH(DTB type) {
+  // CHA: 3   0b0011
+  // CHB: 7   0b0111
+  // CHC: 11  0b1011
+  return ((type & 3) != 3) && ((type >> 2) <= 2);
 }
 
-const CHA* STRTypesVector() {
-  static const CHA Strings[4][4] = {
-      {'V', 'H', 'T', NIL},  //< 00
-      {'A', 'R', 'Y', NIL},  //< 01
-      {'S', 'T', 'K', NIL},  //< 02
-      {'M', 'A', 'T', NIL},  //< 03
-  };
-  return &Strings[0][0];
+BOL ATypeVTBits(DTB type) {
+  //| b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+  //|:-------:|:------:|:-----:|:-----:|:-----:|
+  //|   MOD   |   MT   |  SW   |  VT   |  POD  |
+  const DTB mask = 3,
+        VT = (type >> ATypeVTBit0) & mask,
+        MT = (type >> ATypeMTBit0) & mask;
+  return (VT != _ARY || MT != 0) ? -1 : VT;
 }
 
-const CHA* STRTypesModifier() {
-  static const CHA Strings[4][4] = {
-      {'P', 'O', 'D', NIL},  //< 00
-      {'P', 'T', 'R', NIL},  //< 01
-      {'C', 'N', 'S', NIL},  //< 02
-      {'P', 'T', 'C', NIL},  //< 03
+const ISA* ATypeCustomSize() {
+  static const ISA custom_sizes[13] = {
+    BOLSizeBits,
+    DTASize,
+    DTBSize,
+    DTCSize,
+    DTDSize,
+    DTESize,
+    DTFSize,
+    DTGSize,
+    DTHSize,
+    DTISize,
+    DTJSize,
+    DTKSize,
+    DTLSize
   };
-  return &Strings[0][0];
+  return custom_sizes;
 }
 
-const CHA* STRTrue() { return "true"; }
-const CHA* STRFalse() { return "false"; }
+const ISA* ATypeCustomAlignMask() {
+  static const ISA align_masks[] = {
+    BOLSizeBits,
+    DTAAlignMask,
+    DTBAlignMask,
+    DTCAlignMask,
+    DTDAlignMask,
+    DTEAlignMask,
+    DTFAlignMask,
+    DTGAlignMask,
+    DTHAlignMask,
+    DTIAlignMask,
+    DTJAlignMask,
+    DTKAlignMask,
+    DTLAlignMask
+  };
+  return align_masks;
+}
 
-Typef TypefOf() {
-  Typef typef = {0, 0}; //< I don't want to init this but the compiler is barking.
-  typef.type = 0;
-  typef.string = nullptr;
-  return typef;
+ISA ATypeCustomAlignMask(DTA type) {
+  if (type >= ATypePODCount) return sizeof(ISW) - 1;
+  return ATypeCustomAlignMask()[type - _BOL];
+}
+
+ISA ATypeSizeBytesPOD(DTB type) {
+  if (type == 0 || type >= ATypePODCount) return 0;
+  if (type < _FPB) return 1;
+  if (type < _FPC) return 2;
+  if (type < _FPD) return 4;
+  if (type < _FPE) return 8;
+  if (type < _BOL) return 16;
+  return ATypeCustomSize()[type - _BOL];
+}
+
+
+ISW ATypeSizeBytes(void* value, DTB type) {
+  if (type < ATypePODCount)
+    return ATypeSizeBytesPOD(type);
+  // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+  // |:-------:|:------:|:-----:|:-----:|:-----:|
+  // |   MOD   |   MT   |  SW   |  VT   |  POD  |
+  auto mod = type >> ATypeMODBit0;
+  if (mod && 1) return sizeof(void*);
+  type ^= mod << ATypeMODBit0;
+  auto mt = type >> ATypeMTBit0;
+  type ^= mt << ATypeMTBit0;
+  auto sw = type >> ATypeSWBit0;
+  type ^= sw << ATypeSWBit0;
+  auto vt = type >> ATypeVTBit0;
+  type ^= vt << ATypeVTBit0;
+  if (vt == 0) return ISW(sw) * ATypeSizeBytesPOD(type);
+  ISW size = 0;
+  switch (sw) {
+  case 0:
+    size = ISW(*TPtr<ISA>(value));
+    break;
+  case 1:
+    size = ISW(*TPtr<ISB>(value));
+    break;
+  case 2:
+    size = ISW(*TPtr<ISC>(value));
+    break;
+  case 3:
+    size = ISW(*TPtr<ISD>(value));
+    break;
+  }
+  return size * sw;
+}
+
+ISW ATypeSizeBytes(void* value_base, ISA size_bytes, DTB type) {
+  return ATypeSizeBytes(TPtr<>(value_base, size_bytes), type);
+}
+
+void* ATypeValueEnd(void* value, DTB type) {
+  return TPtr<void>(value, ATypeSizeBytes(value, type));
 }
 
 TypeValue::TypeValue() : type_(_NIL), word_(0), word_2_(0) {}
@@ -158,7 +202,7 @@ AValue::AValue(FPD item) : type_(cFPD) { *TPtr<FPD>(&word_) = item; }
 #endif
 
 TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
-  DTW pod_type = type & PODTypeMask;
+  DTW pod_type = type & ATypePODMask;
   if (type != pod_type) {
     word_ = IUW(item);
   } else if (pod_type <= 7) {
