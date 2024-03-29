@@ -31,7 +31,7 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | 16 | FPE  |  float128_t  |  16   | 16-byte floating-point number. |
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
-| 19 | BOL  |     bool     | 1/2/4 | Implementation-defined 1-bit or 1, 2, or 4-byte boolean value. |
+| 19 | BOL  |     bool     | 1/2/4 | Implementation-defined 1-bit or 1, 2, or 4-byte boolean. |
 | 20 | DTA  |  Data Type A |  xW   | Implementation-defined word-aligned Data Type A. |
 | 21 | DTB  |  Data Type B |  xW   | Implementation-defined word-aligned Data Type B. |
 | 22 | DTC  |  Data Type C |  xW   | Implementation-defined word-aligned Data Type C. |
@@ -84,22 +84,22 @@ A Homotuple (Homogenous Tuple) is a Vector of homogeneous types of length 1, 2, 
 
 | b8:b7 | b6:b5  | b4:b0 |
 |:-----:|:------:|:-----:|
-|  SW   |  VHT   |  0-31 |
+|  SW   |  VHT   |  POD  |
 
 #### One-byte Data Type Bit Pattern
 
 1-byte types only support 2-byte Size Width and are intended for memory constrained processors.
 
-| b7 |      b6:b5       | b4:b0 |
-|:--:|:----------------:|:-----:|
-| SW | Vector Type (VT) |  POD  |
+| b7 |       b6:b5       | b4:b0 |
+|:--:|:-----------------:|:-----:|
+| SW | Vector Type (VT)  |  POD  |
 
 ##### Size Width Pattern b7
 
 | Value | Type | Description |
 |:-----:|:----:|:------------|
-|   0   | VHT  | Vector of Homogenous POD Types 0-31. |
-|   1   | SW2  | 2-byte wide size type, or UTF-16 ADR/STR/TKN types. |
+|   0   | VHT  | Vector of Homogenous Types 0-31. |
+|   1   | SW2  | 2-byte wide size type. |
 
 #### Two and Four-byte Type Bit Pattern
 
@@ -122,9 +122,9 @@ Extended types are created by the Illegal Types. The Illegal Types are types tha
 
 ```AsciiArt
 | Vector |                POD Type 0-31 (1=Valid, 0=Invalid)                |
-|  Type  | N C I I F C I I F C I I T I I F  F I I F D D D D D D D D D D D D |
-| SW:VET | I H S U P H S U P H S U M S U P  P S U P T T T T T T T T T T T T |
-| b8:b5  | L A A A B B B B C C C C E D D D  E E E E A B C D E F G H I J K L |
+|  Type  | N I I C F I I C F I I C T I I F  F I I B D D D D D D D D D D D D |
+| SW:VET | I U I H P U S H P U S H M U S P  P U S O T T T T T T T T T T T T |
+| b8:b5  | L A A A B B B B C C C C E D D D  E E E L A B C D E F G H I J K L |
 +--------+------------------------------------------------------------------|
 | 00_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 00_ARY | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
@@ -163,18 +163,18 @@ Extended Types are created from the Illegal Types.
 
 ##### MT Bits
 
-A Map Type maps from of one POD type to other set, such as a Dictionary that maps a string, an integer hash, or floating-point number to an unsigned integer offset. Map Types are covered in the [Map Types](MapTypes) section. MT Bits are one of the 32 POD types.
+A Map Type maps from of one POD type to other set, such as a Dictionary that maps a string, an integer hash, or floating-point number to an unsigned integer offset. Map Types are covered in the [Map Types](MapTypes) section. MT Bits contain a POD type A such that A maps to B.
 
 ##### MOD Bits
 
 The Modifier Bits (MOD) allow for the creation of pointers and const pointers to POD and Vector types.
 
-| Value | Type | Description     |
-|:-----:|:----:|:----------------|
-|   0   | POD  | Plain-Old-Data. |
-|   1   | PTR  | Pointer.        |
-|   2   | CNS  | Const.          |
-|   3   | PTC  | Const Pointer.  |
+| Value | Type | Description      |
+|:-----:|:----:|:-----------------|
+|   0   | CTG  | Contiguous data. |
+|   1   | PTR  | Pointer.         |
+|   2   | CNS  | Const.           |
+|   3   | PTC  | Const Pointer.   |
 
 #### Two-byte Type Bit Pattern
 
@@ -198,6 +198,6 @@ The Modifier Bits (MOD) allow for the creation of pointers and const pointers to
 
 ## License
 
-Copyright 2015-22 © [Kabuki Starship](https://kabukistarship.com).
+Copyright [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

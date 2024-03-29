@@ -1,6 +1,8 @@
 # Array
 
-ASCII Arrays are C-Style arrays where the number of elements is stored in the header of the array. The number of elements is referred to as the count. The size of the Array is stored in the number of elements rather than the size in bytes to avoid repetitive calculations.
+ASCII Arrays are C-Style arrays where the number of elements is stored in the header of the array. The number of elements is referred to as the count.
+
+The size of the Array is stored in the number of elements rather than the size in bytes to avoid repetitive calculations.
 
 ```C++
 template <typename SIZ = ISC>
@@ -27,6 +29,6 @@ struct TArray {
 
 ## License
 
-Copyright 2015-22 © [Kabuki Starship](https://kabukistarship.com).
+Copyright [Kabuki Starship](https://kabukistarship.com).
 
 This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.

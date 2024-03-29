@@ -44,11 +44,11 @@ struct LIB_MEMBER TME {
 };
 
 enum ClockConstants {
-  cSecondsPerMinute = 60,                    //< Number of seconds in an minute.
-  cSecondsPerHour = 60 * cSecondsPerMinute,  //< Number of seconds in an hour.
-  cSecondsPerDay = 24 * cSecondsPerHour,     //< Number of seconds in an day.
-  cSecondsPerYear = cSecondsPerDay * 365,    //< Number of seconds in an year.
-  cSecondsPerEpoch = 10 * cSecondsPerYear,   //< Number of seconds in an year.
+  SecondsPerMinute = 60,                    //< Number of seconds in an minute.
+  SecondsPerHour = 60 * SecondsPerMinute,  //< Number of seconds in an hour.
+  cSecondsPerDay = 24 * SecondsPerHour,     //< Number of seconds in an day.
+  SecondsPerYear = cSecondsPerDay * 365,    //< Number of seconds in an year.
+  cSecondsPerEpoch = 10 * SecondsPerYear,   //< Number of seconds in an year.
   cDaysInJanuary = 31,                       //< Number of days in January.
   cDaysInFebruary = 28,                      //< Number of days in February.
   cDaysInMarch = 31,                         //< Number of days in March.

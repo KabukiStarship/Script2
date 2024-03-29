@@ -2,10 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Types.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #ifndef INCLUDED_TYPEVALUE_CODE
 #define INCLUDED_TYPEVALUE_CODE
@@ -69,24 +69,6 @@ constexpr Sizef TSizef () {
     }
   }
   return result;
-}
-
-/* Gets one of the STRTypes. */
-inline const CHA* STRTypePOD(DTW index) {
-  if (index < 0 || index >= Invalid) index = 32;
-  return STRTypesPOD() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRTypes. */
-inline const CHA* STRTypeVector(DTW index) {
-  if (index < 0 || index >= 4) index = 0;
-  return STRTypesVector() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRTypes. */
-inline const CHA* STRTypeModifier(DTW index) {
-  if (index < 0 || index >= 4) index = 0;
-  return STRTypesModifier() + (index << 2); // << 2 to * 4
 }
 
 /* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
@@ -271,19 +253,25 @@ inline IUC T() {
   return ((IUC)CharA) & (((IUC)CharB) << 8) & (((IUC)CharC) << 16);
 }
 
-/* Gets the alignment mask for the given POD data type. */
-inline ISW TypeAlignmentMask(DTW type) {
-  if (type == 0) return WordLSbMask;
-  if (type <= _IUA) return 0;
-  if (type <= _FPB) return 1;
-  if (type <= _TME) sizeof(ISN) - 1;
-  return sizeof(ISW) - 1;
+// Returns the memory alignment mask for this type.
+ISA ATypeAlignMask(DTB type) {
+  if (type <= _CHA) return 0;
+  if (type <= _CHB) return 1;
+#if CPU_SIZE == CPU_2_BYTE
+  if (type < _BOL) return 1;
+#elif CPU_SIZE == CPU_4_BYTE
+  if (type < _BOL) return 3;
+#elif CPU_SIZE == CPU_8_BYTE
+  if (type <= _CHC) return 3;
+  if (type < _BOL) return 7;
+#endif
+  return ATypeCustomAlignMask(type - _BOL);
 }
 
 /* Aligns the pointer up to the word boundry required by the type. */
 template<typename T = CHA>
 T* TTypeAlignUp(void* pointer, ISW type) {
-  ISW align_mask = TypeAlignmentMask(type & PODTypeMask);
+  ISW align_mask = ATypeAlignMask(type & ATypePODMask);
   return TPtr<T>(AlignUpPTR(pointer, align_mask));
 }
 
@@ -298,14 +286,16 @@ inline ISW TypeSizeOf(DTW type) {
   return sizeof(ISW) - 1;
 }
 
-/* Checks if the given type is valid.
-@return False if the given type is an 1-byte cLST, cMAP, kBOK, or kDIC. */
-inline BOL TypeIsSupported(DTW type) { return true; }
+/* Checks if the given type is valid. @todo Possibly delete.
+@return False if the given type is an 1-byte LST, MAP, BOK, or DIC.
+inline BOL TypeIsSupported(DTW type) {
+  return true;
+} */
 
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
 inline ISA TypeTextFormat(DTW type) {
-  DTW core_type = type & PODTypeMask;
+  DTW core_type = type & ATypePODMask;
   if (core_type == 0) return -1;  //< then core_type < 32
   if (core_type <= _STC) {
     if (core_type == _NIL) return -1;
@@ -319,24 +309,24 @@ inline ISA TypeTextFormat(DTW type) {
 }
 
 /* Masks off the primary type. */
-inline ISA TypePODMask(DTW value) { return value & 0x1f; }
+inline ISA TypeMaskPOD(DTW value) { return value & 0x1f; }
 
 /* Returns true if the given type is an Array type. */
-inline BOL TypeIsArray(DTW type) { return type >= PODTypeCount; }
+inline BOL TypeIsArray(DTW type) { return type >= ATypePODCount; }
 
 inline ISN TypeSizeWidthCode(ISN type) { return type >> 6; }
 
 /* Extracts the Map Type. */
 inline DTW TypeMap(DTW core_type, DTW map_type) {
-  return core_type | (map_type << (TypePODBitCount + 2));
+  return core_type | (map_type << (ATypePODBitCount + 2));
 }
 
 inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
-  return TypeMap(core_type, map_type) | (size_width << TypePODBitCount);
+  return TypeMap(core_type, map_type) | (size_width << ATypePODBitCount);
 }
 
 inline BOL TypeIsPOD(DTB type) {
-  return !((type >> 5) || ((type & PODTypeMask)));
+  return !((type >> 5) || ((type & ATypePODMask)));
 }
 
 }  //< namespace _

@@ -141,10 +141,10 @@ constexpr IUA* TLoomTop(TLoom<ISZ, ISY>* loom) {
   return TPtr<IUA>(loom, loom->size_bytes);
 }
 
-/* Calculates the amount of free */
+/* Calculates the amount of free space left in the buffer */
 template<LOM_A>
 inline ISZ TLoomFreeSpace(TLoom<ISZ, ISY>* loom) {
-  D_COUT("\n\njfksdljfksd:" << loom->size_bytes << "\n\n");
+  D_COUT("\n\nTLoomFreeSpace::loom->size_bytes:" << loom->size_bytes << "\n\n");
   return loom->size_bytes - loom->top;
 }
 

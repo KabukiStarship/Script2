@@ -2,10 +2,10 @@
 @link    https://github.com/KabukiStarship/Script2.git
 @file    /Binary.hpp
 @author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
+Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
+the MPL was not distributed with this file, You can obtain one at 
+<https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #ifndef SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
 #define SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
@@ -397,8 +397,8 @@ ISW a = TAlignUp(foo, sizeof(ISA)), //< Can't align up to a 8-bit word boundary.
     d = TAlignUp(foo, sizeof(ISD)); //< Aligns to a 64-bit word boundary.
 @endcode */
 template<typename I = ISW, typename DT = ISW>
-I TAlignUp(I value) {
-  return value + (TwosComplementInvert(value) & (sizeof(DT) - 1));
+I TAlignUp(I value, I align_mask = (sizeof(DT) - 1)) {
+  return value + (TwosComplementInvert(value) & align_mask);
 }
 
 /* Aligns th given value down to the given word boundary. */

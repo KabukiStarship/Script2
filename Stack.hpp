@@ -18,6 +18,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #else
 #include "_Release.inl"
 #endif
+#define STK_A typename ISZ
 #define STK_P ISZ
 namespace _ {
 
@@ -188,7 +189,7 @@ TStack<IS>* TStackResize(Autoject& adj) {
 
 template<typename IS = ISN, typename DT = DTB, DT Type>
 constexpr DT TStackType() {
-  return (TBitCode<IS>() << TypeVTBit0) | (_STK << TBitCode<IS>()) | Type;
+  return (TBitCode<IS>() << ATypeVTBit0) | (_STK << TBitCode<IS>()) | Type;
 }
 
 /* RamFactoryStack function for the TStack. */
@@ -321,13 +322,19 @@ T TStackPeek(TStack<IS>* stack) {
 /* Inserts the given item at the start stack.
 @pre You must perform bounds checking before calling this function. */
 template<typename T>
-inline void TStackInsert(T* elements, T* elements_end, T item) {
-  while (elements_end > elements) {
-    *elements_end = *(elements_end - 1);
-    --elements_end;
-  }
-  *elements = item;
+inline void TStackInsert(T* items_start, T* items_end, T item) {
+  --items_end;
+  while (items_start < items_end) *items_end-- = *items_end;
+  *items_start = item;
 }
+
+/* Inserts the given item at the start stack.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename IS>
+inline void TStackInsert(T* elements, IS count_max, T item) {
+  return TStackInsert<T>(elements, elements + count_max, item);
+}
+
 /* Inserts the given item at the index index the elements of the given count.
 @pre You must perform bounds checking before calling this function. */
 template<typename T, typename IS = ISM>
@@ -352,9 +359,9 @@ inline void TStackPushUnchecked(TStack<IS>* stack, T item, IS count) {
 template<typename T = ISW, typename IS = ISN>
 IS TStackInsert(TStack<IS>* stack, T item, IS index = STKPush) {
   D_ASSERT(stack);
-  IS count = stack->count,
+  IS count     = stack->count,
      count_max = stack->count_max;
-  if (count >= count_max) return ErrorStackOverflow;
+  if (count >= count_max) return -ErrorStackOverflow;
   if (index < 0) index = count;
   D_COUT("  Pushing:" << item << " count_max:" << count_max << " count:" << 
          count);
@@ -385,8 +392,8 @@ Insert:
 
 /* Adds the given items to the stop of the obj.
 @return The index of the newly stacked item or -1 upon failure.
-@param stack The Ascii Object base poiner.
-@param items  The  items to push onto the obj.
+@param stack       The Ascii Object base poiner.
+@param items       The  items to push onto the obj.
 @param items_count The number of items to push. */
 template<typename T = ISW, typename IS = ISN, typename BUF = Nil>
 IS TStackInsert(AArray<T, IS, BUF>& obj, const T* items, IS items_count) {
@@ -394,8 +401,12 @@ IS TStackInsert(AArray<T, IS, BUF>& obj, const T* items, IS items_count) {
   D_ASSERT(items_count >= 0);
   D_COUT("\nPushing " << items_count << " items:");
   IS count = obj->count;
-  for (ISN i = 0; i < count; ++i) TStackInsert<T, IS>(obj, items[i]);
-  return 0;
+  auto result = 0;
+  for (ISN i = 0; i < count; ++i) {
+    result = TStackInsert<T, IS>(obj, items[i]);
+    if (result < 0) return result;
+  }
+  return result;
 }
 
 /* Pops the top item off of the obj.
@@ -496,8 +507,8 @@ inline IS TStackSizeWords(IS count) {
 @endcode
 */
 template<typename T = ISW, typename IS = ISN,
-          IS cSize_ = cStackCountMaxDefault,
-          typename BUF = TBUF<cSize_, T, IS, TStack<IS>>>
+          IS Size_ = AStackCountMaxDefault,
+          typename BUF = TBUF<Size_, T, IS, TStack<IS>>>
 class AStack {
   AArray<T, IS, BUF> obj_;  //< An Auto-Array.
 

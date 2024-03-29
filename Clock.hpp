@@ -31,18 +31,18 @@ AClock* TClockInit(AClock& clock, IS t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  ISN value = (ISN)(t / cSecondsPerYear);
-  t -= IS(value) * cSecondsPerYear;
+  ISN value = (ISN)(t / SecondsPerYear);
+  t -= IS(value) * SecondsPerYear;
   clock.year = value + ClockEpoch();
   value = (ISN)(t / cSecondsPerDay);
   t -= IS(value) * cSecondsPerDay;
   clock.day = value;
-  value = (ISN)(t / cSecondsPerHour);
-  t -= IS(value) * cSecondsPerHour;
+  value = (ISN)(t / SecondsPerHour);
+  t -= IS(value) * SecondsPerHour;
   clock.hour = value;
-  value = (ISN)(t / cSecondsPerMinute);
+  value = (ISN)(t / SecondsPerMinute);
   clock.minute = value;
-  clock.second = (ISN)(t - IS(value) * cSecondsPerMinute);
+  clock.second = (ISN)(t - IS(value) * SecondsPerMinute);
   return &clock;
 }
 
@@ -54,9 +54,9 @@ IS TClockTime(ISN year, ISN month, ISN day, ISN hour, ISN minute, ISN second) {
   }
   if (month < 1 || month >= 12 || hour >= 23 || minute >= 60 || second >= 60)
     return 0;
-  return (IS)((year - ClockEpoch()) * cSecondsPerYear +
+  return (IS)((year - ClockEpoch()) * SecondsPerYear +
               ClockDayOfYear(year, month, day) * cSecondsPerDay +
-              hour * cSecondsPerHour + minute * cSecondsPerMinute + second);
+              hour * SecondsPerHour + minute * SecondsPerMinute + second);
 }
 
 /*
@@ -561,18 +561,18 @@ IS TClockSet(AClock* clock, IS t) {
   //   d. Hour.
   //   e. Minute.
   //   f. Second.
-  IS value = t / cSecondsPerYear;
-  t -= value * cSecondsPerYear;
+  IS value = t / SecondsPerYear;
+  t -= value * SecondsPerYear;
   clock->year = (ISC)(value + ClockEpoch());
   value = t / cSecondsPerDay;
   t -= value * cSecondsPerDay;
   clock->day = (ISC)value;
-  value = t / cSecondsPerHour;
-  t -= value * cSecondsPerHour;
+  value = t / SecondsPerHour;
+  t -= value * SecondsPerHour;
   clock->hour = (ISC)value;
-  value = t / cSecondsPerMinute;
+  value = t / SecondsPerMinute;
   clock->minute = (ISC)value;
-  clock->second = (ISC)(t - value * cSecondsPerMinute);
+  clock->second = (ISC)(t - value * SecondsPerMinute);
   return t;
 }
 

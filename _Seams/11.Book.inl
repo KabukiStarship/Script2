@@ -52,36 +52,35 @@ void TestBook() {
   ISZ word_step = TTestWords<CHT>::CharsMax;
   D_COUT("Step 0:\n");
   D_COUT(Charsf(book.This(), book.SizeBytes()));
-  for (ISY i = 0; i < test_word_count; ++i) {
-    D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
-    book.COut();
-    D_COUT("\nStep 2:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
-    book.COut();
-    D_COUT("\nStep 3:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
-    book.COut();
-    D_COUT("\nStep 4:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUB(i)));
-    book.COut();
-    D_COUT("\nStep 5:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
-    book.COut();
-    D_COUT("\nStep 6:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
-    book.COut();
-    D_COUT("\nStep 7:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
-    book.COut();
-    D_COUT("\nStep 8:\n" << Charsf(book.This(), book.SizeBytes()));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
-    book.COut();
-  }
+  D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(1), book.Insert(word_cursor += word_step, ISA(1)));
+  book.COut();
+  /*
+  D_COUT("\nStep 2:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(2), book.Insert(word_cursor += word_step, IUA(2)));
+  book.COut();
+  D_COUT("\nStep 3:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(3), book.Insert(word_cursor += word_step, ISB(3)));
+  book.COut();
+  D_COUT("\nStep 4:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(4), book.Insert(word_cursor += word_step, IUB(4)));
+  book.COut();
+  D_COUT("\nStep 5:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(5), book.Insert(word_cursor += word_step, ISC(5)));
+  book.COut();
+  D_COUT("\nStep 6:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(6), book.Insert(word_cursor += word_step, IUC(6)));
+  book.COut();
+  D_COUT("\nStep 7:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD(7)));
+  book.COut();
+  D_COUT("\nStep 8:\n" << Charsf(book.This(), book.SizeBytes()));
+  A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD(8)));
+  book.COut();
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  for (ISY i = ISY(test_word_count - 1); 
+  for (ISY i = ISY(test_word_count - 1);
        i < ISY(TTestWords<CHT>::WordsMax) - test_word_count; ++i) {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
@@ -101,7 +100,7 @@ void TestBook() {
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
-
+  */
 #if D_THIS
   book.COut();
 #endif

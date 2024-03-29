@@ -12,7 +12,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 const CHA** STRErrors() {
-  static const CHA* cErrors[] = {
+  static const CHA* ErrorsStrings[] = {
     "Success",                  //<   0
     "Invalid input",            //<  -1
     "Input nil",                //<  -2
@@ -42,7 +42,7 @@ const CHA** STRErrors() {
     "Room not found",           //< -26
     "Implementation error",     //< -27
   };
-  return cErrors;
+  return ErrorsStrings;
 }
 
 const CHA* STRError(ISN error) {

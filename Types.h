@@ -12,28 +12,34 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_TYPES_DECL
 namespace _ {
 
-/* Gets the string representations of the given ASCII POD Type 0-31. */
-const CHA* STRTypesPOD();
+// Returns true if the given type is CHA, CHB, or CHC.
+BOL ATypeIsCH(DTB type);
 
-/* Gets the string representations of the b6:b5 Vector type. */
-const CHA* STRTypesVector();
+// Returns the size of the given type in bytes.
+ISA ATypeSizeBytesPOD(DTB type);
 
-/* Gets the string representations of the b15:b14 modifier bits. */
-const CHA* STRTypesModifier();
+/* Returns the size of the given type in bytes.
+@return the size bytes of the value. */
+ISW ATypeSizeBytes(void* value, DTB type);
+ISW ATypeSizeBytes(void* value_base, ISA size_bytes, DTB type);
 
-/* string that reads "true". */
-LIB_MEMBER const CHA* STRTrue();
+// Returns the end (byte after last byte) of the given type-value.
+void* ATypeValueEnd(void* value, DTB type);
 
-/* string that reads "false". */
-LIB_MEMBER const CHA* STRFalse();
+// Returns an array of the customizable POD type sizes.
+const ISA* ATypeCustomSize();
+
+// Returns an array of the user-defined type alignment masks.
+const ISA* ATypeCustomAlignMask();
+
+// Returns the custom time alignment mask for the given type.
+ISA ATypeCustomAlignMask(DTA type);
 
 /* Utility class for printing an ASCII type. */
 struct Typef {
   DTW type;     //< The item type.
   CHA* string;  //< The ASCII type string.
 };
-
-Typef TypefOf();
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct TypeWordValue {

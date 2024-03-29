@@ -167,27 +167,46 @@ inline BOL TBookSizesAreValid(ISZ size_bytes, ISZ size_keys, ISZ count_max) {
   return size_keys <= TListSizeFreeMax<ISZ, DT>(size_bytes, count_max);
 }
 
-/* Prints the book to the stream. */
+// Freespace left in bytes for the given book's keys Loom and values List.
+// @return Returns -1 upon failure.
+template<BOK_A>
+inline ISZ TBookFreespace(TBook<BOK_P>* book) {
+  auto keys = TBookKeys<BOK_P>(book);
+  if (!keys) return -1;
+  return TListFreeSpace<ISZ>(&book->values) + 
+         TLoomFreeSpace<CHT, ISZ, ISY>(keys);
+}
+
+/* Prints the book to the Printer. */
 template<typename Printer, BOK_A>
 Printer& TBookPrint(Printer& o, TBook<BOK_P>* book) {
-  auto values = TBookValues<BOK_P>(book);
-  auto map    = &values->map;
-  ISZ  count  = map->count;
-  auto keys   = TBookKeys<BOK_P>(book);
-  auto types  = TListTypes<ISZ, DTB>(values);
+  auto voffsets    = TPtr<ISZ>(book, sizeof(TBook<BOK_P>));
+  auto cursor      = &book->values.map.count_max;
+  auto count_max   = *cursor++;
+  auto count       = *cursor++;
+  auto types       = TPtr<DT>(cursor) + 1;
+  auto keys_offset = *voffsets++;
+  auto keys        = TPtr<TLoom<ISZ, ISY>>(book, keys_offset);
   TLoomPrint<COut, LOM_P>(COut().Star(), keys);
   o << "\nBook<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>() << ",IS"
-          << TSizef<ISY>() << "> size_bytes:" << values->size_bytes
-          << " count_max:" << values->map.count_max << " count:" << count
-          << " keys_free_space:" << TLoomFreeSpace<LOM_P>(keys) 
-          << " keys.top:" << keys->top
-          << " values_free_space:" << TListFreeSpace<ISZ>(values);
-  for (ISY i = 0; i < count; ++i) {
+    << TSizef<ISY>() << "> size_bytes:" << book->values.size_bytes
+    << " count_max:" << count_max << " count:" << count
+    << " keys_free_space:" << TLoomFreeSpace<LOM_P>(keys) 
+    << " keys.top:" << keys->top
+    << " values_free_space:" << TListFreeSpace<ISZ>(&book->values)
+    << " keys_offset:" << keys_offset 
+    << " keys->size_bytes:" << keys->size_bytes
+    << " TypeOf(keys):";
+  TPrintTypeValue<Printer, DT>(o, *(types - 1), keys);
+  for (ISY i = 1; i < count; ++i) {
     o << '\n' << i << ".) \"" << TLoomGet<CHT, ISZ, ISY>(keys, i) << "\" "
       << " type:";
-    auto type = *types++;
-    TPrintType<Printer, DTB>(o, type);
-    o << " value:" << TListPrintValue<Printer, ISZ, DT>(o, values, i);
+    auto type    = *types++;
+    auto voffset = *voffsets++;
+    TPrintType<Printer>(o, type);
+    o << " voffset:" << voffset
+      << " value:";
+    TPrintTypeValue<Printer, DT, ISZ>(o, type, book, voffset);
   }
   D_COUT(Linef('-') << ' ' << Charsf(book, book->values.size_bytes));
   return o << '\n';
@@ -205,12 +224,12 @@ We are mapping an offset to a CH type, and thus the VT bits are 0.
 4. MT : Map Type bits.
 5. MOD: Modifier bits. */
 template<BOK_A>
-constexpr DT CBookKeysType() {
+constexpr DTB CBookKeysType() {
   enum {
     PODBits = CTypeChar<CHR, DT>(),
-    VTBits  = 1 << TypeVTBit0,
-    SWBits  = CBitWidth<ISZ>() << TypeSWBit0,
-    MTBits  = CTypeIS<ISZ>() << TypeMTBit0
+    VTBits  = 1 << ATypeVTBit0,
+    SWBits  = CBitWidth<ISZ>() << ATypeSWBit0,
+    MTBits  = CTypeIS<ISZ>() << ATypeMTBit0
   };
   return MTBits | SWBits | VTBits | PODBits;
 }
@@ -219,12 +238,12 @@ constexpr DT CBookKeysType() {
 @param size_bytes The size of the book in bytes.
 @param count_max The maximum number of entries in the book -1 for the keys.
 @param size_keys If this number is positive then the value is size of the keys 
-                 Loom in bytes. If the value is negative then it is the number 
-                 of bits to shift the size_bytes to get the size_keys. */
+Loom in bytes. If the value is negative then it is the number of bits to shift 
+the size_bytes to get the size_keys. */
 template<BOK_A>
 TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
-                          ISY count_max = BookDefaultCountMaxFractionShift, 
-                          ISZ size_keys = BookDefaultKeysFractionShift) {
+                        ISY count_max = BookDefaultCountMaxFractionShift, 
+                        ISZ size_keys = BookDefaultKeysFractionShift) {
   D_ASSERT(book);
   auto values = TBookValues<BOK_P>(book);
   ISZ size_bytes = values->size_bytes;
@@ -255,17 +274,28 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
   }
   TListInit<LST_P>(values, size_bytes, count_max);
   auto KeysType = CBookKeysType<BOK_P>();
-  auto keys = TListPush<TLoom<ISZ, ISY> , ISZ, DT>(values, size_keys, KeysType);
-  D_COUT("\nKeysType:0b" << Binaryf(KeysType) << " keys_delta:" << TDelta<>(book, keys));
+  auto keys_index = TListAlloc<LST_P>(values, KeysType, 
+                                                         size_keys);
+  auto keys = TListGetPtr<TLoom<ISZ, ISY>, LST_P>(values, keys_index);
+  D_COUT("\nkeys offset:" << TDelta<>(book, keys) << 
+         "\nKeysType:0b" << Binaryf(KeysType));
+  // Expected Keys offset with ABook<ISB,IUB,ISA,CHA> with SizeBytes:512
+  //   sizeof(TBook<ISB,IUB,ISA,CHA>) + 8*sizeof(IUB+DTB)
+  // = 8 + 8*sizeof(IUB+DTB) = 8 + 32 = 40
+  D_COUT(TPrintType<COut>(COut().Star(), KeysType));
+  D_COUT(" keys_delta:" << TDelta<>(book, keys));
   if (!keys) {
     D_COUT("\nBook Keys too large to fit in list! size_keys:" << size_keys);
     return nullptr;
   }
   auto result = TLoomInit<LOM_P>(keys, count_max);
   D_COUT("\nkeys->top:" << keys->top);
-  D_COUT("\nkeys_delta2:" << TDelta<>(book, TBookKeys<BOK_P>(book)));
+  D_COUT("\nTDelta<>(book, TBookKeys<BOK_P>(book)):" << 
+         TDelta<>(book, TBookKeys<BOK_P>(book)));
   #if SEAM == SCRIPT2_BOOK
-  D_COUT("\n\nKeys:\n");
+  D_COUT("\n\nValues:");
+  TListPrint<COut, LST_P>(COut().Star(), values);
+  D_COUT("\n\nKeys:");
   TLoomPrint<COut, LOM_P>(COut().Star(), keys);
   D_COUT(" free_space:" << TLoomFreeSpace<LOM_P>(keys));
   #endif
@@ -401,11 +431,13 @@ template<typename T, BOK_A>
 inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
                        ISY index = STKPush) {
   D_ASSERT(book);
-  if (!key) return ErrorInputNil;
+  if (!key) return -ErrorInputNil;
   D_COUT("\nAdding key:\"" << key << "\" item:" << item << " into index:" << 
          index);
-  ++index;
+  if (index == 0) return -ErrorInputInvalid;
+  //++index;
   auto keys = TBookKeys<BOK_P>(book);
+  D_COUT("\nkeys offset:" << TDelta<>(book, keys));
   ISY result = TLoomInsert<LOM_P>(keys, key, index);
   D_COUT(" result:" << result);
   if (result < 0) {
@@ -413,17 +445,24 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
     #if D_THIS
     TBookPrint<COut, BOK_P>(COut().Star(), book);
     #endif
+    D_ASSERT(result >= 0);
     return index;
+  } else {
+    //TLoomPrint<COut, LOM_P>(COut().Star(), keys);
   }
   auto values = TBookValues<BOK_P>(book);
-  
-  //TListPrint<COut, ISZ, DT>(COut().Star(), values);
+  D_COUT("\nvalues offset:" << TDelta<>(book, values));
 
   result = ISY(TListInsert<ISZ, DT>(values, item, result));
   if (result < 0) {
     D_COUT("\nFailed to insert into List with error " << result << ':' <<
            STRError(result));
+    D_ASSERT(result > 0);
     TLoomPop<LOM_P>(keys);
+  }
+  else {
+    TListPrint<COut, LST_P>(COut().Star(), values);
+    D_ASSERT(false);
   }
   return result;
 }
@@ -477,14 +516,14 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, FPD item) {
 template<typename T, BOK_A, typename BUF>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                 ISY index = STKPush) {
-  if (!key) return ErrorInputNil;
+  if (!key) return -ErrorInputNil;
   auto book = obj.OriginAs<TBook<BOK_P>*>();
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result = TBookInsert<T, BOK_P>(book, key, item, index);
   while (result < 0) {
     if (!TBookGrow<BOK_P>(obj.AJT())) {
       D_COUT("\n\nFailed to grow.\n\n");
-      return ErrorBufferOverflow;
+      return -ErrorBufferOverflow;
     } else {
       D_COUT("\nSuccesseded in growing.");
     }

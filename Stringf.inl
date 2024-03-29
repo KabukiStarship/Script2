@@ -29,6 +29,223 @@ const CHA* STRPrintHexBorder() {
          " ";
 }
 
+const CHA* STRTypesPOD() {
+  static const CHA Strings[64][4] = {
+      {'N', 'I', 'L', NIL},  //< 00
+      {'I', 'U', 'A', NIL},  //< 01
+      {'I', 'S', 'A', NIL},  //< 02
+      {'C', 'H', 'A', NIL},  //< 03
+      {'F', 'P', 'B', NIL},  //< 04
+      {'I', 'U', 'B', NIL},  //< 05
+      {'I', 'S', 'B', NIL},  //< 06
+      {'C', 'H', 'B', NIL},  //< 07
+      {'F', 'P', 'C', NIL},  //< 08
+      {'I', 'U', 'C', NIL},  //< 09
+      {'I', 'S', 'C', NIL},  //< 10
+      {'C', 'H', 'C', NIL},  //< 11
+      {'F', 'P', 'D', NIL},  //< 12
+      {'I', 'U', 'D', NIL},  //< 13
+      {'I', 'S', 'D', NIL},  //< 14
+      {'T', 'M', 'E', NIL},  //< 15
+      {'F', 'P', 'E', NIL},  //< 16
+      {'I', 'U', 'E', NIL},  //< 17
+      {'I', 'S', 'E', NIL},  //< 18
+      {'B', 'O', 'L', NIL},  //< 19
+      {'D', 'T', 'A', NIL},  //< 20
+      {'D', 'T', 'B', NIL},  //< 21
+      {'D', 'T', 'C', NIL},  //< 22
+      {'D', 'T', 'D', NIL},  //< 23
+      {'D', 'T', 'E', NIL},  //< 24
+      {'D', 'T', 'F', NIL},  //< 25
+      {'D', 'T', 'G', NIL},  //< 26
+      {'D', 'T', 'H', NIL},  //< 27
+      {'D', 'T', 'I', NIL},  //< 28
+      {'D', 'T', 'J', NIL},  //< 29
+      {'D', 'T', 'K', NIL},  //< 30
+      {'D', 'T', 'L', NIL},  //< 31
+      {'I', 'N', 'V', NIL},  //< 32
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRTypesPOD(ISA type) {
+  return TSTRTypesPOD<ISA>(type);
+}
+
+const CHA* STRTypesPOD(ISB type) {
+  return TSTRTypesPOD<ISB>(type);
+}
+
+const CHA* STRTypesPOD(ISC type) {
+  return TSTRTypesPOD<ISC>(type);
+}
+
+const CHA* STRTypesPOD(ISD type) {
+  return TSTRTypesPOD<ISD>(type);
+}
+
+const CHA* STRTypesVector() {
+  static const CHA Strings[17][4] = {
+      {'V', 'H', '1', NIL},  //< 00
+      {'V', 'H', '2', NIL},  //< 01
+      {'V', 'H', '3', NIL},  //< 02
+      {'V', 'H', '4', NIL},  //< 03
+      {'A', 'R', 'A', NIL},  //< 04
+      {'A', 'R', 'B', NIL},  //< 05
+      {'A', 'R', 'C', NIL},  //< 06
+      {'A', 'R', 'D', NIL},  //< 07
+      {'S', 'T', 'A', NIL},  //< 08
+      {'S', 'T', 'B', NIL},  //< 09
+      {'S', 'T', 'C', NIL},  //< 10
+      {'S', 'T', 'D', NIL},  //< 11
+      {'M', 'A', 'A', NIL},  //< 12
+      {'M', 'A', 'B', NIL},  //< 13
+      {'M', 'A', 'C', NIL},  //< 14
+      {'M', 'A', 'D', NIL},  //< 15
+      {'I', 'N', 'V', NIL},  //< 16
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRTypesVector(ISA type) {
+  return TSTRTypesVector<ISA>(type);
+}
+
+const CHA* STRTypesVector(ISB type) {
+  return TSTRTypesVector<ISB>(type);
+}
+
+const CHA* STRTypesVector(ISC type) {
+  return TSTRTypesVector<ISC>(type);
+}
+
+const CHA* STRTypesVector(ISD type) {
+  return TSTRTypesVector<ISD>(type);
+}
+
+
+const CHA* STRTypesVectorClass() {
+  static const CHA Strings[5][4] = {
+      {'V', 'H', 'T', NIL},  //< 00
+      {'A', 'R', 'Y', NIL},  //< 01
+      {'S', 'T', 'K', NIL},  //< 02
+      {'M', 'A', 'T', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRTypesVectorClass(ISA type) {
+  return TSTRTypesVectorClass<ISA>(type);
+}
+
+const CHA* STRTypesVectorClass(ISB type) {
+  return TSTRTypesVectorClass<ISB>(type);
+}
+
+const CHA* STRTypesVectorClass(ISC type) {
+  return TSTRTypesVectorClass<ISC>(type);
+}
+
+const CHA* STRTypesVectorClass(ISD type) {
+  return TSTRTypesVectorClass<ISD>(type);
+}
+
+const CHA* STRTypesModifier() {
+  static const CHA Strings[5][4] = {
+      {'P', 'O', 'D', NIL},  //< 00
+      {'P', 'T', 'R', NIL},  //< 01
+      {'C', 'N', 'S', NIL},  //< 02
+      {'P', 'T', 'C', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRTypesModifier(ISA type) {
+  return TSTRTypesModifier<ISA>(type);
+}
+
+const CHA* STRTypesModifier(ISB type) {
+  return TSTRTypesModifier<ISB>(type);
+}
+
+const CHA* STRTypesModifier(ISC type) {
+  return TSTRTypesModifier<ISC>(type);
+}
+
+const CHA* STRTypesModifier(ISD type) {
+  return TSTRTypesModifier<ISD>(type);
+}
+
+const CHA* STRTypesString() {
+  static const CHA Strings[5][4] = {
+      {'P', 'O', 'D', NIL},  //< 00
+      {'P', 'T', 'R', NIL},  //< 01
+      {'C', 'N', 'S', NIL},  //< 02
+      {'P', 'T', 'C', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRTypesString(ISA type) {
+  return TSTRTypesString<ISA>(type);
+}
+
+const CHA* STRTypesString(ISB type) {
+  return TSTRTypesString<ISB>(type);
+}
+
+const CHA* STRTypesString(ISC type) {
+  return TSTRTypesString<ISC>(type);
+}
+
+const CHA* STRTypesString(ISD type) {
+  return TSTRTypesString<ISD>(type);
+}
+
+const CHA* STRTrue() { return "true"; }
+const CHA* STRFalse() { return "false"; }
+
+const CHA* STRError(ISA error_number) {
+  const CHA error_strings[32][32] = {
+    "ErrorA",                 //< Error 00.
+    "Authentication error",   //< Error 01.
+    "Array overflow",         //< Error 02.
+    "Buffer overflow",        //< Error 03.
+    "Buffer underflow",       //< Error 04.
+    "Input invalid",          //< Error 05.
+    "Input nil",              //< Error 06.
+    "Invalid args",           //< Error 07.
+    "Invalid argument",       //< Error 08.
+    "Invalid buffer",         //< Error 09.
+    "Invalid door",           //< Error 10.
+    "Invalid error handler",  //< Error 11.
+    "Invalid header",         //< Error 12.
+    "Invalid hash",           //< Error 13.
+    "Invalid index",          //< Error 14.
+    "Invalid inquiry",        //< Error 15.
+    "Invalid op",             //< Error 16.
+    "Invalid operand",        //< Error 17.
+    "Invalid Room number",    //< Error 18.
+    "Invalid type",           //< Error 19.
+    "Invalid UTF-8",          //< Error 20.
+    "Invalid UTF-16",         //< Error 21.
+    "Invalid UTF-32",         //< Error 22.
+    "OBJ locked",             //< Error 23.
+    "Parameter overflow",     //< Error 24.
+    "Pop overflow",           //< Error 25.
+    "Stack overflow",         //< Error 26.
+    "Text overflow",          //< Error 27.
+    "Varint overflow",        //< Error 28.
+    "Implementation error"    //< Error 29.
+  };
+  error_number = (error_number < 0 || error_number >= ErrorImplementation) 
+        ? ErrorImplementation : error_number;
+  return error_strings[error_number];
+}
+
 }  //< namespace _
 
 #if SEAM >= SCRIPT2_CORE
@@ -535,7 +752,7 @@ void Stringf::Print(TypeValue item) {
   DTW type = item.Type();
   type_ = type;
   static const CHA kNotSupported[] = "Not supported\0";
-  DTW pod_type = type & PODTypeMask;
+  DTW pod_type = type & ATypePODMask;
   if (type != pod_type) {  // It's not a POD type.
   }
   switch (type) {
@@ -855,13 +1072,13 @@ Linef::Linef(CHA item, ISW count) : element(string, count) {
 Linef::Linef(const CHA* item, ISW count) : element(item, count) {}
 
 Headingf::Headingf(const CHA* caption1)
-    : element(caption1, cConsoleWidth),
+    : element(caption1, AConsoleWidth),
       style(nullptr),
       caption2(nullptr),
       caption3(nullptr) {}
 
 Headingf::Headingf(const CHA* caption1, const CHA* caption2)
-    : element(caption1, cConsoleWidth),
+    : element(caption1, AConsoleWidth),
       style(nullptr),
       caption2(caption2),
       caption3(nullptr) {}

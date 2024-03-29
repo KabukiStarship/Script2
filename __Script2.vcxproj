@@ -36,7 +36,6 @@
     <None Include="Op.inl" />
     <None Include="Operand.inl" />
     <None Include="Puff.inl" />
-    <None Include="ReadMe.md" />
     <None Include="RNG.inl" />
     <None Include="Room.inl" />
     <None Include="Slot.inl" />
@@ -71,8 +70,6 @@
     <None Include="_Seams\17.Seam.s2" />
     <None Include="_Seams\18.File.inl" />
     <None Include="_Seams\19.Release.inl" />
-    <None Include="_Seams\desktop.ini" />
-    <None Include="_Seams\ReadMe.md" />
     <None Include="_Seams\_Seams.inl" />
     <None Include="_Seams\_Tests.inl" />
     <None Include="_Undef.inl" />
@@ -142,10 +139,6 @@
     <ClInclude Include="_Config.h" />
     <ClInclude Include="_Seams\TestWords.h" />
     <ClInclude Include="_Seams\_Config.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="CMakeLists.txt" />
-    <Text Include="_Seams\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Seams\_Main.cpp" />
