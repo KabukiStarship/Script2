@@ -21,8 +21,8 @@ the MPL was not distributed with this file, You can obtain one at
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #define D_COUT_BOUT(message, bout) \
-  _::CPrint().Star() << message;   \
-  _::TBOutPrint<COut>(COut().Star(), bout)
+  _::StdOut() << message;   \
+  _::TBOutPrint<COut>(StdOut(), bout)
 #else
 #include "_Release.inl"
 #define D_COUT_BOUT(message, bout)
@@ -133,7 +133,7 @@ ISC BOutStreamByte(BOut* bout) {
                                     : (stop - origin) + (open - origin) + 2;
 
   if (length < 1) {
-    BOutError(bout, cErrorBufferOverflow, TParams<1, cSTR>(), 2, origin);
+    BOutError(bout, cErrorBufferOverflow, TParams<1, STR_>(), 2, origin);
     return -1;
   }
   // IUA b = *cursor;
@@ -490,7 +490,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
               iua = *iua_ptr;  // Read IUA.
             }
             if (type != cADR) {  //< 1 is faster to compare than 2
-                                 // More likely to have cADR than cSTR
+                                 // More likely to have cADR than STR_
               *stop = 0;         // Write nil-term CHA.
               if (++stop >= stop) stop -= size;
               break;

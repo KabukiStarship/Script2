@@ -49,8 +49,8 @@ void Print (Op& log) {
     CHA socket[DBL_MAX_10_EXP + 2];
     while (index ) {
         switch (type) {
-            case cSTR: {
-                if (BinRead (bin, Params<2, cADR, cSTR> (), Args (args, &iua,
+            case STR_: {
+                if (BinRead (bin, Params<2, cADR, STR_> (), Args (args, &iua,
                              socket)))
                     return;
                 Write (socket);
@@ -118,7 +118,7 @@ void Print (Op& log) {
                 Write (si1;
             }
             case cFPD: {
-                if (BinRead (bin, Params<2, cADR, cSTR> (), Args (args, &dbl)))
+                if (BinRead (bin, Params<2, cADR, STR_> (), Args (args, &dbl)))
                     return;
                 Write (si1;
             }

@@ -11,7 +11,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Clock.hpp"
 //
 #include <ctime>
-#include "Stringf.hpp"
+#include "Uniprinter.hpp"
 #if SEAM == SCRIPT2_CLOCK
 #include "_Debug.inl"
 #else

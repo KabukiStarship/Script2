@@ -579,7 +579,7 @@ class ATable {
     return TTablePrint<Printer, TPARAMS>(o, This());
   }
 
-  inline void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void CPrint() { PrintTo<_::COut>(_::StdOut()); }
 #endif
 };
 

@@ -30,31 +30,31 @@ struct Autoject {
   IUW* begin;              //< Pointer to the Autoject.
 };
 
-enum AsciiFactoryFunction {
-  cFactoryDelete = 0,  //< Factory function deletes an OBJ.
-  cFactoryNew = 1,     //< Factory function checks if the size can double.
-  cFactoryGrow = 2,    //< Factory function double OBJ size.
-  cFactoryClone = 3,   //< Factory function clones the OBJ.
-  cFactoryName = 4,    //< Factory function gets the info AString.
-  cFactoryFunctionCount = 5,  //< Factory function count.
+enum RAMFactoryFunction {
+  RAMFactoryDelete = 0,  //< Factory function deletes an OBJ.
+  RAMFactoryNew = 1,     //< Factory function checks if the size can double.
+  RAMFactoryGrow = 2,    //< Factory function double OBJ size.
+  RAMFactoryClone = 3,   //< Factory function clones the OBJ.
+  RAMFactoryName = 4,    //< Factory function gets the info AString.
+  RAMFactoryFunctionCount = 5,  //< Factory function count.
 };
 
-enum AsciiFactoryError {
-  cFactorySuccess = 0,      //< Factory operation completed successfully error.
-  cFactoryNil = 1,          //< Factory missing error.
-  cFactoryNilOBJ = 2,       //< Factory found nil obj.begin pointer error.
-  cFactoryNilArg = 3,       //< Factory arg nil error.
-  cFactoryCantGrow = 4,     //< Factory can't grow.
-  cFactorySizeInvalid = 5,  //< Factory size invalid.
-  cFactoryErrorCount = 6,   //< Factory function count.
+enum RAMFactoryError {
+  RAMFactorySuccess = 0,      //< Factory operation completed successfully error.
+  RAMFactoryNil = 1,          //< Factory missing error.
+  RAMFactoryNilOBJ = 2,       //< Factory found nil obj.begin pointer error.
+  RAMFactoryNilArg = 3,       //< Factory arg nil error.
+  FactoryCantGrow = 4,     //< Factory can't grow.
+  RAMFactorySizeInvalid = 5,  //< Factory size invalid.
+  RAMFactoryErrorCount = 6,   //< Factory function count.
 };
 
 /* Creates or destroys a block of heap memory.
 @pre size_bytes > 0 */
-LIB_MEMBER IUW* RamFactoryHeap(IUW* obj, ISW size_bytes);
+LIB_MEMBER IUW* RAMFactoryHeap(IUW* obj, ISW size_bytes);
 
 /* Creates a block of heap memory. */
-LIB_MEMBER IUW* RamFactoryStack(IUW* ptr, ISW size_bytes);
+LIB_MEMBER IUW* RAMFactoryStack(IUW* ptr, ISW size_bytes);
 
 LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* buffer);
 
@@ -62,10 +62,10 @@ LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* buffer);
 LIB_MEMBER void Delete(Autoject& obj);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CHA* ArrayFill(void* begin, void* end, CHA fill_char = 0);
+LIB_MEMBER CHA* RAMFill(void* begin, void* end, CHA fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
-LIB_MEMBER CHA* ArrayFill(void* begin, ISW size, CHA fill_char = 0);
+LIB_MEMBER CHA* RAMFill(void* begin, ISW size, CHA fill_char = 0);
 
 /* Overwrites the memory with fill_char; functionally identical to memset. */
 LIB_MEMBER CHA* ArrayWipe(void* begin, void* end);
@@ -79,7 +79,7 @@ LIB_MEMBER CHA* ArrayWipe(void* begin, ISW size);
 @param  begin     The begin of the read socket.
 @param  read_size Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
-LIB_MEMBER CHA* ArrayCopy(void* begin, ISW size, const void* read,
+LIB_MEMBER CHA* RAMCopy(void* begin, ISW size, const void* read,
                           ISW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
@@ -88,7 +88,7 @@ LIB_MEMBER CHA* ArrayCopy(void* begin, ISW size, const void* read,
 @param  begin The begin of the read socket.
 @param  size  Number of bytes to copy.
 @return Pointer to the last IUA written or nil upon failure. */
-LIB_MEMBER CHA* ArrayCopy(void* start, void* stop, const void* begin,
+LIB_MEMBER CHA* RAMCopy(void* start, void* stop, const void* begin,
                           ISW read_size);
 
 /* Copies the source to the target functionally identical to memcpy.
@@ -97,7 +97,7 @@ LIB_MEMBER CHA* ArrayCopy(void* start, void* stop, const void* begin,
 @param  begin The begin of the read socket.
 @param  end   The end of the read socket.
 @return Pointer to the last IUA written or nil upon failure. */
-LIB_INLINE CHA* ArrayCopy(void* start, void* stop, const void* begin,
+LIB_INLINE CHA* RAMCopy(void* start, void* stop, const void* begin,
                           const void* end);
 
 /* Compares the two memory sockets.
@@ -106,7 +106,7 @@ LIB_INLINE CHA* ArrayCopy(void* start, void* stop, const void* begin,
 @param  begin  The begin of Socket B.
 @param  end    The end of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER const void* ArrayCompare(const void* start, const void* stop,
+LIB_MEMBER const void* RAMCompare(const void* start, const void* stop,
                                     const void* begin, const void* end);
 
 /* Compares the two memory sockets.
@@ -115,7 +115,7 @@ LIB_MEMBER const void* ArrayCompare(const void* start, const void* stop,
 @param  begin The begin of Socket B.
 @param  size  The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER const void* ArrayCompare(const void* start, void* stop, 
+LIB_MEMBER const void* RAMCompare(const void* start, void* stop, 
                                     const void* begin, ISW size);
 
 /* Compares the two memory sockets.
@@ -124,7 +124,7 @@ LIB_MEMBER const void* ArrayCompare(const void* start, void* stop,
 @param  start  The begin of socket b.
 @param  size_b The size of Socket B.
 @return True if they are the same and false if they are not. */
-LIB_MEMBER const void* ArrayCompare(const void* start, ISW size_a,
+LIB_MEMBER const void* RAMCompare(const void* start, ISW size_a,
                                     const void* begin, ISW size_b);
 
 /* Shifts the memory up by the given count in bytes.
@@ -132,14 +132,14 @@ LIB_MEMBER const void* ArrayCompare(const void* start, ISW size_a,
 @param  begin       The begin IUA.
 @param  end         The end IUA.
 @param  count_bytes The IUA count to shift up. */
-LIB_MEMBER ISW ArrayShiftUp(void* begin, void* end, ISW count_bytes);
+LIB_MEMBER ISW RAMShiftUp(void* begin, void* end, ISW count_bytes);
 
 /* Shifts the memory down by the given bytes_count.
 @return 0 upon failure and count upon success.
 @param  begin       The start IUA.
 @param  end         The end IUA.
 @param  count_bytes The IUA count to shift up. */
-LIB_MEMBER ISW ArrayShiftDown(void* begin, void* end, ISW bytes_count);
+LIB_MEMBER ISW RAMShiftDown(void* begin, void* end, ISW bytes_count);
 
 }  //< namespace _
 #endif

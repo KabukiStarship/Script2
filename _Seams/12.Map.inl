@@ -20,13 +20,13 @@ using namespace _;
 
 namespace Script2 {
 template<typename D, D kDomainMin_, D kDomainMax, typename ISZ,
-          ISZ kCodomainMin_, ISZ kCodomainMax_, ISZ cSize_>
+          ISZ kCodomainMin_, ISZ kCodomainMax_, ISZ Size_>
 void TestMap() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting AMap<D")
          << sizeof(D) << ",ISZ" << CHA('0' + sizeof(ISZ))
          << Linef(">\n+---\n\n"));
 
-  AMap<D, ISZ, cSize_> map;
+  AMap<D, ISZ, Size_> map;
   D_COUT_OBJ(map);
 
   D_COUT("map_size:" << map.Size() << " map_size_bytes:" << map.SizeBytes()
@@ -35,26 +35,26 @@ void TestMap() {
                      << "\n domain:" << TDelta<>(map.This(), map.Domain())
                      << " codomain:" << TDelta<>(map.This(), map.Codomain()));
 
-  D domain[cSize_];
+  D domain[Size_];
 
   D_COUT(Headingf("Generating random domain values..."));
 
-  for (ISZ i = 0; i < cSize_; ++i) {
+  for (ISZ i = 0; i < Size_; ++i) {
     D d = Random(kDomainMin_, kDomainMax);
     domain[i] = d;
     D_COUT("\n" << i << ".) " << d);
   }
 
-  for (ISZ i = 0; i < cSize_; ++i) map.Add(domain[i]);
+  for (ISZ i = 0; i < Size_; ++i) map.Add(domain[i]);
 
   D_COUT(Headingf("Searching the domain for each domain[i]..."));
-  for (ISZ i = 0; i < cSize_; ++i) A_AVOW_INDEX(i, ISZ(map.Find(domain[i])), i);
+  for (ISZ i = 0; i < Size_; ++i) A_AVOW_INDEX(i, ISZ(map.Find(domain[i])), i);
 
   D_COUT(Headingf("Remapping the codomain to random numbers..."));
 
-  ISZ codomain[cSize_];
+  ISZ codomain[Size_];
 
-  for (ISZ i = 0; i < cSize_; ++i) {
+  for (ISZ i = 0; i < Size_; ++i) {
     ISZ c = Random(kCodomainMin_, kCodomainMax_);
     codomain[i] = c;
     map.RemapCodomain(i, c);
@@ -62,7 +62,7 @@ void TestMap() {
   D_COUT_OBJ(map);
   D_COUT(Headingf("Searching for the remappings..."));
 
-  for (ISZ i = 0; i < cSize_; ++i)
+  for (ISZ i = 0; i < Size_; ++i)
     A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
   D_COUT_OBJ(map);
 }

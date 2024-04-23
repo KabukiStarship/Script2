@@ -187,7 +187,7 @@ Printer& TBookPrint(Printer& o, TBook<BOK_P>* book) {
   auto types       = TPtr<DT>(cursor) + 1;
   auto keys_offset = *voffsets++;
   auto keys        = TPtr<TLoom<ISZ, ISY>>(book, keys_offset);
-  TLoomPrint<COut, LOM_P>(COut().Star(), keys);
+  TLoomPrint<COut, LOM_P>(StdOut(), keys);
   o << "\nBook<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>() << ",IS"
     << TSizef<ISY>() << "> size_bytes:" << book->values.size_bytes
     << " count_max:" << count_max << " count:" << count
@@ -197,16 +197,16 @@ Printer& TBookPrint(Printer& o, TBook<BOK_P>* book) {
     << " keys_offset:" << keys_offset 
     << " keys->size_bytes:" << keys->size_bytes
     << " TypeOf(keys):";
-  TPrintTypeValue<Printer, DT>(o, *(types - 1), keys);
+  TPrintATypeValue<Printer, DT>(o, *(types - 1), keys);
   for (ISY i = 1; i < count; ++i) {
     o << '\n' << i << ".) \"" << TLoomGet<CHT, ISZ, ISY>(keys, i) << "\" "
       << " type:";
     auto type    = *types++;
     auto voffset = *voffsets++;
-    TPrintType<Printer>(o, type);
+    TPrintAType<Printer>(o, type);
     o << " voffset:" << voffset
       << " value:";
-    TPrintTypeValue<Printer, DT, ISZ>(o, type, book, voffset);
+    TPrintATypeValue<Printer, DT, ISZ>(o, type, book, voffset);
   }
   D_COUT(Linef('-') << ' ' << Charsf(book, book->values.size_bytes));
   return o << '\n';
@@ -245,7 +245,7 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
                         ISY count_max = BookDefaultCountMaxFractionShift, 
                         ISZ size_keys = BookDefaultKeysFractionShift) {
   D_ASSERT(book);
-  auto values = TBookValues<BOK_P>(book);
+  TList<LST_P>* values = TBookValues<BOK_P>(book);
   ISZ size_bytes = values->size_bytes;
   D_ARRAY_WIPE(&values->top, size_bytes - sizeof(ISZ));
   D_COUT("\n\nTBookInit size_bytes: " << size_bytes << " count_max:" <<
@@ -273,17 +273,20 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
     return nullptr;
   }
   TListInit<LST_P>(values, size_bytes, count_max);
-  auto KeysType = CBookKeysType<BOK_P>();
-  auto keys_index = TListAlloc<LST_P>(values, KeysType, 
-                                                         size_keys);
+  DTB KeysType = CBookKeysType<BOK_P>();
+  ISZ keys_index = TListAlloc<LST_P>(values, KeysType, size_keys);
+  D_COUT("\nkeys_index  :" << keys_index);
+  #if SEAM == SCRIPT2_BOOK
+  TListPrint<COut, LST_P>(StdOut(), values);
+  #endif
   auto keys = TListGetPtr<TLoom<ISZ, ISY>, LST_P>(values, keys_index);
-  D_COUT("\nkeys offset:" << TDelta<>(book, keys) << 
+  D_COUT("\nkeys offset : " << TDelta<>(book, keys) << 
          "\nKeysType:0b" << Binaryf(KeysType));
   // Expected Keys offset with ABook<ISB,IUB,ISA,CHA> with SizeBytes:512
   //   sizeof(TBook<ISB,IUB,ISA,CHA>) + 8*sizeof(IUB+DTB)
   // = 8 + 8*sizeof(IUB+DTB) = 8 + 32 = 40
-  D_COUT(TPrintType<COut>(COut().Star(), KeysType));
-  D_COUT(" keys_delta:" << TDelta<>(book, keys));
+  D_COUT(TPrintAType<COut>(StdOut(), KeysType));
+  D_COUT("\nkeys_delta:" << TDelta<>(book, keys));
   if (!keys) {
     D_COUT("\nBook Keys too large to fit in list! size_keys:" << size_keys);
     return nullptr;
@@ -294,9 +297,9 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
          TDelta<>(book, TBookKeys<BOK_P>(book)));
   #if SEAM == SCRIPT2_BOOK
   D_COUT("\n\nValues:");
-  TListPrint<COut, LST_P>(COut().Star(), values);
+  TListPrint<COut, LST_P>(StdOut(), values);
   D_COUT("\n\nKeys:");
-  TLoomPrint<COut, LOM_P>(COut().Star(), keys);
+  TLoomPrint<COut, LOM_P>(StdOut(), keys);
   D_COUT(" free_space:" << TLoomFreeSpace<LOM_P>(keys));
   #endif
   if (!result) return nullptr;
@@ -307,17 +310,15 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
          "\nKeys Start:" << TDelta<>(book, keys) <<
          "\nBook      :" << Hexf(book) << "\n\nResult:\n");
   #if SEAM == SCRIPT2_BOOK
-  TBookPrint<COut, BOK_P>(COut().Star(), book);
+  TBookPrint<COut, BOK_P>(StdOut(), book);
   #endif
   return book;
 }
 
 /* Copies an ASCII Book from the origin to the destination. */
 template<BOK_A>
-CHA* TBookCopy(TBook<BOK_P>* origin, TBook<BOK_P>* destination) {
-  return ArrayCopy(&origin->count, sizeof(ISZ) + origin->count * sizeof(T),
-                   &destination->count, 
-                   sizeof(ISZ) + destination->count_max * sizeof(T));
+TBook<BOK_P>* TBookCopy(TBook<BOK_P>* destination, TBook<BOK_P>* origin) {
+  return TPtr<TBook<BOK_P>>(TMapCopy<ISZ>(destination, origin));
 }
 
 /*
@@ -340,8 +341,8 @@ IUW* BookFactoryHeap(IUW* buffer, ISW size_bytes) {
 
 /* Gets the element at the given index. */
 template<BOK_A>
-inline ISA* TBookGetPtr(TBook<BOK_P>* book, ISY index) {
-  return TListGetPtr<ISZ, T>(TBookKeys<BOK_P>(book), index);
+inline void* TBookGetPtr(TBook<BOK_P>* book, ISY index) {
+  return TListGetPtr<void, LST_P>(TBookKeys<BOK_P>(book), index);
 }
 
 /* Gets the TypeValue tuple the given index.
@@ -376,7 +377,7 @@ BOL TBookGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TBookPrint<COut, BOK_P>(COut().Star(), book);
+  TBookPrint<COut, BOK_P>(StdOut(), book);
   D_COUT(Charsf(book, TBookEnd<BOK_P>(book)));
 #endif
 
@@ -429,7 +430,7 @@ ISZ TBookPop(TBook<BOK_P>* book) {
 @return The index upon success or -1 upon failure. */
 template<typename T, BOK_A>
 inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   D_ASSERT(book);
   if (!key) return -ErrorInputNil;
   D_COUT("\nAdding key:\"" << key << "\" item:" << item << " into index:" << 
@@ -441,14 +442,14 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
   ISY result = TLoomInsert<LOM_P>(keys, key, index);
   D_COUT(" result:" << result);
   if (result < 0) {
-    D_COUT("\nFailed to insert into loom!");
+    D_COUT("\n\n\nFailed to insert into loom!");
     #if D_THIS
-    TBookPrint<COut, BOK_P>(COut().Star(), book);
+    TBookPrint<COut, BOK_P>(StdOut(), book);
     #endif
     D_ASSERT(result >= 0);
     return index;
   } else {
-    //TLoomPrint<COut, LOM_P>(COut().Star(), keys);
+    //TLoomPrint<COut, LOM_P>(StdOut(), keys);
   }
   auto values = TBookValues<BOK_P>(book);
   D_COUT("\nvalues offset:" << TDelta<>(book, values));
@@ -461,7 +462,7 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
     TLoomPop<LOM_P>(keys);
   }
   else {
-    TListPrint<COut, LST_P>(COut().Star(), values);
+    TListPrint<COut, LST_P>(StdOut(), values);
     D_ASSERT(false);
   }
   return result;
@@ -515,7 +516,7 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, FPD item) {
 @return The index upon success or -1 if the obj can't grow anymore. */
 template<typename T, BOK_A, typename BUF>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
-                ISY index = STKPush) {
+                ISY index = PSH) {
   if (!key) return -ErrorInputNil;
   auto book = obj.OriginAs<TBook<BOK_P>*>();
   D_COUT("\nAdding:\"" << item << '\"');
@@ -553,35 +554,35 @@ inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUB item,
 }
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISC item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<ISC, BOK_P, BUF>(obj, key, item, index);
 }
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUC item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<ISC, BOK_P, BUF>(obj, key, item, index);
 }
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, ISD item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<ISD, BOK_P, BUF>(obj, key, item, index);
 }
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, IUD item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<IUD, BOK_P, BUF>(obj, key, item, index);
 }
 #if USING_FPC == YES_0
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPC item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<FPC, BOK_P, BUF>(obj, key, item, index);
 }
 #endif
 #if USING_FPD == YES_0
 template<BOK_A, typename BUF>
 inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPD item,
-                       ISY index = STKPush) {
+                       ISY index = PSH) {
   return TBookInsert<FPD, BOK_P, BUF>(obj, key, item, index);
 }
 #endif
@@ -617,8 +618,7 @@ ISZ TBookFind(TBook<BOK_P>* book, const CHT* string) {
 /* An ASCII Book Autoject.
 @code
 ABook<BOK_A, 1024, TBuf<>>
-@endcode
-*/
+@endcode */
 template<BOK_A, ISZ Size = 512,
           typename BUF = TBUF<Size, CHT, ISZ, TString<ISN>>>
 class ABook {
@@ -672,41 +672,41 @@ class ABook {
 
   /* Inserts the key and item on into the Loom and List at the given index.
   @return The index of the string in the Book. */
-  inline ISY Insert(const CHT* key, ISA item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, ISA item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, IUA item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, IUA item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, ISB item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, ISB item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, IUB item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, IUB item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, ISC item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, ISC item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, IUC item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, IUC item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, ISD item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, ISD item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
-  inline ISY Insert(const CHT* key, IUD item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, IUD item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
 #if USING_FPC == YES_0
-  inline ISY Insert(const CHT* key, FPC item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, FPC item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
 #if USING_FPD == YES_0
-  inline ISY Insert(const CHT* key, FPD item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, FPD item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
 #endif
-  inline ISY Insert(const CHT* key, const CHT* item, ISY index = STKPush) {
+  inline ISY Insert(const CHT* key, const CHT* item, ISY index = PSH) {
     return TBookInsert<BOK_P, BUF>(AJT_ARY(), key, item, index);
   }
 
@@ -746,7 +746,7 @@ class ABook {
   }
 
   /* Prints this object to the stdout. */
-  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void COut() { PrintTo<_::COut>(_::StdOut()); }
 };
 
 }  //< namespace _

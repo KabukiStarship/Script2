@@ -17,7 +17,9 @@ namespace _ {
 #if USING_TEXT_SCRIPT == YES_0
 /* Exception thrown to interrupt and crash the program. */
 struct LIB_MEMBER RoomCrashException : public std::exception {
-  const CHA* what() const throw();
+  const CHA* what(
+    
+    throw();
 };
 #endif
 }  //< namespace _

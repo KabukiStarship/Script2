@@ -14,7 +14,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Stack.hpp"
 #if SEAM == SCRIPT2_MAP
 #include "_Debug.inl"
-#define D_COUT_MAP(map) TMapPrint<COut, D, ISZ>(COut().Star(), map)
+#define D_COUT_MAP(map) TMapPrint<COut, D, ISZ>(StdOut(), map)
 #else
 #include "_Release.inl"
 #define D_COUT_MAP(map)
@@ -302,10 +302,10 @@ ISZ TMapRemove(TMap<ISZ>* map, ISZ index) {
 }
 
 /* Inline wrapper for the TMap for stack-to-heap growth.
-CMapSizeBytes<D, ISZ>(cSize_)
+CMapSizeBytes<D, ISZ>(Size_)
 */
-template<typename D = ISN, typename ISZ = ISW, ISZ cSize_ = 16,
-          typename BUF = TBUF<cSize_, TMapBuf<D, ISZ>, ISZ, TMap<ISZ>>>
+template<typename D = ISN, typename ISZ = ISW, ISZ Size_ = 16,
+          typename BUF = TBUF<Size_, TMapBuf<D, ISZ>, ISZ, TMap<ISZ>>>
 class AMap {
   AArray<TMapBuf<D, ISZ>, ISZ, BUF> array_;
 
@@ -313,7 +313,7 @@ class AMap {
   /* Constructs a Map with the given size.
   If size is less than 0 it will be set to the default value. If the
   */
-  AMap() : array_() { TMapInit<D, ISZ>(This(), cSize_); }
+  AMap() : array_() { TMapInit<D, ISZ>(This(), Size_); }
 
   /* Destructs the dynamically allocated socket. */
   ~AMap() {}
@@ -384,7 +384,7 @@ class AMap {
   }
 
   /* Prints This object to the COut. */
-  inline COut& CPrint() { return PrintTo<COut>(COut().Star()); }
+  inline COut& CPrint() { return PrintTo<COut>(StdOut()); }
 
   /* Gets the aarray_. */
   inline AArray<TMapBuf<D, ISZ>, ISZ, BUF>& AJT() { return array_; }

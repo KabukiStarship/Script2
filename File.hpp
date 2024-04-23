@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_FILE_TEMPLATES
 #define SCRIPT2_FILE_TEMPLATES
 #if SEAM >= SCRIPT2_FILE
-#include "Stringf.hpp"
+#include "Uniprinter.hpp"
 //
 #include <errno.h>
 #include <stdlib.h>

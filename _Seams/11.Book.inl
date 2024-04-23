@@ -22,7 +22,7 @@ using namespace _;
 #include "../_Release.inl"
 #endif
 namespace Script2 {
-template<typename ISZ = ISN, typename IUZ = IUN, typename ISY = ISM,
+template<typename ISZ = ISN, typename ISY = ISM,
          typename CHT = CHR, typename  DT = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
@@ -31,8 +31,8 @@ void TestBook() {
     SizeBytes = 512 * sizeof(CHT)
   };
 
-  D_COUT("\n\nTesting ABook<IS" << TSizef<ISZ>() << ",IU" << TSizef<IUZ>() << 
-         ",IS" << TSizef<ISY>() << ",CH" << TSizef<CHT>() << 
+  D_COUT("\n\nTesting ABook<IS" << TSizef<ISZ>() << ",IS" << TSizef<ISY>() << 
+         ",CH" << TSizef<CHT>() << ",DT" << TSizef<DT>() << 
          "> with SizeBytes:" << SizeBytes);
 
   ABook<TPARAMS, SizeBytes> book;
@@ -55,7 +55,7 @@ void TestBook() {
   D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
   A_AVOW(ISY(1), book.Insert(word_cursor += word_step, ISA(1)));
   book.COut();
-  /*
+  
   D_COUT("\nStep 2:\n" << Charsf(book.This(), book.SizeBytes()));
   A_AVOW(ISY(2), book.Insert(word_cursor += word_step, IUA(2)));
   book.COut();
@@ -100,7 +100,7 @@ void TestBook() {
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
-  */
+
 #if D_THIS
   book.COut();
 #endif
@@ -113,18 +113,18 @@ namespace Script2 {
 const CHA* Book(const CHA* args) {
 #if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
-  TestBook<ISB, IUB, ISA, CHA>();
-  TestBook<ISB, IUB, ISA, CHB>();
-  TestBook<ISB, IUB, ISA, CHC>();
+  TestBook<ISB, ISA, CHA>();
+  TestBook<ISB, ISA, CHB>();
+  TestBook<ISB, ISA, CHC>();
 #if USING_UTF16 == YES_0
-  TestBook<ISC, IUC, ISB, CHA>();
-  TestBook<ISC, IUC, ISB, CHB>();
-  TestBook<ISC, IUC, ISB, CHC>();
+  TestBook<ISC, ISB, CHA>();
+  TestBook<ISC, ISB, CHB>();
+  TestBook<ISC, ISB, CHC>();
 #endif
 #if USING_UTF32 == YES_0
-  TestBook<ISD, IUD, ISB, CHA>();
-  TestBook<ISD, IUD, ISB, CHB>();
-  TestBook<ISD, IUD, ISB, CHC>();
+  TestBook<ISD, ISB, CHA>();
+  TestBook<ISD, ISB, CHB>();
+  TestBook<ISD, ISB, CHC>();
 #endif
 #endif
   return nullptr;

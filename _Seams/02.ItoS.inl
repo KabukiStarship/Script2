@@ -13,7 +13,7 @@ the MPL was not distributed with this file, You can obtain one at
 //
 #include "../Puff.hpp"
 #include "../RNG.h"
-#include "../Stringf.hpp"
+#include "../Uniprinter.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_ITOS
 #include "../_Debug.inl"

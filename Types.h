@@ -12,11 +12,17 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_TYPES_DECL
 namespace _ {
 
+// Packs the given ASCII Type bitfield values into a DTB.
+DTB ATypePack(DTB pod, DTB vt);
+DTB ATypePack(DTB pod, DTB vt, DTB sw);
+DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt);
+DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt, DTB mod);
+
 // Returns true if the given type is CHA, CHB, or CHC.
 BOL ATypeIsCH(DTB type);
 
 // Returns the size of the given type in bytes.
-ISA ATypeSizeBytesPOD(DTB type);
+ISA ATypeSizeOfPOD(DTB type);
 
 /* Returns the size of the given type in bytes.
 @return the size bytes of the value. */
@@ -35,17 +41,13 @@ const ISA* ATypeCustomAlignMask();
 // Returns the custom time alignment mask for the given type.
 ISA ATypeCustomAlignMask(DTA type);
 
-/* Utility class for printing an ASCII type. */
-struct Typef {
-  DTW type;     //< The item type.
-  CHA* string;  //< The ASCII type string.
-};
-
 /* Stores a pointer to the ASCII data type and it's value. */
 struct TypeWordValue {
-  DTW type;     //< The ASCII data type word.
+  DTW   type;   //< The ASCII data type word.
   void* value;  //< Pointer to the value of the type.
 };
+
+inline ISA TypeTextFormat(DTW type);
 
 /* An ASCII Type-Value tuple.
 An TypeValue can only work with up to two CPU ALU words because when a CPU
@@ -159,12 +161,6 @@ class LIB_MEMBER TypeValue {
 #if USING_FPD == YES_0
   void Set(FPD item);
 #endif
-};
-
-/* Utility class for printing the size of ASCII TypeValues.
-@see CSizef */
-struct Sizef {
-  ISW size;  //< The size of the item in ?
 };
 
 }  //< namespace _

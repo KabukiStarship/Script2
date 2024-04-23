@@ -7,18 +7,18 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
-#if USING_CONSOLE == YES_0
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "CIn.h"
 #include "Stringf.hpp"
-#if SEAM == SCRIPT2_CORE
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #endif
 #include <conio.h>
-#include <windows.h>
-#include <cstdio>
-#include <iostream>
+//#include <windows.h>
+//#include <cstdio>
+//#include <iostream>
 namespace _ {
 
 template<typename IS = ISW>
@@ -38,15 +38,15 @@ template<typename IS, typename IU>
 BOL TCInSigned(IS& result) {
   CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
-  ISW state = CIn::cStateBaseSign;
+  ISW state = CIn::StateBaseSign;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
-  while (state != CIn::cStateSuccess) {
-    if (state == CIn::cStateBaseSign) {
+  while (state != CIn::StateSuccess) {
+    if (state == CIn::StateBaseSign) {
       c = CIn::ScanKey();
       if ((c != '-') || (c < '0' || c > '9')) return false;
       *cursor++ = (CHA)c;
-      state = CIn::cStateBaseValue;
-    } else if (state == CIn::cStateBaseValue) {
+      state = CIn::StateBaseValue;
+    } else if (state == CIn::StateBaseValue) {
       if (cursor >= end) return false;
       c = CIn::ScanKey();
       if (c < '0' || c > '0') return false;
@@ -60,9 +60,9 @@ BOL TCInSigned(IS& result) {
 template<typename IU>
 BOL TCInUnsigned(IU& result) {
   CHA buffer[CSignedDigitsMax<IU>()] = {};
-  ISN c, state = CIn::cStateBaseValue;
+  ISN c, state = CIn::StateBaseValue;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IU>();
-  while (state != CIn::cStateSuccess) {
+  while (state != CIn::StateSuccess) {
     if (cursor++ >= end) return false;
     c = (CHA)CIn::ScanKey();
     if (c < '0' || c > '0') return false;
@@ -86,42 +86,42 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
 }
 
 template<typename FP = FPW, typename IS = ISW, typename IU = IUW,
-          typename CHT = CHR>
+         typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
   CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
-  ISW state = CIn::cStateBaseSign;
+  ISW state = CIn::StateBaseSign;
   CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
-  while (state != CIn::cStateSuccess) {
+  while (state != CIn::StateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
     *cursor++ = (CHA)c;
     switch (state) {
-      case CIn::cStateBaseSign: {
+      case CIn::StateBaseSign: {
         if ((c != '-') || (c < '0' || c > '9')) return false;
-        state = CIn::cStateBaseValue;
+        state = CIn::StateBaseValue;
       }
-      case CIn::cStateBaseValue: {
+      case CIn::StateBaseValue: {
         c = CIn::ScanKey();
         if (c < '0' || c > '0') return false;
         if (!c) break;
       }
-      case CIn::cStateDotOrExponent: {
+      case CIn::StateDotOrExponent: {
         if ((c == 'e') || (c == 'E'))
-          state = CIn::cStateExponentSign;
+          state = CIn::StateExponentSign;
         else if (c == '.')
-          state = CIn::cStateFractionalPart;
+          state = CIn::StateFractionalPart;
       }
-      case CIn::cStateFractionalPart: {
+      case CIn::StateFractionalPart: {
         if (!TIsDigit<>(c) || c != '-') return false;
-        if (c == '.') state = CIn::cStateExponentSign;
+        if (c == '.') state = CIn::StateExponentSign;
       }
-      case CIn::cStateExponentSign: {
+      case CIn::StateExponentSign: {
         // We saw an 'e' or 'E' so we're locked into
         if (!TIsDigit<>(c) || c != '-') return false;
-        if (c == '-') state = CIn::cStateExponentValue;
+        if (c == '-') state = CIn::StateExponentValue;
       }
-      case CIn::cStateExponentValue: {
+      case CIn::StateExponentValue: {
         if (!TIsDigit<>(c)) {
           *cursor = 0;
           break;
@@ -132,11 +132,11 @@ inline BOL TCInFloatingPoint(FP& result) {
   return false;  // TScanFloat<FP, IS, IU, CHA>(buffer, result) != 0;
 }
 
-ISN IsYesNo(const CHA* string) { return TIsYesNo<CHA>(string); }
-ISN IsYesNo(const CHB* string) { return TIsYesNo<CHB>(string); }
-ISN IsYesNo(const CHC* string) { return TIsYesNo<CHC>(string); }
+ISN IsYesNo(const CHA* string) { return TSTRIsYesNo<CHA>(string); }
+ISN IsYesNo(const CHB* string) { return TSTRIsYesNo<CHB>(string); }
+ISN IsYesNo(const CHC* string) { return TSTRIsYesNo<CHC>(string); }
 
-CIn::CIn() {}
+CIn::CIn() : buffer_{} {}
 
 #if USING_UTF8 == YES_0
 CIn::CIn(CHA& result) { SScan(result); }
@@ -218,7 +218,7 @@ ISN CIn::ScanKey() {
 }
 
 Pausef::Pausef(const CHA* message) {
-  COut().Star() << message;
+  StdOut() << message;
   CIn::ScanKey();
 }
 

@@ -52,14 +52,27 @@ struct TStack {
 
 /* Returns the first element in the Stack TMatrix. */
 template<typename T = ISW, typename IS = ISN>
-inline T* TStackStart(TStack<IS>* stack) {
+inline const T* TStackStart(const TStack<IS>* stack) {
   return TPtr<T>(TPtr<IUA>(stack) + sizeof(TStack<IS>));
+}
+
+/* Returns the first element in the Stack TMatrix. */
+template<typename T = ISW, typename IS = ISN>
+inline T* TStackStart(TStack<IS>* stack) {
+  return CPtr<T>(TStackStart<T, IS>(CPtr<TStack<IS>>(stack)));
+}
+
+/* Returns the first empty element of the stack. */
+template<typename T = ISW, typename IS = ISN>
+inline const T* TStackTop(const TStack<IS>* stack) {
+  return TStackStart<T, IS>(stack) + stack->count;
 }
 
 /* Returns the first empty element of the stack. */
 template<typename T = ISW, typename IS = ISN>
 inline T* TStackTop(TStack<IS>* stack) {
-  return &TStackStart<T, IS>(stack) + stack->count;
+  return CPtr<T>(TStackStart<T, IS>(CPtr<TStack<IS>>(stack))) + 
+         stack->count;
 }
 
 template<typename T = ISW, typename IS = ISN>
@@ -69,14 +82,14 @@ inline IS TStackSizeOf(IS count) {
 
 /* Prints the given obj to the console. */
 template<typename Printer, typename T = ISW, typename IS = ISN>
-Printer& TStackPrint(Printer& o, TStack<IS>* stack) {
+Printer& TStackPrint(Printer& o, const TStack<IS>* stack) {
   IS count_max = stack->count_max, count = stack->count;
   o << Linef("\n+---\n| TStack<T") << CHA('@' + sizeof(T)) << ",IS"
     << CHA('@' + sizeof(IS))
     << ">: size_bytes:" << TStackSizeOf<T, IS>(count_max)
     << " count_max: " << count_max << " count:" << count << Linef("\n+---");
 
-  T* elements = TStackStart<T, IS>(stack);
+  const T* elements = TStackStart<T, IS>(stack);
   for (ISC i = 0; i < count; ++i) o << "\n| " << i << ".) " << elements[i];
   if (count == 0) o << "\n| Empty";
 #if D_THIS
@@ -89,16 +102,16 @@ Printer& TStackPrint(Printer& o, TStack<IS>* stack) {
 
 /* Copies an ASCII Stack from the origin to the destination. */
 template<typename T = ISW, typename IS = ISN>
-inline CHA* TStackCopy(TStack<IS>* destination, TStack<IS>* source) {
-  return ArrayCopy(destination, TStackTop<T, IS>(destination), source,
+inline CHA* TStackCopy(TStack<IS>* destination, const TStack<IS>* source) {
+  return RAMCopy(destination, TStackTop<T, IS>(destination), source,
                    TStackTop<T, IS>(source));
 }
 
 /* Copies an ASCII Stack from the origin to the destination. */
 template<typename T = ISW, typename IS = ISN>
 inline CHA* TStackCopy(TStack<IS>* destination, IS destination_size,
-                       TStack<IS>* source) {
-  return ArrayCopy(destination, destination_size, source,
+                       const TStack<IS>* source) {
+  return RAMCopy(destination, destination_size, source,
                    TStackTop<T, IS>(source));
 }
 
@@ -112,6 +125,12 @@ inline ISR TStackSize(IS count) {
 template<typename IS>
 inline TStack<IS>* TStackPtr(IUW* buffer) {
   return TPtr<TStack<IS>>(buffer);
+}
+
+// Utility to cast Autoject origin to TStack<IS>*.
+template<typename IS>
+inline const TStack<IS>* TStackPtr(const IUW* buffer) {
+  return TPtr<const TStack<IS>>(buffer);
 }
 
 // Utility to cast Autoject origin to TStack<IS>*.
@@ -137,7 +156,7 @@ TStack<IS>* TStackClone(Autoject& adj, IS count_delta) {
   D_ASSERT(count_max >= 0);
 #if D_THIS
   D_COUT("\nAuto-growing Stack...\nBefore:");
-  TStackPrint<COut, T, IS>(COut().Star(), stack);
+  TStackPrint<COut, T, IS>(StdOut(), stack);
 #endif
   IS count_max_new = count_max + count_delta;
   if (count_max_new < 0) return nullptr;
@@ -155,11 +174,11 @@ TStack<IS>* TStackClone(Autoject& adj, IS count_delta) {
          "\nsize_new: " << size_new <<
          "\nTStackStart<T, ISZ>(stack): " <<  Hexf(TStackStart<T, IS>(stack)));
   size_old -= sizeof(TStack<IS>);
-  ArrayCopy(TStackStart<T, IS>(stack_new), size_old,
+  RAMCopy(TStackStart<T, IS>(stack_new), size_old,
             TStackStart<T, IS>(stack), size_old);
 #if D_THIS
   D_COUT("\nResult:");
-  TStackPrint<COut, T, IS>(COut().Star(), stack_new);
+  TStackPrint<COut, T, IS>(StdOut(), stack_new);
 #endif
   return stack_new;
 }
@@ -192,18 +211,18 @@ constexpr DT TStackType() {
   return (TBitCode<IS>() << ATypeVTBit0) | (_STK << TBitCode<IS>()) | Type;
 }
 
-/* RamFactoryStack function for the TStack. */
+/* RAMFactoryStack function for the TStack. */
 template<typename IS = ISN, typename DT = DTB, DT Type = _ISN>
 IUW* TStackFactoryStack(IUW* origin, ISW size_bytes) {
   if (size_bytes <= 0) return TPtr<IUW>(TStackType<IS, DT, Type>());
-  return RamFactoryStack(origin, size_bytes);
+  return RAMFactoryStack(origin, size_bytes);
 }
 
-/* RamFactoryHeap function for the TStack. */
+/* RAMFactoryHeap function for the TStack. */
 template<typename IS = ISN, typename DT = DTB, DT Type = _ISN>
 IUW* TStackFactoryHeap(IUW* origin, ISW size_bytes) {
   if (size_bytes <= 0) return TPtr<IUW>(TStackType<IS, DT, Type>());
-  return RamFactoryHeap(origin, size_bytes);
+  return RAMFactoryHeap(origin, size_bytes);
 }
 
 /* Gets the size of a Stack with the given count_max. */
@@ -228,7 +247,7 @@ inline IS TStackSizeMin() {
 width. */
 template<typename T = ISW, typename IS = ISN>
 inline IS TStackSizeMax() {
-  return (IS)((((~(IS)0) - WordLSbMask) - (IS)sizeof(TStack<IS>)) /
+  return (IS)((((~(IS)0) - ACPUAlignMask) - (IS)sizeof(TStack<IS>)) /
                (IS)sizeof(T));
 }
 
@@ -357,7 +376,7 @@ inline void TStackPushUnchecked(TStack<IS>* stack, T item, IS count) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template<typename T = ISW, typename IS = ISN>
-IS TStackInsert(TStack<IS>* stack, T item, IS index = STKPush) {
+IS TStackInsert(TStack<IS>* stack, T item, IS index = PSH) {
   D_ASSERT(stack);
   IS count     = stack->count,
      count_max = stack->count_max;
@@ -376,7 +395,7 @@ IS TStackInsert(TStack<IS>* stack, T item, IS index = STKPush) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template<typename T = ISW, typename IS = ISN, typename BUF = Nil>
-IS TStackInsert(AArray<T, IS, BUF>& obj, T item, IS index = STKPush) {
+IS TStackInsert(AArray<T, IS, BUF>& obj, T item, IS index = PSH) {
   auto stack = obj.OriginAs<TStack<IS>*>();
 Insert:
   IS result = TStackInsert<T, IS>(stack, item, index);
@@ -513,8 +532,8 @@ class AStack {
   AArray<T, IS, BUF> obj_;  //< An Auto-Array.
 
   constexpr RAMFactory InitRamFactory() {
-    return sizeof(BUF) == 0 ? TRamFactory<IS>::StackHeap
-                            : TRamFactory<IS>::StackStack;
+    return sizeof(BUF) == 0 ? TRAMFactory<IS>::StackHeap
+                            : TRAMFactory<IS>::StackStack;
   }
 
   inline RAMFactory InitRamFactory(RAMFactory factory) {
@@ -662,7 +681,7 @@ class AStack {
   }
 
   /* Prints this object to the given UTF. */
-  inline void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void CPrint() { PrintTo<_::COut>(_::StdOut()); }
 
   /* Gets a reference to the given element index. */
   inline T& operator[](IS index) { return Start()[index]; }
@@ -739,7 +758,7 @@ IUW* TStackClone(Autoject& obj) {
   ISZ count = o->count;
   IUW* clone = TArrayNew<T, ISZ, TStack<ISZ>>(count);
   ISW size_bytes = (ISW)TStackSizeOf<T, ISZ>(count);
-  if (!ArrayCopy(clone, count, origin, size_bytes)) return nullptr;
+  if (!RAMCopy(clone, count, origin, size_bytes)) return nullptr;
   TSizeSet<ISZ>(origin, count);
   return clone;
 } */

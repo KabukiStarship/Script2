@@ -10,11 +10,11 @@ the MPL was not distributed with this file, You can obtain one at
 //
 #include "../_Package.inl"
 //
-#include "00.Core.inl"
+#include "00.COut.inl"
 #include "01.RNG.inl"
 #include "02.ItoS.inl"
 #include "03.FtoS.inl"
-#include "04.SPrinter.inl"
+#include "04.Uniprinter.inl"
 #include "05.Clock.inl"
 #include "06.Stack.inl"
 #include "07.Matrix.inl"
@@ -33,8 +33,8 @@ the MPL was not distributed with this file, You can obtain one at
 using namespace _;
 
 inline const CHA* Script2Tests(const CHA* args) {
-  return TTestTree<Script2::Core, Script2::RNG, Script2::ItoS, Script2::FtoS, 
-                   Script2::SPrinter, Script2::Clock, Script2::Stack, 
+  return TTestTree<Script2::COut, Script2::RNG, Script2::ItoS, Script2::FtoS, 
+                   Script2::Uniprinter, Script2::Clock, Script2::Stack, 
                    Script2::Matrix, Script2::String, Script2::Loom, 
                    Script2::List, Script2::Book, Script2::Map, Script2::Table, 
                    Script2::Dic, Script2::Crabs, Script2::Door, Script2::Room,

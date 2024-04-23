@@ -49,11 +49,11 @@
     <None Include="_Debug.inl" />
     <None Include="_Package.inl" />
     <None Include="_Release.inl" />
-    <None Include="_Seams\00.Core.inl" />
+    <None Include="_Seams\00.COut.inl" />
     <None Include="_Seams\01.RNG.inl" />
     <None Include="_Seams\02.ItoS.inl" />
     <None Include="_Seams\03.FtoS.inl" />
-    <None Include="_Seams\04.SPrinter.inl" />
+    <None Include="_Seams\04.Uniprinter.inl" />
     <None Include="_Seams\05.Clock.inl" />
     <None Include="_Seams\06.Stack.inl" />
     <None Include="_Seams\07.Matrix.inl" />
@@ -127,12 +127,12 @@
     <ClInclude Include="String.hpp" />
     <ClInclude Include="Stringf.h" />
     <ClInclude Include="Stringf.hpp" />
+    <ClInclude Include="Uniprinter.hpp" />
     <ClInclude Include="Table.hpp" />
     <ClInclude Include="Test.h" />
     <ClInclude Include="Test.hpp" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Types.hpp" />
-    <ClInclude Include="Uniprinter.hpp" />
     <ClInclude Include="Varint.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Wall.hpp" />

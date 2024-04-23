@@ -21,7 +21,7 @@ namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
 template<typename CHT = CHR, typename ISZ = ISN>
 void TestStringN() {
-  static const CHT cTesting123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CHT Testing123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
   enum {
@@ -31,17 +31,18 @@ void TestStringN() {
 
   AString<CHT, ISZ, 8> str;
   D_COUT_OBJ(str);
-  D_COUT("\nbuffer_size:" << str.Array().Size() << " buffer_size_bytes:"
-                          << str.Array().SizeBytes() << " buffer_size_words:"
-                          << str.Array().SizeWords());
+  D_COUT("\nbuffer_size:" << str.Array().Size() << 
+         " buffer_size_bytes:" << str.Array().SizeBytes() << 
+         " buffer_size_words:" << str.Array().SizeWords());
   D_COUT("\n\nExpecting \""
-         << cTesting123 << "\"\n\nThe first print function should fail...\n");
+         << Testing123 << "\"\n\nThe first print function should fail...\n");
 
   str << "Testing ";
+  D_COUT("\n\nWORKS HERE!!!\n\n");
   for (ISN i = 1; i < 256; ++i) str << i << ", ";
 
   D_COUT("\n\nResult:\"" << str.Start() << "\"\n");
-  //A_ASSERT(str.Find(cTesting123));
+  //A_ASSERT(str.Find(Testing123));
 }
 #endif
 

@@ -7,12 +7,29 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include "Types.hpp"
-#if SEAM == SCRIPT2_CORE
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
 #endif
 namespace _ {
+
+DTB ATypePack(DTB pod, DTB vt) {
+  return pod | vt << ATypeVTBit0;
+}
+
+DTB ATypePack(DTB pod, DTB vt, DTB sw) {
+  return pod | vt << ATypeVTBit0 | sw << ATypeSWBit0;
+}
+
+DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt) {
+  return pod | vt << ATypeVTBit0 | sw << ATypeSWBit0 | mt << ATypeMTBit0;
+}
+
+DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt, DTB mod) {
+  return pod | vt << ATypeVTBit0 | sw << ATypeSWBit0 | mt << ATypeMTBit0 |
+         mod << ATypeMODBit0;
+}
 
 BOL ATypeIsCH(DTB type) {
   // CHA: 3   0b0011
@@ -70,11 +87,11 @@ const ISA* ATypeCustomAlignMask() {
 }
 
 ISA ATypeCustomAlignMask(DTA type) {
-  if (type >= ATypePODCount) return sizeof(ISW) - 1;
+  if (type < _BOL || type >= ATypePODCount) return sizeof(ISW) - 1;
   return ATypeCustomAlignMask()[type - _BOL];
 }
 
-ISA ATypeSizeBytesPOD(DTB type) {
+ISA ATypeSizeOfPOD(DTB type) {
   if (type == 0 || type >= ATypePODCount) return 0;
   if (type < _FPB) return 1;
   if (type < _FPC) return 2;
@@ -84,39 +101,8 @@ ISA ATypeSizeBytesPOD(DTB type) {
   return ATypeCustomSize()[type - _BOL];
 }
 
-
 ISW ATypeSizeBytes(void* value, DTB type) {
-  if (type < ATypePODCount)
-    return ATypeSizeBytesPOD(type);
-  // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
-  // |:-------:|:------:|:-----:|:-----:|:-----:|
-  // |   MOD   |   MT   |  SW   |  VT   |  POD  |
-  auto mod = type >> ATypeMODBit0;
-  if (mod && 1) return sizeof(void*);
-  type ^= mod << ATypeMODBit0;
-  auto mt = type >> ATypeMTBit0;
-  type ^= mt << ATypeMTBit0;
-  auto sw = type >> ATypeSWBit0;
-  type ^= sw << ATypeSWBit0;
-  auto vt = type >> ATypeVTBit0;
-  type ^= vt << ATypeVTBit0;
-  if (vt == 0) return ISW(sw) * ATypeSizeBytesPOD(type);
-  ISW size = 0;
-  switch (sw) {
-  case 0:
-    size = ISW(*TPtr<ISA>(value));
-    break;
-  case 1:
-    size = ISW(*TPtr<ISB>(value));
-    break;
-  case 2:
-    size = ISW(*TPtr<ISC>(value));
-    break;
-  case 3:
-    size = ISW(*TPtr<ISD>(value));
-    break;
-  }
-  return size * sw;
+  return TATypeSizeOf<ISW>(value, type);
 }
 
 ISW ATypeSizeBytes(void* value_base, ISA size_bytes, DTB type) {

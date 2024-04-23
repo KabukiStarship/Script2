@@ -33,11 +33,11 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 
 ##### Memory Overhead
 
-| #Bytes | I | Index | Size | Total |    Overhead Per index     |
-|:------:|:-:|:-----:|:----:|:-----:|:--------------------------|
-|    2   | 1 |   2   |   2  |   8   |  8 + 3 per index + socket.|
-|    4   | 2 |   4   |   4  |   16  | 16 + 5 per index + socket.|
-|    8   | 4 |   8   |   8  |   32  | 24 + 9 per index + socket.|
+| #Bytes | I | Index | Size | Total |    Overhead Per index      |
+|:------:|:-:|:-----:|:----:|:-----:|:---------------------------|
+|    2   | 1 |   2   |   2  |   8   |  8 + 3 per index + socket. |
+|    4   | 2 |   4   |   4  |   16  | 16 + 5 per index + socket. |
+|    8   | 4 |   8   |   8  |   32  | 24 + 9 per index + socket. |
 
 * Sizes shown in bytes.
 

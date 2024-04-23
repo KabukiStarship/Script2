@@ -14,8 +14,8 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, cSTR:32, cISA, cISB, cISC>:<c_NIL>
-   Bar <1, cSTR:32>:<3, cISA, cISB, cISC>
+   Foo <4, STR_:32, cISA, cISB, cISC>:<c_NIL>
+   Bar <1, STR_:32>:<3, cISA, cISB, cISC>
    FooBar <DIC2, cIUA>:<c_NIL>
             ^     ^
             |     |
@@ -80,13 +80,13 @@ Parent1 {
           |          |       +---------------- This reserves 3 dictionary
          members. |          |       | v          v       v              */
       += DIC_4(nested, 1024, 3) { /* This is a nested dictionary.
-     +------------------------------ This is a operation with key "cSTR"
+     +------------------------------ This is a operation with key "STR_"
      |      +----------------------- Dictionary key.
      |      |    +------------------ Max length 12.
-     |      |    |   +-------------- cSTR value.
+     |      |    |   +-------------- STR_ value.
      |      |    |   |
      v      v    v   v         */
-        += cSTR(item1 12 "ABC") -=
+        += STR_(item1 12 "ABC") -=
             Key item1 /*      Operation "-Key" removes "item1".
 
 

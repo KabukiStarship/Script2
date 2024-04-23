@@ -10,6 +10,7 @@ the MPL was not distributed with this file, You can obtain one at
 #if SEAM >= SCRIPT2_LIST
 #include "../List.hpp"
 #include "../RNG.h"
+//#include "../Uniprinter.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_LIST
 #include "../_Debug.inl"
@@ -87,16 +88,6 @@ static const CHA* List(const CHA* args) {
   TestList<ISB>();
   TestList<ISC>();
   TestList<ISD>();
-  D_COUT("\n\nTesting TTypePrint...\n");
-  for (DTB type = TEST_MIN; type < TEST_MAX; ++type) {
-    D_COUT('\n' << type << ".) ");
-    D_COUT(TPrintType<COut>(COut().Star(), type));
-  }
-
-  D_COUT("\n\nTTypePrint: ARY_CHA");
-#if SEAM == SCRIPT2_LIST
-  TPrintType<COut>(COut().Star(), DTB(_ARY | _CHA));
-#endif
 #endif
   return nullptr;
 }

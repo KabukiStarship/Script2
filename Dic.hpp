@@ -132,7 +132,7 @@ Printer& TDicPrint(Printer& printer, TDic<TPARAMS>* dic) {
     printer << '\n'
             << i << ".) \""
             << "here"
-            << "\" type:" << TPrintType<Printer, DTB>(printer, *types++);
+            << "\" type:" << TPrintAType<Printer, DTB>(printer, *types++);
   }
   D_COUT(Linef('-') << Charsf(dic, TDicSize<TPARAMS>(dic)));
   return printer << '\n';
@@ -163,7 +163,7 @@ BOL TDicGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TDicPrint<COut, TPARAMS>(COut().Star(), dic);
+  TDicPrint<COut, TPARAMS>(StdOut(), dic);
   D_COUT(Charsf(dic, TDicEnd<TPARAMS>(dic)));
 #endif
 
@@ -502,7 +502,7 @@ class ADic {
   }
 
   /* Prints this object to the stdout. */
-  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void COut() { PrintTo<_::COut>(_::StdOut()); }
 };
 
 }  //< namespace _

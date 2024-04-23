@@ -132,12 +132,12 @@ BOL Slot::IsReadable() { return origin != stop; }
         ISW top_chunk = stop - stop;
         size -= top_chunk;
 
-        ArrayCopy (target, target_end, origin, top_chunk);
-        ArrayCopy (TPtr<CHA>(target) + top_chunk, size,
+        RAMCopy (target, target_end, origin, top_chunk);
+        RAMCopy (TPtr<CHA>(target) + top_chunk, size,
                     origin);
         return origin + size;
     }
-    ArrayCopy (target, target_end, stop, size);
+    RAMCopy (target, target_end, stop, size);
     return origin + size;
 }*/
 
@@ -193,13 +193,13 @@ const Op* Slot::Read(const ISC* params, void** args) {
       case cNIL:
         return ReturnError(this, cErrorInvalidType);
       case cADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
-      case cSTR:
+      case STR_:
         // Load buffered-type argument length and increment the
         // index.
         count = *param;
         ++param;
 
-        // std::cout << "\nReading CHA with max length " << count;
+        // StdOut() << "\nReading CHA with max length " << count;
 
         // Load next pointer and increment args.
         iua_ptr = TPtr<CHA>(args[index]);

@@ -7,7 +7,6 @@ Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 the MPL was not distributed with this file, You can obtain one at 
 <https://mozilla.org/MPL/2.0/>. */
 #include "Array.hpp"
-#include "Binary.hpp"
 namespace _ {
 
 /* Creates a CPU word from the repeated fill_char. */
@@ -27,7 +26,7 @@ inline IUW FillWord(CHA fill_char) {
 #endif
 }
 
-CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
+CHA* RAMFill(void* origin, ISW count, CHA fill_char) {
   if (!origin) return nullptr;
   CHA* start = TPtr<CHA>(origin);
   if (count < 3 * sizeof(ISW)) {
@@ -55,7 +54,6 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 }  //< namespace _
 
 #if SEAM >= SCRIPT2_STACK
-#include "Array.hpp"
 
 #if SEAM == SCRIPT2_STACK
 #include "_Debug.inl"
@@ -65,16 +63,16 @@ CHA* ArrayFill(void* origin, ISW count, CHA fill_char) {
 
 namespace _ {
 
-IUW* RamFactoryStack(IUW* origin, ISW size_bytes) {
+IUW* RAMFactoryStack(IUW* origin, ISW size_bytes) {
   if (size_bytes <= 0) return nullptr;
-  size_bytes += (-size_bytes) & WordLSbMask;  //< Word align up.
-  ISW size_words = size_bytes >> WordBitCount; 
+  size_bytes += (-size_bytes) & ACPUAlignMask;  //< Word align up.
+  ISW size_words = size_bytes >> ACPUBitCount; 
   IUW* socket = new IUW[size_words];
   return socket;
 }
 
-IUW* RamFactoryHeap(IUW* origin, ISW size_bytes) {
-  if (!origin) return RamFactoryStack(origin, size_bytes);
+IUW* RAMFactoryHeap(IUW* origin, ISW size_bytes) {
+  if (!origin) return RAMFactoryStack(origin, size_bytes);
   delete[] origin;
   return nullptr;
 }
@@ -215,7 +213,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
   return a_size_bytes;
 }
 
-ISW ArrayCompare(const void* a, ISW a_size_bytes, const void* b,
+ISW RAMCompare(const void* a, ISW a_size_bytes, const void* b,
                  const ISW b_size_bytes) {
   return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
 }
@@ -307,24 +305,24 @@ ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
   return r_size;
 }
 
-ISW ArrayCopy(void* write, ISW w_size, const void* source,
+ISW RAMCopy(void* write, ISW w_size, const void* source,
               const ISW s_size) {
   return ArrayCopySlow(write, w_size, source, s_size);
 }
 
-inline ISW ArrayCopy(void* write, void* w_end, const void* read,
+inline ISW RAMCopy(void* write, void* w_end, const void* read,
                      ISW read_size) {
-  return ArrayCopy(write, TDelta<ISW>(write, w_end), read, read_size);
+  return RAMCopy(write, TDelta<ISW>(write, w_end), read, read_size);
 }
 
-inline ISW ArrayCopy(void* write, ISW r_size, const void* read,
+inline ISW RAMCopy(void* write, ISW r_size, const void* read,
                      const void* r_end) {
-  return ArrayCopy(write, r_size, read, TDelta<ISW>(read, r_end));
+  return RAMCopy(write, r_size, read, TDelta<ISW>(read, r_end));
 }
 /*
-inline ISW ArrayCopy(void* write, void* write_end, const void* read,
+inline ISW RAMCopy(void* write, void* write_end, const void* read,
                      const ISW r_size) {
-  return ArrayCopy(write, TDelta(write, write_end), read, r_size);
+  return RAMCopy(write, TDelta(write, write_end), read, r_size);
 }*/
 
 inline ISW ArrayCopyFast(void* write, void* w_end, const void* read,
@@ -343,7 +341,7 @@ constexpr ISW Nil::SizeBytes() { return 0; }
 constexpr ISW Nil::SizeWords() { return 0; }
 IUW* Nil::Words() { return nullptr; }
 
-ISW ArrayShiftUp(void* origin, void* end, ISW count) {
+ISW RAMShiftUp(void* origin, void* end, ISW count) {
   if (!origin || origin <= end || count <= 0) return 0;
   CHA *start = TPtr<CHA>(origin),
       *stop = TPtr<CHA>(end);
@@ -373,7 +371,7 @@ ISW ArrayShiftUp(void* origin, void* end, ISW count) {
   return count;
 }
 
-ISW ArrayShiftDown(void* origin, void* end, ISW count) {
+ISW RAMShiftDown(void* origin, void* end, ISW count) {
   if (!origin || origin <= end || count <= 0) return 0;
   CHA *start = TPtr<CHA>(origin),
       *stop = TPtr<CHA>(end);
