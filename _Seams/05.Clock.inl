@@ -9,7 +9,7 @@ the MPL was not distributed with this file, You can obtain one at
 
 #if SEAM >= SCRIPT2_CLOCK
 #include "../Clock.hpp"
-#include "../Stringf.hpp"
+#include "../Uniprinter.hpp"
 using namespace _;
 #if SEAM == SCRIPT2_CLOCK
 #include "../_Debug.inl"

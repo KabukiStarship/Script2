@@ -1,6 +1,6 @@
 /* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /Stringf.h
+@file    /Uniprinter.h
 @author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
@@ -8,8 +8,8 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_STRINGF_CODLESS_DECL
-#define SCRIPT2_STRINGF_CODLESS_DECL 1
+#ifndef SCRIPT2_STRINGF_DECL
+#define SCRIPT2_STRINGF_DECL 1
 namespace _ {
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
@@ -233,24 +233,26 @@ struct LIB_MEMBER Charsf {
 };
 
 /* Utility class for formatting text with operator<<, most commonly right and
-center aligned. */
+center aligned.
+@warning Stringf cannot be const because we need to write to it on the stack 
+frame in chained operator overloads.
+*/
 class LIB_MEMBER Stringf {
  public:
   enum {
     // Max length of the buffer in ALU words.
-    cBufferWordCount =
-        (sizeof(void*) == 2)
-            ? 5
-            : (sizeof(void*) == 4) ? 6 : (sizeof(void*) == 8) ? 5 : 1,
+    BufferWordCount = (sizeof(void*) == 2) ? 5
+                    : (sizeof(void*) == 4) ? 6 
+                    : (sizeof(void*) == 8) ? 5 : 1,
     // Max length of a string in characters.
-    cLengthMax = cBufferWordCount * sizeof(void*) - 1,
+    LengthMax = BufferWordCount * sizeof(void*) - 1,
   };
 
  private:
-  const void* String_;  // Pointer to a string or the buffer_.
-  ISW count_;           //< The count.
-  DTW type_;            //< The ASCII string Type, 1-3, of the String_.
-  IUW buffer_[cBufferWordCount];  //< String buffer for the token.
+  const void* string_;  // Pointer to a string or the buffer_.
+  ISW count_;           //< The character count.
+  DTW type_;            //< The ASCII string Type, STA, STB, or STC.
+  IUW buffer_[BufferWordCount];  //< String buffer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
@@ -306,7 +308,8 @@ class LIB_MEMBER Stringf {
 #if USING_FPD == YES_0
   Stringf(FPD item, ISW count);
 #endif
-  Stringf(TypeValue item, ISW count = AConsoleWidth);
+  //Stringf(ATypef item, ISW count = AConsoleWidth);
+  //Stringf(TypeValue item, ISW count = AConsoleWidth);
 
   IUW Word();
 
@@ -322,10 +325,10 @@ class LIB_MEMBER Stringf {
   const CHC* STC();
 
   /* Gets the type_. */
-  ISW Type() const;
+  ISW Type();
 
   /* Gets the count_. */
-  ISW Count() const;
+  ISW Count();
 
   /* Saves the pointer to the String_. */
   void Print(const CHA* item);
@@ -356,11 +359,11 @@ class LIB_MEMBER Stringf {
 #endif
 
   /* Prints a timestamp to the buffer_. */
-  void PrintTMC(TMC item);
-  void PrintTME(TMC item, IUC subsecond_tick);
-  void PrintTMD(TMD item);
+  //void PrintTMC(TMC item);
+  //void PrintTME(TMC item, IUC subsecond_tick);
+  //void PrintTMD(TMD item);
 
-  void Print(TypeValue item);
+  //void Print(TypeValue item);
 
   /* Stores the item to the first word of the buffer and the negative of the
   count. */
@@ -534,6 +537,38 @@ struct LIB_MEMBER Indentf {
   /* Constructs the value from the delta between start and stop. */
   Indentf(ISW indent_count);
 };
+
+/* Utility class for indicating the size or count of an item. */
+struct Sizef {
+  ISW size;  //< The size of the item.
+
+  Sizef(ISA size);
+  Sizef(ISB size);
+  Sizef(ISC size);
+  Sizef(ISD size);
+};
+
+/* Utility class for printing an ASCII type-value one-liner. */
+struct LIB_MEMBER ATypef {
+  DTW type,   //< The item type.
+      count;  //< The number of chars to print.
+
+  ATypef(DTB type, Sizef count = { -1 });
+  ATypef(DTC type, Sizef count = { -1 });
+  ATypef(DTD type, Sizef count = { -1 });
+  //Typef(DTE type, Sizef count = { -1 });
+  ATypef(DTB pod, DTB vt, Sizef count = { -1 });
+  ATypef(DTB pod, DTB vt, DTB sw, Sizef count = { -1 });
+  ATypef(DTB pod, DTB vt, DTB sw, DTB map, Sizef count = { -1 });
+  ATypef(DTB pod, DTB vt, DTB sw, DTB map, DTB mod, Sizef count = { -1 });
+
+  // Center aligns this to the given character count.
+  Centerf Center(ISW count);
+
+  // Right aligns this to the given character count.
+  Rightf Right(ISW count);
+};
+
 
 }  //< namespace _
 

@@ -8,7 +8,7 @@ the MPL was not distributed with this file, You can obtain one at
 <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_STACK
 #include "../Stack.hpp"
-using namespace _;
+using namespace ::_;
 #if SEAM == SCRIPT2_STACK
 #include "../_Debug.inl"
 #else
@@ -49,7 +49,7 @@ void TestStack(const CHA* args) {
 
   D_COUT(Headingf("\n\nPopping items off the Stack... ") << "i:" << i << 'n');
   #if SEAM == SCRIPT2_STACK
-  TStackPrint<COut, T, IS>(COut().Star(), stack.This());
+  TStackPrint<_::COut, T, IS>(StdOut(), stack.This());
   #endif
   for (i=i-1; i >= 0; --i) {
     //D_COUT_OBJ(stack);
@@ -68,13 +68,13 @@ static const CHA* Stack(const CHA* args) {
 #if SEAM >= SCRIPT2_STACK
   A_TEST_BEGIN;
 
-  D_COUT(Headingf("Testing ArrayCompare with offset sequential arrays..."));
+  D_COUT(Headingf("Testing RAMCompare with offset sequential arrays..."));
 
   enum {
     OffsetMax = 2 * WordByteCount,
     TestByteCount = 256,
     BufferSizeBytes = TestByteCount + 2 * OffsetMax,
-    BufferSizeWords = BufferSizeBytes >> WordBitCount,
+    BufferSizeWords = BufferSizeBytes >> ACPUBitCount,
   };
   IUW source[BufferSizeWords],
       destination[BufferSizeWords + OffsetMax];
@@ -138,12 +138,12 @@ static const CHA* Stack(const CHA* args) {
     }
   }
 
-  D_COUT(Headingf("Test ArrayCopy"));
+  D_COUT(Headingf("Test RAMCopy"));
 
   for (IUW s_offset = 0; s_offset < OffsetMax; ++s_offset) {
     for (IUW d_offset = 0; d_offset < OffsetMax; ++d_offset) {
       //D_COUT("\n\ns_offset: " << s_offset << "  d_offset: " << d_offset);
-      ArrayFill(destination, BufferSizeBytes, 0);
+      RAMFill(destination, BufferSizeBytes, 0);
       IUA* cursor = TPtr<IUA>(source);
 
       for (IUW i = 0; i < s_offset; ++i) *cursor++ = 0;

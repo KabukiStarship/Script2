@@ -168,7 +168,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   ISZ dimension_count = *dimensions;
   if (dimension_count < 0) return nullptr;
   ISZ size = (ISZ)sizeof(TStack<ISZ>) + dimension_count * sizeof(T);
-  IUW* socket = new IUW[size >> WordBitCount];
+  IUW* socket = new IUW[size >> ACPUBitCount];
   TStack<ISZ>* stack = TPtr<TStack<ISZ>>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
@@ -251,7 +251,7 @@ inline TMatrix<ISZ>* TMatrixCloneDelta(Autoject& ajt,
     if (!origin_new) return nullptr;
     IUW* origin = ajt.origin;
     ISZ size_bytes = TMatrixSize<T, ISZ>(&matrix->dimensions.count);
-    ArrayCopy(origin_new, TPtr<CHA>(origin_new) + size_bytes, 
+    RAMCopy(origin_new, TPtr<CHA>(origin_new) + size_bytes, 
               origin, TPtr<CHA>(origin) + size_bytes);
     return TPtr<TMatrix<ISZ>>(origin_new);
   }
@@ -297,13 +297,13 @@ inline IUW* TMatrixCopy(TMatrix<ISZ>* destination, TMatrix<ISZ>* source) {
   /* I'm not sure if I even want to try to copy the dimensions and array blocks
   seprataly because in practice the dimensions stack size will never be very 
   much.
-  ArrayCopy(destination, TStackTop<T, ISZ>(destination->dimensions), 
+  RAMCopy(destination, TStackTop<T, ISZ>(destination->dimensions), 
             source     , TStackTop<T, ISZ>(source->dimensions));
-  ArrayCopy(TMatrixStart<T, ISZ>(destination), 
+  RAMCopy(TMatrixStart<T, ISZ>(destination), 
             TPtr<CHA>(destination) + SizeDestination, 
             TMatrixStart<T, ISZ>(source), 
             TPtr<CHA>(source) + SizeSource); */
-  ArrayCopy(destination, TPtr<CHA>(destination) + size_destination, 
+  RAMCopy(destination, TPtr<CHA>(destination) + size_destination, 
             source, TPtr<CHA>(source) + size_source);
   return destination;
 }

@@ -7,16 +7,13 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
-#if USING_CONSOLE == YES_0
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "COut.h"
 //
-#include "Puff.hpp"
-#include "Stringf.hpp"
-#include "Types.hpp"
 #include "Uniprinter.hpp"
 //#include <cstdio>
 #include <iostream>
-#if SEAM == SCRIPT2_CORE
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -50,8 +47,6 @@ BOL CIsPrintable(CHC item) {
   if (item == 127) return false;
   return true;
 }
-
-inline COut& StdOut() { return COut().Star(); }
 
 COut::COut() {}
 
@@ -145,8 +140,8 @@ COut& COut::Print(CHB item) {
 COut& COut::Print(const CHB* item) {
   return TSPrintString<COut, CHB>(*this, item);
 }
-
 #endif
+
 #if USING_UTF32 == YES_0
 COut& COut::Print(CHC item) {
   if (item >= (CHC(1) << 9)) {
@@ -261,21 +256,21 @@ COut& COut::Print(Rightf& item) {
   return TPrintRight<COut>(*this, item.element);
 }
 
-COut& COut::Print(Linef& item) { return TPrintLinef<COut>(*this, item); }
+COut& COut::Print(Linef& item) { return TPrint<COut>(*this, item); }
 
-COut& COut::Print(Headingf& item) { return TPrintHeadingf<COut>(*this, item); }
+COut& COut::Print(Headingf& item) { return TPrint<COut>(*this, item); }
 
 COut& COut::Print(Indentf& item) {
   return _::TPrintIndent<_::COut>(*this, item.indent_count);
 }
 
 COut& COut::Print(Charsf& item) {
-  return _::TPrintChars<COut>(*this, item);
+  return _::TPrint<COut>(*this, item);
 }
 
-COut& COut::Print(TypeWordValue item) {
-  return _::TPrintType<COut>(*this, item);
-}
+//COut& COut::Print(TypeWordValue item) {
+//  return _::TPrintAType<COut>(*this, item);
+//}
 
 COut& COut::NL() { return Print('\n'); }
 COut& COut::NL(CHA item) {
@@ -403,6 +398,8 @@ ISN COut::PrintAndCount(const CHC* string) {
 }
 #endif
 
+COut& StdOut() { return COut().Star(); }
+
 COut CPrint(CHA item) { return COut(item); }
 COut CPrint(const CHA* item) { return COut(item); }
 #if USING_UTF16 == YES_0
@@ -454,21 +451,46 @@ _::COut& operator<<(_::COut& o, FPC item) { return o.Print(item); }
 #if USING_FPD == YES_0
 _::COut& operator<<(_::COut& o, FPD item) { return o.Print(item); }
 #endif
-_::COut& operator<<(_::COut& o, _::Hexf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Binaryf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Centerf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Rightf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Linef item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Headingf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Indentf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::Charsf item) { return o.Print(item); }
-_::COut& operator<<(_::COut& o, _::COut item) { return o; }
+
+_::COut& operator<<(_::COut& o, _::Hexf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+_::COut& operator<<(_::COut& o, _::Binaryf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+
+_::COut& operator<<(_::COut& o, _::Headingf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+
+#if SEAM >= SCRIPT2_UNIPRINTER
+_::COut& operator<<(_::COut& o, _::Centerf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+_::COut& operator<<(_::COut& o, _::Rightf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+_::COut& operator<<(_::COut& o, _::Linef item) {
+  return _::TPrint<_::COut>(o, item);
+}
+_::COut& operator<<(_::COut& o, _::Indentf item) {
+  return _::TPrint<_::COut>(o, item);
+}
+_::COut& operator<<(_::COut& o, _::Charsf item) {
+  return _::TPrint<_::COut>(o, item);
+}
 _::COut& operator<<(_::COut& o, _::Sizef item) {
-  return _::TPrintSizef<_::COut>(o, item);
+  return _::TPrint<_::COut>(o, item);
 }
-
-_::COut& operator<<(_::COut& o, _::TypeWordValue item) {
-  return o.Print(item);
+inline _::COut& operator<<(_::COut& printer, _::ATypef item) {
+  return _::TPrint<_::COut>(printer, item);
 }
-
+inline _::COut& operator<<(_::COut& printer, _::TypeWordValue item) {
+  return _::TPrint<_::COut>(printer, item);
+}
+/*
+_::COut& operator<<(_::COut& o, _::COut& item) {
+  return o;
+}*/
+#endif
 #endif

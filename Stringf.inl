@@ -1,13 +1,13 @@
 /* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /Stringf.inl
+@file    /Uniprinter.inl
 @author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright Kabuki Starship™ <kabukistarship.com>;
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
 #include "Stringf.hpp"
+#include "Binary.hpp"
 namespace _ {
 const CHA* STRPrintCharsHeader() {
   return "\n|0       8       16      24      32      40      48      56      |"
@@ -248,8 +248,8 @@ const CHA* STRError(ISA error_number) {
 
 }  //< namespace _
 
-#if SEAM >= SCRIPT2_CORE
-#if SEAM == SCRIPT2_CORE
+#if SEAM >= SCRIPT2_COUT
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -437,10 +437,42 @@ const CHB* SScan(const CHB* string, CHC& item) {
 }
 #endif
 
-}  //< namespace _
-#endif
+ATypef::ATypef(DTB type, Sizef count) : count(count.size), type(type) {}
+ATypef::ATypef(DTC type, Sizef count) : count(count.size), type(type) {}
+ATypef::ATypef(DTD type, Sizef count) : count(count.size), type(type) {}
 
-namespace _ {
+ATypef::ATypef(DTB pod, DTB vt, Sizef count) :
+  count(count.size),
+  type(ATypePack(pod, vt))
+{}
+
+ATypef::ATypef(DTB pod, DTB vt, DTB sw, Sizef count) :
+  count(count.size),
+  type(ATypePack(pod, vt, sw))
+{}
+
+ATypef::ATypef(DTB pod, DTB vt, DTB sw, DTB map, Sizef count) :
+  count(count.size),
+  type(ATypePack(pod, vt, sw, map))
+{}
+
+ATypef::ATypef(DTB pod, DTB vt, DTB sw, DTB map, DTB mod, Sizef count) :
+  count(count.size),
+  type(ATypePack(pod, vt, sw, map, mod))
+{}
+
+
+Centerf ATypef::Center(ISW count) {
+  Centerf result;
+
+  return result;
+}
+
+Rightf ATypef::Right(ISW count) {
+  Rightf result;
+
+  return result;
+}
 
 Valuef::Valuef() : count(0), value() {}
 
@@ -562,78 +594,75 @@ Binaryf::Binaryf(FPD item) : valuef(item, sizeof(FPD)) {}
 
 // Stringf::Stringf () {}
 Stringf::Stringf() : type_(_NIL), count_(0), buffer_() {
-  String_ = &buffer_[0];
+  string_ = &buffer_[0];
   *buffer_ = 0;
 }
 //< Visual C++ is complaining about unitialized members. I think it's a bug.
 
-Stringf::Stringf(const CHA* item) : String_(item), count_(0) { Print(item); }
+Stringf::Stringf(const CHA* item) : string_(item), count_(0) { Print(item); }
 #if USING_UTF16 == YES_0
-Stringf::Stringf(const CHB* item) : String_(item), count_(0) { Print(item); }
+Stringf::Stringf(const CHB* item) : string_(item), count_(0) { Print(item); }
 #endif
 #if USING_UTF32 == YES_0
-Stringf::Stringf(const CHC* item) : String_(item), count_(0) { Print(item); }
+Stringf::Stringf(const CHC* item) : string_(item), count_(0) { Print(item); }
 #endif
-Stringf::Stringf(CHA item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(CHB item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(CHC item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(ISC item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(IUC item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(ISD item) : String_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(IUD item) : String_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CHA item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CHB item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CHC item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(ISC item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(IUC item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(ISD item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(IUD item) : string_(buffer_), count_(0) { Print(item); }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC item) : String_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(FPC item) : string_(buffer_), count_(0) { Print(item); }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD item) : String_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(FPD item) : string_(buffer_), count_(0) { Print(item); }
 #endif
-Stringf::Stringf(const CHA* item, ISW count) : String_(item), count_(count) {
+Stringf::Stringf(const CHA* item, ISW count) : string_(item), count_(count) {
   Print(item);
 }
 #if USING_UTF16 == YES_0
-Stringf::Stringf(const CHB* item, ISW count) : String_(item), count_(count) {
+Stringf::Stringf(const CHB* item, ISW count) : string_(item), count_(count) {
   Print(item);
 }
 #endif
 #if USING_UTF32 == YES_0
-Stringf::Stringf(const CHC* item, ISW count) : String_(item), count_(count) {
+Stringf::Stringf(const CHC* item, ISW count) : string_(item), count_(count) {
   Print(item);
 }
 #endif
-Stringf::Stringf(CHA item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(CHA item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(CHB item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(CHB item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(CHC item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(CHC item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(ISC item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(ISC item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(IUC item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(IUC item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(ISD item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(ISD item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(IUD item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(IUD item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(FPC item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD item, ISW count) : String_(buffer_), count_(count) {
+Stringf::Stringf(FPD item, ISW count) : string_(buffer_), count_(count) {
   Print(item);
 }
 #endif
-Stringf::Stringf(TypeValue item, ISW count) : String_(buffer_), count_(count) {
-  Print(item);
-}
 
 IUW Stringf::Word() { return buffer_[0]; }
 
@@ -641,117 +670,127 @@ void* Stringf::Value() { return buffer_; }
 
 void* Stringf::Ptr() { return TPtr<void>(buffer_[0]); }
 
-const CHA* Stringf::STA() { return TPtr<const CHA>(String_); }
-const CHB* Stringf::STB() { return TPtr<const CHB>(String_); }
-const CHC* Stringf::STC() { return TPtr<const CHC>(String_); }
+const CHA* Stringf::STA() { return TPtr<const CHA>(string_); }
+const CHB* Stringf::STB() { return TPtr<const CHB>(string_); }
+const CHC* Stringf::STC() { return TPtr<const CHC>(string_); }
 
-ISW Stringf::Type() const { return type_; }
+ISW Stringf::Type() { return type_; }
 
-ISW Stringf::Count() const { return count_; }
+ISW Stringf::Count() { return count_; }
 
 void Stringf::Print(const CHA* item) {
   type_ = _STA;
-  String_ = item;
+  string_ = item;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Print(const CHB* item) {
   type_ = _STB;
-  String_ = item;
+  string_ = item;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(const CHC* item) {
   type_ = _STC;
-  String_ = item;
+  string_ = item;
 }
 #endif
 
 void Stringf::Print(CHA item) {
   CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + cLengthMax, item);
+  _::SPrint(buffer, buffer + LengthMax, item);
   type_ = _STA;
-  String_ = buffer_;
+  string_ = buffer_;
 }
 
 #if USING_UTF16 == YES_0
 void Stringf::Print(CHB item) {
   CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + cLengthMax, item);
+  _::SPrint(buffer, buffer + LengthMax, item);
   type_ = _STA;
-  String_ = buffer_;
+  string_ = buffer_;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(CHC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + cLengthMax, item);
+  _::SPrint(buffer, buffer + LengthMax, item);
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 #endif
 void Stringf::Print(ISC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
 #endif
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 
 void Stringf::Print(IUC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
 #endif
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 
 void Stringf::Print(ISD item) {
   CHA* buffer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
 #endif
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 
 void Stringf::Print(IUD item) {
   CHA* buffer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
 #endif
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Print(FPC item) {
   CHA* buffer = TPtr<CHA>(buffer_);
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 #endif
 #if USING_FPD == YES_0
 void Stringf::Print(FPD item) {
   CHA* buffer = TPtr<CHA>(buffer_);
-  _::TSPrint<CHA>(buffer, buffer + cLengthMax, item);
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
   type_ = _STA;
-  String_ = buffer;
+  string_ = buffer;
 }
 #endif
 
+/*
 void Stringf::PrintTMC(TMC item) {}
 
 void Stringf::PrintTME(TMC item, IUC subsecond_tick) {}
 
 void Stringf::PrintTMD(TMD item) {}
 
+void Stringf::Print(ATypef item) {
+  CHA* buffer = TPtr<CHA>(buffer_);
+#if SEAM >= SCRIPT2_ITOS
+  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+#endif
+  type_ = item.type;
+  string_ = buffer;
+}
+
 void Stringf::Print(TypeValue item) {
   DTW type = item.Type();
   type_ = type;
-  static const CHA kNotSupported[] = "Not supported\0";
+  static const CHA NotSupported[] = "Not supported\0";
   DTW pod_type = type & ATypePODMask;
   if (type != pod_type) {  // It's not a POD type.
   }
@@ -808,8 +847,15 @@ void Stringf::Print(TypeValue item) {
 #endif
       return;
   }
-  String_ = kNotSupported;
+  string_ = NotSupported;
 }
+
+Stringf::Stringf(ATypef item, ISW count) : string_(buffer_), count_(count) {
+  Print(item);
+}
+Stringf::Stringf(TypeValue item, ISW count) : string_(buffer_), count_(count) {
+  Print(item);
+}*/
 
 void Stringf::Hex(CHA item, ISW count) {
   *TPtr<CHA>(buffer_) = item;
@@ -916,6 +962,7 @@ Centerf::Centerf(FPC item, ISW count) : element(item, count) {}
 Centerf::Centerf(FPD item, ISW count) : element(item, count) {}
 #endif
 Centerf::Centerf(IUD item, ISW count) : element(item, count) {}
+//Centerf::Centerf(Typef item, ISW count) : element(item, count) {}
 
 Centerf& Centerf::Hex(CHA item, ISW count) {
   element.Hex(item, count);
@@ -1109,6 +1156,11 @@ Charsf::Charsf(const CHC* start, ISW count) : element(start, count) {}
 
 Indentf::Indentf(ISW indent_count) : indent_count(indent_count) {}
 
+Sizef::Sizef(ISA size) : size(size) {}
+Sizef::Sizef(ISB size) : size(size) {}
+Sizef::Sizef(ISC size) : size(size) {}
+Sizef::Sizef(ISD size) : size(size) {}
+
 }  //< namespace _
 
 #if SEAM >= SCRIPT2_FTOS
@@ -1152,4 +1204,5 @@ const CHA* SScan(const CHA* start, FPD& value) {
   return TSTRFloatStop<CHA>(start);
 }
 }  //< namespace _
+#endif
 #endif

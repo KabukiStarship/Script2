@@ -14,8 +14,8 @@ the MPL was not distributed with this file, You can obtain one at
 namespace _ {
 
 /* Overwrites the memory with fill_char; functionally equivalent to memset. */
-inline CHA* ArrayFill(void* start, void* stop, CHA fill_char) {
-  return ArrayFill(start, TPtr<CHA>(stop) - TPtr<CHA>(start) + 1, fill_char);
+inline CHA* RAMFill(void* start, void* stop, CHA fill_char) {
+  return RAMFill(start, TPtr<CHA>(stop) - TPtr<CHA>(start) + 1, fill_char);
 }
 
 /* The maximum autoject size.
@@ -99,7 +99,7 @@ inline T* TArrayStart(Class* autoject) {
 
 /* Prints the item to the printer. */
 template<typename T, typename IS, typename Printer>
-Printer& TArrayPrint(Printer& o, TArray<IS>* item) {
+Printer& TArrayPrint(Printer& o, const TArray<IS>* item) {
   IS size = item->size;
   o << Linef("\n+---\nTArray<IS") << TSizef<IS>()
     << "> size:" << size;
@@ -110,6 +110,22 @@ Printer& TArrayPrint(Printer& o, TArray<IS>* item) {
     o << "\n| " << i << ".) " << items[i];
   }
   return o << Linef("\n+---");
+}
+
+// Copies the source to the destination.
+template<typename T, typename IS = ISN, ISA AlignMask>
+TArray<IS>* TArrayCopy(void* destination, const void* source) {
+  auto dst = TPtr<IS>(destination);
+  auto src = TPtr<const IS>(source);
+  auto dst_count = *dst;
+  auto src_count = *src;
+  auto result = RAMCopy(TAlignUpPTR<>(dst + 1, AlignMask),
+                        dst_count * sizeof(T),
+                        TAlignUpPTR<>(src + 1, AlignMask),
+                        src_count * sizeof(T));
+  if (result <= 0) return nullptr;
+  *dst = src_count;
+  return TPtr<TArray<IS>>(dst);
 }
 
 /* Calculates the size in bytes of an array with given element_count. */
@@ -173,7 +189,7 @@ inline IS TSizeBytes(Autoject& autoject) {
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IS size) {
   IS size_aligned_up = AlignUp(TSizeBytes<T, IS, Class>(size));
-  return size_aligned_up >> WordBitCount;
+  return size_aligned_up >> ACPUBitCount;
 }
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IUW* origin) {
@@ -188,7 +204,7 @@ inline IS TSizeWords(Autoject& autoject) {
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
 template<typename T, typename IS = ISN, typename Class>
-IUW* TArrayNew(RAMFactory factory, IS size) {
+IUW* TRAMFactoryNew(RAMFactory factory, IS size) {
   IUW* origin = factory(nullptr, TSizeBytes<T, IS, Class>(size));
   TSizeSet<IS>(origin, size);
   return origin;
@@ -220,7 +236,7 @@ TArray<IS>* TArrayWrite(TArray<IS>* destination, TArray<IS>* source,
   D_ASSERT(source);
 
   ISW size_bytes = (ISW)TSizeBytes<T, IS, Class>(size);
-  if (!ArrayCopy(destination, size_bytes, source, size_bytes)) return nullptr;
+  if (!RAMCopy(destination, size_bytes, source, size_bytes)) return nullptr;
   return destination;
 }
 
@@ -243,7 +259,7 @@ IUW* TArrayClone(Autoject& obj) {
 
   TArray<IS>* o = TPtr<TArray<IS>>(origin);
   IS size = o->size;
-  IUW* clone = TArrayNew<T, IS, TArray<IS>>(size);
+  IUW* clone = TRAMFactoryNew<T, IS, TArray<IS>>(size);
   return TArrayWrite<T, IS, Class>(clone, origin, size);
 }
 
@@ -251,7 +267,11 @@ IUW* TArrayClone(Autoject& obj) {
 @return True if the autoject can double in size. */
 template<typename IS>
 BOL TCanGrow(IS size) {
-  return !(size >> (sizeof(IS) * 8 - 2));
+  auto size_new = size >> (sizeof(IS) * 8 - 2);
+  if (size_new == 0) return true;
+  COut("\n\nError! Max size hit! size:").Star() << size;
+  return false;
+
 }
 
 /* Resizes the given array.
@@ -363,9 +383,9 @@ IS TArrayFind(const T* elements, IS element_count, const T& item) {
 @param origin  The origin of Array B.
 @param end    The end of Array B.
 @return True if they are the same and false if they are not. */
-inline ISW ArrayCompare(const void* a_begin, const void* end_a,
+inline ISW RAMCompare(const void* a_begin, const void* end_a,
                         const void* b_begin, const void* end_b) {
-  return ArrayCompare(a_begin, SizeOf(a_begin, end_a), b_begin,
+  return RAMCompare(a_begin, SizeOf(a_begin, end_a), b_begin,
                       SizeOf(b_begin, end_b));
 }
 
@@ -375,28 +395,28 @@ inline ISW ArrayCompare(const void* a_begin, const void* end_a,
 @param origin The origin of Array B.
 @param size  The size of Array B.
 @return True if they are the same and false if they are not. */
-inline ISW ArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
+inline ISW RAMCompare(const void* a_begin, void* a_end, const void* b_begin,
                         ISW b_size_bytes) {
-  return ArrayCompare(a_begin, a_end, a_begin,
+  return RAMCompare(a_begin, a_end, a_begin,
                       TPtr<CHA>(b_begin) + b_size_bytes);
 }
 
-/* Casts ArrayCompare to type T. */
+/* Casts RAMCompare to type T. */
 template<typename T>
 inline T* TArrayCompare(void* a_begin, void* a_end, void* b_begin,
                         ISW b_size_bytes) {
-  return TPtr<T*>(ArrayCompare(a_begin, a_end, b_begin, b_size_bytes));
+  return TPtr<T*>(RAMCompare(a_begin, a_end, b_begin, b_size_bytes));
 }
 
-/* Casts ArrayCompare to type T. */
+/* Casts RAMCompare to type T. */
 template<typename T>
 inline const T* TArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
   ISW b_size_bytes) {
-  return TPtr<const T*>(ArrayCompare(a_begin, a_end, b_begin, b_size_bytes));
+  return TPtr<const T*>(RAMCompare(a_begin, a_end, b_begin, b_size_bytes));
 }
 
-/* A word-aligned array of cSize_ elements of T on the progam stack. */
-template<ISW cSize_ = CRCpuCacheLineSize, typename T = IUA, typename IS = ISN,
+/* A word-aligned array of Size_ elements of T on the progam stack. */
+template<ISW Size_ = ACPUCacheLineSize, typename T = IUA, typename IS = ISN,
           typename Class = Nil>
 class TBUF {
  public:
@@ -441,13 +461,13 @@ class TBUF {
   /* Sets the size to the new value. */
   template<typename ISW>
   inline IUW* SizeSet(ISW size) {
-    A_ASSERT((size & WordLSbMask) == 0)
+    A_ASSERT((size & ACPUAlignMask) == 0)
     *TPtr<ISW>(words_) = size;
     return words_;
   }
 
   /* The size in elements. */
-  static constexpr IS Size() { return IS((cSize_ < 0) ? 0 : IS(cSize_)); }
+  static constexpr IS Size() { return IS((Size_ < 0) ? 0 : IS(Size_)); }
 
   /* The size in bytes including the header. */
   static constexpr IS SizeBytes() {
@@ -462,31 +482,31 @@ class TBUF {
 };
 
 /* A Block of heap. */
-template<DTB cType>
-class TRamFactory {
+template<DTB Type>
+class TRAMFactory {
   /* RAMFactory for the Stack deletes a non-nil buffer. */
-  static IUW* RamFactoryHeap(IUW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    if (size_bytes < 0) return TPtr<IUW>(IUW(cType));
-    return _::RamFactoryHeap(buffer, size_bytes);
+  static IUW* RAMFactoryHeap(IUW* buffer, ISW size_bytes) {
+    if (size_bytes == 0) return (IUW*)RAMFactoryHeap;
+    if (size_bytes < 0) return TPtr<IUW>(IUW(Type));
+    return _::RAMFactoryHeap(buffer, size_bytes);
   }
 
   /* RAMFactory for the Stack doesn't delete a non-nil buffer. */
-  static IUW* RamFactoryStack(IUW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (IUW*)RamFactoryHeap;
-    if (size_bytes < 0) return TPtr<IUW>(cType);
-    return _::RamFactoryStack(buffer, size_bytes);
+  static IUW* RAMFactoryStack(IUW* buffer, ISW size_bytes) {
+    if (size_bytes == 0) return (IUW*)RAMFactoryHeap;
+    if (size_bytes < 0) return TPtr<IUW>(Type);
+    return _::RAMFactoryStack(buffer, size_bytes);
   }
 
   /* Gets the initial RAMFactory for the program stack or heap. */
   template<typename BUF>
   static constexpr RAMFactory RamFactoryInit() {
-    return (sizeof(BUF) == 0) ? RamFactoryHeap : RamFactoryStack;
+    return (sizeof(BUF) == 0) ? RAMFactoryHeap : RAMFactoryStack;
   }
 
  public:
   /* Does nothing. */
-  TRamFactory() {}
+  TRAMFactory() {}
 
   /* Gets the RAMFactory to use upon construction. */
   template<typename BUF>
@@ -511,12 +531,12 @@ class AArray {
 
  public:
   /* Gets the ASCII Data Type. */
-  static constexpr DTA Type() { return CTypeSize<IS, DTA>(_ARY); }
+  static constexpr DTA Type() { return CATypeSize<IS, DTA>(_ARY); }
 
   /* Constructs. */
   AArray() {
     TArrayInit<T, IS>(obj_, buffer_.Words(), IS(buffer_.Size()),
-                       TRamFactory<Type()>().Init<BUF>());
+                       TRAMFactory<Type()>().Init<BUF>());
   }
 
   /* Creates a autoject with either statically or dynamically allocated
@@ -525,7 +545,7 @@ class AArray {
   dynamic memory will be created. */
   AArray(IS size, RAMFactory ram = nullptr) {
     TArrayInit<T, IS>(obj_, buffer_.Words(), size,
-                       TRamFactory<Type()>().Init<BUF>(ram));
+                       TRAMFactory<Type()>().Init<BUF>(ram));
   }
 
   /* Stores the origin and ram to the obj_. */
@@ -605,7 +625,7 @@ class AArray {
     return TArrayPrint<T, IS>(o, Array());
   }
 
-  void CPrint() { PrintTo<_::COut>(_::COut().Star()); }
+  void CPrint() { PrintTo<_::COut>(_::StdOut()); }
 };
 
 }  //< namespace _

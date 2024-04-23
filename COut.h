@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_COUT_DECL
 #define SCRIPT2_COUT_DECL
 #include <_Config.h>
-#if USING_CONSOLE == YES_0
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "Stringf.h"
 namespace _ {
 
@@ -102,7 +102,7 @@ class LIB_MEMBER COut {
   COut& Print(Headingf& item);
   COut& Print(Indentf& item);
   COut& Print(Charsf& item);
-  COut& Print(TypeWordValue item);
+  //COut& Print(TypeWordValue item);
 
   /* Prints a new line followed by the given item to the stdout. */
   COut& NL();
@@ -176,9 +176,12 @@ class LIB_MEMBER COut {
 #endif
 };
 
+// Returns the standard conole out.
+inline COut& StdOut();
+
 /* Wrapper function for COut so you can use it more than once in a lexical
-scope without delcaring COut cout. */
-inline COut CPrint() { return COut(); }
+scope without delcaring COut cout.
+inline COut CPrint() { return COut(); } */
 
 /* Prints the given item to the COut. */
 COut CPrint(CHA item);
@@ -236,15 +239,18 @@ _::COut& operator<<(_::COut& o, FPD item);
 #endif
 _::COut& operator<<(_::COut& o, _::Hexf item);
 _::COut& operator<<(_::COut& o, _::Binaryf item);
+
+_::COut& operator<<(_::COut& o, _::Headingf item);
+#if SEAM >= SCRIPT2_UNIPRINTER
 _::COut& operator<<(_::COut& o, _::Centerf item);
 _::COut& operator<<(_::COut& o, _::Rightf item);
 _::COut& operator<<(_::COut& o, _::Linef item);
-_::COut& operator<<(_::COut& o, _::Headingf item);
 _::COut& operator<<(_::COut& o, _::Indentf item);
 _::COut& operator<<(_::COut& o, _::Charsf item);
 _::COut& operator<<(_::COut& o, _::Sizef item);
-_::COut& operator<<(_::COut& o, _::COut item);
-#endif
-
+_::COut& operator<<(_::COut& o, _::ATypef item);
 _::COut& operator<<(_::COut& o, _::TypeWordValue item);
+//_::COut& operator<<(_::COut& o, _::COut item);
+#endif
+#endif
 #endif

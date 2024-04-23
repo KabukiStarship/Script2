@@ -26,7 +26,7 @@ Printer& TBSeqPrint(Printer& o, const ISN* params) {
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
     o << STRType((ISN)value) << ", ";
-    if (type >= cSTR) {
+    if (type >= STR_) {
       if (value) {
         o << "\nError: arrays may only be created from POD types.";
         return o;
@@ -116,7 +116,7 @@ Printer& TBSeqPrint(Printer& o, const ISN* params) {
   // Do the last set without a comma.
   value = *params++;
   o << STRType(value) << ", ";
-  if (value == cSTR) {
+  if (value == STR_) {
     ++i;
     value = *params++;
     o << value;

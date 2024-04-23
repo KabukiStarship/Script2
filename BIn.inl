@@ -135,7 +135,7 @@ ISC BInStreamByte(BIn* bin) {
                                      : (stop - origin) + (open - origin) + 2);
 
   if (length < 1) {
-    BInError(bin, cErrorBufferOverflow, TParams<1, cSTR>(), 2, origin);
+    BInError(bin, cErrorBufferOverflow, TParams<1, STR_>(), 2, origin);
     return -1;
   }
   // IUA b = *cursor;
@@ -304,7 +304,7 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
 #else
         return BInError(bin, cErrorInvalidType, params, index, origin);
 #endif
-      case cSTR:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
+      case STR_:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
         // Load buffered-type argument length and increment the index.
         ++num_params;
         count = params[++index];
@@ -313,7 +313,7 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
         iua_ptr = TPtr<CHA>(args[arg_index]);
         if (iua_ptr == nullptr)
           return BInError(bin, cErrorImplementation, params, index, origin);
-        D_COUT("\nReading cSTR:0x" << Hexf(iua_ptr) << " with length:" << 
+        D_COUT("\nReading STR_:0x" << Hexf(iua_ptr) << " with length:" << 
                count);
         // Read CHA.
         iua = *origin;

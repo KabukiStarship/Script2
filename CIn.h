@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_CIN_DECL
 #define SCRIPT2_CIN_DECL
 #include <_Config.h>
-#if USING_CONSOLE == YES_0
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "COut.h"
 namespace _ {
 
@@ -33,17 +33,17 @@ class LIB_MEMBER CIn {
 
  public:
   enum {
-    cStateSuccess = 0,     //< State 0: Completed scanning.
-    cStateBaseSign,        //< State 1: Scanning base sign.
-    cStateBaseValue,       //< State 2: Scanning base value.
-    cStateDotOrExponent,   //< State 3: Scanning '.', 'e', or 'E'.
-    cStateFractionalPart,  //< State 4: Scanning the fraction part.
-    cStateExponentSign,    //< State 4: Scanning exponent sign.
-    cStateExponentValue,   //< State 5: Scanning exponent value.
+    StateSuccess = 0,     //< State 0: Completed scanning.
+    StateBaseSign,        //< State 1: Scanning base sign.
+    StateBaseValue,       //< State 2: Scanning base value.
+    StateDotOrExponent,   //< State 3: Scanning '.', 'e', or 'E'.
+    StateFractionalPart,  //< State 4: Scanning the fraction part.
+    StateExponentSign,    //< State 4: Scanning exponent sign.
+    StateExponentValue,   //< State 5: Scanning exponent value.
   };
 
   enum {
-    cBufferSizeMin = 2,  //< This min size of a string buffer.
+    BufferSizeMin = 2,  //< This min size of a string buffer.
   };
 
   /* Pauses until any key is pressed. */
@@ -156,6 +156,7 @@ const IUA* KeyboardNativeToHID();
 const IUA* KeyboardHIDToNative();
 
 typedef ISC VKCode;
+
 enum {
   cVKA = 4,
   cVKB = 5,

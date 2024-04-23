@@ -11,7 +11,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #define SCRIPT2_FILE_DEFINITIONS
 #include <_Config.h>
 #if SEAM >= SCRIPT2_FILE
-#include "Stringf.hpp"
+#include "Uniprinter.hpp"
 namespace _ {
 
 #undef  TARGS

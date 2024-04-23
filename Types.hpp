@@ -7,8 +7,8 @@ Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 the MPL was not distributed with this file, You can obtain one at 
 <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#ifndef INCLUDED_TYPEVALUE_CODE
-#define INCLUDED_TYPEVALUE_CODE
+#ifndef INCLUDED_TYPES_CODE
+#define INCLUDED_TYPES_CODE
 #include "Types.h"
 namespace _ {
 
@@ -25,51 +25,6 @@ struct TTypeValueOffset {
   DT type;      //< The ASCII data type word.
   IS value;     //< Offset to the value of the type.
 };
-
-/* Gets the log_b. */
-template<typename T>
-constexpr Sizef TSizef () {
-  Sizef result = {0};
-  switch (sizeof(T)) {
-    case 1: {
-      result.size = -1;
-      break;
-    }
-    case 2: {
-      result.size = -2;
-      break;
-    }
-    case 4: {
-      result.size = -3;
-      break;
-    }
-    case 8: {
-      result.size = -4;
-      break;
-    }
-    case 16: {
-      result.size = -5;
-      break;
-    }
-    case 32: {
-      result.size = -6;
-      break;
-    }
-    case 64: {
-      result.size = -7;
-      break;
-    }
-    case 128: {
-      result.size = -8;
-      break;
-    }
-    default: {
-      result.size = sizeof(T);
-      break;
-    }
-  }
-  return result;
-}
 
 /* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
 template<typename DT>
@@ -102,6 +57,21 @@ constexpr DT CTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
 
+/* Copies the source to the destination.
+This function is different in that it 
+@return nullptr if the destination does not have enough space. */
+template<typename IS = ISN>
+void* TMapCopy(void* destination, const void* source) {
+  auto dst = static_cast<IS*>(destination);
+  auto src = static_cast<const IS*>(source);
+  auto dst_count = *dst;
+  auto src_count = *src;
+  if (dst_count < src_count) return nullptr;
+  auto result = RAMCopy(dst, dst_count, src, src_count);
+  if (result <= 0) return nullptr;
+  return static_cast<void*>(dst);
+}
+
 /* Creates an ASCII Vector Data Type. */
 template<typename DT = DTB>
 inline DT TTypeVector(DTW pod_type, DTW vector_type, DTW width_bit_count = 0) {
@@ -123,9 +93,11 @@ inline DT TTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 
+
+
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
 template<typename IS = CHR, typename DT = DTB>
-constexpr DT CTypeSize() {
+constexpr DT CATypeSize() {
   return (sizeof(IS) ==  1) ? _SWA 
        : (sizeof(IS) ==  2) ? _SWB
        : (sizeof(IS) ==  4) ? _SWC
@@ -135,13 +107,63 @@ constexpr DT CTypeSize() {
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
 template<typename T, typename DT = DTB>
-constexpr DT CTypeSize(DT pod_type) {
-  return pod_type | (CTypeSize<T>() << 7);
+constexpr DT CATypeSize(DT pod_type) {
+  return pod_type | (CATypeSize<T>() << 7);
 }
 
 template<typename T, typename DT = DTB>
-inline DT TTypeSize(DT pod_type) {
-  return pod_type | (CTypeSize<T>() << 7);
+inline DT TATypeSize(DT pod_type) {
+  return pod_type | (CATypeSize<T>() << 7);
+}
+
+template<typename IS = ISW>
+IS TATypeSizeOf(const void* value, DTB type) {
+  if (type < ATypePODCount)
+    return ATypeSizeOfPOD(type);
+  // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+  // |:-------:|:------:|:-----:|:-----:|:-----:|
+  // |   MOD   |   MT   |  SW   |  VT   |  POD  |
+  auto mod = type >> ATypeMODBit0;
+  if (mod && 1) return sizeof(void*);
+  type ^= mod << ATypeMODBit0;
+  auto mt = type >> ATypeMTBit0;
+  type ^= mt << ATypeMTBit0;
+  auto sw = type >> ATypeSWBit0;
+  type ^= sw << ATypeSWBit0;
+  auto vt = type >> ATypeVTBit0;
+  type ^= vt << ATypeVTBit0;
+  if (vt == 0) return ISW(sw) * ATypeSizeOfPOD(type);
+  IS size = 1;
+  switch (sw) {
+  case 0:
+    size = IS(*static_cast<const ISA*>(value));
+    break;
+  case 1:
+    size = IS(*static_cast<const ISB*>(value));
+    break;
+  case 2:
+    size = IS(*static_cast<const ISC*>(value));
+    break;
+  case 3:
+    size = IS(*static_cast<const ISD*>(value));
+    break;
+  }
+  return size * sw;
+}
+
+template<typename IS = ISW>
+IS TATypeSizeOf(void* value, DTB type) {
+  return TATypeSizeOf<IS>((const void*)value, type);
+}
+template<typename IS = ISW>
+IS TATypeSizeOf(const void* value_base, IS size_bytes, DTB type) {
+  const IUA* vbase = (const IUA*)value_base;
+  return TATypeSizeOf<IS>(vbase + size_bytes, type);
+}
+template<typename IS = ISW>
+IS TATypeSizeOf(void* value_base, IS size_bytes, DTB type) {
+  const void* vbase = (const void*)value_base;
+  return TATypeSizeOf<IS>(vbase, size_bytes, type);
 }
 
 /* Returns the ASCII Type for the given floating-point type FP.
@@ -152,7 +174,7 @@ FPE: 16   0b10000   (0b100 << 2) | 0b00
 */
 template<typename FP, typename DT = DTB>
 constexpr DT CTypeFP() {
-  return (CTypeSize<FP, DT>() << 2);
+  return (CATypeSize<FP, DT>() << 2);
 }
 
 /* Returns the ASCII Type for the given unsigned integer type IS.
@@ -164,7 +186,7 @@ IUE: 17   0b10001   (0b100 << 2) | 0b01
 */
 template<typename IU, typename DT = DTB>
 constexpr DT CTypeIU() {
-  return (CTypeSize<IU, DT>() << 2) | 1;
+  return (CATypeSize<IU, DT>() << 2) | 1;
 }
 
 /* Returns the ASCII Type for the given signed integer type IS.
@@ -176,7 +198,7 @@ ISE: 18   0b10010   (0b100 << 2) | 0b10
 */
 template<typename IS, typename DT = DTB>
 constexpr DT CTypeIS() {
-  return (CTypeSize<IS, DT>() << 2) | 2;
+  return (CATypeSize<IS, DT>() << 2) | 2;
 }
 
 /* Returns the ASCII Type for the given character type CH.
@@ -187,16 +209,31 @@ CHE: 15   0b1111   (0b11 << 2) | 0b11
 */
 template<typename CH, typename DT = DTB>
 constexpr DT CTypeCH() {
-  return (CTypeSize<CH, DT>() << 2) | 3;
+  return (CATypeSize<CH, DT>() << 2) | 3;
+}
+
+/* Extracts the UTF type.
+@return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
+inline ISA TypeTextFormat(DTW type) {
+  DTW core_type = type & ATypePODMask;
+  if (core_type == 0) return -1;  //< then core_type < 32
+  if (core_type <= _STC) {
+    if (core_type == _NIL) return -1;
+    return ISA(type);
+  }
+  if (core_type == type) return -1;  //< then core_type < 32
+  if (core_type == _CHA) return 1;
+  if (core_type == _CHB) return 2;
+  if (core_type <= _CHC) return 3;
+  return -1;
 }
 
 }  //< namespace _
 
-#if SEAM >= SCRIPT2_CORE
-#include "Binary.hpp"
-#include "Stringf.hpp"
+#if SEAM >= SCRIPT2_COUT
+#include "Uniprinter.hpp"
 
-#if SEAM == SCRIPT2_CORE
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -218,8 +255,8 @@ inline DTW AlignmentMask(FPC item) { return 3; }
 inline DTW AlignmentMask(ISD item) { return 7; }
 inline DTW AlignmentMask(IUD item) { return 7; }
 inline DTW AlignmentMask(FPD item) { return 7; }
-inline DTW AlignmentMask(void* item) { return WordLSbMask; }
-inline DTW AlignmentMask(const void* item) { return WordLSbMask; }
+inline DTW AlignmentMask(void* item) { return ACPUAlignMask; }
+inline DTW AlignmentMask(const void* item) { return ACPUAlignMask; }
 
 /* Gets the type of the given item. */
 inline DTW TypeOf(CHA item) { return _CHA; }
@@ -245,27 +282,43 @@ inline BOL TSizeIsValid(IS size) {
   return (size & (sizeof(IS) - 1)) == 0;
 }
 
-/* An ROM  for one of the 32 types.
+/* A ROM  for one of the 32 types.
 C++11 variadic templates ensure there is only one copy in of the given in ROM.
-*/
+
 template<CHA CharA, CHA CharB, CHA CharC>
 inline IUC T() {
   return ((IUC)CharA) & (((IUC)CharB) << 8) & (((IUC)CharC) << 16);
-}
+}*/
 
 // Returns the memory alignment mask for this type.
 ISA ATypeAlignMask(DTB type) {
+  enum {
+    AlignC = sizeof(void*) == 2 ? 1 : 3,
+    AlignD = sizeof(void*) == 2 ? 1
+           : sizeof(void*) == 4 ? 3
+           : sizeof(void*) == 8 ? 7 : 0
+  };
   if (type <= _CHA) return 0;
   if (type <= _CHB) return 1;
-#if CPU_SIZE == CPU_2_BYTE
-  if (type < _BOL) return 1;
-#elif CPU_SIZE == CPU_4_BYTE
-  if (type < _BOL) return 3;
-#elif CPU_SIZE == CPU_8_BYTE
   if (type <= _CHC) return 3;
-  if (type < _BOL) return 7;
-#endif
-  return ATypeCustomAlignMask(type - _BOL);
+  if (type <= _ISE) return 7;
+  if (type < ATypePODCount) return ATypeCustomAlignMask()[type - _BOL];
+  DTB mod = type >> ATypeMODBit0;
+  type ^= mod << ATypeMODBit0;
+  DTB mt = type >> ATypeMTBit0;
+  type ^= mt << ATypeMTBit0;
+  DTB sw = type >> ATypeSWBit0;
+  type ^= sw << ATypeSWBit0;
+  DTB vt = type >> ATypeVTBit0;
+  type ^= vt << ATypeVTBit0;
+  if (vt == 0) return sw * ATypeAlignMask(type); //< Vetor of 2 to 4 Homo-tuples
+  switch (sw) {
+  case 0: return 0;
+  case 1: return 0;
+  case 2: return AlignC;
+  case 3: return AlignD;
+  }
+  return ACPUAlignMask;
 }
 
 /* Aligns the pointer up to the word boundry required by the type. */
@@ -273,39 +326,6 @@ template<typename T = CHA>
 T* TTypeAlignUp(void* pointer, ISW type) {
   ISW align_mask = ATypeAlignMask(type & ATypePODMask);
   return TPtr<T>(AlignUpPTR(pointer, align_mask));
-}
-
-/* Gets the size of the type in bytes.
-@return A postivie size_bytes if the type is a POD type; 0 if the type is an
-Object type; or -1 if the value is a STR. */
-inline ISW TypeSizeOf(DTW type) {
-  if (type == 0) return WordLSbMask;
-  if (type <= _IUA) return 0;
-  if (type <= _FPB) return 1;
-  if (type <= _TME) sizeof(ISN) - 1;
-  return sizeof(ISW) - 1;
-}
-
-/* Checks if the given type is valid. @todo Possibly delete.
-@return False if the given type is an 1-byte LST, MAP, BOK, or DIC.
-inline BOL TypeIsSupported(DTW type) {
-  return true;
-} */
-
-/* Extracts the UTF type.
-@return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
-inline ISA TypeTextFormat(DTW type) {
-  DTW core_type = type & ATypePODMask;
-  if (core_type == 0) return -1;  //< then core_type < 32
-  if (core_type <= _STC) {
-    if (core_type == _NIL) return -1;
-    return ISA(type);
-  }
-  if (core_type == type) return -1;  //< then core_type < 32
-  if (core_type == _CHA) return 1;
-  if (core_type == _CHB) return 2;
-  if (core_type <= _CHC) return 3;
-  return -1;
 }
 
 /* Masks off the primary type. */

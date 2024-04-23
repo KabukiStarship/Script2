@@ -415,7 +415,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bin_state = cBInStateAddress;
           break;
 
-        } else if (type == cSTR) {  // UTF-8/ASCII  type.
+        } else if (type == STR_) {  // UTF-8/ASCII  type.
           // Read the max number_ of chars off the header.
           bytes_left = *(++crabs->header);
           D_COUT("\nScanning STR with max length " << bytes_left);
@@ -742,11 +742,11 @@ void CrabsClear(Crabs* crabs) {
 
   if (origin == stop) return;  //< Nothing to do.
   if (origin > stop) {
-    ArrayFill(origin, stop - origin);
-    ArrayFill(origin, origin - origin);
+    RAMFill(origin, stop - origin);
+    RAMFill(origin, origin - origin);
     return;
   }
-  ArrayFill(origin, stop - origin);
+  RAMFill(origin, stop - origin);
   bin->origin = (ISC)Size(crabs, origin);
   bin->stop = (ISC)Size(crabs, origin + 1);
 }
@@ -769,7 +769,7 @@ const Op* CrabsQuery(Crabs* crabs, const Op& op) {
     void* args[2];
     IUW num_ops = (IUW)op.in, first_op = (IUW)op.out;
     // @todo Write params to crabs!
-    static const ISC* header = Params<5, cSTR, cOpNameLengthMax, UVI, UVI, cSTR,
+    static const ISC* header = Params<5, STR_, cOpNameLengthMax, UVI, UVI, STR_,
                                       cOpDescriptionLengthMax>();
     return BOutWrite(CrabsBOut(crabs), header,
                      Args(args, op.name, &num_ops, &first_op, op.description));
@@ -810,7 +810,7 @@ const Op* CrabsQuery(Crabs* crabs, const Op* op) {
     }
     void* args[2];
     return BOutWrite(CrabsBOut(crabs),
-                     Params<5, cSTR, cOpNameLengthMax, UVI, UVI, cSTR,
+                     Params<5, STR_, cOpNameLengthMax, UVI, UVI, STR_,
                             cOpDescriptionLengthMax>(),
                      Args(args, op->name, op->in, op->out, op->description));
   }

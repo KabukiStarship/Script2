@@ -18,7 +18,7 @@ ISN BSeqParamNumber(const ISN* params, ISN param_number) {
   ISN i;
   for (i = 0; i < param_number; ++i) {
     ISN value = params[i];
-    if (value == cSTR)
+    if (value == STR_)
       ++param_number;
     else if (value > 31) {  // It's an array!
       value = value >> 5;

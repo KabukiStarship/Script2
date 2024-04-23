@@ -12,9 +12,9 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef INCLUDED_SCRIPT2_CLOCK_TEMPLATES
 #define INCLUDED_SCRIPT2_CLOCK_TEMPLATES
 #include "Clock.h"
-#include "Stringf.hpp"
+#include "Uniprinter.hpp"
 #include "Test.h"
-#if SEAM == SCRIPT2_CORE
+#if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
@@ -169,8 +169,8 @@ const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   c = TToLower<CHT>(c);
   if (c == 'a') {  //
     D_COUT("\nCase @HHAm\n HHam ");
-
-    if (TToLower<CHT>(c = *string++) == 'm') c = *string++;
+    c = *string++;
+    if (TToLower<CHT>(c) == 'm') c = *string++;
     if (c && !TIsWhitespace<CHT>(c)) {
       D_COUT("\nInvalid am format.");
       return nullptr;

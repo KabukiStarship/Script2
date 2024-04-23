@@ -186,7 +186,7 @@ inline TLoom<ISZ, ISY>* TLoomInit(TLoom<ISZ, ISY>* loom, ISY count_max) {
   loom->map.count_max = count_max;
   loom->map.count = 0;
   D_COUT("\n\nTLoomInit" << "" <<" size_bytes: "
-         << size_bytes << " count:" << loom->map.count
+         << loom->size_bytes << " count:" << loom->map.count
          << "/" << count_max << " top:" << loom->top 
          << " space_left:" << TDelta<>(TPtr<>(loom, top)));
   return loom;
@@ -201,14 +201,14 @@ CHT* TLoomStop(TLoom<ISZ, ISY>* loom) {
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
 template<LOM_A>
-ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = STKPush) {
+ISY TLoomInsert(TLoom<ISZ, ISY>* loom, const CHT* string, ISY index = PSH) {
   D_ASSERT(loom);
   if (!string || loom->map.count >= loom->map.count_max) return -2;
   ISY count = loom->map.count;
   D_ASSERT(count >= 0);
   CHT* cursor = nullptr;
   if (index < 0) {
-    if (index == Any) {
+    if (index == ANY) {
       D_COUT("\n\nindex == _ANY\n\n");
       if (count <= 1) {
         index = count;
@@ -283,7 +283,7 @@ BOL TLoomClone(TLoom<ISZ, ISY>* loom, TLoom<ISZ, ISY>* destination,
   CHT* start = TLoomStart<LOM_P>(loom);
   ISZ strings_size = TDelta<ISZ>(start, TPtr<>(loom, top));
   CHT* clone_start = TLoomStart<LOM_P>(destination);
-  if (strings_size) ArrayCopy(clone_start, strings_size, start, strings_size);
+  if (strings_size) RAMCopy(clone_start, strings_size, start, strings_size);
   return true;
 }
 
@@ -304,7 +304,7 @@ BOL TLoomGrow(Autoject& obj) {
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
-  TLoomPrint<COut, LOM_P>(COut().Star(), loom);
+  TLoomPrint<COut, LOM_P>(StdOut(), loom);
   D_COUT('\n' << Charsf(loom, loom->size_bytes));
 #endif
 
@@ -317,7 +317,7 @@ BOL TLoomGrow(Autoject& obj) {
   TLoomClone<LOM_P>(loom, destination, count_max, count_max, size_bytes, size_bytes);
 #if D_THIS
   D_COUT("\n\nAfter:\n");
-  TLoomPrint<COut, LOM_P>(COut().Star(), destination);
+  TLoomPrint<COut, LOM_P>(StdOut(), destination);
   D_COUT('\n');
   D_COUT(Charsf(destination, destination->size_bytes));
 #endif
@@ -331,7 +331,7 @@ BOL TLoomGrow(Autoject& obj) {
 @return The index upon success or -1 if the obj can't grow anymore. */
 template<LOM_A, typename BUF>
 ISY TLoomInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* item,
-                ISY index = STKPush) {
+                ISY index = PSH) {
   if (!item) return -1;
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result =
@@ -375,7 +375,7 @@ ISY TLoomRemove(TLoom<ISZ, ISY>* loom, ISY index) {
 
   TStackRemove<ISZ, ISY>(&loom->map, ISZ(index));
 
-  // ArrayShiftDown(TPtr<CHA>(loom) + offset, delta);
+  // RAMShiftDown(TPtr<CHA>(loom) + offset, delta);
   return index;
 }
 
@@ -396,12 +396,12 @@ ISZ TLoomFind(TLoom<ISZ, ISY>* loom, const CHT* string) {
 
 /* An ASCII Loom Autoject. */
 template<typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM,
-          ISZ cSize_ = 512,
-          typename BUF = TBUF<cSize_, CHT, ISZ, TLoom<ISZ, ISY>>>
+          ISZ Size_ = 512,
+          typename BUF = TBUF<Size_, CHT, ISZ, TLoom<ISZ, ISY>>>
 class ALoom {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
-  enum { cCountDefault = cSize_ / 16 };
+  enum { cCountDefault = Size_ / 16 };
   /* Constructs a Loom. */
   ALoom(ISY count_max = cCountDefault) {
     TLoomInit<LOM_P>(This(), count_max);
@@ -426,7 +426,7 @@ class ALoom {
 
   /* Deep copies the given string into the Loom.
   @return The index of the string in the Loom. */
-  inline ISZ Insert(const CHT* string, ISY index = STKPush) {
+  inline ISZ Insert(const CHT* string, ISY index = PSH) {
     return TLoomInsert<LOM_P, BUF>(AJT_ARY(), string, index);
   }
 
@@ -458,7 +458,7 @@ class ALoom {
     return o;
   }
 
-  inline void COut() { PrintTo<_::COut>(_::COut().Star()); }
+  inline void COut() { PrintTo<_::COut>(_::StdOut()); }
 };
 }  //< namespace _
 #endif
