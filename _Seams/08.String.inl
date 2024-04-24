@@ -16,7 +16,7 @@ using namespace _;
 #include "../_Release.inl"
 #endif
 #endif
-
+ 
 namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
 template<typename CHT = CHR, typename ISZ = ISN>
@@ -32,10 +32,9 @@ void TestStringN() {
   AString<CHT, ISZ, 8> str;
   D_COUT_OBJ(str);
   D_COUT("\nbuffer_size:" << str.Array().Size() << 
-         " buffer_size_bytes:" << str.Array().SizeBytes() << 
-         " buffer_size_words:" << str.Array().SizeWords());
-  D_COUT("\n\nExpecting \""
-         << Testing123 << "\"\n\nThe first print function should fail...\n");
+         " total_size_bytes:" << str.Array().SizeBytes());
+  D_COUT("\n\nExpecting \"" << Testing123 << 
+         "\"\n\nThe first print function should fail...\n");
 
   str << "Testing ";
   D_COUT("\n\nWORKS HERE!!!\n\n");

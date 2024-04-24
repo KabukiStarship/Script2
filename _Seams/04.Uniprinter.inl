@@ -35,7 +35,7 @@ static const CHA* TestSPrinter() {
   TSPrint<CHT>(str_a, Count, Testing123);
   D_COUT(Charsf(str_a, 64));
 
-  TSPrinter<CHT> utf(str_a, Count);
+  TSPrinter<CHT, IS> utf(str_a, Count);
 
   enum { TestStringsCount = 4 };
 
@@ -59,7 +59,7 @@ static const CHA* TestSPrinter() {
     Test(cursor);
   }
 
-  D_COUT(Headingf("Testing TSPrinter<CHT>")
+  D_COUT(Headingf("Testing TSPrinter<CHT, ISZ>")
          << "\n\nExpecting \"" << Testing123 << '\"');
   static const CHT CommaSpace[] = {',', ' ', NIL};
 

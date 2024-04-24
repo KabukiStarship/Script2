@@ -733,8 +733,8 @@ IUW* TListNew(ISZ size_data, ISZ count_max, RAMFactory ram) {
 }
 
 /* ASCII List that uses dynamic memory. */
-template<typename ISZ = ISN, ISZ cSizeBytes_ = 512, ISZ cCountMax_ = 32,
-          typename BUF = TBUF<cSizeBytes_, IUA, ISZ, Nil>, typename DT = DTB>
+template<typename ISZ = ISN, ISZ SizeBytes_ = 512, ISZ cCountMax_ = 32,
+          typename BUF = TBUF<SizeBytes_, IUA, ISZ, Nil>, typename DT = DTB>
 class AList {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-array.
  public:
@@ -742,15 +742,15 @@ class AList {
 
   /* Constructs a list with a given count_max with estimated size_bytes. */
   AList(ISZ count_max = cCountMax_)
-      : obj_(TListNew<ISZ, DT>(cSizeBytes_, count_max,
-                                    TRamFactory<Type()>().Init<BUF>()),
-             TRamFactory<Type()>().Init<BUF>()) {}
+      : obj_(TListNew<ISZ, DT>(SizeBytes_, count_max,
+                                    TRAMFactory<Type()>().Init<BUF>()),
+             TRAMFactory<Type()>().Init<BUF>()) {}
 
   /* Constructs a List with the given size_bytes and count_max. */
   AList(ISZ count_max, ISZ size_bytes)
       : obj_(TListNew<ISZ, DT>(size_bytes, count_max,
-                                    TRamFactory<Type()>().Init<BUF>()),
-             TRamFactory<Type()>().Init<BUF>()) {}
+                                    TRAMFactory<Type()>().Init<BUF>()),
+             TRAMFactory<Type()>().Init<BUF>()) {}
 
   /* Inserts the given type-value tuple in the list at the given index. */
   inline ISZ Insert(IUA type, void* value, ISZ index) {

@@ -296,11 +296,13 @@ BOL TLoomGrow(Autoject& obj) {
   D_COUT("\n\nGrowing Loom...");
   auto loom = TPtr<TLoom<ISZ, ISY>>(obj.origin);
   A_ASSERT(loom);
-  ISZ size_bytes = loom->size_bytes;
-  if (!TCanGrow<ISZ>(size_bytes)) return false;
+  ISZ size = loom->size_bytes,
+      new_size = SizeGrow(size);
+  if (!TCanGrow<ISZ>(size, new_size)) return false;
   ISY count_max = loom->map.count_max;
 
-  D_COUT(" new size:" << size_bytes << " count_max:" << count_max);
+  D_COUT(" size:" << size " new_size:" << new_size << " count_max : " << 
+         count_max);
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
@@ -309,12 +311,12 @@ BOL TLoomGrow(Autoject& obj) {
 #endif
 
   // @see RAMFactory for documentation on how to create a new block of memory.
-  auto size_double = size_bytes << 1;
+  auto size_double = size << 1;
   IUW* growth = obj.ram(nullptr, size_double);
-  D_ARRAY_WIPE(growth, size_bytes);
+  D_ARRAY_WIPE(growth, size);
   auto destination = TPtr<TLoom<ISZ, ISY>>(growth);
 
-  TLoomClone<LOM_P>(loom, destination, count_max, count_max, size_bytes, size_bytes);
+  TLoomClone<LOM_P>(loom, destination, count_max, count_max, size, size);
 #if D_THIS
   D_COUT("\n\nAfter:\n");
   TLoomPrint<COut, LOM_P>(StdOut(), destination);

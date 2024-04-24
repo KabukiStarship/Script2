@@ -263,15 +263,23 @@ IUW* TArrayClone(Autoject& obj) {
   return TArrayWrite<T, IS, Class>(clone, origin, size);
 }
 
+/* Grows the size by up to double with exception of last grow,
+which grows to max size.
+@todo This design is because I'm having template issues.*/
+inline ISA SizeGrow(ISA size) { return size + size; }
+inline ISB SizeGrow(ISB size) { return size + size; }
+inline ISC SizeGrow(ISC size) { return size + size; }
+inline ISD SizeGrow(ISD size) { return size + size; }
+template<typename IS>
+inline IS TSizeGrow(IS size) {
+  return SizeGrow(size);
+}
+
 /* Checks of the given size is able to double in size.
 @return True if the autoject can double in size. */
 template<typename IS>
-BOL TCanGrow(IS size) {
-  auto size_new = size >> (sizeof(IS) * 8 - 2);
-  if (size_new == 0) return true;
-  COut("\n\nError! Max size hit! size:").Star() << size;
-  return false;
-
+BOL TCanGrow(IS size, IS new_size) {
+  return new_size > size;
 }
 
 /* Resizes the given array.

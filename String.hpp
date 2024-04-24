@@ -141,7 +141,7 @@ IUW* TStringClone(Autoject& obj) {
   ISZ size = TSize<ISZ>(origin);
   IUW* new_begin = TRAMFactoryNew<CHT, ISZ, TString<ISZ>>(size);
   D_COUT(" new size:" << TSize<ISZ>(new_begin));
-  TSPrinter<CHT> new_utf(new_begin);
+  TSPrinter<CHT, ISZ> new_utf(new_begin);
   CHT* start = TSTRStart<CHT>(origin);
   new_utf << start;
   D_COUT("\nCopying \"" << start << "\" with result:\""
@@ -158,21 +158,21 @@ inline ISZ TStringSize(IUW* origin) {
 template<typename CHT = CHR, typename ISZ = ISW>
 BOL TStringGrow(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter) {
   IUW* origin = obj.origin;
-  ISZ size     = TStringSize<ISZ>(origin), //
-      new_size = size << 1;
+  D_COUT("\n\nShit son, dez nutz; sizeof(ISZ):" << sizeof(ISZ));
+  ISZ size     = TStringSize<ISC>(origin), //
+      new_size = SizeGrow(size);
   #if SEAM == SCRIPT2_STRING
   COut("\nsize: ").Star() << size <<
        "\nnew_size: " << new_size;
   #endif
-  ISZ new_size_bytes = TSizeBytes<CHT, ISZ, TString<ISZ>>(new_size);
-  if (!TCanGrow<ISZ>(new_size_bytes))
+  if (!TCanGrow<ISZ>(size, new_size))
     return false;
   size = new_size;
-  D_COUT(" new_size:" << new_size << " new_size_bytes:" << new_size_bytes);
+  D_COUT(" new_size:" << new_size << " new_size:" << new_size);
 
   IUW* new_begin = TRAMFactoryNew<CHT, ISZ, TString<ISZ>>(obj.ram, size);
   if (!new_begin) return false;
-  D_COUT(" new size:" << new_size_bytes);
+  D_COUT(" new size:" << new_size);
 
   TSPrinter<CHT, ISZ> new_sprinter(TSTRStart<CHT, ISZ>(new_begin), size);
   CHT* start = TSTRStart<CHT>(origin);
@@ -187,16 +187,20 @@ BOL TStringGrow(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter) {
 }
 
 template<typename T, typename CHT = CHR, typename ISZ= ISW>
-void TStringPrint(Autoject& obj, TSPrinter<CHT>& sprinter, T item) {
+void TStringPrint(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter, T item) {
   CHT *start = sprinter.start,  //
       *stop = sprinter.stop;
-  D_COUT("\ndelta_origin_start: " << TDelta<>(obj.origin, start) << 
+  D_COUT("\ndez nutz sizeof(ISZ):" << sizeof(ISZ) <<
+         " delta_origin_start: " << TDelta<>(obj.origin, start) << 
          " delta_origin_stop: " << TDelta<>(obj.origin, stop) <<
          " delta_start_stop: " << TDelta<>(start, stop) << 
-         "\nobj.Size() before: " << *TPtr<ISZ>(obj.origin) <<
+         "\nobj.Size() before: " << *TPtr<ISC>(obj.origin) <<
+         " 0b" << Hexf(*TPtr<ISD>(obj.origin)) <<
          "\norigin_hex:0x" << Hexf(TPtr<IUD>(obj.origin)));
   auto cursor = _::TSPrint<CHT>(start, stop, item);
-  D_COUT("\nobj.Size() after : " << *TPtr<ISZ>(obj.origin));
+  D_COUT("\nobj.Size() after : " << *TPtr<ISC>(obj.origin) <<
+         " 0b" << Hexf(*TPtr<ISD>(obj.origin)) <<
+         Charsf(obj.origin, stop + 1));
   if (!cursor) {
     *start = 0;  //< Replace the delimiter so we can copy the string.
     do {
@@ -259,7 +263,7 @@ template<typename CHT = CHR, typename ISZ= ISW, ISZ Size_ = ASTRCount,
           typename BUF = TBUF<Size_, CHT, ISZ, TString<ISZ>>>
 class AString {
   AArray<CHT, ISZ, BUF> obj_;  //< AutoArray of CHT(s).
-  TSPrinter<CHT> sprinter_;    //< String Printer.
+  TSPrinter<CHT, ISZ> sprinter_;    //< String Printer.
 
  public:
   static constexpr DTB Type() {
@@ -411,7 +415,7 @@ class AString {
   }
 
   /* Gets the UTF. */
-  inline TSPrinter<CHT>& Star() { return sprinter_; }
+  inline TSPrinter<CHT, ISZ>& Star() { return sprinter_; }
 
   /* @todo I had the auto-grow code in a template but I could not figure out
   which function wasn't working so I had to copy paste. This needs to get
@@ -484,7 +488,7 @@ class AString {
 
   template<typename T>
   inline AString& Print(T item) {
-    TStringPrint<T, CHT>(obj_.AJT(), sprinter_, item);
+    TStringPrint<T, CHT, ISZ>(obj_.AJT(), sprinter_, item);
     return *this;
   }
 

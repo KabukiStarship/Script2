@@ -640,7 +640,7 @@ CHX* TSPrintString(CHX* start, CHX* stop, const CHY* item) {
 }
 
 template<typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, CHT* stop, const CHA* item) {
+ inline CHT* TSPrint(CHT* start, CHT* stop, const CHA* item) {
   return TSPrintString<CHT, CHA>(start, stop, item);
 }
 
