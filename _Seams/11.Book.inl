@@ -31,8 +31,8 @@ void TestBook() {
     SizeBytes = 512 * sizeof(CHT)
   };
 
-  D_COUT("\n\nTesting ABook<IS" << TSizef<ISZ>() << ",IS" << TSizef<ISY>() << 
-         ",CH" << TSizef<CHT>() << ",DT" << TSizef<DT>() << 
+  D_COUT("\n\nTesting ABook<IS" << CATypeSWCH<ISZ>() << ",IS" << CATypeSWCH<ISY>() << 
+         ",CH" << CATypeSWCH<CHT>() << ",DT" << CATypeSWCH<DT>() << 
          "> with SizeBytes:" << SizeBytes);
 
   ABook<TPARAMS, SizeBytes> book;

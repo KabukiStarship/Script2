@@ -121,8 +121,7 @@ inline ISZ TLoomKeysSize(ISY count_max, ISZ average_length_string =
 /* Returns the pointer to the first character in the loom string buffer. */
 template<LOM_A>
 inline CHT* TLoomStart(TLoom<ISZ, ISY>* loom, ISY count_max) {
-  ISZ* top = &TStackStart<ISZ, ISY>(&loom->map)[count_max];
-  return TPtr<CHT>(top);
+  return TPtr<CHT>(&TStackStart<ISZ, ISY>(&loom->map)[count_max]);
 }
 template<LOM_A>
 inline CHT* TLoomStart(TLoom<ISZ, ISY>* loom) {
@@ -161,8 +160,8 @@ template <typename Printer, LOM_A>
 Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
   // CHT, ISZ, ISY
-  o << "\nLoom<CH" << TSizef<CHA>() << ", IS" << TSizef<ISZ>() << ", IS"
-    << TSizef<ISY>() << "> size:" << loom->size_bytes
+  o << "\nLoom<CH" << CATypeSWCH<CHA>() << ", IS" << CATypeSWCH<ISZ>() << ", IS"
+    << CATypeSWCH<ISY>() << "> size:" << loom->size_bytes
     << " top:" << loom->top << " count_max:" << loom->map.count_max
     << " count:" << count;
   ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
@@ -181,14 +180,15 @@ inline TLoom<ISZ, ISY>* TLoomInit(TLoom<ISZ, ISY>* loom, ISY count_max) {
   D_ARRAY_WIPE(&loom->top, loom->size_bytes - sizeof(ISZ));
 
   // count_max -= count_max & 3; // @todo Ensure the values are word-aligned?
-  auto top = TLoomStart<LOM_P>(loom, count_max);
-  loom->top = TDelta<ISZ>(loom, top);
+  auto start = TLoomStart<LOM_P>(loom, count_max); // @todo Why???
+  ISZ size_bytes = loom->size_bytes;
+  loom->top = TDelta<ISZ>(loom, start);
   loom->map.count_max = count_max;
   loom->map.count = 0;
   D_COUT("\n\nTLoomInit" << "" <<" size_bytes: "
          << loom->size_bytes << " count:" << loom->map.count
-         << "/" << count_max << " top:" << loom->top 
-         << " space_left:" << TDelta<>(TPtr<>(loom, top)));
+         << "/" << count_max << " top:" << loom->top
+         << " space_atop:" << (loom->top - loom->size_bytes));
   return loom;
 }
 
@@ -301,8 +301,8 @@ BOL TLoomGrow(Autoject& obj) {
   if (!TCanGrow<ISZ>(size, new_size)) return false;
   ISY count_max = loom->map.count_max;
 
-  D_COUT(" size:" << size " new_size:" << new_size << " count_max : " << 
-         count_max);
+  //  D_COUT(" size:" << size " new_size:");<< new_size << " count_max : " <<
+         //count_max);
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");

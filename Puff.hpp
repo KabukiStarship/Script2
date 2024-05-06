@@ -125,11 +125,15 @@ namespace _ {
     digits6and5 -= pow_10_ui2 * digits8and7;
     digits2and1 -= pow_10_ui2 * digits4and3;
     PrintCharPair(cursor, lut[digits8and7]);
-    PrintCharPair(cursor + 2, lut[digits6and5]);
-    PrintCharPair(cursor + 4, lut[digits4and3]);
-    PrintCharPair(cursor + 6, lut[digits2and1]);
+    auto increment = 2;
+    cursor += increment;
+    PrintCharPair(cursor, lut[digits6and5]);
+    cursor += increment;
+    PrintCharPair(cursor, lut[digits4and3]);
+    cursor += increment;
+    PrintCharPair(cursor, lut[digits2and1]);
     D_PRINT_PRINTED;
-    return cursor + 8;
+    return cursor + increment;
   }
 
   template<typename CHT = CHR>
@@ -141,8 +145,8 @@ namespace _ {
     }
     else {
       D_COUT("\n    Printing more than 16 decimals:");
-      TPrint8Decimals<CHT>(cursor, middle_sd, lut);
-      TPrint8Decimals<CHT>(cursor + 8, lsd, lut);
+      cursor = TPrint8Decimals<CHT>(cursor, middle_sd, lut);
+      TPrint8Decimals<CHT>(cursor, lsd, lut);
     }
   }
 
@@ -298,7 +302,8 @@ namespace _ {
         pow_10_ui4 = 10000000;  //< 10^7
         if (value >= pow_10_ui4) {
           D_COUT("\n    Range:[10000000, 16777216] length:8");
-          return TPrint8Decimals<CHT>(cursor, ToIUC(value), lut);
+          cursor = TPrint8Decimals<CHT>(cursor, ToIUC(value), lut);
+          return TPrintNil<CHT>(cursor);
         }
       Print7:
         D_COUT("\n    Range:[1048576, 9999999] length:7");
@@ -560,11 +565,11 @@ namespace _ {
     //          Expecting 0xff
     // right_shift_count = 32 - 16 = 16
     enum {
-      cSize = sizeof(IS) * 8,
+      Size = sizeof(IS) * 8,
       cMSbNatural = (cMSb_ < 0) ? 0 : cMSb_,
       cLSbLNatural = (cLSb_ < 0) ? 0 : cLSb_,
-      cRightShiftTemp1 = cSize - cMSbNatural + 1,
-      cRightShiftTemp2 = (cRightShiftTemp1 >= cSize) ? 0 : cRightShiftTemp1,
+      cRightShiftTemp1 = Size - cMSbNatural + 1,
+      cRightShiftTemp2 = (cRightShiftTemp1 >= Size) ? 0 : cRightShiftTemp1,
       cLeftShift = (cRightShiftTemp2 < cLSb_) ? 0 : cRightShiftTemp2,
       cRightShift = (cRightShiftTemp2 < cLSb_) ? 0 : cRightShiftTemp2,
     };
@@ -592,8 +597,8 @@ namespace _ {
   public:
     enum {
       cSizeMax = 8,
-      cSize = sizeof(Float) >= cSizeMax ? 0 : sizeof(Float),
-      cSizeBits = cSize * 8,
+      Size = sizeof(Float) >= cSizeMax ? 0 : sizeof(Float),
+      cSizeBits = Size * 8,
       cMSb = cSizeBits - 1,
       cStringLengthMax = 24,
       cExponentSizeBits =
@@ -603,9 +608,9 @@ namespace _ {
       cCoefficientSize = cSizeBits - cExponentSizeBits - 1,
       cMantissaSize = cSizeBits - cExponentSizeBits - 1,
       cExponentMaskUnshifted =
-      (sizeof(cSize) == 2)
+      (sizeof(Size) == 2)
       ? 0xf
-      : (sizeof(cSize) == 4) ? 0x7f : (sizeof(cSize) == 8) ? 0x3FF : 0,
+      : (sizeof(Size) == 4) ? 0x7f : (sizeof(Size) == 8) ? 0x3FF : 0,
       cExponentBias = cExponentMaskUnshifted + cCoefficientSize,
       cExponentMin = -cExponentBias,
     };
@@ -706,7 +711,7 @@ namespace _ {
 
 #if D_THIS
     static void PrintDebugInfo() {
-      D_COUT("\nkSize:" << cSize << " cSizeBits:" << cSizeBits << " cMSbIndex:"
+      D_COUT("\nkSize:" << Size << " cSizeBits:" << cSizeBits << " cMSbIndex:"
         << cMSb << " cStringLengthMax:" << cStringLengthMax
         << "\nkExponentSizeBits:" << cExponentSizeBits
         << " cCoefficientSize:" << cCoefficientSize

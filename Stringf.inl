@@ -9,27 +9,27 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Stringf.hpp"
 #include "Binary.hpp"
 namespace _ {
-const CHA* STRPrintCharsHeader() {
+const CHA* STAPrintCharsHeader() {
   return "\n|0       8       16      24      32      40      48      56      |"
          " Begin address:";
 }
 
-const CHA* STRPrintCharsBorder() {
+const CHA* STAPrintCharsBorder() {
   return "\n|+-------+-------+-------+-------+-------+-------+-------+-------|"
          " ";
 }
 
-const CHA* STRPrintHexHeader() {
+const CHA* STAPrintHexHeader() {
   return "\n|0               8               16              24              "
          "|  Begin address:";
 }
 
-const CHA* STRPrintHexBorder() {
+const CHA* STAPrintHexBorder() {
   return "\n|+---------------+---------------+---------------+---------------|"
          " ";
 }
 
-const CHA* STRTypesPOD() {
+const CHA* STAATypesPOD() {
   static const CHA Strings[64][4] = {
       {'N', 'I', 'L', NIL},  //< 00
       {'I', 'U', 'A', NIL},  //< 01
@@ -68,90 +68,88 @@ const CHA* STRTypesPOD() {
   return &Strings[0][0];
 }
 
-const CHA* STRTypesPOD(ISA type) {
-  return TSTRTypesPOD<ISA>(type);
+const CHA* STAATypesPOD(ISA type) {
+  return TSTAATypesPOD<ISA>(type);
 }
 
-const CHA* STRTypesPOD(ISB type) {
-  return TSTRTypesPOD<ISB>(type);
+const CHA* STAATypesPOD(ISB type) {
+  return TSTAATypesPOD<ISB>(type);
 }
 
-const CHA* STRTypesPOD(ISC type) {
-  return TSTRTypesPOD<ISC>(type);
+const CHA* STAATypesPOD(ISC type) {
+  return TSTAATypesPOD<ISC>(type);
 }
 
-const CHA* STRTypesPOD(ISD type) {
-  return TSTRTypesPOD<ISD>(type);
+const CHA* STAATypesPOD(ISD type) {
+  return TSTAATypesPOD<ISD>(type);
 }
 
-const CHA* STRTypesVector() {
+const CHA* STRATypesVector() {
   static const CHA Strings[17][4] = {
-      {'V', 'H', '1', NIL},  //< 00
-      {'V', 'H', '2', NIL},  //< 01
-      {'V', 'H', '3', NIL},  //< 02
-      {'V', 'H', '4', NIL},  //< 03
-      {'A', 'R', 'A', NIL},  //< 04
-      {'A', 'R', 'B', NIL},  //< 05
-      {'A', 'R', 'C', NIL},  //< 06
-      {'A', 'R', 'D', NIL},  //< 07
-      {'S', 'T', 'A', NIL},  //< 08
-      {'S', 'T', 'B', NIL},  //< 09
-      {'S', 'T', 'C', NIL},  //< 10
-      {'S', 'T', 'D', NIL},  //< 11
-      {'M', 'A', 'A', NIL},  //< 12
-      {'M', 'A', 'B', NIL},  //< 13
-      {'M', 'A', 'C', NIL},  //< 14
-      {'M', 'A', 'D', NIL},  //< 15
-      {'I', 'N', 'V', NIL},  //< 16
+      {'V', 'H', 'A', NIL},  //< 0
+      {'A', 'R', 'A', NIL},  //< 0
+      {'S', 'C', 'A', NIL},  //< 0
+      {'M', 'A', 'A', NIL},  //< 0
+      {'V', 'H', 'B', NIL},  //< 0
+      {'A', 'R', 'B', NIL},  //< 0
+      {'S', 'C', 'B', NIL},  //< 0
+      {'M', 'A', 'B', NIL},  //< 0
+      {'V', 'H', 'C', NIL},  //< 0
+      {'A', 'R', 'C', NIL},  //< 0
+      {'S', 'C', 'C', NIL},  //< 0
+      {'M', 'A', 'C', NIL},  //< 0
+      {'V', 'H', 'D', NIL},  //< 0
+      {'A', 'R', 'D', NIL},  //< 0
+      {'S', 'C', 'D', NIL},  //< 0
+      {'M', 'A', 'D', NIL},  //< 0
   };
   return &Strings[0][0];
 }
 
-const CHA* STRTypesVector(ISA type) {
-  return TSTRTypesVector<ISA>(type);
+const CHA* STRATypesVector(ISA type) {
+  return TSTRATypesVector<ISA>(type);
 }
 
-const CHA* STRTypesVector(ISB type) {
-  return TSTRTypesVector<ISB>(type);
+const CHA* STRATypesVector(ISB type) {
+  return TSTRATypesVector<ISB>(type);
 }
 
-const CHA* STRTypesVector(ISC type) {
-  return TSTRTypesVector<ISC>(type);
+const CHA* STRATypesVector(ISC type) {
+  return TSTRATypesVector<ISC>(type);
 }
 
-const CHA* STRTypesVector(ISD type) {
-  return TSTRTypesVector<ISD>(type);
+const CHA* STRATypesVector(ISD type) {
+  return TSTRATypesVector<ISD>(type);
 }
 
-
-const CHA* STRTypesVectorClass() {
+const CHA* STRATypesVectorClass() {
   static const CHA Strings[5][4] = {
       {'V', 'H', 'T', NIL},  //< 00
       {'A', 'R', 'Y', NIL},  //< 01
-      {'S', 'T', 'K', NIL},  //< 02
-      {'M', 'A', 'T', NIL},  //< 03
+      {'S', 'C', 'K', NIL},  //< 02
+      {'M', 'T', 'X', NIL},  //< 03
       {'I', 'N', 'V', NIL},  //< 04
   };
   return &Strings[0][0];
 }
 
-const CHA* STRTypesVectorClass(ISA type) {
-  return TSTRTypesVectorClass<ISA>(type);
+const CHA* STRATypesVectorClass(ISA type) {
+  return TSTRATypesVectorClass<ISA>(type);
 }
 
-const CHA* STRTypesVectorClass(ISB type) {
-  return TSTRTypesVectorClass<ISB>(type);
+const CHA* STRATypesVectorClass(ISB type) {
+  return TSTRATypesVectorClass<ISB>(type);
 }
 
-const CHA* STRTypesVectorClass(ISC type) {
-  return TSTRTypesVectorClass<ISC>(type);
+const CHA* STRATypesVectorClass(ISC type) {
+  return TSTRATypesVectorClass<ISC>(type);
 }
 
-const CHA* STRTypesVectorClass(ISD type) {
-  return TSTRTypesVectorClass<ISD>(type);
+const CHA* STRATypesVectorClass(ISD type) {
+  return TSTRATypesVectorClass<ISD>(type);
 }
 
-const CHA* STRTypesModifier() {
+const CHA* STRATypesModifier() {
   static const CHA Strings[5][4] = {
       {'P', 'O', 'D', NIL},  //< 00
       {'P', 'T', 'R', NIL},  //< 01
@@ -162,23 +160,50 @@ const CHA* STRTypesModifier() {
   return &Strings[0][0];
 }
 
-const CHA* STRTypesModifier(ISA type) {
-  return TSTRTypesModifier<ISA>(type);
+const CHA* STRATypesModifier(ISA type) {
+  return TSTRATypesModifier<ISA>(type);
 }
 
-const CHA* STRTypesModifier(ISB type) {
-  return TSTRTypesModifier<ISB>(type);
+const CHA* STRATypesModifier(ISB type) {
+  return TSTRATypesModifier<ISB>(type);
 }
 
-const CHA* STRTypesModifier(ISC type) {
-  return TSTRTypesModifier<ISC>(type);
+const CHA* STRATypesModifier(ISC type) {
+  return TSTRATypesModifier<ISC>(type);
 }
 
-const CHA* STRTypesModifier(ISD type) {
-  return TSTRTypesModifier<ISD>(type);
+const CHA* STRATypesModifier(ISD type) {
+  return TSTRATypesModifier<ISD>(type);
 }
 
-const CHA* STRTypesString() {
+const CHA* STRAATypesMap() {
+  static const CHA Strings[5][4] = {
+      {'M', 'A', 'A', NIL},  //< 00
+      {'M', 'A', 'B', NIL},  //< 01
+      {'M', 'A', 'C', NIL},  //< 02
+      {'M', 'A', 'D', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+const CHA* STRAATypesMap(ISA type) {
+  return STAATypeMap(type);
+}
+
+const CHA* STRAATypesMap(ISB type) {
+  return STAATypeMap(type);
+}
+
+const CHA* STRAATypesMap(ISC type) {
+  return STAATypeMap(type);
+}
+
+const CHA* STRAATypesMap(ISD type) {
+  return STAATypeMap(type);
+}
+
+const CHA* STRATypesString() {
   static const CHA Strings[5][4] = {
       {'P', 'O', 'D', NIL},  //< 00
       {'P', 'T', 'R', NIL},  //< 01
@@ -189,24 +214,65 @@ const CHA* STRTypesString() {
   return &Strings[0][0];
 }
 
-const CHA* STRTypesString(ISA type) {
-  return TSTRTypesString<ISA>(type);
+const CHA* STRATypesString(ISA type) {
+  return TSTRATypesString<ISA>(type);
 }
 
-const CHA* STRTypesString(ISB type) {
-  return TSTRTypesString<ISB>(type);
+const CHA* STRATypesString(ISB type) {
+  return TSTRATypesString<ISB>(type);
 }
 
-const CHA* STRTypesString(ISC type) {
-  return TSTRTypesString<ISC>(type);
+const CHA* STRATypesString(ISC type) {
+  return TSTRATypesString<ISC>(type);
 }
 
-const CHA* STRTypesString(ISD type) {
-  return TSTRTypesString<ISD>(type);
+const CHA* STRATypesString(ISD type) {
+  return TSTRATypesString<ISD>(type);
 }
 
-const CHA* STRTrue() { return "true"; }
-const CHA* STRFalse() { return "false"; }
+#if USING_UTF8 == YES_0
+const CHA* STATrue() { return "true"; }
+#endif
+#if USING_UTF16 == YES_0
+const CHB* STBTrue() {
+  static const CHB dez_nutz[] = { 't', 'r', 'u', 'e', '\0' };
+  return dez_nutz;
+}
+#endif
+#if USING_UTF32 == YES_0
+const CHC* STCTrue() {
+  static const CHC dez_nutz[] = {'t', 'r', 'u', 'e', '\0'};
+  return dez_nutz;
+}
+#endif
+
+// String that reads "false".
+#if USING_UTF8 == YES_0
+const CHA* STAFalse() { return "false"; }
+#endif
+#if USING_UTF16 == YES_0
+const CHB* STBFalse() {
+  static const CHB dez_nutz[] = { 'f', 'a', 'l', 's', 'e', '\0' };
+  return dez_nutz;
+}
+#endif
+#if USING_UTF32 == YES_0
+const CHC* STCFalse() {
+  static const CHC dez_nutz[] = { 'f', 'a', 'l', 's', 'e', '\0' };
+  return dez_nutz;
+}
+#endif
+
+// Returns the string "true" or "false".
+#if USING_UTF8 == YES_0
+const CHA* STATF(BOL value) { return value ? STATrue() : STAFalse(); }
+#endif
+#if USING_UTF16 == YES_0
+const CHB* STBTF(BOL value) { return value ? STBTrue() : STBFalse(); }
+#endif
+#if USING_UTF32 == YES_0
+const CHC* STCTF(BOL value) { return value ? STCTrue() : STCFalse(); }
+#endif
 
 const CHA* STRError(ISA error_number) {
   const CHA error_strings[32][32] = {

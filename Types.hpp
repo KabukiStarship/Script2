@@ -123,16 +123,20 @@ IS TATypeSizeOf(const void* value, DTB type) {
   // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
   // |:-------:|:------:|:-----:|:-----:|:-----:|
   // |   MOD   |   MT   |  SW   |  VT   |  POD  |
-  auto mod = type >> ATypeMODBit0;
+  DTB mod = type >> ATypeMODBit0;
   if (mod && 1) return sizeof(void*);
   type ^= mod << ATypeMODBit0;
-  auto mt = type >> ATypeMTBit0;
+  DTB mt = type >> ATypeMTBit0;
   type ^= mt << ATypeMTBit0;
-  auto sw = type >> ATypeSWBit0;
+  DTB sw = type >> ATypeSWBit0;
   type ^= sw << ATypeSWBit0;
-  auto vt = type >> ATypeVTBit0;
+  DTB vt = type >> ATypeVTBit0;
   type ^= vt << ATypeVTBit0;
-  if (vt == 0) return ISW(sw) * ATypeSizeOfPOD(type);
+  if (vt == DTB(0)) {
+    //IS dez = IS(sw);
+    //IS nutz = IS(ATypeSizeOfPOD(type));
+    return 0; // dez* nutz;
+  }
   IS size = 1;
   switch (sw) {
   case 0:

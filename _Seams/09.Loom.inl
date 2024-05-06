@@ -24,20 +24,20 @@ void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    cSize = 192 * sizeof(CHT),
+    Size = 192 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ALoom<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>()
-         << "> with cSize:" << cSize << " and cCount:" << cCount);
+  D_COUT("Testing ALoom<CH" << CATypeSWCH<CHT>() << ",IS" << CATypeSWCH<ISZ>()
+         << "> with Size:" << Size << " and cCount:" << cCount);
 
-  ALoom<CHT, ISZ, ISY, cSize, TBUF<cSize>> loom(cCount);
+  ALoom<CHT, ISZ, ISY, Size, TBUF<Size>> loom(cCount);
 #if D_THIS
   D_COUT("\nPrinting empty loom:\n");
   loom.COut();
 #endif
 
   enum {
-    cLengthMax = (cSize << 2) - 1,
+    cLengthMax = (Size << 2) - 1,
   };
 
   CHT string[cLengthMax + 1];

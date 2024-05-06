@@ -210,7 +210,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   // Write data.
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
-    D_COUT("\nparam: " << arg_index + 1 << " type:" << STRType(type)
+    D_COUT("\nparam: " << arg_index + 1 << " type:" << STAAType(type)
                        << " start:" << TDelta<>(origin, origin) << " stop:"
                        << TDelta<>(origin, stop) << " space:" << space);
     switch (type) {

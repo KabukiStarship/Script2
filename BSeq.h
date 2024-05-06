@@ -129,9 +129,9 @@ C++11 variadic template to ensure only one copy in ROM
 and to eliminate some redundant typing. */
 template<const ISC... N>
 inline const ISC* TParams() {
-  static const ISC cSize = 0,  // BsqSize ({ N... })
+  static const ISC Size = 0,  // BsqSize ({ N... })
       cList[sizeof...(N)] = {N...};
-  return &cSize;
+  return &Size;
 }
 
 /*< Returns the requested parameter number_. */

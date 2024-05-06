@@ -173,28 +173,170 @@ static const CHA* TestSPrinter() {
   return nullptr;
 }
 
-static const CHR* TestATypef() {
+static const char* TestATypefPOD() {
   D_COUT("Testing ATypef...");
   // ATypef was the first class that implemented the new Center and Right 
   // functions that return Centerf and Right respectivly. I'm not very conserned
   // about the types being printed right so much as I am in testing said
   // funcationality.
-  auto o = ::_::StdOut();
-  CHA buffer[256];
-  buffer[255] = 0;
+  CHA buffer[256] = {};
   TSPrinter<CHA, ISW> p(buffer, 1024);
-  TPrintAType<TSPrinter<CHA, ISW>>(p, ATypePack(_ISA, _STK));
 
-  o << "\n\nResult:\n\"" <<  buffer << '\"';
+  D_COUT("\n\nPOD types...\n");
+  for (DTB i = 1 << 0; i < 32; ++i) {
+    D_COUT('\n' << i << ':');
+    D_COUT(TPrintAType<_::COut>(StdOut(), i));
+  }
   return nullptr;
 }
 
+static const char* TestATypefARY() {
+  CHA buffer[256] = {};
+  TSPrinter<CHA, ISW> p(buffer, 1024);
+
+  D_COUT("\n\nARY types...\n");
+  for (DTB i = 0; i < 32; ++i) {
+    DTB vt_bits = 1 << ATypeVTBit0;
+    D_COUT('\n' << i << ':');
+    DTB t_1 = i | vt_bits | (1 << ATypeSWBit0),
+        t_2 = i | vt_bits | (2 << ATypeSWBit0),
+        t_3 = i | vt_bits | (3 << ATypeSWBit0);
+    D_COUT("\n    0x" << Hexf(t_1) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_1));
+    D_COUT("\n    0x" << Hexf(t_2) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_2));
+    D_COUT("\n    0x" << Hexf(t_3) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_3));
+  }
+  return nullptr;
+}
+
+static const char* TestATypefVHT() {
+  CHA buffer[256] = {};
+  TSPrinter<CHA, ISW> p(buffer, 1024);
+
+  D_COUT("\n\nVHT types...\n");
+  for (DTB i = 0; i < 32; ++i) {
+    D_COUT('\n' << i << ':');
+    DTB vt_bits = 1 << ATypeVTBit0;
+    DTB t_1 = i | vt_bits | (1 << ATypeSWBit0),
+        t_2 = i | vt_bits | (2 << ATypeSWBit0),
+        t_3 = i | vt_bits | (3 << ATypeSWBit0);
+    D_COUT("\n    0x" << Hexf(t_1) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_1));
+    D_COUT("\n    0x" << Hexf(t_2) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_2));
+    D_COUT("\n    0x" << Hexf(t_3) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_3));
+  }
+  return nullptr;
+}
+
+static const char* TestATypefSCK() {
+  CHA buffer[256] = {};
+  TSPrinter<CHA, ISW> p(buffer, 1024);
+
+  D_COUT("\n\nSCK types...\n");
+  for (DTB i = 0; i < 32; ++i) {
+    DTB vt_bits = 2 << ATypeVTBit0,
+        t_1 = i | vt_bits | (1 << ATypeSWBit0),
+        t_2 = i | vt_bits | (2 << ATypeSWBit0),
+        t_3 = i | vt_bits | (3 << ATypeSWBit0);;
+    D_COUT('\n' << i << ':');
+    D_COUT("\n    0x" << Hexf(t_1) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_1));
+    D_COUT("\n    0x" << Hexf(t_2) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_2));
+    D_COUT("\n    0x" << Hexf(t_3) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_3));
+  }
+  return nullptr;
+}
+
+static const char* TestATypefMTX() {
+  CHA buffer[256] = {};
+  TSPrinter<CHA, ISW> p(buffer, 1024);
+
+  D_COUT("\n\nMTX types...\n");
+  for (DTB i = 0; i < ATypePODCount; ++i) {
+    DTB vt_bits = 3 << ATypeVTBit0;
+    D_COUT('\n' << i << ':');
+    //
+    DTB t_1 = i | vt_bits | (1 << ATypeSWBit0),
+        t_2 = i | vt_bits | (2 << ATypeSWBit0),
+        t_3 = i | vt_bits | (3 << ATypeSWBit0);
+    D_COUT("\n    0x" << Hexf(t_1) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_1));
+    D_COUT("\n    0x" << Hexf(t_2) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_2));
+    D_COUT("\n    0x" << Hexf(t_3) << ' ');
+    D_COUT(TPrintAType<_::COut>(StdOut(), t_3));
+  }
+  return nullptr;
+}
+
+static const char* TestATypeMaps() {
+  CHA buffer[256] = {};
+  TSPrinter<CHA, ISW> p(buffer, 1024);
+
+  D_COUT("\n\nMap types...\n");
+  const DTB Step = 8;
+
+  for (DTB MT = 1; MT < ATypePODCount; MT += Step) { //[j][i]
+    for (DTB PT = 1; PT < ATypePODCount; PT += Step) {
+      D_COUT("\n[" << STAATypesPOD(MT) << "->" << STAATypesPOD(PT) <<
+        ']');
+      for (DTB SW = 0; SW <= 3; ++SW) {
+        DTB type = MT << ATypeMTBit0 | SW << ATypeSWBit0 | PT;
+        D_COUT("\n    0x" << Hexf(type) << 
+               " 0b" << Binaryf(type) << ' ');
+        D_COUT(TPrintAType<_::COut>(StdOut(), type));
+      }
+    }
+  }
+  return nullptr;
+}
+
+static const CHA* TestPrintAType() {
+  D_COUT("Testing ATypef...");
+  D_RUN(TestATypefPOD);
+  D_RUN(TestATypefVHT);
+  D_RUN(TestATypefARY);
+  D_RUN(TestATypefSCK);
+  D_RUN(TestATypefMTX);
+  D_RUN(TestATypeMaps);
+  return nullptr;
+}
+
+static const CHA* TestProblemChildren() {
+  static const ISD problem_children[29] = {
+    420, 4200, 42000, 420000, 4200000, 9999999, 10000000, 12000000,
+    13000000, 12321959, 12321960, 13000000, 16500000, 16800000,
+    16777216,16777217,
+    17000000, 19999990, 20000000, 30000000, 40000000, 50000000, 60000000,
+    70000000, 80000000, 90000000, 99999999, 100000000, 1000000000
+  };
+  // length 8 range: 10000000 to 16777216
+  CHA boofer[1024];
+  TSPrinter<CHA> p(boofer, 1024);
+  D_COUT(boofer);
+  for (ISN dddddez = 11; dddddez < 27; ++dddddez) {
+    auto nutz_in_yo_mouth = problem_children[dddddez];
+    D_COUT("\n\ndddddez ");
+    D_COUT(nutz_in_yo_mouth);
+    p << "\nnutz in your face: " << nutz_in_yo_mouth << '\n';
+    D_COUT(boofer);
+    p.Reset();
+  }
+  return nullptr;
+}
 #endif  //< #if SEAM >= SCRIPT2_UNIPRINTER
 
 static const CHA* Uniprinter(const CHA* args) {
 #if SEAM >= SCRIPT2_UNIPRINTER
-  D_RUN(TestSPrinter);
-  D_RUN(TestATypef);
+  //D_RUN(TestPrintAType);
+  //D_RUN(TestSPrinter)
+  D_RUN(TestProblemChildren);
 #endif
   return nullptr;
 }

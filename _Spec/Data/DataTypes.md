@@ -72,7 +72,7 @@ The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types
 |   0   | VHT  | Vector of 1, 2, 3, or 4 POD types 0-31.           |
 |   1   | ARY  | Array of homogenous types.                        |
 |   2   | STK  | Stack (vector) of homogenous types.               |
-|   3   | MAT  | Matrix (n-dimensional array) of homogenous types. |
+|   3   | MTX  | Matrix (n-dimensional array) of homogenous types. |
 
 #### Homotuples
 
@@ -189,6 +189,10 @@ The Modifier Bits (MOD) allow for the creation of pointers and const pointers to
 3. SW: Size Width bits
 4. MT: Map Type bits
 5. MOD: Modifier bits
+
+#### Variable Byte Lengths
+
+Variable Byte Length (VBL) Types 1 to 2048 bytes long are created when the five Least Significant bits of any 16-bit ASCII Type are 0. The size is calculated by shifting the byte to the right 5 bits (i.e. shift bit_5 into bit-0).
 
 **[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Numbers >>](Numbers.md)**
 

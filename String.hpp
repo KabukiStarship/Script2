@@ -110,8 +110,8 @@ Printer& TStringPrint(Printer& o, const TString<ISZ>* string) {
   if (!string) return o;
   const CHT* start = TSTRStart<CHT, ISZ>(string);
   ISZ size = string->size;
-  o << Linef("\n+---\n| TString<CH") << TSizef<CHT>() << ",IS"
-    << TSizef<ISZ>() << "> size:" << size << Linef("\n+---\n| \"");
+  o << Linef("\n+---\n| TString<CH") << CATypeSWCH<CHT>() << ",IS"
+    << CATypeSWCH<ISZ>() << "> size:" << size << Linef("\n+---\n| \"");
   ISW column_count = AConsoleWidth;
   ISZ length = 0;
   CHL c = 0;

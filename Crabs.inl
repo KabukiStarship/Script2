@@ -380,7 +380,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bin_state = cBInStatePackedArgs;
           type = *(++crabs->header);  //< Setup to read first type.
           D_COUT("\nNext AsciiType to scan:\'"
-                 << STRType(type) << "\' with alignment "
+                 << STAAType(type) << "\' with alignment "
                  << TypeAlign(slot_start, type) << '.');
           slot_start = TypeAlignUpPointer<CHA>(slot_start, (ISC)type);
           break;
@@ -429,11 +429,11 @@ const Op* CrabsScanBIn(Crabs* crabs) {
             // No need to enter a state because there is only one
             // IUA to parse and we already have the IUA loaded.
             D_COUT("\nDone scanning without state change  for \""
-                   << STRType(type) << '\"');
+                   << STAAType(type) << '\"');
             // Setup to read the next type.
             type = *(++crabs->header);
             D_COUT("\nNext AsciiType to scan:\'"
-                   << STRType(type)
+                   << STAAType(type)
                    << "\' with alignment:" << TypeAlign(slot_start, type));
             slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
             break;
@@ -528,7 +528,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
             break;
           }
           D_COUT("\nNext AsciiType to scan:\'"
-                 << STRType(type)
+                 << STAAType(type)
                  << "\' with alignment:" << TypeAlign(slot_start, type));
           slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
           break;
@@ -587,7 +587,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           D_COUT(
               "\nDone scanning varint: "
               "\nNext AsciiType to scan:"
-              << STRType(type)
+              << STAAType(type)
               << " with alignment:" << TypeAlign(slot_start, type));
           slot_start = TAlignUpPointer<>(slot_start, (ISC)type);
         }
@@ -676,7 +676,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           type = *(++header);
           D_COUT("\nNext AsciiType to scan:\'" < < < <
                      "\' with alignment:" < < < < "",
-                 STRType(type), TypeAlign(slot_start, type));
+                 STAAType(type), TypeAlign(slot_start, type));
           slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
           break;
         }

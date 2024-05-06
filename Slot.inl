@@ -185,7 +185,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
   for (index = 0; index < num_params; ++index) {
     type = (IUA)*param;
     ++param;
-    D_COUT("\nindex:" << index << ":\"" << STRType(type) << "\" start:0x"
+    D_COUT("\nindex:" << index << ":\"" << STAAType(type) << "\" start:0x"
                       << TDelta<>(l_begin, start) << " stop:0x"
                       << TDelta<>(l_begin, stop));
 
