@@ -48,7 +48,7 @@ Set Types:
 | Name       | Code | Description                                  |
 |-----------:|:----:|:---------------------------------------------|
 |      Array | ARY  | A packed c-style array of POD number types. |
-|      Stack | STK  | A stack of POD number_ types.                |
+|      Stack | SCK  | A stack of POD number_ types.                |
 |       List | LST  | A stack of Type-Value tuples.                |
 |        Map | MAP  | A one-to-one map of Id-Value tuples.         |
 |   Multimap | DIC  | A multimap of Key-Value tuples.              |

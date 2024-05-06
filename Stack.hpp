@@ -18,8 +18,8 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #else
 #include "_Release.inl"
 #endif
-#define STK_A typename ISZ
-#define STK_P ISZ
+#define SCK_A typename ISZ
+#define SCK_P ISZ
 namespace _ {
 
 /* @ingroup AsciiStack */
@@ -208,7 +208,7 @@ TStack<IS>* TStackResize(Autoject& adj) {
 
 template<typename IS = ISN, typename DT = DTB, DT Type>
 constexpr DT TStackType() {
-  return (TBitCode<IS>() << ATypeVTBit0) | (_STK << TBitCode<IS>()) | Type;
+  return (TBitCode<IS>() << ATypeVTBit0) | (_SCK << TBitCode<IS>()) | Type;
 }
 
 /* RAMFactoryStack function for the TStack. */

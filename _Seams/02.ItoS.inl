@@ -103,10 +103,10 @@ inline const CHA* ItoS(const CHA* args) {
 
   static const IUD problem_child[] = {9173263544803952, 827672716845, 0};
 
-  enum { cProblemChildCount = 2, cSize = 23 };
+  enum { cProblemChildCount = 2, Size = 23 };
 
-  CHA text[cSize + 1], expecting[cSize + 1];
-  CHA socket[cSize];
+  CHA text[Size + 1], expecting[Size + 1];
+  CHA socket[Size];
   CHA* result;
   IUD result_ui8, expected_ui8;
 
@@ -114,7 +114,7 @@ inline const CHA* ItoS(const CHA* args) {
 
   for (ISN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = RandomUI8();
-    sprintf_s(socket, cSize, "%llu", expected_ui8);
+    sprintf_s(socket, Size, "%llu", expected_ui8);
     const CHA* test = TScanUnsigned<IUD, CHA>(socket, result_ui8);
     A_ASSERT(test);
     A_AVOW(expected_ui8, result_ui8);
@@ -139,7 +139,7 @@ inline const CHA* ItoS(const CHA* args) {
     D_COUT(kPuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
                             << i << ".) ");
     ISN expected_length = TSTRLength<CHA>(expecting);
-    result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -151,11 +151,10 @@ inline const CHA* ItoS(const CHA* args) {
   count = TSTRLength<IUD>(edge_condition);
   D_COUT("\n\nTesting " << count << " edge conditions...\n\n");
   for (ISW i = 0; i < count; ++i) {
-    D_COUT(Linef('-'));
     expected_ui8 = edge_condition[i];
     sprintf_s(expecting, 24, "%llu", expected_ui8);
     D_COUT("\n\n" << i + 1 << ".) ");
-    result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
     if (!result) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -182,7 +181,7 @@ inline const CHA* ItoS(const CHA* args) {
       expected_ui8 = Random(lower_bounds, upper_bounds);
       sprintf_s(expecting, 24, "%llu", expected_ui8);
       D_COUT("\n\n" << i + 1);
-      result = TSPrintUnsigned<IUD, CHA>(text, text + cSize - 1, expected_ui8);
+      result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
       if (!result) {
         D_PAUSE("An error occurred :-(");
         break;
@@ -191,6 +190,10 @@ inline const CHA* ItoS(const CHA* args) {
       D_AVOW(expecting, text);
     }
   }*/
+
+  D_COUT("\n\nProblem children...");
+
+  D_COUT('\n' << 12321960);
 
 #endif
   return 0;

@@ -24,11 +24,12 @@ using namespace _;
 
 namespace Script2 {
 
-template<typename ISZ>
+template<typename IS>
 static void TestList() {
   D_COUT(Linef("\n\n\n\n+---\n Testing AList<IS")
-         << sizeof(ISZ) << Linef(">\n+---"));
-  AList<ISZ, 1024, 40> list;
+         << CATypeSWCH<IS>() << Linef(">\n+---"));
+
+  AList<IS, 1024, 40> list;
   D_COUT("\n\nlist.Size():" << list.Size()
                             << " list.SizeBytes():" << list.SizeBytes()
                             << " list.SizeWords():" << list.SizeWords());
@@ -42,22 +43,22 @@ static void TestList() {
   const char* test_sta[] = {"A", "B", "C", "D"};
 
   enum { TestCount = 1 };
-  ISZ count = 0;
-  for (ISZ i = 0; i < TestCount; ++i) {
-    for (ISZ j = 0; j < 4; ++j) {
+  IS count = 0;
+  for (IS i = 0; i < TestCount; ++i) {
+    for (IS j = 0; j < 4; ++j) {
       A_AVOW(count++, list.Insert(test_cha[j]));
     }
   }
   
   D_COUT_OBJ(list);
-  for (ISZ i = 0; i < TestCount; ++i) {
-    for (ISZ j = 0; j < 4; ++j) {
+  for (IS i = 0; i < TestCount; ++i) {
+    for (IS j = 0; j < 4; ++j) {
       A_AVOW(count++, list.Insert(test_isc[j]));
     }
   }
   D_COUT_OBJ(list);
-  for (ISZ i = 0; i < TestCount; ++i) {
-    for (ISZ j = 0; j < 4; ++j) {
+  for (IS i = 0; i < TestCount; ++i) {
+    for (IS j = 0; j < 4; ++j) {
       A_AVOW(count++, list.Insert(test_cha[j]));
       A_AVOW(count++, list.Insert(test_isc[j]));
       A_AVOW(count++, list.Insert(test_fpc[j]));
@@ -65,18 +66,18 @@ static void TestList() {
     }
   }
   D_COUT_OBJ(list);
-  for (ISZ i = TestCount - 1; i >= 0; --i) list.Pop();
+  for (IS i = TestCount - 1; i >= 0; --i) list.Pop();
   
-  D_COUT("\n\nTesting STKPack...");
+  D_COUT("\n\nTesting SCKPack...");
   list.Clear();
   count = 0;
 
-  //for (ISZ j = 0; j < 3; ++j)
+  //for (IS j = 0; j < 3; ++j)
   //  A_AVOW(count++, list.Insert(test_cha[j]));
-  //A_AVOW(ISZ(3), list.Insert(test_isc[0]));
+  //A_AVOW(IS(3), list.Insert(test_isc[0]));
   //D_COUT_OBJ(list);
-  //A_AVOW(ISZ(3), list.Insert(test_cha[3], STKPack));
-  // @todo Add more STKPack test cases.
+  //A_AVOW(IS(3), list.Insert(test_cha[3], SCKPack));
+  // @todo Add more SCKPack test cases.
 }
 }  //< namespace Script2
 #endif

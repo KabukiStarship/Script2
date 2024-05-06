@@ -14,114 +14,133 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #include "Binary.hpp"
 
 namespace _ {
-/* Gets the log_b of the sizeof(T). */
+/*
+inline IUA ValueBase2(IUC value) {
+  // Example: 0b0000_0000_0000_0000_0111_0111_1001_1101
+  return 0;
+} */
+
+/* Gets the log_2 of the sizeof(T).
+Naming Convension:
+ISN = Integer Signed N-Bit = int and A=8-bit, B=16-bit, ...
+O = 64-bits
+N = 32-bits
+M = 16-bits
+L = 8-bits
+SCRIPT Spec does not support 128-bit CPUs.
+*/
 template<typename T>
-constexpr Sizef TSizef() {
-  Sizef result = { 0 };
+constexpr DTB CATypeSW() {
   switch (sizeof(T)) {
-  case 1: {
-    result.size = -1;
-    break;
+    case    1: return 0;  // A
+    case    2: return 1;  // B
+    case    4: return 2;  // C
+    case    8: return 3;  // D
+    case   16: return 4;  // E
+    case   32: return 5;  // F
+    case   64: return 6;  // G
+    case  128: return 7;  // H
+    case  256: return 8;  // I    2^8=256
+    case  512: return 9;  // J
+    case 1024: return 10; // K
   }
-  case 2: {
-    result.size = -2;
-    break;
-  }
-  case 4: {
-    result.size = -3;
-    break;
-  }
-  case 8: {
-    result.size = -4;
-    break;
-  }
-  case 16: {
-    result.size = -5;
-    break;
-  }
-  case 32: {
-    result.size = -6;
-    break;
-  }
-  case 64: {
-    result.size = -7;
-    break;
-  }
-  case 128: {
-    result.size = -8;
-    break;
-  }
-  default: {
-    result.size = sizeof(T);
-    break;
-  }
-  }
-  return result;
+  return 0;
 }
 
+// Gets the ASCII Size Width letter A-K
+template<typename T>
+constexpr CHA CATypeSWCH() {
+  return 'A' + CHA(CATypeSW<T>());
+}
+
+// Gets the ASCII Size Width letter A-K
+inline CHA ATypeSWCH(ISA sw) {
+  return 'A' + CHA(sw);
+}
+inline CHA ATypeSWCH(ISB sw) {
+  return 'A' + CHA(sw);
+}
+inline CHA ATypeSWCH(ISC sw) {
+  return 'A' + CHA(sw);
+}
+inline CHA ATypeSWCH(ISD sw) {
+  return 'A' + CHA(sw);
+}
+
+// 
+template<typename T>
+constexpr Sizef CSizef() {
+  return { -CATypeSW<T>() };  // dez nutz.
+}
 
 template<typename IS>
-const CHA* TSTRTypesPOD(IS type) {
-  auto strings = STRTypesPOD();
+const CHA* TSTAATypesPOD(IS type) {
+  auto strings = STAATypesPOD();
   auto count_max = ATypePODCount;
-  type = (type < 0 || type >= count_max) ? count_max : type;
-  return &strings[type];
+  type = (type < 0 || type > count_max) ? count_max : type;
+  return &strings[type << 2];
 }
 
 template<typename IS>
-const CHA* TSTRTypesVector(IS value) {
-  auto strings = STRTypesVector();
-  auto value_max = 3;
-  value = (value < 0 || value >= value_max) ? value_max : value;
-  return &strings[value];
+const CHA* TSTRATypesVector(IS value) {
+  auto strings = STRATypesVector();
+  auto value_max = 15;
+  value = (value < 0 || value > value_max) ? value_max : value;
+  return &strings[value << 2];
 }
 
 template<typename IS>
-const CHA* TSTRTypesVectorClass(IS value) {
-  auto strings = STRTypesVectorClass();
-  auto value_max = 3;
-  value = (value < 0 || value >= value_max) ? value_max : value;
-  return &strings[value];
+const CHA* TSTRATypesVectorClass(IS value) {
+  auto strings = STRATypesVectorClass();
+  auto value_max = 15;
+  value = (value < 0 || value > value_max) ? value_max : value;
+  return &strings[value << 2];
 }
 
 template<typename IS>
-const CHA* TSTRTypesModifier(IS value) {
-  auto strings = STRTypesModifier();
-  auto value_max = 3;
-  value = (value < 0 || value >= value_max) ? value_max : value;
-  return &strings[value];
+const CHA* TSTRATypesModifier(IS value) {
+  auto strings = STRATypesModifier();
+  auto value_max = 15;
+  value = (value < 0 || value > value_max) ? value_max : value;
+  return &strings[value << 2];
 }
 
 template<typename IS>
-const CHA* TSTRTypesString(IS value) {
-  auto strings = STRTypesString();
-  auto value_max = 3;
-  value = (value < 0 || value >= value_max) ? value_max : value;
-  return &strings[value];
+const CHA* TSTRATypesString(IS value) {
+  auto strings = STRATypesString();
+  auto value_max = 15;
+  value = (value < 0 || value > value_max) ? value_max : value;
+  return &strings[value << 2];
 }
 
-/* Gets one of the STRTypes. */
-inline const CHA* STRTypePOD(DTW index) {
+/* Gets one of the STRATypes. */
+inline const CHA* STAATypePOD(DTW index) {
   if (index < 0 || index >= Invalid) index = 32;
-  return STRTypesPOD() + (index << 2); // << 2 to * 4
+  return STAATypesPOD() + (index << 2); // << 2 to * 4
 }
 
-/* Gets one f the STRTypes. */
-inline const CHA* STRTypeVector(DTW index) {
+/* Gets one f the STRATypes. */
+inline const CHA* STAATypeVector(DTW index) {
   if (index < 0 || index >= 4) index = 0;
-  return STRTypesVector() + (index << 2); // << 2 to * 4
+  return STRATypesVector() + (index << 2); // << 2 to * 4
 }
 
-/* Gets one f the STRTypes. */
-inline const CHA* STRTypeVectorClasses(DTW index) {
+/* Gets one f the STRATypes. */
+inline const CHA* STAATypeVectorClasses(DTW index) {
   if (index < 0 || index >= 16) index = 16;
-  return STRTypesVectorClass() + (index << 2); // << 2 to * 4
+  return STRATypesVectorClass() + (index << 2); // << 2 to * 4
 }
 
-/* Gets one f the STRTypes. */
-inline const CHA* STRTypeModifier(DTW index) {
+/* Gets one f the STRATypes. */
+inline const CHA* STAATypeMap(DTW index) {
   if (index < 0 || index >= 4) index = 0;
-  return STRTypesModifier() + (index << 2); // << 2 to * 4
+  return STRAATypesMap() + (index << 2); // << 2 to * 4
+}
+
+/* Gets one f the STRATypes. */
+inline const CHA* STAATypeModifier(DTW index) {
+  if (index < 0 || index >= 4) index = 0;
+  return STRATypesModifier() + (index << 2); // << 2 to * 4
 }
 
 inline ISN STRLength(IUA value) {
@@ -643,6 +662,10 @@ template<typename CHT = CHR>
  inline CHT* TSPrint(CHT* start, CHT* stop, const CHA* item) {
   return TSPrintString<CHT, CHA>(start, stop, item);
 }
+ template<typename CHT = CHR>
+ inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHA* item) {
+   return TSPrintString<CHT>(start, start + buffer_size - 1, item);
+ }
 
 #if USING_UTF16 == YES_0
 /* Prints a Unicode item to the given socket.
@@ -659,6 +682,10 @@ CHT* TSPrintString(CHT* string, CHT* stop, const CHB* item) {
 template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, const CHB* item) {
   return TSPrintString<CHT>(start, stop, item);
+}
+template<typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHB* item) {
+  return TSPrintString<CHT>(start, start + buffer_size - 1, item);
 }
 #endif
 
@@ -678,6 +705,10 @@ CHT* TSPrintString(CHT* start, CHT* stop, const CHC* item) {
 template<typename CHT = CHR>
 inline CHT* TSPrint(CHT* start, CHT* stop, const CHC* item) {
   return TSPrintString<CHT>(start, stop, item);
+}
+template<typename CHT = CHR>
+inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHC* item) {
+  return TSPrintString<CHT>(start, start + buffer_size - 1, item);
 }
 #endif
 
@@ -1095,42 +1126,6 @@ CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
   else
     *start = 0;
   return start;
-}
-
-/* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param start  The beginning of the socket.
-@param size   The size of the socket in CHT(s).
-@param item   The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if string is nil. */
-template<typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, ISW size, const CHA* item) {
-  return TSPrintString<CHT>(start, start + size - 1, item);
-}
-
-/* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param start  The beginning of the socket.
-@param size   The size of the socket in CHT(s).
-@param item   The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if string is nil. */
-template<typename CHT = CHR>
-CHT* TSPrint(CHT* start, ISW size, const CHB* item) {
-  return TSPrintString<CHT>(start, start + size - 1, item);
-}
-
-/* Prints a Unicode string to the given socket.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param start  The beginning of the socket.
-@param size   The size of the socket in CHT(s).
-@param item   The string to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if string is nil. */
-template<typename CHT = CHR>
-CHT* TSPrint(CHT* start, ISW size, const CHC* item) {
-  return TSPrintString<CHT>(start, start + size - 1, item);
 }
 
 template<typename CHT = CHR>

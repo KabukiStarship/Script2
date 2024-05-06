@@ -249,8 +249,8 @@ _::COut& operator<<(_::COut& o, _::Indentf item);
 _::COut& operator<<(_::COut& o, _::Charsf item);
 _::COut& operator<<(_::COut& o, _::Sizef item);
 _::COut& operator<<(_::COut& o, _::ATypef item);
-_::COut& operator<<(_::COut& o, _::TypeWordValue item);
-//_::COut& operator<<(_::COut& o, _::COut item);
+//_::COut& operator<<(_::COut& o, _::TypeWordValue item);
+_::COut& operator<<(_::COut& o, _::COut& item);
 #endif
 #endif
 #endif

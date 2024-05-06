@@ -188,8 +188,8 @@ Printer& TBookPrint(Printer& o, TBook<BOK_P>* book) {
   auto keys_offset = *voffsets++;
   auto keys        = TPtr<TLoom<ISZ, ISY>>(book, keys_offset);
   TLoomPrint<COut, LOM_P>(StdOut(), keys);
-  o << "\nBook<CH" << TSizef<CHT>() << ",IS" << TSizef<ISZ>() << ",IS"
-    << TSizef<ISY>() << "> size_bytes:" << book->values.size_bytes
+  o << "\nBook<CH" << CATypeSWCH<CHT>() << ",IS" << CATypeSWCH<ISZ>() << ",IS"
+    << CATypeSWCH<ISY>() << "> size_bytes:" << book->values.size_bytes
     << " count_max:" << count_max << " count:" << count
     << " keys_free_space:" << TLoomFreeSpace<LOM_P>(keys) 
     << " keys.top:" << keys->top
@@ -365,15 +365,12 @@ BOL TBookGrow(Autoject& obj) {
   3. Copy the List. */
   auto book = TPtr<TBook<BOK_P>>(obj.origin);
   A_ASSERT(book);
-  ISZ size = TBookCountMax<BOK_P>(book);
-  if (!TCanGrow<ISZ>(size)) return false;
-  ISZ count_max = TBookKeys<BOK_P>(book)->map.count_max;
-  if (!TCanGrow<ISZ>(count_max)) return false;
+  ISZ size = book->values.size_bytes;
+  ISZ size_new = size << 1;
+  if (!TCanGrow<ISZ>(size, size_new)) return false;
+  ISZ count_max = TBookKeys<BOK_P>(book)->map.count_max << 1;
 
-  size = size << 1;
-  count_max = count_max << 1;
-
-  D_COUT(" new size:" << size << " count_max:" << count_max);
+  D_COUT(" size_new:" << size_new << " count_max:" << count_max);
 
 #if D_THIS
   D_COUT("\n\nBefore:\n");
@@ -381,8 +378,8 @@ BOL TBookGrow(Autoject& obj) {
   D_COUT(Charsf(book, TBookEnd<BOK_P>(book)));
 #endif
 
-  IUW* new_begin = obj.ram(nullptr, size);
-  D_ARRAY_WIPE(new_begin, size);
+  IUW* new_begin = obj.ram(nullptr, size_new);
+  D_ARRAY_WIPE(new_begin, size_new);
   TLoom<ISZ, ISY>* other = TPtr<TLoom<ISZ, ISY>>(new_begin);
 
   return true;
@@ -662,7 +659,7 @@ class ABook {
   inline ISZ SizeBytes() { return Values()->size_bytes; }
 
   /* Returns the size in words. */
-  inline ISZ SizeWords() { return obj_.SizeWords() >> WordBitCount; }
+  inline ISZ SizeWords() { return obj_.SizeWords() >> ACPUBitCount; }
 
   /* Returns the number of keys. */
   inline ISZ Count() { return Values()->map.count; }

@@ -35,7 +35,8 @@ BOL ATypeIsCH(DTB type) {
   // CHA: 3   0b0011
   // CHB: 7   0b0111
   // CHC: 11  0b1011
-  return ((type & 3) != 3) && ((type >> 2) <= 2);
+  //return (type & 3) && (type != 15);
+  return type == _CHA || type == _CHB || type == _CHC;
 }
 
 BOL ATypeVTBits(DTB type) {

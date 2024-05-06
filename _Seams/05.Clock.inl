@@ -60,21 +60,21 @@ static const CHA* Clock(const CHA* args) {
 
   D_COUT("\n\nTesting more valid input...\n");
 
-  enum { cSize = 128 };
-  CHA socket[cSize];
+  enum { Size = 128 };
+  CHA socket[Size];
 
   t = ClockTimeTMS(8, 9, 17, 4, 20);
-  ClockPrint(socket, socket + cSize, t);
+  ClockPrint(socket, socket + Size, t);
   result = ScanTime(socket, t_found);
   A_ASSERT(ClockCompare(t_found, t));
 
   t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  ClockPrint(socket, socket + cSize, t);
+  ClockPrint(socket, socket + Size, t);
   result = ScanTime(socket, t_found);
   A_ASSERT(ClockCompare(t, t_found));
 
   t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
-  ClockPrint(socket, socket + cSize, t);
+  ClockPrint(socket, socket + Size, t);
   D_COUT("\n  Before:\"" << socket << '\"');
   result = TSScan<CHA>(socket, t_found);
   D_COUT("\n\n\nresult:\"" << TClock<ISC>(t_found) << "\"\"");

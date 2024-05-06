@@ -101,7 +101,7 @@ inline T* TArrayStart(Class* autoject) {
 template<typename T, typename IS, typename Printer>
 Printer& TArrayPrint(Printer& o, const TArray<IS>* item) {
   IS size = item->size;
-  o << Linef("\n+---\nTArray<IS") << TSizef<IS>()
+  o << Linef("\n+---\nTArray<IS") << CATypeSWCH<IS>()
     << "> size:" << size;
   if (size == 0) return o;
   T* items = TArrayStart<T, IS>(item);

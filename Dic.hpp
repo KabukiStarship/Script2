@@ -388,12 +388,12 @@ ISZ TDicFind(TDic<TPARAMS>* dic, const CHT* string) {
 }
 
 /* An ASCII Dic Autoject. */
-template<TARGS, ISZ cSize = 512,
-          typename BUF = TBUF<cSize, CHT, ISZ, TString<ISN>>>
+template<TARGS, ISZ Size = 512,
+          typename BUF = TBUF<Size, CHT, ISZ, TString<ISN>>>
 class ADic {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
-  enum { cCountDefault = cSize / 16 };
+  enum { cCountDefault = Size / 16 };
   /* Constructs a Dic. */
   ADic(ISY count_max = cCountDefault) { TDicInit<TPARAMS>(This(), count_max); }
 

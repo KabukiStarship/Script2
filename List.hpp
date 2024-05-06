@@ -194,18 +194,19 @@ Printer& TListPrintValue(Printer& o, const TList<ISZ>* list, ISZ index) {
 template<typename Printer, LST_A>
 Printer& TListPrint(Printer& o, const TList<ISZ>* list) {
   ISZ count = list->map.count, count_max = list->map.count_max;
-  o << Linef("\n\n+---\n| List<ISZ") << TSizef<ISZ>()
+  o << Linef("\n\n+---\n| List<IS") << CATypeSWCH<ISZ>()
     << "> size_bytes:" << list->size_bytes << " count_max:" << count_max
     << " count:" << count << Linef("\n+---");
-  const ISZ* data_offsets = TListValueOffsets<ISZ>(list);
-  const DT*  dt_offsets   = TPtr<DT>(data_offsets + count_max);
+
+  const ISZ* value_offsets = TListValueOffsets<ISZ>(list);
+  const DT*  dt_offsets   = TPtr<DT>(value_offsets + count_max);
   for (ISZ index = 0; index < count; ++index) {
-    ISZ data_offset = *data_offsets++;
-    DT data_type = *dt_offsets++;
-    o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2)
-      << ATypef(data_type).Center(10) << ' ';
+    ISZ data_offset = *value_offsets++;
+    DT type = *dt_offsets++;
+    o << "\n| " << Centerf(index, ISW(STRLength(count)) + 2);
+    o << ATypef(type) << ' ';
     const void* value = TPtr<CHA*>(list, TListValueOffsets<ISZ>(list)[index]);
-    TPrintValue<Printer, DT>(o, data_type, value);
+    TPrintValue<Printer, DT>(o, type, value);
   }
   return o << Linef("\n+---");
 }
@@ -446,8 +447,8 @@ T* TListPush(TList<ISZ>* list, ISZ size_bytes_new, DT type,
 
 /* Adds a given type-value tuple at the given index and values_begin.
 index Codes:
-STKPush: -1  Pushes the value onto the top of the type-value stacks.
-STKPack: -2  Insert-packs the type-value into the first free memory slot.
+SCKPush: -1  Pushes the value onto the top of the type-value stacks.
+SCKPack: -2  Insert-packs the type-value into the first free memory slot.
 @return ErrorInvalidIndex upon failure upon receiving an invalid index.
         ErrorBufferOverflow upon values buffer overflow/out of memory.
 @warning Does not check for invalid types! */
@@ -460,14 +461,14 @@ ISZ TListInsert(TList<ISZ>* list, T value, DT type, ISZ align_mask,
   if (count < 0 || count > count_max || vbuf_begin > vbuf_end || index >= count)
     return -ErrorInvalidHeader;
   if (count >= count_max ) return -ErrorStackOverflow;
-  D_COUT("\nInserting " << STRTypePOD(type) << ':' << value <<
+  D_COUT("\nInserting " << STAATypePOD(type) << ':' << value <<
          " into index:" << index << " count: " << count);
   ISZ* voffsets = TListValueOffsets<ISZ>(list);
   DT* types = (DT*)(voffsets + count_max);
   const BOL IsNotInserting = (index == count) && (index < count);
   ISZ size_bytes = list->size_bytes;
   if (index == PSH || index == count || count == 0) {
-    D_COUT("\nSTKPush...");
+    D_COUT("\nSCKPush...");
     top = TAlignUp<ISZ>(top, align_mask);
     ISZ top_new = top + ISZ(sizeof(T));
     if (top_new > size_bytes) return -ErrorBufferOverflow;
@@ -477,7 +478,7 @@ ISZ TListInsert(TList<ISZ>* list, T value, DT type, ISZ align_mask,
     list->map.count = ++count;
     return --count;
   } else if (index == PCK) {
-    D_COUT("\nSTKPack...");
+    D_COUT("\nSCKPack...");
     ISZ offset_previous = *voffsets++;
     ++types;
     for (index = 1; index < count; ++index) {

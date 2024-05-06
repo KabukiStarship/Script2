@@ -25,15 +25,15 @@ static void TestDic() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    cSize = 512 * sizeof(CHT),
+    Size = 512 * sizeof(CHT),
     cCount = 32,
   };
   D_COUT("Testing ADic<IS"
          << CSizef<ISZ> () << ",IU" << CSizef<ISZ> () << ",IS" << CSizef<ISY>() << ",CH"
                                   << CSizef<CHT>()
-         << "> with cSize:" << cSize << " and cCount:" << cCount);
+         << "> with Size:" << Size << " and cCount:" << cCount);
 
-  ADic<TPARAMS, cSize> dic(cCount);
+  ADic<TPARAMS, Size> dic(cCount);
 
   D_COUT("\n\nsize:" << dic.Size() << " size_bytes:" << dic.SizeBytes()
                      << " size_words:" << dic.SizeWords());
@@ -72,7 +72,7 @@ static void TestDic() {
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
-  CHT large_string[cSize];
+  CHT large_string[Size];
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;

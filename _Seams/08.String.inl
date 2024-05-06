@@ -19,17 +19,17 @@ using namespace _;
  
 namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
-template<typename CHT = CHR, typename ISZ = ISN>
+template<typename CH = CHR, typename IS = ISN>
 void TestStringN() {
-  static const CHT Testing123[] = {'T', 'e', 's', 't', 'i', 'n',
+  static const CH Testing123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL};
   enum {
     StringLoopCount = 3,
-    SizeChar = '0' + sizeof(CHT),
+    SizeChar = '0' + sizeof(CH),
   };
 
-  AString<CHT, ISZ, 8> str;
+  AString<CH, IS, 8> str;
   D_COUT_OBJ(str);
   D_COUT("\nbuffer_size:" << str.Array().Size() << 
          " total_size_bytes:" << str.Array().SizeBytes());
@@ -43,6 +43,7 @@ void TestStringN() {
   D_COUT("\n\nResult:\"" << str.Start() << "\"\n");
   //A_ASSERT(str.Find(Testing123));
 }
+
 #endif
 
 static const CHA* String(const CHA* args) {

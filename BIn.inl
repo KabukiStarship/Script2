@@ -196,7 +196,7 @@ const Op* BInRead(BIn* bin, const ISC* params, void** args) {
 
   for (index = 1; index <= num_params; ++index) {
     type = params[index];
-    D_COUT("\nparam:" << arg_index + 1 << " type:" << STRType(type) <<
+    D_COUT("\nparam:" << arg_index + 1 << " type:" << STAAType(type) <<
            " start:" << TDelta<>(origin, start) << " stop:" << 
            TDelta<>(origin, stop) << " length:" << length);
     switch (type) {

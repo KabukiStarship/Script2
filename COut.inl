@@ -127,7 +127,7 @@ COut& COut::Print(CHA item) {
   return *this;
 }
 
-COut& COut::Print(const CHA* item) {
+ COut& COut::Print(const CHA* item) {
   return TSPrintString<COut, CHA>(*this, item);
 }
 
@@ -164,9 +164,9 @@ COut& COut::Print(ISC item) {
 #if CPU_SIZE == CPU_8_BYTE
   Print((ISD)item);
 #else
-  enum { cSize = 24 };
-  CHA socket[cSize];
-  TSPrintSigned<ISD, IUD, CHA>(socket, cSize - 1, (ISD)value);
+  enum { Size = 24 };
+  CHA socket[Size];
+  TSPrintSigned<ISD, IUD, CHA>(socket, Size, (ISD)value);
   Print(socket);
 #endif
 #endif
@@ -180,10 +180,10 @@ COut& COut::Print(IUC item) {
 #if CPU_SIZE == CPU_8_BYTE
   Print((IUD)item);
 #else
-  enum { cSize = 24 };
-  CHA buffer[cSize];
-  TSPrintUnsigned<IUC, CHA>(buffer, cSize - 1, item);
-  Print(buffer);
+  enum { Size = 24 };
+  CHA boofer[Size];
+  TSPrintUnsigned<IUC, CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
 #endif
   return *this;
@@ -193,10 +193,10 @@ COut& COut::Print(ISD item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { cSize = 24 };
-  CHA buffer[cSize];
-  TSPrintSigned<ISD, IUD, CHA>(buffer, cSize - 1, item);
-  Print(buffer);
+  enum { Size = 24 };
+  CHA boofer[Size];
+  auto result = TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -205,10 +205,10 @@ COut& COut::Print(IUD item) {
 #if SEAM <= SCRIPT2_ITOS
   STD_COUT << item;
 #else
-  enum { cSize = 24 };
-  CHA buffer[cSize];
-  TSPrintUnsigned<IUD, CHA>(buffer, cSize - 1, item);
-  Print(buffer);
+  enum { Size = 24 };
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -218,10 +218,10 @@ COut& COut::Print(FPC item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { cSize = 16 };
-  CHA buffer[cSize];
-  TSPrint<CHA>(buffer, cSize, item);
-  Print(buffer);
+  enum { Size = 16 };
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -231,10 +231,10 @@ COut& COut::Print(FPD item) {
 #if SEAM <= SCRIPT2_BOOK
   STD_COUT << item;
 #else
-  enum { cSize = 24 };
-  CHA buffer[cSize];
-  TSPrint<CHA>(buffer, cSize - 1, item);
-  Print(buffer);
+  enum { Size = 24 };
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -352,7 +352,7 @@ COut& COut::Hex(FPC item) { return TPrintHex<COut>(*this, item); }
 COut& COut::Hex(FPD item) { return TPrintHex<COut>(*this, item); }
 #endif
 
-/* Stores the given item to the buffer and store the size. */
+/* Stores the given item to the boofer and store the size. */
 COut& COut::Binary(const void* item) { return TPrintBinary<COut>(*this, item); }
 COut& COut::Binary(const void* item, ISW size) {
   return TPrintBinary<COut>(*this, item, size);
@@ -485,12 +485,13 @@ _::COut& operator<<(_::COut& o, _::Sizef item) {
 inline _::COut& operator<<(_::COut& printer, _::ATypef item) {
   return _::TPrint<_::COut>(printer, item);
 }
+/*
 inline _::COut& operator<<(_::COut& printer, _::TypeWordValue item) {
   return _::TPrint<_::COut>(printer, item);
-}
-/*
+}*/
+
 _::COut& operator<<(_::COut& o, _::COut& item) {
   return o;
-}*/
+}
 #endif
 #endif

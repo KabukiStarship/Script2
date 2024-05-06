@@ -13,61 +13,95 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-LIB_MEMBER const CHA* STRPrintCharsHeader();
+LIB_MEMBER const CHA* STAPrintCharsHeader();
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-LIB_MEMBER const CHA* STRPrintCharsBorder();
+LIB_MEMBER const CHA* STAPrintCharsBorder();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-LIB_MEMBER const CHA* STRPrintHexHeader();
+LIB_MEMBER const CHA* STAPrintHexHeader();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-LIB_MEMBER const CHA* STRPrintHexBorder();
+LIB_MEMBER const CHA* STAPrintHexBorder();
 
 /* Gets the string representations of the given ASCII POD Type 0-31. */
-LIB_MEMBER const CHA* STRTypesPOD();
-LIB_MEMBER const CHA* STRTypesPOD(ISA type);
-LIB_MEMBER const CHA* STRTypesPOD(ISB type);
-LIB_MEMBER const CHA* STRTypesPOD(ISC type);
-LIB_MEMBER const CHA* STRTypesPOD(ISD type);
+LIB_MEMBER const CHA* STAATypesPOD();
+LIB_MEMBER const CHA* STAATypesPOD(ISA type);
+LIB_MEMBER const CHA* STAATypesPOD(ISB type);
+LIB_MEMBER const CHA* STAATypesPOD(ISC type);
+LIB_MEMBER const CHA* STAATypesPOD(ISD type);
 
 /* Gets the string representations of the b6:b5 Vector type. */
-LIB_MEMBER const CHA* STRTypesVector();
-LIB_MEMBER const CHA* STRTypesVector(ISA index);
-LIB_MEMBER const CHA* STRTypesVector(ISB index);
-LIB_MEMBER const CHA* STRTypesVector(ISC index);
-LIB_MEMBER const CHA* STRTypesVector(ISD index);
+LIB_MEMBER const CHA* STRATypesVector();
+LIB_MEMBER const CHA* STRATypesVector(ISA index);
+LIB_MEMBER const CHA* STRATypesVector(ISB index);
+LIB_MEMBER const CHA* STRATypesVector(ISC index);
+LIB_MEMBER const CHA* STRATypesVector(ISD index);
 
 /* Gets the string representations of the b6:b5 Vector types classes.
-Classes are VHT, ARY, STK, and MAT. */
-LIB_MEMBER const CHA* STRTypesVectorClass();
-LIB_MEMBER const CHA* STRTypesVectorClass(ISA index);
-LIB_MEMBER const CHA* STRTypesVectorClass(ISB index);
-LIB_MEMBER const CHA* STRTypesVectorClass(ISC index);
-LIB_MEMBER const CHA* STRTypesVectorClass(ISD index);
+Classes are VHT, ARY, SCK, and MAT. */
+LIB_MEMBER const CHA* STRATypesVectorClass();
+LIB_MEMBER const CHA* STRATypesVectorClass(ISA index);
+LIB_MEMBER const CHA* STRATypesVectorClass(ISB index);
+LIB_MEMBER const CHA* STRATypesVectorClass(ISC index);
+LIB_MEMBER const CHA* STRATypesVectorClass(ISD index);
 
 /* Gets the string representations of the b15:b14 modifier bits. */
-LIB_MEMBER const CHA* STRTypesModifier();
-LIB_MEMBER const CHA* STRTypesModifier(ISA index);
-LIB_MEMBER const CHA* STRTypesModifier(ISB index);
-LIB_MEMBER const CHA* STRTypesModifier(ISC index);
-LIB_MEMBER const CHA* STRTypesModifier(ISD index);
+LIB_MEMBER const CHA* STRATypesModifier();
+LIB_MEMBER const CHA* STRATypesModifier(ISA index);
+LIB_MEMBER const CHA* STRATypesModifier(ISB index);
+LIB_MEMBER const CHA* STRATypesModifier(ISC index);
+LIB_MEMBER const CHA* STRATypesModifier(ISD index);
 
 /* Gets the string representations of the b15:b14 modifier bits. */
-LIB_MEMBER const CHA* STRTypesString();
-LIB_MEMBER const CHA* STRTypesString(ISA index);
-LIB_MEMBER const CHA* STRTypesString(ISB index);
-LIB_MEMBER const CHA* STRTypesString(ISC index);
-LIB_MEMBER const CHA* STRTypesString(ISD index);
+LIB_MEMBER const CHA* STRAATypesMap();
+LIB_MEMBER const CHA* STRAATypesMap(ISA index);
+LIB_MEMBER const CHA* STRAATypesMap(ISB index);
+LIB_MEMBER const CHA* STRAATypesMap(ISC index);
+LIB_MEMBER const CHA* STRAATypesMap(ISD index);
+
+/* Gets the string representations of the b15:b14 modifier bits. */
+LIB_MEMBER const CHA* STRATypesString();
+LIB_MEMBER const CHA* STRATypesString(ISA index);
+LIB_MEMBER const CHA* STRATypesString(ISB index);
+LIB_MEMBER const CHA* STRATypesString(ISC index);
+LIB_MEMBER const CHA* STRATypesString(ISD index);
 
 // Returns true if the given type is a CHA, CHB, or CHC.
 LIB_MEMBER BOL ATypeIsCH(DTB type);
 
-/* string that reads "true". */
-LIB_MEMBER const CHA* STRTrue();
+// string that reads "true".
+#if USING_UTF8 == YES_0
+LIB_MEMBER const CHA* STATrue();
+#endif
+#if USING_UTF16 == YES_0
+LIB_MEMBER const CHB* STBTrue();
+#endif
+#if USING_UTF32 == YES_0
+LIB_MEMBER const CHC* STCTrue();
+#endif
 
-/* String that reads "false". */
-LIB_MEMBER const CHA* STRFalse();
+// String that reads "false".
+#if USING_UTF8 == YES_0
+LIB_MEMBER const CHA* STAFalse();
+#endif
+#if USING_UTF16 == YES_0
+LIB_MEMBER const CHB* STBFalse();
+#endif
+#if USING_UTF32 == YES_0
+LIB_MEMBER const CHC* STCFalse();
+#endif
+
+// Returns the string "true" or "false".
+#if USING_UTF8 == YES_0
+LIB_MEMBER const CHA* STATF(BOL value);
+#endif
+#if USING_UTF16 == YES_0
+LIB_MEMBER const CHB* STBTF(BOL value);
+#endif
+#if USING_UTF32 == YES_0
+LIB_MEMBER const CHC* STCTF(BOL value);
+#endif
 
 /* SCRIPT Specification error strings. */
 const CHA* STRError(ISA error_number);
