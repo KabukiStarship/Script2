@@ -6,50 +6,60 @@
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
+#include "Error.hpp"
 #if SEAM >= SCRIPT2_LIST
-#include "Error.h"
 namespace _ {
-
-const CHA** STRErrors() {
-  static const CHA* ErrorsStrings[] = {
-    "Success",                  //<   0
-    "Invalid input",            //<  -1
-    "Input nil",                //<  -2
-    "Invalid hash",             //<  -3
-    "Invalid type",             //<  -4
-    "Invalid index",            //<  -5
-    "Invalid equerry",          //<  -6
-    "Invalid argument number",  //<  -7
-    "Invalid door",             //<  -8
-    "Invalid error handler",    //<  -9
-    "Invalid Oerand",           //< -10
-    "Invalid Op",               //< -11
-    "Invalid args",             //< -12
-    "Too many parameters",      //< -13
-    "Too many pops",            //< -14
-    "Stack overflow",           //< -15
-    "Varint overflow",          //< -16
-    "Array overflow",           //< -17
-    "Text overflow",            //< -18
-    "Buffer overflow",          //< -19
-    "Buffer underflow",         //< -20
-    "Malformed UTF-8",          //< -21
-    "Malformed UTF-16",         //< -22
-    "Malformed UTF-32",         //< -23
-    "Object Locked",            //< -24
-    "Authentication error",     //< -25
-    "Room not found",           //< -26
-    "Implementation error",     //< -27
+const CHA* CrabsError0STA() {
+  return TCrabsErrorST0<CHA>();
+  /*
+  static const CHA error_strings[ErrorCountMax][32] = {
+    "ErrorA",                 //< Error 00.
+    "Authentication error",   //< Error 01.
+    "Array overflow",         //< Error 02.
+    "Buffer overflow",        //< Error 03.
+    "Buffer underflow",       //< Error 04.
+    "Input invalid",          //< Error 05.
+    "Input nil",              //< Error 06.
+    "Invalid args",           //< Error 07.
+    "Invalid argument",       //< Error 08.
+    "Invalid buffer",         //< Error 09.
+    "Invalid door",           //< Error 10.
+    "Invalid error handler",  //< Error 11.
+    "Invalid header",         //< Error 12.
+    "Invalid hash",           //< Error 13.
+    "Invalid index",          //< Error 14.
+    "Invalid inquiry",        //< Error 15.
+    "Invalid op",             //< Error 16.
+    "Invalid operand",        //< Error 17.
+    "Invalid Room number",    //< Error 18.
+    "Invalid type",           //< Error 19.
+    "Invalid UTF-8",          //< Error 20.
+    "Invalid UTF-16",         //< Error 21.
+    "Invalid UTF-32",         //< Error 22.
+    "OBJ locked",             //< Error 23.
+    "Parameter overflow",     //< Error 24.
+    "Stack overflow",         //< Error 25.
+    "Stack underflow",        //< Error 26.
+    "Text overflow",          //< Error 27.
+    "Varint overflow",        //< Error 28.
+    "Implementation error"    //< Error 29.
   };
-  return ErrorsStrings;
+  return &error_strings[0][0]; */
 }
 
-const CHA* STRError(ISN error) {
-  if (error < 0) error = -error;
-  ISN error_max = -ErrorImplementation;
-  if (error > error_max) error = error_max;
-  return STRErrors()[error];
+const CHA* CrabsErrorSTR(ISA error) {
+  error = error < 0 ? -error : error;
+  if (error > CrabsErrorCountMax) error = CrabsErrorCountMax;
+  return &TCrabsErrorST0<CHA>()[error * 32];
+}
+const CHA* CrabsErrorSTR(ISB error) {
+  return CrabsErrorSTR(ISA(error));
+}
+const CHA* CrabsErrorSTR(ISC error) {
+  return CrabsErrorSTR(ISC(error));
+}
+const CHA* CrabsErrorSTR(ISD error) {
+  return CrabsErrorSTR(ISD(error));
 }
 
 }  //< namespace _

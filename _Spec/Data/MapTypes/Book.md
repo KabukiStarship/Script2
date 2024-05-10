@@ -6,7 +6,7 @@
 
 ### Books
 
-ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII Dictionaries in that multiple values with the same key may be stored. Books use the
+ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII Dictionaries in that multiple values with the same key may be stored. Books are created by creating an ASCII List with an ASCII Loom as element 0 that contains an empty string at element 0.
 
 #### Book Memory Layout
 

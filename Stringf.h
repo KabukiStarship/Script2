@@ -104,7 +104,7 @@ LIB_MEMBER const CHC* STCTF(BOL value);
 #endif
 
 /* SCRIPT Specification error strings. */
-const CHA* STRError(ISA error_number);
+//const CHA* STRError(ISA error_number);
 
 /* Converts a IUA into a two-IUA hex representation.
 @return Returns -1 if c is not a hex IUA. */

@@ -216,41 +216,41 @@ COut CPrint(Indentf& item);
 }  //< namespace _
 
 /* Prints the given item to the COut. */
-_::COut& operator<<(_::COut& o, CHA item);
-_::COut& operator<<(_::COut& o, const CHA* item);
+inline _::COut& operator<<(_::COut& o, CHA item);
+inline _::COut& operator<<(_::COut& o, const CHA* item);
 
 #if USING_UTF16 == YES_0
-_::COut& operator<<(_::COut& o, CHB item);
-_::COut& operator<<(_::COut& o, const CHB* item);
+inline _::COut& operator<<(_::COut& o, CHB item);
+inline _::COut& operator<<(_::COut& o, const CHB* item);
 #endif
 #if USING_UTF32 == YES_0
-_::COut& operator<<(_::COut& o, CHC item);
-_::COut& operator<<(_::COut& o, const CHC* item);
+inline _::COut& operator<<(_::COut& o, CHC item);
+inline _::COut& operator<<(_::COut& o, const CHC* item);
 #endif
-_::COut& operator<<(_::COut& o, ISC item);
-_::COut& operator<<(_::COut& o, IUC item);
-_::COut& operator<<(_::COut& o, ISD item);
-_::COut& operator<<(_::COut& o, IUD item);
+inline _::COut& operator<<(_::COut& o, ISC item);
+inline _::COut& operator<<(_::COut& o, IUC item);
+inline _::COut& operator<<(_::COut& o, ISD item);
+inline _::COut& operator<<(_::COut& o, IUD item);
 #if USING_FPC == YES_0
-_::COut& operator<<(_::COut& o, FPC item);
+inline _::COut& operator<<(_::COut& o, FPC item);
 #endif
 #if USING_FPD == YES_0
-_::COut& operator<<(_::COut& o, FPD item);
+inline _::COut& operator<<(_::COut& o, FPD item);
 #endif
-_::COut& operator<<(_::COut& o, _::Hexf item);
-_::COut& operator<<(_::COut& o, _::Binaryf item);
+inline _::COut& operator<<(_::COut& o, _::Hexf item);
+inline _::COut& operator<<(_::COut& o, _::Binaryf item);
 
-_::COut& operator<<(_::COut& o, _::Headingf item);
+inline _::COut& operator<<(_::COut& o, _::Headingf item);
 #if SEAM >= SCRIPT2_UNIPRINTER
-_::COut& operator<<(_::COut& o, _::Centerf item);
-_::COut& operator<<(_::COut& o, _::Rightf item);
-_::COut& operator<<(_::COut& o, _::Linef item);
-_::COut& operator<<(_::COut& o, _::Indentf item);
-_::COut& operator<<(_::COut& o, _::Charsf item);
-_::COut& operator<<(_::COut& o, _::Sizef item);
-_::COut& operator<<(_::COut& o, _::ATypef item);
-//_::COut& operator<<(_::COut& o, _::TypeWordValue item);
-_::COut& operator<<(_::COut& o, _::COut& item);
+inline _::COut& operator<<(_::COut& o, _::Centerf item);
+inline _::COut& operator<<(_::COut& o, _::Rightf item);
+inline _::COut& operator<<(_::COut& o, _::Linef item);
+inline _::COut& operator<<(_::COut& o, _::Indentf item);
+inline _::COut& operator<<(_::COut& o, _::Charsf item);
+inline _::COut& operator<<(_::COut& o, _::Sizef item);
+inline _::COut& operator<<(_::COut& o, _::ATypef item);
+//inline _::COut& operator<<(_::COut& o, _::TypeWordValue item);
+inline _::COut& operator<<(_::COut& o, _::COut& item);
 #endif
 #endif
 #endif

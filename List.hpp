@@ -449,7 +449,7 @@ T* TListPush(TList<ISZ>* list, ISZ size_bytes_new, DT type,
 index Codes:
 SCKPush: -1  Pushes the value onto the top of the type-value stacks.
 SCKPack: -2  Insert-packs the type-value into the first free memory slot.
-@return ErrorInvalidIndex upon failure upon receiving an invalid index.
+@return  ErrorInvalidIndex upon failure upon receiving an invalid index.
         ErrorBufferOverflow upon values buffer overflow/out of memory.
 @warning Does not check for invalid types! */
 template<typename T, LST_A>
@@ -458,7 +458,7 @@ ISZ TListInsert(TList<ISZ>* list, T value, DT type, ISZ align_mask,
   ISZ count     = list->map.count, 
       count_max = list->map.count_max,
       top       = list->top;
-  if (count < 0 || count > count_max || vbuf_begin > vbuf_end || index >= count)
+  if (count < 0 || count > count_max || vbuf_begin > vbuf_end || index >= count_max)
     return -ErrorInvalidHeader;
   if (count >= count_max ) return -ErrorStackOverflow;
   D_COUT("\nInserting " << STAATypePOD(type) << ':' << value <<
@@ -677,6 +677,7 @@ inline ISZ TListInsert(TList<ISZ>* list, BOL item, ISZ index = PSH) {
 // @return The index of the allocated type-value.
 template<LST_A>
 inline ISZ TListAlloc(TList<ISZ>* list, DTB type, ISZ size_bytes, ISZ index = PSH) {
+  COut("\n\nDez nutz:").Star() << ATypef(type) << "\n\n";
   ISA align_mask = ATypeAlignMask(type);
   auto top = TAlignUp<ISZ>(list->top, align_mask);
   auto count     = list->map.count;
@@ -685,7 +686,7 @@ inline ISZ TListAlloc(TList<ISZ>* list, DTB type, ISZ size_bytes, ISZ index = PS
   *TPtr<ISZ>(list, top) = size_bytes;
   auto voffsets = TListValueOffsets<LST_P>(list);
   voffsets[count] = top;
-  auto types = TPtr<DTB>(voffsets + count_max);
+  auto types = TPtr<DT>(voffsets + count_max);
   types[count++] = type;
   list->top = top + size_bytes;
   list->map.count = count--;

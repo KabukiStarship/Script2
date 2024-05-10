@@ -274,44 +274,6 @@ const CHB* STBTF(BOL value) { return value ? STBTrue() : STBFalse(); }
 const CHC* STCTF(BOL value) { return value ? STCTrue() : STCFalse(); }
 #endif
 
-const CHA* STRError(ISA error_number) {
-  const CHA error_strings[32][32] = {
-    "ErrorA",                 //< Error 00.
-    "Authentication error",   //< Error 01.
-    "Array overflow",         //< Error 02.
-    "Buffer overflow",        //< Error 03.
-    "Buffer underflow",       //< Error 04.
-    "Input invalid",          //< Error 05.
-    "Input nil",              //< Error 06.
-    "Invalid args",           //< Error 07.
-    "Invalid argument",       //< Error 08.
-    "Invalid buffer",         //< Error 09.
-    "Invalid door",           //< Error 10.
-    "Invalid error handler",  //< Error 11.
-    "Invalid header",         //< Error 12.
-    "Invalid hash",           //< Error 13.
-    "Invalid index",          //< Error 14.
-    "Invalid inquiry",        //< Error 15.
-    "Invalid op",             //< Error 16.
-    "Invalid operand",        //< Error 17.
-    "Invalid Room number",    //< Error 18.
-    "Invalid type",           //< Error 19.
-    "Invalid UTF-8",          //< Error 20.
-    "Invalid UTF-16",         //< Error 21.
-    "Invalid UTF-32",         //< Error 22.
-    "OBJ locked",             //< Error 23.
-    "Parameter overflow",     //< Error 24.
-    "Pop overflow",           //< Error 25.
-    "Stack overflow",         //< Error 26.
-    "Text overflow",          //< Error 27.
-    "Varint overflow",        //< Error 28.
-    "Implementation error"    //< Error 29.
-  };
-  error_number = (error_number < 0 || error_number >= ErrorImplementation) 
-        ? ErrorImplementation : error_number;
-  return error_strings[error_number];
-}
-
 }  //< namespace _
 
 #if SEAM >= SCRIPT2_COUT
