@@ -277,8 +277,16 @@ inline IS TSizeGrow(IS size) {
 
 /* Checks of the given size is able to double in size.
 @return True if the autoject can double in size. */
-template<typename IS>
-BOL TCanGrow(IS size, IS new_size) {
+inline BOL ATypeCanGrow(ISA size, ISA new_size) {
+  return new_size > size;
+}
+inline BOL ATypeCanGrow(ISB size, ISB new_size) {
+  return new_size > size;
+}
+inline BOL ATypeCanGrow(ISC size, ISC new_size) {
+  return new_size > size;
+}
+inline BOL ATypeCanGrow(ISD size, ISD new_size) {
   return new_size > size;
 }
 
@@ -307,7 +315,7 @@ BOL TArrayResize(Autoject& obj, IS new_size) {
 template<typename T, typename IS, typename Class>
 BOL TArrayGrow(Autoject& obj) {
   IS size = TSizeBytes<IS>(obj.origin);
-  if (!TCanGrow<IS>(size)) return false;
+  if (!ATypeCanGrow<IS>(size)) return false;
   return TArrayResize<T, IS, Class>(obj, size << 1);
 }
 
@@ -616,7 +624,7 @@ class AArray {
 
   /* Attempts to grow the this autoject.
   @return false if the grow op failed. */
-  inline BOL CanGrow() { return TCanGrow<IS>(obj_); }
+  inline BOL CanGrow() { return ATypeCanGrow<IS>(obj_); }
 
   /* Doubles the size of the obj_ array. */
   template<typename Class>

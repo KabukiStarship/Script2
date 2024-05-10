@@ -809,19 +809,22 @@ Printer& TPrintValuePOD(Printer& p, DTB type, const void* value) {
 template<typename Printer, typename DT = DTB>
 Printer& TPrintValue(Printer & p, DT type, const void* value) {
   auto mod_bits = type >> ATypeMODBit0;
-  type ^= mod_bits << ATypeMODBit0;
+  if (mod_bits) {
+    type ^= mod_bits << ATypeMODBit0;
+    p << STAATypePOD(mod_bits);
+  }
   if (type < ATypePODCount) return TPrintValuePOD<Printer>(p, DTB(type), value);
   auto map_type = type >> ATypeMTBit0;
   type ^= map_type << ATypeMTBit0;
+  auto size_width = type >> ATypeSWBit0;
+  type ^= size_width << ATypeSWBit0;
+  auto vector_type = type >> ATypeVTBit0;
+  type ^= vector_type << ATypeVTBit0;
   if (map_type > 0) {
     if (type < ATypePODCount) { // Map of one POD type to another.
       return p << STAATypePOD(type);
     }
   }
-  auto size_width = type >> ATypeSWBit0;
-  type ^= size_width << ATypeSWBit0;
-  auto vector_type = type >> ATypeVTBit0;
-  type ^= vector_type << ATypeVTBit0;
   p << "count_max:";
   if (vector_type == _ARY) {
     if      (size_width == 0) p << *(ISA*)(value);

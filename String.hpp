@@ -165,7 +165,7 @@ BOL TStringGrow(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter) {
   COut("\nsize: ").Star() << size <<
        "\nnew_size: " << new_size;
   #endif
-  if (!TCanGrow<ISZ>(size, new_size))
+  if (!ATypeCanGrow(size, new_size))
     return false;
   size = new_size;
   D_COUT(" new_size:" << new_size << " new_size:" << new_size);

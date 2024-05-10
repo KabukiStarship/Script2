@@ -15,11 +15,16 @@ namespace _ {
 
 // @see _ConfigHeader.inl for enum of error codes.
 
-/* Returns an array or  pointers for the KabukiError(s). */
-LIB_MEMBER const CHA** STRErrors();
+/* A CHA[32][32] containing the CrabsError error strings.
+Example:
+const CHA* error_string = STRErrors()[error_code * 32]; */
+LIB_MEMBER const CHA* CrabsError0STA();
 
-/* Returns one of the Errors () Strings. */
-LIB_MEMBER const CHA* STRError(ISN error);
+/* Returns one of the STRErrors() CrabsError Strings. */
+inline const CHA* CrabsErrorSTR(ISA error);
+inline const CHA* CrabsErrorSTR(ISB error);
+inline const CHA* CrabsErrorSTR(ISC error);
+inline const CHA* CrabsErrorSTR(ISD error);
 
 }  //< namespace _
 #endif

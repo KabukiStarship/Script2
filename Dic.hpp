@@ -152,9 +152,9 @@ BOL TDicGrow(Autoject& obj) {
   auto dic = TPtr<TDic<TPARAMS>>(obj.origin);
   A_ASSERT(dic);
   ISZ size = TDicSize<TPARAMS>(dic);
-  if (!TCanGrow<ISZ>(size)) return false;
+  if (!ATypeCanGrow<ISZ>(size)) return false;
   ISZ count_max = dic->keys.count_max;
-  if (!TCanGrow<ISZ>(count_max)) return false;
+  if (!ATypeCanGrow<ISZ>(count_max)) return false;
 
   size = size << 1;
   count_max = count_max << 1;

@@ -50,35 +50,29 @@ void TestBook() {
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
   ISZ word_step = TTestWords<CHT>::CharsMax;
-  D_COUT("Step 0:\n");
-  D_COUT(Charsf(book.This(), book.SizeBytes()));
-  D_COUT("\nStep 1:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 0:\n" << Linef("---") << '\n');
+
+  D_COUT("\n\nStep 1:\n" << Linef("---") << '\n');
   A_AVOW(ISY(1), book.Insert(word_cursor += word_step, ISA(1)));
-  book.COut();
-  
-  D_COUT("\nStep 2:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 2:\n" << Linef("---") << '\n');
   A_AVOW(ISY(2), book.Insert(word_cursor += word_step, IUA(2)));
-  book.COut();
-  D_COUT("\nStep 3:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 3:\n" << Linef("---") << '\n');
   A_AVOW(ISY(3), book.Insert(word_cursor += word_step, ISB(3)));
-  book.COut();
-  D_COUT("\nStep 4:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 4:\n" << Linef("---") << '\n');
   A_AVOW(ISY(4), book.Insert(word_cursor += word_step, IUB(4)));
-  book.COut();
-  D_COUT("\nStep 5:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 5:\n" << Linef("---") << 
+         "\nWill have 1-byte unused space.\n");
   A_AVOW(ISY(5), book.Insert(word_cursor += word_step, ISC(5)));
-  book.COut();
-  D_COUT("\nStep 6:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 6:\n" << Linef("---") << '\n');
   A_AVOW(ISY(6), book.Insert(word_cursor += word_step, IUC(6)));
-  book.COut();
-  D_COUT("\nStep 7:\n" << Charsf(book.This(), book.SizeBytes()));
+  D_COUT("\n\nStep 7:\n" << Linef("---") << '\n');
   A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD(7)));
   book.COut();
-  D_COUT("\nStep 8:\n" << Charsf(book.This(), book.SizeBytes()));
+
+  D_COUT("\n\nStep 8:\n" << Linef("---") << "\nTesting Factory.Grow...\n");
   A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD(8)));
   book.COut();
 
-  D_COUT("\n\nTesting Factory.Grow...\n");
 
   for (ISY i = ISY(test_word_count - 1);
        i < ISY(TTestWords<CHT>::WordsMax) - test_word_count; ++i) {

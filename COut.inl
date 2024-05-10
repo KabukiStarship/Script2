@@ -482,7 +482,7 @@ _::COut& operator<<(_::COut& o, _::Charsf item) {
 _::COut& operator<<(_::COut& o, _::Sizef item) {
   return _::TPrint<_::COut>(o, item);
 }
-inline _::COut& operator<<(_::COut& printer, _::ATypef item) {
+_::COut& operator<<(_::COut& printer, _::ATypef item) {
   return _::TPrint<_::COut>(printer, item);
 }
 /*

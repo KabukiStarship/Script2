@@ -97,6 +97,7 @@
     <ClInclude Include="Dic.hpp" />
     <ClInclude Include="Door.hpp" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="Error.hpp" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="File.hpp" />
