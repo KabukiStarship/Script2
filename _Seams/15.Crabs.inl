@@ -27,13 +27,13 @@ static const CHA* Crabs(const CHA* args) {
     BufferWords = BufferSize / sizeof(IUW),
     StackHeight = 8,
   };
-  IUW buffer[BufferWords], unpacked_expr[BufferWords];
+  IUW boofer[BufferWords], unpacked_expr[BufferWords];
   D_COUT("\n|  - Running OperationTests in address ranges: [0x"
-         << Hexf(&buffer[0]) << ":0x" << Hexf(&buffer[BufferWords - 1]));
+         << Hexf(&boofer[0]) << ":0x" << Hexf(&boofer[BufferWords - 1]));
 
   This a;
 
-  Crabs* crabs = CrabsInit(buffer, BufferSize, StackHeight, &a,
+  Crabs* crabs = CrabsInit(boofer, BufferSize, StackHeight, &a,
                                     unpacked_expr, BufferSize);
   CrabsPrint(crabs);
 

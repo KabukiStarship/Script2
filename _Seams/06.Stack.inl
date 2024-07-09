@@ -71,10 +71,10 @@ static const CHA* Stack(const CHA* args) {
   D_COUT(Headingf("Testing RAMCompare with offset sequential arrays..."));
 
   enum {
-    OffsetMax = 2 * WordByteCount,
+    OffsetMax = 2 * ALUByteCount,
     TestByteCount = 256,
     BufferSizeBytes = TestByteCount + 2 * OffsetMax,
-    BufferSizeWords = BufferSizeBytes >> ACPUBitCount,
+    BufferSizeWords = BufferSizeBytes >> ALUShiftCount,
   };
   IUW source[BufferSizeWords],
       destination[BufferSizeWords + OffsetMax];
@@ -90,7 +90,7 @@ static const CHA* Stack(const CHA* args) {
     for (ISN i = 0; i < TestByteCount; ++i) *cursor++ = ISA(i);
     while (cursor < s_end) *cursor++ = 0;
     //D_COUT(Charsf(source, cBufferSizeBytes));
-    // Copy those bytes into a buffer with an offset to exaustly test each 
+    // Copy those bytes into a boofer with an offset to exaustly test each 
     // memory layout variation modulo the word size.
     for (ISN d_offset = 0; d_offset < OffsetMax; ++d_offset) {
       cursor = TPtr<IUA>(destination);

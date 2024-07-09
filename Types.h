@@ -43,11 +43,11 @@ ISA ATypeCustomAlignMask(DTA type);
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct TypeWordValue {
-  DTW   type;   //< The ASCII data type word.
-  void* value;  //< Pointer to the value of the type.
+  DTW   type;         //< ASCII data type word.
+  const void* value;  //< Pointer to the value of the type.
 };
 
-inline ISA TypeTextFormat(DTW type);
+inline ISA ATypeTextFormat(DTW type);
 
 /* An ASCII Type-Value tuple.
 An TypeValue can only work with up to two CPU ALU words because when a CPU

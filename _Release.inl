@@ -27,10 +27,12 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_COUT_TABLE(item)
 #define D_COUT_MAP(item)
 #define D_COUT_BOOK(item)
-#define D_COUT_DICTIONARY(item)
+#define D_COUT_DIC(item)
 #define D_ARRAY_SAVE(origin, stop)
 #define D_ARRAY_FILL(origin, end_or_size, c)
 #define D_ARRAY_WIPE(origin, end_or_size)
+#define D_OBJ_WIPE(obj) 
+#define D_OBJ_ORIGIN_WIPE(origin) 
 #define D_ASSERT_INDEX(condition, index)
 #define A_ASSERT(condition) \
   if (!::_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)

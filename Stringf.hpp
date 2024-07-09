@@ -565,7 +565,7 @@ CHT* TSPrint(CHT* start, ISW count, CHB item) {
 /* Prints the given item to the string.
 @return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param start  Start of socket.
-@param count  Chars in the string buffer.
+@param count  Chars in the string boofer.
 @param item   Item to print. */
 template<typename CHT = CHR>
 CHT* TSPrint(CHT* start, ISW count, CHC item) {
@@ -774,7 +774,7 @@ inline ISN HexToByte(IUB h) {
 }
 
 /* Skips the given CHT in a s if there are any.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = CHR>
 inline CHT* TSTRSkimodulear(CHT* cursor, CHT skip_char) {
   return const_cast<const CHT*>(
@@ -976,8 +976,8 @@ CHT* TPrintBinary(CHT* start, CHT* stop, const void* item) {
 /* Prints the given item aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CHA upon success.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer.
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer.
 @param item  The item to printer.
 @param column_count The token_ of columns to align right to. */
 template<typename CHT = CHR>
@@ -1161,7 +1161,7 @@ const CHT* TSTRDecimalEnd(const CHT* start) {
 /* Skips all the chars in a given range.
 @return Nil upon failure or a pointer to the CHT after the last CHT in the
 given range.
-@param cursor  The first CHT in the buffer.
+@param cursor  The first CHT in the boofer.
 @param lower_bounds
 @param upper bounds*/
 template<typename CHT = CHR>
@@ -1176,7 +1176,7 @@ const CHT* TSTRSkimodulearsInRange(const CHT* cursor, CHT lower_bounds,
 /* Skips all the chars in a given range.
 @return Nil upon failure or a pointer to the CHT after the last CHT in the
 given range.
-@param cursor  The first CHT in the buffer.
+@param cursor  The first CHT in the boofer.
 @param lower_bounds
 @param upper bounds*/
 template<typename CHT = CHR>
@@ -1198,7 +1198,7 @@ inline CHT* TSTRSkipNumbers(CHT* cursor) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = const CHA>
 CHT* TSTRDecimalEnd(CHT* start) {
   const CHT* ptr = TPtr<const CHT>(start);
@@ -1206,8 +1206,8 @@ CHT* TSTRDecimalEnd(CHT* start) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 const CHT* TSTRDecimalEnd(const CHT* cursor, const CHT* stop) {
   if (!cursor || cursor >= stop) return nullptr;
@@ -1227,8 +1227,8 @@ const CHT* TSTRDecimalEnd(const CHT* cursor, const CHT* stop) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 inline CHT* TSTRDecimalEnd(CHT* cursor, CHT* stop) {
   return const_cast<CHT*>(TSTRDecimalEnd<CHT>(
@@ -1251,7 +1251,7 @@ const CHT* TSTRFloatStop(const CHT* start) {
 }
 
 /* Skips the given CHT in a s if there are any.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = CHR>
 const CHT* TSTRSkimodulear(const CHT* cursor, CHT skip_char) {
   if (cursor == nullptr) return nullptr;
@@ -1307,7 +1307,7 @@ inline CHT* TSTRSet(CHT* string) {
 }
 
 /* Searches fro the s line stop.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = CHR>
 const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = AConsoleWidth) {
   CHT c;
@@ -1328,16 +1328,16 @@ const CHT* TSTRLineEnd(const CHT* cursor, ISC column_count = AConsoleWidth) {
 }
 
 /* Searches fro the s line stop.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 CHT* TSTRLineEnd(CHT* cursor, ISC column_count = AConsoleWidth) {
   return const_cast<CHT*>(TSTRLineEnd(TPtr<const CHT>(cursor), column_count));
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param cursor       The first CHT in the buffer.
-@param stop         The last CHT in the buffer.
+@param cursor       The first CHT in the boofer.
+@param stop         The last CHT in the boofer.
 @param column_count In characters. */
 template<typename CHT = CHR>
 const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
@@ -1362,8 +1362,8 @@ const CHT* TSTRLineEnd(const CHT* cursor, const CHT* stop,
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param cursor      The first CHT in the buffer.
-@param stop        The last CHT in the buffer.
+@param cursor      The first CHT in the boofer.
+@param stop        The last CHT in the boofer.
 @param column_coun In characters. */
 template<typename CHT = CHR>
 inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
@@ -1373,7 +1373,7 @@ inline CHT* TSTRLineEnd(CHT* cursor, CHT* stop,
 }
 
 /* Scrolls over any whitespace.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = CHR>
 const CHT* TSTRSkipSpaces(const CHT* cursor) {
   if (!cursor) return nullptr;
@@ -1387,7 +1387,7 @@ const CHT* TSTRSkipSpaces(const CHT* cursor) {
 }
 
 /* Scrolls over any whitespace.
-@param cursor  The first CHT in the buffer. */
+@param cursor  The first CHT in the boofer. */
 template<typename CHT = CHR>
 CHT* TSTRSkipSpaces(CHT* cursor) {
   return const_cast<CHT*>(TSTRSkipSpaces<CHT>(cursor));
@@ -1395,7 +1395,7 @@ CHT* TSTRSkipSpaces(CHT* cursor) {
 
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the cursor query.
-@param cursor  The first CHT in the buffer.
+@param cursor  The first CHT in the boofer.
 @param query   A query string.  */
 template<typename CHT = CHR>
 const CHT* TSTRFind(const CHT* start, const CHT* query) {
@@ -1456,8 +1456,8 @@ const CHT* TSTRSkipSpaces(const CHT* cursor, const CHT* stop) {
 
 /* String skip spaces.
 @return Nil if there are no spaces to skip.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 inline CHT* TSTRSkipSpaces(CHT* cursor, CHT* stop) {
   return const_cast<CHT*>(TSTRSkipSpaces<CHT>(
@@ -1526,7 +1526,7 @@ CHT* TSTREquals(CHT* cursor, CHT* stop, const CHT* query) {
 
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
-@param cursor  The first CHT in the buffer.
+@param cursor  The first CHT in the boofer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(const CHT* cursor) {
@@ -1541,7 +1541,7 @@ BOL TSTRIsntEmpty(const CHT* cursor) {
 
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
-@param cursor  The first CHT in the buffer.
+@param cursor  The first CHT in the boofer.
 @desc A s is defined as empty if it is NIL or all whitespace. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(CHT* cursor) {
@@ -1550,8 +1550,8 @@ BOL TSTRIsntEmpty(CHT* cursor) {
 
 /* Checks to see if the cursor isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(const CHT* cursor, const CHT* stop) {
   if (!cursor) return false;
@@ -1575,14 +1575,14 @@ BOL TSTRIsntEmpty(const CHT* cursor, const CHT* stop) {
 
 /* Checks to see if the cursor isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param cursor  The first CHT in the buffer.
-@param stop    The last CHT in the buffer. */
+@param cursor  The first CHT in the boofer.
+@param stop    The last CHT in the boofer. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(CHT* cursor, const CHT* stop) {
   return TSTRIsntEmpty(TPtr<const CHT>(cursor), TPtr<const CHT>(stop));
 }
 
-/* Prints a cursor to the given buffer without */
+/* Prints a cursor to the given boofer without */
 template<typename CHT = CHR>
 CHT* TPrintWrap(CHT* cursor, CHT* stop, const CHT* string,
   ISW column_count = AConsoleWidth) {

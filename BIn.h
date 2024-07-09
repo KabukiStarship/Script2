@@ -32,7 +32,7 @@ typedef enum BInStates {
   cBInStatePackedPod,      //< State 12: Scanning plain-old-data.
 } BInState;
 
-/* B-Input ring buffer Slot.
+/* B-Input ring boofer Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct LIB_MEMBER BIn {
   ISC size,           //< The size of the socket.

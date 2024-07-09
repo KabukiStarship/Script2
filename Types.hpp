@@ -177,7 +177,7 @@ FPD: 12   0b01100   (0b011 << 2) | 0b00
 FPE: 16   0b10000   (0b100 << 2) | 0b00
 */
 template<typename FP, typename DT = DTB>
-constexpr DT CTypeFP() {
+constexpr DT CATypeFP() {
   return (CATypeSize<FP, DT>() << 2);
 }
 
@@ -189,7 +189,7 @@ IUD: 13   0b01101   (0b011 << 2) | 0b01
 IUE: 17   0b10001   (0b100 << 2) | 0b01
 */
 template<typename IU, typename DT = DTB>
-constexpr DT CTypeIU() {
+constexpr DT CATypeIU() {
   return (CATypeSize<IU, DT>() << 2) | 1;
 }
 
@@ -201,7 +201,7 @@ ISD: 14   0b01110   (0b011 << 2) | 0b10
 ISE: 18   0b10010   (0b100 << 2) | 0b10
 */
 template<typename IS, typename DT = DTB>
-constexpr DT CTypeIS() {
+constexpr DT CATypeIS() {
   return (CATypeSize<IS, DT>() << 2) | 2;
 }
 
@@ -210,15 +210,15 @@ CHB:  3   0b0011   (0b00 << 2) | 0b11
 CHC:  7   0b0111   (0b01 << 2) | 0b11
 CHD: 11   0b1011   (0b10 << 2) | 0b11
 CHE: 15   0b1111   (0b11 << 2) | 0b11
-*/
+
 template<typename CH, typename DT = DTB>
-constexpr DT CTypeCH() {
+constexpr DT CATypeCH() {
   return (CATypeSize<CH, DT>() << 2) | 3;
-}
+} */
 
 /* Extracts the UTF type.
 @return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
-inline ISA TypeTextFormat(DTW type) {
+inline ISA ATypeTextFormat(DTW type) {
   DTW core_type = type & ATypePODMask;
   if (core_type == 0) return -1;  //< then core_type < 32
   if (core_type <= _STC) {
@@ -259,8 +259,8 @@ inline DTW AlignmentMask(FPC item) { return 3; }
 inline DTW AlignmentMask(ISD item) { return 7; }
 inline DTW AlignmentMask(IUD item) { return 7; }
 inline DTW AlignmentMask(FPD item) { return 7; }
-inline DTW AlignmentMask(void* item) { return ACPUAlignMask; }
-inline DTW AlignmentMask(const void* item) { return ACPUAlignMask; }
+inline DTW AlignmentMask(void* item) { return ALUAlignMask; }
+inline DTW AlignmentMask(const void* item) { return ALUAlignMask; }
 
 /* Gets the type of the given item. */
 inline DTW TypeOf(CHA item) { return _CHA; }
@@ -322,7 +322,7 @@ ISA ATypeAlignMask(DTB type) {
   case 2: return AlignC;
   case 3: return AlignD;
   }
-  return ACPUAlignMask;
+  return ALUAlignMask;
 }
 
 /* Aligns the pointer up to the word boundry required by the type. */

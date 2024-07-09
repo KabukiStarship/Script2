@@ -53,24 +53,24 @@ void TestBook() {
   D_COUT("\n\nStep 0:\n" << Linef("---") << '\n');
 
   D_COUT("\n\nStep 1:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(1), book.Insert(word_cursor += word_step, ISA(1)));
+  A_AVOW(ISY(1), book.Insert(word_cursor += word_step, ISA('1')));
   D_COUT("\n\nStep 2:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(2), book.Insert(word_cursor += word_step, IUA(2)));
+  A_AVOW(ISY(2), book.Insert(word_cursor += word_step, IUA('2')));
   D_COUT("\n\nStep 3:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(3), book.Insert(word_cursor += word_step, ISB(3)));
+  A_AVOW(ISY(3), book.Insert(word_cursor += word_step, ISB('3')));
   D_COUT("\n\nStep 4:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(4), book.Insert(word_cursor += word_step, IUB(4)));
+  A_AVOW(ISY(4), book.Insert(word_cursor += word_step, IUB('4')));
   D_COUT("\n\nStep 5:\n" << Linef("---") << 
          "\nWill have 1-byte unused space.\n");
-  A_AVOW(ISY(5), book.Insert(word_cursor += word_step, ISC(5)));
+  A_AVOW(ISY(5), book.Insert(word_cursor += word_step, ISC('5')));
   D_COUT("\n\nStep 6:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(6), book.Insert(word_cursor += word_step, IUC(6)));
+  A_AVOW(ISY(6), book.Insert(word_cursor += word_step, IUC('6')));
   D_COUT("\n\nStep 7:\n" << Linef("---") << '\n');
-  A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD(7)));
+  A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD('7')));
   book.COut();
 
   D_COUT("\n\nStep 8:\n" << Linef("---") << "\nTesting Factory.Grow...\n");
-  A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD(8)));
+  A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD('8')));
   book.COut();
 
 

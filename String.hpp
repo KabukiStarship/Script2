@@ -31,14 +31,14 @@ struct TString {
 };
 
 /* The ASCII Data Type for the given CHT, CHA, CHB, or CHC. */
-template<typename CHT = CHR, typename DT = DTB>
-inline DT TTypeChar() {
+/*template<typename CHT = CHR, typename DT = DTB>
+inline DT TATypeCH() {
   return DT((sizeof(CHT) == 1) ? _CHA :
             (sizeof(CHT) == 2) ? _CHB :
             (sizeof(CHT) == 4) ? _CHC : 0);
-}
+}*/
 template<typename CHT = CHR, typename DT = DTB>
-constexpr DT CTypeChar() {
+constexpr DT CATypeCH() {
   return DT((sizeof(CHT) == 1) ? _CHA : 
             (sizeof(CHT) == 2) ? _CHB : 
             (sizeof(CHT) == 4) ? _CHC : 0);
@@ -160,7 +160,7 @@ BOL TStringGrow(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter) {
   IUW* origin = obj.origin;
   D_COUT("\n\nShit son, dez nutz; sizeof(ISZ):" << sizeof(ISZ));
   ISZ size     = TStringSize<ISC>(origin), //
-      new_size = SizeGrow(size);
+      new_size = ATypeGrow(size);
   #if SEAM == SCRIPT2_STRING
   COut("\nsize: ").Star() << size <<
        "\nnew_size: " << new_size;
@@ -232,7 +232,7 @@ void TStringPrint(Autoject& obj, TSPrinter<CHT, ISZ>& sprinter, T item) {
 /* An ASCII String that can auto-grow from stack to heap.
 
 The count of the string is defined as the maximimum chars that can fit in the
-buffer, including the nil-term CHA.
+boofer, including the nil-term CHA.
 
 This class is designed to take advantage of the behavior of the C++ operator
 overloads. When you have a string of overloads, the objects get destructed
@@ -267,25 +267,25 @@ class AString {
 
  public:
   static constexpr DTB Type() {
-    return CTypeVector(CTypeChar<CHT>(), _ARY, CATypeSize<ISZ>());
+    return CTypeVector(CATypeCH<CHT>(), _ARY, CATypeSize<ISZ>());
   }
 
   /* Constructs a String that auto-grows from stack to heap.
   @param factory RAMFactory to call when the String overflows. */
-  AString() : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString() : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
   }
 
   /* Constructs a String and prints the given item. */
-  AString(CHA item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(CHA item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(const CHA* item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(const CHA* item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
@@ -293,7 +293,7 @@ class AString {
 
 #if USING_UTF16 == YES_0
   /* Constructs a String and prints the given item. */
-  AString(const CHB* item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(const CHB* item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
@@ -302,70 +302,70 @@ class AString {
 
 #if USING_UTF32 == YES_0
   /* Constructs a String and prints the given item. */
-  AString(CHC item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(CHC item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 #endif
   /* Constructs a String and prints the given item. */
-  AString(const CHC* item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(const CHC* item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISA item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(ISA item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUA item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(IUA item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISB item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(ISB item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUB item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(IUB item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISC item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(ISC item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUC item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(IUC item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISD item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(ISD item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUD item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(IUD item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
@@ -373,7 +373,7 @@ class AString {
 
 #if USING_FPC == YES_0
   /* Constructs a String and prints the given item. */
-  AString(FPC item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(FPC item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
@@ -381,7 +381,7 @@ class AString {
 #endif
 #if USING_FPD == YES_0
   /* Constructs a String and prints the given item. */
-  AString(FPD item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(FPD item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
@@ -389,20 +389,20 @@ class AString {
 #endif
 
   /* Constructs a String and prints the given item. */
-  AString(Hexf item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(Hexf item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(Binaryf item) : obj_(Size_, TRAMFactory<Type()>().Init<BUF>()) {
+  AString(Binaryf item) : obj_(Size_, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
     sprinter_.stop = TSTRStop<CHT, ISZ>(This());
     Reset();
     Print(item);
   }
 
-  /* Resets the sprinter_ to the given word-aligned buffer. */
+  /* Resets the sprinter_ to the given word-aligned boofer. */
   inline void Reset() { sprinter_.Set(TStringReset<CHT, ISZ>(This())); }
 
   /* Wipes the given */
@@ -462,7 +462,7 @@ class AString {
   /* Returns the stop of the obj. */
   inline CHA* End() { return TArrayEnd<ISZ>(obj_); }
 
-  /* Calculates the space left in the buffer based on the sprinter_ pointers. */
+  /* Calculates the space left in the boofer based on the sprinter_ pointers. */
   inline ISZ SpaceLeft() { return sprinter_.SpaceLeft(); }
 
   /* Searches for the given querry, returning the end CHT of the qeurry in this

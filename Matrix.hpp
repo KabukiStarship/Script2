@@ -149,7 +149,7 @@ ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
 
 template<typename T, typename ISZ>
 inline ISZ TMatrixDimensionCountMax(ISZ count_max) {
-  count_max += sizeof(TStack<ISZ>) >> CBitWidth<ISZ>();
+  count_max += sizeof(TStack<ISZ>) >> CBitCount<ISZ>();
   return TAlignUpArray<ISZ>(count_max);
 }
 
@@ -168,7 +168,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   ISZ dimension_count = *dimensions;
   if (dimension_count < 0) return nullptr;
   ISZ size = (ISZ)sizeof(TStack<ISZ>) + dimension_count * sizeof(T);
-  IUW* socket = new IUW[size >> ACPUBitCount];
+  IUW* socket = new IUW[size >> ALUShiftCount];
   TStack<ISZ>* stack = TPtr<TStack<ISZ>>(socket);
   stack->size_array = 0;
   stack->size_stack = size;

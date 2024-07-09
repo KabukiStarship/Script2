@@ -20,7 +20,7 @@ LIB_MEMBER CHA* RAMFill(void* origin, ISW size_bytes, CHA fill_char = 0);
 #if SEAM >= SCRIPT2_STACK
 
 /* RAMFactory manages memory for ASCII Objects.
-@return A word-aligned buffer, rounding up if unaligned.
+@return A word-aligned boofer, rounding up if unaligned.
 @param autoject   A contiguous memory auto-object.
 @param size_bytes Autoject size in bytes. */
 typedef IUW* (*RAMFactory)(IUW* autoject, ISW size);
@@ -53,11 +53,11 @@ enum RAMFactoryError {
 };
 
 /* RAMFactory for Autojects on the program stack that doesn't delete the
-buffer. */
-LIB_MEMBER IUW* RAMFactoryStack(IUW* buffer, ISW size_bytes);
+boofer. */
+LIB_MEMBER IUW* RAMFactoryStack(IUW* boofer, ISW size_bytes);
 
-/* RAMFactory for Autojects on the heap that deletes a the buffer. */
-LIB_MEMBER IUW* RAMFactoryHeap(IUW* buffer, ISW size_bytes);
+/* RAMFactory for Autojects on the heap that deletes a the boofer. */
+LIB_MEMBER IUW* RAMFactoryHeap(IUW* boofer, ISW size_bytes);
 
 class Nil {
  public:

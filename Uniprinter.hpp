@@ -290,7 +290,7 @@ Printer& TPrintCenter(Printer& p, Stringf& value) {
     return TPrintAlignedHex<Printer>(p, value.Value(), byte_count >> 1,
       left_count, dot_count, right_count);
   }
-  ISW utf_format = _::TypeTextFormat(value.Type());
+  ISW utf_format = _::ATypeTextFormat(value.Type());
   switch (utf_format) {
 #if USING_UTF8 == YES_0
   case 1: {
@@ -383,7 +383,7 @@ Printer& TPrintRight(Printer& p, Stringf& value) {
       dot_count, 0);
   }
   ISW count = value.Count();
-  switch (_::TypeTextFormat(value.Type())) {
+  switch (_::ATypeTextFormat(value.Type())) {
 #if USING_UTF8 == YES_0
   case 1: {
     return _::TPrintRight<Printer, CHA>(p, value.STA(), count);
@@ -496,7 +496,7 @@ Printer& TPrintLine(Printer& p, CH token = '-', ISW column_count = 80) {
 template<typename Printer>
 Printer& TPrint(Printer& p, Linef& value) {
   ISW type = value.element.value.Type(),  //
-    utf_format = _::TypeTextFormat(type);
+    utf_format = _::ATypeTextFormat(type);
   switch (utf_format) {
 #if USING_UTF8 == YES_0
   case _STA: {
@@ -572,7 +572,7 @@ Printer& TPrintHeading(Printer& p, const CH* element,
 /* Prints the a formatted header. */
 template<typename Printer>
 Printer& TPrint(Printer& p, Headingf& value) {
-  switch (_::TypeTextFormat(value.element.Type())) {
+  switch (_::ATypeTextFormat(value.element.Type())) {
 #if USING_UTF8 == YES_0
   case 1: {
     return _::TPrintHeading<Printer, CHA>(p, value.element.STA(), value.style,
@@ -636,7 +636,7 @@ template<typename Printer>
 Printer& TPrint(Printer& p, Charsf& value) {
   auto element = value.element;
   ISW count = element.Count();
-  switch (_::TypeTextFormat(element.Type())) {
+  switch (_::ATypeTextFormat(element.Type())) {
 #if USING_UTF8 == YES_0
   case 1: {
     return _::TPrintChars<Printer, CHA>(p, element.ToSTA(), count);
@@ -907,28 +907,28 @@ struct TSPrinter {
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
-  @param count The number of CH(s) in the buffer. */
+  @param count The number of CH(s) in the boofer. */
   TSPrinter(CH* start, ISA size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
-  @param count The number of CH(s) in the buffer. */
+  @param count The number of CH(s) in the boofer. */
   TSPrinter(CH* start, ISB size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
-  @param count The number of CH(s) in the buffer. */
+  @param count The number of CH(s) in the boofer. */
   TSPrinter(CH* start, ISC size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the origin.
-  @param count The number of CH(s) in the buffer. */
+  @param count The number of CH(s) in the boofer. */
   TSPrinter(CH* start, ISD size) : start(start), stop(start + size - 1) {
     Reset();
   }
@@ -963,9 +963,9 @@ struct TSPrinter {
   }
 
   /* Sets the start pointer to the new_pointer. */
-  inline TSPrinter& Set(IUW* buffer) {
-    IS size = *TPtr<IS>(buffer);
-    IUW ptr = IUW(buffer) + sizeof(IS);
+  inline TSPrinter& Set(IUW* boofer) {
+    IS size = *TPtr<IS>(boofer);
+    IUW ptr = IUW(boofer) + sizeof(IS);
     CH* start_ptr = TPtr<CH>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;
@@ -1228,7 +1228,10 @@ namespace _ {
 /* Prints a summary of the type-value tuple with word-sized Data Type. */
 template<typename Printer>
 Printer& TPrint(Printer& p, TypeWordValue item) {
-  return TPrintAType<Printer>(p, item.type);
+  TPrintAType<Printer>(p, item.type);
+  p << ':';
+  TPrintATypeValue<Printer, DTW>(p, item.type, item->value);
+  return p;
 }
 
 /* Prints an ASCII Type to the Printer. */
@@ -1236,6 +1239,17 @@ template<typename Printer>
 Printer& TPrint(Printer& p, ATypef item) {
   return TPrintAType<Printer>(p, item.type);
 }
+
+// Prints a type and the binary with bit labels.
+template<typename Printer>
+Printer& TPrintATypeDebug(Printer& p, DTB type) {
+  return p << "\nAType:" << ATypef(type)
+           << "\n      0d" << type
+           << "\n      0x" << Hexf(type)
+           << "\n      0b" << Binaryf(type)
+           << "\n        MD^MT ^SWVT^POD^";
+}
+
 } // namespace _
 
 template<typename CH, typename IS>

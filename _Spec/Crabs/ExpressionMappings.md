@@ -5,19 +5,19 @@
 ### Expressions
 
 ```Script2
-  +-------------------------- Operation Push "=DIC2" is a function  
+  +-------------------------- Operation Push "=DICB" is a function  
   |                           with address stuff that creates a
   |                           dictionary of size 64KB bytes with a
   |                           maximum of 3 entries and pushes it
   |                           onto the stack. This Operation Push
   v                           gets written to the new Expression. */
-stuff =DIC4 65536 3 {
-/*  +--------------------------- This is a function with key "kUI2".
+stuff =DICD 65536 3 {
+/*  +--------------------------- This is a function with key "_UIB".
     |       +------------------- This is a 16-bit unsigned int.
     |       |
     v       v */
     +=IUB item1 1
-    +----------------------------------- Operation with key "+=DIC2" same as
+    +----------------------------------- Operation with key "+=DICB" same as
     |                                    "=DIC4" except it creates a nested
     |                                    dictionary except that it takes a
     |         +------------------------- Token (TKN) type.
@@ -25,7 +25,7 @@ stuff =DIC4 65536 3 {
     |         |     |   +--------------- Maximum of 3 members.
     |         |     |   |
     v         v     v   v */
-    +=DIC4 things 32768 3 {           /* This is a nested dictionary.
+    +=DICD things 32768 3 {           /* This is a nested dictionary.
          +------------------------------ This is a operation with key "STR"
          |      +----------------------- Dictionary key.
          |      |    +------------------ Max length 12.
@@ -38,17 +38,17 @@ stuff =DIC4 65536 3 {
         +=IUB (item2, 2)
         +=IUB item3 1
         -=Index 2                    //< Removes index 2:"item3".
-        +=kSI2 item3 -1
+        +=ISB item3 -1
         +=IUB item4 1
         /*< We can't add item4 because we set the max elements to 3.
         This won't generate an error but may generate an error message. */
-        Shrink  //< We just shrunk the DIC4 (i.e. chopped off the whitespace).
+        Shrink  //< We just shrunk the DICD (i.e. chopped off the whitespace).
 }
 
 /** Using macros to pass return values as arguments.
     Do you have a better abbreviation for a dictionary?
     Example Function:
-    FooBar <DIC4, IUA>:<NIL>
+    FooBar <DICB, IUA>:<NIL>
              ^     ^
              |     |
              |     +----- An 8-bit unsigned integer.

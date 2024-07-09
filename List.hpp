@@ -199,7 +199,7 @@ Printer& TListPrint(Printer& o, const TList<ISZ>* list) {
     << " count:" << count << Linef("\n+---");
 
   const ISZ* value_offsets = TListValueOffsets<ISZ>(list);
-  const DT*  dt_offsets   = TPtr<DT>(value_offsets + count_max);
+  const DT*  dt_offsets    = TPtr<DT>(value_offsets + count_max);
   for (ISZ index = 0; index < count; ++index) {
     ISZ data_offset = *value_offsets++;
     DT type = *dt_offsets++;
@@ -298,7 +298,7 @@ void TListClear(TList<ISZ>* list) {
 
 /* Gets an element of the Book by index. */
 template<LST_A>
-TypeWordValue TListGet(TList<ISZ>* list, ISZ index) {
+TypeWordValue TListGet(const TList<ISZ>* list, ISZ index) {
   if (index < 0 || index >= list->map.count) return { _NIL, nullptr };
   DTW type = DTW(*TPtr<DT>(list, sizeof(TList<ISZ>) +
     list->map.count_max * sizeof(ISZ) + index * sizeof(DT)));
@@ -450,7 +450,7 @@ index Codes:
 SCKPush: -1  Pushes the value onto the top of the type-value stacks.
 SCKPack: -2  Insert-packs the type-value into the first free memory slot.
 @return  ErrorInvalidIndex upon failure upon receiving an invalid index.
-        ErrorBufferOverflow upon values buffer overflow/out of memory.
+        ErrorBufferOverflow upon values boofer overflow/out of memory.
 @warning Does not check for invalid types! */
 template<typename T, LST_A>
 ISZ TListInsert(TList<ISZ>* list, T value, DT type, ISZ align_mask,
@@ -585,19 +585,19 @@ inline ISZ TListInsert(TList<ISZ>* list, FPC item, ISZ index, CHA* values_begin,
 template<LST_A>
 inline ISZ TListInsert(TList<ISZ>* list, IUD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, item, _IUD, ACPUAlignMask, index,
+  return TListInsert<IUD, ISZ, DT>(list, item, _IUD, ALUAlignMask, index,
                                    values_begin, values_end);
 }
 template<LST_A>
 inline ISZ TListInsert(TList<ISZ>* list, ISD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), _ISD, ACPUAlignMask,
+  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), _ISD, ALUAlignMask,
                                    index, values_begin, values_end);
 }
 template<LST_A>
 inline ISZ TListInsert(TList<ISZ>* list, FPD item, ISZ index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), _FPD, ACPUAlignMask,
+  return TListInsert<IUD, ISZ, DT>(list, ToUnsigned(item), _FPD, ALUAlignMask,
                                    index, values_begin, values_end);
 }
 
@@ -677,7 +677,7 @@ inline ISZ TListInsert(TList<ISZ>* list, BOL item, ISZ index = PSH) {
 // @return The index of the allocated type-value.
 template<LST_A>
 inline ISZ TListAlloc(TList<ISZ>* list, DTB type, ISZ size_bytes, ISZ index = PSH) {
-  COut("\n\nDez nutz:").Star() << ATypef(type) << "\n\n";
+  TPrintATypeDebug<COut>(COut().Star(), type);
   ISA align_mask = ATypeAlignMask(type);
   auto top = TAlignUp<ISZ>(list->top, align_mask);
   auto count     = list->map.count;
@@ -691,6 +691,21 @@ inline ISZ TListAlloc(TList<ISZ>* list, DTB type, ISZ size_bytes, ISZ index = PS
   list->top = top + size_bytes;
   list->map.count = count--;
   return count;
+}
+
+/* Inserts the item into the list at the given index. */
+template<LST_A>
+inline ISZ TListInsert(TList<ISZ>* list, DTB type, void* value, ISZ index = PSH) {
+  auto cursor = TPtr<ISZ>(list);
+  auto size_bytes = *cursor++;
+  auto top = *cursor++;
+  auto count_max = *cursor++;
+  auto count = *cursor++;
+  if (index < 0 || index >= count_max) return -ErrorInvalidIndex;
+  auto value_size_bytes = ATypeSizeBytes(value, type);
+  top = AlignUp(top, ATypeAlignMask(type));
+  if (size_bytes - top) return -ErrorStackOverflow;
+  // @todo Finish me
 }
 
 /*
@@ -722,15 +737,15 @@ inline void* TListPop(TList<ISZ>* list) {
   return TListRemove<ISZ>(list, list->map.count - 1);
 }
 
-/* Creates an Autoject buffer large enough to fit a List with the given. */
+/* Creates an Autoject boofer large enough to fit a List with the given. */
 template<LST_A>
 IUW* TListNew(ISZ size_data, ISZ count_max, RAMFactory ram) {
   ISZ count_max_align_lsb_mask = (sizeof(ISZ) / sizeof(DT)) - 1;
   count_max = AlignUp(count_max, count_max_align_lsb_mask);
   ISZ size_bytes = sizeof(TList<ISZ>) + count_max * (sizeof(ISZ) + sizeof(DT)) +
                    AlignUp(size_data);
-  IUW* buffer = ram(nullptr, ISW(size_bytes));
-  TList<ISZ>* list = TPtr<TList<ISZ>>(buffer);
+  IUW* boofer = ram(nullptr, ISW(size_bytes));
+  TList<ISZ>* list = TPtr<TList<ISZ>>(boofer);
   return TPtr<IUW>(TListInit<ISZ>(list, size_bytes, count_max));
 }
 
@@ -745,13 +760,13 @@ class AList {
   /* Constructs a list with a given count_max with estimated size_bytes. */
   AList(ISZ count_max = cCountMax_)
       : obj_(TListNew<ISZ, DT>(SizeBytes_, count_max,
-                                    TRAMFactory<Type()>().Init<BUF>()),
+             TRAMFactory<Type()>().Init<BUF>()),
              TRAMFactory<Type()>().Init<BUF>()) {}
 
   /* Constructs a List with the given size_bytes and count_max. */
   AList(ISZ count_max, ISZ size_bytes)
       : obj_(TListNew<ISZ, DT>(size_bytes, count_max,
-                                    TRAMFactory<Type()>().Init<BUF>()),
+             TRAMFactory<Type()>().Init<BUF>()),
              TRAMFactory<Type()>().Init<BUF>()) {}
 
   /* Inserts the given type-value tuple in the list at the given index. */

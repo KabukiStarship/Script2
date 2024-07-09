@@ -4,91 +4,64 @@
 
 ### Autojects
 
-Autojects (Automatic objects) are memory managed objects using the Socket Abstract Data Type and the SocketFactory.
+Autojects (Automatic objects) are word-aligned memory managed objects using the Socket Abstract Data Type and the RAMFactory.
 
-### SocketFactory
+### RAMFactory
 
-Memory management for Autojects is handled using a C-function pointer called an SocketFactory that uses the prototype:
-
-```C++
-typedef IUW* (*SocketFactory)(IUW* heap_memory, SIW size, DTW data_type);
-```
-
-A SocketFactory the following functions:
-
-1. Returning the SocketFactoryHeap
-2. Returning the ASCII Data Type
-3. Creating Memory.
-4. Deleting Memory.
-5. Growing Memory.
-6. Cloning Memory.
-
-#### Returning the SocketFactoryHeap
-
-In order to auto-grow from stack-to-heap a different SocketFactory is required because you can't delete stack memory.
+Memory management for Autojects is handled using a C-function pointer called an RAMFactory that uses the prototype:
 
 ```C++
-SocketFactory socket_factory = RamFactoryStack;
-IUW* buffer = socket_factory(nullptr, 0);
-SocketFactory ram_factory_heap = socket_factory
+typedef IUW* (*RAMFactory)(IUW* heap_memory, SIW size, DTW data_type);
 ```
 
-#### Returning the ASCII Data Type
+A RAMFactory the following functions:
 
-The data type is returned by passing in a negative number in as the size_bytes.
-
-```C++
-DTW data_type = reinterpret_cast<DTW>(socket_factory(nullptr, -1));
-```
+1. Creating Memory.
+2. Deleting Memory.
+3. Returning the RAMFactory Heap function.
+4. Returning the Data Type.
 
 #### Creating Memory
 
-Creating memory on the heap is done by passing in a nullptr for the `IUW* socket` parameter and the size of the block in bytes.
+Creating memory on the heap is done by passing in a nullptr for the `IUW* socket` parameter and the size of the block in bytes. Memory size values must be a multiple of the CPU word size and be at least one word, else it will either return nullptr if it's less than  one word or be rounded down one word if greater than one word. Please note that SCRIPT Spec does not support 8-bit memory sizes.
 
 ```C++
-SocketFactory socket_factory = RamFactoryHeap;
-IUW* buffer = socket_factory(nullptr, 123);
+RAMFactory socket_factory = RamFactoryHeap;
+IUW* boofer = socket_factory(nullptr, 123);
+boofer = socket_factor(nullptr,  9); // Rounds 9 down to 8 on all systems.
+boofer = socket_factor(nullptr,  1); // ERROR! Returns nullptr.
+boofer = socket_factor(nullptr, -1); // ERROR! Returns nullptr.
 ```
 
 #### Deleting Memory
 
-To delete memory you pass the heap_memory block to be deleted into the SocketFactory as follows:
+To delete memory you pass the pointer to the heap_memory block to be deleted into the RAMFactory as follows:
 
 ```C++
-SocketFactory socket_factory = RamFactoryHeap;
-IUW* buffer = socket_factory(nullptr, 123);
-socket_factory(buffer, 0); //< Deletes the buffer created in the last step.
+RAMFactory socket_factory = RamFactoryHeap;
+IUW* boofer = socket_factory(nullptr, 123);
+socket_factory(boofer, 0); //< Deletes the boofer created in the last step.
+```
+
+If the origin pointer is nil, the size_bytes is disregarded.
+
+#### Returning the RAMFactory Heap
+
+In order to auto-grow from stack-to-heap a different RAMFactory is required because you can't delete stack memory. Because an autoject's size must be at least one word, you can pass in any size_bytes value less than one word and it will return the 
+
+```C++
+RAMFactory socket_factory = RamFactoryStack;
+IUW* boofer = socket_factory(nullptr, 0);
+RAMFactory ram_factory_heap = socket_factory
 ```
 
 #### Getting the ASCII Data Type
 
-The ASCII Data Type of the Autoject is returned when nullptr and 0 are passed in as parameters respectively as follows:
+The ASCII Data Type of the Autoject is returned when the origin pointer is nil and the size_bytes is less than one word.
 
 ```C++
-DTW data_type_word = reinterpret_cast<DTW*>(socket_factory(buffer, 0));
-```
-
-#### Growing Memory
-
-To grow the memory you have two options. You can automatically double the size of the socket by passing in a pointer to a buffer and -2 for the size bytes.
-
-```C++
-IUW* autoject = socket_factory(buffer, -2);
-```
-
-Or you can specify the new size of the socket you would like by passing in the size as negative.
-
-```C++
-ISW size_new = 1024;
-IUW* buffer = socket_factory (buffer, -size_new);
-```
-
-#### Cloning Memory
-
-Cloning memory will create a new copy of that data on the heap. You can clone an autoject by passing in the buffer and -2 for the size_bytes.
-
-```C++
-IUW* clone = socket_factory(buffer, -3);
+DTW data_type_word = reinterpret_cast<DTW>(socket_factory(nullptr, -1));
+data_type_word = reinterpret_cast<DTW>(socket_factory(nullptr, 1));
 ```
 
 **[<< Previous Section: Conformance Targets](./ConformanceTargets.md) | [Next Section: SCRIPT Specification >>](./ScriptSpecification.md)**

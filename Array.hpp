@@ -48,8 +48,8 @@ namespace _ {
 //  WordBitCount = (sizeof(void*) == 8) ? 3 : (sizeof(void*) == 4) ? 2 : 1
 //};
 
-inline IUW* AutojectBeginSet(Autoject& obj, void* buffer) {
-  IUW* ptr = TPtr<IUW>(buffer);
+inline IUW* AutojectBeginSet(Autoject& obj, void* boofer) {
+  IUW* ptr = TPtr<IUW>(boofer);
   if (!ptr) return ptr;
   obj.origin = ptr;
   return ptr;
@@ -189,7 +189,7 @@ inline IS TSizeBytes(Autoject& autoject) {
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IS size) {
   IS size_aligned_up = AlignUp(TSizeBytes<T, IS, Class>(size));
-  return size_aligned_up >> ACPUBitCount;
+  return size_aligned_up >> ALUShiftCount;
 }
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IUW* origin) {
@@ -213,19 +213,19 @@ IUW* TRAMFactoryNew(RAMFactory factory, IS size) {
 /* Writes the size to the given word-aligned-down socket, making a new one if
 required. */
 template<typename T, typename IS>
-inline IUW* TArrayInit(Autoject& obj, IUW* buffer, IS size,
+inline IUW* TArrayInit(Autoject& obj, IUW* boofer, IS size,
                        RAMFactory ram) {
   D_ASSERT(ram);
   D_ASSERT(size >= CSizeMin<IS>());
   obj.ram = ram;
-  if (!buffer) {
+  if (!boofer) {
     IS buffer_size = AlignUp(IS(size * sizeof(T) + sizeof(TArray<IS>)));
-    buffer = ram(nullptr, buffer_size);
+    boofer = ram(nullptr, buffer_size);
   }
-  D_ARRAY_WIPE(buffer, size * sizeof(T) + sizeof(TArray<IS>));
-  TSizeSet<IS>(buffer, size);
-  obj.origin = buffer;
-  return buffer;
+  D_ARRAY_WIPE(boofer, size * sizeof(T) + sizeof(TArray<IS>));
+  TSizeSet<IS>(boofer, size);
+  obj.origin = boofer;
+  return boofer;
 }
 
 /* Writes the source TArray to the destination. */
@@ -252,7 +252,7 @@ IUW* TArrayWrite(IUW* destination, IUW* source, IS size) {
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
 template<typename T = IUA, typename IS = ISN, typename Class>
-IUW* TArrayClone(Autoject& obj) {
+IUW* TArrayCloneSlow(Autoject& obj) {
   RAMFactory factory = obj.ram;
   IUW* origin = obj.origin;
   // if (!factory || !origin) return nullptr;
@@ -266,13 +266,13 @@ IUW* TArrayClone(Autoject& obj) {
 /* Grows the size by up to double with exception of last grow,
 which grows to max size.
 @todo This design is because I'm having template issues.*/
-inline ISA SizeGrow(ISA size) { return size + size; }
-inline ISB SizeGrow(ISB size) { return size + size; }
-inline ISC SizeGrow(ISC size) { return size + size; }
-inline ISD SizeGrow(ISD size) { return size + size; }
+inline ISA ATypeGrow(ISA size) { return size + size; }
+inline ISB ATypeGrow(ISB size) { return size + size; }
+inline ISC ATypeGrow(ISC size) { return size + size; }
+inline ISD ATypeGrow(ISD size) { return size + size; }
 template<typename IS>
 inline IS TSizeGrow(IS size) {
-  return SizeGrow(size);
+  return ATypeGrow(size);
 }
 
 /* Checks of the given size is able to double in size.
@@ -295,17 +295,17 @@ inline BOL ATypeCanGrow(ISD size, ISD new_size) {
 template<typename T, typename IS, typename Class>
 BOL TArrayResize(Autoject& obj, IS new_size) {
   D_COUT("\nResizing Array to new_size:" << new_size);
-  IUW* buffer = obj.origin;
-  if (!buffer) return false;
-  IS size = TSizeBytes<IS>(buffer);
+  IUW* boofer = obj.origin;
+  if (!boofer) return false;
+  IS size = TSizeBytes<IS>(boofer);
   if (size < new_size) {
     if (size <= 0) return false;
-    TSizeSet<IS>(buffer, new_size);
+    TSizeSet<IS>(boofer, new_size);
     return true;
   }
   IUW* new_begin = obj.ram(nullptr, new_size);
   TSizeSet<IS>(new_begin, new_size);
-  TArrayWrite<T, IS, Class>(new_begin, buffer, new_size);
+  TArrayWrite<T, IS, Class>(new_begin, boofer, new_size);
   obj.origin = new_begin;
   return true;
 }
@@ -477,7 +477,7 @@ class TBUF {
   /* Sets the size to the new value. */
   template<typename ISW>
   inline IUW* SizeSet(ISW size) {
-    A_ASSERT((size & ACPUAlignMask) == 0)
+    A_ASSERT((size & ALUAlignMask) == 0)
     *TPtr<ISW>(words_) = size;
     return words_;
   }
@@ -498,26 +498,35 @@ class TBUF {
 };
 
 /* A Block of heap. */
-template<DTB Type>
+template<DTB Type, typename ISZ = ISR>
 class TRAMFactory {
-  /* RAMFactory for the Stack deletes a non-nil buffer. */
-  static IUW* RAMFactoryHeap(IUW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (IUW*)RAMFactoryHeap;
-    if (size_bytes < 0) return TPtr<IUW>(IUW(Type));
-    return _::RAMFactoryHeap(buffer, size_bytes);
+public:
+  /* Deletes a non-nil boofer or calls Stack(boofer, size_bytes). */
+  static IUW* Heap(IUW* boofer, ISW size_bytes) {
+    if (boofer) {
+      delete[] boofer;
+      return nullptr;
+    }
+    return Stack(boofer, size_bytes);
   }
 
-  /* RAMFactory for the Stack doesn't delete a non-nil buffer. */
-  static IUW* RAMFactoryStack(IUW* buffer, ISW size_bytes) {
-    if (size_bytes == 0) return (IUW*)RAMFactoryHeap;
-    if (size_bytes < 0) return TPtr<IUW>(Type);
-    return _::RAMFactoryStack(buffer, size_bytes);
+  /* RAMFactory Stack function allocates heap memory, returns the heap function,
+  or returns the type. */
+  static IUW* Stack(IUW* boofer, ISW size_bytes) {
+    if (boofer == nullptr && size_bytes == 0) 
+      return reinterpret_cast<IUW*>(&Heap);
+    if(size_bytes < sizeof(IUW)) return TPtr<IUW>(Type);
+
+    ISW size_words = AlignUp(size_bytes) >> ALUShiftCount;
+    boofer = new IUW[size_words];
+    *TPtr<ISZ>(boofer) = ISZ(size_bytes);
+    return boofer;
   }
 
   /* Gets the initial RAMFactory for the program stack or heap. */
   template<typename BUF>
   static constexpr RAMFactory RamFactoryInit() {
-    return (sizeof(BUF) == 0) ? RAMFactoryHeap : RAMFactoryStack;
+    return (sizeof(BUF) == 0) ? Heap : Stack;
   }
 
  public:
@@ -540,28 +549,28 @@ class TRAMFactory {
 /* An Auto-Array.
 Arrays may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. */
-template<typename T, typename IS = ISN, typename BUF = Nil>
+template<typename T, typename ISZ = ISN, typename BUF = Nil>
 class AArray {
   Autoject obj_;  //< Automatic Object.
-  BUF buffer_;    //< Optional buffer on the program stack.
+  BUF buffer_;    //< Optional boofer on the program stack.
 
  public:
   /* Gets the ASCII Data Type. */
-  static constexpr DTA Type() { return CATypeSize<IS, DTA>(_ARY); }
+  static constexpr DTA Type() { return CATypeSize<ISZ, DTA>(_ARY); }
 
   /* Constructs. */
   AArray() {
-    TArrayInit<T, IS>(obj_, buffer_.Words(), IS(buffer_.Size()),
-                       TRAMFactory<Type()>().Init<BUF>());
+    TArrayInit<T, ISZ>(obj_, buffer_.Words(), ISZ(buffer_.Size()),
+                      TRAMFactory<Type()>().Init<BUF>());
   }
 
   /* Creates a autoject with either statically or dynamically allocated
   memory based on the size can fit in the buffer_. If the buffer_ is
-  statically allocated but the size can't fit in the buffer a new block of
+  statically allocated but the size can't fit in the boofer a new block of
   dynamic memory will be created. */
-  AArray(IS size, RAMFactory ram = nullptr) {
-    TArrayInit<T, IS>(obj_, buffer_.Words(), size,
-                       TRAMFactory<Type()>().Init<BUF>(ram));
+  AArray(ISZ size, RAMFactory ram = nullptr) {
+    TArrayInit<T, ISZ>(obj_, buffer_.Words(), size,
+                      TRAMFactory<Type()>().Init<BUF>(ram));
   }
 
   /* Stores the origin and ram to the obj_. */
@@ -579,7 +588,7 @@ class AArray {
   /* Returns the buffer_. */
   inline IUW* Origin() { return obj_.origin; }
 
-  template<typename T = TStack<IS>>
+  template<typename T = TStack<ISZ>>
   inline T OriginAs() {
     return reinterpret_cast<T>(Origin());
   }
@@ -589,23 +598,23 @@ class AArray {
   inline IUW* OriginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
 
   /* Gets the ASCII Object size in elements. */
-  inline IS Size() { return TSize<IS>(obj_.origin); }
+  inline ISZ Size() { return TSize<ISZ>(obj_.origin); }
 
   /* Gets the total ASCII Object size in bytes. */
-  template<typename Class = TArray<IS>>
-  inline IS SizeBytes() {
-    return TSizeBytes<T, IS, Class>(AJT());
+  template<typename Class = TArray<ISZ>>
+  inline ISZ SizeBytes() {
+    return TSizeBytes<T, ISZ, Class>(AJT());
   }
 
   /* Gets the total ASCII Object size in words. */
-  template<typename Class = TArray<IS>>
-  inline IS SizeWords() {
-    return TSizeWords<T, IS, Class>(AJT());
+  template<typename Class = TArray<ISZ>>
+  inline ISZ SizeWords() {
+    return TSizeWords<T, ISZ, Class>(AJT());
   }
 
   /* Returns the start of the OBJ. */
   inline T* Start() {
-    IUW ptr = IUW(obj_.origin) + sizeof(TArray<IS>);
+    IUW ptr = IUW(obj_.origin) + sizeof(TArray<ISZ>);
     return TPtr<T>(ptr);
   }
 
@@ -618,27 +627,27 @@ class AArray {
   inline Autoject& AJT() { return obj_; }
 
   /* Gets the TArray<ISZ> for this object. */
-  inline TArray<IS>* Array() {
-    return TPtr<TArray<IS>>(obj_.origin);
+  inline TArray<ISZ>* Array() {
+    return TPtr<TArray<ISZ>>(obj_.origin);
   }
 
   /* Attempts to grow the this autoject.
   @return false if the grow op failed. */
-  inline BOL CanGrow() { return ATypeCanGrow<IS>(obj_); }
+  inline BOL CanGrow() { return ATypeCanGrow<ISZ>(obj_); }
 
   /* Doubles the size of the obj_ array. */
   template<typename Class>
   inline void Grow() {
-    TArrayGrow<T, IS, Class>(obj_);
+    TArrayGrow<T, ISZ, Class>(obj_);
   }
 
-  /* Returns true if the buffer is a Socket and false if it's a Nil. */
+  /* Returns true if the boofer is a Socket and false if it's a Nil. */
   static constexpr BOL UsesStack() { return sizeof(buffer_) != 0; }
 
   /* Prints this autoject to the given printer. */
   template<typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TArrayPrint<T, IS>(o, Array());
+    return TArrayPrint<T, ISZ>(o, Array());
   }
 
   void CPrint() { PrintTo<_::COut>(_::StdOut()); }

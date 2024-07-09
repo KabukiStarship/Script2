@@ -216,7 +216,7 @@ TypeValue::TypeValue(const void* item, DTW type) : type_(type), word_2_(0) {
 
 DTW TypeValue::Type() { return type_; }
 
-DTW TypeValue::UnicodeFormat() { return TypeTextFormat(type_); }
+DTW TypeValue::UnicodeFormat() { return ATypeTextFormat(type_); }
 
 void* TypeValue::WordPTR() { return &word_; }
 

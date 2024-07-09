@@ -724,78 +724,78 @@ void Stringf::Print(const CHC* item) {
 #endif
 
 void Stringf::Print(CHA item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + LengthMax, item);
+  CHA* boofer = TPtr<CHA>(buffer_);
+  _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = buffer_;
 }
 
 #if USING_UTF16 == YES_0
 void Stringf::Print(CHB item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + LengthMax, item);
+  CHA* boofer = TPtr<CHA>(buffer_);
+  _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = buffer_;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(CHC item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  _::SPrint(buffer, buffer + LengthMax, item);
+  CHA* boofer = TPtr<CHA>(buffer_);
+  _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 void Stringf::Print(ISC item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(IUC item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(ISD item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(IUD item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Print(FPC item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  CHA* boofer = TPtr<CHA>(buffer_);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 #if USING_FPD == YES_0
 void Stringf::Print(FPD item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  CHA* boofer = TPtr<CHA>(buffer_);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 
@@ -807,12 +807,12 @@ void Stringf::PrintTME(TMC item, IUC subsecond_tick) {}
 void Stringf::PrintTMD(TMD item) {}
 
 void Stringf::Print(ATypef item) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(buffer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(buffer, buffer + LengthMax, item);
+  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = item.type;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(TypeValue item) {

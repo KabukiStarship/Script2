@@ -43,7 +43,7 @@ class LIB_MEMBER CIn {
   };
 
   enum {
-    BufferSizeMin = 2,  //< This min size of a string buffer.
+    BufferSizeMin = 2,  //< This min size of a string boofer.
   };
 
   /* Pauses until any key is pressed. */
@@ -51,7 +51,7 @@ class LIB_MEMBER CIn {
 
 #if USING_UTF8 == YES_0
   CIn(CHA& result);
-  /* CIns a string with a larger buffer than the */
+  /* CIns a string with a larger boofer than the */
   CIn(CHA* result, ISW buffer_size);
 #endif
 #if USING_UTF16 == YES_0

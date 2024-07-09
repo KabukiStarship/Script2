@@ -119,7 +119,7 @@ LIB_MEMBER const CHA* SScan(const CHA* string, CHC& character);
 /* Prints a UTF-32 character to the string terminated at the stop.
 @return  Nil upon failure or a pointer to the nil-term CHT upon success.
 @param string    The start of the string.
-@param stop      The last CHA in the string buffer.
+@param stop      The last CHA in the string boofer.
 @warning This algorithm is designed to fail if the socket is not a valid socket
 with one or more bytes in it. */
 LIB_MEMBER CHB* SPrint(CHB* string, CHB* stop, CHC character);
@@ -133,7 +133,7 @@ LIB_MEMBER const CHB* SScan(const CHB* string, CHC& character);
 #if USING_UTF32 == YES_0
 /* Prints a character to the string.
 @return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param stop The last character in the string buffer. */
+@param stop The last character in the string boofer. */
 LIB_MEMBER CHA* SPrint(CHA* string, CHA* stop, CHB character);
 
 /* Prints a Unicode character to the given string.
@@ -204,7 +204,7 @@ struct Hexf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
   Hexf(const void* item, ISW size);
-  /* Stores the given item to the buffer and stores the size. */
+  /* Stores the given item to the boofer and stores the size. */
   Hexf(const void* item);
   Hexf(ISA item);
   Hexf(IUA item);
@@ -229,7 +229,7 @@ struct Hexf {
 struct LIB_MEMBER Binaryf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
-  /* Stores the given item to the buffer and store the size. */
+  /* Stores the given item to the boofer and store the size. */
   Binaryf(const void* item);
   Binaryf(const void* item, ISW size);
   Binaryf(ISA item);
@@ -274,7 +274,7 @@ frame in chained operator overloads.
 class LIB_MEMBER Stringf {
  public:
   enum {
-    // Max length of the buffer in ALU words.
+    // Max length of the boofer in ALU words.
     BufferWordCount = (sizeof(void*) == 2) ? 5
                     : (sizeof(void*) == 4) ? 6 
                     : (sizeof(void*) == 8) ? 5 : 1,
@@ -286,11 +286,11 @@ class LIB_MEMBER Stringf {
   const void* string_;  // Pointer to a string or the buffer_.
   ISW count_;           //< The character count.
   DTW type_;            //< The ASCII string Type, STA, STB, or STC.
-  IUW buffer_[BufferWordCount];  //< String buffer for the token.
+  IUW buffer_[BufferWordCount];  //< String boofer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
-  to the buffer. */
+  to the boofer. */
   Stringf();
 
   /* Sets the String_ to the given pointer and stores the count. */
@@ -399,7 +399,7 @@ class LIB_MEMBER Stringf {
 
   //void Print(TypeValue item);
 
-  /* Stores the item to the first word of the buffer and the negative of the
+  /* Stores the item to the first word of the boofer and the negative of the
   count. */
   void Hex(CHA item, ISW count = 80);
 #if USING_UTF16 == YES_0
@@ -455,7 +455,7 @@ struct LIB_MEMBER Centerf {
   Centerf(FPD item, ISW count = AConsoleWidth);
 #endif
 
-  /* Stores the item to the first word of the buffer and the negative of the
+  /* Stores the item to the first word of the boofer and the negative of the
   count. */
   Centerf& Hex(CHA item, ISW count = 80);
 #if USING_UTF16 == YES_0
@@ -510,7 +510,7 @@ struct LIB_MEMBER Rightf {
   Rightf(FPD item, ISW count = AConsoleWidth);
 #endif
 
-  /* Stores the item to the first word of the buffer and the negative of the
+  /* Stores the item to the first word of the boofer and the negative of the
   count. */
   Rightf& Hex(CHA item, ISW count = 80);
 #if USING_UTF16 == YES_0
