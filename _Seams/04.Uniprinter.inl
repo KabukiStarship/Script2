@@ -179,8 +179,8 @@ static const char* TestATypefPOD() {
   // functions that return Centerf and Right respectivly. I'm not very conserned
   // about the types being printed right so much as I am in testing said
   // funcationality.
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nPOD types...\n");
   for (DTB i = 1 << 0; i < 32; ++i) {
@@ -191,8 +191,8 @@ static const char* TestATypefPOD() {
 }
 
 static const char* TestATypefARY() {
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nARY types...\n");
   for (DTB i = 0; i < 32; ++i) {
@@ -212,8 +212,8 @@ static const char* TestATypefARY() {
 }
 
 static const char* TestATypefVHT() {
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nVHT types...\n");
   for (DTB i = 0; i < 32; ++i) {
@@ -233,8 +233,8 @@ static const char* TestATypefVHT() {
 }
 
 static const char* TestATypefSCK() {
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nSCK types...\n");
   for (DTB i = 0; i < 32; ++i) {
@@ -254,8 +254,8 @@ static const char* TestATypefSCK() {
 }
 
 static const char* TestATypefMTX() {
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nMTX types...\n");
   for (DTB i = 0; i < ATypePODCount; ++i) {
@@ -276,8 +276,8 @@ static const char* TestATypefMTX() {
 }
 
 static const char* TestATypeMaps() {
-  CHA buffer[256] = {};
-  TSPrinter<CHA, ISW> p(buffer, 1024);
+  CHA boofer[256] = {};
+  TSPrinter<CHA, ISW> p(boofer, 1024);
 
   D_COUT("\n\nMap types...\n");
   const DTB Step = 8;

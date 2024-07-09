@@ -248,7 +248,7 @@ ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
            "\n       key_offset:" << TDelta<>(destination, keys));
 
     if (!TSPrintString<CHT>(destination, keys, key)) {
-      D_COUT("\nKey buffer overflow printing string when count:0");
+      D_COUT("\nKey boofer overflow printing string when count:0");
       return CInvalidIndex<ISY>();
     }
     ISZ key_offset = ISZ(keys - destination);
@@ -268,7 +268,7 @@ ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
 
   ISZ key_offset = ISZ(keys - destination);
   if (!TSPrintString<CHT>(destination, keys, key)) {
-    D_COUT("\nKey buffer overflow printing key.");
+    D_COUT("\nKey boofer overflow printing key.");
     return CInvalidIndex<ISY>();
   }
   key_offsets[count] = key_offset;

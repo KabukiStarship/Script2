@@ -38,13 +38,26 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_COUT_MAP(item) ::_::TMapPrint<COut, D, ISZ>(StdOut(), item)
 #define D_COUT_BOOK(item) \
   ::_::TBookPrint<COut, CHT, ISZ, ISY>(StdOut(), item)
-#define D_COUT_DICTIONARY(item) \
+#define D_COUT_DIC(item) \
   ::_::TDicPrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
   Socket socket_to_print(origin, end_or_size)
 #define D_ARRAY_FILL(origin, end_or_size, c) \
   ::_::RAMFill(cursor, end_or_size, c)
 #define D_ARRAY_WIPE(origin, end_or_size) ::_::RAMFill(origin, end_or_size)
+#define D_OBJ_ORIGIN_WIPE(origin) { \
+  auto dez_nutz_in_your_mom =  ::_::TPtr<ISZ>(origin); \
+  auto size_of_dez_nutz_in_your_mom = *(dez_nutz_in_your_mom + 1); \
+  ::_::RAMFill(dez_nutz_in_your_mom + 1, \
+               size_of_dez_nutz_in_your_mom - sizeof(ISZ));\
+}
+#define D_OBJ_WIPE(obj) { \
+  auto dez_nutz_into_your_mom_origin = ::_::TPtr<ISZ>(obj.origin); \
+  auto dez_nutz_into_your_mom = \
+    ::_::TPtr<ISZ>(dez_nutz_into_your_mom); \
+  ::_::RAMFill(dez_nutz_into_your_mom + 1, \
+               dez_nutz_into_your_mom - sizeof(ISZ));\
+}
 #define A_CHECK(condition) \
   if (!::_::Test(condition)) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define A_COMPARE(a, b)                            \

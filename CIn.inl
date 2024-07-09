@@ -36,10 +36,10 @@ constexpr ISW CSignedDigitsMax() {
 
 template<typename IS, typename IU>
 BOL TCInSigned(IS& result) {
-  CHA buffer[CSignedDigitsMax<IS>()] = {};
+  CHA boofer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::StateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
+  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IS>();
   while (state != CIn::StateSuccess) {
     if (state == CIn::StateBaseSign) {
       c = CIn::ScanKey();
@@ -54,14 +54,14 @@ BOL TCInSigned(IS& result) {
       if (!c) break;
     }
   }
-  return TScanSigned<IS, IU, CHA>(buffer, result) != 0;
+  return TScanSigned<IS, IU, CHA>(boofer, result) != 0;
 }
 
 template<typename IU>
 BOL TCInUnsigned(IU& result) {
-  CHA buffer[CSignedDigitsMax<IU>()] = {};
+  CHA boofer[CSignedDigitsMax<IU>()] = {};
   ISN c, state = CIn::StateBaseValue;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IU>();
+  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IU>();
   while (state != CIn::StateSuccess) {
     if (cursor++ >= end) return false;
     c = (CHA)CIn::ScanKey();
@@ -69,7 +69,7 @@ BOL TCInUnsigned(IU& result) {
     *cursor++ = (CHA)c;
     if (!c) break;
   }
-  return TScanUnsigned<IU, CHA>(buffer, result) != 0;
+  return TScanUnsigned<IU, CHA>(boofer, result) != 0;
 }
 
 template<typename CHT>
@@ -88,10 +88,10 @@ inline BOL TCInString(CHT* result, ISW buffer_size) {
 template<typename FP = FPW, typename IS = ISW, typename IU = IUW,
          typename CHT = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CHA buffer[CSignedDigitsMax<IS>()] = {};
+  CHA boofer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::StateBaseSign;
-  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
+  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IS>();
   while (state != CIn::StateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
@@ -129,7 +129,7 @@ inline BOL TCInFloatingPoint(FP& result) {
       }
     }
   }
-  return false;  // TScanFloat<FP, IS, IU, CHA>(buffer, result) != 0;
+  return false;  // TScanFloat<FP, IS, IU, CHA>(boofer, result) != 0;
 }
 
 ISN IsYesNo(const CHA* string) { return TSTRIsYesNo<CHA>(string); }

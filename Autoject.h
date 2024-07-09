@@ -17,9 +17,9 @@ struct Autoject;
 }
 
 /* RAMFactory manages memory for ASCII Objects.
-@return A word-aligned buffer, rounding up if unaligned.
+@return A word-aligned boofer, rounding up if unaligned.
 @param obj  A block of word-aligned heap memory.
-@param size The size of the buffer to create in bytes. */
+@param size The size of the boofer to create in bytes. */
 typedef IUW* (*RAMFactory)(IUW* obj, ISW size);
 
 namespace _ {
@@ -56,7 +56,7 @@ LIB_MEMBER IUW* RAMFactoryHeap(IUW* obj, ISW size_bytes);
 /* Creates a block of heap memory. */
 LIB_MEMBER IUW* RAMFactoryStack(IUW* ptr, ISW size_bytes);
 
-LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* buffer);
+LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* boofer);
 
 /* Deletes the given obj using the obj.factory. */
 LIB_MEMBER void Delete(Autoject& obj);

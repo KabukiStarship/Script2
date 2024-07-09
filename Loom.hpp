@@ -44,6 +44,8 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 +============================+  + 0xN
 
 @todo Look into adding variable for average UTF-8 and UTF-16 character length.
+@todo Double check why I'm not growing the offsets up and strings down. Cache 
+optimization?
 */
 
 /* An array of Strings. */
@@ -118,7 +120,7 @@ inline ISZ TLoomKeysSize(ISY count_max, ISZ average_length_string =
           count_max * sizeof(ISY) + sizeof(TLoom<LOM_P>);
 }
 
-/* Returns the pointer to the first character in the loom string buffer. */
+/* Returns the pointer to the first character in the loom string boofer. */
 template<LOM_A, typename T = IUA>
 inline const T* TLoomStart(const TLoom<ISZ, ISY>* loom, ISY count_max) {
   return TPtr<T>(&TStackStart<ISZ, ISY>(&loom->map)[count_max]);
@@ -161,7 +163,7 @@ inline T * TLoomTop(const TLoom<ISZ, ISY>*loom) {
     TLoomTop<LOM_P>(CPtr<TLoom<ISZ, ISY>>(loom), loom->size_bytes));
 }
 
-/* Calculates the amount of free space left in the buffer */
+/* Calculates the amount of free space left in the boofer */
 template<LOM_A>
 inline ISZ TLoomFreeSpace(const TLoom<ISZ, ISY>* loom) {
   D_COUT("\n\nTLoomFreeSpace::loom->size_bytes:" << loom->size_bytes << "\n\n");
@@ -173,7 +175,7 @@ template <LOM_A>
 const CHT* TLoomGet(const TLoom<ISZ, ISY>* loom, ISY index) {
   D_ASSERT(loom);
   if (index < 0 || index >= loom->map.count) return nullptr;
-  return TPtr<CHT>(loom, TStackStart<ISZ, ISY>(&loom->map)[index]);
+  return TPtr<const CHT>(loom, TStackStart<ISZ, ISY>(&loom->map)[index]);
 }
 template <LOM_A>
 CHT* TLoomGet(TLoom<ISZ, ISY>* loom, ISY index) {
@@ -182,14 +184,14 @@ CHT* TLoomGet(TLoom<ISZ, ISY>* loom, ISY index) {
 
 /* Prints the Loom to the stream. */
 template <typename Printer, LOM_A>
-Printer& TLoomPrint(Printer& o, TLoom<ISZ, ISY>* loom) {
+Printer& TLoomPrint(Printer& o, const TLoom<ISZ, ISY>* loom) {
   ISY count = loom->map.count;
   // CHT, ISZ, ISY
   o << "\nLoom<CH" << CATypeSWCH<CHA>() << ", IS" << CATypeSWCH<ISZ>() << ", IS"
     << CATypeSWCH<ISY>() << "> size:" << loom->size_bytes
     << " top:" << loom->top << " count_max:" << loom->map.count_max
     << " count:" << count;
-  ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
+  const ISZ* offsets = TStackStart<ISZ, ISY>(&loom->map);
   for (ISY i = 0; i < count; ++i)
     o << '\n'
       << i << ".) \"" << TLoomGet<LOM_P>(loom, i) << "\":" << offsets[i];
@@ -323,7 +325,7 @@ BOL TLoomGrow(Autoject& obj) {
   auto loom = TPtr<TLoom<ISZ, ISY>>(obj.origin);
   A_ASSERT(loom);
   ISZ size = loom->size_bytes,
-      new_size = SizeGrow(size);
+      new_size = ATypeGrow(size);
   if (!ATypeCanGrow(size, new_size)) return false;
   ISY count_max = loom->map.count_max;
 

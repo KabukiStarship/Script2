@@ -153,26 +153,57 @@ ISN size_words = size_bytes >> TBitCount<ISN> ()
 @endcode
 */
 template<typename T, typename IS = ISW>
-constexpr IS CBitWidth() {
+constexpr IS CBitCount() {
+  IS size = sizeof(IS), 
+     count = 1,
+     b = 1;
+  while (size < b << count) ++count;
+  return count;
   /*
-  IS bit_count = 0,
-     value = 1;
-  while (sizeof(IS) <= value) {
-    ++bit_count;
-    value = value << 1;
+  IS b = 1;
+  if (size < b << 8) { // 1-8
+    if (size < b << 4) { // 1-4
+      if (size < b << 2) {
+        if (size < b << 1) return 1;
+        else return 2;
+      } else {
+        if (size < b << 3) return 3;
+        else return 4;
+      }
+    }
+    else { // 5-8
+      if (size < b << 6) {
+        if (size < b << 5) return 5;
+        else return 6;
+      } else {
+        if (size < b << 7) return 7;
+        else return 8;
+      }
+    }
+  } else { // 9-16
+    if (size < b << 12) { // 9-12
+      if (size < b << 10) {
+        if (size < b << 9) return 9;
+        else return 10;
+      }
+      else {
+        if (size < b << 11) return 11;
+        else return 12;
+      }
+    }
+    else { // 13-16
+      if (size < b << 14) {
+        if (size < b << 13) return 13;
+        else return 14;
+      }
+      else {
+        if (size < b << 15) return 15;
+        else return 16;
+      }
+    }
   }
-  return bit_count;
+  return 0;
   */
-  return (sizeof(IS) ==  1) ? 0
-       : (sizeof(IS) <=  2) ? 1
-       : (sizeof(IS) <=  4) ? 2
-       : (sizeof(IS) <=  8) ? 3 
-       : (sizeof(IS) <= 16) ? 4 
-       : (sizeof(IS) <= 32) ? 5 
-       : (sizeof(IS) <= 64) ? 6 
-       : (sizeof(IS) <= 128) ? 7 
-       : (sizeof(IS) <= 256) ? 8 
-       : (sizeof(IS) <= 512) ? 9 : 10;
 }
 
 template<typename DT = DTB, DT dt>
@@ -235,60 +266,60 @@ unsgiend_example = AlignUp<ISC, IUB, IUB> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (ISA) - 1) = value
 @endcode */
-inline ISA AlignUp(ISA value, ISA align_mask = ACPUAlignMask) {
+inline ISA AlignUp(ISA value, ISA align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-inline IUA AlignUp(IUA value, IUA align_mask = ACPUAlignMask) {
+inline IUA AlignUp(IUA value, IUA align_mask = ALUAlignMask) {
   return IUA(AlignUp(ISA(value), ISA(align_mask)));
 }
-inline ISB AlignUp(ISB value, ISB align_mask = ACPUAlignMask) {
+inline ISB AlignUp(ISB value, ISB align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-inline IUB AlignUp(IUB value, IUB align_mask = ACPUAlignMask) {
+inline IUB AlignUp(IUB value, IUB align_mask = ALUAlignMask) {
   return value + (IUB(-ISB(value)) & align_mask);
 }
-inline ISC AlignUp(ISC value, ISC align_mask = ACPUAlignMask) {
+inline ISC AlignUp(ISC value, ISC align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-inline IUC AlignUp(IUC value, IUC align_mask = ACPUAlignMask) {
+inline IUC AlignUp(IUC value, IUC align_mask = ALUAlignMask) {
   return value + (IUC(-ISC(value)) & align_mask);
 }
-inline ISD AlignUp(ISD value, ISD align_mask = ACPUAlignMask) {
+inline ISD AlignUp(ISD value, ISD align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-inline IUD AlignUp(IUD value, IUD align_mask = ACPUAlignMask) {
+inline IUD AlignUp(IUD value, IUD align_mask = ALUAlignMask) {
   return value + (IUD(-ISD(value)) & align_mask);
 }
-constexpr ISA CAlignUp(ISA value, ISA align_mask = ACPUAlignMask) {
+constexpr ISA CAlignUp(ISA value, ISA align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUA CAlignUp(IUA value, IUA align_mask = ACPUAlignMask) {
+constexpr IUA CAlignUp(IUA value, IUA align_mask = ALUAlignMask) {
   return IUA(CAlignUp(ISA(value), ISA(align_mask)));
 }
-constexpr ISB CAlignUp(ISB value, ISB align_mask = ACPUAlignMask) {
+constexpr ISB CAlignUp(ISB value, ISB align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUB CAlignUp(IUB value, IUB align_mask = ACPUAlignMask) {
+constexpr IUB CAlignUp(IUB value, IUB align_mask = ALUAlignMask) {
   return value + (IUB(-ISB(value)) & align_mask);
 }
-constexpr ISC CAlignUp(ISC value, ISC align_mask = ACPUAlignMask) {
+constexpr ISC CAlignUp(ISC value, ISC align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUC CAlignUp(IUC value, IUC align_mask = ACPUAlignMask) {
+constexpr IUC CAlignUp(IUC value, IUC align_mask = ALUAlignMask) {
   return value + (IUC(-ISC(value)) & align_mask);
 }
-constexpr ISD CAlignUp(ISD value, ISD align_mask = ACPUAlignMask) {
+constexpr ISD CAlignUp(ISD value, ISD align_mask = ALUAlignMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUD CAlignUp(IUD value, IUD align_mask = ACPUAlignMask) {
+constexpr IUD CAlignUp(IUD value, IUD align_mask = ALUAlignMask) {
   return value + (IUD(-ISD(value)) & align_mask);
 }
 
-inline void* AlignUpPTR(void* pointer, ISW mask = ACPUAlignMask) {
+inline void* AlignUpPTR(void* pointer, ISW mask = ALUAlignMask) {
   ISW address = ISW(pointer);
   return TPtr<void>(CAlignUp(address, mask));
 }
-inline const void* AlignUpPTR(const void* pointer, ISW mask = ACPUAlignMask) {
+inline const void* AlignUpPTR(const void* pointer, ISW mask = ALUAlignMask) {
   ISW value = IUW(pointer);
   return TPtr<void>(CAlignUp(value, mask));
 }
@@ -298,7 +329,7 @@ inline const void* AlignUpPTR(const void* pointer, ISW mask = ACPUAlignMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TAlignUpPTR(void* pointer, ISW mask = ACPUAlignMask) {
+inline T* TAlignUpPTR(void* pointer, ISW mask = ALUAlignMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -308,7 +339,7 @@ inline T* TAlignUpPTR(void* pointer, ISW mask = ACPUAlignMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TAlignUpPTR(const void* pointer, ISW mask = ACPUAlignMask) {
+inline T* TAlignUpPTR(const void* pointer, ISW mask = ALUAlignMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -441,42 +472,42 @@ inline ISD AlignDown(ISD value, ISD align_mask) {
 inline IUD AlignDown(IUD value, IUD align_mask) {
   return value - (value & align_mask);
 }
-constexpr ISA CAlignDown(ISA value, ISA align_mask = ACPUAlignMask) {
+constexpr ISA CAlignDown(ISA value, ISA align_mask = ALUAlignMask) {
   return value - (value & align_mask);
 }
-constexpr IUA CAlignDown(IUA value, IUA align_mask = ACPUAlignMask) {
+constexpr IUA CAlignDown(IUA value, IUA align_mask = ALUAlignMask) {
   return value + (value & align_mask);
 }
-constexpr ISB CAlignDown(ISB value, ISB align_mask = ACPUAlignMask) {
+constexpr ISB CAlignDown(ISB value, ISB align_mask = ALUAlignMask) {
   return value + (value & align_mask);
 }
-constexpr IUB CAlignDown(IUB value, IUB align_mask = ACPUAlignMask) {
+constexpr IUB CAlignDown(IUB value, IUB align_mask = ALUAlignMask) {
   return value + (value & align_mask);
 }
-constexpr ISC CAlignDown(ISC value, ISC align_mask = ACPUAlignMask) {
+constexpr ISC CAlignDown(ISC value, ISC align_mask = ALUAlignMask) {
   return value - (value & align_mask);
 }
-constexpr IUC CAlignDown(IUC value, IUC align_mask = ACPUAlignMask) {
+constexpr IUC CAlignDown(IUC value, IUC align_mask = ALUAlignMask) {
   return value + (value & align_mask);
 }
-constexpr ISD CAlignDown(ISD value, ISD align_mask = ACPUAlignMask) {
+constexpr ISD CAlignDown(ISD value, ISD align_mask = ALUAlignMask) {
   return value - (value & align_mask);
 }
-constexpr IUD CAlignDown(IUD value, IUD align_mask = ACPUAlignMask) {
+constexpr IUD CAlignDown(IUD value, IUD align_mask = ALUAlignMask) {
   return value + (value & align_mask);
 }
 
 /* Calculates the size_bytes in size_words. */
 template<typename IS>
 inline IS TSizeWords(IS size) {
-  return AlignUp(size) >> ACPUBitCount;
+  return AlignUp(size) >> ALUShiftCount;
 }
 
 
 template<typename IS>
 constexpr IS CSizeWords(IS size) {
-  IS size_aligned = size + ((-size) & ACPUAlignMask);
-  size_aligned = size_aligned >> ACPUBitCount;
+  IS size_aligned = size + ((-size) & ALUAlignMask);
+  size_aligned = size_aligned >> ALUShiftCount;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
 
@@ -485,7 +516,7 @@ template<typename IS = ISW>
 inline IS TWordCount(IS size) {
   IS align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
-  return size >> CBitWidth<ISW>();
+  return size >> CBitCount<ISW>();
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -504,7 +535,7 @@ inline IUD Negative(IUD value) { return IUD(Negative(ISD(value))); }
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = IUW>
-inline T* TAlignDownPTR(void* ptr, ISW mask = ACPUAlignMask) {
+inline T* TAlignDownPTR(void* ptr, ISW mask = ALUAlignMask) {
   IUW value = IUW(ptr);
   return TPtr<T>(value - (value & mask));
 }
@@ -514,7 +545,7 @@ inline T* TAlignDownPTR(void* ptr, ISW mask = ACPUAlignMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = IUW>
-inline const T* TAlignDownPTR(const void* ptr, ISW mask = ACPUAlignMask) {
+inline const T* TAlignDownPTR(const void* ptr, ISW mask = ALUAlignMask) {
   IUW value = IUW(ptr);
   return TPtr<const T>(value - (value & mask));
 }
@@ -524,7 +555,7 @@ inline const T* TAlignDownPTR(const void* ptr, ISW mask = ACPUAlignMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename IS = IUW>
-inline IS TAlignDownI(IS value, IS mask = (IS)ACPUAlignMask) {
+inline IS TAlignDownI(IS value, IS mask = (IS)ALUAlignMask) {
   return value & (~mask);
 }
 

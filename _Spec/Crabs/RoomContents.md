@@ -14,7 +14,7 @@ At the root scope of each system lies a *Interrupt Operations* DC1, DC2, DC3, an
 
 #### Doors
 
-**Doors** in a *Chinese Rooms* are a kMAP ASCII Data Type.
+**Doors** in a *Chinese Rooms* are a MAP type.
 
 ##### Front Door
 

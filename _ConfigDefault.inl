@@ -18,6 +18,8 @@ the MPL was not distributed with this file, You can obtain one at
 #define USING_UTF8 YES_0
 #define USING_UTF16 YES_0
 #define USING_UTF32 YES_0
+#define DEFAULT_INT_SIZE ATYPE_32BIT
+
 #define LARGEST_CHAR STRING_TYPE_A
 #define USING_STR STRING_TYPE_A
 #define USING_LOM _ARC_CHA

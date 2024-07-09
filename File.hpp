@@ -303,7 +303,7 @@ class TFolder {
 #ifdef _TINYDIR_USE_READDIR
     _e = _tinydir_readdir(_d);
 #else
-    // allocate dirent buffer for readdir_r.
+    // allocate dirent boofer for readdir_r.
     size = _tinydir_dirent_buf_size(_d);  // conversion to ISN.
     if (size == -1) return -1;
     _ep = (struct _tinydir_dirent *)_TINYDIR_MALLOC(size);

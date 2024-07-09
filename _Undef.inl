@@ -23,10 +23,12 @@ the MPL was not distributed with this file, You can obtain one at
 #undef D_COUT_TABLE
 #undef D_COUT_MAP
 #undef D_COUT_BOOK
-#undef D_COUT_DICTIONARY
+#undef D_COUT_DIC
 #undef D_ARRAY_SAVE
 #undef D_ARRAY_FILL
 #undef D_ARRAY_WIPE
+#undef D_OBJ_WIPE
+#undef D_OBJ_ORIGIN_WIPE
 #undef A_CHECK
 #undef D_CHECK
 #undef R_CHECK

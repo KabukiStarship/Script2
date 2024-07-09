@@ -22,7 +22,7 @@ const CHA* CrabsError0STA() {
     "Input nil",              //< Error 06.
     "Invalid args",           //< Error 07.
     "Invalid argument",       //< Error 08.
-    "Invalid buffer",         //< Error 09.
+    "Invalid boofer",         //< Error 09.
     "Invalid door",           //< Error 10.
     "Invalid error handler",  //< Error 11.
     "Invalid header",         //< Error 12.

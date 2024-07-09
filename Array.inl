@@ -65,8 +65,8 @@ namespace _ {
 
 IUW* RAMFactoryStack(IUW* origin, ISW size_bytes) {
   if (size_bytes <= 0) return nullptr;
-  size_bytes += (-size_bytes) & ACPUAlignMask;  //< Word align up.
-  ISW size_words = size_bytes >> ACPUBitCount; 
+  size_bytes += (-size_bytes) & ALUAlignMask;  //< Word align up.
+  ISW size_words = size_bytes >> ALUShiftCount; 
   IUW* socket = new IUW[size_words];
   return socket;
 }
@@ -121,15 +121,15 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
   const IUA* a_end_word = TAlignDownPTR<const IUA>(a_end);
   IUW        a_offset = TDelta(a_begin_word, a_cursor) * 8,
              b_offset = TDelta(b_begin_word, b_cursor) * 8,
-             a_offset_msb = IUW(WordByteCount) * 8 - a_offset,
-             b_offset_msb = IUW(WordByteCount) * 8 - b_offset;
+             a_offset_msb = IUW(ALUByteCount) * 8 - a_offset,
+             b_offset_msb = IUW(ALUByteCount) * 8 - b_offset;
   a_cursor = (IUA*)a_begin_word;
   b_cursor = (IUA*)b_begin_word;
   IUW a_lsb = *TPtr<IUW>(a_cursor), 
       b_lsb = *TPtr<IUW>(b_cursor);
-  while (a_cursor < a_end_word - WordByteCount) {
-    a_cursor += WordByteCount;
-    b_cursor += WordByteCount;
+  while (a_cursor < a_end_word - ALUByteCount) {
+    a_cursor += ALUByteCount;
+    b_cursor += ALUByteCount;
     const IUW a_msb         = *(IUW*)a_cursor,
               b_msb         = *(IUW*)b_cursor,
               a_lsb_shifted = a_lsb >> a_offset,
@@ -161,14 +161,14 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
              "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));*/
       IUW index = 0;
       while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
-      return -TDelta<>(a, a_cursor - WordByteCount + index);
+      return -TDelta<>(a, a_cursor - ALUByteCount + index);
     }
     a_lsb = a_msb;
     b_lsb = b_msb;
   }
   if (a_cursor == a_end) return a_size_bytes;
-  a_cursor += WordByteCount;
-  b_cursor += WordByteCount;
+  a_cursor += ALUByteCount;
+  b_cursor += ALUByteCount;
   // Step 2: Compare the MSB.
   const IUW a_msb         = *(IUW*)a_cursor,
             b_msb         = *(IUW*)b_cursor,
@@ -176,7 +176,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
             a_msb_shifted = a_offset == 0 ? 0 : a_msb << a_offset_msb,
             b_lsb_shifted = b_lsb >> b_offset,
             b_msb_shifted = b_offset == 0 ? 0 : b_msb << b_offset_msb,
-            word_mask     = ~IUW(0) >> (WordByteCount - TDelta(a_cursor, a_end)),
+            word_mask     = ~IUW(0) >> (ALUByteCount - TDelta(a_cursor, a_end)),
             a_word        = (a_lsb_shifted | a_msb_shifted) & word_mask,
             b_word        = (b_lsb_shifted | b_msb_shifted) & word_mask;
   if (a_word != b_word) {
@@ -232,7 +232,7 @@ ISW ArrayCopySlow(void* write, ISW w_size, const void* read,
 /* Copies the block of memory in word-sized chunks. */
 ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
                   const ISW r_size) {
-  if (r_size < WordByteCount)
+  if (r_size < ALUByteCount)
     return ArrayCopySlow(write, w_size, read, r_size);
   if (!write || !read || r_size <= 0 || w_size < r_size)
     return 0;
@@ -281,7 +281,7 @@ ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
 
     IUW       r_word_lsb   = *r_start_word++;
     const IUW r_offset_lsb = r_offset * 8,
-              r_offset_msb = (WordByteCount - r_offset) * 8;
+              r_offset_msb = (ALUByteCount - r_offset) * 8;
 
     while (w_start_word < w_stop_word) {
       const IUW r_word_msb = *r_start_word++;

@@ -129,7 +129,7 @@ class LIB_MEMBER COut {
   COut& NL(FPD item);
 #endif
 
-  /* Stores the given item to the buffer and store the size. */
+  /* Stores the given item to the boofer and store the size. */
   COut& Hex(const void* item);
   COut& Hex(const void* item, ISW size);
   COut& Hex(const void* item, const void* item_stop);
@@ -148,7 +148,7 @@ class LIB_MEMBER COut {
   COut& Hex(FPD item);
 #endif
 
-  /* Stores the given item to the buffer and store the size. */
+  /* Stores the given item to the boofer and store the size. */
   COut& Binary(const void* item);
   COut& Binary(const void* item, ISW size);
   COut& Binary(const void* item, const void* item_stop);
