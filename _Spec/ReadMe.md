@@ -9,7 +9,7 @@ This document is a Release for Comment (RFC) not an ISO Specification, there are
     1. [Terminology](Overview/Terminology)
     1. [Chinese Room Objects](Overview/ChineseRoomObjects)
 2. [ASCII Data Specification](Data/)
-   1. [Data Types](Data/DataTypes)
+   1. [Types](Data/Types)
    1. [Numbers](Data/Numbers)
    1. [Timestamps](Data/Timestamps)
    1. [Strings](Data/Strings)

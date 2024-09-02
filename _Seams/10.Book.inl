@@ -33,7 +33,7 @@ void TestBook() {
 
   D_COUT("\n\nTesting ABook<IS" << CATypeSWCH<ISZ>() << ",IS" << CATypeSWCH<ISY>() << 
          ",CH" << CATypeSWCH<CHT>() << ",DT" << CATypeSWCH<DT>() << 
-         "> with SizeBytes:" << SizeBytes);
+         "> sizeof:" << sizeof(TBook<BOK_P>) << " with SizeBytes : " << SizeBytes);
 
   ABook<TPARAMS, SizeBytes> book;
 
@@ -69,29 +69,26 @@ void TestBook() {
   A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD('7')));
   book.COut();
 
-  D_COUT("\n\nStep 8:\n" << Linef("---") << "\nTesting Factory.Grow...\n");
+  D_COUT("\n\nStep 8: Testing Factory.Grow...\n" << Linef("---") << '\n');
   A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD('8')));
   book.COut();
-
-
-  for (ISY i = ISY(test_word_count - 1);
-       i < ISY(TTestWords<CHT>::WordsMax) - test_word_count; ++i) {
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUB(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUC(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISD(i)));
-    A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUD(i)));
-    D_COUT("\n\nFoo dady\n\n");
+  ISY i = 9;
+  D_COUT("\n\nStep 8b: Testing POD types...\n" << Linef("---\n"));
+  for (; i < ISY(TTestWords<CHT>::WordsMax) - 8;) {
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISA(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, IUA(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISB(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, IUB(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISC(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, IUC(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISD(i)));
+    A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, IUD(i)));
   }
 
-  D_COUT("\n\nAttmpeting to add a very large string...\n");
-
+  D_COUT("\n\nStep 8c Adding large string...:\n" << Linef("---\n"));
   CHT large_string[SizeBytes] = {0};
   CHT* cursor = large_string;
-  for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
+  for (ISN i = 0; i < SizeBytes - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
 
@@ -107,18 +104,18 @@ namespace Script2 {
 const CHA* Book(const CHA* args) {
 #if SEAM >= SCRIPT2_BOOK
   A_TEST_BEGIN;
+#if USING_UTF8 == YES_0
   TestBook<ISB, ISA, CHA>();
-  TestBook<ISB, ISA, CHB>();
-  TestBook<ISB, ISA, CHC>();
-#if USING_UTF16 == YES_0
   TestBook<ISC, ISB, CHA>();
+  TestBook<ISD, ISC, CHA>();
+#endif
+#if USING_UTF16 == YES_0
   TestBook<ISC, ISB, CHB>();
-  TestBook<ISC, ISB, CHC>();
+  TestBook<ISD, ISC, CHB>();
 #endif
 #if USING_UTF32 == YES_0
-  TestBook<ISD, ISB, CHA>();
-  TestBook<ISD, ISB, CHB>();
-  TestBook<ISD, ISB, CHC>();
+  TestBook<ISC, ISB, CHC>();
+  TestBook<ISD, ISC, CHC>();
 #endif
 #endif
   return nullptr;

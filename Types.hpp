@@ -14,16 +14,32 @@ namespace _ {
 
 /* Stores an ASCII type and pointer to it's value. */
 template<typename DT = DTW>
-struct TTypeValue {
-  DT type;      //< The ASCII data type word.
+struct TATypeValuePtr {
+  DT    type;   //< The ASCII data type word.
   void* value;  //< POint to the value of the type.
 };
 
-/* Stores an offset to the ASCII data type and it's value. */
+/* Stores an ASCII data type and offset to value.
+This class is preferred over TATypeValuePtr for x86_64 because two 32-bit or 
+smaller values may be returned from functions without using the stack. */
 template<typename IS = ISW, typename DT = DTW>
-struct TTypeValueOffset {
+struct TATypeValue {
   DT type;      //< The ASCII data type word.
   IS value;     //< Offset to the value of the type.
+};
+
+/* Stores a pointer to the ASCII data type and it's value. */
+template<typename IS = ISW, typename DT = DTW, typename CH = CHR>
+struct TATypeKV {
+  const CH* key;          //< Pointer to the key.
+  TATypeValue<IS, DT> tv; //< AType value offset pair.
+};
+
+/* Stores a pointer to the ASCII data type and it's value. */
+template<typename IS = ISW, typename DT = DTW, typename CH = CHR>
+struct TATypeKeyValueIndex {
+  IS index;                        //< Index of the key-value pair.
+  TATypeKV<IS, DT, CH> type_value; //< Pointer to the value of the type.
 };
 
 /* An 8-bit, 16-bit, or 32-bit ASCII Data Type. */
@@ -33,8 +49,7 @@ class TType {
 
   DT type;  //< The ASCII Data Type.
 
-  /* Stores teh type. */
-  TType(DT type) : type(type) {}
+  TType(DT type) : type(type) {} //< Stores the type.
 };
 
 /* Extracts the Vector type. */
@@ -57,11 +72,56 @@ constexpr DT CTypeMap(DTW type) {
   return DT((type >> 8) & 3);
 }
 
+// Returns the memory alignment mask for this type.
+ISA ATypeAlignMask(DTB type) {
+  if (type <= _CHA) return 0;
+  if (type <= _CHB) return 1;
+  if (type <= _CHC) return ALUAlignC;
+  if (type <= _ISE) return ALUAlignD;
+  if (type == _BOL) return BOLAlignMask;
+  if (type < _CT4) return ALUAlignD;
+  if (type < _CT3) return ALUAlignD;
+  if (type < _CT2) return ALUAlignC;
+  if (type < _CT1) return 1;
+  if (type < _CT0) return 0;
+  DTB mod = type >> ATypeMODBit0;
+  type ^= mod << ATypeMODBit0;
+  DTB mt = type >> ATypeMTBit0;
+  type ^= mt << ATypeMTBit0;
+  DTB sw = type >> ATypeSWBit0;
+  type ^= sw << ATypeSWBit0;
+  DTB vt = type >> ATypeVTBit0;
+  type ^= vt << ATypeVTBit0;
+  if (vt == 0) { // Vetor of 2 to 4 Homo-tuples
+    return ATypeAlignMask(type & 31);
+  }
+  switch (sw) {
+  case 0: return 0;
+  case 1: return 1;
+  case 2: return ALUAlignC;
+  case 3: return ALUAlignD;
+  }
+  return ALUWordMask;
+}
+
+/* Aligns the pointer up to the word boundry required by the type. */
+template<typename T = void>
+const T* TATypeAlignUp(const void* pointer, DTB type) {
+  ISW align_mask = ATypeAlignMask(type & ATypePODMask);
+  auto ptr = reinterpret_cast<IUW>(pointer);
+  ptr += IUW(-ISW(pointer)) & align_mask;
+  return reinterpret_cast<T*>(ptr);
+}
+template<typename T = void>
+inline T* TATypeAlignUp(void* pointer, DTB type) {
+  return const_cast<T*>(TATypeAlignUp<T>(const_cast<const T*>(pointer), type));
+}
+
 /* Copies the source to the destination.
 This function is different in that it 
 @return nullptr if the destination does not have enough space. */
-template<typename IS = ISN>
-void* TMapCopy(void* destination, const void* source) {
+template<typename IS = ISR>
+void* TATypeClone(void* destination, const void* source) {
   auto dst = static_cast<IS*>(destination);
   auto src = static_cast<const IS*>(source);
   auto dst_count = *dst;
@@ -71,25 +131,155 @@ void* TMapCopy(void* destination, const void* source) {
   if (result <= 0) return nullptr;
   return static_cast<void*>(dst);
 }
+/* Writes the given value to the socket. */
+template<typename IS = ISR>
+void* TATypeWriteCustom(void* begin, void* end, DTB type) {
+  return begin;
+}
+
+/* Writes the given value to the socket between begin and end without any 
+checks.
+@warning You must memory align and verify the buffer fits before calling. */
+template<typename IS = ISR>
+void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, ISA align_mask) {
+  // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+  // |:-------:|:------:|:-----:|:-----:|:-----:|
+  // |   MOD   |   MT   |  SW   |  VT   |  POD  |
+  DTB mod = type >> ATypeMODBit0;
+  type ^= mod << ATypeMODBit0;
+  if (mod && 1) type = _IUW;
+
+  begin = TATypeAlignUp<>(begin, type);
+  if (type <= _CHA) {
+    Write1Byte:
+    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
+    if (delta < 1) return nullptr;
+    auto ptr = reinterpret_cast<IUA*>(begin);
+    *ptr++ = *reinterpret_cast<const IUA*>(value);
+    return ptr;
+  }
+  if (type <= _CHB) {
+    Write2Bytes:
+    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
+    if (delta < 2) return nullptr;
+    auto ptr = reinterpret_cast<IUB*>(begin);
+    *ptr++ = *reinterpret_cast<const IUB*>(value);
+    return ptr;
+  }
+  if (type <= _CHC) {
+    Write4Bytes:
+    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
+    if (delta < 4) return nullptr;
+    auto ptr = reinterpret_cast<IUC*>(begin);
+    *ptr++ = *reinterpret_cast<const IUC*>(value);
+    return ptr;
+  }
+  if (type <= _TME) {
+    Write8Bytes:
+    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
+    if (delta < 8) return nullptr;
+    auto ptr = reinterpret_cast<IUD*>(begin);
+    *ptr++ = *reinterpret_cast<const IUD*>(value);
+    return ptr;
+  }
+  if (type <= _ISE) {
+    Write16Bytes:
+    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
+    if (delta < 16) return nullptr;
+    auto ptr = reinterpret_cast<IUD*>(begin);
+    auto value_ptr = reinterpret_cast<const IUD*>(value);
+    *ptr++ = *value_ptr++;
+    *ptr++ = *value_ptr;
+    return ptr;
+  }
+  if (type == _BOL) {
+#if BOL_SIZE == 1
+    goto Write1Byte;
+#endif
+#if BOL_SIZE == 2
+    goto Write2Bytes;
+#endif
+#if BOL_SIZE == 4
+    goto Write4Bytes;
+#endif
+#if BOL_SIZE == 8
+    goto Write8Bytes;
+#endif
+  }
+  if (type <= _CT4) goto Write16Bytes;
+  if (type <= _CT3) goto Write8Bytes;
+  if (type <= _CT2) goto Write4Bytes;
+  if (type <= _CT1) goto Write2Bytes;
+  if (type <= _CT0) goto Write1Byte;
+
+  DTB mt = type >> ATypeMTBit0;
+  type ^= mt << ATypeMTBit0;
+  DTB sw = type >> ATypeSWBit0;
+  type ^= sw << ATypeSWBit0;
+  DTB vt = type >> ATypeVTBit0;
+  type ^= vt << ATypeVTBit0;
+  //@todo Fix me!
+  if (vt == 0) { // Vector of Homotuples.
+    auto size_bytes = (1 << vt) * ATypeSizeOfPOD(type);
+    return reinterpret_cast<ISA*>(begin) + size_bytes;
+  } else {
+    switch (vt) {
+      case 0: {
+        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
+        auto size_bytes = *reinterpret_cast<const ISA*>(value);
+        if (delta <= size_bytes) return nullptr;
+        *reinterpret_cast<ISA*>(begin) = size_bytes;
+        return reinterpret_cast<ISA*>(begin) + size_bytes;
+      }
+      case 1: {
+        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
+        auto size_bytes = *reinterpret_cast<const ISB*>(value);
+        if (delta <= size_bytes) return nullptr;
+        *reinterpret_cast<ISB*>(begin) = size_bytes;
+        return reinterpret_cast<ISA*>(begin) + size_bytes;
+      }
+      case 2: {
+        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
+        auto size_bytes = *reinterpret_cast<const ISC*>(value);
+        if (delta <= size_bytes) return nullptr;
+        *reinterpret_cast<ISC*>(begin) = size_bytes;
+        return reinterpret_cast<ISA*>(begin) + size_bytes;
+      }
+      case 3: {
+        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
+        auto size_bytes = *reinterpret_cast<const ISD*>(value);
+        if (delta <= size_bytes) return nullptr;
+        *reinterpret_cast<ISD*>(begin) = size_bytes;
+        return reinterpret_cast<ISA*>(begin) + size_bytes;
+      }
+    }
+  }
+  return nullptr;
+}
+
+template<typename IS = ISR>
+void* TATypeWrite(void* begin, void* end, DTB type, const void* value) {
+  return TATypeWrite<IS>(begin, end, type, value);
+}
 
 /* Creates an ASCII Vector Data Type. */
 template<typename DT = DTB>
-inline DT TTypeVector(DTW pod_type, DTW vector_type, DTW width_bit_count = 0) {
+inline DT TATypeVector(DTW pod_type, DTW vector_type, DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
 template<typename DT = DTB>
-constexpr DT CTypeVector(DTW pod_type, DTW vector_type,
+constexpr DT CATypeVector(DTW pod_type, DTW vector_type,
                          DTW width_bit_count = 0) {
   return DT(pod_type | (vector_type << 5) | (width_bit_count << 7));
 }
 
 /* Creates an ASCII Map Type. */
 template<typename DT = DTB>
-constexpr DT CTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
+constexpr DT CATypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 template<typename DT = DTB>
-inline DT TTypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
+inline DT TATypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 
@@ -133,26 +323,17 @@ IS TATypeSizeOf(const void* value, DTB type) {
   DTB vt = type >> ATypeVTBit0;
   type ^= vt << ATypeVTBit0;
   if (vt == DTB(0)) {
-    //IS dez = IS(sw);
-    //IS nutz = IS(ATypeSizeOfPOD(type));
-    return 0; // dez* nutz;
+    IS dez  = IS(sw);
+    IS nutz = IS(ATypeSizeOfPOD(type));
+    return dez * nutz;
   }
   IS size = 1;
   switch (sw) {
-  case 0:
-    size = IS(*static_cast<const ISA*>(value));
-    break;
-  case 1:
-    size = IS(*static_cast<const ISB*>(value));
-    break;
-  case 2:
-    size = IS(*static_cast<const ISC*>(value));
-    break;
-  case 3:
-    size = IS(*static_cast<const ISD*>(value));
-    break;
+    case 0: return IS(*static_cast<const ISA*>(value));
+    case 1: return IS(*static_cast<const ISB*>(value));
+    case 2: return IS(*static_cast<const ISC*>(value));
   }
-  return size * sw;
+  return IS(*static_cast<const ISD*>(value));
 }
 
 template<typename IS = ISW>
@@ -259,8 +440,8 @@ inline DTW AlignmentMask(FPC item) { return 3; }
 inline DTW AlignmentMask(ISD item) { return 7; }
 inline DTW AlignmentMask(IUD item) { return 7; }
 inline DTW AlignmentMask(FPD item) { return 7; }
-inline DTW AlignmentMask(void* item) { return ALUAlignMask; }
-inline DTW AlignmentMask(const void* item) { return ALUAlignMask; }
+inline DTW AlignmentMask(void* item) { return ALUWordMask; }
+inline DTW AlignmentMask(const void* item) { return ALUWordMask; }
 
 /* Gets the type of the given item. */
 inline DTW TypeOf(CHA item) { return _CHA; }
@@ -294,62 +475,24 @@ inline IUC T() {
   return ((IUC)CharA) & (((IUC)CharB) << 8) & (((IUC)CharC) << 16);
 }*/
 
-// Returns the memory alignment mask for this type.
-ISA ATypeAlignMask(DTB type) {
-  enum {
-    AlignC = sizeof(void*) == 2 ? 1 : 3,
-    AlignD = sizeof(void*) == 2 ? 1
-           : sizeof(void*) == 4 ? 3
-           : sizeof(void*) == 8 ? 7 : 0
-  };
-  if (type <= _CHA) return 0;
-  if (type <= _CHB) return 1;
-  if (type <= _CHC) return 3;
-  if (type <= _ISE) return 7;
-  if (type < ATypePODCount) return ATypeCustomAlignMask()[type - _BOL];
-  DTB mod = type >> ATypeMODBit0;
-  type ^= mod << ATypeMODBit0;
-  DTB mt = type >> ATypeMTBit0;
-  type ^= mt << ATypeMTBit0;
-  DTB sw = type >> ATypeSWBit0;
-  type ^= sw << ATypeSWBit0;
-  DTB vt = type >> ATypeVTBit0;
-  type ^= vt << ATypeVTBit0;
-  if (vt == 0) return sw * ATypeAlignMask(type); //< Vetor of 2 to 4 Homo-tuples
-  switch (sw) {
-  case 0: return 0;
-  case 1: return 0;
-  case 2: return AlignC;
-  case 3: return AlignD;
-  }
-  return ALUAlignMask;
-}
-
-/* Aligns the pointer up to the word boundry required by the type. */
-template<typename T = CHA>
-T* TTypeAlignUp(void* pointer, ISW type) {
-  ISW align_mask = ATypeAlignMask(type & ATypePODMask);
-  return TPtr<T>(AlignUpPTR(pointer, align_mask));
-}
-
 /* Masks off the primary type. */
-inline ISA TypeMaskPOD(DTW value) { return value & 0x1f; }
+inline ISA ATypeMaskPOD(DTW value) { return value & 0x1f; }
 
 /* Returns true if the given type is an Array type. */
-inline BOL TypeIsArray(DTW type) { return type >= ATypePODCount; }
+inline BOL ATypeIsArray(DTW type) { return type >= ATypePODCount; }
 
-inline ISN TypeSizeWidthCode(ISN type) { return type >> 6; }
+inline ISN ATypeSizeWidthCode(ISN type) { return type >> 6; }
 
 /* Extracts the Map Type. */
-inline DTW TypeMap(DTW core_type, DTW map_type) {
+inline DTW ATypeMap(DTW core_type, DTW map_type) {
   return core_type | (map_type << (ATypePODBitCount + 2));
 }
 
-inline DTW TypeMap(DTW core_type, DTW map_type, DTW size_width) {
-  return TypeMap(core_type, map_type) | (size_width << ATypePODBitCount);
+inline DTW ATypeMap(DTW core_type, DTW map_type, DTW size_width) {
+  return ATypeMap(core_type, map_type) | (size_width << ATypePODBitCount);
 }
 
-inline BOL TypeIsPOD(DTB type) {
+inline BOL ATypeIsPOD(DTB type) {
   return !((type >> 5) || ((type & ATypePODMask)));
 }
 

@@ -100,21 +100,21 @@ inline TDic<TPARAMS>* TDicInit(TDic<TPARAMS>* dic, ISY count_max) {
 template<TARGS>
 inline CHT* TDicEnd(TDic<TPARAMS>* dic) {
   CHT* list = TPtr<CHT>(TTableEnd<TPARAMS>(&dic->keys));
-  return TPtr<CHT>(TListEnd<ISZ>(TPtr<TList<ISZ>>(list)));
+  return TPtr<CHT>(TListEnd<ISZ>(TPtr<TList<LST_P>>(list)));
 }
 template<TARGS>
-inline TList<ISZ>* TDicList(TDic<TPARAMS>* dic, ISZ size_bytes) {
-  return TPtr<TList<ISZ>>(dic, size_bytes);
+inline TList<LST_P>* TDicList(TDic<TPARAMS>* dic, ISZ size_bytes) {
+  return TPtr<TList<LST_P>>(dic, size_bytes);
 }
 template<TARGS>
-inline TList<ISZ>* TDicList(TDic<TPARAMS>* dic) {
+inline TList<LST_P>* TDicList(TDic<TPARAMS>* dic) {
   return TDicList<TPARAMS>(dic, dic->keys.size_bytes);
 }
 
 /* The size of the dic. */
 template<TARGS>
 inline ISZ TDicSize(TDic<TPARAMS>* dic) {
-  TList<ISZ>* list = TDicList<TPARAMS>(dic);
+  TList<LST_P>* list = TDicList<TPARAMS>(dic);
   return dic->keys.size_bytes + list->size_bytes;
 }
 
@@ -178,7 +178,7 @@ BOL TDicGrow(Autoject& obj) {
 @return The index upon success or -1 upon failure. */
 template<TARGS>
 void* TDicListRemove(TDic<TPARAMS>* dic, ISY index) {
-  TList<ISZ>* list = TDicList<TPARAMS>(dic);
+  TList<LST_P>* list = TDicList<TPARAMS>(dic);
   ISY count = ISY(list->offsets.count);
   ISZ* offsets = TListOffsets<ISZ>(list);
   TStackRemove<ISZ, ISZ>(offsets, count, index);

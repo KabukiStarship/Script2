@@ -71,10 +71,10 @@ static const CHA* Stack(const CHA* args) {
   D_COUT(Headingf("Testing RAMCompare with offset sequential arrays..."));
 
   enum {
-    OffsetMax = 2 * ALUByteCount,
+    OffsetMax = 2 * ALUSize,
     TestByteCount = 256,
     BufferSizeBytes = TestByteCount + 2 * OffsetMax,
-    BufferSizeWords = BufferSizeBytes >> ALUShiftCount,
+    BufferSizeWords = BufferSizeBytes >> ALUSizeLog2,
   };
   IUW source[BufferSizeWords],
       destination[BufferSizeWords + OffsetMax];

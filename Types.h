@@ -26,8 +26,8 @@ ISA ATypeSizeOfPOD(DTB type);
 
 /* Returns the size of the given type in bytes.
 @return the size bytes of the value. */
-ISW ATypeSizeBytes(void* value, DTB type);
-ISW ATypeSizeBytes(void* value_base, ISA size_bytes, DTB type);
+ISW ATypeSizeBytes(const void* value, DTB type);
+ISW ATypeSizeBytes(const void* value_base, ISA size_bytes, DTB type);
 
 // Returns the end (byte after last byte) of the given type-value.
 void* ATypeValueEnd(void* value, DTB type);
@@ -42,11 +42,12 @@ const ISA* ATypeCustomAlignMask();
 ISA ATypeCustomAlignMask(DTA type);
 
 /* Stores a pointer to the ASCII data type and it's value. */
-struct TypeWordValue {
+struct ATypeValue {
   DTW   type;         //< ASCII data type word.
   const void* value;  //< Pointer to the value of the type.
 };
 
+// Gets the Unicode format: 0=UTF-8, 1=UTF-16, 2=UTF-32.
 inline ISA ATypeTextFormat(DTW type);
 
 /* An ASCII Type-Value tuple.

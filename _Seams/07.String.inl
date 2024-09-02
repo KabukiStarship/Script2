@@ -19,7 +19,7 @@ using namespace _;
  
 namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
-template<typename CH = CHR, typename IS = ISN>
+template<typename CH = CHR, typename IS = ISR>
 void TestStringN() {
   static const CH Testing123[] = {'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',

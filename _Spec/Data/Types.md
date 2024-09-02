@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](./)
 
-### Data Types
+### Types
 
 ASCII Data Types use 3-letter acronyms in all capital letters[1][2]. Whenever possible, the letters in the ASCII Data Type acronyms are such that like-types are grouped alphabetically, and 8, 16, 32, 64, and 128-bit types use the post fix A, B, C, D, and E, and an 8-bit unsigned integer is a IUA and a 16-bit one is a IUB. Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data Types are forward compatible with 2-byte Types. Given there are only 8, 16, 32, and 64-bit CPUs, the bit pattern of the data type is required to be laid out such that the bit_1 of the 4 bits required to represent these 4 byte depths shall be laid out across the boundary between a IUA and IUB word boundaries.
 
@@ -32,18 +32,18 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
 | 19 | BOL  |     bool     | 1/2/4 | Implementation-defined 1-bit or 1, 2, or 4-byte boolean. |
-| 20 | DTA  |  Data Type A |  xW   | Implementation-defined word-aligned Data Type A. |
-| 21 | DTB  |  Data Type B |  xW   | Implementation-defined word-aligned Data Type B. |
-| 22 | DTC  |  Data Type C |  xW   | Implementation-defined word-aligned Data Type C. |
-| 23 | DTD  |  Data Type D |  xW   | Implementation-defined word-aligned Data Type D. |
-| 24 | DTE  |  Data Type E |  xW   | Implementation-defined word-aligned Data Type E. |
-| 25 | DTF  |  Data Type F |  xW   | Implementation-defined word-aligned Data Type F. |
-| 26 | DTG  |  Data Type G |  xW   | Implementation-defined word-aligned Data Type G. |
-| 27 | DTH  |  Data Type H |  xW   | Implementation-defined word-aligned Data Type H. |
-| 28 | DTI  |  Data Type I |  xW   | Implementation-defined word-aligned Data Type I. |
-| 29 | DTJ  |  Data Type J |  xW   | Implementation-defined word-aligned Data Type J. |
-| 30 | DTK  |  Data Type K |  xW   | Implementation-defined word-aligned Data Type K. |
-| 31 | DTL  |  Data Type L |  xW   | Implementation-defined word-aligned Data Type L. |
+| 20 | CTA  |  Data Type A |  xW   | Implementation-defined custom Data Type A. |
+| 21 | CTB  |  Data Type B |  xW   | Implementation-defined Custom Data Type B. |
+| 22 | CTC  |  Data Type C |  xW   | Implementation-defined Custom Data Type C. |
+| 23 | CTD  |  Data Type D |  xW   | Implementation-defined Custom Data Type D. |
+| 24 | CTE  |  Data Type E |  xW   | Implementation-defined Custom Data Type E. |
+| 25 | CTF  |  Data Type F |  xW   | Implementation-defined Custom Data Type F. |
+| 26 | CTG  |  Data Type G |  xW   | Implementation-defined Custom Data Type G. |
+| 27 | CTH  |  Data Type H |  xW   | Implementation-defined Custom Data Type H. |
+| 28 | CTI  |  Data Type I |  xW   | Implementation-defined Custom Data Type I. |
+| 29 | CTJ  |  Data Type J |  xW   | Implementation-defined Custom Data Type J. |
+| 30 | CTK  |  Data Type K |  xW   | Implementation-defined Custom Data Type K. |
+| 31 | CTL  |  Data Type L |  xW   | Implementation-defined Custom Data Type L. |
 
 ##### List of Types Key
 
@@ -80,7 +80,7 @@ A Homotuple (Homogenous Tuple) is a Vector of homogeneous types of length 1, 2, 
 
 ***Bit Pattern***
 
-2-byte types can be used created a Core Type or a map one Core Type to another such as a ST1_FP4 (UTF-8 string-to-float) map or a CH1_BOL (char-to-bool) map. To create a single core type set the Size Width (SW) bits of the ASCII Data Types word to 1:
+2-byte types can be used created a Core Type or a map one Core Type to another such as a STA_FPD (UTF-8 string-to-float) map or a CHA_BOL (char-to-bool) map. To create a single core type set the Size Width (SW) bits of the ASCII Data Types word to 1:
 
 | b8:b7 | b6:b5  | b4:b0 |
 |:-----:|:------:|:-----:|
@@ -193,6 +193,14 @@ The Modifier Bits (MOD) allow for the creation of pointers and const pointers to
 #### Variable Byte Lengths
 
 Variable Byte Length (VBL) Types 1 to 2048 bytes long are created when the five Least Significant bits of any 16-bit ASCII Type are 0. The size is calculated by shifting the byte to the right 5 bits (i.e. shift bit_5 into bit-0).
+
+#### Custom Types
+
+Custom Types CTA through CTL are implementation defined and may be 8, 16, 32, 64, or 128-bits wide. Custom types must be sorted descending by width, which is reverse order from POD types 1 through 18. All custom types except for 8-bit custom types can be deleted, which would make all of the custom data types 8-bit, hence why they are reverse sorted.
+
+Custom Types are set by defining the last custom type index of that size such that `CT0 = 31 >= CT1 >= CT2 >= CT3 >= CT4 >= CT5 > 19`. When the machine is configured these values are CT0_STOP, CT1_STOP, CT2_STOP, CT3_STOP, CT4_STOP, and CT5_STOP respectively. After the machine has been configured the codes then turn into integer values _CT0, _CT1, _CT2, _CT3, _CT4, and _CT5.
+
+To delete all 128-bit custom types set CT4_STOP to BOL (19). To delete all 64-bit custom types set CT3_STOP to CT4_STOP. To delete all 32-bit custom types set CT2_STOP to CT3_STOP. To delete all 16-bit custom types set CT1_STOP to CT2_STOP. All unspecified custom types are then 8-bit types that cannot be deleted.
 
 **[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Numbers >>](Numbers.md)**
 
