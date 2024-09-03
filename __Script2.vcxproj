@@ -49,6 +49,29 @@
     <None Include="_Debug.inl" />
     <None Include="_Package.inl" />
     <None Include="_Release.inl" />
+    <None Include="_Seams\00.COut.inl" />
+    <None Include="_Seams\01.RNG.inl" />
+    <None Include="_Seams\02.ItoS.inl" />
+    <None Include="_Seams\03.FtoS.inl" />
+    <None Include="_Seams\04.Uniprinter.inl" />
+    <None Include="_Seams\05.Clock.inl" />
+    <None Include="_Seams\06.Stack.inl" />
+    <None Include="_Seams\07.String.inl" />
+    <None Include="_Seams\08.Loom.inl" />
+    <None Include="_Seams\09.List.inl" />
+    <None Include="_Seams\10.Book.inl" />
+    <None Include="_Seams\11.Map.inl" />
+    <None Include="_Seams\12.Table.inl" />
+    <None Include="_Seams\13.Dic.inl" />
+    <None Include="_Seams\14.Crabs.inl" />
+    <None Include="_Seams\15.Door.inl" />
+    <None Include="_Seams\16.Room.inl" />
+    <None Include="_Seams\17.Matrix.inl" />
+    <None Include="_Seams\17.Seam.s2" />
+    <None Include="_Seams\18.File.inl" />
+    <None Include="_Seams\19.Release.inl" />
+    <None Include="_Seams\desktop.ini" />
+    <None Include="_Seams\ReadMe.md" />
     <None Include="_Seams\_Seams.inl" />
     <None Include="_Seams\_Tests.inl" />
     <None Include="_Undef.inl" />
@@ -119,6 +142,9 @@
     <ClInclude Include="_Config.h" />
     <ClInclude Include="_Seams\TestWords.h" />
     <ClInclude Include="_Seams\_Config.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_Seams\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_Seams\_Main.cpp" />
