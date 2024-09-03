@@ -48,7 +48,8 @@ void TestBook() {
   ISZ test_word_count = book.CountMax();
   D_COUT("\nPopulating " << test_word_count << " test words...");
 
-  const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
+  const CHT * test_words  = TTestWords<CHT>::Words(),
+            * word_cursor = test_words;
   ISZ word_step = TTestWords<CHT>::CharsMax;
   D_COUT("\n\nStep 0:\n" << Linef("---") << '\n');
 

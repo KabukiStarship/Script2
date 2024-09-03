@@ -578,7 +578,7 @@ class TBUF {
 template<DTB Type, typename ISZ = ISW>
 class TRAMFactory {
 public:
-  /* Deletes a non-nil boofer or calls Stack(boofer, size_bytes). */
+  /* Deletes a non-nil buffer or calls Stack(boofer, size_bytes). */
   static IUW* Heap(IUW* boofer, ISW size_bytes) {
     if (boofer) {
       delete[] boofer;
