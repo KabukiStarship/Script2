@@ -30,30 +30,16 @@ the MPL was not distributed with this file, You can obtain one at
 
 #define USING_16_BYTE_POD_TYPES NO_0
 
-#define BOL_SIZE_BITS 32
-#define DTA_SIZE 0
-#define DTB_SIZE 0
-#define DTC_SIZE 0
-#define DTD_SIZE 0
-#define DTE_SIZE 0
-#define DTF_SIZE 0
-#define DTG_SIZE 0
-#define DTH_SIZE 0
-#define DTI_SIZE 0
-#define DTJ_SIZE 0
-#define DTK_SIZE 0
-#define DTL_SIZE 0
+#define BOL_SIZE 4 //< Size of boolean in bytes.
 
-#define BOL_ALIGN_MASK 3
-#define DTA_ALIGN_MASK 0
-#define DTB_ALIGN_MASK 0
-#define DTC_ALIGN_MASK 0
-#define DTD_ALIGN_MASK 0
-#define DTE_ALIGN_MASK 0
-#define DTF_ALIGN_MASK 0
-#define DTG_ALIGN_MASK 0
-#define DTH_ALIGN_MASK 0
-#define DTI_ALIGN_MASK 0
-#define DTJ_ALIGN_MASK 0
-#define DTK_ALIGN_MASK 0
-#define DTL_ALIGN_MASK 0
+// Last 128-bit custom type; to disable define as 19 (ASCII BOL).
+#define CT5_STOP 19
+
+// Last 64-bit custom type; to disable define as CT5_STOP.
+#define CT4_STOP CT5_STOP
+
+// Last 32-bit custom type; to disable define as CT4_STOP.
+#define CT3_STOP CT4_STOP
+
+// Last 16-bit custom type; to disable define as CT3_STOP.
+#define CT2_STOP CT3_STOP

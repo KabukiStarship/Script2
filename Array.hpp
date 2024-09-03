@@ -28,7 +28,7 @@ inline IS TArraySizeMax() {
 }
 /* The upper bounds defines exactly how many elements can fit into a space
 in memory. */
-template<typename T = ISW, typename IS = ISN, typename Class>
+template<typename T = ISW, typename IS = ISR, typename Class>
 inline IS TArraySizeMax() {
   IS max_value = IS((~IS(0)) >> 1);
   return max_value - IS(sizeof(IUW) - 1 - sizeof(Class) / sizeof(T));
@@ -78,7 +78,7 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 +-----------------+ 0xN
 @endcode
 */
-template<typename IS = ISN>
+template<typename IS = ISR>
 struct TArray {
   IS size;  //< Number of elements in the array.
 };
@@ -113,7 +113,7 @@ Printer& TArrayPrint(Printer& o, const TArray<IS>* item) {
 }
 
 // Copies the source to the destination.
-template<typename T, typename IS = ISN, ISA AlignMask>
+template<typename T, typename IS = ISR, ISA AlignMask>
 TArray<IS>* TArrayCopy(void* destination, const void* source) {
   auto dst = TPtr<IS>(destination);
   auto src = TPtr<const IS>(source);
@@ -189,7 +189,7 @@ inline IS TSizeBytes(Autoject& autoject) {
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IS size) {
   IS size_aligned_up = AlignUp(TSizeBytes<T, IS, Class>(size));
-  return size_aligned_up >> ALUShiftCount;
+  return size_aligned_up >> ALUSizeLog2;
 }
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IUW* origin) {
@@ -203,7 +203,7 @@ inline IS TSizeWords(Autoject& autoject) {
 /* Dynamically allocates a new Array of the given size.
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
-template<typename T, typename IS = ISN, typename Class>
+template<typename T, typename IS = ISR, typename Class>
 IUW* TRAMFactoryNew(RAMFactory factory, IS size) {
   IUW* origin = factory(nullptr, TSizeBytes<T, IS, Class>(size));
   TSizeSet<IS>(origin, size);
@@ -229,7 +229,7 @@ inline IUW* TArrayInit(Autoject& obj, IUW* boofer, IS size,
 }
 
 /* Writes the source TArray to the destination. */
-template<typename T = IUA, typename IS = ISN, typename Class>
+template<typename T = IUA, typename IS = ISR, typename Class>
 TArray<IS>* TArrayWrite(TArray<IS>* destination, TArray<IS>* source,
                          IS size) {
   D_ASSERT(destination);
@@ -240,7 +240,7 @@ TArray<IS>* TArrayWrite(TArray<IS>* destination, TArray<IS>* source,
   return destination;
 }
 
-template<typename T = IUA, typename IS = ISN, typename Class>
+template<typename T = IUA, typename IS = ISR, typename Class>
 IUW* TArrayWrite(IUW* destination, IUW* source, IS size) {
   TArray<IS>* result =
       TArrayWrite<T, IS, Class>(TPtr<TArray<IS>>(destination),
@@ -251,7 +251,7 @@ IUW* TArrayWrite(IUW* destination, IUW* source, IS size) {
 /* Clones the other ASCII Autoject including possibly unused autoject space.
 @return Nil upon failure or a pointer to the cloned autoject upon success.
 @param socket A raw ASCII Socket to clone. */
-template<typename T = IUA, typename IS = ISN, typename Class>
+template<typename T = IUA, typename IS = ISR, typename Class>
 IUW* TArrayCloneSlow(Autoject& obj) {
   RAMFactory factory = obj.ram;
   IUW* origin = obj.origin;
@@ -378,6 +378,83 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
   return o;
 }
 
+/* Inserts the given item at the start stack.
+@pre You must perform bounds checking before calling this function. */
+template<typename T>
+inline void TArrayInsert_NC(T* items_start, T* items_end, T item) {
+  --items_end;
+  while (items_start < items_end) *items_end-- = *items_end;
+  *items_start = item;
+}
+
+/* Inserts the given item at the start stack.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename ISZ>
+inline void TArrayInsert_NC(T* elements, ISZ count_max, T item) {
+  return TArrayInsert_NC<T>(elements, elements + count_max, item);
+}
+
+/* Inserts the given item at the index index the elements of the given count.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename ISZ = ISM>
+inline void TArrayInsert_NC(T* items, ISZ count, ISZ index, T item) {
+  TArrayInsert_NC<T>(items + index, items + count, item);
+}
+
+/* Shifts the elements down starting at the index without deleting the last 
+element.
+@pre You must perform bounds checking before calling this function. */
+template<typename T>
+inline void TArrayShift_NC(T* elements, T* end) {
+  while (elements < end) {
+    *elements = *(elements + 1);
+    ++elements;
+  }
+}
+template<typename T, typename IS = ISR>
+void TArrayShift_NC
+(T* elements, IS count_max) {
+  if (count_max < 0) return;
+  return TArrayShift_NC<T>(elements, elements + count_max);
+}
+
+/* Shifts the elements down starting at the index element and deletes the index
+element at the given index.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename IS = ISR>
+void TArrayShift(T* elements, T* end, IS count = 1) {
+  if (count < 1) return;
+  auto dez_nutz = elements + count;
+  auto read_cursor = dez_nutz;
+  while (elements < dez_nutz) {
+    auto element = *read_cursor;
+    *elements++ = element;
+  }
+}
+template<typename T, typename IS = ISR>
+void TArrayShift(T* elements, IS count_max, IS count = 1) {
+  if (count_max < 0) return;
+  return TArrayShift<T>(elements, elements + count_max, count);
+}
+
+/* Shifts the elements by the given count and nulls the source element. */
+template<typename T, typename IS = ISR>
+void TArrayRemove(T* elements, T* end, IS count = 1) {
+  if (count < 1) return;
+  auto dez_nutz = elements + count;
+  auto read_cursor = dez_nutz;
+  while (elements < dez_nutz) {
+    auto element = *read_cursor;
+    *read_cursor++ = 0;
+    *elements++ = element;
+  }
+}
+template<typename T, typename IS = ISR>
+void TArrayRemove(T* elements, IS count_max, IS count = 1) {
+  if (count_max < 0) return;
+  return TArrayRemove<T>(elements, elements + count_max, count);
+}
+
 /* An invalid index. */
 template<typename IS>
 constexpr IS CInvalidIndex() {
@@ -387,9 +464,9 @@ constexpr IS CInvalidIndex() {
 /* Searches for the item in the elements.
 @return An invalid index upon failure or a valid index upon success. */
 template<typename T, typename IS>
-IS TArrayFind(const T* elements, IS element_count, const T& item) {
+IS TArrayFind(const T* elements, IS element_count, const T& Item) {
   for (IS i = 0; i < element_count; ++i)
-    if (*elements++ == item) return i;
+    if (*elements++ == Item) return i;
   return CInvalidIndex<IS>();
 }
 
@@ -432,7 +509,7 @@ inline const T* TArrayCompare(const void* a_begin, void* a_end, const void* b_be
 }
 
 /* A word-aligned array of Size_ elements of T on the progam stack. */
-template<ISW Size_ = ACPUCacheLineSize, typename T = IUA, typename IS = ISN,
+template<ISW Size_ = ACPUCacheLineSize, typename T = IUA, typename IS = ISR,
           typename Class = Nil>
 class TBUF {
  public:
@@ -477,7 +554,7 @@ class TBUF {
   /* Sets the size to the new value. */
   template<typename ISW>
   inline IUW* SizeSet(ISW size) {
-    A_ASSERT((size & ALUAlignMask) == 0)
+    A_ASSERT((size & ALUWordMask) == 0)
     *TPtr<ISW>(words_) = size;
     return words_;
   }
@@ -498,10 +575,10 @@ class TBUF {
 };
 
 /* A Block of heap. */
-template<DTB Type, typename ISZ = ISR>
+template<DTB Type, typename ISZ = ISW>
 class TRAMFactory {
 public:
-  /* Deletes a non-nil boofer or calls Stack(boofer, size_bytes). */
+  /* Deletes a non-nil buffer or calls Stack(boofer, size_bytes). */
   static IUW* Heap(IUW* boofer, ISW size_bytes) {
     if (boofer) {
       delete[] boofer;
@@ -516,8 +593,7 @@ public:
     if (boofer == nullptr && size_bytes == 0) 
       return reinterpret_cast<IUW*>(&Heap);
     if(size_bytes < sizeof(IUW)) return TPtr<IUW>(Type);
-
-    ISW size_words = AlignUp(size_bytes) >> ALUShiftCount;
+    ISW size_words = AlignUp(size_bytes) >> ALUSizeLog2;
     boofer = new IUW[size_words];
     *TPtr<ISZ>(boofer) = ISZ(size_bytes);
     return boofer;
@@ -588,7 +664,7 @@ class AArray {
   /* Returns the buffer_. */
   inline IUW* Origin() { return obj_.origin; }
 
-  template<typename T = TStack<ISZ>>
+  template<typename T = TStack<SCK_P>>
   inline T OriginAs() {
     return reinterpret_cast<T>(Origin());
   }
@@ -627,7 +703,7 @@ class AArray {
   inline Autoject& AJT() { return obj_; }
 
   /* Gets the TArray<ISZ> for this object. */
-  inline TArray<ISZ>* Array() {
+  inline TArray<ISZ>* This() {
     return TPtr<TArray<ISZ>>(obj_.origin);
   }
 
@@ -647,7 +723,7 @@ class AArray {
   /* Prints this autoject to the given printer. */
   template<typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TArrayPrint<T, ISZ>(o, Array());
+    return TArrayPrint<T, ISZ>(o, This());
   }
 
   void CPrint() { PrintTo<_::COut>(_::StdOut()); }

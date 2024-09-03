@@ -39,13 +39,13 @@ template<typename ISZ = ISN>
 struct TMatrix {
   ISZ size;                //< Number of elements in the Matrix.
   ISZ neo_from_the_Matrix; //< Agent Smith bruh.
-  TStack<ISZ> dimensions;  //< The stack of dimensions.
+  TStack<SCK_P> dimensions;  //< The stack of dimensions.
 };
 
 /* Max number of elements that can fit in the given ISZ. */
 template<typename T = ISW, typename ISZ = ISN>
 constexpr ISZ TMatrixElementCountMax() {
-  return (TSignedMax<ISZ>() - sizeof(TStack<ISZ>)) / sizeof(T);
+  return (TSignedMax<ISZ>() - sizeof(TStack<SCK_P>)) / sizeof(T);
 }
 
 /* Calculates the size of the Dimensions Stack with the TMatrix header. */
@@ -117,7 +117,7 @@ ISZ TMatrixSize(const ISZ* dimensions) {
     element_count *= dimension;
   }
   if (element_count > TMatrixArraySizeMax<T, ISZ>()) return -1;
-  return sizeof(TStack<ISZ>) + element_count * sizeof(T);
+  return sizeof(TStack<SCK_P>) + element_count * sizeof(T);
 }
 
 /* Returns the required size of the given array.
@@ -136,7 +136,7 @@ ISZ TMatrixSize(const ISZ* dimensions, const ISZ* delta) {
     element_count *= dimension;
   }
   if (element_count > TMatrixArraySizeMax<T, ISZ>()) return -1;
-  return sizeof(TStack<ISZ>) + element_count * sizeof(T);
+  return sizeof(TStack<SCK_P>) + element_count * sizeof(T);
 }
 
 /* Returns the required size of the given array. */
@@ -149,7 +149,7 @@ ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
 
 template<typename T, typename ISZ>
 inline ISZ TMatrixDimensionCountMax(ISZ count_max) {
-  count_max += sizeof(TStack<ISZ>) >> CBitCount<ISZ>();
+  count_max += sizeof(TStack<SCK_P>) >> CBitCount<ISZ>();
   return TAlignUpArray<ISZ>(count_max);
 }
 
@@ -167,9 +167,9 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   A_ASSERT(dimensions);
   ISZ dimension_count = *dimensions;
   if (dimension_count < 0) return nullptr;
-  ISZ size = (ISZ)sizeof(TStack<ISZ>) + dimension_count * sizeof(T);
-  IUW* socket = new IUW[size >> ALUShiftCount];
-  TStack<ISZ>* stack = TPtr<TStack<ISZ>>(socket);
+  ISZ size = (ISZ)sizeof(TStack<SCK_P>) + dimension_count * sizeof(T);
+  IUW* socket = new IUW[size >> ALUSizeLog2];
+  TStack<SCK_P>* stack = TPtr<TStack<SCK_P>>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
   stack->count_max = dimension_count;

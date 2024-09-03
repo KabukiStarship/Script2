@@ -47,7 +47,7 @@ If the origin pointer is nil, the size_bytes is disregarded.
 
 #### Returning the RAMFactory Heap
 
-In order to auto-grow from stack-to-heap a different RAMFactory is required because you can't delete stack memory. Because an autoject's size must be at least one word, you can pass in any size_bytes value less than one word and it will return the 
+In order to auto-grow from stack-to-heap a different RAMFactory is required because you can't delete stack memory. Because an autoject's size must be at least one word, you can pass in any size_bytes value less than one word and it will return the type.
 
 ```C++
 RAMFactory socket_factory = RamFactoryStack;

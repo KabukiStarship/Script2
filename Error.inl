@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #if SEAM >= SCRIPT2_LIST
 namespace _ {
 const CHA* CrabsError0STA() {
-  return TCrabsErrorST0<CHA>();
+  return TErrorST<CHA>();
   /*
   static const CHA error_strings[ErrorCountMax][32] = {
     "ErrorA",                 //< Error 00.
@@ -49,17 +49,17 @@ const CHA* CrabsError0STA() {
 
 const CHA* CrabsErrorSTR(ISA error) {
   error = error < 0 ? -error : error;
-  if (error > CrabsErrorCountMax) error = CrabsErrorCountMax;
-  return &TCrabsErrorST0<CHA>()[error * 32];
+  if (error > CrabsErrorCount) error = CrabsErrorCount;
+  return &TErrorST<CHA>()[error * 32];
 }
 const CHA* CrabsErrorSTR(ISB error) {
   return CrabsErrorSTR(ISA(error));
 }
 const CHA* CrabsErrorSTR(ISC error) {
-  return CrabsErrorSTR(ISC(error));
+  return CrabsErrorSTR(ISA(error));
 }
 const CHA* CrabsErrorSTR(ISD error) {
-  return CrabsErrorSTR(ISD(error));
+  return CrabsErrorSTR(ISA(error));
 }
 
 }  //< namespace _

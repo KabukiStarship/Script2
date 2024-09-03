@@ -230,7 +230,7 @@ inline const CHT* TSTRFindLast(const CHT* string, CHA token) {
 /* Gets the length of the given CHA.
 @todo    Update function for UTF-8 and UTF-16.
 @return  Returns -1 if the text CHA is nil.*/
-template<typename CHT = CHR, typename IS = ISN>
+template<typename CHT = CHR, typename IS = ISR>
 IS TSTRLength(const CHT* string) {
   return (IS)(TSTREnd<CHT>(string) - string);
 }
@@ -239,7 +239,7 @@ IS TSTRLength(const CHT* string) {
 @return  Returns -1 if the text CHA is nil.
 @warning This function is only safe to use on ROM Strings with a nil-term
 CHA. */
-template<typename CHT = CHR, typename IS = ISN>
+template<typename CHT = CHR, typename IS = ISR>
 inline IS TSTRLength(CHT* string) {
   return TSTRLength<CHT>(TPtr<const CHT>(string));
 }

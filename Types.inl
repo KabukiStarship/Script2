@@ -49,64 +49,36 @@ BOL ATypeVTBits(DTB type) {
   return (VT != _ARY || MT != 0) ? -1 : VT;
 }
 
-const ISA* ATypeCustomSize() {
-  static const ISA custom_sizes[13] = {
-    BOLSizeBits,
-    DTASize,
-    DTBSize,
-    DTCSize,
-    DTDSize,
-    DTESize,
-    DTFSize,
-    DTGSize,
-    DTHSize,
-    DTISize,
-    DTJSize,
-    DTKSize,
-    DTLSize
-  };
-  return custom_sizes;
-}
-
-const ISA* ATypeCustomAlignMask() {
-  static const ISA align_masks[] = {
-    BOLSizeBits,
-    DTAAlignMask,
-    DTBAlignMask,
-    DTCAlignMask,
-    DTDAlignMask,
-    DTEAlignMask,
-    DTFAlignMask,
-    DTGAlignMask,
-    DTHAlignMask,
-    DTIAlignMask,
-    DTJAlignMask,
-    DTKAlignMask,
-    DTLAlignMask
-  };
-  return align_masks;
-}
-
-ISA ATypeCustomAlignMask(DTA type) {
-  if (type < _BOL || type >= ATypePODCount) return sizeof(ISW) - 1;
-  return ATypeCustomAlignMask()[type - _BOL];
-}
-
+// Retrusn the size of an ASCII POD Type 0-31 in bytes.
 ISA ATypeSizeOfPOD(DTB type) {
-  if (type == 0 || type >= ATypePODCount) return 0;
-  if (type < _FPB) return 1;
-  if (type < _FPC) return 2;
-  if (type < _FPD) return 4;
-  if (type < _FPE) return 8;
-  if (type < _BOL) return 16;
-  return ATypeCustomSize()[type - _BOL];
+  if (type <= 0) return 0;
+  if (type <= _CHA) return 1;
+  if (type <= _CHB) return 2;
+  if (type <= _CHC) return 4;
+  if (type <= _TME) return 8;
+  if (type <= _BOL) return 16;
+  if (type == _BOL) return sizeof(BOL);
+#if USING_CT5
+  if (type <= _CT5) return 16;
+#endif
+#if USING_CT4
+  if (type <= _CT4) return 8;
+#endif
+#if USING_CT3
+  if (type <= _CT3) return 4;
+#endif
+#if USING_CT2
+  if (type <= _CT2) return 2;
+#endif
+  if (type <= 31) return 1;
+  return 0;
 }
 
-ISW ATypeSizeBytes(void* value, DTB type) {
+ISW ATypeSizeBytes(const void* value, DTB type) {
   return TATypeSizeOf<ISW>(value, type);
 }
 
-ISW ATypeSizeBytes(void* value_base, ISA size_bytes, DTB type) {
+ISW ATypeSizeBytes(const void* value_base, ISA size_bytes, DTB type) {
   return ATypeSizeBytes(TPtr<>(value_base, size_bytes), type);
 }
 
@@ -264,7 +236,7 @@ void TypeValue::Set(CHA item) {
   word_ = IUW(item);
 }
 void TypeValue::Set(const CHA* item) {
-  type_ = CTypeMap(_STA, _CNS_PTR);
+  type_ = CATypeMap(_STA, _CNS_PTR);
   word_ = IUW(item);
 }
 #endif

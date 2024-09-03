@@ -600,6 +600,7 @@ Printer& TPrint(Printer& p, Headingf& value) {
 
 template<typename Printer, typename CH = CHR>
 Printer& TPrintChars(Printer& p, const CH* start, const CH* stop) {
+  D_ASSERT(start < stop);
   if (!start || start >= stop) return p;
 
   ISW size_bytes = stop - start + 1;
@@ -879,7 +880,7 @@ Printer& TPrintValue(Printer& p, DT type, const void* base_ptr, IS offset) {
 
 // Prints the value of the given type-value tuple.
 template<typename Printer, typename DT, typename IS>
-Printer& TPrintValue(Printer& p, TTypeValue<DT> type_value) {
+Printer& TPrintValue(Printer& p, TATypeValuePtr<DT> type_value) {
   return TPrintValue<Printer, DT>(p, type_value.type, type_value.value);
 }
 
@@ -1227,7 +1228,7 @@ namespace _ {
 
 /* Prints a summary of the type-value tuple with word-sized Data Type. */
 template<typename Printer>
-Printer& TPrint(Printer& p, TypeWordValue item) {
+Printer& TPrint(Printer& p, ATypeValue item) {
   TPrintAType<Printer>(p, item.type);
   p << ':';
   TPrintATypeValue<Printer, DTW>(p, item.type, item->value);
@@ -1302,7 +1303,7 @@ inline _::TSPrinter<CH, IS>& operator<<(_::TSPrinter<CH, IS>& p,
 
 template<typename CH, typename IS>
 inline _::TSPrinter<CH, IS>& operator<<(_::TSPrinter<CH, IS>& p,
-                                         _::TypeWordValue item) {
+                                         _::ATypeValue item) {
   return _::TPrint<_::TSPrinter<CH, IS>>(p, item);
 }
 

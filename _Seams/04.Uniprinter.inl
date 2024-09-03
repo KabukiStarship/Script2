@@ -18,7 +18,7 @@ using namespace _;
 
 namespace Script2 {
 #if SEAM >= SCRIPT2_UNIPRINTER
-template<typename CHT = CHR, typename IS = ISN>
+template<typename CHT = CHR, typename IS = ISR>
 static const CHA* TestSPrinter() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << sizeof(CHT) << ",IS"
                     << sizeof(IS) << ">\n\n"

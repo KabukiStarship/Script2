@@ -267,7 +267,7 @@ class AString {
 
  public:
   static constexpr DTB Type() {
-    return CTypeVector(CATypeCH<CHT>(), _ARY, CATypeSize<ISZ>());
+    return CATypeVector(CATypeCH<CHT>(), _ARY, CATypeSize<ISZ>());
   }
 
   /* Constructs a String that auto-grows from stack to heap.
