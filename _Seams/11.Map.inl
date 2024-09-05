@@ -19,14 +19,14 @@ using namespace _;
 #endif
 
 namespace Script2 {
-template<typename D, D kDomainMin_, D kDomainMax, typename ISZ,
-          ISZ kCodomainMin_, ISZ kCodomainMax_, ISZ Size_>
+template<typename D, D DomainMin_, D DomainMax_, typename ISZ,
+          ISZ CodomainMin_, ISZ CodomainMax_, ISZ Size_>
 void TestMap() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting AMap<D")
          << sizeof(D) << ",ISZ" << CHA('0' + sizeof(ISZ))
          << Linef(">\n+---\n\n"));
 
-  AMap<D, ISZ, Size_> map;
+  AMap<MAP_P, Size_> map;
   D_COUT_OBJ(map);
 
   D_COUT("map_size:" << map.Size() << " map_size_bytes:" << map.SizeBytes()
@@ -40,12 +40,14 @@ void TestMap() {
   D_COUT(Headingf("Generating random domain values..."));
 
   for (ISZ i = 0; i < Size_; ++i) {
-    D d = Random(kDomainMin_, kDomainMax);
+    D d = Random(DomainMin_, DomainMax_);
     domain[i] = d;
     D_COUT("\n" << i << ".) " << d);
   }
 
   for (ISZ i = 0; i < Size_; ++i) map.Add(domain[i]);
+
+  D_COUT_MAP(map.This());
 
   D_COUT(Headingf("Searching the domain for each domain[i]..."));
   for (ISZ i = 0; i < Size_; ++i) A_AVOW_INDEX(i, ISZ(map.Find(domain[i])), i);
@@ -55,7 +57,7 @@ void TestMap() {
   ISZ codomain[Size_];
 
   for (ISZ i = 0; i < Size_; ++i) {
-    ISZ c = Random(kCodomainMin_, kCodomainMax_);
+    ISZ c = Random(CodomainMin_, CodomainMax_);
     codomain[i] = c;
     map.RemapCodomain(i, c);
   }

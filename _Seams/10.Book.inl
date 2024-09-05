@@ -40,10 +40,8 @@ void TestBook() {
   D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes() << 
          " book.Count():" << book.Count() << 
          " book.CountMax():" << book.CountMax());
-#if D_THIS
   D_COUT("\nPrinting empty book:\n");
-  book.COut();
-#endif
+  D_COUT_BOOK(book.This());
 
   ISZ test_word_count = book.CountMax();
   D_COUT("\nPopulating " << test_word_count << " test words...");
@@ -68,11 +66,11 @@ void TestBook() {
   A_AVOW(ISY(6), book.Insert(word_cursor += word_step, IUC('6')));
   D_COUT("\n\nStep 7:\n" << Linef("---") << '\n');
   A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD('7')));
-  book.COut();
+  //book.COut();
 
   D_COUT("\n\nStep 8: Testing Factory.Grow...\n" << Linef("---") << '\n');
   A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD('8')));
-  book.COut();
+  //book.COut();
   ISY i = 9;
   D_COUT("\n\nStep 8b: Testing POD types...\n" << Linef("---\n"));
   for (; i < ISY(TTestWords<CHT>::WordsMax) - 8;) {
@@ -92,10 +90,8 @@ void TestBook() {
   for (ISN i = 0; i < SizeBytes - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
-
-#if D_THIS
-  book.COut();
-#endif
+  const TBook<BOK_P>* dez_nutz = book.This();
+  D_COUT_BOOK(dez_nutz);
 }
 }  //< namespace Script2
 #undef TPARAMS

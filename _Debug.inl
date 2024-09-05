@@ -30,16 +30,20 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_COUT_FUNCTION_LINE \
   ::_::COut().NL();            \
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__)
-#define D_COUT_ARRAY(item) ::_::TArrayPrint<COut, ISZ>(StdOut(), item)
-#define D_COUT_STACK(item) ::_::TStackPrint<COut, T, ISZ>(StdOut(), item)
-#define D_COUT_MATRIX(item) ::_::TMatrixPrint<COut, T, ISZ>(StdOut(), item)
-#define D_COUT_TABLE(item) \
-  TTablePrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
-#define D_COUT_MAP(item) ::_::TMapPrint<COut, D, ISZ>(StdOut(), item)
+#define D_COUT_ARRAY(item) ::_::TArrayPrint<::_::COut, ISZ>(StdOut(), item)
+#define D_COUT_STACK(item) ::_::TStackPrint<::_::COut, T, ISZ>(StdOut(), item)
+#define D_COUT_MATRIX(item) ::_::TMatrixPrint<::_::COut, T, ISZ>(StdOut(), item)
+#define D_COUT_LIST(item) \
+  TListPrint<::_::COut, ISZ, ISY, DT>(StdOut(), item)
+#define D_COUT_LOOM(item) \
+  TLoomPrint<::_::COut, CHT, ISZ, ISY>(StdOut(), item)
 #define D_COUT_BOOK(item) \
-  ::_::TBookPrint<COut, CHT, ISZ, ISY>(StdOut(), item)
+  ::_::TBookPrint<::_::COut, CHT, ISZ, ISY, DT>(StdOut(), item)
+#define D_COUT_MAP(item) ::_::TMapPrint<::_::COut, D, ISZ>(StdOut(), item)
 #define D_COUT_DIC(item) \
   ::_::TDicPrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
+#define D_COUT_TABLE(item) \
+  TTablePrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
   Socket socket_to_print(origin, end_or_size)
 #define D_ARRAY_FILL(origin, end_or_size, c) \
