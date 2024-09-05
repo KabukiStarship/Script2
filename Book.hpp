@@ -211,17 +211,14 @@ Printer& TBookPrint(Printer& o, const TBook<BOK_P>* book) {
   auto voffsets     = TPtr<ISZ>(book, sizeof(TBook<BOK_P>));
   auto types        = TPtr<DT>(voffsets + count_max);
   auto keys_offset  = *voffsets++;
-  auto keys = TPtr<TLoom<LOM_P>>(book, keys_offset);
-  #if D_THIS
-  TLoomPrint<COut, LOM_P>(o, keys);
-  #endif
+  auto keys         = TPtr<TLoom<LOM_P>>(book, keys_offset);
   auto keys_size    = keys->size_bytes;
   auto keys_top     = keys->top;
   D_COUT("\ncount_max:" << count_max << " count:" << count << 
          " keys_size:" << keys_size << " keys_top : " << keys_top);
-  //D_AVOW(count_max, keys->map.count_max);
-  //D_AVOW(count    , keys->map.count);
-  //TLoomPrint<COut, LOM_P>(StdOut(), keys);
+  D_AVOW(count_max, keys->map.count_max);
+  D_AVOW(count    , keys->map.count);
+  D_COUT_LOOM(keys);
   o << "\nBook<CH" << CATypeSWCH<CHT>() << ",IS" << CATypeSWCH<ISZ>() << ",IS"
     << CATypeSWCH<ISY>() << "> size_bytes:" << book->values.size_bytes
     << " count_max:" << count_max << " count:" << count << '\n'
@@ -230,7 +227,6 @@ Printer& TBookPrint(Printer& o, const TBook<BOK_P>* book) {
     << " values_free_space:" << TListFreeSpace<ISZ>(&book->values)
     << " keys.size_bytes:" << keys_size << " keys.top:" << keys_top
     << " TypeOf(keys):" << ATypef(types[0]) << ' ';
-  //TPrintATypeValue<Printer, DT>(o, *(types - 1), keys);
   for (ISY i = 1; i < count; ++i) {
     o << '\n' << i << ".) \"" << TLoomGet<LOM_P>(keys, i) << "\" type:";
     auto type    = *(++types);
@@ -307,9 +303,6 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
   ISY keys_index = TListAlloc<LST_P>(values, KeysType, size_keys);
   D_AVOW(ISY(0), keys_index);
   D_COUT("\nkeys_index  :" << keys_index);
-  //#if SEAM == SCRIPT2_BOOK
-  //TListPrint<COut, LST_P>(StdOut(), values);
-  //#endif
   TLoom<LOM_P>* keys = TListValue<LST_P, TLoom<LOM_P>>(values, keys_index);
   D_COUT("\nkeys offset : " << TDelta<>(book, keys) << 
          "\nKeysType:0b" << Binaryf(KeysType) << ' ');
@@ -328,23 +321,13 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
   D_COUT("\nkeys->top:" << keys->top);
   D_COUT("\nTDelta<>(book, TBookKeys<BOK_P>(book)):" << 
          TDelta<>(book, TBookKeys<BOK_P>(book)));
-  /*
-  #if SEAM == SCRIPT2_BOOK
-  D_COUT("\n\nValues:");
-  TListPrint<COut, LST_P>(StdOut(), values);
-  D_COUT("\n\nKeys:");
-  TLoomPrint<COut, LOM_P>(StdOut(), keys);
-  D_COUT(" free_space:" << TLoomFreeSpace<LOM_P>(keys));
-  #endif*/
   if (!result) return nullptr;
   D_COUT("\n\nTListInit Post size_bytes: " << size_bytes << 
          " count_max:" << count_max << 
          "\nBook End  :" << TDelta<>(book, TBookEnd<BOK_P>(book)) <<
          "\nKeys End  :" << TDelta<>(book, TLoomEnd<LOM_P>(keys)) <<
          "\nKeys Start:" << TDelta<>(book, keys) << "\n\nResult:\n");
-  #if D_THIS
-  TBookPrint<COut, BOK_P>(StdOut(), book);
-  #endif
+  D_COUT_BOOK(book);
   return book;
 }
 
@@ -463,22 +446,18 @@ inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key,
   if (result < 0) {
     D_COUT("\n\n\nFailed to insert into loom:" << result << ' ' << 
            CrabsErrorSTR(result));
-#if D_THIS
-    TLoomPrint<COut, LOM_P>(StdOut(), keys);
-    TBookPrint<COut, BOK_P>(StdOut(), book);
-#endif
+    D_COUT_LOOM(keys);
+    D_COUT_BOOK(book);
     return -ErrorKeysBufferOverflow;
   }
-  else {
-    //TLoomPrint<COut, LOM_P>(StdOut(), keys);
-  }
+  //D_COUT_LOOM(keys);
   //D_COUT("\n\nBefore:\n" << Charsf(book, book->values.size_bytes));
   result = TListInsert<LST_P>(&book->values, item, result);
   if (result < 0) {
     #if SEAM == SCRIPT2_BOOK
     D_COUT("\nFailed to insert into List with error " << result << ':' <<
       CrabsErrorSTR(result));
-    TListPrint<COut, LST_P>(StdOut(), &book->values);
+    D_COUT_LIST(&book->values);
     D_COUT("\n\nList memory: &book->values.size_bytes:" << *&book->values.size_bytes << '\n');
     D_COUT(Charsf(&book->values, &book->values.size_bytes));
     //D_COUT("After:\n" << Charsf(book, book->values.size_bytes));
@@ -599,7 +578,7 @@ inline ISY TBookInsertFrom(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* ke
   //D_COUT("\n\nList memory before:\n" <<
   //  Charsf(&book->values, *&book->values.size_bytes));
   auto result = TListInsert<LST_P>(&book->values, type, value, index);
-  /**/TListPrint<COut, LST_P>(COut().Star(), &book->values);
+  D_COUT_LIST(&book->values);
   if (result < 0)
     return result;
   auto key_index = TLoomInsert<LOM_P>(keys, key, index);
@@ -643,9 +622,7 @@ TBook<BOK_P>* TBookAdd(TBook<BOK_P>* book, const TBook<BOK_P>* source) {
       src_count     = ISY(src_values->map.count);
   D_COUT("\nAdding " << src_count << " of " << src_count_max << 
     " max items...\nsource:\n");
-  #if D_THIS
-  TBookPrint<COut, BOK_P>(COut().Star(), source);
-  #endif
+  D_COUT_BOOK(source);
   D_ASSERT(src_count >= 0 && src_count <= src_count_max && src_top > 0);
   TLoom<LOM_P>* keys     = TBookKeys<BOK_P>(book);
   const TLoom<LOM_P>* src_keys = TBookKeys<BOK_P>(source);
@@ -710,7 +687,7 @@ BOL TBookGrow(Autoject& obj) {
   D_COUT("\n\n\n*******\nsize_new:" << size_new << 
          " count_max:" << count_max_new << " keys_size_new:" << keys_size_new);
   D_COUT("\n\nBefore:\n");
-  TBookPrint<COut, BOK_P>(StdOut(), source);
+  D_COUT_BOOK(source);
   D_COUT(Charsf(source, source->values.size_bytes));
 #endif*/
   IUW* origin_new = obj.ram(nullptr, size_new);
@@ -722,9 +699,7 @@ BOL TBookGrow(Autoject& obj) {
   TBookAdd<BOK_P>(destination, source);
   obj.origin = origin_new;
   D_COUT("\n\nFinished growing. :-)\n\n");
-  #if SEAM == SCRIPT2_BOOK
-  TBookPrint<COut, BOK_P>(COut().Star(), TPtr<TBook<BOK_P>>(obj.origin));
-  #endif
+  D_COUT_BOOK(TPtr<TBook<BOK_P>>(obj.origin));
   return true;
 }
 
@@ -759,9 +734,7 @@ ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
       D_COUT("\n\n\nFailed to insert into book:" << result << ' ' <<
              CrabsErrorSTR(result));
       auto keys = TBookKeys<BOK_P>(TPtr<TBook<BOK_P>>(obj.This()));
-      #if D_THIS
-      TLoomPrint<COut, LOM_P>(COut().Star(), keys);
-      #endif
+      D_COUT_LOOM(keys);
     }
     D_COUT("\ndez nutz baby!!!");
     D_COUT('\n');

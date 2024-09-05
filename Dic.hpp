@@ -228,9 +228,7 @@ inline ISY TDicInsert(TDic<TPARAMS>* dic, const CHT* key, T item,
   //       " into index:" << index);
   if (index < 0) return index;
   auto list = TDicList<TPARAMS>(dic);
-#if DEBUG_THIS
-  TListPrint<COut, ISY>(list);
-#endif
+  D_COUT_DIC(list);
   ISY result = ISY(TListInsert<ISZ, DTB>(list, item));
   if (result < 0) {
     D_COUT("\nFailed to insert with error " << result << ':'

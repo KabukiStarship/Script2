@@ -20,6 +20,8 @@ the MPL was not distributed with this file, You can obtain one at
 #undef D_COUT_ARRAY
 #undef D_COUT_STACK
 #undef D_COUT_MATRIX
+#undef D_COUT_LIST
+#undef D_COUT_LOOM
 #undef D_COUT_TABLE
 #undef D_COUT_MAP
 #undef D_COUT_BOOK

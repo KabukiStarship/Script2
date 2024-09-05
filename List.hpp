@@ -730,7 +730,7 @@ inline ISY TListInsert(TList<LST_P>* list, DT type, const void* value,
   D_COUT("\n\nInserting type:" << Typef(type) << ":0d" << type << ":0x" << Hexf(type));
   auto align_mask = ATypeAlignMask(type);
   if (index == count) {
-    TListPrint<COut, LST_P>(COut().Star(), list);
+    //TListPrint<COut, LST_P>(StdOut(), list);
     auto result = TATypeWrite_NC<ISZ>(TPtr<>(list, top), TPtr<>(list, size_bytes), 
                                       type, value, align_mask);
     if (result == 0) return -ErrorBufferOverflow;
@@ -759,7 +759,7 @@ inline ISY TListInsert(TList<LST_P>* list, DT type, const void* value,
 template<LST_A>
 inline ISY TListAlloc(TList<LST_P>* list, DT type, ISZ size_bytes,
     ISY index = PSH) {
-  TPrintATypeDebug<COut>(COut().Star(), type);
+  //TPrintATypeDebug<COut>(StdOut(), type);
   ISA align_mask = ATypeAlignMask(type);
   auto top = TAlignUp<ISZ>(list->top, align_mask);
   ISY  count = ISY(list->map.count),

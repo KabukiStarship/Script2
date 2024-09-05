@@ -10,6 +10,7 @@ the MPL was not distributed with this file, You can obtain one at
 #ifndef SCRIPT2_ARRAY_TEMPLATES
 #define SCRIPT2_ARRAY_TEMPLATES
 #include "Array.h"
+#include "Binary.hpp"
 #include "Types.hpp"
 namespace _ {
 
@@ -381,17 +382,19 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
 /* Inserts the given item at the start stack.
 @pre You must perform bounds checking before calling this function. */
 template<typename T>
-inline void TArrayInsert_NC(T* items_start, T* items_end, T item) {
-  --items_end;
-  while (items_start < items_end) *items_end-- = *items_end;
-  *items_start = item;
+inline void TArrayInsert_NC(T* items_start, T* items_stop, T item) {
+  while (items_start < items_stop) {
+    auto read = *(items_stop - 1);
+    *items_stop-- = read;
+  }
+  *items_stop = item;
 }
 
 /* Inserts the given item at the start stack.
 @pre You must perform bounds checking before calling this function. */
 template<typename T, typename ISZ>
-inline void TArrayInsert_NC(T* elements, ISZ count_max, T item) {
-  return TArrayInsert_NC<T>(elements, elements + count_max, item);
+inline void TArrayInsert_NC(T* elements, ISZ count, T item) {
+  return TArrayInsert_NC<T>(elements, elements + count, item);
 }
 
 /* Inserts the given item at the index index the elements of the given count.
