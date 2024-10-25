@@ -30,7 +30,7 @@ struct LIB_MEMBER BOut {
 };
 
 /* Gets the B-Output's socket.*/
-LIB_MEMBER CHA* BOutBuffer(BOut* bout);
+LIB_MEMBER CHA* BOutBoofer(BOut* bout);
 
 #if USING_SCRIPT2_TEXT == YES_0
 
@@ -47,7 +47,7 @@ LIB_MEMBER BOut* BOutInit(IUW* socket, ISC size);
 LIB_MEMBER ISC BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-LIB_MEMBER ISC BOutBufferLength(BOut* bout);
+LIB_MEMBER ISC BOutBooferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
 LIB_MEMBER CHA* BOutEndAddress(BOut* bout);

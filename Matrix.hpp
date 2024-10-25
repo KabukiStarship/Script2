@@ -50,14 +50,14 @@ constexpr ISZ TMatrixElementCountMax() {
 
 /* Calculates the size of the Dimensions Stack with the TMatrix header. */
 template<typename I = ISN>
-inline I TMatrixHeaderSize(I dimensions_count_max) {
-  return sizeof(TMatrix<I>) + dimensions_count_max * sizeof(I);
+inline I TMatrixHeaderSize(I dimensions_total) {
+  return sizeof(TMatrix<I>) + dimensions_total * sizeof(I);
 }
 
 // Checks if the 
 template<typename T = ISW, typename ISZ = ISN>
-inline ISZ TMatrixArraySizeMax(ISZ dimensions_count_max) {
-  return ~ISW(0) - TMatrixHeaderSize<ISZ>(dimensions_count_max);
+inline ISZ TMatrixArraySizeMax(ISZ dimensions_total) {
+  return ~ISW(0) - TMatrixHeaderSize<ISZ>(dimensions_total);
 }
 
 /* Prints the TMatrix to the UTF. */
@@ -65,7 +65,7 @@ template<typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TMatrixPrint(Printer& o, TMatrix<ISZ>* matrix) {
   A_ASSERT(matrix);
   ISZ size = matrix->size, 
-      dimension_size  = matrix->dimensions.count_max,
+      dimension_size  = matrix->dimensions.total,
       dimension_count = matrix->dimensions.count;
 
   o << "\n\nArray: size:" << size << " dimensions:{" << dimension_count;
@@ -144,20 +144,20 @@ template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
   D_ASSERT(matrix);
   return ISZ(sizeof(TMatrix<ISZ>)) + matrix->size * sizeof(T) + 
-         matrix->dimensions->count_max * sizeof(ISZ);
+         matrix->dimensions->total * sizeof(ISZ);
 }
 
 template<typename T, typename ISZ>
-inline ISZ TMatrixDimensionCountMax(ISZ count_max) {
-  count_max += sizeof(TStack<SCK_P>) >> CBitCount<ISZ>();
-  return TAlignUpArray<ISZ>(count_max);
+inline ISZ TMatrixDimensionCountMax(ISZ total) {
+  total += sizeof(TStack<SCK_P>) >> CBitCount<ISZ>();
+  return TAlignUpArray<ISZ>(total);
 }
 
 template<typename T, typename ISZ, ISZ AlignementMask = sizeof(T) - 1>
-ISZ TMatrixSize(ISZ dimension_count_max, ISZ element_count) {
-  ISZ size_bytes = TMatrixHeaderSize<ISZ>(dimension_count_max) +
+ISZ TMatrixSize(ISZ dimension_total, ISZ element_count) {
+  ISZ bytes = TMatrixHeaderSize<ISZ>(dimension_total) +
                    sizeof(T) * element_count;
-  return AlignUp(size_bytes, AlignementMask);
+  return AlignUp(bytes, AlignementMask);
 }
 
 /* Initializes an stack of n elements of the given type.
@@ -172,7 +172,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
   TStack<SCK_P>* stack = TPtr<TStack<SCK_P>>(socket);
   stack->size_array = 0;
   stack->size_stack = size;
-  stack->count_max = dimension_count;
+  stack->total = dimension_count;
   stack->count = 0;
   return stack;
 }
@@ -245,14 +245,14 @@ inline TMatrix<ISZ>* TMatrixCloneDelta(Autoject& ajt,
   ISZ* a_dimensions = &matrix->dimensions.count;
   ISZ dimension_count = *a_dimensions;
   if (!dimensions_delta || dimension_count == 0) {
-    ISZ size_bytes = TMatrixSize<T, ISZ>(matrix);
-    if (size_bytes < 0) return nullptr;
-    IUW* origin_new = ajt.ram(nullptr, size_bytes);
+    ISZ bytes = TMatrixSize<T, ISZ>(matrix);
+    if (bytes < 0) return nullptr;
+    IUW* origin_new = ajt.ram(nullptr, bytes);
     if (!origin_new) return nullptr;
     IUW* origin = ajt.origin;
-    ISZ size_bytes = TMatrixSize<T, ISZ>(&matrix->dimensions.count);
-    RAMCopy(origin_new, TPtr<CHA>(origin_new) + size_bytes, 
-              origin, TPtr<CHA>(origin) + size_bytes);
+    ISZ bytes = TMatrixSize<T, ISZ>(&matrix->dimensions.count);
+    RAMCopy(origin_new, TPtr<CHA>(origin_new) + bytes, 
+              origin, TPtr<CHA>(origin) + bytes);
     return TPtr<TMatrix<ISZ>>(origin_new);
   }
   ISZ dimensions_delta_count = *dimensions_delta++;
@@ -260,9 +260,9 @@ inline TMatrix<ISZ>* TMatrixCloneDelta(Autoject& ajt,
   if (dimension_count == 1) {
     return nullptr;
   }
-  ISZ size_bytes = TMatrixSize<T, ISZ>(dimensions_delta);
-  if (size_bytes < 0) return nullptr;
-  IUW* origin_new = ajt.ram(nullptr, size_bytes);
+  ISZ bytes = TMatrixSize<T, ISZ>(dimensions_delta);
+  if (bytes < 0) return nullptr;
+  IUW* origin_new = ajt.ram(nullptr, bytes);
   const ISZ* b_dimensions = 0,
            * a_cursor = a_dimensions,
            * b_cursor = dimensions_delta_count;

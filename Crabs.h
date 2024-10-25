@@ -29,15 +29,15 @@ App/Driver/User writes to the stop of the Tx socket and the driver reads from
 the beginning. The user writes are synchronous and the driver reads are
 asynchronous.
 
-# Ring Buffer Streaming Diagram
+# Ring Boofer Streaming Diagram
 
 @code
-      |>---------------------- Ring Buffer ------------------------->|
+      |>---------------------- Ring Boofer ------------------------->|
       ________________________________________________________________
-BOut  |>-Buffer->|>-Sync User SScan-->|>-Async Portal Rx-->|>-Buffer->|
+BOut  |>-Boofer->|>-Sync User SScan-->|>-Async Portal Rx-->|>-Boofer->|
       |__________|___________________|____________________|__________|
       ________________________________________________________________
-BIn   |>-Buffer->|>-Async Portal Tx->|>-Sync User Writes->|>-Buffer->|
+BIn   |>-Boofer->|>-Async Portal Tx->|>-Sync User Writes->|>-Boofer->|
       |__________|___________________|____________________|__________|
 @endcode
 
@@ -52,7 +52,7 @@ that grows down.
     |            |            |
     |            v            |
     |=========================|
-    |          Buffer         |
+    |          Boofer         |
     |=========================|
     |          Slot           |
     |=========================|
@@ -65,8 +65,8 @@ that grows down.
 struct Crabs {
   /* List of Crabs Error Ops. */
   typedef enum Errors {
-    cErrorBufferOverflow = 0,
-    cErrorBufferUnderflow,
+    cErrorBooferOverflow = 0,
+    cErrorBooferUnderflow,
     cErrorInvalidOperand,
     cErrorStackOverflow,
     cErrorLockedState,
@@ -78,7 +78,7 @@ struct Crabs {
 
   enum {
     cMinStaccSize = 16,  //< Size of the crabs stack.
-    cMinBufferSize = 2,  //< Min socket size.
+    cMinBooferSize = 2,  //< Min socket size.
   };
 
   ISC size,            //< Offset to the BOut slot.
@@ -110,7 +110,7 @@ struct Crabs {
 LIB_MEMBER IUW* CrabsBinAddress(Crabs* crabs);
 
 /* Gets the crabs's socket. */
-LIB_MEMBER CHA* CrabsBuffer(Crabs* crabs);
+LIB_MEMBER CHA* CrabsBoofer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
 LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
@@ -123,10 +123,10 @@ LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
-@param unpacked_buffer The word-aligned expression socket.
+@param unpacked_boofer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-LIB_MEMBER Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_count,
-                            Operand* root, IUW* unpacked_buffer,
+LIB_MEMBER Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_count,
+                            Operand* root, IUW* unpacked_boofer,
                             IUW unpacked_size);
 
 /* Gets the base address of the device stack. */

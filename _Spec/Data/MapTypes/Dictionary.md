@@ -6,7 +6,9 @@
 
 #### Dictionaries
 
-Dictionaries are key-type-value sets with a hash table of unique keys. Hash sizes my be 16-bit with up to 120 members, 32-bit with up to 2^24 items, or 64-bit with up to 256 * 10^6 items. Dictionaries have slower insert times than ASCII Books but faster lookup.
+Dictionaries are key-type-value sets with a hash table of unique keys. Hash sizes my be 16-bit with up to 120 members, 32-bit with up to 2^24 items, or 64-bit with up to 256 * 10^6 items; these numbers are dictated by the statistical chance of hash algorism collisions. ASCII Dictionaries are created from a List with a Table in element 0.
+
+Dictionaries have slower insert times than ASCII Books but faster lookup.
 
 ##### Dictionary Memory Layout
 
@@ -34,7 +36,7 @@ Dictionaries are key-type-value sets with a hash table of unique keys. Hash size
 |  4   |     2^13   |      0.1         | Ceiling (0.04*p*2^13) = 327.68 |
 |  8   |     2^29   |    10^-16        | Ceiling (0.04*p*2^29) = 327.68 |
 
-**[<< Previous Section: Book](./Book.md) | [Next Section: SCRIPT Specification >>](../../)**
+**[<< Previous Section: Table](./Table.md) | [Next Section: SCRIPT Specification >>](../../)**
 
 ## Requirements
 

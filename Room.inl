@@ -174,7 +174,7 @@ Wall* Room::GetWall(int_t wall_number) {
 
 Wall* Room::AddWall(Wall* new_wall) {
   if (new_wall == nullptr) return nullptr;
-  if (walls_->count >= walls_->count_max) return nullptr;
+  if (walls_->count >= walls_->total) return nullptr;
   TStackInsert<Wall*>(walls_, new_wall);
   return new_wall;
 }

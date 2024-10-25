@@ -194,7 +194,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         return ReturnError(this, cErrorInvalidType);
       case cADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
       case STR_:
-        // Load buffered-type argument length and increment the
+        // Load boofered-type argument length and increment the
         // index.
         count = *param;
         ++param;
@@ -215,7 +215,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
 
         while (iua && count) {
           if (count-- == 0)
-            return ReturnError(this, cErrorBufferUnderflow, params, index,
+            return ReturnError(this, cErrorBooferUnderflow, params, index,
                                l_start);
           D_COUT(iua);
 
@@ -236,7 +236,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
       case cBOL:
 #if USING_SCRIPT2_1_BYTE_TYPES
         if (length == 0) {
-          return ReturnError(this, cErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBooferUnderflow, params, index,
                              l_start);
         }
         --length;
@@ -271,7 +271,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Word-align
         offset = AlignUpOffset2(l_start);
         if ((IUW)length < offset + 2) {
-          return ReturnError(this, cErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= (ISC)offset + 2;
@@ -314,7 +314,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Word-align
         offset = AlignUpOffset4(l_start);
         if ((IUW)length < offset + 4) {
-          return ReturnError(this, cErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= (ISC)offset + 4;
@@ -349,7 +349,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
         // Word-align
         offset = AlignUpOffset8(l_start);
         if ((IUW)length < offset + sizeof(ISD)) {
-          return ReturnError(this, cErrorBufferUnderflow, params, index,
+          return ReturnError(this, cErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= offset + sizeof(ISD);
@@ -399,42 +399,42 @@ const Op* Slot::Read(const ISC* params, void** args) {
           }
           case 1: {  // It's a 16-bit count.
             if (length < 3) {
-              return ReturnError(this, cErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 2;
             iub_ptr = TPtr<IUB>(iua_ptr);
             count = (IUW)*iub_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 2: {  // It's a 32-bit count.
             if (length < 5) {
-              return ReturnError(this, cErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 4;
             iuc_ptr = TPtr<IUC>(iua_ptr);
             count = (IUW)*iuc_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 3: {  // It's a 64-bit count.
             if (length < 9) {
-              return ReturnError(this, cErrorBufferUnderflow, params, index,
+              return ReturnError(this, cErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 8;
             iud_ptr = TPtr<IUD>(iua_ptr);
             count = (IUW)*iud_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBufferOverflow, params, index,
+              return ReturnError(this, cErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
@@ -445,11 +445,11 @@ const Op* Slot::Read(const ISC* params, void** args) {
           }
         }
         if (length < count) {
-          return ReturnError(this, cErrorBufferOverflow, params, index,
+          return ReturnError(this, cErrorBooferOverflow, params, index,
                              l_start);
         }
         if (!count) {
-          return ReturnError(this, cErrorBufferOverflow, params, index,
+          return ReturnError(this, cErrorBooferOverflow, params, index,
                              l_start);
         }
         if (l_start + count >= l_end) {

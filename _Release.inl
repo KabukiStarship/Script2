@@ -33,12 +33,18 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_ARRAY_SAVE(origin, stop)
 #define D_ARRAY_FILL(origin, end_or_size, c)
 #define D_ARRAY_WIPE(origin, end_or_size)
-#define D_OBJ_WIPE(obj) 
-#define D_OBJ_ORIGIN_WIPE(origin) 
+#define D_OBJ_WIPE(origin) 
 #define D_ASSERT_INDEX(condition, index)
 #define A_ASSERT(condition) \
   if (!::_::Test(condition)) ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
 #define D_ASSERT(condition)
+#define A_ASSERT_PTR(ptr)                            \
+  if (IUW(ptr) < CrabsErrorCount)  \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
+#define D_ASSERT_PTR(ptr)
+#define R_ASSERT_PTR(ptr)                            \
+  if (IUW(ptr) < CrabsErrorCount)  \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
 #define A_CHECK(condition)
 #define D_CHECK(condition)
 #define R_CHECK(condition) \
@@ -82,7 +88,27 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_RETURN(value)
 #define R_RETURN(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return; }
+#define D_RETURNT(type, error) return type(error)
+#define D_RETURN_CPTR_ERROR(type, error) return const_cast<type>(error)
+#define D_RETURN_TPTR_ERROR(type, error) return reinterpret_cast<type>(error)
 #define A_RETURN_VALUE(value) return value;
 #define D_RETURN_VALUE(value)
 #define R_RETURN_VALUE(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return; }
+#define D_CHECK_PTR_RETURN_CODE(ptr, error_code)\
+  if (IUW(ptr) < IUW(CrabsErrorCount))\
+    return error_code;
+#define D_CHECK_PTR_RETURN(ptr)\
+  if (IUW(ptr) < IUW(CrabsErrorCount))\
+    return ptr;
+#define D_CHECK_CPTR_RETURN(type, ptr)\
+  if (IUW(ptr) < IUW(CrabsErrorCount))\
+    return const_cast<type>(ptr);
+#define D_CHECK_TPTR_RETURN(type, ptr)\
+  if (IUW(ptr) < IUW(CrabsErrorCount))\
+    return reinterpret_cast<type>(ptr);
+#define D_CHECK_PTR_TRETURN(type, ptr)\
+  if (IUW(ptr) < IUW(CrabsErrorCount))\
+    return type(IUW(ptr));
+#define D_CHECK_PTR_RETURN_NIL(ptr)\
+  if (IUW(ptr) < IUW(CrabsErrorCount)) return;

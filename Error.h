@@ -10,7 +10,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPT2_ERROR_DECL
 #define SCRIPT2_ERROR_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_LIST
+#if SEAM >= SCRIPT2_CORE
 namespace _ {
 
 // @see _ConfigHeader.inl for enum of error codes.
@@ -25,6 +25,8 @@ inline const CHA* CrabsErrorSTR(ISA error);
 inline const CHA* CrabsErrorSTR(ISB error);
 inline const CHA* CrabsErrorSTR(ISC error);
 inline const CHA* CrabsErrorSTR(ISD error);
+
+inline BOL AIsError(const void* result);
 
 }  //< namespace _
 #endif

@@ -29,7 +29,7 @@ void TestMap() {
   AMap<MAP_P, Size_> map;
   D_COUT_OBJ(map);
 
-  D_COUT("map_size:" << map.Size() << " map_size_bytes:" << map.SizeBytes()
+  D_COUT("map_size:" << map.Size() << " map_bytes:" << map.SizeBytes()
                      << " map_size_words:" << map.SizeWords()
                      << " sizeof(TMapBuf<D,ISZ>):" << sizeof(TMapBuf<D, ISZ>)
                      << "\n domain:" << TDelta<>(map.This(), map.Domain())

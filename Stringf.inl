@@ -296,7 +296,7 @@ CHA* SPrint(CHA* string, CHA* stop, CHC item) {
   if (!string) return nullptr;
 
   D_COUT("\n\n" << IUC(item) << ".) Printed:0x");
-  if (!(item >> 7)) {  // 1 ASCII CHA.
+  if (!(item >> 7)) { // 1 ASCII CHA.
     if (string + 1 > stop) return nullptr;
     *string++ = CHA(item);
     D_COUT(Hexf(*(string - 1)) << "   ");
@@ -621,9 +621,9 @@ Binaryf::Binaryf(FPD item) : valuef(item, sizeof(FPD)) {}
 #endif
 
 // Stringf::Stringf () {}
-Stringf::Stringf() : type_(_NIL), count_(0), buffer_() {
-  string_ = &buffer_[0];
-  *buffer_ = 0;
+Stringf::Stringf() : type_(_NIL), count_(0), boofer_() {
+  string_ = &boofer_[0];
+  *boofer_ = 0;
 }
 //< Visual C++ is complaining about unitialized members. I think it's a bug.
 
@@ -634,18 +634,18 @@ Stringf::Stringf(const CHB* item) : string_(item), count_(0) { Print(item); }
 #if USING_UTF32 == YES_0
 Stringf::Stringf(const CHC* item) : string_(item), count_(0) { Print(item); }
 #endif
-Stringf::Stringf(CHA item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(CHB item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(CHC item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(ISC item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(IUC item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(ISD item) : string_(buffer_), count_(0) { Print(item); }
-Stringf::Stringf(IUD item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(CHA item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(CHB item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(CHC item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(ISC item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(IUC item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(ISD item) : string_(boofer_), count_(0) { Print(item); }
+Stringf::Stringf(IUD item) : string_(boofer_), count_(0) { Print(item); }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(FPC item) : string_(boofer_), count_(0) { Print(item); }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD item) : string_(buffer_), count_(0) { Print(item); }
+Stringf::Stringf(FPD item) : string_(boofer_), count_(0) { Print(item); }
 #endif
 Stringf::Stringf(const CHA* item, ISW count) : string_(item), count_(count) {
   Print(item);
@@ -660,43 +660,43 @@ Stringf::Stringf(const CHC* item, ISW count) : string_(item), count_(count) {
   Print(item);
 }
 #endif
-Stringf::Stringf(CHA item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(CHA item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(CHB item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(CHB item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(CHC item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(CHC item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(ISC item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(ISC item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(IUC item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(IUC item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(ISD item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(ISD item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(IUD item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(IUD item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(FPC item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(FPD item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
 #endif
 
-IUW Stringf::Word() { return buffer_[0]; }
+IUW Stringf::Word() { return boofer_[0]; }
 
-void* Stringf::Value() { return buffer_; }
+void* Stringf::Value() { return boofer_; }
 
-void* Stringf::Ptr() { return TPtr<void>(buffer_[0]); }
+void* Stringf::Ptr() { return TPtr<void>(boofer_[0]); }
 
 const CHA* Stringf::STA() { return TPtr<const CHA>(string_); }
 const CHB* Stringf::STB() { return TPtr<const CHB>(string_); }
@@ -724,30 +724,30 @@ void Stringf::Print(const CHC* item) {
 #endif
 
 void Stringf::Print(CHA item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
   _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
-  string_ = buffer_;
+  string_ = boofer_;
 }
 
 #if USING_UTF16 == YES_0
 void Stringf::Print(CHB item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
   _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
-  string_ = buffer_;
+  string_ = boofer_;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Print(CHC item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
   _::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
 }
 #endif
 void Stringf::Print(ISC item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
@@ -756,7 +756,7 @@ void Stringf::Print(ISC item) {
 }
 
 void Stringf::Print(IUC item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
@@ -765,7 +765,7 @@ void Stringf::Print(IUC item) {
 }
 
 void Stringf::Print(ISD item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
@@ -774,7 +774,7 @@ void Stringf::Print(ISD item) {
 }
 
 void Stringf::Print(IUD item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
@@ -784,7 +784,7 @@ void Stringf::Print(IUD item) {
 
 #if USING_FPC == YES_0
 void Stringf::Print(FPC item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
@@ -792,7 +792,7 @@ void Stringf::Print(FPC item) {
 #endif
 #if USING_FPD == YES_0
 void Stringf::Print(FPD item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
@@ -807,7 +807,7 @@ void Stringf::PrintTME(TMC item, IUC subsecond_tick) {}
 void Stringf::PrintTMD(TMD item) {}
 
 void Stringf::Print(ATypef item) {
-  CHA* boofer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
   _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
@@ -878,81 +878,82 @@ void Stringf::Print(TypeValue item) {
   string_ = NotSupported;
 }
 
-Stringf::Stringf(ATypef item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(ATypef item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }
-Stringf::Stringf(TypeValue item, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(TypeValue item, ISW count) : string_(boofer_), count_(count) {
   Print(item);
 }*/
 
 void Stringf::Hex(CHA item, ISW count) {
-  *TPtr<CHA>(buffer_) = item;
+  *TPtr<CHA>(boofer_) = item;
   type_ = _CHA;
   count_ = -count;
 }
 #if USING_UTF16 == YES_0
 void Stringf::Hex(CHB item, ISW count) {
-  *TPtr<CHB>(buffer_) = item;
+  *TPtr<CHB>(boofer_) = item;
   type_ = _CHB;
   count_ = -count;
 }
 #endif
 #if USING_UTF32 == YES_0
 void Stringf::Hex(CHC item, ISW count) {
-  *TPtr<CHC>(buffer_) = item;
+  *TPtr<CHC>(boofer_) = item;
   type_ = _CHC;
   count_ = -count;
 }
 #endif
 void Stringf::Hex(ISA item, ISW count) {
-  *TPtr<ISA>(buffer_) = item;
+  *TPtr<ISA>(boofer_) = item;
   type_ = _ISA;
   count_ = -count;
 }
 void Stringf::Hex(IUA item, ISW count) {
-  *TPtr<IUA>(buffer_) = item;
+  *TPtr<IUA>(boofer_) = item;
   type_ = _IUA;
   count_ = -count;
 }
 
 void Stringf::Hex(ISB item, ISW count) {
-  *TPtr<ISB>(buffer_) = item;
+  *TPtr<ISB>(boofer_) = item;
   type_ = _ISB;
   count_ = -count;
 }
 
 void Stringf::Hex(IUB item, ISW count) {
-  *TPtr<IUB>(buffer_) = item;
+  *TPtr<IUB>(boofer_) = item;
   type_ = _IUB;
   count_ = -count;
 }
 
 void Stringf::Hex(ISC item, ISW count) {
-  *TPtr<ISC>(buffer_) = item;
+  *TPtr<ISC>(boofer_) = item;
   type_ = _ISC;
   count_ = -count;
 }
 
 void Stringf::Hex(IUC item, ISW count) {
-  *TPtr<IUC>(buffer_) = item;
+  *TPtr<IUC>(boofer_) = item;
   type_ = _IUC;
+  count_ = -count;
 }
 
 void Stringf::Hex(ISD item, ISW count) {
-  *TPtr<ISD>(buffer_) = item;
+  *TPtr<ISD>(boofer_) = item;
   type_ = _ISD;
   count_ = -count;
 }
 
 void Stringf::Hex(IUD item, ISW count) {
-  *TPtr<IUD>(buffer_) = item;
+  *TPtr<IUD>(boofer_) = item;
   type_ = _IUD;
   count_ = -count;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Hex(FPC item, ISW count) {
-  *TPtr<FPC>(buffer_) = item;
+  *TPtr<FPC>(boofer_) = item;
   type_ = _FPC;
   count_ = -count;
 }
@@ -960,7 +961,7 @@ void Stringf::Hex(FPC item, ISW count) {
 
 #if USING_FPD == YES_0
 void Stringf::Hex(FPD item, ISW count) {
-  *TPtr<FPD>(buffer_) = item;
+  *TPtr<FPD>(boofer_) = item;
   type_ = _FPD;
   count_ = -count;
 }
@@ -1136,7 +1137,7 @@ Rightf& Rightf::Hex(FPD item, ISW count) {
 }
 #endif
 
-Linef::Linef(CHA item, ISW count) : element(string, count) {
+Linef::Linef(CHA item, ISW count) : element(string, count), string("") {
   CHA* cursor = string;
   *cursor++ = '\n';
   *cursor++ = item;
@@ -1144,7 +1145,7 @@ Linef::Linef(CHA item, ISW count) : element(string, count) {
   *cursor++ = item;
   *cursor = 0;
 }
-Linef::Linef(const CHA* item, ISW count) : element(item, count) {}
+Linef::Linef(const CHA* item, ISW count) : element(item, count), string("") {}
 
 Headingf::Headingf(const CHA* caption1)
     : element(caption1, AConsoleWidth),

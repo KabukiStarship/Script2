@@ -16,13 +16,13 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
   template<typename CHT = CHR>
   CHT* TPrintPrinted(CHT* start = nullptr) {
-    static CHT* buffer_begin = 0;
+    static CHT* boofer_begin = 0;
     if (start) {
-      buffer_begin = start;
+      boofer_begin = start;
       return start;
     }
     std::cout << "\n    Printed \"";
-    CHT* string = buffer_begin;
+    CHT* string = boofer_begin;
     CHT c = *string++;
     while (c) {
       std::cout << c;

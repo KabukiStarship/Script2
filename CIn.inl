@@ -24,14 +24,14 @@ namespace _ {
 template<typename IS = ISW>
 constexpr ISW CSignedDigitsMax() {
   enum {
-    cBufferSize =
+    cBooferSize =
         (sizeof(IS) == 1)
             ? 4
             : (sizeof(IS) == 2)
                   ? 5
                   : (sizeof(IS) == 4) ? 16 : (sizeof(IS) == 8) ? 24 : 32
   };
-  return cBufferSize;
+  return cBooferSize;
 }
 
 template<typename IS, typename IU>
@@ -73,11 +73,11 @@ BOL TCInUnsigned(IU& result) {
 }
 
 template<typename CHT>
-inline BOL TCInString(CHT* result, ISW buffer_size) {
+inline BOL TCInString(CHT* result, ISW boofer_size) {
   if (!result) return false;
   ISN c = -1;
   while (c < 0) {
-    if (--buffer_size <= 0) return false;
+    if (--boofer_size <= 0) return false;
     c = CIn::ScanKey();
     *result++ = (CHT)c;
     if (c == 0) break;
@@ -136,19 +136,19 @@ ISN IsYesNo(const CHA* string) { return TSTRIsYesNo<CHA>(string); }
 ISN IsYesNo(const CHB* string) { return TSTRIsYesNo<CHB>(string); }
 ISN IsYesNo(const CHC* string) { return TSTRIsYesNo<CHC>(string); }
 
-CIn::CIn() : buffer_{} {}
+CIn::CIn() : boofer_{} {}
 
 #if USING_UTF8 == YES_0
 CIn::CIn(CHA& result) { SScan(result); }
-CIn::CIn(CHA* result, ISW buffer_size) { SScan(result, buffer_size); }
+CIn::CIn(CHA* result, ISW boofer_size) { SScan(result, boofer_size); }
 #endif
 #if USING_UTF16 == YES_0
 CIn::CIn(CHB& result) { SScan(result); }
-CIn::CIn(CHB* result, ISW buffer_size) { SScan(result, buffer_size); }
+CIn::CIn(CHB* result, ISW boofer_size) { SScan(result, boofer_size); }
 #endif
 #if USING_UTF32 == YES_0
 CIn::CIn(CHC& result) { SScan(result); }
-CIn::CIn(CHC* result, ISW buffer_size) { SScan(result, buffer_size); }
+CIn::CIn(CHC* result, ISW boofer_size) { SScan(result, boofer_size); }
 #endif
 CIn::CIn(ISA& result) { SScan(result); }
 CIn::CIn(IUA& result) { SScan(result); }
@@ -171,8 +171,8 @@ BOL CIn::SScan(CHA& result) {
   return true;
 }
 
-BOL CIn::SScan(CHA* result, ISW buffer_size) {
-  return TCInString<CHA>(result, buffer_size);
+BOL CIn::SScan(CHA* result, ISW boofer_size) {
+  return TCInString<CHA>(result, boofer_size);
 }
 #endif
 #if USING_UTF16 == YES_0
@@ -180,8 +180,8 @@ BOL CIn::SScan(CHB& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::SScan(CHB* result, ISW buffer_size) {
-  return TCInString<CHB>(result, buffer_size);
+BOL CIn::SScan(CHB* result, ISW boofer_size) {
+  return TCInString<CHB>(result, boofer_size);
 }
 #endif
 #if USING_UTF32 == YES_0
@@ -189,8 +189,8 @@ BOL CIn::SScan(CHC& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::SScan(CHC* result, ISW buffer_size) {
-  return TCInString<CHC>(result, buffer_size);
+BOL CIn::SScan(CHC* result, ISW boofer_size) {
+  return TCInString<CHC>(result, boofer_size);
 }
 #endif
 BOL CIn::SScan(ISA& result) { return TCInSigned<ISA, IUA>(result); }

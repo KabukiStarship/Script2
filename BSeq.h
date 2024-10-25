@@ -83,7 +83,7 @@ constexpr ISC CBSeqSize(const ISC* params) {
   if (!params) {
     return 0;
   }
-  ISC size_bytes = sizeof(ISC), count = *params++;
+  ISC bytes = sizeof(ISC), count = *params++;
 
   if (count > cParamsMax) {
     return 0;
@@ -96,15 +96,15 @@ constexpr ISC CBSeqSize(const ISC* params) {
       return 0;
     }
     //if (param <= cTKN) {
-    //  size_bytes += sizeof(ISC);
+    //  bytes += sizeof(ISC);
     //  ++params;
     //}
     if (param == cISE) {
-      size_bytes += sizeof(ISC);
+      bytes += sizeof(ISC);
       ++params;
     }
     if (param == cIUE) {
-      size_bytes += sizeof(ISC);
+      bytes += sizeof(ISC);
       ++params;
     }
     //if (param >= cLST && param <= cMAP) {  // This is illegal.
@@ -119,9 +119,9 @@ constexpr ISC CBSeqSize(const ISC* params) {
     //    params += param + 1;  // for the dimension count.
     //  }
     //}
-    size_bytes += sizeof(ISC);
+    bytes += sizeof(ISC);
   }
-  return size_bytes;
+  return bytes;
 }
 
 /* Creates a immutable Script B-Sequence.

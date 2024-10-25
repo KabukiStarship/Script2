@@ -23,18 +23,18 @@ static const CHA* Crabs(const CHA* args) {
   A_TEST_BEGIN;
 
   enum {
-    BufferSize = 2048,
-    BufferWords = BufferSize / sizeof(IUW),
+    BooferSize = 2048,
+    BooferWords = BooferSize / sizeof(IUW),
     StackHeight = 8,
   };
-  IUW boofer[BufferWords], unpacked_expr[BufferWords];
+  IUW boofer[BooferWords], unpacked_expr[BooferWords];
   D_COUT("\n|  - Running OperationTests in address ranges: [0x"
-         << Hexf(&boofer[0]) << ":0x" << Hexf(&boofer[BufferWords - 1]));
+         << Hexf(&boofer[0]) << ":0x" << Hexf(&boofer[BooferWords - 1]));
 
   This a;
 
-  Crabs* crabs = CrabsInit(boofer, BufferSize, StackHeight, &a,
-                                    unpacked_expr, BufferSize);
+  Crabs* crabs = CrabsInit(boofer, BooferSize, StackHeight, &a,
+                                    unpacked_expr, BooferSize);
   CrabsPrint(crabs);
 
   D_COUT("\n|    Testing Root (@see \"a.h\")...\n");
@@ -48,7 +48,7 @@ static const CHA* Crabs(const CHA* args) {
   CrabsRingBell(crabs);
   CrabsAckBack(crabs);
   result =
-      BoutWrite(bout, Params<4, ADR, IUA, CHA*, Parent::cTextBufferSize, ADR>(),
+      BoutWrite(bout, Params<4, ADR, IUA, CHA*, Parent::cTextBooferSize, ADR>(),
                 Args(args, Address<'A', 'A', 'A'>(), &io_number_, Const("Test"),
                      Address<BS, CR>()));
   BoutPrint(bout);

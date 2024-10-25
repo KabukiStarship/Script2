@@ -10,48 +10,50 @@ The Table is a string-to-unsorted-index map with a hash table. The acronym for a
 
 ##### Memory Layout
 
-The memory layout shall be optimized by need to minimize lookup time, which starts with a binary search of the hash table. The second
+The memory layout shall be optimized by need to minimize lookup time, which starts with a binary search of the hash table.
 
 ```AsciiArt
 +--------------------------------------+
-|_____ | Key 1                         |
-|_____ v Key N                Keys     |
+|_ISY_   Collision Count (negative)    |
+|_____ | Collision 0   ISY Collision   |
+|_____ v Collision N          Pile     |
 +--------------------------------------+
-|        Buffer                        |
+|_____   Boofer Stop                   |
+|_____   Boofer                        |
+|_____   Boofer Start                  |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Collision N        Collision  |
-|_____ | Collision 0          Pile     |
+|_____ ^ Key N                 CHT     |
+|_____ | Key 0                Keys     |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Collision Index N   Unsorted  |
-|      | Collision Index 0   Indexes   |
+|_____   Boofer                ISY     |
+|_____ ^ Unsorted Index N    Unsorted  |
+|      | Unsorted Index 0    Indexes   |
 +--------------------------------------+
-|_____   Buffer                        |
+|_____   Boofer                ISY     |
 |_____ ^ Collision Index N  Collision  |
 |      | Collision Index 0   Indexes   |
 +--------------------------------------+
-|_____   Buffer                        |
+|_____   Boofer                ISZ     |
 |_____ ^ Key Offset N          Key     |
-|      | Key Offset 1        Offsets   |
+|      | Key Offset 0        Offsets   |
 +--------------------------------------+
-|_____   Buffer                        |
+|_____   Boofer                HSH     |
 |_____ ^ Sorted Hash N        Hashes   |
-|      | Sorted Hash 1                 |
+|      | Sorted Hash 0                 |
 +--------------------------------------+  ^ Up in addresses.
 |            TTable Header             |  |
 +--------------------------------------+ 0x0
 ```
 
 ```C++
-template <typename ISZ, typename ISY>
+template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN>
 struct TTable {
-  ISZ size_bytes,  //< Size of this object in bytes.
-      size_pile;   //< Size of the collision table pile.
-  ISY count,       //< Number of keys.
-      count_max;   //< Number of buffered indexes.
-};
+  ISZ bytes,          //< Size of this object in bytes.
+      stop;           //< Keys boofer stop offset or start if count == total.
+  TStack<SCK_P> map;  //< A Stack of offset mappings to strings.
 ```
+
+When the count is less than the map.total, the stop of the keys boofer is stored in the stop ISZ value, and the start of the keys boofer is stored in the `keys_map[count]`. When the map.count is equal to the map.total the stop variable stores the keys start offset, and when the map.count returns to being less than the total
 
 ##### Hash Function
 
@@ -111,7 +113,7 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 }
 ```
 
-**[<< Previous Section: List](List.md) | [Next Section: Book >>](Book.md)**
+**[<< Previous Section: Map](Map.md) | [Next Section: Dictionary >>](Dictionary.md)**
 
 ## Requirements
 

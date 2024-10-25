@@ -31,8 +31,8 @@ void TestStringN() {
 
   AString<CH, IS, 8> str;
   D_COUT_OBJ(str);
-  D_COUT("\nbuffer_size:" << str.Array().Size() << 
-         " total_size_bytes:" << str.Array().SizeBytes());
+  D_COUT("\nboofer_size:" << str.Array().Size() << 
+         " total_bytes:" << str.Array().SizeBytes());
   D_COUT("\n\nExpecting \"" << Testing123 << 
          "\"\n\nThe first print function should fail...\n");
 

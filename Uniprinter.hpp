@@ -603,7 +603,7 @@ Printer& TPrintChars(Printer& p, const CH* start, const CH* stop) {
   D_ASSERT(start < stop);
   if (!start || start >= stop) return p;
 
-  ISW size_bytes = stop - start + 1;
+  ISW bytes = stop - start + 1;
 
   p << STAPrintCharsHeader() << STAPrintCharsBorder() << Hexf(start);
   int i = 0;
@@ -625,7 +625,7 @@ Printer& TPrintChars(Printer& p, const CH* start, const CH* stop) {
     }
     p << "| " << Hexf(address_to_print - 1);
   }
-  return p << STAPrintCharsBorder() << "Chars printed:" << size_bytes;
+  return p << STAPrintCharsBorder() << "Chars printed:" << bytes;
 }
 
 template<typename Printer, typename CH = CHR>
@@ -826,7 +826,7 @@ Printer& TPrintValue(Printer & p, DT type, const void* value) {
       return p << STAATypePOD(type);
     }
   }
-  p << "count_max:";
+  p << "total:";
   if (vector_type == _ARY) {
     if      (size_width == 0) p << *(ISA*)(value);
     else if (size_width == 1) p << *(ISB*)(value);

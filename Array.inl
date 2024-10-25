@@ -40,11 +40,11 @@ CHA* RAMFill(void* origin, ISW count, CHA fill_char) {
   IUW fill_word = FillWord(fill_char);
 
   // 1.) Align start pointer up to a word boundry and fill the unaligned bytes.
-  CHA *success = stop, *aligned_pointer = TAlignUpPTR<>(start);
+  CHA *success = stop, *aligned_pointer = TPtrAlignUp<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
   IUW *words = TPtr<IUW>(start),
-      *words_end = TAlignDownPTR<IUW>(stop);
+      *words_end = TPtrAlignDown<IUW>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
   start = TPtr<CHA>(words_end);
@@ -64,48 +64,48 @@ CHA* RAMFill(void* origin, ISW count, CHA fill_char) {
 
 namespace _ {
 
-IUW* RAMFactoryStack(IUW* origin, ISW size_bytes) {
-  if (size_bytes <= 0) return nullptr;
-  size_bytes += (-size_bytes) & ALUWordMask;  //< Word align up.
-  ISW size_words = size_bytes >> ALUSizeLog2; 
+IUW* RAMFactoryStack(IUW* origin, ISW bytes) {
+  if (bytes <= 0) return nullptr;
+  bytes += (-bytes) & ALUWordMask;  //< Word align up.
+  ISW size_words = bytes >> ALUSizeLog2; 
   IUW* socket = new IUW[size_words];
   return socket;
 }
 
-IUW* RAMFactoryHeap(IUW* origin, ISW size_bytes) {
-  if (!origin) return RAMFactoryStack(origin, size_bytes);
+IUW* RAMFactoryHeap(IUW* origin, ISW bytes) {
+  if (!origin) return RAMFactoryStack(origin, bytes);
   delete[] origin;
   return nullptr;
 }
 
 /* Compares the two blocks of memory byte by byte to check if they're identical.
-@return a_size_bytes if the two blocks of memory are idential, 0 if either the
+@return a_bytes if the two blocks of memory are idential, 0 if either the
 pointers are null or the size in bytes are not the same, and any negative result
 is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareSlow(const void* a, const ISW a_size_bytes, const void* b,
-                     const ISW b_size_bytes) {
-  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
+ISW ArrayCompareSlow(const void* a, const ISW a_bytes, const void* b,
+                     const ISW b_bytes) {
+  if (a_bytes != b_bytes || a_bytes <= 0) return 0;
   const CHA* a_cursor = TPtr<CHA>(a),
-           * a_end    = a_cursor + a_size_bytes,
+           * a_end    = a_cursor + a_bytes,
            * b_cursor = TPtr<CHA>(b);
   while (a_cursor < a_end)
     if (*a_cursor++ != *b_cursor++) {
       return -TDelta<>(a, a_cursor);
     }
-  return a_size_bytes;
+  return a_bytes;
 }
 
 /* Compares the two blocks of memory in words see if they're identical
-@return a_size_bytes if the two blocks of memory are idential, 0 if either the 
+@return a_bytes if the two blocks of memory are idential, 0 if either the 
 pointers are null or the size in bytes are not the same, and any negative result
 is the index + 1 of the first byte that was not the same. */
-ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
-                     const ISW b_size_bytes) {
-  if (a_size_bytes != b_size_bytes || a_size_bytes <= 0) return 0;
+ISW ArrayCompareFast(const void* a, const ISW a_bytes, const void* b,
+                     const ISW b_bytes) {
+  if (a_bytes != b_bytes || a_bytes <= 0) return 0;
   const IUA* a_cursor = TPtr<const IUA>(a),
-           * a_end    = a_cursor + a_size_bytes,
+           * a_end    = a_cursor + a_bytes,
            * b_cursor = TPtr<const IUA>(b),
-           * b_end    = b_cursor + b_size_bytes;
+           * b_end    = b_cursor + b_bytes;
   // 18-byte Examples:
   // v-- 0x0   v--------------------------- a_offset_msb
   // xABCDEFG_HIJKLMNP_QR                <- a_offset = 1
@@ -117,9 +117,9 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
   // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
   // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
   // Step 1: Compare the words...
-  const IUW* a_begin_word = TAlignDownPTR<IUW>(a_cursor),
-           * b_begin_word = TAlignDownPTR<IUW>(b_cursor);
-  const IUA* a_end_word = TAlignDownPTR<const IUA>(a_end);
+  const IUW* a_begin_word = TPtrAlignDown<IUW>(a_cursor),
+           * b_begin_word = TPtrAlignDown<IUW>(b_cursor);
+  const IUA* a_end_word = TPtrAlignDown<const IUA>(a_end);
   IUW        a_offset = TDelta(a_begin_word, a_cursor) * 8,
              b_offset = TDelta(b_begin_word, b_cursor) * 8,
              a_offset_msb = IUW(ALUSize) * 8 - a_offset,
@@ -167,7 +167,7 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
     a_lsb = a_msb;
     b_lsb = b_msb;
   }
-  if (a_cursor == a_end) return a_size_bytes;
+  if (a_cursor == a_end) return a_bytes;
   a_cursor += ALUSize;
   b_cursor += ALUSize;
   // Step 2: Compare the MSB.
@@ -211,12 +211,12 @@ ISW ArrayCompareFast(const void* a, const ISW a_size_bytes, const void* b,
            "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));*/
     return -TDelta<>(a, a_cursor);
   }
-  return a_size_bytes;
+  return a_bytes;
 }
 
-ISW RAMCompare(const void* a, ISW a_size_bytes, const void* b,
-                 const ISW b_size_bytes) {
-  return ArrayCompareFast(a, a_size_bytes, b, b_size_bytes);
+ISW RAMCompare(const void* a, ISW a_bytes, const void* b,
+                 const ISW b_bytes) {
+  return ArrayCompareFast(a, a_bytes, b, b_bytes);
 }
 
 ISW ArrayCopySlow(void* write, ISW w_size, const void* read, 
@@ -252,12 +252,12 @@ ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
   const IUA* r_start      = TPtr<IUA>(read),
            * r_stop       = r_start + r_size;
   IUA      * w_cursor     = TPtr<IUA>(write);
-  IUW      * w_start_word = TAlignUpPTR<IUW>(w_cursor);
+  IUW      * w_start_word = TPtrAlignUp<IUW>(w_cursor);
 
   while (w_cursor < TPtr<IUA>(w_start_word)) *w_cursor++ = *r_start++;
 
-  IUW* w_stop_word = TAlignDownPTR<IUW>(w_cursor + r_size);
-  const IUW *r_start_word = TAlignDownPTR<const IUW>(r_start);
+  IUW* w_stop_word = TPtrAlignDown<IUW>(w_cursor + r_size);
+  const IUW *r_start_word = TPtrAlignDown<const IUW>(r_start);
   IUW w_offset = TDelta(w_cursor, w_start_word),
       r_offset = TDelta(r_start_word, r_start);
 

@@ -30,7 +30,6 @@ the MPL was not distributed with this file, You can obtain one at
 #undef D_ARRAY_FILL
 #undef D_ARRAY_WIPE
 #undef D_OBJ_WIPE
-#undef D_OBJ_ORIGIN_WIPE
 #undef A_CHECK
 #undef D_CHECK
 #undef R_CHECK
@@ -41,6 +40,9 @@ the MPL was not distributed with this file, You can obtain one at
 #undef A_ASSERT
 #undef D_ASSERT
 #undef R_ASSERT
+#undef A_ASSERT_PTR
+#undef D_ASSERT_PTR
+#undef R_ASSERT_PTR
 #undef A_AVOW
 #undef D_AVOW
 #undef R_AVOW
@@ -53,6 +55,47 @@ the MPL was not distributed with this file, You can obtain one at
 #undef A_RETURN
 #undef D_RETURN
 #undef R_RETURN
+#undef D_RETURNT
+#undef D_RETURN_PTR_ERROR
+#undef D_RETURN_CPTR_ERROR
+#undef D_RETURN_TPTR_ERROR
 #undef A_RETURN_VALUE
 #undef D_RETURN_VALUE
 #undef R_RETURN_VALUE
+#undef D_CHECK_PTR_RETURN_CODE
+#undef D_CHECK_PTR_TRETURN
+#undef D_CHECK_CPTR_RETURN
+#undef D_CHECK_TPTR_RETURN
+#undef D_CHECK_PTR_RETURN_NIL
+
+//@todo Delete me!
+//enum
+//{
+//  plain = 0,
+//  bold = 1,
+//  italic = 2
+//};
+//
+//void PrintString(const char* message, int size, int style)
+//{
+//}
+//
+//#define PRINT_STRING_1_ARGS(message)              PrintString(message, 0, 0)
+//#define PRINT_STRING_2_ARGS(message, size)        PrintString(message, size, 0)
+//#define PRINT_STRING_3_ARGS(message, size, style) PrintString(message, size, style)
+//
+//#define GET_4TH_ARG(arg1, arg2, arg3, arg4, ...) arg4
+//#define PRINT_STRING_MACRO_CHOOSER(...) \
+//    GET_4TH_ARG(__VA_ARGS__, PRINT_STRING_3_ARGS, \
+//                PRINT_STRING_2_ARGS, PRINT_STRING_1_ARGS, )
+//
+//#define PRINT_STRING(...) PRINT_STRING_MACRO_CHOOSER(__VA_ARGS__)(__VA_ARGS__)
+//
+//int main(int argc, char* const argv[])
+//{
+//  PRINT_STRING("Hello, World!");
+//  PRINT_STRING("Hello, World!", 18);
+//  PRINT_STRING("Hello, World!", 18, bold);
+//
+//  return 0;
+//}

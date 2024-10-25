@@ -27,7 +27,7 @@ struct LIB_MEMBER TCollection {
   TKey table_size,   //< Size of the (optional) key Strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.
   Index item_count,  //< Number of items.
-      count_max;     //< Max number_ of items that can fit in the header.
+      total;     //< Max number_ of items that can fit in the header.
 };
 
 /* A Type-Value Tuple. */

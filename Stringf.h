@@ -275,18 +275,18 @@ class LIB_MEMBER Stringf {
  public:
   enum {
     // Max length of the boofer in ALU words.
-    BufferWordCount = (sizeof(void*) == 2) ? 5
+    BooferWordCount = (sizeof(void*) == 2) ? 5
                     : (sizeof(void*) == 4) ? 6 
                     : (sizeof(void*) == 8) ? 5 : 1,
     // Max length of a string in characters.
-    LengthMax = BufferWordCount * sizeof(void*) - 1,
+    LengthMax = BooferWordCount * sizeof(void*) - 1,
   };
 
  private:
-  const void* string_;  // Pointer to a string or the buffer_.
+  const void* string_;  // Pointer to a string or the boofer_.
   ISW count_;           //< The character count.
   DTW type_;            //< The ASCII string Type, STA, STB, or STC.
-  IUW buffer_[BufferWordCount];  //< String boofer for the token.
+  IUW boofer_[BooferWordCount];  //< String boofer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
@@ -302,8 +302,8 @@ class LIB_MEMBER Stringf {
   Stringf(const CHC* item);
 #endif
 
-  /* Prints the item to the buffer_, stores the count, and sets the String_ to
-  the buffer_. */
+  /* Prints the item to the boofer_, stores the count, and sets the String_ to
+  the boofer_. */
   Stringf(CHA item);
   Stringf(CHB item);
   Stringf(CHC item);
@@ -327,8 +327,8 @@ class LIB_MEMBER Stringf {
   Stringf(const CHC* item, ISW count);
 #endif
 
-  /* Prints the item to the buffer_, stores the count, and sets the String_ to
-  the buffer_. */
+  /* Prints the item to the boofer_, stores the count, and sets the String_ to
+  the boofer_. */
   Stringf(CHA item, ISW count);
   Stringf(CHB item, ISW count);
   Stringf(CHC item, ISW count);
@@ -373,7 +373,7 @@ class LIB_MEMBER Stringf {
   void Print(const CHC* item);
 #endif
 
-  /* Prints the given item to the buffer_. */
+  /* Prints the given item to the boofer_. */
   void Print(CHA item);
 #if USING_UTF16 == YES_0
   void Print(CHB item);
@@ -392,7 +392,7 @@ class LIB_MEMBER Stringf {
   void Print(FPD item);
 #endif
 
-  /* Prints a timestamp to the buffer_. */
+  /* Prints a timestamp to the boofer_. */
   //void PrintTMC(TMC item);
   //void PrintTME(TMC item, IUC subsecond_tick);
   //void PrintTMD(TMD item);
@@ -537,8 +537,8 @@ struct LIB_MEMBER Rightf {
 
 /* Utility class for printing a horizontal line with operator<<. */
 struct LIB_MEMBER Linef {
-  Valuef element;  //< Pointer to a pointer to utf.
-  CHA string[5];   //< Used to create a string in Linef(CHA,ISW).
+  Valuef element;     //< Pointer to a pointer to utf.
+  CHA string[5];      //< Used to create a string in Linef(CHA,ISW).
 
   /* Constructors a horizontal line of the character. */
   Linef(CHA item, ISW count = AConsoleWidth);

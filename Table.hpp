@@ -12,348 +12,552 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #ifndef SCRIPTT2_TABLE_TEMPLATES
 #define SCRIPTT2_TABLE_TEMPLATES
 #include "Array.hpp"
+#include "Binary.hpp"
 #include "Hash.hpp"
 #if SEAM == SCRIPT2_TABLE
 #include "_Debug.inl"
 #else
 #include "_Release.inl"
-#define D_COUT_TABLE(item)
 #endif
-#define TPARAMS CHT, ISZ, ISY, HSH
-#define TARGS \
-  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
+#undef  TBL_A
+#define TBL_A \
+  typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN
+#undef  TBL_P
+#define TBL_P CHT, ISZ, ISY, HSH
 
 namespace _ {
 
 /* A dense key-index map.
 @see ASCII Data Type Specification.
-@link ./Spec/Data/MapTypes/table.md
+@link ./Spec/Data/MapTypes/Table.md
 
-# Collision Table
-
-Collision table works by using the maximum key value (i.e. 255 for a ISZ,
-2^15TTableInvalidIndex<ISZ>() for a ISB, etc). The collisions list is a sequence
-of indexes terminated by an invalid index that is greater than cMaxNumOps.
-collissionsList[0] is an invalid index, so the collisions list is searched
-from lower address up.
 @code
          Table Memory Layout
 +--------------------------------------+
-|_____ | Key 1                         |
-|_____ v Key N                Keys     |
+|_ISY_   pile_size (negative)          |
+|_____ | Collision 0          ISY      |
+|_____ v Collision N          pile     |
 +--------------------------------------+
-|        Buffer                        |
+|_____   Boofer Stop                   |
+|_____   Boofer                        |
+|_____   Boofer Start                  |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Collision N        Collision  |
-|_____ | Collision 0          Pile     |
+|_____ ^ Key N                 CHT     |
+|_____ | Key 0                Keys     |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Collision Index N   Unsorted  |
-|      | Collision Index 0   Indexes   |
+|_____   Boofer                ISY     |
+|_____ ^ Unsorted Index N    sort_map  |
+|      | Unsorted Index 0              |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Collision Index N  Collision  |
-|      | Collision Index 0   Indexes   |
+|_____   Boofer                ISY     |
+|_____ ^ Collision Index N   pile_map  |
+|      | Collision Index 0             |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Key Offset N          Key     |
-|      | Key Offset 1        Offsets   |
+|_____   Boofer                ISZ     |
+|_____ ^ Key Offset N        keys_map  |
+|      | Key Offset 0                  |
 +--------------------------------------+
-|_____   Buffer                        |
-|_____ ^ Sorted Hash N        Hashes   |
-|      | Sorted Hash 1                 |
+|_____   Boofer                HSH     |
+|_____ ^ Sorted Hash N       hash_map  |
+|      | Sorted Hash 0                 |
 +--------------------------------------+  ^ Up in addresses.
 |            TTable Header             |  |
 +--------------------------------------+ 0x0
 @endcode
 */
-template<typename ISZ, typename ISY>
+template<TBL_A>
 struct TTable {
-  ISZ size_bytes,  //< Size of this object in bytes.
-      size_pile;   //< Size of the collision table pile.
-  ISY count,       //< Number of keys.
-      count_max;   //< Number of buffered indexes.
+  ISZ bytes,          //< Size of this object in bytes.
+      stop;           //< Keys boofer stop offset or start if count == total.
+  TStack<SCK_P> map;  //< A Stack of offset mappings to strings.
 };
+
+#define TBL TTable<CHT, ISZ, ISY, HSH>
 
 enum {
-  cMinTableSize = 64,  //< Min size of a Table
+  TableSizeMin = 64,  //< Min size of a Table
 };
 
-/* Checks of the given index is valid. */
-template<typename ISY>
-inline BOL TIndexIsValid(ISY index) {
-  return index >= 0;
+template<TBL_A>
+constexpr ISZ CTableEntryOverhead() {
+  return sizeof(HSH) + sizeof(ISZ) + sizeof(ISY) + sizeof(ISY);
 }
 
-template<typename ISZ = ISN, typename ISY = ISM>
-inline ISZ TTableEntryOverhead() {
-  return 2 * (sizeof(ISZ) + sizeof(ISY));
+template<TBL_A>
+inline HSH* TTableHashes(TBL* table) {
+  return TPtr<HSH>(table, sizeof(TBL));
+}
+template<TBL_A>
+inline const HSH* TTableHashes(const TBL* table) {
+  return CPtr<HSH>(TTableHashes<TBL_P>(CPtr<TBL>(table)));
 }
 
-template<TARGS, ISZ cCountMax = 32, ISZ cAverageStringLength = 16>
+template<TBL_A>
+inline BOL TTableHashesVerify(const TBL* table) {
+  const HSH* hash_map = TTableHashes<TBL_P>(table);
+  return THashFindFirstUnsorted<ISY, HSH>(hash_map, hash_map + table->map.count) < 0;
+}
+
+template<TBL_A>
+inline ISY* TTableCollisionMap(TBL* table, ISY total) {
+  return TPtr<ISZ>(&TTableHashes<TBL_P>(table)[total]);
+}
+template<TBL_A>
+inline const ISY* TTableCollisionMap(const TBL* table, ISY total) {
+  return CPtr<ISY>(TTableCollisionMap<TBL_P>(CPtr<TBL>(table), 
+    total));
+}
+
+// Map from sorted indexes to unsorted key index.
+template<TBL_A>
+inline ISY* TTableSortMap(TBL* table, ISY total) {
+  return TPtr<ISY>(TTableHashes<TBL_P>(table),
+    total * (sizeof(HSH) + sizeof(ISZ) + sizeof(ISY)));
+}
+template<TBL_A>
+inline const ISY* TTableSortMap(const TBL* table, ISY total) {
+  return CPtr<ISY>(TTableSortMap<TBL_P>(CPtr<TBL>(table), total));
+}
+
+template<TBL_A>
+inline ISY* TTablePile(TBL* table, ISZ bytes) {
+  return TPtrAlignDown<ISY>(table, bytes) - 1;
+}
+template<TBL_A>
+inline const ISY* TTablePile(const TBL* table, ISZ bytes) {
+  return CPtr<ISY>(TTablePile<TBL_P>(CPtr<TBL>(table), bytes));
+}
+
+template<TBL_A>
+inline ISY* TTablePile(TBL* table) {
+  return TTablePile<TBL_P>(table, table->bytes);
+}
+template<TBL_A>
+inline const ISY* TTablePile(const TBL* table) {
+  return TTablePile<TBL_P>(table, table->bytes);
+}
+
+/* TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
+                        sort_map);
+*/
+template<TBL_A>
+inline void TTablePointers(TBL* table, ISZ bytes, ISY total, ISZ*& keys_map, 
+  HSH*& hash_map, ISY*& pile_map, ISY*& sort_map) {
+  hash_map = TPtr<HSH>(table, sizeof(TBL));
+  keys_map = TPtr<ISZ>(hash_map + total);
+  pile_map = TPtr<ISY>(keys_map + total);
+  sort_map = pile_map + total;
+}
+template<TBL_A>
+inline void TTablePointers(const TBL* table, ISZ bytes, ISY total,
+  const ISZ*& keys_map, const HSH*& hash_map, const ISY*& pile_map,
+  const ISY*& sort_map) {
+  hash_map = TPtr<HSH>(table, sizeof(TBL));
+  keys_map = TPtr<ISZ>(hash_map + total);
+  pile_map = TPtr<ISY>(keys_map + total);
+  sort_map = pile_map + total;
+}
+
+template<TBL_A, ISZ CountMax_ = 32, ISZ AverageStringLength_ = 16>
 constexpr ISZ CTableSize() {
-  return sizeof(TTable<ISZ, ISY>) + 
-         2 * cCountMax * (sizeof(ISZ) + sizeof(ISY)) + 
-         cCountMax * (cAverageStringLength + 1);
+  return sizeof(TBL) + 
+         2 * CountMax_ * (sizeof(ISZ) + sizeof(ISY)) + 
+         CountMax_ * (AverageStringLength_ + 1);
 }
 
-template<TARGS>
-constexpr ISZ CTableSize(ISZ count_max, ISZ average_string_length = 24) {
-  return sizeof(TTable<ISZ, ISY>) + 
-         2 * count_max * (sizeof(ISZ) + sizeof(ISY)) +
-         count_max * (average_string_length + 1);
+template<TBL_A>
+constexpr ISZ CTableSize(ISY total, ISZ average_string_length = 24) {
+  return sizeof(TBL) + 
+         2 * total * (sizeof(ISZ) + sizeof(ISY)) +
+         total * (average_string_length + 1);
 }
 
-template<TARGS>
-inline CHT* TTableKeysStop(TTable<ISZ, ISY>* table, ISZ size_bytes) {
-  return TPtr<CHT>(table, size_bytes) - 1;
+template<TBL_A>
+void* TTableEnd(TBL* table) {
+  return TPtr<void>(table, table->bytes);
+}
+template<TBL_A>
+const void* TTableEnd(const TBL* table) {
+  return CPtr<void>(TTableEnd<TBL_P>(CPtr<TBL>(table)));
 }
 
-#if USING_STR
-/* Prints this object out to the console. */
-template<typename Printer, TARGS>
-Printer& TTablePrint(Printer& o, TTable<ISZ, ISY>* table) {
-  D_ASSERT(table);
+// The offset from the keys_map to the keys boofer start.
+template <TBL_A>
+inline ISZ TTableKeysMapOffset(ISY total) {
+  return (sizeof(HSH) + sizeof(ISZ)) * ISZ(total) +
+    sizeof(TBL);
+}
+
+/* Points to the string offsets array. */
+template <TBL_A>
+ISZ* TTableKeysMap(TBL* table, ISY total) {
+  return TPtr<ISZ>(table,  sizeof(HSH) * total + sizeof(TBL));
+}
+template <TBL_A>
+const ISZ* TTableKeysMap(const TBL* table, ISY total) {
+  return CPtr<ISZ>(TTableKeysMap<TBL_P>(CPtr<TBL>(table), total));
+}
+template <TBL_A>
+ISZ* TTableKeysMap(TBL* table) {
+  return TTableKeysMap<TBL_P>(table, table->map.total);
+}
+template <TBL_A>
+const ISZ* TTableKeysMap(const TBL* table) {
+  return TTableKeysMap<TBL_P>(table, table->map.total);
+}
+
+template<TBL_A>
+inline CHT* TTableKey(ISZ* keys_map, ISZ offset) {
+  return TPtr<CHT>(keys_map, offset);
+}
+template<TBL_A>
+inline const CHT* TTableKey(const ISZ* keys_map, ISZ offset) {
+  return CPtr<CHT>(TTableKey<TBL_P>(CPtr<ISZ>(keys_map), offset));
+}
+template <TBL_A>
+CHT* TTableKey(TBL* table, ISY total, ISY count) {
+  return TTableKey<TBL_P>(table, table)[count];
+}
+template <TBL_A>
+const ISZ* TTableKey(const TBL* table, ISY total, ISY count) {
+  return CPtr<ISZ>(TTableKey<TBL_P>(CPtr<TBL>(table), total, count));
+}
+template<TBL_A>
+inline CHT* TTableKeyAt(ISZ* keys_map, ISY index) {
+  return TPtr<CHT>(keys_map, keys_map[index]);
+}
+template<TBL_A>
+inline const CHT* TTableKeyAt(const ISZ* keys_map, ISY index) {
+  return CPtr<CHT>(TTableKeyAt<TBL_P>(CPtr<ISZ>(keys_map), index));
+}
+
+template<TBL_A>
+inline CHT* TTableKeysStop(TBL* table, ISZ bytes) {
+  ISY* pile = TTablePile<TBL_P>(table, bytes) - 1;
+  return TPtrAlignDown<CHT>(TPtr<ISA>(pile + *pile) - sizeof(CHT));
+}
+template<TBL_A>
+inline const CHT* TTableKeysStop(const TBL* table, ISZ bytes) {
+  return CPtr<CHT>(TTableKeysStop<TBL_P>(CPtr<TBL>(table), bytes));
+}
+template<TBL_A>
+inline ISZ TTableKeysMapStart(ISY total) {
+  return ISZ(sizeof(ISZ) + sizeof(ISY) + sizeof(ISY)) * ISZ(total);
+}
+
+// The address of the next collision index.
+template<TBL_A>
+inline CHT* TTablePileBotton(TBL* table, ISZ bytes) {
+  ISY* pile = TTablePile<TBL_P>(table, bytes);
+  return pile + *TPtr<ISY>(pile);
+}
+template<TBL_A>
+inline const CHT* TTablePileBotton(const TBL* table, ISZ bytes) {
+  return CPtr<CHT>(TTablePileBotton<TBL_P>(CPtr<TBL>(table), bytes));
+}
+
+/* Free space left in the keys boofer. */
+template<TBL_A>
+inline ISZ TTableFreeSpace(const TBL* table, ISZ bytes, ISZ stop, 
+  ISY total, ISY count) {
+  ISZ* keys_map = TTableKeysMap<TBL_P>(table, total);
+  if (count >= total) // start is stored as table->stop.
+    return TDelta<ISZ>(keys_map, TTableKeysStop<TBL_P>(table, bytes)) - stop;
+  // stop is the stop and start is at keys_map[count].
+  return stop - keys_map[count];
+}
+template<TBL_A>
+inline ISZ TTableFreeSpace(const TBL* table) {
+  return TTableFreeSpace<TBL_P>(table, table->bytes, table->stop,
+    ISY(table->map.total), ISY(table->map.count));
+}
+
+/* Prints to the Printer. */
+template<typename Printer, TBL_A>
+Printer& TTablePrint(Printer& o, const TBL* table) {
+  if (AIsError(table)) return o;
   enum {
-    cHashWidth = (sizeof(HSH) * 2) < 10 ? 10 : (sizeof(HSH) * 2),
+    HashSize = (sizeof(HSH) * 2) < 10 ? 10 : (sizeof(HSH) * 2),
   };
-  ISY count = table->count,            //
-      count_max = table->count_max;    //
-  ISZ collision_pile_index,            //
-      size_bytes = table->size_bytes,  //
-      size_pile = table->size_pile;    //
-
-  ISN count_length_max = STRLength(count_max);
-  count_length_max = (count_length_max < 2 ? 2 : count_length_max);
-  o << Linef("\n+---\n| Table<IS") << CHA('0' + sizeof(ISZ)) 
-    << ",IS" << CHA('0' + sizeof(HSH))
-    << ",IU" << CHA('0' + sizeof(HSH)) 
-    << ",CH" << CHA('0' + sizeof(CHT)) << ">:0x"
-    << Hexf(table) << " size_bytes:" << size_bytes << " key_count:" << count
-    << " count_max:" << count_max << " size_pile:" << size_pile
-    << Linef("\n+---\n| ") << Rightf("i", count_length_max)  //
-    << Centerf("hash_e", cHashWidth - 2) << Centerf("hash_u", cHashWidth - 2)
-    << Centerf("hash_s", cHashWidth - 2) << Centerf("index_u", cHashWidth)
+  ISZ bytes = table->bytes,
+      stop  = table->stop;
+  ISY count = ISY(table->map.count),
+      total = ISY(table->map.total);
+  const ISZ* keys_map = nullptr;
+  const HSH* hash_map = nullptr;
+  const ISY* pile_map = nullptr,
+           * sort_map = nullptr;
+  TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
+                        sort_map);
+  ISN total_length = STRLength(total);
+  const ISY* pile = TTablePile<TBL_P>(table, bytes);
+  D_ASSERT((TDelta<ISW>(pile) & ISW(sizeof(ISY) - 1)) == 0);
+  ISY pile_size = *pile;
+  D_ASSERT(pile_size < 0);
+  total_length = (total_length < 2 ? 2 : total_length);
+  #if D_THIS
+  ISZ start = 0;
+  if (count < total) {
+    start = keys_map[count];
+  } else {
+    start = stop;
+    stop = TDelta<ISZ>(keys_map, TTableKeysStop<TBL_P>(table, bytes));
+  }
+  #endif
+  o << Linef("\n+---\n| Table<CH") << CSizeCodef<CHT>()
+    << ",IS" << CSizeCodef<ISZ>()
+    << ",IS" << CSizeCodef<ISY>()
+    << ",IU" << CSizeCodef<HSH>() << ">:0x"
+    << Hexf(table) << " bytes:" << bytes << " count:" << count
+    << " total:" << total
+    #if D_THIS
+    << "\n| pile_size:" << pile_size << " start:" << start << " stop:" << stop
+    #endif
+    << Linef("\n+---\n| ") << Rightf("i", total_length) << ' '
+    #if D_THIS
+    << Centerf("hash_e", HashSize - 2) << ' '
+    << Centerf("hash_u", HashSize - 2) << ' '
+    #endif
+    << Centerf("hash_s", HashSize - 2) << ' '
+    << Centerf("index_s", HashSize) << ' '
     << Centerf("offset", 8) << Linef(" \"Key\":{Collissions}\n+---");
-
-  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
-  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
-     * unsorted_indexes = collision_indexes + count_max;
-  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
-
   for (ISY i = 0; i < count; ++i) {
-    o << "\n| " << Rightf(i, count_length_max)  //
-      << Centerf().Hex(THashPrime<HSH, CHT>(keys - key_offsets[i]), cHashWidth)
-      << Centerf().Hex(hashes[unsorted_indexes[i]], cHashWidth)
-      << Centerf().Hex(hashes[i], cHashWidth)
-      << Centerf(unsorted_indexes[i], cHashWidth) << Centerf(key_offsets[i], 8)
-      << " \"" << (keys - key_offsets[i]) << "\":{";
-
-    collision_pile_index = collision_indexes[i];
-    if (TIndexIsValid<ISY>(collision_pile_index) && (i < count)) {
-      ISY *collision_pile = unsorted_indexes + count_max,
-          *collision_begin = collision_pile + collision_pile_index;
-      ISY collision = *collision_begin++;
-      o << collision;
-      while (TIndexIsValid<ISY>(collision)) {
-        collision = *collision_begin++;
-        if (TIndexIsValid<ISY>(collision)) o << ", " << collision;
+    ISZ offset = keys_map[i];
+    ISY index_s = sort_map[i];
+    HSH hash_u = hash_map[index_s],
+        hash_s = hash_map[i];
+    const CHT* key = TTableKey<TBL_P>(keys_map, offset);
+    o << "\n| " << Rightf(i, total_length) << ' '
+      #if D_THIS
+      << Centerf().Hex(THashPrime<HSH, CHT>(key), HashSize) << ' '
+      << Centerf().Hex(hash_u, HashSize) << ' '
+      #endif
+      << Centerf().Hex(hash_s, HashSize) << ' '
+      << Centerf(index_s, HashSize) << ' '
+      << Centerf(offset, 8) << ' '
+      << " \"" << key << "\":{";
+    
+    ISY pile_index = pile_map[i];
+    if (pile_index > 0 || pile_index <= pile_size) {
+      o << "\nOut of bounds pile_index at pile_map[" << i << "]: " << pile_index 
+        << " pile_size:" << pile_size;
+      D_ASSERT(pile_index > pile_size);
+      return o;
+    }
+    if (pile_index < 0) {
+      const ISY* pile_cursor = pile + pile_index,
+               * pile_end    = pile + pile_size;
+      ISY collision = *pile_cursor--;
+      while (collision >= 0) {
+        D_ASSERT(collision < count);
+        o << collision;
+        collision = *pile_cursor--;
+        if (collision >= 0) o << ", ";
+        if (pile_cursor < pile_end)
+          return o << " Invalid collision" << collision << "}";
       }
     }
     o << '}';
   }
 #if D_THIS
-  return o << Linef("\n+---") << Charsf(table, table->size_bytes) << '\n';
+  return o << Linef("\n+---") << Charsf(table, table->bytes) << '\n';
 #endif
   return o << Linef("\n+---\n");
 #endif
-}  //< namespace _
+}
 
-/* Creates a streamable hash table with enough socket space for the
-count_max. */
-template<TARGS>
-TTable<ISZ, ISY>* TTableInit(TTable<ISZ, ISY>* table, ISY height, ISZ size_bytes) {
-  D_ASSERT(table);
-
-  ISZ array_sizes = ISZ(height) * TTableEntryOverhead<ISZ>() + sizeof(TTable<ISZ, ISY>),
-      min_required_size = 2 * height;
-  min_required_size += array_sizes;
-  D_COUT("\nCreating a TTable<> with size_bytes:"
-         << size_bytes << " size:" << height
-         << " min_required_size:" << min_required_size);
-
-  if (size_bytes < min_required_size) {
-    D_COUT("\nTable init failed because size_bytes < min_required_size");
-    return nullptr;
-  }
-
-  D_ARRAY_WIPE(table, size_bytes);
-
-  table->count = 0;
-  table->count_max = height;
-  table->size_pile = 0;
-  table->size_bytes = size_bytes;
+/* Inits a hash table. */
+template<TBL_A>
+TBL* TTableInit(TBL* table, ISY total) {
+  D_CHECK_PTR_RETURN_CODE(table);
+  ISZ bytes = table->bytes;
+  bytes = TAlignDown<ISZ>(bytes);
+  D_OBJ_WIPE(table);
+  ISZ* keys_map = TTableKeysMap<TBL_P>(table, total);
+  ISY* pile = TTablePile<TBL_P>(table, bytes);
+  *pile-- = CAInvalidIndex<ISY>();
+  ISZ start = TTableKeysMapStart<TBL_P>(total);
+  *keys_map = start;
+  CHT* stop_ptr = TPtrAlignDown<CHT>(pile, -ISW(sizeof(CHT)));
+  D_COUT("\nkeys_stop delta:" << TDelta<>(table, stop_ptr));
+  ISZ  stop      = TDelta<ISZ>(keys_map, stop_ptr);
+  D_COUT("\nCreating a TTable<> with bytes:" << bytes << " total:" << total << 
+         " start:" << start << " stop:" << stop);
+  if (start >= stop)
+    D_RETURN_TPTR_ERROR(TBL, ErrorKeysBooferOverflow);
+  table->stop      = stop;
+  table->map.total = total;
+  table->map.count = 0;
   D_COUT_TABLE(table);
   return table;
 }
 
-template<TARGS>
-inline TTable<ISZ, ISY>* TTableInit(IUW* socket, ISY count_max, ISZ size) {
-  auto table = TPtr<TTable<ISZ, ISY>>(socket);
-  return TTableInit<TPARAMS>(table, count_max, size);
+template<TBL_A>
+inline TBL* TTableInit(IUW* socket, ISY total) {
+  return TTableInit<TBL_P>(TPtr<TBL>(socket), total);
 }
 
 /* Adds the key to the table.
-@return An invalid index upon failure or valid index upon success. */
-template<TARGS>
-ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
-  D_ASSERT(table);
-  D_ASSERT(key);
-
-  ISY count = table->count, count_max = table->count_max;
-  ISZ size_bytes = table->size_bytes;
-
-  if (count >= count_max)
-    return CInvalidIndex<ISY>();  //< We're out of buffered indexes.
-
-  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
-  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
-     * unsorted_indexes = collision_indexes + count_max,
-     * collision_pile = unsorted_indexes + count_max;
-  CHT *keys = TPtr<CHT>(table, size_bytes) - 1, *destination;
-  HSH hash = THashPrime<HSH, CHT>(key), current_hash;
-  ISZ key_length = TSTRLength<CHT, ISZ>(key);
-  CHT* bottom = TPtr<CHT>(collision_pile + table->size_pile) + 1;
-
-  D_COUT("\n\nAdding        key:\"" << key <<                             //
-         "\"\n             hash:0x" << Hexf(hash) <<                      //
-         "\n           length:" << key_length <<                          //
-         "\n           hashes:" << TDelta<>(table, hashes) <<             //
-         "\n      key_offsets:" << TDelta<>(table, key_offsets) <<        //
-         "\ncollision_indexes:" << TDelta<>(table, collision_indexes) <<  //
-         "\n           bottom:" << TDelta<>(table, bottom) <<             //
-         "\n             keys:" << TDelta<>(table, keys) <<               //
-         "\n       space_left:" << keys - bottom <<                       //
-         "\n       size_bytes:" << size_bytes);
-
+@return An invalid index upon failure or valid index upon success.
+@todo Check if pile has enough room to add another. */
+template<TBL_A>
+ISY TTableInsert(TBL* table, const CHT* key) {
+  D_CHECK_PTR_TRETURN(ISY, table);
+  D_CHECK_PTR_TRETURN(ISY, key);
+  ISZ  bytes     = table->bytes,
+       stop      = table->stop;
+  ISY  total     = ISY(table->map.total),
+       count     = ISY(table->map.count);
+  if (count >= total) 
+    D_RETURNT(ISY, -ErrorBooferOverflow);
+  HSH* hash_map  = nullptr;
+  ISZ* keys_map  = nullptr;
+  ISY* pile_map  = nullptr,
+     * sort_map  = nullptr;
+  TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
+    sort_map);
+  ISZ  start = 0;
+  ISY count_new = count + 1;
+  if (count_new < total) {
+    start = keys_map[count];
+  } else {
+    start = stop;
+    CHT* stop_ptr = TTableKeysStop<TBL_P>(table, bytes);
+    stop = TDelta<ISZ>(keys_map, stop_ptr);
+  }
+  CHT* start_ptr = TPtr<CHT>(keys_map, start);
+  CHT* stop_ptr  = TPtr<CHT>(keys_map, stop);
+  HSH  hash      = 0;
+  ISZ  length    = 0;
+  CHT* start_next_ptr =  THashPrimePrint<HSH, ISZ, CHT, CHT>(start_ptr, 
+    stop_ptr, key, hash, length) + 1;
+  D_CHECK_PTR_TRETURN(ISY, start_next_ptr);
+  if (start_next_ptr >= stop_ptr) D_RETURNT(ISY, -ErrorKeysBooferOverflow);
+  ISZ start_next = TDelta<ISZ>(keys_map, start_next_ptr);
+  if (count_new < total) keys_map[count_new] = start_next;
+  D_COUT(Linef("\n\n---\nAdding key: \"") << key << "\":" << length << ":0x" << Hexf(hash) <<
+         " count:" << count << " total:" << total);
+  //D_COUT("\n  hash_map:" << TDelta<>(table, hash_map ) <<
+  //       "\n  keys_map:" << TDelta<>(table, keys_map ) <<
+  //       "\n  pile_map:" << TDelta<>(table, pile_map ) <<
+  //       "\n     start:" << start <<
+  //       "\n start_next:" << start_next <<
+  //       "\n      stop:" << stop <<
+  //       "\nchars_left:" << (stop_ptr - start_ptr    ) <<
+  //       "\n     bytes:" << bytes);
+  D_COUT("\n\n  Finding insert location... ");
   if (count == 0) {
-    *hashes = hash;
-    *collision_indexes = CInvalidIndex<ISY>();
-    *unsorted_indexes = 0;
-    destination = keys - key_length;
-    D_COUT("\n      destination:" << TDelta<>(table, destination) <<  //
-           "\n       key_offset:" << TDelta<>(destination, keys));
-
-    if (!TSPrintString<CHT>(destination, keys, key)) {
-      D_COUT("\nKey boofer overflow printing string when count:0");
-      return CInvalidIndex<ISY>();
-    }
-    ISZ key_offset = ISZ(keys - destination);
-    key_offsets[count] = key_offset;
-    D_COUT("\n\nAdded the first key_offset:" << key_offset);
-    table->count = 1;
+    *hash_map = hash;
+    *pile_map = 0;
+    *sort_map = count;
+    table->map.count = count_new;
     D_COUT_TABLE(table);
     return count;
-  };
-
-  CHT* top = keys - key_offsets[count - 1] - 1;
-  destination = top - key_length;
-  D_COUT("\n           bottom:" << TDelta<>(table, bottom) <<       //
-         "\n      destination:" << TDelta<>(table, destination) <<  //
-         "\n       key_offset:" << TDelta<>(destination, keys) <<   //
-         "\n              top:" << TDelta<>(table, top));
-
-  ISZ key_offset = ISZ(keys - destination);
-  if (!TSPrintString<CHT>(destination, keys, key)) {
-    D_COUT("\nKey boofer overflow printing key.");
-    return CInvalidIndex<ISY>();
   }
-  key_offsets[count] = key_offset;
-  D_COUT("\n       key_offset:" << key_offset <<  //
-         "\n\nFinding insert location... ");
-
-  ISY low = 0, mid = 0, high = count;
-
+  ISY low  = 0,
+      mid  = 0,
+      high = count;
+  HSH current_hash = 0;
   while (low <= high) {
     mid = (low + high) >> 1;  //< Shift >> 1 to / 2
-
-    current_hash = hashes[mid];
-    D_COUT("\n   low:" << low << " mid:" << mid << " high:" << high
-                       << " hash:0x" << Hexf(current_hash));
-
-    if (current_hash > hash) {
+    current_hash = hash_map[mid];
+    D_COUT("\n     low:" << low << " mid:" << mid << " high:" << high << 
+           " hash:0x" << Hexf(current_hash));
+    if (hash < current_hash) {
       high = mid - 1;
-    } else if (current_hash < hash) {
+    } else if (hash > current_hash) {
       low = mid + 1;
-    } else {
-      ISY unsorted_index = unsorted_indexes[mid],
-          collision_index = collision_indexes[unsorted_index];
-      D_COUT(" Found hash at unsorted_index:"
-             << unsorted_index << " collision_index:" << collision_index);
-      if (TIndexIsValid<ISY>(collision_index)) {
-        D_COUT("\n       Found collision. Checking the collision_pile...");
-
-        ISY* collision_pile = unsorted_indexes + count_max;
-        ISY* collision_cursor = collision_pile + collision_index;
-        ISY collision = *collision_cursor++;
-        while (collision < 0) {
-          ISZ offset = key_offsets[collision];
-          D_COUT("comparing to \"" << keys - offset << "\". ");
-          if (TSTREquals<CHT>(key, keys - offset)) {
-            D_COUT(" Found key at offset:" << collision);
-            return collision_index;
+    } else { // Hash collision
+      hash_map[count] = ~HSH(0);  //< high init value must be the max value.
+      ISY sort_index    = sort_map[mid],
+          pile_index  = pile_map[sort_index];
+      D_COUT("\n         Found hash at sort_index:" << sort_index << 
+             " pile_index:" << pile_index);
+      if (pile_index < 0) {
+        D_COUT("\n       Found collision. Checking the pile...");
+        ISY* pile        = TTablePile<TBL_P>(table, bytes);
+        ISY* pile_cursor = pile + pile_index;
+        ISY  pile_size   = *pile,
+             stack_index = *pile_cursor--;
+        ISY* pile_end    = pile + pile_size;
+        while (stack_index >= 0) {
+          if (pile_cursor <= pile_end)
+            D_RETURNT(ISY, -ErrorBooferOverflow);
+          ISZ key_offset = keys_map[stack_index];
+          D_COUT("\n         Comparing to \"" << 
+                 TTableKey<TBL_P>(keys_map, key_offset) << 
+                 "\":" << stack_index << 
+                 "  table_to_pile_cursor_delta:" << TDelta<>(table, pile_cursor));
+          if (TSTREquals<CHT>(key, TTableKey<TBL_P>(keys_map, key_offset))) {
+            D_COUT(" Found key at stack_index:" << stack_index);
+            return stack_index;
           }
-          collision_index = *collision_cursor++;
+          stack_index = *pile_cursor--;
         }
-        D_COUT("\n    New collision detected. Updating the collision_pile...");
-        ISZ size_pile = table->size_pile;
-        TStackInsert<ISY>(collision_pile, count, collision_index, ISY(size_pile));
-        table->size_pile = size_pile + 1;
-        collision_indexes[count] = collision_index;
-        unsorted_indexes[count] = count;
-
-        D_COUT("\n\n    Inserted at collision_index:" << collision_index);
-        table->count = count + 1;
+        D_COUT("\n             New collision detected, inserting into pile");
+        if (TPtrAlignDown<CHT>(pile - 1) < start_ptr)
+          D_RETURNT(ISY, -ErrorBooferOverflow);
+        sort_map[count] = count;
+        pile_map[count] = pile_index;
+        for (ISY i = pile_index; i > pile_index - 5; --i)
+          D_COUT("\n  pile[" << i << "]: " << *(pile + i));
+        TArrayInsertDown_NC<ISY>(pile + pile_index, pile + pile_size, count);
+        *pile = --pile_size;
+        D_COUT("\n           Inserted at pile_index:" << pile_index);
+        for (ISY i = pile_index; i > pile_index - 5; --i)
+          D_COUT("\n  pile[" << i << "]: " << *(pile + i));
+        table->map.count = count_new;
+        if (count_new == total) table->stop = start_next;
+        else table->stop = TDelta<ISZ>(keys_map, TPtrAlignDown<CHT, ISY>(
+          pile + pile_size, -ISY(sizeof(ISY))));
         D_COUT_TABLE(table);
         return count;
       }
-      key_offset = key_offsets[unsorted_index];
-      CHT* other_key = keys - key_offset;
-      D_COUT("\n     No collisions exist.\n     Comparing to "
-             << unsorted_index << ":\"" << other_key
-             << "\" at key_offset:" << key_offset);
+      ISZ key_offset = keys_map[sort_index];
+      CHT* other_key = TTableKey<TBL_P>(keys_map, key_offset);
+      D_COUT("\n           No collisions exist." <<
+             "\n           Comparing to " << sort_index << ":\"" << other_key << 
+             "\" at offset:" << key_offset);
       if (!TSTREquals<CHT>(key, other_key)) {
-        ISZ size_pile = table->size_pile;
-        D_COUT("\n       New collision with unsorted_index:"
-               << unsorted_index << " size_pile:" << size_pile
-               << " count:" << count);
-        collision_indexes[unsorted_index] = ISY(size_pile);
-        collision_indexes[count] = ISY(size_pile);
-        ISY* collision_pile_top = collision_pile + size_pile;
+        ISY* pile = TTablePile<TBL_P>(table, bytes);
+        ISY  pile_size = *pile;
+        D_COUT("\n             New collision with sort_index:" << 
+               sort_index << " count:" << count << " pile_size:" << pile_size <<
+               "\n               Adding to end of pile:");
+        for (ISY i = pile_size; i < 0; ++i)
+          D_COUT("\n                          pile[" << i << "]: " << *(pile + i));
+        ISY* pile_cursor = pile + pile_size;
+        if (TPtr<>(pile_cursor - 3) < TPtr<>(stop))
+          D_RETURNT(ISY, -ErrorKeysBooferOverflow);
+        sort_map[count     ] = count;
+        pile_map[count     ] = pile_size;
+        pile_map[sort_index] = pile_size;
+        *pile = pile_size - 3;
 
-        *collision_pile_top++ = unsorted_index;
-        *collision_pile_top++ = count;
-        *collision_pile_top = CInvalidIndex<ISY>();
+        *pile_cursor-- = count++;
+        *pile_cursor-- = sort_index;
+        *pile_cursor   = -1;
 
-        table->size_pile = size_pile + 3;
-        table->count = count + 1;
+        table->map.count = count;
+        if (count-- == total) table->stop = start_next;
+        else 
+          table->stop = TDelta<ISZ>(keys_map, 
+            TPtrAlignDown<CHT, ISY>(pile + pile_size, -ISY(sizeof(ISY))));
         D_COUT_TABLE(table);
         return count;
       }
       D_COUT("\nTable already contains the key.");
-      return CInvalidIndex<ISY>();
+      return sort_index;
     }
   }
-  D_COUT("\n\nHash not found. Inserting into mid:" << mid << " before hash:0x"
-                                                   << Hexf(hashes[mid]));
-
-  TStackInsert<HSH>(hashes, count, mid, hash);
-  collision_indexes[count] = CInvalidIndex<ISY>();
-  TStackInsert<ISY>(unsorted_indexes, count, mid, count);
-  table->count = count + 1;
+  D_COUT("\n     Hash not found. Inserting into mid:" << mid << 
+         " before hash:0x" << Hexf(hash_map[mid]) << '\n');
+  if (hash > current_hash) ++mid;
+  TArrayInsert_NC<HSH>(hash_map + mid, hash_map + count, hash);
+  TArrayInsert_NC<ISY>(sort_map + mid, sort_map + count, count);
+  pile_map[count] = 0;
+  table->map.count = count_new;
+  if (count_new == total) table->stop = start_next;
   D_COUT_TABLE(table);
   return count;
 }
@@ -361,214 +565,217 @@ ISY TTableAdd(TTable<ISZ, ISY>* table, const CHT* key) {
 /* Attempts to find the given key.
 @return Returns TTableInvalidIndex<ISY>() upon failure, and valid index upon
 success. */
-template<TARGS>
-ISY TTableFind(const TTable<ISZ, ISY>* table, const CHT* key) {
-  D_ASSERT(table);
-  ISY count = table->count, count_max = table->count_max;
-
-  if (!key || count == 0) return CInvalidIndex<ISY>();
-
-  ISZ size_bytes = table->size_bytes;
-
-  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
-  ISY* collision_indexes = TPtr<ISY>(key_offsets + count_max),
-     * unsorted_indexes = collision_indexes + count_max;
-  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
-
+template<TBL_A>
+ISY TTableFind(const TBL* table, const CHT* key) {
+  D_CHECK_PTR_TRETURN(ISY, table);
+  D_CHECK_PTR_TRETURN(ISY, key);
+  ISY count = ISY(table->map.count),
+      total = ISY(table->map.total);
+  if (count == 0) D_RETURNT(ISY, -ErrorInvalidBounds);
+  ISZ bytes = table->bytes;
+  const ISZ* keys_map = nullptr;
+  const HSH* hash_map = nullptr;
+  const ISY* pile_map = nullptr,
+           * sort_map = nullptr;
+  TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
+                        sort_map);
   HSH hash = THashPrime<HSH, CHT>(key);
-
-  D_COUT("\n\nSearching for key:\"" << key << "\"\n             hash:0x"
-                                    << Hexf(hash) << "...");
-
+  D_COUT("\n\nSearching for key:\"" << key << "\"\n             hash:0x" << 
+         Hexf(hash) << "...");
   if (count == 1) {
-    ISZ offset = key_offsets[0];
-    D_COUT("\nComparing to only key \"" << keys - offset << "\"...");
-    if (TSTREquals<CHT>(key, keys - offset)) {
+    ISZ offset = keys_map[0];
+    D_COUT("\nComparing to only key \"" << 
+      TTableKey<TBL_P>(keys_map, offset) << "\":" << offset << "...");
+    if (TSTREquals<CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("hit at offset:" << offset);
       return 0;
     }
-    if (!TSTREquals<CHT>(key, keys - offset)) {
+    if (!TSTREquals<CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("key not found.");
-      return CInvalidIndex<ISY>();
+      return CAInvalidIndex<ISY>();
     }
     D_COUT("Found key:\"" << key << '\"' << Linef('-'));
     return 0;
   }
-
-  // Perform a binary search to find the hash. If the mid is odd, we need to
-  // subtract the sizeof (HSH*) in order to get the right pointer address.
   ISY low = 0, mid, high = count - 1;
-
-  while (low <= high) {
+  while (low <= high) { // Binary search through hashes.
     mid = (low + high) >> 1;  //< >> 1 to /2
-
-    HSH current_hash = hashes[mid];
-    D_COUT("\n  low:" << low << " mid:" << mid << " high:" << high
-                      << " hashes[mid]:" << Hexf(hashes[mid]));
+    HSH current_hash = hash_map[mid];
+    D_COUT("\n  low:" << low << " mid:" << mid << " high:" << high << 
+           " hashes[mid]:" << Hexf(hash_map[mid]));
     if (current_hash > hash) {
       high = mid - 1;
     } else if (current_hash < hash) {
       low = mid + 1;
     } else {
-      ISY unsorted_index = unsorted_indexes[mid],
-          collision_index = collision_indexes[unsorted_index];
-      D_COUT("\n    Found hash[" << mid << "]:0x" << Hexf(hashes[mid])
-                                 << " unsorted_index:" << unsorted_index
-                                 << " collision_index:" << collision_index);
-
-      if (TIndexIsValid<ISY>(collision_index)) {
-        D_COUT("\n    Collision detected at collision_index:"
-               << collision_index << ". Checking the collision_pile...");
-
-        // The collision_pile is a sequence of indexes terminated by
-        // an invalid index > cMaxNumOps. collissionsList[0] is an
-        // invalid index, so the collision_pile is searched from
-        // lower address up.
-
-        ISY *collision_pile = unsorted_indexes + count_max,
-            *collision_cursor =
-                collision_pile + collision_indexes[unsorted_index];
-        collision_index = *collision_cursor++;
-
-        while (TIndexIsValid<ISY>(collision_index)) {
-          ISZ key_offset = key_offsets[collision_index];
-          D_COUT("\n      Comparing to:\"" << keys - key_offset
-                                           << "\" at offset:" << key_offset);
-          if (TSTREquals<CHT>(key, keys - key_offset)) {
-            D_COUT(". Hit at index:" << collision_index
-                                     << " offset:" << key_offset);
-            return collision_index;
+      ISY sorted_index = sort_map[mid],
+          pile_index   = pile_map[sorted_index];
+      D_COUT("\n    Found hash[" << mid << "]:0x" << Hexf(hash_map[mid]) << 
+        " sort_index:" << sorted_index << " pile_index:" << pile_index);
+      if (pile_index < 0) {
+        const ISY* pile = TTablePile<TBL_P>(table, bytes);
+        ISY pile_offset = pile_map[sorted_index];
+        const ISY* pile_cursor = pile + pile_offset;
+        D_COUT("\n    Collision detected at pile_index:" << pile_index <<
+          ".\n    Checking the pile_map[" << sorted_index << "]:" << pile_offset);
+        ISY stack_index = *pile_cursor--;
+        // @todo I'm not sure if we care if the collision list is empty.
+        //if (stack_index < 0) return D_RETURNT(ISY, -ErrorInvalidInput);
+        D_COUT(" pile_cursor:(" << stack_index << ", " << *(pile_cursor - 1) << ')');
+        while (stack_index >= 0) {
+          if (stack_index >= count)
+            D_RETURNT(ISY, -ErrorInvalidInput);
+          ISZ offset = keys_map[stack_index];
+          const CHT* other = TTableKey<TBL_P>(keys_map, offset);
+          D_COUT("\n      Comparing to:\"" << other << "\" at offset:" << 
+                 offset << " at " << stack_index);
+          if (TSTREquals<CHT>(key, other)) {
+            D_COUT("\n      Hit at index:" << stack_index << " offset:" << offset);
+            return stack_index;
           }
-          collision_index = *collision_cursor++;
+          stack_index = *pile_cursor--;
         }
-        D_COUT(Linef("\n      collision_pile does not contain the key.\n---"));
-        return CInvalidIndex<ISY>();
+        D_COUT("\n      pile does not contain the key.");
+        D_RETURNT(ISY, -ErrorUnavailable);
       }
-
-      ISZ key_offset = key_offsets[unsorted_index];
-      CHT* other_key = keys - key_offsets[unsorted_index];
-      D_COUT("\n    Comparing to key:\"" << other_key << '"');
-
-      if (!TSTREquals<CHT>(key, other_key)) {
+      ISZ offset = keys_map[sorted_index];
+      const CHT* other = TTableKeyAt<TBL_P>(keys_map, sorted_index);
+      D_COUT("\n    Comparing to key:\"" << other << '"');
+      if (!TSTREquals<CHT>(key, other)) {
         D_COUT("\n    Table does not contain key.");
-        return CInvalidIndex<ISY>();
+        return CAInvalidIndex<ISY>();
       }
-
-      D_COUT("\n    Found key at unsorted_index:" << unsorted_index);
-      return unsorted_index;
+      D_COUT("\n    Found key at sort_index:" << sorted_index);
+      return sorted_index;
     }
   }
   D_COUT(Linef("\nTable does not contain the hash.\n---"));
-
-  return CInvalidIndex<ISY>();
+  return CAInvalidIndex<ISY>();
 }
 
-/* Gets the given key.
-@return Returns the index it go inserted into. */
-template<TARGS>
-inline CHT* TTableGet(TTable<ISZ, ISY>* table, ISY index) {
-  ISY count = table->count;
+/* Gets the given key by unsorted index. */
+template<TBL_A>
+inline CHT* TTableGet(TBL* table, ISY index) {
+  D_CHECK_PTR_TRETURN(ISY, table);
+  ISY count = ISY(table->map.count);
   if (index < 0 || index >= count) return nullptr;
-  ISZ size_bytes = table->size_bytes;
-  ISY count_max = table->count_max;
-  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ* key_offsets = TPtr<ISZ>(hashes + count_max);
-  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
-  return keys - key_offsets[index];
+  return TPtr<CHT>(TTableKeysMap<TBL_P>(table, table->map.total, index));
+}
+template<TBL_A>
+inline const CHT* TTableGet(const TBL* table, ISY index) {
+  return CPtr<CHT>(TTableGet<TBL_P>(CPtr<TBL>(table), index));
 }
 
-/* Removes the string at the given index. */
-template<TARGS>
-ISY TTableRemove(TTable<ISZ, ISY>* table, ISY index) {
-  D_ASSERT(table);
+/* Gets the element at the given index. */
+template <TBL_A>
+const CHT* TTableGet_NC(const TBL* table, ISY index) {
+  return TPtr<CHT>(table, TTableKeysMap<TBL_P>(table)[index]);
+}
+template <TBL_A>
+CHT* TTableGet_NC(TBL* table, ISY index) {
+  return CPtr<CHT>(TTableGet_NC<TBL_P>(CPtr<TBL>(table), index));
+}
+
+/* Removes the string at the given sort_map index. */
+template<TBL_A>
+ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
+  D_CHECK_PTR_TRETURN(ISY, table);
   D_COUT("\nBefore:");
   D_COUT_TABLE(table);
-
-  ISY count = table->count;
-  if (index < 0 || index >= count) return CInvalidIndex<ISY>();
-
-  ISZ size_bytes = table->size_bytes;
-  ISY count_max = table->count_max;
-
-  HSH* hashes = TPtr<HSH>(TPtr<CHA>(table, sizeof(TTable<ISZ, ISY>)));
-  ISZ *key_offsets = TPtr<ISZ>(hashes + count_max),
-      *collision_indexes = key_offsets + count_max,
-      *unsorted_indexes = collision_indexes + count_max;
-  CHT* keys = TPtr<CHT>(table, size_bytes) - 1;
-
-  // Algorithm:
-  // 1. Remove the hashes.
-  // 2. Remove the key offsets.
-  // 3. Remove from collision indexes.
-  // 4. Remove from unsorted indexes.
-  // 5. Remove from collisions list.
+  ISY count = ISY(table->map.count);
+  ISZ bytes = table->bytes,
+      stop  = table->stop;
+  ISY total = ISY(table->map.total);
+  if (index < 0 || index >= count) return -ErrorInvalidIndex;
+  if (index == count - 1) pack = false;
+  ISZ* keys_map = nullptr;
+  HSH* hash_map = nullptr;
+  ISY* pile_map = nullptr,
+     * sort_map = nullptr;
+  TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
+                        sort_map);
+  ISZ sorted_index = sort_map[index];
+  TStackRemove<HSH, SCK_P>(hash_map, sorted_index);
+  if (pack) {
+    D_ASSERT(false);
+  }
+  TStackRemove<HSH, SCK_P>(keys_map, index);
+  ISY pile_offset = pile_map[index];
+  if (pile_offset > 0) {
+    ISY* pile = TTablePile<TBL_P>(table, bytes);
+    ISY* cursor = pile + pile_offset;
+    ISY stack_index = *cursor++;
+    while (stack_index >= 0) {
+      if (stack_index == index) {
+        ISY pile_end = *pile;
+        ISY* pile_end_ptr = pile + pile_end;
+        while (cursor > pile_end_ptr) *cursor-- = *cursor;
+      }
+      stack_index = *cursor++;
+    }
+  }
+  TStackRemove<HSH, SCK_P>(pile_map, index);
+  TStackRemove<HSH, SCK_P>(sort_map, index);
+  ISY* end = sort_map + count;
+  sort_map += index;
+  while (sort_map < end) *sort_map = *sort_map - 1;
+  if (count-- == total) table->stop = TTableKeysStop<TBL_P>(table, bytes);
+  table->map.count = count;
   return count;
 }
 
-template<TARGS>
-CHA* TTableEnd(TTable<ISZ, ISY>* table) {
-  return TPtr<CHA>(table) + table->size_bytes;
-}
-
 /* Removes the given key from the table. */
-template<TARGS>
-ISY TTableRemove(TTable<ISZ, ISY>* table, const CHT* key) {
-  ISY index = TTableFind<TPARAMS>(table, key);
-  return TTableRemove<TPARAMS>(table, index);
+template<TBL_A>
+ISY TTableRemove(TBL* table, const CHT* key) {
+  ISY index = 0;// @todo fix me!
+  return TTableRemove<TBL_P>(table, index);
 }
 
 /* An ASCII Table Autoject. */
-template<TARGS,
-          ISY cCountMax = 32,
-          typename BUF =
-              TBUF<CTableSize<TPARAMS, cCountMax>(), ISA, ISZ, TTable<ISZ, ISY>>>
+template<TBL_A, ISY CountMax = 32, 
+  typename BUF = TBUF<CTableSize<TBL_P, CountMax>(), ISA, ISZ, TBL>>
 class ATable {
   AArray<CHT, ISZ, BUF> obj_;  //< Auto-Array of CHT(s).
  public:
-  /* Constructs a Table.
-  @param factory RAMFactory to call when the String overflows. */
+  /* Constructs a Table. */
   ATable() {
-    ISZ size_bytes = CTableSize<TPARAMS, cCountMax>();
-    D_ARRAY_WIPE(obj_.Origin(), size_bytes);
-    TTableInit<TPARAMS>(obj_.Origin(), cCountMax, size_bytes);
+    D_OBJ_WIPE(obj_.Origin());
+    TTableInit<TBL_P>(obj_.Origin(), CountMax);
   }
 
-  /* Constructs a Table.
-  @param factory RAMFactory to call when the String overflows. */
-  ATable(ISY count_max) {
-    ISZ size_bytes = CTableSize<TPARAMS, count_max>();
-    D_ARRAY_WIPE(obj_.Origin(), size_bytes);
-    TTableInit<TPARAMS>(obj_.Origin(), count_max, size_bytes);
+  /* Constructs a Table. */
+  ATable(ISY total) {
+    D_OBJ_WIPE(obj_.Origin());
+    TTableInit<TBL_P>(obj_.Origin(), total);
   }
 
   /* Deep copies the given string into the Table.
   @return The index of the string in the Table. */
   inline ISY Add(const CHT* string) {
-    return TTableAdd<TPARAMS>(This(), string);
+    return TTableInsert<TBL_P>(This(), string);
   }
 
   /* Removes the string at the given index from the Table. */
   inline ISY Remove(ISY index) {
-    return TTableRemove<TPARAMS>(This(), index);
+    return TTableRemove<TBL_P>(This(), index);
   }
 
   /* Removes the string at the given index from the Table. */
   inline ISY Remove(const CHT* key) {
-    return TTableRemove<TPARAMS>(This(), key);
+    return TTableRemove<TBL_P>(This(), key);
   }
 
   /* Gets the string at the given index. */
   inline CHT* Get(ISY index) {
-    return TTableGet<TPARAMS>(This(), index);
+    return TTableGet<TBL_P>(This(), index);
   }
 
   inline ISY Find(const CHT* string) {
-    return TTableFind<TPARAMS>(This(), string);
+    return TTableFind<TBL_P>(This(), string);
   }
 
   /* Gets the ASCII Object. */
-  inline TTable<ISZ, ISY>* This() { return obj_.OriginAs<TTable<ISZ, ISY>*>(); }
+  inline TBL* This() { return obj_.OriginAs<TBL*>(); }
 
   /* Gets the Auto-Array. */
   inline AArray<CHT, ISZ, BUF>& Array() { return obj_; }
@@ -576,7 +783,7 @@ class ATable {
 #if USING_STR
   template<typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TTablePrint<Printer, TPARAMS>(o, This());
+    return TTablePrint<Printer, TBL_P>(o, This());
   }
 
   inline void CPrint() { PrintTo<_::COut>(_::StdOut()); }
@@ -584,8 +791,4 @@ class ATable {
 };
 
 }  //< namespace _
-#undef TARGS
-#undef TPARAMS
-#undef D_COUT_TABLE
-#endif
 #endif

@@ -81,7 +81,7 @@ const CHA** BOutStateStrings() {
   return Strings;
 }
 
-CHA* BOutBuffer(BOut* bout) {
+CHA* BOutBoofer(BOut* bout) {
   return TPtr<CHA>(bout) + sizeof(BOut);
 }
 
@@ -97,7 +97,7 @@ BOut* BOutInit(IUW* socket, ISC size) {
   bout->read = 0;
 
 #if SEAM_MAJOR == 0 && SEAM_MINOR == 2
-  MemoryClear(BOutBuffer(bout), size);
+  MemoryClear(BOutBoofer(bout), size);
 #endif
   return bout;
 }
@@ -111,11 +111,11 @@ ISC BOutSpace(BOut* bout) {
                          bout->size);
 }
 
-ISC BOutBufferLength(BOut* bout) {
+ISC BOutBooferLength(BOut* bout) {
   if (!bout) {
     return 0;
   }
-  CHA* origin = BOutBuffer(bout);
+  CHA* origin = BOutBoofer(bout);
   return TSlotLength<IUN>(origin + bout->origin, origin + bout->stop,
                             bout->size);
 }
@@ -125,7 +125,7 @@ CHA* BOutEndAddress(BOut* bout) {
 }
 
 ISC BOutStreamByte(BOut* bout) {
-  CHA *origin = BOutBuffer(bout), *stop = origin + bout->size;
+  CHA *origin = BOutBoofer(bout), *stop = origin + bout->size;
   CHA *open = (CHA*)origin + bout->read, *origin = origin + bout->origin,
       *origin = origin;
 
@@ -133,7 +133,7 @@ ISC BOutStreamByte(BOut* bout) {
                                     : (stop - origin) + (open - origin) + 2;
 
   if (length < 1) {
-    BOutError(bout, cErrorBufferOverflow, TParams<1, STR_>(), 2, origin);
+    BOutError(bout, cErrorBooferOverflow, TParams<1, STR_>(), 2, origin);
     return -1;
   }
   // IUA b = *cursor;
@@ -146,8 +146,8 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   D_COUT("\n\nWriting ");
   D_COUT_BSQ(params);
   enum {
-    cBOutBufferSize = 1024,
-    cBOutBufferSizeWords = cBOutBufferSize >> WordBitCount
+    cBOutBooferSize = 1024,
+    cBOutBooferSizeWords = cBOutBooferSize >> WordBitCount
   };
   D_COUT_BOUT(" to B-Output:", bout);
 
@@ -185,7 +185,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   const ISC* param = params;  //< Pointer to the current param.
          //* bsc_param;       //< Pointer to the current cBSQ param.
   // Convert the socket offsets to pointers.
-  CHA* origin = BOutBuffer(bout),       //< Beginning of the socket.
+  CHA* origin = BOutBoofer(bout),       //< Beginning of the socket.
      * stop = origin + size,            //< End of the socket.
      * origin = origin + bout->origin,  //< Start of the data.
      * stop = origin + bout->stop;      //< Stop of the data.
@@ -202,7 +202,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
   space = TSlotSpace<ISC>(origin, stop, size);
 
   // Check if the socket has enough room.
-  if (space == 0) return BOutError(bout, cErrorBufferOverflow);
+  if (space == 0) return BOutError(bout, cErrorBooferOverflow);
   --space;
   length = params[0];  //< Load the max CHA length.
   ++param;
@@ -222,7 +222,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 #if USING_SCRIPT2_1_BYTE_TYPES
         // Check if the socket has enough room.
         if (space-- == 0)
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
 
         // Load pointer and read data to write.
         iua_ptr = TPtr<const CHA>(args[arg_index]);
@@ -243,7 +243,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         // Align the socket to a word boundary and check if the
         // socket has enough room.
         if (space < sizeof(IUB))
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         space -= sizeof(IUB);
 
         // Load pointer and value to write.
@@ -289,7 +289,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       WriteVarint2 : {
         // Byte 1
         if (space-- == 0)
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         iua = iub & 0x7f;
         iub = iub >> 7;
         if (iub == 0) {
@@ -305,7 +305,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 
         // Byte 2
         if (--space == 0)
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         iua = iub & 0x7f;
         iub = iub >> 7;
         if (iub == 0) {
@@ -321,7 +321,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
 
         // Byte 3
         if (--space == 0)
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         iua = iub & 0x7f;
         iua |= 0x80;
         *stop = iua;
@@ -342,7 +342,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       WriteVarint4 : {  //< Optimized manual do while loop.
         iub = 5;
         if (space == 0)  //< @todo Benchmark to space--
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         --space;  //< @todo Benchmark to space--
         iua = iuc & 0x7f;
         iuc = iuc >> 7;
@@ -372,7 +372,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         // has enough room.
 
         if (space < sizeof(IUC))
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         space -= sizeof(IUD);
 
         // Load pointer and value to write.
@@ -396,7 +396,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         // Align the socket to a word boundary and check if the socket
         // has enough room.
         if (space < sizeof(IUD))
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         space -= sizeof(IUD);
 
         // Load pointer and value to write.
@@ -426,7 +426,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
       WriteVarint8 : {     //< Optimized manual do while loop.
         iub = 8;           //< The max number_ of varint bytes - 1.
         if (space <= 9) {  //< @todo Benchmark to space--
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         }
         --space;           //< @todo Benchmark to space--
         if (--iub == 0) {  //< It's the last IUA not term bit.
@@ -462,7 +462,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
         if (block_type == ARY) {
           D_COUT("\nPrinting string.");
             if (space == 0)
-              return BOutError(bout, cErrorBufferOverflow, params, index,
+              return BOutError(bout, cErrorBooferOverflow, params, index,
                                origin);
             if (type != cADR) {
               // We might not need to write anything if it's an cADR with
@@ -480,7 +480,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
             iua = *iua_ptr;
             while (iua != 0) {
               if (space-- == 0)
-                return BOutError(bout, cErrorBufferOverflow, params, index,
+                return BOutError(bout, cErrorBooferOverflow, params, index,
                                  origin);
               hash = HashIUB(iua, hash);
 
@@ -554,7 +554,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
           }
         }
         if (space < length) {
-          return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+          return BOutError(bout, cErrorBooferOverflow, params, index, origin);
         }
         if (length == 0) {
           break;  //< Not sure if this is an error.
@@ -587,7 +587,7 @@ const Op* BOutWrite(BOut* bout, const ISC* params, void** args) {
     ++arg_index;
   }
   if (space < 3)
-    return BOutError(bout, cErrorBufferOverflow, params, index, origin);
+    return BOutError(bout, cErrorBooferOverflow, params, index, origin);
   // space -= 2;   //< We don't need to save this variable.
   *stop = IUA(hash);
   if (++stop >= stop) stop -= size;
@@ -612,13 +612,13 @@ void BOutRingBell(BOut* bout, const CHA* address) {
   ISC size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  CHA *origin = BOutBuffer(bout),           //< Beginning of the socket.
+  CHA *origin = BOutBoofer(bout),           //< Beginning of the socket.
       *stop = origin + size,                //< End of the socket.
           *origin = origin + bout->origin,  //< Start of the data.
               *stop = origin + bout->stop;  //< Stop of the data.
   space = TSlotSpace<ISC>(origin, stop, size);
   if (space == 0) {
-    D_COUT("\nBuffer overflow!");
+    D_COUT("\nBoofer overflow!");
     return;
   }
   *stop = 0;
@@ -627,7 +627,7 @@ void BOutRingBell(BOut* bout, const CHA* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      D_COUT("\nBuffer overflow!");
+      D_COUT("\nBoofer overflow!");
       return;
     }
     *stop = c;
@@ -653,13 +653,13 @@ void BOutAckBack(BOut* bout, const CHA* address) {
   ISC size = bout->size,  //< Size of the socket.
       space;              //< Space in the socket.
   // Convert the Slot offsets to pointers.
-  CHA *origin = BOutBuffer(bout),           //< Beginning of the socket.
+  CHA *origin = BOutBoofer(bout),           //< Beginning of the socket.
       *stop = origin + size,                //< End of the socket.
           *origin = origin + bout->origin,  //< Start of the data.
               *stop = origin + bout->stop;  //< Stop of the data.
   space = TSlotSpace<ISC>(origin, stop, size);
   if (space == 0) {
-    D_COUT("\nBuffer overflow!");
+    D_COUT("\nBoofer overflow!");
     return;
   }
   *stop = 0;
@@ -668,7 +668,7 @@ void BOutAckBack(BOut* bout, const CHA* address) {
   c = *address;
   while (c) {
     if (space == 0) {
-      D_COUT("\nBuffer overflow!");
+      D_COUT("\nBoofer overflow!");
       return;
     }
     *stop = c;
@@ -686,25 +686,25 @@ const Op* BOutConnect(BOut* bout, const CHA* address) {
 
 #if USING_SCRIPT2_TEXT
 /*
-CHA* Print (BOut* bout, CHA* socket, CHA* buffer_end) {
+CHA* Print (BOut* bout, CHA* socket, CHA* boofer_end) {
     BOL print_now = !socket;
     if (!socket) {
         return socket;
     }
-    if (socket >= buffer_end) {
+    if (socket >= boofer_end) {
         return nullptr;
     }
-    socket = TPrintLinef('_', 80, socket, buffer_end);
+    socket = TPrintLinef('_', 80, socket, boofer_end);
     if (!bout) {
         return nullptr;
     }
     ISC size = bout->size;
-    UTF& utf (socket, buffer_end);
+    UTF& utf (socket, boofer_end);
     utf << "\nBOut:" << Hex<IUW> (bout)
           << " size:" << size
           << " origin:" << bout->origin << " stop:" << bout->stop
           << " read:"  << bout->read
-          << Memory (BOutBuffer (bout), size + 64);
+          << Memory (BOutBoofer (bout), size + 64);
     //< @todo remove the + 64.);
     return utf.cursor;
 }*/
@@ -714,7 +714,7 @@ UTF1& PrintBOut(UTF1& utf, BOut* bout) {
   ISC size = bout->size;
   utf << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
       << " start:" << bout->origin << " stop:" << bout->stop
-      << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
+      << " read:" << bout->read << Socket(BOutBoofer(bout), size - 1);
   Printf("\n!| cursor:%p", utf.start);
   return utf;
 }

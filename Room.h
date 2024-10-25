@@ -139,7 +139,7 @@ class Room : public Operand {
   };
 
   /* Creates a Room with the given size.
-  @param floor Buffer used to create the Wall Stack. Set to nullptr to
+  @param floor Boofer used to create the Wall Stack. Set to nullptr to
   enable dynamic memory.
   @param size  The room size that is bounded between the kMinRoomSize and
   RoomCountMax. */

@@ -8,7 +8,7 @@ v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #pragma once
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 #ifndef INCLUDED_SCRIPT2_EXCEPTIONS
 #define INCLUDED_SCRIPT2_EXCEPTIONS YES_0
 #if USING_SCRIPT2_INTERRUPTS == YES_0

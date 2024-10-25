@@ -74,6 +74,7 @@ constexpr DT CTypeMap(DTW type) {
 
 // Returns the memory alignment mask for this type.
 ISA ATypeAlignMask(DTB type) {
+  DezNutz:
   if (type <= _CHA) return 0;
   if (type <= _CHB) return 1;
   if (type <= _CHC) return ALUAlignC;
@@ -93,7 +94,8 @@ ISA ATypeAlignMask(DTB type) {
   DTB vt = type >> ATypeVTBit0;
   type ^= vt << ATypeVTBit0;
   if (vt == 0) { // Vetor of 2 to 4 Homo-tuples
-    return ATypeAlignMask(type & 31);
+    type &= (ATypePODCount - 1);
+    goto DezNutz;
   }
   switch (sw) {
   case 0: return 0;
@@ -103,11 +105,13 @@ ISA ATypeAlignMask(DTB type) {
   }
   return ALUWordMask;
 }
+ISA ATypeAlignMask(DTC type) {  return ATypeAlignMask(DTB(type)); }
+ISA ATypeAlignMask(DTD type) {  return ATypeAlignMask(DTB(type)); }
 
 /* Aligns the pointer up to the word boundry required by the type. */
 template<typename T = void>
 const T* TATypeAlignUp(const void* pointer, DTB type) {
-  ISW align_mask = ATypeAlignMask(type & ATypePODMask);
+  ISW align_mask = ATypeAlignMask(DTB(type & ATypePODMask));
   auto ptr = reinterpret_cast<IUW>(pointer);
   ptr += IUW(-ISW(pointer)) & align_mask;
   return reinterpret_cast<T*>(ptr);
@@ -115,6 +119,22 @@ const T* TATypeAlignUp(const void* pointer, DTB type) {
 template<typename T = void>
 inline T* TATypeAlignUp(void* pointer, DTB type) {
   return const_cast<T*>(TATypeAlignUp<T>(const_cast<const T*>(pointer), type));
+}
+template<typename T = void>
+T* TATypeAlignUp(void* pointer, DTC type) {
+  return TATypeAlignUp<T>(pointer, DTB(type));
+}
+template<typename T = void>
+const T* TATypeAlignUp(const void* pointer, DTC type) {
+  return TATypeAlignUp<T>(pointer, DTB(type));
+}
+template<typename T = void>
+T* TATypeAlignUp(void* pointer, DTD type) {
+  return TATypeAlignUp<T>(pointer, DTB(type));
+}
+template<typename T = void>
+const T* TATypeAlignUp(const void* pointer, DTD type) {
+  return TATypeAlignUp<T>(pointer, DTB(type));
 }
 
 /* Copies the source to the destination.
@@ -139,9 +159,10 @@ void* TATypeWriteCustom(void* begin, void* end, DTB type) {
 
 /* Writes the given value to the socket between begin and end without any 
 checks.
-@warning You must memory align and verify the buffer fits before calling. */
+@warning You must memory align and verify the boofer fits before calling. */
 template<typename IS = ISR>
-void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, ISA align_mask) {
+void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, 
+  ISA align_mask) {
   // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
   // |:-------:|:------:|:-----:|:-----:|:-----:|
   // |   MOD   |   MT   |  SW   |  VT   |  POD  |
@@ -220,37 +241,37 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, ISA al
   type ^= vt << ATypeVTBit0;
   //@todo Fix me!
   if (vt == 0) { // Vector of Homotuples.
-    auto size_bytes = (1 << vt) * ATypeSizeOfPOD(type);
-    return reinterpret_cast<ISA*>(begin) + size_bytes;
+    auto bytes = (1 << vt) * ATypeSizeOfPOD(type);
+    return reinterpret_cast<ISA*>(begin) + bytes;
   } else {
     switch (vt) {
       case 0: {
         auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto size_bytes = *reinterpret_cast<const ISA*>(value);
-        if (delta <= size_bytes) return nullptr;
-        *reinterpret_cast<ISA*>(begin) = size_bytes;
-        return reinterpret_cast<ISA*>(begin) + size_bytes;
+        auto bytes = *reinterpret_cast<const ISA*>(value);
+        if (delta <= bytes) return nullptr;
+        *reinterpret_cast<ISA*>(begin) = bytes;
+        return reinterpret_cast<ISA*>(begin) + bytes;
       }
       case 1: {
         auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto size_bytes = *reinterpret_cast<const ISB*>(value);
-        if (delta <= size_bytes) return nullptr;
-        *reinterpret_cast<ISB*>(begin) = size_bytes;
-        return reinterpret_cast<ISA*>(begin) + size_bytes;
+        auto bytes = *reinterpret_cast<const ISB*>(value);
+        if (delta <= bytes) return nullptr;
+        *reinterpret_cast<ISB*>(begin) = bytes;
+        return reinterpret_cast<ISA*>(begin) + bytes;
       }
       case 2: {
         auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto size_bytes = *reinterpret_cast<const ISC*>(value);
-        if (delta <= size_bytes) return nullptr;
-        *reinterpret_cast<ISC*>(begin) = size_bytes;
-        return reinterpret_cast<ISA*>(begin) + size_bytes;
+        auto bytes = *reinterpret_cast<const ISC*>(value);
+        if (delta <= bytes) return nullptr;
+        *reinterpret_cast<ISC*>(begin) = bytes;
+        return reinterpret_cast<ISA*>(begin) + bytes;
       }
       case 3: {
         auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto size_bytes = *reinterpret_cast<const ISD*>(value);
-        if (delta <= size_bytes) return nullptr;
-        *reinterpret_cast<ISD*>(begin) = size_bytes;
-        return reinterpret_cast<ISA*>(begin) + size_bytes;
+        auto bytes = *reinterpret_cast<const ISD*>(value);
+        if (delta <= bytes) return nullptr;
+        *reinterpret_cast<ISD*>(begin) = bytes;
+        return reinterpret_cast<ISA*>(begin) + bytes;
       }
     }
   }
@@ -258,8 +279,40 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, ISA al
 }
 
 template<typename IS = ISR>
+void* TATypeWrite_NC(void* begin, void* end, DTC type, const void* value) {
+  auto result = TATypeWrite_NC<IS>(begin, end, DTB(type), value);
+  if (!result) return result;
+  return TATypeWrite_NC<IS>(result, end, DTB(type >> 16), value);
+}
+
+template<typename IS = ISR>
+void* TATypeWrite_NC(void* begin, void* end, DTD type, const void* value) {
+  auto result = TATypeWrite_NC<IS>(begin, end, DTB(type), value);
+  if (!result) return result;
+  result = TATypeWrite_NC<IS>(result, end, DTB(type >> 16), value);
+  if (!result) return result;
+  return TATypeWrite_NC<IS>(result, end, DTB(type >> 24), value);
+}
+
+template<typename IS = ISR>
 void* TATypeWrite(void* begin, void* end, DTB type, const void* value) {
   return TATypeWrite<IS>(begin, end, type, value);
+}
+
+template<typename IS = ISR>
+void* TATypeWrite(void* begin, void* end, DTC type, const void* value) {
+  auto result = TATypeWrite<IS>(begin, end, DTB(type), value);
+  if (!result) return result;
+  return TATypeWrite<IS>(result, end, DTB(type >> 16), value);
+}
+
+template<typename IS = ISR>
+void* TATypeWrite(void* begin, void* end, DTD type, const void* value) {
+  auto result = TATypeWrite<IS>(begin, end, DTB(type), value);
+  if (!result) return result;
+  result = TATypeWrite<IS>(result, end, DTB(type >> 16), value);
+  if (!result) return result;
+  return TATypeWrite<IS>(result, end, DTB(type >> 24), value);
 }
 
 /* Creates an ASCII Vector Data Type. */
@@ -341,14 +394,14 @@ IS TATypeSizeOf(void* value, DTB type) {
   return TATypeSizeOf<IS>((const void*)value, type);
 }
 template<typename IS = ISW>
-IS TATypeSizeOf(const void* value_base, IS size_bytes, DTB type) {
+IS TATypeSizeOf(const void* value_base, IS bytes, DTB type) {
   const IUA* vbase = (const IUA*)value_base;
-  return TATypeSizeOf<IS>(vbase + size_bytes, type);
+  return TATypeSizeOf<IS>(vbase + bytes, type);
 }
 template<typename IS = ISW>
-IS TATypeSizeOf(void* value_base, IS size_bytes, DTB type) {
+IS TATypeSizeOf(void* value_base, IS bytes, DTB type) {
   const void* vbase = (const void*)value_base;
-  return TATypeSizeOf<IS>(vbase, size_bytes, type);
+  return TATypeSizeOf<IS>(vbase, bytes, type);
 }
 
 /* Returns the ASCII Type for the given floating-point type FP.

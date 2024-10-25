@@ -1,26 +1,26 @@
 /* Script2™
 @link    https://github.com/KabukiStarship/Script2.git
-@file    /Buffer.h
+@file    /Boofer.h
 @author  Cale McCollough <https://cookingwithcale.org>
 @license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
 Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
 the MPL was not distributed with this file, You can obtain one at 
 <https://mozilla.org/MPL/2.0/>. */
 #pragma once
-#ifndef SCRIPT2_BUFFER
-#define SCRIPT2_BUFFER
+#ifndef SCRIPT2_boofer
+#define SCRIPT2_boofer
 #include <_Config.h>
 #if SEAM >= SCRIPT2_DIC
 namespace _ {
 
 /* Creates/Gets a static socket of the specified size. */
-template<ISW cBufferSize = cBufferSizeDefault>
-inline CHA* Buffer() {
+template<ISW cBooferSize = cBooferSizeDefault>
+inline CHA* Boofer() {
   enum {
-    cBufferSizeWords =
-        (cBufferSize / sizeof(IUW)) + cBufferSize % sizeof(IUW) ? 1 : 0
+    cBooferSizeWords =
+        (cBooferSize / sizeof(IUW)) + cBooferSize % sizeof(IUW) ? 1 : 0
   };
-  static IUW socket[cBufferSizeWords];
+  static IUW socket[cBooferSizeWords];
   return TPtr<CHA>(socket);
 }
 

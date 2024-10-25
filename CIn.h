@@ -29,7 +29,7 @@ COut("\n\nEnter a value 0-1,000,000").Star() << cin.SScan(a)
 @endcode
 */
 class LIB_MEMBER CIn {
-  CHA buffer_[24];  //< Buffer for scanning numbers and short Strings.
+  CHA boofer_[24];  //< Boofer for scanning numbers and short Strings.
 
  public:
   enum {
@@ -43,7 +43,7 @@ class LIB_MEMBER CIn {
   };
 
   enum {
-    BufferSizeMin = 2,  //< This min size of a string boofer.
+    BooferSizeMin = 2,  //< This min size of a string boofer.
   };
 
   /* Pauses until any key is pressed. */
@@ -52,15 +52,15 @@ class LIB_MEMBER CIn {
 #if USING_UTF8 == YES_0
   CIn(CHA& result);
   /* CIns a string with a larger boofer than the */
-  CIn(CHA* result, ISW buffer_size);
+  CIn(CHA* result, ISW boofer_size);
 #endif
 #if USING_UTF16 == YES_0
   CIn(CHB& result);
-  CIn(CHB* result, ISW buffer_size);
+  CIn(CHB* result, ISW boofer_size);
 #endif
 #if USING_UTF32 == YES_0
   CIn(CHC& result);
-  CIn(CHC* result, ISW buffer_size);
+  CIn(CHC* result, ISW boofer_size);
 #endif
 
   /* Scans the given item to the CIn stream. */
@@ -83,22 +83,22 @@ class LIB_MEMBER CIn {
   /* Reads the character from the CIn stream. */
   LIB_MEMBER static BOL SScan(CHA& result);
 
-  /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHA* result, ISW buffer_size);
+  /* Reads the string with the given boofer_size from the CIn stream. */
+  static LIB_MEMBER BOL SScan(CHA* result, ISW boofer_size);
 #endif
 #if USING_UTF16 == YES_0
   /* Reads the character from the CIn stream. */
   static LIB_MEMBER BOL SScan(CHB& result);
 
-  /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHB* result, ISW buffer_size);
+  /* Reads the string with the given boofer_size from the CIn stream. */
+  static LIB_MEMBER BOL SScan(CHB* result, ISW boofer_size);
 #endif
 #if USING_UTF32 == YES_0
   /* Reads the character from the CIn stream. */
   static LIB_MEMBER BOL SScan(CHC& result);
 
-  /* Reads the string with the given buffer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHC* result, ISW buffer_size);
+  /* Reads the string with the given boofer_size from the CIn stream. */
+  static LIB_MEMBER BOL SScan(CHC* result, ISW boofer_size);
 #endif
 
   /* Reads the value from the CIn stream. */

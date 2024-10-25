@@ -59,19 +59,19 @@ class TDoor : public Operand {
 
   /* A door in a Chinese room. */
   TDoor(const CHA* roomName = nullptr, IUW* socket = nullptr,
-        IUW size_bytes = cMinDoorSize) {
+        IUW bytes = cMinDoorSize) {
     if (!socket) {
-      if (size_bytes < cMinDoorSize) {
-        size_bytes = cMinDoorSize;
+      if (bytes < cMinDoorSize) {
+        bytes = cMinDoorSize;
       }
     } else {
-      if (size_bytes < kMinDoorSize) {
+      if (bytes < kMinDoorSize) {
         // @todo insert error code here
-        D_COUT("\nError: Door size_bytes < kMinDoorSize!");
+        D_COUT("\nError: Door bytes < kMinDoorSize!");
         return;
       }
     }
-    // tx.SetBuffer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
+    // tx.SetBoofer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
     // rx = new SerialSlot (tx.EndAddress (), aSlot, aSlotSize,
     //  aTalkbaccSize);
   }
@@ -114,10 +114,10 @@ class TDoor : public Operand {
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(Crabs* crabs) {
     TMatrix<ISC, ISC, ISC>* slots = slots_;
-    ISC scan_count_max = scan_count_max_;
+    ISC scan_total = scan_total_;
     for (ISC i = 0; i < slots->Count(); ++i) {
       BIn* bin = Slot(i);
-      for (ISC count = scan_count_max; count > 0; --count) {
+      for (ISC count = scan_total; count > 0; --count) {
         ISC value = BInNextByte(bin);
         if (value < 0) break;
         const Op* result = crabs->SScan(value);
@@ -152,8 +152,8 @@ class TDoor : public Operand {
   }
 
  private:
-  ISC size_bytes_,                 //< Door size in bytes.
-      scan_count_max_;             //< Max bytes to pull throught the slot.
+  ISC bytes_,                 //< Door size in bytes.
+      scan_total_;             //< Max bytes to pull throught the slot.
   IUW* begin_;                     //< Pointer to dynamic socket.
   TMatrix<ISC, ISC, ISC>* slots_;  //< Slots in the door.
   CBIn* OffsetToBIn(ISC offset) {

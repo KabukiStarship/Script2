@@ -173,7 +173,7 @@ class Library : public Operand {
       num_libraries_;  //< Number of libraries.
   IUA type_;           //< Current type of bag.
   TIndex num_keys_,    //< Current number_ of Star members.
-      buffer_size_;    //< Current size of the header and names socket in bytes.
+      boofer_size_;    //< Current size of the header and names socket in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
       collisions_size_;  //< Current size of the header and names socket in
                          // bytes.

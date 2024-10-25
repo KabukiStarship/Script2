@@ -15,9 +15,12 @@ using namespace _;
 #else
 #include "../_Release.inl"
 #endif
-#define TPARAMS CHT, ISZ, ISY, HSH
+#undef TPARAMS
+#undef TARGS
+#define TPARAMS CHT, ISZ, ISY, DT, HSH
 #define TARGS \
-  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename HSH = IUN
+  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, \
+  typename DT = DTB, typename HSH = IUN
 
 namespace Script2 {
 template<TARGS>
@@ -35,7 +38,7 @@ static void TestDic() {
 
   ADic<TPARAMS, Size> dic(cCount);
 
-  D_COUT("\n\nsize:" << dic.Size() << " size_bytes:" << dic.SizeBytes()
+  D_COUT("\n\nsize:" << dic.Size() << " bytes:" << dic.SizeBytes()
                      << " size_words:" << dic.SizeWords());
 #if D_THIS
   D_COUT("\nPrinting empty dictionary:\n");
@@ -72,7 +75,7 @@ static void TestDic() {
 
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
-  CHT large_string[Size];
+  CHT large_string[Size] = { 0 };
   CHT* cursor = large_string;
   for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
   *cursor = 0;

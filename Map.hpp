@@ -32,11 +32,11 @@ offsets).
 @code
          Map Memory Layout
 +-------------------------------+
-|_____   Buffer       ISZ       |
+|_____   Boofer       ISZ       |
 |_____ ^ Y_n        Codomain    |
 |      | Y_0        Mappings    |
 +-------------------------------+
-|_____   Buffer                 |
+|_____   Boofer                 |
 |_____ ^ X_n     Sorted Domain  |
 |      | X_0         Values     |
 +-------------------------------+  ^ Up in addresses.
@@ -53,8 +53,8 @@ struct TMap {
 /* Utility class for creating an object with the TBUF. */
 template<MAP_A>
 struct TMapBuf {
-  D domain_value;
-  ISZ codomain_value;
+  D   domain_value;   //< 
+  ISZ codomain_value; //< 
 };
 
 /* Returns the start of the domain. */
@@ -190,7 +190,7 @@ ISZ TMapAdd(TMap<MAP_P>* map, D domain_value, ISZ codomain_mapping) {
   D_ASSERT(map);
   D_COUT("\n\nAdding:" << domain_value << "->" << codomain_mapping);
   ISZ count = map->count, size = map->size;
-  if (count >= size) return CInvalidIndex<ISZ>();
+  if (count >= size) D_RETURNT(ISZ, -ErrorBooferOverflow);
   D  * domain   = TMapDomain<MAP_P>(map);
   ISZ* codomain = TMapCodomain<MAP_P>(domain, size);
 
@@ -218,7 +218,7 @@ ISZ TMapAdd(TMap<MAP_P>* map, D domain_value, ISZ codomain_mapping) {
       low = mid + 1;
     } else {
       D_COUT(". The value exists in the domain.");
-      return CInvalidIndex<ISZ>();
+      return CAInvalidIndex<ISZ>();
     }
   }
   if (domain_value > current_domain_value) {
@@ -278,7 +278,7 @@ ISZ TMapFind(const TMap<MAP_P>* map, const D& domain_member) {
     }
   }
   D_COUT("\n  Domain does not contain domain_member.");
-  return CInvalidIndex<ISZ>();
+  return CAInvalidIndex<ISZ>();
 }
 
 /* Attempts to find the codomain_mapping index.
@@ -295,12 +295,13 @@ inline void TMapRemapCodomain(TMap<MAP_P>* map, ISZ index, ISZ codomain_mapping)
   D_ASSERT(map);
   TMapCodomain<MAP_P>(map)[index] = codomain_mapping;
 }
+
 /* Removes the codomain_mapping from the domain to the index in the codomain.
 @return An invalid index upon failure or the new size of the map upon success.
 */
 template<MAP_A>
 ISZ TMapRemove(TMap<MAP_P>* map, ISZ index) {
-  if (index < 0 || index >= map->count) return CInvalidIndex<ISZ>();
+  if (index < 0 || index >= map->count) D_RETURNT(ISZ, -ErrorInvalidIndex);
   ISZ size = map->size, count = map->count, zero = 0;
   if (count == zero)
     if (--count == zero) {

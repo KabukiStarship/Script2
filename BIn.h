@@ -61,7 +61,7 @@ LIB_MEMBER inline ISW SlotSpace(CHA* origin, CHA* stop, IUW size);
 /* Gets the rx socket length. */
 LIB_MEMBER inline ISC BInSpace(BIn* bin);
 
-LIB_MEMBER inline ISC BinBufferLength(BIn* bin);
+LIB_MEMBER inline ISC BinBooferLength(BIn* bin);
 
 #if USING_SCRIPT2_TEXT == YES_0
 /* Gets a a CHA for printing out the bin_state. */

@@ -78,8 +78,8 @@ ISW ATypeSizeBytes(const void* value, DTB type) {
   return TATypeSizeOf<ISW>(value, type);
 }
 
-ISW ATypeSizeBytes(const void* value_base, ISA size_bytes, DTB type) {
-  return ATypeSizeBytes(TPtr<>(value_base, size_bytes), type);
+ISW ATypeSizeBytes(const void* value_base, ISA bytes, DTB type) {
+  return ATypeSizeBytes(TPtr<>(value_base, bytes), type);
 }
 
 void* ATypeValueEnd(void* value, DTB type) {

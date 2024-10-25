@@ -70,7 +70,7 @@ IUW* CrabsBinAddress(Crabs* crabs) {
   return TPtr<IUW>(crabs) + crabs->header_size;
 }
 
-CHA* CrabsBuffer(Crabs* crabs) {
+CHA* CrabsBoofer(Crabs* crabs) {
   CHA* ptr = TPtr<CHA>(crabs);
   return ptr + sizeof(Crabs);
 }
@@ -90,19 +90,19 @@ BOut* CrabsBOut(Crabs* crabs) {
   return TPtr<BOut>(CrabsBOutAddress(crabs));
 }
 
-Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
-                 IUW* unpacked_buffer, IUW unpacked_size) {
+Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_size, Operand* root,
+                 IUW* unpacked_boofer, IUW unpacked_size) {
   if (!socket) {
     return nullptr;
   }
-  if (buffer_size < Crabs::cMinBufferSize) {
+  if (boofer_size < Crabs::cMinBooferSize) {
     return nullptr;
   }
   if (stack_size < cMinStaccSize) {
     stack_size = cMinStaccSize;  //< Minimum stack size.
   }
-  if (unpacked_buffer == nullptr) {
-    D_COUT("\nError: unpacked_buffer was nil!");
+  if (unpacked_boofer == nullptr) {
+    D_COUT("\nError: unpacked_boofer was nil!");
   }
 
   if (root == nullptr) {
@@ -114,7 +114,7 @@ Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
 
   ISC total_stack_size = (stack_size - 1) * (2 * sizeof(Operand*));
   // Calculate the size of the Slot and Stack.
-  ISC size = (buffer_size - sizeof(Crabs) - total_stack_size + 1) >> 1;
+  ISC size = (boofer_size - sizeof(Crabs) - total_stack_size + 1) >> 1;
 
   //< >>1 to divide by 2
   crabs->bout_state = cBOutStateDisconnected;
@@ -124,8 +124,8 @@ Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_size, Operand* root,
   crabs->stack_size = stack_size;
   crabs->num_states = 0;
   crabs->operand = nullptr;
-  D_COUT("\nInitializing Stack with size:" << stack_size << " buffer_size:"
-                                           << buffer_size << " size:" << size);
+  D_COUT("\nInitializing Stack with size:" << stack_size << " boofer_size:"
+                                           << boofer_size << " size:" << size);
   crabs->bytes_left = 0;
   // ISC offset    = sizeof (Crabs) + total_stack_size - sizeof (void*);
   // bin_offset       = sizeof (BIn) + total_stack_size + offset;
@@ -479,7 +479,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bytes_left = b;
           if (array_type == 0) {
             // We don't need to enter a state here because we
-            // already have the size_bytes. :-)
+            // already have the bytes. :-)
             bin_state = cBInStatePackedPod;
             break;
           } else if (array_type == 1) {
@@ -738,7 +738,7 @@ void CrabsClear(Crabs* crabs) {
   CHA *origin = BInBegin(bin), *stop = origin + bin->size,
       *origin = origin + bin->origin, *stop = origin + bin->stop;
 
-  // ISC buffer_space = SlotSpace (origin, stop, size);
+  // ISC boofer_space = SlotSpace (origin, stop, size);
 
   if (origin == stop) return;  //< Nothing to do.
   if (origin > stop) {

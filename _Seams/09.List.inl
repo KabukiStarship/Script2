@@ -27,7 +27,7 @@ namespace Script2 {
 template<typename ISZ, typename ISY>
 static void TestList() {
   D_COUT(Linef("\n\n\n\n+---\n Testing AList<IS")
-         << CATypeSWCH<ISZ>() << Linef(">\n+---"));
+         << CSizeCodef<ISZ>() << Linef(">\n+---"));
 
   AList<ISZ, ISY, 1024, 40> list;
   D_COUT("\n\nlist.Size():" << list.Size()
