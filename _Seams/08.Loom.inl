@@ -27,7 +27,7 @@ void TestLoom() {
     Size = 192 * sizeof(CHT),
     cCount = 32,
   };
-  D_COUT("Testing ALoom<CH" << CATypeSWCH<CHT>() << ",IS" << CATypeSWCH<ISZ>()
+  D_COUT("Testing ALoom<CH" << CSizeCodef<CHT>() << ",IS" << CSizeCodef<ISZ>()
          << "> with Size:" << Size << " and cCount:" << cCount);
 
   ALoom<CHT, ISZ, ISY, Size, TBUF<Size>> loom(cCount);

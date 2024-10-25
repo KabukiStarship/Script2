@@ -37,7 +37,7 @@ needed a new Wall may be created and destroyed dynamically.
 |  Terminals   |
 |      v       |
 |vvvvvvvvvvvvvv|
-|    Buffer    |
+|    Boofer    |
 |^^^^^^^^^^^^^^|
 |      ^       |
 |  TStack of   |
@@ -63,43 +63,43 @@ class Wall : public Operand {
   Wall(TMap<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
-  Wall(ISW size_bytes = cMinSizeBytes) : is_dynamic_(true) {
-    size_bytes = size_bytes < cMinSizeBytes ? (ISC)cMinSizeBytes : size_bytes;
-    size_bytes = TAlignUpUnsigned<ISD, ISW>(size_bytes);
-    ISW size_words = (size_bytes >> sizeof(void*)) + 3;
+  Wall(ISW bytes = cMinSizeBytes) : is_dynamic_(true) {
+    bytes = bytes < cMinSizeBytes ? (ISC)cMinSizeBytes : bytes;
+    bytes = TAlignUpUnsigned<ISD, ISW>(bytes);
+    ISW size_words = (bytes >> sizeof(void*)) + 3;
     IUW *socket = new IUW[size_words],
-        *aligned_buffer = AlignUpPointer8<IUW>(socket);
+        *aligned_boofer = AlignUpPointer8<IUW>(socket);
     //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
     //< on 16 and 32-bit systems.
-    size_bytes -= sizeof(IUW) * (aligned_buffer - socket);
+    bytes -= sizeof(IUW) * (aligned_boofer - socket);
     origin = socket;
-    doors_ = TPtr<TMatrix<Door*>>(aligned_buffer);
-    TStackInit(socket, size_bytes >> sizeof(IUW));
+    doors_ = TPtr<TMatrix<Door*>>(aligned_boofer);
+    TStackInit(socket, bytes >> sizeof(IUW));
   }
 
   /* Constructs a wall from the given socket. */
-  Wall(IUW* socket, ISW size_bytes) {
+  Wall(IUW* socket, ISW bytes) {
     // CHA* ptr     = TPtr<CHA> (socket);//,
     //    * new_ptr = ptr + AlignOffset<IUD> (ptr),
-    //    * end_ptr = ptr + size_bytes;
+    //    * end_ptr = ptr + bytes;
     enum {
       cBitsShift = sizeof(IUW) == 2 ? 1 : sizeof(IUW) == 2 ? 2 : 3,
     };
-    // ISC size_words = (size_bytes >> kBitsShift) + 3;
+    // ISC size_words = (bytes >> kBitsShift) + 3;
     //< Computer engineering voodoo for aligning to 64-bit boundary.
 
-    IUW* aligned_buffer = AlignUpPointer8<IUW>(socket);
+    IUW* aligned_boofer = AlignUpPointer8<IUW>(socket);
     //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
     //< on 16 and 32-bit systems.
-    size_bytes -= sizeof(IUW) * (aligned_buffer - socket);
+    bytes -= sizeof(IUW) * (aligned_boofer - socket);
     origin = socket;
-    doors_ = TPtr<TMatrix<Door*>>(aligned_buffer);
-    TStackInit(socket, size_bytes >> sizeof(IUW));
+    doors_ = TPtr<TMatrix<Door*>>(aligned_boofer);
+    TStackInit(socket, bytes >> sizeof(IUW));
   }
 
   /* Gets the size of the wall in bytes. */
   ISW GetSizeBytes() {
-    return size_bytes_;
+    return bytes_;
 
     /* Gets a pointer to the array of pointers to Door(). */
     TMatrix<Door*>* Doors();
@@ -123,7 +123,7 @@ class Wall : public Operand {
 
    private:
     BOL is_dynamic_;        //< Flag for if using dynamic memory.
-    ISW size_bytes_;        //< Size of the Wall in bytes.
+    ISW bytes_;        //< Size of the Wall in bytes.
     IUW* origin;            //< The Wall's socket.
     TStack<Door*>* doors_;  //< The doors in the room.
   };

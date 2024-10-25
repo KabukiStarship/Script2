@@ -17,7 +17,7 @@ one at <https://mozilla.org/MPL/2.0/>. */
 namespace _ {
 
 /* A Slot in a Door in a Chinese Room to pass messages through.
-A Slot is Ring Buffer Socket similar to a TCP port. The operation of the
+A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
 pointers for the (socket) origin and (data) origin of the ring socket and
 you may write packed data. */

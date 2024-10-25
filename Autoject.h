@@ -50,11 +50,11 @@ enum RAMFactoryError {
 };
 
 /* Creates or destroys a block of heap memory.
-@pre size_bytes > 0 */
-LIB_MEMBER IUW* RAMFactoryHeap(IUW* obj, ISW size_bytes);
+@pre bytes > 0 */
+LIB_MEMBER IUW* RAMFactoryHeap(IUW* obj, ISW bytes);
 
 /* Creates a block of heap memory. */
-LIB_MEMBER IUW* RAMFactoryStack(IUW* ptr, ISW size_bytes);
+LIB_MEMBER IUW* RAMFactoryStack(IUW* ptr, ISW bytes);
 
 LIB_INLINE IUW* AutojectBeginSet(Autoject& obj, void* boofer);
 

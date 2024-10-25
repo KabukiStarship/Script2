@@ -19,7 +19,7 @@ Printer& TBOutPrint(Printer& printer, BOut* bout) {
   ISC size = bout->size;
   printer << Line('_', 80) << "\nBOut:" << Hex<>(bout) << " size:" << size
           << " start:" << bout->origin << " stop:" << bout->stop
-          << " read:" << bout->read << Socket(BOutBuffer(bout), size - 1);
+          << " read:" << bout->read << Socket(BOutBoofer(bout), size - 1);
   return printer;
 }
 

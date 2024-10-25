@@ -27,7 +27,7 @@ needed a new Wall may be created and destroyed dynamically.
 |  Terminals   |
 |      v       |
 |vvvvvvvvvvvvvv|
-|    Buffer    |
+|    Boofer    |
 |^^^^^^^^^^^^^^|
 |      ^       |
 |  TStack of   |
@@ -48,10 +48,10 @@ class Wall {
   Wall(TMap<Door*>* doors);
 
   /* Constructs a wall from the given socket. */
-  Wall(ISW size_bytes = kMinSizeBytes);
+  Wall(ISW bytes = kMinSizeBytes);
 
   /* Constructs a wall from the given socket. */
-  Wall(IUW* socket, ISW size_bytes);
+  Wall(IUW* socket, ISW bytes);
 
   /* Gets the size of the wall in bytes. */
   ISW GetSizeBytes();
@@ -75,7 +75,7 @@ class Wall {
 
  private:
   BOL is_dynamic_;         //< Flag for if using dynamic memory.
-  ISW size_bytes_;         //< Size of the Wall in bytes.
+  ISW bytes_;         //< Size of the Wall in bytes.
   IUW* origin;             //< The Wall's socket.
   TMatrix<Door*>* doors_;  //< The doors in the room.
 };

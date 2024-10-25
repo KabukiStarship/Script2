@@ -49,7 +49,7 @@ constexpr DTB CATypeSW() {
 
 // Gets the ASCII Size Width letter A-K
 template<typename T>
-constexpr CHA CATypeSWCH() {
+constexpr CHA CSizeCodef() {
   return 'A' + CHA(CATypeSW<T>());
 }
 
@@ -76,8 +76,8 @@ constexpr Sizef CSizef() {
 template<typename IS>
 const CHA* TSTAATypesPOD(IS type) {
   auto strings = STAATypesPOD();
-  auto count_max = ATypePODCount;
-  type = (type < 0 || type > count_max) ? count_max : type;
+  auto total = ATypePODCount;
+  type = (type < 0 || type > total) ? total : type;
   return &strings[type << 2];
 }
 
@@ -645,7 +645,7 @@ inline CHC* SPrint(CHC* string, CHC* stop, CHB item) {
 @param stop   The last CHT in the socket.
 @param item   The item to print. */
 template<typename CHX, typename CHY>
-CHX* TSPrintString(CHX* start, CHX* stop, const CHY* item) {
+inline CHX* TSPrintString(CHX* start, CHX* stop, const CHY* item) {
   if (!start || start >= stop || !item) return nullptr;
   CHL c = 0;
   item = SScan(item, c);
@@ -663,8 +663,8 @@ template<typename CHT = CHR>
   return TSPrintString<CHT, CHA>(start, stop, item);
 }
  template<typename CHT = CHR>
- inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHA* item) {
-   return TSPrintString<CHT>(start, start + buffer_size - 1, item);
+ inline CHT* TSPrint(CHT* start, ISW boofer_size, const CHA* item) {
+   return TSPrintString<CHT>(start, start + boofer_size - 1, item);
  }
 
 #if USING_UTF16 == YES_0
@@ -684,8 +684,8 @@ inline CHT* TSPrint(CHT* start, CHT* stop, const CHB* item) {
   return TSPrintString<CHT>(start, stop, item);
 }
 template<typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHB* item) {
-  return TSPrintString<CHT>(start, start + buffer_size - 1, item);
+inline CHT* TSPrint(CHT* start, ISW boofer_size, const CHB* item) {
+  return TSPrintString<CHT>(start, start + boofer_size - 1, item);
 }
 #endif
 
@@ -707,8 +707,8 @@ inline CHT* TSPrint(CHT* start, CHT* stop, const CHC* item) {
   return TSPrintString<CHT>(start, stop, item);
 }
 template<typename CHT = CHR>
-inline CHT* TSPrint(CHT* start, ISW buffer_size, const CHC* item) {
-  return TSPrintString<CHT>(start, start + buffer_size - 1, item);
+inline CHT* TSPrint(CHT* start, ISW boofer_size, const CHC* item) {
+  return TSPrintString<CHT>(start, start + boofer_size - 1, item);
 }
 #endif
 
@@ -797,11 +797,11 @@ void TPrint3(CHT* start, CHT token) {
 }*/
 
 template<typename T, typename CHT = CHR>
-CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, ISW size_bytes) {
-  CHT* end = start + (size_bytes * 2);
-  if (!start || size_bytes <= 0 || end < start) return nullptr;
+CHT* TSPrintHex(CHT* start, CHT* stop, const void* origin, ISW bytes) {
+  CHT* end = start + (bytes * 2);
+  if (!start || bytes <= 0 || end < start) return nullptr;
   const IUA* cursor = TPtr<const IUA>(origin);
-  while (size_bytes-- > 0) {
+  while (bytes-- > 0) {
     IUA byte = *cursor++;
     *start++ = HexNibbleToUpperCase(byte >> 4);
     *start++ = HexNibbleToUpperCase(byte & 0xf);

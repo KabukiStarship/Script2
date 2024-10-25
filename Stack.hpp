@@ -20,15 +20,16 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 #define SCK_A typename ISZ
 #define SCK_P ISZ
+//@todo Change SCP_A to typename ISZ = ISN, typename ISY = ISZ
 namespace _ {
 
 /* @ingroup AsciiStack */
 
 /* ASCII Stack
 Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./Spec/Data/MapTypes/Stack.md */
+@link ./Spec/Data/MapTypes/Stack.md
 
-/* An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
+An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
 Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./Spec/Data/MapTypes/Stack.md
 
@@ -36,7 +37,7 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 
 @code
 +---------------+
-|    Buffer     |
+|    Boofer     |
 |---------------|
 | C-Style Array |
 |---------------|  ^
@@ -46,8 +47,8 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 */
 template<typename ISZ = ISN>
 struct TStack {
-  ISZ count_max,  //< Size of the Array in elements.
-      count;      //< Element count.
+  ISZ total,  //< Size of the Array in elements.
+      count;  //< Element count.
 };
 
 /* Returns the first element in the Stack TMatrix. */
@@ -83,18 +84,18 @@ inline ISZ TStackSizeOf(ISZ count) {
 /* Prints the given obj to the console. */
 template<typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TStackPrint(Printer& o, const TStack<SCK_P>* stack) {
-  ISZ count_max = stack->count_max, count = stack->count;
+  ISZ total = stack->total, count = stack->count;
   o << Linef("\n+---\n| TStack<T") << CHA('@' + sizeof(T)) << ",ISZ"
     << CHA('@' + sizeof(ISZ))
-    << ">: size_bytes:" << TStackSizeOf<T, SCK_P>(count_max)
-    << " count_max: " << count_max << " count:" << count << Linef("\n+---");
+    << ">: bytes:" << TStackSizeOf<T, SCK_P>(total)
+    << " total: " << total << " count:" << count << Linef("\n+---");
 
   const T* elements = TStackStart<T, SCK_P>(stack);
   for (ISC i = 0; i < count; ++i) o << "\n| " << i << ".) " << elements[i];
   if (count == 0) o << "\n| Empty";
 #if D_THIS
-  ISZ size_bytes = TStackSizeOf<T, SCK_P>(stack->count_max);
-  return o << Linef("\n+---") << Charsf(stack, size_bytes) << '\n';
+  ISZ bytes = TStackSizeOf<T, SCK_P>(stack->total);
+  return o << Linef("\n+---") << Charsf(stack, bytes) << '\n';
 #else
   return o;
 #endif
@@ -146,31 +147,31 @@ inline TStack<SCK_P>* TStackPtr(Autoject& ajt) {
   return TPtr<TStack<SCK_P>>(ajt.origin);
 }
 
-/* Creates a new copy of the stack with the new size being the count_max + 
+/* Creates a new copy of the stack with the new size being the total + 
 count_delta.
 @return Returns nil if the clone cannot grow or shrink. */
 template<typename T = ISW, typename ISZ = ISN>
 TStack<SCK_P>* TStackClone(Autoject& adj, ISZ count_delta) {
   auto stack = TStackPtr<ISZ>(adj);
   D_ASSERT(stack);
-  ISZ count_max = stack->count_max;
-  D_ASSERT(count_max >= 0);
+  ISZ total = stack->total;
+  D_ASSERT(total >= 0);
 #if D_THIS
   D_COUT("\nAuto-growing Stack...\nBefore:");
   TStackPrint<COut, T, ISZ>(StdOut(), stack);
 #endif
-  ISZ count_max_new = count_max + count_delta;
-  if (count_max_new < 0) return nullptr;
+  ISZ total_new = total + count_delta;
+  if (total_new < 0) return nullptr;
   ISZ count = stack->count;
-  ISZ count_new = count_max_new < count ? count_max_new : count;
+  ISZ count_new = total_new < count ? total_new : count;
   ISW size_old = TStackSize<T, SCK_P>(count),
-      size_new = TStackSize<T, SCK_P>(count_max_new);
+      size_new = TStackSize<T, SCK_P>(total_new);
   TStack<SCK_P>* stack_new = TStackPtr<ISZ>(adj.ram(nullptr, size_new));
   if(!stack_new) return stack_new;
-  *stack_new = {count_max_new, count_new};
+  *stack_new = {total_new, count_new};
   D_COUT("\nCopying data..." <<
          "\nstack_new.count: " << stack_new->count <<
-         "\nstack_new.count_max: " << stack_new->count_max <<
+         "\nstack_new.total: " << stack_new->total <<
          "\nsize_old: " << size_old << 
          "\nsize_new: " << size_new <<
          "\nTStackStart<T, SCK_P>(stack): " <<  Hexf(TStackStart<T, SCK_P>(stack)));
@@ -186,7 +187,7 @@ TStack<SCK_P>* TStackClone(Autoject& adj, ISZ count_delta) {
 
 /* Resizes the AutoStack by the given count delta and deletes the old boofer.
 @return Nil if it's not possible to resize: either out of memory or negative 
-new count_max. */
+new total. */
 template<typename T = ISW, typename ISZ = ISN>
 TStack<SCK_P>* TStackResize(Autoject& adj, ISZ count_delta) {
   auto stack_new = TStackClone<T, SCK_P>(adj, count_delta);
@@ -196,11 +197,11 @@ TStack<SCK_P>* TStackResize(Autoject& adj, ISZ count_delta) {
   return stack_new;
 }
 
-/* Doubles the AutoStack count_max and deletes the old boofer. */
+/* Doubles the AutoStack total and deletes the old boofer. */
 template<typename T = ISW, typename ISZ = ISN>
 TStack<SCK_P>* TStackResize(Autoject& adj) {
   auto stack = TStackPtr<ISZ>(adj.origin);
-  auto stack_new = TStackClone<T, SCK_P>(adj, stack->count_max);
+  auto stack_new = TStackClone<T, SCK_P>(adj, stack->total);
   if (!stack_new) return stack_new;
   adj.ram(adj.origin, 0);
   adj.origin = TPtr<IUW>(stack_new);
@@ -214,24 +215,24 @@ constexpr DT TStackType() {
 
 /* RAMFactoryStack function for the TStack. */
 template<typename ISZ = ISN, typename DT = DTB, DT Type = _ISN>
-IUW* TStackFactoryStack(IUW* origin, ISW size_bytes) {
-  if (size_bytes <= 0) return TPtr<IUW>(TStackType<ISZ, DT, Type>());
-  return RAMFactoryStack(origin, size_bytes);
+IUW* TStackFactoryStack(IUW* origin, ISW bytes) {
+  if (bytes <= 0) return TPtr<IUW>(TStackType<ISZ, DT, Type>());
+  return RAMFactoryStack(origin, bytes);
 }
 
 /* RAMFactoryHeap function for the TStack. */
 template<typename ISZ = ISN, typename DT = DTB, DT Type = _ISN>
-IUW* TStackFactoryHeap(IUW* origin, ISW size_bytes) {
-  if (size_bytes <= 0) return TPtr<IUW>(TStackType<ISZ, DT, Type>());
-  return RAMFactoryHeap(origin, size_bytes);
+IUW* TStackFactoryHeap(IUW* origin, ISW bytes) {
+  if (bytes <= 0) return TPtr<IUW>(TStackType<ISZ, DT, Type>());
+  return RAMFactoryHeap(origin, bytes);
 }
 
-/* Gets the size of a Stack with the given count_max. */
+/* Gets the size of a Stack with the given total. */
 template<typename T = ISW, typename ISZ = ISN>
-inline ISZ TStackSize(ISZ count_max) {
+inline ISZ TStackSize(ISZ total) {
   enum { CountMaxMin = sizeof(IUD) / sizeof(T) };
-  if (count_max < CountMaxMin) count_max = CountMaxMin;
-  return sizeof(TStack<SCK_P>) + sizeof(T) * count_max;
+  if (total < CountMaxMin) total = CountMaxMin;
+  return sizeof(TStack<SCK_P>) + sizeof(T) * total;
 }
 
 /* Gets the min size of a Stack with zero elements. */
@@ -260,10 +261,10 @@ ISZ StackCountMax () {
 
 /* The minimum obj size. */
 template<typename T = ISW, typename ISZ = ISN>
-inline ISZ TStackSizeMin(ISZ count_max) {
+inline ISZ TStackSizeMin(ISZ total) {
   ISZ count_upper_bounds = TStackSizeMax<T, SCK_P>();
-  if (count_max > count_upper_bounds) count_max = count_upper_bounds;
-  return (ISZ)(sizeof(TStack<SCK_P>) + count_max * sizeof(T));
+  if (total > count_upper_bounds) total = count_upper_bounds;
+  return (ISZ)(sizeof(TStack<SCK_P>) + total * sizeof(T));
 }
 
 /* Initializes an obj from a preallocated socket who's size is a multiple of
@@ -274,7 +275,7 @@ template<typename T = ISW, typename ISZ = ISN>
 TStack<SCK_P>* TStackInit(TStack<SCK_P>* stack, ISZ size) {
   if (!stack || size < 0) return nullptr;
   D_ARRAY_WIPE(stack, ISW(TStackSizeOf<T, SCK_P>(size)));
-  stack->count_max = size;
+  stack->total = size;
   stack->count = 0;
   return stack;
 }
@@ -289,7 +290,7 @@ TStack<SCK_P>* TStackInit(TStack<SCK_P>* stack, ISZ size, const T* items,
   if (!stack || !items || size <= 0 || count < 0) return nullptr;
   D_ARRAY_WIPE(stack, ISW(TStackSizeOf<T, SCK_P>(size)));
 
-  stack->count_max = size;
+  stack->total = size;
   stack->count = 0;
   return stack;
 }
@@ -305,14 +306,14 @@ inline Type TStackEnd(TStack<SCK_P>* stack) {
 template<typename T = ISW, typename ISZ = ISN>
 BOL TStackResize(Autoject& obj, ISZ new_count) {
   TStack<SCK_P> stack = *TPtr<TStack<SCK_P>>(obj.origin);
-  ISZ count = stack.count, count_max = TStackSizeMax<T, SCK_P>();
-  if (count > count_max || count == new_count) return false;
+  ISZ count = stack.count, total = TStackSizeMax<T, SCK_P>();
+  if (count > total || count == new_count) return false;
 }
 
 /* Checks if the given index exists in the stack. */
 template<typename T = ISW, typename ISZ = ISN>
 BOL TStackInBounds(const TStack<SCK_P>* stack, ISZ index) {
-  return index >= 0 && index < stack->count_max;
+  return index >= 0 && index < stack->total;
 }
 
 /* Gets the element at the given index.
@@ -359,25 +360,39 @@ inline void TStackPush_NC(TStack<SCK_P>* stack, T item, ISZ count) {
 @param stack The Ascii Object base poiner.
 @param item  The item to push onto the obj. */
 template<typename T = ISW, typename ISZ = ISN, typename ISY = ISZ>
-inline ISY TStackInsert(T* start, ISZ count_max, ISZ count, T item, ISY index = PSH) {
-  if (count >= count_max) return -ErrorStackOverflow;
-  if (index < 0) index = count;
+inline ISY TStackInsert(T* start, ISZ total, ISZ count, T item, ISY index = PSH) {
+  if (count >= total) return -ErrorStackOverflow;
+  if (index < 0) return -ErrorInvalidIndex;
+  //if (index < 0) index = count;
   TArrayInsert_NC<T, SCK_P>(start, count, item);
   return index;
 }
 template<typename T = ISW, typename ISZ = ISN, typename ISY = ISZ>
 inline ISY TStackInsert(TStack<SCK_P>* stack, T item, ISY index = PSH) {
-  D_ASSERT(stack);
-  ISY count     = ISY(stack->count),
-      count_max = ISY(stack->count_max);
-  if (count >= count_max) return -ErrorStackOverflow;
-  if (index < 0) index = count;
-  D_COUT("  Pushing:" << item << " count_max:" << count_max << " count:" <<
-    count);
-  D_COUT("\n| Before:" << Charsf(stack, TStackSizeOf<T, SCK_P>(count_max)));
+  //D_CHECK_PTR_TRETURN(ISY, stack);
+  if (index < PSH) return -ErrorInvalidIndex;
+  ISY count = ISY(stack->count),
+      total = ISY(stack->total);
+  if (count >= total) return -ErrorStackOverflow;
+  if (index == PSH) index = count;
+  D_COUT("  Pushing:" << item << " total:" << total << " count:" << count << 
+         "\n| Before:" << Charsf(stack, TStackSizeOf<T, SCK_P>(total)));
   TArrayInsert_NC<T, SCK_P>(TStackStart<T, SCK_P>(stack), count++, index, item);
-  D_COUT("\n| After:" << Charsf(stack, TStackSizeOf<T, SCK_P>(count_max)));
+  D_COUT("\n| After:" << Charsf(stack, TStackSizeOf<T, SCK_P>(total)));
   stack->count = count;
+  return index;
+}
+
+/* Adds the given item to the stop of the obj.
+@return The index of the newly stacked item or -1 upon failure.
+@param stack The Ascii Object base poiner.
+@param item  The item to push onto the obj. */
+template<typename T = ISW, typename ISZ = ISW, typename ISY = ISZ>
+inline ISY TStackInsertDown(T* start, ISZ total, ISZ count, T item, 
+  ISY index = PSH) {
+  if (count >= total) return -ErrorStackOverflow;
+  if (index > 0) return -ErrorInvalidIndex;
+  TArrayInsertDown_NC<T, SCK_P>(start, count, item);
   return index;
 }
 
@@ -391,9 +406,8 @@ ISZ TStackInsert(AArray<T, ISZ, BUF>& obj, T item, ISZ index = PSH) {
 Insert:
   ISZ result = TStackInsert<T, SCK_P>(stack, item, index);
   if (result < 0) {
-    //if (result == cErrorBufferOverflow) return index;
-    D_COUT("\n\nStack overflow! index:" << index << " result:" << result << 
-           " Autogrowing...");
+    D_COUT("\n\nError " << result << ": " << TCrabsErrorST<>(result) <<
+           " at index:" << index << "\nAutogrowing...");
     stack = TStackResize<T, SCK_P>(obj.AJT());
     goto Insert;
   }
@@ -497,7 +511,7 @@ inline ISZ TStackSizeWords(ISZ count) {
 |  Packed Stack  |
 |----------------|
 |  Word Aligned  |
-|     Buffer     |
+|     Boofer     |
 |----------------|
 | Stack Elements |
 |----------------|  +
@@ -530,18 +544,18 @@ class AStack {
   /* Attempts to down-size the BUF or creates a dynamically allocated stack.
   @param size The number of elements in the Array. */
   AStack(ISZ stack_height) : obj_(TStackSize<T, SCK_P>(stack_height)) {
-    ISZ size_bytes = TStack<SCK_P>(stack_height) - sizeof(ISZ);
+    ISZ bytes = TStack<SCK_P>(stack_height) - sizeof(ISZ);
     D_ARRAY_WIPE(Start(), SizeBytes() - sizeof(TStack<SCK_P>));
   }
 
-  /* Copies the items into the obj_.Buffer () with some additional
+  /* Copies the items into the obj_.Boofer () with some additional
   empty_elements. */
-  AStack(ISZ count_max, const T* items, ISZ items_count)
+  AStack(ISZ total, const T* items, ISZ items_count)
       : obj_(TStackSize<T, SCK_P>(items_count)) {
     TStackInsert<T, SCK_P>(This().AJT(), items, items_count);
   }
 
-  /* Copies the items into the obj_.Buffer () with some additional
+  /* Copies the items into the obj_.Boofer () with some additional
   empty_elements. */
   AStack(const T* items, ISZ items_count)
       : obj_(TStackSize<T, SCK_P>(items_count)) {
@@ -572,7 +586,7 @@ class AStack {
   inline ISZ SizeMin() { return TStackSizeMin<T, SCK_P>(); }
 
   /* Gets the max elements that can fit in the stack boofer. */
-  inline ISZ Height() { return This()->count_max; }
+  inline ISZ Height() { return This()->total; }
 
   /* Gets the count of the items on the obj. */
   inline ISZ Count() { return This()->count; }

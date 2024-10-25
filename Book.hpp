@@ -33,7 +33,7 @@ Please see the ASCII List documentation for information about
 
 /* @ingroup Book
 @brief A contiguous memory Associative List composed of a Loom and list.
-The Loom datatype stores the size_bytes, which includes the size of the 
+The Loom datatype stores the bytes, which includes the size of the 
 Keys Loom and the Values List. The Keys Loom is an array of strings that 
 stores the Book Keys. The Values List is a list of type-value tupes that 
 correspond to the key indexes.
@@ -43,17 +43,17 @@ the keys.
 
 @code
 +====================================+
-|_______   Buffer                    |
+|_______   Boofer                    |
 |_______ ^ List Value N              |
 |_______ | List Value 1              |
 |        | Keys Loom (Value 0)       |
 |------------------------------------|
-|_______   Buffer                    |
+|_______   Boofer                    |
 |_______ ^ List Value N Type         |
 |_______ | List Value 1 Type         |
 |        | Loom Type (Type 0)        |
 |------------------------------------|
-|_______   Buffer                    |
+|_______   Boofer                    |
 |_______   Offset to Value N         |
 |_______ ^ Offset to Value 1         |
 |        | Offset to Keys (Offset 0) |
@@ -66,12 +66,14 @@ struct TBook {
   TList<LST_P> values;  //< A list of values with a Loom of keys in index 0.
 };
 
+#define BOK TBook<CHT, ISZ, ISY, DT>
+
 enum {
-  // The number of bits to shift a Book's size_bytes right by to calculate the 
-  // size_keys (Example: size_keys = size_bytes >> 2).
+  // The number of bits to shift a Book's bytes right by to calculate the 
+  // size_keys (Example: size_keys = bytes >> 2).
   BookDefaultKeysFractionShift = -1,
-  // The number of bits to shift a Book's size_bytes right by to calculate the 
-  // count_max (Example: count_max = size_bytes >> 5).
+  // The number of bits to shift a Book's bytes right by to calculate the 
+  // total (Example: total = bytes >> 5).
   BookDefaultCountMaxFractionShift = -6,
   BookDefaultLengthKey = 15,
   BookDefaultSizeBytes = 512,
@@ -80,14 +82,14 @@ enum {
 
 /* The minimum count a good with the given template parameters can have. */
 template<BOK_A>
-constexpr ISY CBookCountMin() {
+constexpr ISY CBookMinCount() {
   return 8 / sizeof(ISZ);
 }
 
 /* The minimum size of a Book based on the CCountMin. */
 template<BOK_A>
-constexpr ISZ CBookSizeMin(ISY count_max) {
-  return sizeof(TBook<BOK_P>) + count_max * (sizeof(ISZ) + 2); //< @todo ???
+constexpr ISZ CBookMinSize(ISY total) {
+  return sizeof(BOK) + total * (sizeof(ISZ) + 2); //< @todo ???
 }
 
 /* Gets the default count of a good with the given template parameters. */
@@ -98,134 +100,146 @@ constexpr ISZ CBookDefaultCount() {
 
 /* Gets the default count of a good with the given template parameters. */
 template<BOK_A>
-ISY TBookCount(const TBook<BOK_P>* book) {
+ISY TBookCount(const BOK* book) {
   return book->values.map.count - 1;
 }
 
 /* Gets the default count of a good with the given template parameters. */
 template<BOK_A>
-ISY TBookCountMax(const TBook<BOK_P>* book) {
-  return book->values.map.count_max - 1;
+ISY TBookCountMax(const BOK* book) {
+  return book->values.map.total - 1;
 }
 
 /* Gets the default count of a good with the given template parameters. */
 template<BOK_A>
-ISY TBookCountDefault(ISY size_bytes) {
-  return size_bytes >> 5; // >> 5 to / by 32
+ISY TBookDefaultCount(ISY bytes) {
+  return bytes >> 5; // >> 5 to / by 32
 }
 
 /* Gets the default size of a Book with the CBookDefaultCount. */
 template<BOK_A>
-constexpr ISZ CBookDefaultSize(ISY count_max = CBookDefaultCount<BOK_P>()) {
-  if (count_max < 1) return -1;
-  if (count_max < CBookCountMin<BOK_P>()) 
-    count_max = CBookCountMin<BOK_P>();
-  return count_max * BookDefaultLengthKey * sizeof(CHT);
+constexpr ISZ CBookDefaultSize(ISY total = CBookDefaultCount<BOK_P>()) {
+  if (total < 1) return -1;
+  if (total < CBookMinCount<BOK_P>()) 
+    total = CBookMinCount<BOK_P>();
+  return total * BookDefaultLengthKey * sizeof(CHT);
 }
 
 /* Points to the base of the value offsets array. */
 template<BOK_A>
-inline ISZ* TBookValuesMap(TBook<BOK_P>* book) {
-  return TPtr<ISZ>(book, sizeof(TBook<BOK_P>));
+inline ISZ* TBookValuesMap(BOK* book) {
+  return TPtr<ISZ>(book, sizeof(BOK));
 }
-
-/* Points to the base of the value offsets array. */
 template<BOK_A>
-inline const ISZ* TBookValuesMap(const TBook<BOK_P>* book) {
-  return CPtr<ISZ>(TBookValuesMap<BOK_P>(CPtr<TBook<BOK_P>>(book)));
+inline const ISZ* TBookValuesMap(const BOK* book) {
+  return CPtr<ISZ>(TBookValuesMap<BOK_P>(CPtr<BOK>(book)));
 }
 
 /* Gets the keys Loom (index 0 of the ASCII List). */
 template<BOK_A>
-inline TLoom<LOM_P>* TBookKeys(TBook<BOK_P>* book) {
+inline TLoom<LOM_P>* TBookKeys(BOK* book) {
   return TPtr<TLoom<LOM_P>>(book, *TBookValuesMap<BOK_P>(book));
 }
 template<BOK_A>
-inline const TLoom<LOM_P>* TBookKeys(const TBook<BOK_P>* book) {
-  return CPtr<TLoom<LOM_P>>(TBookKeys<BOK_P>(CPtr<TBook<BOK_P>>(book)));
+inline const TLoom<LOM_P>* TBookKeys(const BOK* book) {
+  return CPtr<TLoom<LOM_P>>(TBookKeys<BOK_P>(CPtr<BOK>(book)));
 }
 
 /* Gets the values List. */
 template<BOK_A>
-inline ISZ* TBookKeysMap(TBook<BOK_P>* book) {
-  return TLoomOffsets<LOM_P>(TBookKeys<BOK_P>(book));
+inline ISZ* TBookKeysMap(BOK* book) {
+  return TLoomKeysMap<LOM_P>(TBookKeys<BOK_P>(book));
 }
 template<BOK_A>
-inline const ISZ* TBookKeysMap(const TBook<BOK_P>* book) {
-  return CPtr<ISZ>(TBookKeysMap<BOK_P>(CPtr<TBook<BOK_P>>(book)));
+inline const ISZ* TBookKeysMap(const BOK* book) {
+  return CPtr<ISZ>(TBookKeysMap<BOK_P>(CPtr<BOK>(book)));
 }
 
 /* Gets the start of the book as a templated-defined character. */
 template<BOK_A>
-inline CHT* TBookStart(TBook<BOK_P>* book, ISZ count_max) {
-  ISZ* top = &TStackStart<ISZ, ISZ>(TBookKeys<BOK_P>(book))[count_max];
+inline CHT* TBookStart(BOK* book, ISY total) {
+  ISZ* top = &TStackStart<ISZ, ISZ>(TBookKeys<BOK_P>(book))[total];
   return TPtr<CHT>(top);
+}
+template<BOK_A>
+inline const CHT* TBookStart(const BOK* book, ISY total) {
+  return CPtr<ISZ>(TBookStart<BOK_P>(CPtr<BOK>(book), total));
 }
 
 /* Gets the start byte of the book. */
 template<BOK_A>
-inline CHT* TBookStart(TBook<BOK_P>* book) {
-  return TBookStart<BOK_P>(book, TBookKeys<BOK_P>(book).count_max);
+inline CHT* TBookStart(BOK* book) {
+  return TBookStart<BOK_P>(book, TBookKeys<BOK_P>(book).total);
 }
 
 /* Points to the byte after the last byte of the book's contiguous memory block. */
 template<BOK_A>
-inline CHA* TBookEnd(TBook<BOK_P>* book) {
+inline CHA* TBookEnd(BOK* book) {
   return TListEnd<ISZ>(&book->values);
+}
+template<BOK_A>
+inline const ISZ* TBookEnd(const BOK* book) {
+  return CPtr<ISZ>(TBookEnd<BOK_P>(CPtr<BOK>(book)));
 }
 
 /* Gets the byte after the end of the book's contiguous memory block. */
 template<BOK_A>
-inline CHA* TBookKeysEnd(TBook<BOK_P>* book) {
+inline CHA* TBookKeysEnd(BOK* book) {
   return TLoomEnd<LOM_P>(TBookKeys<BOK_P>(book));
 }
 
 /* Gets the size of the Book in bytes. */
 template<BOK_A>
-inline ISZ TBookCountMax(TBook<BOK_P>* book) {
-  return TBookKeys<BOK_P>(book)->map.count_max;
+inline ISZ TBookCountMax(BOK* book) {
+  return TBookKeys<BOK_P>(book)->map.total;
+}
+template<BOK_A>
+inline const ISZ* TBookCountMax(const BOK* book) {
+  return CPtr<ISZ>(TBookCountMax<BOK_P>(CPtr<BOK>(book)));
 }
 
 /* Checks if the book size values result are valid.
-You must have enough room in the size_bytes with given count_max. */
+You must have enough room in the bytes with given total. */
 template<BOK_A>
-inline BOL TBookSizesAreValid(ISZ size_bytes, ISZ size_keys, ISY count_max) {
-  return size_keys <= TListSizeFreeMax<LST_P>(size_bytes, count_max);
+inline BOL TBookSizesAreValid(ISZ bytes, ISZ size_keys, ISY total) {
+  return size_keys <= TListSizeFreeMax<LST_P>(bytes, total);
 }
 
 // Freespace left in bytes for the given book's keys Loom and values List.
 // @return Returns -1 upon failure.
 template<BOK_A>
-inline ISZ TBookFreespace(TBook<BOK_P>* book) {
+inline ISZ TBookFreeSpace(BOK* book) {
+  D_CHECK_TPTR_RETURN(ISZ, book);
   auto keys = TBookKeys<BOK_P>(book);
-  if (!keys) return -1;
-  return TListFreeSpace<ISZ>(&book->values) + 
-         TLoomFreeSpace<CHT, ISZ, ISY>(keys);
+  D_CHECK_TPTR_RETURN(ISZ, keys);
+  return TListFreeSpace<LST_P>(&book->values) + 
+         TLoomFreeSpace<LOM_P>(keys);
 }
 
 /* Prints the book to the Printer. */
 template<typename Printer, BOK_A>
-Printer& TBookPrint(Printer& o, const TBook<BOK_P>* book) {
-  auto count_max    = book->values.map.count_max;
+Printer& TBookPrint(Printer& o, const BOK* book) {
+  D_CHECK_PTR_TRETURN(Printer, book);
+  auto total    = book->values.map.total;
   auto count        = book->values.map.count;
-  auto voffsets     = TPtr<ISZ>(book, sizeof(TBook<BOK_P>));
-  auto types        = TPtr<DT>(voffsets + count_max);
+  auto voffsets     = TPtr<ISZ>(book, sizeof(BOK));
+  auto types        = TPtr<DT>(voffsets + total);
   auto keys_offset  = *voffsets++;
   auto keys         = TPtr<TLoom<LOM_P>>(book, keys_offset);
-  auto keys_size    = keys->size_bytes;
+  auto keys_size    = keys->bytes;
   auto keys_top     = keys->top;
-  D_COUT("\ncount_max:" << count_max << " count:" << count << 
+  D_COUT("\ntotal:" << total << " count:" << count << 
          " keys_size:" << keys_size << " keys_top : " << keys_top);
-  D_AVOW(count_max, keys->map.count_max);
+  D_AVOW(total, keys->map.total);
   D_AVOW(count    , keys->map.count);
   D_COUT_LOOM(keys);
-  o << "\nBook<CH" << CATypeSWCH<CHT>() << ",IS" << CATypeSWCH<ISZ>() << ",IS"
-    << CATypeSWCH<ISY>() << "> size_bytes:" << book->values.size_bytes
-    << " count_max:" << count_max << " count:" << count << '\n'
+  o << "\nBook<CH" << CSizeCodef<CHT>() << ",IS" << CSizeCodef<ISZ>() << ",IS"
+    << CSizeCodef<ISY>() << "> bytes:" << book->values.bytes
+    << " total:" << total << " count:" << count << '\n'
     << " list_top:" << book->values.top << " keys_offset:" << keys_offset
     << " keys_free_space:" << TLoomFreeSpace<LOM_P>(keys)
     << " values_free_space:" << TListFreeSpace<ISZ>(&book->values)
-    << " keys.size_bytes:" << keys_size << " keys.top:" << keys_top
+    << " keys.bytes:" << keys_size << " keys.top:" << keys_top
     << " TypeOf(keys):" << ATypef(types[0]) << ' ';
   for (ISY i = 1; i < count; ++i) {
     o << '\n' << i << ".) \"" << TLoomGet<LOM_P>(keys, i) << "\" type:";
@@ -233,7 +247,7 @@ Printer& TBookPrint(Printer& o, const TBook<BOK_P>* book) {
     auto voffset = *(++voffsets);
     o << ATypef(type) << " voffset:" << voffset << " value:";
   }
-  D_COUT(Linef('-') << ' ' << Charsf(book, book->values.size_bytes));
+  D_COUT(Linef('-') << ' ' << Charsf(book, book->values.bytes));
   return o << '\n';
 }
 
@@ -251,7 +265,7 @@ We are mapping an offset to a CH type, and thus the VT bits are 0.
 template<BOK_A>
 constexpr DTB CBookKeysType() {
   enum {
-    PODBits = CATypeCH<CHR, DT>(),
+    PODBits = CATypeCH<CHR>(),
     VTBits  = 1 << ATypeVTBit0,
     SWBits  = CBitCount<ISZ>() << ATypeSWBit0,
     MTBits  = CATypeIS<ISY>() << ATypeMTBit0
@@ -259,46 +273,45 @@ constexpr DTB CBookKeysType() {
   return MTBits | SWBits | VTBits | PODBits;
 }
 
-/* Initializes the book to the given count_max using the CBookDefaultSize.
-@param size_bytes The size of the book in bytes.
-@param count_max The maximum number of entries in the book -1 for the keys.
+/* Initializes the book to the given total using the CBookDefaultSize.
+@param bytes The size of the book in bytes.
+@param total The maximum number of entries in the book -1 for the keys.
 @param size_keys If this number is positive then the value is size of the keys 
 Loom in bytes. If the value is negative then it is the number of bits to shift 
-the size_bytes to get the size_keys. */
+the bytes to get the size_keys. */
 template<BOK_A>
-TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
-                        ISY count_max = BookDefaultCountMaxFractionShift, 
+BOK* TBookInit(BOK* book,
+                        ISY total = BookDefaultCountMaxFractionShift,
                         ISZ size_keys = BookDefaultKeysFractionShift) {
   D_ASSERT(book);
   TList<LST_P>* values = &book->values;
-  ISZ size_bytes = values->size_bytes;
-
-  D_COUT("\n\nTBookInit size_bytes: " << size_bytes << " count_max:" <<
-         count_max << " size_keys:" << size_keys);
-  D_ARRAY_WIPE(&values->top, size_bytes - sizeof(ISZ));
+  ISZ bytes = values->bytes;
+  D_COUT("\n\nTBookInit bytes: " << bytes << " total:" <<
+         total << " size_keys:" << size_keys);
+  D_ARRAY_WIPE(&values->top, bytes - sizeof(ISZ));
   if (size_keys < 0) {
     size_keys *= -1;
     if (size_keys >= TBitCount<ISZ>()) {
-      D_COUT("\nInvalid count_max bit shift value.");
+      D_COUT("\nInvalid total bit shift value.");
       return nullptr;
     }
-    size_keys = size_bytes >> size_keys;
+    size_keys = bytes >> size_keys;
     D_COUT("\nnew size_keys:" << size_keys);
   }
-  if (count_max < 0) {
-    count_max *= -1;
-    if (count_max >= TBitCount<ISZ>()) {
-      D_COUT("\nInvalid count_max bit shift value.");
+  if (total < 0) {
+    total *= -1;
+    if (total >= TBitCount<ISZ>()) {
+      D_COUT("\nInvalid total bit shift value.");
       return nullptr;
     }
-    count_max = ISY(size_bytes >> ISZ(count_max));
-    D_COUT("\nnew count_max:" << count_max);
+    total = ISY(bytes >> ISZ(total));
+    D_COUT("\nnew total:" << total);
   }
-  if (!TBookSizesAreValid<BOK_P>(size_bytes, size_keys, count_max)) {
+  if (!TBookSizesAreValid<BOK_P>(bytes, size_keys, total)) {
     D_COUT("\nInvalid book sizes!");
     return nullptr;
   }
-  TListInit<LST_P>(values, size_bytes, count_max);
+  TListInit<LST_P>(values, bytes, total);
   DTB KeysType = CBookKeysType<BOK_P>();
   ISY keys_index = TListAlloc<LST_P>(values, KeysType, size_keys);
   D_AVOW(ISY(0), keys_index);
@@ -316,14 +329,14 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
     D_COUT("\nBook Keys too large to fit in list! size_keys:" << size_keys);
     return nullptr;
   }
-  auto result = TLoomInit<LOM_P>(keys, count_max);
+  auto result = TLoomInit<LOM_P>(keys, total);
   TLoomInsert<LOM_P>(result, "");
-  D_COUT("\nkeys->top:" << keys->top);
+  D_COUT("\nkeys->top:" << keys->start);
   D_COUT("\nTDelta<>(book, TBookKeys<BOK_P>(book)):" << 
          TDelta<>(book, TBookKeys<BOK_P>(book)));
   if (!result) return nullptr;
-  D_COUT("\n\nTListInit Post size_bytes: " << size_bytes << 
-         " count_max:" << count_max << 
+  D_COUT("\n\nTListInit Post bytes: " << bytes << 
+         " total:" << total << 
          "\nBook End  :" << TDelta<>(book, TBookEnd<BOK_P>(book)) <<
          "\nKeys End  :" << TDelta<>(book, TLoomEnd<LOM_P>(keys)) <<
          "\nKeys Start:" << TDelta<>(book, keys) << "\n\nResult:\n");
@@ -331,100 +344,98 @@ TBook<BOK_P>* TBookInit(TBook<BOK_P>* book,
   return book;
 }
 
-/* Copies an ASCII Book from the origin to the destination.
-template<BOK_A>
-TBook<BOK_P>* TBookCopy(TBook<BOK_P>* destination, TBook<BOK_P>* origin) {
-  return TPtr<TBook<BOK_P>>(TMapCopy<ISZ>(destination, origin));
-} */
-
 /* Gets the element at the given index. */
 template<BOK_A>
-inline void* TBookValue(TBook<BOK_P>* book, ISY index) {
+inline void* TBookValue(BOK* book, ISY index) {
   return TListValue<void, LST_P>(TBookKeys<BOK_P>(book), index);
+}
+template<BOK_A>
+inline const void* TBookValue(const BOK* book, ISY index) {
+  return CPtr<DT>(TBookValue<BOK_P>(CPtr<BOK>(book), index));
 }
 
 /* Gets the TypeValue tuple the given index.
 @param tuple Reference to the return type passed in by reference. */
 template<BOK_A>
-inline ATypeValue TBookATypeValue(const TBook<BOK_P>* book, ISY index) {
+inline ATypeValue TBookATypeValue(const BOK* book, ISY index) {
   return TListTypeValuePtr<ISZ, DT>(&book->values, index);
 }
 
 template<BOK_A>
-inline DT* TBookTypes(TBook<BOK_P>* book, ISY count_max) {
-  return TListTypes<LST_P>(&book->values, count_max);
+inline DT* TBookTypes(BOK* book, ISY total) {
+  return TListTypes<LST_P>(&book->values, total);
 }
 template<BOK_A>
-inline const DT* TBookTypes(const TBook<BOK_P>* book, ISY count_max) {
-  return CPtr<DT>(TBookTypes<BOK_P>(CPtr<TBook<BOK_P>>(book), count_max));
+inline const DT* TBookTypes(const BOK* book, ISY total) {
+  return CPtr<DT>(TBookTypes<BOK_P>(CPtr<BOK>(book), total));
 }
 
 /* Gets the key at the given index without doing any error checking. */
 template<BOK_A>
-inline CHT* TBookKey_NC(TBook<BOK_P>* book, ISY index) {
+inline CHT* TBookKey_NC(BOK* book, ISY index) {
   return TLoomGet_NC<LOM_P>(TBookKeys<BOK_P>(book), index);
 }
 
 /* Gets the key at the given index without doing any error checking. */
 template<BOK_A>
-inline const CHT* TBookKey_NC(const TBook<BOK_P>* book, ISY index) {
-  return CPtr<CHT>(TBookKey_NC<LOM_P>(CPtr<TBook<BOK_P>>(book), index));
+inline const CHT* TBookKey_NC(const BOK* book, ISY index) {
+  return CPtr<CHT>(TBookKey_NC<LOM_P>(CPtr<BOK>(book), index));
 }
 
 /* Gets the keys offsets array. */
 template<BOK_A>
-inline CHT* TBookKeys_NC(TBook<BOK_P>* book, ISY index) {
-  return TPtr<CHT>(book, *TPtr<ISZ>(book, sizeof(TBook<BOK_P>)));
+inline CHT* TBookKeys_NC(BOK* book, ISY index) {
+  return TPtr<CHT>(book, *TPtr<ISZ>(book, sizeof(BOK)));
 }
 template<BOK_A>
-inline const CHT* TBookKeys_NC(const TBook<BOK_P>* book) {
-  auto bok = CPtr<TBook<BOK_P>>(TBookKeys<BOK_P>(book));
+inline const CHT* TBookKeys_NC(const BOK* book) {
+  auto bok = CPtr<BOK>(TBookKeys<BOK_P>(book));
   return CPtr<CHT>(TBookKeys_NC<LOM_P>(bok));
 }
 
 /* Gets the type at the given index without doing any error checking. */
 template<BOK_A>
-inline DT TBookType_NC(const TBook<BOK_P>* book, ISY count_max, ISY index) {
-  return TListType_NC<LST_P>(&book->values, count_max, index);
+inline DT TBookType_NC(const BOK* book, ISY total, ISY index) {
+  return TListType_NC<LST_P>(&book->values, total, index);
 }
 
 /* Gets the keys offsets array. */
 template<BOK_A>
-inline DT* TBookTypes_NC(TBook<BOK_P>* book, ISY count_max) {
-  return TPtr<DT>(book, TBookKeys_NC<BOK_P>(book) + count_max);
+inline DT* TBookTypes_NC(BOK* book, ISY total) {
+  return TPtr<DT>(book, TBookKeys_NC<BOK_P>(book) + total);
 }
 template<BOK_A>
-inline const CHT* TBookTypes_NC(const TBook<BOK_P>* book) {
-  auto bok = CPtr<TBook<BOK_P>>(TBookValuesMap<BOK_P>(book));
+inline const CHT* TBookTypes_NC(const BOK* book) {
+  auto bok = CPtr<BOK>(TBookValuesMap<BOK_P>(book));
   return CPtr<CHT>(TBookTypes_NC<LOM_P>(bok));
 }
 
 /* Gets the type at the given index without doing any error checking. */
 template<BOK_A>
-inline void* TBookValue_NC(TBook<BOK_P>* book, ISY index) {
+inline void* TBookValue_NC(BOK* book, ISY index) {
   return TListValue_NC<LST_P>(&book->values, index);
 }
 template<BOK_A>
-inline const void* TBookValue_NC(const TBook<BOK_P>* book, ISY index) {
-  return CPtr<void>(TBookValue_NC<BOK_P>(CPtr<TBook<BOK_P>>(book), index));
+inline const void* TBookValue_NC(const BOK* book, ISY index) {
+  return CPtr<void>(TBookValue_NC<BOK_P>(CPtr<BOK>(book), index));
 }
 
 /* Gets the type at the given index without doing any error checking. */
 template<BOK_A>
-inline ISZ TBookValueOffset_NC(const TBook<BOK_P>* book, ISY index) {
+inline ISZ TBookValueOffset_NC(const BOK* book, ISY index) {
   //return TListValueOffset_NC<LST_P>(&book->values, index);
-  return TPtr<ISZ>(book, sizeof(TBook<BOK_P>))[index];
+  return TPtr<ISZ>(book, sizeof(BOK))[index];
 }
 
 /* Gets the TypeValue tuple the given index.
 @param tuple Reference to the return type passed in by reference. */
 template<BOK_A>
-inline TATypeKV<ISZ, DT, CHT> TBookTypeKV(const TBook<BOK_P>* book, ISY index) {
+inline TATypeKV<ISZ, DT, CHT> TBookTypeKV(const BOK* book, ISY index) {
   auto count = book->values.map.count;
   if (index < 0 || index >= count) 
     return { nullptr, _NIL, 0 };
   return { TBookKey_NC<BOK_P>(book, index), 
-           TBookType_NC<BOK_P>(book, book->values.map.count_max, index),
+           TBookType_NC<BOK_P>(book, book->values.map.total, index),
            TBookValueOffset_NC<BOK_P>(book, index) };
 }
 
@@ -432,137 +443,133 @@ inline TATypeKV<ISZ, DT, CHT> TBookTypeKV(const TBook<BOK_P>* book, ISY index) {
 @todo Delete this function and replace with void* value.
 @return The index upon success or -1 upon failure. */
 template<typename T, BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     T item, ISY index = PSH) {
-  D_ASSERT(book);
-  if (!key) return -ErrorInputNil;
+  D_CHECK_PTR_TRETURN(ISY, book);
   D_COUT("\nAdding key:\"" << key << "\" item:" << item << " into index:" <<
     index);
-  if (index == 0) return -ErrorInputInvalid;
-  D_COUT("\nKeys offset:" << TDelta<>(book, keys));
-  D_COUT("\nValues offsets:" << TDelta<>(book, 
-         TBookValuesMap<BOK_P>(book)));
+  if (index == 0) D_RETURNT(ISY, -ErrorInvalidIndex);
+  D_COUT("\nKeys offset:" << TDelta<>(book, keys) << 
+         "\nValues offsets:" << TDelta<>(book, TBookValuesMap<BOK_P>(book)));
   ISY result = TLoomInsert<LOM_P>(keys, key, index);
   if (result < 0) {
     D_COUT("\n\n\nFailed to insert into loom:" << result << ' ' << 
            CrabsErrorSTR(result));
     D_COUT_LOOM(keys);
     D_COUT_BOOK(book);
-    return -ErrorKeysBufferOverflow;
+    return -ErrorKeysBooferOverflow;
   }
-  //D_COUT_LOOM(keys);
-  //D_COUT("\n\nBefore:\n" << Charsf(book, book->values.size_bytes));
   result = TListInsert<LST_P>(&book->values, item, result);
   if (result < 0) {
     #if SEAM == SCRIPT2_BOOK
     D_COUT("\nFailed to insert into List with error " << result << ':' <<
       CrabsErrorSTR(result));
     D_COUT_LIST(&book->values);
-    D_COUT("\n\nList memory: &book->values.size_bytes:" << *&book->values.size_bytes << '\n');
-    D_COUT(Charsf(&book->values, &book->values.size_bytes));
-    //D_COUT("After:\n" << Charsf(book, book->values.size_bytes));
+    D_COUT("\n\nList memory: &book->values.bytes:" << *&book->values.bytes << '\n');
+    D_COUT(Charsf(&book->values, &book->values.bytes));
+    //D_COUT("After:\n" << Charsf(book, book->values.bytes));
     #endif
     D_ASSERT(result > 0);
     TLoomPop<LOM_P>(keys);
   }
-  //D_COUT("After:\n" << Charsf(book, book->values.size_bytes));
+  //D_COUT("After:\n" << Charsf(book, book->values.bytes));
   return result;
 }
 template<typename T, BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, T item,
+inline ISY TBookInsert(BOK* book, const CHT* key, T item,
     ISY index = PSH) {
   return TBookInsert<T, BOK_P>(book, TBookKeys<BOK_P>(book), key, item, index);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     ISA item) {
   return TBookInsert<ISA, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, ISA item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, ISA item) {
   return TBookInsert<ISA, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     IUA item) {
   return TBookInsert<ISA, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, IUA item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, IUA item) {
   return TBookInsert<ISA, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     ISB item) {
   return TBookInsert<ISB, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, ISB item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, ISB item) {
   return TBookInsert<ISB, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     IUB item) {
   return TBookInsert<ISB, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, IUB item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, IUB item) {
   return TBookInsert<ISB, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     ISC item) {
   return TBookInsert<ISC, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, ISC item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, ISC item) {
   return TBookInsert<ISC, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     IUC item) {
   return TBookInsert<ISC, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, IUC item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, IUC item) {
   return TBookInsert<ISC, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     ISD item) {
   return TBookInsert<ISD, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, ISD item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, ISD item) {
   return TBookInsert<ISD, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, IUD item) {
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, IUD item) {
   return TBookInsert<IUD, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, IUD item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, IUD item) {
   return TBookInsert<IUD, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 #if USING_FPC == YES_0
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     FPC item) {
   return TBookInsert<FPC, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, FPC item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, FPC item) {
   return TBookInsert<FPC, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 #endif
 #if USING_FPD == YES_0
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
     FPD item) {
   return TBookInsert<FPD, BOK_P>(book, keys, key, item);
 }
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, FPD item) {
+inline ISY TBookInsert(BOK* book, const CHT* key, FPD item) {
   return TBookInsert<FPD, BOK_P>(book, TBookKeys<BOK_P>(book), key, item);
 }
 #endif
@@ -570,13 +577,13 @@ inline ISY TBookInsert(TBook<BOK_P>* book, const CHT* key, FPD item) {
 /* Adds a key-value tuple to the end of the Book.
 @return The index upon success or -1 upon failure. */
 template<BOK_A>
-inline ISY TBookInsertFrom(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* key, 
+inline ISY TBookInsertFrom(BOK* book, TLoom<LOM_P>* keys, const CHT* key, 
                        DT type, const void* value, ISY index = PSH) {
   D_COUT("\nAdding \"" << key << "\" type:" << ATypef(type) << ":0d" << type <<
          ":0x" << Hexf(type) << ":\'" << CHA(type) << "\' value(offset):" <<
          TDelta<>(book, value));
   //D_COUT("\n\nList memory before:\n" <<
-  //  Charsf(&book->values, *&book->values.size_bytes));
+  //  Charsf(&book->values, *&book->values.bytes));
   auto result = TListInsert<LST_P>(&book->values, type, value, index);
   D_COUT_LIST(&book->values);
   if (result < 0)
@@ -587,26 +594,26 @@ inline ISY TBookInsertFrom(TBook<BOK_P>* book, TLoom<LOM_P>* keys, const CHT* ke
   return key_index;
 }
 template<BOK_A>
-inline ISY TBookInsertFrom(TBook<BOK_P>* book, TLoom<LOM_P>* keys, 
+inline ISY TBookInsertFrom(BOK* book, TLoom<LOM_P>* keys, 
     const CHT* key, DT type, ISZ value_offset, ISY index = PSH) {
   return TBookInsert<BOK_P>(book, keys, key, type, 
     TPtr<>(&book->values, value_offset), index);
 }
 template<BOK_A>
-inline ISY TBookInsertFrom(TBook<BOK_P>* book, const CHT* key, DT type,
+inline ISY TBookInsertFrom(BOK* book, const CHT* key, DT type,
     const void* value, ISY index = PSH) {
   return TBookInsert<BOK_P>(book, TBookKeys<BOK_P>(book), key, type, 
                             value, index);
 }
 template<BOK_A>
-inline ISY TBookInsertFrom(TBook<BOK_P>* book, const CHT* key, DT type,
+inline ISY TBookInsertFrom(BOK* book, const CHT* key, DT type,
     ISZ value_offset, ISY index = PSH) {
   return TBookInsert<BOK_P>(book, TBookKeys<BOK_P>(book), key, type, 
                             value_offset, index);
 }
 
 template<BOK_A>
-inline ISY TBookInsert(TBook<BOK_P>* book, TATypeKV<ISZ, DT, CHT> item, 
+inline ISY TBookInsert(BOK* book, TATypeKV<ISZ, DT, CHT> item, 
                        ISY index = PSH) {
   return TBookInsert<BOK_P>(book, item.key, item.tv.type, 
                             TPtr<>(book, item.tv.value));
@@ -614,21 +621,23 @@ inline ISY TBookInsert(TBook<BOK_P>* book, TATypeKV<ISZ, DT, CHT> item,
 
 /* Adds all of the items from the source to the book. */
 template<BOK_A>
-TBook<BOK_P>* TBookAdd(TBook<BOK_P>* book, const TBook<BOK_P>* source) {
+BOK* TBookAdd(BOK* book, const BOK* source) {
+  D_CHECK_PTR_RETURN(book);
+  D_CHECK_CPTR_RETURN(BOK*, source);
   auto src_values = &source->values;
-  auto src_size = src_values->size_bytes;
+  auto src_size = src_values->bytes;
   auto src_top = src_values->top;
-  ISY src_count_max = ISY(src_values->map.count_max),
+  ISY src_total = ISY(src_values->map.total),
       src_count     = ISY(src_values->map.count);
-  D_COUT("\nAdding " << src_count << " of " << src_count_max << 
+  D_COUT("\nAdding " << src_count << " of " << src_total << 
     " max items...\nsource:\n");
   D_COUT_BOOK(source);
-  D_ASSERT(src_count >= 0 && src_count <= src_count_max && src_top > 0);
+  D_ASSERT(src_count >= 0 && src_count <= src_total && src_top > 0);
   TLoom<LOM_P>* keys     = TBookKeys<BOK_P>(book);
   const TLoom<LOM_P>* src_keys = TBookKeys<BOK_P>(source);
   const ISZ* src_keys_map      = TBookKeysMap<BOK_P>(source) + 1;
   const ISZ* src_values_map    = TBookValuesMap<BOK_P>(source) + 1;
-  const DT * src_types         = TBookTypes<BOK_P>(source, src_count_max) + 1;
+  const DT * src_types         = TBookTypes<BOK_P>(source, src_total) + 1;
   for (ISY i = 1; i < src_count; ++i) {
     D_COUT("\n\ni:" << i);
     const CHT* key    = TPtr<CHT>(src_keys, *src_keys_map++);
@@ -636,14 +645,14 @@ TBook<BOK_P>* TBookAdd(TBook<BOK_P>* book, const TBook<BOK_P>* source) {
     DT  type          = *src_types++;
     ISY result        = TBookInsertFrom<BOK_P>(book, keys, key, type,
       TPtr<>(&book->values, value_offset));
-    const CHA* dez_nutz = TErrorST<CHA, ISY>(result);
+    const CHA* dez_nutz = TCrabsErrorST<CHA, ISY>(result);
     D_COUT("\nResult:" << result << ' ' << (result < 0 ? dez_nutz : " "));
     D_ASSERT(result >= 0);
   }
   return book;
 }
 
-/* Doubles the size and count_max of the book.
+/* Doubles the size and total of the book.
 @return Returns nil if the size is greater than the amount of memory that
 can fit in type ISW, the unaltered socket pointer if the Stack has grown to the
 size upper bounds, or a new dynamically allocated socket upon failure. */
@@ -656,12 +665,12 @@ BOL TBookGrow(Autoject& obj) {
   3. Copy the List. */
   auto origin = obj.origin;
   D_ASSERT(origin);
-  auto source    = TPtr<TBook<BOK_P>>(origin);
-  auto size      = source->values.size_bytes;
+  auto source    = TPtr<BOK>(origin);
+  auto size      = source->values.bytes;
   auto top       = source->values.top;
-  ISY  count_max = ISY(source->values.map.count_max),
+  ISY  total = ISY(source->values.map.total),
        count     = ISY(source->values.map.count);
-  D_COUT("\nsize:" << size << " top:" << top << " count_max:" << count_max << 
+  D_COUT("\nsize:" << size << " top:" << top << " total:" << total << 
          " count:" << count);
   auto size_new = ATypeGrow(size);
   if (!ATypeCanGrow(size, size_new)) {
@@ -669,13 +678,13 @@ BOL TBookGrow(Autoject& obj) {
       " keys_size_new:" << size_new);
     return false;
   }
-  auto count_max_new = ATypeGrow(count_max);
-  if (!ATypeCanGrow(count_max, count_max_new)) {
-    D_COUT("\n\nError: count_max cannot grow! count:" << count_max << 
-           " count_max_new:" << count_max_new);
+  auto total_new = ATypeGrow(total);
+  if (!ATypeCanGrow(total, total_new)) {
+    D_COUT("\n\nError: total cannot grow! count:" << total << 
+           " total_new:" << total_new);
     return false;
   }
-  auto keys_size = TBookKeys<BOK_P>(source)->size_bytes;
+  auto keys_size = TBookKeys<BOK_P>(source)->bytes;
   auto keys_size_new = ATypeGrow(keys_size);
   if (!ATypeCanGrow(keys_size, keys_size_new)) {
     D_COUT("\n\nError: keys_size cannot grow! keys_size:" << keys_size << 
@@ -685,21 +694,21 @@ BOL TBookGrow(Autoject& obj) {
   /*
 #if D_THIS
   D_COUT("\n\n\n*******\nsize_new:" << size_new << 
-         " count_max:" << count_max_new << " keys_size_new:" << keys_size_new);
+         " total:" << total_new << " keys_size_new:" << keys_size_new);
   D_COUT("\n\nBefore:\n");
   D_COUT_BOOK(source);
-  D_COUT(Charsf(source, source->values.size_bytes));
+  D_COUT(Charsf(source, source->values.bytes));
 #endif*/
   IUW* origin_new = obj.ram(nullptr, size_new);
   D_COUT("\n\n*TPtr<ISZ>(origin_new):" << *TPtr<ISZ>(origin_new) << 
          " size_new:" << size_new);
-  auto destination = TPtr<TBook<BOK_P>>(origin_new);
-  //D_OBJ_ORIGIN_WIPE(TPtr<ISZ>(origin_new));
-  TBookInit<BOK_P>(destination, count_max_new, keys_size_new);
+  auto destination = TPtr<BOK>(origin_new);
+  //D_OBJ_WIPE(TPtr<ISZ>(origin_new));
+  TBookInit<BOK_P>(destination, total_new, keys_size_new);
   TBookAdd<BOK_P>(destination, source);
   obj.origin = origin_new;
   D_COUT("\n\nFinished growing. :-)\n\n");
-  D_COUT_BOOK(TPtr<TBook<BOK_P>>(obj.origin));
+  D_COUT_BOOK(TPtr<BOK>(obj.origin));
   return true;
 }
 
@@ -709,31 +718,31 @@ BOL TBookGrow(Autoject& obj) {
 template<typename T, BOK_A, typename BUF>
 ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, T item,
                 ISY index = PSH) {
-  if (!key) return -ErrorInputNil;
-  auto book = obj.OriginAs<TBook<BOK_P>*>();
-  //D_COUT("\nAdding:\"" << item << "book->values.size_bytes:" << 
-  //       book->values.size_bytes << 
-  //       "\nBefore: obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes:" << 
-  //       obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes);
+  D_CHECK_PTR_TRETURN(ISY, key);
+  auto book = obj.OriginAs<BOK*>();
+  //D_COUT("\nAdding:\"" << item << "book->values.bytes:" << 
+  //       book->values.bytes << 
+  //       "\nBefore: obj.OriginAs<BOK*>()->values.bytes:" << 
+  //       obj.OriginAs<BOK*>()->values.bytes);
   ISY result = TBookInsert<T, BOK_P>(book, key, item, index);
-  //D_COUT("\n\nAfter: obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes:" << 
-  //  obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes);
+  //D_COUT("\n\nAfter: obj.OriginAs<BOK*>()->values.bytes:" << 
+  //  obj.OriginAs<BOK*>()->values.bytes);
   //D_COUT("\n\nTBookInsert::CrabsErrorSTR(result):" << CrabsErrorSTR(result) << ':' << 
   //       result << '\n');
   while (result < 0) {
     if (!TBookGrow<BOK_P>(obj.AJT())) {
       //D_COUT("\n\nFailed to grow, personally.\n\n");
-      //D_COUT("\n\n\n!!!obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes:" <<    
-      //       obj.OriginAs<TBook<BOK_P>*>()->values.size_bytes << 
-      //       "\n!!!book->values.size-bytes:" << book->values.size_bytes);
-      return -ErrorBufferOverflow;
+      //D_COUT("\n\n\n!!!obj.OriginAs<BOK*>()->values.bytes:" <<    
+      //       obj.OriginAs<BOK*>()->values.bytes << 
+      //       "\n!!!book->values.size-bytes:" << book->values.bytes);
+      return -ErrorBooferOverflow;
     }
-    book = obj.OriginAs<TBook<BOK_P>*>();
+    book = obj.OriginAs<BOK*>();
     result = TBookInsert<T, BOK_P>(book, key, item, index);
     if (result < 0) {
       D_COUT("\n\n\nFailed to insert into book:" << result << ' ' <<
              CrabsErrorSTR(result));
-      auto keys = TBookKeys<BOK_P>(TPtr<TBook<BOK_P>>(obj.This()));
+      auto keys = TBookKeys<BOK_P>(TPtr<BOK>(obj.This()));
       D_COUT_LOOM(keys);
     }
     D_COUT("\ndez nutz baby!!!");
@@ -799,7 +808,7 @@ inline ISY TBookInsert(AArray<IUA, ISZ, BUF>& obj, const CHT* key, FPD item,
 /* Removes the given index from the Book.
 @return The index upon success or -1 upon failure. */
 template<BOK_A>
-void* TBookListRemove(TBook<BOK_P>* book, ISY index) {
+void* TBookListRemove(BOK* book, ISY index) {
   if (index < 1) return nullptr;
   TList<LST_P>* list = &book->values;
   ISY count = ISY(list->map.count);
@@ -812,7 +821,7 @@ void* TBookListRemove(TBook<BOK_P>* book, ISY index) {
 /* Removes the given index from the Book.
 @return The index upon success or -1 upon failure. */
 template<BOK_A>
-void* TBookRemove(TBook<BOK_P>* book, ISY index) {
+void* TBookRemove(BOK* book, ISY index) {
   ISY result = TLoomRemove<BOK_P>(TBookKeys<BOK_P>(book), index);
   if (!result) return nullptr;
   return TBookListRemove<BOK_P>(book, index);
@@ -821,7 +830,7 @@ void* TBookRemove(TBook<BOK_P>* book, ISY index) {
 /* Removes the given key from the Book.
 @return Nil upon failure or a pointer to the item removed upon success. */
 template<BOK_A>
-void* TBookRemove(TBook<BOK_P>* book, const CHT* key) {
+void* TBookRemove(BOK* book, const CHT* key) {
   ISY index = TLoomFind<BOK_P>(TBookKeys<BOK_P>(book), key);
   if (index < 0) return index;
   TLoomRemove<BOK_P>(TBookKeys<BOK_P>(book), index);
@@ -831,23 +840,23 @@ void* TBookRemove(TBook<BOK_P>* book, const CHT* key) {
 /* Adds a string to the end of the Book.
 @return The index upon success or -1 upon failure. */
 template<BOK_A>
-ISZ TBookPop(TBook<BOK_P>* book) {
+ISZ TBookPop(BOK* book) {
   return TBookRemove<BOK_P>(book, TBookKeys<BOK_P>(book).map.count - 1);
 }
 
 template<BOK_A, typename BUF>
-ISZ TBookCharCount(TBook<BOK_P>* book) {
+ISZ TBookCharCount(BOK* book) {
   return (ISZ)(TBookEnd<BOK_P>(book) - TBookStart<BOK_P>(book));
 }
 template<BOK_A, typename BUF>
-BOL TBookWrite(TBook<BOK_P>* destination, TBook<BOK_P>* soure) {
+BOL TBookWrite(BOK* destination, BOK* soure) {
   return true;
 }
 
 /* Adds a string to the end of the Book.
 @return The index upon success or -1 upon failure. */
 template<BOK_A>
-CHT* TBookPop(TBook<BOK_P>* book) {
+CHT* TBookPop(BOK* book) {
   if (TBookKeys<BOK_P>(book).count == 0) return nullptr;
   ISZ offset = TStackPop<ISZ, ISZ>(TBookKeys<BOK_P>(book)), top = book->top;
   book->top = offset;
@@ -857,7 +866,7 @@ CHT* TBookPop(TBook<BOK_P>* book) {
 /* Searches for the given string in the book.
 @return -1 if the book doesn't contain the string or the index if it does. */
 template<BOK_A>
-ISZ TBookFind(TBook<BOK_P>* book, const CHT* string) {
+ISZ TBookFind(BOK* book, const CHT* string) {
   D_ASSERT(book);
   D_ASSERT(string);
   return TLoomFind<CHT, ISZ>(TBookKeys<BOK_P>(book), string);
@@ -888,19 +897,19 @@ class ABook {
     BitchWhat_DEZ_NUTZ_BABY = Type()
   };
 
-  ABook(ISY count_max = BookDefaultCountMaxFractionShift,
+  ABook(ISY total = BookDefaultCountMaxFractionShift,
         ISZ size_keys = BookDefaultKeysFractionShift)
     : obj_(SizeInit, TRAMFactory<Type(), ISZ>().Init<BUF>()) {
-    TBookInit<BOK_P>(This(), count_max, size_keys);
+    TBookInit<BOK_P>(This(), total, size_keys);
   }
 
   /* Constructs a Book on the Heap.
   @param factory RAMFactory to call when the String overflows. */
   ABook(RAMFactory ram, 
-        ISY count_max = BookDefaultCountMaxFractionShift,
+        ISY total = BookDefaultCountMaxFractionShift,
         ISZ size_keys = BookDefaultKeysFractionShift)
       : obj_(ram) {
-    TBookInit<BOK_P>(This(), count_max);
+    TBookInit<BOK_P>(This(), total);
   }
 
   /* Returns the size in elements. */
@@ -913,7 +922,7 @@ class ABook {
   inline TLoom<LOM_P>* Keys() { return TBookKeys<BOK_P>(This()); }
 
   /* Returns the size in bytes. */
-  inline ISZ SizeBytes() { return Values()->size_bytes; }
+  inline ISZ SizeBytes() { return Values()->bytes; }
 
   /* Returns the size in words. */
   inline ISZ SizeWords() { return obj_.SizeWords() >> ALUSizeLog2; }
@@ -922,7 +931,7 @@ class ABook {
   inline ISZ Count() { return Values()->map.count; }
 
   /* Returns the maximum number of keys. */
-  inline ISZ CountMax() { return Values()->map.count_max; }
+  inline ISZ CountMax() { return Values()->map.total; }
 
   /* Inserts the key and item on into the Loom and List at the given index.
   @return The index of the string in the Book. */
@@ -991,7 +1000,7 @@ class ABook {
   inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; }
 
   /* Gets the ASCII Object. */
-  inline TBook<BOK_P>* This() { return obj_.OriginAs<TBook<BOK_P>*>(); }
+  inline BOK* This() { return obj_.OriginAs<BOK*>(); }
 
   /* Prints this object to the Printer. */
   template<typename Printer>

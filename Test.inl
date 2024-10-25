@@ -23,7 +23,10 @@ void TestFunctionLine(ISN line, const CHA* function, const CHA* file) {
 }
 
 BOL TestWarn(ISN line, const CHA* function, const CHA* file) {
-  TestFunctionLine(line, function, file);
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut("\n\nWARNING Function:").Print(function) << " at line:" << line <<
+       "\n       " << " in \"" << file << '\"';
+#endif
   return true;
 }
 
@@ -82,7 +85,7 @@ BOL Test(BOL condition) { return condition; }
 
 static const CHA STRErrorExpecting[] = "\n\nERROR: Expecting:0x\0";
 static const CHA STRFound[] = "\n           Found:0x\0";
-static const CHA cSTRErrorNil[] = "\nERROR: value was nil!\0";
+//static const CHA STRErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL Test(const CHA* a, const CHA* b) {
   ISN difference = TSTRCompare<CHA>(a, b);

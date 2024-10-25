@@ -15,8 +15,23 @@ the MPL was not distributed with this file, You can obtain one at
 namespace _ {
 
 /* Overwrites the memory with fill_char; functionally equivalent to memset. */
-inline CHA* RAMFill(void* start, void* stop, CHA fill_char) {
+inline CHA* RAMFill(void* start, void* stop, CHA fill_char = 0) {
   return RAMFill(start, TPtr<CHA>(stop) - TPtr<CHA>(start) + 1, fill_char);
+}
+
+template<typename IS>
+inline CHA* TOBJFill(void* start, void* stop, CHA fill_char = 0) {
+  return RAMFill(TPtr<>(start, sizeof(IS)), stop, fill_char);
+}
+
+template<typename IS>
+inline CHA* TOBJFill(void* origin, ISW bytes, CHA fill_char = 0) {
+  return RAMFill(TPtr<>(origin, sizeof(IS)), bytes - sizeof(IS), fill_char);
+}
+
+template<typename IS>
+inline CHA* TOBJFill(void* origin, CHA fill_char = 0) {
+  return TOBJFill<IS>(origin, *TPtr<IS>(origin), fill_char);
 }
 
 /* The maximum autoject size.
@@ -24,8 +39,8 @@ The max ASCII Object size is dictated by the max value allowed that can be
 aligned up to a multiple of 8 (i.e. 64-bit word boundary). */
 template<typename IS>
 inline IS TArraySizeMax() {
-  IS count_max = 0;
-  return (~count_max) - 15;
+  IS total = 0;
+  return (~total) - 15;
 }
 /* The upper bounds defines exactly how many elements can fit into a space
 in memory. */
@@ -102,7 +117,7 @@ inline T* TArrayStart(Class* autoject) {
 template<typename T, typename IS, typename Printer>
 Printer& TArrayPrint(Printer& o, const TArray<IS>* item) {
   IS size = item->size;
-  o << Linef("\n+---\nTArray<IS") << CATypeSWCH<IS>()
+  o << Linef("\n+---\nTArray<IS") << CSizeCodef<IS>()
     << "> size:" << size;
   if (size == 0) return o;
   T* items = TArrayStart<T, IS>(item);
@@ -120,9 +135,9 @@ TArray<IS>* TArrayCopy(void* destination, const void* source) {
   auto src = TPtr<const IS>(source);
   auto dst_count = *dst;
   auto src_count = *src;
-  auto result = RAMCopy(TAlignUpPTR<>(dst + 1, AlignMask),
+  auto result = RAMCopy(TPtrAlignUp<>(dst + 1, AlignMask),
                         dst_count * sizeof(T),
-                        TAlignUpPTR<>(src + 1, AlignMask),
+                        TPtrAlignUp<>(src + 1, AlignMask),
                         src_count * sizeof(T));
   if (result <= 0) return nullptr;
   *dst = src_count;
@@ -220,8 +235,8 @@ inline IUW* TArrayInit(Autoject& obj, IUW* boofer, IS size,
   D_ASSERT(size >= CSizeMin<IS>());
   obj.ram = ram;
   if (!boofer) {
-    IS buffer_size = AlignUp(IS(size * sizeof(T) + sizeof(TArray<IS>)));
-    boofer = ram(nullptr, buffer_size);
+    IS boofer_size = AlignUp(IS(size * sizeof(T) + sizeof(TArray<IS>)));
+    boofer = ram(nullptr, boofer_size);
   }
   D_ARRAY_WIPE(boofer, size * sizeof(T) + sizeof(TArray<IS>));
   TSizeSet<IS>(boofer, size);
@@ -236,8 +251,8 @@ TArray<IS>* TArrayWrite(TArray<IS>* destination, TArray<IS>* source,
   D_ASSERT(destination);
   D_ASSERT(source);
 
-  ISW size_bytes = (ISW)TSizeBytes<T, IS, Class>(size);
-  if (!RAMCopy(destination, size_bytes, source, size_bytes)) return nullptr;
+  ISW bytes = (ISW)TSizeBytes<T, IS, Class>(size);
+  if (!RAMCopy(destination, bytes, source, bytes)) return nullptr;
   return destination;
 }
 
@@ -387,21 +402,46 @@ inline void TArrayInsert_NC(T* items_start, T* items_stop, T item) {
     auto read = *(items_stop - 1);
     *items_stop-- = read;
   }
-  *items_stop = item;
+  *items_start = item;
 }
 
 /* Inserts the given item at the start stack.
 @pre You must perform bounds checking before calling this function. */
-template<typename T, typename ISZ>
-inline void TArrayInsert_NC(T* elements, ISZ count, T item) {
+template<typename T, typename IS = ISR>
+inline void TArrayInsert_NC(T* elements, IS count, T item) {
   return TArrayInsert_NC<T>(elements, elements + count, item);
 }
 
 /* Inserts the given item at the index index the elements of the given count.
 @pre You must perform bounds checking before calling this function. */
-template<typename T, typename ISZ = ISM>
-inline void TArrayInsert_NC(T* items, ISZ count, ISZ index, T item) {
+template<typename T, typename IS = ISR>
+inline void TArrayInsert_NC(T* items, IS count, IS index, T item) {
   TArrayInsert_NC<T>(items + index, items + count, item);
+}
+
+/* Inserts the given item at the start stack growing down negative.
+@pre items_stop must be less than items_start. */
+template<typename T>
+inline void TArrayInsertDown_NC(T* items_start, T* items_stop, T item) {
+  while (items_start > items_stop) {
+    auto read = *(items_stop + 1);
+    *items_stop++ = read;
+  }
+  *items_start = item;
+}
+
+/* Inserts the given item at the start stack.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename IS>
+inline void TArrayInsertDown_NC(T* elements, IS index, T item) {
+  return TArrayInsertDown_NC<T>(elements, elements + index, item);
+}
+
+/* Inserts the given item at the index index the elements of the given count.
+@pre You must perform bounds checking before calling this function. */
+template<typename T, typename IS = ISM>
+inline void TArrayInsertDown_NC(T* items, IS count, IS index, T item) {
+  TArrayInsertDown_NC<T>(items + index, items + count, item);
 }
 
 /* Shifts the elements down starting at the index without deleting the last 
@@ -416,9 +456,9 @@ inline void TArrayShift_NC(T* elements, T* end) {
 }
 template<typename T, typename IS = ISR>
 void TArrayShift_NC
-(T* elements, IS count_max) {
-  if (count_max < 0) return;
-  return TArrayShift_NC<T>(elements, elements + count_max);
+(T* elements, IS total) {
+  if (total < 0) return;
+  return TArrayShift_NC<T>(elements, elements + total);
 }
 
 /* Shifts the elements down starting at the index element and deletes the index
@@ -435,9 +475,9 @@ void TArrayShift(T* elements, T* end, IS count = 1) {
   }
 }
 template<typename T, typename IS = ISR>
-void TArrayShift(T* elements, IS count_max, IS count = 1) {
-  if (count_max < 0) return;
-  return TArrayShift<T>(elements, elements + count_max, count);
+void TArrayShift(T* elements, IS total, IS count = 1) {
+  if (total < 0) return;
+  return TArrayShift<T>(elements, elements + total, count);
 }
 
 /* Shifts the elements by the given count and nulls the source element. */
@@ -453,14 +493,14 @@ void TArrayRemove(T* elements, T* end, IS count = 1) {
   }
 }
 template<typename T, typename IS = ISR>
-void TArrayRemove(T* elements, IS count_max, IS count = 1) {
-  if (count_max < 0) return;
-  return TArrayRemove<T>(elements, elements + count_max, count);
+void TArrayRemove(T* elements, IS total, IS count = 1) {
+  if (total < 0) return;
+  return TArrayRemove<T>(elements, elements + total, count);
 }
 
 /* An invalid index. */
 template<typename IS>
-constexpr IS CInvalidIndex() {
+constexpr IS CAInvalidIndex() {
   return -1;
 }
 
@@ -470,45 +510,45 @@ template<typename T, typename IS>
 IS TArrayFind(const T* elements, IS element_count, const T& Item) {
   for (IS i = 0; i < element_count; ++i)
     if (*elements++ == Item) return i;
-  return CInvalidIndex<IS>();
+  return CAInvalidIndex<IS>();
 }
 
 /* Compares the two memory sockets.
 @param start  The start of Array A.
 @param stop   The stop of Array A.
-@param origin  The origin of Array B.
+@param origin The origin of Array B.
 @param end    The end of Array B.
 @return True if they are the same and false if they are not. */
 inline ISW RAMCompare(const void* a_begin, const void* end_a,
                         const void* b_begin, const void* end_b) {
   return RAMCompare(a_begin, SizeOf(a_begin, end_a), b_begin,
-                      SizeOf(b_begin, end_b));
+                    SizeOf(b_begin, end_b));
 }
 
 /* Compares the two memory sockets.
-@param start The start of Array A.
-@param stop  The stop of Array A.
+@param start  The start of Array A.
+@param stop   The stop of Array A.
 @param origin The origin of Array B.
-@param size  The size of Array B.
+@param size   The size of Array B.
 @return True if they are the same and false if they are not. */
 inline ISW RAMCompare(const void* a_begin, void* a_end, const void* b_begin,
-                        ISW b_size_bytes) {
+                      ISW b_bytes) {
   return RAMCompare(a_begin, a_end, a_begin,
-                      TPtr<CHA>(b_begin) + b_size_bytes);
+                    TPtr<CHA>(b_begin) + b_bytes);
 }
 
 /* Casts RAMCompare to type T. */
 template<typename T>
 inline T* TArrayCompare(void* a_begin, void* a_end, void* b_begin,
-                        ISW b_size_bytes) {
-  return TPtr<T*>(RAMCompare(a_begin, a_end, b_begin, b_size_bytes));
+                        ISW b_bytes) {
+  return TPtr<T*>(RAMCompare(a_begin, a_end, b_begin, b_bytes));
 }
 
 /* Casts RAMCompare to type T. */
 template<typename T>
 inline const T* TArrayCompare(const void* a_begin, void* a_end, const void* b_begin,
-  ISW b_size_bytes) {
-  return TPtr<const T*>(RAMCompare(a_begin, a_end, b_begin, b_size_bytes));
+  ISW b_bytes) {
+  return TPtr<const T*>(RAMCompare(a_begin, a_end, b_begin, b_bytes));
 }
 
 /* A word-aligned array of Size_ elements of T on the progam stack. */
@@ -578,27 +618,27 @@ class TBUF {
 };
 
 /* A Block of heap. */
-template<DTB Type, typename ISZ = ISW>
+template<DTB Type, typename IS = ISW>
 class TRAMFactory {
 public:
-  /* Deletes a non-nil buffer or calls Stack(boofer, size_bytes). */
-  static IUW* Heap(IUW* boofer, ISW size_bytes) {
+  /* Deletes a non-nil boofer or calls Stack(boofer, bytes). */
+  static IUW* Heap(IUW* boofer, ISW bytes) {
     if (boofer) {
       delete[] boofer;
       return nullptr;
     }
-    return Stack(boofer, size_bytes);
+    return Stack(boofer, bytes);
   }
 
   /* RAMFactory Stack function allocates heap memory, returns the heap function,
   or returns the type. */
-  static IUW* Stack(IUW* boofer, ISW size_bytes) {
-    if (boofer == nullptr && size_bytes == 0) 
+  static IUW* Stack(IUW* boofer, ISW bytes) {
+    if (boofer == nullptr && bytes == 0) 
       return reinterpret_cast<IUW*>(&Heap);
-    if(size_bytes < sizeof(IUW)) return TPtr<IUW>(Type);
-    ISW size_words = AlignUp(size_bytes) >> ALUSizeLog2;
+    if(bytes < sizeof(IUW)) return TPtr<IUW>(Type);
+    ISW size_words = AlignUp(bytes) >> ALUSizeLog2;
     boofer = new IUW[size_words];
-    *TPtr<ISZ>(boofer) = ISZ(size_bytes);
+    *TPtr<IS>(boofer) = IS(bytes);
     return boofer;
   }
 
@@ -628,27 +668,27 @@ public:
 /* An Auto-Array.
 Arrays may only use 16-bit, 32-bit, and 64-bit signed integers for their
 size. */
-template<typename T, typename ISZ = ISN, typename BUF = Nil>
+template<typename T, typename IS = ISN, typename BUF = Nil>
 class AArray {
   Autoject obj_;  //< Automatic Object.
-  BUF buffer_;    //< Optional boofer on the program stack.
+  BUF boofer_;    //< Optional boofer on the program stack.
 
  public:
   /* Gets the ASCII Data Type. */
-  static constexpr DTA Type() { return CATypeSize<ISZ, DTA>(_ARY); }
+  static constexpr DTA Type() { return CATypeSize<IS, DTA>(_ARY); }
 
   /* Constructs. */
   AArray() {
-    TArrayInit<T, ISZ>(obj_, buffer_.Words(), ISZ(buffer_.Size()),
+    TArrayInit<T, IS>(obj_, boofer_.Words(), IS(boofer_.Size()),
                       TRAMFactory<Type()>().Init<BUF>());
   }
 
   /* Creates a autoject with either statically or dynamically allocated
-  memory based on the size can fit in the buffer_. If the buffer_ is
+  memory based on the size can fit in the boofer_. If the boofer_ is
   statically allocated but the size can't fit in the boofer a new block of
   dynamic memory will be created. */
-  AArray(ISZ size, RAMFactory ram = nullptr) {
-    TArrayInit<T, ISZ>(obj_, buffer_.Words(), size,
+  AArray(IS size, RAMFactory ram = nullptr) {
+    TArrayInit<T, IS>(obj_, boofer_.Words(), size,
                       TRAMFactory<Type()>().Init<BUF>(ram));
   }
 
@@ -661,10 +701,10 @@ class AArray {
   /* Destructor calls the RAMFactory factory. */
   ~AArray() { Delete(obj_); }
 
-  /* Gets the buffer_. */
-  inline BUF& Buffer() { return buffer_; }
+  /* Gets the boofer_. */
+  inline BUF& Boofer() { return boofer_; }
 
-  /* Returns the buffer_. */
+  /* Returns the boofer_. */
   inline IUW* Origin() { return obj_.origin; }
 
   template<typename T = TStack<SCK_P>>
@@ -677,23 +717,23 @@ class AArray {
   inline IUW* OriginSet(void* socket) { return AutojectBeginSet(obj_, socket); }
 
   /* Gets the ASCII Object size in elements. */
-  inline ISZ Size() { return TSize<ISZ>(obj_.origin); }
+  inline IS Size() { return TSize<IS>(obj_.origin); }
 
   /* Gets the total ASCII Object size in bytes. */
-  template<typename Class = TArray<ISZ>>
-  inline ISZ SizeBytes() {
-    return TSizeBytes<T, ISZ, Class>(AJT());
+  template<typename Class = TArray<IS>>
+  inline IS SizeBytes() {
+    return TSizeBytes<T, IS, Class>(AJT());
   }
 
   /* Gets the total ASCII Object size in words. */
-  template<typename Class = TArray<ISZ>>
-  inline ISZ SizeWords() {
-    return TSizeWords<T, ISZ, Class>(AJT());
+  template<typename Class = TArray<IS>>
+  inline IS SizeWords() {
+    return TSizeWords<T, IS, Class>(AJT());
   }
 
   /* Returns the start of the OBJ. */
   inline T* Start() {
-    IUW ptr = IUW(obj_.origin) + sizeof(TArray<ISZ>);
+    IUW ptr = IUW(obj_.origin) + sizeof(TArray<IS>);
     return TPtr<T>(ptr);
   }
 
@@ -705,28 +745,28 @@ class AArray {
   /* Gets the Autoject. */
   inline Autoject& AJT() { return obj_; }
 
-  /* Gets the TArray<ISZ> for this object. */
-  inline TArray<ISZ>* This() {
-    return TPtr<TArray<ISZ>>(obj_.origin);
+  /* Gets the TArray<IS> for this object. */
+  inline TArray<IS>* This() {
+    return TPtr<TArray<IS>>(obj_.origin);
   }
 
   /* Attempts to grow the this autoject.
   @return false if the grow op failed. */
-  inline BOL CanGrow() { return ATypeCanGrow<ISZ>(obj_); }
+  inline BOL CanGrow() { return ATypeCanGrow<IS>(obj_); }
 
   /* Doubles the size of the obj_ array. */
   template<typename Class>
   inline void Grow() {
-    TArrayGrow<T, ISZ, Class>(obj_);
+    TArrayGrow<T, IS, Class>(obj_);
   }
 
   /* Returns true if the boofer is a Socket and false if it's a Nil. */
-  static constexpr BOL UsesStack() { return sizeof(buffer_) != 0; }
+  static constexpr BOL UsesStack() { return sizeof(boofer_) != 0; }
 
   /* Prints this autoject to the given printer. */
   template<typename Printer>
   inline Printer& PrintTo(Printer& o) {
-    return TArrayPrint<T, ISZ>(o, This());
+    return TArrayPrint<T, IS>(o, This());
   }
 
   void CPrint() { PrintTo<_::COut>(_::StdOut()); }

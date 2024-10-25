@@ -7,7 +7,7 @@ This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
 one at <https://mozilla.org/MPL/2.0/>. */
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_CRABS
 // Dependencies:
 #include "Interrupts.h"
 // End dependencies.
@@ -21,4 +21,4 @@ const CHA* RoomCrashException::what() const throw() { return "External crash"; }
 
 }  //< namespace _
 #endif  //< USING_SCRIPT2_INTERRUPTS
-#endif  ///< #if SEAM >= SCRIPT2_DIC
+#endif  ///< #if SEAM >= SCRIPT2_CRABS
