@@ -16,11 +16,11 @@ template<typename CHT = CHR>
 struct TTestWords {
   enum {
     CharsMax = 16,   //< The max characters in a word including term char.
-    WordsMax = 129,  //< The max word count.
+    Total = 128,  //< The max word count.
   };
   /* An array of 128 random words. */
   static const CHT* Words() {
-    static const CHT Strings[WordsMax][CharsMax] = {
+    static const CHT Strings[Total + 1][CharsMax] = {
       {'w', 'h', 'i', 'p'},
       {'j', 'u', 'm', 'b', 'l', 'e', 'd'},
       {'e', 'n', 'e', 'r', 'g', 'e', 't', 'i', 'c'},
@@ -148,8 +148,8 @@ struct TTestWords {
       {'g', 'u', 'e', 's', 's'},
       {'d', 'r', 'a', 'i', 'n'},
       {'b', 'r', 'i', 'd', 'g', 'e'},
-      { 'f', 'o', 'o', 'l', 'i', 's', 'h' },
-      { 't', 'r', 'u', 'm', 'p', '2', '0', '2', '4' } // BABY!!!
+      {'d', 'o', 'n', 'e'},
+      { 'i', 'n', 'v', 'a', 'l', 'i', 'd'}
     };
     return &Strings[0][0];
   }
@@ -158,8 +158,8 @@ struct TTestWords {
   static const CHT* Word(ISN index) {
     if (index < 0)
       index = 0;
-    else if (index >= WordsMax)
-      index = WordsMax;
+    else if (index >= Total)
+      index = Total;
     return Words()[index];
   }
 };

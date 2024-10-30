@@ -40,11 +40,11 @@ CHA* RAMFill(void* origin, ISW count, CHA fill_char) {
   IUW fill_word = FillWord(fill_char);
 
   // 1.) Align start pointer up to a word boundry and fill the unaligned bytes.
-  CHA *success = stop, *aligned_pointer = TPtrAlignUp<>(start);
+  CHA *success = stop, *aligned_pointer = TPtrUp<>(start);
   while (start < aligned_pointer) *start++ = fill_char;
   // 2.) Align stop pointer down to a word boundry and copy the midde words.
   IUW *words = TPtr<IUW>(start),
-      *words_end = TPtrAlignDown<IUW>(stop);
+      *words_end = TPtrDown<IUW>(stop);
   while (words < words_end) *words++ = fill_word;
   // 3.) Copy remaining unaligned bytes.
   start = TPtr<CHA>(words_end);
@@ -117,9 +117,9 @@ ISW ArrayCompareFast(const void* a, const ISW a_bytes, const void* b,
   // xABCDEFG_HIJKLMNP_OQRSTUVW_XYZ   v---- b_end
   // xxxxABCD_EFGHIJKL_MNPOQRST_UVWXYZ
   // Step 1: Compare the words...
-  const IUW* a_begin_word = TPtrAlignDown<IUW>(a_cursor),
-           * b_begin_word = TPtrAlignDown<IUW>(b_cursor);
-  const IUA* a_end_word = TPtrAlignDown<const IUA>(a_end);
+  const IUW* a_begin_word = TPtrDown<IUW>(a_cursor),
+           * b_begin_word = TPtrDown<IUW>(b_cursor);
+  const IUA* a_end_word = TPtrDown<const IUA>(a_end);
   IUW        a_offset = TDelta(a_begin_word, a_cursor) * 8,
              b_offset = TDelta(b_begin_word, b_cursor) * 8,
              a_offset_msb = IUW(ALUSize) * 8 - a_offset,
@@ -252,12 +252,12 @@ ISW ArrayCopyFast(void* write, ISW w_size, const void* read,
   const IUA* r_start      = TPtr<IUA>(read),
            * r_stop       = r_start + r_size;
   IUA      * w_cursor     = TPtr<IUA>(write);
-  IUW      * w_start_word = TPtrAlignUp<IUW>(w_cursor);
+  IUW      * w_start_word = TPtrUp<IUW>(w_cursor);
 
   while (w_cursor < TPtr<IUA>(w_start_word)) *w_cursor++ = *r_start++;
 
-  IUW* w_stop_word = TPtrAlignDown<IUW>(w_cursor + r_size);
-  const IUW *r_start_word = TPtrAlignDown<const IUW>(r_start);
+  IUW* w_stop_word = TPtrDown<IUW>(w_cursor + r_size);
+  const IUW *r_start_word = TPtrDown<const IUW>(r_start);
   IUW w_offset = TDelta(w_cursor, w_start_word),
       r_offset = TDelta(r_start_word, r_start);
 
@@ -338,7 +338,7 @@ inline ISW ArrayCopySlow(void* write, void* w_end, const void* read,
 
 Nil::Nil() {}
 constexpr ISW Nil::Size() { return 0; }
-constexpr ISW Nil::SizeBytes() { return 0; }
+constexpr ISW Nil::Bytes() { return 0; }
 constexpr ISW Nil::SizeWords() { return 0; }
 IUW* Nil::Words() { return nullptr; }
 

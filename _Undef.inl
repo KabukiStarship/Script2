@@ -49,6 +49,8 @@ the MPL was not distributed with this file, You can obtain one at
 #undef A_AVOW_INDEX
 #undef R_AVOW_INDEX
 #undef D_AVOW_INDEX
+#undef A_FAIL
+#undef D_FAIL
 #undef A_WARN
 #undef D_WARN
 #undef R_WARN
@@ -64,6 +66,7 @@ the MPL was not distributed with this file, You can obtain one at
 #undef R_RETURN_VALUE
 #undef D_CHECK_PTR_RETURN_CODE
 #undef D_CHECK_PTR_TRETURN
+#undef D_CHECK_PTR_TRETURN2
 #undef D_CHECK_CPTR_RETURN
 #undef D_CHECK_TPTR_RETURN
 #undef D_CHECK_PTR_RETURN_NIL

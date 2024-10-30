@@ -45,6 +45,8 @@ the MPL was not distributed with this file, You can obtain one at
 #define R_ASSERT_PTR(ptr)                            \
   if (IUW(ptr) < CrabsErrorCount)  \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
+#define A_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define D_FAIL()
 #define A_CHECK(condition)
 #define D_CHECK(condition)
 #define R_CHECK(condition) \
@@ -89,8 +91,8 @@ the MPL was not distributed with this file, You can obtain one at
 #define R_RETURN(value) \
   { ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__) return; }
 #define D_RETURNT(type, error) return type(error)
-#define D_RETURN_CPTR_ERROR(type, error) return const_cast<type>(error)
-#define D_RETURN_TPTR_ERROR(type, error) return reinterpret_cast<type>(error)
+#define D_RETURN_CPTR_ERROR(type, error) return const_cast<type*>(IUW(error))
+#define D_RETURN_TPTR_ERROR(type, error) return reinterpret_cast<type*>(IUW(error))
 #define A_RETURN_VALUE(value) return value;
 #define D_RETURN_VALUE(value)
 #define R_RETURN_VALUE(value) \
@@ -103,12 +105,17 @@ the MPL was not distributed with this file, You can obtain one at
     return ptr;
 #define D_CHECK_CPTR_RETURN(type, ptr)\
   if (IUW(ptr) < IUW(CrabsErrorCount))\
-    return const_cast<type>(ptr);
+    return const_cast<type*>(ptr);
 #define D_CHECK_TPTR_RETURN(type, ptr)\
   if (IUW(ptr) < IUW(CrabsErrorCount))\
-    return reinterpret_cast<type>(ptr);
+    return reinterpret_cast<type*>(ptr);
 #define D_CHECK_PTR_TRETURN(type, ptr)\
   if (IUW(ptr) < IUW(CrabsErrorCount))\
     return type(IUW(ptr));
+#define D_CHECK_PTR_TRETURN2(type, ptr1, ptr2)\
+  if (IUW(ptr1) < IUW(CrabsErrorCount))\
+    return type(IUW(ptr1));\
+  if (IUW(ptr2) < IUW(CrabsErrorCount))\
+    return type(IUW(ptr2));
 #define D_CHECK_PTR_RETURN_NIL(ptr)\
   if (IUW(ptr) < IUW(CrabsErrorCount)) return;

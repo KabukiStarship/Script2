@@ -600,7 +600,6 @@ Printer& TPrint(Printer& p, Headingf& value) {
 
 template<typename Printer, typename CH = CHR>
 Printer& TPrintChars(Printer& p, const CH* start, const CH* stop) {
-  D_ASSERT(start < stop);
   if (!start || start >= stop) return p;
 
   ISW bytes = stop - start + 1;
@@ -732,7 +731,7 @@ Printer& TPrintAType(Printer& p, DTB type) {
     return p << STRATypesVector(vector_type | (size_width << 2))
              << '_' << STAATypePOD(type);
   if (ATypeIsCH(type) && map_type == 0) // Then it's a string, loom, or.
-    return p << "ST" << ATypeSWCH(size_width);
+    return p << "ST" << ASizeCodef(size_width);
   return p << STAATypePOD(type);
 }
 // NIL->CHA   -> 0x01351f =: "dez nutz!\0"

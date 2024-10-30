@@ -11,19 +11,14 @@ the MPL was not distributed with this file, You can obtain one at
 //
 #include "TestWords.h"
 using namespace _;
-#undef  TARGS
-#define TARGS \
-  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DTB
-#undef  TPARAMS
-#define TPARAMS CHT, ISZ, ISY, DT
 #if SEAM == SCRIPT2_BOOK
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
 namespace Script2 {
-template<typename ISZ = ISN, typename ISY = ISM,
-         typename CHT = CHR, typename  DT = DTB>
+template<typename ISZ = ISN, typename ISY = ISM, typename CHT = CHR,
+         typename DT  = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
@@ -35,15 +30,15 @@ void TestBook() {
          ",CH" << CSizeCodef<CHT>() << ",DT" << CSizeCodef<DT>() << 
          "> sizeof:" << sizeof(TBook<BOK_P>) << " with SizeBytes : " << SizeBytes);
 
-  ABook<TPARAMS, SizeBytes> book;
+  ABook<BOK_P, SizeBytes> book;
 
   D_COUT("\n\nAfter TBookInit book.SizeBytes():" << book.SizeBytes() << 
          " book.Count():" << book.Count() << 
-         " book.CountMax():" << book.CountMax());
+         " book.Total():" << book.Total());
   D_COUT("\nPrinting empty book:\n");
   D_COUT_BOOK(book.This());
 
-  ISZ test_word_count = book.CountMax();
+  ISZ test_word_count = book.Total();
   D_COUT("\nPopulating " << test_word_count << " test words...");
 
   const CHT * test_words  = TTestWords<CHT>::Words(),
@@ -68,12 +63,13 @@ void TestBook() {
   A_AVOW(ISY(7), book.Insert(word_cursor += word_step, ISD('7')));
   //book.COut();
 
+  D_COUT("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
   D_COUT("\n\nStep 8: Testing Factory.Grow...\n" << Linef("---") << '\n');
-  A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD('8')));
+   A_AVOW(ISY(8), book.Insert(word_cursor += word_step, IUD('8')));
   //book.COut();
   ISY i = 9;
   D_COUT("\n\nStep 8b: Testing POD types...\n" << Linef("---\n"));
-  for (; i < ISY(TTestWords<CHT>::WordsMax) - 8;) {
+  for (; i < ISY(TTestWords<CHT>::Total) - 8;) {
     A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISA(i)));
     A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, IUA(i)));
     A_AVOW(ISY(i++), book.Insert(word_cursor += word_step, ISB(i)));

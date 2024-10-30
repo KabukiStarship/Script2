@@ -14,6 +14,24 @@ the MPL was not distributed with this file, You can obtain one at
 #include "Types.hpp"
 namespace _ {
 
+/* An ASCII Array.
+Please see the ASCII Data Specificaiton for DRY documentation.
+@link ./Spec/Data/VectorTypes/Array.md
+
+@code
++-----------------+
+|  C-Style Array  |
+|  255-byte array | size=255, requires 8-bits.
+|-----------------|  ^
+|  TArray Header  |  |
++-----------------+ 0xN
+@endcode
+*/
+template<typename IS = ISR>
+struct TArray {
+  IS size;  //< Number of elements in the array.
+};
+
 /* Overwrites the memory with fill_char; functionally equivalent to memset. */
 inline CHA* RAMFill(void* start, void* stop, CHA fill_char = 0) {
   return RAMFill(start, TPtr<CHA>(stop) - TPtr<CHA>(start) + 1, fill_char);
@@ -81,24 +99,6 @@ inline void Delete(Autoject obj) {
   if (ram) ram(obj.origin, 0);
 }
 
-/* An ASCII Array.
-Please see the ASCII Data Specificaiton for DRY documentation.
-@link ./Spec/Data/VectorTypes/Array.md
-
-@code
-+-----------------+
-|  C-Style Array  |
-|  255-byte array | size=255, requires 8-bits.
-|-----------------|  ^
-|  TArray Header  |  |
-+-----------------+ 0xN
-@endcode
-*/
-template<typename IS = ISR>
-struct TArray {
-  IS size;  //< Number of elements in the array.
-};
-
 /* Checks if the given autoject count is in the min max bounds of an ASCII
 Object. */
 template<typename T, typename IS>
@@ -135,9 +135,9 @@ TArray<IS>* TArrayCopy(void* destination, const void* source) {
   auto src = TPtr<const IS>(source);
   auto dst_count = *dst;
   auto src_count = *src;
-  auto result = RAMCopy(TPtrAlignUp<>(dst + 1, AlignMask),
+  auto result = RAMCopy(TPtrUp<>(dst + 1, AlignMask),
                         dst_count * sizeof(T),
-                        TPtrAlignUp<>(src + 1, AlignMask),
+                        TPtrUp<>(src + 1, AlignMask),
                         src_count * sizeof(T));
   if (result <= 0) return nullptr;
   *dst = src_count;
@@ -394,8 +394,8 @@ Printer& TArrayPrint(Printer& o, Autoject& obj) {
   return o;
 }
 
-/* Inserts the given item at the start stack.
-@pre You must perform bounds checking before calling this function. */
+/* Inserts the given item into the stack, but can't push on top.
+@pre items_start must be less than items_stop */
 template<typename T>
 inline void TArrayInsert_NC(T* items_start, T* items_stop, T item) {
   while (items_start < items_stop) {

@@ -142,7 +142,7 @@ class Room : public Operand {
   @param floor Boofer used to create the Wall Stack. Set to nullptr to
   enable dynamic memory.
   @param size  The room size that is bounded between the kMinRoomSize and
-  RoomCountMax. */
+  RoomTotal. */
   Room(const CHA* room_name = "chinese_room", ISC num_states = 2);
 
   /* RAMFactory. */

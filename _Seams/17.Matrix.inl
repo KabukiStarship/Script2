@@ -20,7 +20,7 @@ template<typename ISZ, typename T>
 void TestMatrixIntegers() {
   //D_LINEF("\n\n+---\n| Testing AMatrix<IS" << CSizef<ISZ>() << ">\n+---");
   D_LINEF("\n\n+---\n| Testing AMatrix<IS");
-  D_COUT(CATypeSWCH<ISZ>());
+  D_COUT(CASizeCodef<ISZ>());
   D_LINEF(">\n+---"); //< @todo Find a better way to do this.
 
   static const ISC array_3d_exected[2][2][2] = {{{0, 1}, {2, 3}},

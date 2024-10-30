@@ -44,7 +44,7 @@ struct TMatrix {
 
 /* Max number of elements that can fit in the given ISZ. */
 template<typename T = ISW, typename ISZ = ISN>
-constexpr ISZ TMatrixElementCountMax() {
+constexpr ISZ TMatrixElementTotal() {
   return (TSignedMax<ISZ>() - sizeof(TStack<SCK_P>)) / sizeof(T);
 }
 
@@ -148,7 +148,7 @@ ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
 }
 
 template<typename T, typename ISZ>
-inline ISZ TMatrixDimensionCountMax(ISZ total) {
+inline ISZ TMatrixDimensionTotal(ISZ total) {
   total += sizeof(TStack<SCK_P>) >> CBitCount<ISZ>();
   return TAlignUpArray<ISZ>(total);
 }

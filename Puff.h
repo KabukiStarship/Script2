@@ -17,9 +17,9 @@ namespace _ {
 const IUB* BinaryLUTDecimals();
 
 enum {
-  cUI2DigitCountMax = 5,
-  cUI4DigitCountMax = 9,
-  cUI8DigitCountMax = 20,
+  cUI2DigitTotal = 5,
+  cUI4DigitTotal = 9,
+  cUI8DigitTotal = 20,
 };
 
 const IUD* Pow10_UI8();

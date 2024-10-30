@@ -30,6 +30,12 @@ struct TString {
   ISZ size;  //< Size of the ASCII Object.
 };
 
+template<typename CH = CHR>
+const CH* TStringEmpty() {
+  static const CH empty_string[1] = { 0 };
+  return empty_string;
+}
+
 /* The ASCII Data Type for the given CHT, CHA, CHB, or CHC. */
 /*template<typename CHT = CHR, typename DT = DTB>
 inline DT TATypeCH() {

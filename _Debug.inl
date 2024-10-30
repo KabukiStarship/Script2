@@ -11,6 +11,8 @@ the MPL was not distributed with this file, You can obtain one at
 //
 #include "Test.hpp"
 
+// @todo Add OSERT: Optional Assert.
+
 #define D_THIS 1
 #define A_TEST_BEGIN\
   ::_::COut cout;   \
@@ -93,6 +95,8 @@ the MPL was not distributed with this file, You can obtain one at
     ::_::COut("\n           Index:").Print(index);   \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
   }
+#define A_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define D_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define A_WARN(condition) \
   if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define D_WARN(condition) \
@@ -141,6 +145,19 @@ the MPL was not distributed with this file, You can obtain one at
     ::_::COut("\n\nERROR ").Print(IUW(ptr)) << ": " <<\
       TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
     return type(IUW(ptr));\
+  }
+#define D_CHECK_PTR_TRETURN2(type, ptr1, ptr2) \
+  if(IUW(ptr1) < CrabsErrorCount) {\
+    ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
+    ::_::COut("\n\nERROR ").Print(IUW(ptr1)) << ": " <<\
+      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr1));\
+    return type(IUW(ptr1));\
+  } \
+  if(IUW(ptr2) < CrabsErrorCount) {\
+    ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
+    ::_::COut("\n\nERROR ").Print(IUW(ptr2)) << ": " <<\
+      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr2));\
+    return type(IUW(ptr2));\
   }
 #define D_CHECK_CPTR_RETURN(type, ptr)\
   if(IUW(ptr) < CrabsErrorCount) {\

@@ -15,71 +15,59 @@ using namespace _;
 #else
 #include "../_Release.inl"
 #endif
-#undef TPARAMS
-#undef TARGS
-#define TPARAMS CHT, ISZ, ISY, DT, HSH
-#define TARGS \
-  typename CHT = CHR, typename ISZ = ISN, typename ISY = ISM, \
-  typename DT = DTB, typename HSH = IUN
 
 namespace Script2 {
-template<TARGS>
+template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ,
+         typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
-  D_COUT(Linef("\n\n---\n\n"));
-
   enum {
-    Size = 512 * sizeof(CHT),
-    cCount = 32,
+    Size = 512 * sizeof(ISZ),
+    TotalInit = 16, //< Must be a multiple of 8.
   };
-  D_COUT("Testing ADic<IS"
-         << CSizef<ISZ> () << ",IU" << CSizef<ISZ> () << ",IS" << CSizef<ISY>() << ",CH"
-                                  << CSizef<CHT>()
-         << "> with Size:" << Size << " and cCount:" << cCount);
+  D_COUT(Linef("\n\n---\n\nTesting ADic<IS") << CSizeCodef<ISZ>() << 
+         ",CH" << CSizeCodef<CHT>() << ",IU" << CSizeCodef<ISZ>() << 
+         ",IS" << CSizeCodef<ISY>() <<  " DT" << CSizeCodef<DT>() << 
+         "> with Size:" << Size << " and Total:" << TotalInit);
 
-  ADic<TPARAMS, Size> dic(cCount);
+  ADic<DIC_P, Size> dic(TotalInit);
 
-  D_COUT("\n\nsize:" << dic.Size() << " bytes:" << dic.SizeBytes()
-                     << " size_words:" << dic.SizeWords());
-#if D_THIS
-  D_COUT("\nPrinting empty dictionary:\n");
-  dic.COut();
-#endif
-
-  D_COUT("\nPopulating " << cCount << " test words...");
+  D_COUT("\n\nAfter init size:" << dic.Size() << " bytes:" << dic.Bytes() << 
+         " size_words:" << dic.BytesWords() <<
+         "\nPrinting empty dictionary:\n");
+  D_COUT_DIC(dic.This());
+  A_AVOW(ISY(0), dic.Find(TStringEmpty<CHT>()));
+  D_COUT("\nPopulating " << TotalInit << " test words...");
 
   const CHT *test_words = TTestWords<CHT>::Words(), *word_cursor = test_words;
-
-  for (ISY i = -1; i < 32; ++i) {
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUA(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISB(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUB(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISC(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUC(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISD(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUD(i)));
+  ISY i = 1;
+  while(i < TotalInit) {
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISD(i)));
+    if(dic.Total() != dic.Count())
+      A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUD(i)));
   }
 
-  D_COUT("\n\nTesting Factory.Grow...\n");
+  dic.COut();
+  D_COUT_TABLE(dic.Keys());
+  D_COUT("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTesting RAMFactory.Grow...\n");
+  A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUD(i)));
 
-  for (ISY i = 31; i < 128; ++i) {
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISA(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUA(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISB(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUB(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISC(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUC(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, ISD(i)));
-    A_AVOW(ISY(++i), dic.Insert(word_cursor += 16, IUD(i)));
+  while(i < TTestWords<CHT>::Total - 8) {
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISA(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUA(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISB(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUB(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISC(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUC(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, ISD(i)));
+    A_AVOW(ISY(i++), dic.Insert(word_cursor += 16, IUD(i)));
+    //@todo Change order above to test memory alignment.
   }
-
-  D_COUT("\n\nAttmpeting to add a very large string...\n");
-
-  CHT large_string[Size] = { 0 };
-  CHT* cursor = large_string;
-  for (ISN i = 0; i < 1024; ++i) *cursor++ = '*';
-  *cursor = 0;
-  ISY index = dic.Insert(large_string, 1);
 
 #if D_THIS
   dic.COut();
@@ -92,22 +80,21 @@ namespace Script2 {
 const CHA* Dic(const CHA* args) {
 #if SEAM >= SCRIPT2_DIC
   A_TEST_BEGIN;
-  TestDic<CHA, ISB, ISA, IUB>();
-  TestDic<CHB, ISB, ISA, IUB>();
-  TestDic<CHC, ISB, ISA, IUB>();
-#if USING_UTF16 == YES_0
-  TestDic<CHA, ISC, ISB, IUC>();
-  TestDic<CHB, ISC, ISB, IUC>();
-  TestDic<CHC, ISC, ISB, IUC>();
+#if USING_UTF8 == YES_0
+  TestDic<CHA, ISC, ISB, DTB, IUC>();
+  //TestDic<CHA, ISD, ISC, DTB, IUD>();
 #endif
-#if USING_UTF32 == YES_0
-  TestDic<CHA, ISD, ISB, IUD>();
-  TestDic<CHB, ISD, ISB, IUD>();
-  TestDic<CHC, ISD, ISB, IUD>();
-#endif
+//#if USING_UTF16 == YES_0
+//  TestDic<CHB, ISC, ISB, DTB, IUC>();
+//  TestDic<CHB, ISD, ISC, DTB, IUD>();
+//#endif
+//#if USING_UTF32 == YES_0
+//  TestDic<CHC, ISC, ISB, DTB, IUC>();
+//  TestDic<CHC, ISD, ISC, DTB, IUD>();
+//#endif
 #endif
   return nullptr;
 }
 }  //< namespace Script2
-#undef TARGS
-#undef TPARAMS
+#undef DIC_A
+#undef DIC_P
