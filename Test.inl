@@ -30,8 +30,16 @@ BOL TestWarn(ISN line, const CHA* function, const CHA* file) {
   return true;
 }
 
+BOL TestWarnFail(ISN line, const CHA* function, const CHA* file) {
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut("\n\nFAILURE Function:").Print(function) << " at line:" << line <<
+    "\n       " << " in \"" << file << '\"';
+#endif
+  return true;
+}
+
 BOL TestFail(ISN line, const CHA* function, const CHA* file) {
-  BOL result = TestWarn(line, function, file);
+  BOL result = TestWarnFail(line, function, file);
   // Insert break-point here.
   return result;
 }

@@ -30,6 +30,15 @@ inline const T* TPtr(const void* ptr) {
   return reinterpret_cast<const T*>(ptr);
 }
 
+/* Checks if the pointer is between values 0-63. */
+inline BOL PtrIsValid(const void* ptr) { return IUW(ptr) >= CrabsErrorCount; }
+
+// Checks if the input is aligned to the T word boundary.
+template<typename T = void>
+inline BOL TAlignIs(const T* input) { return (IUW(input) & (sizeof(T) - 1)) == 0; }
+template<typename T = IUW, typename I = T>
+inline BOL TAlignIs(I input) { return (input & (sizeof(T) - 1)) == 0; }
+
 /* Syntactical sugar for reinterpret_cast using templates. */
 template<typename T = void>
 inline T* CPtr(const void* ptr) {
@@ -342,7 +351,7 @@ inline const void* AlignUpPTR(const void* pointer, ISW mask = ALUWordMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TPtrAlignUp(void* pointer, ISW mask = ALUWordMask) {
+inline T* TPtrUp(void* pointer, ISW mask = ALUWordMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -352,7 +361,7 @@ inline T* TPtrAlignUp(void* pointer, ISW mask = ALUWordMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TPtrAlignUp(const void* pointer, ISW mask = ALUWordMask) {
+inline T* TPtrUp(const void* pointer, ISW mask = ALUWordMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -416,7 +425,7 @@ inline I TAlignUpArray(I count) {
 
 /* Aligns the given pointer up to the given least_significant_bits_max. */
 inline const CHA* AlignUp(const CHA* pointer, IUW least_significant_bits_max) {
-  return TPtrAlignUp<const CHA>(pointer, least_significant_bits_max);
+  return TPtrUp<const CHA>(pointer, least_significant_bits_max);
 }
 
 
@@ -529,36 +538,36 @@ inline I TAlignDown(I value) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = IUW, typename AlignT = T>
-inline T* TPtrAlignDown(void* ptr) {
+inline T* TPtrDown(void* ptr) {
   IUW value = IUW(ptr);
   return TPtr<T>(value - (value & (sizeof(AlignT) - 1)));
 }
 template<typename T = IUW, typename AlignT = T>
-inline const T* TPtrAlignDown(const void* ptr) {
+inline const T* TPtrDown(const void* ptr) {
   IUW value = IUW(ptr);
   return TPtr<const T>(value - (value & (sizeof(AlignT) - 1)));
 }
 template<typename T = IUW, typename AlignT = T>
-inline T* TPtrAlignDown(void* ptr, ISW ptr_offset) {
+inline T* TPtrDown(void* ptr, ISW ptr_offset) {
   IUW value = IUW(ISW(ptr) + ptr_offset);
   return TPtr<T>(value - (value & (sizeof(AlignT) - 1)));
 }
 template<typename T = IUW, typename AlignT = T>
-inline const T* TPtrAlignDown(const void* ptr, ISW ptr_offset) {
+inline const T* TPtrDown(const void* ptr, ISW ptr_offset) {
   IUW value = IUW(ISW(ptr) + ptr_offset);
   return TPtr<const T>(value - (value & (sizeof(AlignT) - 1)));
 }
 
 /* Aligns the given pointer down to the given least_significant_bits_max. */
 inline CHA* AlignDown(CHA* pointer, IUW least_significant_bits_max) {
-  return TPtrAlignDown<CHA>(pointer);
+  return TPtrDown<CHA>(pointer);
 }
 inline const CHA* AlignDown(const CHA* pointer,
   IUW least_significant_bits_max) {
-  return TPtrAlignDown<const CHA>(pointer);
+  return TPtrDown<const CHA>(pointer);
 }
 inline const IUW* AlignDown(const IUW* pointer, IUW least_significant_bits_max) {
-  return TPtrAlignDown<const IUW>(pointer);
+  return TPtrDown<const IUW>(pointer);
 }
 inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
   return const_cast<IUW*>(

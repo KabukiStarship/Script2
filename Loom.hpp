@@ -52,6 +52,8 @@ struct TLoom {
   TStack<SCK_P> map;  //< A Stack of offset mappings to strings.
 };
 
+#define LOM TLoom<LOM_P>
+
 template<LOM_A>
 constexpr ISY TLoomCountMin() {
   return 8 / sizeof(ISZ);
@@ -143,7 +145,7 @@ inline ISZ TLoomKeysBegin(ISY total) {
 
 template<LOM_A>
 CHT* TLoomStop(TLoom<LOM_P>* loom, ISZ bytes) {
-  return TPtr<CHT>(TPtrAlignDown<ISW, CHT>(loom, bytes));
+  return TPtr<CHT>(TPtrDown<ISW, CHT>(loom, bytes));
 }
 template<LOM_A>
 inline const CHT* TLoomStop(const TLoom<LOM_P>* loom, ISZ bytes) {
@@ -390,19 +392,18 @@ BOL TLoomGrow(Autoject& obj) {
 
 /* Adds a string to the end of the Loom, auto-growing if neccissary.
 @return The index upon success or -1 if the obj can't grow anymore. */
-template<LOM_A, typename BUF, typename CH=CHT>
-ISY TLoomInsert(AArray<IUA, ISZ, BUF>& obj, const CH* item, ISY index = PSH) {
+template<LOM_A, typename CH=CHT>
+ISY TLoomInsert(Autoject& obj, const CH* item, ISY index = PSH) {
   if (!item) return -1;
   D_COUT("\nAdding:\"" << item << '\"');
   ISY result =
-      TLoomInsert<LOM_P>(obj.OriginAs<TLoom<LOM_P>*>(), item, index);
+      TLoomInsert<LOM_P, CH>(TPtr<LOM>(obj.origin), item, index);
   while (result < 0) {
-    if (!TLoomGrow<LOM_P>(obj.AJT())) {
+    if (!TLoomGrow<LOM_P>(obj)) {
       D_COUT("\n\nFailed to grow.\n\n");
       return -1;
     }
-    result =
-        TLoomInsert<LOM_P, CH>(obj.OriginAs<TLoom<LOM_P>*>(), item, index);
+    result = TLoomInsert<LOM_P, CH>(TPtr<LOM>(obj.origin), item, index);
   }
   return result;
 }
@@ -487,7 +488,7 @@ class ALoom {
   @return The index of the string in the Loom. */
   template<typename CH=CHT>
   inline ISZ Insert(const CH* string, ISY index = PSH) {
-    return TLoomInsert<LOM_P, BUF, CH>(AJT_ARY(), string, index);
+    return TLoomInsert<LOM_P, CH>(AJT(), string, index);
   }
 
   /* Removes the string at the given index from the Loom. */
@@ -507,10 +508,10 @@ class ALoom {
   inline TLoom<LOM_P>* This() { return obj_.OriginAs<TLoom<LOM_P>*>(); }
 
   /* Gets the Auto-Array. */
-  inline Autoject AJT() { return obj_.AJT(); }
+  inline Autoject& AJT() { return obj_.AJT(); }
 
-  /* Gets the Auto-Array. */
-  inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; }
+  /* Gets the Auto-Array.
+  inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; } */
 
   template<typename Printer>
   inline Printer& PrintTo(Printer& o) {

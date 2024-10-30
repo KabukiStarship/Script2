@@ -244,7 +244,7 @@ Printer& TListPrint(Printer& o, const TList<LST_P>* list) {
 
 /* Returns the minimum count to align the data struct to a 64-bit boundary. */
 template<LST_A>
-constexpr ISZ TListCountMaxBoundsLower() {
+constexpr ISZ TListTotalBoundsLower() {
   return 8 / sizeof(ISZ);
 }
 
@@ -464,26 +464,6 @@ template<typename T, LST_A>
 T* TListValueEnd(TList<LST_P>* list, ISY index) {
 }
 
-/* Pushes a an ASCII Array onto the List stack.
-template<typename T, LST_A>
-T* TListPush(TList<LST_P>* list, ISZ bytes_new, DT type, 
-             ISW align_mask = WordLSbMask) {
-  // Offset to the value pointer.
-  auto dest = AlignUpPTR(TPtr<void>(list, list->top), align_mask);
-  ISZ value_offset = TDelta<ISZ>(list, dest),
-      size_boofer  = list->bytes - value_offset,
-      count        = list->map.count;
-  if (count >= list->map.total ||
-      size_boofer < bytes_new) return nullptr;
-  TStackPushUnchecked<LST_P>(&list->map, value_offset, count);
-  list->top = value_offset + bytes_new;
-  auto ptr = TPtr<ISZ>(list, value_offset);
-  *ptr = bytes_new;
-  // Push the DT onto the Data Types stack.
-  TListTypes<LST_P>(list)[count] = type;
-  return TPtr<T>(ptr);
-} */
-
 /* Adds a given type-value tuple at the given index and values_begin.
 index Codes:
 SCKPush: -1  Pushes the value onto the top of the type-value stacks.
@@ -540,7 +520,7 @@ ISY TListInsert(TList<LST_P>* list, T value, DT type, ISZ align_mask,
   }
   D_COUT("\nInserting into into index:" << index);
   auto vbuf_stop = (index == count) ? bytes : voffsets[index];
-  auto vbuf_start  = TPtrAlignUp<CHA>(vbuf_begin, align_mask);
+  auto vbuf_start  = TPtrUp<CHA>(vbuf_begin, align_mask);
   if ((vbuf_start + sizeof(T)) > vbuf_end) return -ErrorBooferOverflow;
   *TPtr<T>(vbuf_start) = value;
   *(voffsets + index) = top;
@@ -759,28 +739,20 @@ inline ISY TListInsert(TList<LST_P>* list, DT type, const void* value,
 template<LST_A>
 inline ISY TListAlloc(TList<LST_P>* list, DT type, ISZ bytes,
     ISY index = PSH) {
-  //TPrintATypeDebug<COut>(StdOut(), type);
-  ISA align_mask = ATypeAlignMask(DTB(type));
-  auto top = TAlignUp<ISZ>(list->top, align_mask);
-  ISY  count = ISY(list->map.count),
-    total = ISY(list->map.total);
+  ISA  align_mask = ATypeAlignMask(DTB(type));
+  auto top        = TAlignUp<ISZ>(list->top, align_mask);
+  ISY  count      = ISY(list->map.count),
+       total      = ISY(list->map.total);
   if (top + bytes > list->bytes || count >= total) return -1;
   *TPtr<ISZ>(list, top) = bytes;
-  auto voffsets = TListValuesMap<LST_P>(list);
+  auto voffsets   = TListValuesMap<LST_P>(list);
   voffsets[count] = top;
-  auto types = TPtr<DT>(voffsets + total);
-  types[count++] = type;
-  list->top = top + bytes;
+  auto types      = TPtr<DT>(voffsets + total);
+  types[count++]  = type;
+  list->top       = top + bytes;
   list->map.count = count--;
   return count;
 }
-
-/*
-template<typename ISZ>
-inline ISZ TSizeOf(void* value, DT type) {
-  ISZ bytes = ATypeSizeOfPOD(type);
-  if (bytes != 0) return bytes;
-}*/
 
 /* Removes the item at the given address from the list. */
 template<LST_A>
@@ -817,7 +789,7 @@ IUW* TListNew(ISZ size_data, ISY total, RAMFactory ram) {
 }
 
 /* ASCII List that uses dynamic memory. */
-template<typename ISZ = ISR, typename ISY = ISQ, ISZ SizeBytes_ = 512, ISY CountMax_ = 32,
+template<typename ISZ = ISR, typename ISY = ISQ, ISZ SizeBytes_ = 512, ISY Total_ = 32,
           typename BUF = TBUF<SizeBytes_, IUA, ISZ, Nil>, typename DT = DTB>
 class AList {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-array.
@@ -825,7 +797,7 @@ class AList {
   static constexpr DT Type() { return CTypeMap<DT>(CATypeSize<ISZ>()); }
 
   /* Constructs a list with a given total with estimated bytes. */
-  AList(ISY total = CountMax_)
+  AList(ISY total = Total_)
       : obj_(TListNew<LST_P>(SizeBytes_, total,
              TRAMFactory<Type()>().Init<BUF>()),
              TRAMFactory<Type()>().Init<BUF>()) {}

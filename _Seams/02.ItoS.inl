@@ -35,21 +35,21 @@ inline const CHA* ItoS(const CHA* args) {
 
   D_COUT("\n\nTesting Pow10_UI2...");
   IUB pow10_ui2 = 1;
-  for (IUB i = 0; i < cUI2DigitCountMax; ++i) {
+  for (IUB i = 0; i < cUI2DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
     pow10_ui2 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI4...");
   IUC pow10_ui4 = 1;
-  for (IUC i = 0; i < cUI4DigitCountMax; ++i) {
+  for (IUC i = 0; i < cUI4DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
     pow10_ui4 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI8...");
   IUD pow10_ui8 = 1;
-  for (IUD i = 0; i < cUI8DigitCountMax; ++i) {
+  for (IUD i = 0; i < cUI8DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
     pow10_ui8 *= 10;
   }

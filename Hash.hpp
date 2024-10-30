@@ -52,9 +52,8 @@ inline HSH THashPrime(const CHT* str) {
 }
 
 template<typename HSH = IUN, typename ISZ = ISR, typename CHT, typename CHY>
-inline CHT* THashPrimePrint(CHT* start, CHT* stop, const CHY* item, HSH& hash, 
+inline CHT* THashPrimePrint_NC(CHT* start, CHT* stop, const CHY* item, HSH& hash, 
   ISZ& length) {
-  if (!start || start >= stop || !item) return nullptr;
   CHL c = 0;
   hash = TPrimeMaxUnigned<HSH>();
   item = SScan(item, c);
@@ -67,6 +66,14 @@ inline CHT* THashPrimePrint(CHT* start, CHT* stop, const CHY* item, HSH& hash,
   }
   *start = 0;
   return start;
+}
+template<typename HSH = IUN, typename ISZ = ISR, typename CHT, typename CHY>
+inline CHT* THashPrimePrint(CHT* start, CHT* stop, const CHY* item, HSH& hash,
+  ISZ& length) {
+  D_CHECK_PTR_RETURN(start);
+  if (start >= stop) D_RETURN_TPTR_ERROR(CHT, ErrorInvalidBoofer);
+  D_CHECK_CPTR_RETURN(CHT, item);
+  THashPrimePrint<HSH, ISZ, CHT, CHY>(start, stop, item, hash, length);
 }
 
 inline IUB HashIUB(IUB value, IUB hash) {

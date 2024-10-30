@@ -30,7 +30,7 @@ L = 8-bits
 SCRIPT Spec does not support 128-bit CPUs.
 */
 template<typename T>
-constexpr DTB CATypeSW() {
+constexpr DTB CASizeCodef() {
   switch (sizeof(T)) {
     case    1: return 0;  // A
     case    2: return 1;  // B
@@ -50,27 +50,27 @@ constexpr DTB CATypeSW() {
 // Gets the ASCII Size Width letter A-K
 template<typename T>
 constexpr CHA CSizeCodef() {
-  return 'A' + CHA(CATypeSW<T>());
+  return 'A' + CHA(CASizeCodef<T>());
 }
 
 // Gets the ASCII Size Width letter A-K
-inline CHA ATypeSWCH(ISA sw) {
+inline CHA ASizeCodef(ISA sw) {
   return 'A' + CHA(sw);
 }
-inline CHA ATypeSWCH(ISB sw) {
+inline CHA ASizeCodef(ISB sw) {
   return 'A' + CHA(sw);
 }
-inline CHA ATypeSWCH(ISC sw) {
+inline CHA ASizeCodef(ISC sw) {
   return 'A' + CHA(sw);
 }
-inline CHA ATypeSWCH(ISD sw) {
+inline CHA ASizeCodef(ISD sw) {
   return 'A' + CHA(sw);
 }
 
 // 
 template<typename T>
 constexpr Sizef CSizef() {
-  return { -CATypeSW<T>() };  // dez nutz.
+  return { -CASizeCodef<T>() };  // dez nutz.
 }
 
 template<typename IS>
@@ -572,7 +572,8 @@ CHT* TSPrint(CHT* start, ISW count, CHC item) {
   return TSPrint<CHT>(start, start + count - 1, item);
 }
 inline CHA* SPrint(CHA* start, CHA* stop, CHA item) {
-  if (!stop || start >= stop) return nullptr;
+  if (!PtrIsValid(stop) || start >= stop) return nullptr;
+  //if (!stop || start >= stop) return nullptr;
   *start++ = item;
   *start = 0;
   return start;

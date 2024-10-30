@@ -230,8 +230,8 @@ IUW* TStackFactoryHeap(IUW* origin, ISW bytes) {
 /* Gets the size of a Stack with the given total. */
 template<typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSize(ISZ total) {
-  enum { CountMaxMin = sizeof(IUD) / sizeof(T) };
-  if (total < CountMaxMin) total = CountMaxMin;
+  enum { TotalMin = sizeof(IUD) / sizeof(T) };
+  if (total < TotalMin) total = TotalMin;
   return sizeof(TStack<SCK_P>) + sizeof(T) * total;
 }
 
@@ -240,9 +240,9 @@ template<typename T = ISW, typename ISZ = ISN>
 inline ISZ TStackSizeMin() {
   enum {
     StackCountMin = sizeof(T) > 8 ? 1 : 8 / sizeof(T),
-    StackCountMaxMin = sizeof(TStack<SCK_P>) + sizeof(T) * StackCountMin,
+    StackTotalMin = sizeof(TStack<SCK_P>) + sizeof(T) * StackCountMin,
   };
-  return StackCountMaxMin;
+  return StackTotalMin;
 }
 
 /* Gets the max number_ of elements in an obj with the specific index
@@ -255,7 +255,7 @@ inline ISZ TStackSizeMax() {
 
 /*
 template<typename T = ISW, typename ISZ = ISN>
-ISZ StackCountMax () {
+ISZ StackTotal () {
     return (ISZ)((UnsignedMax<ISZ> () - (ISZ)sizeof (TStack<T, ISZ, ISZ>)) / (ISZ)sizeof (T));
 }*/
 
@@ -520,7 +520,7 @@ inline ISZ TStackSizeWords(ISZ count) {
 @endcode
 */
 template<typename T = ISW, typename ISZ = ISN,
-          ISZ Size_ = AStackCountMaxDefault,
+          ISZ Size_ = AStackTotalDefault,
           typename BUF = TBUF<Size_, T, ISZ, TStack<SCK_P>>>
 class AStack {
   AArray<T, ISZ, BUF> obj_;  //< An Auto-Array.

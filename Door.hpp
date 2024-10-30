@@ -131,7 +131,7 @@ class TDoor : public Operand {
     static const Op cThis = {
       "Door",
       OpFirst('A'),
-      OpFirst(ATypeSWCH(slots_->count)),
+      OpFirst(ASizeCodef(slots_->count)),
       "A door in a Chinese room with a bunch of slots in it where "
       "messages are passed.",
       '}',

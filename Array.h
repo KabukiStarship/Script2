@@ -102,7 +102,7 @@ public:
   static constexpr ISW Size();
 
   /* Gets the size of the socket. */
-  static constexpr ISW SizeBytes();
+  static constexpr ISW Bytes();
 
   /* Gets the size of the socket. */
   static constexpr ISW SizeWords();
