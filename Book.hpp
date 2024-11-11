@@ -1,17 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Book.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_BOOK_CODE
 #define SCRIPT2_BOOK_CODE
-#include <_Config.h>
-#if SEAM >= SCRIPT2_BOOK
 #include "List.hpp"
+#if SEAM >= SCRIPT2_BOOK
 #if SEAM == SCRIPT2_BOOK
 #include "_Debug.inl"
 #else
@@ -655,7 +647,7 @@ BOK* TBookAppend(BOK* book, const BOK* source) {
     DT  type          = *src_types++;
     ISY result        = TBookInsertFrom<BOK_P>(book, keys, key, type,
       TPtr<>(&book->values, value_offset));
-    const CHA* dez_nutz = TCrabsErrorST<CHA, ISY>(result);
+    const CHA* dez_nutz = TAErrors<CHA, ISY>(result);
     D_COUT("\nResult:" << result << ' ' << (result < 0 ? dez_nutz : " "));
     D_ASSERT(result >= 0);
   }
@@ -860,10 +852,10 @@ ISZ TBookFind(BOK* book, const CHT* string) {
 
 /* An ASCII Book Autoject.
 @code
-ABook<BOK_A, 1024, TBuf<>>
+ABook<BOK_A, 1024, TBuf<>>All
 @endcode */
 template<BOK_A, ISZ SizeInit = 512, 
-          typename BUF = TBUF<SizeInit, CHT, ISZ, TString<ISN>>>
+         typename BUF = TBUF<SizeInit, CHT, ISZ, TString<ISN>>>
 class ABook {
   AArray<IUA, ISZ, BUF> obj_;  //< An Auto-Array object.
  public:
@@ -911,7 +903,7 @@ class ABook {
   inline ISZ SizeBytes() { return Values()->bytes; }
 
   /* Returns the size in words. */
-  inline ISZ SizeWords() { return obj_.SizeWords() >> ALUSizeLog2; }
+  inline ISZ SizeWords() { return obj_.SizeWords() >> WordSizeLog2; }
 
   /* Returns the number of keys. */
   inline ISZ Count() { return Values()->map.count; }

@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Stack.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_STACK_TEMPLATES
@@ -406,7 +399,7 @@ ISZ TStackInsert(AArray<T, ISZ, BUF>& obj, T item, ISZ index = PSH) {
 Insert:
   ISZ result = TStackInsert<T, SCK_P>(stack, item, index);
   if (result < 0) {
-    D_COUT("\n\nError " << result << ": " << TCrabsErrorST<>(result) <<
+    D_COUT("\n\nError " << result << ": " << TAErrors<>(result) <<
            " at index:" << index << "\nAutogrowing...");
     stack = TStackResize<T, SCK_P>(obj.AJT());
     goto Insert;

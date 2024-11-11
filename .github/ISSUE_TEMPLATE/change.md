@@ -5,9 +5,13 @@ title: 'Change'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-# Change
+## Problem
 
+The problem that is so great it requires a Change with Change Control Management is...
 
+## Solution
+
+The solution is...
 
 ## License
 

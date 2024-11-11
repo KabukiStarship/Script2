@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Types.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_TYPES_DECL
@@ -26,20 +19,20 @@ ISA ATypeSizeOfPOD(DTB type);
 
 /* Returns the size of the given type in bytes.
 @return the size bytes of the value. */
-ISW ATypeSizeBytes(const void* value, DTB type);
-ISW ATypeSizeBytes(const void* value_base, ISA bytes, DTB type);
+ISW ATypeBytes(const void* value, DTB type);
+ISW ATypeBytes(const void* value_base, ISA bytes, DTB type);
 
 // Returns the end (byte after last byte) of the given type-value.
 void* ATypeValueEnd(void* value, DTB type);
 
 // Returns an array of the customizable POD type sizes.
-const ISA* ATypeCustomSize();
+//const ISA* ATypeCustomSize();
 
 // Returns an array of the user-defined type alignment masks.
-const ISA* ATypeCustomAlignMask();
+//const ISA* ATypeCustomAlignMask();
 
 // Returns the custom time alignment mask for the given type.
-ISA ATypeCustomAlignMask(DTA type);
+//ISA ATypeCustomAlignMask(DTA type);
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct ATypeValue {
@@ -128,10 +121,10 @@ class LIB_MEMBER TypeValue {
   /* Sets the second word to the value. */
   void SetWord2(IUW value);
 
-  /*Sets the type_ to cNIL with an indeterminite value. */
+  /*Sets the type_ to _NIL with an indeterminite value. */
   void SetNIL();
 
-  /*Sets the type_ to cNIL with an indeterminite value. */
+  /*Sets the type_ to _NIL with an indeterminite value. */
   void SetNIL(IUW value);
 
   /*Sets the word_ to the given item and updates the type. */

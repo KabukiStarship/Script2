@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Uniprinter.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #include "Stringf.hpp"
 #include "Binary.hpp"
 namespace _ {
@@ -725,7 +718,7 @@ void Stringf::Print(const CHC* item) {
 
 void Stringf::Print(CHA item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-  _::SPrint(boofer, boofer + LengthMax, item);
+  ::_::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer_;
 }
@@ -733,7 +726,7 @@ void Stringf::Print(CHA item) {
 #if USING_UTF16 == YES_0
 void Stringf::Print(CHB item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-  _::SPrint(boofer, boofer + LengthMax, item);
+  ::_::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer_;
 }
@@ -741,7 +734,7 @@ void Stringf::Print(CHB item) {
 #if USING_UTF32 == YES_0
 void Stringf::Print(CHC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-  _::SPrint(boofer, boofer + LengthMax, item);
+  ::_::SPrint(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
 }
@@ -749,7 +742,7 @@ void Stringf::Print(CHC item) {
 void Stringf::Print(ISC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
   string_ = boofer;
@@ -758,7 +751,7 @@ void Stringf::Print(ISC item) {
 void Stringf::Print(IUC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
   string_ = boofer;
@@ -767,7 +760,7 @@ void Stringf::Print(IUC item) {
 void Stringf::Print(ISD item) {
   CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
   string_ = boofer;
@@ -776,7 +769,7 @@ void Stringf::Print(ISD item) {
 void Stringf::Print(IUD item) {
   CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _STA;
   string_ = boofer;
@@ -785,7 +778,7 @@ void Stringf::Print(IUD item) {
 #if USING_FPC == YES_0
 void Stringf::Print(FPC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
 }
@@ -793,7 +786,7 @@ void Stringf::Print(FPC item) {
 #if USING_FPD == YES_0
 void Stringf::Print(FPD item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
   type_ = _STA;
   string_ = boofer;
 }
@@ -809,7 +802,7 @@ void Stringf::PrintTMD(TMD item) {}
 void Stringf::Print(ATypef item) {
   CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= SCRIPT2_ITOS
-  _::TSPrint<CHA>(boofer, boofer + LengthMax, item);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = item.type;
   string_ = boofer;
@@ -991,7 +984,7 @@ Centerf::Centerf(FPC item, ISW count) : element(item, count) {}
 Centerf::Centerf(FPD item, ISW count) : element(item, count) {}
 #endif
 Centerf::Centerf(IUD item, ISW count) : element(item, count) {}
-//Centerf::Centerf(Typef item, ISW count) : element(item, count) {}
+//Centerf::Centerf(ATypef item, ISW count) : element(item, count) {}
 
 Centerf& Centerf::Hex(CHA item, ISW count) {
   element.Hex(item, count);

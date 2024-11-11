@@ -27,23 +27,23 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | 12 | FPD  |    double    |   8   | 8-byte floating-point number. |
 | 13 | IUD  |   uint64_t   |   8   | 8-byte unsigned integer. |
 | 14 | ISD  |    int64_t   |   8   | 8-byte signed integer. |
-| 15 | TME  |    int64_t   |   8   | ISC seconds since epoch timestamp with a IUC sub-second tick. |
+| 15 | TMD  |    int64_t   |   8   | 8-byte timestamp with ISC second and IUC sub-second tick. |
 | 16 | FPE  |  float128_t  |  16   | 16-byte floating-point number. |
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
-| 19 | BOL  |     bool     | 1/2/4 | Implementation-defined 1-bit or 1, 2, or 4-byte boolean. |
-| 20 | CTA  |  Data Type A |  xW   | Implementation-defined custom Data Type A. |
-| 21 | CTB  |  Data Type B |  xW   | Implementation-defined Custom Data Type B. |
-| 22 | CTC  |  Data Type C |  xW   | Implementation-defined Custom Data Type C. |
-| 23 | CTD  |  Data Type D |  xW   | Implementation-defined Custom Data Type D. |
-| 24 | CTE  |  Data Type E |  xW   | Implementation-defined Custom Data Type E. |
-| 25 | CTF  |  Data Type F |  xW   | Implementation-defined Custom Data Type F. |
-| 26 | CTG  |  Data Type G |  xW   | Implementation-defined Custom Data Type G. |
-| 27 | CTH  |  Data Type H |  xW   | Implementation-defined Custom Data Type H. |
-| 28 | CTI  |  Data Type I |  xW   | Implementation-defined Custom Data Type I. |
-| 29 | CTJ  |  Data Type J |  xW   | Implementation-defined Custom Data Type J. |
-| 30 | CTK  |  Data Type K |  xW   | Implementation-defined Custom Data Type K. |
-| 31 | CTL  |  Data Type L |  xW   | Implementation-defined Custom Data Type L. |
+| 19 | TME  |   uint128_t  |  16   | 16-byte Linear ID Universally Unique Identifier. |
+| 20 | CTA  |  Data Type A |   ?   | Implementation-defined custom Data Type A. |
+| 21 | CTB  |  Data Type B |   ?   | Implementation-defined Custom Data Type B. |
+| 22 | CTC  |  Data Type C |   ?   | Implementation-defined Custom Data Type C. |
+| 23 | CTD  |  Data Type D |   ?   | Implementation-defined Custom Data Type D. |
+| 24 | CTE  |  Data Type E |   ?   | Implementation-defined Custom Data Type E. |
+| 25 | CTF  |  Data Type F |   ?   | Implementation-defined Custom Data Type F. |
+| 26 | CTG  |  Data Type G |   ?   | Implementation-defined Custom Data Type G. |
+| 27 | CTH  |  Data Type H |   ?   | Implementation-defined Custom Data Type H. |
+| 28 | CTK  |  Data Type I |   ?   | Implementation-defined Custom Data Type I. |
+| 29 | CTJ  |  Data Type J |   ?   | Implementation-defined Custom Data Type J. |
+| 30 | CTK  |  Data Type K |   ?   | Implementation-defined Custom Data Type K. |
+| 31 | BFA  |   uint8_t    |   1   | 1-byte field of 8 boolean values. |
 
 ##### List of Types Key
 
@@ -118,48 +118,117 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 
 ##### Illegal Vector Types
 
-Extended types are created by the Illegal Types. The Illegal Types are types that are not memory aligned on any processor, such as a Stack of ISB with an ISA size width. If the POD type is 8 or more bytes wide then the stack or array must use a SWA (8-byte Size Width).
+Extended types are created by the Illegal Types. All ASCII data types shall be memory aligned on 8, 16, 32, and 64-bit systems. The Illegal Types are types that are not memory aligned on all processors, such as a Stack of ISB with an ISA size width. Because the custom types BOL and DTA through DTL are not defined at this level, there are illegal and potentially illegal types which are remapped to the Extended ASCII Types and Extended Custom Types.
 
 ```AsciiArt
-| Vector |                POD Type 0-31 (1=Valid, 0=Invalid)                |
-|  Type  | N I I C F I I C F I I C T I I F  F I I B D D D D D D D D D D D D |
-| SW:VET | I U I H P U S H P U S H M U S P  P U S O T T T T T T T T T T T T |
-| b8:b5  | L A A A B B B B C C C C E D D D  E E E L A B C D E F G H I J K L |
+| Vector |     POD Type 0-31 (1=Valid, 0=Extended Types, ?=User Types)      |
+|  Type  | N I I C F I I C F I I C T I I F  F I I T C C C D C C C C C C C C |
+| SW:VET | I U I H P U S H P U S H M U S P  P U S M T T T T T T T T T T T T |
+| b8:b5  | L A A A B B B B C C C C D D D D  E E E E A B C D E F G H I J K L |
 +--------+------------------------------------------------------------------|
-| 00_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 00_ARY | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 00_STK | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 00_MAT | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_VHT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 01_ARY | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_STK | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 01_MAT | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_VHB | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 10_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_STK | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 10_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 11_VHC | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_STK | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
-| 11_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+|  8_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+|  8_ARY | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+|  8_STK | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+|  8_MAT | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 16_VHT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 16_ARY | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 16_STK | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 16_MAT | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 32_VHB | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 32_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 32_STK | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 32_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
+| 64_VHC | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 64_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 64_STK | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 64_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 +--------+------------------------------------------------------------------|
 | Total  | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1  1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 |
 |  512   |      Type 0-31      0 1 2 3 4 5  6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 |
 ```
 
+| b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+|:------:|:-----:|:-----:|:-----:|
+|  CHA   |   8   |  ARY  |  CHA  |
+|  CHA   |  16   |  ARY  |  CHA  |
+|  CHA   |  32   |  ARY  |  CHA  |
+|  MT    |  SW   |  VT   |  POD  |
+
 ##### Extended Types
 
-Extended Types are created from the Illegal Types.
+There are a total of 231 Illegal Types with 159 Extended ASCII Types and 72 Extended Custom Types. Extended Custom Types are defined by the implementation.
+
+###### Extended ASCII Types
+
+The Extended ASCII Types are contiguous types that use offsets such that ISZ means the largest signed integer, ISY is half the size of ISZ, and so on to IST. Because ISY and subsequent signed integer types must be half the size of the prior post-fixed letter type, the legal types are packed up contiguously in ascending order. The ASCII Code for the type is when the last character is a letter. Implementations may map the all-letter Extended ASCII Type code to one of the number post-fix ASCII Types to set the Default Extended Type for that implementation; for example thd default DIC may be DI4 and on that implementation DIC is the same integer value as DI4. The Extended ASCII Types are:
 
 | ID  |  Type   |    Name    | Description |
 |:---:|:-------:|:----------:|:------------|
-| 39  |   LST   |    List    | A collection of type-value tuples. |
-| 40  |   BOK   |    Book    | An associative list without a hash-table. |
-| 41  |   BSQ   | B-Sequence | Header for a sequence of bytes. |
-| 42  |   BIN   |  B-Input   | A Byte-input ring buffer socket. |
-| 43  |   BOU   |  B-Output  | A Byte-output ring buffer socket. |
-| 44  |   BIO   |    B-IO    | A BIn and BOut. |
-| 45  |   XPR   | Expression | A SCRIPT Script. |
+|   |   BOA   |  Boolean   | 1-byte BOL value. |
+|   |   BOB   |  Boolean   | 2-byte BOL value. |
+|   |   BOC   |  Boolean   | 4-byte BOL value. |
+|   |         |            | .|
+|   |   DTA   | Data Type  | 8-bit ASCII Data Type. |
+|   |   DTB   | Data Type  | 16-bit ASCII Data Type. |
+|   |   DTC   | Data Type  | Two contiguous 16-bit ASCII Data Types. |
+|   |   DTD   | Data Type  | Three contiguous 16-bit ASCII Data Types. |
+|   |   OBA   |  Object    | 1-byte size-width contiguous object. |
+|   |   OBB   |  Object    | 2-byte size-width contiguous object. |
+|   |   OBC   |  Object    | 4-byte size-width contiguous object. |
+|   |   OBD   |  Object    | 8-byte size-width contiguous object. |
+|   |   BSA   |   BSQ      | 1-byte total B-Sequence.|
+|   |   BSB   |   BSQ      | 2-byte total B-Sequence.|
+|   |   BSC   |   BSQ      | 4-byte total B-Sequence.|
+|   |   BSD   |   BSQ      | 8-byte total B-Sequence.|
+|   |   LS0   |   List     | TList<ISB, ISA>. |
+|   |   LS1   |   List     | TList<ISC, ISB>. |
+|   |   LS2   |   List     | TList<ISD, ISC>. |
+|   |   DI0   | Dictionary | TDic<CHA, ISC, ISB, IUC, DTB>. |
+|   |   DI1   | Dictionary | TDic<CHA, ISD, ISC, IUD, DTB>. |
+|   |   DI2   | Dictionary | TDic<CHB, ISC, ISB, IUC, DTB>. |
+|   |   DI3   | Dictionary | TDic<CHB, ISD, ISC, IUD, DTB>. |
+|   |   DI4   | Dictionary | TDic<CHC, ISC, ISB, IUC, DTB>. |
+|   |   DI5   | Dictionary | TDic<CHC, ISD, ISC, IUD, DTB>. |
+|   |   BO0   |    Book    | TBook<CHA, ISB, ISA, DTB>. |
+|   |   BO1   |    Book    | TBook<CHA, ISC, ISB, DTB>. |
+|   |   BO2   |    Book    | TBook<CHA, ISD, ISC, DTB>. |
+|   |   BO3   |    Book    | TBook<CHB, ISB, ISA, DTB>. |
+|   |   BO4   |    Book    | TBook<CHB, ISC, ISB, DTB>. |
+|   |   BO5   |    Book    | TBook<CHB, ISD, ISC, DTB>. |
+|   |   BO6   |    Book    | TBook<CHC, ISB, ISA, DTB>. |
+|   |   BO7   |    Book    | TBook<CHC, ISC, ISB, DTB>. |
+|   |   BO8   |    Book    | TBook<CHC, ISD, ISC, DTB>. |
+|   |         |            | .|
+|   |         |            | .|
+| . |   ...   |     ...    | ...|
+|   |   ERA   |   Error    | 1-byte Error type. |
+|   |   ERB   |   Error    | 2-byte Error type. |
+|   |   ERC   |   Error    | 4-byte Error type. |
+|   |   ERD   |   Error    | 8-byte Error type. |
+|   |   EOA   | Err Object | 1-byte Error type. |
+|   |   EOB   | Err Object | 2-byte Error type. |
+|   |   EOC   | Err Object | 4-byte Error type. |
+|   |   EOD   | Err Object | 8-byte Error type. |
+
+
+|  Type   |    Name    | Description |
+|:-------:|:----------:|:------------|
+|   LOM   |    Loom    | An array of strings. |
+|   LST   |    List    | A collection of type-value tuples. |
+|   BOK   |    Book    | An associative list without a hash-table. |
+|   DIC   | Dictionary | An associative list with a hash-table. |
+|   BSQ   | B-Sequence | Header for a sequence of bytes. |
+|   BIN   |  B-Input   | A Byte-input ring buffer socket. |
+|   BOU   |  B-Output  | A Byte-output ring buffer socket. |
+|   SLT   |    Slot    | A slot in a Door with a  BIn and BOut to pass messages. |
+
+#### Mandatory User Type
+
+Because boolean type is not well defined, one of the custom types must be BOL and it may be mapped to ISA, ISB, or ISC.
+
+| ID |  Type   |    Name    | Description |
+|:--:|:-------:|:----------:|:------------|
+| 01 |   BOL   |  Boolean   | A signed integer boolean value. |
 
 ##### MT Bits
 
@@ -169,12 +238,12 @@ A Map Type maps from of one POD type to other set, such as a Dictionary that map
 
 The Modifier Bits (MOD) allow for the creation of pointers and const pointers to POD and Vector types.
 
-| Value | Type | Description      |
-|:-----:|:----:|:-----------------|
-|   0   | CTG  | Contiguous data. |
-|   1   | PTR  | Pointer.         |
-|   2   | CNS  | Const.           |
-|   3   | PTC  | Const Pointer.   |
+| Value | Type | Description           |
+|:-----:|:----:|:----------------------|
+|   0   | CNS  | Const.                |
+|   1   | PTC  | Const Crabs pointer.  |
+|   2   | CTG  | Contiguous data.      |
+|   3   | PTR  | Crabs Crabs pointer.  |
 
 #### Two-byte Type Bit Pattern
 

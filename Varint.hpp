@@ -1,18 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Varint.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>; all rights reserved.
 #pragma once
+#ifndef SCRIPT2_VARINT_INLINE_CODE
+#define SCRIPT2_VARINT_INLINE_CODE
 #include <_Config.h>
-
 #if SEAM >= SCRIPT2_DIC
-#ifndef INCLUDED_SCRIPTVARINT
-#define INCLUDED_SCRIPTVARINT
-
 namespace _ {
 
 #if CPU_SIZE == CPU_2_BYTE
@@ -23,7 +14,7 @@ inline ISB UnpackSVI(ISB value) {
   return value;
 }
 
-inline ISB PackSVI(ISB value) {
+inline ISB PackVSI(ISB value) {
   if (value < 0) {
     IUB result = 1 << 15;
     return result | ((~value + 1) << 1);
@@ -31,7 +22,7 @@ inline ISB PackSVI(ISB value) {
   return value;
 }
 #else
-inline ISC UnpackSVI(ISC value) {
+inline ISC VSCUnpack(ISC value) {
   if (value < 0) {
     IUC result = 0x80000000;
     return result | ~(value - 1);
@@ -39,7 +30,7 @@ inline ISC UnpackSVI(ISC value) {
   return value;
 }
 
-inline ISC PackSVI(ISC value) {
+inline ISC VSCPack(ISC value) {
   if (value < 0) {
     ISC result = 0x80000000;
     return result | ((~value + 1) << 1);
@@ -48,7 +39,7 @@ inline ISC PackSVI(ISC value) {
 }
 #endif
 
-inline ISD UnpackSV8(ISD value) {
+inline ISD VSDUnpack(ISD value) {
   if (value < 0) {
     ISD result = 0x8000000000000000;
     return result | ~(value - 1);
@@ -56,13 +47,28 @@ inline ISD UnpackSV8(ISD value) {
   return value;
 }
 
-inline ISD PackSV8(ISD value) {
+inline ISD VSDPack(ISD value) {
   if (value < 0) {
     ISD result = 0x8000000000000000;
     return result | ((~value + 1) << 1);
   }
   return value;
 }
+
+template<typename IS = ISW>
+inline IS TVarintPack(IS value) {
+  if (value < 0) {
+    IS result = IS(-1) >> 1;
+    return result | ((~value + 1) << 1);
+  }
+  return value;
+}
+//#endif
+
+//template<typename IS = ISW>
+//inline IS TVarintUnpack(IS value) {
+//  return (value >= 0) ? value : result | ;
+//}
 
 // template<typename T>
 // T UnpackSVI (T value) {

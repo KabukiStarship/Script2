@@ -1,20 +1,12 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /BSeq.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "BSeq.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 ISN BSeqParamNumber(const ISN* params, ISN param_number) {
   if (!params) return 0;
   ISN num_params = *params++;
-  if (param_number > num_params) return cNIL;
+  if (param_number > num_params) return _NIL;
   ISN i;
   for (i = 0; i < param_number; ++i) {
     ISN value = params[i];
@@ -27,7 +19,7 @@ ISN BSeqParamNumber(const ISN* params, ISN param_number) {
         break;
       } else if (value > 7) {  // Gratuitous explanation points!
         // D_COUT ("\nError");
-        return cNIL;
+        return _NIL;
       } else {
         param_number += params[i] + 1;
       }

@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Binary.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
 #define SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
@@ -240,9 +233,8 @@ constexpr ISN TBitCode() {
   if (dt <= _CHA) return 0;
   if (dt <= _CHB) return 1;
   if (dt <= _CHC) return 2;
-  if (dt <= _TME) return 3;
+  if (dt <= _TMD) return 3;
   if (dt <= _ISE) return 4;
-  if (dt == _BOL) return BOLSizeLog2;
   if (dt <= _CT4) return 4;
   if (dt <= _CT3) return 3;
   if (dt <= _CT2) return 2;
@@ -337,11 +329,11 @@ constexpr IUD CAlignUp(IUD value, IUD align_mask = ALUWordMask) {
   return value + (IUD(-ISD(value)) & align_mask);
 }
 
-inline void* AlignUpPTR(void* pointer, ISW mask = ALUWordMask) {
+inline void* PtrUp(void* pointer, ISW mask = ALUWordMask) {
   ISW address = ISW(pointer);
   return TPtr<void>(CAlignUp(address, mask));
 }
-inline const void* AlignUpPTR(const void* pointer, ISW mask = ALUWordMask) {
+inline const void* PtrUp(const void* pointer, ISW mask = ALUWordMask) {
   ISW value = IUW(pointer);
   return TPtr<void>(CAlignUp(value, mask));
 }
@@ -577,13 +569,13 @@ inline IUW* AlignDown(IUW* pointer, IUW least_significant_bits_max) {
 /* Calculates the bytes in size_words. */
 template<typename IS>
 inline IS TSizeWords(IS size) {
-  return AlignUp(size) >> ALUSizeLog2;
+  return AlignUp(size) >> WordSizeLog2;
 }
 
 template<typename IS>
 constexpr IS CSizeWords(IS size) {
   IS size_aligned = size + ((-size) & ALUWordMask);
-  size_aligned = size_aligned >> ALUSizeLog2;
+  size_aligned = size_aligned >> WordSizeLog2;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
 
@@ -593,6 +585,11 @@ inline IS TWordCount(IS size) {
   IS align_offset = (-size) & (sizeof(ISW) - 1);
   size += align_offset;
   return size >> CBitCount<ISW>();
+}
+
+template<typename I>
+inline I TWordLSbAsserted() {
+  return I(~(ToUnsigned(0) >> 1));
 }
 
 /* Utility function for converting to two's complement and back with templates.
@@ -823,7 +820,7 @@ It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template<typename T = void*, ISW PowerOf2>
 const T* TAlignUpPointer(const void* value) {
-  return AlignUpPTR(value, PowerOf2 - 1);
+  return PtrUp(value, PowerOf2 - 1);
 }
 
 /* Aligns up a number to the given PowerOf2.
@@ -832,7 +829,7 @@ It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template<typename T = void*, ISW PowerOf2>
 T* TAlignUpPointer(void* value) {
-  return AlignUpPTR(value, PowerOf2 - 1);
+  return PtrUp(value, PowerOf2 - 1);
 }
 
 inline void* ToPTR(IUW value) { return TPtr<void>(value); }

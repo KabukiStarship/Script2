@@ -1,24 +1,16 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/09.Loom.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_LOOM
 #include "../Loom.hpp"
 //
 #include "TestWords.h"
-using namespace _;
 #if SEAM == SCRIPT2_LOOM
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
-
+using namespace _;
 namespace Script2 {
+
 template<typename CHT = CHR, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
@@ -40,7 +32,7 @@ void TestLoom() {
     LengthMax = (Size << 2) - 1,
   };
 
-  CHT str[LengthMax + 1];
+  CHT str[LengthMax + 1] = {};
   CHT* string_end = &str[LengthMax];
 
   for (ISN i = 0; i < 32; ++i) {

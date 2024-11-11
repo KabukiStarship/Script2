@@ -1,18 +1,8 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Slot.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
-
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "Slot.hpp"
-//
-#include "String.hpp"
-#include "Types.h"
+#if SEAM >= SCRIPT2_CRABS
+//#include "String.hpp"
+//#include "Types.h"
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
@@ -20,61 +10,61 @@ one at <https://mozilla.org/MPL/2.0/>. */
 #endif
 namespace _ {
 
-const Op* ReturnError(Slot* slot, Error error) {
-  D_COUT('\n' << TSTRError<CHA>()[error]));
+const Op* ReturnError(Slot* slot, ERC error) {
+  D_COUT('\n' << TSTRError<CHR>()[error]);
   return OpError(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const ISC* header) {
-  D_COUT('\n' << TSTRError<CHA>()[error]));
+const Op* ReturnError(Slot* slot, ERC error, const ISC* header) {
+  D_COUT('\n' << TSTRError<CHR>()[error]);
   return OpError(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const ISC* header, IUA offset) {
-  D_COUT('\n' << TSTRError<CHA>()[error]));
+const Op* ReturnError(Slot* slot, ERC error, const ISC* header, IUA offset) {
+  D_COUT('\n' << TSTRError<CHR>()[error]);
   return OpError(error);
 }
 
-const Op* ReturnError(Slot* slot, Error error, const ISC* header, ISC offset,
-                      CHA* address) {
-  D_COUT('\n' << TSTRError<CHA>()[error]));
+const Op* ReturnError(Slot* slot, ERC error, const ISC* header, ISC offset,
+                      IUA* address) {
+  D_COUT('\n' << TSTRError<CHR>()[error]);
   return OpError(error);
 }
 
 Slot::Slot(IUW* socket, ISW size) {
   A_ASSERT(socket);
-  A_ASSERT(size >= cSlotSizeMin);
-  CHA* l_begin = TPtr<CHA>(socket);
-  origin = l_begin;
-  origin = l_begin;
-  stop = l_begin;
-  stop = l_begin + size - 1;
+  A_ASSERT(size >= SlotBytesMin);
+  IUA* begin = TPtr<IUA>(socket);
+  origin = begin;
+  start  = begin;
+  stop   = begin;
+  end    = begin + size - 1;
 }
 
 Slot::Slot(BIn* bin) {
   A_ASSERT(bin);
-  CHA* l_begin = TPtr<CHA>(bin) + sizeof(BIn);
-  origin = l_begin;
-  origin = l_begin + bin->origin;
-  stop = l_begin + bin->stop;
-  stop = l_begin + bin->size;
+  IUA* begin = TPtr<IUA>(bin, sizeof(BIn));
+  origin = begin;
+  start  = begin + bin->origin;
+  stop   = begin + bin->stop;
+  end    = begin + bin->size;
 }
 
 Slot::Slot(BOut* bout) {
   A_ASSERT(bout);
-  CHA* l_begin = TPtr<CHA>(bout) + sizeof(BIn);
-  origin = l_begin;
-  origin = l_begin + bout->origin;
-  stop = l_begin + bout->stop;
-  stop = l_begin + bout->size;
+  IUA* begin = TPtr<IUA>(bout, sizeof(BIn));
+  origin = begin;
+  start  = begin + bout->origin;
+  stop   = begin + bout->stop;
+  end    = begin + bout->size;
 }
 
 void* Slot::Contains(void* address) {
-  CHA* origin = TPtr<CHA>(this) + sizeof(Slot);
+  IUA* origin = TPtr<IUA>(this,  sizeof(Slot));
   if (address < origin) {
     return nullptr;
   }
-  CHA* l_end = stop;
+  IUA* l_end = stop;
   if (address > l_end) {
     return nullptr;
   }
@@ -82,7 +72,7 @@ void* Slot::Contains(void* address) {
 }
 
 void Slot::Wipe() {
-  CHA *l_begin = TPtr<CHA>(this) + sizeof(Slot), *l_start = origin,
+  IUA *l_begin = TPtr<IUA>(this) + sizeof(Slot), *l_start = origin,
       *l_stop = stop, *temp;
   if (l_start > l_stop) {
     temp = l_start;
@@ -93,7 +83,7 @@ void Slot::Wipe() {
 }
 
 const Op* Slot::Write(const ISC* params, void** args) {
-  A_ASSERT(params);
+  D_CHECK_TPTR_RETURN(Op, params);
   A_ASSERT(args);
 
   A_ASSERT(false);
@@ -102,7 +92,7 @@ const Op* Slot::Write(const ISC* params, void** args) {
 }
 
 BOL Slot::IsWritable() {
-  CHA* l_stop = origin;
+  IUA* l_stop = origin;
   if (l_stop == origin) {
     if (l_stop != stop) {
       return false;
@@ -114,8 +104,8 @@ BOL Slot::IsWritable() {
 
 BOL Slot::IsReadable() { return origin != stop; }
 
-/*CHA* SlotRead (Slot* slot, CHA* write, void* write_end, CHA* const origin,
-                    CHA* const origin, CHA* const stop , CHA* const stop,
+/*IUA* SlotRead (Slot* slot, IUA* write, void* write_end, IUA* const origin,
+                    IUA* const origin, IUA* const stop , IUA* const stop,
                     ISW size) {
     if (!slot) {
         return nullptr;
@@ -133,7 +123,7 @@ BOL Slot::IsReadable() { return origin != stop; }
         size -= top_chunk;
 
         RAMCopy (target, target_end, origin, top_chunk);
-        RAMCopy (TPtr<CHA>(target) + top_chunk, size,
+        RAMCopy (TPtr<IUA>(target) + top_chunk, size,
                     origin);
         return origin + size;
     }
@@ -145,22 +135,22 @@ const Op* Slot::Read(const ISC* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
   IUA iua;  //< Temp variable to load most types.
-  IUB iub;  //< Temp variable for working with cIUB types.
+  //IUB iub;  //< Temp variable for working with _IUB types.
 #if USING_SCRIPT2_4_BYTE_TYPES
   IUC iuc;
 #endif
 #if USING_SCRIPT2_8_BYTE_TYPES
-  IUD iud;  //< Temp cIUD variable.
+  IUD iud;  //< Temp _IUD variable.
 #endif
-  CHA* iua_ptr;              //< Pointer to a cIUA.
-  IUB* iub_ptr;              //< Pointer to a cIUB.
-  IUC* iuc_ptr;              //< Pointer to a cIUC.
-  IUD* iud_ptr;              //< Pointer to a cIUD.
-  ISC type,                  //< Current type being read.
-      index,                 //< Index in the escape sequence.
+  IUA* iua_ptr;              //< Pointer to a _IUA.
+  //IUB* iub_ptr;              //< Pointer to a _IUB.
+  //IUC* iuc_ptr;              //< Pointer to a _IUC.
+  //IUD* iud_ptr;              //< Pointer to a _IUD.
+  DTB type;                  //< Current type being read.
+  ISC index,                 //< Index in the escape sequence.
       num_params = *params;  //< Number of params.
-  ISC offset,                //< Offset to word align the current type.
-      length,                //< Length of the data in the socket.
+  //ISC offset,                //< Offset to word align the current type.
+  ISC length,                //< Length of the data in the socket.
       count,                 //< Argument length.
       size;                  //< Size of the ring socket.
 
@@ -168,15 +158,15 @@ const Op* Slot::Read(const ISC* params, void** args) {
 
   D_COUT("\n\nReading BIn: ");
 
-  CHA *l_begin = origin,          //< Beginning of the socket.
+  IUA *l_begin = origin,          //< Beginning of the socket.
       *l_end = stop,              //< stop of the socket.
-          *l_start = origin,      //< origin of the data.
-              *l_stop = stop;     //< stop of the data.
+      *l_start = origin,          //< origin of the data.
+      *l_stop = stop;             //< stop of the data.
   const ISC* param = params + 1;  //< current param.
 
-  size = l_end - l_begin;
+  size = TDelta<ISC>(l_end, l_begin);
 
-  length = SlotLength(l_start, l_stop, size);
+  length = ISC(SlotLength(l_start, l_stop, size));
 
   D_COUT("\n\nReading " << length << " bytes.");
   // D_COUT_BSQ (params)
@@ -185,24 +175,24 @@ const Op* Slot::Read(const ISC* params, void** args) {
   for (index = 0; index < num_params; ++index) {
     type = (IUA)*param;
     ++param;
-    D_COUT("\nindex:" << index << ":\"" << STAAType(type) << "\" start:0x"
+    D_COUT("\nindex:" << index << ":\"" << ATypef(type) << "\" start:0x"
                       << TDelta<>(l_begin, start) << " stop:0x"
                       << TDelta<>(l_begin, stop));
 
     switch (type) {
-      case cNIL:
-        return ReturnError(this, cErrorInvalidType);
-      case cADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
-      case STR_:
+      case _NIL:
+        return ReturnError(this, ErrorInvalidType);
+      case _ADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
+      //case STR_:
         // Load boofered-type argument length and increment the
         // index.
         count = *param;
         ++param;
 
-        // StdOut() << "\nReading CHA with max length " << count;
+        // StdOut() << "\nReading IUA with max length " << count;
 
         // Load next pointer and increment args.
-        iua_ptr = TPtr<CHA>(args[index]);
+        iua_ptr = TPtr<IUA>(args[index]);
         if (!iua_ptr) {
           break;
         }
@@ -215,7 +205,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
 
         while (iua && count) {
           if (count-- == 0)
-            return ReturnError(this, cErrorBooferUnderflow, params, index,
+            return ReturnError(this, ErrorBooferUnderflow, params, index,
                                l_start);
           D_COUT(iua);
 
@@ -231,12 +221,11 @@ const Op* Slot::Read(const ISC* params, void** args) {
           *iua_ptr = iua;
         }
         break;
-      case cISA:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
-      case cIUA:
-      case cBOL:
+      case _ISA:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
+      case _IUA:
 #if USING_SCRIPT2_1_BYTE_TYPES
         if (length == 0) {
-          return ReturnError(this, cErrorBooferUnderflow, params, index,
+          return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);
         }
         --length;
@@ -247,7 +236,7 @@ const Op* Slot::Read(const ISC* params, void** args) {
           l_start -= size;
         }
         // Load next pointer and increment args.
-        iua_ptr = TPtr<CHA>(args[index]);
+        iua_ptr = TPtr<IUA>(args[index]);
         if (!iua_ptr) {
           break;
         }
@@ -257,21 +246,17 @@ const Op* Slot::Read(const ISC* params, void** args) {
         }
         break;
 #else
-        return ReturnError(this, cErrorInvalidType);
+        return ReturnError(this, ErrorInvalidType);
 #endif
-      case cISB:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
-      case cIUB:
-      case cFPB:
-#if CPU_SIZE <= 16
-      case SVI:
-      case UVI:
-#endif
+      case _ISB:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
+      case _IUB:
+      case _FPB:
 #if USING_SCRIPT2_2_BYTE_TYPES
         // Read2ByteType:{
         // Word-align
         offset = AlignUpOffset2(l_start);
         if ((IUW)length < offset + 2) {
-          return ReturnError(this, cErrorBooferUnderflow, params, index,
+          return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= (ISC)offset + 2;
@@ -295,26 +280,26 @@ const Op* Slot::Read(const ISC* params, void** args) {
         //}
         break;
 #else
-        return ReturnError(this, cErrorInvalidType);
+        return ReturnError(this, ErrorInvalidType);
 #endif
 #if USING_SCRIPT2_VARINT2
         goto Read2ByteType;
 #else
-        return ReturnError(this, cErrorInvalidType);
+        return ReturnError(this, ErrorInvalidType);
 #endif
 #if CPU_SIZE > 16
       case SVI:
       case UVI:
 #endif
-      case cISC:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
-      case cIUC:
-      case cFPC:
+      case _ISC:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
+      case _IUC:
+      case _FPC:
 #if USING_SCRIPT2_4_BYTE_TYPES
         // Read4ByteType:{
         // Word-align
         offset = AlignUpOffset4(l_start);
         if ((IUW)length < offset + 4) {
-          return ReturnError(this, cErrorBooferUnderflow, params, index,
+          return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= (ISC)offset + 4;
@@ -338,18 +323,18 @@ const Op* Slot::Read(const ISC* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, cErrorInvalidType);
+        return ReturnError(this, ErrorInvalidType);
 #endif
-      case cISD:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
-      case cIUD:
-      case cFPD:
-      case cTME:
+      case _ISD:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
+      case _IUD:
+      case _FPD:
+      case _TMD:
 #if USING_SCRIPT2_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
         offset = AlignUpOffset8(l_start);
         if ((IUW)length < offset + sizeof(ISD)) {
-          return ReturnError(this, cErrorBooferUnderflow, params, index,
+          return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= offset + sizeof(ISD);
@@ -371,27 +356,27 @@ const Op* Slot::Read(const ISC* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, cErrorInvalidType);
+        return ReturnError(this, ErrorInvalidType);
 #endif
       default: {
 #if USING_SCRIPT2_OBJ
         count = type >> 5;  //< count is now the array type bits.
         type &= 0x1f;       //< Now type is the type 0-31
-        if (count && (type >= cOBJ)) {
+        if (count && (type >= _OBJ)) {
           // Can't make arrays out of objects!
-          return ReturnError(this, cErrorInvalidType, params, index, l_start);
+          return ReturnError(this, ErrorInvalidType, params, index, l_start);
         }
         // We don't care if it's a multidimensional array anymore.
-        iua_ptr = TPtr<CHA>(args[index]);
+        iua_ptr = TPtr<IUA>(args[index]);
         if (iua_ptr == nullptr)
-          return ReturnError(this, cErrorImplementation, params, index,
+          return ReturnError(this, ErrorImplementation, params, index,
                              l_start);
         count &= 0x3;
         switch (count) {
           case 0: {  // It's a 8-bit count.
-            if (type >= cLST) {
-              // cLST, kBOK, kDIC, and cMAP can't be 8-bit!
-              return ReturnError(this, cErrorInvalidType, params, index,
+            if (type >= _LST) {
+              // _LST, kBOK, kDIC, and _MAP can't be 8-bit!
+              return ReturnError(this, ErrorInvalidType, params, index,
                                  l_start);
             }
             count = (IUW)*iua_ptr;
@@ -399,57 +384,57 @@ const Op* Slot::Read(const ISC* params, void** args) {
           }
           case 1: {  // It's a 16-bit count.
             if (length < 3) {
-              return ReturnError(this, cErrorBooferUnderflow, params, index,
+              return ReturnError(this, ErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 2;
             iub_ptr = TPtr<IUB>(iua_ptr);
             count = (IUW)*iub_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBooferOverflow, params, index,
+              return ReturnError(this, ErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 2: {  // It's a 32-bit count.
             if (length < 5) {
-              return ReturnError(this, cErrorBooferUnderflow, params, index,
+              return ReturnError(this, ErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 4;
             iuc_ptr = TPtr<IUC>(iua_ptr);
             count = (IUW)*iuc_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBooferOverflow, params, index,
+              return ReturnError(this, ErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 3: {  // It's a 64-bit count.
             if (length < 9) {
-              return ReturnError(this, cErrorBooferUnderflow, params, index,
+              return ReturnError(this, ErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 8;
             iud_ptr = TPtr<IUD>(iua_ptr);
             count = (IUW)*iud_ptr;
             if (count > length) {
-              return ReturnError(this, cErrorBooferOverflow, params, index,
+              return ReturnError(this, ErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           default: {
-            return ReturnError(this, cErrorImplementation, params, index,
+            return ReturnError(this, ErrorImplementation, params, index,
                                l_start);
           }
         }
         if (length < count) {
-          return ReturnError(this, cErrorBooferOverflow, params, index,
+          return ReturnError(this, ErrorBooferOverflow, params, index,
                              l_start);
         }
         if (!count) {
-          return ReturnError(this, cErrorBooferOverflow, params, index,
+          return ReturnError(this, ErrorBooferOverflow, params, index,
                              l_start);
         }
         if (l_start + count >= l_end) {
@@ -501,11 +486,11 @@ const Op* Slot::Write(const Op& op, void** args) { return Write(op.out, args); }
 
 const Op* Slot::Write(Slot& other) { return nullptr; }
 
-const Op* Slot::Write(const CHA* message) { return nullptr; }
+const Op* Slot::Write(const IUA* message) { return nullptr; }
 
 #if USING_SCRIPT2_TEXT
 UTF1& Slot::Print(UTF1& utf) {
-  CHA *l_begin = origin, *l_end = stop;
+  IUA *l_begin = origin, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: origin:" << Hex<>(l_begin)
              << " start:" << Hex<>(origin) << "\nstop:" << Hex<>(stop)
              << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);

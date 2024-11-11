@@ -1,22 +1,15 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/11.Book.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_BOOK
 #include "../Book.hpp"
-//
 #include "TestWords.h"
-using namespace _;
 #if SEAM == SCRIPT2_BOOK
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
+using namespace _;
 namespace Script2 {
+
 template<typename ISZ = ISN, typename ISY = ISM, typename CHT = CHR,
          typename DT  = DTB>
 void TestBook() {
@@ -103,10 +96,12 @@ const CHA* Book(const CHA* args) {
   TestBook<ISD, ISC, CHA>();
 #endif
 #if USING_UTF16 == YES_0
+  TestBook<ISB, ISA, CHB>();
   TestBook<ISC, ISB, CHB>();
   TestBook<ISD, ISC, CHB>();
 #endif
 #if USING_UTF32 == YES_0
+  TestBook<ISB, ISA, CHC>();
   TestBook<ISC, ISB, CHC>();
   TestBook<ISD, ISC, CHC>();
 #endif

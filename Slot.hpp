@@ -1,27 +1,22 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Slot.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
-#include <_Config.h>
+#ifndef SCRIPT2_SLOT_INLINE_CODE
+#define SCRIPT2_SLOT_INLINE_CODE
+#include "Slot.h"
 #if SEAM >= SCRIPT2_CRABS
-#ifndef SCRIPT2_SLOT
-#define SCRIPT2_SLOT
-#include "Slot.hpp"
-#include "Binary.hpp"
 namespace _ {
+
+enum {
+  SlotBytesMin = 32  //< Minimum size of a slot in bytes.
+};
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
 template<typename T>
-inline T TSlotLength(CHA* origin, CHA* stop, IUW size) {
-  return TPtr<T>(stop - origin);
+inline T TSlotLength(IUA* origin, IUA* stop, ISW size) {
+  return T(stop - origin);
 }
 
 /* Calculates the space left in the given ring socket.
@@ -29,8 +24,8 @@ inline T TSlotLength(CHA* origin, CHA* stop, IUW size) {
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
 template<typename T>
-inline T TSlotSpace(CHA* origin, CHA* stop, IUW size) {
-  return TPtr<T>(size - (stop - origin));
+inline T TSlotSpace(IUA* start, IUA* stop, ISW size) {
+  return T(size - (stop - start));
 }
 
 }  //< namespace _

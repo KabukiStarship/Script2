@@ -1,26 +1,23 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /BSeq.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_BSEQ_DELC
 #define SCRIPT2_BSEQ_DELC
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
 #include "Types.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 /* Utility class for printing B-Sequences. */
-struct BSeq {
-  const ISC* params;  //< BSeq params.
+template<typename ISY = ISN, typename DT = DTB>
+struct TBSeq {
+  const DT* params;  //< BSeq params.
 
-  BSeq(const ISC* params) : params(params) {
+  TBSeq(const DT* params) : params(params) {
     // Nothing to do here! (:-)-+=<
   }
+};
+
+enum {
+  BSQMax = 420   //< Max number of elements in a BSQ.
 };
 
 #if CPU_SIZE == CPU_2_BYTE
@@ -38,79 +35,41 @@ inline ISB PackSVI(ISB value) {
   }
   return value;
 }
-#else
-inline ISC UnpackSVI(ISC value) {
-  if (value < 0) {
-    IUC result = 0x80000000;
-    return result | ~(value - 1);
-  }
-  return value;
-}
-
-inline ISC PackSVI(ISC value) {
-  if (value < 0) {
-    ISC result = 0x80000000;
-    return result | ((~value + 1) << 1);
-  }
-  return value;
-}
 #endif
-
-inline ISD UnpackSV8(ISD value) {
-  if (value < 0) {
-    ISD result = 0x8000000000000000;
-    return result | ~(value - 1);
-  }
-  return value;
-}
-
-inline ISD PackSV8(ISD value) {
-  if (value < 0) {
-    ISD result = 0x8000000000000000;
-    return result | ((~value + 1) << 1);
-  }
-  return value;
-}
-
-// template<typename T>
-// T UnpackSVI (T value) {
-//    T temp = value << sizeof (T) * 8 - 1;
-//    temp |= value;
-//    return temp;
-//}
 
 constexpr ISC CBSeqSize(const ISC* params) {
   if (!params) {
     return 0;
   }
-  ISC bytes = sizeof(ISC), count = *params++;
+  ISC bytes = sizeof(ISC), 
+      count = *params++;
 
-  if (count > cParamsMax) {
+  if (count > BSQMax) {
     return 0;
   }
 
   for (; count > 0; --count) {
     ISC param = *params++;
 
-    if (param == cNIL) {  // This is illegal.
+    if (param == _NIL) {  // This is illegal.
       return 0;
     }
-    //if (param <= cTKN) {
+    //if (param <= _TKN) {
     //  bytes += sizeof(ISC);
     //  ++params;
     //}
-    if (param == cISE) {
+    if (param == _ISE) {
       bytes += sizeof(ISC);
       ++params;
     }
-    if (param == cIUE) {
+    if (param == _IUE) {
       bytes += sizeof(ISC);
       ++params;
     }
-    //if (param >= cLST && param <= cMAP) {  // This is illegal.
+    //if (param >= _LST && param <= _MAP) {  // This is illegal.
     //  return 0;
     //}
-    //if (param > cMAP) {
+    //if (param > _MAP) {
     //  if (param >> 8) {  // This is an error.
     //    return 0;
     //  }

@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Map.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright (ISZ) 2015-2023 Kabuki Starship <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_MAP_TEMPLATES
 #define SCRIPT2_MAP_TEMPLATES
@@ -22,7 +15,7 @@ namespace _ {
 #undef  MAP_P
 #define MAP_P D, ISZ
 #undef  MAP_A
-#define MAP_A typename D = ISR, typename ISZ = ISR
+#define MAP_A typename D = ISR, typename ISZ = ISQ
 
 /* A sparse array map of Sorted Domain Values to Codomain Mappings (i.e. pointer
 offsets).
@@ -46,7 +39,7 @@ offsets).
 */
 template<MAP_A>
 struct TMap {
-  ISZ size,   //< Size of the Array in elements.
+  ISZ total,  //< Maximum number of elements in the map.
       count;  //< Element count.
 };
 
@@ -102,7 +95,7 @@ inline ISZ* TMapCodomain(TMap<MAP_P>* map, ISZ size) {
 /* Returns the start of the codomain. */
 template<MAP_A>
 inline const ISZ* TMapCodomain(const TMap<MAP_P>* map) {
-  return TMapCodomain<MAP_P>(map, map->size);
+  return TMapCodomain<MAP_P>(map, map->total);
 }
 template<MAP_A>
 inline ISZ* TMapCodomain(TMap<MAP_P>* map) {
@@ -136,7 +129,7 @@ Printer& TMapPrint(Printer& o, const TMap<MAP_P>* map) {
     CodomainColumns = DomainColumns,
   };
 
-  ISZ size = map->size, count = map->count;
+  ISZ size = map->total, count = map->count;
 
   o << Linef("\n+---\n| TMap<D") << sizeof(D) << ",IS" << CHA('0' + sizeof(ISZ))
     << "> size:" << size << " count:" << count << Linef("\n+---\n|  ")
@@ -189,7 +182,7 @@ template<MAP_A>
 ISZ TMapAdd(TMap<MAP_P>* map, D domain_value, ISZ codomain_mapping) {
   D_ASSERT(map);
   D_COUT("\n\nAdding:" << domain_value << "->" << codomain_mapping);
-  ISZ count = map->count, size = map->size;
+  ISZ count = map->count, size = map->total;
   if (count >= size) D_RETURNT(ISZ, -ErrorBooferOverflow);
   D  * domain   = TMapDomain<MAP_P>(map);
   ISZ* codomain = TMapCodomain<MAP_P>(domain, size);
@@ -260,7 +253,7 @@ ISZ TMapFind(const TMap<MAP_P>* map, const D& domain_member) {
   D_COUT("\nSearching for domain_member:" << domain_member);
 
   const D* domain = TMapDomain<MAP_P>(map);
-  ISZ count = map->count, size = map->size;
+  ISZ count = map->count, size = map->total;
   ISZ low = 0, mid = 0, high = count;
   while (low <= high) {
     mid = (low + high) >> 1;
@@ -302,7 +295,7 @@ inline void TMapRemapCodomain(TMap<MAP_P>* map, ISZ index, ISZ codomain_mapping)
 template<MAP_A>
 ISZ TMapRemove(TMap<MAP_P>* map, ISZ index) {
   if (index < 0 || index >= map->count) D_RETURNT(ISZ, -ErrorInvalidIndex);
-  ISZ size = map->size, count = map->count, zero = 0;
+  ISZ size = map->total, count = map->count, zero = 0;
   if (count == zero)
     if (--count == zero) {
       map->count = zero;
@@ -386,7 +379,7 @@ class AMap {
   inline ISZ SizeWords() { return AJT().SizeWords<TMap<MAP_P>>(); }
 
   /* Gets the size of the array in elements*/
-  inline ISZ Size() { return This()->size; }
+  inline ISZ Size() { return This()->total; }
 
   /* Gets the count of the mappings. */
   inline ISZ Count() { return This()->count; }

@@ -1,20 +1,14 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Slot.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
+#ifndef SCRIPT2_SLOT_DECL
+#define SCRIPT2_SLOT_DECL
 #include <_Config.h>
 #if SEAM >= SCRIPT2_CRABS
-#ifndef SCRIPT2_SLOT
-#define SCRIPT2_SLOT
-#include "BIn.hpp"
-#include "BOut.h"
-#include "Op.h"
 namespace _ {
+
+struct BIn;
+struct BOut;
+struct Op;
 
 /* A Slot in a Door in a Chinese Room to pass messages through.
 A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
@@ -22,7 +16,7 @@ Slot is similar to the Text class except that it introduces two more
 pointers for the (socket) origin and (data) origin of the ring socket and
 you may write packed data. */
 struct Slot {
-  CHA* origin,  //< First byte of the ring socket.
+  IUA* origin,  //< First byte of the ring socket.
      * start,   //< Start of the data in the ring socket.
      * stop,    //< Stop of the data in the ring socket.
      * end;     //< End of the ring socket.
@@ -43,9 +37,9 @@ struct Slot {
   @param size  The size of the ring socket in bytes. */
   inline BOL Set(IUW* socket, IUW size) {
     if (!socket) return true;
-    CHA* l_begin = TPtr<CHA>(socket);
+    IUA* l_begin = reinterpret_cast<IUA*>(socket);
     origin = origin = stop = l_begin;
-    stop = l_begin + size;
+    stop   = l_begin + size;
     return false;
   }
 
@@ -99,7 +93,7 @@ struct Slot {
   /* Writes a single  to the slot socket.
   @param message The  message to send.
   @return Nil upon success and an Error Operation upon failure. */
-  const Op* Write(const CHA* message);
+  const Op* Write(const IUA* message);
 
   /* Copies the contents of the target slot into the slot. */
   const Op* Write(Slot& target);

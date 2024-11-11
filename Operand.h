@@ -1,17 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Operand.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_OPERAND_DECL
 #define SCRIPT2_OPERAND_DECL
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
 #include "Slot.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 struct LIB_MEMBER Crabs;

@@ -1,17 +1,7 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Crabs.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "Crabs.h"
-#include "BSeq.h"
-#include "Clock.h"
-#include "Test.h"
+#if SEAM >= SCRIPT2_CRABS
+#include "Slot.h"
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
@@ -22,8 +12,8 @@ namespace _ {
 /* Used to return an erroneous result from a B-Input.
 @return Returns a Static Error Op Result.
 @param error The error type. */
-inline const Op* CrabsError(Crabs* crabs, Error error) {
-  D_COUT("\nCrabs " << STRError(error) << " Error!");
+inline const Op* CrabsError(Crabs* crabs, ERC error) {
+  D_COUT("\nCrabs " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
@@ -34,8 +24,8 @@ inline const Op* CrabsError(Crabs* crabs, Error error) {
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error. */
-inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
-  D_COUT("\nCrabs " << STRError(error) << " Error!");
+inline const Op* CrabsError(Crabs* crabs, ERC error, const ISC* header) {
+  D_COUT("\nCrabs " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
@@ -46,9 +36,9 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header) {
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error. */
-inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
+inline const Op* CrabsError(Crabs* crabs, ERC error, const ISC* header,
                             IUA offset) {
-  D_COUT("\nCrabs " << STRError(error) << " Error!");
+  D_COUT("\nCrabs " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
@@ -59,9 +49,9 @@ inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error. */
-inline const Op* CrabsError(Crabs* crabs, Error error, const ISC* header,
-                            IUA offset, CHA* address) {
-  D_COUT("\nCrabs " << STRError(error) << " Error!");
+inline const Op* CrabsError(Crabs* crabs, ERC error, const ISC* header,
+                            IUA offset, IUA* address) {
+  D_COUT("\nCrabs " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
@@ -70,9 +60,8 @@ IUW* CrabsBinAddress(Crabs* crabs) {
   return TPtr<IUW>(crabs) + crabs->header_size;
 }
 
-CHA* CrabsBoofer(Crabs* crabs) {
-  CHA* ptr = TPtr<CHA>(crabs);
-  return ptr + sizeof(Crabs);
+IUA* CrabsBoofer(Crabs* crabs) {
+  return TPtr<IUA>(crabs, sizeof(Crabs));
 }
 
 BIn* CrabsBIn(Crabs* crabs) {
@@ -95,11 +84,11 @@ Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_size, Operand* root,
   if (!socket) {
     return nullptr;
   }
-  if (boofer_size < Crabs::cMinBooferSize) {
+  if (boofer_size < Crabs::BooferSizeMin) {
     return nullptr;
   }
-  if (stack_size < cMinStaccSize) {
-    stack_size = cMinStaccSize;  //< Minimum stack size.
+  if (stack_size < Crabs::StackSizeMin) {
+    stack_size = Crabs::StackSizeMin;
   }
   if (unpacked_boofer == nullptr) {
     D_COUT("\nError: unpacked_boofer was nil!");
@@ -117,10 +106,10 @@ Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_size, Operand* root,
   ISC size = (boofer_size - sizeof(Crabs) - total_stack_size + 1) >> 1;
 
   //< >>1 to divide by 2
-  crabs->bout_state = cBOutStateDisconnected;
-  crabs->bin_state = cBInStateDisconnected;
+  crabs->bout_state = BOutStateDisconnected;
+  crabs->bin_state = BInStateDisconnected;
   crabs->stack_count = 1;
-  crabs->type = cNIL;
+  crabs->type = _NIL;
   crabs->stack_size = stack_size;
   crabs->num_states = 0;
   crabs->operand = nullptr;
@@ -147,32 +136,23 @@ Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_size, Operand* root,
 //    return crabs->type % 2 == 1;
 //}
 
-CHA* CrabsEndAddress(Crabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
+IUA* CrabsEndAddress(Crabs* crabs) { return BInEnd(CrabsBIn(crabs)); }
 
 const Op* CrabsReset(Crabs* crabs) { return 0; }
 
 IUA CrabsExitState(Crabs* crabs) {
-  // We are guaranteed crabs is not nil at this point.
-  // if (!crabs) {
-  //    return  CrabsError (CrabsBIn (crabs), cErrorImplementation);
-  //}
-  D_COUT("\nExiting " << STRBInStates()[crabs->bin_state]
-                      << " state back to the state:"
-                      << STRBInStates()[crabs->last_bin_state] << '.');
+  D_COUT("\nExiting " << TBInStates<CHR>(crabs->bin_state) << 
+         " state back to the state:" <<
+         TBInStates<CHR>(crabs->last_bin_state) << '.');
   IUA state = crabs->last_bin_state;
   crabs->bin_state = state;
   return state;
 }
 
 const Op* CrabsSetState(Crabs* crabs, BInState state) {
-  // We are guaranteed crabs is not nil at this point.
-  // if (!crabs) {
-  //    return  CrabsError (CrabsBIn (crabs), cErrorImplementation);
-  //}
-  if (state == cBInStateLocked) {
-    return CrabsError(crabs, cErrorObjLocked);
-  }
-  D_COUT("\nEntering " << BInState[state] << " state:" << state);
+  if (state == BInStateLocked)
+    return CrabsError(crabs, ErrorReadOnly);
+  D_COUT("\nEntering " << TBInStates<CHR>(state) << " state:" << state);
   crabs->bin_state = state;
   return nullptr;
 }
@@ -180,9 +160,9 @@ const Op* CrabsSetState(Crabs* crabs, BInState state) {
 const Op* CrabsEnterState(Crabs* crabs, BInState state) {
   // We are guaranteed crabs is not nil at this point.
   // if (!crabs) {
-  //    return  CrabsError (CrabsBIn (crabs), cErrorImplementation);
+  //    return  CrabsError (CrabsBIn (crabs), ErrorImplementation);
   //}
-  D_COUT("\nEntering " << BInState()[state] << " state:" << state);
+  D_COUT("\nEntering " << TBInStates<CHR>(state) << " state:" << state);
   crabs->last_bin_state = crabs->bin_state;
   crabs->bin_state = state;
   return nullptr;
@@ -192,16 +172,16 @@ IUA CrabsStreamBOut(Crabs* crabs) { return BOutStreamByte(CrabsBOut(crabs)); }
 
 const Op* Push(Crabs* crabs, Operand* operand) {
   if (!crabs) {
-    return CrabsError(crabs, cErrorImplementation);
+    return CrabsError(crabs, ErrorImplementation);
   }
   if (!operand) {
-    return CrabsError(crabs, cErrorInvalidOperand);
+    return CrabsError(crabs, ErrorInvalidOperand);
   }
   D_COUT("\nPushing " << operand->Star('?', nullptr)->name
                       << " onto the stack");
   ISC stack_count = crabs->stack_count;
   if (stack_count >= crabs->stack_size) {
-    return CrabsError(crabs, cErrorStackOverflow);
+    return CrabsError(crabs, ErrorStackOverflow);
   }
   CrabsStack(crabs)[stack_count - 1] = crabs->operand;
   crabs->operand = operand;
@@ -215,7 +195,7 @@ const Op* Push(Crabs* crabs, Operand* operand) {
 const Op* Pop(Crabs* crabs) {
   ISC stack_count = crabs->stack_count;
   if (stack_count == 0) {  // This should not happen.
-    return CrabsError(crabs, cErrorInvalidOperand);
+    return CrabsError(crabs, ErrorInvalidOperand);
   }
   if (stack_count == 1) {
     // We ever pop off the root.
@@ -233,16 +213,15 @@ const Op* Pop(Crabs* crabs) {
 #endif
     return nullptr;
 }
-
 const Op* CrabsScanBIn(Crabs* crabs) {
   if (!crabs) {
-    return CrabsError(crabs, cErrorImplementation);
+    return CrabsError(crabs, ErrorImplementation);
   }
 
+  DTB type;          //< Current type.
   ISC size,          //< Size of the ring socket.
       space,         //< Space left in the right socket.
       length,        //< Length of the ring socket data.
-      type,          //< Current type.
       bytes_left,    //< Number of bytes left to scan.
       array_type,    //< The type of array.
       shift_bits,    //< Number of bytes left to scan.
@@ -251,12 +230,12 @@ const Op* CrabsScanBIn(Crabs* crabs) {
       b;             //< Current IUA being verified.
   IUB hash,          //< Expected hash of the B-Sequence.
       found_hash;    //< Found B-Sequence hash.
-  TMD timestamp,     //< Last time when the expression ran.
+  ISD timestamp,     //< Last time when the expression ran.
       delta_t;       //< Time delta between the last timestamp.
   const Op* op;      //< Current operation.
   Operand* operand;  //< The operand.
   BIn* bin;          //< BIn.
-  CHA *bin_begin,    //< Beginning of the ring socket.
+  IUA *bin_begin,    //< Beginning of the ring socket.
       *bin_start,    //< Start of the ring socket data.
       *bin_stop,     //< Stop of the ring socket data.
       *bin_end,      //< End of the ring socket.
@@ -267,8 +246,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
 
   slot_begin = crabs->slot.origin;
   slot_start = crabs->slot.origin;
-  slot_stop = crabs->slot.stop;
-  slot_end = crabs->slot.stop;
+  slot_stop  = crabs->slot.stop;
+  slot_end   = crabs->slot.stop;
 
   const Op* result;  //< Result of the SScan.
   const ISC* header = crabs->header;
@@ -304,14 +283,13 @@ const Op* CrabsScanBIn(Crabs* crabs) {
   for (; length != 0; --length) {
     b = *bin_start;
     *slot_start++ = b;
-    D_COUT(Linef('=') << "\n"
-                      << length << ":\'" < < < <
-           "\' state:\'" << STRBInStates()[bin_state] << "\'" << Linef('='));
+    //D_COUT(Linef('=') << "\n"  << length << ":\'" <<
+    //       "\' state:\'" << TBInStates<CHR>(bin_state) << '\'' << Linef(' = '));
 
     if (++bin_start >= bin_end) bin_start -= size;
     // Process the rest of the bytes in a loop to reduce setup overhead.
     switch (bin_state) {
-      case cBInStateAddress: {
+      case BInStateAddress: {
         hash = HashIUB(b, hash);
         D_COUT("\nhash:0x%x" << Hexf(hash));
         // When verifying an address, there is guaranteed to be an
@@ -327,8 +305,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         if (b == op->close) {
           Pop(crabs);
           crabs->bytes_left = 1;
-          CrabsSetState(crabs, cBInStateVerifyingHash);
-          bin_state = cBInStateVerifyingHash;
+          CrabsSetState(crabs, BInStateVerifyingHash);
+          bin_state = BInStateVerifyingHash;
           break;
         }
         operand = crabs->operand;
@@ -345,17 +323,17 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           // optimized.
           // result = crabs->result;
           // if (result == nullptr) {
-          //    return Result (crabs, cErrorInvalidOperand);
+          //    return Result (crabs, ErrorInvalidOperand);
           //}
           // CrabsPushScan (crabs, crabs->operand);
           // Clear the socket and return.
           // CrabsClear (crabs); //< Do I really need to clear?
           // return crabs->result;
-          return CrabsForceDisconnect(crabs, cErrorInvalidOperand);
+          return CrabsForceDisconnect(crabs, ErrorInvalidOperand);
         }
         const ISC* params = op->in;
         IUW num_ops = IUW(params);
-        if (num_ops > cParamsMax) {
+        if (num_ops > CrabsParamsMax) {
           // It's an Op.
           // The software implementer pushes the Op on the stack.
 
@@ -364,31 +342,31 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           result = CrabsScanHeader(crabs, params);
           if (result) {
             D_COUT("Crabs::Error reading address.");
-            return CrabsForceDisconnect(crabs, cErrorImplementation);
+            return CrabsForceDisconnect(crabs, ErrorImplementation);
           }
 
           operand = crabs->operand;
           if (!operand) {
             D_COUT("\nNull operand found!");
-            return CrabsForceDisconnect(crabs, cErrorInvalidOperand);
+            return CrabsForceDisconnect(crabs, ErrorInvalidOperand);
           }
           header = op->in;
           crabs->params_left = *header;
           crabs->header = header;        //< +1 to bypass the number_ of params
           crabs->header_start = header;  //< Used to utf current header.
-          CrabsEnterState(crabs, cBInStatePackedArgs);
-          bin_state = cBInStatePackedArgs;
+          CrabsEnterState(crabs, BInStatePackedArgs);
+          bin_state = BInStatePackedArgs;
           type = *(++crabs->header);  //< Setup to read first type.
-          D_COUT("\nNext AsciiType to scan:\'"
-                 << STAAType(type) << "\' with alignment "
-                 << TypeAlign(slot_start, type) << '.');
-          slot_start = TypeAlignUpPointer<CHA>(slot_start, (ISC)type);
+          auto align_mask = ATypeAlignMask(type);
+          D_COUT("\nNext AsciiType to scan:\'" <<
+                 ATypef(type) << "\'.");
+          slot_start = TPtrUp<IUA>(slot_start, (ISC)type);
           break;
         }
         op = operand->Star(b, crabs);
         break;
       }
-      case cBInStatePackedArgs: {
+      case BInStatePackedArgs: {
         // In this state, a procedure has been called to scan on a valid
         // operand. This state is responsible for loading the next
         // header argument and checking for the stop of the procedure
@@ -403,49 +381,49 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         D_COUT("\nhash:" << Hexf(hash));
 
         // Switch to next state
-        if (type <= cADR) {
-          if (type < cADR) {  // Address type.
+        if (type <= _ADR) {
+          if (type < _ADR) {  // Address type.
             D_COUT("\nScanning address.");
-            CrabsError(crabs, cErrorInvalidType);
-            CrabsEnterState(crabs, cBInStateLocked);
-            bin_state = cBInStateLocked;
+            CrabsError(crabs, ErrorInvalidType);
+            CrabsEnterState(crabs, BInStateLocked);
+            bin_state = BInStateLocked;
             break;
           }
-          CrabsEnterState(crabs, cBInStateAddress);
-          bin_state = cBInStateAddress;
+          CrabsEnterState(crabs, BInStateAddress);
+          bin_state = BInStateAddress;
           break;
 
         } else if (type == STR_) {  // UTF-8/ASCII  type.
           // Read the max number_ of chars off the header.
           bytes_left = *(++crabs->header);
           D_COUT("\nScanning STR with max length " << bytes_left);
-          CrabsEnterState(crabs, cBInStatePackedUTF8);
-          bin_state = cBInStatePackedUTF8;
+          CrabsEnterState(crabs, BInStatePackedUTF8);
+          bin_state = BInStatePackedUTF8;
           break;
-        } else if (type < cFPD) {  // Plain-old-data type.
-          bytes_left = TypeFixedSize(type);
+        } else if (type < _FPD) {  // Plain-old-data type.
+          bytes_left = ATypeSizeOfPOD(type);
           D_COUT("\nScanning POD with bytes_left:" << bytes_left);
           if (bytes_left == 1) {
             // No need to enter a state because there is only one
             // IUA to parse and we already have the IUA loaded.
             D_COUT("\nDone scanning without state change  for \""
-                   << STAAType(type) << '\"');
+                   << ATypef(type) << '\"');
             // Setup to read the next type.
             type = *(++crabs->header);
             D_COUT("\nNext AsciiType to scan:\'"
-                   << STAAType(type)
-                   << "\' with alignment:" << TypeAlign(slot_start, type));
-            slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
+                   << ATypef(type)
+                   /*<< "\' with alignment:" << TypeAlign(slot_start, type)*/);
+            slot_start = TPtrUp<IUA>(slot_start, ISC(type));
             break;
           }
-          CrabsEnterState(crabs, cBInStatePackedPod);
-          bin_state = cBInStatePackedPod;
+          CrabsEnterState(crabs, BInStatePackedPOD);
+          bin_state = BInStatePackedPOD;
           break;
-        } else if (type < UVI) {  // Varint type.
+        } else if (type < _VUI) {  // Varint type.
           D_COUT("\nScanning Varint.");
-          bytes_left = TypeFixedSize(type);
-          CrabsEnterState(crabs, cBInStatePackedVarint);
-          bin_state = cBInStatePackedVarint;
+          bytes_left = ATypeSizeOfPOD(type);
+          CrabsEnterState(crabs, BInStatePackedVarint);
+          bin_state = BInStatePackedVarint;
           break;
           /*
           } else if (type == STB) { // UTF-16  type.
@@ -474,86 +452,82 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         } else {  // It's not a POD type.
           D_COUT("\nScanning AArray.");
           // Multi-dimension arrays are parsed just like any other
-          // cOBJ.
+          // _OBJ.
           array_type &= 0x3;
           bytes_left = b;
           if (array_type == 0) {
             // We don't need to enter a state here because we
             // already have the bytes. :-)
-            bin_state = cBInStatePackedPod;
+            bin_state = BInStatePackedPOD;
             break;
           } else if (array_type == 1) {
             bytes_shift = 0;
             shift_bits = 16;
-            CrabsEnterState(crabs, cBInStatePackedObj);
-            bin_state = cBInStatePackedObj;
+            CrabsEnterState(crabs, BInStatePackedObj);
+            bin_state = BInStatePackedObj;
             break;
           } else if (array_type == 2) {
             bytes_shift = 0;
             shift_bits = 32;
-            CrabsEnterState(crabs, cBInStatePackedObj);
-            bin_state = cBInStatePackedObj;
+            CrabsEnterState(crabs, BInStatePackedObj);
+            bin_state = BInStatePackedObj;
             break;
           } else {  //< array_type == 3
             bytes_shift = 0;
             shift_bits = 64;
-            CrabsEnterState(crabs, cBInStatePackedObj);
-            bin_state = cBInStatePackedObj;
+            CrabsEnterState(crabs, BInStatePackedObj);
+            bin_state = BInStatePackedObj;
             break;
           }
         }
         break;
       }
-      case cBInStatePackedUTF8: {
+      case BInStatePackedUTF8: {
         if (bytes_left == 0) {
-          CrabsError(crabs, cErrorTextOverflow,
+          CrabsError(crabs, ErrorTextOverflow,
                      const_cast<const ISC*>(crabs->header), 0, bin_start);
           break;
         }
         hash = HashIUB(b, hash);
-        D_COUT("\nhash:");
-        D_COUT_HEX(hash);
+        D_COUT("\nhash:" << Hexf(hash));
         // Hash IUA.
         // Check if CHA terminated.
         if (b == 0) {
           // Check if there is another argument to scan.
           CrabsExitState(crabs);
-          bin_state = cBInStatePackedArgs;
-          //< We can't go back from cOBJ to POD for Text Types.
+          bin_state = BInStatePackedArgs;
+          //< We can't go back from _OBJ to POD for Text Types.
           // Setup to read next type.
           type = *(++crabs->header);
           if (crabs->params_left == 0) {
-            CrabsSetState(crabs, cBInStateAddress);
-            bin_state = cBInStateAddress;
+            CrabsSetState(crabs, BInStateAddress);
+            bin_state = BInStateAddress;
             break;
           }
           D_COUT("\nNext AsciiType to scan:\'"
-                 << STAAType(type)
-                 << "\' with alignment:" << TypeAlign(slot_start, type));
-          slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
+                 << ATypef(type)
+                 << "\' with alignment:"/* << TypeAlign(slot_start, type)*/);
+          slot_start = TPtrUp<IUA>(slot_start, ISC(type));
           break;
         }
         --bytes_left;
         break;
       }
-      case cBInStatePackedUTF16: {
+      case BInStatePackedUTF16: {
         hash = HashIUB(b, hash);
-        D_COUT("\nhash:");
-        D_COUT_HEX(hash));
+        D_COUT("\nhash:0x" << Hexf(hash));
         CrabsExitState(crabs);
         break;
       }
-      case cBInStatePackedUTF32: {
+      case BInStatePackedUTF32: {
         hash = HashIUB(b, hash);
-        D_COUT("\nhash:");
-        D_COUT_HEX(hash);
+        D_COUT("\nhash:0x" << Hexf(hash));
         CrabsExitState(crabs);
         break;
       }
-      case cBInStatePackedVarint: {
+      case BInStatePackedVarint: {
         hash = HashIUB(b, hash);
-        D_COUT("\nhash:");
-        D_COUT_HEX(hash);
+        D_COUT("\nhash:0x" << Hexf(hash));
         // When verifying a varint, there is a max number_ of bytes for
         // the type (3, 5, or 9) but the varint may be complete before
         // this number_ of bytes. We're just basically counting down and
@@ -573,8 +547,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           if ((b >> 7) != 1) {
             const ISC* header = const_cast<const ISC*>(crabs->header);
 
-            CrabsEnterState(crabs, cBInStateHandlingError);
-            return CrabsError(crabs, cErrorVarintOverflow, header, 0,
+            CrabsEnterState(crabs, BInStateHandlingError);
+            return CrabsError(crabs, ErrorVarintOverflow, header, 0,
                               bin_start);
           }
 
@@ -584,32 +558,33 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           D_COUT("");
           // Setup to read the next type.
           type = *(++header);
+          auto align_mask = ATypeAlignMask(type);
           D_COUT(
               "\nDone scanning varint: "
               "\nNext AsciiType to scan:"
-              << STAAType(type)
-              << " with alignment:" << TypeAlign(slot_start, type));
-          slot_start = TAlignUpPointer<>(slot_start, (ISC)type);
+              << ATypef(type)
+              << " with alignment:"/* << AlignUp(slot_start, align_mask)*/);
+          slot_start = TPtrUp<IUA>(slot_start, ISC(type));
         }
         --bytes_left;
         break;
       }
-      case cBInStatePackedObj: {
+      case BInStatePackedObj: {
         hash = HashIUB(b, hash);
-        D_COUT("\nhash:" << PrintHex(hash));
+        D_COUT("\nhash:" << Hexf(hash));
         if (bytes_shift >= shift_bits) {
           // Done shifting.
           D_COUT("\nLoading object of size:" << bytes_left);
           CrabsExitState(crabs);
-          CrabsEnterState(crabs, cBInStatePackedPod);
-          bin_state = cBInStatePackedPod;
+          CrabsEnterState(crabs, BInStatePackedPOD);
+          bin_state = BInStatePackedPOD;
           break;
         }
         bytes_left &= ((ISC)b) << bytes_shift;
         shift_bits += 8;
         break;
       }
-      case cBInStateVerifyingHash: {
+      case BInStateVerifyingHash: {
         if (crabs->bytes_left != 0) {  // One more IUA to load.
           crabs->last_byte = b;
           crabs->bytes_left = 0;
@@ -619,11 +594,9 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         found_hash = found_hash << 8;
         found_hash |= crabs->last_byte;
         if (hash != found_hash) {
-          D_COUT("\nError: expecting hash:");
-          D_COUT_HEX(hash);
-          D_COUT(" and found ");
-          D_COUT_HEX(found_hash);
-          return CrabsForceDisconnect(crabs, cErrorInvalidHash);
+          D_COUT("\nError: expecting hash:0x" << Hexf(hash));
+          D_COUT(" and found " << Hexf(found_hash));
+          return CrabsForceDisconnect(crabs, ErrorInvalidHash);
         }
         hash = PRIME_LARGEST_IUB;  //< Reset hash to largest 16-bit prime.
         D_COUT(
@@ -631,35 +604,35 @@ const Op* CrabsScanBIn(Crabs* crabs) {
             "\nResetting hash.\n");
         break;
       }
-      case cBInStateHandlingError: {
+      case BInStateHandlingError: {
         break;
       }
-      case cBInStateDisconnected: {
+      case BInStateDisconnected: {
         if (b) {
-          CrabsSetState(crabs, cBInStateHandlingError);
-          bin_state = cBInStateHandlingError;
+          CrabsSetState(crabs, BInStateHandlingError);
+          bin_state = BInStateHandlingError;
         } else {
-          CrabsSetState(crabs, cBInStateAck);
-          bin_state = cBInStateAck;
+          CrabsSetState(crabs, BInStateAck);
+          bin_state = BInStateAck;
         }
         break;
       }
-      case cBInStateAck: {
+      case BInStateAck: {
         if (b) {
-          CrabsSetState(crabs, cBInStateHandlingError);
-          bin_state = cBInStateHandlingError;
+          CrabsSetState(crabs, BInStateHandlingError);
+          bin_state = BInStateHandlingError;
         } else {
           D_COUT("\nResetting hash.");
-          hash = kPrimeLargestUI2;  //< Reset hash to largest 16-bit prime.
+          hash = TPrimeMaxUnigned<IUB>();  //< Reset hash to largest 16-bit prime.
           crabs->operand = crabs->root;
           crabs->result = nullptr;
-          bin_state = cBInStateAddress;
-          CrabsSetState(crabs, cBInStateAddress);
+          bin_state = BInStateAddress;
+          CrabsSetState(crabs, BInStateAddress);
           D_COUT("\nRoot scope:\"" << OperandName(crabs->operand) << '\"');
         }
         break;
       }
-      case cBInStateLocked: {
+      case BInStateLocked: {
         D_COUT("Locked");
         break;
       }
@@ -674,16 +647,15 @@ const Op* CrabsScanBIn(Crabs* crabs) {
 
           // Setup to read the next type.
           type = *(++header);
-          D_COUT("\nNext AsciiType to scan:\'" < < < <
-                     "\' with alignment:" < < < < "",
-                 STAAType(type), TypeAlign(slot_start, type));
-          slot_start = TypeAlignUpPointer<>(slot_start, (ISC)type);
+          auto align_mask = ATypeAlignMask(type);
+          D_COUT("\nNext AsciiType to scan:\'" << ATypef(type) <<
+                 " align_mask:" << align_mask);
+          slot_start = TPtrUp<IUA>(slot_start, align_mask);
           break;
         }
         --bytes_left;
         // b = input->Pull ();
-        D_COUT("\nLoading next IUA:");
-        D_COUT_HEX(b);
+        D_COUT("\nLoading next IUA:" << Hexf(b));
         hash = HashIUB(b, hash);
         *bin_start = b;
         ++bin_start;
@@ -694,7 +666,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
   //
   crabs->hash = hash;
   crabs->bytes_left = bytes_left;
-  bin->origin = (ISC)SocketSize(bin_begin, bin_start);
+  bin->origin = TDelta<ISC>(bin_begin, bin_start);
   return nullptr;
 }
 
@@ -707,7 +679,7 @@ BOL CrabsContains(Crabs* crabs, void* address) {
 const Op* CrabsScanHeader(Crabs* crabs, const ISC* header) {
   if (crabs->stack_count >= crabs->stack_size) {
     // Handle overflow cleanup:
-    return CrabsError(crabs, cErrorStackOverflow, header);
+    return CrabsError(crabs, ErrorStackOverflow, header);
   }
 
   return 0;
@@ -726,7 +698,7 @@ void CrabsClose(Crabs* crabs) {
 void CrabsCancel(Crabs* crabs) {
   D_COUT("\nCanceling expression.");
   crabs->stack_count = 1;
-  crabs->bin_state = cBInStateAddress;
+  crabs->bin_state = BInStateAddress;
   // CrabsPush (crabs->root);
 }
 
@@ -735,20 +707,22 @@ void CrabsClear(Crabs* crabs) {
 
   BIn* bin = CrabsBIn(crabs);
 
-  CHA *origin = BInBegin(bin), *stop = origin + bin->size,
-      *origin = origin + bin->origin, *stop = origin + bin->stop;
+  IUA *begin = BInBegin(bin),
+      *end = begin + bin->size,
+      *origin = begin + bin->origin,
+      *stop = begin + bin->stop;
 
   // ISC boofer_space = SlotSpace (origin, stop, size);
 
-  if (origin == stop) return;  //< Nothing to do.
-  if (origin > stop) {
-    RAMFill(origin, stop - origin);
-    RAMFill(origin, origin - origin);
+  if (begin == end) return;  //< Nothing to do.
+  if (begin > end) {
+    RAMFill(begin, end - begin);
+    RAMFill(begin, begin - begin);
     return;
   }
-  RAMFill(origin, stop - origin);
-  bin->origin = (ISC)Size(crabs, origin);
-  bin->stop = (ISC)Size(crabs, origin + 1);
+  RAMFill(begin, end - begin);
+  bin->origin = TDelta< ISC>(crabs, begin);
+  bin->stop = TDelta<ISC>(crabs, begin + 1);
 }
 
 void CrabsRingBell(Crabs* crabs, const CHA* address) {
@@ -759,8 +733,8 @@ void CrabsAckBack(Crabs* crabs, const CHA* address) {
   BOutAckBack(CrabsBOut(crabs), address);
 }
 
-const Op* CrabsForceDisconnect(Crabs* crabs, Error error) {
-  crabs->bin_state = cBInStateDisconnected;
+const Op* CrabsForceDisconnect(Crabs* crabs, ERC error) {
+  crabs->bin_state = BInStateDisconnected;
   return CrabsError(crabs, error);
 }
 
@@ -769,25 +743,26 @@ const Op* CrabsQuery(Crabs* crabs, const Op& op) {
     void* args[2];
     IUW num_ops = (IUW)op.in, first_op = (IUW)op.out;
     // @todo Write params to crabs!
-    static const ISC* header = Params<5, STR_, cOpNameLengthMax, UVI, UVI, STR_,
-                                      cOpDescriptionLengthMax>();
+    static const ISC* header = 
+      TParams<5, STR_, CROpNameLengthMax, _VUI, _VUI, _STR,
+              CROpDescriptionLengthMax>();
     return BOutWrite(CrabsBOut(crabs), header,
                      Args(args, op.name, &num_ops, &first_op, op.description));
   }
   return &op;
 }
 
-CHA* CrabsBaseAddress(BIn* bin) {
-  return TPtr<CHA>(bin) + sizeof(BIn);
+IUA* CrabsBaseAddress(BIn* bin) {
+  return TPtr<IUA>(bin) + sizeof(BIn);
 }
 
-ISC CrabsSpace(BIn* bin) {
+ISW CrabsSpace(BIn* bin) {
   if (!bin) {
     return ~0;
   }
 
-  CHA* origin = CrabsBaseAddress(bin);
-  return (ISC)SlotSpace(origin + bin->origin, origin + bin->stop, bin->size);
+  IUA* origin = CrabsBaseAddress(bin);
+  return ISW(SlotSpace(origin + bin->origin, origin + bin->stop, bin->size));
 }
 
 IUW* CrabsBaseAddress(void* ptr, ISC rx_tx_offset) {
@@ -806,19 +781,20 @@ CHA* CrabsEndAddress(BIn* bin) {
 const Op* CrabsQuery(Crabs* crabs, const Op* op) {
   if (crabs) {
     if (!op) {
-      return CrabsError(crabs, cErrorImplementation);
+      return CrabsError(crabs, ErrorImplementation);
     }
     void* args[2];
     return BOutWrite(CrabsBOut(crabs),
-                     Params<5, STR_, cOpNameLengthMax, UVI, UVI, STR_,
-                            cOpDescriptionLengthMax>(),
+                     TParams<5, STR_, CROpNameLengthMax, _VUI, _VUI, _STR,
+                            CROpDescriptionLengthMax>(),
                      Args(args, op->name, op->in, op->out, op->description));
   }
   return op;
 }
 
-#if USING_SCRIPT2_TEXT
-UTF1& PrintCrabsStack(UTF1& utf, Crabs* crabs) {
+#if USING_SCRIPT2_TEXT == YES_0
+template<typename Printer>
+Printer& PrintCrabsStack(Printer & o, Crabs* crabs) {
   A_ASSERT(crabs);
 
   ISC i, stack_count;
@@ -827,41 +803,41 @@ UTF1& PrintCrabsStack(UTF1& utf, Crabs* crabs) {
   Operand** stack = CrabsStack(crabs);
 
   stack_count = crabs->stack_count;
-  utf << "\nOperand stack_count:" << stack_count;
+  o << "\nOperand stack_count:" << stack_count;
 
   if (stack_count == 1) {
-    return utf << "\nStack Item 1: " << OperandName(crabs->root);
+    return o << "\nStack Item 1: " << OperandName(crabs->root);
   }
   for (i = 0; i < stack_count - 1; ++i) {
-    utf << "\nStack Item " << i + 1 << ":\"";
+    o << "\nStack Item " << i + 1 << ":\"";
     operand = stack[i];
     op = operand->Star('?', nullptr);
-    utf << op->name << '\"';
+    o << op->name << '\"';
   }
   op = crabs->operand->Star('?', nullptr);
-  return utf << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
+  return o << "\nStack Item " << i + 1 << ":\"" << op->name << "\"";
 }
 
 template<typename Printer>
 Printer& Print(Printer& o, Crabs* crabs) {
-  o << Line('~', 80) << "\nStack:    " << Hexf(crabs) << '\n'
-    << Line('_', 80) << "\nbytes_left : " << crabs->bytes_left
+  o << Linef('~', 80) << "\nStack:    " << Hexf(crabs) << '\n'
+    << Linef('_', 80) << "\nbytes_left : " << crabs->bytes_left
     << "\nheader_size: " << crabs->header_size
     << "\nstack_count: " << crabs->stack_count
     << "\nstack_size : " << crabs->stack_size
-    << "\nbin_state  : " << BInStateStrings()[crabs->bin_state]
-    << "\nbout_state : " << BOutStateStrings()[crabs->bout_state]
+    << "\nbin_state  : " << BInStates(crabs->bin_state)
+    << "\nbout_state : " << BOutStates(crabs->bout_state)
     << "\nnum_states : " << crabs->num_states
-    << "\nheader_size: " << crabs->header_size << Line('-', 80)
-    << crabs->operand << "\nheader     : " << BSeq(crabs->header_start)
-    << Line('-', 80);
-  PrintCrabsStack(utf, crabs);
-  utf << Line('~', 80);
-  return utf;
+    << "\nheader_size: " << crabs->header_size << Linef('-', 80)
+    << crabs->operand << "\nheader     : ";
+  TBSeqPrint<Printer>(o, crabs->header_start);
+  o << Linef('-', 80);
+  PrintCrabsStack(o, crabs);
+  o << Linef('~', 80);
+  return o;
 }
 
 #endif
-
 }  //< namespace _
 
 #endif

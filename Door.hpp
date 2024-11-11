@@ -1,16 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Door.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
-#ifndef SCRIPT2_DOOR
-#define SCRIPT2_DOOR
+#ifndef SCRIPT2_DOOR_DECL
+#define SCRIPT2_DOOR_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
+#if SEAM >= SCRIPT2_ROOM
 #include "Crabs.h"
 #include "Slot.h"
 #include "Stack.hpp"
@@ -40,34 +33,29 @@ connection to multiple systems over a WiFi connection.
 
 @endcode
 */
-template<ISC cDoorCount_, ISC cSlotSizeDefault_>
+template<typename ISZ>
 class TDoor : public Operand {
  public:
   enum {
-    cDoorCount = cDoorCount_,              //< Initial (or static) Door count.
-    cSlotSizeDefault = cSlotSizeDefault_,  //< Default.
+    DoorCount = DoorTotal_,              //< Initial (or static) Door count.
+    SlotSizeDefault = SlotSizeDefault_,  //< Default.
   };
 
-  typedef enum Errors {
-    cErrorInvalidOp = 0,   //< Error code for invalid operation.
-    cErrorImplementation,  //< Error code for an unkown implementation error.
-  } Error;
-
   enum {
-    cMinDoorSize = 128,  //< The min and default size of the door socket.
+    DoorBytesMin = 128,  //< The min and default size of the door socket.
   };
 
   /* A door in a Chinese room. */
   TDoor(const CHA* roomName = nullptr, IUW* socket = nullptr,
-        IUW bytes = cMinDoorSize) {
+        IUW bytes = DoorBytesMin) {
     if (!socket) {
-      if (bytes < cMinDoorSize) {
-        bytes = cMinDoorSize;
+      if (bytes < DoorBytesMin) {
+        bytes = DoorBytesMin;
       }
     } else {
-      if (bytes < kMinDoorSize) {
+      if (bytes < DoorBytesMin) {
         // @todo insert error code here
-        D_COUT("\nError: Door bytes < kMinDoorSize!");
+        D_COUT("\nError: Door bytes < DoorBytesMin!");
         return;
       }
     }
@@ -113,7 +101,7 @@ class TDoor : public Operand {
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(Crabs* crabs) {
-    TMatrix<ISC, ISC, ISC>* slots = slots_;
+    TSTack<ISZ>* slots = slots_;
     ISC scan_total = scan_total_;
     for (ISC i = 0; i < slots->Count(); ++i) {
       BIn* bin = Slot(i);
@@ -128,7 +116,7 @@ class TDoor : public Operand {
 
   /* Script2 operations. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
-    static const Op cThis = {
+    static const Op This = {
       "Door",
       OpFirst('A'),
       OpFirst(ASizeCodef(slots_->count)),
@@ -142,7 +130,7 @@ class TDoor : public Operand {
       nullptr
     };
     if (index == '?') {
-      return CrabsQuery(crabs, cThis);
+      return CrabsQuery(crabs, This);
     }
     index -= ' ';
     if (((ISC)index) >= slots_->count) {
@@ -152,11 +140,12 @@ class TDoor : public Operand {
   }
 
  private:
-  ISC bytes_,                 //< Door size in bytes.
-      scan_total_;             //< Max bytes to pull throught the slot.
-  IUW* begin_;                     //< Pointer to dynamic socket.
-  TMatrix<ISC, ISC, ISC>* slots_;  //< Slots in the door.
-  CBIn* OffsetToBIn(ISC offset) {
+  ISN  bytes_,          //< Door size in bytes.
+       scan_total_;     //< Max bytes to pull throught the slot at once.
+  IUW* begin_;          //< Pointer to dynamic socket.
+  TStack<ISZ>* slots_;  //< Slots in the door.
+
+  TBIn<ISZ>* OffsetToBIn(ISC offset) {
     return TPtr<CBIn>(IUW(this) + offset);
   }
 };

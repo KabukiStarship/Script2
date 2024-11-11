@@ -48,7 +48,7 @@ There are 5 classes of types of B-Sequence parameters: types with a fixed POD si
         v   v       v               v */
    Foo <4, STR:32, ISA, ISB, ISC>:<NIL>
    Bar <1, STR:32>:<3, ISA, ISB, ISC>
-   FooBar <DIC4, IUB>:<NIL>
+   FooBar <DIC, IUD>:<NIL>
 /*          ^     ^
             |     |
             |     +----- An 16-bit unsigned integer.

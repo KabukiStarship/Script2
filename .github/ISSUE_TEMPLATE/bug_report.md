@@ -5,8 +5,6 @@ title: ''
 labels: ''
 assignees: ''
 ---
-# Bug
-
 ## Problem
 
 The bug I am reporting is...

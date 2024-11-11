@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/06.Stack.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_STACK
 #include "../Stack.hpp"
 using namespace ::_;
@@ -74,7 +67,7 @@ static const CHA* Stack(const CHA* args) {
     OffsetMax = 2 * ALUSize,
     TestByteCount = 256,
     BooferSizeBytes = TestByteCount + 2 * OffsetMax,
-    BooferSizeWords = BooferSizeBytes >> ALUSizeLog2,
+    BooferSizeWords = BooferSizeBytes >> WordSizeLog2,
   };
   IUW source[BooferSizeWords],
       destination[BooferSizeWords + OffsetMax];

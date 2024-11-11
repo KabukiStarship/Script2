@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Uniprinter.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_STRINGF_CODE
 #define SCRIPT2_STRINGF_CODE
@@ -1084,7 +1077,7 @@ const CHT* TSTRNL() {
 
 template<typename CHT = CHR>
 const CHT* TSTRLinef() {
-  static const CHT kString[] = { '\n', '\n', '-', '-', '-', '\n', NIL };
+  static const CHT kString[] = { '\n', '\n', '-', '-', '-', '\n', _NIL };
   return kString;
 }
 
@@ -1288,7 +1281,7 @@ const CHT* TSTREmpty() {
 // String the reads "Error:".
 template<typename CHT = CHR>
 const CHT* TSTRError() {
-  static const CHT kString[] = { '\n', 'E', 'r', 'r', 'o', 'r', ':', NIL };
+  static const CHT kString[] = { '\n', 'E', 'r', 'r', 'o', 'r', ':', _NIL };
   return kString;
 }
 
@@ -1528,7 +1521,7 @@ CHT* TSTREquals(CHT* cursor, CHT* stop, const CHT* query) {
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
 @param cursor  The first CHT in the boofer.
-@desc A s is defined as empty if it is NIL or all whitespace. */
+@desc A s is defined as empty if it is _NIL or all whitespace. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(const CHT* cursor) {
   if (!cursor) return false;
@@ -1543,7 +1536,7 @@ BOL TSTRIsntEmpty(const CHT* cursor) {
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
 @param cursor  The first CHT in the boofer.
-@desc A s is defined as empty if it is NIL or all whitespace. */
+@desc A s is defined as empty if it is _NIL or all whitespace. */
 template<typename CHT = CHR>
 BOL TSTRIsntEmpty(CHT* cursor) {
   return TSTRIsntEmpty<CHT>(TPtr<const CHT>(cursor));

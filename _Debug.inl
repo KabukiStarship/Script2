@@ -1,18 +1,8 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Debug.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "_Undef.inl"
 //
 #include "Test.hpp"
-
-// @todo Add OSERT: Optional Assert.
-
+// @todo Add O_ marcors for optional tests.
 #define D_THIS 1
 #define A_TEST_BEGIN\
   ::_::COut cout;   \
@@ -43,7 +33,7 @@ the MPL was not distributed with this file, You can obtain one at
   ::_::TBookPrint<::_::COut, CHT, ISZ, ISY, DT>(StdOut(), item)
 #define D_COUT_MAP(item) ::_::TMapPrint<::_::COut, D, ISZ>(StdOut(), item)
 #define D_COUT_DIC(item) \
-  ::_::TDicPrint<::_::COut, CHT, ISZ, ISY, DT, HSH>(StdOut(), item)
+  ;//::_::TDicPrint<::_::COut, CHT, ISZ, ISY, DT, HSH>(StdOut(), item)
 #define D_COUT_TABLE(item) \
   TTablePrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
@@ -97,6 +87,7 @@ the MPL was not distributed with this file, You can obtain one at
   }
 #define A_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define D_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define R_FAIL()
 #define A_WARN(condition) \
   if (!condition) ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define D_WARN(condition) \
@@ -110,22 +101,22 @@ the MPL was not distributed with this file, You can obtain one at
 #define D_RETURNT(type, error) { \
   ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__); \
   ::_::COut("\n\nERROR ").Print(error) << ": " << \
-    TCrabsErrorST<CHR, ISN>(error); \
+    TAErrors<CHR, ISN>(error); \
   return type(error); }
 #define D_RETURN_CPTR_ERROR(type, error){ \
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__); \
   ::_::COut("\n\nERROR ").Print(ISW(error)) << ": " << \
-    TCrabsErrorST<CHR, ISW>(ISW(error)); \
+    TAErrors<CHR, ISW>(ISW(error)); \
   return const_cast<type*>(error);}
 #define D_RETURN_TPTR_ERROR(type, error){ \
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__); \
   ::_::COut("\n\nERROR ").Print(ISW(error)) << ": " << \
-    TCrabsErrorST<CHR, ISW>(ISW(error)); \
+    TAErrors<CHR, ISW>(ISW(error)); \
   return reinterpret_cast<type*>(error);}
 #define D_RETURN_PTR_ERROR(error) {\
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__); \
   ::_::COut("\n\nERROR ").Print(ISW(error)) << ": " << \
-    TCrabsErrorST<CHR, ISW>(ISW(error)); \
+    TAErrors<CHR, ISW>(ISW(error)); \
   return error;}
 #define A_RETURN_VALUE(value) {\
   ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__); return value; }
@@ -136,47 +127,47 @@ the MPL was not distributed with this file, You can obtain one at
   if(IUW(ptr) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
+      TAErrors<CHR, ISW>(ISW(ptr));\
     return ptr;\
   }
 #define D_CHECK_PTR_TRETURN(type, ptr) \
   if(IUW(ptr) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
+      TAErrors<CHR, ISW>(ISW(ptr));\
     return type(IUW(ptr));\
   }
 #define D_CHECK_PTR_TRETURN2(type, ptr1, ptr2) \
   if(IUW(ptr1) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr1)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr1));\
+      TAErrors<CHR, ISW>(ISW(ptr2));\
     return type(IUW(ptr1));\
   } \
   if(IUW(ptr2) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr2)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr2));\
+      TAErrors<CHR, ISW>(ISW(ptr2));\
     return type(IUW(ptr2));\
   }
 #define D_CHECK_CPTR_RETURN(type, ptr)\
   if(IUW(ptr) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
+      TAErrors<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
     return const_cast<type*>(ptr);\
   }
 #define D_CHECK_TPTR_RETURN(type, ptr) \
   if(IUW(ptr) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(IUW(ptr)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
-    return reinterpret_cast<type*>(ptr);\
+      TAErrors<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
+    return reinterpret_cast<type*>(IUW(ptr));\
   }
 #define D_CHECK_PTR_RETURN_NIL(ptr) \
   if(IUW(ptr) < CrabsErrorCount) {\
     ::_::TestFunctionLine(__LINE__, __FUNCTION__, __FILE__);\
     ::_::COut("\n\nERROR ").Print(reinterpret_cast<ISW>(ptr)) << ": " <<\
-      TCrabsErrorST<CHR, ISW>(reinterpret_cast<ISW>(ptr));\
+      TAErrors<CHR, ISW>(reinterpret_cast<ISW>(IUW(ptr)));\
     return;\
   }

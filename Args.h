@@ -1,17 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Args.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_ARGS
 #define SCRIPT2_ARGS
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
 #include "BSeq.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 /* Sets the params to the given pointers corresponding to the index 1-26 of the

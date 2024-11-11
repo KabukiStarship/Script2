@@ -5,8 +5,6 @@ title: 'Artifact'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-# Artifact
-
 ## Description
 
 The artifact that is left over from a change is...

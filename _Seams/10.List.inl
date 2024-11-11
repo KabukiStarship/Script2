@@ -1,17 +1,8 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/10.List.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_LIST
 #include "../List.hpp"
 #include "../RNG.h"
 //#include "../Uniprinter.hpp"
-using namespace _;
 #if SEAM == SCRIPT2_LIST
 #include "../_Debug.inl"
 #define TEST_MIN 0
@@ -21,7 +12,7 @@ using namespace _;
 #define TEST_MIN 0
 #define TEST_MAX 0xffff
 #endif
-
+using namespace _;
 namespace Script2 {
 
 template<typename ISZ, typename ISY>
@@ -89,6 +80,7 @@ static const CHA* List(const CHA* args) {
   TestList<ISB, ISA>();
   TestList<ISC, ISB>();
   TestList<ISD, ISC>();
+  TestList<ISD, ISD>();
 #endif
   return nullptr;
 }

@@ -1,16 +1,7 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/05.Clock.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_CLOCK
 #include "../Clock.hpp"
 #include "../Uniprinter.hpp"
-using namespace _;
 #if SEAM == SCRIPT2_CLOCK
 #include "../_Debug.inl"
 #else
@@ -18,6 +9,7 @@ using namespace _;
 #endif
 #endif
 
+using namespace _;
 namespace Script2 {
 static const CHA* Clock(const CHA* args) {
 #if SEAM >= SCRIPT2_CLOCK
@@ -25,7 +17,7 @@ static const CHA* Clock(const CHA* args) {
 
   D_COUT(Headingf("Testing TScanTime..."));
 
-  TMC t, t_found;
+  ISC t, t_found;
   const CHA* result;
 
   // @note The following dates must be the current day to work right in order
@@ -53,7 +45,7 @@ static const CHA* Clock(const CHA* args) {
 
   for (ISC i = 0; i < 18; ++i) {
     D_COUT(Linef('-') << "\n    " << i);
-    TMC t = 0;
+    ISC t = 0;
     result = ScanTime(Strings[i], t);
     // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
   }

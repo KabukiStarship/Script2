@@ -5,8 +5,6 @@ title: 'Incident @2023-'
 labels: ''
 assignees: 'CookingWithCale'
 ---
-# Incident
-
 
 
 ## Time

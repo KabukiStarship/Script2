@@ -1,22 +1,14 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/14.Dic.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_DIC
 #include "../Dic.hpp"
-using namespace _;
 #if SEAM == SCRIPT2_DIC
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
-
+using namespace _;
 namespace Script2 {
+
 template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ,
          typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
@@ -82,19 +74,17 @@ const CHA* Dic(const CHA* args) {
   A_TEST_BEGIN;
 #if USING_UTF8 == YES_0
   TestDic<CHA, ISC, ISB, DTB, IUC>();
-  //TestDic<CHA, ISD, ISC, DTB, IUD>();
+  TestDic<CHA, ISD, ISC, DTB, IUD>();
 #endif
-//#if USING_UTF16 == YES_0
-//  TestDic<CHB, ISC, ISB, DTB, IUC>();
-//  TestDic<CHB, ISD, ISC, DTB, IUD>();
-//#endif
-//#if USING_UTF32 == YES_0
-//  TestDic<CHC, ISC, ISB, DTB, IUC>();
-//  TestDic<CHC, ISD, ISC, DTB, IUD>();
-//#endif
+#if USING_UTF16 == YES_0
+  TestDic<CHB, ISC, ISB, DTB, IUC>();
+  TestDic<CHB, ISD, ISC, DTB, IUD>();
+#endif
+#if USING_UTF32 == YES_0
+  TestDic<CHC, ISC, ISB, DTB, IUC>();
+  TestDic<CHC, ISD, ISC, DTB, IUD>();
+#endif
 #endif
   return nullptr;
 }
 }  //< namespace Script2
-#undef DIC_A
-#undef DIC_P

@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Dic.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_DIC_TEMPLATES
 #define SCRIPT2_DIC_TEMPLATES
@@ -607,7 +600,7 @@ DIC* TDicAppend(DIC* table, const DIC* source) {
     DT  type   = *src_types++;
     ISY result = TDicInsertFrom<DIC_P>(table, keys, key, type,
       TPtr<>(&table->values, value_offset));
-    const CHA* dez_nutz = TCrabsErrorST<CHA, ISY>(result);
+    const CHA* dez_nutz = TAErrors<CHA, ISY>(result);
     D_COUT("\nResult:" << result << ' ' << (result < 0 ? dez_nutz : " "));
     D_ASSERT(result >= 0);
   }
@@ -664,7 +657,7 @@ BOL TDicGrow(Autoject& obj) {
   obj.origin = origin_new;
   D_COUT("\n\nFinished growing. :-)\n\n");
   //D_COUT_DIC(TPtr<DIC>(origin_new));
-  TDicPrintStruct<COut, DIC_P>(StdOut(), TPtr<DIC>(origin_new));
+  //TDicPrintStruct<COut, DIC_P>(StdOut(), TPtr<DIC>(origin_new));
   D_COUT_TABLE(TDicKeys<DIC_P>(TPtr<DIC>(origin_new)));
   return true;
 }
@@ -868,7 +861,7 @@ public:
   inline ISZ Bytes() { return Values()->bytes; }
 
   /* Returns the size in words. */
-  inline ISZ BytesWords() { return obj_.SizeWords() >> ALUSizeLog2; }
+  inline ISZ BytesWords() { return obj_.SizeWords() >> WordSizeLog2; }
 
   /* Returns the number of keys. */
   inline ISZ Count() { return Values()->map.count; }
