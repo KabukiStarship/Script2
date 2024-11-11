@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Types.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #ifndef INCLUDED_TYPES_CODE
 #define INCLUDED_TYPES_CODE
@@ -78,8 +71,7 @@ ISA ATypeAlignMask(DTB type) {
   if (type <= _CHA) return 0;
   if (type <= _CHB) return 1;
   if (type <= _CHC) return ALUAlignC;
-  if (type <= _ISE) return ALUAlignD;
-  if (type == _BOL) return BOLAlignMask;
+  if (type <= _TME) return ALUAlignD;
   if (type < _CT4) return ALUAlignD;
   if (type < _CT3) return ALUAlignD;
   if (type < _CT2) return ALUAlignC;
@@ -195,7 +187,7 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value,
     *ptr++ = *reinterpret_cast<const IUC*>(value);
     return ptr;
   }
-  if (type <= _TME) {
+  if (type <= _TMD) {
     Write8Bytes:
     auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
     if (delta < 8) return nullptr;
@@ -203,7 +195,7 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value,
     *ptr++ = *reinterpret_cast<const IUD*>(value);
     return ptr;
   }
-  if (type <= _ISE) {
+  if (type <= _TME) {
     Write16Bytes:
     auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
     if (delta < 16) return nullptr;
@@ -212,20 +204,6 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value,
     *ptr++ = *value_ptr++;
     *ptr++ = *value_ptr;
     return ptr;
-  }
-  if (type == _BOL) {
-#if BOL_SIZE == 1
-    goto Write1Byte;
-#endif
-#if BOL_SIZE == 2
-    goto Write2Bytes;
-#endif
-#if BOL_SIZE == 4
-    goto Write4Bytes;
-#endif
-#if BOL_SIZE == 8
-    goto Write8Bytes;
-#endif
   }
   if (type <= _CT4) goto Write16Bytes;
   if (type <= _CT3) goto Write8Bytes;

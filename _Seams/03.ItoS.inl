@@ -1,12 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/01.ItoS.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_ITOS
 #include <cstring>
 #include <cstdio>
@@ -14,7 +6,6 @@ the MPL was not distributed with this file, You can obtain one at
 #include "../Puff.hpp"
 #include "../RNG.h"
 #include "../Uniprinter.hpp"
-using namespace _;
 #if SEAM == SCRIPT2_ITOS
 #include "../_Debug.inl"
 #else
@@ -22,6 +13,7 @@ using namespace _;
 #endif
 #endif
 
+using namespace _;
 namespace Script2 {
 
 inline const CHA* ItoS(const CHA* args) {

@@ -1,31 +1,29 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /BSeq.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
+#pragma once
+#ifndef SCRIPT_BSQ_INLINE_CODE
+#define SCRIPT_BSQ_INLINE_CODE
 #include "BSeq.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 template<typename Printer>
 Printer& TBSeqPrint(Printer& o, const ISN* params) {
-  ISN num_params = *params++, i, type, value = 0;
+  ISN param_count = *params++,
+      i     = 0;
+  DTB type  = 0,
+      value = 0;
 
   o << "Param<";
-  if (num_params > cParamsMax) {
-    o << "\nInvalid num_params: " << num_params;
+  if (param_count > BSQMax) {
+    o << "\nInvalid num_params: " << param_count;
     return o;
   }
-  o << num_params << ": ";
-  for (i = 1; i < num_params; ++i) {
+  o << param_count << ": ";
+  for (i = 1; i < param_count; ++i) {
     value = *params++;
     type = value & 0x1f;  //< Mask off type.
     value = value >> 5;   //< Shift over array type.
-    o << STAAType((ISN)value) << ", ";
+    o << ATypef(value) << ", ";
     if (type >= STR_) {
       if (value) {
         o << "\nError: arrays may only be created from POD types.";
@@ -115,7 +113,7 @@ Printer& TBSeqPrint(Printer& o, const ISN* params) {
   }
   // Do the last set without a comma.
   value = *params++;
-  o << STAAType(value) << ", ";
+  o << ATypef(value) << ", ";
   if (value == STR_) {
     ++i;
     value = *params++;
@@ -202,4 +200,5 @@ Printer& TBSeqPrint(Printer& o, const ISN* params) {
 
 }  //< namespace _
 
+#endif
 #endif

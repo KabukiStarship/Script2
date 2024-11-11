@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Types.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #include "Types.hpp"
 #if SEAM == SCRIPT2_COUT
 #include "_Debug.inl"
@@ -55,9 +48,8 @@ ISA ATypeSizeOfPOD(DTB type) {
   if (type <= _CHA) return 1;
   if (type <= _CHB) return 2;
   if (type <= _CHC) return 4;
-  if (type <= _TME) return 8;
-  if (type <= _BOL) return 16;
-  if (type == _BOL) return sizeof(BOL);
+  if (type <= _TMD) return 8;
+  if (type <= _TME) return 16;
 #if USING_CT5
   if (type <= _CT5) return 16;
 #endif
@@ -74,17 +66,32 @@ ISA ATypeSizeOfPOD(DTB type) {
   return 0;
 }
 
-ISW ATypeSizeBytes(const void* value, DTB type) {
+ISW ATypeBytes(const void* value, DTB type) {
   return TATypeSizeOf<ISW>(value, type);
 }
 
-ISW ATypeSizeBytes(const void* value_base, ISA bytes, DTB type) {
-  return ATypeSizeBytes(TPtr<>(value_base, bytes), type);
+ISW ATypeBytes(const void* value_base, ISA bytes, DTB type) {
+  return ATypeBytes(TPtr<>(value_base, bytes), type);
 }
 
 void* ATypeValueEnd(void* value, DTB type) {
-  return TPtr<void>(value, ATypeSizeBytes(value, type));
+  return TPtr<void>(value, ATypeBytes(value, type));
 }
+
+// Returns an array of the customizable POD type sizes.
+//const ISA* ATypeCustomSize() {
+//  return nullptr;
+//}
+
+// Returns an array of the user-defined type alignment masks.
+//const ISA* ATypeCustomAlignMask() {
+//  return nullptr;
+//}
+
+// Returns the custom time alignment mask for the given type.
+//ISA ATypeCustomAlignMask(DTA type) {
+//  return 0;
+//}
 
 TypeValue::TypeValue() : type_(_NIL), word_(0), word_2_(0) {}
 TypeValue::TypeValue(void* item) : type_(_PTR), word_(IUW(item)), word_2_(0) {}
@@ -110,7 +117,7 @@ TypeValue::TypeValue(IUA item) : type_(_IUA), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(ISB item) : type_(_ISB), word_(IUW(item)), word_2_(0) {}
 TypeValue::TypeValue(IUB item) : type_(_IUB), word_(IUW(item)), word_2_(0) {}
 #if CPU_SIZE == CPU_2_BYTE
-AValue::AValue(ISC item) : type_(cISC) {
+AValue::AValue(ISC item) : type_(_ISC) {
   // @todo I don't know if this is going to be needed. In my mind the compiler
   // will push the word_ onto the program stack because of the *reintpret_cast.
   // This might however get optimized into just storing item. Dissassemble me!
@@ -121,7 +128,7 @@ TypeValue::TypeValue(ISC item) : type_(_ISC), word_(IUW(item)), word_2_(0) {}
 #endif
 
 #if CPU_SIZE == CPU_2_BYTE
-AValue::AValue(IUC item) : type_(cIUC) {
+AValue::AValue(IUC item) : type_(_IUC) {
   *TPtr<IUC>(&word_) = item;
 }
 #else
@@ -131,13 +138,13 @@ TypeValue::TypeValue(IUC item) : type_(_IUC), word_(IUW(item)), word_2_(0) {}
 #if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(ISD item) : type_(_ISD), word_(IUW(item)), word_2_(0) {}
 #else
-AValue::AValue(ISD item) : type_(cISD) { *TPtr<ISD>(&word_) = item; }
+AValue::AValue(ISD item) : type_(_ISD) { *TPtr<ISD>(&word_) = item; }
 #endif
 
 #if CPU_SIZE == CPU_8_BYTE
 TypeValue::TypeValue(IUD item) : type_(_IUD), word_(IUW(item)), word_2_(0) {}
 #else
-AValue::AValue(IUD item) : type_(cIUD) {
+AValue::AValue(IUD item) : type_(_IUD) {
   *TPtr<IUD>(&word_) = item;
 }
 
@@ -147,7 +154,7 @@ AValue::AValue(IUD item) : type_(cIUD) {
 TypeValue::TypeValue(FPC item)
     : type_(_FPC), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
+AValue::AValue(FPC item) : type_(_FPC) { *TPtr<FPC>(&word_) = item; }
 #endif
 #endif
 
@@ -156,7 +163,7 @@ AValue::AValue(FPC item) : type_(cFPC) { *TPtr<FPC>(&word_) = item; }
 TypeValue::TypeValue(FPD item)
     : type_(_FPD), word_(ToUnsigned(item)), word_2_(0) {}
 #else
-AValue::AValue(FPD item) : type_(cFPD) { *TPtr<FPD>(&word_) = item; }
+AValue::AValue(FPD item) : type_(_FPD) { *TPtr<FPD>(&word_) = item; }
 #endif
 #endif
 

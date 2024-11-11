@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/00.Core.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_COUT
 #include "../Uniprinter.hpp"
 #if SEAM == SCRIPT2_COUT
@@ -80,7 +73,7 @@ inline const CHA* COut(const CHA* args) {
   enum {
     STRBCount = 4,
   };
-  CHB str2[STRBCount];
+  CHB str2[STRBCount] = {};
   CHB* str2_cursor = str2;
   str2_cursor = SPrint(str2, ISW(STRBCount) - 1, CHC(0));
   D_COUT(Hexf(str2) << TPtr<CHA>(str2 + 3) - 1);

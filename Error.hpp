@@ -1,21 +1,14 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Errors.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
-#ifndef SCRIPT2_ERROR
-#define SCRIPT2_ERROR
+#ifndef SCRIPT2_ERROR_INLINE_CODE
+#define SCRIPT2_ERROR_INLINE_CODE
 #include "Error.h"
 #if SEAM >= SCRIPT2_CORE
 namespace _ {
 
 /* Human-readable Crabs error strings. */
 template<typename CH = CHR>
-const CH* TCrabsErrorST() {
+const CH* TAErrors() {
   static const CH error_strings[CrabsErrorCount + 1][32] = {
     /*00*/{'S','u','c','k',' ','i','t',0,},
     /*01*/{'I','n','v','a','l','i','d',0,},
@@ -75,10 +68,10 @@ const CH* TCrabsErrorST() {
 }
 
 template<typename CH = CHR, typename IS = ISN>
-const CH* TCrabsErrorST(IS index) {
+const CH* TAErrors(IS index) {
   if (index < 0) index *= -1;
   if (index >= CrabsErrorCount) index = CrabsErrorCount;
-  return &TCrabsErrorST<CH>()[index << 5];
+  return &TAErrors<CH>()[index << 5];
 }
 }  //< namespace _
 #endif

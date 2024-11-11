@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Undef.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 
 #undef D_THIS
 #undef A_TEST_BEGIN
@@ -51,6 +44,7 @@ the MPL was not distributed with this file, You can obtain one at
 #undef D_AVOW_INDEX
 #undef A_FAIL
 #undef D_FAIL
+#undef R_FAIL
 #undef A_WARN
 #undef D_WARN
 #undef R_WARN

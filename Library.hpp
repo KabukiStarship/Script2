@@ -1,16 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Library.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_LIBRARY_CODE_TEMPLATES
 #define SCRIPT2_LIBRARY_CODE_TEMPLATES
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= SCRIPT2_ROOM
 namespace _ {
 #if USING_SCRIPT2_TEXT
 template<typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
@@ -107,7 +100,7 @@ class Library : public Operand {
     switch (array_type) {
       case 0:
 #if SCRIPT2_MEMORY_PROFILE >= 16
-        /// Library format: { cIUA, cIUA, cIUB, cIUB }
+        /// Library format: { _IUA, _IUA, _IUB, _IUB }
         return size + sizeof(Library) + *(address + 1) * sizeof(IUA) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
 #else
@@ -115,7 +108,7 @@ class Library : public Operand {
 #endif
       case 1:
 #if SCRIPT2_MEMORY_PROFILE >= 32
-        /// Library format: { cIUA, cIUA, cIUB, cIUC }
+        /// Library format: { _IUA, _IUA, _IUB, _IUC }
         return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
@@ -123,7 +116,7 @@ class Library : public Operand {
 #endif
       case 2:
 #if SCRIPT2_MEMORY_PROFILE >= 64
-        /// Library format: { cIUB, cIUB, cIUC, cIUD }
+        /// Library format: { _IUB, _IUB, _IUC, _IUD }
         return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
 #else
@@ -145,12 +138,12 @@ class Library : public Operand {
   @param index The index of the expression.
   @param crabs  The Crabs to read and write from. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
-    static const Op cThis = {"Library", OpFirst('A'), OpLast('A'),
+    static const Op This = {"Library", OpFirst('A'), OpLast('A'),
                              "",        kOpOperand,   0};
 
     switch (index) {
       case '?':
-        return ExprEnquiry(crabs, cThis);
+        return ExprEnquiry(crabs, This);
       case 'A': {
         static const Op This = {"Foo", Params<0>(), Params<0>(), "Foo.",
                                 '(',   ')',         nullptr};

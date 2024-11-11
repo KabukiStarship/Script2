@@ -1,17 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Clock.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
-#include <_Config.h>
+#include "Clock.h"
 #if SEAM >= SCRIPT2_CLOCK
 #ifndef INCLUDED_SCRIPT2_CLOCK_TEMPLATES
 #define INCLUDED_SCRIPT2_CLOCK_TEMPLATES
-#include "Clock.h"
 #include "Uniprinter.hpp"
 #include "Test.h"
 #if SEAM == SCRIPT2_COUT
@@ -104,15 +96,15 @@ Printer& TSPrint(Printer& o, const _::AClock& clock) {
            << clock.second;
 }
 
-template<typename CHT = CHR, typename Time = TMD>
-CHT* TClockPrint(CHT* cursor, CHT* stop, Time t) {
+template<typename CHT = CHR, typename IS = ISD>
+CHT* TClockPrint(CHT* cursor, CHT* stop, IS t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHT>(cursor, stop, clock);
 }
 
 template<typename CHT = CHR>
-CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
+CHT* TSPrint(CHT* cursor, CHT* stop, const TMD& t) {
   // The way the utf functions are setup, we return a nil-term CHA so we
   // don't have to check to write a single CHA in this
   A_ASSERT(cursor);
@@ -128,7 +120,7 @@ CHT* TSPrint(CHT* cursor, CHT* stop, TME& t) {
 }
 
 template<typename Printer>
-Printer& TSPrint(Printer& o, TME& t) {
+Printer& TSPrint(Printer& o, TMD& t) {
   AClock clock;
   ClockInit(clock, t.seconds);
   return TSPrint<Printer>(o, clock) << ':' << t.ticks;
@@ -161,7 +153,7 @@ const CHT* TScanTime(const CHT* string, ISC& hour, ISC& minute, ISC& second) {
   c = *string++;
   if (!c || TIsWhitespace<CHT>(c)) {  // Case @HH
     D_COUT(" HH ");
-    // Then it's a single number_, so create a TMC for the current
+    // Then it's a single number_, so create a ISC for the current
     // user-time hour..
     hour = h;
     return string;
@@ -311,13 +303,13 @@ template<typename CHT = CHR>
 const CHT* TSScan(const CHT* string, AClock& clock) {
   D_ASSERT(string);
   D_COUT("\n    Scanning AClock:\"" << string << "\n    Scanning: ");
-
   string = TSTRSkimodulear<CHT>(string, '0');
   CHT c = *string,  //< The current CHT.
       delimiter;     //< The delimiter.
   const CHT* stop;  //< Might not need
-
-  ISC hour = 0, minute = 0, second = 0;
+  ISC hour   = 0,
+      minute = 0,
+      second = 0;
 
   if (c == '@') {
     if (!(string = TScanTime<CHT>(string, hour, minute, second))) {
@@ -524,24 +516,24 @@ const CHT* TSScan(const CHT* string, AClock& clock) {
 }
 
 template<typename CHT, typename IS>
-const CHT* TScanTime(const CHT* origin, TMC& result) {
+const CHT* TScanTime(const CHT* origin, ISC& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
-  result = (TMC)ClockSeconds(clock);
+  result = ISC(ClockSeconds(clock));
   return stop;
 }
 
 template<typename CHT, typename IS>
-const CHT* TScanTime(const CHT* origin, TMD& result) {
+const CHT* TScanTime(const CHT* origin, ISD& result) {
   AClock clock;
   const CHT* stop = TSScan<CHT>(origin, clock);
-  result = (TMD)ClockSeconds(clock);
+  result = ISD(ClockSeconds(clock));
   return stop;
 }
 
 template<typename CHT>
-const CHT* TSScan(const CHT* origin, TME& result) {
-  origin = TScanTime<CHT, TMC>(origin, result.seconds);
+const CHT* TSScan(const CHT* origin, TMD& result) {
+  origin = TScanTime<CHT, ISC>(origin, result.seconds);
   if (!origin) return nullptr;
   if (*origin++ != ':') {
     result.ticks = 0;
@@ -578,7 +570,7 @@ IS TClockSet(AClock* clock, IS t) {
 
 /* A time in seconds stored as either a 32-bit or 64-bit IS.
 The difference between a TClock and AClock is that that TClock stores the AClock
-and the TMD or TMC. */
+and the TMD or ISC. */
 template<typename IS>
 struct LIB_MEMBER TClock {
   AClock clock;  //< A human-readable clock.

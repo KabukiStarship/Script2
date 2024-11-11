@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Uniprinter.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_STRING_CODE
 #define SCRIPT2_STRING_CODE
@@ -549,7 +542,7 @@ Printer& TPrint(Printer& p, Linef& value) {
 template<typename CH>
 const CH* TSTRHeadingf() {
   static const CH String[] = { '\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
-                                NIL,  '\n', '+', '-', '-', '-', '\n', NIL };
+                                NIL, '\n', '+', '-', '-', '-', '\n', NIL };
   return String;
 }
 
@@ -789,15 +782,13 @@ Printer& TPrintValuePOD(Printer& p, DTB type, const void* value) {
     case _FPD: return p << *TPtr<const FPD>(value); //< 12
     case _IUD: return p << *TPtr<const IUD>(value); //< 13
     case _ISD: return p << *TPtr<const ISD>(value); //< 14
-    case _TME: return p << "TME not implemented";
+    case _TMD: return p << "TME not implemented";
       //p << *TPtr<const TME>(value); //< 15
     case _FPE: return p << "FPE not implemented";
       //p << *TPtr<const FPE>(value); //< 16
     case _IUE: return p << "IUE not implemented";
       //p << *TPtr<const IUE>(value); //< 17
     case _ISE: return p << "ISE not implemented";
-      //p << *TPtr<const ISE>(value); //< 18
-    case _BOL:  return p << *TPtr<const BOL>(value); //< 19
   }
   return p;
 }

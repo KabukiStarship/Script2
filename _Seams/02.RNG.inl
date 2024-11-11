@@ -1,22 +1,15 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/01.RNG.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_RNG
 #include "../RNG.h"
-using namespace _;
 #if SEAM == SCRIPT2_RNG
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
 #endif
-
+using namespace _;
 namespace Script2 {
+
 static const CHA* RNG(const CHA* args) {
 #if SEAM >= SCRIPT2_RNG
   A_TEST_BEGIN;

@@ -1,16 +1,8 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Release.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "_Undef.inl"
 //
 #include "Test.hpp"
-
+//
 #define D_THIS 0
 #define A_TEST_BEGIN
 #define D_PAUSE(message)
@@ -46,6 +38,7 @@ the MPL was not distributed with this file, You can obtain one at
   if (IUW(ptr) < CrabsErrorCount)  \
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__)
 #define A_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
+#define R_FAIL() ::_::TestWarn(__LINE__, __FUNCTION__, __FILE__)
 #define D_FAIL()
 #define A_CHECK(condition)
 #define D_CHECK(condition)

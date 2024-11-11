@@ -1,17 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /CIn.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_CIN_DECL
 #define SCRIPT2_CIN_DECL
-#include <_Config.h>
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "COut.h"
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 namespace _ {
 
 /* Checks if the given string is yes or no.

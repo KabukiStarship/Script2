@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Array.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "Array.hpp"
 namespace _ {
 
@@ -67,7 +60,7 @@ namespace _ {
 IUW* RAMFactoryStack(IUW* origin, ISW bytes) {
   if (bytes <= 0) return nullptr;
   bytes += (-bytes) & ALUWordMask;  //< Word align up.
-  ISW size_words = bytes >> ALUSizeLog2; 
+  ISW size_words = bytes >> WordSizeLog2; 
   IUW* socket = new IUW[size_words];
   return socket;
 }

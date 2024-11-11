@@ -11,8 +11,8 @@ TKN key                   //< No quotes needed for a TKN.
 ADR 123                   //< A ADR is a TKN.
 STA  "\"Hello world!\""   //< UTF-8 STR that reads "Hello world!" with double quotes.
 ARC_CHC "Foo"             //< STR is shorthand for ARC_CHA
-STB "Hello world!"       //< This is a _::TStrand<> that is up to 64KB long.
-STC "Hello world!"       //< This is a _::TStrand<> that is up to 4GB long.
+STB "Hello world!"        //< This is a _::TStrand<> that is up to 64KB long.
+STC "Hello world!"        //< This is a _::TStrand<> that is up to 4GB long.
 ```
 
 **[<< Previous Section:Timestamps](Timestamps.md) | [Next Section: B-Sequences >>](BSequences.md)**

@@ -1,7 +1,7 @@
 // Copyright Kabuki Starship™ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_ROOM
-#include "../Room.hpp"
-#if SEAM == SCRIPT2_ROOM
+#include "../Door.hpp"
+#if SEAM == SCRIPT2_DOOR
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
@@ -10,13 +10,12 @@
 using namespace _;
 namespace Script2 {
 
-static const CHA* Room(const CHA* args) {
-#if SEAM == SCRIPT2_ROOM
+static const CHA* Door(const CHA* args) {
+#if SEAM == SCRIPT2_DOOR
   A_TEST_BEGIN;
-  //Room room_a, //
-  //     room_b;
+  ADoor door;
+  Slot slot
 #endif
-  return nullptr;
+      return nullptr;
 }
-
 }  //< namespace Script2

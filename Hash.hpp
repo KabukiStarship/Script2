@@ -1,15 +1,8 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Hash.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
-#include <_Config.h>
 #ifndef SCRIPT2_HASH_HEADER_IMPL
 #define SCRIPT2_HASH_HEADER_IMPL
+#include <_Config.h>
 namespace _ {
 /* Returns the highest signed prime that can fit in type IS.
 @return 0 if the sizeof (IS) is not 1, 2, 4, or 8.  */

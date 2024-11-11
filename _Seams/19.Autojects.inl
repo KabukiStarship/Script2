@@ -1,7 +1,7 @@
 // Copyright Kabuki Starship™ <kabukistarship.com>.
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= SCRIPT2_AUTOJECTS
 #include "../Room.hpp"
-#if SEAM == SCRIPT2_ROOM
+#if SEAM == SCRIPT2_AUTOJECTS
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
@@ -10,11 +10,9 @@
 using namespace _;
 namespace Script2 {
 
-static const CHA* Room(const CHA* args) {
-#if SEAM == SCRIPT2_ROOM
+static const CHA* Autojects(const CHA* args) {
+#if SEAM == SCRIPT2_AUTOJECTS
   A_TEST_BEGIN;
-  //Room room_a, //
-  //     room_b;
 #endif
   return nullptr;
 }

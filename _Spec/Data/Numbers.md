@@ -27,9 +27,9 @@ ISB 0xFFFFF   ; Too big for size
 Unsigned Not-a-Number (U-NaN) is the bit pattern with all ones as in the following example:
 
 ```C++
-template<typename UI = IUW>
-inline UI NaNUnsigned () {
-  UI nan = 0;
+template<typename IU = IUW>
+inline IU NaNUnsigned () {
+  IU nan = 0;
   return ~nan;
 }
 ```
@@ -39,23 +39,25 @@ inline UI NaNUnsigned () {
 Unsigned Not-a-Number (S-NaN) is the bit pattern with only the Most Significant bit asserted as in the following example:
 
 ```C++
-template<typename SI, typename UI>
-inline SI NaNSigned () {
-  UI nan = 1;
-  return (SI)(nan << (sizeof (UI) * 8 - 1));
+template<typename IS, typename IU>
+inline IS NaNSigned () {
+  IU nan = 1;
+  return (IS)(nan << (sizeof (IU) * 8 - 1));
 }
 ```
 
 #### 2.2.e Varints
 
-Variants are MSb variant are compressed using MSB-encoded signed and unsigned 1-to-9-byte variable-length integers. Varints use the MSb of each byte to determine if another byte is to be loaded. This allows values less than 128 to be sent using only one byte, 14-bit values in two bytes, 21-bit values in three bytes and so on.  
+Variants are MSb variant are compressed using Negative MSB-variant encoded signed and unsigned 1-to-9-byte variable-length integers. Varints C0 code prefix is VS for Varint Signed and VU for Varint Unsigned. There are no 8-bit varints so there are VSB, VSC, VSD, VUB, VUC, and VUD.
 
-Both Signed and Unsigned Varints must use the most significant bit asserted is used to marks if another byte is loaded. All Script implementations shall represent signed varints as uncomplemented integers with the sign bit in the LSb.
+Varints use the MSb of each byte to determine if another byte is to be loaded. This allows values less than 128 to be sent using only one byte, 14-bit values in two bytes, 21-bit values in three bytes and so on.
+
+Varints are converted from least to most significant bits in groups of 7. If any of the more significant bits left to pack or unpack are asserted, you multiply the 7-bit nibble by -1 to get the encoding for that nibble with the exception of the last nibble.
 
 ```C++
-IUB_V 128 // = 0b0000_0001_1000_0000
-IUC_V 255 // = 0b0000_0001_1111_1111
-SID_V -64 // = 0b0011_1111
+VUB 128 // = 0b0000_0001_1000_0000
+VUC 255 // = 0b0000_0001_1111_1111
+VSA -64 // = 0b1100_0001
 ```
 
 #### 2.2.f BigNum

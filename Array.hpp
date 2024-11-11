@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Array.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_ARRAY_TEMPLATES
 #define SCRIPT2_ARRAY_TEMPLATES
@@ -205,7 +198,7 @@ inline IS TSizeBytes(Autoject& autoject) {
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IS size) {
   IS size_aligned_up = AlignUp(TSizeBytes<T, IS, Class>(size));
-  return size_aligned_up >> ALUSizeLog2;
+  return size_aligned_up >> WordSizeLog2;
 }
 template<typename T, typename IS, typename Class>
 inline IS TSizeWords(IUW* origin) {
@@ -636,7 +629,7 @@ public:
     if (boofer == nullptr && bytes == 0) 
       return reinterpret_cast<IUW*>(&Heap);
     if(bytes < sizeof(IUW)) return TPtr<IUW>(Type);
-    ISW size_words = AlignUp(bytes) >> ALUSizeLog2;
+    ISW size_words = AlignUp(bytes) >> WordSizeLog2;
     boofer = new IUW[size_words];
     *TPtr<IS>(boofer) = IS(bytes);
     return boofer;

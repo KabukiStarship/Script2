@@ -5,7 +5,7 @@ title: ''
 labels: ''
 assignees: ''
 ---
-# Mission
+
 
 ## Problem
 

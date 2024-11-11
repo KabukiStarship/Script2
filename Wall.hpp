@@ -1,27 +1,19 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Wall.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>; all rights reserved.
 #pragma once
-#include <_Config.h>
-
-#if SEAM >= SCRIPT2_DIC
 #ifndef SCRIPT2_WALL_CODE
 #define SCRIPT2_WALL_CODE
-#include "Door.h"
-#include "Op.h"
-#incude "Array.h"
+#include <_Config.h>
+#if SEAM >= SCRIPT2_DIC
+#include "Door.hpp"
+#include "Op.hpp"
+#include "Array.hpp"
 
 namespace _ {
-
-/* A memory aligned singled contiguous socket in a Chinese Room.
+  
+/* A group of slots that all go to the same Room.
 Only one single wall is required for a Chinese Room, but when more memory is
 needed a new Wall may be created and destroyed dynamically.
+
 @code
 +--------------+
 |  Terminals   |
@@ -37,47 +29,74 @@ needed a new Wall may be created and destroyed dynamically.
 |    Header    |
 +--------------+
 @endcode */
-class Wall {
+template<typename ISZ, typename ISY>
+class TWall : public Operand {
  public:
   enum {
-    cMinSizeBytes = 512,  //< Min functional Wall size.
+    BytesMin = 512,  //< Min functional Wall size.
   };
 
-  virtual ~Wall();
+private:
+  TStack<ISZ> doors_;  //< The doors in the room.
 
-  Wall(TMap<Door*>* doors);
+  virtual ~TWall() {
+    if (is_dynamic_) {
+      CHA* socket = TPtr<CHA>(&doors_);
+      delete[] socket;
+    }
+  }
 
   /* Constructs a wall from the given socket. */
-  Wall(ISW bytes = kMinSizeBytes);
+  TWall(ISW bytes = BytesMin) : is_dynamic_(true) {
+    bytes = bytes < BytesMin ? (ISC)BytesMin : bytes;
+    bytes = TAlignUp<ISD, ISW>(bytes);
+    ISW size_words = (bytes >> sizeof(void*)) + 3;
+    IUW *socket = new IUW[size_words],
+        *aligned_boofer = TPtrUp<IUW>(socket);
+    //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
+    //< on 16 and 32-bit systems.
+    bytes -= sizeof(IUW) * (aligned_boofer - socket);
+    origin = socket;
+    doors_ = TPtr<TStack<ISZ>>(aligned_boofer);
+    TStackInit(socket, bytes >> sizeof(IUW));
+  }
 
   /* Constructs a wall from the given socket. */
-  Wall(IUW* socket, ISW bytes);
+  TWall(IUW* socket, ISW bytes) {
+    IUW* aligned_boofer = TPtrUp<IUW>(socket);
+    //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
+    //< on 16 and 32-bit systems.
+    bytes -= sizeof(IUW) * (aligned_boofer - socket);
+    origin = socket;
+    doors_ = TPtr<TStack<ISZ>>(aligned_boofer);
+    TStackInit(socket, bytes >> sizeof(IUW));
+  }
 
   /* Gets the size of the wall in bytes. */
-  ISW GetSizeBytes();
-
+  ISW GetSizeBytes() {
+    return bytes_;
+  }
   /* Gets a pointer to the array of pointers to Door(). */
-  TMatrix<Door*>* Doors();
+  TStack<ISZ>* Doors() {
+    return &doors_;
+  }
 
   /* Gets the Door from the Door at the given index. */
-  Door* GetDoor(ISC index);
+  TDoor<ISZ> GetDoor(ISY index) { return 0; }
 
   /* Adds a Door to the slot.
   @return Returns nil if the Door is full and a pointer to the Door in the
           socket upon success. */
-  ISC OpenDoor(Door* door);
+  ISC OpenDoor(Door * door) { return 0; }
 
   /* Deletes the Door from the Door at the given index. */
-  BOL CloseDoor(ISC index);
+  BOL CloseDoor(ISY index) { return false; }
 
-  /* Prints the given Door to the stdout. */
-  Slot& Print(Slot& slot);
-
- private:
-  BOL is_dynamic_;         //< Flag for if using dynamic memory.
-  ISW bytes_;         //< Size of the Wall in bytes.
-  IUW* origin;             //< The Wall's socket.
-  TMatrix<Door*>* doors_;  //< The doors in the room.
+  /* Prints the given Door to the stream. */
+  template<typename Printer>
+  Printer& PrintTo(Printer & o) {
+    return o;
+  }
 };
 
 }  //< namespace _

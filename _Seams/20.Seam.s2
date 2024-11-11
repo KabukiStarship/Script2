@@ -14,9 +14,9 @@
         |   |       |               +-- There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, STR_:32, cISA, cISB, cISC>:<c_NIL>
-   Bar <1, STR_:32>:<3, cISA, cISB, cISC>
-   FooBar <DIC2, cIUA>:<c_NIL>
+   Foo <4, STR_:32, _ISA, _ISB, _ISC>:<_NIL>
+   Bar <1, STR_:32>:<3, _ISA, _ISB, _ISC>
+   FooBar <DIC2, _IUA>:<_NIL>
             ^     ^
             |     |
             |     +----- An 8-bit unsigned integer.
@@ -60,7 +60,7 @@ Parent1 {
      Dictionaries are created and edited using Escape Sequences.
 
 
-           +-------------------- Operation Push "=DIC_4" is a special
+           +-------------------- Operation Push "=DI4" is a special
            |                     function that creates a dictionary that is size
      1024 |                     bytes with a maximum of 3 entries and | pushes
      it onto the stack. This Operation Push |                     gets written
@@ -68,10 +68,10 @@ Parent1 {
            |
            V  */
   root:
-    = DIC_4(2048, 3) {
+    = DI4(2048, 3) {
       /*<
-          +----------------------------------- Operation with key "+DIC_4"
-         identical |                                    to "$DIC_4" except it
+          +----------------------------------- Operation with key "+DI4"
+         identical |                                    to "$DI4" except it
          will be evaluated |                                    each time it
          gets called, which is |                                    once in this
          context.
@@ -79,7 +79,7 @@ Parent1 {
           |          +------------------------ Same "DIC2_4" Operand as above.
           |          |       +---------------- This reserves 3 dictionary
          members. |          |       | v          v       v              */
-      += DIC_4(nested, 1024, 3) { /* This is a nested dictionary.
+      += DI4(nested, 1024, 3) { /* This is a nested dictionary.
      +------------------------------ This is a operation with key "STR_"
      |      +----------------------- Dictionary key.
      |      |    +------------------ Max length 12.
@@ -94,9 +94,9 @@ Parent1 {
 |       +--------------------- henThis is a 16-bit unsigned SIC.
 |       |
 v       v */
-            += cISA item1 1 += cISB(item2, 2) += cISC item3 1 -=
+            += _ISA item1 1 += _ISB(item2, 2) += _ISC item3 1 -=
             Index 2  //< Removes index 2:"item3".
-            += cISB item3 - 1 += cIUB item4 1
+            += _ISB item3 - 1 += _IUB item4 1
             /*< We can't add item4 because we set the max elements to 3.
                 This won't generate an error but may generate an error
                 message. */
@@ -105,16 +105,16 @@ v       v */
       }
     }
 
-    /* Return Address (cADR) Example.
+    /* Return Address (_ADR) Example.
 
         @fn =
-            @param <c_NIL>:<cBSQ>
+            @param <_NIL>:<_BSQ>
     */
 
   abc123:
     = {1 2 3}
       /*< Operand "=$" default takes a Unicode CHA.
-          and returns a cBSQ token 123.
+          and returns a _BSQ token 123.
                   +------ Then we pass the return address as a input parameter
                   |       using the $ operator which is similar to static const.
                   |       Had $ not been here we would evaluate
@@ -131,6 +131,6 @@ v       v */
 
     */
 
-    xyz = cIUB(+c_UI2(*2 3) 3 4)
+    xyz = _IUB(+c_UI2(*2 3) 3 4)
 
         FooWeNeedNewNames(return_address $xyz);

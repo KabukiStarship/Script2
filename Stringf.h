@@ -1,11 +1,4 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Uniprinter.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_STRINGF_DECL
@@ -104,7 +97,7 @@ LIB_MEMBER const CHC* STCTF(BOL value);
 #endif
 
 /* SCRIPT Specification error strings. */
-//const CHA* STRError(ISA error_number);
+//const CHA* TAErrors<>(ISA error_number);
 
 /* Converts a IUA into a two-IUA hex representation.
 @return Returns -1 if c is not a hex IUA. */
@@ -590,7 +583,7 @@ struct LIB_MEMBER ATypef {
   ATypef(DTB type, Sizef count = { -1 });
   ATypef(DTC type, Sizef count = { -1 });
   ATypef(DTD type, Sizef count = { -1 });
-  //Typef(DTE type, Sizef count = { -1 });
+  //ATypef(DTE type, Sizef count = { -1 });
   ATypef(DTB pod, DTB vt, Sizef count = { -1 });
   ATypef(DTB pod, DTB vt, DTB sw, Sizef count = { -1 });
   ATypef(DTB pod, DTB vt, DTB sw, DTB map, Sizef count = { -1 });

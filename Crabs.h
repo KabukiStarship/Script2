@@ -1,23 +1,9 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Crabs.h
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_CRABS_DECL
 #define SCRIPT2_CRABS_DECL
-#include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
-#include "Args.h"
-#include "BIn.hpp"
-#include "BOut.h"
-#include "BSeq.h"
-#include "Error.h"
 #include "Operand.h"
-#include "Slot.h"
+#if SEAM >= SCRIPT2_CRABS
 namespace _ {
 
 /* A full-duplex Crabs EXP (Expression) interpreter.
@@ -34,7 +20,7 @@ asynchronous.
 @code
       |>---------------------- Ring Boofer ------------------------->|
       ________________________________________________________________
-BOut  |>-Boofer->|>-Sync User SScan-->|>-Async Portal Rx-->|>-Boofer->|
+BOut  |>-Boofer->|>-Sync User SScan->|>-Async Portal Rx-->|>-Boofer->|
       |__________|___________________|____________________|__________|
       ________________________________________________________________
 BIn   |>-Boofer->|>-Async Portal Tx->|>-Sync User Writes->|>-Boofer->|
@@ -58,27 +44,15 @@ that grows down.
     |=========================|
     |   Stack of Operand**    |
  +  |=========================|
- |  |      Crabs struct      |
+ |  |      Crabs struct       |
 0xN |=========================|
 @endcode
 */
 struct Crabs {
-  /* List of Crabs Error Ops. */
-  typedef enum Errors {
-    cErrorBooferOverflow = 0,
-    cErrorBooferUnderflow,
-    cErrorInvalidOperand,
-    cErrorStackOverflow,
-    cErrorLockedState,
-    cErrorTextOverflow,
-    cErrorVarintOverflow,
-    cErrorReadInvalidType,
-    cErrorImplementation
-  } Error;
 
   enum {
-    cMinStaccSize = 16,  //< Size of the crabs stack.
-    cMinBooferSize = 2,  //< Min socket size.
+    StackSizeMin = 16,  //< Size of the crabs stack.
+    BooferSizeMin = 2,  //< Min socket size.
   };
 
   ISC size,            //< Offset to the BOut slot.
@@ -96,7 +70,7 @@ struct Crabs {
   CHC current_char;    //< Current Unicode CHA being scanned.
   IUB hash;            //< Packed BSQ hash.
   IUC timeout_us;      //< Timeout time in microseconds.
-  TMD last_time;       //< Last time the Stack was scanned.
+  ISD last_time;       //< Last time the Stack was scanned.
   const Op* result;    //< Result of the EXR.
   const ISC* header,   //< Pointer to the header being verified.
       * header_start;  //< Start of the header being verified.
@@ -110,7 +84,7 @@ struct Crabs {
 LIB_MEMBER IUW* CrabsBinAddress(Crabs* crabs);
 
 /* Gets the crabs's socket. */
-LIB_MEMBER CHA* CrabsBoofer(Crabs* crabs);
+LIB_MEMBER IUA* CrabsBoofer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
 LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
@@ -137,7 +111,7 @@ inline Operand** CrabsStack(Crabs* crabs) {
 /* Returns true if the Stack uses dynamic memory. */
 // LIB_MEMBER BOL CrabsIsDynamic (Crabs* crabs);
 
-LIB_MEMBER CHA* CrabsEndAddress(Crabs* crabs);
+LIB_MEMBER IUA* CrabsEndAddress(Crabs* crabs);
 
 /* Resets this Stack to the new state. */
 LIB_MEMBER const Op* CrabsReset(Crabs* crabs);
@@ -193,7 +167,7 @@ LIB_MEMBER void CrabsRingBell(Crabs* crabs, const CHA* address = "");
 LIB_MEMBER void CrabsAckBack(Crabs* crabs, const CHA* address = "");
 
 /* Disconnects the expression. */
-LIB_MEMBER const Op* CrabsForceDisconnect(Crabs* crabs, Error error);
+LIB_MEMBER const Op* CrabsForceDisconnect(Crabs* crabs, ERC error);
 
 /* Reads the Crabs args from the crabs->slot.
 inline const Op* CrabsArgs (Crabs* crabs, const ISC* params, void** args) {

@@ -1,14 +1,6 @@
-/* Script
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /MorseCode.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include <_Config.h>
 namespace _ {
-
 /* This code doesn't really seam to match with Script2's mission other than a
 universal Chinese Room Langauge. The problem is that it doesn't seem to feit
 anywhere in Kabuki Toolkit right now so it sits here. It's useful for

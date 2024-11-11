@@ -1,15 +1,7 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Test.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
+#include "Test.h"
 #define D_RUN(test_unit) \
   { auto result = test_unit(); if(!result) return result; }
-#include "Test.h"
 //
 #include "COut.h"
 #include "Stringf.hpp"

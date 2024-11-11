@@ -1,22 +1,14 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /_Seams/05.String.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>; This Source Code 
-Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of
-the MPL was not distributed with this file, You can obtain one at 
-<https://mozilla.org/MPL/2.0/>. */
-
+// Copyright Kabuki Starshipâ„¢ <kabukistarship.com>.
 #if SEAM >= SCRIPT2_STRING
 #include "../String.hpp"
-using namespace _;
 #if SEAM == SCRIPT2_STRING
 #include "../_Debug.inl"
 #else
 #include "../_Release.inl"
 #endif
 #endif
- 
+
+using namespace _;
 namespace Script2 {
 #if SEAM >= SCRIPT2_STRING
 template<typename CH = CHR, typename IS = ISR>

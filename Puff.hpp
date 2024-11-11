@@ -1,15 +1,10 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Puff.hpp
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #pragma once
+#ifndef SCRIPT2_PUFF_INLINE_CODE
+#define SCRIPT2_PUFF_INLINE_CODE
+#include "Puff.h"
 #if SEAM >= SCRIPT2_ITOS
 #include "Binary.hpp"
-#include "Puff.h"
 #if SEAM == SCRIPT2_ITOS
 #include <iostream>
 #define D_COUT(item) std::cout << item
@@ -1094,14 +1089,14 @@ namespace _ {
         start[kk] = '.';
         start[kk + 1] = '0';
         nil_term_char = &start[kk + 2];
-        *nil_term_char = NIL;
+        *nil_term_char = _NIL;
         return nil_term_char;
       }
       else if (0 < kk && kk <= 21) {  // 1234e-2 -> 12.34
         ShiftUp(&start[kk + 1], length - kk);
         start[kk] = '.';
         nil_term_char = &start[length + 1];
-        *nil_term_char = NIL;
+        *nil_term_char = _NIL;
         return nil_term_char;
       }
       else if (-6 < kk && kk <= 0) {  // 1234e-6 -> 0.001234
@@ -1170,5 +1165,6 @@ namespace _ {
 #endif
 
 }  //< namespace _
+#endif
 #endif
 #undef D_COUT

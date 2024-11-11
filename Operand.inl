@@ -1,15 +1,7 @@
-/* Script2™
-@link    https://github.com/KabukiStarship/Script2.git
-@file    /Operand.inl
-@author  Cale McCollough <https://cookingwithcale.org>
-@license Copyright Kabuki Starship™ <kabukistarship.com>;
-This Source Code Form is subject to the terms of the Mozilla Public License,
-v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
-one at <https://mozilla.org/MPL/2.0/>. */
-#include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS
-#include "Op.h"
+// Copyright Kabuki Starshipï¿½ <kabukistarship.com>.
 #include "Operand.h"
+#if SEAM >= SCRIPT2_CRABS
+#include "Op.hpp"
 #if SEAM == SCRIPT2_CRABS
 #include "_Debug.inl"
 #else
@@ -35,10 +27,11 @@ CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
   A_ASSERT(operand);
   const Op* op = operand->Star('?', nullptr);
   A_ASSERT(op);
-  CHC index = OpFirst(op), last = OpLast(op);
+  CHC index = OpFirst(op),
+      last  = OpLast (op);
   A_ASSERT(index);
   for (; index <= last; ++index) {
-    if (STREquals(origin, stop, operand->Star(index, nullptr)->name)) {
+    if (TSTREquals<CHA>(origin, stop, operand->Star(index, nullptr)->name)) {
       return index;
     }
   }
@@ -68,7 +61,7 @@ UTF1& PrintOperand(UTF1& utf, Operand* operand) {
 
   IUW num_ops = IUW(op->in),
       op_num = IUW(op->out), last_op = op_num + num_ops - 1;
-  if (num_ops > cParamsMax) {
+  if (num_ops > ParamsTotal) {
     return utf << "\nError: Too many parameters!";
   }
   utf << "\nOperand         :" << op->name << Line('-', 80);
