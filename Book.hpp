@@ -5,9 +5,9 @@
 #include "List.hpp"
 #if SEAM >= SCRIPT2_BOOK
 #if SEAM == SCRIPT2_BOOK
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 namespace _ {
 /* @ingroup Book

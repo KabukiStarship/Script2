@@ -8,9 +8,9 @@
 #include "Binary.hpp"
 #include "Hash.hpp"
 #if SEAM == SCRIPT2_TABLE
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 #define TBL_A \
   typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN

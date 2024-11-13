@@ -6,9 +6,9 @@
 #if SEAM >= SCRIPT2_DIC
 #include "Table.hpp"
 #if SEAM == SCRIPT2_DIC
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 namespace _ {
 /* @ingroup Dic

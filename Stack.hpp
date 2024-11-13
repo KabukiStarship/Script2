@@ -7,9 +7,9 @@
 #include "Binary.hpp"
 #include "String.hpp"
 #if SEAM == SCRIPT2_STACK
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 #define SCK_A typename ISZ
 #define SCK_P ISZ

@@ -506,13 +506,13 @@ namespace _ {
 
 #if SEAM >= SCRIPT2_FTOS
 #if SEAM == SCRIPT2_FTOS
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count) \
   Print("\nBinary:\"");                                       \
   TPrintBinary(value);                                        \
   PrintNL()
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count)
 #endif
 

@@ -6,9 +6,9 @@
 #if SEAM >= SCRIPT2_MAP
 #include "Stack.hpp"
 #if SEAM == SCRIPT2_MAP
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 namespace _ {
 

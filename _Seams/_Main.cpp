@@ -1,6 +1,6 @@
 // Copyright Kabuki Starship™ <kabukistarship.com>.
 #include <_Config.h>
-#include "_Tests.inl"
+#include "_Tests.hxx"
 using namespace _;
 
 ISN main(ISN arg_count, CHA** args) {

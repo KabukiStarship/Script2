@@ -7,9 +7,9 @@
 #include "Uniprinter.hpp"
 #include "Test.h"
 #if SEAM == SCRIPT2_COUT
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 namespace _ {
 

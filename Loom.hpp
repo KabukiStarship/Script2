@@ -8,9 +8,9 @@
 #include "Stack.hpp"
 #include "Types.hpp"
 #if SEAM == SCRIPT2_LOOM
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 #define LOM_A typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ
 #define LOM_P CHT, ISZ, ISY

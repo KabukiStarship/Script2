@@ -6,7 +6,7 @@
 #if SEAM >= SCRIPT2_CORE
 namespace _ {
 
-// @see _ConfigHeader.inl for enum of error codes.
+// @see _ConfigHeader.hxx for enum of error codes.
 
 /* A CHA[32][32] containing the CrabsError error strings.
 Example:

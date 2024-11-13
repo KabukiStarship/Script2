@@ -8,11 +8,11 @@
 #include "Uniprinter.hpp"
 #include "Types.h"
 #if SEAM == SCRIPT2_STRING
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #define D_COUT_STRING(string) \
   TStringPrint<COut, CHT, ISZ>(StdOut(), string)
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #define D_COUT_STRING(string)
 #endif
 namespace _ {

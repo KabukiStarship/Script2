@@ -32,18 +32,18 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
 | 19 | TME  |   uint128_t  |  16   | 16-byte Linear ID Universally Unique Identifier. |
-| 20 | CTA  |  Data Type A |   ?   | Implementation-defined custom Data Type A. |
-| 21 | CTB  |  Data Type B |   ?   | Implementation-defined Custom Data Type B. |
-| 22 | CTC  |  Data Type C |   ?   | Implementation-defined Custom Data Type C. |
-| 23 | CTD  |  Data Type D |   ?   | Implementation-defined Custom Data Type D. |
-| 24 | CTE  |  Data Type E |   ?   | Implementation-defined Custom Data Type E. |
-| 25 | CTF  |  Data Type F |   ?   | Implementation-defined Custom Data Type F. |
-| 26 | CTG  |  Data Type G |   ?   | Implementation-defined Custom Data Type G. |
-| 27 | CTH  |  Data Type H |   ?   | Implementation-defined Custom Data Type H. |
-| 28 | CTK  |  Data Type I |   ?   | Implementation-defined Custom Data Type I. |
-| 29 | CTJ  |  Data Type J |   ?   | Implementation-defined Custom Data Type J. |
-| 30 | CTK  |  Data Type K |   ?   | Implementation-defined Custom Data Type K. |
-| 31 | BFA  |   uint8_t    |   1   | 1-byte field of 8 boolean values. |
+| 20 | CTA  |  Data Type A |   ?   | Custom Data Type A. |
+| 21 | CTB  |  Data Type B |   ?   | Custom Data Type B. |
+| 22 | CTC  |  Data Type C |   ?   | Custom Data Type C. |
+| 23 | CTD  |  Data Type D |   ?   | Custom Data Type D. |
+| 24 | CTE  |  Data Type E |   ?   | Custom Data Type E. |
+| 25 | CTF  |  Data Type F |   ?   | Custom Data Type F. |
+| 26 | CTG  |  Data Type G |   ?   | Custom Data Type G. |
+| 27 | CTH  |  Data Type H |   ?   | Custom Data Type H. |
+| 28 | CTK  |  Data Type I |   ?   | Custom Data Type I. |
+| 29 | CTJ  |  Data Type J |   ?   | Custom Data Type J. |
+| 30 | CTK  |  Data Type K |   ?   | Custom Data Type K. |
+| 31 | CTL  |  Data Type L |   ?   | Custom Data Type L. |
 
 ##### List of Types Key
 
@@ -118,7 +118,7 @@ The Size width (SW) bits stores the number of bits uses to store the Object Arra
 
 ##### Illegal Vector Types
 
-Extended types are created by the Illegal Types. All ASCII data types shall be memory aligned on 8, 16, 32, and 64-bit systems. The Illegal Types are types that are not memory aligned on all processors, such as a Stack of ISB with an ISA size width. Because the custom types BOL and DTA through DTL are not defined at this level, there are illegal and potentially illegal types which are remapped to the Extended ASCII Types and Extended Custom Types.
+Extended types are created by the Illegal Types. All ASCII data types shall be memory aligned on 8, 16, 32, and 64-bit systems. The Illegal Types are types that are not memory aligned on all processors, such as a Stack of ISB with an ISA size width. Users cannot create a pointer to a NIL type. Custom types BOL and DTA through DTL are not defined at this level, so there are illegal and potentially illegal types which are remapped to the Extended ASCII Types and Extended Custom Types.
 
 ```AsciiArt
 | Vector |     POD Type 0-31 (1=Valid, 0=Extended Types, ?=User Types)      |
@@ -149,10 +149,17 @@ Extended types are created by the Illegal Types. All ASCII data types shall be m
 
 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
 |:------:|:-----:|:-----:|:-----:|
+|  MT    |  SW   |  VT   |  POD  |
 |  CHA   |   8   |  ARY  |  CHA  |
 |  CHA   |  16   |  ARY  |  CHA  |
 |  CHA   |  32   |  ARY  |  CHA  |
-|  MT    |  SW   |  VT   |  POD  |
+
+| Exists | Binary | Missing                   |
+|:------:|:------:|:-------------------------:|
+|    1   | 0b0001 |                           |
+|    2   | 0b0010 | 3                         |
+|    4   | 0b0100 | 5, 6, 7                   |
+|    8   | 0b1000 | 9, 10, 11, 12, 13, 14, 15 |
 
 ##### Extended Types
 
@@ -164,10 +171,10 @@ The Extended ASCII Types are contiguous types that use offsets such that ISZ mea
 
 | ID  |  Type   |    Name    | Description |
 |:---:|:-------:|:----------:|:------------|
+|   |   INV   |  Invalid   | Invalid type. |
 |   |   BOA   |  Boolean   | 1-byte BOL value. |
 |   |   BOB   |  Boolean   | 2-byte BOL value. |
 |   |   BOC   |  Boolean   | 4-byte BOL value. |
-|   |         |            | .|
 |   |   DTA   | Data Type  | 8-bit ASCII Data Type. |
 |   |   DTB   | Data Type  | 16-bit ASCII Data Type. |
 |   |   DTC   | Data Type  | Two contiguous 16-bit ASCII Data Types. |
@@ -180,9 +187,9 @@ The Extended ASCII Types are contiguous types that use offsets such that ISZ mea
 |   |   BSB   |   BSQ      | 2-byte total B-Sequence.|
 |   |   BSC   |   BSQ      | 4-byte total B-Sequence.|
 |   |   BSD   |   BSQ      | 8-byte total B-Sequence.|
-|   |   LS0   |   List     | TList<ISB, ISA>. |
-|   |   LS1   |   List     | TList<ISC, ISB>. |
-|   |   LS2   |   List     | TList<ISD, ISC>. |
+|   |   LS0   |   List     | TList<ISB, ISA, DTB>. |
+|   |   LS1   |   List     | TList<ISC, ISB, DTB>. |
+|   |   LS2   |   List     | TList<ISD, ISC, DTB>. |
 |   |   DI0   | Dictionary | TDic<CHA, ISC, ISB, IUC, DTB>. |
 |   |   DI1   | Dictionary | TDic<CHA, ISD, ISC, IUD, DTB>. |
 |   |   DI2   | Dictionary | TDic<CHB, ISC, ISB, IUC, DTB>. |
@@ -252,6 +259,10 @@ The Modifier Bits (MOD) allow for the creation of pointers and const pointers to
 | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
 |:-------:|:------:|:-----:|:-----:|:-----:|
 |   MOD   |   MT   |  SW   |  VT   |  POD  |
+
+|  b15  | b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
+|:-----:|:---:|:------:|:-----:|:-----:|:-----:|
+| Const | PTR |   MT   |  SW   |  VT   |  POD  |
 
 1. POD: Plain Old Data bits
 2. VT: Vector Type bits
