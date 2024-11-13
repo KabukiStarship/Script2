@@ -9,9 +9,9 @@
 #include "Stack.hpp"
 #include "Types.hpp"
 #if SEAM == SCRIPT2_LIST
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 #define LST_A typename ISZ = ISR, typename ISY = ISR, typename DT = DTB
 #define LST_P ISZ, ISY, DT

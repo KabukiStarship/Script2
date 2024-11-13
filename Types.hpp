@@ -450,9 +450,9 @@ inline ISA ATypeTextFormat(DTW type) {
 #include "Uniprinter.hpp"
 
 #if SEAM == SCRIPT2_COUT
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 
 namespace _ {

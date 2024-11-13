@@ -5,15 +5,13 @@ title: ''
 labels: ''
 assignees: ''
 ---
-
-
 ## Problem
 
-The problem I am addressing on this mission is...
+The problem I am tackling on this mission is...
 
 ## Solution
 
-The solution that I'm addressing on this mission is...
+The solution is...
 
 ### File Affected
 

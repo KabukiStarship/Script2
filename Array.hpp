@@ -65,9 +65,9 @@ inline IS TArraySizeMax() {
 #if SEAM >= SCRIPT2_STACK
 #include "Binary.hpp"
 #if SEAM == SCRIPT2_STACK
-#include "_Debug.inl"
+#include "_Debug.hxx"
 #else
-#include "_Release.inl"
+#include "_Release.hxx"
 #endif
 namespace _ {
 

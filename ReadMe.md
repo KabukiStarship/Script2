@@ -24,7 +24,7 @@ The Serial Chinese Room, Interprocess, and Telemetry Specification (SCRIPT Speci
 
 ## Status and Help Wanted
 
-I need help debugging the ASCII Data Types contiguous-memory data structures. Right now (2025-05-18) I'm still working on the Book data structure. It's a show stpeer becasue there are some stuff in the core that is missing, and I can't do anything until the core is fixed. You can switch seams to the Book seam in the `_Seams/_Config.h`. You can find a list of the seams in the `_Seams/_Seams.inl` file. You will need to Fork this repo to contribute and debug in your own fork, then push the changes to your fork and then merge with the master branch from there. The current show stopper is the memory copy algorithms.
+I need help debugging the ASCII Data Types contiguous-memory data structures. Right now (2025-05-18) I'm still working on the Book data structure. It's a show stpeer becasue there are some stuff in the core that is missing, and I can't do anything until the core is fixed. You can switch seams to the Book seam in the `_Seams/_Config.h`. You can find a list of the seams in the `_Seams/_Seams.hxx` file. You will need to Fork this repo to contribute and debug in your own fork, then push the changes to your fork and then merge with the master branch from there. The current show stopper is the memory copy algorithms.
 
 ## Documentation
 
