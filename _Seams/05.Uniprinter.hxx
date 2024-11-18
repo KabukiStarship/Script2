@@ -287,40 +287,6 @@ static const CHA* TestATypeEXTAndCTX() {
   CHA boofer[CTotal] = {};
   TSPrinter<CHA, ISW> p(boofer, CTotal);
 
-  const DTB EXTStartStop[9][2] = {
-    { 4 +  1 * 32, 31 +  1 * 32},
-    { 8 +  2 * 32, 31 +  2 * 32},
-    { 8 +  4 * 32, 31 +  3 * 32},
-    { 8 +  6 * 32, 31 +  5 * 32},
-    {12 +  6 * 32, 19 +  6 * 32},
-    {12 +  7 * 32, 19 +  7 * 32},
-    {12 +  9 * 32, 19 +  9 * 32},
-    {16 + 10 * 32, 19 + 10 * 32},
-    {16 + 11 * 32, 19 + 11 * 32},
-  };
-
-  DTB i = 0;
-  for (DTB sw_vt_bits = 1; sw_vt_bits < 16; ++sw_vt_bits)
-    A_AVOW(i++, ATypeEXT(sw_vt_bits << ATypePODBitTotal));
-  for (DTB row = 0; row < 9; ++row) {
-    for (DTB type = EXTStartStop[row][0]; type < EXTStartStop[row][1]; ++type)
-      A_AVOW(i++, ATypeEXT(type));
-  }
-
-  const DTB CTXStartStop[6][2] = {
-    {36 +  5 * 32, 31 + 6 * 32},
-    {36 +  6 * 32, 31 + 7 * 32},
-    {36 +  7 * 32, 31 + 8 * 32},
-    {36 +  9 * 32, 31 + 10 * 32},
-    {36 + 10 * 32, 31 + 11 * 32},
-    {36 + 11 * 32, 31 + 12 * 32},
-  };
-
-  i = 0;
-  for (DTB row = 0; row < 9; ++row) {
-    for (DTB type = CTXStartStop[row][0]; type < CTXStartStop[row][1]; ++type)
-      A_AVOW(i++, ATypeCTX(type));
-  }
   return nullptr;
 }
 

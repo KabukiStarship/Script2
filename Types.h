@@ -37,9 +37,6 @@ void* ATypeValueEnd(void* value, DTB type);
 // Converts a 16-bit ASCII Data Type bit pattern to Extended ASCII Type mapping.
 inline DTB ATypeEXT(DTB value);
 
-// Converts a 16-bit ASCII Data Type bit pattern to Context ASCII Type mapping.
-inline DTB ATypeCTX(DTB value);
-
 /* Stores a pointer to the ASCII data type and it's value. */
 struct ATypeValue {
   DTW   type;         //< ASCII data type word.

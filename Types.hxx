@@ -100,7 +100,7 @@ DTB ATypeEXT(DTB type) {
   type ^= MOD << ATypeMODBit0;
   if (type < _INV || type > ATypeCTXMax) return 0;
   const DTB SW_VT = type >> ATypeVTBit0;
-  const DTB POD ^= SW_VT << ATypeVTBit0;
+  const DTB POD = type ^ SW_VT << ATypeVTBit0;
   if (SW_VT && !POD) return SW_VT; //< A
   if ((SW_VT & ATypePODMask) == 0) return 0;
   if (POD < _FPC) return 0;
