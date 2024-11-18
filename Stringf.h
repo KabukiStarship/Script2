@@ -1,9 +1,19 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_STRINGF_DECL
 #define SCRIPT2_STRINGF_DECL 1
 namespace _ {
+
+// Returns true if the item is printable.
+BOL CHIsPrintable(CHA item);
+BOL CHIsPrintable(CHB item);
+BOL CHIsPrintable(CHC item);
+
+// Returns true if the item is not printable or is whitespace.
+BOL CHIsBlank(CHA item);
+BOL CHIsBlank(CHB item);
+BOL CHIsBlank(CHC item);
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
 LIB_MEMBER const CHA* STAPrintCharsHeader();
@@ -16,88 +26,6 @@ LIB_MEMBER const CHA* STAPrintHexHeader();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
 LIB_MEMBER const CHA* STAPrintHexBorder();
-
-/* Gets the string representations of the given ASCII POD Type 0-31. */
-LIB_MEMBER const CHA* STAATypesPOD();
-LIB_MEMBER const CHA* STAATypesPOD(ISA type);
-LIB_MEMBER const CHA* STAATypesPOD(ISB type);
-LIB_MEMBER const CHA* STAATypesPOD(ISC type);
-LIB_MEMBER const CHA* STAATypesPOD(ISD type);
-
-/* Gets the string representations of the b6:b5 Vector type. */
-LIB_MEMBER const CHA* STRATypesVector();
-LIB_MEMBER const CHA* STRATypesVector(ISA index);
-LIB_MEMBER const CHA* STRATypesVector(ISB index);
-LIB_MEMBER const CHA* STRATypesVector(ISC index);
-LIB_MEMBER const CHA* STRATypesVector(ISD index);
-
-/* Gets the string representations of the b6:b5 Vector types classes.
-Classes are VHT, ARY, SCK, and MAT. */
-LIB_MEMBER const CHA* STRATypesVectorClass();
-LIB_MEMBER const CHA* STRATypesVectorClass(ISA index);
-LIB_MEMBER const CHA* STRATypesVectorClass(ISB index);
-LIB_MEMBER const CHA* STRATypesVectorClass(ISC index);
-LIB_MEMBER const CHA* STRATypesVectorClass(ISD index);
-
-/* Gets the string representations of the b15:b14 modifier bits. */
-LIB_MEMBER const CHA* STRATypesModifier();
-LIB_MEMBER const CHA* STRATypesModifier(ISA index);
-LIB_MEMBER const CHA* STRATypesModifier(ISB index);
-LIB_MEMBER const CHA* STRATypesModifier(ISC index);
-LIB_MEMBER const CHA* STRATypesModifier(ISD index);
-
-/* Gets the string representations of the b15:b14 modifier bits. */
-LIB_MEMBER const CHA* STRAATypesMap();
-LIB_MEMBER const CHA* STRAATypesMap(ISA index);
-LIB_MEMBER const CHA* STRAATypesMap(ISB index);
-LIB_MEMBER const CHA* STRAATypesMap(ISC index);
-LIB_MEMBER const CHA* STRAATypesMap(ISD index);
-
-/* Gets the string representations of the b15:b14 modifier bits. */
-LIB_MEMBER const CHA* STRATypesString();
-LIB_MEMBER const CHA* STRATypesString(ISA index);
-LIB_MEMBER const CHA* STRATypesString(ISB index);
-LIB_MEMBER const CHA* STRATypesString(ISC index);
-LIB_MEMBER const CHA* STRATypesString(ISD index);
-
-// Returns true if the given type is a CHA, CHB, or CHC.
-LIB_MEMBER BOL ATypeIsCH(DTB type);
-
-// string that reads "true".
-#if USING_UTF8 == YES_0
-LIB_MEMBER const CHA* STATrue();
-#endif
-#if USING_UTF16 == YES_0
-LIB_MEMBER const CHB* STBTrue();
-#endif
-#if USING_UTF32 == YES_0
-LIB_MEMBER const CHC* STCTrue();
-#endif
-
-// String that reads "false".
-#if USING_UTF8 == YES_0
-LIB_MEMBER const CHA* STAFalse();
-#endif
-#if USING_UTF16 == YES_0
-LIB_MEMBER const CHB* STBFalse();
-#endif
-#if USING_UTF32 == YES_0
-LIB_MEMBER const CHC* STCFalse();
-#endif
-
-// Returns the string "true" or "false".
-#if USING_UTF8 == YES_0
-LIB_MEMBER const CHA* STATF(BOL value);
-#endif
-#if USING_UTF16 == YES_0
-LIB_MEMBER const CHB* STBTF(BOL value);
-#endif
-#if USING_UTF32 == YES_0
-LIB_MEMBER const CHC* STCTF(BOL value);
-#endif
-
-/* SCRIPT Specification error strings. */
-//const CHA* TAErrors<>(ISA error_number);
 
 /* Converts a IUA into a two-IUA hex representation.
 @return Returns -1 if c is not a hex IUA. */

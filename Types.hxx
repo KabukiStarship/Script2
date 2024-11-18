@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "Types.hpp"
 #if SEAM == SCRIPT2_COUT
 #include "_Debug.hxx"
@@ -92,6 +92,37 @@ void* ATypeValueEnd(void* value, DTB type) {
 //ISA ATypeCustomAlignMask(DTA type) {
 //  return 0;
 //}
+
+/* Converts an ASCII Data Type to Extended Type.
+@return If the type isn't an extended type, (type & 0x7fff) * -1. */
+DTB ATypeEXT(DTB type) {
+  const DTB MOD = type >> ATypeMODBit0;
+  type ^= MOD << ATypeMODBit0;
+  if (type < _INV || type > ATypeCTXMax) return 0;
+  const DTB SW_VT = type >> ATypeVTBit0;
+  const DTB POD ^= SW_VT << ATypeVTBit0;
+  if (SW_VT && !POD) return SW_VT; //< A
+  if ((SW_VT & ATypePODMask) == 0) return 0;
+  if (POD < _FPC) return 0;
+  if (SW_VT < 4) {
+    if (POD >= _FPC) return type; //< B
+    if (POD < _FPB || SW_VT > 2) return 0;
+  }
+  if (POD >= _CTE) 
+    return ATypeEXTTotal + (((SW_VT - 4) << ATypeVTBit0) | (POD - 16)); //< C
+  if (POD >= _CTA) {
+    if (SW_VT < 8)
+      return ATypeEXTTotal + (((SW_VT - 4) << ATypeVTBit0) | (POD - 12)); //< D
+    return ATypeEXTTotal + (((SW_VT - 8) << ATypeVTBit0) | (POD - 12));  //< E
+  }
+  if (SW_VT < 8) {
+    if (POD < _FPD) 
+      return ATypeEXTTotal + (((SW_VT - 5) << 8) | (POD - 12)); //< F
+    if (POD < _FPC || SW_VT > 5) return 0;
+  }
+  if (SW_VT < 12) return 16 + (((SW_VT - 5) << 4) | (POD - 12)); //< G
+  return POD + 12;  //< H
+}
 
 TypeValue::TypeValue() : type_(_NIL), word_(0), word_2_(0) {}
 TypeValue::TypeValue(void* item) : type_(_PTR), word_(IUW(item)), word_2_(0) {}

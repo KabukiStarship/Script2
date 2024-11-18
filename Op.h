@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef INCLUDED_SCRIPT2_OP_DECL
 #define INCLUDED_SCRIPT2_OP_DECL

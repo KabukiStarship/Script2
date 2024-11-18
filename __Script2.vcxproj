@@ -140,7 +140,6 @@
     <None Include="Tasks.json" />
     <None Include="_Seams\20.Seam.s2" />
     <None Include="_Seams\ReadMe.md" />
-    <None Include="_Seams\_Seams.inl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

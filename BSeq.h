@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_BSEQ_DELC
 #define SCRIPT2_BSEQ_DELC

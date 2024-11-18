@@ -36,12 +36,10 @@ Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/
 
 **[<< Previous Section: Terminals](Terminals.md) | [Next Section: Congestion Control >>](CongestionControl.md)**
 
-## License
-
 ## Requirements
 
 [1] ./
 
-Copyright [Kabuki Starship](https://kabukistarship.com).
+## License
 
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+Copyright Kabuki Starship <<https://github.com/KabukiStarship/Script2>>.

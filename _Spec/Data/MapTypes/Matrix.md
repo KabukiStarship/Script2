@@ -46,7 +46,7 @@ struct TMatrix {
                |   |  | | | | |      |  |    REALLY fast to interpret!
                v   v  v   v v v      v  v
 ui1_matrix = [IUA#2<1 x 1 x 3>]{ 1, 2, (3) }
-flt_matrix = [FLT#2<1 x 1 x 3>]{ 1.0, 2.0, 3.0 }
+fpd_matrix = [FPD#2<1 x 1 x 3>]{ 1.0, 2.0, 3.0 }
 3d_matrix  = [IUA#2<1 x 3 x 3>]{ 1, 2, 3; 1, 2, 3; 1, 2, 3 }
 /*                                                  ^
                                                     |
@@ -65,6 +65,4 @@ Matlab style Multi-dimensional matrix separator ---+   */
 
 ## License
 
-Copyright [Kabuki Starship](https://kabukistarship.com).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+Copyright Kabuki Starship <<https://github.com/KabukiStarship/Script2>>.

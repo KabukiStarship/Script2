@@ -1,9 +1,9 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef INCLUDED_SCRIPT2_MATRIX
 #define INCLUDED_SCRIPT2_MATRIX
 #include <_Config.h>
-#if SEAM >= SCRIPT2_MATRIX
+#if SEAM >= 1 //SCRIPT2_MATRIX
 #include "Stack.hpp"
 namespace _ {
 
@@ -30,9 +30,9 @@ Please see the ASCII Data Specificaiton for DRY documentation.
 */
 template<typename ISZ = ISN>
 struct TMatrix {
-  ISZ size;                //< Number of elements in the Matrix.
-  ISZ neo_from_the_Matrix; //< Agent Smith bruh.
-  TStack<SCK_P> dimensions;  //< The stack of dimensions.
+  ISZ bytes,                //< Size in bytes.
+      elems;                //< Total number of matrix elements.
+  TStack<ISZ> dimensions;   //< Stack of dimensions.
 };
 
 /* Max number of elements that can fit in the given ISZ. */
@@ -57,7 +57,7 @@ inline ISZ TMatrixArraySizeMax(ISZ dimensions_total) {
 template<typename Printer, typename T = ISW, typename ISZ = ISN>
 Printer& TMatrixPrint(Printer& o, TMatrix<ISZ>* matrix) {
   A_ASSERT(matrix);
-  ISZ size = matrix->size, 
+  ISZ size = matrix->bytes, 
       dimension_size  = matrix->dimensions.total,
       dimension_count = matrix->dimensions.count;
 
@@ -136,7 +136,7 @@ ISZ TMatrixSize(const ISZ* dimensions, const ISZ* delta) {
 template<typename T = ISW, typename ISZ = ISN>
 ISZ TMatrixSize(const TMatrix<ISZ>* matrix) {
   D_ASSERT(matrix);
-  return ISZ(sizeof(TMatrix<ISZ>)) + matrix->size * sizeof(T) + 
+  return ISZ(sizeof(TMatrix<ISZ>)) + matrix->bytes * sizeof(T) + 
          matrix->dimensions->total * sizeof(ISZ);
 }
 
@@ -175,7 +175,7 @@ TMatrix<ISZ>* TMatrixInit(const ISZ* dimensions) {
 @return Pointer to the first element in the array. */
 template<typename T, typename ISZ = ISN>
 inline T* TMatrixStart(TMatrix<ISZ>* obj) {
-  return TPtr<T>(TStackStart<ISZ, ISZ>(&obj->dimensions) + obj->size);
+  return TPtr<T>(TStackStart<ISZ, ISZ>(&obj->dimensions) + obj->bytes);
 }
 
 /* Creates a immutable array of dimensions. */

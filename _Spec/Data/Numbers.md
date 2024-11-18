@@ -98,7 +98,7 @@ FPD - 0.1;  // Wastes a whole lot of space!
 FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 ```
 
-**[<< Previous Section: Types](Types.md) | [Next Section: Timestamps >>](Timestamps.md)**
+**[<< Previous Section: Extended Types](ExtendedTypes.md) | [Next Section: Timestamps >>](Timestamps.md)**
 
 ## Requirements
 
@@ -106,6 +106,4 @@ FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 
 ## License
 
-Copyright [Kabuki Starship](https://kabukistarship.com).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+Copyright Kabuki Starship <<https://github.com/KabukiStarship/Script2>>.

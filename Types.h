@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #include <_Config.h>
 #ifndef SCRIPT2_TYPES_DECL
@@ -11,7 +11,7 @@ DTB ATypePack(DTB pod, DTB vt, DTB sw);
 DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt);
 DTB ATypePack(DTB pod, DTB vt, DTB sw, DTB mt, DTB mod);
 
-// Returns true if the given type is CHA, CHB, or CHC.
+// Returns true if the given type is a CHA, CHB, or CHC.
 BOL ATypeIsCH(DTB type);
 
 // Returns the size of the given type in bytes.
@@ -33,6 +33,12 @@ void* ATypeValueEnd(void* value, DTB type);
 
 // Returns the custom time alignment mask for the given type.
 //ISA ATypeCustomAlignMask(DTA type);
+
+// Converts a 16-bit ASCII Data Type bit pattern to Extended ASCII Type mapping.
+inline DTB ATypeEXT(DTB value);
+
+// Converts a 16-bit ASCII Data Type bit pattern to Context ASCII Type mapping.
+inline DTB ATypeCTX(DTB value);
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct ATypeValue {

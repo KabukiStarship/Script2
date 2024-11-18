@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "BOut.hpp"
 #if SEAM >= SCRIPT2_CRABS
 #include "Args.h"

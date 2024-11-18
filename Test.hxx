@@ -1,8 +1,5 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "Test.h"
-#define D_RUN(test_unit) \
-  { auto result = test_unit(); if(!result) return result; }
-//
 #include "COut.h"
 #include "Stringf.hpp"
 namespace _ {
@@ -66,14 +63,14 @@ const CHA* TestTree(const CHA* args, TestCase* tests, ISN count) {
 
 ISN SeamResult(const CHA* result) {
   if (result) {
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+    #if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
     COut("\n\nError in seam ").Print(result);
-#endif
+    #endif
     return APP_EXIT_FAILURE;
   }
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  #if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
   COut("\n\nUnit tests completed successfully! (:-)+==<\n");
-#endif
+  #endif
   return APP_EXIT_SUCCESS;
 }
 

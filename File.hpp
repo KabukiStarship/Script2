@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include <_Config.h>
 #ifndef SCRIPT2_FILE_TEMPLATES
 #define SCRIPT2_FILE_TEMPLATES

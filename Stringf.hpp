@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_STRINGF_CODE
 #define SCRIPT2_STRINGF_CODE
@@ -60,81 +60,35 @@ inline CHA ASizeCodef(ISD sw) {
   return 'A' + CHA(sw);
 }
 
-// 
+//
 template<typename T>
 constexpr Sizef CSizef() {
   return { -CASizeCodef<T>() };  // dez nutz.
 }
 
-template<typename IS>
-const CHA* TSTAATypesPOD(IS type) {
-  auto strings = STAATypesPOD();
-  auto total = ATypePODCount;
-  type = (type < 0 || type > total) ? total : type;
-  return &strings[type << 2];
-}
-
-template<typename IS>
-const CHA* TSTRATypesVector(IS value) {
-  auto strings = STRATypesVector();
-  auto value_max = 15;
-  value = (value < 0 || value > value_max) ? value_max : value;
-  return &strings[value << 2];
-}
-
-template<typename IS>
-const CHA* TSTRATypesVectorClass(IS value) {
-  auto strings = STRATypesVectorClass();
-  auto value_max = 15;
-  value = (value < 0 || value > value_max) ? value_max : value;
-  return &strings[value << 2];
-}
-
-template<typename IS>
-const CHA* TSTRATypesModifier(IS value) {
-  auto strings = STRATypesModifier();
-  auto value_max = 15;
-  value = (value < 0 || value > value_max) ? value_max : value;
-  return &strings[value << 2];
-}
-
-template<typename IS>
-const CHA* TSTRATypesString(IS value) {
-  auto strings = STRATypesString();
-  auto value_max = 15;
-  value = (value < 0 || value > value_max) ? value_max : value;
-  return &strings[value << 2];
-}
-
-/* Gets one of the STRATypes. */
-inline const CHA* STAATypePOD(DTW index) {
-  if (index < 0 || index >= Invalid) index = 32;
-  return STAATypesPOD() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRATypes. */
-inline const CHA* STAATypeVector(DTW index) {
-  if (index < 0 || index >= 4) index = 0;
-  return STRATypesVector() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRATypes. */
-inline const CHA* STAATypeVectorClasses(DTW index) {
-  if (index < 0 || index >= 16) index = 16;
-  return STRATypesVectorClass() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRATypes. */
-inline const CHA* STAATypeMap(DTW index) {
-  if (index < 0 || index >= 4) index = 0;
-  return STRAATypesMap() + (index << 2); // << 2 to * 4
-}
-
-/* Gets one f the STRATypes. */
-inline const CHA* STAATypeModifier(DTW index) {
-  if (index < 0 || index >= 4) index = 0;
-  return STRATypesModifier() + (index << 2); // << 2 to * 4
-}
+//// Gets one f the STRATypes.
+//inline const CHA* STAATypeVector(DTW index) {
+//  if (index < 0 || index >= 4) index = 0;
+//  return STRATypesVector() + (index << 2); // << 2 to * 4
+//}
+//
+//// Gets one f the STRATypes.
+//inline const CHA* STAATypeVectorClasses(DTW index) {
+//  if (index < 0 || index >= 16) index = 16;
+//  return STRATypesVectorClass() + (index << 2); // << 2 to * 4
+//}
+//
+//// Gets one f the STRATypes.
+//inline const CHA* STAATypeMap(DTW index) {
+//  if (index < 0 || index >= 4) index = 0;
+//  return STRAATypesMap() + (index << 2); // << 2 to * 4
+//}
+//
+//// Gets one f the STRATypes.
+//inline const CHA* STAATypeModifier(DTW index) {
+//  if (index < 0 || index >= 4) index = 0;
+//  return STRATypesModifier() + (index << 2); // << 2 to * 4
+//}
 
 inline ISN STRLength(IUA value) {
   if (value < 10) return 1;

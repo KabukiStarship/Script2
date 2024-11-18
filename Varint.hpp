@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>; all rights reserved.
+// Copyright Kabuki Starship <kabukistarship.com>; all rights reserved.
 #pragma once
 #ifndef SCRIPT2_VARINT_INLINE_CODE
 #define SCRIPT2_VARINT_INLINE_CODE

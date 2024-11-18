@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_DIC_TEMPLATES
 #define SCRIPT2_DIC_TEMPLATES
@@ -165,7 +165,6 @@ Printer& TDicPrint(Printer& o, const DIC* dic) {
     " keys_size:" << keys_size);
   D_AVOW(total, ISY(keys->map.total));
   D_AVOW(count, ISY(keys->map.count));
-  //D_COUT_TABLE(keys);
   const ISZ* keys_map = TTableKeysMap<TBL_P>(keys, total);
   o << Linef("\n+---\n| Dic<CH") << CSizeCodef<CHT>() 
     << ",IS" << CSizeCodef<ISZ>() << ",IS"
@@ -271,8 +270,7 @@ inline DIC* TDicInit(DIC* dic,
   TBL* keys = TListValue<LST_P, TBL>(values, keys_index);
   D_COUT("\nkeys_index  :" << keys_index <<
          "\nkeys offset : " << TDelta<>(dic, keys) <<
-         "\nKeysType:0b" << Binaryf(KeysType) << ' ' <<
-         TPrintAType<COut>(StdOut(), KeysType) <<
+         "\nKeysType:0b" << Binaryf(KeysType) << ' ' << ATypef(KeysType) <<
          "\nvalue_offsets_delta:" << TDelta<>(dic, TDicValuesMap<DIC_P>(dic)) <<
          "\nkeys_delta:" << TDelta<>(dic, keys) << 
          " size_bytes_found:" << *TPtr<ISZ>(keys));
@@ -410,21 +408,15 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key,
     D_COUT_DIC(table);
     return -ErrorKeysBooferOverflow;
   }
-  //D_COUT_TABLE(keys);
-  //D_COUT("\n\nBefore:\n" << Charsf(table, table->values.bytes));
   ISY index = TListInsert<LST_P>(&table->values, item);
   if (index < 0) {
-#if SEAM == SCRIPT2_DIC
     D_COUT("\nFailed to insert into List with error " << index << ':' <<
       CrabsErrorSTR(-index));
     D_COUT_LIST(&table->values);
-    D_COUT("\n\nList memory: &table->values.bytes:" << *&table->values.bytes << '\n');
-    D_COUT(Charsf(&table->values, &table->values.bytes));
-    //D_COUT("After:\n" << Charsf(table, table->values.bytes));
-#endif
+    D_COUT("\n\nList memory: &table->values.bytes:" << *&table->values.bytes <<
+      '\n' << Charsf(&table->values, &table->values.bytes));
     TTableRemove<TBL_P>(keys, index);
   }
-  //D_COUT("After:\n" << Charsf(table, table->values.bytes));
   return tbl_index;
 }
 template<typename T, DIC_A>
@@ -534,31 +526,28 @@ inline ISY TDicInsertFrom(DIC* table, TBL* keys, const CHT* key,
   D_COUT("\nAdding \"" << key << "\" type:" << ATypef(type) << ":0d" << type <<
     ":0x" << Hexf(type) << ":\'" << CHA(type) << "\' value(offset):" <<
     TDelta<>(table, value));
-  //D_COUT("\n\nList memory before:\n" <<
-  //  Charsf(&table->values, *&table->values.bytes));
   auto key_index = TTableAppend<TBL_P>(keys, key);
   if (key_index < 0) {
-    D_FAIL();
+    SCRIPT2_FAIL();
     return key_index;
   }
   auto result = TListInsert<LST_P>(&table->values, type, value);
   if (result < 0) {
     TTableRemove<TBL_P>(keys, key_index);
-    D_FAIL();
+    SCRIPT2_FAIL();
   }
   D_COUT_DIC(table);
-  //D_COUT_LIST(&table->values);
   return key_index;
 }
 template<DIC_A>
 inline ISY TDicInsertFrom(DIC* table, TBL* keys,
-  const CHT* key, DT type, ISZ value_offset, ISY index = PSH) {
+    const CHT* key, DT type, ISZ value_offset, ISY index = PSH) {
   return TDicInsert<DIC_P>(table, keys, key, type,
     TPtr<>(&table->values, value_offset), index);
 }
 template<DIC_A>
 inline ISY TDicInsertFrom(DIC* table, const CHT* key, DT type,
-  const void* value, ISY index = PSH) {
+    const void* value, ISY index = PSH) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, type,
     value, index);
 }
@@ -593,10 +582,17 @@ DIC* TDicAppend(DIC* table, const DIC* source) {
   const ISZ* src_values_map = TDicValuesMap<DIC_P>(source) + 1;
   const DT* src_types = TDicTypes<DIC_P>(source, src_total) + 1;
   TBL* keys = TDicKeys<DIC_P>(table);
+#if SEAM == SCRIPT2_CRABS
+  TDicPrint<COut, DIC_P>(StdOut(), source);
+  StdOut() << "\nsrc_size:" << src_size;
+#endif
   for (ISY i = 1; i < src_count; ++i) {
     D_COUT("\n\ni:" << i);
     const CHT* key = TPtr<CHT>(src_keys_map, *(src_keys_map + i));
     ISZ value_offset = *src_values_map++;
+#if SEAM == SCRIPT2_CRABS
+    StdOut() << "\nvalue_offset:" << value_offset;
+#endif
     DT  type   = *src_types++;
     ISY result = TDicInsertFrom<DIC_P>(table, keys, key, type,
       TPtr<>(&table->values, value_offset));
@@ -656,8 +652,6 @@ BOL TDicGrow(Autoject& obj) {
   TDicAppend<DIC_P>(destination, source);
   obj.origin = origin_new;
   D_COUT("\n\nFinished growing. :-)\n\n");
-  //D_COUT_DIC(TPtr<DIC>(origin_new));
-  //TDicPrintStruct<COut, DIC_P>(StdOut(), TPtr<DIC>(origin_new));
   D_COUT_TABLE(TDicKeys<DIC_P>(TPtr<DIC>(origin_new)));
   return true;
 }

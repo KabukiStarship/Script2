@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
 #define SCRIPT2_KABUKI_BINARY_WITH_TEMPLATES
@@ -235,10 +235,10 @@ constexpr ISN TBitCode() {
   if (dt <= _CHC) return 2;
   if (dt <= _TMD) return 3;
   if (dt <= _ISE) return 4;
-  if (dt <= _CT4) return 4;
-  if (dt <= _CT3) return 3;
-  if (dt <= _CT2) return 2;
-  if (dt <= _CT1) return 1;
+  if (dt <= _CTE) return 4;
+  if (dt <= _CTD) return 3;
+  if (dt <= _CTC) return 2;
+  if (dt <= _CTB) return 1;
   return 0;
 }
 

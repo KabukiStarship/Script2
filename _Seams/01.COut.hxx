@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #if SEAM >= SCRIPT2_COUT
 #include "../Uniprinter.hpp"
 #if SEAM == SCRIPT2_COUT

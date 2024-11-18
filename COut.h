@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_COUT_DECL
 #define SCRIPT2_COUT_DECL
@@ -6,11 +6,6 @@
 #if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 #include "Stringf.h"
 namespace _ {
-
-/* Returns true if the item is printable*/
-BOL CIsPrintable(CHA item);
-BOL CIsPrintable(CHB item);
-BOL CIsPrintable(CHC item);
 
 /* Utility class for printing to the stdout. */
 class LIB_MEMBER COut {

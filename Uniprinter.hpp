@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT2_STRING_CODE
 #define SCRIPT2_STRING_CODE
@@ -705,12 +705,12 @@ Printer& TPrintATypePOD(Printer& p, DT type) {
 |   MOD   |   MT   |  SW   |  VT   |  POD  | */
 template<typename Printer>
 Printer& TPrintAType(Printer& p, DTB type) {
-  auto mod_bits = type >> ATypeMODBit0;
+  ISW mod_bits = ISW(type >> ATypeMODBit0);
   if (mod_bits) {
     type ^= mod_bits << ATypeMODBit0;
-    p << STAATypeModifier(mod_bits) << '_';
+    p << TATypeModifiers<>(mod_bits) << '_';
   }
-  if (type < ATypePODCount) return p << STAATypePOD(type); // POD Type
+  if (type < ATypePODTotal) return p << TATypePODs<>(type); // POD Type
   // Processing from MOD to POD/left to right.
   auto map_type = type >> ATypeMTBit0;
   type ^= map_type << ATypeMTBit0;
@@ -719,13 +719,15 @@ Printer& TPrintAType(Printer& p, DTB type) {
   auto vector_type = type >> ATypeVTBit0;
   type ^= vector_type << ATypeVTBit0;
   if (map_type)
-    p << STAATypeMap(size_width) << '_' << STAATypePOD(map_type) << '_';
-  if (!map_type && (vector_type || (!vector_type && size_width)))
-    return p << STRATypesVector(vector_type | (size_width << 2))
-             << '_' << STAATypePOD(type);
+    return p << TATypeMaps<>(map_type >> 4) 
+      << '_' << TATypePODs<>(map_type & 0xf)
+      << '_' << TATypePODs<>(type);
+  if (vector_type || !vector_type && size_width)
+    return p << TATypeVectors<>(size_width, vector_type)
+             << '_' << TATypePODs<>(type);
   if (ATypeIsCH(type) && map_type == 0) // Then it's a string, loom, or.
     return p << "ST" << ASizeCodef(size_width);
-  return p << STAATypePOD(type);
+  return p << TATypePODs<>(type);
 }
 // NIL->CHA   -> 0x01351f =: "dez nutz!\0"
 // ANY->NIL 16-bit -> 
@@ -761,6 +763,17 @@ Printer& TPrintAType(Printer& p, DTD type) {
     if (type == 0) return p;
   }
   return p;
+}
+
+template<typename Printer, typename CHT = CHR>
+Printer& TPrintATypeCSV(Printer& o, const CHT* types) {
+  CHC c = 0;
+  const CHT* token_start = types;
+  ISW state = 0;
+  while (!CHIsBlank(c)) {
+    
+  }
+  return o;
 }
 
 // Prints the value of the given type-value tuple.
@@ -799,21 +812,21 @@ Printer& TPrintValuePOD(Printer& p, DTB type, const void* value) {
 //|   MOD   |   MT   |  SW   |  VT   |  POD  |
 template<typename Printer, typename DT = DTB>
 Printer& TPrintValue(Printer & p, DT type, const void* value) {
-  auto mod_bits = type >> ATypeMODBit0;
+  ISW mod_bits = type >> ATypeMODBit0;
   if (mod_bits) {
     type ^= mod_bits << ATypeMODBit0;
-    p << STAATypePOD(mod_bits);
+    p << TATypePODs(mod_bits);
   }
-  if (type < ATypePODCount) return TPrintValuePOD<Printer>(p, DTB(type), value);
-  auto map_type = type >> ATypeMTBit0;
+  if (type < ATypePODTotal) return TPrintValuePOD<Printer>(p, DTB(type), value);
+  ISW map_type = type >> ATypeMTBit0;
   type ^= map_type << ATypeMTBit0;
-  auto size_width = type >> ATypeSWBit0;
+  ISW size_width = type >> ATypeSWBit0;
   type ^= size_width << ATypeSWBit0;
-  auto vector_type = type >> ATypeVTBit0;
+  ISW vector_type = type >> ATypeVTBit0;
   type ^= vector_type << ATypeVTBit0;
   if (map_type > 0) {
-    if (type < ATypePODCount) { // Map of one POD type to another.
-      return p << STAATypePOD(type);
+    if (type < ATypePODTotal) { // Map of one POD type to another.
+      return p << TATypePODs<>(type);
     }
   }
   p << "total:";
@@ -841,7 +854,7 @@ Printer& TPrintValue(Printer & p, DT type, const void* value) {
       p << *cursor++ << " count:" << *cursor;
     }
   }
-  else if (vector_type == _MAT) {
+  else if (vector_type == _MTX) {
     if (size_width == 0) {
       auto cursor = TPtr<const ISA>(value);
       p << *cursor++ << " count:" << *cursor;

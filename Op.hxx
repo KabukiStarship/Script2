@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "Op.h"
 #if SEAM >= SCRIPT2_DIC
 #include "BSeq.hpp"

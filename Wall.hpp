@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>; all rights reserved.
+// Copyright Kabuki Starship <kabukistarship.com>; all rights reserved.
 #pragma once
 #ifndef SCRIPT2_WALL_CODE
 #define SCRIPT2_WALL_CODE

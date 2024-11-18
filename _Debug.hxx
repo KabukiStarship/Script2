@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "_Undef.hxx"
 //
 #include "Test.hpp"
@@ -7,6 +7,11 @@
 #define A_TEST_BEGIN\
   ::_::COut cout;   \
   cout << Headingf("Testing ", __FUNCTION__, nullptr, nullptr, 80)
+#define A_RUN_TEST(test_unit) \
+  { const CHA* result = test_unit(); if(result) return result; }
+#define D_RUN_TEST(test_unit) \
+  { const CHA* = test_unit(); if(result) return result; }
+#define R_RUN_TEST(test_unit)
 #define D_COUT(item) ::_::StdOut() << item
 #define D_COUT_NL ::_::StdOut().NL()
 #define D_LINEF(item) ::_::StdOut() << Linef(item)
@@ -33,7 +38,7 @@
   ::_::TBookPrint<::_::COut, CHT, ISZ, ISY, DT>(StdOut(), item)
 #define D_COUT_MAP(item) ::_::TMapPrint<::_::COut, D, ISZ>(StdOut(), item)
 #define D_COUT_DIC(item) \
-  ;//::_::TDicPrint<::_::COut, CHT, ISZ, ISY, DT, HSH>(StdOut(), item)
+  ::_::TDicPrint<::_::COut, CHT, ISZ, ISY, DT, HSH>(StdOut(), item)
 #define D_COUT_TABLE(item) \
   TTablePrint<::_::COut, CHT, ISZ, ISY, HSH>(StdOut(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
@@ -171,3 +176,8 @@
       TAErrors<CHR, ISW>(reinterpret_cast<ISW>(IUW(ptr)));\
     return;\
   }
+
+
+#if SEAM < SCRIPT2_SCRIPT2
+#define SCRIPT2_FAIL D_FAIL
+#endif

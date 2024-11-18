@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef INCLUDED_TYPES_CODE
 #define INCLUDED_TYPES_CODE
@@ -72,11 +72,10 @@ ISA ATypeAlignMask(DTB type) {
   if (type <= _CHB) return 1;
   if (type <= _CHC) return ALUAlignC;
   if (type <= _TME) return ALUAlignD;
-  if (type < _CT4) return ALUAlignD;
-  if (type < _CT3) return ALUAlignD;
-  if (type < _CT2) return ALUAlignC;
-  if (type < _CT1) return 1;
-  if (type < _CT0) return 0;
+  if (type < _CTD) return ALUAlignD;
+  if (type < _CTC) return ALUAlignC;
+  if (type < _CTB) return 1;
+  if (type < _CTA) return 0;
   DTB mod = type >> ATypeMODBit0;
   type ^= mod << ATypeMODBit0;
   DTB mt = type >> ATypeMTBit0;
@@ -86,7 +85,7 @@ ISA ATypeAlignMask(DTB type) {
   DTB vt = type >> ATypeVTBit0;
   type ^= vt << ATypeVTBit0;
   if (vt == 0) { // Vetor of 2 to 4 Homo-tuples
-    type &= (ATypePODCount - 1);
+    type &= (ATypePODTotal - 1);
     goto DezNutz;
   }
   switch (sw) {
@@ -102,31 +101,56 @@ ISA ATypeAlignMask(DTD type) {  return ATypeAlignMask(DTB(type)); }
 
 /* Aligns the pointer up to the word boundry required by the type. */
 template<typename T = void>
-const T* TATypeAlignUp(const void* pointer, DTB type) {
-  ISW align_mask = ATypeAlignMask(DTB(type & ATypePODMask));
-  auto ptr = reinterpret_cast<IUW>(pointer);
-  ptr += IUW(-ISW(pointer)) & align_mask;
-  return reinterpret_cast<T*>(ptr);
+T* TATypePtrUp(void* pointer, DTB type) {
+  ISW align_mask = ATypeAlignMask(type);
+  return reinterpret_cast<T*>(ISW(pointer) + (-ISW(pointer) & align_mask));
 }
 template<typename T = void>
-inline T* TATypeAlignUp(void* pointer, DTB type) {
-  return const_cast<T*>(TATypeAlignUp<T>(const_cast<const T*>(pointer), type));
+inline const T* TATypePtrUp(const void* pointer, DTB type) {
+  return const_cast<const T*>(TATypePtrUp<T>(const_cast<T*>(pointer), type));
 }
 template<typename T = void>
-T* TATypeAlignUp(void* pointer, DTC type) {
-  return TATypeAlignUp<T>(pointer, DTB(type));
+T* TATypePtrUp(void* pointer, DTC type) {
+  return TATypePtrUp<T>(pointer, DTB(type));
 }
 template<typename T = void>
-const T* TATypeAlignUp(const void* pointer, DTC type) {
-  return TATypeAlignUp<T>(pointer, DTB(type));
+const T* TATypePtrUp(const void* pointer, DTC type) {
+  return TATypePtrUp<T>(pointer, DTB(type));
 }
 template<typename T = void>
-T* TATypeAlignUp(void* pointer, DTD type) {
-  return TATypeAlignUp<T>(pointer, DTB(type));
+T* TATypePtrUp(void* pointer, DTD type) {
+  return TATypePtrUp<T>(pointer, DTB(type));
 }
 template<typename T = void>
-const T* TATypeAlignUp(const void* pointer, DTD type) {
-  return TATypeAlignUp<T>(pointer, DTB(type));
+const T* TATypePtrUp(const void* pointer, DTD type) {
+  return TATypePtrUp<T>(pointer, DTB(type));
+}
+
+/* Aligns the pointer down to the word boundry required by the type. */
+template<typename T = void>
+T* TATypePtrDown(void* pointer, DTB type) {
+  ISW align_mask = ATypeAlignMask(type);
+  return reinterpret_cast<T*>(ISW(pointer) - (ISW(pointer) & align_mask));
+}
+template<typename T = void>
+inline const T* TATypePtrDown(const void* pointer, DTB type) {
+  return const_cast<const T*>(TATypePtrDown<T>(const_cast<T*>(pointer), type));
+}
+template<typename T = void>
+T* TATypePtrDown(void* pointer, DTC type) {
+  return TATypePtrDown<T>(pointer, DTB(type));
+}
+template<typename T = void>
+const T* TATypePtrDown(const void* pointer, DTC type) {
+  return TATypePtrDown<T>(pointer, DTB(type));
+}
+template<typename T = void>
+T* TATypePtrDown(void* pointer, DTD type) {
+  return TATypePtrDown<T>(pointer, DTB(type));
+}
+template<typename T = void>
+const T* TATypePtrDown(const void* pointer, DTD type) {
+  return TATypePtrDown<T>(pointer, DTB(type));
 }
 
 /* Copies the source to the destination.
@@ -153,8 +177,7 @@ void* TATypeWriteCustom(void* begin, void* end, DTB type) {
 checks.
 @warning You must memory align and verify the boofer fits before calling. */
 template<typename IS = ISR>
-void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value, 
-  ISA align_mask) {
+void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value) {
   // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
   // |:-------:|:------:|:-----:|:-----:|:-----:|
   // |   MOD   |   MT   |  SW   |  VT   |  POD  |
@@ -162,54 +185,53 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value,
   type ^= mod << ATypeMODBit0;
   if (mod && 1) type = _IUW;
 
-  begin = TATypeAlignUp<>(begin, type);
+  ISW align_mask = ATypeAlignMask(type);
+  void* value_aligned_ptr = TPtrUp<>(value, align_mask);
+  auto value_align_delta = ISW(value_aligned_ptr) - ISW(value);
+  void* base_ptr = TPtrUp<>(begin, align_mask);
+  ISW freespace = ISW(end) - ISW(base_ptr);
   if (type <= _CHA) {
     Write1Byte:
-    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
-    if (delta < 1) return nullptr;
-    auto ptr = reinterpret_cast<IUA*>(begin);
-    *ptr++ = *reinterpret_cast<const IUA*>(value);
+    if (freespace < 1) return nullptr;
+    auto ptr = reinterpret_cast<IUA*>(base_ptr);
+    *ptr++ = *reinterpret_cast<const IUA*>(value_aligned_ptr);
     return ptr;
   }
   if (type <= _CHB) {
     Write2Bytes:
-    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
-    if (delta < 2) return nullptr;
-    auto ptr = reinterpret_cast<IUB*>(begin);
-    *ptr++ = *reinterpret_cast<const IUB*>(value);
+    if (freespace < 2) return nullptr;
+    auto ptr = reinterpret_cast<IUB*>(base_ptr);
+    *ptr++ = *reinterpret_cast<const IUB*>(value_aligned_ptr);
     return ptr;
   }
   if (type <= _CHC) {
     Write4Bytes:
-    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
-    if (delta < 4) return nullptr;
-    auto ptr = reinterpret_cast<IUC*>(begin);
-    *ptr++ = *reinterpret_cast<const IUC*>(value);
+    if (freespace < 4) return nullptr;
+    auto ptr = reinterpret_cast<IUC*>(base_ptr);
+    *ptr++ = *reinterpret_cast<const IUC*>(value_aligned_ptr);
     return ptr;
   }
   if (type <= _TMD) {
     Write8Bytes:
-    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
-    if (delta < 8) return nullptr;
-    auto ptr = reinterpret_cast<IUD*>(begin);
-    *ptr++ = *reinterpret_cast<const IUD*>(value);
+    if (freespace < 8) return nullptr;
+    auto ptr = reinterpret_cast<IUD*>(base_ptr);
+    *ptr++ = *reinterpret_cast<const IUD*>(value_aligned_ptr);
     return ptr;
   }
   if (type <= _TME) {
     Write16Bytes:
-    auto delta = reinterpret_cast<IUW>(end) - reinterpret_cast<IUW>(begin);
-    if (delta < 16) return nullptr;
-    auto ptr = reinterpret_cast<IUD*>(begin);
-    auto value_ptr = reinterpret_cast<const IUD*>(value);
+    if (freespace < 16) return nullptr;
+    auto ptr = reinterpret_cast<IUD*>(base_ptr);
+    auto value_ptr = reinterpret_cast<const IUD*>(value_aligned_ptr);
     *ptr++ = *value_ptr++;
     *ptr++ = *value_ptr;
     return ptr;
   }
-  if (type <= _CT4) goto Write16Bytes;
-  if (type <= _CT3) goto Write8Bytes;
-  if (type <= _CT2) goto Write4Bytes;
-  if (type <= _CT1) goto Write2Bytes;
-  if (type <= _CT0) goto Write1Byte;
+  if (type <= _CTE) goto Write16Bytes;
+  if (type <= _CTD) goto Write8Bytes;
+  if (type <= _CTC) goto Write4Bytes;
+  if (type <= _CTB) goto Write2Bytes;
+  if (type <= _CTA) goto Write1Byte;
 
   DTB mt = type >> ATypeMTBit0;
   type ^= mt << ATypeMTBit0;
@@ -220,36 +242,32 @@ void* TATypeWrite_NC(void* begin, void* end, DTB type, const void* value,
   //@todo Fix me!
   if (vt == 0) { // Vector of Homotuples.
     auto bytes = (1 << vt) * ATypeSizeOfPOD(type);
-    return reinterpret_cast<ISA*>(begin) + bytes;
+    return reinterpret_cast<ISA*>(base_ptr) + bytes;
   } else {
     switch (vt) {
       case 0: {
-        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto bytes = *reinterpret_cast<const ISA*>(value);
-        if (delta <= bytes) return nullptr;
-        *reinterpret_cast<ISA*>(begin) = bytes;
-        return reinterpret_cast<ISA*>(begin) + bytes;
+        auto bytes = *reinterpret_cast<const ISA*>(value_aligned_ptr);
+        if (freespace <= bytes) return nullptr;
+        *reinterpret_cast<ISA*>(base_ptr) = bytes;
+        return reinterpret_cast<ISA*>(base_ptr) + bytes;
       }
       case 1: {
-        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto bytes = *reinterpret_cast<const ISB*>(value);
-        if (delta <= bytes) return nullptr;
-        *reinterpret_cast<ISB*>(begin) = bytes;
-        return reinterpret_cast<ISA*>(begin) + bytes;
+        auto bytes = *reinterpret_cast<const ISB*>(value_aligned_ptr);
+        if (freespace <= bytes) return nullptr;
+        *reinterpret_cast<ISB*>(base_ptr) = bytes;
+        return reinterpret_cast<ISA*>(base_ptr) + bytes;
       }
       case 2: {
-        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto bytes = *reinterpret_cast<const ISC*>(value);
-        if (delta <= bytes) return nullptr;
-        *reinterpret_cast<ISC*>(begin) = bytes;
-        return reinterpret_cast<ISA*>(begin) + bytes;
+        auto bytes = *reinterpret_cast<const ISC*>(value_aligned_ptr);
+        if (freespace <= bytes) return nullptr;
+        *reinterpret_cast<ISC*>(base_ptr) = bytes;
+        return reinterpret_cast<ISA*>(base_ptr) + bytes;
       }
       case 3: {
-        auto delta = reinterpret_cast<ISW>(end) - reinterpret_cast<ISW>(begin);
-        auto bytes = *reinterpret_cast<const ISD*>(value);
-        if (delta <= bytes) return nullptr;
-        *reinterpret_cast<ISD*>(begin) = bytes;
-        return reinterpret_cast<ISA*>(begin) + bytes;
+        auto bytes = *reinterpret_cast<const ISD*>(value_aligned_ptr);
+        if (freespace <= bytes) return nullptr;
+        *reinterpret_cast<ISD*>(base_ptr) = bytes;
+        return reinterpret_cast<ISA*>(base_ptr) + bytes;
       }
     }
   }
@@ -314,7 +332,141 @@ inline DT TATypeMap(DTW pod_type, DTW map_type, DTW width_bit_count = 0) {
   return DT(pod_type | (map_type << 9) | (width_bit_count << 14));
 }
 
+// Strings for the POD types 0-31.
+template<typename CHT = CHR>
+const CHT* TATypePODs() {
+  static const CHT Strings[64][4] = {
+      {'N', 'I', 'L', NIL},  //< 00
+      {'I', 'U', 'A', NIL},  //< 01
+      {'I', 'S', 'A', NIL},  //< 02
+      {'C', 'H', 'A', NIL},  //< 03
+      {'F', 'P', 'B', NIL},  //< 04
+      {'I', 'U', 'B', NIL},  //< 05
+      {'I', 'S', 'B', NIL},  //< 06
+      {'C', 'H', 'B', NIL},  //< 07
+      {'F', 'P', 'C', NIL},  //< 08
+      {'I', 'U', 'C', NIL},  //< 09
+      {'I', 'S', 'C', NIL},  //< 10
+      {'C', 'H', 'C', NIL},  //< 11
+      {'F', 'P', 'D', NIL},  //< 12
+      {'I', 'U', 'D', NIL},  //< 13
+      {'I', 'S', 'D', NIL},  //< 14
+      {'T', 'M', 'D', NIL},  //< 15
+      {'F', 'P', 'E', NIL},  //< 16
+      {'I', 'U', 'E', NIL},  //< 17
+      {'I', 'S', 'E', NIL},  //< 18
+      {'T', 'M', 'E', NIL},  //< 19
+      {'D', 'T', 'A', NIL},  //< 20
+      {'D', 'T', 'B', NIL},  //< 21
+      {'D', 'T', 'C', NIL},  //< 22
+      {'D', 'T', 'D', NIL},  //< 23
+      {'D', 'T', 'E', NIL},  //< 24
+      {'D', 'T', 'F', NIL},  //< 25
+      {'D', 'T', 'G', NIL},  //< 26
+      {'D', 'T', 'H', NIL},  //< 27
+      {'D', 'T', 'I', NIL},  //< 28
+      {'D', 'T', 'J', NIL},  //< 29
+      {'D', 'T', 'K', NIL},  //< 30
+      {'D', 'T', 'L', NIL},  //< 31
+      {'I', 'N', 'V', NIL},  //< 32
+  };
+  return &Strings[0][0];
+}
 
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypePODs(IS type) {
+  type = (type < 0 || type > ATypePODTotal) ? ATypePODTotal : type;
+  return &TATypePODs<CHT>()[type << 2];
+}
+
+template<typename CHT = CHR>
+const CHT* TATypeVectors() {
+  static const CHT Strings[17][4] = {
+      {'V', 'H', 'A', NIL},  //< 00
+      {'A', 'R', 'A', NIL},  //< 01
+      {'S', 'C', 'A', NIL},  //< 02
+      {'M', 'A', 'A', NIL},  //< 03
+      {'V', 'H', 'B', NIL},  //< 04
+      {'A', 'R', 'B', NIL},  //< 05
+      {'S', 'C', 'B', NIL},  //< 06
+      {'M', 'A', 'B', NIL},  //< 07
+      {'V', 'H', 'C', NIL},  //< 08
+      {'A', 'R', 'C', NIL},  //< 09
+      {'S', 'C', 'C', NIL},  //< 10
+      {'M', 'A', 'C', NIL},  //< 11
+      {'V', 'H', 'D', NIL},  //< 12
+      {'A', 'R', 'D', NIL},  //< 13
+      {'S', 'C', 'D', NIL},  //< 14
+      {'M', 'A', 'D', NIL},  //< 15
+      {'I', 'N', 'V', NIL},  //< 16
+  };
+  return &Strings[0][0];
+}
+
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypeVectors(IS value) {
+  value = (value < 0 || value > 16) ? 16 : value;
+  return &TATypeVectors<CHT>()[value << 2];
+}
+
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypeVectors(IS size_width_bits, IS vector_type_bits) {
+  IS value = (size_width_bits << 2) | vector_type_bits;
+  value = (value < 0 || value > 16) ? 16 : value;
+  return &TATypeVectors<CHT>()[value << 2];
+}
+
+template<typename CHT = CHR>
+const CHT* TATypeVectorClasses() {
+  static const CHT Strings[5][4] = {
+      {'V', 'H', 'T', NIL},  //< 00
+      {'A', 'R', 'Y', NIL},  //< 01
+      {'S', 'C', 'K', NIL},  //< 02
+      {'M', 'T', 'X', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypeVectorClasses(IS value) {
+  value = (value < 0 || value > 16) ? 16 : value;
+  return &TATypeVectorClasses<CHT>()[value << 2];
+}
+
+template<typename CHT = CHR>
+const CHT* TATypeModifiers() {
+  static const CHT Strings[5][4] = {
+      {'P', 'O', 'D', NIL},  //< 00
+      {'P', 'T', 'R', NIL},  //< 01
+      {'C', 'N', 'S', NIL},  //< 02
+      {'P', 'T', 'C', NIL},  //< 03
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypeModifiers(IS value) {
+  value = (value < 0 || value > 4) ? 4 : value;
+  return &TATypeModifiers<CHT>()[value << 2];
+}
+
+template<typename CHT = CHR>
+const CHT* TATypeMaps() {
+  static const CHT Strings[5][4] = {
+      {'M', 'A', 'C', NIL},  //< 00
+      {'M', 'A', 'D', NIL},  //< 01
+      {'I', 'N', 'V', NIL},  //< 04
+  };
+  return &Strings[0][0];
+}
+
+template<typename CHT = CHR, typename IS = ISW>
+const CHT* TATypeMaps(IS value) {
+  value = (value < 0 || value > 2) ? 2 : value;
+  return &TATypeMaps<CHT>()[value << 2];
+}
 
 /* The ASCII Data Type mask for the SW (Size Width) bits. */
 template<typename IS = CHR, typename DT = DTB>
@@ -339,7 +491,7 @@ inline DT TATypeSize(DT pod_type) {
 
 template<typename IS = ISW>
 IS TATypeSizeOf(const void* value, DTB type) {
-  if (type < ATypePODCount)
+  if (type < ATypePODTotal)
     return ATypeSizeOfPOD(type);
   // | b15:b14 | b13:b9 | b8:b7 | b6:b5 | b4:b0 |
   // |:-------:|:------:|:-----:|:-----:|:-----:|
@@ -510,17 +662,17 @@ inline IUC T() {
 inline ISA ATypeMaskPOD(DTW value) { return value & 0x1f; }
 
 /* Returns true if the given type is an Array type. */
-inline BOL ATypeIsArray(DTW type) { return type >= ATypePODCount; }
+inline BOL ATypeIsArray(DTW type) { return type >= ATypePODTotal; }
 
 inline ISN ATypeSizeWidthCode(ISN type) { return type >> 6; }
 
 /* Extracts the Map Type. */
 inline DTW ATypeMap(DTW core_type, DTW map_type) {
-  return core_type | (map_type << (ATypePODBitCount + 2));
+  return core_type | (map_type << (ATypePODBitTotal + 2));
 }
 
 inline DTW ATypeMap(DTW core_type, DTW map_type, DTW size_width) {
-  return ATypeMap(core_type, map_type) | (size_width << ATypePODBitCount);
+  return ATypeMap(core_type, map_type) | (size_width << ATypePODBitTotal);
 }
 
 inline BOL ATypeIsPOD(DTB type) {

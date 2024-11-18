@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "COut.h"
 #if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
 //
@@ -12,33 +12,6 @@
 #endif
 #define STD_COUT std::wcerr
 namespace _ {
-
-BOL CIsPrintable(CHA item) {
-  if (item < ' ') {
-    if (item == 9) return true; // TAB
-    return false;
-  }
-  if (item == 127) return false;
-  return true;
-}
-
-BOL CIsPrintable(CHB item) {
-  if (item < ' ') {
-    if (item == 9) return true; // TAB
-    return false;
-  }
-  if (item == 127) return false;
-  return true;
-}
-
-BOL CIsPrintable(CHC item) {
-  if (item < ' ') {
-    if (item == 9) return true; // TAB
-    return false;
-  }
-  if (item == 127) return false;
-  return true;
-}
 
 COut::COut() {}
 

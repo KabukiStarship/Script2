@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT_LIST_CODE
 #define SCRIPT_LIST_CODE
@@ -477,7 +477,7 @@ ISY TListInsert(LST* list, T value, DT type, ISZ align_mask,
       index >= total)
     return -ErrorInvalidHeader;
   if (count >= total ) return -ErrorStackOverflow;
-  D_COUT("\nInserting " << STAATypePOD(type) << ':' << value <<
+  D_COUT("\nInserting " << TATypePODs<>(type) << ':' << value <<
          " into index:" << index << " count: " << count);
   ISZ* voffsets = TListValuesMap<LST_P>(list);
   DT* types = (DT*)(voffsets + total);
@@ -491,7 +491,7 @@ ISY TListInsert(LST* list, T value, DT type, ISZ align_mask,
     list->top = top_new;
     *(voffsets + index) = top;
     *TPtr<T>(list, top) = value;
-    *(types + count) = type;
+    *(types + index) = type;
     list->map.count = ++count;
     return --count;
   } else if (index == PCK) {
@@ -531,105 +531,105 @@ inserts the item to the list at the given index.
 template<LST_A>
 inline ISY TListInsert(LST* list, IUA item, ISY index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUA, LST_P>(list, item, _IUA, sizeof(IUA) - 1, index,
-                                   values_begin, values_end);
+  return TListInsert<IUA, LST_P>(list, item, _IUA, 0, index,
+                                 values_begin, values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHA item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUA, LST_P>(list, ToUnsigned(item), _CHA,
-                                   sizeof(IUA) - 1, index, values_begin,
-                                   values_end);
+                                 0, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISA item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUA, LST_P>(list, ToUnsigned(item), _ISA,
-                                   sizeof(IUA) - 1, index, values_begin,
-                                   values_end);
+                                 0, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, IUB item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, LST_P>(list, item, _IUB, sizeof(IUB) - 1, index,
-                                   values_begin, values_end);
+                                 values_begin, values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISB item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUB, LST_P>(list, ToUnsigned(item), _ISB,
-                                   sizeof(IUB) - 1, index, values_begin,
-                                   values_end);
+                                 sizeof(ISB) - 1, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHB item, ISY index, CHA* values_begin,
                        CHA* values_end) {
-  return TListInsert<IUB, ISZ>(list, ToUnsigned(item), _CHB, sizeof(IUB) - 1,
+  return TListInsert<IUB, ISZ>(list, ToUnsigned(item), _CHB, sizeof(CHB) - 1,
                                index, values_begin, values_end);
 }
 //template<LST_A>
 //inline ISY TListInsert(LST* list, BOL item, ISY index, CHA* values_begin,
 //                       CHA* values_end) {
 //  return TListInsert<IUB, LST_P>(list, ToUnsigned(item), _BOL,
-//                                   sizeof(BOL) - 1, index, values_begin,
-//                                   values_end);
+//                                 sizeof(BOL) - 1, index, values_begin,
+//                                 values_end);
 //}
 template<LST_A>
 inline ISY TListInsert(LST* list, IUC item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, LST_P>(list, item, _IUC, sizeof(IUC) - 1, index,
-                                   values_begin, values_end);
+                                 values_begin, values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISC item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, LST_P>(list, ToUnsigned(item), _ISC,
-                                   sizeof(IUC) - 1, index, values_begin,
-                                   values_end);
+                                 sizeof(IUC) - 1, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHC item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, LST_P>(list, ToUnsigned(item), _CHC,
-                                   sizeof(IUC) - 1, index, values_begin,
-                                   values_end);
+                                 sizeof(CHC) - 1, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPC item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUC, LST_P>(list, ToUnsigned(item), _FPC,
-                                   sizeof(IUC) - 1, index, values_begin,
-                                   values_end);
+                                sizeof(FPC) - 1, index, values_begin,
+                                 values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, IUD item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, LST_P>(list, item, _IUD, ALUWordMask, index,
-                                   values_begin, values_end);
+                                 values_begin, values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISD item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, LST_P>(list, ToUnsigned(item), _ISD, ALUWordMask,
-                                   index, values_begin, values_end);
+                                 index, values_begin, values_end);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPD item, ISY index, CHA* values_begin,
                        CHA* values_end) {
   return TListInsert<IUD, LST_P>(list, ToUnsigned(item), _FPD, ALUWordMask,
-                                   index, values_begin, values_end);
+                                 index, values_begin, values_end);
 }
 
 /* Inserts the item into the list at the given index. */
 template<LST_A>
 inline ISY TListInsert(LST* list, IUA item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISA item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHA item, ISY index = PSH) {
@@ -639,57 +639,57 @@ inline ISY TListInsert(LST* list, CHA item, ISY index = PSH) {
 template<LST_A>
 inline ISY TListInsert(LST* list, IUB item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISB item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHB item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, IUC item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISC item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, CHC item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPC item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, IUD item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, ISD item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPD item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-                              TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, BOL item, ISY index = PSH) {
   return TListInsert<LST_P>(list, item, index, TListValuesTop<LST_P>(list),
-    TListValuesEnd<LST_P>(list));
+                            TListValuesEnd<LST_P>(list));
 }
 
 /* Inserts the item into the list at the given index. */
@@ -697,17 +697,23 @@ template<LST_A>
 inline ISY TListInsert(LST* list, DT type, const void* value, 
     ISY index = PSH) {
   auto bytes = list->bytes;
-  auto top        = list->top;
-  ISY  total  = ISY(list->map.total),
-       count      = ISY(list->map.count);
+  auto top   = list->top;
+  ISY  total = ISY(list->map.total),
+       count = ISY(list->map.count);
+  A_ASSERT(top > 0);
   if (index == PSH) index = count;
   if (index < 0 || index > count) return -ErrorInvalidIndex;
-  D_COUT("\n\nInserting type:" << ATypef(type) << ":0d" << type << ":0x" << Hexf(type));
-  auto align_mask = ATypeAlignMask(type);
+  D_COUT("\n\nInserting type:" << ATypef(type) << ":0d" << type << ":0x" << 
+         Hexf(type));
   if (index == count) {
-    //TListPrint<COut, LST_P>(StdOut(), list);
-    auto result = TATypeWrite_NC<ISZ>(TPtr<>(list, top), TPtr<>(list, bytes), 
-                                      type, value, align_mask);
+    IUA* top_ptr = TPtr<IUA>(list, top),
+       * end_ptr = TPtr<IUA>(list, bytes);
+    ISW delta_top_end = ISW(end_ptr) - ISW(top_ptr);
+    //StdOut() << "\n\nvalue_ptr:0x" << Hexf(value)
+    //         << "\nalign_ptr:0x" << Hexf(TATypePtrUp<>(value, type))
+    //         << " delta:" << TDelta<>(value, TATypePtrUp<>(value, type));
+    A_ASSERT(top_ptr < end_ptr);
+    auto result = TATypeWrite_NC<ISZ>(top_ptr, end_ptr, type, value);
     if (result == 0) return -ErrorBooferOverflow;
     TListValuesMap<LST_P>(list)[count] = top;
     TListTypes<LST_P>(list)[count] = type;
@@ -716,16 +722,16 @@ inline ISY TListInsert(LST* list, DT type, const void* value,
     return index;
   }
   D_ASSERT(false); // @todo Fix me!
-  ISZ stop = TListValueOffset_NC<LST_P>(list, index + 1);
-  auto value_bytes = ATypeBytes(value, type);
-  if (value_bytes <= 0) {
-    value_bytes *= -1;
-    if (bytes - top) return -ErrorStackOverflow;
-    return index;
-  }
-  top = TAlignUp<ISZ>(top, align_mask);
-  if (stop - top >= bytes) return -ErrorStackOverflow;
-  // @todo finish me.
+  //ISZ stop = TListValueOffset_NC<LST_P>(list, index + 1);
+  //auto value_bytes = ATypeBytes(value, type);
+  //if (value_bytes <= 0) {
+  //  value_bytes *= -1;
+  //  if (bytes - top) return -ErrorStackOverflow;
+  //  return index;
+  //}
+  //top = TAlignUp<ISZ>(top, align_mask);
+  //if (stop - top >= bytes) return -ErrorStackOverflow;
+  //// @todo finish me.
   return -1;
 }
 

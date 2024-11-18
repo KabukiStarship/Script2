@@ -1,10 +1,15 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "_Undef.hxx"
 //
 #include "Test.hpp"
 //
 #define D_THIS 0
 #define A_TEST_BEGIN
+#define A_RUN_TEST(test_unit) \
+  { const CHA* result = test_unit(); if(result) return result; }
+#define D_RUN_TEST(test_unit)
+#define R_RUN_TEST(test_unit) \
+  { const CHA* result = test_unit(); if(result) return result; }
 #define D_PAUSE(message)
 #define D_COUT(item)
 #define D_COUT_NL
@@ -112,3 +117,7 @@
     return type(IUW(ptr2));
 #define D_CHECK_PTR_RETURN_NIL(ptr)\
   if (IUW(ptr) < IUW(CrabsErrorCount)) return;
+
+#if SEAM < SCRIPT2_SCRIPT2
+#define SCRIPT2_FAIL D_FAIL
+#endif

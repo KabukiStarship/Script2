@@ -1,7 +1,10 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 
 #undef D_THIS
 #undef A_TEST_BEGIN
+#undef A_RUN_TEST
+#undef D_RUN_TEST
+#undef R_RUN_TEST
 #undef D_PAUSE
 #undef D_COUT
 #undef D_COUT_NL
@@ -64,6 +67,8 @@
 #undef D_CHECK_CPTR_RETURN
 #undef D_CHECK_TPTR_RETURN
 #undef D_CHECK_PTR_RETURN_NIL
+//
+#undef SCRIPT2_FAIL
 
 //@todo Delete me!
 //enum

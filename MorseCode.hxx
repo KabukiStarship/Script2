@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include <_Config.h>
 namespace _ {
 /* This code doesn't really seam to match with Script2's mission other than a

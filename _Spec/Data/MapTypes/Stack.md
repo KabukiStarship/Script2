@@ -9,8 +9,8 @@
 ```C++
 template <typename ISZ = ISN>
 struct TStack {
-  ISZ count_max,  //< Size of the Array in elements.
-      count;      //< Element count.
+  ISZ total,  //< Size of the Array in elements.
+      count;  //< Element count.
 };
 ```
 
@@ -34,6 +34,4 @@ struct TStack {
 
 ## License
 
-Copyright [Kabuki Starship](https://kabukistarship.com).
-
-This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at <https://mozilla.org/MPL/2.0/>.
+Copyright Kabuki Starship <<https://github.com/KabukiStarship/Script2>>.

@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #pragma once
 #ifndef SCRIPT_BSQ_INLINE_CODE
 #define SCRIPT_BSQ_INLINE_CODE

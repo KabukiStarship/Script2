@@ -1,4 +1,4 @@
-// Copyright Kabuki Starship� <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #include "BSeq.h"
 #if SEAM >= SCRIPT2_CRABS
 namespace _ {

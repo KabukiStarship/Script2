@@ -1,8 +1,8 @@
-// Copyright Kabuki Starship™ <kabukistarship.com>.
+// Copyright Kabuki Starship <kabukistarship.com>.
 #if SEAM >= SCRIPT2_CRABS
-//#include "../Crabs.h"
-//#include "../BIn.hpp"
-//#include "../BOut.hpp"
+#include "../Crabs.h"
+#include "../BIn.hpp"
+#include "../BOut.hpp"
 #if SEAM == SCRIPT2_CRABS
 #include "../_Debug.hxx"
 #else
