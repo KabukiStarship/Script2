@@ -28,18 +28,18 @@ The POD Types table is laid out such that the types are grouped into groups by w
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer. |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer. |
 | 19 | TME  |   uint128_t  |  16   | 16-byte Linear ID Universally Unique Identifier. |
-| 20 | CTA  |      ?       |   ?   | Custom Type A. |
-| 21 | CTB  |      ?       |   ?   | Custom Type B. |
-| 22 | CTC  |      ?       |   ?   | Custom Type C. |
-| 23 | CTD  |      ?       |   ?   | Custom Type D. |
-| 24 | CTE  |      ?       |   ?   | Custom Type E. |
-| 25 | CTF  |      ?       |   ?   | Custom Type F. |
-| 26 | CTG  |      ?       |   ?   | Custom Type G. |
-| 27 | CTH  |      ?       |   ?   | Custom Type H. |
-| 28 | CTK  |      ?       |   ?   | Custom Type I. |
-| 29 | CTJ  |      ?       |   ?   | Custom Type J. |
-| 30 | CTK  |      ?       |   ?   | Custom Type K. |
-| 31 | CTL  |      ?       |   ?   | Custom Type L. |
+| 20 | PTa  |      ?       |   ?   | Plain Type a. |
+| 21 | PTb  |      ?       |   ?   | Plain Type b. |
+| 22 | PTc  |      ?       |   ?   | Plain Type c. |
+| 23 | PTd  |      ?       |   ?   | Plain Type d. |
+| 24 | PTe  |      ?       |   ?   | Plain Type e. |
+| 25 | PTf  |      ?       |   ?   | Plain Type f. |
+| 26 | PTg  |      ?       |   ?   | Plain Type g. |
+| 27 | PTh  |      ?       |   ?   | Plain Type h. |
+| 28 | PTi  |      ?       |   ?   | Plain Type i. |
+| 29 | PTj  |      ?       |   ?   | Plain Type j. |
+| 30 | PTk  |      ?       |   ?   | Plain Type k. |
+| 31 | PTl  |      ?       |   ?   | Plain Type l. |
 
 ### List of Types Key
 
@@ -70,9 +70,9 @@ The Vector types are stored in b6:b5 (mask 0x60) for 1, 2, and 4-byte Data Types
 |   2   | STK  | Stack (vector) of homogenous types.               |
 |   3   | MTX  | Matrix (n-dimensional array) of homogenous types. |
 
-## Homotuples
+## Vector of Homotuples
 
-A Homotuple (Homogenous Tuple) is a Vector of homogeneous types of length 1, 2, 3, or 4. Homotuples are created when the Vector bits are set to zero where the number of homogenous types in the set are determined by the SW (Size Width) one is added to the SW value to store the number of vector elements.
+A VHT or Vector of Homotuple (Homogenous Tuple) is a packed contiguous set of 1, 2, 3, or 4 of any of the POD types 0-31. Homotuples are created when the Vector bits are set to zero where the number of homogenous types in the set are determined by the SW (Size Width) one is added to the SW value to store the number of vector elements.
 
 ***Bit Pattern***
 
@@ -151,13 +151,13 @@ The Modifier Bits (MOD) allow for the creation of pointers and const pointers to
 
 Variable Byte Length (VBL) Types 1 to 2048 bytes long are created when the five Least Significant bits of any 16-bit ASCII Type are 0. The size is calculated by shifting the byte to the right 5 bits (i.e. shift bit_5 into bit-0).
 
-## Custom Types
+## Plain Types
 
-Custom Types CTA through CTL are implementation defined and may be 8, 16, 32, 64, or 128-bits wide. Custom types must be sorted descending by width, which is reverse order from POD types 1 through 18. All custom types except for 8-bit custom types can be deleted, which would make all of the custom data types 8-bit, hence why they are reverse sorted.
+Plain Types PTa through PTl are implementation defined and may be 8, 16, 32, 64, or 128-bits wide. Plain types must be sorted descending by width, which is reverse order from POD types 1 through 18. All Plain Types except for 8-bit Plain Types can be deleted, which would make all of the Plain Data types 8-bit, hence why they are reverse sorted.
 
-Custom Types are set by defining the last custom type index of that size such that `CT0 = 31 >= CT1 >= CT2 >= CT3 >= CT4 >= CT5 > 19`. When the machine is configured these values are CT0_STOP, CT1_STOP, CT2_STOP, CT3_STOP, CT4_STOP, and CT5_STOP respectively. After the machine has been configured the codes then turn into integer values _CT0, _CT1, _CT2, _CT3, _CT4, and _CT5.
+Plain Types are set by defining the last Plain Type index of that size such that `CT0 = 31 >= CT1 >= CT2 >= CT3 >= CT4 >= CT5 > 19`. When the machine is configured these values are CT0_STOP, CT1_STOP, CT2_STOP, CT3_STOP, CT4_STOP, and CT5_STOP respectively. After the machine has been configured the codes then turn into integer values _CT0, _CT1, _CT2, _CT3, _CT4, and _CT5.
 
-To delete all 128-bit custom types set CT4_STOP to BOL (19). To delete all 64-bit custom types set CT3_STOP to CT4_STOP. To delete all 32-bit custom types set CT2_STOP to CT3_STOP. To delete all 16-bit custom types set CT1_STOP to CT2_STOP. All unspecified custom types are then 8-bit types that cannot be deleted.
+To delete all 128-bit Plain Types set CT4_STOP to BOL (19). To delete all 64-bit Plain Types set CT3_STOP to CT4_STOP. To delete all 32-bit Plain Types set CT2_STOP to CT3_STOP. To delete all 16-bit Plain Types set CT1_STOP to CT2_STOP. All unspecified Plain Types are then 8-bit types that cannot be deleted.
 
 **[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Extended Types >>](ExtendedTypes.md)**
 

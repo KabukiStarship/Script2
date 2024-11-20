@@ -718,6 +718,12 @@ Printer& TPrintAType(Printer& p, DTB type) {
   type ^= size_width << ATypeSWBit0;
   auto vector_type = type >> ATypeVTBit0;
   type ^= vector_type << ATypeVTBit0;
+
+  DTB ext_type = ATypeToEXT(type);
+  if (ext_type) {
+    return p << "Extended type:" << ext_type;
+  }
+
   if (map_type)
     return p << TATypeMaps<>(map_type >> 4) 
       << '_' << TATypePODs<>(map_type & 0xf)

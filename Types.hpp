@@ -668,11 +668,11 @@ inline ISN ATypeSizeWidthCode(ISN type) { return type >> 6; }
 
 /* Extracts the Map Type. */
 inline DTW ATypeMap(DTW core_type, DTW map_type) {
-  return core_type | (map_type << (ATypePODBitTotal + 2));
+  return core_type | (map_type << (ATypePODBits + 2));
 }
 
 inline DTW ATypeMap(DTW core_type, DTW map_type, DTW size_width) {
-  return ATypeMap(core_type, map_type) | (size_width << ATypePODBitTotal);
+  return ATypeMap(core_type, map_type) | (size_width << ATypePODBits);
 }
 
 inline BOL ATypeIsPOD(DTB type) {

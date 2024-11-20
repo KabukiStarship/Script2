@@ -95,33 +95,55 @@ void* ATypeValueEnd(void* value, DTB type) {
 
 /* Converts an ASCII Data Type to Extended Type.
 @return If the type isn't an extended type, (type & 0x7fff) * -1. */
-DTB ATypeEXT(DTB type) {
-  const DTB MOD = type >> ATypeMODBit0;
-  type ^= MOD << ATypeMODBit0;
-  if (type < _INV || type > ATypeCTXMax) return 0;
+DTB ATypeToEXT(DTB type) {
+  type &= (~DTB(0) >> 2); //< Don't care if it's const or ptr.
+  if (type < _INV || type >= ATypeCodomainTotal) return 0;
+  // We know it doesn't have a map type now.
   const DTB SW_VT = type >> ATypeVTBit0;
-  const DTB POD = type ^ SW_VT << ATypeVTBit0;
-  if (SW_VT && !POD) return SW_VT; //< A
-  if ((SW_VT & ATypePODMask) == 0) return 0;
-  if (POD < _FPC) return 0;
+  DTB pod = type ^ SW_VT << ATypeVTBit0;
+  if (SW_VT && !pod) return SW_VT; //< A
+  if ((SW_VT & 3) == 0) return 0; //< VHT
   if (SW_VT < 4) {
-    if (POD >= _FPC) return type; //< B
-    if (POD < _FPB || SW_VT > 2) return 0;
+    if (pod >= _FPC) return (SW_VT << ATypeVTBit0) | pod; //< B
+    if (pod < _FPB || SW_VT >= 2) return 0;
+  } else if (pod >= _PTe) {
+    return ATypeCTXStart + 8 + (((SW_VT - 5) << (ATypeVTBit0 - 2)) | (pod - 24));  //< C
+  } else if (pod >= _PTa) {
+    if (SW_VT <= 7)
+      return ATypeCTXStart + (((SW_VT - 5) << ATypeVTBit0) | (pod - 16)); //< D
+    return ATypeCTXStart + (((SW_VT - 9) << ATypeVTBit0) | (pod - 20));  //< E
+  } else if (SW_VT <= 7) {
+    if (pod >= _FPD)
+      return (((SW_VT - 4) << ATypeVTBit0) | (pod - 12)); //< F
+    if (pod < _FPC || SW_VT > 5) return 0;
+  } else if (SW_VT <= 10 && pod >= _FPE) {
+    if (pod < _FPE || (SW_VT == 10 && pod < _FPE))
+      return 0;
+    return 128 + (((SW_VT - 9) << 2) | (pod - 16)); //< G
   }
-  if (POD >= _CTE) 
-    return ATypeEXTTotal + (((SW_VT - 4) << ATypeVTBit0) | (POD - 16)); //< C
-  if (POD >= _CTA) {
-    if (SW_VT < 8)
-      return ATypeEXTTotal + (((SW_VT - 4) << ATypeVTBit0) | (POD - 12)); //< D
-    return ATypeEXTTotal + (((SW_VT - 8) << ATypeVTBit0) | (POD - 12));  //< E
-  }
-  if (SW_VT < 8) {
-    if (POD < _FPD) 
-      return ATypeEXTTotal + (((SW_VT - 5) << 8) | (POD - 12)); //< F
-    if (POD < _FPC || SW_VT > 5) return 0;
-  }
-  if (SW_VT < 12) return 16 + (((SW_VT - 5) << 4) | (POD - 12)); //< G
-  return POD + 12;  //< H
+  DTB type_m4 = (pod >> 2) & 3;
+  DTB sw_vt_shift = SW_VT + 3;
+  if (sw_vt_shift > type_m4 * 4 && (pod < _FPE)) return 0;
+  return pod + 12;  //< H
+}
+
+/* Checks if the type is an Extended Type.
+@see ~/Spec/Data/ExtendedTypes#FasterEXTBooleanMethod */
+BOL ATypeIsEXT(DTB type) {
+  DTB pod = type & (~DTB(0) >> 2); //< Don't care if it's const or ptr.
+  if (pod < _INV || pod >= ATypeCodomainTotal) return false;
+  const DTB SW_VT = pod >> ATypeVTBit0;
+  pod ^= SW_VT << ATypeVTBit0; //< type is the 5-bit POD type at this point.
+  //
+  if (SW_VT && !pod)
+    return true; //< A
+  if ((SW_VT & 3) == 0)
+    return false; //< VHT
+  if (pod >= _FPE)
+    return true; //< B
+  DTB type_m4 = (pod >> 2) & 3; //< @todo I don't think I need the &3
+  DTB sw_vt_shift = SW_VT + 3;
+  return !(sw_vt_shift > type_m4 * 4);
 }
 
 TypeValue::TypeValue() : type_(_NIL), word_(0), word_2_(0) {}

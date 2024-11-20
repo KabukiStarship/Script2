@@ -35,7 +35,7 @@ void* ATypeValueEnd(void* value, DTB type);
 //ISA ATypeCustomAlignMask(DTA type);
 
 // Converts a 16-bit ASCII Data Type bit pattern to Extended ASCII Type mapping.
-inline DTB ATypeEXT(DTB value);
+inline DTB ATypeToEXT(DTB value);
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct ATypeValue {

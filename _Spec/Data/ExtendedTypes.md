@@ -11,22 +11,22 @@ There are a total of 207 Illegal Types that are remapped to 135 [Extended Types]
 ```AsciiArt
 | Vector |     POD Type 0-31 (1=Valid, 0=Extended Types, ?=User Types)      |
 | Type   | N I I C F I I C F I I C T I I F  F I I T C C C D C C C C C C C C |
-| SW:VT  | I U I H P U S H P U S H M U S P  P U S M T T T T T T T T T T T T |
+| SW:VT  | I U S H P U S H P U S H M U S P  P U S M T T T T T T T T T T T T |
 | b8:b5  | L A A A B B B B C C C C D D D D  E E E E A B C D E F G H I J K L |
 +--------+------------------------------------------------------------------|
-|  8_VHA | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+|  8_VH1 | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 |  8_ARY | 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 |  8_STK | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
 |  8_MAT | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
-| 16_VHB | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 16_VH2 | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 16_ARY | 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
 | 16_STK | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
 | 16_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
-| 32_VHC | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 32_VH3 | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 32_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
 | 32_STK | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
 | 32_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  0 0 0 0 ? ? ? ? ? ? ? ? ? ? ? ? |
-| 64_VHD | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+| 64_VH4 | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 64_ARY | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 64_STK | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
 | 64_MAT | 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
@@ -39,32 +39,34 @@ There are a total of 207 Illegal Types that are remapped to 135 [Extended Types]
 
 Remapping 14-bit ASCII Data Type bit pattern to the Extended Types shall be fast as possible. Types are remapped in blocks in order A through H in the table bellow.
 
-The fastest Extended Types to decode is the A column, which are remap transposed to E01 through E0F amd does not require shifting. The rest of the mappings only require subtracting or adding to the lower 5 bits to shift into place. B and C don't require any shifting. Types 1 through 135 are mapped to Extended Types and 136 through 135 are Context Types. This allows a signed integer to return either the Standard or Extended Type with where the Standard Type is positive and the Extended Types are negative.
+The fastest Extended Types to decode is the A column, which are remap transposed to E01 through E0F amd does not require shifting. The rest of the mappings only require subtracting or adding to the lower 5 bits to shift into place. B and C don't require any shifting. Types 1 through 135 are mapped to Extended Types and 136 through 135 are Context Types. This allows a signed integer to return either the Standard or Extended Type with where the Standard Type is negative and the Extended Types are positive.
 
 ```AsciiArt
 | Vector |      POD Type 0-31 (.=Valid A-H=Order to convert blocks in)      |
-| Type   | N I I C F I I C F I I C F I I T  F I I T C C C D C C C C C C C C |
+| Type   | N I I C F I I C F I I C F I I T  F I I T P P P P P P P P P P P P |
 | SW:VT  | I U I H P U S H P U S H P U S M  P U S M T T T T T T T T T T T T |
-| b8:b5  | L A A A B B B B C C C C D D D D  E E E E A B C D E F G H I J K L |
+| b8:b5  | L A A A B B B B C C C C D D D D  E E E E a b c d e f g h i j k l |
 +--------+------------------------------------------------------------------|
-|  8_VHA | . . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
-|  8_ARY | A . . . H H H H B B B B B B B B  B B B B B B B B B B B B B B B B |
-|  8_STK | A . . . . . . . B B B B B B B B  B B B B B B B B B B B B B B B B |
-|  8_MAT | A . . . . . . . B B B B B B B B  B B B B B B B B B B B B B B B B |
-| 16_VHB | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
-| 16_ARY | A . . . . . . . H H H H F F F F  F F F F D D D D C C C C C C C C |
-| 16_STK | A . . . . . . . . . . . F F F F  F F F F D D D D C C C C C C C C |
-| 16_MAT | A . . . . . . . . . . . F F F F  F F F F D D D D C C C C C C C C |
-| 32_VHC | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
-| 32_ARY | A . . . . . . . . . . . H H H H  G G G G E E E E C C C C C C C C |
-| 32_STK | A . . . . . . . . . . . . . . .  G G G G E E E E C C C C C C C C |
-| 32_MAT | A . . . . . . . . . . . . . . .  H H H H E E E E C C C C C C C C |
+|   0/A  | . . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   1/B  | A . . . H H H H B B B B B B B B  B B B B B B B B B B B B B B B B |
+|   2/C  | A . . . . . . . B B B B B B B B  B B B B B B B B B B B B B B B B |
+|   3/D  | A . . . . . . . B B B B B B B B  B B B B B B B B B B B B B B B B |
+|   4/E  | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   5/F  | A . . . . . . . H H H H F F F F  F F F F D D D D C C C C C C C C |
+|   6/G  | A . . . . . . . . . . . F F F F  F F F F D D D D C C C C C C C C |
+|   7/H  | A . . . . . . . . . . . F F F F  F F F F D D D D C C C C C C C C |
+|   8/I  | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   9/J  | A . . . . . . . . . . . H H H H  G G G G E E E E C C C C C C C C |
+|  10/K  | A . . . . . . . . . . . . . . .  G G G G E E E E C C C C C C C C |
+|  11/L  | A . . . . . . . . . . . . . . .  H H H H E E E E C C C C C C C C |
 +--------+------------------------------------------------------------------|
 | Total  | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1  1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 |
 |  512   |      Type 0-31      0 1 2 3 4 5  6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 |
 ```
 
-## Remapped Extended Types 1-135
+For the optimization for Block H please see "Faster EXT Boolean Method" bellow.
+
+## Remapped Extended Standard Types 1-135
 
 ```AsciiArt
 | Total | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1  1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 |
@@ -88,6 +90,72 @@ The fastest Extended Types to decode is the A column, which are remap transposed
 |  01   | E E E E D D D D C C C C C C C C  C C C C C C C C C C C C C C C C |
 |  10   | E E E E D D D D x x x x x x x x  x x x x x x x x x x x x x x x x | 
 +-------+------------------------------------------------------------------|
+```
+
+## Faster EXT Boolean Method
+
+```AsciiArt
+| Vector |    POD Type 0-31 (.=Valid A-C=Order to convert x=Don't care)     |
+| Type   | N I I C F I I C F I I C F I I T  F I I T C C C D C C C C C C C C |
+| SW:VT  | I U I H P U S H P U S H P U S M  P U S M T T T T T T T T T T T T |
+| b8:b5  | L A A A B B B B C C C C D D D D  E E E E A B C D E F G H I J K L |
++--------+------------------------------------------------------------------|
+|   0/A  | . . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   1/B  | A . . . C C C C 0 0 0 0 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   2/C  | A . . . . . . . 0 0 0 0 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   3/D  | A . . . . . . . 0 0 0 0 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   4/E  | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   5/F  | A . . . . . . . C C C C 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   6/G  | A . . . . . . . . . . . 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   7/H  | A . . . . . . . . . . . 0 0 0 0  B B B B B B B B B B B B B B B B |
+|   8/I  | A . . . . . . . . . . . . . . .  . . . . . . . . . . . . . . . . |
+|   9/J  | A . . . . . . . . . . . C C C C  B B B B B B B B B B B B B B B B |
+|  10/K  | A . . . . . . . . . . . . . . .  B B B B B B B B B B B B B B B B |
+|  11/L  | A . . . . . . . . . . . . . . .  B B B B B B B B B B B B B B B B |
++--------+------------------------------------------------------------------|
+| Total  | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1  1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3 |
+|  512   |      Type 0-31      0 1 2 3 4 5  6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 |
+```
+
+```AsciiArt
+| Vector | .=Valid C=Block C x=Don't care  |
+| SW:VT  | 0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1 |
+| b8:b5  |                     0 1 2 3 4 5 |
++--------+---------------------------------|
+|   0/A  | x x x x x x x x x x x x x x x x |
+|   1/B  | x . . . C C C C 0 0 0 0 0 0 0 0 |
+|   2/C  | x . . . . . . . 0 0 0 0 0 0 0 0 |
+|   3/D  | x . . . . . . . 0 0 0 0 0 0 0 0 |
+|   4/E  | x . . . . . . . x x x x x x x x |
+|   5/F  | x . . . . . . . C C C C 0 0 0 0 |
+|   6/G  | x . . . . . . . . . . . 0 0 0 0 |
+|   7/H  | x . . . . . . . . . . . 0 0 0 0 |
+|   8/I  | x . . . . . . . . . . . x x x x |
+|   9/J  | x . . . . . . . . . . . C C C C |
+|  10/K  | x . . . . . . . . . . . . . . . |
+|  11/L  | x . . . . . . . . . . . . . . . |
++--------+---------------------------------|
+```
+
+```AsciiArt
+| SW:VT | 0 1 2 3 |
+| b8:b5 | type_m4 |
++-------+---------|
+|  0/A  | x x x x |
+|  1/B  | x x x x |
+|  2/C  | x x x x |
+|  3/D  | x x x x |
+|  4/E  | . C 0 0 |
+|  5/F  | . . 0 0 |
+|  6/G  | . . 0 0 |
+|  7/H  | . . x x |
+|  8/I  | . . C 0 |
+|  9/J  | . . . 0 |
+| 10/K  | . . . 0 |
+| 11/L  | . . . x |
+| 12/M  | . . . C |
+| 13/N  | . . . . |
++-------+---------|
 ```
 
 ## Extended Types Table
@@ -151,7 +219,6 @@ The fastest Extended Types to decode is the A column, which are remap transposed
 | 133 |  IUK    |   8192     | 1024-byte unsigned integer. |
 | 134 |  IUL    |   16384    | 2048-byte unsigned integer. |
 | 135 |  IUM    |   32768    | 4096-byte unsigned integer. |
-
 
 |  Type   |    Name    | Description |
 |:-------:|:----------:|:------------|

@@ -17,7 +17,7 @@ static const CHA* TestSPrinterCH() {
                     << sizeof(IS) << ">\n\n"
                     << Linef('-'));
   enum {
-    Count = 512,
+    Count = ATypeCodomainTotal,
   };
   CHT str_a[Count];
   static const CHT Testing123[] = { 'T', 'e', 's', 't', 'i', 'n',
@@ -281,12 +281,147 @@ static const CHA* TestATypeMaps() {
   return nullptr;
 }
 
-static const CHA* TestATypeEXTAndCTX() {
+static const BOL TestATypeEXTContains(DTB* ext_start, DTB* ext_stop, DTB type) {
+  while (ext_start < ext_stop) if (type == *ext_start++) return true;
+  return false;
+}
+
+static const CHA* TestATypeEXT() {
   D_COUT("\n\nTesting EXT types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  //CHA boofer[CTotal] = {};
+  //TSPrinter<CHA, ISW> p(boofer, CTotal);
+  //DTB ext_types[ATypeCodomainTotal] = {};
+  //DTB* ext_stop = ext_types;
+  //for (DTB i = 0; i < ATypeCodomainTotal; ++i) {
+  //  if (i < 10) D_COUT("\n00");
+  //  else if (i < 100) D_COUT("\n0");
+  //  else D_COUT('\n');
+  //  D_COUT(i << ':' << CHA('A' + (i >> ATypePODBits)));
+  //  DTB ext_type = ATypeToEXT(i);
+  //  if(ext_type != 0) *ext_stop++ = ext_type;
+  //  BOL is_ext_type = ATypeIsEXT(i);
+  //  DTB pod_type = i & ATypePODMask;
+  //  if(pod_type < 10) D_COUT('0');
+  //  D_COUT(pod_type << ':' << ATypef(i) << ' ');
+  //  if (ext_type < 10) D_COUT("00");
+  //  else if (ext_type < 100) D_COUT('0');
+  //  D_COUT(ext_type << " ATypeIsEXT:" <<
+  //         (is_ext_type ? "true  " : "false "));
+  //  A_ASSERT((ext_type > 0) == is_ext_type);
+  //}
+  //DTB count = ext_stop - ext_types;
+  //D_COUT("\nFound " << count << " extended types.\n");
+  //IUA counts[ATypeCodomainTotal] = {};
+  //DTB* ext_cursor = ext_types;
+  //while(ext_cursor < ext_stop) {
+  //  DTB type = *ext_cursor++;
+  //  A_ASSERT(type < ATypeEXTTotal);
+  //  IUA* ptr = &counts[type];
+  //  IUA counts_count = *ptr;
+  //  *ptr = ++counts_count;
+  //  if (counts_count > 1) {
+  //    D_COUT("\nFound duplicate EXT" << type << " at index:" << (ext_cursor - ext_types));
+  //    DTB* cursor = ext_types;
+  //    while(cursor < ext_types + (ptr - counts))
+  //      if(counts_count == *cursor++) 
+  //        D_COUT("\n     First found at index:" << (cursor - ext_types));
+  //  }
+  //  A_ASSERT(counts_count <= 1);
+  //}
+  //for(DTB i = 0; i < ATypeCodomainTotal; ++i) {
+  //  if (!TestATypeEXTContains(ext_types, ext_stop, i)) {
+  //    DTB dez_nutz = ATypeToEXT(i);
+  //    if (dez_nutz < 10) D_COUT("\n00");
+  //    else if (dez_nutz < 100) D_COUT("\n0");
+  //    else D_COUT('\n');
+  //    D_COUT(i << ":EXT");
+  //    if (dez_nutz < 10) D_COUT("00");
+  //    else if (dez_nutz < 100) D_COUT('0');
 
+  //    A_ASSERT(ATypeToEXT(i) == 0);
+  //  }
+  //}
+  DTB t = 1;
+  D_COUT("\nTesting Block A...");
+  for (DTB i = 1; i <= 15; ++i) {
+    DTB type = i * ATypePODTotal;
+    A_AVOW(t++, ATypeToEXT(type));
+  }
+  D_COUT("\nTesting Block B...");
+  for (DTB sw_vt = 1; sw_vt < 4; ++sw_vt) {
+    for (DTB pod = _FPC; pod <= _PTl; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(DTB((sw_vt << ATypeVTBit0) | pod), ATypeToEXT(type));
+    }
+  }
+  D_COUT("\nTesting Block C lower half...");
+  t = ATypeCTXStart + 8;
+  for (DTB sw_vt = 5; sw_vt <= 7; ++sw_vt) {
+    for (DTB pod = _PTe; pod <= _PTl; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+  }
+  D_COUT("\nTesting Block C upper half...");
+  t = ATypeCTXStart + 40;
+  for (DTB sw_vt = 9; sw_vt <= 11; ++sw_vt) {
+    for (DTB pod = _PTe; pod <= _PTl; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+  }
+  D_COUT("\nTesting Block D...");
+  t = ATypeCTXStart + 4;
+  for (DTB sw_vt = 5; sw_vt <= 7; ++sw_vt) {
+    for (DTB pod = _PTa; pod <= _PTd; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+    t += ATypePODTotal - 4;
+  }
+  D_COUT("\nTesting Block E...");
+  t = ATypeCTXStart;
+  for (DTB sw_vt = 9; sw_vt <= 11; ++sw_vt) {
+    for (DTB pod = _PTa; pod <= _PTd; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+    t += ATypePODTotal - 4;
+  }
+  D_COUT("\nTesting Block F...");
+  t = _INV;
+  for (DTB sw_vt = 5; sw_vt <= 7; ++sw_vt) {
+    for (DTB pod = _FPD; pod <= _TME; ++pod) {
+      DTB type = ATypeToEXT((sw_vt << ATypeVTBit0) | pod);
+      A_AVOW(t++, type);
+    }
+    t += ATypePODTotal - 8 ;
+  }
+  D_COUT("\nTesting Block G...");
+  t = 128;
+  for (DTB sw_vt = 9; sw_vt <= 10; ++sw_vt) {
+    for (DTB pod = _FPE; pod <= _TME; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+  }
+  D_COUT("\nTesting Block H...");
+  DTB pod_base = _FPB;
+  t = 16;
+  for (DTB sw_vt = 1; sw_vt <= 11; sw_vt += 4) {
+    for (DTB pod = pod_base; pod <= pod_base + 3; ++pod) {
+      DTB type = (sw_vt << ATypeVTBit0) | pod;
+      D_COUT("\nt:" << t << " type:" << sw_vt << '_' << pod << " 0d" << type);
+      A_AVOW(t++, ATypeToEXT(type));
+    }
+    pod_base += 4;
+    if (sw_vt == 9) sw_vt = 7;
+  }
+  //for (DTB pod = pod_base; pod <= pod_base + 3; ++pod) {
+  //  A_AVOW(t++, ATypeToEXT((11 << ATypeVTBit0) | (pod - 12)));
+  //}
+  //A_AVOW(count, DTB(ATypeEXTTotal));
   return nullptr;
 }
 
@@ -297,7 +432,7 @@ static const CHA* TestPrintAType() {
   //A_RUN_TEST(TestATypefSCK);
   //A_RUN_TEST(TestATypefMTX);
   //A_RUN_TEST(TestATypeMaps);
-  A_RUN_TEST(TestATypeEXTAndCTX);
+  A_RUN_TEST(TestATypeEXT);
   return nullptr;
 }
 
