@@ -79,6 +79,15 @@
     ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
   }
 #define R_AVOW(a, b)
+#define A_AVOW_NOT(a, b)                             \
+  if (!::_::TestNot(a, b)) {                            \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define D_AVOW_NOT(a, b)                             \
+  if (!::_::TestNot(a, b)) {                            \
+    ::_::TestFail(__LINE__, __FUNCTION__, __FILE__); \
+  }
+#define R_AVOW_NOT(a, b)
 #define R_AVOW_INDEX(a, b, index)
 #define D_AVOW_INDEX(a, b, index)                    \
   if (!::_::Test(a, b)) {                            \

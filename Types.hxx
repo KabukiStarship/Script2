@@ -97,12 +97,12 @@ void* ATypeValueEnd(void* value, DTB type) {
 @return If the type isn't an extended type, (type & 0x7fff) * -1. */
 DTB ATypeToEXT(DTB type) {
   type &= (~DTB(0) >> 2); //< Don't care if it's const or ptr.
-  if (type < _INV || type >= ATypeCodomainTotal) return 0;
+  if (type < _INV || type > ATypeEXTStop) return 0;
   // We know it doesn't have a map type now.
   const DTB SW_VT = type >> ATypeVTBit0;
   DTB pod = type ^ SW_VT << ATypeVTBit0;
   if (SW_VT && !pod) return SW_VT; //< A
-  if ((SW_VT & 3) == 0) return 0; //< VHT
+  if ((SW_VT & 3) == 0 || SW_VT >= 12) return 0; //< VHT
   if (SW_VT < 4) {
     if (pod >= _FPC) return (SW_VT << ATypeVTBit0) | pod; //< B
     if (pod < _FPB || SW_VT >= 2) return 0;
@@ -130,14 +130,15 @@ DTB ATypeToEXT(DTB type) {
 /* Checks if the type is an Extended Type.
 @see ~/Spec/Data/ExtendedTypes#FasterEXTBooleanMethod */
 BOL ATypeIsEXT(DTB type) {
-  DTB pod = type & (~DTB(0) >> 2); //< Don't care if it's const or ptr.
-  if (pod < _INV || pod >= ATypeCodomainTotal) return false;
+  DTB pod = type & ((~DTB(0)) >> 2); //< Don't care if it's const or ptr.
+  if (pod < _INV || pod > ATypeEXTStop)
+    return false;
   const DTB SW_VT = pod >> ATypeVTBit0;
   pod ^= SW_VT << ATypeVTBit0; //< type is the 5-bit POD type at this point.
   //
   if (SW_VT && !pod)
     return true; //< A
-  if ((SW_VT & 3) == 0)
+  if ((SW_VT & 3) == 0 || SW_VT >= 12)
     return false; //< VHT
   if (pod >= _FPE)
     return true; //< B

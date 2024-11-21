@@ -281,67 +281,17 @@ static const CHA* TestATypeMaps() {
   return nullptr;
 }
 
-static const BOL TestATypeEXTContains(DTB* ext_start, DTB* ext_stop, DTB type) {
-  while (ext_start < ext_stop) if (type == *ext_start++) return true;
-  return false;
+static const DTB TestATypeEXTContains(DTB* ext_start, DTB* ext_stop, DTB type) {
+  while (ext_start < ext_stop) {
+    DTB t = *ext_start++;
+    if (type == t) return t;
+  }
+  return 0;
 }
 
 static const CHA* TestATypeEXT() {
   D_COUT("\n\nTesting EXT types...");
   const ISW CTotal = 1024;
-  //CHA boofer[CTotal] = {};
-  //TSPrinter<CHA, ISW> p(boofer, CTotal);
-  //DTB ext_types[ATypeCodomainTotal] = {};
-  //DTB* ext_stop = ext_types;
-  //for (DTB i = 0; i < ATypeCodomainTotal; ++i) {
-  //  if (i < 10) D_COUT("\n00");
-  //  else if (i < 100) D_COUT("\n0");
-  //  else D_COUT('\n');
-  //  D_COUT(i << ':' << CHA('A' + (i >> ATypePODBits)));
-  //  DTB ext_type = ATypeToEXT(i);
-  //  if(ext_type != 0) *ext_stop++ = ext_type;
-  //  BOL is_ext_type = ATypeIsEXT(i);
-  //  DTB pod_type = i & ATypePODMask;
-  //  if(pod_type < 10) D_COUT('0');
-  //  D_COUT(pod_type << ':' << ATypef(i) << ' ');
-  //  if (ext_type < 10) D_COUT("00");
-  //  else if (ext_type < 100) D_COUT('0');
-  //  D_COUT(ext_type << " ATypeIsEXT:" <<
-  //         (is_ext_type ? "true  " : "false "));
-  //  A_ASSERT((ext_type > 0) == is_ext_type);
-  //}
-  //DTB count = ext_stop - ext_types;
-  //D_COUT("\nFound " << count << " extended types.\n");
-  //IUA counts[ATypeCodomainTotal] = {};
-  //DTB* ext_cursor = ext_types;
-  //while(ext_cursor < ext_stop) {
-  //  DTB type = *ext_cursor++;
-  //  A_ASSERT(type < ATypeEXTTotal);
-  //  IUA* ptr = &counts[type];
-  //  IUA counts_count = *ptr;
-  //  *ptr = ++counts_count;
-  //  if (counts_count > 1) {
-  //    D_COUT("\nFound duplicate EXT" << type << " at index:" << (ext_cursor - ext_types));
-  //    DTB* cursor = ext_types;
-  //    while(cursor < ext_types + (ptr - counts))
-  //      if(counts_count == *cursor++) 
-  //        D_COUT("\n     First found at index:" << (cursor - ext_types));
-  //  }
-  //  A_ASSERT(counts_count <= 1);
-  //}
-  //for(DTB i = 0; i < ATypeCodomainTotal; ++i) {
-  //  if (!TestATypeEXTContains(ext_types, ext_stop, i)) {
-  //    DTB dez_nutz = ATypeToEXT(i);
-  //    if (dez_nutz < 10) D_COUT("\n00");
-  //    else if (dez_nutz < 100) D_COUT("\n0");
-  //    else D_COUT('\n');
-  //    D_COUT(i << ":EXT");
-  //    if (dez_nutz < 10) D_COUT("00");
-  //    else if (dez_nutz < 100) D_COUT('0');
-
-  //    A_ASSERT(ATypeToEXT(i) == 0);
-  //  }
-  //}
   DTB t = 1;
   D_COUT("\nTesting Block A...");
   for (DTB i = 1; i <= 15; ++i) {
@@ -412,16 +362,100 @@ static const CHA* TestATypeEXT() {
   for (DTB sw_vt = 1; sw_vt <= 11; sw_vt += 4) {
     for (DTB pod = pod_base; pod <= pod_base + 3; ++pod) {
       DTB type = (sw_vt << ATypeVTBit0) | pod;
-      D_COUT("\nt:" << t << " type:" << sw_vt << '_' << pod << " 0d" << type);
+      //D_COUT("\nt:" << t << " type:" << sw_vt << '_' << pod << " 0d" << type);
       A_AVOW(t++, ATypeToEXT(type));
     }
     pod_base += 4;
     if (sw_vt == 9) sw_vt = 7;
   }
-  //for (DTB pod = pod_base; pod <= pod_base + 3; ++pod) {
-  //  A_AVOW(t++, ATypeToEXT((11 << ATypeVTBit0) | (pod - 12)));
-  //}
-  //A_AVOW(count, DTB(ATypeEXTTotal));
+  D_COUT("\n\nTesting Standard Types...");
+  DTB valid_bounds[12] = {
+    31,
+    3,
+    7,
+    7,
+    31,
+    7,
+    11,
+    11,
+    31,
+    11,
+    15,
+    15
+  };
+  for (DTB sw_vt = 0; sw_vt <= 11; ++sw_vt) {
+    D_COUT('\n' << CHA('A' + sw_vt) << " | ");
+    DTB stop = valid_bounds[sw_vt];
+    t = sw_vt * ATypePODTotal;
+    D_COUT(t << ' ');
+    DTB ext = ATypeToEXT(t);
+    BOL is_ext = ATypeIsEXT(t);
+    if(sw_vt == 0) {
+      D_AVOW(DTB(0), ext);
+      D_ASSERT(!is_ext);
+    } else {
+      D_AVOW_NOT(DTB(0), ext);
+      D_ASSERT(is_ext);
+    }
+    for (DTB pod = 1; pod <= stop; ++pod) {
+      t = (sw_vt << ATypeVTBit0) | pod;
+      D_COUT(t << ' ');
+      ext = ATypeToEXT(t);
+      is_ext = ATypeIsEXT(t);
+      D_AVOW(DTB(0), ext);
+      D_ASSERT(!is_ext);
+    }
+    for (DTB pod = stop + 1; pod < ATypePODTotal; ++pod) {
+      t = (sw_vt << ATypeVTBit0) | pod;
+      D_COUT(t << ' ');
+      ext = ATypeToEXT(t);
+      is_ext = ATypeIsEXT(t);
+      D_AVOW_NOT(DTB(0), ext);
+      D_ASSERT(is_ext);
+
+    }
+  }
+  D_COUT("\n\nTesting types 0-511...");
+  CHA boofer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  DTB ext_types[ATypeCodomainTotal] = {};
+  DTB* ext_stop = ext_types;
+  for (DTB i = 0; i < ATypeCodomainTotal; ++i) {
+    if (i < 10) D_COUT("\n00");
+    else if (i < 100) D_COUT("\n0");
+    else D_COUT('\n');
+    D_COUT(i << ':' << CHA('A' + (i >> ATypePODBits)));
+    DTB ext = ATypeToEXT(i);
+    if(ext != 0) *ext_stop++ = ext;
+    BOL is_ext_type = ATypeIsEXT(i);
+    DTB pod = i & ATypePODMask;
+    if(pod < 10) D_COUT('0');
+    D_COUT(pod << ':' << ATypef(i) << ' ');
+    if (ext < 10) D_COUT("00");
+    else if (ext < 100) D_COUT('0');
+    D_COUT(ext << " ATypeIsEXT:" <<
+           (is_ext_type ? "true  " : "false "));
+    D_ASSERT(ext <= ATypeEXTEnd);
+    A_ASSERT((ext > 0) == is_ext_type);
+    if (is_ext_type) {
+      DTB exists = TestATypeEXTContains(ext_types, ext_stop - 1, i);
+      if (exists) {
+        DTB count = ext_stop - ext_types;
+        D_COUT("\nError: type:" << exists << " already exists. Found count:" << count);
+      }
+      A_ASSERT(!exists);
+    }
+  }
+
+  D_COUT("\n\nPrinting EXT...");
+  DTB* ext_cursor = ext_types;
+  DTB tick = 1;
+  while (ext_cursor < ext_stop) {
+    D_COUT('\n' << tick++ << ':' << *ext_cursor++);
+  }
+  DTB count = ext_stop - ext_types;
+  D_COUT("\nFound " << count << " extended types.\n");
+  A_AVOW(count, DTB(ATypeEXTEnd));
   return nullptr;
 }
 

@@ -245,6 +245,169 @@ BOL Test(FPD a, FPD b) {
 }
 #endif
 
+
+
+BOL TestNot(const CHA* a, const CHA* b) {
+  ISN difference = !TSTRCompare<CHA>(a, b);
+  if (!difference) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut("\n\nERROR: Expecting:\"").Print(a)
+      << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
+      << difference;
+#endif
+  return false;
+}
+
+#if USING_UTF16 == YES_0
+BOL TestNot(const CHB* a, const CHB* b) {
+  ISN difference = !TSTRCompare<CHB>(a, b);
+  if (!difference) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut("\n\nERROR: Expecting:\"").Print(a)
+      << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
+      << difference;
+#endif
+  return false;
+}
+#endif
+#if USING_UTF32 == YES_0
+BOL TestNot(const CHC* a, const CHC* b) {
+  ISN difference = TSTRCompare<CHC>(a, b);
+  if (!difference) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut("\n\nERROR: Expecting:\"").Print(a)
+      << "\"\n           Found:\"" << b << "\"\n      Difference:\0"
+      << difference;
+#endif
+  return false;
+}
+#endif
+BOL TestNot(CHA a, CHA b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(CHB a, CHB b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(CHC a, CHC b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(const void* a, const void* b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a) << STRFound << Hexf(b);
+#endif
+  return false;
+}
+
+BOL TestNot(IUA a, IUA b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(ISA a, ISA b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(IUB a, IUB b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(ISB a, ISB b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(IUC a, IUC b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(ISC a, ISC b) {
+  if (a != b) return true;
+
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(IUD a, IUD b) {
+  if (a != b) return true;
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+BOL TestNot(ISD a, ISD b) {
+  if (a != b) return true;
+
+#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+#endif
+  return false;
+}
+
+#if USING_FPC == YES_0
+BOL TestNot(FPC a, FPC b) {
+  if (a != b) return true;
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+  return false;
+}
+#endif
+#if USING_FPD == YES_0
+BOL TestNot(FPD a, FPD b) {
+  if (a != b) return true;
+  COut(STRErrorExpecting).Hex(a)
+      << ':' << a << STRFound << Hexf(b) << ':' << b;
+  return false;
+}
+#endif
+
 BOL Test(const void* value) { return value != nullptr; }
 
 BOL Test(IUA value) { return value != 0; }
