@@ -1,13 +1,13 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_MATRIX
+#if SEAM >= CRABS_MATRIX
 #include "../Matrix.hpp"
-#if SEAM == SCRIPT2_MATRIX
+#if SEAM == CRABS_MATRIX
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<typename ISZ, typename T>
 void TestMatrixIntegers() {
@@ -31,12 +31,12 @@ void TestMatrixIntegers() {
     }
   }
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 static const CHA* MathCore(const CHA* args) {
-#if SEAM >= SCRIPT2_MATRIX
+#if SEAM >= CRABS_MATRIX
   A_TEST_BEGIN;
   TestMatrixIntegers<ISA, ISA>();
   TestMatrixIntegers<ISA, ISB>();
@@ -57,4 +57,4 @@ static const CHA* MathCore(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

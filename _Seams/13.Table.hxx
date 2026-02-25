@@ -1,15 +1,15 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_TABLE
+#if SEAM >= CRABS_TABLE
 #include "../Table.hpp"
 //
 #include "./TestWords.h"
-#if SEAM == SCRIPT2_TABLE
+#if SEAM == CRABS_TABLE
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<TBL_A>
 void TestTable() {
@@ -134,12 +134,12 @@ void TestTable() {
   auto dez_nutz = table.This();
   D_COUT_TABLE(dez_nutz);
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 static const CHA* Table(const CHA* args) {
-#if SEAM >= SCRIPT2_TABLE
+#if SEAM >= CRABS_TABLE
   A_TEST_BEGIN;
 
 #if USING_STA == YES_0
@@ -157,4 +157,4 @@ static const CHA* Table(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

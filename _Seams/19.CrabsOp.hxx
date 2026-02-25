@@ -1,19 +1,19 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "../Crabs.h"
 #include "../BIn.hpp"
 #include "../BOut.hpp"
 #include "../BSeq.hpp"
 #include "../Args.h"
 #include "../Address.hpp"
-//#include "../Mirror.h"
-#if SEAM == SCRIPT2_CRABS_OP
+#include "../Operand.h"
+#if SEAM == CRABS_OPERATION
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 class StarTest : public Operand {
 public:
@@ -34,9 +34,9 @@ public:
 }
 #endif
 
-namespace Script2 {
+namespace Crabs {
 static const CHA* CrabsOp(const CHA* args) {
-  #if SEAM == SCRIPT2_CRABS_OP
+  #if SEAM == CRABS_OPERATION
   A_TEST_BEGIN;
 
   enum {
@@ -83,4 +83,4 @@ static const CHA* CrabsOp(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

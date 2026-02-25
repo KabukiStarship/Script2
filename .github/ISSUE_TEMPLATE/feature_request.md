@@ -30,7 +30,3 @@ RequestFeature
 ## Sessions
 
 * AStarCale/.github#9
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

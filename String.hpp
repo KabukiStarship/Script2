@@ -1,13 +1,13 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_STRING_HPP
-#define SCRIPT2_STRING_HPP 1
+#ifndef CRABS_STRING_HPP
+#define CRABS_STRING_HPP 1
 #include "Stack.hpp"
-#if SEAM >= SCRIPT2_STRING
+#if SEAM >= CRABS_STRING
 #include "Uniprinter.hpp"
 #include "AType.h"
-#if SEAM == SCRIPT2_STRING
+#if SEAM == CRABS_STRING
 #include "_Debug.h"
 #else
 #include "_Release.h"

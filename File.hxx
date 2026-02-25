@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "File.h"
-#if SEAM >= SCRIPT2_FILE
+#if SEAM >= CRABS_FILE
 #include <sys/stat.h>
 #include <sys/types.h>
 #ifndef WIN32

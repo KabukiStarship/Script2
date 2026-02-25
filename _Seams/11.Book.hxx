@@ -1,14 +1,14 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_BOOK
+#if SEAM >= CRABS_BOOK
 #include "../Book.hpp"
 #include "TestWords.h"
-#if SEAM == SCRIPT2_BOOK
+#if SEAM == CRABS_BOOK
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<typename ISZ = ISN, typename ISY = ISM, typename CHT = CHR,
          typename DT  = DTB>
@@ -72,13 +72,13 @@ void TestBook() {
   const TBook<BOK_P>* dez_nutz = book.This();
   D_COUT_BOOK(dez_nutz);
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #undef TPARAMS
 #endif
 
-namespace Script2 {
+namespace Crabs {
 const CHA* Book(const CHA* args) {
-#if SEAM >= SCRIPT2_BOOK
+#if SEAM >= CRABS_BOOK
   A_TEST_BEGIN;
 #if USING_STA == YES_0
   //TestBook<ISB, ISA, CHA>();
@@ -98,4 +98,4 @@ const CHA* Book(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

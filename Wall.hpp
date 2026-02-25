@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_WALL_HPP
-#define SCRIPT2_WALL_HPP 1
+#ifndef CRABS_WALL_HPP
+#define CRABS_WALL_HPP 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 #include "Door.hpp"
 #include "Op.hpp"
 #include "Array.hpp"

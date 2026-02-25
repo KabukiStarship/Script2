@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BOOK_CODE
-#define SCRIPT2_BOOK_CODE 1
+#ifndef CRABS_BOOK_CODE
+#define CRABS_BOOK_CODE 1
 #include "List.hpp"
-#if SEAM >= SCRIPT2_BOOK
-#if SEAM == SCRIPT2_BOOK
+#if SEAM >= CRABS_BOOK
+#if SEAM == CRABS_BOOK
 #include "_Debug.h"
 #else
 #include "_Release.h"

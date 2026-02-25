@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Array.hpp"
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 namespace _ {
 
 /* Creates a CPU word from the repeated fill_char. */

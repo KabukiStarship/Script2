@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_MIRROR_DECL
-#define SCRIPT2_MIRROR_DECL 1
+#ifndef CRABS_MIRROR_DECL
+#define CRABS_MIRROR_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "BIn.h"
 #include "BOut.h"
 #include "Op.h"

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_STRING
+#if SEAM >= CRABS_STRING
 #include "../String.hpp"
-#if SEAM == SCRIPT2_STRING
+#if SEAM == CRABS_STRING
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
@@ -9,8 +9,8 @@
 #endif
 
 using namespace ::_;
-namespace Script2 {
-#if SEAM >= SCRIPT2_STRING
+namespace Crabs {
+#if SEAM >= CRABS_STRING
 template<typename T = CHR, typename ISZ = ISR, typename ISY=ISZ>
 void TestStringN() {
   D_COUT(Linef("\n\n\n---\nTesting TString<CH") << CSizeCodef<T>() << ", IS" <<
@@ -42,7 +42,7 @@ void TestStringN() {
 #endif
 
 static const CHA* String(const CHA* args) {
-#if SEAM >= SCRIPT2_STRING
+#if SEAM >= CRABS_STRING
   A_TEST_BEGIN;
 
   //TestStringN<CHA, ISC, ISB>();
@@ -56,4 +56,4 @@ static const CHA* String(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

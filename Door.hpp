@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_DOOR_DECL
-#define SCRIPT2_DOOR_DECL 1
+#ifndef CRABS_DOOR_DECL
+#define CRABS_DOOR_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 #include "Crabs.h"
 #include "Slot.h"
 #include "Stack.hpp"
@@ -114,7 +114,7 @@ class TDoor : public Operand {
     return NILP;
   }
 
-  /* Script2 operations. */
+  /* Crabs operations. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
     static const Op This = {
       "Door",

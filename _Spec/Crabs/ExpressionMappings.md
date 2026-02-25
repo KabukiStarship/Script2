@@ -4,7 +4,7 @@
 
 ### Expressions
 
-```Script2
+```Crabs
   +-------------------------- Operation Push "=DICB" is a function  
   |                           with address stuff that creates a
   |                           dictionary of size 64KB bytes with a

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_CRABS_DECL
-#define SCRIPT2_CRABS_DECL
+#ifndef CRABS_CRABS_DECL
+#define CRABS_CRABS_DECL
 #include "Op.h"
 #include "Operand.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 /* A full-duplex Crabs EXP (Expression) interpreter.

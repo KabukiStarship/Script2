@@ -1,17 +1,17 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 #include "../Room.hpp"
-#if SEAM == SCRIPT2_ROOM
+#if SEAM == CRABS_ROOM
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 static const CHA* Room(const CHA* args) {
-#if SEAM == SCRIPT2_ROOM
+#if SEAM == CRABS_ROOM
   A_TEST_BEGIN;
   //Room room_a, //
   //     room_b;
@@ -19,4 +19,4 @@ static const CHA* Room(const CHA* args) {
   return NILP;
 }
 
-}  //< namespace Script2
+}  //< namespace Crabs

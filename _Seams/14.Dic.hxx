@@ -1,13 +1,13 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 #include "../Dic.hpp"
-#if SEAM == SCRIPT2_DIC
+#if SEAM == CRABS_DIC
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ,
          typename DT = DTB, typename HSH = IUN>
@@ -62,12 +62,12 @@ static void TestDic() {
 
   D_COUT_DIC(dic.This());
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 const CHA* Dic(const CHA* args) {
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
   A_TEST_BEGIN;
 //#if USING_STA == YES_0
   TestDic<CHA, ISC, ISB, DTB, IUC>();
@@ -84,4 +84,4 @@ const CHA* Dic(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

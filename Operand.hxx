@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Operand.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "Op.hpp"
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -38,7 +38,7 @@ CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
   return 0;
 }
 
-#if USING_SCRIPT2_TEXT
+#if USING_CRABS_TEXT
 /*
 UTF& Print (UTF& utf, const Operand* op) {
     utf << "\n Op:\n" << op->name << "\nparams_in:"

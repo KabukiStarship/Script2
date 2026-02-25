@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_STRINGF_HPP
-#define SCRIPT2_STRINGF_HPP 1
+#ifndef CRABS_STRINGF_HPP
+#define CRABS_STRINGF_HPP 1
 #include "Stringf.h"
 namespace _ {
 
@@ -20,7 +20,7 @@ Printer& TPrintSizeCodef(Printer o, TSizeCodef<T, CH> item) {
 }
 
 /* Compares the two Strings up to the given delimiter.
-@param delimiter Delimiters in Script2 are equal to or less than.
+@param delimiter Delimiters in Crabs are equal to or less than.
 @return 0 if the Strings are equal or a non-zero delta upon failure. */
 template<typename CHT = CHR>
 ISN TStringCompare(const CHT* string, const CHT* other_String,
@@ -66,7 +66,7 @@ ISN TStringCompare(const CHT* string, const CHT* other_String,
 
 }  // namespace _
 
-#if SEAM >= SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
 #include "AType.hpp"
 
 namespace _ {
@@ -578,7 +578,7 @@ CHT* TPrintLinef(CHT* start, CHT* stop, const CHT* item,
 
 } //< namespace _
 #endif
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 namespace _ {
 
 /* Prints a Unicode item to the given socket.

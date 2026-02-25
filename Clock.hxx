@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Clock.hpp"
-#if SEAM >= SCRIPT2_CLOCK
+#if SEAM >= CRABS_CLOCK
 //
 #include <ctime>
 #include "Uniprinter.hpp"
-#if SEAM == SCRIPT2_CLOCK
+#if SEAM == CRABS_CLOCK
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -441,4 +441,4 @@ const CHC* ScanTime(const CHC* string, ISD& result) {
 
 }  //< namespace _
 
-#endif  //< #if SEAM >= SCRIPT2_CLOCK
+#endif  //< #if SEAM >= CRABS_CLOCK

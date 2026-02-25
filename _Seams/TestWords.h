@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_TESTWORDS
-#define SCRIPT2_TESTWORDS
+#ifndef CRABS_TESTWORDS
+#define CRABS_TESTWORDS
 
 /* A basic list of test words. */
 template<typename CHT = CHR>

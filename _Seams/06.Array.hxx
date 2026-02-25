@@ -1,16 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_ARRAY
+#if SEAM >= CRABS_ARRAY
 #include "../Array.hpp"
 using namespace ::_;
-#if SEAM == SCRIPT2_ARRAY
+#if SEAM == CRABS_ARRAY
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
-namespace Script2 {
+namespace Crabs {
 
-#if SEAM >= SCRIPT2_ARRAY
+#if SEAM >= CRABS_ARRAY
 template<typename T, typename ISZ>
 void TestArray(const CHA* args) {
   D_COUT("Testing AArray<ISZ" << CHA('@' + sizeof(T)) << ",ISZ" << 
@@ -25,7 +25,7 @@ void TestArray(const CHA* args) {
 #endif
 
 static const CHA* Array(const CHA* args) {
-#if SEAM >= SCRIPT2_ARRAY
+#if SEAM >= CRABS_ARRAY
   A_TEST_BEGIN;
 
   D_COUT(Headingf("Testing RAMCompare with offset sequential arrays..."));
@@ -158,4 +158,4 @@ static const CHA* Array(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

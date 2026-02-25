@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BOUT_HPP
-#define SCRIPT2_BOUT_HPP
+#ifndef CRABS_BOUT_HPP
+#define CRABS_BOUT_HPP
 #include "BOut.h"
-#if SEAM >= SCRIPT2_CRABS_OP
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"

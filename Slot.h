@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_SLOT_DECL
-#define SCRIPT2_SLOT_DECL
+#ifndef CRABS_SLOT_DECL
+#define CRABS_SLOT_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 struct BIn;

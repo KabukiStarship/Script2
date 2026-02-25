@@ -8,6 +8,6 @@ ISN main(ISN arg_count, CHA** args) {
 #if SEAM == SEAM_N
   return SeamResult(Release(argss));
 #else
-  return TTestTree<Script2Tests>(arg_count, args);
+  return TTestTree<CrabsTests>(arg_count, args);
 #endif
 }

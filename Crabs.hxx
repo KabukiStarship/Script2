@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Crabs.hpp"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "Args.h"
 #include "Slot.h"
 #include "Op.hpp"
 #include "Hash.hpp"
 #include "BSeq.hpp"
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -150,7 +150,7 @@ const Op* Push(Crabs* crabs, Operand* operand) {
   CrabsStack(crabs)[stack_count - 1] = crabs->operand;
   crabs->operand = operand;
   crabs->stack_count = stack_count + 1;
-#if DEBUG_SCRIPT2_EXPR
+#if DEBUG_CRABS_EXPR
   CrabsPrintStack(crabs, Print());
 #endif
   return NILP;
@@ -169,7 +169,7 @@ const Op* Pop(Crabs* crabs) {
   D_COUT("\nPopping " << OperandName(crabs->operand) << " off the stack.");
   crabs->operand = CrabsStack(crabs)[stack_count - 2];
   crabs->stack_count = stack_count - 1;
-#if DEBUG_SCRIPT2_EXPR
+#if DEBUG_CRABS_EXPR
   Slot sout = out;
     D_COUT ("\nTop of stack is now "
             << OperandName (crabs->operand) << '.'
@@ -219,7 +219,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
   //< Header of the current Op being verified.
   op = NILP;
   //    if (input == NILP) {
-  //#if DEBUG_SCRIPT2_EXPR
+  //#if DEBUG_CRABS_EXPR
   //        PrintDebug ("input = nil");
   //#endif
   //        return;
@@ -391,7 +391,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           break;
           /*
           } else if (type == STB) { // UTF-16  type.
-              #if DEBUG_SCRIPT2_EXPR
+              #if DEBUG_CRABS_EXPR
               Write ("\nScanning STB.");
               #endif
               if (bytes_left == 1) {
@@ -406,7 +406,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
               break;
           }
           else if (type == STC) { // UTF-32  type.
-              #if DEBUG_SCRIPT2_EXPR
+              #if DEBUG_CRABS_EXPR
               Write ("\nScanning STC.");
               #endif
               // Read the max number_ of chars off the header.

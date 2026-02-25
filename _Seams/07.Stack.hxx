@@ -1,16 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
 #include "../Stack.hpp"
 using namespace ::_;
-#if SEAM == SCRIPT2_STACK
+#if SEAM == CRABS_STACK
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
-namespace Script2 {
+namespace Crabs {
 
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
 template<typename T, typename ISZ, typename ISY=ISZ>
 void TestStack(const CHA* args) {
   D_COUT("Testing AStack<T" << CSizeCodef<T>() << ",IS" <<
@@ -37,7 +37,7 @@ void TestStack(const CHA* args) {
   }
 
   D_COUT(Headingf("\n\nPopping items off the Stack... ") << "i:" << i << 'n');
-  #if SEAM == SCRIPT2_STACK
+  #if SEAM == CRABS_STACK
   TStackPrint<::_::COut, SCK_P>(StdOut(), stack.This());
   #endif
   for (i=i-1; i >= 0; --i) {
@@ -54,7 +54,7 @@ void TestStack(const CHA* args) {
 #endif
 
 static const CHA* Stack(const CHA* args) {
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
   A_TEST_BEGIN;
   D_COUT(Headingf("TestStack"));
 
@@ -65,4 +65,4 @@ static const CHA* Stack(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

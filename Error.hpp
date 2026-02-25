@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ERROR_HPP
-#define SCRIPT2_ERROR_HPP 1
+#ifndef CRABS_ERROR_HPP
+#define CRABS_ERROR_HPP 1
 #include "Error.h"
-#if SEAM >= SCRIPT2_CORE
+#if SEAM >= CRABS_CORE
 namespace _ {
 }  //< namespace _
 #endif

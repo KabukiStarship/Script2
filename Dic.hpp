@@ -1,11 +1,11 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_DIC_HPP
-#define SCRIPT2_DIC_HPP
+#ifndef CRABS_DIC_HPP
+#define CRABS_DIC_HPP
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 #include "Table.hpp"
-#if SEAM == SCRIPT2_DIC
+#if SEAM == CRABS_DIC
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -531,13 +531,13 @@ inline ISY TDicInsert(DIC* table, const CHT* key, FPD value) {
 //    TDelta<>(table, value));
 //  ISY key_index = TTableAppend<TBL_P>(keys, key);
 //  if (key_index < 0) {
-//    SCRIPT2_FAIL();
+//    CRABS_FAIL();
 //    return key_index;
 //  }
 //  ISY result = TListInsert<LST_P>(&table->values, type, value);
 //  if (result < 0) {
 //    TTableRemove<TBL_P>(keys, key_index);
-//    SCRIPT2_FAIL();
+//    CRABS_FAIL();
 //  }
 //  D_COUT_DIC(table);
 //  return key_index;
@@ -585,7 +585,7 @@ DIC* TDicAppend(DIC* table, const DIC* source) {
   const ISZ* src_values_map = TDicValuesMap<DIC_P>(source) + 1;
   const DT* src_types = TDicTypes<DIC_P>(source, src_total) + 1;
   TBL* keys = TDicKeys<DIC_P>(table);
-#if SEAM == SCRIPT2_DIC
+#if SEAM == CRABS_DIC
   TDicPrint<COut, DIC_P>(StdOut(), source);
   StdOut() << "\nsrc_size:" << src_size;
 #endif
@@ -593,7 +593,7 @@ DIC* TDicAppend(DIC* table, const DIC* source) {
     D_COUT("\n\ni:" << i);
     const CHT* key = TPtr<CHT>(src_keys_map, *(src_keys_map + i));
     ISZ value_offset = *src_values_map++;
-#if SEAM == SCRIPT2_DIC
+#if SEAM == CRABS_DIC
     StdOut() << "\nvalue_offset:" << value_offset;
 #endif
     DT  type   = *src_types++;

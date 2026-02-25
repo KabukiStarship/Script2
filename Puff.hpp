@@ -1,11 +1,11 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_PUFF_HPP
-#define SCRIPT2_PUFF_HPP 1
+#ifndef CRABS_PUFF_HPP
+#define CRABS_PUFF_HPP 1
 #include "Puff.h"
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
 #include "Binary.hpp"
-#if SEAM == SCRIPT2_ITOS
+#if SEAM == CRABS_ITOS
 #include <iostream>
 #define D_COUT(item) std::cout << item
 namespace _ {
@@ -515,8 +515,8 @@ inline CHT* TSPrint(CHT* start, ISW size, ISC value) {
 }  //< namespace _
 #endif
 
-#if SEAM >= SCRIPT2_FTOS
-#if SEAM == SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
+#if SEAM == CRABS_FTOS
 #include "_Debug.h"
 #define D_COUT_FLOAT_BINARY(integer, decimals, decimal_count) \
 Print("\nBinary:\"");                                       \

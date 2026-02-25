@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_CLOCK
+#if SEAM >= CRABS_CLOCK
 #include "../Clock.hpp"
 #include "../Uniprinter.hpp"
-#if SEAM == SCRIPT2_CLOCK
+#if SEAM == CRABS_CLOCK
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
@@ -10,9 +10,9 @@
 #endif
 
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 static const CHA* Clock(const CHA* args) {
-#if SEAM >= SCRIPT2_CLOCK
+#if SEAM >= CRABS_CLOCK
   A_TEST_BEGIN;
 
   D_COUT(Headingf("Testing TScanTime..."));
@@ -81,4 +81,4 @@ static const CHA* Clock(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ROOM_HPP
-#define SCRIPT2_ROOM_HPP 1
+#ifndef CRABS_ROOM_HPP
+#define CRABS_ROOM_HPP 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 #include "Interrupts.h"
 #include "BOut.hpp"
 #include "Wall.hpp"
@@ -161,10 +161,10 @@ class TRoom : public Operand {
  public:
 
   enum {
-#ifndef SCRIPT2_MAX_WALLS
+#ifndef CRABS_MAX_WALLS
     RoomFloorSize = 1024,
 #else
-    FloorSize = SCRIPT2_MAX_WALLS,
+    FloorSize = CRABS_MAX_WALLS,
 #undef ROOM_FLOOR_SIZE
 #endif
     FloorSizeWords = FloorSize / sizeof(IUW) + 2,  //< +2 socket.
@@ -325,7 +325,7 @@ class TRoom : public Operand {
       @return Returns nil upon success and an error  upon failure. */
   virtual CHA CommandNext();
 
-  /* Script2 operations. */
+  /* Crabs operations. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
   static const Op This = {
       "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0
@@ -351,7 +351,7 @@ class TRoom : public Operand {
   return 0;
 }
 
-#if USING_SCRIPT2_TEXT == YES_0
+#if USING_CRABS_TEXT == YES_0
   /* Prints the Room to to the dest. */
   virtual UTF1& Print(UTF1& dest) { return utf << "\nRoom: "; }
 #endif

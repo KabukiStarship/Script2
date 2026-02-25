@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Folder.h"
-#if SEAM >= SCRIPT2_FILE
+#if SEAM >= CRABS_FILE
 namespace _ {
 
 Folder::Folder(const CHR* uri) : uri_(uri_) {}

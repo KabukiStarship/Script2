@@ -45,16 +45,4 @@ The solution to the bug is...
 
 ## Hierarchy
 
-* #1
-
-## Tags
-
-RequestFeature
-
-## Sessions
-
-* AStarCale/.github#9
-
-## License
-
-Copyright [AStarship™](https://astarship.net).
+* #11

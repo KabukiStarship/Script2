@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ERROR_DECL
-#define SCRIPT2_ERROR_DECL 1
+#ifndef CRABS_ERROR_DECL
+#define CRABS_ERROR_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CORE
+#if SEAM >= CRABS_CORE
 namespace _ {
 
 // @see _ConfigHeader.hxx for enum of error codes.

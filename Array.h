@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ARRAY_DECL
-#define SCRIPT2_ARRAY_DECL 1
+#ifndef CRABS_ARRAY_DECL
+#define CRABS_ARRAY_DECL 1
 #include <_Config.h>
 namespace _ {
 
@@ -49,4 +49,4 @@ LIB_MEMBER ISW ArrayShiftDown(void* origin, void* end, ISW bytes_count);
 LIB_MEMBER CHA* ArrayFill(void* origin, ISW bytes, CHA fill_char = 0);
 
 }  //< namespace _
-#endif  //< #ifndef SCRIPT2_ARRAY_DECL
+#endif  //< #ifndef CRABS_ARRAY_DECL

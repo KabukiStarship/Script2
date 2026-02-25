@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_UNIPRINTER_HPP
-#define SCRIPT2_UNIPRINTER_HPP
+#ifndef CRABS_UNIPRINTER_HPP
+#define CRABS_UNIPRINTER_HPP
 #include "Stringf.hpp"
-#if SEAM >= SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
 namespace _ {
 
 /* Prints the given string to the Printer. */
@@ -188,7 +188,7 @@ Printer& TPrintAligned(Printer& p, const CHA* string, ISW char_count,
                        ISW left_count, ISW dot_count, ISW right_count) {
   while (--left_count > 0) p << ' ';
   while (--char_count > 0) {
-#if LARGEST_CHAR == 1 || SEAM < SCRIPT2_COUT
+#if LARGEST_CHAR == 1 || SEAM < CRABS_COUT
     p << *string++;
 #else
     CHL c;
@@ -661,11 +661,11 @@ Printer& TPrint(Printer& p, const Indentf& value) {
 }
 
 }  //< namespace _
-#endif  //< #if SEAM >= SCRIPT2_COUT
+#endif  //< #if SEAM >= CRABS_COUT
 
 #include "Puff.hpp"
 
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 namespace _ {
 
 /* Prints the given sizef to the printer. */
@@ -1478,5 +1478,5 @@ inline ::_::TSPrinter<CH, IS>& operator<<(::_::TSPrinter<CH, IS>& p,
   return ::_::TPrint<::_::TSPrinter<CH, IS>>(p, value);
 }
 
-#endif  //< #if SEAM >= SCRIPT2_UNIPRINTER
-#endif  //< #ifndef SCRIPT2_UNIPRINTER_HPP
+#endif  //< #if SEAM >= CRABS_UNIPRINTER
+#endif  //< #ifndef CRABS_UNIPRINTER_HPP

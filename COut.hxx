@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
 #include "COut.h"
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+#if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 //
 #include "Uniprinter.hpp"
 #include "Puff.hpp"
 //#include <cstdio>
 #include <iostream>
-#if SEAM == SCRIPT2_COUT
+#if SEAM == CRABS_COUT
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -124,7 +124,7 @@ COut& COut::Print(const CHC* item) {
 #endif
 
 COut& COut::Print(ISC item) {
-#if SEAM <= SCRIPT2_ITOS
+#if SEAM <= CRABS_ITOS
   STD_COUT << item;
 #else
 #if CPU_SIZE == CPU_8_BYTE
@@ -140,7 +140,7 @@ COut& COut::Print(ISC item) {
 }
 
 COut& COut::Print(IUC item) {
-#if SEAM <= SCRIPT2_ITOS
+#if SEAM <= CRABS_ITOS
   STD_COUT << item;
 #else
 #if CPU_SIZE == CPU_8_BYTE
@@ -156,7 +156,7 @@ COut& COut::Print(IUC item) {
 }
 
 COut& COut::Print(ISD item) {
-#if SEAM <= SCRIPT2_ITOS
+#if SEAM <= CRABS_ITOS
   STD_COUT << item;
 #else
   enum { Size = 24 };
@@ -168,7 +168,7 @@ COut& COut::Print(ISD item) {
 }
 
 COut& COut::Print(IUD item) {
-#if SEAM <= SCRIPT2_ITOS
+#if SEAM <= CRABS_ITOS
   STD_COUT << item;
 #else
   enum { Size = 24 };
@@ -181,7 +181,7 @@ COut& COut::Print(IUD item) {
 
 #if USING_FPC == YES_0
 COut& COut::Print(FPC item) {
-#if SEAM <= SCRIPT2_BOOK
+#if SEAM <= CRABS_BOOK
   STD_COUT << item;
 #else
   enum { Size = 16 };
@@ -194,7 +194,7 @@ COut& COut::Print(FPC item) {
 #endif
 #if USING_FPD == YES_0
 COut& COut::Print(FPD item) {
-#if SEAM <= SCRIPT2_BOOK
+#if SEAM <= CRABS_BOOK
   STD_COUT << item;
 #else
   enum { Size = 24 };
@@ -426,7 +426,7 @@ inline ::_::COut& operator<<(::_::COut& o, ::_::Headingf item) {
   return ::_::TPrint<::_::COut>(o, item);
 }
 
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 inline ::_::COut& operator<<(::_::COut& o, ::_::Centerf item) {
   return ::_::TPrint<::_::COut>(o, item);
 }

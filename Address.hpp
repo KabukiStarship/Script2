@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Address.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 /* C++11 constexpr function for creating Script addresses headers with less

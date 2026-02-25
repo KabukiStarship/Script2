@@ -1,11 +1,11 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_LIBRARY_HPP
-#define SCRIPT2_LIBRARY_HPP 1
+#ifndef CRABS_LIBRARY_HPP
+#define CRABS_LIBRARY_HPP 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 namespace _ {
-#if USING_SCRIPT2_TEXT
+#if USING_CRABS_TEXT
 template<typename TIndex, typename TKey, typename TData, ISC MaxStackHeight>
 class Library : public Operand {
  public:
@@ -84,13 +84,13 @@ class Library : public Operand {
   @return Returns a pointer to one of the ChineseRoom error Strings upon
   failure. */
   void* GetDataAddress(TIndex index) {
-#if SCRIPT2_MEMORY_PROFILE >= 64
+#if CRABS_MEMORY_PROFILE >= 64
     Index64* UI8_ptr = (Index64*)address;
-#elif SCRIPT2_MEMORY_PROFILE >= 32
+#elif CRABS_MEMORY_PROFILE >= 32
     Index32* UI4_ptr = (Index32*)address;
-#elif SCRIPT2_MEMORY_PROFILE >= 16
+#elif CRABS_MEMORY_PROFILE >= 16
     Index16* UI2_ptr = (Index16*)address;
-#elif SCRIPT2_MEMORY_PROFILE != 8
+#elif CRABS_MEMORY_PROFILE != 8
 #error Index_t invalid size!
 #endif
 
@@ -102,7 +102,7 @@ class Library : public Operand {
 
     switch (array_type) {
       case 0:
-#if SCRIPT2_MEMORY_PROFILE >= 16
+#if CRABS_MEMORY_PROFILE >= 16
         /// Library format: { _IUA, _IUA, _IUB, _IUB }
         return size + sizeof(Library) + *(address + 1) * sizeof(IUA) +
                *(UI2_ptr + 2) + *(UI8_ptr + 4);
@@ -110,7 +110,7 @@ class Library : public Operand {
         return 0;
 #endif
       case 1:
-#if SCRIPT2_MEMORY_PROFILE >= 32
+#if CRABS_MEMORY_PROFILE >= 32
         /// Library format: { _IUA, _IUA, _IUB, _IUC }
         return size + sizeof(Bag32) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
@@ -118,7 +118,7 @@ class Library : public Operand {
         return 0;
 #endif
       case 2:
-#if SCRIPT2_MEMORY_PROFILE >= 64
+#if CRABS_MEMORY_PROFILE >= 64
         /// Library format: { _IUB, _IUB, _IUC, _IUD }
         return size + sizeof(Library) + *(UI2_ptr + 2) * sizeof(IUA) +
                *(UI4_ptr + 4) + *(UI8_ptr + 8);
@@ -135,7 +135,7 @@ class Library : public Operand {
   /* Shrinks the currently selected bag's socket to the min size. */
   void Shrink() {}
 
-  /* Script2 Operations.
+  /* Crabs Operations.
   @return       Returns nil upon success, a Set header upon query, and an
   error_t ticket upon Read-Write failure.
   @param index The index of the expression.
@@ -183,7 +183,7 @@ LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == NILP) return;
   delete TPtr<CHA>(r);
 }
-#endif  //< SCRIPT2_MEMORY_PROFILE > 2
+#endif  //< CRABS_MEMORY_PROFILE > 2
 
 }  //< namespace _
 #endif

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Op.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "BSeq.hpp"
 #include "Slot.h"
 #include "Test.h"
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -13,7 +13,7 @@ namespace _ {
 
 inline const Op* OpError(ERC error) { return (const Op*)ISW(error); }
 /*
-#if USING_SCRIPT2_TEXT
+#if USING_CRABS_TEXT
 Op OpInit (IUW* socket, ISC boofer_size) {
     BOut* bout = BOutInit (socket, boofer_size);
     Op log;

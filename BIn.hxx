@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
 #include "BIn.hpp"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "BSeq.hpp"
 #include "Hash.hpp"
 #include "Varint.hpp"
 #include "Slot.hpp"
 #include "Op.h"
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -175,7 +175,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _ISA:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s________________
       case _IUA:
       case _CHA:
-#ifdef USING_SCRIPT2_1_BYTE_TYPES
+#ifdef USING_CRABS_1_BYTE_TYPES
         if (length-- == 0)
           return BInError(bin, ErrorBooferUnderflow, params, index, origin);
 
@@ -199,7 +199,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _IUB:
       case _FPB:
       case _CHB:
-#ifdef USING_SCRIPT2_2_BYTE_TYPES
+#ifdef USING_CRABS_2_BYTE_TYPES
         if (length < 2)
           return BInError(bin, ErrorBooferUnderflow, params, index, origin);
         length -= 2;
@@ -229,7 +229,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _IUC:
       case _FPC:
       case _CHC:
-#ifdef USING_SCRIPT2_4_BYTE_TYPES
+#ifdef USING_CRABS_4_BYTE_TYPES
         if (length < 4)
           return BInError(bin, ErrorBooferUnderflow, params, index, origin);
         length -= 4;
@@ -254,7 +254,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _IUD:
       case _FPD:
       case _TMD:
-#ifdef USING_SCRIPT2_8_BYTE_TYPES
+#ifdef USING_CRABS_8_BYTE_TYPES
         if (length < 8)
           return BInError(bin, ErrorBooferUnderflow, params, index, origin);
         length -= 8;
@@ -422,7 +422,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
 #endif
       default: {
         //D_COUT("\nIt's an array!\n");
-#if USING_SCRIPT2_ARRAY
+#if USING_CRABS_ARRAY
         switch (type & 0x60) {
           case 0: {
             if ((type < _LST) && (type < _MAP))

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BSQ_HPP
-#define SCRIPT2_BSQ_HPP
+#ifndef CRABS_BSQ_HPP
+#define CRABS_BSQ_HPP
 #include "BSeq.h"
-#if SEAM >= SCRIPT2_LIST
-#if SEAM == SCRIPT2_LIST
+#if SEAM >= CRABS_LIST
+#if SEAM == CRABS_LIST
 #include "_Debug.h"
 #else
 #include "_Release.h"

@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_CLOCK_DECL
-#define SCRIPT2_CLOCK_DECL 1
+#ifndef CRABS_CLOCK_DECL
+#define CRABS_CLOCK_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CLOCK
+#if SEAM >= CRABS_CLOCK
 namespace _ {
 
 /* A time in seconds and optional microseconds format that is compatible with

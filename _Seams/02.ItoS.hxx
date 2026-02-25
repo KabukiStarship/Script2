@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
 #include <cstring>
 #include <cstdio>
 //
 #include "../Puff.hpp"
 #include "../RNG.h"
 #include "../Uniprinter.hpp"
-#if SEAM == SCRIPT2_ITOS
+#if SEAM == CRABS_ITOS
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
@@ -14,10 +14,10 @@
 #endif
 
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 inline const CHA* ItoS(const CHA* args) {
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   A_TEST_BEGIN;
   D_COUT(
       "\n\nDirections: To use this tester, you'll want to run the script on "
@@ -190,4 +190,4 @@ inline const CHA* ItoS(const CHA* args) {
 #endif
   return 0;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

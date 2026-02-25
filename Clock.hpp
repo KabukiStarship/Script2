@@ -1,11 +1,11 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include "Clock.h"
-#if SEAM >= SCRIPT2_CLOCK
-#ifndef SCRIPT2_CLOCK_HPP
-#define SCRIPT2_CLOCK_HPP 1
+#if SEAM >= CRABS_CLOCK
+#ifndef CRABS_CLOCK_HPP
+#define CRABS_CLOCK_HPP 1
 //#include "Uniprinter.hpp"
-#if SEAM == SCRIPT2_COUT
+#if SEAM == CRABS_COUT
 #include "_Debug.h"
 #else
 #include "_Release.h"

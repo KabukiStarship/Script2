@@ -3,9 +3,9 @@
 #include "Array.h"
 #include "Autoject.hpp"
 #include "Stringf.hpp"
-#ifndef SCRIPT2_ARRAY_HPP
-#define SCRIPT2_ARRAY_HPP 1
-#if SEAM >= SCRIPT2_STACK
+#ifndef CRABS_ARRAY_HPP
+#define CRABS_ARRAY_HPP 1
+#if SEAM >= CRABS_STACK
 #include "Array.h"
 #define ARY_A typename T = CHA, typename ISZ = ISN
 #define ARY_P T, ISZ

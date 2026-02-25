@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 #include "../Uniprinter.hpp"
 #include "../Array.hpp"
-#if SEAM == SCRIPT2_UNIPRINTER
+#if SEAM == CRABS_UNIPRINTER
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
@@ -10,8 +10,8 @@
 #endif
 
 using namespace ::_;
-namespace Script2 {
-#if SEAM >= SCRIPT2_UNIPRINTER
+namespace Crabs {
+#if SEAM >= CRABS_UNIPRINTER
 template<typename CHT = CHR, typename IS = ISR>
 static const CHA* TestSPrinterCH() {
   D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << CSizeCodef<CHT>() << ",IS"
@@ -439,15 +439,15 @@ static const CHA* TestProblemChildren() {
   return NILP;
 }
 
-#endif  //< #if SEAM >= SCRIPT2_UNIPRINTER
+#endif  //< #if SEAM >= CRABS_UNIPRINTER
 
 static const CHA* Uniprinter(const CHA* args) {
   A_TEST_BEGIN;
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
   A_RUN_TEST(TestPrintAType);
   //A_RUN_TEST(TestSPrinter);
   //A_RUN_TEST(TestProblemChildren);
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

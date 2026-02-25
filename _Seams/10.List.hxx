@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_LIST
+#if SEAM >= CRABS_LIST
 #include "../List.hpp"
 #include "../RNG.h"
 //#include "../Uniprinter.hpp"
-#if SEAM == SCRIPT2_LIST
+#if SEAM == CRABS_LIST
 #include "../_Debug.h"
 #define TEST_MIN 0
 #define TEST_MAX 0xffff
@@ -13,7 +13,7 @@
 #define TEST_MAX 0xffff
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<LST_A>
 static void TestList() {
@@ -212,12 +212,12 @@ static void TestList() {
   //A_AVOW(IS(3), list.Insert(test_cha[3], SCKPack));
   // @todo Add more SCKPack test cases.
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 static const CHA* List(const CHA* args) {
-#if SEAM >= SCRIPT2_LIST
+#if SEAM >= CRABS_LIST
   A_TEST_BEGIN;
   TestList<ISB, ISA, DTB>();
   TestList<ISC, ISB, DTB>();
@@ -226,6 +226,6 @@ static const CHA* List(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #undef TEST_MIN
 #undef TEST_MAX

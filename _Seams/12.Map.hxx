@@ -1,15 +1,15 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_MAP
+#if SEAM >= CRABS_MAP
 #include "../Map.hpp"
 //
 #include "../RNG.h"
-#if SEAM == SCRIPT2_MAP
+#if SEAM == CRABS_MAP
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<typename D, D DomainMin_, D DomainMax_, typename ISZ,
           ISZ CodomainMin_, ISZ CodomainMax_, ISZ Size_>
@@ -60,12 +60,12 @@ void TestMap() {
     A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
   D_COUT_OBJ(map);
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 const CHA* Map(const CHA* args) {
-#if SEAM >= SCRIPT2_MAP
+#if SEAM >= CRABS_MAP
   A_TEST_BEGIN;
 
   TestMap<ISB, CISMin<ISB>(), CISMax<ISB>(), ISB, CISMin<ISB>(),
@@ -92,4 +92,4 @@ const CHA* Map(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

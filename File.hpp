@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #include <_Config.h>
-#ifndef SCRIPT2_FILE_HPP
-#define SCRIPT2_FILE_HPP 1
-#if SEAM >= SCRIPT2_FILE
+#ifndef CRABS_FILE_HPP
+#define CRABS_FILE_HPP 1
+#if SEAM >= CRABS_FILE
 #include "Uniprinter.hpp"
 //
 #include <errno.h>

@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "BOut.hpp"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "BSeq.hpp"
 #include "Hash.hpp"
 #include "Varint.hpp"
@@ -117,13 +117,13 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
   // Temp variables packed into groups of 8 bytes for memory alignment.
   IUA  // type,
       iua;
-#ifdef USING_SCRIPT2_2_BYTE_TYPES
+#ifdef USING_CRABS_2_BYTE_TYPES
   IUB iub;
 #endif
-#ifdef USING_SCRIPT2_4_BYTE_TYPES
+#ifdef USING_CRABS_4_BYTE_TYPES
   IUC iuc;
 #endif
-#ifdef USING_SCRIPT2_8_BYTE_TYPES
+#ifdef USING_CRABS_8_BYTE_TYPES
   IUD iud;
 #endif
   ISN num_params = params[0];
@@ -146,10 +146,10 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
      * stop  = begin + bout->stop;
   const IUA* iua_ptr;
   const IUB* iub_ptr;
-#ifdef USING_SCRIPT2_4_BYTE_TYPES
+#ifdef USING_CRABS_4_BYTE_TYPES
   const IUC* iuc_ptr;  //< Pointer to a 4-IUA type.
 #endif
-#ifdef USING_SCRIPT2_8_BYTE_TYPES
+#ifdef USING_CRABS_8_BYTE_TYPES
   const IUD* iud_ptr;  //< Pointer to a 8-IUA type.
 #endif
   IUB hash = PRIME_LARGEST_IUB;
@@ -171,7 +171,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
     //                   << " start:" << TDelta<>(begin, start) << " stop:"
     //                   << TDelta<>(begin, stop) << " space:" << space);
     if (type <= _CHA) {
-     #ifdef USING_SCRIPT2_1_BYTE_TYPES
+     #ifdef USING_CRABS_1_BYTE_TYPES
       if (space-- <= 0)
         return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
 
@@ -188,7 +188,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       return BOutError(bout, ErrorInvalidType);
      #endif
     } else if (type <= _CHB) {
-     #ifdef USING_SCRIPT2_2_BYTE_TYPES
+     #ifdef USING_CRABS_2_BYTE_TYPES
       if (space < sizeof(IUB))
         return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUB);
@@ -213,9 +213,9 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       break;
      #else
       return BOutError(bout, ErrorInvalidType);
-     #endif  // USING_SCRIPT2_4_BYTE_TYPES
+     #endif  // USING_CRABS_4_BYTE_TYPES
     } else if (type <= _CHC) {
-     #ifdef USING_SCRIPT2_4_BYTE_TYPES
+     #ifdef USING_CRABS_4_BYTE_TYPES
       if (space < sizeof(IUD))
         return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUD);
@@ -234,9 +234,9 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       break;
      #else
       return BOutError(bout, ErrorInvalidType);
-     #endif            //< USING_SCRIPT2_4_BYTE_TYPES
+     #endif            //< USING_CRABS_4_BYTE_TYPES
     } else if (type <= _TME) {
-     #ifdef USING_SCRIPT2_8_BYTE_TYPES
+     #ifdef USING_CRABS_8_BYTE_TYPES
       if (space < sizeof(IUD))
         return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUD);
@@ -255,7 +255,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       break;
 #else
       return BOutError(bout, ErrorInvalidType);
-#endif            //< USING_SCRIPT2_8_BYTE_TYPES
+#endif            //< USING_CRABS_8_BYTE_TYPES
     }
 //#if CPU_SIZE <= 16
 //      case _VSB:  //< _W_r_i_t_e__2_-_b_y_t_e__S_i_g_n_e_d__V_a_r_i_n_t____
@@ -354,7 +354,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //        goto WriteVarint4;
 //      } break;
 //#endif
-//#if USING_SCRIPT2_8_BYTE_TYPES
+//#if USING_CRABS_8_BYTE_TYPES
 //        // Align the socket to a word boundary and check if the socket
 //        // has enough room.
 //        if (space < sizeof(IUD))
@@ -480,7 +480,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //              return BOutError(bout, ErrorImplementation, params, index,
 //                               begin);
 //          }
-//#if USING_SCRIPT2_2_BYTE_TYPES
+//#if USING_CRABS_2_BYTE_TYPES
 //          case 1: {
 //            iub_ptr = TPtr<const IUB>(args[arg_index]);
 //            if (iub_ptr == NILP)
@@ -491,7 +491,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //            iua_ptr = TPtr<const IUA>(iub_ptr);
 //          }
 //#endif
-//#if USING_SCRIPT2_4_BYTE_TYPES
+//#if USING_CRABS_4_BYTE_TYPES
 //          case 2: {
 //            iuc_ptr = TPtr<const IUC>(args[arg_index]);
 //            if (iuc_ptr == NILP)
@@ -502,7 +502,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //            iua_ptr = TPtr<const IUA>(iuc_ptr);
 //          }
 //#endif
-//#if USING_SCRIPT2_8_BYTE_TYPES
+//#if USING_CRABS_8_BYTE_TYPES
 //          case 3: {
 //            iud_ptr = TPtr<const IUD>(args[arg_index]);
 //            if (iud_ptr == NILP)
@@ -512,7 +512,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //            length = static_cast<ISN>(iud);
 //            iua_ptr = TPtr<const IUA>(iud_ptr);
 //          }
-//#endif  //< USING_SCRIPT2_8_BYTE_TYPES
+//#endif  //< USING_CRABS_8_BYTE_TYPES
 //          default: {
 //            // This wont happen due to the & 0x3 bit mask
 //            // but it stops the compiler from barking.

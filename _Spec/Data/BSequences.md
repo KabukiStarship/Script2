@@ -28,7 +28,7 @@ B-Sequences (BSQ), as in the B in `A*B`, is a data structure that describes byte
 
 ## B-Sequence Header Example
 
-```Script2
+```Crabs
 /*      +--------------- 4 input parameters.
         |   +----------- A _::TStrand<> of max length 31.
         |   |       +--- A signed integer with 1-byte width.

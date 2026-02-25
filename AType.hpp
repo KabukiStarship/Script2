@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ATYPE_HPP
-#define SCRIPT2_ATYPE_HPP
+#ifndef CRABS_ATYPE_HPP
+#define CRABS_ATYPE_HPP
 #include "AType.h"
-#if SEAM >= SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
 namespace _ {
 
 /* Utility class for givings names to params.

@@ -25,7 +25,7 @@ struct TMatrix {
 
 ## Examples
 
-```Script2
+```Crabs
 /*             +---------------------- Operand Push "[IUA#2" with signature
                |                       <NIL>:<IUB#2>, Creates an Matrix and pushes
                |                       it onto the Operand Vector.

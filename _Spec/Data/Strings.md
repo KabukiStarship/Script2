@@ -22,7 +22,7 @@ struct TSRope {
 };
 ```
 
-```Script2
+```Crabs
 STA utf8_example: "🥜Dez nutz🥜"
 STB utf16_example: "🥜Dez nutz🥜"
 STC utf32_example: "🥜Dez nutz🥜"

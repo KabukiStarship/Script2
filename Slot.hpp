@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_SLOT_HPP
-#define SCRIPT2_SLOT_HPP
+#ifndef CRABS_SLOT_HPP
+#define CRABS_SLOT_HPP
 #include "Slot.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 /* Calculates the used ring socket space.

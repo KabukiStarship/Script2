@@ -1,11 +1,11 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once 
 #include <_Config.h>
-#ifndef SCRIPT2_STACK_HPP
-#define SCRIPT2_STACK_HPP 1
-#if SEAM >= SCRIPT2_STACK
+#ifndef CRABS_STACK_HPP
+#define CRABS_STACK_HPP 1
+#if SEAM >= CRABS_STACK
 #include "Array.hpp"
-#if SEAM == SCRIPT2_STACK
+#if SEAM == CRABS_STACK
 #include "_Debug.h"
 #else
 #include "_Release.h"

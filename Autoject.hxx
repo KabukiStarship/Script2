@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
 #include "Autoject.h"
 #include "Binary.hpp"
-#if SEAM == SCRIPT2_STACK
+#if SEAM == CRABS_STACK
 #include "_Debug.h"
 #else
 #include "_Release.h"

@@ -10,7 +10,7 @@ An Escape Sequence (ESC) is a sequence of one or more Script Expressions that re
 
 #### ESC Example
 
-```Script2
+```Crabs
 Parent.Child1.Foo ("Hello world!", 1, 2, 3); //< () and ',' are optional and
 Parent Child1 Foo "Hello world!", 1, 2, 3; //< Pop Operations are programmable.
 Parent Child1 Foo "Hello world!" 1 2 3    //< There is no pop instruction here

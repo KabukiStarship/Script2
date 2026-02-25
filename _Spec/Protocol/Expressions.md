@@ -12,7 +12,7 @@ Once a valid Expression has been received, a room may then **Evaluate** that exp
 
 #### Hyphenated Script Expression Example
 
-```Script2
+```Crabs
 /* typedef IUA UIT;
    static const UIT in_params[]  = { 1, kUI4, kUI8 },
                        out_params[] = { 1, NILL, kNIL };

@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_VARINT_HPP
-#define SCRIPT2_VARINT_HPP
+#ifndef CRABS_VARINT_HPP
+#define CRABS_VARINT_HPP
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 namespace _ {
 
 #if CPU_SIZE == CPU_2_BYTE

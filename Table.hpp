@@ -3,11 +3,11 @@
 #ifndef SCRIPTT2_TABLE_HPP
 #define SCRIPTT2_TABLE_HPP 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_TABLE
+#if SEAM >= CRABS_TABLE
 #include "Array.hpp"
 #include "Binary.hpp"
 #include "Hash.hpp"
-#if SEAM == SCRIPT2_TABLE
+#if SEAM == CRABS_TABLE
 #include "_Debug.h"
 #else
 #include "_Release.h"

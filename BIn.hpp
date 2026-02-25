@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BIN_HPP
-#define SCRIPT2_BIN_HPP
+#ifndef CRABS_BIN_HPP
+#define CRABS_BIN_HPP
 #include "BIn.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
-#if USING_SCRIPT2_TEXT == YES_0
+#if USING_CRABS_TEXT == YES_0
 inline const IUA* BInOrigin(const BIn* bin) { 
   return TPtr<IUA>(bin, sizeof(BIn));
 }

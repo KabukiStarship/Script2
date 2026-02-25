@@ -1,31 +1,31 @@
-# [Script2](github.com/AStarStarship/Script2)
+# [Crabs](github.com/AStarStarship/Crabs)
 
 ```AsciiArt
- /\               MP""""""`MM                   oo            dP   d8888b.
-( /   @ @    ()   M  mmmmm..M                                 88       `88
- \  __| |__  /    M.      `YM .d8888b. 88d888b. dP 88d888b. d8888P .aaadP'
-  -/   "   \-     MMMMMMM.  M 88'  `"" 88'  `88 88 88'  `88   88   88'
- /-|       |-\    M. .MMM'  M 88.  ... 88       88 88.  .88   88   88.
-/ /-\     /-\ \   Mb.     .dM `88888P' dP       dP 88Y888P'   dP   Y88888P
- / /-`---'-\ \    MMMMMMMMMMM                      88
-  /         \                                      dP
+ /\                 /$$$$$$                     /$$                
+( /   @ @    ()    /$$__  $$                   | $$                
+ \  __| |__  /    | $$  \__/  /$$$$$$  /$$$$$$ | $$$$$$$   /$$$$$$$
+  -/   "   \-     | $$       /$$__  $$|____  $$| $$__  $$ /$$_____/
+ /-|       |-\    | $$      | $$  \__/ /$$$$$$$| $$  \ $$|  $$$$$$ 
+/ /-\     /-\ \   | $$    $$| $$      /$$__  $$| $$  | $$ \____  $$
+ / /-`---'-\ \    |  $$$$$$/| $$     |  $$$$$$$| $$$$$$$/ /$$$$$$$/
+  /         \      \______/ |__/      \_______/|_______/ |_______/ 
 ```
 
 [![GitHub version](https://badge.fury.io/gh/AStarStarship%2Fscript2.svg)](https://badge.fury.io/gh/AStarStarship%2Fscript2)
 
 > **🚀 We are calling all pioneers!** We are building a new foundation for software, and we need your help to build the next generation of **Games, Apps, and AI**. [Join the Mission](#join-the-mission) below.
 
-## What is Script2?
+## What is Crabs?
 
-Script2 is a high-performance, cross-platform implementation of the **SCRIPT Specification** (Serial Chinese Room, Interprocess, and Telemetry).
+The Chinese Room Abstract Stack (Crabs) Machine is a high-performance, cross-platform implementation of the **SCRIPT Specification** (Serial Chinese Room, Interprocess, and Telemetry Specification).
 
-We are remaining the C++ ecosystem by replacing the standard library with a modern, embedded-friendly alternative. Script2 is designed for **Webapps**, **Games**, **Artificial Intelligence**, and **Distributed Systems** where performance, determinism, and precise memory control are paramount.
+We are remaining the C++ ecosystem by replacing the standard library with a modern, embedded-friendly alternative. Crabs is designed for **Webapps**, **Games**, **Artificial Intelligence**, and **Distributed Systems** where performance, determinism, and precise memory control are paramount.
 
-### Why Script2?
+### Why Crabs?
 
 *   **⚡ Ultra-Fast Performance:** Our **Uniprinter** and custom **ASCII Data Types** are optimized for CPU cache performance, replacing slow standard library components like `printf` and `std::string` with blazing fast alternatives.
 *   **🧠 Built for AI & Logic:** Modeled after the *Chinese Room Thought Experiment*, our architecture treats data processing as a conversation of symbols (the Chinese Room Abstract Stack Machine or "Crabs"), making it uniquely suited for AI agents and complex telemetry.
-*   **🎮 Game Engine Ready:** With optional dynamic memory and no garbage collection pauses, Script2 provides the low-level control required for high-performance game engines.
+*   **🎮 Game Engine Ready:** With optional dynamic memory and no garbage collection pauses, Crabs provides the low-level control required for high-performance game engines.
 *   **🛠️ Modern Embedded-C++:** A clean slate. We use a simplified **Kabuki Module** format and custom containers (`Array`, `List`, `Stack`) to create a robust, dependency-free environment.
 
 ## Join the Mission
@@ -34,19 +34,19 @@ We are an ambitious open-source project looking for volunteers who want to learn
 
 We need help with:
 *   **Webapp Development:** Building cross-platform app libraries with async IO and that easily map to any programming language and operate across assembly line boundaries.
-*   **Game Development:** Building demos, physics integrations, and rendering loops using Script2.
+*   **Game Development:** Building demos, physics integrations, and rendering loops using Crabs.
 *   **AI Integration:** Implementing the Chinese Room logic and linear ID systems.
 *   **Core Systems:** optimizing our custom memory allocators and data structures.
 *   **Community & Docs:** Helping others understand the ASCII Chinese Room philosophy.
 
 **"I've been working on this specification for a long time, and I am looking for a community to help bring this vision to life. I worked for many years to make the ASCII Data Specification make sense for creating a Chinese Room, and it would be a lot of fun to make some modern AI, games, and apps with it."** — *AStarCale, Founder/Code Monkey*
 
-👉 **Ready to help?** Check out our [Good First Issues](https://github.com/AStarStarship/Script2/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or introduce yourself in the Discussions!
+👉 **Ready to help?** Check out our [Good First Issues](https://github.com/AStarStarship/Crabs/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) or introduce yourself in the Discussions!
 
 ## Key Features
 
 *   **ASCII Data Specification:** An Abstract Data Type Specification defining a contiguous memory layout optimized for Data Driven Design and Development.
-*   **Uniprinter:** Ultra-fast Unicode string processing featuring the [Puff Algorithm](https://github.com/AStarStarship/Script2/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers), the world's fastest integer-to-string algorithm that uses discrete math to eliminate over half the division instructions of the industry-standard mod 100 div 100 loop.
+*   **Uniprinter:** Ultra-fast Unicode string processing featuring the [Puff Algorithm](https://github.com/AStarStarship/Crabs/wiki/Fastest-Method-to-Print-Integers-and-Floating-point-Numbers), the world's fastest integer-to-string algorithm that uses discrete math to eliminate over half the division instructions of the industry-standard mod 100 div 100 loop.
 *   **Seam Testing:** A low-cost, in-order tree-based unit test framework for Agile and Issue Driven Development.
 
 ## Documentation

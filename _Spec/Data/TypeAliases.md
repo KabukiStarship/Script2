@@ -5,6 +5,7 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 | Type |   Alt Name   |  Width  | Description |
 |:----:|:------------:|:-------:|:------------|
 | CHN  |   wchar_t    |   2,4   | A 16 or 32-bits wide Unicode character. |
+| CHR  |    char_t    |  1,2,4  | Unicode character at least 8 bits wide. |
 | ISN  |     int      |   2,4   | Signed integer at least 16 bits wide. |
 | IUN  | unsigned int |   2,4   | Unsigned integer at least 16 bits wide. |
 | ISG  |     SI       |   W/2   | Half-word sized signed integer. |
@@ -19,7 +20,6 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 | PTR  |    void*     |    W    | Word-sized pointer. |
 | PTC  | const void*  |    W    | Word-sized const pointer. |
 | DTW  |   intptr_t   |    W    | A word-sized ASCII Data Type. |
-| CHR  |    char_t    |  1,2,4  | Unicode character at least 8 bits wide. |
 | ISR  |    int_t     | 1,2,4,8 | Signed integer at least 8 bits wide. |
 | IUR  |    uint_t    | 1,2,4,8 | Unsigned integer at least 8 bits wide. |
 | FPR  |   float_t    | 1,2,4,8 | Floating-point number at least 16 bits wide. |

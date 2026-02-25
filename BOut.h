@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BOUT_DECL
-#define SCRIPT2_BOUT_DECL
+#ifndef CRABS_BOUT_DECL
+#define CRABS_BOUT_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 struct BIn;
@@ -35,7 +35,7 @@ struct LIB_MEMBER BOut {
 inline const Op* BOutError(BOut* bout, ERC error, const DTB* header,
   ISN bsq_error, IUA* error_byte);
 
-#if USING_SCRIPT2_TEXT == YES_0
+#if USING_CRABS_TEXT == YES_0
 
 /* Gets a a CHA for printing out the bout_state. */
 LIB_MEMBER const CHA** BOutStateStrings();

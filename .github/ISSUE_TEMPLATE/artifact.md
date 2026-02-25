@@ -16,7 +16,3 @@ The artifact that is left over from a change is...
 ## A
 
 
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

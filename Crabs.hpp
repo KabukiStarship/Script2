@@ -1,14 +1,14 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Crabs.h"
-#if SEAM >= SCRIPT2_CRABS_OP
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
 namespace _ {
 
-#if USING_SCRIPT2_TEXT == YES_0
+#if USING_CRABS_TEXT == YES_0
 template<typename Printer>
 Printer& TCrabsPrintStack(Printer & o, Crabs* crabs) {
   A_ASSERT(crabs);

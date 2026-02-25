@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Error.hpp"
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
 namespace _ {
 const CHA* ASCIIErrorSTA() {
   return TAErrors<CHA>();

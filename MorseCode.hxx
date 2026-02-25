@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #include <_Config.h>
 namespace _ {
-/* This code doesn't really seam to match with Script2's mission other than a
+/* This code doesn't really seam to match with Crabs's mission other than a
 universal Chinese Room Langauge. The problem is that it doesn't seem to feit
 anywhere in Kabuki Toolkit right now so it sits here. It's useful for
 transeiving debug messages via LED lights. */

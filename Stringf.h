@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_STRINGF_DECL
-#define SCRIPT2_STRINGF_DECL 1
+#ifndef CRABS_STRINGF_DECL
+#define CRABS_STRINGF_DECL 1
 #include "AType.h"
 namespace _ {
 

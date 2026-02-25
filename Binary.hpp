@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BINARY_HPP
-#define SCRIPT2_BINARY_HPP 1
+#ifndef CRABS_BINARY_HPP
+#define CRABS_BINARY_HPP 1
 #include <_Config.h>
 namespace _ {
 
@@ -875,7 +875,7 @@ inline IU TShiftLeftRight(IU value, ISC left_bits, ISC right_bits) {
 }
 
 /* Aligns up a number to the given PowerOf2.
-This function is for those not familiar with how Script2 does pointer alignment.
+This function is for those not familiar with how Crabs does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template<typename T = void*, ISW PowerOf2>
@@ -884,7 +884,7 @@ const T* TAlignUpPointer(const void* value) {
 }
 
 /* Aligns up a number to the given PowerOf2.
-This function is for those not familiar with how Script2 does pointer alignment.
+This function is for those not familiar with how Crabs does pointer alignment.
 It's faster to align the pointer using the max for the power of 2 rather than
 power of 2. The only difference is the mask is one less than the power of 2. */
 template<typename T = void*, ISW PowerOf2>

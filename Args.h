@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ARGS
-#define SCRIPT2_ARGS 1
+#ifndef CRABS_ARGS
+#define CRABS_ARGS 1
 #include "BSeq.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 /* Sets the params to the given pointers corresponding to the index 1-26 of the

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_OP_HPP
-#define SCRIPT2_OP_HPP 1
+#ifndef CRABS_OP_HPP
+#define CRABS_OP_HPP 1
 #include "Op.h"
 #include "BSeq.hpp"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 #include "String.hpp"
 namespace _ {
 
@@ -28,8 +28,7 @@ inline const ISC* OpFirst(CHC index) { return TPtr<const ISC>(index); }
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
   return (CHC) IUW(op->in);
-}
-
+}`
 /* Converts the given value to a pointer. */
 inline const ISC* OpLast(CHC index) { return TPtr<const ISC>(index); }
 

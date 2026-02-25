@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_COUT_DECL
-#define SCRIPT2_COUT_DECL
+#ifndef CRABS_COUT_DECL
+#define CRABS_COUT_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+#if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 #include "Stringf.h"
 namespace _ {
 
@@ -229,7 +229,7 @@ inline ::_::COut& operator<<(::_::COut& o, ::_::Hexf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Binaryf item);
 
 inline ::_::COut& operator<<(::_::COut& o, ::_::Headingf item);
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 inline ::_::COut& operator<<(::_::COut& o, ::_::Centerf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Rightf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Linef item);

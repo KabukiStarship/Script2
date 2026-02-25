@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BOOFER_DECL
-#define SCRIPT2_BOOFER_DECL 1
+#ifndef CRABS_BOOFER_DECL
+#define CRABS_BOOFER_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 namespace _ {
 
 /* Creates/Gets a static socket of the specified size. */

@@ -1,20 +1,20 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_RNG
+#if SEAM >= CRABS_RNG
 #include "../RNG.h"
-#if SEAM == SCRIPT2_RNG
+#if SEAM == CRABS_RNG
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 static const CHA* RNG(const CHA* args) {
-#if SEAM >= SCRIPT2_RNG
+#if SEAM >= CRABS_RNG
   A_TEST_BEGIN;
 
-#if SEAM == SCRIPT2_RNG
+#if SEAM == CRABS_RNG
   enum { PrintCount = 256 };
 #else
   enum { PrintCount = 1 };
@@ -26,4 +26,4 @@ static const CHA* RNG(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

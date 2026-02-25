@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_FILE_DECL
-#define SCRIPT2_FILE_DECL 1
+#ifndef CRABS_FILE_DECL
+#define CRABS_FILE_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_FILE
+#if SEAM >= CRABS_FILE
 #include "Uniprinter.hpp"
 namespace _ {
 

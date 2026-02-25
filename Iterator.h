@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_ITERATOR_DECL
-#define SCRIPT2_ITERATOR_DECL 1
+#ifndef CRABS_ITERATOR_DECL
+#define CRABS_ITERATOR_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 // Dependencies:
 // End dependencies.
 namespace _ {

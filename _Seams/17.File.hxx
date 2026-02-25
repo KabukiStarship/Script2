@@ -1,20 +1,20 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_FILE
+#if SEAM >= CRABS_FILE
 #include "../File.h"
-#if SEAM == SCRIPT2_FILE
+#if SEAM == CRABS_FILE
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 static const CHA* File(const CHA* args) {
-#if SEAM == SCRIPT2_FILE
+#if SEAM == CRABS_FILE
   A_TEST_BEGIN;
 #endif
   return NILP;
 }
 
-}  //< namespace Script2
+}  //< namespace Crabs

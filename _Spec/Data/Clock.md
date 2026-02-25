@@ -37,7 +37,7 @@ The MSb and bits 35:34 of the Eternal UUID Bit Pattern are always 1.
 ### Cold UUID Bit Pattern
 
 The MSb of the Cold Bit UUID Pattern is always 0.
-****
+
 ```AsciiArt
 +------------------------------------------------------------+
 |  MSb:0 | 34-bit unsigned seconds | 29-bit Subsecond ticker |

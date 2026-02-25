@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_BIN_DECL
-#define SCRIPT2_BIN_DECL
+#ifndef CRABS_BIN_DECL
+#define CRABS_BIN_DECL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 struct BIn;
@@ -61,7 +61,7 @@ LIB_MEMBER inline ISN BInSpace(BIn* bin);
 
 LIB_MEMBER inline ISN BinBooferLength(BIn* bin);
 
-#if USING_SCRIPT2_TEXT == YES_0
+#if USING_CRABS_TEXT == YES_0
 
 /* Pulls the keyboard input into the ring socket. */
 // LIB_MEMBER void BInKeyboard()

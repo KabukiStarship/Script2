@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Floor.h"
-#if SEAM >= SCRIPT2_ROOM
+#if SEAM >= CRABS_ROOM
 namespace _ {
 
 }  //< namespace _

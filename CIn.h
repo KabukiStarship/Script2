@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_CIN_DECL
-#define SCRIPT2_CIN_DECL 1
+#ifndef CRABS_CIN_DECL
+#define CRABS_CIN_DECL 1
 #include "COut.h"
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+#if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 namespace _ {
 
 /* Checks if the given string is yes or no.

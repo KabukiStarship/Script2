@@ -12,7 +12,3 @@ The problem that is so great it requires a Change with Change Control Management
 ## Solution
 
 The solution is...
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

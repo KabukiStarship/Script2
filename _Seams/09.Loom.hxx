@@ -1,15 +1,15 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_LOOM
+#if SEAM >= CRABS_LOOM
 #include "../Loom.hpp"
 //
 #include "TestWords.h"
-#if SEAM == SCRIPT2_LOOM
+#if SEAM == CRABS_LOOM
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 template<typename CH = CHR, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
@@ -129,12 +129,12 @@ void TestLoom() {
 
   A_AVOW(ISY(-1), loom.Find(test));
 }
-}  //< namespace Script2
+}  //< namespace Crabs
 #endif
 
-namespace Script2 {
+namespace Crabs {
 static const CHA* Loom(const CHA* args) {
-#if SEAM >= SCRIPT2_LOOM
+#if SEAM >= CRABS_LOOM
   A_TEST_BEGIN;
   //TestLoom<CHA, ISB, ISB>();
   //TestLoom<CHA, ISC, ISC>();
@@ -157,4 +157,4 @@ static const CHA* Loom(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

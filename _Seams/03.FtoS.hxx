@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
 #include "../RNG.h"
-#if SEAM == SCRIPT2_FTOS
+#if SEAM == CRABS_FTOS
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
@@ -10,12 +10,12 @@
 
 using namespace std;
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 const CHA* FtoS(const CHA* args) {
-#if SEAM >= SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
   A_TEST_BEGIN;
 
-#if SEAM == SCRIPT2_FTOS
+#if SEAM == CRABS_FTOS
   enum { TestCount = 1 << 20 };
 #else
   enum { TestCount = 1 << 15 };
@@ -70,4 +70,4 @@ const CHA* FtoS(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Script2
+}  //< namespace Crabs

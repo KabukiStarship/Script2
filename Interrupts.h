@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_EXCEPTIONS_DECL
-#define SCRIPT2_EXCEPTIONS_DECL 1
+#ifndef CRABS_EXCEPTIONS_DECL
+#define CRABS_EXCEPTIONS_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_CRABS_OP
-#if USING_SCRIPT2_INTERRUPTS == YES_0
+#if SEAM >= CRABS_OPERATION
+#if USING_CRABS_INTERRUPTS == YES_0
 namespace _ {
 
 #if USING_TEXT_SCRIPT == YES_0
@@ -12,7 +12,7 @@ namespace _ {
 struct LIB_MEMBER RoomCrashException : public std::exception {
   RoomCrashException() {}
 };
-#endif  //< USING_SCRIPT2_INTERRUPTS == YES_0
+#endif  //< USING_CRABS_INTERRUPTS == YES_0
 }  //< namespace _
 #endif
 #endif

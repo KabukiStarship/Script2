@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_TYPES_DECL
-#define SCRIPT2_TYPES_DECL
+#ifndef CRABS_TYPES_DECL
+#define CRABS_TYPES_DECL
 #include <_Config.h>
 
 /* Function that remaps a Standard Data Type to an Extended Plain or Extended

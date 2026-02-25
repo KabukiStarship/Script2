@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_FOLDER_DECL
-#define SCRIPT2_FOLDER_DECL 1
+#ifndef CRABS_FOLDER_DECL
+#define CRABS_FOLDER_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_FILE
+#if SEAM >= CRABS_FILE
 namespace _ {
 
 struct CFolder {

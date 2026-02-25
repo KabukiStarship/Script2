@@ -1,17 +1,17 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
 #include "../Uniprinter.hpp"
-#if SEAM == SCRIPT2_COUT
+#if SEAM == CRABS_COUT
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 #endif
 using namespace ::_;
-namespace Script2 {
+namespace Crabs {
 
 inline const CHA* COut(const CHA* args) {
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+#if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   A_TEST_BEGIN;
   
   D_COUT(Headingf("Testing ArgsToString"));
@@ -116,4 +116,4 @@ inline const CHA* COut(const CHA* args) {
   return 0;
 }
 
-}  //< namespace Script2
+}  //< namespace Crabs

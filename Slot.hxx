@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Slot.hpp"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 //#include "String.hpp"
 //#include "AType.h"
-#if SEAM == SCRIPT2_CRABS_OP
+#if SEAM == CRABS_OPERATION
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -146,10 +146,10 @@ const Op* Slot::Read(const DTB* params, void** args) {
   A_ASSERT(args);
   IUA iua;  //< Temp variable to load most types.
   IUB iub;  //< Temp variable for working with _IUB types.
-#ifdef USING_SCRIPT2_4_BYTE_TYPES
+#ifdef USING_CRABS_4_BYTE_TYPES
   IUC iuc;
 #endif
-#ifdef USING_SCRIPT2_8_BYTE_TYPES
+#ifdef USING_CRABS_8_BYTE_TYPES
   IUD iud;  //< Temp _IUD variable.
 #endif
   IUA* iua_ptr;             //< Pointer to a _IUA.
@@ -233,7 +233,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         break;
       case _ISA:  //< _R_e_a_d__1__B_y_t_e__T_y_p_e_s___________
       case _IUA:
-#ifdef USING_SCRIPT2_1_BYTE_TYPES
+#ifdef USING_CRABS_1_BYTE_TYPES
         if (length == 0) {
           return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);
@@ -261,7 +261,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
       case _ISB:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case _IUB:
       case _FPB:
-#ifdef USING_SCRIPT2_2_BYTE_TYPES
+#ifdef USING_CRABS_2_BYTE_TYPES
         // Read2ByteType:{
         // Word-align
         offset = AlignUpB(l_start);
@@ -292,7 +292,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
 #else
         return ReturnError(this, ErrorInvalidType);
 #endif
-#if USING_SCRIPT2_VARINT2
+#if USING_CRABS_VARINT2
         goto Read2ByteType;
 #else
         return ReturnError(this, ErrorInvalidType);
@@ -304,7 +304,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
       case _ISC:  //< _R_e_a_d__3_2_-_b_i_t__T_y_p_e_s__________
       case _IUC:
       case _FPC:
-#ifdef USING_SCRIPT2_4_BYTE_TYPES
+#ifdef USING_CRABS_4_BYTE_TYPES
         // Read4ByteType:{
         // Word-align
         offset = AlignUpC(l_start);
@@ -339,7 +339,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
       case _IUD:
       case _FPD:
       case _TMD:
-#ifdef USING_SCRIPT2_8_BYTE_TYPES
+#ifdef USING_CRABS_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
         offset = AlignUpD(l_start);
@@ -369,7 +369,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         return ReturnError(this, ErrorInvalidType);
 #endif
       default: {
-#if USING_SCRIPT2_OBJ
+#if USING_CRABS_OBJ
         count = type >> 5;  //< count is now the array type bits.
         type &= 0x1f;       //< Now type is the type 0-31
         if (count && (type >= _OBJ)) {
@@ -498,7 +498,7 @@ const Op* Slot::Write(Slot& other) { return NILP; }
 
 const Op* Slot::Write(const IUA* message) { return NILP; }
 
-#if USING_SCRIPT2_TEXT
+#if USING_CRABS_TEXT
 UTF1& Slot::Print(UTF1& utf) {
   IUA *l_begin = origin, *l_end = stop;
   return utf << Line('_', 80) << "\nSlot: origin:" << Hex<>(l_begin)

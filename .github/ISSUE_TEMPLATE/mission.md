@@ -1,6 +1,6 @@
 ---
 name: Mission
-about: A mission with a problem-solution analysis
+about: A mission with a problem-solution analysis.
 title: ''
 labels: ''
 assignees: ''
@@ -28,11 +28,3 @@ Mission
 ## A
 
 
-
-### Sessions
-
-* AStarCale/.github#9
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

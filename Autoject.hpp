@@ -1,13 +1,13 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_AUTOJECT_CODE
-#define SCRIPT2_AUTOJECT_CODE 1
+#ifndef CRABS_AUTOJECT_CODE
+#define CRABS_AUTOJECT_CODE 1
 #include "Autoject.h"
 #include "Array.h"
 #include "Binary.hpp"
 #include "AType.hpp"
-#if SEAM >= SCRIPT2_UNIPRINTER
-#if SEAM == SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
+#if SEAM == CRABS_UNIPRINTER
 #include "_Debug.h"
 #else
 #include "_Release.h"

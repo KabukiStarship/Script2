@@ -7,7 +7,7 @@
 // keep in mind that the static data will get duplicated in each library
 // you build.
 namespace _ {
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
 
 const IUD* Pow10_UI8() {
   static const IUD k10ToThe[20] = {
@@ -150,7 +150,7 @@ ISN STRLength(ISD value) {
 
 #endif
 
-#if SEAM >= SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
 
 IUD TComputePow10(ISC e, ISC alpha, ISC gamma) {
   FPD pow_10 = 0.30102999566398114,  //< 1/lg(10)

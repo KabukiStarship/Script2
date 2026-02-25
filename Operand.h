@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_OPERAND_DECL
-#define SCRIPT2_OPERAND_DECL
+#ifndef CRABS_OPERAND_DECL
+#define CRABS_OPERAND_DECL
 #include "Slot.h"
-#if SEAM >= SCRIPT2_CRABS_OP
+#if SEAM >= CRABS_OPERATION
 namespace _ {
 
 struct LIB_MEMBER Crabs;
@@ -35,7 +35,7 @@ functions of this object via the Data Controller (DC).
 */
 
 struct Operand {
-  /* Script2 Operations.
+  /* Crabs Operations.
   @param index The index of the expression.
   @param crabs The Crabs to read and write from.
   @return      Returns nil upon success, a Set header upon query, and an
@@ -56,7 +56,7 @@ LIB_MEMBER IUW OperandCount(Operand* op);
 Contain the given key. */
 LIB_MEMBER CHC OperandIndex(Operand* operand, CHA* key_begin, CHA* key_end);
 
-#if USING_SCRIPT2_TEXT
+#if USING_CRABS_TEXT
 /* Queries the given Operand Op Header.
 @param crabs The expression to write the query to. Set to nil to return
               op.

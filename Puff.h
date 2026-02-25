@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_PUFF_DECL
-#define SCRIPT2_PUFF_DECL 1
+#ifndef CRABS_PUFF_DECL
+#define CRABS_PUFF_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
 namespace _ {
 
 /* Lookup table of ASCII CHT pairs for 00, 01, ..., 99. */
@@ -32,7 +32,7 @@ LIB_MEMBER ISC STRLength(ISC value);
 LIB_MEMBER ISC STRLength(IUD value);
 LIB_MEMBER ISC STRLength(ISD value);
 
-#if SEAM >= SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
 
 /* IEEE754 Powers of 10 integral portions LUT. */
 const void* Binary32Pow10IntegralPortions();

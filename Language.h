@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_LANGUAGE_DECL
-#define SCRIPT2_LANGUAGE_DECL 1
+#ifndef CRABS_LANGUAGE_DECL
+#define CRABS_LANGUAGE_DECL 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_DIC
+#if SEAM >= CRABS_DIC
 namespace _ {
 namespace language {
 

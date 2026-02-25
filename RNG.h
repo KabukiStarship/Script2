@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_RNG_DECL
-#define SCRIPT2_RNG_DECL 1
+#ifndef CRABS_RNG_DECL
+#define CRABS_RNG_DECL 1
 #include <_Config.h>
 namespace _ {
 

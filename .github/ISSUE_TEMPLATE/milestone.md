@@ -16,7 +16,3 @@ assignees: ''
 #### Discretionary
 
 1. Bar.
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

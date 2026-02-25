@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_HASH_HEADER_IMPL
-#define SCRIPT2_HASH_HEADER_IMPL
+#ifndef CRABS_HASH_HEADER_IMPL
+#define CRABS_HASH_HEADER_IMPL
 #include <_Config.h>
-#if SEAM >= SCRIPT2_TABLE
+#if SEAM >= CRABS_TABLE
 
 namespace _ {
 /* Returns the highest signed prime that can fit in type IS.

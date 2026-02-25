@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include <_Config.h>
-#ifndef SCRIPT2_TEST_DECL
-#define SCRIPT2_TEST_DECL 1
+#ifndef CRABS_TEST_DECL
+#define CRABS_TEST_DECL 1
 
 /* Function pointer prototype for a test case with command line argument.
 @return Pointer to a  to utf to the stdout.

@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #include "CIn.h"
-#if SEAM >= SCRIPT2_COUT && USING_CONSOLE == YES_0
+#if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 #include "Stringf.hpp"
-#if SEAM == SCRIPT2_COUT
+#if SEAM == CRABS_COUT
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -219,7 +219,7 @@ ISC CInKey() { return 0; }
 BOL CInState(ISC vk_code) { return false; }
 
 const IUA* KeyboardHIDToNative() {
-#if SCRIPT2_PLATFORM == OS_WINDOWS
+#if CRABS_PLATFORM == OS_WINDOWS
   static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
       76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
@@ -239,7 +239,7 @@ const IUA* KeyboardHIDToNative() {
       16,  18,  255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-#elif SCRIPT2_PLATFORM == MAC
+#elif CRABS_PLATFORM == MAC
   static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 0,   11,  8,   2,   14,  3,   5,   4,   34,  38,  40,
       37,  46,  45,  31,  35,  12,  15,  1,   17,  32,  9,   13,  7,   16,  6,
@@ -259,7 +259,7 @@ const IUA* KeyboardHIDToNative() {
       56,  58,  55,  62,  60,  61,  54,  255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-#elif SCRIPT2_PLATFORM == EVDEV
+#elif CRABS_PLATFORM == EVDEV
   static const IUA cHIDToNative[256] = {
       255, 255, 255, 255, 38,  56,  54,  40,  26,  41,  42,  43,  31,  44,  45,
       46,  58,  57,  32,  33,  24,  27,  39,  28,  30,  55,  25,  53,  29,  52,
@@ -284,7 +284,7 @@ const IUA* KeyboardHIDToNative() {
 }
 
 const IUA* KeyboardNativeToHID() {
-#if SCRIPT2_PLATFORM == OS_WINDOWS
+#if CRABS_PLATFORM == OS_WINDOWS
   static const IUA cNativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 42,  43,  255, 255, 255, 40,  255,
       255, 225, 224, 226, 72,  57,  255, 255, 255, 255, 255, 255, 41,  255, 255,
@@ -304,7 +304,7 @@ const IUA* KeyboardNativeToHID() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
-#elif SCRIPT2_PLATFORM == MAC
+#elif CRABS_PLATFORM == MAC
   static const IUA cNativeToHID[128] = {
       4,   22,  7,   9,   11,  10,  29,  27,  6,   25,  255, 5,   20,  26,  8,
       21,  28,  23,  30,  31,  32,  33,  35,  34,  46,  38,  36,  45,  37,  39,
@@ -315,7 +315,7 @@ const IUA* KeyboardNativeToHID() {
       111, 96,  97,  255, 255, 255, 62,  63,  64,  60,  65,  66,  255, 68,  255,
       104, 107, 105, 255, 67,  255, 69,  255, 106, 117, 74,  75,  76,  61,  77,
       59,  78,  58,  80,  79,  81,  82,  255};
-#elif SCRIPT2_PLATFORM == EVDEV
+#elif CRABS_PLATFORM == EVDEV
   static const IUA cNativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 41,  30,  31,  32,  33,  34,
       35,  36,  37,  38,  39,  45,  46,  42,  43,  20,  26,  8,   21,  23,  28,

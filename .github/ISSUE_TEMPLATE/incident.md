@@ -23,7 +23,3 @@ assignees: 'AStarCale'
 ## A
 
 
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

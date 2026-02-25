@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #include <_Config.h>
-#if SEAM >= SCRIPT2_BOOK
-#ifndef SCRIPT2_BOOK_HPP
-#define SCRIPT2_BOOK_HPP 1
+#if SEAM >= CRABS_BOOK
+#ifndef CRABS_BOOK_HPP
+#define CRABS_BOOK_HPP 1
 #include "AType.h"
 namespace _ {
 

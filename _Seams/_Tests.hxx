@@ -23,17 +23,17 @@
 #include "18.SGraTe.hxx"
 #include "19.CrabsOp.hxx"
 #include "20.Room.hxx"
-#include "21.Script2Core.hxx"
+#include "21.CrabsCore.hxx"
 #include "22.Release.hxx"
 //
 #include "../Test.hpp"
 using namespace ::_;
 
-inline const CHA* Script2Tests(const CHA* args) {
-  return TTestTree<Script2::COut, Script2::ItoS, Script2::FtoS, 
-    Script2::Uniprinter, Script2::Clock, Script2::Stack, Script2::String, 
-    Script2::Loom,  Script2::List, Script2::Book, Script2::Map, Script2::Table,
-    Script2::Dic, Script2::MathCore, Script2::RNG, Script2::File,
-    Script2::SGraTe, Script2::CrabsOp, Script2::Room, 
-    Script2::Script2Core>(args);
+inline const CHA* CrabsTests(const CHA* args) {
+  return TTestTree<Crabs::COut, Crabs::ItoS, Crabs::FtoS, 
+    Crabs::Uniprinter, Crabs::Clock, Crabs::Stack, Crabs::String, 
+    Crabs::Loom,  Crabs::List, Crabs::Book, Crabs::Map, Crabs::Table,
+    Crabs::Dic, Crabs::MathCore, Crabs::RNG, Crabs::File,
+    Crabs::SGraTe, Crabs::CrabsOp, Crabs::Room, 
+    Crabs::CrabsCore>(args);
 }

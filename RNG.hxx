@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #include "RNG.h"
 // 
-#if SEAM < SCRIPT2_RNG
+#if SEAM < CRABS_RNG
 #include <random>
 namespace _ {
 

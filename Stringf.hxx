@@ -79,8 +79,8 @@ const CHA* STAPrintHexBorder() {
 
 }  //< namespace _
 
-#if SEAM >= SCRIPT2_COUT
-#if SEAM == SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
+#if SEAM == CRABS_COUT
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -555,7 +555,7 @@ void Stringf::Print(CHC item) {
 #endif
 void Stringf::Print(ISC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _ISC;
@@ -564,7 +564,7 @@ void Stringf::Print(ISC item) {
 
 void Stringf::Print(IUC item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _IUC;
@@ -573,7 +573,7 @@ void Stringf::Print(IUC item) {
 
 void Stringf::Print(ISD item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _ISD;
@@ -582,7 +582,7 @@ void Stringf::Print(ISD item) {
 
 void Stringf::Print(IUD item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = _SWA;
@@ -615,7 +615,7 @@ void Stringf::PrintTMD(TMD item) {}
 
 void Stringf::Print(ATypef item) {
   CHA* boofer = TPtr<CHA>(boofer_);
-#if SEAM >= SCRIPT2_ITOS
+#if SEAM >= CRABS_ITOS
   ::_::TSPrint<CHA>(boofer, boofer + LengthMax, item);
 #endif
   type_ = item.type;
@@ -1015,8 +1015,8 @@ Sizef::Sizef(ISD size) : size(size) {}
 
 }  //< namespace _
 
-#if SEAM >= SCRIPT2_FTOS
-#if SEAM == SCRIPT2_FTOS
+#if SEAM >= CRABS_FTOS
+#if SEAM == CRABS_FTOS
 #include "_Debug.h"
 #else
 #include "_Release.h"

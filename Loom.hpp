@@ -1,13 +1,13 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef SCRIPT2_LOOM_HPP
-#define SCRIPT2_LOOM_HPP 1
+#ifndef CRABS_LOOM_HPP
+#define CRABS_LOOM_HPP 1
 #include <_Config.h>
-#if SEAM >= SCRIPT2_LOOM
+#if SEAM >= CRABS_LOOM
 #include "Array.h"
 #include "Stack.hpp"
 #include "AType.hpp"
-#if SEAM == SCRIPT2_LOOM
+#if SEAM == CRABS_LOOM
 #include "_Debug.h"
 #else
 #include "_Release.h"

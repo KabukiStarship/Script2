@@ -2,13 +2,13 @@
 #include "AType.hpp"
 //
 #include "Array.h"
-#if SEAM == SCRIPT2_COUT
+#if SEAM == CRABS_COUT
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
 
-#if SEAM >= SCRIPT2_COUT
+#if SEAM >= CRABS_COUT
 namespace _ {
 DTB ATypeMDDeassert(DTW type) {
   const DTW MD = (type >> ATypeMDBit0) & 0x3;
@@ -736,7 +736,7 @@ void ATypeValue::Set(FPD value) {
 }  //< namespace _
 #endif
 
-#if SEAM >= SCRIPT2_UNIPRINTER
+#if SEAM >= CRABS_UNIPRINTER
 namespace _ {
 DTB ATypeRemapEP(DTW sw_vt_bits, DTW pod_type, DTD ep_remap) {
   return DTB((pod_type >> (pod_type - _PCa) * 5) & ATypePODMask);
@@ -833,7 +833,7 @@ DTW ACTXHandlerDefault(void* begin, void* end, DTW type, IUW value, IUW vmsb) {
   }
 #endif
   case ACTXFunWrite: {
-#if SEAM >= SCRIPT2_STACK
+#if SEAM >= CRABS_STACK
     return ArrayCopy(begin, end, (void*)value, ISW(vmsb));
 #else
     return 0;
