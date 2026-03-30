@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_ITERATOR_DECL
-#define CRABS_ITERATOR_DECL 1
+#define CRABS_ITERATOR_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_DIC
 // Dependencies:
@@ -9,7 +9,7 @@
 namespace _ {
 
 /* Interface for a generic iterator. */
-struct LIB_MEMBER Iterator {
+struct Iterator {
   /* Virtual destructor. */
   virtual ~Iterator() = 0;
 

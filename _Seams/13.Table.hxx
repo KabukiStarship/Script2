@@ -9,20 +9,20 @@
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 template<TBL_A>
 void TestTable() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS")
          << CSizef<ISZ>() << ",IU" << CSizef<HSH>() << ",CH"
-         << CSizef<CHT>() << ">\n"
+         << CSizef<CHS>() << ">\n"
          << Linef("+---\n\n"));
   ISY total_init = 13;
   ATable<TBL_P> table(total_init);
   const TBL* This = table.This();
   const ISZ size_bytes = table.Bytes();
 
-  static const CHT a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
+  static const CHS a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
                    d[] = {'D', '\0'}, e[] = { 'E', '\0' },
                    abc[] = {'a', 'b', 'c', '\0'},
                    bac[] = {'b', 'a', 'c', '\0'},
@@ -103,9 +103,9 @@ void TestTable() {
   D_COUT_OBJ(table);
   A_AVOW(CAInvalidIndex<ISY>(), table.Find(test));
 
-  const CHT* test_words = TTestWords<CHT>::Words(),
+  const CHS* test_words = TTestWords<CHS>::Words(),
     * word_cursor = test_words;
-  ISZ word_step = TTestWords<CHT>::CharsMax;
+  ISZ word_step = TTestWords<CHS>::CharsMax;
 
   ISY i = total_init;
   D_COUT("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -113,7 +113,7 @@ void TestTable() {
   A_AVOW(ISY(i++), table.Append(word_cursor += word_step));
   //table.COut();
   D_COUT("\n\nStep 8b: Testing POD types...\n" << Linef("---\n"));
-  for (; i < ISY(TTestWords<CHT>::Total) - 8;) {
+  for (; i < ISY(TTestWords<CHS>::Total) - 8;) {
     A_AVOW(ISY(i++), table.Append(word_cursor += word_step));
     A_AVOW(ISY(i++), table.Append(word_cursor += word_step));
     A_AVOW(ISY(i++), table.Append(word_cursor += word_step));
@@ -126,18 +126,18 @@ void TestTable() {
 
   D_COUT("\n\nStep 8c Adding large string...:\n" << Linef("---\n"));
   enum { LargeStringLength = 255 };
-  CHT large_string[LargeStringLength] = { 0 };
-  CHT* cursor = large_string;
+  CHS large_string[LargeStringLength] = { 0 };
+  CHS* cursor = large_string;
   for (ISN i = 0; i < LargeStringLength - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = table.Append(large_string);
   auto dez_nutz = table.This();
   D_COUT_TABLE(dez_nutz);
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #endif
 
-namespace Crabs {
+namespace CRTest {
 static const CHA* Table(const CHA* args) {
 #if SEAM >= CRABS_TABLE
   A_TEST_BEGIN;
@@ -157,4 +157,4 @@ static const CHA* Table(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

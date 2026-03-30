@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_FILE_DECL
-#define CRABS_FILE_DECL 1
+#define CRABS_FILE_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_FILE
 #include "Uniprinter.hpp"

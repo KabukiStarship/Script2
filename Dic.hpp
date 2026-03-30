@@ -14,9 +14,9 @@ namespace _ {
 /* @ingroup Dic
 Please see the ASCII Data Specificaiton for DRY documentation.
 @link ./Spec/Data/MapTypes/Dictionary.md */
-#define DIC_A typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ,\
+#define DIC_A typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ,\
   typename DT = DTB, typename HSH = IUN
-#define DIC_P CHT, ISZ, ISY, DT, HSH
+#define DIC_P CHS, ISZ, ISY, DT, HSH
 
 /* @ingroup Dic
 @brief A contiguous memory Associative List created from a List and a Table.
@@ -34,7 +34,7 @@ struct TDic {
   TList<LST_P> values;  //< A list of values with a Table of keys in index 0.
 };
 
-#define DIC TDic<CHT, ISZ, ISY, DT, HSH>
+#define DIC TDic<CHS, ISZ, ISY, DT, HSH>
 
 /* The minimum count a good with the given template parameters can have. */
 template<DIC_A>
@@ -72,7 +72,7 @@ constexpr ISY CDicDefaultCount() {
 /* Gets the default size of a Dic with the CDicCountDefault. */
 template<DIC_A>
 constexpr ISZ CDicDefaultSize() {
-  return (32 * CDicDefaultCount<DIC_P>() * sizeof(CHT)) & (sizeof(ISW) - 1);
+  return (32 * CDicDefaultCount<DIC_P>() * sizeof(CHS)) & (sizeof(ISW) - 1);
 }
 
 /* Points to the base of the value offsets array. */
@@ -107,9 +107,9 @@ inline const ISZ* TDicKeysMap(const DIC* dic) {
 
 /* Gets the start of the dic as a templated-defined character. */
 template<DIC_A>
-inline CHT* TDicStart(DIC* dic, ISY total) {
+inline CHS* TDicStart(DIC* dic, ISY total) {
   ISZ* top = &TStackBegin<ISZ, ISZ>(&dic->offsets)[total];
-  return TPtr<CHT>(top);
+  return TPtr<CHS>(top);
 }
 template<DIC_A>
 inline const ISZ* TDicStart(const DIC* dic, ISY total) {
@@ -118,7 +118,7 @@ inline const ISZ* TDicStart(const DIC* dic, ISY total) {
 
 /* Gets the start byte. */
 template<DIC_A>
-inline CHT* TDicStart(DIC* dic) {
+inline CHS* TDicStart(DIC* dic) {
   return TDicStart<DIC_P>(dic, dic->offsets.total);
 }
 template<DIC_A>
@@ -169,7 +169,7 @@ Printer& TDicPrint(Printer& o, const DIC* dic) {
   }
   D_AVOW(count, ISY(keys->map.count));
   const ISZ* keys_map = TTableKeysMap<TBL_P>(keys, total);
-  o << Linef("\n+---\n| Dic<CH") << CSizeCodef<CHT>() 
+  o << Linef("\n+---\n| Dic<CH") << CSizeCodef<CHS>() 
     << ",IS" << CSizeCodef<ISZ>() << ",IS"
     << CSizeCodef<ISY>() << "> bytes:" << dic->values.bytes
     << " total:" << total << " count:" << count 
@@ -180,7 +180,7 @@ Printer& TDicPrint(Printer& o, const DIC* dic) {
     << " keys_free_space:" << TTableSpace<TBL_P>(keys)
     << " keys.bytes:" << keys_size << Linef("\n+---");
   for (ISY i = 1; i < count; ++i) {
-    o << "\n| " << i << ".) \"" << TPtr<CHT>(keys_map, keys_map[i]) 
+    o << "\n| " << i << ".) \"" << TPtr<CHS>(keys_map, keys_map[i]) 
       << "\" type:";
     DT  type    = *(++types);
     ISZ voffset = *(++vmap);
@@ -203,7 +203,7 @@ Printer& TDicPrintStruct(Printer& o, const DIC* dic) {
   auto keys_size = keys->bytes;
   D_COUT("\ntotal:" << total << " count:" << count <<
          " keys_size:" << keys_size);
-  o << "\nDIC<CH" << CSizeCodef<CHT>() << ",IS" << CSizeCodef<ISZ>() << ",IS"
+  o << "\nDIC<CH" << CSizeCodef<CHS>() << ",IS" << CSizeCodef<ISZ>() << ",IS"
     << CSizeCodef<ISY>() << "> bytes:" << dic->values.bytes
     << " total:" << total << " count:" << count << '\n'
     << " list_top:" << dic->values.top << " keys_offset:" << keys_offset
@@ -287,7 +287,7 @@ inline DIC* TDicInit(DIC* dic,
   auto result = TTableInit<TBL_P>(keys, total);
   if (IsError(result))
     D_RETURN_TPTR_ERROR(DIC, result);
-  TTableAppend<TBL_P>(keys, TStringEmpty<CHT>());
+  TTableAppend<TBL_P>(keys, TStringEmpty<CHS>());
   D_COUT("\nTDelta<>(dic, TDicKeys<DIC_P>(dic)):" <<
     TDelta<>(dic, TDicKeys<DIC_P>(dic)));
   if (IsError(result)) return NILP;
@@ -329,25 +329,25 @@ inline const DT* TDicTypes(const DIC* table, ISY total) {
 
 /* Gets the key at the given index without doing any error checking. */
 template<DIC_A>
-inline CHT* TDicKey_NC(DIC* table, ISY index) {
+inline CHS* TDicKey_NC(DIC* table, ISY index) {
   return TTableGet_NC<TBL_P>(TDicKeys<DIC_P>(table), index);
 }
 
 /* Gets the key at the given index without doing any error checking. */
 template<DIC_A>
-inline const CHT* TDicKey_NC(const DIC* table, ISY index) {
-  return CPtr<CHT>(TDicKey_NC<TBL_P>(CPtr<DIC>(table), index));
+inline const CHS* TDicKey_NC(const DIC* table, ISY index) {
+  return CPtr<CHS>(TDicKey_NC<TBL_P>(CPtr<DIC>(table), index));
 }
 
 /* Gets the keys offsets array. */
 template<DIC_A>
-inline CHT* TDicKeys_NC(DIC* table, ISY index) {
-  return TPtr<CHT>(table, *TPtr<ISZ>(table, sizeof(DIC)));
+inline CHS* TDicKeys_NC(DIC* table, ISY index) {
+  return TPtr<CHS>(table, *TPtr<ISZ>(table, sizeof(DIC)));
 }
 template<DIC_A>
-inline const CHT* TDicKeys_NC(const DIC* table) {
+inline const CHS* TDicKeys_NC(const DIC* table) {
   auto bok = CPtr<DIC>(TDicKeys<DIC_P>(table));
-  return CPtr<CHT>(TDicKeys_NC<TBL_P>(bok));
+  return CPtr<CHS>(TDicKeys_NC<TBL_P>(bok));
 }
 
 /* Gets the type at the given index without doing any error checking. */
@@ -362,9 +362,9 @@ inline DT* TDicTypes_NC(DIC* table, ISY total) {
   return TPtr<DT>(table, TDicKeys_NC<DIC_P>(table) + total);
 }
 template<DIC_A>
-inline const CHT* TDicTypes_NC(const DIC* table) {
+inline const CHS* TDicTypes_NC(const DIC* table) {
   auto bok = CPtr<DIC>(TDicValuesMap<DIC_P>(table));
-  return CPtr<CHT>(TDicTypes_NC<TBL_P>(bok));
+  return CPtr<CHS>(TDicTypes_NC<TBL_P>(bok));
 }
 
 /* Gets the type at the given index without doing any error checking. */
@@ -387,7 +387,7 @@ inline ISZ TDicValueOffset_NC(const DIC* table, ISY index) {
 /* Gets the TypeValue tuple the given index.
 @param tuple Reference to the return type passed in by reference. */
 template<DIC_A>
-inline TATypeKV<ISZ, DT, CHT> TDicTypeKV(const DIC* table, ISY index) {
+inline TATypeKV<ISZ, DT, CHS> TDicTypeKV(const DIC* table, ISY index) {
   auto count = table->values.map.count;
   if (index < 0 || index >= count)
     return { NILP, _NIL, 0 };
@@ -400,7 +400,7 @@ inline TATypeKV<ISZ, DT, CHT> TDicTypeKV(const DIC* table, ISY index) {
 @todo Delete this function and replace with void* value.
 @return The index upon success or -1 upon failure. */
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, DT type, IUW value,
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
                       ISY index = PSH, IUW value_msb = 0) {
   D_CHECK_PTR_TRETURN2(ISY, table, key);
   if (index == PSH) index = table->values.map.count;
@@ -431,92 +431,92 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, DT type, IUW value,
   return tbl_index;
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, DT type, IUW value, 
+inline ISY TDicInsert(DIC* table, const CHS* key, DT type, IUW value, 
                       ISY index = PSH, IUW value_msb = 0) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, type, value, 
                            index, value_msb);
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, ISA value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, ISA value) {
   return TDicInsert<DIC_P>(table, keys, key, _ISA, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, ISA value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, ISA value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _ISA, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, IUA value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, IUA value) {
   return TDicInsert<DIC_P>(table, keys, key, _IUA, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, IUA value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, IUA value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _IUA, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, ISB value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, ISB value) {
   return TDicInsert<DIC_P>(table, keys, key, _ISB, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, ISB value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, ISB value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _ISB, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, IUB value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, IUB value) {
   return TDicInsert< DIC_P>(table, keys, key, _IUB, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, IUB value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, IUB value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _IUB, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, ISC value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, ISC value) {
   return TDicInsert<DIC_P>(table, keys, key, _ISC, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, ISC value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, ISC value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _ISC, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, IUC value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, IUC value) {
   return TDicInsert<DIC_P>(table, keys, key, _IUC, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, IUC value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, IUC value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _IUC, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, ISD value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, ISD value) {
   return TDicInsert<DIC_P>(table, keys, key, _ISD, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, ISD value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, ISD value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _ISD, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, IUD value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, IUD value) {
   return TDicInsert<DIC_P>(table, keys, key, _IUD, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, IUD value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, IUD value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _IUD, IUW(value));
 }
 #if USING_FPC == YES_0
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, FPC value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, FPC value) {
   return TDicInsert<DIC_P>(table, keys, key, _FPC, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, FPC value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, FPC value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _FPC, IUW(value));
 }
 #endif
 #if USING_FPD == YES_0
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, TBL* keys, const CHT* key, FPD value) {
+inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, FPD value) {
   return TDicInsert<DIC_P>(table, keys, key, _FPD, IUW(value));
 }
 template<DIC_A>
-inline ISY TDicInsert(DIC* table, const CHT* key, FPD value) {
+inline ISY TDicInsert(DIC* table, const CHS* key, FPD value) {
   return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, _FPD, IUW(value));
 }
 #endif
@@ -524,7 +524,7 @@ inline ISY TDicInsert(DIC* table, const CHT* key, FPD value) {
 /* Adds a key-value tuple to the end of the Dic.
 @return The index upon success or -1 upon failure. */
 //template<DIC_A>
-//inline ISY TDicInsertFrom(DIC* table, TBL* keys, const CHT* key, DT type, 
+//inline ISY TDicInsertFrom(DIC* table, TBL* keys, const CHS* key, DT type, 
 //                          const void* value, ISY index = PSH) {
 //  D_COUT("\nAdding \"" << key << "\" type:" << ATypef(type) << ":0d" << type <<
 //    ":0x" << Hexf(type) << ":\'" << CHA(type) << "\' value(offset):" <<
@@ -544,25 +544,25 @@ inline ISY TDicInsert(DIC* table, const CHT* key, FPD value) {
 //}
 //template<DIC_A>
 //inline ISY TDicInsertFrom(DIC* table, TBL* keys,
-//    const CHT* key, DT type, ISZ value_offset, ISY index = PSH) {
+//    const CHS* key, DT type, ISZ value_offset, ISY index = PSH) {
 //  return TDicInsert<DIC_P>(table, keys, key, type,
 //    TPtr<>(&table->values, value_offset), index);
 //}
 //template<DIC_A>
-//inline ISY TDicInsertFrom(DIC* table, const CHT* key, DT type,
+//inline ISY TDicInsertFrom(DIC* table, const CHS* key, DT type,
 //    const void* value, ISY index = PSH) {
 //  return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, type,
 //    value, index);
 //}
 //template<DIC_A>
-//inline ISY TDicInsertFrom(DIC* table, const CHT* key, DT type,
+//inline ISY TDicInsertFrom(DIC* table, const CHS* key, DT type,
 //  ISZ value_offset, ISY index = PSH) {
 //  return TDicInsert<DIC_P>(table, TDicKeys<DIC_P>(table), key, type,
 //    value_offset, index);
 //}
 //
 //template<DIC_A>
-//inline ISY TDicInsert(DIC* table, TATypeKV<ISZ, DT, CHT> value,
+//inline ISY TDicInsert(DIC* table, TATypeKV<ISZ, DT, CHS> value,
 //  ISY index = PSH) {
 //  return TDicInsert<DIC_P>(table, value.key, value.tv.type,
 //    TPtr<>(table, value.tv.value));
@@ -591,7 +591,7 @@ DIC* TDicAppend(DIC* table, const DIC* source) {
 #endif
   for (ISY i = 1; i < src_count; ++i) {
     D_COUT("\n\ni:" << i);
-    const CHT* key = TPtr<CHT>(src_keys_map, *(src_keys_map + i));
+    const CHS* key = TPtr<CHS>(src_keys_map, *(src_keys_map + i));
     ISZ value_offset = *src_values_map++;
 #if SEAM == CRABS_DIC
     StdOut() << "\nvalue_offset:" << value_offset;
@@ -632,7 +632,7 @@ void* TDicRemove(DIC* table, ISY index) {
 /* Removes the given key from the Dic.
 @return Nil upon failure or a pointer to the value removed upon success. */
 template<DIC_A>
-void* TDicRemove(DIC* table, const CHT* key) {
+void* TDicRemove(DIC* table, const CHS* key) {
   ISY index = TTableFind<TBL_P>(TDicKeys<DIC_P>(table), key);
   if (index < 0) return index;
   TTableRemove<TBL_P>(TDicKeys<DIC_P>(table), index);
@@ -658,17 +658,17 @@ BOL TDicWrite(DIC* destination, DIC* soure) {
 /* Adds a string to the end of the Dic.
 @return The index upon success or -1 upon failure. */
 template<DIC_A>
-CHT* TDicPop(DIC* table) {
+CHS* TDicPop(DIC* table) {
   if (TDicKeys<DIC_P>(table).count == 0) return NILP;
   ISZ offset = TStackPop<ISZ, ISZ>(TDicKeys<DIC_P>(table)), top = table->top;
   table->top = offset;
-  return TPtr<CHT>(ISW(table) + offset);
+  return TPtr<CHS>(ISW(table) + offset);
 }
 
 /* Searches for the given string in the table.
 @return -1 if the table doesn't contain the string or the index if it does. */
 template<DIC_A>
-ISY TDicFind(DIC* table, const CHT* string) {
+ISY TDicFind(DIC* table, const CHS* string) {
   return TTableFind<TBL_P>(TDicKeys<DIC_P>(table), string);
 }
 
@@ -677,7 +677,7 @@ ISY TDicFind(DIC* table, const CHT* string) {
 ADic<DIC_A, 1024, TBuf<>>
 @endcode */
 template<DIC_A, ISZ BytesInit_ = 512,
-  typename BOF = TBOF<BytesInit_, CHT, ISZ, TString<ISN>>>
+  typename BOF = TBOF<BytesInit_, CHS, ISZ, TString<ISN>>>
 class ADic {
   AArray<IUA, ISZ, BytesInit_, BOF> aary_;  //< An Auto-Array object.
 public:
@@ -735,47 +735,47 @@ public:
 
   /* Inserts the key and value on into the Table and List at the given index.
   @return The index of the string in the Dic. */
-  inline ISY Insert(const CHT* key, ISA value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, ISA value, ISY index = PSH) {
     return InvertTV(key, _ISA, value, index);
   }
-  inline ISY Insert(const CHT* key, IUA value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, IUA value, ISY index = PSH) {
     return InvertTV(key, _IUA, value, index);
   }
-  inline ISY Insert(const CHT* key, ISB value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, ISB value, ISY index = PSH) {
     return InvertTV(key, _ISB, value, index);
   }
-  inline ISY Insert(const CHT* key, IUB value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, IUB value, ISY index = PSH) {
     return InvertTV(key, _IUB, value, index);
   }
-  inline ISY Insert(const CHT* key, ISC value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, ISC value, ISY index = PSH) {
     return InvertTV(key, _ISC, value, index);
   }
-  inline ISY Insert(const CHT* key, IUC value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, IUC value, ISY index = PSH) {
     return InvertTV(key, _IUC, value, index);
   }
-  inline ISY Insert(const CHT* key, ISD value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, ISD value, ISY index = PSH) {
     return InvertTV(key, _ISD, value, index);
   }
-  inline ISY Insert(const CHT* key, IUD value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, IUD value, ISY index = PSH) {
     return InvertTV(key, _IUD, value, index);
   }
 #if USING_FPC == YES_0
-  inline ISY Insert(const CHT* key, FPC value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, FPC value, ISY index = PSH) {
     return InvertTV(key, _FPC, value, index);
   }
 #endif
 #if USING_FPD == YES_0
-  inline ISY Insert(const CHT* key, FPD value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, FPD value, ISY index = PSH) {
     return InvertTV(key, _FPD, value, index);
   }
 #endif
-  inline ISY Insert(const CHT* key, const CHA* value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, const CHA* value, ISY index = PSH) {
     return InvertTV(key, _SWA, value, index);
   }
-  inline ISY Insert(const CHT* key, const CHB* value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, const CHB* value, ISY index = PSH) {
     return InvertTV(key, _SWB, value, index);
   }
-  inline ISY Insert(const CHT* key, const CHC* value, ISY index = PSH) {
+  inline ISY Insert(const CHS* key, const CHC* value, ISY index = PSH) {
     return InvertTV(key, _SWC, value, index);
   }
 
@@ -783,7 +783,7 @@ public:
   inline void* Remove(ISY index) { return TDicRemove<DIC_P>(This(), index); }
 
   /* Removes the string at the given index from the Dic. */
-  inline void* Remove(const CHT* key) {
+  inline void* Remove(const CHS* key) {
     return TDicRemove<DIC_P>(This(), key);
   }
 
@@ -791,11 +791,11 @@ public:
   inline ISZ Pop() { return TDicRemove<DIC_P>(This()); }
 
   /* Gets the string at the given index. */
-  inline CHT* Get(ISY index) { return TDicATypeValue<DIC_P>(This(), index); }
+  inline CHS* Get(ISY index) { return TDicATypeValue<DIC_P>(This(), index); }
 
   /* Searches for the given string.
   @return -1 if the Dic doesn't contain the string or the index if it does. */
-  inline ISY Find(const CHT* string) {
+  inline ISY Find(const CHS* string) {
     return TDicFind<DIC_P>(This(), string);
   }
 
@@ -875,7 +875,7 @@ public:
   /* Adds a string to the end of the Dic, auto-growing if neccissary.
   @return The index upon success or -1 if the obj can't grow anymore.
   @todo Verify copmile size of this function isolated and in the AArray class. */
-  ISY InvertTV(const CHT* key, DT type, IUW value, ISY index = PSH, 
+  ISY InvertTV(const CHS* key, DT type, IUW value, ISY index = PSH, 
                IUW value_msb = 0) {
     Autoject& obj = AJT();
     D_CHECK_PTR_TRETURN(ISY, key);

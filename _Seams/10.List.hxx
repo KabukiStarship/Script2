@@ -13,7 +13,7 @@
 #define TEST_MAX 0xffff
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 template<LST_A>
 static void TestList() {
@@ -212,10 +212,10 @@ static void TestList() {
   //A_AVOW(IS(3), list.Insert(test_cha[3], SCKPack));
   // @todo Add more SCKPack test cases.
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #endif
 
-namespace Crabs {
+namespace CRTest {
 static const CHA* List(const CHA* args) {
 #if SEAM >= CRABS_LIST
   A_TEST_BEGIN;
@@ -226,6 +226,6 @@ static const CHA* List(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #undef TEST_MIN
 #undef TEST_MAX

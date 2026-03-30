@@ -32,7 +32,7 @@ In order to keep track of the change in IP Addresses, each Script Network must k
 
 Registering a *Internet Guild* requires a server computer with fixed *UP IP Address*. This server is responsible for resolving DNS Queries for the *guild*.
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Key Promotion](KeyPromotion.md) | [Next Section: DNS Specification >>](../)**
 
 ## Requirements
 
@@ -40,4 +40,4 @@ Registering a *Internet Guild* requires a server computer with fixed *UP IP Addr
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

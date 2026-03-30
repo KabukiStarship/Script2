@@ -3,7 +3,7 @@
 #ifndef CRABS_BOUT_DECL
 #define CRABS_BOUT_DECL
 #include <_Config.h>
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 struct BIn;
@@ -18,7 +18,7 @@ typedef enum BOutStates {
 } BOutState;
 
 /* Byte-ring output socket. */
-struct LIB_MEMBER BOut {
+struct BOut {
   ISN bytes;            //< Size of the B-Output in bytes.
   volatile ISN origin;  //< Starting index of the ring-socket data.
   ISN stop,             //< Stopping index of the ring-socket data.
@@ -38,29 +38,29 @@ inline const Op* BOutError(BOut* bout, ERC error, const DTB* header,
 #if USING_CRABS_TEXT == YES_0
 
 /* Gets a a CHA for printing out the bout_state. */
-LIB_MEMBER const CHA** BOutStateStrings();
+const CHA** BOutStateStrings();
 
 #endif
 
 /* Initializes the B-Output socket with the given socket size. */
-LIB_MEMBER BOut* BOutInit(BOut* socket, ISN size);
+BOut* BOutInit(BOut* socket, ISN size);
 
 /* Calculates the space left in the given ring socket.
     @param bout The B-Output socket. */
-LIB_MEMBER ISN BOutSpace(BOut* bout);
+ISN BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-LIB_MEMBER ISN BOutBooferLength(BOut* bout);
+ISN BOutBooferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
-LIB_MEMBER IUA* BOutEndAddress(BOut* bout);
+IUA* BOutEndAddress(BOut* bout);
 
 /* Streams a B-Output IUA.
     @param bout A B-Output abstract IUA stream. */
-LIB_MEMBER ISN BOutStreamByte(BOut* bout);
+ISN BOutStreamByte(BOut* bout);
 
 /* The first byte in the B-Output's socket.*/
-LIB_MEMBER IUA* BOutBoofer(BOut* bout);
+IUA* BOutBoofer(BOut* bout);
 
 /* Gets the begin of the socket. */
 inline const CHA* BOutBegin(const BOut* bout);
@@ -95,23 +95,23 @@ inline const Op* BOutError(BOut* bout, ERC error, const DTB* header,
 @param params The escape sequence to write.
 @param args   The array of pointers to the stuff to write.
 @param pc_ctx The context mapping for the write operation. */
-LIB_MEMBER const Op* BOutWrite(BOut* bout, const DTB* params, void** args, 
+const Op* BOutWrite(BOut* bout, const DTB* params, void** args, 
   IUD pc_ctx);
 
 /* Sends a connection message to the given address. */
-LIB_MEMBER const Op* BOutConnect(BOut* bout, const CHA* address, IUD pc_ctx);
+const Op* BOutConnect(BOut* bout, const CHA* address, IUD pc_ctx);
 
 /* Sends a connection message to the given address. */
-LIB_MEMBER void BOutRingBell(BOut* bout, const CHA* address);
+void BOutRingBell(BOut* bout, const CHA* address);
 
 /* Sends a connection acknowledgment to the given address. */
-LIB_MEMBER void BOutAckBack(BOut* bout, const CHA* address);
+void BOutAckBack(BOut* bout, const CHA* address);
 
 /* Sends a connection termination message to the given address. */
-LIB_MEMBER void BOutTerminate(BOut* bout, const CHA* address);
+void BOutTerminate(BOut* bout, const CHA* address);
 
 /* Sends a connection reset message to the given address. */
-LIB_MEMBER void BOutReset(BOut* bout, const CHA* address);
+void BOutReset(BOut* bout, const CHA* address);
 
 }  //< namespace _
 

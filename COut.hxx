@@ -1,10 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #include "COut.h"
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
-//
 #include "Uniprinter.hpp"
 #include "Puff.hpp"
-//#include <cstdio>
 #include <iostream>
 #if SEAM == CRABS_COUT
 #include "_Debug.h"
@@ -34,12 +32,8 @@ COut::COut(ISC item) { Print(item); }
 COut::COut(IUC item) { Print(item); }
 COut::COut(ISD item) { Print(item); }
 COut::COut(IUD item) { Print(item); }
-#if USING_FPC == YES_0
 COut::COut(FPC item) { Print(item); }
-#endif
-#if USING_FPD == YES_0
 COut::COut(FPD item) { Print(item); }
-#endif
 COut::COut(Hexf item) { Print(item); }
 COut::COut(Binaryf item) { Print(item); }
 COut::COut(Centerf item) { Print(item); }
@@ -94,7 +88,7 @@ COut& COut::Print(CHA item) {
 }
 
  COut& COut::Print(const CHA* item) {
-  return TSPrintString<COut, CHA>(*this, item);
+  return TSPrint<COut, CHA>(*this, item);
 }
 
 #if USING_STB == YES_0
@@ -104,22 +98,22 @@ COut& COut::Print(CHB item) {
 }
 
 COut& COut::Print(const CHB* item) {
-  return TSPrintString<COut, CHB>(*this, item);
+  return TSPrint<COut, CHB>(*this, item);
 }
 #endif
 
 #if USING_STC == YES_0
 COut& COut::Print(CHC item) {
   if (item >= (CHC(1) << 9)) {
-    STD_COUT << (CHN)(item & 0x3f) + 0xD800;
-    STD_COUT << (CHN)((item >> 10) & 0x3f) + 0xDC00;
+    STD_COUT << CHN(item & 0x3f) + 0xD800;
+    STD_COUT << CHN((item >> 10) & 0x3f) + 0xDC00;
   } else {
-    STD_COUT << (CHN)item;
+    STD_COUT << CHN(item);
   }
   return *this;
 }
 COut& COut::Print(const CHC* item) {
-  return TSPrintString<COut, CHC>(*this, item);
+  return TSPrint<COut, CHC>(*this, item);
 }
 #endif
 
@@ -128,11 +122,11 @@ COut& COut::Print(ISC item) {
   STD_COUT << item;
 #else
 #if CPU_SIZE == CPU_8_BYTE
-  Print((ISD)item);
+  Print(ISD(item));
 #else
   enum { Size = 24 };
   CHA socket[Size];
-  TSPrintSigned<ISD, IUD, CHA>(socket, Size, (ISD)value);
+  TSPrintSigned<ISD, IUD, CHA>(socket, Size, ISD(value));
   Print(socket);
 #endif
 #endif
@@ -179,9 +173,8 @@ COut& COut::Print(IUD item) {
   return *this;
 }
 
-#if USING_FPC == YES_0
 COut& COut::Print(FPC item) {
-#if SEAM <= CRABS_BOOK
+#if SEAM <= CRABS_FTOS
   STD_COUT << item;
 #else
   enum { Size = 16 };
@@ -191,10 +184,9 @@ COut& COut::Print(FPC item) {
 #endif
   return *this;
 }
-#endif
-#if USING_FPD == YES_0
+
 COut& COut::Print(FPD item) {
-#if SEAM <= CRABS_BOOK
+#if SEAM <= CRABS_FTOS
   STD_COUT << item;
 #else
   enum { Size = 24 };
@@ -204,7 +196,6 @@ COut& COut::Print(FPD item) {
 #endif
   return *this;
 }
-#endif
 
 COut& COut::Print(Hexf& item) {
   return TPrintHex<COut>(*this, item.element.Value(), item.element.count);
@@ -378,12 +369,8 @@ COut CPrint(ISC item) { return COut(item); }
 COut CPrint(IUC item) { return COut(item); }
 COut CPrint(ISD item) { return COut(item); }
 COut CPrint(IUD item) { return COut(item); }
-#if USING_FPC == YES_0
 COut CPrint(FPC item) { return COut(item); }
-#endif
-#if USING_FPD == YES_0
 COut CPrint(FPD item) { return COut(item); }
-#endif
 COut CPrint(Hexf& item) { return COut(item); }
 COut CPrint(Binaryf& item) { return COut(item); }
 COut CPrint(Centerf& item) { return COut(item); }
@@ -408,12 +395,8 @@ inline ::_::COut& operator<<(::_::COut& o, ISC item) { return o.Print(item); }
 inline ::_::COut& operator<<(::_::COut& o, IUC item) { return o.Print(item); }
 inline ::_::COut& operator<<(::_::COut& o, ISD item) { return o.Print(item); }
 inline ::_::COut& operator<<(::_::COut& o, IUD item) { return o.Print(item); }
-#if USING_FPC == YES_0
 inline ::_::COut& operator<<(::_::COut& o, FPC item) { return o.Print(item); }
-#endif
-#if USING_FPD == YES_0
 inline ::_::COut& operator<<(::_::COut& o, FPD item) { return o.Print(item); }
-#endif
 
 inline ::_::COut& operator<<(::_::COut& o, ::_::Hexf item) {
   return ::_::TPrint<::_::COut>(o, item);

@@ -3,7 +3,7 @@
 #ifndef CRABS_SLOT_DECL
 #define CRABS_SLOT_DECL
 #include <_Config.h>
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 struct BIn;

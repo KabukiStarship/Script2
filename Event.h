@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_EVENT_DECL
-#define CRABS_EVENT_DECL 1
+#define CRABS_EVENT_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_DIC
 namespace _ {

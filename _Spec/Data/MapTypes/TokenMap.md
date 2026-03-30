@@ -20,8 +20,8 @@ struct TTable {
 
 [1] ./
 
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
 
-**[<< Previous Section: Dictionary](Dictionary.md) | [Next Section: Addressing >>](../../Addressing/)**
+**[<< Previous Section: Dictionary](Dictionary.md) | [Next Section: Map Types Overview >>](../)**
 
 Copyright [AStarship™](https://astarship.net).

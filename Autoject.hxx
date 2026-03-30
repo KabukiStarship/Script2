@@ -64,7 +64,7 @@ IUW* ArrayFactoryHeapD(IUW* origin, ISW bytes) {
 IUW* ObjectFactoryStack(IUW* origin, ISW bytes) {
   if (bytes <= 0) return NILP;
   D_ASSERT(!origin);
-  bytes += (-bytes) & ACPUMask;  //< Word align up.
+  bytes += (-bytes) & ACPUWordMask;  //< Word align up.
   IUW* socket = new IUW[bytes >> ACPUBytesLog2];
   return socket;
 }

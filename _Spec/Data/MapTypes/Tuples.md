@@ -37,7 +37,7 @@ struct TypeString {
 
 A TST may store a pointer to another string type or object using the second element of the buffer.
 
-**[<< Previous Section:Platform-specific Types](PlatformSpecificPODTypes) | [Next Section:Map Types >>](./MapTypes/)**
+**[<< Previous Section: Map Types Overview](../) | [Next Section: Socket >>](Socket.md)**
 
 ## Requirements
 
@@ -45,6 +45,6 @@ A TST may store a pointer to another string type or object using the second elem
 
 [SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
 
-**[<< Previous Section:Platform-specific Types](PlatformSpecificPODTypes) | [Next Section:Map Types >>](./MapTypes/)**
+**[<< Previous Section: Map Types Overview](../) | [Next Section: Socket >>](Socket.md)**
 
 Copyright [AStarship™](https://astarship.net).

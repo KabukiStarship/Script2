@@ -29,7 +29,7 @@ The Automaton Standard Code for Information Interchange (ASCII) Data Specificati
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 
-**[<< Previous Section: SCRIPT Specification](../)  |  [Next Section: Data Types >>](./DataTypes.md)**
+**[<< Previous Section: SCRIPT Specification](../)  |  [Next Section: Types >>](Types.md)**
 
 ## License
 

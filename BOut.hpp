@@ -3,8 +3,8 @@
 #ifndef CRABS_BOUT_HPP
 #define CRABS_BOUT_HPP
 #include "BOut.h"
-#if SEAM >= CRABS_OPERATION
-#if SEAM == CRABS_OPERATION
+#if SEAM >= CRABS_OP
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_DOOR_DECL
-#define CRABS_DOOR_DECL 1
+#define CRABS_DOOR_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_ROOM
 #include "Crabs.h"

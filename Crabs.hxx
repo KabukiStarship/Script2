@@ -1,17 +1,22 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Crabs.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "Args.h"
 #include "Slot.h"
 #include "Op.hpp"
 #include "Hash.hpp"
 #include "BSeq.hpp"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
 namespace _ {
+
+Crabs* StdCrabs() {} {
+  static IUA room[CRABS_ROOM_BYTES] = {}
+  return reinterpret_cast<Crabs*>(PtrUp(room, ACPUCacheLineSize - 1));
+}
 
 inline ISC CrabsHeaderBytes(ISC stack_total) {
   return sizeof(Crabs) + 2 * sizeof(void*) * stack_total;
@@ -748,19 +753,33 @@ inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args,
   return BOutWrite(CrabsBOut(crabs), op.out, args, pc_ctx);
 }
 
-const Op* CrabsQuery(Crabs* crabs, const Op& op, IUD pc_ctx) {
-  if (crabs) {
+const Op* CrabsQuery(Crabs* crabs, const Op* op, IUD pc_ctx) {
+    if (IsError(op)) return op;
+
+    if (IsError(op)) {
+        return CrabsError(crabs, ErrorImplementation);
+    }
     void* args[2];
-    IUW num_ops = (IUW)op.in, first_op = (IUW)op.out;
-    // @todo Write params to crabs!
-    static const DTB* header = 
-      TTSQ<STR_, CrabsOpNameLengthMax, _VUI, _VUI, _STR,
-              CrabsOpDescriptionLengthMax>();
-    return BOutWrite(CrabsBOut(crabs), header,
-                     Args(args, op.name, &num_ops, &first_op, op.description),
-                     pc_ctx);
-  }
-  return &op;
+    return BOutWrite(CrabsBOut(crabs),
+        TTSQ<STR_, CrabsOpNameLengthMax, _VUI, _VUI, _STR,
+        CrabsOpDescriptionLengthMax>(),
+        Args(args, op->name, op->in, op->out, op->description),
+        crabs->ctxt);
+}
+
+const Op* CrabsQuery(Crabs* crabs, const Op& op, IUD pc_ctx) {
+    if (crabs) {
+        void* args[2];
+        IUW num_ops = (IUW)op.in, first_op = (IUW)op.out;
+        // @todo Write params to crabs!
+        static const DTB* header =
+            TTSQ<STR_, CrabsOpNameLengthMax, _VUI, _VUI, _STR,
+            CrabsOpDescriptionLengthMax>();
+        return BOutWrite(CrabsBOut(crabs), header,
+            Args(args, op.name, &num_ops, &first_op, op.description),
+            pc_ctx);
+    }
+    return &op;
 }
 
 inline IUA* CrabsBaseAddress(BIn* bin) {
@@ -787,20 +806,6 @@ IUW* CrabsBaseAddress(void* ptr, ISC rx_tx_offset) {
 
 CHA* CrabsEndAddress(BIn* bin) {
   return TPtr<CHA>(bin) + sizeof(BIn) + bin->bytes;
-}
-
-const Op* CrabsQuery(Crabs* crabs, const Op* op) {
-  if (IsError(op)) return op;
-
-  if (IsError(op)) {
-    return CrabsError(crabs, ErrorImplementation);
-  }
-  void* args[2];
-  return BOutWrite(CrabsBOut(crabs),
-                   TTSQ<STR_, CrabsOpNameLengthMax, _VUI, _VUI, _STR,
-                   CrabsOpDescriptionLengthMax>(),
-                   Args(args, op->name, op->in, op->out, op->description),
-                   crabs->ctxt);
 }
 
 }  //< namespace _

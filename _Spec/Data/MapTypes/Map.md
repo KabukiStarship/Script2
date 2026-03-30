@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](../)
 
-### [Map Types]./()
+### [Map Types](.)
 
 #### Map
 
@@ -42,8 +42,8 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 
 [1] ./
 
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
 
-**[<< Previous Section:Book](Book.md) | [Next Section: Table >>](Table.md)**
+**[<< Previous Section: Book](Book.md) | [Next Section: Table >>](Table.md)**
 
 Copyright [AStarship™](https://astarship.net).

@@ -8,9 +8,9 @@ In the John Searle's famous Chinese Room Thought Experiment users may talk to th
 
 ### Content Table
 
-1. [ASCII Data Specification](./ascii_data/)
-1. [Universal Addressing Specification](./universal_addressing)
-1. [Crabs Specification](./crabs/)
+1. [ASCII Data Specification](../Data/)
+1. [Universal Addressing Specification](../Addressing/)
+1. [Crabs Specification](../Crabs/)
 
 **[<< Previous Section: SCRIPT Specification](../) | [Next Section: Group Automata >>](./GroupAutomata.md)**
 

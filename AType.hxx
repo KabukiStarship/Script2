@@ -222,8 +222,8 @@ inline DTW AlignmentMask(FPC item) { return 3; }
 inline DTW AlignmentMask(ISD item) { return 7; }
 inline DTW AlignmentMask(IUD item) { return 7; }
 inline DTW AlignmentMask(FPD item) { return 7; }
-inline DTW AlignmentMask(void* item) { return ACPUMask; }
-inline DTW AlignmentMask(const void* item) { return ACPUMask; }
+inline DTW AlignmentMask(void* item) { return ACPUWordMask; }
+inline DTW AlignmentMask(const void* item) { return ACPUWordMask; }
 
 /* Gets the type of the given item. */
 inline DTW TypeOf(CHA item) { return _CHA; }

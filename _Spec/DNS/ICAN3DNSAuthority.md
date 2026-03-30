@@ -1,6 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [Distributed Nomination System](./)
+# [Distributed Nomination System](./)
 
 The **ICAN3 Distributed Nomination Systems** (**ICAN3 DNS**) is a technology for the fair promotion of unique key domains to the **Global Namespace** (i.e. ".com websites"). It's designed to make corporate control of the .com a domain a thing of the past. In ICAN3 DNS, keys without and .tags are Global in scopes, meaning they go to the DNS Authorities for that planet.
 
@@ -29,7 +27,7 @@ _________   _________   _________   _________
    ...         ...         ...         ...
 ```
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: DNS Specification](../) | [Next Section: DNS Caching >>](DNSCaching.md)**
 
 ## Requirements
 
@@ -37,4 +35,4 @@ _________   _________   _________   _________
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

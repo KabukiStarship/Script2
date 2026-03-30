@@ -2,7 +2,7 @@
 #pragma once 
 #include <_Config.h>
 #ifndef CRABS_STACK_HPP
-#define CRABS_STACK_HPP 1
+#define CRABS_STACK_HPP
 #if SEAM >= CRABS_STACK
 #include "Array.hpp"
 #if SEAM == CRABS_STACK
@@ -116,7 +116,7 @@ Printer& TStackPrint(Printer& o, const SCK* sck) {
          "   delta:" << TDelta<>(sck, elements) << "\nsizeof():" << sizeof(SCK));
   for (ISC i = 0; i < count; ++i) o << "\n| " << i << ".) " << *elements++;
   if (count == 0) o << "\n| Empty";
-#if D_THIS
+#ifdef D_THIS
   o << Linef("\n+---") << Charsf(sck, TStackSizeOf<SCK_P>(sck->total)) << '\n';
 #endif
   return o;
@@ -588,7 +588,7 @@ class AStack {
     if (total < 0 || count < 0 || count > total || count_start < 0 || 
         count_start >= count || count_stop > count)
       return NILP;
-#if D_THIS
+#ifdef D_THIS
     D_COUT("\nAuto-growing Stack...\nBefore:");
     TStackPrint<COut, T, ISZ>(StdOut(), src);
 #endif
@@ -607,7 +607,7 @@ class AStack {
       "\nTStackStart<SCK_P>(stack): " << Hexf(TStackBegin<SCK_P>(src)));
     ArrayCopy(TStackBegin<SCK_P>(dest_sck), bytes_copy,
               TStackBegin<SCK_P>(src) + count_start, bytes_copy);
-#if D_THIS
+#ifdef D_THIS
     D_COUT("\nResult:");
     TStackPrint<COut, T, ISZ>(StdOut(), dest_sck);
 #endif

@@ -3,10 +3,10 @@
 #ifndef CRABS_OPERAND_DECL
 #define CRABS_OPERAND_DECL
 #include "Slot.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
-struct LIB_MEMBER Crabs;
+struct Crabs;
 
 /* Interface for an abstract A*B Op operand.
 A Script Operand is an object that is being operated on.
@@ -44,17 +44,17 @@ struct Operand {
 };
 
 /* Returns the name of the given Operand. */
-LIB_MEMBER const CHA* OperandName(Operand* op);
+const CHA* OperandName(Operand* op);
 
 /* Gets the number_ of ops in the given expressions. */
-LIB_MEMBER IUW OperandCount(Operand* op);
+IUW OperandCount(Operand* op);
 
 /* Returns the index of the given Op using the given slot.
 @param key_begin Beginning of the key slot socket.
 @param key_end   End of the key slot socket.
 @return A value printable Unicode CHA or invalid if the Operand doesn't
 Contain the given key. */
-LIB_MEMBER CHC OperandIndex(Operand* operand, CHA* key_begin, CHA* key_end);
+CHC OperandIndex(Operand* operand, CHA* key_begin, CHA* key_end);
 
 #if USING_CRABS_TEXT
 /* Queries the given Operand Op Header.
@@ -62,7 +62,7 @@ LIB_MEMBER CHC OperandIndex(Operand* operand, CHA* key_begin, CHA* key_end);
               op.
 @param op   The Op header.
 @return Returns nil upon success and an error Op upon failure.
-LIB_MEMBER const Op* OperandQuery (Crabs* crabs, const Op* op);*/
+const Op* OperandQuery (Crabs* crabs, const Op* op);*/
 
 /* Queries the operand for the given ??? @todo fix me */
 Slot& OperandQuery(Operand* root, const CHA* address, Slot& key);

@@ -1,87 +1,111 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_RNG_DECL
-#define CRABS_RNG_DECL 1
+#define CRABS_RNG_DECL
 #include <_Config.h>
 namespace _ {
 
 /* Gets a random generator device seed. */
-LIB_MEMBER IUC RandomSeed();
+IUC RandomSeed();
 
 /* Re-seeds the static mersenne twister engine. */
-LIB_MEMBER void RandomizeSeed();
+void RandomizeSeed();
 
 /* Gets a random 8-bit/1-byte unsigned integer. */
-LIB_MEMBER IUA Random(IUA min, IUA max);
+IUA Random(IUA min, IUA max);
 
 /* Gets a random 8-bit/1-byte signed integer. */
-LIB_MEMBER ISA Random(ISA min, ISA max);
+ISA Random(ISA min, ISA max);
 
 /* Gets a random 16-bit/2-byte unsigned integer. */
-LIB_MEMBER IUB Random(IUB min, IUB max);
+IUB Random(IUB min, IUB max);
 
 /* Gets a random 16-bit/2-byte signed integer. */
-LIB_MEMBER ISB Random(ISB min, ISB max);
+ISB Random(ISB min, ISB max);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-LIB_MEMBER IUC Random(IUC min, IUC max);
+IUC Random(IUC min, IUC max);
 
 /* Gets a random 32-bit/4-byte unsigned integer. */
-LIB_MEMBER ISC Random(ISC min, ISC max);
+ISC Random(ISC min, ISC max);
 
 /* Gets a random 64-bit/8-byte unsigned integer. */
-LIB_MEMBER IUD Random(IUD min, IUD max);
+IUD Random(IUD min, IUD max);
 
 /* Gets a random 64-bit/8-byte signed integer. */
-LIB_MEMBER ISD Random(ISD min, ISD max);
+ISD Random(ISD min, ISD max);
 
 /* Gets a random 8-bit/1-IUA unsigned integer. */
-LIB_MEMBER IUA IUARandom();
+IUA IUARandom();
 
 /* Gets a random 8-bit/1-IUA signed integer. */
-LIB_MEMBER ISA ISARandom();
+ISA ISARandom();
 
 /* Gets a random 16-bit/2-IUA unsigned integer. */
-LIB_MEMBER IUB IUBRandom();
+IUB IUBRandom();
 
 /* Gets a random 16-bit/2-IUA signed integer. */
-LIB_MEMBER ISB ISBRandom();
+ISB ISBRandom();
 
 /* Gets a random 32-bit/4-IUA unsigned integer. */
-LIB_MEMBER IUC IUCRandom();
+IUC IUCRandom();
 
 /* Gets a random 32-bit/4-IUA signed integer. */
-LIB_MEMBER ISC ISCRandom();
+ISC ISCRandom();
 
 /* Gets a random 64-bit/8-IUA unsigned integer. */
-LIB_MEMBER IUD IUDRandom();
+IUD IUDRandom();
 
 /* Gets a random 64-bit/8-IUA signed integer. */
-LIB_MEMBER ISD ISDRandom();
+ISD ISDRandom();
 
 /* Gets a random 8-bit/1-IUA unsigned integer. */
-LIB_MEMBER void RandomNumber(IUA& result);
+void RandomNumber(IUA& result);
 
 /* Gets a random 8-bit/1-IUA signed integer. */
-LIB_MEMBER void RandomNumber(ISA& result);
+void RandomNumber(ISA& result);
 
 /* Gets a random 16-bit/2-IUA unsigned integer. */
-LIB_MEMBER void RandomNumber(IUB& result);
+void RandomNumber(IUB& result);
 
 /* Gets a random 16-bit/2-IUA signed integer. */
-LIB_MEMBER void RandomNumber(ISB& result);
+void RandomNumber(ISB& result);
 
 /* Gets a random 32-bit/4-IUA unsigned integer. */
-LIB_MEMBER void RandomNumber(IUC& result);
+void RandomNumber(IUC& result);
 
 /* Gets a random 32-bit/4-IUA signed integer. */
-LIB_MEMBER void RandomNumber(ISC& result);
+void RandomNumber(ISC& result);
 
 /* Gets a random 64-bit/8-IUA unsigned integer. */
-LIB_MEMBER void RandomNumber(IUD& result);
+void RandomNumber(IUD& result);
 
 /* Gets a random 64-bit/8-IUA signed integer. */
-LIB_MEMBER void RandomNumber(ISD& result);
+void RandomNumber(ISD& result);
+
+/* Generates a random 64-bit floating point number 0 <= x <= 1. */
+void RandomProbability(FPC& result);
+
+/* Generates a random 64-bit floating point number 0 <= x <= 1. */
+void RandomProbability(FPD& result);
+
+/* Generates a random 64-bit floating point number -1 <= x <= 1. */
+void RandomProbabilitySigned(FPC& result);
+
+/* Generates a random 64-bit floating point number -1 <= x <= 1. */
+void RandomProbabilitySigned(FPD& result);
+
+/* Generates a random 32-bit integer with the given number of bits. */
+void RandomBits(ISA& result, ISA bit_count);
+
+/* Generates a random 32-bit integer with the given number of bits. */
+void RandomBits(ISB& result, ISB bit_count);
+
+/* Generates a random 32-bit integer with the given number of bits. */
+void RandomBits(ISC& result, ISC bit_count);
+
+/* Generates a random 64-bit integer with the given number of bits. */
+void RandomBits(ISD& result, ISD bit_count);
 
 }  //< namespace _
 #endif

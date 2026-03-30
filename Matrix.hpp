@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#ifndef CRABS_MATRIX_HPP
-#define CRABS_MATRIX_HPP 1
+#ifndef CRABS_MATHCORE_HPP
+#define CRABS_MATHCORE_HPP
 #include <_Config.h>
-#if SEAM >= 1 //CRABS_MATRIX
+#if SEAM >= CRABS_MATHCORE
 #include "Stack.hpp"
 #define MTX_A typename T = ISW, typename ISZ = ISN
 #define MTX_P T, ISZ

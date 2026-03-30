@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_BOOFER_DECL
-#define CRABS_BOOFER_DECL 1
+#define CRABS_BOOFER_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_ROOM
 namespace _ {

@@ -9,7 +9,7 @@
 #endif
 
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 #if SEAM >= CRABS_STRING
 template<typename T = CHR, typename ISZ = ISR, typename ISY=ISZ>
 void TestStringN() {
@@ -56,4 +56,4 @@ static const CHA* String(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

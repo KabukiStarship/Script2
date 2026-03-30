@@ -1,6 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Array.hpp"
 #if SEAM >= CRABS_UNIPRINTER
+#include "Binary.hpp"
 namespace _ {
 
 /* Creates a CPU word from the repeated fill_char. */
@@ -148,13 +149,15 @@ ISW ArrayCompareFast(const void* a, const ISW a_bytes, const void* b,
              "\nTDelta<>(b, b_cursor    ): " << TDelta<>(b, b_cursor    ) <<
              "\nTDelta<>(b_cursor, b_end): " << TDelta<>(b_cursor, b_end));*/
       IUW index = 0;
-      while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) ++index;
+      while (((a_word << index) & 0xff) == ((b_word << index) & 0xff)) 
+        ++index;
       return -TDelta<>(a, a_cursor - ACPUBytes + index);
     }
     a_lsb = a_msb;
     b_lsb = b_msb;
   }
-  if (a_cursor == a_end) return a_bytes;
+  if (a_cursor == a_end) 
+    return a_bytes;
   a_cursor += ACPUBytes;
   b_cursor += ACPUBytes;
   // Step 2: Compare the MSB.

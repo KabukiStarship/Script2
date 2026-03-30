@@ -17,23 +17,22 @@
 #include "12.Map.hxx"
 #include "13.Table.hxx"
 #include "14.Dic.hxx"
-#include "15.MathCore.hxx"
-#include "16.RNG.hxx"
-#include "17.File.hxx"
-#include "18.SGraTe.hxx"
-#include "19.CrabsOp.hxx"
-#include "20.Room.hxx"
-#include "21.CrabsCore.hxx"
+#include "15.CrabsOp.hxx"
+#include "16.Room.hxx"
+#include "17.MathCore.hxx"
+#include "18.RNG.hxx"
+#include "19.File.hxx"
+#include "20.SGraTe.hxx"
+#include "21.CrabsScript.hxx"
 #include "22.Release.hxx"
 //
 #include "../Test.hpp"
 using namespace ::_;
 
 inline const CHA* CrabsTests(const CHA* args) {
-  return TTestTree<Crabs::COut, Crabs::ItoS, Crabs::FtoS, 
-    Crabs::Uniprinter, Crabs::Clock, Crabs::Stack, Crabs::String, 
-    Crabs::Loom,  Crabs::List, Crabs::Book, Crabs::Map, Crabs::Table,
-    Crabs::Dic, Crabs::MathCore, Crabs::RNG, Crabs::File,
-    Crabs::SGraTe, Crabs::CrabsOp, Crabs::Room, 
-    Crabs::CrabsCore>(args);
+  return TTestTree<CRTest::COut, CRTest::ItoS, CRTest::FtoS, 
+    CRTest::Uniprinter, CRTest::Clock, CRTest::Stack, CRTest::String, 
+    CRTest::Loom,  CRTest::List, CRTest::Book, CRTest::Map, CRTest::Table,
+    CRTest::Dic, CRTest::File, CRTest::CrabsOp, CRTest::Room, CRTest::MathCore, CRTest::RNG, CRTest::SGraTe,
+    CRTest::CrabsScript>(args);
 }

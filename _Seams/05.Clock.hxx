@@ -10,7 +10,7 @@
 #endif
 
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 static const CHA* Clock(const CHA* args) {
 #if SEAM >= CRABS_CLOCK
   A_TEST_BEGIN;
@@ -43,34 +43,40 @@ static const CHA* Clock(const CHA* args) {
     "2019-01-19@00:00:00a ",
   };
 
-  for (ISC i = 0; i < 18; ++i) {
-    D_COUT(Linef('-') << "\n    " << i);
-    ISC t = 0;
-    result = ScanTime(Strings[i], t);
-    // Assert (!ClockCompare (t, 2018, 8, 9, 0, 0, 0))
+  for (TMC i = 0; i < 18; ++i) {
+    D_COUT(Linef('-') << "\n    " << i << ".) " << Strings[i] << " -> ");
+    TMC t = -1;
+    result = SScanTime(Strings[i], t);
+    A_ASSERT(result);
+    // A_ASSERT (!ClockCompare (t, 2018, 8, 9, 0, 0, 0));
   }
 
-  D_COUT("\n\nTesting more valid input...\n");
+  D_COUT("\n\nTesting TestTimes...\n\n");
 
-  enum { Size = 128 };
+  enum { Size = 128, TestTimeCount = 3 };
   CHA socket[Size];
+  const TMC TestTimes[TestTimeCount][7] = {
+    { 2008,  9, 17,  4, 20,  0, 1970 },
+    { 2020,  4, 20,  4, 20,  0, 1970 },
+    { 2038,  1, 19, 23, 59, 59, 1970 },
+  };
+  for (ISN i = 0; i < TestTimeCount; ++i) {
+    D_COUT("\n\n" << i << ".) Testing: " << TestTimes[i][0] << '-' << TestTimes[i][1] << '-' <<
+      TestTimes[i][2] << '@' << TestTimes[i][3] << ':' << TestTimes[i][4] <<
+      ':' << TestTimes[i][5] << " epoch:" << TestTimes[i][6]);
 
-  t = ClockTimeTMS(8, 9, 17, 4, 20);
-  ClockPrint(socket, socket + Size, t);
-  result = ScanTime(socket, t_found);
-  A_ASSERT(ClockCompare(t_found, t));
-
-  t = ClockTimeTMS(2020, 4, 20, 4, 20);
-  ClockPrint(socket, socket + Size, t);
-  result = ScanTime(socket, t_found);
-  A_ASSERT(ClockCompare(t, t_found));
-
-  t = ClockTimeTMS(1947, 12, 7, 23, 5, 7);
-  ClockPrint(socket, socket + Size, t);
-  D_COUT("\n  Before:\"" << socket << '\"');
-  result = TSScan<CHA>(socket, t_found);
-  D_COUT("\n\n\nresult:\"" << TClock<ISC>(t_found) << "\"\"");
-  A_ASSERT(ClockCompare(t, t_found));
+    t = ClockTimeTMC(TestTimes[i][0], TestTimes[i][1], TestTimes[i][2], 
+      TestTimes[i][3], TestTimes[i][4], TestTimes[i][5], TestTimes[i][6]);
+    AClock clock;
+    ClockInit(clock, t);
+    D_COUT("\nAClock:");
+    TClockPrint<::_::COut>(StdOut(), clock);
+    ClockPrint(socket, socket + Size, t);
+    D_COUT("\n\n  Before:\"" << socket << '\"');
+    result = SScanTime(socket, t_found);
+    D_COUT("\n\nresult:\"" << TClock<ISC>(t_found) << "\"\"");
+    A_ASSERT(ClockCompare(t_found, t));
+  }
 
   D_COUT(Headingf("Testing invalid input"));
   TSScan<CHA>("cat", t);
@@ -78,7 +84,39 @@ static const CHA* Clock(const CHA* args) {
   TSScan<CHA>("2017-30-40", t);
 
   D_COUT("\nDone testing date parsing utils! :-)\n");
+
+  D_COUT(Headingf("Testing ClockDayToMonth..."));
+
+  TMC year = 2021; //< Not a leap year.
+  A_AVOW(ISA(MonthJanuary  ), ClockDayToMonth(DaysJanuaryStart   - 1, year));
+  A_AVOW(ISA(MonthJanuary  ), ClockDayToMonth(DaysJanuaryStop    - 1, year));
+  A_AVOW(ISA(MonthFebruary ), ClockDayToMonth(DaysFebruaryStart  - 1, year));
+  A_AVOW(ISA(MonthFebruary ), ClockDayToMonth(DaysFebruaryStop   - 1, year));
+  A_AVOW(ISA(MonthMarch    ), ClockDayToMonth(DaysMarchStart     - 1, year));
+  A_AVOW(ISA(MonthMarch    ), ClockDayToMonth(DaysMarchStop      - 1, year));
+  A_AVOW(ISA(MonthApril    ), ClockDayToMonth(DaysAprilStart     - 1, year));
+  A_AVOW(ISA(MonthApril    ), ClockDayToMonth(DaysAprilStop      - 1, year));
+  A_AVOW(ISA(MonthMay      ), ClockDayToMonth(DaysMayStart       - 1, year));
+  A_AVOW(ISA(MonthMay      ), ClockDayToMonth(DaysMayStop        - 1, year));
+  A_AVOW(ISA(MonthJune     ), ClockDayToMonth(DaysJuneStart      - 1, year));
+  A_AVOW(ISA(MonthJune     ), ClockDayToMonth(DaysJuneStop       - 1, year));
+  A_AVOW(ISA(MonthJuly     ), ClockDayToMonth(DaysJulyStart      - 1, year));
+  A_AVOW(ISA(MonthJuly     ), ClockDayToMonth(DaysJulyStop       - 1, year));
+  A_AVOW(ISA(MonthAugust   ), ClockDayToMonth(DaysAugustStart    - 1, year));
+  A_AVOW(ISA(MonthAugust   ), ClockDayToMonth(DaysAugustStop     - 1, year));
+  A_AVOW(ISA(MonthSeptember), ClockDayToMonth(DaysSeptemberStart - 1, year));
+  A_AVOW(ISA(MonthSeptember), ClockDayToMonth(DaysSeptemberStop  - 1, year));
+  A_AVOW(ISA(MonthOctober  ), ClockDayToMonth(DaysOctoberStart   - 1, year));
+  A_AVOW(ISA(MonthOctober  ), ClockDayToMonth(DaysOctoberStop    - 1, year));
+  A_AVOW(ISA(MonthNovember ), ClockDayToMonth(DaysNovemberStop   - 1, year));
+  A_AVOW(ISA(MonthNovember ), ClockDayToMonth(DaysNovemberStop   - 1, year));
+  A_AVOW(ISA(MonthDecember ), ClockDayToMonth(DaysDecemberStart  - 1, year));
+  A_AVOW(ISA(MonthDecember ), ClockDayToMonth(DaysDecemberStop   - 1, year));
+
+  A_AVOW(ISA(-1), ClockDayToMonth(-1, year));
+  A_AVOW(ISA(-1), ClockDayToMonth(366, year));
+  D_COUT("\nDone testing TClockDayToMonth! :-)\n");
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

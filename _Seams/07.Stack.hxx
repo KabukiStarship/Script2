@@ -8,7 +8,7 @@ using namespace ::_;
 #include "../_Release.h"
 #endif
 #endif
-namespace Crabs {
+namespace CRTest {
 
 #if SEAM >= CRABS_STACK
 template<typename T, typename ISZ, typename ISY=ISZ>
@@ -65,4 +65,4 @@ static const CHA* Stack(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

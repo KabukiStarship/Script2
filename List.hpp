@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_LIST_HPP
-#define CRABS_LIST_HPP 1
+#define CRABS_LIST_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_LIST
 #include "Binary.hpp"

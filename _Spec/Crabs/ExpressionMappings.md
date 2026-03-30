@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [Crabs Specification](./)
-
-### Expressions
+# Expressions
 
 ```Crabs
   +-------------------------- Operation Push "=DICB" is a function  
@@ -63,12 +59,10 @@ Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things it
                    stuff things item3;
 ```
 
-**[<< Previous Section: Messages](./Messages.md) | [Next Section: SCRIPT Specification >>](../)**
-
 ## Requirements
 
 [1] ./
 
-## License
+**[<< Previous Section: Messages](./Messages.md) | [Next Section: SCRIPT Specification >>](../)**
 
-Copyright [AStarship™](https://astarship.net)..
+[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

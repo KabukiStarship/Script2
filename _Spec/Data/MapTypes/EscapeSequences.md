@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](../)
 
-### [Map Types](./)
+### [Map Types](.)
 
 ### Escape Sequence
 
@@ -34,8 +34,8 @@ Parent {
 
 [1] ./
 
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
 
-**[<< Previous Section:](./) | [Next Section: >>](./)**
+**[<< Previous Section: Tuples](Tuples.md) | [Next Section: Socket >>](Socket.md)**
 
 Copyright [AStarship™](https://astarship.net).

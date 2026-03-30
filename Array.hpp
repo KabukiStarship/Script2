@@ -1,12 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
+#ifndef CRABS_ARRAY_HPP
+#define CRABS_ARRAY_HPP
 #include "Array.h"
+#if SEAM >= CRABS_ARRAY
 #include "Autoject.hpp"
 #include "Stringf.hpp"
-#ifndef CRABS_ARRAY_HPP
-#define CRABS_ARRAY_HPP 1
-#if SEAM >= CRABS_STACK
-#include "Array.h"
+#if SEAM == CRABS_ARRAY
+#include "_Debug.h"
+#else
+#include "_Release.h"
+#endif
 #define ARY_A typename T = CHA, typename ISZ = ISN
 #define ARY_P T, ISZ
 #define ARY TArray<T, ISZ>
@@ -551,7 +555,7 @@ class AArray {
     if (total < 0 || count < 0 || count > total || count_start < 0 || 
         count_start >= count || count_stop > count)
       return NILP;
-#if D_THIS
+#ifdef D_THIS
     D_COUT("\nAuto-growing Stack...\nBefore:");
     TArrayPrint<COut, T, ISZ>(StdOut(), src);
 #endif
@@ -570,7 +574,7 @@ class AArray {
       "\nTArrayStart<ARY_P>(array): " << Hexf(TArrayStart<ARY_P>(src)));
     ArrayCopy(TPtr<void>(dest_ary, sizeof(Class)), bytes_copy,
               TPtr<void>(src, sizeof(Class)) + count_start, bytes_copy);
-#if D_THIS
+#ifdef D_THIS
     D_COUT("\nResult:");
     TArrayPrint<COut, T, ISZ>(StdOut(), dest_ary);
 #endif

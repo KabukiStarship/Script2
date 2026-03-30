@@ -2,7 +2,7 @@
 #pragma once
 #include <_Config.h>
 #ifndef CRABS_TEST_DECL
-#define CRABS_TEST_DECL 1
+#define CRABS_TEST_DECL
 
 /* Function pointer prototype for a test case with command line argument.
 @return Pointer to a  to utf to the stdout.

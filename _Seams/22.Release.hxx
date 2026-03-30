@@ -6,7 +6,7 @@
 #include "../_Release.h"
 #endif
 #endif
-namespace Crabs {
+namespace CRTest {
 
 inline const CHA* Release(const CHA* args) {
 #if SEAM == CRABS_RELEASE
@@ -14,4 +14,4 @@ inline const CHA* Release(const CHA* args) {
   return NILP;
 }
 
-}  //< namespace Crabs
+}  //< namespace CRTest

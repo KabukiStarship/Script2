@@ -40,7 +40,7 @@ static DTW ACTXHandlerDefault(void* begin, void* end, DTW type, IUW value,
 
 /* A single cache-line-aligned variable set for controlling the Chinese Room.
 */
-struct LIB_MEMBER ACTXFrame {
+struct ACTXFrame {
   enum {
     Bytes = 256 + ACPUCacheLineSize,
     BytesReserved = (Bytes - 2 * sizeof(IUW)) >> ACPUBytesLog2,
@@ -55,7 +55,7 @@ struct LIB_MEMBER ACTXFrame {
 };
 
 /* Returns the the Global Chinese Room Entry. */
-LIB_MEMBER inline ACTXFrame* ACTX();
+inline ACTXFrame* ACTX();
 
 // Maps a type to ACTXHandler.
 inline DTW ACTXHandle(ACTXHandler actxh, void* begin, void* end, DTW type, 
@@ -88,7 +88,7 @@ inline DTB ATypeMakePtrCNS(DTW type);
 inline DTB ATypeCrabsIndexCNS(DTW type);
 
 // A 128-bit unsigned integer.
-struct LIB_MEMBER IUE {
+struct IUE {
   IUD lsb;    //< Least significant 64 bits.
   IUD msb;    //< Most significant 64 bits.
 
@@ -100,7 +100,7 @@ struct LIB_MEMBER IUE {
 };
 
 // A 128-bit signed integer.
-struct LIB_MEMBER ISE {
+struct ISE {
   IUD lsb;    //< Least significant 64 bits.
   IUD msb;    //< Most significant 64 bits.
 
@@ -114,7 +114,7 @@ struct LIB_MEMBER ISE {
 #if USING_SOFTWARE_FPC == YES_0
 #if CPU_SIZE == CPU_2_BYTES
 // A 32-bit floating-point number.
-struct LIB_MEMBER FPC {
+struct FPC {
   IUB lsb;    //< Least significant 16 bits.
   IUB msb;    //< Most significant 16 bits.
 
@@ -122,7 +122,7 @@ struct LIB_MEMBER FPC {
 };
 #else
 // A 32-bit floating-point number.
-struct LIB_MEMBER FPC {
+struct FPC {
   IUB lsb;    //< Least significant 16 bits.
   IUB msb;    //< Most significant 16 bits.
 
@@ -132,7 +132,7 @@ struct LIB_MEMBER FPC {
 #endif
 #if CPU_SIZE < CPU_8_BYTES
 // A 64-bit floating-point number.
-struct LIB_MEMBER FPD {
+struct FPD {
   IUC lsb;    //< Least significant 32 bits.
   IUC msb;    //< Most significant 32 bits.
 
@@ -143,7 +143,7 @@ struct LIB_MEMBER FPD {
 #endif
 
 // A 128-bit floating-point number.
-struct LIB_MEMBER FPE {
+struct FPE {
   IUD lsb;    //< Least significant 64 bits.
   IUD msb;    //< Most significant 64 bits.
 
@@ -275,7 +275,7 @@ multiplies two integers together the result is two ALU-sized words and thus the
 CPU can only address 2 words at a time. For types that are larger that two ALU
 words wide the word_ stores a pointer to that type in memory and a struct will
 be needed to work with the type. */
-class LIB_MEMBER ATypeValue {
+class ATypeValue {
   DTW type_;    //< Type of the value.
   IUW value_,   //< First or only word of the value.
       vmsb_;    //< Most significant bits of two word type.

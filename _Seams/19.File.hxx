@@ -8,7 +8,7 @@
 #endif
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 static const CHA* File(const CHA* args) {
 #if SEAM == CRABS_FILE
@@ -17,4 +17,4 @@ static const CHA* File(const CHA* args) {
   return NILP;
 }
 
-}  //< namespace Crabs
+}  //< namespace CRTest

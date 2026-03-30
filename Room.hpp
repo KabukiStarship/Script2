@@ -1,16 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_ROOM_HPP
-#define CRABS_ROOM_HPP 1
+#define CRABS_ROOM_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_ROOM
 #include "Interrupts.h"
 #include "BOut.hpp"
 #include "Wall.hpp"
 #define ROM_A \
-  typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, \
+  typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ, \
   typename DT = DTB, typename HSH = IUN
-#define ROM_P CHT, ISZ, ISY, DT, HSH
+#define ROM_P CHS, ISZ, ISY, DT, HSH
 namespace _ {
 
   /* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to
@@ -32,17 +32,17 @@ namespace _ {
 
   /* Returns an array of pointers to Strings that describe the program states.
    */
-  LIB_MEMBER const CHA** TCRStates();
+  const CHA** TCRStates();
 
   /* Returns a pointer to an array of pointers to the Request Strings. */
-  LIB_MEMBER const CHA** TCRRequests();
+  const CHA** TCRRequests();
 
   /* Gets the response CHA corresponding to the given request. */
-  LIB_MEMBER const CHA* CRRequests(CRRequest r);
+  const CHA* CRRequests(CRRequest r);
 
-template<typename CHT = CHR>
-const CHT** TCRStates() {
-  static const CHT* Strings[CRStateInvalid][16] = {
+template<typename CHS = CHR, typename CHT = CHC>
+const CHS** TCRStates() {
+  static const CHS* Strings[CRStateInvalid][16] = {
     "Initializing",
     "Waking up",
     "Running",
@@ -53,15 +53,15 @@ const CHT** TCRStates() {
   return Strings;
 }
 
-template<typename CHT = CHR>
-inline const CHT* CRStates(CRRequest r) {
+template<typename CHS = CHR, typename CHT = CHC>
+inline const CHS* CRStates(CRRequest r) {
   if (r < 0 || r > CRStateInvalid) r = CRStateInvalid;
   return TCRRequests()[r];
 }
 
-template<typename CHT = CHR>
-inline const CHT** TCRRequests() {
-  static const CHT* Strings[CRRequestInvalid][16] = {
+template<typename CHS = CHR, typename CHT = CHC>
+inline const CHS** TCRRequests() {
+  static const CHS* Strings[CRRequestInvalid][16] = {
     "Open door",
     "Close door",
     "Invalid request"
@@ -69,8 +69,8 @@ inline const CHT** TCRRequests() {
   return Strings;
 }
 
-template<typename CHT = CHR>
-const CHT* CRRequests(CRRequest r) {
+template<typename CHS = CHR, typename CHT = CHC>
+const CHS* CRRequests(CRRequest r) {
   if (r < 0 || r > CRRequestInvalid) r = CRRequestInvalid;
   return TCRRequests()[r];
 }
@@ -296,7 +296,7 @@ class TRoom : public Operand {
   virtual ISC Main(const CHA** args, ISC args_count) {
     const Op* result = NILP;
     D_COUT("\nInitializing Chinese Room with " << args_count << " args:");
-#if D_THIS
+#ifdef D_THIS
     for (ISC i = 0; i < args_count; ++i)
       D_COUT('\n' << i << ":\"" << args[i] << '\"');
 #endif

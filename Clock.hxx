@@ -1,9 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Clock.hpp"
 #if SEAM >= CRABS_CLOCK
-//
 #include <ctime>
 #include "Uniprinter.hpp"
+#include "RNG.h"
+#include "Crabs.h"
 #if SEAM == CRABS_CLOCK
 #include "_Debug.h"
 #else
@@ -11,6 +12,105 @@
 #endif
 using namespace ::_;
 namespace _ {
+
+ISC ClockEpoch() {
+#if SEAM < CRABS_OP
+  return AClockEpochYearInit;
+#else
+#endif
+}
+
+inline BOL ClockIsNotLeapYear(ISC year) {
+  return year & 0x3;
+}
+
+inline BOL ClockIsLeapYear(ISC year) {
+  return !(year & 0x3);
+}
+
+inline ISB ClockYear(TMC timestamp, TMC epoch) {
+  return TClockYear<TMC>(timestamp, epoch);
+}
+
+inline ISA ClockSecond(TMC timestamp, TMC epoch) {
+    return TClockSeconds<TMC>(timestamp);
+}
+
+inline ISA ClockMinute(TMC timestamp, TMC epoch) {
+    return TClockMinutes<TMC>(timestamp);
+}
+
+inline ISA ClockHour(TMC timestamp, TMC epoch) {
+    return TClockHours<TMC>(timestamp);
+}
+
+inline ISA ClockDay(TMC timestamp, TMC epoch) {
+    return TClockDayOfYear<TMC>(timestamp);
+}
+
+ISA ClockDayToMonth(TMC day_of_year, TMC year) {
+  if (!TClockIsLeap<TMC>(year, day_of_year)) 
+    ++day_of_year;
+  if (day_of_year <= 0 || day_of_year > DaysYear) {
+    return -1;
+  }
+  if (day_of_year < DaysSeptemberStart) {
+    if (day_of_year < DaysMayStart) {
+      if (day_of_year < DaysMarchStart) {
+        if (day_of_year < DaysFebruaryStart) {
+          return MonthJanuary;
+        }
+        else {
+          return MonthFebruary;
+        }
+      }
+      else {
+        if (day_of_year < DaysAprilStart) {
+          return MonthMarch;
+        }
+        else {
+          return MonthApril;
+        }
+      }
+    }
+    else {
+      if (day_of_year < DaysJulyStart) {
+        if (day_of_year < DaysJuneStart) {
+          return MonthMay;
+        }
+        else {
+          return MonthJune;
+        }
+      }
+      else {
+        if (day_of_year < DaysAugustStart) {
+          return MonthJuly;
+        }
+        else {
+          return MonthAugust;
+        }
+      }
+    }
+  }
+  if (day_of_year < DaysNovemberStart) {
+    if (day_of_year < DaysOctoberStart){
+      return MonthSeptember;
+    }
+    return MonthOctober;
+  }
+  if (day_of_year < DaysDecemberStart) {
+    return MonthNovember;
+  }
+  return MonthDecember;
+}
+
+inline ISA ClockMonth(TMC timestamp, TMC epoch) {
+    return TClockMonth<TMC>(timestamp);
+}
+
+inline ISA ClockWeekday(TMC timestamp, TMC epoch) {
+  return 0;// return TClockYear<TMC>(timestamp, epoch);
+}
 
 TMT::TMT(ISC seconds, IUC ticks) :
     ticks(ticks), seconds(seconds) {}
@@ -23,69 +123,192 @@ TMT::TMT(IUD value) {
   *this = value;
 }
 
-TMD::TMD(ISC seconds, ISC ticks, ISC id) :
-  value(ISD(seconds) << TMDSecondsBit0 | ISD(ticks) << TMDTicksBit0 | ISD(id))
+SSD::SSD(ISC seconds, ISC ticker, ISC source) :
+  value(ISD(seconds) << SSDHotSecondsBit0 | ISD(ticker) << SSDHotTickerBit0 | ISD(source))
 {}
 
-TMD::TMD(IUD value) {
+SSD::SSD(IUD value) {
+  *this = ISD(value);
+}
+
+SSD::SSD(ISD value) {
   *this = value;
 }
 
-TMD::TMD(ISD value) {
-  *this = value;
+ISC SSD::Seconds() {
+  ISD mask = (1 << (SSDHotSecondsBitCount - 1)) - 1;
+  return (this->value >> SSDHotSecondsBit0) & mask;
 }
 
-ISC TMD::Seconds() { return this->value >> TMDSecondsBit0; }
+ISC SSD::Ticker() { 
+  return (this->value >> SSDHotTickerBit0) & ((1 << SSDHotTickerBitCount) - 1);
+}
 
-//ISC TMD::SetSeconds(ISC value) {
-//  if (value >> TMDSecondsBitCount) {
-//    value = value & (TMDSecondsBitCount - 1);
-//  }
-//  ISD value = this->value;
-//  ISC seconds = value ^ (value >> TMDSecondsBit0);
-//  value ^= ISD(seconds << TMDSecondsBit0);
-//  return value;
-//}
+ISC SSD::Source() { return this->value & ((1 << SSDHotSourceBitCount) - 1); }
 
-ISC TMD::Ticks() { return (this->value >> TMDTicksBit0) & (TMDTicksBitCount - 1); }
+/* Checks if the TMD is a Hot UUID.
+Hot UUID have MSb = 1 and ticks < 192. */
+BOL SSD::IsHot() {
+  ISD ssd = this->value;
+  return ssd < 0 && (((ssd >> SSDEvergreenBit0) & SSDEvergreenBitMaskLSB) == 
+    SSDEvergreenBitMaskLSB);
+}
 
-//ISC TMD::SetTicks(ISC value) {
-//  if (value >> TMDSecondsBitCount) {
-//    value = value & (TMDSecondsBitCount - 1);
-//  }
-//  ISD value = this->value;
-//  ISC seconds = value ^ (value >> TMDSecondsBit0);
-//  value ^= ISD(seconds << TMDSecondsBit0);
-//  return value;
-//}
+/* Checks if the TMD is a Cold UUID.
+Cold UUID have MSb = 0. */
+BOL SSD::IsCold() { return this->value >= 0; }
 
-ISC TMD::Id() { return this->value & (TMDIdBitCount - 1); }
+/* Checks if the TMD is an Evergreen UUID.
+Evergreen UUID have MSb = 1 and bits 35:34 = 1. */
+BOL SSD::IsEvergreen() {
+	ISD ssd = this->value;
+  return ssd < 0 && (((ssd >> SSDEvergreenBit0) & SSDEvergreenBitMaskLSB) ==
+    SSDEvergreenBitMaskLSB);
+}
 
-TME::TME(ISD seconds, ISD ticks, ISD id_lsb, ISD id_msb) :
-  msb(seconds << TMESecondsMSBit0 | ticks << TMETicksMSBit0 | id_msb),
-  lsb(id_lsb)
+/* Converts a Hot UUID to Evergreen UUID.
+@param source_id The random source ID to use for the Evergreen UUID.
+@return Reference to this TMD. */
+ISD SSD::ToCold(ISC ticker) const {
+  // Extract components from Hot UUID
+  ISD ssd = this->value;
+  ISC seconds = (ssd >> SSDHotSecondsBit0) & 
+                ((1 << (SSDHotSecondsBitCount - 1)) - 1);
+  ISC ticks = (ssd >> SSDHotTickerBit0) & ((1 << SSDHotTickerBitCount) - 1);
+  return ISD(ssd) << SSDHotSecondsBit0;
+}
+
+/* Converts Hot UUID to Evergreen UUID.
+Hot UUID: MSb=1, [27-bit seconds][8-bit ticks][28-bit id]
+Evergreen UUID: MSb=1, bit35=1, bit34=1, [27-bit seconds][34-bit id]
+@param hot_uuid The Hot UUID 64-bit value
+@param source_id The random source ID (will be masked to 34-bit)
+@return Evergreen UUID as IUD */
+IUD ClockHotToEvergreen(IUD hot_uuid, IUD source_id) {
+  ISC seconds = ISC((hot_uuid >> SSDHotSecondsBit0) & ((ISD(1) << 27) - 1));
+  ISC ticks = ISC((hot_uuid >> SSDHotTickerBit0) & (SSDHotTickerBitCount - 1));
+  // Build Evergreen UUID:
+  // b63 (MSb): 1
+  // b62:36: 27-bit seconds
+  // b35:34  0b11
+  // b33:0: 34-bit source
+  
+  IUD Evergreen = 0;
+  Evergreen |= (IUD(1) << 63) | (IUD(3) << 34) |
+               (IUD(seconds & ((ISD(1) << 27) - 1)) << SSDEvergreenBit0);
+  
+  // Set 34-bit source_id at bits 33:0
+  Evergreen |= (source_id & ((IUD(1) << 34) - 1));
+  
+  return Evergreen;
+}
+
+/* Generates a random 28-bit source ID for Hot UUID using RNG module.
+@return Random 28-bit source ID. */
+IUD GenerateHotSourceID() {
+  // Generate 64-bit random number and mask to 28 bits
+  IUD random_high = IUD(IUCRandom()) << 32;
+  IUD random_low = IUD(IUCRandom());
+  IUD random_value = random_high | random_low;
+  
+  // Mask to 28 bits (keep only lower 28 bits)
+  return random_value & ((IUD(1) << 28) - 1);
+}
+
+/* Generates a random 34-bit source ID for Evergreen UUID using RNG module.
+@return Random 34-bit source ID. */
+IUD GenerateEvergreenSourceID() {
+  // Generate 64-bit random number and mask to 34 bits
+  IUD random_high = IUD(IUCRandom()) << 32;
+  IUD random_low = IUD(IUCRandom());
+  IUD random_value = random_high | random_low;
+  
+  // Mask to 34 bits (keep only lower 34 bits)
+  return random_value & ((IUD(1) << 34) - 1);
+}
+
+/* Creates a Hot UUID from seconds, ticks, and source_id.
+@param seconds The 27-bit seconds timestamp
+@param ticks The 8-bit subsecond ticker (max 191)
+@param source_id The 28-bit random source ID
+@return Hot UUID as IUD */
+IUD CreateHotUUID(ISC seconds, ISC ticks, IUD source_id) {
+  // Validate inputs
+  D_ASSERT(seconds >= 0 && seconds < (ISD(1) << 27));
+  D_ASSERT(ticks >= 0 && ticks < 192);  // Max 192 ticks per second
+  D_ASSERT(source_id < (IUD(1) << 28));
+  
+  IUD hot_uuid = 0;
+  
+  // Set MSb = 1 (Hot UUID indicator)
+  hot_uuid |= (IUD(1) << 63);
+  
+  // Set 27-bit seconds
+  hot_uuid |= IUD(seconds & ((ISD(1) << 27) - 1)) << SSDHotSecondsBit0;
+  
+  // Set 8-bit ticks
+  hot_uuid |= IUD(ticks & ((1 << SSDHotTickerBitCount) - 1)) << SSDHotTickerBit0;
+  
+  // Set 28-bit source_id
+  hot_uuid |= source_id & ((IUD(1) << 28) - 1);
+  
+  return hot_uuid;
+}
+
+/* Creates an Evergreen UUID from seconds and source_id.
+@param seconds The 27-bit seconds timestamp  
+@param source_id The 34-bit random source ID
+@return Evergreen UUID as IUD */
+IUD CreateEvergreenUUID(ISC seconds, IUD source_id) {
+  // Validate inputs
+  D_ASSERT(seconds >= 0 && seconds < (ISD(1) << 27));
+  D_ASSERT(source_id < (IUD(1) << 34));
+  
+  IUD Evergreen = 0;
+  
+  // Set MSb = 1 (Evergreen UUID indicator)
+  Evergreen |= IUD(1) << 63;
+  
+  // Set bit 35 = 1
+  Evergreen |= IUD(1) << 35;
+  
+  // Set bit 34 = 1
+  Evergreen |= IUD(1) << 34;
+  
+  // Set 27-bit seconds at bits 62:36
+  Evergreen |= IUD(seconds & ((ISD(1) << 27) - 1)) << 36;
+  
+  // Set 34-bit source_id at bits 33:0
+  Evergreen |= source_id & ((IUD(1) << 34) - 1);
+  
+  return Evergreen;
+}
+
+SSE::SSE(ISD seconds, ISD ticks, ISD source_msb, ISD source_lsb) :
+  msb(seconds << SSESecondsMSBit0 | ticks << SSETickerMSBit0 | source_msb),
+  lsb(source_lsb)
 {}
 
-ISC TME::Seconds() { return ISC(this->msb >> TMESecondsMSBit0); }
+ISC SSE::Seconds() { return ISC(this->msb >> SSESecondsMSBit0); }
 
-ISC TME::Ticks() { 
-  return ISC((this->msb >> TMETicksMSBit0) & (TMETicksBitCount - 1));
+ISC SSE::Ticks() { 
+  return ISC((this->msb >> SSETickerMSBit0) & (SSETickerBitCount - 1));
 }
 
-ISC TME::IdMSB() { return ISC(this->msb & (TMEIdBitCount - 1)); }
+ISC SSE::IdMSB() { return ISC(this->msb & (SSESourceBitCount - 1)); }
 
-ISD TME::IdLSB() { return this->lsb; }
+ISD SSE::IdLSB() { return this->lsb; }
 
 const ISB* ClockLastDayOfMonth() {
-  static const ISB MonthDayOfYear[12] = {31,  59,  90,  120, 151, 181,
+  static const ISB LastDayOfMonth[12] = {31,  59,  90,  120, 151, 181,
                                          212, 243, 273, 304, 334, 365};
-  return MonthDayOfYear;
+  return LastDayOfMonth;
 }
 
 const ISB* ClockLastDayOfMonthLeapYear() {
-  static const ISB MonthDayOfYearLeapYear[12] = {31,  60,  91,  121, 152, 182,
+  static const ISB LastDayOfMonthLeapYear[12] = {31,  60,  91,  121, 152, 182,
                                                  213, 244, 274, 305, 335, 366};
-  return MonthDayOfYearLeapYear;
+  return LastDayOfMonthLeapYear;
 }
 
 ISN MonthByDay(ISN day, ISN year) {
@@ -102,15 +325,18 @@ ISN MonthByDay(ISN day, ISN year) {
   return 0;
 }
 
-ISC ClockEpoch() { return AClockEpochYearInit; }
+AClock* ClockInit(AClock& clock, TMC t, TMC epoch) {
+  return TClockInit<TMC>(clock, t, epoch);
+}
 
-AClock* ClockInit(AClock& clock, ISC t) { return TClockInit<ISC>(clock, t); }
+AClock* ClockInit(AClock& clock, TMD t, TMC epoch) {
+  return TClockInit<TMD>(clock, t, epoch);
+}
 
-AClock* ClockInit(AClock& clock, ISD t) { return TClockInit<ISD>(clock, t); }
-
-TMT& StopwatchInit(TMT& tss, ISC t, IUC ticks) {
-  tss.seconds = t;
-  return tss;
+TMT& ClockInit(TMT& timestamp, ISC t, IUC ticks) {
+  timestamp.seconds = t;
+  timestamp.ticks = ticks;
+  return timestamp;
 }
 
 AClock* ClockInit(AClock& clock) {
@@ -119,28 +345,28 @@ AClock* ClockInit(AClock& clock) {
   return TClockInit<time_t>(clock, t);
 }
 
-void ClockEpochUpdate() {
+inline void ClockEpochUpdate() {
   // RoomLock();
-  // cClockEpochInit += 10;
+  // ClockEpochInit += 10;
   // RoomUnlock();
 }
 
-ISD ClockNow() {
+TMD ClockNow() {
   time_t t;
   time(&t);
-  if (t > SecondsPerEpoch) ClockEpochUpdate();
-  return ISD(t);
+  if (t > ClockEpoch()) ClockEpochUpdate();
+  return TMD(t);
 }
 
-ISC ClockSeconds(AClock& clock) {
-  return (clock.year - AClockEpochYearInit) * SecondsPerYear +
+TMC ClockToTimestamp(AClock& clock) {
+  return (clock.year - ClockEpoch()) * SecondsPerYear +
          (clock.day - 1) * SecondsPerDay + clock.hour * SecondsPerHour +
          clock.minute * SecondsPerMinute + clock.second;
 }
 
-ISC ClockISC(AClock& clock) { return ClockSeconds(clock); }
-
-ISD ClockISD(AClock& clock) { return ISD(ClockSeconds(clock)); }
+//ISC ClockISC(AClock& clock) { return ClockSeconds(clock); }
+//
+//ISD ClockISD(AClock& clock) { return ISD(ClockSeconds(clock)); }
 
 ISN ClockMonthDayCount(ISC t) {
   TClock<ISC> date(t);
@@ -240,8 +466,8 @@ ISN ClockCompare(const AClock& clock, ISN year, ISN month, ISN day,
                                    << clock.year + ClockEpoch() << '.');
     return 1;
   }
-  if (month != clock.month + 1) {
-    D_COUT("\n    Expecting month:" << month << " but found:" << clock.month + 1
+  if (month != clock.month) {
+    D_COUT("\n    Expecting month:" << month << " but found:" << clock.month
                                     << '.');
     return 2;
   }
@@ -267,88 +493,92 @@ ISN ClockCompare(const AClock& clock, ISN year, ISN month, ISN day,
   return 0;
 }
 
-void ClockZeroTime(AClock& local_time) {
+inline void ClockZeroTime(AClock& local_time) {
   local_time.second = 0;
   local_time.minute = 0;
-  local_time.hour = 0;
-  local_time.day = 0;
-  local_time.month = 0;
-  local_time.year = 0;
+  local_time.hour   = 0;
+  local_time.day    = 0;
+  local_time.month  = 0;
+  local_time.year   = 0;
 }
 
-ISC TimeMake(AClock& time) { return (ISC)mktime(TPtr<tm>(&time)); }
-
-const ISB* ClockDaysInMonth() {
-  static const ISB cDaysInMonth[12] = {31, 28, 31, 30, 31, 30,
-                                       31, 31, 30, 31, 30, 31};
-  return cDaysInMonth;
+inline TMC TimeMake(AClock& time) { 
+  return TMC(mktime(TPtr<tm>(&time)));
 }
 
-ISN ClockDaysInMonth(ISN month, ISN year) {
+inline const ISA* ClockDaysMonth() {
+  static const ISA DaysMonthArray[12] = {31, 28, 31, 30, 31, 30,
+                                         31, 31, 30, 31, 30, 31};
+  return DaysMonthArray;
+}
+
+inline ISN ClockDaysMonth(ISN month, ISN year) {
   if ((year & 3) == 0) {
     if (month == 4) return 29;
   }
   if (month < 1 || month > 12) return 0;
-  return ClockDaysInMonth()[month - 1];
+  return ClockDaysMonth()[month - 1];
 }
 
-ISN ClockDayOfYear(ISN year, ISN month, ISN day) {
-  if (day < 1 || day > ClockDaysInMonth(month, year) || month < 1 || month > 12)
+inline ISN ClockDayOfYear(ISN year, ISN month, ISN day) {
+  if (day < 1 || day > ClockDaysMonth(month, year) || month < 1 || month > 12)
     return 0;
   if (month == 1) {
     return day;
   }
-  if (year & 3) return ClockLastDayOfMonthLeapYear()[month - 2] + 1 + day;
-  return ClockLastDayOfMonth()[month - 2] + 1 + day;
+  if (year & 3) return ClockLastDayOfMonth()[month - 2] + day;
+  return ClockLastDayOfMonthLeapYear()[month - 2] + day;
 }
 
-ISC ClockTimeTMS(ISN year, ISN month, ISN day, ISN hour, ISN minute,
-                 ISN second) {
-  return TClockTime<ISC>(year, month, day, hour, minute, second);
+inline TMC ClockTimeTMC(ISN year, ISN month, ISN day, ISN hour, ISN minute,
+                        ISN second, TMC epoch) {
+  return TClockTimestamp<ISC>(year, month, day, hour, minute, second);
 }
 
-ISD ClockTimeTME(ISN year, ISN month, ISN day, ISN hour, ISN minute,
-                 ISN second) {
-  return TClockTime<ISC>(year, month, day, hour, minute, second);
+inline TMD ClockTimeTMD(ISN year, ISN month, ISN day, ISN hour, ISN minute,
+                        ISN second, TMC epoch) {
+  return TClockTimestamp<ISC>(year, month, day, hour, minute, second);
 }
 
 #if USING_STA == YES_0
-CHA* SPrint(CHA* origin, CHA* stop, const AClock& clock) {
+inline CHA* SPrint(CHA* origin, CHA* stop, const AClock& clock) {
   return TSPrint<CHA>(origin, stop, clock);
 }
 
-CHA* SPrint(CHA* origin, CHA* stop, const TMT& t) {
+inline CHA* SPrint(CHA* origin, CHA* stop, const TMT& t) {
   return TSPrint<CHA>(origin, stop, t);
 }
 
-CHA* ClockPrint(CHA* origin, CHA* stop, ISC t) {
+inline CHA* ClockPrint(CHA* origin, CHA* stop, ISC t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHA>(origin, stop, clock);
 }
 
-CHA* ClockPrint(CHA* origin, CHA* stop, ISD t) {
+inline CHA* ClockPrint(CHA* origin, CHA* stop, ISD t) {
   AClock clock;
   ClockInit(clock, t);
   return TSPrint<CHA>(origin, stop, clock);
 }
 
-const CHA* ScanTime(const CHA* string, ISN& hour, ISN& minute, ISN& second) {
-  return TScanTime<CHA>(string, hour, minute, second);
+inline const CHA* ScanTime(const CHA* string, ISN& hour, ISN& minute, ISN& second) {
+  return TSScan<CHA>(string, hour, minute, second);
 }
 
-const CHA* SScan(const CHA* string, AClock& clock) {
+inline const CHA* SScan(const CHA* string, AClock& clock) {
   return TSScan<CHA>(string, clock);
 }
 
-const CHA* SScan(const CHA* string, TMT& t) { return TSScan<CHA>(string, t); }
-
-const CHA* ScanTime(const CHA* string, ISC& t) {
-  return TScanTime<CHA, ISC>(string, t);
+inline const CHA* SScan(const CHA* string, TMT& t) { 
+  return TSScan<CHA>(string, t); 
 }
 
-const CHA* ScanTime(const CHA* string, ISD& t) {
-  return TScanTime<CHA, ISD>(string, t);
+inline const CHA* SScanTime(const CHA* string, TMC& t) {
+  return TSScan<CHA>(string, t);
+}
+
+inline const CHA* SScanTime(const CHA* string, TMD& t) {
+  return TSScan<CHA, CHC, TMD>(string, t);
 }
 
 #endif
@@ -362,12 +592,12 @@ CHB* SPrint(CHB* origin, CHB* stop, const TMT& t) {
   return TSPrint<CHB>(origin, stop, t);
 }
 
-CHB* ClockPrint(CHB* origin, CHB* stop, ISC t) {
-  return TClockPrint<CHB, ISC>(origin, stop, t);
+CHB* ClockPrint(CHB* origin, CHB* stop, TMC t) {
+  return TClockSPrint<CHB, TMC>(origin, stop, t);
 }
 
-CHB* ClockPrint(CHB* origin, CHB* stop, ISD t) {
-  return TClockPrint<CHB, ISD>(origin, stop, t);
+CHB* ClockPrint(CHB* origin, CHB* stop, TMD t) {
+  return TClockSPrint<CHB, TMD>(origin, stop, t);
 }
 
 CHC* SPrint(CHC* origin, CHC* stop, const AClock& clock) {
@@ -379,62 +609,70 @@ CHC* SPrint(CHC* origin, CHC* stop, const TMT& t) {
 }
 
 CHC* ClockPrint(CHC* origin, CHC* stop, ISC t) {
-  return TClockPrint<CHC, ISC>(origin, stop, t);
+  return TClockSPrint<CHC, ISC>(origin, stop, t);
 }
 
 CHC* ClockPrint(CHC* origin, CHC* stop, ISD t) {
-  return TClockPrint<CHC, ISD>(origin, stop, t);
+  return TClockSPrint<CHC, ISD>(origin, stop, t);
 }
 
-const CHB* SScan(const CHB* string, AClock& clock) {
+inline const CHB* SScan(const CHB* string, AClock& clock) {
   return TSScan<CHB>(string, clock);
 }
 
-const CHB* SScan(const CHB* string, TMT& result) {
+inline const CHB* SScan(const CHB* string, SSD& result) {
+  return NILP;// TSScan<CHB>(string, result);
+}
+
+inline const CHB* SScan(const CHB* string, SSE& result) {
+  return NILP;// TSScan<CHB>(string, result);
+}
+
+inline const CHB* SScan(const CHB* string, TMT& result) {
   return TSScan<CHB>(string, result);
 }
 
-const CHB* ScanTime(const CHB* string, ISN& hour, ISN& minute, ISN& second) {
-  return TScanTime<CHB>(string, hour, minute, second);
+inline const CHB* ScanTime(const CHB* string, ISN& hour, ISN& minute, ISN& second) {
+  return TSScan<CHB>(string, hour, minute, second);
 }
 
-const CHB* ScanTime(const CHB* string, ISC& result) {
-  return TScanTime<CHB, ISC>(string, result);
+inline const CHB* ScanTime(const CHB* string, ISC& result) {
+  return TSScan<CHB, CHC, ISC>(string, result);
 }
 
-const CHB* ScanTime(const CHB* string, ISD& result) {
-  return TScanTime<CHB, ISD>(string, result);
+inline const CHB* ScanTime(const CHB* string, ISD& result) {
+  return TSScan<CHB, CHC, ISD>(string, result);
 }
 #endif
 
 #if USING_STC == YES_0
 
-CHC* SPrint(CHC* origin, CHC* stop, AClock& clock) {
+inline CHC* SPrint(CHC* origin, CHC* stop, AClock& clock) {
   return TSPrint<CHC>(origin, stop, clock);
 }
 
-CHC* SPrint(CHC* origin, CHC* stop, ISC& t) {
+inline CHC* SPrint(CHC* origin, CHC* stop, ISC& t) {
   return TSPrint<CHC>(origin, stop, t);
 }
 
-const CHC* ScanTime(const CHC* string, ISN& hour, ISN& minute, ISN& second) {
-  return TScanTime<CHC>(string, hour, minute, second);
+inline const CHC* ScanTime(const CHC* string, ISN& hour, ISN& minute, ISN& second) {
+  return TSScan<CHC>(string, hour, minute, second);
 }
 
-const CHC* SScan(const CHC* string, AClock& time) {
+inline const CHC* SScan(const CHC* string, AClock& time) {
   return TSScan<CHC>(string, time);
 }
 
-const CHC* SScan(const CHC* string, TMT& result) {
+inline const CHC* SScan(const CHC* string, TMT& result) {
   return TSScan<CHC>(string, result);
 }
 
-const CHC* ScanTime(const CHC* string, ISC& result) {
-  return TScanTime<CHC, ISC>(string, result);
+inline const CHC* ScanTime(const CHC* string, ISC& result) {
+  return TSScan<CHC, CHC, ISC>(string, result);
 }
 
-const CHC* ScanTime(const CHC* string, ISD& result) {
-  return TScanTime<CHC, ISD>(string, result);
+inline const CHC* ScanTime(const CHC* string, ISD& result) {
+  return TSScan<CHC, CHC, ISD>(string, result);
 }
 
 #endif

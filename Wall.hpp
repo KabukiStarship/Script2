@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_WALL_HPP
-#define CRABS_WALL_HPP 1
+#define CRABS_WALL_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_DIC
 #include "Door.hpp"

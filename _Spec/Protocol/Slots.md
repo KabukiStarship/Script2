@@ -103,4 +103,4 @@ Script implementations may implement a default BIn Slot named In (**in UpperCase
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

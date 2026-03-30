@@ -18,7 +18,7 @@ The memory layout shall be optimized by need to minimize lookup time, which star
 |_____   Boofer                        |
 |_____   Boofer Start                  |
 +--------------------------------------+
-|_____ ^ Key N                 CHT     |
+|_____ ^ Key N                 CHS     |
 |_____ | Key 0                Keys     |
 +--------------------------------------+
 |_____   Boofer                ISY     |
@@ -42,7 +42,7 @@ The memory layout shall be optimized by need to minimize lookup time, which star
 ```
 
 ```C++
-template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN>
+template<typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN>
 struct TTable {
   ISZ bytes,          //< Size of this object in bytes.
       stop;           //< Keys boofer stop offset or start if count == total.
@@ -113,7 +113,7 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
 
 [1] ./
 
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
 
 **[<< Previous Section: Map](Map.md) | [Next Section: Dictionary >>](Dictionary.md)**
 

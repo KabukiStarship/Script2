@@ -34,10 +34,17 @@ SRC utf32_example: "🥜You guessed it bois... dez nutz!🥜"
 
 ## Requirements
 
-[1] ./
+1. Unicode strings must be created using either ASCII Strings or ASCII Ropes (String Rope).
+2. ASCII Strings created from ASCII Stacks of Characters (CHA, CHB, or CHC POD Types) must not track the number of Unicode characters.
+3. SRopes created using Extended Mappable Types must track the number of Unicode Characters.
+4. SRopes must be valid only for UTF-8 and UTF-16 strings, and must not be valid for UTF-32 strings.
+5. SRopes must be composed of an ISZ datum, followed by an ISZ chars (character count), followed by an ASCII String.
+6. The TSRope structure must maintain memory alignment for the datum field.
+7. The TSRope structure must track the total size of the string in bytes including the header.
+8. The TSRope structure must track the count of elements in the buffer.
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 
-**[<< Previous Section: Numbers](Numbers.md) | [Next Section: Extended Types >>](ExtendedTypes.md)**
+**[<< Previous Section: Clock](Clock.md) | [Next Section: B-Sequences >>](BSequences.md)**
 
 Copyright [AStarship™](https://astarship.net).

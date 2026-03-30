@@ -1,18 +1,18 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_PUFF_DECL
-#define CRABS_PUFF_DECL 1
+#define CRABS_PUFF_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_ITOS
 namespace _ {
 
-/* Lookup table of ASCII CHT pairs for 00, 01, ..., 99. */
+/* Lookup table of ASCII CHS pairs for 00, 01, ..., 99. */
 const IUB* BinaryLUTDecimals();
 
 enum {
-  cUI2DigitTotal = 5,
-  cUI4DigitTotal = 9,
-  cUI8DigitTotal = 20,
+  UI2DigitTotal = 5,
+  UI4DigitTotal = 9,
+  UI8DigitTotal = 20,
 };
 
 const IUD* Pow10_UI8();
@@ -25,12 +25,12 @@ const IUB* Pow10_UI2();
 IUB Pow10(IUB index);
 
 /* Finds the string length of the given value. */
-LIB_MEMBER ISC STRLength(IUB value);
-LIB_MEMBER ISC STRLength(ISB value);
-LIB_MEMBER ISC STRLength(IUC value);
-LIB_MEMBER ISC STRLength(ISC value);
-LIB_MEMBER ISC STRLength(IUD value);
-LIB_MEMBER ISC STRLength(ISD value);
+ISC STRLength(IUB value);
+ISC STRLength(ISB value);
+ISC STRLength(IUC value);
+ISC STRLength(ISC value);
+ISC STRLength(IUD value);
+ISC STRLength(ISD value);
 
 #if SEAM >= CRABS_FTOS
 
@@ -47,31 +47,31 @@ const void* BinaryPow10Exponents();
 #if USING_FPC == YES_0
 /* Gets the maximum number_ of digits required to represent a FPC as in
 ASCII. */
-LIB_MEMBER ISC FloatDigitsMax();
+ISC FloatDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsFinite(FPC value);
+BOL IsFinite(FPC value);
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsInfinite(FPC value);
+BOL IsInfinite(FPC value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER FPC Ceiling(FPC value);
+FPC Ceiling(FPC value);
 #endif
 
 #if USING_FPD == YES_0
 /* Gets the maximum number_ of digits required to represent a FPD as in
 ASCII. */
-LIB_MEMBER ISC DoubleDigitsMax();
+ISC DoubleDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
-LIB_MEMBER BOL IsFinite(FPD value);
+BOL IsFinite(FPD value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER BOL IsInfinite(FPD value);
+BOL IsInfinite(FPD value);
 
 /* Returns the ceiling of the given value to the next highest up integer. */
-LIB_MEMBER FPD Ceiling(FPD value);
+FPD Ceiling(FPD value);
 #endif
 
 #endif

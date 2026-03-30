@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_AUTOJECT_DECL
-#define CRABS_AUTOJECT_DECL 1
+#define CRABS_AUTOJECT_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_UNIPRINTER
 
@@ -43,42 +43,42 @@ enum RAMFactoryError {
 
 /* RAMFactory for Autojects on the program stack that doesn't delete the
 boofer. */
-LIB_MEMBER IUW* ObjectFactoryStack(IUW* boofer, ISW bytes);
+IUW* ObjectFactoryStack(IUW* boofer, ISW bytes);
 
 /* RAMFactory for Autojects on the heap that deletes a the boofer. */
-LIB_MEMBER IUW* ObjectFactoryHeap(IUW* boofer, ISW bytes);
+IUW* ObjectFactoryHeap(IUW* boofer, ISW bytes);
 
 /* RAMFactory for Auto-array of total elements on the program stack that 
 doesn't delete the boofer. */
-LIB_MEMBER IUW* ArrayFactoryStackA(IUW* boofer, ISW total);
+IUW* ArrayFactoryStackA(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the 
 boofer. */
-LIB_MEMBER IUW* ArrayFactoryHeapA(IUW* boofer, ISW total);
+IUW* ArrayFactoryHeapA(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
 doesn't delete the boofer. */
-LIB_MEMBER IUW* ArrayFactoryStackB(IUW* boofer, ISW total);
+IUW* ArrayFactoryStackB(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
 boofer. */
-LIB_MEMBER IUW* ArrayFactoryHeapB(IUW* boofer, ISW total);
+IUW* ArrayFactoryHeapB(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
 doesn't delete the boofer. */
-LIB_MEMBER IUW* ArrayFactoryStackC(IUW* boofer, ISW total);
+IUW* ArrayFactoryStackC(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
 boofer. */
-LIB_MEMBER IUW* ArrayFactoryHeapC(IUW* boofer, ISW total);
+IUW* ArrayFactoryHeapC(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
 doesn't delete the boofer. */
-LIB_MEMBER IUW* ArrayFactoryStackD(IUW* boofer, ISW total);
+IUW* ArrayFactoryStackD(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
 boofer. */
-LIB_MEMBER IUW* ArrayFactoryHeapD(IUW* boofer, ISW total);
+IUW* ArrayFactoryHeapD(IUW* boofer, ISW total);
 
 }  //< namespace _
 #endif

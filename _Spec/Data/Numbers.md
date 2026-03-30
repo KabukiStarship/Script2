@@ -110,6 +110,6 @@ FPE 1.0     // Wastes a TRUCK TON of space but best for repeated addition.
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 
-**[<< Previous Section: Extended Types](ExtendedTypes.md) | [Next Section: Clock >>](Clock.md)**
+**[<< Previous Section: Extended Types](ExtendedTypes.md) | [Next Section: Strings >>](Strings.md)**
 
 Copyright [AStarship™](https://astarship.net).

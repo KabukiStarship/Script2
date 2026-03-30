@@ -6,6 +6,8 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 |:----:|:------------:|:-------:|:------------|
 | CHN  |   wchar_t    |   2,4   | A 16 or 32-bits wide Unicode character. |
 | CHR  |    char_t    |  1,2,4  | Unicode character at least 8 bits wide. |
+| CHL  | Char Largest |   1,4   | The largest char type, either CHA or CHC.  |
+| CHS  | Char String  |  1,2,4  | The character type of the string.          |
 | ISN  |     int      |   2,4   | Signed integer at least 16 bits wide. |
 | IUN  | unsigned int |   2,4   | Unsigned integer at least 16 bits wide. |
 | ISG  |     SI       |   W/2   | Half-word sized signed integer. |
@@ -39,6 +41,6 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 
-**[<< Previous Section:Text](Text.md) | [Next Section:Value >>](Value.md)**
+**[<< Previous Section: Numbers](Numbers.md) | [Next Section: Clock >>](Clock.md)**
 
 Copyright [AStarship™](https://astarship.net).

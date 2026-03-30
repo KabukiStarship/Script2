@@ -46,7 +46,7 @@ BOL TCInSigned(IS& result) {
       if (!c) break;
     }
   }
-  return TScanSigned<IS, IU, CHA>(boofer, result) != 0;
+  return TSScanSigned<IS, IU, CHA>(boofer, result) != 0;
 }
 
 template<typename IU>
@@ -61,29 +61,30 @@ BOL TCInUnsigned(IU& result) {
     *cursor++ = (CHA)c;
     if (!c) break;
   }
-  return TScanUnsigned<IU, CHA>(boofer, result) != 0;
+  return TSScanUnsigned<IU, CHA>(boofer, result) != 0;
 }
 
-template<typename CHT>
-inline BOL TCInString(CHT* result, ISW boofer_size) {
+template<typename CHS>
+inline BOL TCInString(CHS* result, ISW boofer_size) {
   if (IsError(result)) return false;
   ISN c = -1;
   while (c < 0) {
     if (--boofer_size <= 0) return false;
     c = CIn::ScanKey();
-    *result++ = (CHT)c;
+    *result++ = (CHS)c;
     if (c == 0) break;
   }
   return true;
 }
 
 template<typename FP = FPW, typename IS = ISW, typename IU = IUW,
-         typename CHT = CHR>
+         typename CHS = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
   CHA boofer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::StateBaseSign;
-  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IS>();
+  CHA *cursor = boofer, 
+      *end    = boofer + CSignedDigitsMax<IS>();
   while (state != CIn::StateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
@@ -124,9 +125,9 @@ inline BOL TCInFloatingPoint(FP& result) {
   return false;  // TScanFloat<FP, IS, IU, CHA>(boofer, result) != 0;
 }
 
-ISN IsYesNo(const CHA* string) { return TStringIsYesNo<CHA>(string); }
-ISN IsYesNo(const CHB* string) { return TStringIsYesNo<CHB>(string); }
-ISN IsYesNo(const CHC* string) { return TStringIsYesNo<CHC>(string); }
+ISN IsYesNo(const CHA* string) { return TSIsYesNo<CHA>(string); }
+ISN IsYesNo(const CHB* string) { return TSIsYesNo<CHB>(string); }
+ISN IsYesNo(const CHC* string) { return TSIsYesNo<CHC>(string); }
 
 CIn::CIn() : boofer_{} {}
 
@@ -220,7 +221,7 @@ BOL CInState(ISC vk_code) { return false; }
 
 const IUA* KeyboardHIDToNative() {
 #if CRABS_PLATFORM == OS_WINDOWS
-  static const IUA cHIDToNative[256] = {
+  static const IUA HIDToNative[256] = {
       255, 255, 255, 255, 65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,
       76,  77,  78,  79,  80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,
       49,  50,  51,  52,  53,  54,  55,  56,  57,  48,  13,  27,  8,   9,   32,
@@ -240,7 +241,7 @@ const IUA* KeyboardHIDToNative() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
 #elif CRABS_PLATFORM == MAC
-  static const IUA cHIDToNative[256] = {
+  static const IUA HIDToNative[256] = {
       255, 255, 255, 255, 0,   11,  8,   2,   14,  3,   5,   4,   34,  38,  40,
       37,  46,  45,  31,  35,  12,  15,  1,   17,  32,  9,   13,  7,   16,  6,
       18,  19,  20,  21,  23,  22,  26,  28,  25,  29,  36,  53,  51,  48,  49,
@@ -260,7 +261,7 @@ const IUA* KeyboardHIDToNative() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
 #elif CRABS_PLATFORM == EVDEV
-  static const IUA cHIDToNative[256] = {
+  static const IUA HIDToNative[256] = {
       255, 255, 255, 255, 38,  56,  54,  40,  26,  41,  42,  43,  31,  44,  45,
       46,  58,  57,  32,  33,  24,  27,  39,  28,  30,  55,  25,  53,  29,  52,
       10,  11,  12,  13,  14,  15,  16,  17,  18,  19,  36,  9,   22,  23,  65,
@@ -280,12 +281,12 @@ const IUA* KeyboardHIDToNative() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
 #endif
-  return cHIDToNative;
+  return HIDToNative;
 }
 
 const IUA* KeyboardNativeToHID() {
 #if CRABS_PLATFORM == OS_WINDOWS
-  static const IUA cNativeToHID[256] = {
+  static const IUA NativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 42,  43,  255, 255, 255, 40,  255,
       255, 225, 224, 226, 72,  57,  255, 255, 255, 255, 255, 255, 41,  255, 255,
       255, 255, 44,  75,  78,  77,  74,  80,  82,  79,  81,  255, 255, 255, 70,
@@ -305,7 +306,7 @@ const IUA* KeyboardNativeToHID() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
 #elif CRABS_PLATFORM == MAC
-  static const IUA cNativeToHID[128] = {
+  static const IUA NativeToHID[128] = {
       4,   22,  7,   9,   11,  10,  29,  27,  6,   25,  255, 5,   20,  26,  8,
       21,  28,  23,  30,  31,  32,  33,  35,  34,  46,  38,  36,  45,  37,  39,
       48,  18,  24,  47,  12,  19,  40,  15,  13,  52,  14,  51,  49,  54,  56,
@@ -316,7 +317,7 @@ const IUA* KeyboardNativeToHID() {
       104, 107, 105, 255, 67,  255, 69,  255, 106, 117, 74,  75,  76,  61,  77,
       59,  78,  58,  80,  79,  81,  82,  255};
 #elif CRABS_PLATFORM == EVDEV
-  static const IUA cNativeToHID[256] = {
+  static const IUA NativeToHID[256] = {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 41,  30,  31,  32,  33,  34,
       35,  36,  37,  38,  39,  45,  46,  42,  43,  20,  26,  8,   21,  23,  28,
       24,  12,  18,  19,  47,  48,  40,  224, 4,   22,  7,   9,   10,  11,  13,
@@ -336,11 +337,11 @@ const IUA* KeyboardNativeToHID() {
       255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
       255};
 #endif
-  return cNativeToHID;
+  return NativeToHID;
 }
 
 const CHA* KeyIdName() {
-  static const CHA kKeyIdName[598] =
+  static const CHA KeyIdName[598] =
       "0\0001\0002\0003\0004\0005\0006\0007\0008\0009\0A\0B\0Backslash\0C\0Caps"
       "Lock\0Comma\0D\0Delete\0DeleteForward\0Down\0E\0End\0Enter\0Equals\0"
       "Escape\0F\0F1\0F10\0F11\0F12\0F13\0F14\0F15\0F16\0F17\0F18\0F19\0F2\0F20"
@@ -352,11 +353,11 @@ const CHA* KeyIdName() {
       "\0Period\0PrintScreen\0Q\0Quote\0R\0Right\0RightAlt\0RightBracket\0Right"
       "Control\0RightGUI\0RightShift\0S\0ScrollLock\0Semicolon\0Slash\0Space\0T"
       "\0Tab\0U\0Up\0V\0W\0X\0Y\0Z";
-  return kKeyIdName;
+  return KeyIdName;
 }
 
 const ISB* KeyIdOffset() {
-  static const ISB cKeyIdOffset[256] = {
+  static const ISB KeyIdOffset[256] = {
       -1,  -1,  -1,  -1,  20,  22,  34,  51,  79,  105, 194, 202, 214, 223, 225,
       339, 396, 409, 426, 428, 471, 479, 542, 577, 583, 588, 590, 592, 594, 596,
       2,   4,   6,   8,   10,  12,  14,  16,  18,  0,   85,  98,  53,  579, 571,
@@ -375,12 +376,12 @@ const ISB* KeyIdOffset() {
       386, 346, 378, 509, 531, 487, 522, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
       -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
       -1};
-  return cKeyIdOffset;
+  return KeyIdOffset;
   return NILP;
 }
 
 inline const IUA* KeyIdOrder() {
-  static const IUA cKeyIdOrder[119] = {
+  static const IUA KeyIdOrder[119] = {
       39,  30,  31,  32,  33,  34,  35,  36,  37,  38,  4,   5,   49,  6,   57,
       54,  7,   42,  76,  81,  8,   77,  40,  46,  41,  9,   58,  67,  68,  69,
       104, 105, 106, 107, 108, 109, 110, 59,  111, 112, 113, 114, 115, 60,  61,
@@ -389,7 +390,7 @@ inline const IUA* KeyIdOrder() {
       99,  86,  15,  80,  226, 47,  224, 227, 225, 16,  118, 45,  17,  100, 18,
       19,  78,  75,  72,  55,  70,  20,  52,  21,  79,  230, 48,  228, 231, 229,
       22,  71,  51,  56,  44,  23,  43,  24,  82,  25,  26,  27,  28,  29};
-  return cKeyIdOrder;
+  return KeyIdOrder;
 }
 
 ISC KeyIdCodeFromName(const CHA* name) {
@@ -398,7 +399,7 @@ ISC KeyIdCodeFromName(const CHA* name) {
   while (l < r) {
     m = (l + r) / 2;
     x = KeyIdOrder()[m];
-    c = TStringCompare<>(name, KeyIdName() + KeyIdOffset()[x]);
+    c = TSCompare<>(name, KeyIdName() + KeyIdOffset()[x]);
     if (c < 0)
       r = m;
     else if (c > 0)

@@ -4,7 +4,7 @@
 #define CRABS_CRABS_DECL
 #include "Op.h"
 #include "Operand.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 /* A full-duplex Crabs EXP (Expression) interpreter.
@@ -62,6 +62,7 @@ struct Crabs {
       num_states,       //< Number of states on the state stack.
       bytes_left,       //< Countdown counter for parsing POD types.
       params_left;      //< Height of header and cursors stacks.
+  TMC epoch;            //< The Unix timestamp.
   IUA bout_state,       //< BOut streaming state.
       bin_state,        //< Slot streaming state.
       last_bin_state,   //< Last BIn state.
@@ -80,23 +81,25 @@ struct Crabs {
   Slot slot;            //< Slot for unpacking B-Sequences to.
 };
 
+Crabs* StdCrabs();
+
 /*  */
 inline ISC CrabsHeaderBytes(ISC stack_total);
 
 /* Gets the crabs's socket. */
-LIB_MEMBER IUA* CrabsBoofer(Crabs* crabs);
+IUA* CrabsBoofer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
-LIB_MEMBER BIn* CrabsBIn(Crabs* crabs);
+BIn* CrabsBIn(Crabs* crabs);
 
 /* Gets a pointer to the BOut slot. */
-LIB_MEMBER BOut* CrabsBOut(Crabs* crabs);
+BOut* CrabsBOut(Crabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
 @param unpacked_boofer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-LIB_MEMBER Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_count,
+Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_count,
                             Operand* root, IUW* unpacked_boofer,
                             IUW unpacked_size, IUD ctxt);
 
@@ -106,63 +109,63 @@ inline Operand** CrabsStack(Crabs* crabs) {
 }
 
 /* Returns true if the Stack uses dynamic memory. */
-// LIB_MEMBER BOL CrabsIsDynamic (Crabs* crabs);
+// BOL CrabsIsDynamic (Crabs* crabs);
 
-LIB_MEMBER IUA* CrabsEndAddress(Crabs* crabs);
+IUA* CrabsEndAddress(Crabs* crabs);
 
 /* Resets this Stack to the new state. */
-LIB_MEMBER const Op* CrabsReset(Crabs* crabs);
+const Op* CrabsReset(Crabs* crabs);
 
 /* Pushes the operand at the given index of the current device control onto the stack.
 @return Returns nil upon success and a pointer to a CHA
 upon failure. */
-LIB_MEMBER const Op* Push(Crabs* crabs, Operand* operand);
+const Op* Push(Crabs* crabs, Operand* operand);
 
 /* Attempts to pop an Star off the stack and returns a pointer to a CHA upon failure. */
-LIB_MEMBER const Op* Pop(Crabs* crabs);
+const Op* Pop(Crabs* crabs);
 
 /* Exits the current state. */
-LIB_MEMBER IUA CrabsExitState(Crabs* crabs);
+IUA CrabsExitState(Crabs* crabs);
 
 /* Sets the new state onto the expression stack.
-LIB_MEMBER const Op* CrabsSetState (Crabs* crabs, BInState state); */
+const Op* CrabsSetState (Crabs* crabs, BInState state); */
 
 /* Saves the current bin_state and sets the bin_state to the new state. */
-LIB_MEMBER const Op* CrabsEnterState(Crabs* crabs, BInState state);
+const Op* CrabsEnterState(Crabs* crabs, BInState state);
 
 /* Streams a B-Output IUA. */
-LIB_MEMBER IUA CrabsStreamBOut(Crabs* crabs);
+IUA CrabsStreamBOut(Crabs* crabs);
 
 /* Scans the BIn socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
-LIB_MEMBER const Op* CrabsScanBIn(Crabs* crabs);  // , Portal* io);
+const Op* CrabsScanBIn(Crabs* crabs);  // , Portal* io);
 
 /* Returns true if the given Stack contains the given address. */
-LIB_MEMBER BOL CrabsContains(Crabs* crabs, void* address);
+BOL CrabsContains(Crabs* crabs, void* address);
 
 /* Pushes a header onto the scan stack.*/
-LIB_MEMBER const Op* CrabsScanHeader(Crabs* crabs, const DTB* header);
+const Op* CrabsScanHeader(Crabs* crabs, const DTB* header);
 
 /* Gets the base address of the header stack. */
-LIB_MEMBER const ISC* CrabsHeaderStack(Crabs* crabs);
+const ISC* CrabsHeaderStack(Crabs* crabs);
 
 /* Closes the current crabs and cues it for execution. */
-LIB_MEMBER void CrabsClose(Crabs* crabs);
+void CrabsClose(Crabs* crabs);
 
 /* Cancels the current crabs. */
-LIB_MEMBER void CrabsCancel(Crabs* crabs);
+void CrabsCancel(Crabs* crabs);
 
 /* Cancels the current crabs and writes zeros to the socket. */
-LIB_MEMBER void CrabsClear(Crabs* crabs);
+void CrabsClear(Crabs* crabs);
 
 /* Script Bell Op rings the bell of the given address. */
-LIB_MEMBER void CrabsRingBell(Crabs* crabs, const CHA* address = "");
+void CrabsRingBell(Crabs* crabs, const CHA* address = "");
 
 /* Script Ack-back Op replies an ACK to a Bell Op. */
-LIB_MEMBER void CrabsAckBack(Crabs* crabs, const CHA* address = "");
+void CrabsAckBack(Crabs* crabs, const CHA* address = "");
 
 /* Disconnects the expression. */
-LIB_MEMBER const Op* CrabsForceDisconnect(Crabs* crabs, ERC error);
+const Op* CrabsForceDisconnect(Crabs* crabs, ERC error);
 
 /* Pops the args off the Crabs Args Stack. */
 inline const Op* CrabsArgs(Crabs* crabs, const DTB* params, void** args);
@@ -171,32 +174,40 @@ inline const Op* CrabsArgs(Crabs* crabs, const DTB* params, void** args);
 @param crabs The resulting expression.
 @param op   The Operation with result B-Sequence header.
 @param args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args);
+inline const Op* CrabsResult(Crabs* crabs, const Op& op, void** args,
+    IUD pc_ctx);
+//    inline const Op* CrabsResult(Crabs * crabs, const Op & op, void** args,
+//        IUD pc_ctx) {
 
 /* Writes the result to the Crabs.
 @return NIL upon  @todo something or other, I don't know. WTF is this?
 @param crabs The resulting expression.
 @param op   The Operation with result B-Sequence header.
 @param args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(Crabs* crabs, const Op* op, void** args);
+inline const Op* CrabsResult(Crabs* crabs, const Op* op, void** args,
+    IUD pc_ctx);
 
+//inline const Op* CrabsResult(Crabs* crabs, const Op* op, void** args,
+//    IUD pc_ctx) {
+//
 /* Writes the result to the Crabs.
 @param crabs The resulting expression.
 @param op   The Operation with result B-Sequence header.
 @param args Pointers to the B-Sequence args. */
-inline const Op* CrabsResult(Crabs* crabs, const ISC* params, void** args);
+inline const Op* CrabsResult(Crabs* crabs, const DTB* params, void** args,
+    IUD pc_ctx);
 
 /* Returns the Operand header or writes it to the Crabs.
 @param crabs  The expression to write the Op header to.
 @param header The Op header.
 @return Returns the header if crabs is nil. */
-LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op& header);
+const Op* CrabsQuery(Crabs* crabs, const Op& header, IUD pc_ctx);
 
 /* Returns the Op header or writes it to the Crabs.
 @param crabs The expression to write the Op header to.
 @param op    The Op header.
 @return Returns the header if crabs is nil. */
-LIB_MEMBER const Op* CrabsQuery(Crabs* crabs, const Op* op);
+const Op* CrabsQuery(Crabs* crabs, const Op* op, IUD pc_ctx);
 
 }  //< namespace _
 

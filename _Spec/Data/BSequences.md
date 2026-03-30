@@ -54,6 +54,6 @@ B-Sequences (BSQ), as in the B in `A*B`, is a data structure that describes byte
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 
-**[<< Previous Section: Strings](Strings.md) | [Next Section: Homo-tuples >>](HomoTuples.md)**
+**[<< Previous Section: Numbers](Numbers.md) | [Next Section: Clock >>](Clock.md)**
 
 Copyright [AStarship™](https://astarship.net).

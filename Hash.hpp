@@ -30,24 +30,24 @@ inline HSH TPrimeMaxUnigned() {
   return prime;
 }
 
-template<typename HSH, typename CHT = CHR>
-inline HSH THashPrime(CHT value, HSH hash) {
+template<typename HSH, typename CHS = CHR>
+inline HSH THashPrime(CHS value, HSH hash) {
   return hash + hash * (HSH)value;
 }
 
-template<typename HSH = IUN, typename CHT = CHR>
-inline HSH THashPrime(const CHT* str) {
-  CHT c = (CHT)*str++;
+template<typename HSH = IUN, typename CHS = CHR>
+inline HSH THashPrime(const CHS* str) {
+  CHS c = (CHS)*str++;
   HSH hash = TPrimeMaxUnigned<HSH>();
   while (c) {
-    hash = THashPrime<HSH, CHT>(c, hash);
+    hash = THashPrime<HSH, CHS>(c, hash);
     c = *str++;
   }
   return hash;
 }
 
-template<typename HSH = IUN, typename ISZ = ISR, typename CHT, typename CHY>
-inline CHT* THashPrimePrint_NC(CHT* start, CHT* stop, const CHY* item, HSH& hash, 
+template<typename HSH = IUN, typename ISZ = ISR, typename CHS, typename CHY>
+inline CHS* THashPrimePrint_NC(CHS* start, CHS* stop, const CHY* item, HSH& hash, 
   ISZ& length) {
   CHL c = 0;
   hash = TPrimeMaxUnigned<HSH>();
@@ -62,13 +62,13 @@ inline CHT* THashPrimePrint_NC(CHT* start, CHT* stop, const CHY* item, HSH& hash
   *start = 0;
   return start;
 }
-template<typename HSH = IUN, typename ISZ = ISR, typename CHT, typename CHY>
-inline CHT* THashPrimePrint(CHT* start, CHT* stop, const CHY* item, HSH& hash,
+template<typename HSH = IUN, typename ISZ = ISR, typename CHS, typename CHY>
+inline CHS* THashPrimePrint(CHS* start, CHS* stop, const CHY* item, HSH& hash,
   ISZ& length) {
   D_CHECK_PTR_RETURN(start);
-  if (start >= stop) D_RETURN_TPTR_ERROR(CHT, ErrorInvalidBoofer);
-  D_CHECK_CPTR_RETURN(CHT, item);
-  THashPrimePrint<HSH, ISZ, CHT, CHY>(start, stop, item, hash, length);
+  if (start >= stop) D_RETURN_TPTR_ERROR(CHS, ErrorInvalidBoofer);
+  D_CHECK_CPTR_RETURN(CHS, item);
+  THashPrimePrint<HSH, ISZ, CHS, CHY>(start, stop, item, hash, length);
 }
 
 inline IUB HashIUB(IUB value, IUB hash) {

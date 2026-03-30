@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #include <_Config.h>
 #ifndef CRABS_FILE_HPP
-#define CRABS_FILE_HPP 1
+#define CRABS_FILE_HPP
 #if SEAM >= CRABS_FILE
 #include "Uniprinter.hpp"
 //
@@ -92,7 +92,7 @@ enum { cFilenameLengthMax = 256 };
 #define _TINYDIR_FREE(_ptr) free(_ptr)
 #endif /* !defined(_TINYDIR_MALLOC) */
 
-template<typename CHT>
+template<typename CHS>
 class TFile {
   CHR *extension;
   ISN is_directory_,  //< flag for if this is a directory.
@@ -110,9 +110,9 @@ class TFile {
 
  public:
   void Extension() {
-    CHR *period = TStringFindLast<CHT>('.');
+    CHR *period = TStringFindLast<CHS>('.');
     if (period == NILP) {
-      extension = &(name[TStringLength<CHT>(name)]);
+      extension = &(name[TSCodeCount<CHS, CHT, IS>(name)]);
     } else {
       extension = period + 1;
     }
@@ -133,11 +133,11 @@ class TFile {
     CHR ext_buf[cFilenameLengthMax];
 #endif
 
-    if (IsError(path) || TStringLength<CHT>(path) == 0) {
+    if (IsError(path) || TSCodeCount<CHS, CHT, IS>(path) == 0) {
       errno = EINVAL;
       return -1;
     }
-    if (TStringLength<CHT>(path) + cFilenamePad >= cPathLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(path) + cFilenamePad >= cPathLengthMax) {
       errno = ENAMETOOLONG;
       return -1;
     }
@@ -166,10 +166,10 @@ class TFile {
       SPrint(dir_name_buf, cPathLengthMax, '.');
     }
     // Concatenate the drive letter and dir name to form full dir name.
-    TSConcat<CHT>(drive_buf, cPathLengthMax, dir_name_buf);
+    TSConcat<CHS>(drive_buf, cPathLengthMax, dir_name_buf);
     dir_name = drive_buf;
     // Concatenate the file name and extension to form base name.
-    TSConcat<CHT>(file_name_buf, cFilenameLengthMax, ext_buf);
+    TSConcat<CHS>(file_name_buf, cFilenameLengthMax, ext_buf);
     base_name = file_name_buf;
 #else
     SPrint(dir_name_buf, cPathLengthMax, path);
@@ -205,21 +205,21 @@ class TFile {
     return result;
   }
 
-  ISN CompareNames(const TFile<CHT> *other) {
+  ISN CompareNames(const TFile<CHS> *other) {
     if (is_directory_ != other->is_directory_) {
       return -(is_directory_ - other->is_directory_);
     }
-    return TStringCompare<CHT>(name, other->name);
+    return TStringCompare<CHS>(name, other->name);
   }
 };
 
-template<typename CHT>
+template<typename CHS>
 class TFolder {
   CHR path_[cPathLengthMax];
   ISN has_next_;
   size_t file_count_;
 
-  TFile<CHT> *_files;
+  TFile<CHS> *_files;
 #ifdef _MSC_VER
   HANDLE _h;
   WIN32_FIND_DATA _f;
@@ -243,11 +243,11 @@ class TFolder {
 #endif
     CHR *pathp;
 
-    if (IsError(dir) || IsError(path) || TStringLength<CHT>(path) == 0) {
+    if (IsError(dir) || IsError(path) || TSCodeCount<CHS, CHT, IS>(path) == 0) {
       errno = EINVAL;
       return cErrorInvalidInput;
     }
-    if (TStringLength<CHT>(path) + cFilenamePad >= cPathLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(path) + cFilenamePad >= cPathLengthMax) {
       errno = ENAMETOOLONG;
       return cErrorInvalidInput;
     }
@@ -266,15 +266,15 @@ class TFolder {
 
     SPrint(path, cPathLengthMax, path);
     // Remove trailing slashes.
-    pathp = &path[TStringLength<CHT>(path) - 1];
-    CHT c = *pathp;
+    pathp = &path[TSCodeCount<CHS, CHT, IS>(path) - 1];
+    CHS c = *pathp;
     while (pathp != path && (c == '\\' || c == '/')) {
       *pathp = 0;
       ++pathp;
     }
 #ifdef _MSC_VER
     SPrint(path_buf, cPathLengthMax, path);
-    TSConcat<CHT>(path_buf, cPathLengthMax, "\\*");
+    TSConcat<CHS>(path_buf, cPathLengthMax, "\\*");
 #if (defined WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
     _h = FindFirstFileEx(path_buf, FindExInfoStandard, &_f,
                          FindExSearchNameMatch, NILP, 0);
@@ -330,10 +330,10 @@ class TFolder {
     if (file_count == 0 || Open(path) == -1) return -1;
 
     file_count = 0;
-    _files = (TFile<CHT> *)_TINYDIR_MALLOC(sizeof *_files * file_count);
+    _files = (TFile<CHS> *)_TINYDIR_MALLOC(sizeof *_files * file_count);
     if (IsError(_files)) goto bail;
     while (has_next_) {
-      TFile<CHT> *p_file;
+      TFile<CHS> *p_file;
       file_count++;
 
       p_file = &_files[file_count - 1];
@@ -444,21 +444,21 @@ class TFolder {
 #else
         _e->d_name;
 #endif
-    if (TStringLength<CHT>(path_) + TStringLength<CHT>(filename) + 1 + cFilenamePad >=
+    if (TSCodeCount<CHS, CHT, IS>(path_) + TSCodeCount<CHS, CHT, IS>(filename) + 1 + cFilenamePad >=
         cPathLengthMax) {
       // the path for the file will be too long.
       errno = ENAMETOOLONG;
       return -1;
     }
-    if (TStringLength<CHT>(filename) >= cFilenameLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(filename) >= cFilenameLengthMax) {
       errno = ENAMETOOLONG;
       return -1;
     }
 
     SPrint(file->path, cPathLengthMax, path_);
-    TSConcat<CHT>(file->path, cPathLengthMax, '/');
+    TSConcat<CHS>(file->path, cPathLengthMax, '/');
     SPrint(file->name, cPathLengthMax, filename);
-    TSConcat<CHT>(file->path, cFilenameLengthMax, filename);
+    TSConcat<CHS>(file->path, cFilenameLengthMax, filename);
 #ifndef _MSC_VER
 #ifdef __MINGW32__
     if (_tstat(
@@ -502,7 +502,7 @@ class TFolder {
     return 0;
   }
 
-  inline ISN ReadFile(TFile<CHT> *file, size_t i) {
+  inline ISN ReadFile(TFile<CHS> *file, size_t i) {
     if (IsError(file)) {
       errno = EINVAL;
       return -1;

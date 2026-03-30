@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_FOLDER_DECL
-#define CRABS_FOLDER_DECL 1
+#define CRABS_FOLDER_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_FILE
 namespace _ {

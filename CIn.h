@@ -1,16 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_CIN_DECL
-#define CRABS_CIN_DECL 1
+#define CRABS_CIN_DECL
 #include "COut.h"
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 namespace _ {
 
 /* Checks if the given string is yes or no.
 @return -1 if no, 1 if yes, and 0 if neither. */
-LIB_MEMBER ISN IsYesNo(const CHA* string);
-LIB_MEMBER ISN IsYesNo(const CHB* string);
-LIB_MEMBER ISN IsYesNo(const CHC* string);
+ISN IsYesNo(const CHA* string);
+ISN IsYesNo(const CHB* string);
+ISN IsYesNo(const CHC* string);
 
 /* Utility class for scanning types with operator overloads.
 @code
@@ -20,7 +20,7 @@ CIn cin;
 COut("\n\nEnter a value 0-1,000,000").Star() << cin.SScan(a)
 @endcode
 */
-class LIB_MEMBER CIn {
+class CIn {
   CHA boofer_[24];  //< Boofer for scanning numbers and short Strings.
 
  public:
@@ -73,54 +73,54 @@ class LIB_MEMBER CIn {
 
 #if USING_STA == YES_0
   /* Reads the character from the CIn stream. */
-  LIB_MEMBER static BOL SScan(CHA& result);
+  static BOL SScan(CHA& result);
 
   /* Reads the string with the given boofer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHA* result, ISW boofer_size);
+  static BOL SScan(CHA* result, ISW boofer_size);
 #endif
 #if USING_STB == YES_0
   /* Reads the character from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHB& result);
+  static BOL SScan(CHB& result);
 
   /* Reads the string with the given boofer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHB* result, ISW boofer_size);
+  static BOL SScan(CHB* result, ISW boofer_size);
 #endif
 #if USING_STC == YES_0
   /* Reads the character from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHC& result);
+  static BOL SScan(CHC& result);
 
   /* Reads the string with the given boofer_size from the CIn stream. */
-  static LIB_MEMBER BOL SScan(CHC* result, ISW boofer_size);
+  static BOL SScan(CHC* result, ISW boofer_size);
 #endif
 
   /* Reads the value from the CIn stream. */
-  static LIB_MEMBER BOL SScan(ISA& result);
-  static LIB_MEMBER BOL SScan(IUA& result);
-  static LIB_MEMBER BOL SScan(ISB& result);
-  static LIB_MEMBER BOL SScan(IUB& result);
-  static LIB_MEMBER BOL SScan(ISC& result);
-  static LIB_MEMBER BOL SScan(IUC& result);
-  static LIB_MEMBER BOL SScan(ISD& result);
-  static LIB_MEMBER BOL SScan(IUD& result);
+  static BOL SScan(ISA& result);
+  static BOL SScan(IUA& result);
+  static BOL SScan(ISB& result);
+  static BOL SScan(IUB& result);
+  static BOL SScan(ISC& result);
+  static BOL SScan(IUC& result);
+  static BOL SScan(ISD& result);
+  static BOL SScan(IUD& result);
 #if USING_FPC == YES_0
-  static LIB_MEMBER BOL SScan(FPC& result);
+  static BOL SScan(FPC& result);
 #endif
 #if USING_FPD == YES_0
-  static LIB_MEMBER BOL SScan(FPD& result);
+  static BOL SScan(FPD& result);
 #endif
 
   /* Reads the current key depressed on the keyboard.
   @return A negative number_ (typically 1) if no keys are pressed. */
-  static LIB_MEMBER ISN GetKey();
+  static ISN GetKey();
 
   /* Spin waits for the user to press a keyboard key.
   @return The key the user pressed. */
-  static LIB_MEMBER ISN ScanKey();
+  static ISN ScanKey();
 };
 
 /* Prints a formatted string to the console and then pauses for the user to
 press any key to continue. */
-struct LIB_MEMBER Pausef {
+struct Pausef {
   Pausef(const CHA* message = "\nPress any key to continue...");
 };
 

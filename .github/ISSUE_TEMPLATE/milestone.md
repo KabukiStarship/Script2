@@ -5,7 +5,7 @@ title: ''
 labels: ''
 assignees: ''
 ---
-<https://github.com/AStarStarship/Script2/milestone/N>
+<https://github.com/AStarStarship/Crabs/milestone/N>
 
 ### Todo
 

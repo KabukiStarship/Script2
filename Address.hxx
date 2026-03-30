@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Address.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 /* Returns a pointer to static variable for writing the address { a, \0 } to.

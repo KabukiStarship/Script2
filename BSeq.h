@@ -3,11 +3,11 @@
 #ifndef CRABS_BSEQ_DECL
 #define CRABS_BSEQ_DECL
 #include "AType.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 /*< Returns the requested parameter number_. */
-LIB_MEMBER ISC BSeqParamNumber(const DTB* params, ISN param_number);
+ISC BSeqParamNumber(const DTB* params, ISN param_number);
 
 }  //< namespace _
 

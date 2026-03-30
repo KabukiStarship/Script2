@@ -8,19 +8,19 @@
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
-template<typename ISZ = ISN, typename ISY = ISM, typename CHT = CHR,
+template<typename ISZ = ISN, typename ISY = ISM, typename CHS = CHR,
          typename DT  = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    Bytes = 512 * sizeof(CHT)
+    Bytes = 512 * sizeof(CHS)
   };
 
   D_COUT("\n\nTesting ABook<IS" << CSizeCodef<ISZ>() << ",IS" << CSizeCodef<ISY>() << 
-         ",CH" << CSizeCodef<CHT>() << ",DT" << CSizeCodef<DT>() << 
+         ",CH" << CSizeCodef<CHS>() << ",DT" << CSizeCodef<DT>() << 
          "> sizeof:" << sizeof(TBook<BOK_P>) << " with Bytes : " << Bytes);
 
   ABook<BOK_P, Bytes> book;
@@ -34,9 +34,9 @@ void TestBook() {
   ISZ test_word_count = book.Total();
   D_COUT("\nPopulating " << test_word_count << " test words...");
 
-  const CHT * test_words  = TTestWords<CHT>::Words(),
+  const CHS * test_words  = TTestWords<CHS>::Words(),
             * word_cursor = test_words;
-  ISZ word_step = TTestWords<CHT>::CharsMax;
+  ISZ word_step = TTestWords<CHS>::CharsMax;
 
   ISY i = 0;
   D_COUT("\n\nStep 1: Fill up the dictionary...\n" << Linef("---") << '\n');
@@ -51,7 +51,7 @@ void TestBook() {
 
   D_COUT("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
   D_COUT("\n\nStep 2: Testing Factory.Grow...\n" << Linef("---") << '\n');
-  while (i < ISY(TTestWords<CHT>::Total - 8)) {
+  while (i < ISY(TTestWords<CHS>::Total - 8)) {
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISA('!' + i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, IUA('!' + i)));
     A_AVOW(ISY(++i), book.Insert(word_cursor += word_step, ISB('!' + i)));
@@ -64,19 +64,19 @@ void TestBook() {
   //book.COut();
 
   D_COUT("\n\nStep 3 Adding large string...:\n" << Linef("---\n"));
-  CHT large_string[Bytes] = {0};
-  CHT* cursor = large_string;
+  CHS large_string[Bytes] = {0};
+  CHS* cursor = large_string;
   for (ISN i = 0; i < Bytes - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
   const TBook<BOK_P>* dez_nutz = book.This();
   D_COUT_BOOK(dez_nutz);
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #undef TPARAMS
 #endif
 
-namespace Crabs {
+namespace CRTest {
 const CHA* Book(const CHA* args) {
 #if SEAM >= CRABS_BOOK
   A_TEST_BEGIN;
@@ -98,4 +98,4 @@ const CHA* Book(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

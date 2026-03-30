@@ -1,12 +1,8 @@
-# [SCRIPT Specification](../)
-
-## [Universal Addressing Specification](./)
-
-### Polar Routing
+# Polar Routing
 
 It is not possible for any router to be located at the exact center of a 1 degree latitude by 1 degree longitude grid, nor does it need to be because there are a manageably small number of fiber optics cables to route and thus the center of the grid is defined as the fastest internet connection in that Degree Grid. All other organizations that provide the internet backbone are then referenced again in polar coordinates from the Degree Grid Reference.
 
-#### Longitude and Latitude
+## Longitude and Latitude
 
 Latitude and longitude are useful to know in an IP Address because it helps the system route signals to the fastest possible routes through the network.
 
@@ -25,7 +21,7 @@ Latitude and longitude are useful to know in an IP Address because it helps the 
         ---> +180            |            ---> -90
 ```
 
-##### Haversine Formula
+### Haversine Formula
 
 Haversine Formula's is used to calculate 3D arc lengths using polar coordinates with a known radius.
 
@@ -36,12 +32,10 @@ Haversine Formula's is used to calculate 3D arc lengths using polar coordinates 
 * Let c = 2 * atan2 ( sqrt(a), sqrt(1 - a) )
 * Let d = R * c
 
-**[<< Previous Section: Universal Addressing Specification](./) | [Next Section: Universal Address Format>>](./UniversalAddressFormat.md)**
-
 ## Requirements
 
 [1] ./
 
-## License
+**[<< Previous Section: Universal Address Format](UniversalAddressFormat.md) | [Next Section: SCRIPT Specification >>](../)**
 
-Copyright [AStarship™](https://astarship.net)..
+[SCRIPT Specification](../) **>** [Addressing](./)

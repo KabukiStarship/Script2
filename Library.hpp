@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_LIBRARY_HPP
-#define CRABS_LIBRARY_HPP 1
+#define CRABS_LIBRARY_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_ROOM
 namespace _ {
@@ -179,7 +179,7 @@ class Library : public Operand {
 
 /* Destructs the given bag. */
 template<typename TIndex, typename TKey, typename TData, IUN MaxStaccSize>
-LIB_MEMBER void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
+void Delete(Library<TIndex, TKey, TData, TData, MaxStaccSize>* r) {
   if (r == NILP) return;
   delete TPtr<CHA>(r);
 }

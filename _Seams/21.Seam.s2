@@ -1,5 +1,5 @@
-/* Script uses C++ comments and Doxygen notation.
-   Script is designed for natural language processing so delimiters are the
+/* Crabs uses C++ comments and Doxygen notation.
+   Crabs is designed for natural language processing so delimiters are the
    non-alpha-numeric ASCII chars and any symbol key may be user-defined as
    either a Operation (function call), Operand (push object onto stack),
    Operation Push (function call with corresponding stack push), or an

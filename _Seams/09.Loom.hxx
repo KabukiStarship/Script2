@@ -9,7 +9,7 @@
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 template<typename CH = CHR, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
@@ -19,11 +19,11 @@ void TestLoom() {
     Size = 256 * sizeof(CH),
     Count = 16,
   };
-  D_COUT("Testing ALoom<CH" << CSizeCodef<CH>() << ",IS" << CSizeCodef<ISZ>()
-         << "> with Size:" << Size << " and Count:" << Count);
+  D_COUT("Testing ALoom<CH" << CSizeCodef<CH>() << ",IS" << CSizeCodef<ISZ>() <<
+         "> with Size:" << Size << " and Count:" << Count);
 
   ALoom<CH, ISZ, ISY, Size, TBOF<Size>> loom(Count);
-#if D_THIS
+#ifdef D_THIS
   D_COUT("\nPrinting empty loom:\n");
   loom.COut();
 #endif
@@ -33,32 +33,31 @@ void TestLoom() {
   };
 
   CH str[LengthMax + 1] = {};
-  CH* string_end = &str[LengthMax];
+  CH* str_end = &str[LengthMax];
   ISY i = 0;
   for (; i < Count; ++i) {
-    TSPrint<CH>(str, string_end, i);
+    TSPrint<CH>(str, str_end, i);
     D_COUT("\nstr:" << str);
     A_AVOW(ISY(i), loom.Insert<CH>(str));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  TSPrint<CH>(str, string_end, Count);
+  TSPrint<CH>(str, str_end, Count);
   loom.Insert(str);
-  auto boofer = loom.AJT().origin;
+  IUW* boofer = loom.AJT().origin;
   auto dez_nutz = loom.Insert(str);
   A_AVOW(boofer, loom.AJT().origin);
   //i = Count + 1;
   A_AVOW(++i, dez_nutz);
-  for (i; i < 96; ) {
-    TSPrint<CH>(str, string_end, i);
+  while (i < 96) {
+    TSPrint<CH>(str, str_end, i);
     A_AVOW(ISY(++i), loom.Insert(str));
   }
-
-  TSPrint<CH>(str, string_end, i);
+  
+  TSPrint<CH>(str, str_end, i);
   A_AVOW(++i, loom.Insert(str));
-
-
+  
   D_COUT("\n\nAttmpeting to add a very large string...\n");
 
   for (i = 0; i < LengthMax; ++i) str[i] = '*';
@@ -66,12 +65,12 @@ void TestLoom() {
   str[LengthMax] = 0;
 
   ISY index = loom.Insert(str);
-#if D_THIS
+#ifdef D_THIS
   loom.COut();
 #endif
   A_AVOW(ISY(98), index);
 
-#if D_THIS
+#ifdef D_THIS
   D_COUT('\n');
   loom.COut();
   D_COUT('\n');
@@ -121,7 +120,7 @@ void TestLoom() {
   A_AVOW(ISY(105), loom.Find(cba));
   A_AVOW(ISY(106), loom.Find(cab));
 
-#if D_THIS
+#ifdef D_THIS
   D_COUT('\n');
   loom.COut();
   D_COUT('\n');
@@ -129,10 +128,10 @@ void TestLoom() {
 
   A_AVOW(ISY(-1), loom.Find(test));
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #endif
 
-namespace Crabs {
+namespace CRTest {
 static const CHA* Loom(const CHA* args) {
 #if SEAM >= CRABS_LOOM
   A_TEST_BEGIN;
@@ -157,4 +156,4 @@ static const CHA* Loom(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

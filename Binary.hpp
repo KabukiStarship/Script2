@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_BINARY_HPP
-#define CRABS_BINARY_HPP 1
+#define CRABS_BINARY_HPP
 #include <_Config.h>
 namespace _ {
 
@@ -27,10 +27,9 @@ inline const T* TPtr(const void* ptr) {
 inline BOL IsError(const void* ptr) {
   return IUW(ptr) < AErrorTotal;
 }
-
-/* Checks if the pointer is an ASCII Error Code. */
-constexpr BOL CIsError(const void* ptr) {
-  return IUW(ptr) < AErrorTotal;
+/* Checks if the start is an ASCII Error Code and start < stop. */
+inline BOL IsErrorSocket(const void* start, const void* stop) {
+  return IUW(start) < AErrorTotal || start >= stop;
 }
 
 // Checks if the input is aligned to the T word boundary.
@@ -305,52 +304,52 @@ unsgiend_example = AlignUp<ISC, IUB, IUB> (unsigned_example);
 // 8-bit example:
 // value + ((~value) + 1) & (sizeof (ISA) - 1) = value
 @endcode */
-inline ISA AlignUp(ISA value, ISA align_mask = ACPUMask) {
+inline ISA AlignUp(ISA value, ISA align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-inline IUA AlignUp(IUA value, IUA align_mask = ACPUMask) {
+inline IUA AlignUp(IUA value, IUA align_mask = ACPUWordMask) {
   return IUA(AlignUp(ISA(value), ISA(align_mask)));
 }
-inline ISB AlignUp(ISB value, ISB align_mask = ACPUMask) {
+inline ISB AlignUp(ISB value, ISB align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-inline IUB AlignUp(IUB value, IUB align_mask = ACPUMask) {
+inline IUB AlignUp(IUB value, IUB align_mask = ACPUWordMask) {
   return value + (IUB(-ISB(value)) & align_mask);
 }
-inline ISC AlignUp(ISC value, ISC align_mask = ACPUMask) {
+inline ISC AlignUp(ISC value, ISC align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-inline IUC AlignUp(IUC value, IUC align_mask = ACPUMask) {
+inline IUC AlignUp(IUC value, IUC align_mask = ACPUWordMask) {
   return value + (IUC(-ISC(value)) & align_mask);
 }
-inline ISD AlignUp(ISD value, ISD align_mask = ACPUMask) {
+inline ISD AlignUp(ISD value, ISD align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-inline IUD AlignUp(IUD value, IUD align_mask = ACPUMask) {
+inline IUD AlignUp(IUD value, IUD align_mask = ACPUWordMask) {
   return value + (IUD(-ISD(value)) & align_mask);
 }
-constexpr ISA CAlignUp(ISA value, ISA align_mask = ACPUMask) {
+constexpr ISA CAlignUp(ISA value, ISA align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUA CAlignUp(IUA value, IUA align_mask = ACPUMask) {
+constexpr IUA CAlignUp(IUA value, IUA align_mask = ACPUWordMask) {
   return IUA(CAlignUp(ISA(value), ISA(align_mask)));
 }
-constexpr ISB CAlignUp(ISB value, ISB align_mask = ACPUMask) {
+constexpr ISB CAlignUp(ISB value, ISB align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUB CAlignUp(IUB value, IUB align_mask = ACPUMask) {
+constexpr IUB CAlignUp(IUB value, IUB align_mask = ACPUWordMask) {
   return value + (IUB(-ISB(value)) & align_mask);
 }
-constexpr ISC CAlignUp(ISC value, ISC align_mask = ACPUMask) {
+constexpr ISC CAlignUp(ISC value, ISC align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUC CAlignUp(IUC value, IUC align_mask = ACPUMask) {
+constexpr IUC CAlignUp(IUC value, IUC align_mask = ACPUWordMask) {
   return value + (IUC(-ISC(value)) & align_mask);
 }
-constexpr ISD CAlignUp(ISD value, ISD align_mask = ACPUMask) {
+constexpr ISD CAlignUp(ISD value, ISD align_mask = ACPUWordMask) {
   return value + ((-value) & align_mask);
 }
-constexpr IUD CAlignUp(IUD value, IUD align_mask = ACPUMask) {
+constexpr IUD CAlignUp(IUD value, IUD align_mask = ACPUWordMask) {
   return value + (IUD(-ISD(value)) & align_mask);
 }
 
@@ -367,11 +366,11 @@ inline ISD AlignUpD(void* origin) {
   return ISD((-ISW(origin)) & (sizeof(ISW) - 1));
 }
 
-inline void* PtrUp(void* pointer, ISW mask = ACPUMask) {
+inline void* PtrUp(void* pointer, ISW mask = ACPUWordMask) {
   ISW address = ISW(pointer);
   return TPtr<void>(CAlignUp(address, mask));
 }
-inline const void* PtrUp(const void* pointer, ISW mask = ACPUMask) {
+inline const void* PtrUp(const void* pointer, ISW mask = ACPUWordMask) {
   ISW value = IUW(pointer);
   return TPtr<void>(CAlignUp(value, mask));
 }
@@ -381,7 +380,7 @@ inline const void* PtrUp(const void* pointer, ISW mask = ACPUMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TPtrUp(void* pointer, ISW mask = ACPUMask) {
+inline T* TPtrUp(void* pointer, ISW mask = ACPUWordMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -391,7 +390,7 @@ inline T* TPtrUp(void* pointer, ISW mask = ACPUMask) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename T = CHA>
-inline T* TPtrUp(const void* pointer, ISW mask = ACPUMask) {
+inline T* TPtrUp(const void* pointer, ISW mask = ACPUWordMask) {
   ISW value = ISW(pointer);
   return TPtr<T>(value + ((-value) & mask));
 }
@@ -508,7 +507,7 @@ I TAlignUp(I value) {
 @param value The value to align.
 @param mask  The power of 2 to align to minus 1 (makes the mask). */
 template<typename IS = IUW>
-inline IS TAlignDownI(IS value, IS mask = ACPUMask) {
+inline IS TAlignDownI(IS value, IS mask = ACPUWordMask) {
   return value & (~mask);
 }
 
@@ -537,28 +536,28 @@ inline ISD AlignDown(ISD value, ISD align_mask) {
 inline IUD AlignDown(IUD value, IUD align_mask) {
   return value - (value & align_mask);
 }
-constexpr ISA CAlignDown(ISA value, ISA align_mask = ACPUMask) {
+constexpr ISA CAlignDown(ISA value, ISA align_mask = ACPUWordMask) {
   return value - (value & align_mask);
 }
-constexpr IUA CAlignDown(IUA value, IUA align_mask = ACPUMask) {
+constexpr IUA CAlignDown(IUA value, IUA align_mask = ACPUWordMask) {
   return value + (value & align_mask);
 }
-constexpr ISB CAlignDown(ISB value, ISB align_mask = ACPUMask) {
+constexpr ISB CAlignDown(ISB value, ISB align_mask = ACPUWordMask) {
   return value + (value & align_mask);
 }
-constexpr IUB CAlignDown(IUB value, IUB align_mask = ACPUMask) {
+constexpr IUB CAlignDown(IUB value, IUB align_mask = ACPUWordMask) {
   return value + (value & align_mask);
 }
-constexpr ISC CAlignDown(ISC value, ISC align_mask = ACPUMask) {
+constexpr ISC CAlignDown(ISC value, ISC align_mask = ACPUWordMask) {
   return value - (value & align_mask);
 }
-constexpr IUC CAlignDown(IUC value, IUC align_mask = ACPUMask) {
+constexpr IUC CAlignDown(IUC value, IUC align_mask = ACPUWordMask) {
   return value + (value & align_mask);
 }
-constexpr ISD CAlignDown(ISD value, ISD align_mask = ACPUMask) {
+constexpr ISD CAlignDown(ISD value, ISD align_mask = ACPUWordMask) {
   return value - (value & align_mask);
 }
-constexpr IUD CAlignDown(IUD value, IUD align_mask = ACPUMask) {
+constexpr IUD CAlignDown(IUD value, IUD align_mask = ACPUWordMask) {
   return value + (value & align_mask);
 }
 
@@ -603,7 +602,7 @@ inline const T* TPtrDown(const void* ptr, ISW ptr_offset, ISW align_mask) {
 }
 
 /* Aligns the given pointer down to the given align_mask. */
-inline CHA* AlignDown(CHA* pointer, IUW align_mask = ACPUMask) {
+inline CHA* AlignDown(CHA* pointer, IUW align_mask = ACPUWordMask) {
   return TPtrDown<CHA>(pointer, align_mask);
 }
 inline const CHA* AlignDown(const CHA* pointer, IUW align_mask) {
@@ -625,7 +624,7 @@ inline IS TSizeWords(IS size) {
 
 template<typename IS>
 constexpr IS CSizeWords(IS size) {
-  IS size_aligned = size + ((-size) & ACPUMask);
+  IS size_aligned = size + ((-size) & ACPUWordMask);
   size_aligned = size_aligned >> ACPUBytesLog2;
   return (size_aligned < 1) ? 1 : size_aligned;
 }
@@ -958,11 +957,11 @@ inline ISN HexToByte(CHA c) {
 /* Converts a single hex IUA a IUA.
 @return Returns -1 if c is not a hex IUA. */
 inline ISN HexToByte(IUB h) {
-  ISN lowerValue = HexToByte((CHA)(h >> 8));
+  ISN lowerValue = HexToByte(CHA(h >> 8));
 
   if (lowerValue < 0) return -1;
 
-  ISN upper_value = HexToByte((CHA)h);
+  ISN upper_value = HexToByte(CHA(h));
   if (upper_value < 0) return -1;
 
   return lowerValue | (upper_value << 4);

@@ -4,7 +4,7 @@
 
 ### Terminals
 
-**[<< Previous Section: Terminals](Terminals.md) | [Next Section: Encryption >>](Encryption.md)**
+**[<< Previous Section: Encryption](Encryption.md) | [Next Section: Congestion Control >>](CongestionControlTable.md)**
 
 ## Requirements
 
@@ -12,4 +12,4 @@
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

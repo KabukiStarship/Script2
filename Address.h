@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_ADDRESS
-#define CRABS_ADDRESS 1
+#define CRABS_ADDRESS
 #include <_Config.h>
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 /* Returns a pointer to static variable for writing the address { a, \0 } to.

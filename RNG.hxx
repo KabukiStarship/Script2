@@ -1,6 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
 #include "RNG.h"
-// 
 #if SEAM < CRABS_RNG
 #include <random>
 namespace _ {
@@ -11,10 +10,21 @@ static std::default_random_engine rng;
 
 IUC RandomSeed() { /*return std::random_device();*/ return 0; }
 
-template<typename IS>
-IS TRandom(IS min, IS max) {
-  static std::uniform_int_distribution<IS> dist(min, max);
+template<typename I>
+I TRandom(I min, I max) {
+  std::uniform_int_distribution<I> dist(min, max);
   return dist(rng);
+}
+
+template<typename I>
+void TRandomBits(I& result, I bit_count) {
+  if (bit_count < 0) {
+    result = 0;
+    return;
+  }
+	if (bit_count >= sizeof(I) * 8) bit_count = sizeof(I) *  8;
+  std::uniform_int_distribution<I> dist(0, (I(1) << (bit_count - 1)) - 1);
+  result = dist(rng);
 }
 
 IUA IUARandom() { return IUA(IUBRandom()); }
@@ -46,7 +56,7 @@ void RandomizeSeed() { return rng.seed(RandomSeed()); }
 //IUD IUDRandom() {
 //  IUD a = IUCRandom(),
 //      b = IUCRandom();
-//  return (ISD)(a | (b << 32));
+//  return ISD(a | (b << 32));
 //}
 //
 //template<typename IS>
@@ -60,33 +70,49 @@ void RandomizeSeed() { return rng.seed(RandomSeed()); }
 
 namespace _ {
 
-BOL BOLRandom() { return BOL(IUCRandom()); }
+inline BOL BOLRandom() { return BOL(IUCRandom()); }
 
-ISA ISARandom() { return ISA(IUARandom()); }
+inline ISA ISARandom() { return ISA(IUARandom()); }
 
-ISB ISBRandom() { return ISB(IUBRandom()); }
+inline ISB ISBRandom() { return ISB(IUBRandom()); }
 
-ISC ISCRandom() { return ISC(IUCRandom()); }
+inline ISC ISCRandom() { return ISC(IUCRandom()); }
 
-ISD ISDRandom() { return (ISD)IUDRandom(); }
+inline ISD ISDRandom() { return (ISD)IUDRandom(); }
 
-void RandomNumber(BOL& result) { result = BOL(IUCRandom() & 1); }
+inline void RandomNumber(BOL& result) { result = BOL(IUCRandom() & 1); }
 
-void RandomNumber(IUA& result) { result = IUARandom(); }
+inline void RandomNumber(IUA& result) { result = IUARandom(); }
 
-void RandomNumber(ISA& result) { result = ISARandom(); }
+inline void RandomNumber(ISA& result) { result = ISARandom(); }
 
-void RandomNumber(IUB& result) { result = IUBRandom(); }
+inline void RandomNumber(IUB& result) { result = IUBRandom(); }
 
-void RandomNumber(ISB& result) { result = ISBRandom(); }
+inline void RandomNumber(ISB& result) { result = ISBRandom(); }
 
-void RandomNumber(IUC& result) { result = IUCRandom(); }
+inline void RandomNumber(IUC& result) { result = IUCRandom(); }
 
-void RandomNumber(ISC& result) { result = ISCRandom(); }
+inline void RandomNumber(ISC& result) { result = ISCRandom(); }
 
-void RandomNumber(IUD& result) { result = IUDRandom(); }
+inline void RandomNumber(IUD& result) { result = IUDRandom(); }
 
-void RandomNumber(ISD& result) { result = ISDRandom(); }
+inline void RandomNumber(ISD& result) { result = ISDRandom(); }
+
+inline void RandomProbability(FPC& result) { 
+  //result = TRandom<FPC>(-1.0f, 1.0f);
+}
+
+inline void RandomProbability(FPD& result) {
+  //result = TRandom<FPD>(-1.0, 1.0);
+}
+
+inline void RandomProbabilitySigned(FPC& result) {
+  //result = TRandom<FPC>(-1.0f, 1.0f);
+}
+
+inline void RandomProbabilitySigned(FPD& result) {
+  //result = TRandom<FPD>(-1.0, 1.0);
+}
 
 IUA Random(IUA min, IUA max) { return IUA(TRandom<IUB>(min, max)); }
 
@@ -103,5 +129,23 @@ ISC Random(ISC min, ISC max) { return TRandom<ISC>(min, max); }
 IUD Random(IUD min, IUD max) { return TRandom<IUD>(min, max); }
 
 ISD Random(ISD min, ISD max) { return TRandom<ISD>(min, max); }
+
+void RandomBits(ISA& result, ISA bit_count) {
+  ISB resultb = 0;
+  TRandomBits<ISB>(resultb, bit_count);
+  result = ISA(resultb);
+}
+
+void RandomBits(ISB& result, ISB bit_count) {
+  TRandomBits<ISB>(result, bit_count);
+}
+
+void RandomBits(ISC& result, ISC bit_count) {
+  TRandomBits<ISC>(result, bit_count);
+}
+
+void RandomBits(ISD& result, ISD bit_count) {
+  TRandomBits<ISD>(result, bit_count);
+}
 
 }  //< namespace _

@@ -10,30 +10,30 @@
 #endif
 
 using namespace ::_;
-namespace Crabs {
+namespace CRTest { 
 #if SEAM >= CRABS_UNIPRINTER
-template<typename CHT = CHR, typename IS = ISR>
+template<typename CHS = CHR, typename CHT = CHC, typename IS = ISR>
 static const CHA* TestSPrinterCH() {
-  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << CSizeCodef<CHT>() << ",IS"
+  D_COUT(Linef('-') << "\n\n\nTesting UTF<CH" << CSizeCodef<CHS>() << ",IS"
                     << sizeof(IS) << ">\n\n"
                     << Linef('-'));
   enum {
     Count = ATypeCodomainTotal,
   };
-  CHT str_a[Count];
-  static const CHT Testing123[] = { 'T', 'e', 's', 't', 'i', 'n',
+  CHS str_a[Count] = {0};
+  static const CHS Testing123[] = { 'T', 'e', 's', 't', 'i', 'n',
                                      'g', ' ', '1', ',', ' ', '2',
                                      ',', ' ', '3', '.', NIL };
 
-  D_RAM_WIPE(str_a, Count * sizeof(CHT));
-  TSPrint<CHT>(str_a, Count, Testing123);
+  D_RAM_WIPE(str_a, Count * sizeof(CHS));
+  TSPrint<CHS, CHT>(str_a, Count, Testing123);
   D_COUT(Charsf(str_a, 64));
 
-  TSPrinter<CHT, IS> utf(str_a, Count);
+  TSPrinter<CHS, CHT, IS> utf(str_a, Count);
 
   enum { TestStringsCount = 4 };
 
-  const CHT TestStrings[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
+  const CHS TestStrings[5][2][7] = {{{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                      {NIL, NIL, NIL, NIL, NIL, NIL, NIL}},
                                     {{'?', NIL, NIL, NIL, NIL, NIL, NIL},
                                      {'?', NIL, NIL, NIL, NIL, NIL, NIL}},
@@ -43,23 +43,23 @@ static const CHA* TestSPrinterCH() {
                                      {'A', 'p', 'p', 'l', 'e', 's', NIL}},
                                     {{'A', 'p', 'p', 'l', 'e', 's', NIL},
                                      {'A', 'p', 'p', 'l', 'e', 's', NIL}}};
-  const CHT* cursor;
+  const CHS* cursor;
   for (ISC i = 0; i < TestStringsCount; ++i) {
-    D_RAM_WIPE(str_a, Count * sizeof(CHT));
-    cursor = TSPrintString<CHT>(str_a, str_a + Count, TestStrings[i][0]);
+    D_RAM_WIPE(str_a, Count * sizeof(CHS));
+    cursor = TSPrint<CHS, CHT>(str_a, str_a + Count, TestStrings[i][0]);
     D_COUT(Charsf(str_a, 64));
     Test(cursor);
-    cursor = TStringEquals<CHT>(str_a, TestStrings[i][0]);
+    cursor = TSEquals<CHS>(str_a, TestStrings[i][0]);
     Test(cursor);
   }
 
-  D_COUT(Headingf("Testing TSPrinter<CHT, ISZ>") <<
+  D_COUT(Headingf("Testing TSPrinter<CHS, CHT, ISZ>") <<
          "\n\nExpecting \"" << Testing123 << '\"');
-  static const CHT CommaSpace[] = {',', ' ', NIL};
+  static const CHS CommaSpace[] = {',', ' ', NIL};
 
-  const CHT TestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
+  const CHS TestingSpace[] = {'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL};
 
-  D_RAM_WIPE(str_a, Count * sizeof(CHT));
+  D_RAM_WIPE(str_a, Count * sizeof(CHS));
 
   utf.Set(str_a).Print(TestingSpace);
   utf.Print(1);
@@ -73,34 +73,34 @@ static const CHA* TestSPrinterCH() {
   D_COUT(Charsf(str_a, 64));
   A_AVOW(Testing123, str_a);
 
-  D_COUT("\n\nTesting TStringEquals<CHT>");
+  D_COUT("\n\nTesting TStringEquals<CHS>");
 
-  const CHT CompareStrings[4][9] = {
+  const CHS CompareStrings[4][9] = {
       {'T', 'e', 's', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', NIL, NIL},
       {'T', 'e', 's', 't', 'i', 'n', 'g', '@', NIL},
       {'T', 'e', 'x', 't', 'i', 'n', 'g', '@', NIL},
   };
 
-  A_ASSERT(!TStringEquals<CHT>(CompareStrings[0], CompareStrings[1]));
-  A_ASSERT(!TStringEquals<CHT>(CompareStrings[0], CompareStrings[3]));
-  A_ASSERT( TStringEquals<CHT>(CompareStrings[0], CompareStrings[0]));
-  A_ASSERT(!TStringEquals<CHT>(CompareStrings[2], CompareStrings[3]));
-  A_ASSERT( TStringEquals<CHT>(CompareStrings[2], CompareStrings[2]));
+  A_ASSERT(!TSEquals<CHS>(CompareStrings[0], CompareStrings[1]));
+  A_ASSERT(!TSEquals<CHS>(CompareStrings[0], CompareStrings[3]));
+  A_ASSERT( TSEquals<CHS>(CompareStrings[0], CompareStrings[0]));
+  A_ASSERT(!TSEquals<CHS>(CompareStrings[2], CompareStrings[3]));
+  A_ASSERT( TSEquals<CHS>(CompareStrings[2], CompareStrings[2]));
 
-  const CHT Chars1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
-  A_AVOW(9, TStringLength<CHT>(Chars1to9));
+  const CHS Chars1to9[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NIL};
+  //A_AVOW(IS(9), TSCodeCount<CHS, CHT, IS>(Chars1to9));
 
-  D_COUT("\n\nTesting TStringFind<CHT>");
+  D_COUT("\n\nTesting TStringFind<CHS>");
 
-  const CHT One[] = {'1', ',', NIL};
-  const CHT ThreePeriod[] = {'3', '.', NIL};
-  A_ASSERT(TStringFind<CHT>(Testing123, One));
-  A_ASSERT(TStringFind<CHT>(Testing123, ThreePeriod));
+  const CHS One[] = {'1', ',', NIL};
+  const CHS ThreePeriod[] = {'3', '.', NIL};
+  A_ASSERT(TSFind<CHS>(Testing123, One));
+  A_ASSERT(TSFind<CHS>(Testing123, ThreePeriod));
 
-  D_COUT(Headingf("Testing TPrintRight<CHT>"));
+  D_COUT(Headingf("Testing TPrintRight<CHS>"));
 
-  const CHT RightAligned[12][13] = {
+  const CHS RightAligned[12][13] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -116,16 +116,16 @@ static const CHA* TestSPrinterCH() {
 
   ISC shift_right = 6;
   for (ISC i = 0; i < 12; ++i) {
-    D_RAM_WIPE(str_a, (ISW)(Count * sizeof(CHT)));
-    cursor = TPrintRight<CHT>(str_a, str_a + Count - 1, TestingSpace, i + 1);
+    D_RAM_WIPE(str_a, (ISW)(Count * sizeof(CHS)));
+    cursor = TPrintRight<CHS>(str_a, str_a + Count - 1, TestingSpace, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
-           << "\n    Wrote:\"" << str_a << "\":" << TStringLength<CHT>(str_a));
+      << "\n    Wrote:\"" << str_a << "\":");// << TSCodeCount<CHS, CHT, IS>(str_a));
     A_AVOW_INDEX(&RightAligned[i][0], str_a, i);
   }
-  D_COUT(Headingf("Testing TPrintCenter<CHT>"));
+  D_COUT(Headingf("Testing TPrintCenter<CHS>"));
 
-  const CHT CenterAligned[13][14] = {
+  const CHS CenterAligned[13][14] = {
       {'.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
       {'.', '.', '.', NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL},
@@ -140,15 +140,15 @@ static const CHA* TestSPrinterCH() {
       {' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ' ', NIL, NIL},
       {' ', ' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', ' ', NIL}};
 
-  static const CHT Numbers1To9[] = {'1', '2', '3', '4', '5',
+  static const CHS Numbers1To9[] = {'1', '2', '3', '4', '5',
                                     '6', '7', '8', '9', NIL};
 
   for (ISC i = 12; i >= 0; --i) {
-    D_RAM_WIPE(str_a, Count * sizeof(CHT));
-    cursor = TPrintCenter<CHT>(str_a, str_a + Count - 1, Numbers1To9, i + 1);
+    D_RAM_WIPE(str_a, Count * sizeof(CHS));
+    cursor = TPrintCenter<CHS>(str_a, str_a + Count - 1, Numbers1To9, i + 1);
     D_ASSERT_INDEX(cursor, i);
     D_COUT(Charsf(str_a, 64)
-           << "\n    Wrote:\"" << str_a << "\":" << TStringLength<CHT>(str_a));
+      << "\n    Wrote:\"" << str_a << "\":");// << TSCodeCount<CHS, CHT, IS>(str_a));
     A_AVOW_INDEX(&CenterAligned[i][0], str_a, i);
   }
 
@@ -157,13 +157,13 @@ static const CHA* TestSPrinterCH() {
 
 static const CHA* TestSPrinter() {
 #if USING_STA == YES_0
-  { const CHA* result = TestSPrinterCH<CHA, ISC>(); if (result) return result; }
+  { const CHA* result = TestSPrinterCH<CHA, CHC, ISC>(); if (result) return result; }
 #endif
 #if USING_STB == YES_0
-  { const CHA* result = TestSPrinterCH<CHB, ISC>(); if (result) return result; }
+  { const CHA* result = TestSPrinterCH<CHB, CHC, ISC>(); if (result) return result; }
 #endif
 #if USING_STC == YES_0
-  { const CHA* result = TestSPrinterCH<CHC, ISC>(); if (result) return result; }
+  { const CHA* result = TestSPrinterCH<CHC, CHC, ISC>(); if (result) return result; }
 #endif
   return NILP;
 }
@@ -425,7 +425,7 @@ static const CHA* TestProblemChildren() {
     70000000, 80000000, 90000000, 99999999, 100000000, 1000000000
   };
   // length 8 range: 10000000 to 16777216
-  CHA boofer[1024];
+  CHA boofer[1024] = { 0 };
   TSPrinter<CHA> p(boofer, 1024);
   D_COUT(boofer);
   for (ISN dddddez = 11; dddddez < 27; ++dddddez) {
@@ -450,4 +450,4 @@ static const CHA* Uniprinter(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

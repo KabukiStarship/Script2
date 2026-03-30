@@ -3,7 +3,7 @@
 #include <_Config.h>
 #if SEAM >= CRABS_BOOK
 #ifndef CRABS_BOOK_HPP
-#define CRABS_BOOK_HPP 1
+#define CRABS_BOOK_HPP
 #include "AType.h"
 namespace _ {
 
@@ -15,7 +15,7 @@ typedef IUW PODType;
 @endcode
 */
 template<typename Index, typename TKey, typename ISZ, typename THash>
-struct LIB_MEMBER TCollection {
+struct TCollection {
   ISZ size;          //< Total size of the set.
   TKey table_size,   //< Size of the (optional) key Strings in bytes.
       size_pile;     //< Size of the (optional) collisions pile in bytes.

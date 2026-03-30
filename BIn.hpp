@@ -3,7 +3,7 @@
 #ifndef CRABS_BIN_HPP
 #define CRABS_BIN_HPP
 #include "BIn.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 #if USING_CRABS_TEXT == YES_0
@@ -32,9 +32,9 @@ Printer& TBInPrint(Printer& o, const BIn* bin) {
            << " read:" << bin->read << Hexf(BInOrigin(bin), size + sizeof(BIn));
 }
 
-template<typename CHT=CHR>
-const CHT* TBInStates() {
-  static const CHT StateStrings[BInStateInvalid + 1][16] = {
+template<typename CHS=CHR>
+const CHS* TBInStates() {
+  static const CHS StateStrings[BInStateInvalid + 1][16] = {
     /*00*/{'A','d','d','r','e','s','s'},
     /*01*/{'P','a','c','k','e','d',' ','A','r','g','s'},
     /*02*/{'P','a','c','k','e','d',' ','U','T','F','8'},
@@ -52,10 +52,10 @@ const CHT* TBInStates() {
   };
   return &StateStrings[0][0];
 }
-template<typename CHT=CHR, typename IS=ISW>
-inline const CHT* TBInStates(IS state) {
+template<typename CHS=CHR, typename IS=ISW>
+inline const CHS* TBInStates(IS state) {
   if (state < 0 || state >= BInStateInvalid) state = BInStateInvalid;
-  return &TBInStates<CHT>()[BInStateInvalid * 32];
+  return &TBInStates<CHS>()[BInStateInvalid * 32];
 }
 #endif
 

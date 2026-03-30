@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#include <_Config.h>
 #ifndef CRABS_STRING_HPP
-#define CRABS_STRING_HPP 1
+#define CRABS_STRING_HPP
+#include <_Config.h>
 #include "Stack.hpp"
 #if SEAM >= CRABS_STRING
 #include "Uniprinter.hpp"
@@ -16,7 +16,7 @@
 
 #define STR_A typename T=CHR, typename ISZ=ISW, typename ISY=ISZ
 #define STR_P T, ISZ, ISY
-#define STR TString<STR_P>
+#define STR TString<T, ISZ, ISY>
 
 //#define SND_A typename T = CHR, typename ISZ = ISC = ISC, typename ISY = ISB
 //#define SND_P T, ISZ, ISY
@@ -172,7 +172,7 @@ Printer& TStringPrint(Printer& o, const STR* str) {
     o << "\n| ";
   }
 PrintBottomLine:
-  #if D_THIS
+  #ifdef D_THIS
   o << Linef("\"\n+---") << Charsf(begin, bytes);
   #endif
   return o << Linef("\"\n+---");
@@ -399,7 +399,7 @@ class AString {
     T* begin = TStringBegin<SCK_P>(str),
      * start = begin + count - 1,
      * end = begin + total - 1;
-    //D_AVOW(TStringLength<T, ISZ>(begin) + 1, count);
+    //D_AVOW(TSCodeCount<T, ISZ>(begin) + 1, count);
     D_ASSERT(count <= total);
     D_COUT("\n         \"" << begin << '\"');
     T* stop = _::TSPrint<T>(start, end, item);
@@ -487,7 +487,7 @@ class AString {
 
   /* Searches for the given querry, returning the end T of the qeurry in this
   str. */
-  inline T* Find(const T* querry) { return TStringFind(Begin(), querry); }
+  inline T* Find(const T* querry) { return TSFind(Begin(), querry); }
 
   /* Checks if this String to the other str are equivalent.
   @return Nil if they Strings are not equivalent and a pointer to the next CHA

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Op.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "BSeq.hpp"
 #include "Slot.h"
 #include "Test.h"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_MAP_HPP
-#define CRABS_MAP_HPP 1
+#define CRABS_MAP_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_MAP
 #include "Stack.hpp"
@@ -145,7 +145,7 @@ Printer& TMapPrint(Printer& o, const MAP* map) {
       << Centerf(*domain++, DomainColumns)
       << Centerf(*codomain++, DomainColumns);
   }
-#if D_THIS
+#ifdef D_THIS
   return o << Linef("\n+---\n");
   //<< Charsf(map, map->size * sizeof(TMapBuf<MAP_P>));
 #else

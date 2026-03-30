@@ -4,12 +4,14 @@
 
 ### Abnormal Behavior
 
-**[<< Previous Section: Congestion control](CongestionControl.md) | [Next Section: Crabs Specification >>](./CrabsSpecification.md)**
-
 ## Requirements
 
 [1] ./
 
+**[<< Previous Section: Congestion Control](CongestionControlTable.md) | [Next Section: Crabs Specification >>](../Crabs/)**
+
+[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)
+
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

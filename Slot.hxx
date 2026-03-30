@@ -1,9 +1,9 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Slot.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 //#include "String.hpp"
 //#include "AType.h"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -159,7 +159,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
   DTB type;                 //< Current type being read.
   ISC index,                //< Index in the escape sequence.
       num_params = *params; //< Number of params.
-  ISC offset;             //< Offset to word align the current type.
+  ISC offset;               //< Offset to word align the current type.
   ISC length,               //< Length of the data in the socket.
       count,                //< Argument length.
       size;                 //< Size of the ring socket.
@@ -342,7 +342,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
 #ifdef USING_CRABS_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
-        offset = AlignUpD(l_start);
+        offset = ISC(AlignUpD(l_start));
         if (IUW(length) < offset + sizeof(ISD)) {
           return ReturnError(this, ErrorBooferUnderflow, params, index,
                              l_start);

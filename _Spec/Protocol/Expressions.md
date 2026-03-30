@@ -228,4 +228,4 @@ Return values just need an address of an Operation to send the return value too.
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

@@ -2,71 +2,186 @@
 #pragma once
 #include <_Config.h>
 #ifndef CRABS_STRINGF_DECL
-#define CRABS_STRINGF_DECL 1
+#define CRABS_STRINGF_DECL
 #include "AType.h"
 namespace _ {
 
+/* @module Stringf
+@brief String formatting utilities for the Uniprinter.
+*/
+
 // Returns true if the item is printable.
-BOL CHIsPrintable(CHA item);
-BOL CHIsPrintable(CHB item);
-BOL CHIsPrintable(CHC item);
+BOL IsPrintable(CHA item);
+BOL IsPrintable(CHB item);
+BOL IsPrintable(CHC item);
 
 // Returns true if the item is not printable or is whitespace.
-BOL CHIsBlank(CHA item);
-BOL CHIsBlank(CHB item);
-BOL CHIsBlank(CHC item);
+BOL IsntPrintable(CHA item);
+BOL IsntPrintable(CHB item);
+BOL IsntPrintable(CHC item);
+
+BOL IsWhitespace(CHC item);
+
+BOL IsDigit(CHC c);
+
+BOL IsLowerCase(CHC c);
+
+BOL IsUpperCase(CHC c);
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-LIB_MEMBER const CHA* STAPrintCharsHeader();
+const CHA* STAPrintCharsHeader();
 
 /* Gets the header to print for PrintChars(const void*, const void*). */
-LIB_MEMBER const CHA* STAPrintCharsBorder();
+const CHA* STAPrintCharsBorder();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-LIB_MEMBER const CHA* STAPrintHexHeader();
+const CHA* STAPrintHexHeader();
 
 /* Gets the header to print for PrintHex(const void*, const void*). */
-LIB_MEMBER const CHA* STAPrintHexBorder();
+const CHA* STAPrintHexBorder();
 
 /* Converts a IUA into a two-IUA hex representation.
 @return Returns -1 if c is not a hex IUA. */
-LIB_MEMBER ISC HexToByte(IUB hex);
+ISC HexToByte(IUB hex);
 
-/* Attempts to scan a UTF-32 CHA from the given UTF-8 string.
+/* Attempts to scan a character from the given string.
 @return  Nil upon failure or a pointer to the end of the UTF-8 CHA upon
 success. */
-LIB_MEMBER const CHA* SScan(const CHA* string, CHC& character);
+const CHA* SScan(const CHA* start, CHA& item);
+CHA* SScan(CHA* start, CHA& item);
+
+const CHA* SScan(const CHA* start, CHC& item);
+CHA* SScan(CHA* start, CHC& item);
+
+
+const CHA* SScan(const CHA* start, ISA& item);
+CHA* SScan(CHA* start, ISA& item);
+const CHA* SScan(const CHA* start, IUA& item);
+CHA* SScan(CHA* start, IUA& item);
+const CHA* SScan(const CHA* start, ISB& item);
+CHA* SScan(CHA* start, ISB& item);
+const CHA* SScan(const CHA* start, IUB& item);
+CHA* SScan(CHA* start, IUB& item);
+const CHA* SScan(const CHA* start, ISC& item);
+CHA* SScan(CHA* start, ISC& item);
+const CHA* SScan(const CHA* start, IUC& item);
+CHA* SScan(CHA* start, IUC& item);
+const CHA* SScan(const CHA* start, ISD& item);
+CHA* SScan(CHA* start, ISD& item);
+const CHA* SScan(const CHA* start, IUD& item);
+CHA* SScan(CHA* start, IUD& item);
+
+const CHB* SScan(const CHB* start, CHC& item);
+CHB* SScan(CHB* start, CHC& item);
+const CHB* SScan(const CHB* start, ISA& item);
+CHB* SScan(CHB* start, ISA& item);
+const CHB* SScan(const CHB* start, IUA& item);
+CHB* SScan(CHB* start, IUA& item);
+const CHB* SScan(const CHB* start, ISB& item);
+CHB* SScan(CHB* start, ISB& item);
+const CHB* SScan(const CHB* start, IUB& item);
+CHB* SScan(CHB* start, IUB& item);
+const CHB* SScan(const CHB* start, ISC& item);
+CHB* SScan(CHB* start, ISC& item);
+const CHB* SScan(const CHB* start, IUC& item);
+CHB* SScan(CHB* start, IUC& item);
+const CHB* SScan(const CHB* start, ISD& item);
+CHB* SScan(CHB* start, ISD& item);
+const CHB* SScan(const CHB* start, IUD& item);
+CHB* SScan(CHB* start, IUD& item);
+
+
+const CHC* SScan(const CHC* start, CHC& item);
+CHC* SScan(CHC* start, CHC& item);
+const CHC* SScan(const CHC* start, ISA& item);
+CHC* SScan(CHC* start, ISA& item);
+const CHC* SScan(const CHC* start, IUA& item);
+CHC* SScan(CHC* start, IUA& item);
+const CHC* SScan(const CHC* start, ISB& item);
+CHC* SScan(CHC* start, ISB& item);
+const CHC* SScan(const CHC* start, IUB& item);
+CHC* SScan(CHC* start, IUB& item);
+const CHC* SScan(const CHC* start, ISC& item);
+CHC* SScan(CHC* start, ISC& item);
+const CHC* SScan(const CHC* start, IUC& item);
+CHC* SScan(CHC* start, IUC& item);
+const CHC* SScan(const CHC* start, ISD& item);
+CHC* SScan(CHC* start, ISD& item);
+const CHC* SScan(const CHC* start, IUD& item);
+CHC* SScan(CHC* start, IUD& item);
+
+/* Attempts to scan the previous character from the given ASCII string.
+@return NILP upon invalid Unicode character or invalid start. */
+const CHA* SScanBack(const CHA* start, CHA& item);
+const CHA* SScanBack(const CHA* start, CHC& item);
+const CHB* SScanBack(const CHB* start, CHC& item);
+const CHC* SScanBack(const CHC* start, CHC& item);
+
+/* Prints a item to the string.
+@return  Nil upon failure or a pointer to the nil-term CHS upon success.
+@param start The beginning of the string socket.
+@param stop  The last character in the string boofer.
+@param item  The character to print. */
+CHA* SPrint(CHA* start, CHA* stop, IUA item);
+CHA* SPrint(CHA* start, CHA* stop, ISA item);
+CHA* SPrint(CHA* start, CHA* stop, IUB item);
+CHA* SPrint(CHA* start, CHA* stop, ISB item);
+CHA* SPrint(CHA* start, CHA* stop, IUC item);
+CHA* SPrint(CHA* start, CHA* stop, ISC item);
+CHA* SPrint(CHA* start, CHA* stop, IUD item);
+CHA* SPrint(CHA* start, CHA* stop, ISD item);
+CHA* SPrint(CHA* start, CHA* stop, FPC item);
+CHA* SPrint(CHA* start, CHA* stop, FPD item);
+CHA* SPrint(CHA* start, CHA* stop, CHA item);
+CHA* SPrint(CHA* start, CHA* stop, CHC item);
+CHA* SPrint(CHA* start, CHA* stop, const CHA* item);
+CHA* SPrint(CHA* start, CHA* stop, const CHB* item);
+CHA* SPrint(CHA* start, CHA* stop, const CHC* item);
 
 #if USING_STB == YES_0
-/* Prints a UTF-32 character to the string terminated at the stop.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param string    The start of the string.
-@param stop      The last CHA in the string boofer.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it. */
-LIB_MEMBER CHB* SPrint(CHB* string, CHB* stop, CHC character);
-
-/* Attempts to scan a UTF-32 CHA from the given UTF-16 string.
-@return  Nil upon failure or a pointer to the end of the UTF-8 CHA upon
-success. */
-LIB_MEMBER const CHB* SScan(const CHB* string, CHC& character);
+/* Prints a character to the string.
+@return  Nil upon failure or a pointer to the nil-term CHS upon success. */
+CHB* SPrint(CHB* start, CHB* stop, IUA item);
+CHB* SPrint(CHB* start, CHB* stop, ISA item);
+CHB* SPrint(CHB* start, CHB* stop, IUB item);
+CHB* SPrint(CHB* start, CHB* stop, ISB item);
+CHB* SPrint(CHB* start, CHB* stop, IUC item);
+CHB* SPrint(CHB* start, CHB* stop, ISC item);
+CHB* SPrint(CHB* start, CHB* stop, IUD item);
+CHB* SPrint(CHB* start, CHB* stop, ISD item);
+CHB* SPrint(CHB* start, CHB* stop, FPC item);
+CHB* SPrint(CHB* start, CHB* stop, FPD item);
+CHB* SPrint(CHB* start, CHB* stop, CHA item);
+CHB* SPrint(CHB* start, CHB* stop, CHB item);
+CHB* SPrint(CHB* start, CHB* stop, CHC item);
+CHB* SPrint(CHB* start, CHB* stop, const CHA* item);
+CHB* SPrint(CHB* start, CHB* stop, const CHB* item);
+CHB* SPrint(CHB* start, CHB* stop, const CHC* item);
 #endif
 
 #if USING_STC == YES_0
-/* Prints a character to the string.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param stop The last character in the string boofer. */
-LIB_MEMBER CHA* SPrint(CHA* string, CHA* stop, CHB character);
-
-/* Prints a Unicode character to the given string.
-@return  Nil upon failure or a pointer to the nil-term CHT upon success.
-@param stop   The last CHT in the socket. */
-LIB_MEMBER CHA* SPrint(CHA* string, CHA* stop, CHC character);
+/* Prints a character or string to the string.
+@return  Nil upon failure or a pointer to the nil-term CHS upon success. */
+CHC* SPrint(CHC* start, CHC* stop, IUA item);
+CHC* SPrint(CHC* start, CHC* stop, ISA item);
+CHC* SPrint(CHC* start, CHC* stop, IUB item);
+CHC* SPrint(CHC* start, CHC* stop, ISB item);
+CHC* SPrint(CHC* start, CHC* stop, IUC item);
+CHC* SPrint(CHC* start, CHC* stop, ISC item);
+CHC* SPrint(CHC* start, CHC* stop, IUD item);
+CHC* SPrint(CHC* start, CHC* stop, ISD item);
+CHC* SPrint(CHC* start, CHC* stop, FPC item);
+CHC* SPrint(CHC* start, CHC* stop, FPD item);
+CHC* SPrint(CHC* start, CHC* stop, CHA item);
+CHC* SPrint(CHC* start, CHC* stop, CHC item);
+CHC* SPrint(CHC* start, CHC* stop, const CHA* item);
+CHC* SPrint(CHC* start, CHC* stop, const CHB* item);
+CHC* SPrint(CHC* start, CHC* stop, const CHC* item);
 #endif
 
 /* Utility class for printing numbers. */
-struct LIB_MEMBER Valuef {
-  ISW count;        //< Width of the item in bytes or columns.
+struct Valuef {
+  ISW count;         //< Width of the item in bytes or columns.
   ATypeValue value;  //< The type and value.
 
   /* Constrcts a NIL item. */
@@ -148,7 +263,7 @@ struct Hexf {
 };
 
 /* Utility class for printing a POD type in binary. */
-struct LIB_MEMBER Binaryf {
+struct Binaryf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
   /* Stores the given item to the boofer and store the size. */
@@ -172,7 +287,7 @@ struct LIB_MEMBER Binaryf {
 
 /* Utility class for printing blocks of characters to the console with
 operator<<. */
-struct LIB_MEMBER Charsf {
+struct Charsf {
   Valuef element;  //< The type, value and CHA, CHB, or CHC count.
 
   /* Constructs the value from the delta between start and stop. */
@@ -195,7 +310,7 @@ struct LIB_MEMBER Charsf {
 center aligned.
 @warning Stringf cannot be const because we need to write to it on the stack 
 frame in chained operator overloads. */
-class LIB_MEMBER Stringf {
+class Stringf {
  public:
   enum {
     // Max length of the boofer in ALU words.
@@ -207,7 +322,7 @@ class LIB_MEMBER Stringf {
   };
 
  private:
-  const void* string_;  // Pointer to a string or the boofer_.
+  const void* string_;  //< Pointer to a string or the boofer_.
   ISW count_;           //< The character count.
   DTW type_;            //< The ASCII string Type, STA, STB, or STC.
   IUW boofer_[BooferWordCount];  //< String boofer for the token.
@@ -299,9 +414,9 @@ class LIB_MEMBER Stringf {
 
   /* Prints the given item to the boofer_. */
   void Print(CHA item);
-#if USING_STB == YES_0
-  void Print(CHB item);
-#endif
+//#if USING_STB == YES_0
+//  void Print(CHB item);
+//#endif
 #if USING_STC == YES_0
   void Print(CHC item);
 #endif
@@ -349,7 +464,7 @@ class LIB_MEMBER Stringf {
 };
 
 /* Utility class for printing hex with operator<<. */
-struct LIB_MEMBER Centerf {
+struct Centerf {
   Stringf element;  //< Pointer to a pointer to utf.
 
   /* Does nothing. */
@@ -408,7 +523,7 @@ struct LIB_MEMBER Centerf {
 };
 
 /* Utility class for printing hex with operator<<. */
-struct LIB_MEMBER Rightf {
+struct Rightf {
   Stringf element;  //< Pointer to a pointer to utf.
 
   /* Does nothing. */
@@ -466,9 +581,9 @@ struct LIB_MEMBER Rightf {
 };
 
 /* Utility class for printing a horizontal line with operator<<. */
-struct LIB_MEMBER Linef {
+struct Linef {
   Valuef element;     //< Pointer to a pointer to utf.
-  CHA string[5];      //< Used to create a string in Linef(CHA,ISW).
+  CHA format[5];      //< Used to create a string in Linef(CHA,ISW).
 
   /* Constructors a horizontal line of the character. */
   Linef(CHA item, ISW count = AConsoleWidth);
@@ -487,9 +602,9 @@ struct LIB_MEMBER Linef {
 };
 
 /* Utility class for printing a Heading with formatting with operator<<. */
-struct LIB_MEMBER Headingf {
+struct Headingf {
   Stringf element;
-  const CHA* style,     //< Printf-style string
+  const CHA* style,     //< Printf-style string.
            * caption2,  //< Line under the style.
            * caption3;  //< Line under the caption2.
 
@@ -509,7 +624,7 @@ struct LIB_MEMBER Headingf {
 };
 
 /* Utility class for indenting text with operator<<. */
-struct LIB_MEMBER Indentf {
+struct Indentf {
   ISW indent_count;  //< Number of spaces to indent.
 
   /* Constructs the value from the delta between start and stop. */
@@ -527,7 +642,7 @@ struct Sizef {
 };
 
 /* Utility class for printing an ASCII type-value one-liner. */
-struct LIB_MEMBER ATypef {
+struct ATypef {
   DTW type,   //< The item type.
       count;  //< The number of chars to print.
 
@@ -548,14 +663,14 @@ struct LIB_MEMBER ATypef {
 };
 
 /* Utility class for printing an ASCII type-value one-liner. */
-struct LIB_MEMBER AValuef {
+struct AValuef {
   ATypeValue value;  //< The item type and value.
 };
 
 // Utility class for printing an ASCII Error Code.
-struct LIB_MEMBER AErrorf {
-  ISW error;                //< Error code.
-  const CHA* message; //< Error message.
+struct AErrorf {
+  ISW error;            //< Error code.
+  const CHA* message;   //< Error message.
 
   AErrorf(ISW error, const CHA* message = NILP);
 };

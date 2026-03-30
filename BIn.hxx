@@ -1,12 +1,12 @@
 // Copyright AStarship <https://astarship.net>.
 #include "BIn.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "BSeq.hpp"
 #include "Hash.hpp"
 #include "Varint.hpp"
 #include "Slot.hpp"
 #include "Op.h"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"
@@ -163,8 +163,10 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
     //D_COUT("\nparam:" << arg_index + 1 << " type:" << ATypef(type) <<
     //       " origin:" << TDelta<>(origin, origin) << " stop:" <<
     //       TDelta<>(origin, stop) << " length:" << length);
-    if (type < 0) type ^= 1 << sizeof(DTB) - 1;
-    DTB mod = type >> sizeof(DTB) - 3;
+    if (type < 0) { // It's marked read-only, we don't care about the RO mod.
+        type ^= 1 << ((sizeof(DTB) * 8) - 1);
+    }
+    DTB mod = (type >> sizeof(DTB)) - 3;
     if (mod == 0) {
 
     } else if (1) {
@@ -398,10 +400,10 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
             // Varint 8 differs from Varint 2 and 4 in that on the
             // last IUA, IUA 9 of 9, there is no terminating
             // varint bit.
-            iud |= ((IUD)(iua)) << iub;
+            iud |= IUD(iua) << iub;
             break;
           }
-          iud |= ((IUD)(iua & 0x7F)) << iub;
+          iud |= IUD(iua & 0x7F) << iub;
           //< @todo I'm starting to second guess if we need to mask
           //< iua because we're packing them up and will overwrite.
           iub += 7;

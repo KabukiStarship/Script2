@@ -10,7 +10,7 @@ namespace _ {
 #if SEAM >= CRABS_ITOS
 
 const IUD* Pow10_UI8() {
-  static const IUD k10ToThe[20] = {
+  static const IUD TenToThe[20] = {
       1,                     //< 10^0
       10,                    //< 10^1
       100,                   //< 10^2
@@ -32,13 +32,13 @@ const IUD* Pow10_UI8() {
       1000000000000000000,   //< 10^18
       10000000000000000000,  //< 10^19
   };
-  return k10ToThe;
+  return TenToThe;
 }
 
 IUD Pow10(IUD index) { return (index > 19) ? 0 : Pow10_UI8()[index]; }
 
 const IUC* Pow10_UI4() {
-  static const IUC k10ToThe[20] = {
+  static const IUC TenToThe[20] = {
       1,           //< 10^0
       10,          //< 10^1
       100,         //< 10^2
@@ -50,20 +50,20 @@ const IUC* Pow10_UI4() {
       100000000,   //< 10^8
       1000000000,  //< 10^9
   };
-  return k10ToThe;
+  return TenToThe;
 }
 
 IUC Pow10(IUC index) { return (index > 9) ? 0 : Pow10_UI4()[index]; }
 
 const IUB* Pow10_UI2() {
-  static const IUB k10ToThe[20] = {
+  static const IUB TenToThe[20] = {
       1,      //< 10^0
       10,     //< 10^1
       100,    //< 10^2
       1000,   //< 10^3
       10000,  //< 10^4
   };
-  return k10ToThe;
+  return TenToThe;
 }
 
 IUB Pow10(IUB index) { return (index > 4) ? 0 : Pow10_UI2()[index]; }

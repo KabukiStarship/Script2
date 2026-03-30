@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_AUTOJECT_CODE
-#define CRABS_AUTOJECT_CODE 1
+#define CRABS_AUTOJECT_CODE
 #include "Autoject.h"
 #include "Array.h"
 #include "Binary.hpp"
@@ -76,7 +76,7 @@ class TBOF {
   /* Sets the size to the new value. */
   template<typename ISW>
   inline IUW* SizeSet(ISW size) {
-    A_ASSERT((size & ACPUMask) == 0);
+    A_ASSERT((size & ACPUWordMask) == 0);
     *TPtr<ISZ>(words_) = size;
     return words_;
   }

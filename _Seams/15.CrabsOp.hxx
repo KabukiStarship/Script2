@@ -1,5 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "../Crabs.h"
 #include "../BIn.hpp"
 #include "../BOut.hpp"
@@ -7,13 +7,13 @@
 #include "../Args.h"
 #include "../Address.hpp"
 #include "../Operand.h"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 class StarTest : public Operand {
 public:
@@ -34,9 +34,9 @@ public:
 }
 #endif
 
-namespace Crabs {
+namespace CRTest {
 static const CHA* CrabsOp(const CHA* args) {
-  #if SEAM == CRABS_OPERATION
+  #if SEAM == CRABS_OP
   A_TEST_BEGIN;
 
   enum {
@@ -83,4 +83,4 @@ static const CHA* CrabsOp(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

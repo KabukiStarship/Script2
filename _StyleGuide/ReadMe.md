@@ -114,7 +114,7 @@ Most open-source projects developed by Google conform to the requirements in thi
 
 Note that this guide is not a C++ tutorial: we assume that the reader is familiar with the language.
 
-The ASCII C++ Style Guide makes heavy use of the ASCII Data Specification. You can find a copy of the the specification at <https://github.com/AStarStarship/Script2/blob/master/docs/rfc/ascii_data_specification_rfc>.
+The ASCII C++ Style Guide makes heavy use of the ASCII Data Specification. You can find a copy of the the specification at <https://github.com/AStarStarship/Crabs/blob/master/docs/rfc/ascii_data_specification_rfc>.
 
 ### Goals of the Style Guide
 

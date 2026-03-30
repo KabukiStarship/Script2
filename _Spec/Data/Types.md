@@ -23,11 +23,11 @@ Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data 
 | 12 | FPD  |    double    |   8   | 8-byte floating-point number.   |
 | 13 | IUD  |   uint64_t   |   8   | 8-byte unsigned integer.        |
 | 14 | ISD  |    int64_t   |   8   | 8-byte signed integer.          |
-| 15 | TMD  |    int64_t   |   8   | 8-byte Subsecond Id timestamp.  |
+| 15 | SSD  |    int64_t   |   8   | 8-byte Subsecond Id timestamp.  |
 | 16 | FPE  |  float128_t  |  16   | 16-byte floating-point number.  |
 | 17 | IUE  |   uint128_t  |  16   | 16-byte unsigned integer.       |
 | 18 | ISE  |   int128_t   |  16   | 16-byte signed integer.         |
-| 19 | TME  |   uint128_t  |  16   | 16-byte Subsecond Id timestamp. |
+| 19 | SSE  |   uint128_t  |  16   | 16-byte Subsecond Id timestamp. |
 | 20 | PCa  |      ?       |   ?   | Plain Context Type a.           |
 | 21 | PCb  |      ?       |   ?   | Plain Context Type b.           |
 | 22 | PCc  |      ?       |   ?   | Plain Context Type c.           |
@@ -171,15 +171,50 @@ Variable Byte Length (VBL) Types 1 to 2048 bytes long are created when the five 
 
 Plain Context Types PCa through PCl are implementation defined and may be 8, 16, 32, 64, or 128-bits wide. Plain types must be sorted descending by width, which is reverse order from POD types 1 through 18. All Plain Context Types except for 8-bit Plain Context Types can be deleted, which would make all of the Plain Data types 8-bit, hence why they are reverse sorted.
 
+### Concrete Type Definitions
+
+The following concrete definitions are recommended for Plain Context Types:
+
+| Type | Width | Purpose | Usage |
+|:----:|:-----:|:--------|:------|
+| PCa | 128-bit | Extended Context Storage | Large-scale context data for complex operations |
+| PCb | 64-bit | Context Pointer | Pointer to context data structures |
+| PCc | 32-bit | Context Index | Index into context tables |
+| PCd | 16-bit | Context Tag | Tag for context classification |
+| PCe | 8-bit | Context Flag | Boolean flag for context state |
+| PCf | 8-bit | Context Modifier | Additional context modifier bits |
+| PCg | 8-bit | Context Reserved | Reserved for future use |
+| PCh | 8-bit | Context Reserved | Reserved for future use |
+| PCi | 8-bit | Context Reserved | Reserved for future use |
+| PCj | 8-bit | Context Reserved | Reserved for future use |
+| PCk | 8-bit | Context Reserved | Reserved for future use |
+| PCl | 8-bit | Context Reserved | Reserved for future use |
+
+### Configuration and Deletion
+
 Plain Context Types are set by defining the last Plain Type index of that size such that `CT0 = 31 >= CT1 >= CT2 >= CT3 >= CT4 >= CT5 > 19`. When the machine is configured these values are CT0_STOP, CT1_STOP, CT2_STOP, CT3_STOP, CT4_STOP, and CT5_STOP respectively. After the machine has been configured the codes then turn into integer values _CT0, _CT1, _CT2, _CT3, _CT4, and _CT5.
 
 To delete all 128-bit Plain Context Types set CT4_STOP to BOL (19). To delete all 64-bit Plain Context Types set CT3_STOP to CT4_STOP. To delete all 32-bit Plain Context Types set CT2_STOP to CT3_STOP. To delete all 16-bit Plain Context Types set CT1_STOP to CT2_STOP. All unspecified Plain Context Types are then 8-bit types that cannot be deleted.
+
+### Usage Examples
+
+```C++
+// Example: Using Plain Context Types for context management
+struct Context {
+  PCa extended_data;      // 128-bit extended context
+  PCb context_ptr;        // 64-bit pointer to context structure
+  PCc context_index;      // 32-bit index into context table
+  PCd context_tag;        // 16-bit context classification tag
+  PCe context_flag;       // 8-bit boolean flag
+  PCf context_modifier;   // 8-bit modifier bits
+};
+```
 
 ## Requirements
 
 [1]: ../Requirements#Optimal-Transceiving
 
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification Overview](./)
 
 **[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Extended Types >>](ExtendedTypes.md)**
 

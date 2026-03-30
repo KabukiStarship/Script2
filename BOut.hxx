@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "BOut.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "BSeq.hpp"
 #include "Hash.hpp"
 #include "Varint.hpp"
@@ -124,7 +124,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
   IUC iuc;
 #endif
 #ifdef USING_CRABS_8_BYTE_TYPES
-  IUD iud;
+  //IUD iud;
 #endif
   ISN num_params = params[0];
   if (num_params == 0) {
@@ -150,7 +150,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
   const IUC* iuc_ptr;  //< Pointer to a 4-IUA type.
 #endif
 #ifdef USING_CRABS_8_BYTE_TYPES
-  const IUD* iud_ptr;  //< Pointer to a 8-IUA type.
+  //const IUD* iud_ptr;  //< Pointer to a 8-IUA type.
 #endif
   IUB hash = PRIME_LARGEST_IUB;
 

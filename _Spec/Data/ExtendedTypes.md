@@ -244,7 +244,7 @@ At the very origin of the Crabs machine is a word aligned block of memory, which
 
 ## Requirements
 
-**[<< Previous Section: Types](Types.md) | [Next Section: Numbers >>](Numbers.md)**
+**[<< Previous Section: Types](Types.md) | [Next Section: Clock >>](Clock.md)**
 
 [SCRIPT Specification](../) **>** [ASCII Data Specification](./)
 

@@ -37,6 +37,6 @@ pair, so we need a 64-bit dictionary.
 
 [SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
 
-**[<< Previous Section: Homo-tuples](../HomoTuples.md) | [Next Section: Array >>](Array.md)**
+**[<< Previous Section: Map Types Overview](../) | [Next Section: Socket >>](Socket.md)**
 
 Copyright [AStarship™](https://astarship.net).

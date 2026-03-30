@@ -118,7 +118,7 @@
     <ClInclude Include="_Package.hxx" />
     <ClInclude Include="_Release.h" />
     <ClInclude Include="_Seams\01.COut.hxx" />
-    <ClInclude Include="_Seams\16.RNG.hxx" />
+    <ClInclude Include="_Seams\18.RNG.hxx" />
     <ClInclude Include="_Seams\02.ItoS.hxx" />
     <ClInclude Include="_Seams\03.FtoS.hxx" />
     <ClInclude Include="_Seams\04.Uniprinter.hxx" />
@@ -132,14 +132,15 @@
     <ClInclude Include="_Seams\12.Map.hxx" />
     <ClInclude Include="_Seams\13.Table.hxx" />
     <ClInclude Include="_Seams\14.Dic.hxx" />
-    <ClInclude Include="_Seams\19.CrabsOp.hxx" />
+    <ClInclude Include="_Seams\15.CrabsOp.hxx" />
     <ClInclude Include="_Seams\16.CrabsCore.hxx" />
-    <ClInclude Include="_Seams\20.Room.hxx" />
-    <ClInclude Include="_Seams\15.MathCore.hxx" />
-    <ClInclude Include="_Seams\17.File.hxx" />
-    <ClInclude Include="_Seams\18.SGraTe.hxx" />
-    <ClInclude Include="_Seams\21.CrabsCore.hxx" />
+    <ClInclude Include="_Seams\16.Room.hxx" />
+    <ClInclude Include="_Seams\17.MathCore.hxx" />
+    <ClInclude Include="_Seams\19.File.hxx" />
+    <ClInclude Include="_Seams\20.SGraTe.hxx" />
+    <ClInclude Include="_Seams\21.CrabsScript.hxx" />
     <ClInclude Include="_Seams\22.Release.hxx" />
+    <ClInclude Include="_Seams\pch.h" />
     <ClInclude Include="_Seams\TestWords.h" />
     <ClInclude Include="_Seams\_Config.h" />
     <ClInclude Include="_Seams\_Seams.h" />
@@ -208,6 +209,7 @@
     <None Include="_Spec\ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="_Seams\__Crabs.cpp" />
     <ClCompile Include="_Seams\_Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -280,13 +282,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeaderFile>_Config.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)./_Seams</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
     </ClCompile>

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_ERROR_DECL
-#define CRABS_ERROR_DECL 1
+#define CRABS_ERROR_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_CORE
 namespace _ {
@@ -11,7 +11,7 @@ namespace _ {
 /* A CHA[32][32] containing the ASCIIError error strings.
 Example:
 const CHA* error_string = STRErrors()[error_code * 32]; */
-LIB_MEMBER const CHA* ASCIIErrorSTA();
+const CHA* ASCIIErrorSTA();
 
 /* Returns one of the STRErrors() ASCIIError Strings. */
 inline const CHA* ASCIIErrorSTR(ISA error);

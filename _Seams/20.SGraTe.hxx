@@ -8,7 +8,7 @@
 #endif
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 /* Seam contains test functions for the rest of the Autojects. */
 static const CHA* SGraTe(const CHA* args) {
@@ -18,4 +18,4 @@ static const CHA* SGraTe(const CHA* args) {
   return NILP;
 }
 
-}  //< namespace Crabs
+}  //< namespace CRTest

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef SCRIPTT2_TABLE_HPP
-#define SCRIPTT2_TABLE_HPP 1
+#define SCRIPTT2_TABLE_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_TABLE
 #include "Array.hpp"
@@ -13,9 +13,9 @@
 #include "_Release.h"
 #endif
 #define TBL_A \
-  typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN
-#define TBL_P CHT, ISZ, ISY, HSH
-#define TBL TTable<CHT, ISZ, ISY, HSH>
+  typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN
+#define TBL_P CHS, ISZ, ISY, HSH
+#define TBL TTable<CHS, ISZ, ISY, HSH>
 namespace _ {
 
 /* A dense key-index map.
@@ -199,15 +199,15 @@ const ISZ* TTableKeysMap(const TBL* table) {
 }
 
 template<TBL_A>
-inline CHT* TTableKey(ISZ* keys_map, ISZ offset) {
-  return TPtr<CHT>(keys_map, offset);
+inline CHS* TTableKey(ISZ* keys_map, ISZ offset) {
+  return TPtr<CHS>(keys_map, offset);
 }
 template<TBL_A>
-inline const CHT* TTableKey(const ISZ* keys_map, ISZ offset) {
-  return CPtr<CHT>(TTableKey<TBL_P>(CPtr<ISZ>(keys_map), offset));
+inline const CHS* TTableKey(const ISZ* keys_map, ISZ offset) {
+  return CPtr<CHS>(TTableKey<TBL_P>(CPtr<ISZ>(keys_map), offset));
 }
 template<TBL_A>
-CHT* TTableKey(TBL* table, ISY total, ISY count) {
+CHS* TTableKey(TBL* table, ISY total, ISY count) {
   return TTableKey<TBL_P>(table, table)[count];
 }
 template<TBL_A>
@@ -215,24 +215,24 @@ const ISZ* TTableKey(const TBL* table, ISY total, ISY count) {
   return CPtr<ISZ>(TTableKey<TBL_P>(CPtr<TBL>(table), total, count));
 }
 template<TBL_A>
-inline CHT* TTableKeyAt(ISZ* keys_map, ISY index) {
-  return TPtr<CHT>(keys_map, keys_map[index]);
+inline CHS* TTableKeyAt(ISZ* keys_map, ISY index) {
+  return TPtr<CHS>(keys_map, keys_map[index]);
 }
 template<TBL_A>
-inline const CHT* TTableKeyAt(const ISZ* keys_map, ISY index) {
-  return CPtr<CHT>(TTableKeyAt<TBL_P>(CPtr<ISZ>(keys_map), index));
+inline const CHS* TTableKeyAt(const ISZ* keys_map, ISY index) {
+  return CPtr<CHS>(TTableKeyAt<TBL_P>(CPtr<ISZ>(keys_map), index));
 }
 
 template<TBL_A>
-inline CHT* TTableKeysStop(TBL* table, ISZ bytes) {
+inline CHS* TTableKeysStop(TBL* table, ISZ bytes) {
   ISY* pile      = TTablePile<TBL_P>(table, bytes);
   ISY  pile_size = *pile;
   D_ASSERT(pile_size < 0);
-  return TPtrDown<CHT>(TPtr<ISA>(pile + pile_size) - sizeof(CHT));
+  return TPtrDown<CHS>(TPtr<ISA>(pile + pile_size) - sizeof(CHS));
 }
 template<TBL_A>
-inline const CHT* TTableKeysStop(const TBL* table, ISZ bytes) {
-  return CPtr<CHT>(TTableKeysStop<TBL_P>(CPtr<TBL>(table), bytes));
+inline const CHS* TTableKeysStop(const TBL* table, ISZ bytes) {
+  return CPtr<CHS>(TTableKeysStop<TBL_P>(CPtr<TBL>(table), bytes));
 }
 template<TBL_A>
 inline ISZ TTableKeysMapStartOffset(ISY total) {
@@ -245,13 +245,13 @@ inline ISZ TTableKeysStopOffset(const TBL* table, ISZ bytes, const ISZ* keys_map
 
 // The address of the next collision index.
 template<TBL_A>
-inline CHT* TTablePileBotton(TBL* table, ISZ bytes) {
+inline CHS* TTablePileBotton(TBL* table, ISZ bytes) {
   ISY* pile = TTablePile<TBL_P>(table, bytes);
   return pile + *TPtr<ISY>(pile);
 }
 template<TBL_A>
-inline const CHT* TTablePileBotton(const TBL* table, ISZ bytes) {
-  return CPtr<CHT>(TTablePileBotton<TBL_P>(CPtr<TBL>(table), bytes));
+inline const CHS* TTablePileBotton(const TBL* table, ISZ bytes) {
+  return CPtr<CHS>(TTablePileBotton<TBL_P>(CPtr<TBL>(table), bytes));
 }
 
 /* Free space left in the keys boofer. */
@@ -293,7 +293,7 @@ Printer& TTablePrint(Printer& o, const TBL* table) {
   ISY pile_size = *pile;
   D_ASSERT(pile_size < 0);
   total_length = (total_length < 2 ? 2 : total_length);
-  #if D_THIS
+  #ifdef D_THIS
   ISZ start = 0;
   if (count < total) {
     start = keys_map[count];
@@ -302,17 +302,17 @@ Printer& TTablePrint(Printer& o, const TBL* table) {
     stop = TDelta<ISZ>(keys_map, TTableKeysStop<TBL_P>(table, bytes));
   }
   #endif
-  o << Linef("\n+---\n| Table<CH") << CSizeCodef<CHT>()
+  o << Linef("\n+---\n| Table<CH") << CSizeCodef<CHS>()
     << ",IS" << CSizeCodef<ISZ>()
     << ",IS" << CSizeCodef<ISY>()
     << ",IU" << CSizeCodef<HSH>() << ">:0x"
     << Hexf(table) << " bytes:" << bytes << " count:" << count
     << " total:" << total
-    #if D_THIS
+    #ifdef D_THIS
     << "\n| pile_size:" << pile_size << " start:" << start << " stop:" << stop
     #endif
     << Linef("\n+---\n| ") << Rightf("i", total_length) << ' '
-    #if D_THIS
+    #ifdef D_THIS
     << Centerf("hash_e", HashSize - 2) << ' '
     << Centerf("hash_u", HashSize - 2) << ' '
     #endif
@@ -324,10 +324,10 @@ Printer& TTablePrint(Printer& o, const TBL* table) {
     ISY index_s = sort_map[i];
     HSH hash_u = hash_map[index_s],
         hash_s = hash_map[i];
-    const CHT* key = TTableKey<TBL_P>(keys_map, offset);
+    const CHS* key = TTableKey<TBL_P>(keys_map, offset);
     o << "\n| " << Rightf(i, total_length) << ' '
-      #if D_THIS
-      << Centerf().Hex(THashPrime<HSH, CHT>(key), HashSize) << ' '
+      #ifdef D_THIS
+      << Centerf().Hex(THashPrime<HSH, CHS>(key), HashSize) << ' '
       << Centerf().Hex(hash_u, HashSize) << ' '
       #endif
       << Centerf().Hex(hash_s, HashSize) << ' '
@@ -357,7 +357,7 @@ Printer& TTablePrint(Printer& o, const TBL* table) {
     }
     o << '}';
   }
-#if D_THIS
+#ifdef D_THIS
   return o << Linef("\n+---") << Charsf(table, table->bytes) << '\n';
 #endif
   return o << Linef("\n+---\n");
@@ -376,7 +376,7 @@ TBL* TTableInit(TBL* table, ISY total) {
   *pile-- = CAInvalidIndex<ISY>();
   ISZ start = TTableKeysMapStartOffset<TBL_P>(total);
   *keys_map = start;
-  CHT* stop_ptr = TPtrDown<CHT>(pile, -ISW(sizeof(CHT)));
+  CHS* stop_ptr = TPtrDown<CHS>(pile, -ISW(sizeof(CHS)));
   D_COUT("\nkeys_stop delta:" << TDelta<>(table, stop_ptr));
   ISZ  stop      = TDelta<ISZ>(keys_map, stop_ptr);
   D_COUT("\nCreating a TTable<> with bytes:" << bytes << " total:" << total << 
@@ -399,7 +399,7 @@ inline TBL* TTableInit(IUW* socket, ISY total) {
 @return An invalid index upon failure or valid index upon success.
 @todo Check if pile has enough room to add another. */
 template<TBL_A>
-ISY TTableAppend(TBL* table, const CHT* key) {
+ISY TTableAppend(TBL* table, const CHS* key) {
   D_CHECK_PTR_TRETURN(ISY, table);
   D_CHECK_PTR_TRETURN(ISY, key);
   ISZ  bytes     = table->bytes,
@@ -416,7 +416,7 @@ ISY TTableAppend(TBL* table, const CHT* key) {
     sort_map);
   ISY count_new = count + 1;
   ISZ start = keys_map[count];
-  CHT* stop_ptr = TPtr<CHT>(keys_map, stop);
+  CHS* stop_ptr = TPtr<CHS>(keys_map, stop);
   D_ASSERT(count >= 0 && count < total);
   if (count_new == total) {
     start = stop;
@@ -424,13 +424,13 @@ ISY TTableAppend(TBL* table, const CHT* key) {
     stop_ptr = TTableKeysStop<TBL_P>(table, bytes);
     stop = TDelta<ISZ>(keys_map, stop_ptr);
   }
-  CHT* start_ptr = TPtr<CHT>(keys_map, start);
+  CHS* start_ptr = TPtr<CHS>(keys_map, start);
   auto start_stop_delta = stop - start;
   auto start_stop_ptr_delta = stop_ptr - start_ptr;
   D_ASSERT(start_stop_delta == start_stop_ptr_delta);
   HSH  hash      = 0;
   ISZ  length    = 0;
-  CHT* start_next_ptr = THashPrimePrint_NC<HSH, ISZ, CHT, CHT>(start_ptr,
+  CHS* start_next_ptr = THashPrimePrint_NC<HSH, ISZ, CHS, CHS>(start_ptr,
     stop_ptr, key, hash, length);
   D_CHECK_PTR_TRETURN(ISY, start_next_ptr);
   if (++start_next_ptr >= stop_ptr) D_RETURNT(ISY, -ErrorKeysBooferOverflow);
@@ -481,14 +481,14 @@ ISY TTableAppend(TBL* table, const CHT* key) {
                  TTableKey<TBL_P>(keys_map, key_offset) << 
                  "\":" << stack_index << 
                  "  table_to_pile_cursor_delta:" << TDelta<>(table, pile_cursor));
-          if (TStringEquals<CHT>(key, TTableKey<TBL_P>(keys_map, key_offset))) {
+          if (TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, key_offset))) {
             D_COUT(" Found key at stack_index:" << stack_index);
             return stack_index;
           }
           stack_index = *pile_cursor--;
         }
         D_COUT("\n             New collision detected, inserting into pile");
-        if (TPtrDown<CHT>(pile - 1) < start_ptr)
+        if (TPtrDown<CHS>(pile - 1) < start_ptr)
           D_RETURNT(ISY, -ErrorBooferOverflow);
         sort_map[count] = count;
         pile_map[count] = pile_index;
@@ -506,11 +506,11 @@ ISY TTableAppend(TBL* table, const CHT* key) {
         return count;
       }
       ISZ key_offset = keys_map[sort_index];
-      CHT* other_key = TTableKey<TBL_P>(keys_map, key_offset);
+      CHS* other_key = TTableKey<TBL_P>(keys_map, key_offset);
       D_COUT("\n           No collisions exist." <<
              "\n           Comparing to " << sort_index << ":\"" << other_key << 
              "\" at offset:" << key_offset);
-      if (!TStringEquals<CHT>(key, other_key)) {
+      if (!TSEquals<CHS>(key, other_key)) {
         ISY* pile = TTablePile<TBL_P>(table, bytes);
         ISY  pile_size = *pile;
         D_COUT("\n             New collision with sort_index:" << 
@@ -559,7 +559,7 @@ ISY TTableAppend(TBL* table, TBL* items) {
   ISZ* keys_map = TTableKeysMap<TBL_P>(items, total);
   ISY result = 0;
   for (ISY i = 0; i < count; ++i) {
-    result = TTableAppend<TBL_P>(table, TPtr<CHT>(keys_map, keys_map[i]));
+    result = TTableAppend<TBL_P>(table, TPtr<CHS>(keys_map, keys_map[i]));
     if (result < 0) return result;
   }
   return result;
@@ -612,7 +612,7 @@ BOL TTableGrow(Autoject& obj) {
 @return The index upon success or -1 if the obj can't grow anymore.
 @todo Verify copmile size of this function isolated and in the AArray class. */
 template<TBL_A>
-ISY TTableAppend(Autoject& obj, const CHT* key) {
+ISY TTableAppend(Autoject& obj, const CHS* key) {
   D_CHECK_PTR_TRETURN(ISY, key);
   IUW* origin = obj.origin;
   ISY result = TTableAppend<TBL_P>(TPtr<TBL>(origin), key);
@@ -640,7 +640,7 @@ ISY TTableAppend(Autoject& obj, TBL* items) {
   ISZ* keys_map = TTableKeysMap<TBL_P>(table, total);
   ISY result = 0;
   for (ISY i = 0; i < count; ++i) {
-    result = TTableAppend<TBL_P>(obj, TPtr<CHT>(keys_map, keys_map[i]));
+    result = TTableAppend<TBL_P>(obj, TPtr<CHS>(keys_map, keys_map[i]));
     if (result < 0) {
       D_ASSERT(result >= 0);
       return result;
@@ -654,7 +654,7 @@ ISY TTableAppend(Autoject& obj, TBL* items) {
 @return Returns TTableInvalidIndex<ISY>() upon failure, and valid index upon
 success. */
 template<TBL_A>
-ISY TTableFind(const TBL* table, const CHT* key) {
+ISY TTableFind(const TBL* table, const CHS* key) {
   D_CHECK_PTR_TRETURN(ISY, table);
   D_CHECK_PTR_TRETURN(ISY, key);
   ISY count = ISY(table->map.count),
@@ -667,18 +667,18 @@ ISY TTableFind(const TBL* table, const CHT* key) {
            * sort_map = NILP;
   TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
                         sort_map);
-  HSH hash = THashPrime<HSH, CHT>(key);
+  HSH hash = THashPrime<HSH, CHS>(key);
   D_COUT("\n\nSearching for key:\"" << key << "\"\n             hash:0x" << 
          Hexf(hash) << "...");
   if (count == 1) {
     ISZ offset = keys_map[0];
     D_COUT("\nComparing to only key \"" << 
       TTableKey<TBL_P>(keys_map, offset) << "\":" << offset << "...");
-    if (TStringEquals<CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
+    if (TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("hit at offset:" << offset);
       return 0;
     }
-    if (!TStringEquals<CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
+    if (!TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("key not found.");
       return CAInvalidIndex<ISY>();
     }
@@ -714,10 +714,10 @@ ISY TTableFind(const TBL* table, const CHT* key) {
           if (stack_index >= count)
             D_RETURNT(ISY, -ErrorInvalidInput);
           ISZ offset = keys_map[stack_index];
-          const CHT* other = TTableKey<TBL_P>(keys_map, offset);
+          const CHS* other = TTableKey<TBL_P>(keys_map, offset);
           D_COUT("\n      Comparing to:\"" << other << "\" at offset:" << 
                  offset << " at " << stack_index);
-          if (TStringEquals<CHT>(key, other)) {
+          if (TSEquals<CHS>(key, other)) {
             D_COUT("\n      Hit at index:" << stack_index << " offset:" << offset);
             return stack_index;
           }
@@ -727,9 +727,9 @@ ISY TTableFind(const TBL* table, const CHT* key) {
         D_RETURNT(ISY, -ErrorUnavailable);
       }
       ISZ offset = keys_map[sorted_index];
-      const CHT* other = TTableKeyAt<TBL_P>(keys_map, sorted_index);
+      const CHS* other = TTableKeyAt<TBL_P>(keys_map, sorted_index);
       D_COUT("\n    Comparing to key:\"" << other << '"');
-      if (!TStringEquals<CHT>(key, other)) {
+      if (!TSEquals<CHS>(key, other)) {
         D_COUT("\n    Table does not contain key.");
         return CAInvalidIndex<ISY>();
       }
@@ -743,45 +743,45 @@ ISY TTableFind(const TBL* table, const CHT* key) {
 
 /* Gets the given key by index without bounds checking. */
 template<TBL_A>
-inline CHT* TTableGet_NC(TBL* table, ISY total, ISY index) {
-  return TPtr<CHT>(table, TTableKeysMap<TBL_P>(table, total)[index]);
+inline CHS* TTableGet_NC(TBL* table, ISY total, ISY index) {
+  return TPtr<CHS>(table, TTableKeysMap<TBL_P>(table, total)[index]);
 }
 template<TBL_A>
-inline const CHT* TTableGet_NC(const TBL* table, ISY total, ISY index) {
-  return CPtr<CHT>(TTableGet_NC<TBL_P>(CPtr<TBL>(table), index));
+inline const CHS* TTableGet_NC(const TBL* table, ISY total, ISY index) {
+  return CPtr<CHS>(TTableGet_NC<TBL_P>(CPtr<TBL>(table), index));
 }
 
 /* Gets the given key by index without bounds checking. */
 template<TBL_A>
-inline CHT* TTableGet_NC(TBL* table, ISY index) {
+inline CHS* TTableGet_NC(TBL* table, ISY index) {
   return TTableGet_NC<TBL_P>(table, ISY(table->map.total), index);
 }
 template<TBL_A>
-inline const CHT* TTableGet_NC(const TBL* table, ISY index) {
+inline const CHS* TTableGet_NC(const TBL* table, ISY index) {
   return TTableGet_NC<TBL_P>(table, ISY(table->map.total), index);
 }
 
 /* Gets the given key by unsorted index. */
 template<TBL_A>
-inline CHT* TTableGet(TBL* table, ISY total, ISY index) {
-  D_CHECK_TPTR_RETURN(CHT, table);
+inline CHS* TTableGet(TBL* table, ISY total, ISY index) {
+  D_CHECK_TPTR_RETURN(CHS, table);
   ISY count = ISY(table->map.count);
   if (index < 0 || index >= count) return NILP;
   ISZ* keys_map = TTableKeysMap<TBL_P>(table, total);
-  return TPtr<CHT>(keys_map, keys_map[index]);
+  return TPtr<CHS>(keys_map, keys_map[index]);
 }
 template<TBL_A>
-inline const CHT* TTableGet(const TBL* table, ISY total, ISY index) {
-  return CPtr<CHT>(TTableGet<TBL_P>(CPtr<TBL>(table), total, index));
+inline const CHS* TTableGet(const TBL* table, ISY total, ISY index) {
+  return CPtr<CHS>(TTableGet<TBL_P>(CPtr<TBL>(table), total, index));
 }
 
 /* Gets the given key by unsorted index. */
 template<TBL_A>
-inline CHT* TTableGet(TBL* table, ISY index) {
+inline CHS* TTableGet(TBL* table, ISY index) {
   return TTableGet<TBL_P>(table, ISY(table->map.total), index);
 }
 template<TBL_A>
-inline const CHT* TTableGet(const TBL* table, ISY index) {
+inline const CHS* TTableGet(const TBL* table, ISY index) {
   return TTableGet<TBL_P>(table, ISY(table->map.total), index);
 }
 
@@ -803,7 +803,7 @@ ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
      * sort_map = NILP;
   TTablePointers<TBL_P>(table, bytes, total, keys_map, hash_map, pile_map,
                         sort_map);
-  CHT* key_start = 0, 
+  CHS* key_start = 0, 
      * key_end   = 0;
   ISY sorted_index = sort_map[index];
   TStackRemove<HSH, ISY>(hash_map, total, sorted_index);
@@ -826,9 +826,9 @@ ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
   TStackRemove<ISY, ISY>(pile_map, count, index);
   if (pack) {
     D_ASSERT(false);
-    key_start = TPtr<CHT>(keys_map, sort_map[index]);
-    key_end = (index == count) ? TPtr<CHT>(keys_map, stop) 
-                               : TPtr<CHT>(keys_map, sort_map[index + 1]);
+    key_start = TPtr<CHS>(keys_map, sort_map[index]);
+    key_end = (index == count) ? TPtr<CHS>(keys_map, stop) 
+                               : TPtr<CHS>(keys_map, sort_map[index + 1]);
   }
   TStackRemove<ISY, ISY>(sort_map, count, index);
   ISY* end = sort_map + count;
@@ -842,7 +842,7 @@ ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
 
 /* Removes the given key from the table. */
 template<TBL_A>
-ISY TTableRemove(TBL* table, const CHT* key) {
+ISY TTableRemove(TBL* table, const CHS* key) {
   ISY index = 0;// @todo fix me!
   return TTableRemove<TBL_P>(table, index);
 }
@@ -851,7 +851,7 @@ ISY TTableRemove(TBL* table, const CHT* key) {
 template<TBL_A, ISY Total_ = 32, 
   typename BOF = TBOF<CTableSize<TBL_P, Total_>(), ISA, ISZ, TBL>>
 class ATable {
-  AArray<CHT, ISZ, Total_ * 32, BOF> obj_;  //< Auto-Array of CHT(s).
+  AArray<CHS, ISZ, Total_ * 32, BOF> obj_;  //< Auto-Array of CHS.
  public:
   /* Constructs a Table. */
   ATable() {
@@ -869,7 +869,7 @@ class ATable {
 
   /* Deep copies the given string into the Table.
   @return The index of the string in the Table. */
-  inline ISY Append(const CHT* string) {
+  inline ISY Append(const CHS* string) {
     return TTableAppend<TBL_P>(obj_.AJT(), string);
   }
 
@@ -879,16 +879,16 @@ class ATable {
   }
 
   /* Removes the string at the given index from the Table. */
-  inline ISY Remove(const CHT* key) {
+  inline ISY Remove(const CHS* key) {
     return TTableRemove<TBL_P>(This(), key);
   }
 
   /* Gets the string at the given index. */
-  inline CHT* Get(ISY index) {
+  inline CHS* Get(ISY index) {
     return TTableGet<TBL_P>(This(), index);
   }
 
-  inline ISY Find(const CHT* string) {
+  inline ISY Find(const CHS* string) {
     return TTableFind<TBL_P>(This(), string);
   }
 

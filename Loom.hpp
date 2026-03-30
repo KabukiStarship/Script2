@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_LOOM_HPP
-#define CRABS_LOOM_HPP 1
+#define CRABS_LOOM_HPP
 #include <_Config.h>
 #if SEAM >= CRABS_LOOM
 #include "Array.h"
@@ -12,8 +12,8 @@
 #else
 #include "_Release.h"
 #endif
-#define LOM_A typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ
-#define LOM_P CHT, ISZ, ISY
+#define LOM_A typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ
+#define LOM_P CHS, ISZ, ISY
 #define LOM TLoom<LOM_P>
 namespace _ {
 /* @ingroup Loom
@@ -65,7 +65,7 @@ total. */
 template<LOM_A>
 ISZ TLoomSizeMin(ISZ total, ISZ average_string_length = 0) {
   return sizeof(TLoom<LOM_P>) + 
-    total * (sizeof(ISY) + (average_string_length + 1) * sizeof(CHT));
+    total * (sizeof(ISY) + (average_string_length + 1) * sizeof(CHS));
 }
 
 /* The default length of a key. */
@@ -84,14 +84,14 @@ constexpr ISY TLoomCountDefault() {
 template<LOM_A>
 constexpr ISZ TLoomSizeDefault() {
   return (TLoomKeyLengthDefault<LOM_P>() *
-    TLoomCountDefault<LOM_P>() * sizeof(CHT)) & (sizeof(ISW) - 1);
+    TLoomCountDefault<LOM_P>() * sizeof(CHS)) & (sizeof(ISW) - 1);
 }
 
 /* The default size of a Loom when no paramters are specified. */
 template<LOM_A>
 constexpr ISZ TLoomSize(ISY total, ISZ string_length_average = 
                          TLoomKeyLengthDefault<LOM_P>()) {
-  return total * ((string_length_average + 1) * sizeof(CHT) +
+  return total * ((string_length_average + 1) * sizeof(CHS) +
           sizeof(ISY)) + sizeof(TLoom<LOM_P>);
 }
 
@@ -106,7 +106,7 @@ length. */
 template<LOM_A>
 inline ISZ TLoomKeysSize(ISY total, ISZ average_length_string =
   TLoomDefaultLengthString<LOM_P>()) {
-  return total * sizeof(CHT) * (average_length_string + 1) +
+  return total * sizeof(CHS) * (average_length_string + 1) +
           total * sizeof(ISY) + sizeof(TLoom<LOM_P>);
 }
 
@@ -118,39 +118,39 @@ inline ISZ TLoomKeysBeginOffset(ISY total) {
 
 /* Returns the pointer to the first character in the loom string boofer. */
 template<LOM_A>
-inline CHT* TLoomKeysBegin(TLoom<LOM_P>* loom) {
+inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
 }
 template<LOM_A>
-inline const CHT* TLoomKeysBegin(const TLoom<LOM_P>* loom) {
+inline const CHS* TLoomKeysBegin(const TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
 }
 
 /* Returns the first char in the string boofer. */
 template<LOM_A>
-inline CHT* TLoomKeysBegin(TLoom<LOM_P>* loom, ISY total) {
-  return TPtr<CHT>(loom, TLoomKeysBeginOffset<LOM_P>(total));
+inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom, ISY total) {
+  return TPtr<CHS>(loom, TLoomKeysBeginOffset<LOM_P>(total));
 }
 template<LOM_A>
-inline const CHT* TLoomKeysBegin(const TLoom<LOM_P>* loom, ISY total) {
-  return TPtr<const CHT>(loom, TLoomKeysBeginOffset<LOM_P>(total));
-}
-
-template<LOM_A>
-CHT* TLoomStop(TLoom<LOM_P>* loom, ISZ bytes) {
-  return TPtr<CHT>(TPtrDown<ISW, CHT>(loom, bytes));
-}
-template<LOM_A>
-inline const CHT* TLoomStop(const TLoom<LOM_P>* loom, ISZ bytes) {
-  return CPtr<CHT>(TLoomStop<LOM_P>(CPtr<TLoom<LOM_P>>(loom), bytes));
+inline const CHS* TLoomKeysBegin(const TLoom<LOM_P>* loom, ISY total) {
+  return TPtr<const CHS>(loom, TLoomKeysBeginOffset<LOM_P>(total));
 }
 
 template<LOM_A>
-CHT* TLoomStop(TLoom<LOM_P>* loom) {
+CHS* TLoomStop(TLoom<LOM_P>* loom, ISZ bytes) {
+  return TPtr<CHS>(TPtrDown<ISW, CHS>(loom, bytes));
+}
+template<LOM_A>
+inline const CHS* TLoomStop(const TLoom<LOM_P>* loom, ISZ bytes) {
+  return CPtr<CHS>(TLoomStop<LOM_P>(CPtr<TLoom<LOM_P>>(loom), bytes));
+}
+
+template<LOM_A>
+CHS* TLoomStop(TLoom<LOM_P>* loom) {
   return TLoomStop<LOM_P>(loom, loom->bytes);
 }
 template<LOM_A>
-inline const CHT* TLoomStop(const TLoom<LOM_P>* loom) {
+inline const CHS* TLoomStop(const TLoom<LOM_P>* loom) {
   return TLoomStop<LOM_P>(loom, loom->bytes);
 }
 
@@ -194,31 +194,31 @@ const ISZ* TLoomKeysMap(const TLoom<LOM_P>* loom) {
 
 /* Gets the element at the given index. */
 template<LOM_A>
-CHT* TLoomGet(TLoom<LOM_P>* loom, ISY index) {
+CHS* TLoomGet(TLoom<LOM_P>* loom, ISY index) {
   D_ASSERT(loom);
   if (index < 0 || index >= loom->map.count) return NILP;
-  return TPtr<CHT>(loom, TStackBegin<ISZ, ISZ>(&loom->map)[index]);
+  return TPtr<CHS>(loom, TStackBegin<ISZ, ISZ>(&loom->map)[index]);
 }
 template<LOM_A>
-const CHT* TLoomGet(const TLoom<LOM_P>* loom, ISY index) {
-  return CPtr<CHT>(TLoomGet<LOM_P>(CPtr<TLoom<LOM_P>>(loom), index));
+const CHS* TLoomGet(const TLoom<LOM_P>* loom, ISY index) {
+  return CPtr<CHS>(TLoomGet<LOM_P>(CPtr<TLoom<LOM_P>>(loom), index));
 }
 
 /* Gets the element at the given index. */
 template<LOM_A>
-const CHT* TLoomGet_NC(const TLoom<LOM_P>* loom, ISY index) {
-  return TPtr<CHT>(loom, TLoomKeysMap<LOM_P>(loom)[index]);
+const CHS* TLoomGet_NC(const TLoom<LOM_P>* loom, ISY index) {
+  return TPtr<CHS>(loom, TLoomKeysMap<LOM_P>(loom)[index]);
 }
 template<LOM_A>
-CHT* TLoomGet_NC(TLoom<LOM_P>* loom, ISY index) {
-  return CPtr<CHT>(TLoomGet_NC<LOM_P>(CPtr<TLoom<LOM_P>>(loom), index));
+CHS* TLoomGet_NC(TLoom<LOM_P>* loom, ISY index) {
+  return CPtr<CHS>(TLoomGet_NC<LOM_P>(CPtr<TLoom<LOM_P>>(loom), index));
 }
 
 /* Prints the Loom to the stream. */
 template<typename Printer, LOM_A>
 Printer& TLoomPrint(Printer& o, const TLoom<LOM_P>* loom) {
   ISY count = ISY(loom->map.count);
-  o << Linef("\n+---\nLoom<CH") << CSizeCodef<CHT>() << ", IS" 
+  o << Linef("\n+---\nLoom<CH") << CSizeCodef<CHS>() << ", IS" 
     << CSizeCodef<ISZ>() << ", IS" << CSizeCodef<ISY>() << "> size:" 
     << loom->bytes << " start:" << loom->start << " total:" << loom->map.total
     << " count:" << count;
@@ -252,7 +252,7 @@ inline TLoom<LOM_P>* TLoomInit(TLoom<LOM_P>* loom, ISY total) {
 
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
-template<LOM_A, typename CH = CHT>
+template<LOM_A, typename CH = CHS>
 ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
   D_ASSERT(loom);
   D_ASSERT(str);
@@ -265,21 +265,22 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
     return -ErrorInvalidInput;
   }
   D_ASSERT(count >= 0);
-  CHT* cursor = NILP;
+  CHS* cursor = NILP;
   if (index < 0) {
     if (index == ANY) {
       D_COUT("\n\nindex == _ANY\n\n");
       if (count <= 1) {
         index = count;
       } else {
-        auto length = TStringLength<CH>(str);
+        auto length = TSCodeCount<CH, ISZ>(str);
         for (ISN i = 0; i < count; ++i) {
           if (i == count) {
             index = count;
             break;
           }
-          cursor = TStringStop<CHT>(TLoomGet<LOM_P>(loom, i)) + 1;
-          CHT* start_next_string = TLoomGet<LOM_P>(loom, i + 1);
+          cursor = 
+            CHS>(TLoomGet<LOM_P>(loom, i)) + 1;
+          CHS* start_next_string = TLoomGet<LOM_P>(loom, i + 1);
           if (start_next_string - cursor > length) {
             index = i;
             break;
@@ -290,13 +291,13 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
       if (index != count) {
         index = TStackInsert<ISZ, ISZ, ISY>(&loom->map, TDelta<ISZ>(loom, cursor), 
                                             index);
-        TSPrintString<CHT>(cursor, TLoomEnd<LOM_P, CHT>(loom), str);
+        TSPrint<CHS, CHT>(cursor, TLoomEnd<LOM_P, CHS>(loom), str);
         return index;
       }
     }
   }
-  cursor = TPtr<CHT>(loom, loom->start);
-  cursor = TSPrintString<CHT>(cursor, (CHT*)TLoomEnd<LOM_P>(loom), str);
+  cursor = TPtr<CHS>(loom, loom->start);
+  cursor = TSPrint<CHS, CHT>(cursor, (CHS*)TLoomEnd<LOM_P>(loom), str);
   if (IsError(cursor))
     return -1;
 
@@ -308,7 +309,7 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
 
 template<LOM_A>
 ISZ TLoomCharCount(TLoom<LOM_P>* loom) {
-  return (ISZ)(TLoomEnd<LOM_P>(loom) - TLoomKeysBegin<LOM_P>(loom));
+  return ISZ(TLoomEnd<LOM_P>(loom) - TLoomKeysBegin<LOM_P>(loom));
 }
 template<LOM_A>
 BOL TLoomWrite(TLoom<LOM_P>* destination, TLoom<LOM_P>* soure) {
@@ -337,7 +338,7 @@ TLoom<LOM_P>* TLoomClone(TLoom<LOM_P>* dest, const TLoom<LOM_P>* src,
     src_start_new = src_start;
   }
   ISZ offsets_copy_bytes = copy_count * sizeof(ISZ);
-  const CHT* src_start_char = TPtr<CHT>(src, src_start_new);
+  const CHS* src_start_char = TPtr<CHS>(src, src_start_new);
   dest->map.total = total_new;
   dest->map.count = src_count;
   // Copy offsets.
@@ -350,9 +351,9 @@ TLoom<LOM_P>* TLoomClone(TLoom<LOM_P>* dest, const TLoom<LOM_P>* src,
   dest->start = src_start_new + growth_delta;
   
   // Copy strings.
-  CHT* dest_begin = TLoomKeysBegin<LOM_P>(dest, total_new);
+  CHS* dest_begin = TLoomKeysBegin<LOM_P>(dest, total_new);
   ISZ src_begin_offset = TLoomKeysBeginOffset<LOM_P>(src_total);
-  const CHT* src_begin = TPtr<CHT>(src, src_begin_offset);
+  const CHS* src_begin = TPtr<CHS>(src, src_begin_offset);
   ISZ src_copy_end_offset = copy_count < src_count ? src_offsets[copy_count - 1] 
                                                    : src_start;
   ISZ string_copy_bytes = src_copy_end_offset - src_begin_offset;
@@ -383,12 +384,12 @@ inline TLoom<LOM_P>* TLoomClone(TLoom<LOM_P>* dest, const TLoom<LOM_P>* src) {
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
 template<LOM_A>
-CHT* TLoomPop(TLoom<LOM_P>* loom) {
+CHS* TLoomPop(TLoom<LOM_P>* loom) {
   if (loom->map.count == 0) return NILP;
   ISZ offset = TStackPop<ISZ, ISZ>(&loom->map),
       start  = loom->start;
   loom->start = offset;
-  return TPtr<CHT>(ISW(loom) + offset);
+  return TPtr<CHS>(ISW(loom) + offset);
 }
 
 /* Adds a string to the end of the Loom.
@@ -416,21 +417,21 @@ ISY TLoomRemove(TLoom<LOM_P>* loom, ISY index) {
 /* Searches for the given string in the loom.
 @return -1 if the loom doesn't contain the string or the index if it does. */
 template<LOM_A>
-ISY TLoomFind(TLoom<LOM_P>* loom, const CHT* string) {
+ISY TLoomFind(TLoom<LOM_P>* loom, const CHS* string) {
   D_ASSERT(loom);
   D_ASSERT(string);
   ISZ* offsets = TStackBegin<ISZ, ISZ>(&loom->map);
   for (ISY i = 0; i < loom->map.count; ++i) {
     ISZ offset = offsets[i];
-    CHT* other = TPtr<CHT>(IUW(loom) + offset);
-    if (!TStringCompare<CHT>(string, other)) return i;
+    CHS* other = TPtr<CHS>(IUW(loom) + offset);
+    if (!TStringCompare<CHS>(string, other)) return i;
   }
   return -1;
 }
 
 /* An ASCII Loom Autoject. */
 template<LOM_A, ISZ Total_ = 512,
-          typename BOF = TBOF<Total_, CHT, ISZ, TLoom<LOM_P>>>
+          typename BOF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
 class ALoom {
   AArray<IUA, ISZ, Total_, BOF> obj_;  //< An Auto-Array object.
  public:
@@ -461,12 +462,12 @@ class ALoom {
   inline ISY Remove(ISY index) { return TLoomRemove<LOM_P>(This(), index); }
 
   /* Gets the string at the given index. */
-  inline CHT* Get(ISY index) { return TLoomGet<LOM_P>(This(), index); }
+  inline CHS* Get(ISY index) { return TLoomGet<LOM_P>(This(), index); }
 
   /* Searches for the given string.
   @return -1 if the Loom doesn't contain the string or the index if it does.
 */
-  inline ISY Find(const CHT* string) {
+  inline ISY Find(const CHS* string) {
     return TLoomFind<LOM_P>(This(), string);
   }
 
@@ -501,7 +502,7 @@ class ALoom {
     if (bytes == bytes_new) return false;
     ISY total     = ISY(src->map.total),
         total_new = AutojectGrowTotal(total);
-    #if D_THIS
+    #ifdef D_THIS
     D_COUT("\n\nGrowing Loom... bytes_new:" << bytes_new << " total:" << 
            total << " total_new:" << total_new << "\n\nBefore:\n");
     COut();
@@ -514,18 +515,18 @@ class ALoom {
     if (IsError(dest_copy))
       return false;
     Delete(obj, growth);
-    #if D_THIS
+    #ifdef D_THIS
     dest = TPtr<LOM>(obj.origin);
     D_COUT("\n\nAfter:\n");
     TLoomPrint<::_::COut, LOM_P>(StdOut(), dest);
-    D_COUT(Charsf(dest, dest->bytes));
+    //D_COUT(Charsf(dest, dest->bytes - 1)); //< @todo Why is this crashing?
     #endif
     return true;
   }
 
   /* Deep copies the given string into the Loom.
   @return The index of the string in the Loom. */
-  template<typename CH = CHT>
+  template<typename CH = CHS>
   inline ISY Insert(const CH* item, ISY index = PSH) {
     if (IsError(item)) return -1;
     D_COUT("\nAdding:\"" << item << '\"' << " freespace:" << 

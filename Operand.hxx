@@ -1,8 +1,8 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Operand.h"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "Op.hpp"
-#if SEAM == CRABS_OPERATION
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"

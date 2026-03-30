@@ -419,7 +419,7 @@ ISA ATypeAlignMask(DTB type) {
     case 2: return ACPUAlignC;
     case 3: return ACPUAlignD;
   }
-  return ACPUMask;
+  return ACPUWordMask;
 }
 ISA ATypeAlignMask(DTC type) {  return ATypeAlignMask(DTB(type)); }
 ISA ATypeAlignMask(DTD type) {  return ATypeAlignMask(DTB(type)); }

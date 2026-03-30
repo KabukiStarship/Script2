@@ -9,7 +9,7 @@
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 template<typename D, D DomainMin_, D DomainMax_, typename ISZ,
           ISZ CodomainMin_, ISZ CodomainMax_, ISZ Size_>
@@ -60,10 +60,10 @@ void TestMap() {
     A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
   D_COUT_OBJ(map);
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #endif
 
-namespace Crabs {
+namespace CRTest {
 const CHA* Map(const CHA* args) {
 #if SEAM >= CRABS_MAP
   A_TEST_BEGIN;
@@ -92,4 +92,4 @@ const CHA* Map(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

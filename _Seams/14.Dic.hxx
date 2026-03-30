@@ -7,9 +7,9 @@
 #include "../_Release.h"
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
-template<typename CHT = CHR, typename ISZ = ISR, typename ISY = ISQ,
+template<typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ,
          typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
   enum {
@@ -17,7 +17,7 @@ static void TestDic() {
     TotalInit = 8, //< Must be a multiple of 8.
   };
   D_COUT(Linef("\n\n---\n\nTesting ADic<IS") << CSizeCodef<ISZ>() << 
-         ",CH" << CSizeCodef<CHT>() << ",IU" << CSizeCodef<ISZ>() << 
+         ",CH" << CSizeCodef<CHS>() << ",IU" << CSizeCodef<ISZ>() << 
          ",IS" << CSizeCodef<ISY>() <<  " DT" << CSizeCodef<DT>() << 
          "> with Size:" << Size << " and Total:" << TotalInit);
 
@@ -27,10 +27,10 @@ static void TestDic() {
          " size_words:" << dic.BytesWords() <<
          "\nPrinting empty dictionary:\n");
   D_COUT_DIC(dic.This());
-  A_AVOW(ISY(0), dic.Find(TStringEmpty<CHT>()));
+  A_AVOW(ISY(0), dic.Find(TStringEmpty<CHS>()));
   D_COUT("\nPopulating " << TotalInit << " test words...");
 
-  const CHT* words = TTestWords<CHT>::Words(),
+  const CHS* words = TTestWords<CHS>::Words(),
            * key   = words;
   ISY i = 0;
   A_AVOW(ISY(++i), dic.Insert(key += 16, ISA('!' + i)));
@@ -46,7 +46,7 @@ static void TestDic() {
   D_COUT("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTesting Grow...\n");
   A_AVOW(ISY(++i), dic.Insert(key += 16, IUD('!' + i)));
 
-  while(i < TTestWords<CHT>::Total - 8) {
+  while(i < TTestWords<CHS>::Total - 8) {
     A_AVOW(ISY(++i), dic.Insert(key += 16, ISA('!' + i)));
     A_AVOW(ISY(++i), dic.Insert(key += 16, IUA('!' + i)));
     A_AVOW(ISY(++i), dic.Insert(key += 16, ISB('!' + i)));
@@ -62,10 +62,10 @@ static void TestDic() {
 
   D_COUT_DIC(dic.This());
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
 #endif
 
-namespace Crabs {
+namespace CRTest {
 const CHA* Dic(const CHA* args) {
 #if SEAM >= CRABS_DIC
   A_TEST_BEGIN;
@@ -84,4 +84,4 @@ const CHA* Dic(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

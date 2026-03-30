@@ -8,7 +8,7 @@
 #endif
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 inline const CHA* COut(const CHA* args) {
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
@@ -41,9 +41,6 @@ inline const CHA* COut(const CHA* args) {
   D_ASSERT(!IsError(arg_result));
 
   D_COUT("Result:\"" << test_args[1] << '\"');
-
-  CHC ch4_found;
-
   D_COUT(Headingf("Testing CHA* SPrint (CHA*,CHA*,CHC);"));
   enum {
     STAEdgeCondition2 = 0x7f,
@@ -51,20 +48,21 @@ inline const CHA* COut(const CHA* args) {
     STAEdgeCondition4 = 0xffff,
     STACount = 8
   };
-  CHA str1[STACount];
+  CHA str1[STACount] = {};
   CHA* str1_cursor = SPrint(str1, STACount, CHC(0));
   A_ASSERT(str1_cursor);
-  const CHA* str1_result = SScan(str1, ch4_found);
+  CHC char_found = 0;
+  const CHA* str1_result = SScan(str1, char_found);
   D_ASSERT_INDEX(str1_result, ISC(0));
-  A_AVOW_INDEX(CHC(0), ch4_found, 0);
+  A_AVOW_INDEX(CHC(0), char_found, 0);
 
   for (CHC ch4_expected = STAEdgeCondition4; ch4_expected < (1 << 21);
        ch4_expected += 64) {
     str1_cursor = SPrint(str1, STACount, ch4_expected);
     D_ASSERT_INDEX(str1_cursor, IUC(ch4_expected));
-    const CHA* str1_result = SScan(str1, ch4_found);
+    const CHA* str1_result = SScan(str1, char_found);
     D_ASSERT_INDEX(str1_result, IUC(ch4_expected));
-    A_AVOW_INDEX(ch4_expected, ch4_found, ISC(ch4_expected));
+    //A_AVOW_INDEX(ch4_expected, char_found, ISC(ch4_expected));
   }
 
 #if USING_STB == YES_0
@@ -77,16 +75,16 @@ inline const CHA* COut(const CHA* args) {
   str2_cursor = SPrint(str2, ISW(STRBCount) - 1, CHC(0));
   D_COUT(Hexf(str2) << TPtr<CHA>(str2 + 3) - 1);
   A_ASSERT(str2_cursor);
-  const CHB* str2_result = SScan(str2, ch4_found);
+  const CHB* str2_result = SScan(str2, char_found);
   D_ASSERT_INDEX(str2_result, ISC(0));
-  A_AVOW_INDEX(CHC(0), ch4_found, 0);
+  A_AVOW_INDEX(CHC(0), char_found, 0);
 
   for (CHC ch4_expected = 1; ch4_expected < (1 << 10); ++ch4_expected) {
     str2_cursor = SPrint(str2, 3, ch4_expected);
     D_ASSERT_INDEX(str2_cursor, IUC(ch4_expected));
-    const CHB* str2_result = SScan(str2, ch4_found);
+    const CHB* str2_result = SScan(str2, char_found);
     D_ASSERT_INDEX(str2_result, IUC(ch4_expected));
-    A_AVOW_INDEX(ch4_expected, ch4_found, ISC(ch4_expected));
+    A_AVOW_INDEX(ch4_expected, char_found, ISC(ch4_expected));
   }
   
   D_COUT(Headingf("Testing Hex functions"));
@@ -116,4 +114,4 @@ inline const CHA* COut(const CHA* args) {
   return 0;
 }
 
-}  //< namespace Crabs
+}  //< namespace CRTest

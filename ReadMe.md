@@ -11,7 +11,7 @@
   /         \      \______/ |__/      \_______/|_______/ |_______/ 
 ```
 
-[![GitHub version](https://badge.fury.io/gh/AStarStarship%2Fscript2.svg)](https://badge.fury.io/gh/AStarStarship%2Fscript2)
+[![GitHub version](https://badge.fury.io/gh/AStarStarship%2FCrabs.svg)](https://badge.fury.io/gh/AStarStarship%2FCrabs)
 
 > **🚀 We are calling all pioneers!** We are building a new foundation for software, and we need your help to build the next generation of **Games, Apps, and AI**. [Join the Mission](#join-the-mission) below.
 
@@ -26,7 +26,7 @@ We are remaining the C++ ecosystem by replacing the standard library with a mode
 *   **⚡ Ultra-Fast Performance:** Our **Uniprinter** and custom **ASCII Data Types** are optimized for CPU cache performance, replacing slow standard library components like `printf` and `std::string` with blazing fast alternatives.
 *   **🧠 Built for AI & Logic:** Modeled after the *Chinese Room Thought Experiment*, our architecture treats data processing as a conversation of symbols (the Chinese Room Abstract Stack Machine or "Crabs"), making it uniquely suited for AI agents and complex telemetry.
 *   **🎮 Game Engine Ready:** With optional dynamic memory and no garbage collection pauses, Crabs provides the low-level control required for high-performance game engines.
-*   **🛠️ Modern Embedded-C++:** A clean slate. We use a simplified **Kabuki Module** format and custom containers (`Array`, `List`, `Stack`) to create a robust, dependency-free environment.
+*   **🛠️ Modern Embedded-C++:** A clean slate. We use a simplified **Crabs Module** format and custom containers (`Array`, `List`, `Stack`) to create a robust, dependency-free environment.
 
 ## Join the Mission
 

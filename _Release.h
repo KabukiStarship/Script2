@@ -5,7 +5,6 @@
 //
 #define D_(code)
 #define R_(code) code
-#define D_THIS 0
 #define A_TEST_BEGIN
 #define A_RUN_TEST(test_unit) \
   { const CHA* result = test_unit(); if(result) return result; }

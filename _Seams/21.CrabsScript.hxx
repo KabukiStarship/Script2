@@ -8,9 +8,9 @@
 #endif
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
-static const CHA* CrabsCore(const CHA* args) {
+static const CHA* CrabsScript(const CHA* args) {
 #if SEAM == CRABS_SCRIPT
   A_TEST_BEGIN;
   ADoor door;
@@ -18,4 +18,4 @@ static const CHA* CrabsCore(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

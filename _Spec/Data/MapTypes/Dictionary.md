@@ -2,7 +2,7 @@
 
 ## [ASCII Data Specification](../)
 
-### [Map Types](./map_types)
+### [Map Types](.)
 
 #### Dictionaries
 
@@ -51,8 +51,8 @@ Dictionaries have slower insert times than ASCII Books but faster lookup.
 
 [1] ./
 
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
+[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
 
-**[<< Previous Section: Table](./Table.md) | [Next Section: SCRIPT Specification >>](../../)**
+**[<< Previous Section: Table](Table.md) | [Next Section: Book >>](Book.md)**
 
 Copyright [AStarship™](https://astarship.net).

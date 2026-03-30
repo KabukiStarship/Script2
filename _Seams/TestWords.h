@@ -5,15 +5,15 @@
 #define CRABS_TESTWORDS
 
 /* A basic list of test words. */
-template<typename CHT = CHR>
+template<typename CHS = CHR, typename CHT = CHC>
 struct TTestWords {
   enum {
     CharsMax = 16,   //< The max characters in a word including term char.
     Total = 128,  //< The max word count.
   };
   /* An array of 128 random words. */
-  static const CHT* Words() {
-    static const CHT Strings[Total + 1][CharsMax] = {
+  static const CHS* Words() {
+    static const CHS Strings[Total + 1][CharsMax] = {
       {'w', 'h', 'i', 'p'},
       {'j', 'u', 'm', 'b', 'l', 'e', 'd'},
       {'e', 'n', 'e', 'r', 'g', 'e', 't', 'i', 'c'},
@@ -148,7 +148,7 @@ struct TTestWords {
   }
 
   /* Gets a test word. */
-  static const CHT* Word(ISN index) {
+  static const CHS* Word(ISN index) {
     if (index < 0)
       index = 0;
     else if (index >= Total)

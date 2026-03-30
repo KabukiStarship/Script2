@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_TEST_HPP
-#define CRABS_TEST_HPP 1
+#define CRABS_TEST_HPP
 #include "Test.h"
 namespace _ {
 
@@ -27,7 +27,7 @@ inline BOL TTestNZ(T value) {
 
 template<typename T>
 BOL TTestEq(T a, T b) {
-  if (a < b) return true;
+  if (a == b) return true;
 
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   StdOut() << "\n\nERROR: Expecting: " << a << " > " << b
@@ -38,7 +38,7 @@ BOL TTestEq(T a, T b) {
 
 template<typename T>
 BOL TTestGTEQ(T a, T b) {
-  if (a <= b) return true;
+  if (a >= b) return true;
 
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   StdOut() << "\n\nERROR: Expecting: " << a << " >= " << b

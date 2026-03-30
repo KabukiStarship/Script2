@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Crabs.h"
-#if SEAM >= CRABS_OPERATION
-#if SEAM == CRABS_OPERATION
+#if SEAM >= CRABS_OP
+#if SEAM == CRABS_OP
 #include "_Debug.h"
 #else
 #include "_Release.h"

@@ -1,27 +1,19 @@
-# [SCRIPT Specification](../)
-
-## [Crabs Specification](./)
-
-### Conformance Targets
+# Conformance Targets
 
 Script has two currently supported conformance targets: Automaton and Automata.
 
-#### Automaton
+## Automaton
 
-The Target shall be certified to be a Script Automaton if the Target does not support Script^2.
+The Target shall be certified to be a Script Automaton if the Target does not support Crabs.
 
-#### Group Automata
+## Group Automata
 
-The Target shall be certified as a Group Automata if the Target supports Script^2.
-
-[<< Universal Addressing Specification](../Addressing) **|** [Beginning >>]()
-
-**[<< Previous Section: Room Contents](./RoomContents.md) | [Next Section: Autojects >>](./Autojects.md)**
+The Target shall be certified as a Group Automata if the Target supports Crabs.
 
 ## Requirements
 
 [1] ./
 
-## License
+**[<< Previous Section: Autojects](Autojects.md) | [Next Section: Authentication >>](Authentication.md)**
 
-Copyright [AStarship™](https://astarship.net)..
+[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

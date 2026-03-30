@@ -14,7 +14,7 @@
 #endif
 
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 inline const CHA* ItoS(const CHA* args) {
 #if SEAM >= CRABS_ITOS
@@ -27,21 +27,21 @@ inline const CHA* ItoS(const CHA* args) {
 
   D_COUT("\n\nTesting Pow10_UI2...");
   IUB pow10_ui2 = 1;
-  for (IUB i = 0; i < cUI2DigitTotal; ++i) {
+  for (IUB i = 0; i < UI2DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui2, Pow10(i), i);
     pow10_ui2 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI4...");
   IUC pow10_ui4 = 1;
-  for (IUC i = 0; i < cUI4DigitTotal; ++i) {
+  for (IUC i = 0; i < UI4DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui4, Pow10(i), i);
     pow10_ui4 *= 10;
   }
 
   D_COUT("\n\nTesting Pow10_UI8...");
   IUD pow10_ui8 = 1;
-  for (IUD i = 0; i < cUI8DigitTotal; ++i) {
+  for (IUD i = 0; i < UI8DigitTotal; ++i) {
     A_AVOW_INDEX(pow10_ui8, Pow10(i), i);
     pow10_ui8 *= 10;
   }
@@ -95,26 +95,26 @@ inline const CHA* ItoS(const CHA* args) {
 
   static const IUD problem_child[] = {9173263544803952, 827672716845, 0};
 
-  enum { cProblemChildCount = 2, Size = 23 };
+  enum { ProblemChildCount = 2, EdgeConditionCount = 23, Size = 23 };
 
   CHA text[Size + 1], expecting[Size + 1];
   CHA socket[Size];
   CHA* result;
   IUD result_ui8, expected_ui8;
 
-  D_COUT("\nTesting ScanUnsigned<IU, CHT> (const CHT*, const CHA*, I);");
+  D_COUT("\nTesting ScanUnsigned<IU, CHS> (const CHS*, const CHA*, I);");
 
   for (ISN i = 0; i < 1 << 6; ++i) {
     expected_ui8 = IUDRandom();
     sprintf_s(socket, Size, "%llu", expected_ui8);
-    const CHA* test = TScanUnsigned<IUD, CHA>(socket, result_ui8);
+    const CHA* test = TSScanUnsigned<IUD, CHA>(socket, result_ui8);
     A_ASSERT(test);
     A_AVOW(expected_ui8, result_ui8);
   }
 
   D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
 
-  ISN count = TStringLength<IUD>(problem_child);
+  ISN count = ProblemChildCount;
   D_COUT("\n\nTesting %i problem children...\n\n" << count);
 
   for (ISN i = 0; i < count; ++i) {
@@ -130,7 +130,7 @@ inline const CHA* ItoS(const CHA* args) {
         "    |\0";
     D_COUT(PuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
                             << i << ".) ");
-    ISN expected_length = TStringLength<CHA>(expecting);
+    ISN expected_length = TSCodeCount<CHA>(expecting);
     result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
     if (IsError(result)) {
       D_PAUSE("An error occurred :-(");
@@ -140,7 +140,7 @@ inline const CHA* ItoS(const CHA* args) {
     D_AVOW(expecting, text);
   }
 
-  count = TStringLength<IUD>(edge_condition);
+  count = EdgeConditionCount;
   D_COUT("\n\nTesting " << count << " edge conditions...\n\n");
   for (ISW i = 0; i < count; ++i) {
     expected_ui8 = edge_condition[i];
@@ -154,7 +154,7 @@ inline const CHA* ItoS(const CHA* args) {
     *result = 0;
     D_AVOW(expecting, text);
   }
-#if D_THIS
+#ifdef D_THIS
   count = 200;
 #else
   count = 1000;
@@ -190,4 +190,4 @@ inline const CHA* ItoS(const CHA* args) {
 #endif
   return 0;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

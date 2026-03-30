@@ -8,7 +8,7 @@
 #endif
 #endif
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 
 static const CHA* RNG(const CHA* args) {
 #if SEAM >= CRABS_RNG
@@ -26,4 +26,4 @@ static const CHA* RNG(const CHA* args) {
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest

@@ -1,10 +1,10 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
 #ifndef CRABS_OP_HPP
-#define CRABS_OP_HPP 1
+#define CRABS_OP_HPP
 #include "Op.h"
 #include "BSeq.hpp"
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 #include "String.hpp"
 namespace _ {
 
@@ -28,7 +28,7 @@ inline const ISC* OpFirst(CHC index) { return TPtr<const ISC>(index); }
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
   return (CHC) IUW(op->in);
-}`
+}
 /* Converts the given value to a pointer. */
 inline const ISC* OpLast(CHC index) { return TPtr<const ISC>(index); }
 
@@ -39,10 +39,10 @@ inline CHC OpLast(const Op* op) {
 
 }  //< namespace _
 
-template<typename CHT, typename ISZ>
-inline ::_::TSPrinter<CHT, ISZ>& operator<<(::_::TSPrinter<CHT, ISZ>& utf,
+template<typename CHS, typename ISZ>
+inline ::_::TSPrinter<CHS, CHT, ISZ>& operator<<(::_::TSPrinter<CHS, CHT, ISZ>& utf,
                                             const ::_::Op* op) {
-  return ::_::TOpPrint<::_::TSPrinter<CHT, ISZ>>(utf, op);
+  return ::_::TOpPrint<::_::TSPrinter<CHS, CHT, ISZ>>(utf, op);
 }
 #endif
 #endif

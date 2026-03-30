@@ -41,14 +41,14 @@
 #define D_COUT_LIST(item) \
   ::_::TListPrint<::_::COut, ISZ, ISY, DT>(::StdOut(), item)
 #define D_COUT_LOOM(item) \
-  ::_::TLoomPrint<::_::COut, CHT, ISZ, ISY>(::StdOut(), item)
+  ::_::TLoomPrint<::_::COut, CHS, ISZ, ISY>(::StdOut(), item)
 #define D_COUT_BOOK(item) \
-  ::_::TBookPrint<::_::COut, CHT, ISZ, ISY, DT>(::StdOut(), item)
+  ::_::TBookPrint<::_::COut, CHS, ISZ, ISY, DT>(::StdOut(), item)
 #define D_COUT_MAP(item) ::_::TMapPrint<::_::COut, D, ISZ>(::StdOut(), item)
 #define D_COUT_DIC(item) \
-  ::_::TDicPrint<::_::COut, CHT, ISZ, ISY, DT, HSH>(::StdOut(), item)
+  ::_::TDicPrint<::_::COut, CHS, ISZ, ISY, DT, HSH>(::StdOut(), item)
 #define D_COUT_TABLE(item) \
-  TTablePrint<::_::COut, CHT, ISZ, ISY, HSH>(::StdOut(), item)
+  TTablePrint<::_::COut, CHS, ISZ, ISY, HSH>(::StdOut(), item)
 #define D_ARRAY_SAVE(origin, end_or_size) \
   Socket socket_to_print(origin, end_or_size)
 #define D_ARY_FILL(origin, end_or_size, c) \

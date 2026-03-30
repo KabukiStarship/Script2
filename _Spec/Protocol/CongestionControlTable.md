@@ -29,4 +29,4 @@ Three years of data must be stored in order to detect annual cycles such as holi
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

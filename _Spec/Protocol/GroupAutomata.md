@@ -24,11 +24,7 @@ Script, and all formal intelligence, can be recursively defined as follows:
     * *许多机器人作为一个*
     * *Xǔduō jīqìrén zuòwéi yīgè*
 
-**[<< Previous Section: SCRIPT Protocol Specification](./) | [Next Section: Time >>](Time.md)**
-
-## Requirements
-
-[1] ./
+**[<< Previous Section: SCRIPT Protocol Specification](../) | [Next Section: Time >>](Time.md)**
 
 ## Requirements
 
@@ -36,4 +32,4 @@ Script, and all formal intelligence, can be recursively defined as follows:
 
 ## License
 
-Copyright [AStarship™](https://astarship.net)..
+Copyright [AStarship™](https://astarship.net).

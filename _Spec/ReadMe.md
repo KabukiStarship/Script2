@@ -1,13 +1,13 @@
 # SCRIPT Specification
 
-SCRIPT (Serial Chinese Room, Interprocess, and Telemetry) Specification defines the Crabs (Chinese Room Abstract Stack) Machine and ASCII (Automaton Standard Code for Information Interchange) Data Specification. This document is a Release for Comment (RFC) not an ISO Specification, there are plenty of errors and things we can do better so your comments and criticism are appreciated. If you would like to contribute to this RFC, contributors are welcome on GitHub at <https://github.com/AStarStarship/script2>.
+SCRIPT (Serial Chinese Room, Interprocess, and Telemetry) Specification defines the Crabs (Chinese Room Abstract Stack) Machine and ASCII (Automaton Standard Code for Information Interchange) Data Specification. This document is a Release for Comment (RFC) not an ISO Specification, there are plenty of errors and things we can do better so your comments and criticism are appreciated. If you would like to contribute to this RFC, contributors are welcome on GitHub at <https://github.com/AStarStarship/Crabs>.
 
 ## Content Table
 
-1. [Overview](Overview/)
-    1. [Requirements](Overview/Requirements)
-    1. [Terminology](Overview/Terminology)
-    1. [Chinese Room Objects](Overview/ChineseRoomObjects)
+1. [Requirements](../Requirements.md)
+    1. [Overview Requirements](Overview/Requirements.md)
+    1. [Terminology](Overview/Terminology.md)
+    1. [Chinese Room Objects](Overview/ChineseRoomObjects.md)
 2. [ASCII Data Specification](Data/)
    1. [Types](Data/Types)
    2. [Extended Types](Data/ExtendedTypes)
@@ -27,7 +27,7 @@ SCRIPT (Serial Chinese Room, Interprocess, and Telemetry) Specification defines 
       8. [Table](Data/MapTypes/Table)
       9. [Book](Data/MapTypes/Book)
       10. [Dictionary](Data/MapTypes/Dictionary)
-      11. [TokenMap](./Data/MapTypes/TokenMap)
+      11. [TokenMap](Data/MapTypes/TokenMap.md)
 3. [Universal Addressing Specification](Addressing/)
    1. [Most Longitudinal bit](Addressing/MostLongitudinalBit)
    2. [Universal Address Format](Addressing/UniversalAddressFormat)
@@ -44,13 +44,15 @@ SCRIPT (Serial Chinese Room, Interprocess, and Telemetry) Specification defines 
    10. [Congestion Control](Protocol/CongestionControl)
    11. [Abnormal Behavior](Protocol/AbnormalBehavior)
 5. [Crabs Specification](Crabs/)
-   1. [Authentication](Crabs/Authentication)
-   2. [Portals](Crabs/Portals)
-   3. [Room Contents](Crabs/RoomContents)
-   4. [Conformance Targets](Crabs/ConformanceTargets)
-   5. [Autojects](Crabs/Autojects)
-   6. [Messages](Crabs/Messages)
-   7. [Expression Mappings](Crabs/ExpressionMappings)
+    1. [Monoid Chinese Room](Crabs/MonoidChineseRoom)
+    2. [Authentication](Crabs/Authentication)
+    3. [Portals](Crabs/Portals)
+    4. [Room Contents](Crabs/RoomContents)
+    5. [Conformance Targets](Crabs/ConformanceTargets)
+    6. [Autojects](Crabs/Autojects)
+    7. [Messages](Crabs/Messages)
+    8. [Expression Mappings](Crabs/ExpressionMappings)
+    9. [Abnormal Behaviors](Crabs/AbnormalBehaviors)
 6. [IMUL Specification](IMUL)
    1. 
 

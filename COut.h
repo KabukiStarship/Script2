@@ -4,11 +4,11 @@
 #define CRABS_COUT_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
-#include "Stringf.h"
+#include "Stringf.hpp"
 namespace _ {
 
 /* Utility class for printing to the stdout. */
-class LIB_MEMBER COut {
+class COut {
  public:
   /* Prints nothing. */
   COut();
@@ -33,12 +33,8 @@ class LIB_MEMBER COut {
   COut(IUC item);
   COut(ISD item);
   COut(IUD item);
-#if USING_FPC == YES_0
   COut(FPC item);
-#endif
-#if USING_FPD == YES_0
   COut(FPD item);
-#endif
   COut(Hexf item);
   COut(Binaryf item);
   COut(Centerf item);
@@ -76,12 +72,8 @@ class LIB_MEMBER COut {
   COut& Print(IUC item);
   COut& Print(ISD item);
   COut& Print(IUD item);
-#if USING_FPC == YES_0
   COut& Print(FPC item);
-#endif
-#if USING_FPD == YES_0
   COut& Print(FPD item);
-#endif
   COut& Print(Hexf& item);
   COut& Print(Binaryf& item);
   COut& Print(Centerf& item);
@@ -110,12 +102,8 @@ class LIB_MEMBER COut {
   COut& NL(IUC item);
   COut& NL(ISD item);
   COut& NL(IUD item);
-#if USING_FPC == YES_0
   COut& NL(FPC item);
-#endif
-#if USING_FPD == YES_0
   COut& NL(FPD item);
-#endif
 
   /* Stores the given item to the boofer and store the size. */
   COut& Hex(const void* item);
@@ -129,12 +117,8 @@ class LIB_MEMBER COut {
   COut& Hex(IUC item);
   COut& Hex(ISD item);
   COut& Hex(IUD item);
-#if USING_FPC == YES_0
   COut& Hex(FPC item);
-#endif
-#if USING_FPD == YES_0
   COut& Hex(FPD item);
-#endif
 
   /* Stores the given item to the boofer and store the size. */
   COut& Binary(const void* item);
@@ -148,12 +132,8 @@ class LIB_MEMBER COut {
   COut& Binary(IUC item);
   COut& Binary(ISD item);
   COut& Binary(IUD item);
-#if USING_FPC == YES_0
   COut& Binary(FPC item);
-#endif
-#if USING_FPD == YES_0
   COut& Binary(FPD item);
-#endif
 
   ISN PrintAndCount(const CHA* string);
 #if USING_STB == YES_0
@@ -187,12 +167,8 @@ COut CPrint(ISC item);
 COut CPrint(IUC item);
 COut CPrint(ISD item);
 COut CPrint(IUD item);
-#if USING_FPC == YES_0
 COut CPrint(FPC item);
-#endif
-#if USING_FPD == YES_0
 COut CPrint(FPD item);
-#endif
 COut CPrint(Hexf& item);
 COut CPrint(Binaryf& item);
 COut CPrint(Centerf& item);
@@ -219,12 +195,8 @@ inline ::_::COut& operator<<(::_::COut& o, ISC item);
 inline ::_::COut& operator<<(::_::COut& o, IUC item);
 inline ::_::COut& operator<<(::_::COut& o, ISD item);
 inline ::_::COut& operator<<(::_::COut& o, IUD item);
-#if USING_FPC == YES_0
 inline ::_::COut& operator<<(::_::COut& o, FPC item);
-#endif
-#if USING_FPD == YES_0
 inline ::_::COut& operator<<(::_::COut& o, FPD item);
-#endif
 inline ::_::COut& operator<<(::_::COut& o, ::_::Hexf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Binaryf item);
 

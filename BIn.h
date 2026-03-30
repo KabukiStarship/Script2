@@ -3,7 +3,7 @@
 #ifndef CRABS_BIN_DECL
 #define CRABS_BIN_DECL
 #include <_Config.h>
-#if SEAM >= CRABS_OPERATION
+#if SEAM >= CRABS_OP
 namespace _ {
 
 struct BIn;
@@ -31,7 +31,7 @@ typedef enum BInStates {
 
 /* B-Input ring boofer Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
-struct LIB_MEMBER BIn {
+struct BIn {
   ISN bytes,          //< The size of the socket in bytes.
       origin;         //< The starting index of the ring socket data.
   volatile ISN stop;  //< The stopping index of the ring socket data.
@@ -39,43 +39,43 @@ struct LIB_MEMBER BIn {
 };
 
 /* Get's the B-Input's socket. */
-LIB_MEMBER inline const IUA* BInOrigin(const BIn* bin);
-LIB_MEMBER inline IUA* BInOrigin(BIn* bin);
+inline const IUA* BInOrigin(const BIn* bin);
+inline IUA* BInOrigin(BIn* bin);
 
-LIB_MEMBER inline IUA* BInEnd(BIn* bin);
+inline IUA* BInEnd(BIn* bin);
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline ISW SlotLength(IUA* origin, IUA* stop, IUW size);
+inline ISW SlotLength(IUA* origin, IUA* stop, IUW size);
 
 /* Calculates the space left in the given ring socket.
 @param Start The origin of the data.
 @param Stop  The stop of the data.
 @param Size  The size of the socket. */
-LIB_MEMBER inline ISW SlotSpace(IUA* origin, IUA* stop, IUW size);
+inline ISW SlotSpace(IUA* origin, IUA* stop, IUW size);
 
 /* Gets the rx socket length. */
-LIB_MEMBER inline ISN BInSpace(BIn* bin);
+inline ISN BInSpace(BIn* bin);
 
-LIB_MEMBER inline ISN BinBooferLength(BIn* bin);
+inline ISN BinBooferLength(BIn* bin);
 
 #if USING_CRABS_TEXT == YES_0
 
 /* Pulls the keyboard input into the ring socket. */
-// LIB_MEMBER void BInKeyboard()
+// void BInKeyboard()
 #endif
 
-/* Initializes the BIn struct LIB_MEMBER to an empty socket. */
-LIB_MEMBER BIn* BInInit(BIn* socket, ISN size);
+/* Initializes the BIn struct to an empty socket. */
+BIn* BInInit(BIn* socket, ISN size);
 
 /* Gets the stop address of the rx socket. */
-LIB_MEMBER IUA* BInEnd(BIn* bin);
+IUA* BInEnd(BIn* bin);
 
 /* Returns true if the BIn socket contains any data.
     @warning Function does not do any error checking for speed. */
-LIB_MEMBER BOL BInIsReadable(BIn* bin);
+BOL BInIsReadable(BIn* bin);
 
 /* Scans a message with the given params to the given BIn.
 The data in the BIn is word-aligned, unlike the Slot. It also
@@ -86,7 +86,7 @@ doesn't have a hash with an escape sequence.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number upon
               failure. */
-LIB_MEMBER const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD 
+const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD 
                              pc_ctx);
 
 }  //< namespace _

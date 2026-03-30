@@ -292,7 +292,7 @@ static const CHA STRFound[] = "\n           Found:0x\0";
 //static const CHA STRErrorNil[] = "\nERROR: value was nil!\0";
 
 BOL TestEq(const CHA* a, const CHA* b) {
-  ISN difference = TStringCompare<CHA>(a, b);
+  ISN difference = TSCompare<CHA>(a, b);
   if (!difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)
@@ -304,7 +304,7 @@ BOL TestEq(const CHA* a, const CHA* b) {
 
 #if USING_STB == YES_0
 BOL TestEq(const CHB* a, const CHB* b) {
-  ISN difference = TStringCompare<CHB>(a, b);
+  ISN difference = TSCompare<CHB>(a, b);
   if (!difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)
@@ -317,7 +317,7 @@ BOL TestEq(const CHB* a, const CHB* b) {
 
 #if USING_STC == YES_0
 BOL TestEq(const CHC* a, const CHC* b) {
-  ISN difference = TStringCompare<CHC>(a, b);
+  ISN difference = TSCompare<CHC>(a, b);
   if (!difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)
@@ -457,7 +457,7 @@ BOL TestEq(FPD a, FPD b) {
 
 
 BOL TestNot(const CHA* a, const CHA* b) {
-  ISN difference = TStringCompare<CHA>(a, b);
+  ISN difference = TSCompare<CHA>(a, b);
   if (difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)
@@ -469,7 +469,7 @@ BOL TestNot(const CHA* a, const CHA* b) {
 
 #if USING_STB == YES_0
 BOL TestNot(const CHB* a, const CHB* b) {
-  ISN difference = TStringCompare<CHB>(a, b);
+  ISN difference = TSCompare<CHB>(a, b);
   if (difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)
@@ -481,7 +481,7 @@ BOL TestNot(const CHB* a, const CHB* b) {
 #endif
 #if USING_STC == YES_0
 BOL TestNot(const CHC* a, const CHC* b) {
-  ISN difference = TStringCompare<CHC>(a, b);
+  ISN difference = TSCompare<CHC>(a, b);
   if (difference) return true;
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
   COut("\n\nERROR: Expecting:\"").Print(a)

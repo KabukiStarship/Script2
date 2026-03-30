@@ -8,9 +8,8 @@
 #endif
 #endif
 
-using namespace std;
 using namespace ::_;
-namespace Crabs {
+namespace CRTest {
 const CHA* FtoS(const CHA* args) {
 #if SEAM >= CRABS_FTOS
   A_TEST_BEGIN;
@@ -40,7 +39,7 @@ const CHA* FtoS(const CHA* args) {
   }
 
   D_COUT(
-      "\n\nTesting const CHT* TSScan<CHT> (const CHT*, const CHT*, FPC&) "
+      "\n\nTesting const CHS* TSScan<CHS, CHT> (const CHS*, const CHS*, FPC&) "
       "functions...\n");
 
   for (ISC i = 0; i < TestCount; ++i) {
@@ -53,7 +52,7 @@ const CHA* FtoS(const CHA* args) {
     A_AVOW(dbl_expected, dbl_found);
   }
 
-  D_COUT("\n\nTesting CHT* TSPrint<CHT> (CHT*, CHT*, Float)...\n");
+  D_COUT("\n\nTesting CHS* TSPrint<CHS, CHT> (CHS*, CHS*, Float)...\n");
 
   for (ISC i = 0; i < TestCount; ++i) {
     do {
@@ -65,9 +64,9 @@ const CHA* FtoS(const CHA* args) {
     A_ASSERT(r);
     A_AVOW(dbl_expected, dbl_found);
   }
-  TBinary<>::PrintDebugInfo();
+  TDecimalFloat<>::PrintDebugInfo();
   */
 #endif
   return NILP;
 }
-}  //< namespace Crabs
+}  //< namespace CRTest
