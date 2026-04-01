@@ -312,7 +312,7 @@ ISZ TLoomCharCount(TLoom<LOM_P>* loom) {
   return ISZ(TLoomEnd<LOM_P>(loom) - TLoomKeysBegin<LOM_P>(loom));
 }
 template<LOM_A>
-BOL TLoomWrite(TLoom<LOM_P>* destination, TLoom<LOM_P>* soure) {
+BOL TLoomWrite(TLoom<LOM_P>* destination, TLoom<LOM_P>* source) {
   return true;
 }
 
@@ -424,12 +424,13 @@ ISY TLoomFind(TLoom<LOM_P>* loom, const CHS* string) {
   for (ISY i = 0; i < loom->map.count; ++i) {
     ISZ offset = offsets[i];
     CHS* other = TPtr<CHS>(IUW(loom) + offset);
-    if (!TStringCompare<CHS>(string, other)) return i;
+    if (!TSEquals<CHS>(string, other)) return i;
   }
   return -1;
 }
 
-/* An ASCII Loom Autoject. */
+/* An 
+Loom Autoject. */
 template<LOM_A, ISZ Total_ = 512,
           typename BOF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
 class ALoom {

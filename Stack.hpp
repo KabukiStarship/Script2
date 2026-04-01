@@ -223,16 +223,17 @@ inline ISZ TStackSizeMin() {
 width. */
 template<SCK_A>
 inline ISZ TStackSizeMax() {
-  return (ISZ)((((~(ISZ)0) - ACPUMask) - (ISZ)sizeof(SCK)) /
-               (ISZ)sizeof(T));
+  return ISZ((((~ISZ(0)) - ACPUWordMask) - ISZ(sizeof(SCK))) /
+               ISZ(sizeof(T)));
 }
 
 /* The minimum obj size. */
 template<SCK_A>
 inline ISZ TStackSizeMin(ISY total) {
   ISZ count_upper_bounds = TStackSizeMax<SCK_P>();
-  if (total > count_upper_bounds) total = count_upper_bounds;
-  return (ISZ)(sizeof(SCK) + total * sizeof(T));
+  if (total > count_upper_bounds)
+    total = count_upper_bounds;
+  return ISZ(sizeof(SCK) + total * sizeof(T));
 }
 
 /* Initializes an obj from a preallocated socket who's size is a multiple of

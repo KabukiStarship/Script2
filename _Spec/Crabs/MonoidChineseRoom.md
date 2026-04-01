@@ -6,11 +6,11 @@
 
 #### 1. Mathematical Foundations: Monoids in Formal Mathematics
 
-**Theorem 1 (Monoid Axioms for Group Automata)**. Let **A** be a set of states in a Chinese Room Abstract Stack Machine (CRASM). Let **B** be a set of abstract parameters in the form of an IUA stream of ASCII Data Types. Let * be an abstract binary operation on sets **A** and **B**. Then (**A**, *, **e**) forms a monoid if and only if:
+**Theorem 1 (Monoid Axioms for Group Automata)**. Let **A** be a set of states in a Chinese Room Abstract Stack (Crabs) Machine. Let **B** be a set of abstract parameters in the form of an IUA stream of ASCII Data Types. Let \* be an abstract binary operation on sets **A** and **B**. Then (**A**, *, **e**) forms a monoid if and only if:
 
-1. **Closure**: For all **a** ∈ **A** and **b** ∈ **B**, the result **a** * **b** ∈ **A**
-2. **Associativity**: For all **a** ∈ **A**, **b**, **c** ∈ **B**, (**a** * **b**) * **c** = **a** * (**b** * **c**)
-3. **Identity Element**: There exists **e** ∈ **A** such that for all **a** ∈ **A**, **e** * **a** = **a** * **e** = **a**
+1. **Closure**: For all **a** ∈ **A** and **b** ∈ **B**, the result **a** \* **b** ∈ **A**
+2. **Associativity**: For all **a** ∈ **A**, **b**, **c** ∈ **B**, (**a** \* **b**) \* **c** = **a** \* (**b** \* **c**)
+3. **Identity Element**: There exists **e** ∈ **A** such that for all **a** ∈ **A**, **e** \* **a** = **a** \* **e** = **a**
 
 *Proof Sketch*. The Chinese Room's Abstract Stack Machine (ASM) satisfies these axioms through its stack-based operation model. The identity element corresponds to the **Reset Operation** which returns the machine to its initial state without modifying subsequent operations. Associativity is guaranteed by the stack discipline where operations are applied in strict LIFO order.
 
@@ -78,7 +78,7 @@ Script imposes additional relations beyond the free monoid structure:
 
 1. **Associativity Relation**: (**ab**)c = a(**bc**) for all operations a, b, c
 2. **Identity Relation**: ε·a = a·ε = a where ε is the empty operation sequence
-3. **Reset Inverse Relation**: (**A** * **B**) * **A^(-1)** = **A** (from Group Automata Theorem)
+3. **Reset Inverse Relation**: (**A** \* **B**) \* **A^(-1)** = **A** (from Group Automata Theorem)
 
 *Note*: The inverse operation **A^(-1)** corresponds to the **Reset Operation**, which is not a true group inverse but rather a "reset to initial state" operation that satisfies the left-inverse property.
 
@@ -100,7 +100,7 @@ However, certain operation classes may commute under specific conditions:
 
 ##### 3.1 Machine Model: CRASM
 
-The **Chinese Room Abstract Stack Machine (CRASM)** is defined as a 7-tuple:
+The **Chinese Room Abstract Stack (Crabs) Machine** is defined as a 7-tuple:
 
 **CRASM** = (**Q**, **Σ**, **Γ**, **δ**, **q_0**, **Z_0**, **F**)
 

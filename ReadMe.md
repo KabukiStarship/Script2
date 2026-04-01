@@ -24,7 +24,7 @@ We are remaining the C++ ecosystem by replacing the standard library with a mode
 ### Why Crabs?
 
 *   **⚡ Ultra-Fast Performance:** Our **Uniprinter** and custom **ASCII Data Types** are optimized for CPU cache performance, replacing slow standard library components like `printf` and `std::string` with blazing fast alternatives.
-*   **🧠 Built for AI & Logic:** Modeled after the *Chinese Room Thought Experiment*, our architecture treats data processing as a conversation of symbols (the Chinese Room Abstract Stack Machine or "Crabs"), making it uniquely suited for AI agents and complex telemetry.
+*   **🧠 Built for AI & Logic:** Modeled after the *Chinese Room Thought Experiment* using cutting-edge monoid AI structure to prune off invalid and unuseful expression combinations for string-in-string-out compiler optimization using group theory symmetry.
 *   **🎮 Game Engine Ready:** With optional dynamic memory and no garbage collection pauses, Crabs provides the low-level control required for high-performance game engines.
 *   **🛠️ Modern Embedded-C++:** A clean slate. We use a simplified **Crabs Module** format and custom containers (`Array`, `List`, `Stack`) to create a robust, dependency-free environment.
 

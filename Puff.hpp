@@ -84,7 +84,7 @@ inline CHC* Write(CHC* cursor, CHC c) { return TSPrintChar<CHC>(cursor, c); }
 If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template<typename CHS = CHR>
-inline CHS* TPrint2Decimals(CHS* socket, IUB decimal_pair) {
+inline CHS* TSPrint2Decimals(CHS* socket, IUB decimal_pair) {
   enum { Bytes = sizeof(CHS) * 8 };
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
   socket[0] = CHA(decimal_pair >> 8);
@@ -114,11 +114,11 @@ inline void SPrintCharPair(CHA* socket, IUB value) {
 }
 
 inline void SPrintCharPair(CHB* cursor, IUB decimal_pair) {
-  TPrint2Decimals<CHB>(cursor, decimal_pair);
+  TSPrint2Decimals<CHB>(cursor, decimal_pair);
 }
 
 inline void SPrintCharPair(CHC* cursor, IUB decimal_pair) {
-  TPrint2Decimals<CHC>(cursor, decimal_pair);
+  TSPrint2Decimals<CHC>(cursor, decimal_pair);
 }
 
 /* Prints 8 decimals to the given socket with given LUT.*/
@@ -454,12 +454,12 @@ inline CHS* TSPrint(CHS* start, ISW size, IUC value) {
 #else
 template<typename CHS = CHR>
 inline CHS* TSPrint(CHS* start, CHS* stop, IUC value) {
-  return TSPrint<CHS, CHT>(start, stop, (IUD)value);
+  return TSPrint<CHS, CHT>(start, stop, IUD(value));
 }
 
 template<typename CHS = CHR>
 inline CHS* TSPrint(CHS* start, ISW size, IUC value) {
-  return TSPrint<CHS, CHT>(start, size, (IUD)value);
+  return TSPrint<CHS, CHT>(start, size, IUD(value));
 }
 #endif
 

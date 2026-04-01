@@ -115,7 +115,7 @@ static const CHA* Clock(const CHA* args) {
 
   A_AVOW(ISA(-1), ClockDayToMonth(-1, year));
   A_AVOW(ISA(-1), ClockDayToMonth(366, year));
-  D_COUT("\nDone testing TClockDayToMonth! :-)\n");
+  D_COUT("\nDone testing ClockDayToMonth! :-)\n");
 #endif
   return NILP;
 }

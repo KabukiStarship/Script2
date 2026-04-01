@@ -114,7 +114,7 @@ static const CHA* TestSPrinterCH() {
       {' ', ' ', ' ', 'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL, NIL},
       {' ', ' ', ' ', ' ', 'T', 'e', 's', 't', 'i', 'n', 'g', ' ', NIL}};
 
-  ISC shift_right = 6;
+  //< Removed unused variable: `ISC shift_right = 6;`
   for (ISC i = 0; i < 12; ++i) {
     D_RAM_WIPE(str_a, (ISW)(Count * sizeof(CHS)));
     cursor = TPrintRight<CHS>(str_a, str_a + Count - 1, TestingSpace, i + 1);
@@ -416,6 +416,73 @@ static const CHA* TestPrintAType() {
   return NILP;
 }
 
+static const CHA* TestStringStartsWithEndsWithStrip() {
+  D_COUT(Headingf("Testing TSStartsWith, TSEndsWith, TSStripStart, TSStripEnd, TSStrip"));
+
+  static const CHA Apple[]      = {'A', 'p', 'p', 'l', 'e', NIL};
+  static const CHA Appl[]       = {'A', 'p', 'p', 'l', NIL};
+  static const CHA pple[]       = {'p', 'p', 'l', 'e', NIL};
+  static const CHA le[]         = {'l', 'e', NIL};
+  static const CHA Empty[]      = {NIL};
+  static const CHA Longer[]     = {'A', 'p', 'p', 'l', 'e', 'S', 'a', 'u', 'c', 'e', NIL};
+
+  D_COUT("\n\nTesting TSStartsWith");
+  // Positive: exact match and prefix
+  A_ASSERT( TSStartsWith<CHA>(Apple, Apple));
+  A_ASSERT( TSStartsWith<CHA>(Apple, Appl));
+  A_ASSERT( TSStartsWith<CHA>(Apple, Empty));  //< Any string starts with ""
+  // Negative: not a prefix, and substring longer than source
+  A_ASSERT(!TSStartsWith<CHA>(Apple, pple));
+  A_ASSERT(!TSStartsWith<CHA>(Apple, Longer));
+
+  D_COUT("\n\nTesting TSEndsWith");
+  // Positive: exact match and suffix
+  A_ASSERT( TSEndsWith<CHA>(Apple, Apple));
+  A_ASSERT( TSEndsWith<CHA>(Apple, le));
+  // Negative: not a suffix, and substring longer than source
+  A_ASSERT(!TSEndsWith<CHA>(Apple, Appl));
+  A_ASSERT(!TSEndsWith<CHA>(Apple, Longer));
+
+  D_COUT("\n\nTesting TSStripStart");
+  static const CHA SpaceHello[]  = {' ', '\t', 'H', 'e', 'l', 'l', 'o', NIL};
+  static const CHA Hello[]       = {'H', 'e', 'l', 'l', 'o', NIL};
+  static const CHA OnlySpaces[]  = {' ', ' ', ' ', NIL};
+  const CHA* cursor;
+  // Leading whitespace stripped: should point to 'H'
+  cursor = TSStripStart<CHA>(SpaceHello);
+  A_ASSERT(TSEquals<CHA>(cursor, Hello));
+  // No leading whitespace: pointer unchanged
+  cursor = TSStripStart<CHA>(Hello);
+  A_ASSERT(TSEquals<CHA>(cursor, Hello));
+  // All whitespace: should reach nil-terminator
+  cursor = TSStripStart<CHA>(OnlySpaces);
+  A_ASSERT(*cursor == NIL);
+
+  D_COUT("\n\nTesting TSStripEnd");
+  static const CHA HelloSpace[]  = {'H', 'e', 'l', 'l', 'o', ' ', '\t', NIL};
+  // Trailing whitespace: should return pointer to last printable char 'o'
+  cursor = TSStripEnd<CHA>(HelloSpace);
+  A_ASSERT(*cursor == 'o');
+  // No trailing whitespace: last char is already 'o'
+  cursor = TSStripEnd<CHA>(Hello);
+  A_ASSERT(*cursor == 'o');
+
+  D_COUT("\n\nTesting TSStrip");
+  static const CHA SpaceHelloSpace[] = {' ', '\t', 'H', 'e', 'l', 'l', 'o', ' ', ' ', NIL};
+  // TSStrip = TSStripEnd(TSStripStart(str)): result points to last printable char
+  cursor = TSStrip<CHA>(SpaceHelloSpace);
+  A_ASSERT(*cursor == 'o');
+  // Verify the start of the stripped range separately
+  const CHA* stripped_start = TSStripStart<CHA>(SpaceHelloSpace);
+  A_ASSERT(*stripped_start == 'H');
+  // All-whitespace input: stripped range is empty (start == stop == nil-term)
+  static const CHA AllSpaces[] = {' ', ' ', ' ', NIL};
+  cursor = TSStrip<CHA>(AllSpaces);
+  A_ASSERT(*cursor == NIL);
+
+  return NILP;
+}
+
 static const CHA* TestProblemChildren() {
   static const ISD problem_children[29] = {
     420, 4200, 42000, 420000, 4200000, 9999999, 10000000, 12000000,
@@ -445,6 +512,7 @@ static const CHA* Uniprinter(const CHA* args) {
   A_TEST_BEGIN;
 #if SEAM >= CRABS_UNIPRINTER
   A_RUN_TEST(TestPrintAType);
+	A_RUN_TEST(TestStringStartsWithEndsWithStrip);
   //A_RUN_TEST(TestSPrinter);
   //A_RUN_TEST(TestProblemChildren);
 #endif

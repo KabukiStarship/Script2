@@ -148,10 +148,9 @@ inline const CHS* TSFindLast(const CHS* start, CHA token) {
 /* Returns and scans to the nil-term char. */
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSStop(CHS* start) {
-  CHT c = 0;
-  start = SScan(start, c);
-  while (c) {
-    start = SScan(start, c);
+  CHT c = *start++;
+  while (c) { 
+    c = *start++;
   }
   return start - 1;
 }
@@ -164,11 +163,10 @@ inline const CHS* TSStop(const CHS* start) {
 
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSStop(CHS* start, CHS* stop) {
-  CHT c = 0;
-  start = SScan(start, c);
+  CHT c = *start++;
   while (c) {
-    start = SScan(start, c);
-    if (IsErrorSocket(start, stop))
+    start = *start++;
+    if (start >= stop)
       return NILP;
   }
   return start - 1;
@@ -1023,22 +1021,73 @@ const CHS* TStringFloatStop(const CHS* start) {
   return stop;
 }
 
+/* Checks if the string starts with the given substring.
+@return Pointer to the first char in `start` after the matched prefix, or NILP. */
 template<typename CHS=CHR>
-const CHS* TStringStartsWith(const CHS* start, const CHS* str) {
-  return NILP;
+const CHS* TSStartsWith(const CHS* start, const CHS* substring) {
+  CHS a = *start++, b = *substring++;
+  while (b) {
+    if (a != b) return NILP;
+    a = *start++;
+    b = *substring++;
+  }
+  return start - 1;  //< Fixed off-by-one: was `return start` (one past the match)
 }
 
+/* Checks if the string ends with the given substring.
+@return Pointer to the first char of the matched suffix in `start`, or NILP. */
 template<typename CHS = CHR, typename CHT = CHC>
-const CHS* TStringEndsWith(const CHS* start, const CHS* str) {
-  return NILP;
+const CHS* TSEndsWith(const CHS* start, const CHS* substring) {
+	const CHS* substring_stop = TSStop<CHS>(substring);
+	if (substring_stop == substring)
+		return NILP;
+	const CHS* stop = TSStop<CHS>(start);
+	CHS c     = *(--substring_stop),
+			str_c = *(--stop);
+	while (substring_stop > substring) {
+		if (c != str_c)
+			return NILP;
+		c = *--substring_stop;
+		str_c = *--stop;
+	}
+	if (c != str_c)
+		return NILP;
+	return stop;
+}
+
+/* Skips leading whitespace and non-printable chars from the start of a string.
+@return Pointer to the first printable char, or the nil-terminator. */
+template<typename CHS = CHR>
+const CHS* TSStripStart(const CHS* start) {
+	CHS c = *start;
+	while (c && (c <= ' ' || c == _DEL))
+		c = *++start;
+	return start;
+}
+
+template<typename CHS = CHR>
+const CHS* TSStripEnd(const CHS* start) {
+  const CHS* stop = TSStop<CHS>(start);
+  CHS c = *stop;
+  while (stop > start) {
+    if (c > ' ' && c != _DEL)
+      break;
+    c = *--stop;
+  }
+	return stop;  
+}
+
+/* Strips the whitespace & non-printable chars from start and stop of string. */
+template<typename CHS = CHR>
+const CHS* TSStrip(const CHS* start) {
+  return TSStripEnd<CHS>(TSStripStart<CHS>(start));
 }
 
 /* Skips the given CHS in a s if there are any.
 @param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHC>
 const CHS* TSSkipAll(const CHS* start, CHS skip_char) {
-  if (start == NILP)
-    return NILP;
+  if (IsError(start)) return start;
   CHT c = 0;
   start = SScan(start, c);
   if (c != skip_char)
@@ -1254,12 +1303,12 @@ const CHS* TSEquals(const CHS* start_a, const CHS* start_b) {
   CHS a = *start_a, b = *start_b;
   while (a) {
     if (a != b) return NILP;
-    if (b == 0) return start_a;
+    //< Removed dead code: `if (b == 0) return start_a` was unreachable (a==b and a!=0 implies b!=0)
     a = *(++start_a);
     b = *(++start_b);
   }
   if (b) return NILP;
-  return start_a;  //< Find hit!
+  return start_a;
 }
 /* Checks if the two Strings are the same.
 @return Nil upon Strings not being the same or a pointer to the stop of the

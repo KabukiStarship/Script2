@@ -189,7 +189,7 @@ class TFile {
         result = -1;
         goto bail;
       }
-      if (TStringCompare<CHR>(name, base_name) == 0) {
+      if (TSEquals<CHR>(name, base_name) == 0) {
         found = 1;
         break;
       }
@@ -209,7 +209,7 @@ class TFile {
     if (is_directory_ != other->is_directory_) {
       return -(is_directory_ - other->is_directory_);
     }
-    return TStringCompare<CHS>(name, other->name);
+    return TSEquals<CHS>(name, other->name);
   }
 };
 

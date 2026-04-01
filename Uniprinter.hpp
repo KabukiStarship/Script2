@@ -1149,7 +1149,7 @@ struct TSPrinter {
 
   /* Prints a value to the string. */
   inline TSPrinter& PrintChar(CHA value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
   inline TSPrinter& PrintChar(CHB value) {
     return Set(TSPrint<CHS, CHT>(start, stop, value));
@@ -1170,25 +1170,25 @@ struct TSPrinter {
     return Set(TSPrint<CHS, CHT>(start, stop, value));
   }
   inline TSPrinter& Print(ISC value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
   inline TSPrinter& Print(IUC value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
   inline TSPrinter& Print(ISD value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
   inline TSPrinter& Print(IUD value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
 #if USING_FPC == YES_0
   inline TSPrinter& Print(FPC value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
 #endif
 #if USING_FPD == YES_0
   inline TSPrinter& Print(FPD value) {
-    return Set(TSPrint<CHS, CHT>(start, stop, value));
+    return Set(TSPrint<CHS>(start, stop, value));
   }
 #endif
 
