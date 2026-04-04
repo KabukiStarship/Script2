@@ -36,28 +36,28 @@ inline HSH THashPrime(CHS value, HSH hash) {
 }
 
 template<typename HSH = IUN, typename CHS = CHR>
-inline HSH THashPrime(const CHS* str) {
-  CHS c = (CHS)*str++;
+inline HSH THashPrime(const CHS* element) {
+  CHS c = (CHS)*element++;
   HSH hash = TPrimeMaxUnigned<HSH>();
   while (c) {
     hash = THashPrime<HSH, CHS>(c, hash);
-    c = *str++;
+    c = *element++;
   }
   return hash;
 }
 
 template<typename HSH = IUN, typename ISZ = ISR, typename CHS, typename CHY>
 inline CHS* THashPrimePrint_NC(CHS* start, CHS* stop, const CHY* item, HSH& hash, 
-  ISZ& length) {
-  CHL c = 0;
+    ISZ& length) {
+  CHY c = *item++;
   hash = TPrimeMaxUnigned<HSH>();
-  item = SScan(item, c);
   while (c) {
     ++length;
     hash = THashPrime<HSH, CHY>(c, hash);
     start = SPrint(start, stop, c);
-    if (IsError(start)) return start;
-    item = SScan(item, c);
+    if (IsError(start)) 
+      return start;
+    c = *item++;
   }
   *start = 0;
   return start;

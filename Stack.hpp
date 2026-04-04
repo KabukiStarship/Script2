@@ -19,11 +19,11 @@ namespace _ {
 /* @ingroup ASCII Stack */
 
 /* ASCII Stack
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Stack.md
 
 An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Stack.md
 
 # Stack Memory Layout
@@ -619,7 +619,7 @@ class AStack {
     return dest_sck;
   }
 
-  /* Clones the other object including the total, growing if neccissary.
+  /* Clones the other object including the total, growing if necessary.
   @return true upon success and false upon failure. */
   inline SCK* Clone(SCK* src) {
     if (IsError(src)) return NILP;
@@ -708,7 +708,7 @@ class AStack {
   }
 
   /* Resizes stack to the new_total, potentially shrinking the count or growing 
-  if neccissary. */
+  if necessary. */
   inline SCK* Resize(ISZ total_new, ISZ count_start = 0, ISZ count_stop = 0) {
     SCK* t = This();
     ISY total = t->total,

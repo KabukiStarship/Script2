@@ -17,7 +17,7 @@
 #define AARY AArray<T, ISZ>
 namespace _ {
 /* An ASCII Array.
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/VectorTypes/Array.md
 
 @code
@@ -585,7 +585,7 @@ class AArray {
     return dest_ary;
   }
 
-  /* Clones the other object including the total, growing if neccissary.
+  /* Clones the other object including the total, growing if necessary.
   @return true upon success and false upon failure. */
   inline ARY* Clone(ARY* src) {
     if (IsError(src)) return NILP;
@@ -608,7 +608,7 @@ class AArray {
                     TArrayStart<ARY_P>(src), src_count);
   }
 
-  /* Resizes the Array to the new total, growing if neccissary. */
+  /* Resizes the Array to the new total, growing if necessary. */
   inline ARY* Resize(ISZ total_new = -1) {
     ARY* ths = This();
     ISZ total = ths->total;
@@ -657,7 +657,7 @@ class AArray {
   }
 
   /* Resizes array to the new_total, potentially shrinking the count or growing 
-  if neccissary. */
+  if necessary. */
   inline ARY* Resize(ISZ total_new, ISZ count_start = 0, ISZ count_stop = 0) {
     ARY* t = This();
     ISZ total = t->total,

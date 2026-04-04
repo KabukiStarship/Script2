@@ -601,6 +601,16 @@ struct Linef {
   DTW Type();
 };
 
+/* Utility class to print a string repeating a given number of times. */
+struct Repeatf {
+  Stringf element;
+  ISW count;
+
+  Repeatf(const CHA* element, ISW count);
+  Repeatf(const CHB* element, ISW count);
+  Repeatf(const CHC* element, ISW count);
+};
+
 /* Utility class for printing a Heading with formatting with operator<<. */
 struct Headingf {
   Stringf element;

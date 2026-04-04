@@ -12,13 +12,13 @@ A collection of abstract print functions that can be remapped to print to any so
 
 /* Prints the given string to the Printer. */
 template<typename Printer, typename CHS = CHR, typename CHT = CHC>
-Printer& TSPrint(Printer& p, const CHS* str) {
-  if (IsError(str)) return p;
+Printer& TSPrint(Printer& p, const CHS* element) {
+  if (IsError(element)) return p;
   CHT c = 0;
-  str = SScan(str, c);
+  element = SScan(element, c);
   while (c) {
     p << c;
-    str = SScan(str, c);
+    element = SScan(element, c);
   }
   return p;
 }
@@ -26,22 +26,22 @@ Printer& TSPrint(Printer& p, const CHS* str) {
 /* Prints the given string to the Printer and returns the count of characters
 printed. */
 template<typename Printer, typename CHS = CHR, typename CHT = CHC>
-ISN TPrintAndCount(Printer& p, const CHS* str) {
-  if (IsError(str)) return 0;
+ISN TPrintAndCount(Printer& p, const CHS* element) {
+  if (IsError(element)) return 0;
   ISN print_count = 0;
   CHT c = 0;
-  str = SScan(str, c);
+  element = SScan(element, c);
   while (c) {
     p << c;
     ++print_count;
-    str = SScan(str, c);
+    element = SScan(element, c);
   }
   return print_count;
 }
 
 /* Prints the following value to the console in Hex. */
 template<typename Printer, typename IU>
-Printer& TPrintHex(Printer& p, IU value) {
+Printer& TSPrintHex(Printer& p, IU value) {
   enum { HexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
   auto ui = ToUnsigned(value);
   for (ISC num_bits_shift = sizeof(IU) * 8 - 4; num_bits_shift >= 0;
@@ -53,24 +53,24 @@ Printer& TPrintHex(Printer& p, IU value) {
 
 /* Prints the following value to the console in Hex. */
 template<typename Printer>
-Printer& TPrintHex(Printer& p, const void* value) {
+Printer& TSPrintHex(Printer& p, const void* value) {
   IUW ptr = IUW(value);
-  return TPrintHex<Printer, IUW>(p, ptr);
+  return TSPrintHex<Printer, IUW>(p, ptr);
 }
 template<typename Printer, typename IS, typename IU>
-Printer& TPrintHex(Printer& p, IS value) {
-  return TPrintHex<Printer, IU>(p, IU(value));
+Printer& TSPrintHex(Printer& p, IS value) {
+  return TSPrintHex<Printer, IU>(p, IU(value));
 }
 #if USING_FPC == YES_0
 template<typename Printer>
-Printer& TPrintHex(Printer& p, FPC value) {
-  return TPrintHex<Printer, IUC>(p, *TPtr<IUC>(&value));
+Printer& TSPrintHex(Printer& p, FPC value) {
+  return TSPrintHex<Printer, IUC>(p, *TPtr<IUC>(&value));
 }
 #endif
 #if USING_FPD == YES_0
 template<typename Printer>
-Printer& TPrintHex(Printer& p, FPD value) {
-  return TPrintHex<Printer, IUD>(p, *TPtr<IUD>(&value));
+Printer& TSPrintHex(Printer& p, FPD value) {
+  return TSPrintHex<Printer, IUD>(p, *TPtr<IUD>(&value));
 }
 #endif
 /* Prints the given hex memory block or POD value depending on the sign of the
@@ -83,7 +83,7 @@ which is frutrating because of how simple the conversion code is. If the
 byte_count is greater than zero then the memory will be printed sequentially
 one byte at a time. */
 template<typename Printer>
-Printer& TPrintHex(Printer& p, const void* origin, ISW byte_count) {
+Printer& TSPrintHex(Printer& p, const void* origin, ISW byte_count) {
   if (IsError(origin)) return p;
   ISW delta;
   const IUA* cursor = TPtr<const IUA>(origin);
@@ -113,14 +113,14 @@ Printer& TPrintHex(Printer& p, const void* origin, ISW byte_count) {
 }
 
 template<typename Printer>
-Printer& TPrintHex(Printer& p, const void* start, const void* stop) {
+Printer& TSPrintHex(Printer& p, const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
-  return TPrintHex<Printer>(p, start, delta);
+  return TSPrintHex<Printer>(p, start, delta);
 }
 
 template<typename Printer>
 Printer& TPrint(Printer& p, Hexf& value) {
-  return TPrintHex<Printer>(p, value.element.Value(), value.element.count);
+  return TSPrintHex<Printer>(p, value.element.Value(), value.element.count);
 }
 /* Prints the memory beginning at start to the Printer. */
 template<typename Printer>
@@ -187,12 +187,12 @@ Printer& TPrint(Printer& p, Binaryf& value) {
 }
 
 template<typename Printer>
-Printer& TPrintAligned(Printer& p, const CHA* str, ISW char_count,
+Printer& TPrintAligned(Printer& p, const CHA* element, ISW char_count,
                        ISW left_count, ISW dot_count, ISW right_count) {
   while (--left_count > 0) p << ' ';
   while (--char_count > 0) {
 #if LARGEST_CHAR == 1 || SEAM < CRABS_COUT
-    p << *str++;
+    p << *element++;
 #else
     CHC c;
     str = SScan(str, c);
@@ -212,7 +212,7 @@ Printer& TPrintAlignedHex(Printer& p, const void* origin, ISW byte_count,
   const CHA* cursor = TPtr<const CHA>(origin);
   while (--left_count > 0) p << ' ';
   // TPrintHex<Printer>(p, origin, byte_count >> 1);
-  TPrintHex<Printer>(p, cursor, -byte_count);
+  TSPrintHex<Printer>(p, cursor, -byte_count);
   while (--dot_count > 0) p << ' ';
   while (--right_count > 0) p << ' ';
   return p;
@@ -229,23 +229,23 @@ pointer to the nil-term CHA upon success.
 @param token  The token to utf.
 @param column_count The number_ of columns to align right to. */
 template<typename Printer, typename CHS = CHR, typename CHT = CHC, typename IS = ISR>
-Printer& TPrintCenter(Printer& p, const CHS* str, IS column_count = 80) {
-  if (IsError(str) || column_count < 1) 
+Printer& TPrintCenter(Printer& p, const CHS* element, IS column_count = 80) {
+  if (IsError(element) || column_count < 1) 
     return p;
   IS char_count = 0;
-  const CHS* token_end = TSStopCharCount<CHS, CHT>(str, char_count);
+  const CHS* token_end = TSStopCharCount<CHS, CHT>(element, char_count);
   if (IsError(token_end)) 
     return p;
-  if (str == token_end) 
+  if (element == token_end) 
     return p;
-  IS code_count = token_end - str, 
+  IS code_count = token_end - element, 
     space_count = column_count - char_count;
 
   if (space_count > 0) {
     IS half_count = space_count >> 1;
     space_count -= half_count;
     while (half_count-- > 0) p << ' ';
-    p << str;
+    p << element;
     while (space_count-- > 0) p << ' ';
     return p;
   }
@@ -255,7 +255,7 @@ Printer& TPrintCenter(Printer& p, const CHS* str, IS column_count = 80) {
   } else {
     while (char_count > 0) {
       CHT c = 0;
-			str = SScan(str, c);  
+			element = SScan(element, c);  
       p << c;
     }
     p << "...";
@@ -317,20 +317,20 @@ pointer to the nil-term CHA upon success.
 @param str  The string to print.
 @param column_count The number_ of columns to align right to. */
 template<typename Printer, typename CHS = CHR, typename CHT = CHC>
-Printer& TPrintRight(Printer& p, const CHS* str, ISW column_count = 80) {
-  if (IsError(str) || column_count < 1)
+Printer& TPrintRight(Printer& p, const CHS* element, ISW column_count = 80) {
+  if (IsError(element) || column_count < 1)
     return p;
 
   // const CHS* token_end = TSStop<CHS, CHT>(value);
-  const CHS* token_end = str;
+  const CHS* token_end = element;
   while (token_end++);
-  if (str == token_end)
+  if (element == token_end)
     return p;
-  ISW length = token_end - str, space_count = column_count - length;
+  ISW length = token_end - element, space_count = column_count - length;
 
   if (space_count > 0) {
     while (space_count-- > 0) p << ' ';
-    p << str;
+    p << element;
     return p;
   }
   length = (-length) - 3;
@@ -349,7 +349,7 @@ Printer& TPrintRight(Printer& p, const CHS* str, ISW column_count = 80) {
   } else {
     while (length > 0) {
       CHT c = 0;
-      str = SScan(str, c);
+      element = SScan(element, c);
       p << c;
     }
     p << "...";
@@ -501,19 +501,19 @@ Printer& TPrint(Printer& p, Linef& value) {
   switch (format) {
 #if USING_STA == YES_0
     case _SWA: {
-      TPrintLinef<Printer, CHA>(p, value.element.ToSTA(), value.element.count);
+      TPrintLinef<Printer, CHA, CHC>(p, value.element.ToSTA(), value.element.count);
       break;
     }
 #endif
 #if USING_STB == YES_0
     case _SWB: {
-      TPrintLinef<Printer, CHB>(p, value.element.ToSTB(), value.element.count);
+      TPrintLinef<Printer, CHB, CHC>(p, value.element.ToSTB(), value.element.count);
       break;
     }
 #endif
 #if USING_STC == YES_0
     case _SWC: {
-      TPrintLinef<Printer, CHC>(p, value.element.ToSTC(), value.element.count);
+      TPrintLinef<Printer, CHC, CHC>(p, value.element.ToSTC(), value.element.count);
       break;
     }
 #endif
@@ -546,6 +546,36 @@ Printer& TPrint(Printer& p, Linef& value) {
   return p;
 }
 
+template<typename Printer>
+Printer& TPrint(Printer& p, Repeatf& value) {
+  ISW type = value.element.Type(),  //
+    format = ATypeTextFormat(type);
+  switch (format) {
+  #if USING_STA == YES_0
+    case _SWA: {
+      for (ISW i = 0; i < value.count; ++i)
+        p << value.element.STA();
+      break;
+    }
+  #endif
+  #if USING_STB == YES_0
+    case _SWB: {
+      for (ISW i = 0; i < value.count; ++i)
+        p << value.element.STB();
+      break;
+    }
+  #endif
+  #if USING_STC == YES_0
+    case _SWC: {
+      for (ISW i = 0; i < value.count; ++i)
+        p << value.element.STC();
+      break;
+    }
+  #endif
+  }
+  return p;
+}
+
 template<typename CHS>
 const CHS* TStringHeadingf() {
   static const CHS String[] = {'\n', '\n', '+', '-', '-', '-', '\n', '|', ' ',
@@ -559,12 +589,12 @@ Printer& TPrintHeading(Printer& p, const CHS* element, const CHA* style = NILP,
                        ISW column_count = 80, const CHA* caption2 = NILP,
                        const CHA* caption3 = NILP) {
   if (IsError(style)) style = TStringHeadingf<CHA>();
-  style = TPrintLinef<Printer, CHA>(p, style, column_count);
+  style = TPrintLinef<Printer, CHA, CHC>(p, style, column_count);
   if (IsError(style)) return p;
   p << element;
   if (caption2) p << caption2;
   if (caption3) p << caption3;
-  TPrintLinef<Printer, CHA>(p, style, column_count);
+  TPrintLinef<Printer, CHA, CHC>(p, style, column_count);
   return p;
 }
 
@@ -1194,41 +1224,41 @@ struct TSPrinter {
 
   /* Prints the given pointer as hex. */
   inline TSPrinter& Hex(ISA value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(IUA value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(ISB value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(IUB value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(ISC value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(IUC value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(ISD value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
   inline TSPrinter& Hex(IUD value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
 #if USING_FPC == YES_0
   inline TSPrinter& Hex(FPC value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
 #endif
 #if USING_FPD == YES_0
   inline TSPrinter& Hex(FPD value) {
-    return Set(TPrintHex<CHS>(start, stop, value));
+    return Set(TSPrintHex<CHS>(start, stop, value));
   }
 #endif
   inline TSPrinter& Hex(const void* ptr) {
-    return Set(TPrintHex<CHS>(start, stop, ptr));
+    return Set(TSPrintHex<CHS>(start, stop, ptr));
   }
   inline TSPrinter& Binary(ISA value) {
     return Set(TPrintBinary<CHS>(start, stop, value));
@@ -1275,9 +1305,9 @@ struct TSPrinter {
   template<typename Printer>
   inline Printer& PrintTo(Printer& p) {
     p << "\nTSPrinter<CHS" << sizeof(CHS) << ", IS" << sizeof(IS) << ">{ start:";
-    TPrintHex<Printer>(p, start);
+    TSPrintHex<Printer>(p, start);
     p << " stop:";
-    TPrintHex<Printer>(p, stop);
+    TSPrintHex<Printer>(p, stop);
 
 #ifdef D_THIS
 // return TPrintChars<Printer, CHS>(p, start, stop);

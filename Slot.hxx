@@ -11,23 +11,23 @@
 namespace _ {
 
 const Op* ReturnError(Slot* slot, ERC error) {
-  D_COUT('\n' << TStringError<CHR>()[error]);
+  D_COUT('\n' << TSError<CHR>()[error]);
   return OpError(error);
 }
 
 const Op* ReturnError(Slot* slot, ERC error, const DTB* header) {
-  D_COUT('\n' << TStringError<CHR>()[error]);
+  D_COUT('\n' << TSError<CHR>()[error]);
   return OpError(error);
 }
 
 const Op* ReturnError(Slot* slot, ERC error, const DTB* header, IUA offset) {
-  D_COUT('\n' << TStringError<CHR>()[error]);
+  D_COUT('\n' << TSError<CHR>()[error]);
   return OpError(error);
 }
 
 const Op* ReturnError(Slot* slot, ERC error, const DTB* header, ISC offset,
                       IUA* address) {
-  D_COUT('\n' << TStringError<CHR>()[error]);
+  D_COUT('\n' << TSError<CHR>()[error]);
   return OpError(error);
 }
 

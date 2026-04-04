@@ -9,8 +9,8 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ,
-         typename DT = DTB, typename HSH = IUN>
+template<typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, 
+  typename ISY = ISQ, typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
   enum {
     Size = 512 * sizeof(ISZ),
@@ -27,7 +27,7 @@ static void TestDic() {
          " size_words:" << dic.BytesWords() <<
          "\nPrinting empty dictionary:\n");
   D_COUT_DIC(dic.This());
-  A_AVOW(ISY(0), dic.Find(TStringEmpty<CHS>()));
+  A_AVOW(ISY(0), dic.Find(TSEmpty<CHS>()));
   D_COUT("\nPopulating " << TotalInit << " test words...");
 
   const CHS* words = TTestWords<CHS>::Words(),
@@ -70,16 +70,16 @@ const CHA* Dic(const CHA* args) {
 #if SEAM >= CRABS_DIC
   A_TEST_BEGIN;
 //#if USING_STA == YES_0
-  TestDic<CHA, ISC, ISB, DTB, IUC>();
-//  TestDic<CHA, ISD, ISC, DTB, IUD>();
+  TestDic<CHA, CHC, ISC, ISB, DTB, IUC>();
+//  TestDic<CHA, CHC, ISD, ISC, DTB, IUD>();
 //#endif
 //#if USING_STB == YES_0
-//  TestDic<CHB, ISC, ISB, DTB, IUC>();
-//  TestDic<CHB, ISD, ISC, DTB, IUD>();
+//  TestDic<CHB, CHC, ISC, ISB, DTB, IUC>();
+//  TestDic<CHB, CHC, ISD, ISC, DTB, IUD>();
 //#endif
 //#if USING_STC == YES_0
-//  TestDic<CHC, ISC, ISB, DTB, IUC>();
-//  TestDic<CHC, ISD, ISC, DTB, IUD>();
+//  TestDic<CHC, CHC, ISC, ISB, DTB, IUC>();
+//  TestDic<CHC, CHC, ISD, ISC, DTB, IUD>();
 //#endif
 #endif
   return NILP;

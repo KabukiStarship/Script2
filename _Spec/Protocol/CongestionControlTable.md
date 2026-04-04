@@ -1,6 +1,6 @@
 # [SCRIPT Specification](../)
 
-## [SCRIPT Protocol Specificaiton](./)
+## [SCRIPT Protocol Specification](./)
 
 ### Congestion Control Table
 

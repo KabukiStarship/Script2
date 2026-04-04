@@ -15,7 +15,7 @@
 #endif
 #define LST_A typename ISZ = ISC, typename ISY = ISB, typename DT = DTB
 #define LST_P ISZ, ISY, DT
-#define LST TList<LST_P>
+#define LST TList<ISZ, ISY, DT>
 namespace _ {
 
 /* A collection of type-value tuples.
@@ -803,7 +803,7 @@ class AList {
   /* Prints This object to the printer. */
   template<typename Printer>
   Printer& PrintTo(Printer& o) {
-    return TListPrint<Printer, ISZ>(o, This());
+    return TListPrint<Printer, LST_P>(o, This());
   }
 
  private:
@@ -814,7 +814,7 @@ class AList {
    size upper bounds, or a new dynamically allocated socket upon failure. */
    static BOL Grow(Autoject& obj) {
      D_COUT("\n\nGrowing List...");
-     /* Grow Algoirhm.
+     /* Grow Algorithm.
      1. Check if we can grow and if so, create a new block of memory.
      2. Copy the Loom.
      3. Copy the List. */
@@ -852,9 +852,9 @@ class AList {
      return true;
    }
 
-   /* Adds a string to the end of the List, auto-growing if neccissary.
+   /* Adds a string to the end of the List, auto-growing if necessary.
    @return The index upon success or -1 if the obj can't grow anymore.
-   @todo Verify copmile size of this function isolated and in the AArray class. */
+   @todo Verify compile size of this function isolated and in the AArray class. */
    static ISY InsertTV(Autoject& obj, DT type, IUW value, ISY index = PSH, 
                        IUW value_msb = 0) {
      ISY result = TListInsert<LST_P>(TPtr<LST>(obj.origin), type, IUW(value), 
@@ -867,7 +867,7 @@ class AList {
                                    index);
        if (result < 0) {
          D_COUT("\n\n\nFailed to insert into list:" << result << ' ' <<
-           ASCIIErrorSTR(result));
+           ASCIIErrorSTA(result));
          return result;
        }
      }

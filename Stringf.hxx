@@ -125,8 +125,8 @@ inline const CHA* SScan(const CHA* start, CHC& value) {
   return start;
 }
 inline CHA* SScan(CHA* start, CHC& value) {
-  const CHA* str = const_cast<const CHA*>(start);
-  return const_cast<CHA*>(SScan(str, value));
+  const CHA* element = const_cast<const CHA*>(start);
+  return const_cast<CHA*>(SScan(element, value));
 }
 
 #if USING_STB == YES_0
@@ -177,8 +177,8 @@ inline const CHC* SScan(const CHC* start, CHC& result) {
 }
 inline CHC* SScan(CHC* start, CHC& value) {
   //if (IsError(start)) return start;
-  const CHC* str = const_cast<const CHC*>(start);
-  return const_cast<CHC*>(SScan(str, value));
+  const CHC* element = const_cast<const CHC*>(start);
+  return const_cast<CHC*>(SScan(element, value));
 }
 #endif
 
@@ -1477,6 +1477,11 @@ Linef::Linef(const CHB* value, ISW count) : element(value, count), format("") {}
 Linef::Linef(const CHC* value, ISW count) : element(value, count), format("") {}
 
 DTW Linef::Type() { return element.Type(); }
+
+
+Repeatf::Repeatf(const CHA* element, ISW count) : element(element), count(count) {}
+Repeatf::Repeatf(const CHB* element, ISW count) : element(element), count(count) {}
+Repeatf::Repeatf(const CHC* element, ISW count) : element(element), count(count) {}
 
 Headingf::Headingf(const CHA* caption1)
     : element(caption1, AConsoleWidth),

@@ -12,11 +12,12 @@
 #endif
 namespace _ {
 /* @ingroup Dic
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Dictionary.md */
-#define DIC_A typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ,\
-  typename DT = DTB, typename HSH = IUN
-#define DIC_P CHS, ISZ, ISY, DT, HSH
+#define DIC_A typename CHS = CHR, typename CHT = CHR, typename ISZ = ISR,\
+  typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
+#define DIC_P CHS, CHT, ISZ, ISY, DT, HSH
+#define DIC TDic<CHS, CHT, ISZ, ISY, DT, HSH>
 
 /* @ingroup Dic
 @brief A contiguous memory Associative List created from a List and a Table.
@@ -33,8 +34,6 @@ template<DIC_A>
 struct TDic {
   TList<LST_P> values;  //< A list of values with a Table of keys in index 0.
 };
-
-#define DIC TDic<CHS, ISZ, ISY, DT, HSH>
 
 /* The minimum count a good with the given template parameters can have. */
 template<DIC_A>
@@ -174,7 +173,7 @@ Printer& TDicPrint(Printer& o, const DIC* dic) {
     << CSizeCodef<ISY>() << "> bytes:" << dic->values.bytes
     << " total:" << total << " count:" << count 
     << Linef("\n+---\n| list_top:") << dic->values.top
-    << " values_free_space:" << TListSpace<ISZ>(&dic->values)
+    << " values_free_space:" << TListSpace<LST_P>(&dic->values)
     << " TypeOf(keys):" << ATypef(types[0])
     << "\n| keys_offset:" << kmap
     << " keys_free_space:" << TTableSpace<TBL_P>(keys)
@@ -208,7 +207,7 @@ Printer& TDicPrintStruct(Printer& o, const DIC* dic) {
     << " total:" << total << " count:" << count << '\n'
     << " list_top:" << dic->values.top << " keys_offset:" << keys_offset
     << " keys_free_space:" << TTableSpace<TBL_P>(keys)
-    << " values_free_space:" << TListSpace<ISZ>(&dic->values)
+    << " values_free_space:" << TListSpace<LST_P>(&dic->values)
     << " keys.bytes:" << keys_size << " TypeOf(keys):" << ATypef(types[0])
     << '\n';
   return o;
@@ -287,7 +286,7 @@ inline DIC* TDicInit(DIC* dic,
   auto result = TTableInit<TBL_P>(keys, total);
   if (IsError(result))
     D_RETURN_TPTR_ERROR(DIC, result);
-  TTableAppend<TBL_P>(keys, TStringEmpty<CHS>());
+  TTableAppend<TBL_P>(keys, TSEmpty<CHS>());
   D_COUT("\nTDelta<>(dic, TDicKeys<DIC_P>(dic)):" <<
     TDelta<>(dic, TDicKeys<DIC_P>(dic)));
   if (IsError(result)) return NILP;
@@ -412,7 +411,7 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
   ISY tbl_index = TTableAppend<TBL_P>(keys, key);
   if (tbl_index < 0) {
     D_COUT("\n\n\nFailed to insert into table:" << tbl_index << ' ' <<
-           ASCIIErrorSTR(tbl_index));
+           ASCIIErrorSTA(tbl_index));
     D_COUT_TABLE(keys);
     D_COUT_DIC(table);
     return -ErrorKeysBooferOverflow;
@@ -421,7 +420,7 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
   index = TListInsert<LST_P>(&table->values, type, value, index, value_msb);
   if (index < 0) {
     D_COUT("\nFailed to insert into List with error " << index << ':' <<
-      ASCIIErrorSTR(-index));
+      ASCIIErrorSTA(-index));
     D_COUT_LIST(&table->values);
     D_COUT("\n\nList memory: &table->values.bytes:" << *&table->values.bytes <<
            '\n' << Charsf(&table->values, &table->values.bytes));
@@ -825,7 +824,7 @@ public:
   size upper bounds, or a new dynamically allocated socket upon failure. */
   BOL Grow() {
     D_COUT("\n\nGrowing Dic...");
-    /* Grow Algoirhm.
+    /* Grow Algorithm.
     1. Check if we can grow and if so, create a new block of memory.
     2. Copy the Table.
     3. Copy the List. */
@@ -872,9 +871,9 @@ public:
     return true;
   }
 
-  /* Adds a string to the end of the Dic, auto-growing if neccissary.
+  /* Adds a string to the end of the Dic, auto-growing if necessary.
   @return The index upon success or -1 if the obj can't grow anymore.
-  @todo Verify copmile size of this function isolated and in the AArray class. */
+  @todo Verify compile size of this function isolated and in the AArray class. */
   ISY InvertTV(const CHS* key, DT type, IUW value, ISY index = PSH, 
                IUW value_msb = 0) {
     Autoject& obj = AJT();
@@ -889,7 +888,7 @@ public:
       result = TDicInsert<DIC_P>(dic, key, type, value, index, value_msb);
       if (result < 0) {
         D_COUT("\n\n\nFailed to insert into dic:" << result << ' ' <<
-               ASCIIErrorSTR(result));
+               ASCIIErrorSTA(result));
         auto keys = TDicKeys<DIC_P>(dic);
         D_COUT_TABLE(keys);
       }

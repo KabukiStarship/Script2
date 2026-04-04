@@ -281,7 +281,7 @@ class ATypeValue {
       vmsb_;    //< Most significant bits of two word type.
 
  public:
-  /* Stores a NIL type with indeterminite word_. */
+  /* Stores a NIL type with indeterminate word_. */
   ATypeValue();
 
 #if USING_STA == YES_0
@@ -365,10 +365,10 @@ class ATypeValue {
   /* Sets the second word to the value. */
   inline void SetWord2(IUW value);
 
-  /*Sets the type_ to _NIL with an indeterminite value. */
+  /*Sets the type_ to _NIL with an indeterminate value. */
   inline void SetNIL();
 
-  /*Sets the type_ to _NIL with an indeterminite value. */
+  /*Sets the type_ to _NIL with an indeterminate value. */
   inline void SetNIL(IUW value);
 
   inline void* Set(void* value);

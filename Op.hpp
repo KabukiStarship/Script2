@@ -39,7 +39,7 @@ inline CHC OpLast(const Op* op) {
 
 }  //< namespace _
 
-template<typename CHS, typename ISZ>
+template<typename CHS, typename CHT, typename ISZ>
 inline ::_::TSPrinter<CHS, CHT, ISZ>& operator<<(::_::TSPrinter<CHS, CHT, ISZ>& utf,
                                             const ::_::Op* op) {
   return ::_::TOpPrint<::_::TSPrinter<CHS, CHT, ISZ>>(utf, op);

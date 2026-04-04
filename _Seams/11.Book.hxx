@@ -10,8 +10,8 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename ISZ = ISN, typename ISY = ISM, typename CHS = CHR,
-         typename DT  = DTB>
+template<typename ISZ = ISN, typename ISY = ISM, typename CHS = CHR, 
+  typename CHT = CHC, typename DT  = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
@@ -69,7 +69,7 @@ void TestBook() {
   for (ISN i = 0; i < Bytes - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
-  const TBook<BOK_P>* dez_nutz = book.This();
+  auto dez_nutz = book.This();
   D_COUT_BOOK(dez_nutz);
 }
 }  //< namespace CRTest
@@ -81,19 +81,19 @@ const CHA* Book(const CHA* args) {
 #if SEAM >= CRABS_BOOK
   A_TEST_BEGIN;
 #if USING_STA == YES_0
-  //TestBook<ISB, ISA, CHA>();
-  TestBook<ISC, ISB, CHA>();
-  TestBook<ISD, ISC, CHA>();
+  //TestBook<ISB, ISA, CHA, CHC>();
+  TestBook<ISC, ISB, CHA, CHC>();
+  TestBook<ISD, ISC, CHA, CHC>();
 #endif
 #if USING_STB == YES_0
-  //TestBook<ISB, ISA, CHB>();
-  TestBook<ISC, ISB, CHB>();
-  TestBook<ISD, ISC, CHB>();
+  //TestBook<ISB, ISA, CHB, CHC>();
+  TestBook<ISC, ISB, CHB, CHC>();
+  TestBook<ISD, ISC, CHB, CHC>();
 #endif
 #if USING_STC == YES_0
-  //TestBook<ISB, ISA, CHC>();
-  TestBook<ISC, ISB, CHC>();
-  TestBook<ISD, ISC, CHC>();
+  //TestBook<ISB, ISA, CHC, CHC>();
+  TestBook<ISC, ISB, CHC, CHC>();
+  TestBook<ISD, ISC, CHC, CHC>();
 #endif
 #endif
   return NILP;

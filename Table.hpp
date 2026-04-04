@@ -7,15 +7,16 @@
 #include "Array.hpp"
 #include "Binary.hpp"
 #include "Hash.hpp"
+#include "Error.h" //< Temp
 #if SEAM == CRABS_TABLE
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
-#define TBL_A \
-  typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ, typename HSH = IUN
-#define TBL_P CHS, ISZ, ISY, HSH
-#define TBL TTable<CHS, ISZ, ISY, HSH>
+#define TBL_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, \
+  typename ISY = ISQ, typename HSH = IUN
+#define TBL_P CHS, CHT, ISZ, ISY, HSH
+#define TBL TTable<CHS, CHT, ISZ, ISY, HSH>
 namespace _ {
 
 /* A dense key-index map.
@@ -318,7 +319,7 @@ Printer& TTablePrint(Printer& o, const TBL* table) {
     #endif
     << Centerf("hash_s", HashSize - 2) << ' '
     << Centerf("index_s", HashSize) << ' '
-    << Centerf("offset", 8) << Linef(" \"Key\":{Collissions}\n+---");
+    << Centerf("offset", 8) << Linef(" \"Key\":{Collisions}\n+---");
   for (ISY i = 0; i < count; ++i) {
     ISZ offset = keys_map[i];
     ISY index_s = sort_map[i];
@@ -384,7 +385,7 @@ TBL* TTableInit(TBL* table, ISY total) {
   if (start >= stop)
     D_RETURN_TPTR_ERROR(TBL, ErrorKeysBooferOverflow);
   table->stop      = stop;
-  table->map.total = total;
+  table->map.total = ISZ(total);
   table->map.count = 0;
   D_COUT_TABLE(table);
   return table;
@@ -443,7 +444,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
     *hash_map = hash;
     *pile_map = 0;
     *sort_map = count;
-    table->map.count = count_new;
+    table->map.count = ISZ(count_new);
     D_COUT_TABLE(table);
     return count;
   }
@@ -481,7 +482,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
                  TTableKey<TBL_P>(keys_map, key_offset) << 
                  "\":" << stack_index << 
                  "  table_to_pile_cursor_delta:" << TDelta<>(table, pile_cursor));
-          if (TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, key_offset))) {
+          if (TSEquals<CHS, CHT>(key, TTableKey<TBL_P>(keys_map, key_offset))) {
             D_COUT(" Found key at stack_index:" << stack_index);
             return stack_index;
           }
@@ -499,7 +500,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         D_COUT("\n             Inserted at pile_index:" << pile_index);
         for (ISY i = pile_index; i > pile_index - 5; --i)
           D_COUT("\n               pile[" << i << "]: " << *(pile + i));
-        table->map.count = count_new;
+        table->map.count = ISZ(count_new);
         if (count_new == total - 1)
           table->stop = start_next;
         D_COUT_TABLE(table);
@@ -510,7 +511,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
       D_COUT("\n           No collisions exist." <<
              "\n           Comparing to " << sort_index << ":\"" << other_key << 
              "\" at offset:" << key_offset);
-      if (!TSEquals<CHS>(key, other_key)) {
+      if (!TSEquals<CHS, CHT>(key, other_key)) {
         ISY* pile = TTablePile<TBL_P>(table, bytes);
         ISY  pile_size = *pile;
         D_COUT("\n             New collision with sort_index:" << 
@@ -530,7 +531,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         *pile_cursor-- = sort_index;
         *pile_cursor   = -1;
 
-        table->map.count = count_new;
+        table->map.count = ISZ(count_new);
         if (count_new == total - 1) table->stop = start_next;
         D_COUT_TABLE(table);
         return count;
@@ -545,7 +546,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
   TArrayInsert_NC<HSH>(hash_map + mid, hash_map + count, hash);
   TArrayInsert_NC<ISY>(sort_map + mid, sort_map + count, count);
   pile_map[count] = 0;
-  table->map.count = count_new;
+  table->map.count = ISZ(count_new);
   if (count_new == total - 1) table->stop = start_next;
   D_COUT_TABLE(table);
   return count;
@@ -572,8 +573,8 @@ size upper bounds, or a new dynamically allocated socket upon failure. */
 template<TBL_A>
 BOL TTableGrow(Autoject& obj) {
   D_COUT("\n\nGrowing Table...");
-  /* Grow Algoirhm.
-  1. Check if we can grow and if so, creatze a new block of memory.
+  /* Grow Algorithm.
+  1. Check if we can grow and if so, creates a new block of memory.
   2. Copy the stacks. */
   auto origin = obj.origin;
   D_ASSERT(origin);
@@ -600,7 +601,7 @@ BOL TTableGrow(Autoject& obj) {
   D_COUT("\n\n*TPtr<ISZ>(origin_new):" << *TPtr<ISZ>(origin_new) <<
     " size_new:" << size_new);
   auto destination = TPtr<TBL>(origin_new);
-  TTableInit<TBL_P>(destination, total_new);
+  TTableInit<TBL_P>(destination, ISY(total_new));
   TTableAppend<TBL_P>(destination, source);
   obj.origin = origin_new;
   D_COUT("\n\nFinished growing. :-)\n\n");
@@ -608,9 +609,9 @@ BOL TTableGrow(Autoject& obj) {
   return true;
 }
 
-/* Adds a string to the end of the Table, auto-growing if neccissary.
+/* Adds a string to the end of the Table, auto-growing if necessary.
 @return The index upon success or -1 if the obj can't grow anymore.
-@todo Verify copmile size of this function isolated and in the AArray class. */
+@todo Verify compile size of this function isolated and in the AArray class. */
 template<TBL_A>
 ISY TTableAppend(Autoject& obj, const CHS* key) {
   D_CHECK_PTR_TRETURN(ISY, key);
@@ -623,7 +624,7 @@ ISY TTableAppend(Autoject& obj, const CHS* key) {
     result = TTableAppend<TBL_P>(table, key);
     if (result < 0) {
       D_COUT("\n\n\nFailed to append to table:" << result << ' ' <<
-        ASCIIErrorSTR(result));
+        ASCIIErrorSTA(result));
       D_COUT_TABLE(table);
     }
     D_COUT("\ndez nutz baby!!!\n");
@@ -674,11 +675,11 @@ ISY TTableFind(const TBL* table, const CHS* key) {
     ISZ offset = keys_map[0];
     D_COUT("\nComparing to only key \"" << 
       TTableKey<TBL_P>(keys_map, offset) << "\":" << offset << "...");
-    if (TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, offset))) {
+    if (TSEquals<CHS, CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("hit at offset:" << offset);
       return 0;
     }
-    if (!TSEquals<CHS>(key, TTableKey<TBL_P>(keys_map, offset))) {
+    if (!TSEquals<CHS, CHT>(key, TTableKey<TBL_P>(keys_map, offset))) {
       D_COUT("key not found.");
       return CAInvalidIndex<ISY>();
     }
@@ -717,7 +718,7 @@ ISY TTableFind(const TBL* table, const CHS* key) {
           const CHS* other = TTableKey<TBL_P>(keys_map, offset);
           D_COUT("\n      Comparing to:\"" << other << "\" at offset:" << 
                  offset << " at " << stack_index);
-          if (TSEquals<CHS>(key, other)) {
+          if (TSEquals<CHS, CHT>(key, other)) {
             D_COUT("\n      Hit at index:" << stack_index << " offset:" << offset);
             return stack_index;
           }
@@ -729,7 +730,7 @@ ISY TTableFind(const TBL* table, const CHS* key) {
       ISZ offset = keys_map[sorted_index];
       const CHS* other = TTableKeyAt<TBL_P>(keys_map, sorted_index);
       D_COUT("\n    Comparing to key:\"" << other << '"');
-      if (!TSEquals<CHS>(key, other)) {
+      if (!TSEquals<CHS, CHT>(key, other)) {
         D_COUT("\n    Table does not contain key.");
         return CAInvalidIndex<ISY>();
       }

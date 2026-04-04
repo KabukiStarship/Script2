@@ -12,12 +12,12 @@
 #else
 #include "_Release.h"
 #endif
-#define LOM_A typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ
-#define LOM_P CHS, ISZ, ISY
+#define LOM_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, typename ISY = ISQ
+#define LOM_P CHS, CHT, ISZ, ISY
 #define LOM TLoom<LOM_P>
 namespace _ {
 /* @ingroup Loom
-Please see the ASCII Data Specificaiton for DRY documentation.
+Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Loom.md
 
 # Memory Layout
@@ -52,7 +52,7 @@ constexpr ISY TLoomCountMin() {
 }
 
 template<LOM_A>
-constexpr ISZ TLoomSizeMin() {
+constexpr ISZ TLoomBytesMin() {
   enum {
     CountMin = TLoomCountMin(),
     SizeMin = sizeof(TLoom<LOM_P>) + CountMin * (sizeof(ISZ) + 2),
@@ -63,7 +63,7 @@ constexpr ISZ TLoomSizeMin() {
 /* Calculates the minimum size of a Loom of empty strings with the given 
 total. */
 template<LOM_A>
-ISZ TLoomSizeMin(ISZ total, ISZ average_string_length = 0) {
+ISZ TLoomBytesMin(ISZ total, ISZ average_string_length = 0) {
   return sizeof(TLoom<LOM_P>) + 
     total * (sizeof(ISY) + (average_string_length + 1) * sizeof(CHS));
 }
@@ -80,14 +80,14 @@ constexpr ISY TLoomCountDefault() {
   return 32;
 }
 
-/* The default size of a Loom when no paramters are specified. */
+/* The default size of a Loom when no parameters are specified. */
 template<LOM_A>
 constexpr ISZ TLoomSizeDefault() {
   return (TLoomKeyLengthDefault<LOM_P>() *
     TLoomCountDefault<LOM_P>() * sizeof(CHS)) & (sizeof(ISW) - 1);
 }
 
-/* The default size of a Loom when no paramters are specified. */
+/* The default size of a Loom when no parameters are specified. */
 template<LOM_A>
 constexpr ISZ TLoomSize(ISY total, ISZ string_length_average = 
                          TLoomKeyLengthDefault<LOM_P>()) {
@@ -182,6 +182,20 @@ inline ISZ TLoomSpace(const TLoom<LOM_P>* loom) {
   return loom->bytes - loom->start;
 }
 
+/* Returns the minimum number of bytes required to hold the current contents
+of the loom, sized for exactly loom->map.count map entries.
+@pre loom must be a valid, initialized TLoom. */
+template<LOM_A>
+ISZ TLoomBytesMinFast(const TLoom<LOM_P>* loom) {
+  if (IsError(loom))
+    return 0;
+  ISZ string_bytes = loom->start -
+    TLoomKeysBeginOffset<LOM_P>(ISY(loom->map.total));
+  // @todo Scan through keys to find unused space; or make another function.
+  return ISZ(sizeof(TLoom<LOM_P>)) + ISZ(loom->map.count) * ISZ(sizeof(ISZ)) +
+    string_bytes;
+}
+
 /* Points to the string offsets array. */
 template<LOM_A>
 ISZ* TLoomKeysMap(TLoom<LOM_P>* loom) {
@@ -196,7 +210,8 @@ const ISZ* TLoomKeysMap(const TLoom<LOM_P>* loom) {
 template<LOM_A>
 CHS* TLoomGet(TLoom<LOM_P>* loom, ISY index) {
   D_ASSERT(loom);
-  if (index < 0 || index >= loom->map.count) return NILP;
+  if (index < 0 || index >= loom->map.count) 
+    return NILP;
   return TPtr<CHS>(loom, TStackBegin<ISZ, ISZ>(&loom->map)[index]);
 }
 template<LOM_A>
@@ -253,10 +268,10 @@ inline TLoom<LOM_P>* TLoomInit(TLoom<LOM_P>* loom, ISY total) {
 /* Adds a string to the end of the Loom.
 @return The index upon success or -1 upon failure. */
 template<LOM_A, typename CH = CHS>
-ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
+ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* element, ISY index = PSH) {
   D_ASSERT(loom);
-  D_ASSERT(str);
-  if (IsError(loom) || IsError(str))
+  D_ASSERT(element);
+  if (IsError(loom) || IsError(element))
     return -ErrorInvalidInput;
   ISY count = ISY(loom->map.count),
       total = ISY(loom->map.total);
@@ -272,14 +287,13 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
       if (count <= 1) {
         index = count;
       } else {
-        auto length = TSCodeCount<CH, ISZ>(str);
+        auto length = TSCodeCount<CH, ISZ>(element);
         for (ISN i = 0; i < count; ++i) {
           if (i == count) {
             index = count;
             break;
           }
-          cursor = 
-            CHS>(TLoomGet<LOM_P>(loom, i)) + 1;
+          cursor = TSStop<CHS, CHT>(TLoomGet<LOM_P>(loom, i)) + 1;
           CHS* start_next_string = TLoomGet<LOM_P>(loom, i + 1);
           if (start_next_string - cursor > length) {
             index = i;
@@ -291,13 +305,13 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* str, ISY index = PSH) {
       if (index != count) {
         index = TStackInsert<ISZ, ISZ, ISY>(&loom->map, TDelta<ISZ>(loom, cursor), 
                                             index);
-        TSPrint<CHS, CHT>(cursor, TLoomEnd<LOM_P, CHS>(loom), str);
+        TSPrint<CHS, CHT>(cursor, TLoomEnd<LOM_P, CHS>(loom), element);
         return index;
       }
     }
   }
   cursor = TPtr<CHS>(loom, loom->start);
-  cursor = TSPrint<CHS, CHT>(cursor, (CHS*)TLoomEnd<LOM_P>(loom), str);
+  cursor = TSPrint<CHS, CHT>(cursor, (CHS*)TLoomEnd<LOM_P>(loom), element);
   if (IsError(cursor))
     return -1;
 
@@ -424,7 +438,7 @@ ISY TLoomFind(TLoom<LOM_P>* loom, const CHS* string) {
   for (ISY i = 0; i < loom->map.count; ++i) {
     ISZ offset = offsets[i];
     CHS* other = TPtr<CHS>(IUW(loom) + offset);
-    if (!TSEquals<CHS>(string, other)) return i;
+    if (TSEquals<CHS>(string, other)) return i;
   }
   return -1;
 }

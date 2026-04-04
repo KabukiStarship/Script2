@@ -530,6 +530,25 @@ CHS* TSPrintLinef(CHS* start, CHS* stop, const CHS* item,
   return start;
 }
 
+template<typename CHS = CHR, typename CHT = CHC>
+CHS* TSPrint(CHS* start, CHS* stop, const Linef& value) {
+  switch (value.element.Type()) {
+    case _STA: {
+      return TSPrintLinef<CHA, CHC>(start, stop, value.element.ToSTA(), value.element.count);
+      break;
+    }
+    case _STB: {
+      return TSPrintLinef<CHB, CHC>(start, stop, value.element.ToSTB(), value.element.count);
+      break;
+    }
+    case _STC: {
+      return TSPrintLinef<CHC, CHC>(start, stop, value.element.ToSTC(), value.element.count);
+      break;
+    }
+  }
+  return TSPrintLinef(start, stop, value.element);
+}
+
 } //< namespace _
 #endif
 #if SEAM >= CRABS_UNIPRINTER
@@ -555,60 +574,60 @@ inline CHS* TSPrint(CHS* start, CHS* stop, const CHO* item) {
   *start = 0;
   return start;
 }
-
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TSPrint(CHS* start, CHS* stop, const CHA* item) {
-  return TSPrint<CHS, CHT>(start, stop, item);
-}
+//
+//template<typename CHS = CHR, typename CHT = CHC>
+//inline CHS* TSPrint(CHS* start, CHS* stop, const CHA* item) {
+//  return TSPrint<CHS, CHT>(start, stop, item);
+//}
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHA* item) {
   return TSPrint<CHS, CHT>(start, start + boofer_size - 1, item);
 }
-
-#if USING_STB == YES_0
-/* Prints a Unicode item to the given socket.
-@return  Nil upon failure or a pointer to the nil-term CHS upon success.
-@param string  The beginning of the socket.
-@param stop    The last CHS in the socket.
-@param item    The item to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if item is nil. */
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TSPrint(CHS* start, CHS* stop, const CHB* item) {
-  return TSPrint<CHS, CHT, CHB>(start, stop, item);
-}
+//
+//#if USING_STB == YES_0
+///* Prints a Unicode item to the given socket.
+//@return  Nil upon failure or a pointer to the nil-term CHS upon success.
+//@param string  The beginning of the socket.
+//@param stop    The last CHS in the socket.
+//@param item    The item to print.
+//@warning This algorithm is designed to fail if the socket is not a valid socket
+//with one or more bytes in it, or if item is nil. */
 //template<typename CHS = CHR, typename CHT = CHC>
 //inline CHS* TSPrint(CHS* start, CHS* stop, const CHB* item) {
 //  return TSPrint<CHS, CHT, CHB>(start, stop, item);
 //}
+////template<typename CHS = CHR, typename CHT = CHC>
+////inline CHS* TSPrint(CHS* start, CHS* stop, const CHB* item) {
+////  return TSPrint<CHS, CHT, CHB>(start, stop, item);
+////}
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHB* item) {
   return TSPrint<CHS, CHT, CHB>(start, start + boofer_size - 1, item);
 }
-#endif
-
-#if USING_STC == YES_0
-/* Prints a Unicode item to the given socket.
-@return  Nil upon failure or a pointer to the nil-term CHS upon success.
-@param start  The beginning of the socket.
-@param stop    The last CHS in the socket.
-@param item    The item to print.
-@warning This algorithm is designed to fail if the socket is not a valid socket
-with one or more bytes in it, or if item is nil. */
-template<typename CHS = CHR, typename CHT = CHC>
-CHS* TSPrint(CHS* start, CHS* stop, const CHC* item) {
-  return TSPrint<CHS, CHC, CHC>(start, stop, item);
-}
-
+//#endif
+//
+//#if USING_STC == YES_0
+///* Prints a Unicode item to the given socket.
+//@return  Nil upon failure or a pointer to the nil-term CHS upon success.
+//@param start  The beginning of the socket.
+//@param stop    The last CHS in the socket.
+//@param item    The item to print.
+//@warning This algorithm is designed to fail if the socket is not a valid socket
+//with one or more bytes in it, or if item is nil. */
 //template<typename CHS = CHR, typename CHT = CHC>
-//inline CHS* TSPrint(CHS* start, CHS* stop, const CHC* item) {
-//  return TSPrint<CHS, CHT, CHC>(start, stop, item);
+//CHS* TSPrint(CHS* start, CHS* stop, const CHC* item) {
+//  return TSPrint<CHS, CHC, CHC>(start, stop, item);
 //}
+//
+////template<typename CHS = CHR, typename CHT = CHC>
+////inline CHS* TSPrint(CHS* start, CHS* stop, const CHC* item) {
+////  return TSPrint<CHS, CHT, CHC>(start, stop, item);
+////}
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHC* item) {
   return TSPrint<CHS, CHT, CHC>(start, start + boofer_size - 1, item);
 }
-#endif
+//#endif
 
 /* Skips the given CHS in a s if there are any.
 @param start  The first CHS in the boofer. */
@@ -625,7 +644,7 @@ inline CHS* TSSkipAll(CHS* start, CHS skip_char) {
 //}
 
 template<typename T, typename CHS = CHR>
-CHS* TPrintHex(CHS* start, CHS* stop, const void* origin, ISW bytes) {
+CHS* TSPrintHex(CHS* start, CHS* stop, const void* origin, ISW bytes) {
   CHS* end = start + (bytes * 2);
   if (IsErrorSocket(start, end) || bytes <= 0) return NILP;
   const CHA* cursor = TPtr<const CHA>(origin);
@@ -640,7 +659,7 @@ CHS* TPrintHex(CHS* start, CHS* stop, const void* origin, ISW bytes) {
 
 /* Prints a hex value to the Console. */
 template<typename CHS, typename IU>
-CHS* TPrintHex(CHS* start, CHS* stop, IU value) {
+CHS* TSPrintHex(CHS* start, CHS* stop, IU value) {
   enum { HexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
 
   if (IsError(start) || start + HexStringLengthSizeMax >= stop) return NILP;
@@ -657,62 +676,62 @@ CHS* TPrintHex(CHS* start, CHS* stop, IU value) {
 }
 
 /* Prints a hex value to a text socket. */
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, ISA value) {
-  return TPrintHex<CHS, IUA>(start, stop, (IUA)value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, ISA value) {
+  return TSPrintHex<CHS, IUA>(start, stop, IUA(value));
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, IUA value) {
-  return TPrintHex<CHS, IUA>(start, stop, value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, IUA value) {
+  return TSPrintHex<CHS, IUA>(start, stop, value);
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, ISB value) {
-  return TPrintHex<CHS, IUB>(start, stop, (IUB)value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, ISB value) {
+  return TSPrintHex<CHS, IUB>(start, stop, IUB(value));
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, IUB value) {
-  return TPrintHex<CHS, IUB>(start, stop, value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, IUB value) {
+  return TSPrintHex<CHS, IUB>(start, stop, value);
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, ISC value) {
-  return TPrintHex<CHS, IUC>(start, stop, (IUC)value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, ISC value) {
+  return TSPrintHex<CHS, IUC>(start, stop, IUC(value));
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, IUC value) {
-  return TPrintHex<CHS, IUC>(start, stop, value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, IUC value) {
+  return TSPrintHex<CHS, IUC>(start, stop, value);
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, ISD value) {
-  return TPrintHex<CHS, IUD>(start, stop, (IUD)value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, ISD value) {
+  return TSPrintHex<CHS, IUD>(start, stop, IUD(value));
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, IUD value) {
-  return TPrintHex<CHS, IUD>(start, stop, value);
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, IUD value) {
+  return TSPrintHex<CHS, IUD>(start, stop, value);
 }
 
 #if USING_FPC == YES_0
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, FPC value) {
-  return TPrintHex<CHS, IUC>(start, stop, ToUnsigned(value));
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, FPC value) {
+  return TSPrintHex<CHS, IUC>(start, stop, ToUnsigned(value));
 }
 #endif
 #if USING_FPD == YES_0
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, FPD value) {
-  return TPrintHex<CHS, IUD>(start, stop, ToUnsigned(value));
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, FPD value) {
+  return TSPrintHex<CHS, IUD>(start, stop, ToUnsigned(value));
 }
 #endif
 
-template<typename CHS = CHR, typename CHT = CHC>
-inline CHS* TPrintHex(CHS* start, CHS* stop, const void* ptr) {
-  return TPrintHex<CHS, IUW>(start, stop, ToUnsigned(ptr));
+template<typename CHS = CHR>
+inline CHS* TSPrintHex(CHS* start, CHS* stop, const void* ptr) {
+  return TSPrintHex<CHS, IUW>(start, stop, ToUnsigned(ptr));
 }
 
 /* Prints the given value to Binary. */
@@ -841,12 +860,12 @@ CHS* TPrintRight(CHS* start, CHS* stop, const CHS* item,
 
 /* Prints the given string center aligned to the given column_count. */
 template<typename CHS = CHR, typename CHT = CHC>
-CHS* TPrintCenter(CHS* start, CHS* stop, const CHS* str,
+CHS* TPrintCenter(CHS* start, CHS* stop, const CHS* element,
                   ISC column_count = AConsoleWidth) {
   if (IsErrorSocket(start, stop)) return NILP;
   CHS* cursor = start;
   // We need to leave at least one space to the left and right of
-  ISC length = TSCodeCount<CHS, CHT, ISC>(str);
+  ISC length = TSCodeCount<CHS, CHT, ISC>(element);
   ISC delta;
   CHT c = 0;
   if (length <= column_count) {
@@ -855,10 +874,10 @@ CHS* TPrintCenter(CHS* start, CHS* stop, const CHS* str,
     if (length != column_count)
       while (delta-- > 0)
         *cursor++ = ' ';
-    str = SScan(str, c);
+    element = SScan(element, c);
     while (c) {
       cursor = SPrint(cursor, stop, c);
-      str = SScan(str, c);
+      element = SScan(element, c);
     }
     if (length != column_count)
       while (length-- > 0)
@@ -875,7 +894,7 @@ CHS* TPrintCenter(CHS* start, CHS* stop, const CHS* str,
   }
   delta = column_count - 3;
   while (delta-- > 0) {
-    str = SScan(str, c);
+    element = SScan(element, c);
     cursor = SPrint(cursor, stop, c);
   }
   *cursor++ = '.';
@@ -965,7 +984,7 @@ inline CHS* TStringSkipNumbers(CHS* start) {
 template<typename CHS = const CHA>
 CHS* TSDecimalEnd(CHS* start) {
   const CHS* ptr = TPtr<const CHS>(start);
-  return const_cast<CHS*>(TSDecimalEnd<CHS>(ptr));
+  return const_cast<CHS>(TSDecimalEnd<CHS>(ptr));
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
@@ -1233,7 +1252,6 @@ const CHS* TSFind(const CHS* start, const CHS* query) {
     return NILP;
   const CHS *start_of_query, 
     *cursor = start;
-  query = TSSkipSpaces<CHS>(query);
 
   // Scroll through each CHS and match it to the query CHS.
   while (s) {
@@ -1244,7 +1262,7 @@ const CHS* TSFind(const CHS* start, const CHS* query) {
       t = c;
       // check the rest of the CHS:
       while (s == t) {
-				start = SScan(start, s);
+        start = SScan(start, s);
         cursor = SScan(cursor, t);
         if (t == 0)  // Once we've reached the delimiter it's a match!
           return start_of_query;
@@ -1289,7 +1307,7 @@ const CHS* TSSkipSpaces(const CHS* start, const CHS* stop) {
 @param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHC>
 inline CHS* TSSkipSpaces(CHS* start, CHS* stop) {
-  return const_cast<CHS*>(
+  return const_cast<CHS>(
       TSSkipSpaces<CHS>(TPtr<const CHS>(start), TPtr<const CHS>(stop)));
 }
 
@@ -1416,15 +1434,15 @@ BOL TSIsntEmpty(CHS* start, const CHS* stop) {
 
 /* Prints a string to the given boofer without */
 template<typename CHT = CHR>
-CHT* TPrintWrap(CHT* start, CHT* stop, const CHT* str,
+CHT* TPrintWrap(CHT* start, CHT* stop, const CHT* element,
     ISW column_count = AConsoleWidth) {
-  if (IsError(start) || start <= stop || !str) return NILP;
+  if (IsError(start) || start <= stop || !element) return NILP;
   if (column_count < 2) return start;
-  CHT c = *str++;
+  CHT c = *element++;
   while (c) {
     for (ISC i = column_count; i > 0; --i) {
       *start++ = c;
-      c = *str++;
+      c = *element++;
       if (start >= stop) return NILP;
       if (!c) {
         *start = c;

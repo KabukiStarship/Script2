@@ -18,16 +18,16 @@ Please see the ASCII List documentation for information about
 */
 
 #undef  BOK_P
-#define BOK_P CHS, ISZ, ISY, DT
+#define BOK_P CHS, CHT, ISZ, ISY, DT
 #undef  BOK_A
-#define BOK_A \
-  typename CHS = CHR, typename ISZ = ISN, typename ISY = ISM, typename DT = DTB
+#define BOK_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISN,\
+  typename ISY = ISM, typename DT = DTB
 
 /* @ingroup Book
 @brief A contiguous memory Associative List composed of a Loom and list.
 The Loom datatype stores the bytes, which includes the size of the 
 Keys Loom and the Values List. The Keys Loom is an array of strings that 
-stores the Book Keys. The Values List is a list of type-value tupes that 
+stores the Book Keys. The Values List is a list of type-value tuples that 
 correspond to the key indexes.
 
 The first element of every List ist a Loom (Array of Strings) that stores
@@ -58,7 +58,7 @@ struct TBook {
   TList<LST_P> values;  //< A list of values with a Loom of keys in index 0.
 };
 
-#define BOK TBook<CHS, ISZ, ISY, DT>
+#define BOK TBook<CHS, CHT, ISZ, ISY, DT>
 
 enum {
   // The number of bits to shift a Book's bytes right by to calculate the 
@@ -214,14 +214,14 @@ Printer& TBookPrint(Printer& o, const BOK* book) {
   D_ASSERT_PTR(book);
   if (IsError(book))
     return o << "book ptr invalid";
-  auto total        = book->values.map.total;
-  auto count        = book->values.map.count;
-  auto vmap     = TBookValuesMap<BOK_P>(book);
-  auto types        = TPtr<DT>(vmap + total) + 1;
-  auto keys_offset  = *vmap++;
-  auto keys         = TPtr<TLoom<LOM_P>>(book, keys_offset);
-  auto keys_size    = keys->bytes;
-  auto keys_start   = keys->start;
+  ISZ total       = book->values.map.total;
+  ISZ count       = book->values.map.count;
+  const ISZ* vmap = TBookValuesMap<BOK_P>(book);
+  const DT* types = TPtr<DT>(vmap + total) + 1;
+  ISZ keys_offset = *vmap++;
+  auto keys       = TPtr<TLoom<LOM_P>>(book, keys_offset);
+  auto keys_size  = keys->bytes;
+  auto keys_start = keys->start;
   //D_COUT("\ntotal:" << total << " count:" << count << 
   //       " keys_size:" << keys_size << " keys_top : " << keys_start);
   //D_COUT_LOOM(keys);
@@ -237,7 +237,7 @@ Printer& TBookPrint(Printer& o, const BOK* book) {
     << " total:" << (total - 1) << " count:" << (count - 1)
     << "\n| list_top:" << book->values.top << " keys_offset:" << keys_offset
     << " keys_space:" << TLoomSpace<LOM_P>(keys)
-    << " values_space:" << TListSpace<ISZ>(&book->values)
+    << " values_space:" << TListSpace<LST_P>(&book->values)
     << "\n| keys.bytes:" << keys_size << " keys.top:" << keys_start
     << " TypeOf(keys):" << ATypef(types[0]) << Linef("\n+---");
   for (ISY i = 1; i < count; ++i) {
@@ -863,7 +863,7 @@ class ABook {
   BOL Grow() {
     D_COUT("\n\nGrowing Book...");
     Autoject& obj = AJT();
-    /* Grow Algoirhm.
+    /* Grow Algorithm.
     1. Check if we can grow and if so, create a new block of memory.
     2. Copy the Loom.
     3. Copy the List. */
@@ -907,9 +907,9 @@ class ABook {
     return true;
   }
 
-  /* Adds a string to the end of the Book, auto-growing if neccissary.
+  /* Adds a string to the end of the Book, auto-growing if necessary.
   @return The index upon success or -1 if the obj can't grow anymore.
-  @todo Verify copmile size of this function isolated and in the AArray class.
+  @todo Verify compile size of this function isolated and in the AArray class.
   @todo Why am I calling TBookInsert twice? */
   ISY InsertTV(const CHS* key, DT type, IUW value, 
       ISY index = PSH, IUW msb = 0) {
@@ -925,7 +925,7 @@ class ABook {
       result = TBookInsert<BOK_P>(book, key, type, value, index, msb);
       if (result < 0) {
         D_COUT("\n\n\nFailed to insert into book:" << result << ' ' <<
-               ASCIIErrorSTR(result));
+               ASCIIErrorSTA(result));
         D_COUT_LOOM(TBookKeys<BOK_P>(book));
         return result;
       }

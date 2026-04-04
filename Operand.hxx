@@ -31,7 +31,7 @@ CHC OperandIndex(Operand* operand, CHA* origin, CHA* stop) {
       last  = OpLast (op);
   A_ASSERT(index);
   for (; index <= last; ++index) {
-    if (TStringEquals<CHA>(origin, stop, operand->Star(index, NILP)->name)) {
+    if (TSEquals<CHA>(origin, stop, operand->Star(index, NILP)->name)) {
       return index;
     }
   }

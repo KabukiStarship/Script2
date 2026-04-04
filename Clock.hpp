@@ -158,22 +158,28 @@ CHS* TSPrint(CHS* cursor, CHS* stop, const AClock& clock,
   A_ASSERT(cursor < stop);
 
   cursor = SPrint(cursor, stop, ISC(clock.year) - epoch);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor)) 
+    return NILP;
   *cursor++ = '-';
   cursor = SPrint(cursor, stop, clock.month + 1);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor))
+    return NILP;
   *cursor++ = '-';
   cursor = SPrint(cursor, stop, clock.day);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor))
+    return NILP;
   *cursor++ = '@';
   cursor = SPrint(cursor, stop, clock.hour);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor))
+    return NILP;
   *cursor++ = ':';
   cursor = SPrint(cursor, stop, clock.minute);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor))
+    return NILP;
   *cursor++ = ':';
   cursor = SPrint(cursor, stop, clock.second);
-  if (IsError(cursor)) return NILP;
+  if (IsError(cursor))
+    return NILP;
   return cursor;
 }
 
@@ -216,19 +222,19 @@ Printer& TSPrint(Printer& o, TMT& t) {
 
 /* Scans a time in seconds from the given string. */
 template<typename CHS = CHR, typename CHT = CHC>
-const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
-  if (str == NILP)
+const CHS* TSScan(const CHS* element, ISC& hour, ISC& minute, ISC& second) {
+  if (element == NILP)
     return NILP;
 
-  D_COUT("\n\n    Scanning time:\"" << str << '\"');
+  D_COUT("\n\n    Scanning time:\"" << element << '\"');
   ISC h = 0,   //< Hour.
       m = 0,   //< Minute.
       s = 0;   //< Second.
-  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(++str, h))) {
+  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(++element, h))) {
     D_COUT("\nInvalid hour:" << h);
     return NILP;
   }
-  str = TStringSkipNumbers<CHS>(str);
+  element = TStringSkipNumbers<CHS>(element);
   if (h < 0) {
     D_COUT("\nHours:" << h << " can't be negative.");
     return NILP;
@@ -238,38 +244,38 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
     return NILP;
   }
   D_COUT(h);
-  CHS c = *str++;
+  CHS c = *element++;
   if (!c || TIsWhitespace<CHS>(c)) {  // Case @HH
     D_COUT(" HH ");
     // Then it's a single number_, so create a ISC for the current
     // user-time hour..
     hour = h;
-    return str;
+    return element;
   }
   c = TToLower<CHS>(c);
   if (c == 'a') {  //
     D_COUT("\nCase @HHAm\n HHam ");
-    c = *str++;
-    if (TToLower<CHS>(c) == 'm') c = *str++;
+    c = *element++;
+    if (TToLower<CHS>(c) == 'm') c = *element++;
     if (c && !TIsWhitespace<CHS>(c)) {
       D_COUT("\nInvalid am format.");
       return NILP;
     }
     D_COUT(" @HHAM ");
     hour = h;
-    return str;
+    return element;
   }
   if (c == 'p') {
     D_COUT(" Case @HHpm ");
-    c = *str++;
-    if (TToLower<CHS>(c) == 'm') c = *str++;
+    c = *element++;
+    if (TToLower<CHS>(c) == 'm') c = *element++;
     if (c && !TIsWhitespace<CHS>(c)) {
       D_COUT("\ninvalid pm format.");
       return NILP;
     }
     D_COUT("\nCase @HHPM " << h + 12 << ":00:00");
     hour = h + 12;
-    return str;
+    return element;
   }
   if (c != ':') {
     D_COUT("\nExpecting ':'.");
@@ -280,8 +286,8 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
       "\nCases HH:MM, HH::MMam, HH::MMpm, HH:MM:SS, HH:MM:SSam, and "
       "HH:MM:SSpm");
 
-  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(str, m))) return NILP;
-  str = TStringSkipNumbers<CHS>(str);
+  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(element, m))) return NILP;
+  element = TStringSkipNumbers<CHS>(element);
   if (m < 0) {
     D_COUT("\nMinutes:" << m << " can't be negative!");
     return NILP;
@@ -292,20 +298,20 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
   }
   D_COUT(':' << m);
 
-  str = TStringSkipNumbers<CHS>(str);
-  c = *str++;
+  element = TStringSkipNumbers<CHS>(element);
+  c = *element++;
   if (!c || TIsWhitespace<CHS>(c)) {
     D_COUT(" HH:MM ");
     hour = h;
     minute = m;
-    return str;
+    return element;
   }
   c = TToLower<CHS>(c);
   if (c == 'a') {
     D_COUT(" HH:MMam ");
-    c = *str++;
+    c = *element++;
     if (TToLower<CHS>(c) == 'm') {  // The 'm' is optional.
-      c = *str++;
+      c = *element++;
     }
     if (c && !TIsWhitespace<CHS>(c)) {  // The space is not.
       D_COUT("Invalid am in HH::MM AM");
@@ -313,13 +319,13 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
     }
     hour = h;
     minute = m;
-    return str;
+    return element;
   }
   if (c == 'p') {  //< Case HH:MM PM
     D_COUT(" HH:MMpm ");
-    c = *str++;
+    c = *element++;
     if (TToLower<CHS>(c) == 'm') {  //< The 'm' is optional.
-      c = *str++;
+      c = *element++;
     }
     if (c && !TIsWhitespace<CHS>(c)) {  //< The space is not.
       D_COUT("Invalid am in HH::MM PM");
@@ -327,13 +333,13 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
     }
     hour = h + 12;
     minute = m;
-    return str;
+    return element;
   }
   if (c != ':') return NILP;
 
   D_COUT("\n    Cases HH:MM:SS, HH:MM:SSam, and HH:MM:SSpm");
 
-  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(str, s))) return NILP;
+  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(element, s))) return NILP;
   if (s < 0) {
     D_COUT("\nSeconds:" << s << " can't be negative!");
     return NILP;
@@ -343,20 +349,20 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
     return NILP;
   }
   D_COUT(':' << s);
-  str = TStringSkipNumbers<CHS>(str);
-  c = TToLower<CHS>(*str);
+  element = TStringSkipNumbers<CHS>(element);
+  c = TToLower<CHS>(*element);
   if (!c || TIsWhitespace<CHS>(c)) {
     D_COUT(" HH:MM:SS ");
     hour = h;
     minute = m;
     second = s;
-    return str;
+    return element;
   }
   if (c == 'a') {
     D_COUT(" HH:MM:SSam ");
-    c = *str++;
+    c = *element++;
     if (TToLower<CHS>(c) == 'm') {  //< The 'm' is optional.
-      c = *str++;
+      c = *element++;
     }
     if (!c || !TIsWhitespace<CHS>(c)) {  //< The space is not.
       D_COUT("\nInvalid am in HH::MM:SS AM");
@@ -365,16 +371,16 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
     hour = h;
     minute = m;
     second = s;
-    return str;
+    return element;
   }
   if (c != 'p') {
     D_COUT("\nExpecting a PM but found:" << c);
     return NILP;  // Format error!
   }
   D_COUT(" HH:MM:SSpm ");
-  c = TToLower<CHS>(*str++);
+  c = TToLower<CHS>(*element++);
   if (c == 'm') {  //< The 'm' is optional.
-    c = *str++;
+    c = *element++;
   }
   if (!c || !TIsWhitespace<CHS>(c)) {  //< The space is not.
     D_COUT("\nInvalid am in HH::MM:SS PM");
@@ -383,24 +389,24 @@ const CHS* TSScan(const CHS* str, ISC& hour, ISC& minute, ISC& second) {
   hour = h + 12;
   minute = m;
   second = s;
-  return str;
+  return element;
 }
 
 /* Scans the given string for a timestamp. */
 template<typename CHS = CHR, typename CHT = CHC>
-const CHS* TSScan(const CHS* str, AClock& clock) {
-  D_ASSERT(str);
-  D_COUT("\n    Scanning AClock:\"" << str << "\n    Scanning: ");
-  str = TSSkipAll<CHS>(str, '0');
-  CHS c = *str;  //< The current CHS.
+const CHS* TSScan(const CHS* element, AClock& clock) {
+  D_ASSERT(element);
+  D_COUT("\n    Scanning AClock:\"" << element << "\n    Scanning: ");
+  element = TSSkipAll<CHS>(element, '0');
+  CHS c = *element;  //< The current CHS.
   const CHS* stop;  //< Might not need
   ISC hour   = 0,
       minute = 0,
       second = 0;
 
   if (c == '@') {
-    str = TSScan<CHS, CHT>(str, hour, minute, second);
-    if (IsError(str)) {
+    element = TSScan<CHS, CHT>(element, hour, minute, second);
+    if (IsError(element)) {
       D_COUT("\nCase @ invalid time");
       return NILP;
     }
@@ -408,18 +414,18 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
     clock.minute = minute;
     clock.second = second;
 
-    return str + 1;
+    return element + 1;
   }
   if (c == '#') {
-    str = TSScan<CHS, CHT>(str, hour, minute, second);
-    if (IsError(str)) {
+    element = TSScan<CHS, CHT>(element, hour, minute, second);
+    if (IsError(element)) {
       D_COUT("\nCase @ invalid time");
     }
     clock.hour += hour;
     clock.minute += minute;
     clock.second += second;
 
-    return str + 1;
+    return element + 1;
   }
 
   ISC value1 = 0,       //< The first date field scanned.
@@ -428,7 +434,7 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
       is_last_year = 0; //< Flag for if the date was last year or not.
 
   // SScan value1
-  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(str, value1))) {
+  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(element, value1))) {
     D_COUT("SScan error at value1");
     return NILP;
   }
@@ -436,25 +442,25 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
     D_COUT("Dates can't be negative.");
     return NILP;
   }
-  str = TSDecimalEnd<CHS>(str);
-  if (IsError(str)) 
+  element = TSDecimalEnd<CHS>(element);
+  if (IsError(element)) 
     return NILP;
-  CHT delimiter = *str++;
+  CHT delimiter = *element++;
   D_COUT(value1);
   if (delimiter == '@') {
     D_COUT(" HH@ ");
 
-    if (IsError(str = TSScan<CHS, CHT>(str, hour, minute, second))) {
+    if (IsError(element = TSScan<CHS, CHT>(element, hour, minute, second))) {
       D_COUT("\nInvalid time DD@");
       return NILP;
     }
     clock.day = value1;
 
-    return str + 1;
+    return element + 1;
   }
   // SScan value2.
-  str = TSSkipAll<CHS>(str, '0');
-  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(str, value2))) {
+  element = TSSkipAll<CHS>(element, '0');
+  if (IsError(TSScanSigned<ISC, IUC, CHS, CHT>(element, value2))) {
     D_COUT("\n    Failed scanning value2 of date.");
     return NILP;
   }
@@ -463,12 +469,12 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
     return NILP;  //< Invalid month and day.
   }
   D_COUT(value2);
-  str = TSDecimalEnd<CHS>(str);
-  c = *str;
+  element = TSDecimalEnd<CHS>(element);
+  c = *element;
   if (c != delimiter) {
     D_COUT("\n    Cases MM/DD and MM/YYyy");
     if (c == '@') {
-      if (IsError(str = TSScan<CHS, CHT>(str, hour, minute, second))) {
+      if (IsError(element = TSScan<CHS, CHT>(element, hour, minute, second))) {
         D_COUT(" invalid time ");
         return NILP;
       }
@@ -485,7 +491,7 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
       clock.minute = minute;
       clock.second = second;
 
-      return str + 1;
+      return element + 1;
     }
     c = TToLower<CHS>(c);
     if ((value1 < 12) && (value2 > 0) &&
@@ -508,43 +514,43 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
       clock.hour = hour;
       clock.minute = minute;
       clock.second = second;
-      if (IsError(str = TSScan(str, hour, minute, second))) {
+      if (IsError(element = TSScan(element, hour, minute, second))) {
         D_COUT("\nInvalid MM/DD@");
         return NILP;
       }
 
-      return str + 1;
+      return element + 1;
     }
     if ((value1 < 12) && (value2 > ClockMonthDayCount(value1))) {
       D_COUT(" MM/YYyy");
       clock.month = value1 - 1;
       clock.year = value2;
-      if (IsError(str = TSScan<CHS, CHT>(str, hour, minute, second))) {
+      if (IsError(element = TSScan<CHS, CHT>(element, hour, minute, second))) {
         D_COUT("\nInvalid MM / YYYY@ time");
         return NILP;
       }
 
-      return str + 1;
+      return element + 1;
     }
     D_COUT("\nInvalid MM/DD or MM/YYyy format");
     return NILP;
   }
 
   // Formats MM/DD/YYyy and YYyy/MM/DD
-  str = TSSkipAll<CHS>(++str, '0');
-  c = *str;
+  element = TSSkipAll<CHS>(++element, '0');
+  c = *element;
   // Then there are 3 values and 2 delimiters.
-  if (!IsDigit(c) || !TSScanSigned<ISC, IUC, CHS, CHT>(str, value3)) {
+  if (!IsDigit(c) || !TSScanSigned<ISC, IUC, CHS, CHT>(element, value3)) {
     D_COUT("\n    SlotRead error reading value3 of date." << CHS(c) << ": ");
     return NILP;  //< Invalid format!
   }
-  str = TSDecimalEnd<CHS>(str);
+  element = TSDecimalEnd<CHS>(element);
   D_COUT(c << value3);
   // Now we need to check what format it is in.
 
-  c = *str;
+  c = *element;
   if (c == '@') {
-    if (IsError(stop = TSScan<CHS, CHT>(str, hour, minute, second))) {
+    if (IsError(stop = TSScan<CHS, CHT>(element, hour, minute, second))) {
       D_COUT("Invalid YYyy/MM/DD@ time.");
       return NILP;
     }
@@ -552,7 +558,7 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
   clock.hour = hour;
   clock.minute = minute;
   clock.second = second;
-  if (TIsWhitespace<CHS>(*(++str))) {
+  if (TIsWhitespace<CHS>(*(++element))) {
     D_COUT("No date found.");
     return NILP;
   }
@@ -580,7 +586,7 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
     clock.month = value2 - 1;
     clock.day   = value3;
 
-    return str + 1;
+    return element + 1;
   }
   D_COUT("\n    Cases MM/DD/YY and MM/DD/YYYY");
 
@@ -601,7 +607,7 @@ const CHS* TSScan(const CHS* str, AClock& clock) {
     D_COUT("\n    Case MM/DD/YYYY");
     clock.year = value3 - ClockEpoch();
   }
-  return str + 1;
+  return element + 1;
 }
 
 template<typename CHS, typename CHT, typename IS>

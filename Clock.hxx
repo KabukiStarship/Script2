@@ -17,6 +17,8 @@ ISC ClockEpoch() {
 #if SEAM < CRABS_OP
   return AClockEpochYearInit;
 #else
+  //@todo fix me!
+  return AClockEpochYearInit;
 #endif
 }
 

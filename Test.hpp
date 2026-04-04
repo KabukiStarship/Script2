@@ -12,7 +12,6 @@ inline T TBRK(T value = 0, const CHR* message = nullptr) {
     StdOut() << " message:\"" << message << "\"\nvalue:" << value;
     #endif
   }
-  //while (true);
   return value;  //< Insert break-point here.
 }
 

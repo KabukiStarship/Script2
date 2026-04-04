@@ -13,8 +13,8 @@
 #endif
 namespace _ {
 
-Crabs* StdCrabs() {} {
-  static IUA room[CRABS_ROOM_BYTES] = {}
+Crabs* StdCrabs() {
+  static IUA room[ACRBytes] = {};
   return reinterpret_cast<Crabs*>(PtrUp(room, ACPUCacheLineSize - 1));
 }
 

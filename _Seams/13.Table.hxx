@@ -13,10 +13,10 @@ namespace CRTest {
 
 template<TBL_A>
 void TestTable() {
-  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS")
-         << CSizef<ISZ>() << ",IU" << CSizef<HSH>() << ",CH"
-         << CSizef<CHS>() << ">\n"
-         << Linef("+---\n\n"));
+  D_COUT(Linef("\n\n\n\n\n\n+---\nTesting ATable<IS") 
+    << ",CH" << CSizef<CHS>() << ",CH" << CSizef<CHT>() 
+    << " IS" << CSizef<ISZ>() << ",IU" << CSizef<HSH>() 
+    << ">\n" << Linef("+---\n\n"));
   ISY total_init = 13;
   ATable<TBL_P> table(total_init);
   const TBL* This = table.This();
@@ -130,7 +130,7 @@ void TestTable() {
   CHS* cursor = large_string;
   for (ISN i = 0; i < LargeStringLength - 1; ++i) *cursor++ = '*';
   *cursor = 0;
-  ISZ index = table.Append(large_string);
+  ISY index = table.Append(large_string);
   auto dez_nutz = table.This();
   D_COUT_TABLE(dez_nutz);
 }
@@ -143,16 +143,16 @@ static const CHA* Table(const CHA* args) {
   A_TEST_BEGIN;
 
 #if USING_STA == YES_0
-  TestTable<CHA, ISC, ISB, IUC>();
-  TestTable<CHA, ISD, ISC, IUD>();
+  TestTable<CHA, CHC, ISC, ISB, IUC>();
+  TestTable<CHA, CHC, ISD, ISC, IUD>();
 #endif
 #if USING_STB == YES_0
-  TestTable<CHB, ISC, ISB, IUC>();
-  TestTable<CHB, ISD, ISC, IUD>();
+  TestTable<CHB, CHC, ISC, ISB, IUC>();
+  TestTable<CHB, CHC, ISD, ISC, IUD>();
 #endif
 #if USING_STC == YES_0
-  TestTable<CHC, ISC, ISB, IUC>();
-  TestTable<CHC, ISD, ISC, IUD>();
+  TestTable<CHC, CHC, ISC, ISB, IUC>();
+  TestTable<CHC, CHC, ISD, ISC, IUD>();
 #endif
 #endif
   return NILP;

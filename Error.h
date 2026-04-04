@@ -14,12 +14,9 @@ const CHA* error_string = STRErrors()[error_code * 32]; */
 const CHA* ASCIIErrorSTA();
 
 /* Returns one of the STRErrors() ASCIIError Strings. */
-inline const CHA* ASCIIErrorSTR(ISA error);
-inline const CHA* ASCIIErrorSTR(ISB error);
-inline const CHA* ASCIIErrorSTR(ISC error);
-inline const CHA* ASCIIErrorSTR(ISD error);
+const CHA* ASCIIErrorSTA(ISW error);
 
-inline BOL AIsError(const void* result);
+BOL AIsError(const void* result);
 
 }  //< namespace _
 #endif

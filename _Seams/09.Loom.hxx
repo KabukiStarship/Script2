@@ -11,18 +11,18 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename CH = CHR, typename ISZ = ISN, typename ISY = ISN>
+template<typename CHS = CHR, typename CHT = CHC, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    Size = 256 * sizeof(CH),
+    Size = 256 * sizeof(CHS),
     Count = 16,
   };
-  D_COUT("Testing ALoom<CH" << CSizeCodef<CH>() << ",IS" << CSizeCodef<ISZ>() <<
+  D_COUT("Testing ALoom<CHS" << CSizeCodef<CHS>() << ",IS" << CSizeCodef<ISZ>() <<
          "> with Size:" << Size << " and Count:" << Count);
 
-  ALoom<CH, ISZ, ISY, Size, TBOF<Size>> loom(Count);
+  ALoom<CHS, CHT, ISZ, ISY, Size, TBOF<Size>> loom(Count);
 #ifdef D_THIS
   D_COUT("\nPrinting empty loom:\n");
   loom.COut();
@@ -32,39 +32,39 @@ void TestLoom() {
     LengthMax = (Size << 2) - 1,
   };
 
-  CH str[LengthMax + 1] = {};
-  CH* str_end = &str[LengthMax];
+  CHS element[LengthMax + 1] = {};
+  CHS* str_end = &element[LengthMax];
   ISY i = 0;
   for (; i < Count; ++i) {
-    TSPrint<CH>(str, str_end, i);
-    D_COUT("\nstr:" << str);
-    A_AVOW(ISY(i), loom.Insert<CH>(str));
+    TSPrint<CHS, CHT>(element, str_end, i);
+    D_COUT("\nstr:" << element);
+    A_AVOW(ISY(i), loom.Insert<CHS>(element));
   }
 
   D_COUT("\n\nTesting Factory.Grow...\n");
 
-  TSPrint<CH>(str, str_end, Count);
-  loom.Insert(str);
+  TSPrint<CHS, CHT>(element, str_end, Count);
+  loom.Insert(element);
   IUW* boofer = loom.AJT().origin;
-  auto dez_nutz = loom.Insert(str);
+  auto dez_nutz = loom.Insert(element);
   A_AVOW(boofer, loom.AJT().origin);
   //i = Count + 1;
   A_AVOW(++i, dez_nutz);
   while (i < 96) {
-    TSPrint<CH>(str, str_end, i);
-    A_AVOW(ISY(++i), loom.Insert(str));
+    TSPrint<CHS, CHT>(element, str_end, i);
+    A_AVOW(ISY(++i), loom.Insert(element));
   }
   
-  TSPrint<CH>(str, str_end, i);
-  A_AVOW(++i, loom.Insert(str));
+  TSPrint<CHS, CHT>(element, str_end, i);
+  A_AVOW(++i, loom.Insert(element));
   
-  D_COUT("\n\nAttmpeting to add a very large string...\n");
+  D_COUT("\n\nAttempting to add a very large string...\n");
 
-  for (i = 0; i < LengthMax; ++i) str[i] = '*';
+  for (i = 0; i < LengthMax; ++i) element[i] = '*';
 
-  str[LengthMax] = 0;
+  element[LengthMax] = 0;
 
-  ISY index = loom.Insert(str);
+  ISY index = loom.Insert(element);
 #ifdef D_THIS
   loom.COut();
 #endif
@@ -78,7 +78,7 @@ void TestLoom() {
 
   D_COUT("\nTesting TLoomFind...\n");
 
-  static const CH a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
+  static const CHS a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
                    d[] = {'D', '\0'}, abc[] = {'a', 'b', 'c', '\0'},
                    bac[] = {'b', 'a', 'c', '\0'}, cba[] = {'c', 'b', 'a', '\0'},
                    cab[] = {'c', 'a', 'b', '\0'},
@@ -135,23 +135,25 @@ namespace CRTest {
 static const CHA* Loom(const CHA* args) {
 #if SEAM >= CRABS_LOOM
   A_TEST_BEGIN;
-  //TestLoom<CHA, ISB, ISB>();
-  //TestLoom<CHA, ISC, ISC>();
-  //TestLoom<CHA, ISB, ISA>();
-  //TestLoom<CHA, ISC, ISB>();
-  TestLoom<CHA, ISD, ISC>();
+  //TestLoom<CHA, CHA, ISB, ISB>();
+  // 
+  //TestLoom<CHA, CHC, ISB, ISB>();
+  //TestLoom<CHA, CHC, ISC, ISC>();
+  //TestLoom<CHA, CHC, ISB, ISA>();
+  //TestLoom<CHA, CHC, ISC, ISB>();
+  TestLoom<CHA, CHC, ISD, ISC>();
 #if USING_STB == YES_0
-  //TestLoom<CHB, ISB, ISB>();
-  //TestLoom<CHB, ISC, ISC>();
-  //TestLoom<CHB, ISB, ISA>();
-  //TestLoom<CHB, ISC, ISB>();
-  TestLoom<CHB, ISD, ISC>();
+  //TestLoom<CHB, CHC, ISB, ISB>();
+  //TestLoom<CHB, CHC, ISC, ISC>();
+  //TestLoom<CHB, CHC, ISB, ISA>();
+  //TestLoom<CHB, CHC, ISC, ISB>();
+  TestLoom<CHB, CHC, ISD, ISC>();
 #endif
 #if USING_STC == YES_0
-  //TestLoom<CHC, ISC, ISC>();
-  //TestLoom<CHC, ISB, ISA>();
-  //TestLoom<CHC, ISC, ISB>();
-  TestLoom<CHC, ISD, ISC>();
+  //TestLoom<CHC, CHC, ISC, ISC>();
+  //TestLoom<CHC, CHC, ISB, ISA>();
+  //TestLoom<CHC, CHC, ISC, ISB>();
+  TestLoom<CHC, CHC, ISD, ISC>();
 #endif
 #endif
   return NILP;

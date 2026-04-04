@@ -40,6 +40,7 @@ class COut {
   COut(Centerf item);
   COut(Rightf item);
   COut(Linef item);
+  COut(Repeatf item);
   COut(Headingf item);
   COut(Indentf item);
   COut(Charsf item);
@@ -79,6 +80,7 @@ class COut {
   COut& Print(Centerf& item);
   COut& Print(Rightf& item);
   COut& Print(Linef& item);
+  COut& Print(Repeatf& item);
   COut& Print(Headingf& item);
   COut& Print(Indentf& item);
   COut& Print(Charsf& item);
@@ -144,11 +146,11 @@ class COut {
 #endif
 };
 
-// Returns the standard conole out.
+// Returns the standard console out.
 inline COut& StdOut();
 
 /* Wrapper function for COut so you can use it more than once in a lexical
-scope without delcaring COut cout.
+scope without declaring COut cout.
 inline COut CPrint() { return COut(); } */
 
 /* Prints the given item to the COut. */
@@ -205,6 +207,7 @@ inline ::_::COut& operator<<(::_::COut& o, ::_::Headingf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Centerf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Rightf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Linef item);
+inline ::_::COut& operator<<(::_::COut& o, ::_::Repeatf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Indentf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Charsf item);
 inline ::_::COut& operator<<(::_::COut& o, ::_::Sizef item);

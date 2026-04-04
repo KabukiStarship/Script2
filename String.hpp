@@ -14,9 +14,9 @@
 #define D_COUT_STRING(s)
 #endif
 
-#define STR_A typename T=CHR, typename ISZ=ISW, typename ISY=ISZ
-#define STR_P T, ISZ, ISY
-#define STR TString<T, ISZ, ISY>
+#define STR_A typename T=CHR, typename CHT = CHC, typename ISZ=ISW, typename ISY=ISZ
+#define STR_P T, CHT, ISZ, ISY
+#define STR TString<T, CHT, ISZ, ISY>
 
 //#define SND_A typename T = CHR, typename ISZ = ISC = ISC, typename ISY = ISB
 //#define SND_P T, ISZ, ISY
@@ -51,12 +51,12 @@ constexpr DTB CATypeCH() {
 
 /* Gets the begin character in the str. */
 template<STR_A>
-inline T* TStringBegin(STR* str) {
-  return TStackBegin<SCK_P>(TPtr<TStack<SCK_P>>(str));
+inline T* TStringBegin(STR* element) {
+  return TStackBegin<SCK_P>(TPtr<TStack<SCK_P>>(element));
 }
 template<STR_A>
-inline const T* TStringBegin(const STR* str) {
-  return TStackBegin<SCK_P>(TPtr<TStack<SCK_P>>(str));
+inline const T* TStringBegin(const STR* element) {
+  return TStackBegin<SCK_P>(TPtr<TStack<SCK_P>>(element));
 }
 
 /* Gets the first character in the str.
@@ -97,63 +97,63 @@ inline const T* TStringStop(const STR* str) {
 
 /* Gets the stop char of the str. */
 template<STR_A>
-inline T* TStringEnd(STR* str, ISY total) {
-  return TStackBegin<SCK_P>(str, total);
+inline T* TStringEnd(STR* element, ISY total) {
+  return TStackBegin<SCK_P>(element, total);
 }
 template<STR_A>
-inline const T* TStringEnd(const STR* str, ISY total) {
-  return TStackEnd<SCK_P>(str, total);
+inline const T* TStringEnd(const STR* element, ISY total) {
+  return TStackEnd<SCK_P>(element, total);
 }
 
 /* Searches for the stop of the str. */
 template<STR_A>
-inline T* TStringEnd(STR* str) {
-  return TStackEnd<SCK_P>(str, str->total);
+inline T* TStringEnd(STR* element) {
+  return TStackEnd<SCK_P>(element, element->total);
 }
 template<STR_A>
-inline const T* TStringEnd(const STR* str) {
-  return TStackEnd<SCK_P>(str, str->total);
+inline const T* TStringEnd(const STR* element) {
+  return TStackEnd<SCK_P>(element, element->total);
 }
 
 /* Calculates the size of the string in bytes. */
 template<STR_A>
-inline ISZ TStringBytes(const STR* str, ISZ total) {
+inline ISZ TStringBytes(const STR* element, ISZ total) {
   return sizeof(STR) + total * sizeof(T);
 }
 template<STR_A>
-inline ISZ TStringBytes(const STR* str) {
-  return TStringBytes<STR_P>(str, str->total);
+inline ISZ TStringBytes(const STR* element) {
+  return TStringBytes<STR_P>(element, element->total);
 }
 
 template<STR_A>
-inline T* TStringReset(STR* str) {
-  D_STR_WIPE(str);
-  D_ASSERT_PTR(str);
-  T* begin = TStringBegin<STR_P>(str);
+inline T* TStringReset(STR* element) {
+  D_STR_WIPE(element);
+  D_ASSERT_PTR(element);
+  T* begin = TStringBegin<STR_P>(element);
   *begin = 0;
-  str->count = 1;
+  element->count = 1;
   return begin;
 }
 
 /* Initializes an ASCII String. */
 template<STR_A>
 inline STR* TStringInit(void* origin, ISZ total) {
-  STR* str = TPtr<STR>(origin);
-  D_ASSERT_PTR(str);
+  STR* element = TPtr<STR>(origin);
+  D_ASSERT_PTR(element);
   D_ASSERT(total >= 0);
-  str->total = total;
-  TStringReset(str);
-  return str;
+  element->total = total;
+  TStringReset(element);
+  return element;
 }
 
 /* Prints this object to the given printer. */
 template<typename Printer, STR_A>
-Printer& TStringPrint(Printer& o, const STR* str) {
-  if (IsError(str)) return o;
-  const T* begin = TStringBegin<STR_P>(str);
-  ISZ total = str->total,
-      count = str->count,
-      bytes = TStringBytes<STR_P>(str);
+Printer& TStringPrint(Printer& o, const STR* element) {
+  if (IsError(element)) return o;
+  const T* begin = TStringBegin<STR_P>(element);
+  ISZ total = element->total,
+      count = element->count,
+      bytes = TStringBytes<STR_P>(element);
   o << Linef("\n+---\n| TString<CH") << CSizeCodef<T>() << ",IS"
     << CSizeCodef<ISZ>() << "> total:" << total << " count:" << count
     << " bytes:" << bytes << Linef("\n+---\n| \"");
@@ -193,7 +193,7 @@ inline ISZ TStringSize(void* origin) {
 
 /* An ASCII String that can auto-grow from stack to heap.
 
-The count of the str is defined as the maximimum chars that can fit in the
+The count of the str is defined as the maximum chars that can fit in the
 boofer, including the nil-term CHA.
 
 This class is designed to take advantage of the behavior of the C++ operator
@@ -389,20 +389,20 @@ class AString {
     Autoject& ajt = asck_.AJT();
     IUW* origin = ajt.origin;
     D_ASSERT(origin);
-    STR* str  = TPtr<STR>(origin);
-    ISZ total = str->total,
-        count = str->count;
+    STR* element  = TPtr<STR>(origin);
+    ISZ total = element->total,
+        count = element->count;
     D_COUT("\n\n---\nPrinting \"" << item << "\" to 0x" << Hexf(origin) << 
            " total: " << total << " count : " << count);
     D_ASSERT(total >= 0);
     D_ASSERT(count > 0);
-    T* begin = TStringBegin<SCK_P>(str),
+    T* begin = TStringBegin<STR_P>(element),
      * start = begin + count - 1,
      * end = begin + total - 1;
     //D_AVOW(TSCodeCount<T, ISZ>(begin) + 1, count);
     D_ASSERT(count <= total);
     D_COUT("\n         \"" << begin << '\"');
-    T* stop = _::TSPrint<T>(start, end, item);
+    T* stop = _::TSPrint<T, CHT>(start, end, item);
     D_COUT("\n| delta_begin_stop:" << TDelta<>(begin, stop) << 
            " delta_begin_end:" << TDelta<>(begin, end));
     //D_COUT(Charsf(begin, end));  //< Why does this bug the unit test out?
@@ -418,7 +418,7 @@ class AString {
         Autoject growth = { NILP, ram };
         ISY total_new = AutojectGrowTotal(total);
         D_COUT(" total_new:" << total_new);
-        str_new = Clone(growth, str, total_new, 0, count);
+        str_new = Clone(growth, element, total_new, 0, count);
         if (IsError(str_new)) {
           *start = 0;
           D_COUT("\nWarning: Could not grow str!");
@@ -429,7 +429,7 @@ class AString {
         begin = TStringBegin<STR_P>(str_new);
         T* start = begin + count - 1,
          * end   = begin + str_new->total;
-        stop = _::TSPrint<T>(start, end, item);
+        stop = _::TSPrint<T, CHT>(start, end, item);
       } while (IsError(stop));
       count = ISZ(stop - begin) + 1;
       str_new->count = count;
@@ -437,7 +437,7 @@ class AString {
       ajt.origin = TPtr<IUW>(str_new);
     } else {
       count = ISZ(stop - begin) + 1;
-      str->count = count;
+      element->count = count;
     }
     D_COUT("\nPrinted:\"" << begin << "\":" << count << '/' << total);
     //D_COUT_STRING(TPtr<const STR>(ajt.origin));
@@ -467,27 +467,29 @@ class AString {
   inline AString& Print(FPD item) { return Print<FPD>(item); }
 #endif
 
+  inline AString& Print(Repeatf item) { return Print<FPD>(item); }
+
   /* Returns the begin char. */
-  inline T* Begin() { return TStringBegin<SCK_P>(This()); }
+  inline T* Begin() { return TStringBegin<STR_P>(This()); }
 
   /* Returns the nil-term/start char.
-  inline T* Start() { return TStringStart<SCK_P>(This()); } */
+  inline T* Start() { return TStringStart<STR_P>(This()); } */
 
   /* Returns the stop char.
-  inline T* Stop() { return TStringStop<SCK_P>(This()); } */
+  inline T* Stop() { return TStringStop<STR_P>(This()); } */
 
   /* Returns the stop of the obj. */
-  inline T* End() { return TStringEnd<SCK_P>(This()); }
+  inline T* End() { return TStringEnd<STR_P>(This()); }
 
   /* Calculates the space left in the boofer based on the sprinter_ pointers. */
   inline ISZ SpaceLeft() {
-    STR str = This();
-    return str.total - str.count;
+    STR element = This();
+    return element.total - element.count;
   }
 
-  /* Searches for the given querry, returning the end T of the qeurry in this
+  /* Searches for the given query, returning the end T of the query in this
   str. */
-  inline T* Find(const T* querry) { return TSFind(Begin(), querry); }
+  inline T* Find(const T* query) { return TSFind<T, CHT>(Begin(), query); }
 
   /* Checks if this String to the other str are equivalent.
   @return Nil if they Strings are not equivalent and a pointer to the next CHA
@@ -684,6 +686,12 @@ inline ::_::AString<STR_P, Size, BOF>& operator<<(
 template<STR_A, ISZ Size, typename BOF>
 inline ::_::AString<STR_P, Size, BOF>& operator<<(
     ::_::AString<STR_P, Size, BOF>& obj, ::_::Linef item) {
+  return obj.Print(item);
+}
+
+template<STR_A, ISZ Size, typename BOF>
+inline ::_::AString<STR_P, Size, BOF>& operator<<(
+  ::_::AString<STR_P, Size, BOF>& obj, ::_::Repeatf item) {
   return obj.Print(item);
 }
 

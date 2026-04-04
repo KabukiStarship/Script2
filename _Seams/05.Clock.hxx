@@ -70,7 +70,9 @@ static const CHA* Clock(const CHA* args) {
     AClock clock;
     ClockInit(clock, t);
     D_COUT("\nAClock:");
+    #if D_THIS
     TClockPrint<::_::COut>(StdOut(), clock);
+    #endif
     ClockPrint(socket, socket + Size, t);
     D_COUT("\n\n  Before:\"" << socket << '\"');
     result = SScanTime(socket, t_found);
