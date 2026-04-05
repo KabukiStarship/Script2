@@ -53,13 +53,3 @@ Matlab style Multi-dimensional matrix separator ---+   */
               Use N semicolons where        |
               N is the Dimension Count -----+  */
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
-
-**[<< Previous Section: Stack](Stack.md) | [Next Section: Map >>](Map.md)**
-
-Copyright [AStarship™](https://astarship.net).

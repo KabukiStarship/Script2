@@ -41,11 +41,3 @@ When using the User Datagram Protocol packets may get dropped. Script runs over 
 ### Interprocess
 
 Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
-
-## Requirements
-
-[1] ./
-
-**[<< Previous Section: Authentication](Authentication.md) | [Next Section: Room Contents >>](RoomContents.md)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

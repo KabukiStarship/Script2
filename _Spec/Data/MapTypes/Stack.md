@@ -1,10 +1,4 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](./)
-
-#### Stack
+# Stack
 
 ```C++
 template <typename ISZ = ISN>
@@ -14,7 +8,7 @@ struct TStack {
 };
 ```
 
-##### Array Memory Layout
+## Array Memory Layout
 
 ```AsciiArt
     +---------------+
@@ -25,13 +19,3 @@ struct TStack {
  |  |    Header     |
 0xN +---------------+
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
-
-**[<< Previous Section: Array](Array.md) | [Next Section: Matrix >>](Matrix.md)**
-
-Copyright [AStarship™](https://astarship.net).

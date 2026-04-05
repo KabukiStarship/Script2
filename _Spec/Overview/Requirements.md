@@ -1,6 +1,4 @@
-# [SCRIPT Specification](../)
-
-## Requirements
+# Requirements
 
 Script devices shall be required to:
 
@@ -19,9 +17,3 @@ Script devices shall be required to:
 13. **Provide Extensibility**: Allow for future enhancements and feature additions without breaking compatibility.
 14. **Ensure Reliability**: Implement robust error recovery and fault tolerance mechanisms.
 15. **Optimize Power Consumption**: Support low-power operation for battery-powered devices.
-
-**[<< Previous Section: Overview](../) | [Next Section: Terminology >>](Terminology.md)**
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

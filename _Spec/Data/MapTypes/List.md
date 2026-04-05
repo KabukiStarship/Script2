@@ -1,14 +1,8 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](.)
-
-#### List
+# List
 
 Lists are stacks of type-value tuples similar in memory layout to Books but they **do not** have keys. Functionally they are identical to B-Sequences expect the offsets are stored as an Array to eliminate the need to scan through the header to calculate the data offset. Sequences are ideal for situations where the fastest possible RW performance is needed.
 
-##### Memory Layout
+## Memory Layout
 
 ```AsciiArt
 +----------------------------+
@@ -27,13 +21,3 @@ Lists are stacks of type-value tuples similar in memory layout to Books but they
 |        TList Struct        |  |
 +----------------------------+ 0xN
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Map](Map.md) | [Next Section: Table >>](Table.md)**
-
-Copyright [AStarship™](https://astarship.net).

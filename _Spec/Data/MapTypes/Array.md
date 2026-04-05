@@ -20,13 +20,3 @@ struct TArray {
  |  |     Header     |
 0xN +----------------+
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../../) **>** [ASCII Data Specification](../) **>** [Map Types](./)
-
-**[<< Previous Section: Socket](Socket.md) | [Vector Types](./) | [Next Section: Stack >>](Stack.md)**
-
-Copyright [AStarship™](https://astarship.net).

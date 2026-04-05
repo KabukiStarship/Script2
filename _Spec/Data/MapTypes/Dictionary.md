@@ -1,16 +1,10 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](.)
-
-#### Dictionaries
+# Dictionaries
 
 Dictionaries are key-type-value sets with a hash table of unique keys. Hash sizes my be 16-bit with up to 120 members, 32-bit with up to 2^24 items, or 64-bit with up to 256 * 10^6 items; these numbers are dictated by the statistical chance of hash algorism collisions. ASCII Dictionaries are created from a List with a Table in element 0.
 
 Dictionaries have slower insert times than ASCII Books but faster lookup.
 
-##### Dictionary Memory Layout
+### Dictionary Memory Layout
 
 ```AsciiArt
 +====================================+
@@ -33,7 +27,7 @@ Dictionaries have slower insert times than ASCII Books but faster lookup.
 +====================================+  + 0xN
 ```
 
-##### Book Memory Overhead
+### Book Memory Overhead
 
 | #Bytes | Index | Offset | Hash  | Total | Overhead Per index |
 |:------:|:-----:|:------:|:-----:|:-----:|:-------------------|
@@ -46,13 +40,3 @@ Dictionaries have slower insert times than ASCII Books but faster lookup.
 |  2   |     255    |    0.0001        | Ceiling (0.02*p*2^8)  = 2      |
 |  4   |     2^13   |      0.1         | Ceiling (0.04*p*2^13) = 327.68 |
 |  8   |     2^29   |    10^-16        | Ceiling (0.04*p*2^29) = 327.68 |
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Table](Table.md) | [Next Section: Book >>](Book.md)**
-
-Copyright [AStarship™](https://astarship.net).

@@ -1,7 +1,5 @@
 # Table
 
-***[Spec](../../) > [Data](../) > [Map Types](./)***
-
 The Table is a string-to-unsorted-index map with a hash table. The acronym for a Table is a TBL.
 
 ## Memory Layout
@@ -108,13 +106,3 @@ hash64_t Hash64 (const char* s, hash64_t hash) {
     return hash;
 }
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Map](Map.md) | [Next Section: Dictionary >>](Dictionary.md)**
-
-Copyright [AStarship™](https://astarship.net).

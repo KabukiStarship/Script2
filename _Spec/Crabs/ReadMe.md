@@ -15,7 +15,3 @@ The **Chinese Room Abstract Stack Machine** (**Crabs**) is an abstract machine c
 9. The machine must support international language support.
 10. The machine must operate in a safe manner with proper error handling and recovery mechanisms.
 11. The machine must be useful in multiple contexts including embedded systems, IoT devices, and educational environments.
-
-**[<< Previous Section: SCRIPT Protocol](../Protocol/) | [Next Section: Authentication >>](./Authentication.md)**
-
-[SCRIPT Specification](../) **>** [Crabs](./)

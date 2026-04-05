@@ -209,13 +209,3 @@ struct Context {
   PCf context_modifier;   // 8-bit modifier bits
 };
 ```
-
-## Requirements
-
-[1]: ../Requirements#Optimal-Transceiving
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification Overview](./)
-
-**[<< Previous Section: ASCII Data Specification Overview](./)  |  [Next Section: Extended Types >>](ExtendedTypes.md)**
-
-Copyright [AStarship™](https://astarship.net).

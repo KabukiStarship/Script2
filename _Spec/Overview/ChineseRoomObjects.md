@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [Overview](./)
-
-### Chinese Room Objects
+# Chinese Room Objects
 
 |      Class | Code | Description       |
 |-----------:|:----:|:------------------|
@@ -22,13 +18,3 @@
 |       Slot | SLT  | A slot (i.e. Socket) in a Door in a Chinese Room in the form of a Ring Buffer Socket. |
 |      Table | TBL  | A Symbol Table implemented as a Set with no data. |
 |       Wall | WAL  | A Wall in a Chinese Room composed of a contiguous word-aligned block of memory. |
-
-**[<< Previous Section: Terminology](Terminology.md)** | **[Next Section: SCRIPT Specification >>](../)**
-
-## Requirements
-
-[1] ./
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

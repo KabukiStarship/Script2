@@ -34,13 +34,3 @@ Type Aliases are POD types that are remapped to POD Types 0 through 19 are defin
 |   x   | The number of bytes in the type. |
 |  xW   | Word-aligned word-sized type.    |
 |  W/2  | Half-word type word-sized type.  |
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
-
-**[<< Previous Section: Numbers](Numbers.md) | [Next Section: Clock >>](Clock.md)**
-
-Copyright [AStarship™](https://astarship.net).

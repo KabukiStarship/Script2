@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [SCRIPT Protocol](./)
-
-### Encryption
+# Encryption
 
 The SCRIPT Protocol uses **DTLS 1.2** (Datagram Transport Layer Security) for secure communication between Chinese Rooms. DTLS 1.2 provides strong encryption and authentication for network communications, particularly suited for datagram-based protocols like UDP.
 
@@ -313,15 +309,3 @@ All security levels provide forward secrecy through ECDHE key exchange. Compromi
 - Medium security: 2ms
 - High security: 3ms
 - Vital security: 5ms
-
-## Requirements
-
-[1] ../Requirements#Secure-Communication
-
-**[<< Previous Section: Terminals](Terminals.md) | [Next Section: Congestion Control >>](CongestionControlTable.md)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

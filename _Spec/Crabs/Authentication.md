@@ -45,7 +45,3 @@ OPD status: 0x01  // Success
 OPD session_key: 0x1234567890ABCDEF
 OPD expiration: 0x12345678
 ```
-
-**[<< Previous Section: Crabs Specification](../) | [Next Section: Portals >>](Portals.md)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

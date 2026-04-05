@@ -192,7 +192,7 @@ The CNS, MD, and EB (Extended Block) bits take up 6 control bits, leaving 10 LSb
 | 01  |   ___   |  Reserved  | Reserved.                                    |
 | 02  |   ___   |  Reserved  | Reserved.                                    |
 | 03  |   STA   |   String   | Nil-terminated UTF-8 string.                 |
-| 04  |   VSB   |   Varint   | 16-bit signed MSb variant encoded integer.   |
+# | 04  |   VSB   |   Varint   | 16-bit signed MSb variant encoded integer.   |
 | 05  |   VUB   |   Varint   | 16-bit unsigned MSb variant encoded integer. |
 | 06  |   STB   |   String   | Nil-terminated UTF-16 string.                |
 | 07  |   VSC   |   Varint   | 32-bit signed MSb variant encoded integer.   |
@@ -241,11 +241,3 @@ There are two ways to make an ASCII Pointer, one is by setting the MD bits to MD
 When an ASCII Object's bytes is positive the type is a contiguous number of bytes, if the values is negative then it becomes a raw pointer from the origin of the Crabs machine.
 
 At the very origin of the Crabs machine is a word aligned block of memory, which does not apply to 16-bit address space CPUs, that is 256 bytes plus the width of the CPU's cache line plus size of variables, which is typically 64 bytes on all CPUs with DDR RAM. 8-bit Crabs pointers are mapped to this 256-byte Crabs origin.
-
-## Requirements
-
-**[<< Previous Section: Types](Types.md) | [Next Section: Clock >>](Clock.md)**
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
-
-Copyright [AStarship™](https://astarship.net).

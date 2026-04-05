@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [SCRIPT Protocol Specification](./)
-
-### Congestion Control Table
+# Congestion Control Table
 
 The **Script Congestion Control Table** (**CCT**) is an array of 2^16 (65536) time slices of 15-bit integers per day offset from midnight. Each value represents the average load of the network from 0 through 32767. This value is then translated directly into the maximum length of a *ASCII Packet*. Endpoints may request a copy of the CCT using the *ENQ Operation*.
 
@@ -12,7 +8,7 @@ Three years of data must be stored in order to detect annual cycles such as holi
 
 `current_sample = Sigma (0.85* previos_sample + 0.15 * current) / num_samples`
 
-#### Memory Footprint
+## Memory Footprint
 
 * *60 (seconds/minute) × 60 (minutes/hour) × 24 (hours/day)* = ***86400 (seconds/day)***
 * *(86400 seconds/day) / 2^16(samples/day* = ***1.318359375 (seconds/sample)***
@@ -20,13 +16,3 @@ Three years of data must be stored in order to detect annual cycles such as holi
 | One Day's Memory | One Week's Memory | Three Year's Memory |
 |:----------------:|:-----------------:|:-------------------:|
 |      128KB       |        1MB        |      140.928MB      |
-
-**[<< Previous Section: Quality of Service](QualityOfService.md) | [Next Section: Abnormal Behavior >>](AbnormalBehavior.md)**
-
-## Requirements
-
-[1] ./
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

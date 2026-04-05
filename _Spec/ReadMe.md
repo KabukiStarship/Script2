@@ -53,8 +53,6 @@ SCRIPT (Serial Chinese Room, Interprocess, and Telemetry) Specification defines 
     7. [Messages](Crabs/Messages)
     8. [Expression Mappings](Crabs/ExpressionMappings)
     9. [Abnormal Behaviors](Crabs/AbnormalBehaviors)
-6. [IMUL Specification](IMUL)
-   1. 
 
 ## License
 

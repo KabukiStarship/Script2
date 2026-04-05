@@ -1,14 +1,8 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](.)
-
-#### Map
+# Map
 
 A Map is a sparse array map of Sorted Domain Values to Codomain Mappings. Codomain mappings always unsigned integers starting where the highest value integer, 0xF...F or -1 in 2's complement, is always an illegal mapping index. Domain types shall be integer or floating-point types (oh really).
 
-##### Set C++ Data Structure
+## Set C++ Data Structure
 
 The TMap data structure is identical to the TStack but the two classes are not interoperable due to Memory Layout Requirement.
 
@@ -20,7 +14,7 @@ struct TMap {
 };
 ```
 
-##### Memory Layout
+## Memory Layout
 
 The Memory Layout Requirement is we are required to first search the sorted domain values before looking up it's Codomain mapping.
 
@@ -37,13 +31,3 @@ The Memory Layout Requirement is we are required to first search the sorted doma
 |          TMap Header          |  |
 +-------------------------------+ 0x0
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Book](Book.md) | [Next Section: Table >>](Table.md)**
-
-Copyright [AStarship™](https://astarship.net).

@@ -1,10 +1,8 @@
-# SCRIPT Specification
-
-## Requirements
+# Requirements
 
 SCRIPT devices shall be required to:
 
-### 1. Overview Requirements
+## 1. Overview Requirements
 
 1. **Reduce RAM**: Minimize memory usage through efficient data structures and memory management techniques.
 2. **Reduce ROM**: Optimize code size and data storage to fit within limited flash memory.
@@ -22,7 +20,7 @@ SCRIPT devices shall be required to:
 14. **Ensure Reliability**: Implement robust error recovery and fault tolerance mechanisms.
 15. **Optimize Power Consumption**: Support low-power operation for battery-powered devices.
 
-### 2. ASCII Data Specification Requirements
+## 2. ASCII Data Specification Requirements
 
 16. Use 3-letter all-caps ASCII C0 code mimicry abbreviations for data types (e.g., IUA, ISA, CHA, FPB).
 17. Support Plain Old Data (POD) types with bit patterns supporting 8, 16, 32, 64, and 128-bit widths.
@@ -35,7 +33,7 @@ SCRIPT devices shall be required to:
 24. Support Clock formats: TMC (32-bit Unix timestamp), TMS (64-bit signed seconds), TMT (subsecond), SSD (64-bit Subsecond Id), SSE (128-bit Subsecond Id UUIDs).
 25. Ensure all ASCII Data Types are memory aligned on 32-bit systems.
 
-### 3. Addressing Requirements
+## 3. Addressing Requirements
 
 26. Use 96-bit IP Address format with longitude, latitude, and height above/below sea level.
 27. Implement Most Longitudinal bit (MLb) metric unit for precise location encoding.
@@ -46,7 +44,7 @@ SCRIPT devices shall be required to:
 32. Support 64800 possible directions for off-planet signals (360° longitude × 180° latitude).
 33. Ensure minimum varint byte requirements for Interstellar Internet Routes.
 
-### 4. Protocol Requirements
+## 4. Protocol Requirements
 
 34. Implement Group Automata theorem with total, associative, identity, and inverse properties (non-commutative group structure).
 35. Support Expressions as sequences of Stack Operations ending with empty Operand Stack.
@@ -59,7 +57,7 @@ SCRIPT devices shall be required to:
 42. Support Exponent Operations including Infinite Exponential Operations (IEOs) for loop constructs.
 43. Ensure all Unicode Operation indexes are valid and all B-Stream lengths are valid.
 
-### 5. Crabs Specification Requirements
+## 5. Crabs Specification Requirements
 
 44. Implement Chinese Room Abstract Stack Machine (Crabs) capable of running Group Automata using SCRIPT Protocol and ASCII Data Types.
 45. Provide standardized Crabs API for interacting with Chinese Rooms via text terminals over Script.
@@ -70,7 +68,7 @@ SCRIPT devices shall be required to:
 50. Be portable to almost any microprocessor and pen and paper computers.
 51. Operate safely with proper error handling and recovery mechanisms.
 
-### 6. Authentication Requirements
+## 6. Authentication Requirements
 
 52. Implement authentication using sequences of Crabs Operations.
 53. Support token verification using shared secrets or public key infrastructure.
@@ -79,33 +77,29 @@ SCRIPT devices shall be required to:
 56. Implement rate-limiting for failed authentication attempts.
 57. Support session key exchange using secure key exchange protocols.
 
-### 7. Portal Requirements
+## 7. Portal Requirements
 
 58. Support Room-to-Room Portals (e.g., SPI, UART, I2C, CAN, Bluetooth).
 59. Support Hallway Portals broadcasting messages to multiple Slots in Doors.
 60. Handle imperfect transmission lines with appropriate interrupt systems for each protocol.
 61. Support UDP connections with data loss recovery mechanisms.
 
-### 8. Message Requirements
+## 8. Message Requirements
 
 62. Define Crabs Messages as set of stack operations starting and ending with empty Operand Stack.
 63. Support IUA-encoded B-Streams for non-printable Unicode characters.
 64. Support UTF-8, UTF-16, and UTF-32 encoding for messages.
 65. Ensure all keys resolve correctly and B-Stream lengths are valid for each B-Sequence argument.
 
-### 9. Autoject Requirements
+## 9. Autoject Requirements
 
 66. Implement Autojects as word-aligned memory managed objects using Socket Abstract Data Type and RAMFactory.
 67. Support RAMFactory operations: creating, deleting, returning heap pointer, and returning data type.
 68. Use multiples of CPU word size for memory allocation (no 8-bit support).
 69. Support stack-to-heap auto-growth functionality.
 
-### 10. Map Types Requirements
+## 10. Map Types Requirements
 
 70. Implement contiguous memory layouts with 16/32/64-bit signed integer size headers at beginning.
 71. Support standard Object types: Array, Stack, Matrix, Loom, Book, Dictionary, Map, Socket.
 72. Support various hash table implementations optimized for microcontrollers and embedded systems.
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

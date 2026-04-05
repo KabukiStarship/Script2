@@ -6,7 +6,8 @@ namespace _ {
 ISC BSeqParamNumber(const DTB* params, ISN param_number) {
   if (IsError(params)) return 0;
   DTB num_params = *params++;
-  if (param_number > num_params) return _NIL;
+  if (param_number > num_params)
+    return _NIL;
   DTB i;
   for (i = 0; i < param_number; ++i) {
     DTB value = params[i];
@@ -17,7 +18,7 @@ ISC BSeqParamNumber(const DTB* params, ISN param_number) {
       if (value < 4) {  // It's a single dimension!
         param_number += 2;
         break;
-      } else if (value > 7) {  // Gratuitous explanation points!
+      } else if (value > 7) {
         // D_COUT ("\nError");
         return _NIL;
       } else {

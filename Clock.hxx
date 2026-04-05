@@ -349,14 +349,15 @@ AClock* ClockInit(AClock& clock) {
 
 inline void ClockEpochUpdate() {
   // RoomLock();
-  // ClockEpochInit += 10;
+  // ClockEpochInit += AClockEpoch;
   // RoomUnlock();
 }
 
 TMD ClockNow() {
   time_t t;
   time(&t);
-  if (t > ClockEpoch()) ClockEpochUpdate();
+  // 64-bit seconds timestamp has no epoch
+  //if (t > ClockEpoch()) ClockEpochUpdate();
   return TMD(t);
 }
 

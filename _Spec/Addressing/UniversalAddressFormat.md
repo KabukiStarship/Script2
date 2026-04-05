@@ -40,7 +40,3 @@ All off-planet signs are routed using the UAF Height Value of all logic level 1(
 6. The packet format must reserve address ranges with longitude > +180 or < -180 and latitude > +90 or < -90 for authoritative endpoints.
 7. The packet format must support 64800 possible directions for off-planet signals based on 360 degrees longitude times 180 latitude.
 8. The packet format must support ultra-precise coordinates for Interstellar Internet Routes with minimum varint byte requirements.
-
-**[<< Previous Section: Polar Routing](PolarRouting.md) | [Next Section: Addressing Specification >>](../)**
-
-[SCRIPT Specification](../) **>** [Addressing](./)

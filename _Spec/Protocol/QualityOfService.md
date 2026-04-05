@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [SCRIPT Protocol Specification](./)
-
-### Quality of Service
+# Quality of Service
 
 For all operations that return kNIL, there is no checking to see if a function call made. Quality of Service (QoS) is performed using ESC Evaluation. Each Operation with a return value gets a Unicode Operation Index attached to it, which is then used to throw an error if the return arguments were not received.
 
@@ -33,13 +29,3 @@ A slave device assumes that there is another Automaton or Automata performing th
 ## 3.13 Encryption
 
 Script uses DTLS 3.1 provided by the Script. Please see [https://tools.ietf.org/html/rfc4347](https://tools.ietf.org/html/rfc4347) for details.
-
-**[<< Previous Section: Terminals](Terminals.md) | [Next Section: Congestion Control >>](CongestionControlTable.md)**
-
-## Requirements
-
-[1] ./
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

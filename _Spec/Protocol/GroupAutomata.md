@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [SCRIPT Protocol](./)
-
-### Group Automata Theorem
+# Group Automata Theorem
 
 Script, and all formal intelligence, can be recursively defined as follows:
 
@@ -23,13 +19,3 @@ Script, and all formal intelligence, can be recursively defined as follows:
   * *Many robots acting as one*
     * *许多机器人作为一个*
     * *Xǔduō jīqìrén zuòwéi yīgè*
-
-**[<< Previous Section: SCRIPT Protocol Specification](../) | [Next Section: Time >>](Time.md)**
-
-## Requirements
-
-[1] ./
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

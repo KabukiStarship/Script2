@@ -1,8 +1,4 @@
-# [SCRIPT Specification](../)
-
-## [SCRIPT Protocol](./)
-
-### Generic Handshake
+# Generic Handshake
 
 1. Let **host_a** and **host_b** be *Chinese Rooms* connected through a serial connection or package switched network.
 2. Let **host_a** and **host_b** exchange packets of size 1 IUA and be 16-bit prime multiple hashes of the packets with single bytes.
@@ -34,7 +30,3 @@
 5. Each stage of the Script Router must execute the Script Hash Function to create the final IUA sequence.
 6. The handshake must support a 3-way protocol (SYN, SYN-ACK, ACK) for reliable connection establishment.
 7. The protocol must handle address resolution for both IPv4 and future IP address formats.
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

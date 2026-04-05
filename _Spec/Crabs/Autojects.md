@@ -59,11 +59,3 @@ The ASCII Data Type of the Autoject is returned when the origin pointer is nil a
 DTW data_type_word = reinterpret_cast<DTW>(socket_factory(nullptr, -1));
 data_type_word = reinterpret_cast<DTW>(socket_factory(nullptr, 1));
 ```
-
-## Requirements
-
-[1] ./
-
-**[<< Previous Section: Conformance Targets](ConformanceTargets.md) | [Next Section: Messages >>](Messages.md)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

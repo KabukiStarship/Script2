@@ -31,11 +31,3 @@ Handling abnormal behavior is left up to the implementation. Implementation may 
 ## Reporting Compromised Automata
 
 Compromised Automata shall be reported to the Intergalactic Council of Artificial and Natural Neural Nets (ICAN3) for immediate removal from the Intergalactic Internet Service Providers (IISP) distributed hash table.
-
-## Requirements
-
-[1] ./
-
-**[<< Previous Section: Protocol Abnormal Behavior](../Protocol/AbnormalBehavior.md) | [Next Section: Crabs Specification >>](./)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

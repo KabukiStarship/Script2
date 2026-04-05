@@ -786,17 +786,18 @@ inline const CHS* TTableGet(const TBL* table, ISY index) {
   return TTableGet<TBL_P>(table, ISY(table->map.total), index);
 }
 
-/* Removes the string at the given sort_map index. */
+/* Removes the string at the given sorted index. */
 template<TBL_A>
 ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
   D_CHECK_PTR_TRETURN(ISY, table);
   D_COUT("\nBefore:");
   D_COUT_TABLE(table);
   ISY count = ISY(table->map.count);
+  if (index < 0 || index >= count)
+    D_RETURNT(ISY, -ErrorInvalidIndex);
   ISZ bytes = table->bytes,
       stop  = table->stop;
   ISY total = ISY(table->map.total);
-  if (index < 0 || index >= count) D_RETURNT(ISY, -ErrorInvalidIndex);
   if (index == count - 1) pack = false;
   ISZ* keys_map = NILP;
   HSH* hash_map = NILP;
@@ -844,7 +845,7 @@ ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
 /* Removes the given key from the table. */
 template<TBL_A>
 ISY TTableRemove(TBL* table, const CHS* key) {
-  ISY index = 0;// @todo fix me!
+  ISY index = TTableFind<TBL_P>(table, key);
   return TTableRemove<TBL_P>(table, index);
 }
 

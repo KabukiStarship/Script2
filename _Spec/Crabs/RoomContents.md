@@ -23,11 +23,3 @@ Back-doors are unknown entrances to the Room.
 ## Mirrors and Windows
 
 **Mirrors** in a *Chinese Rooms* are *Contiguous Word-Aligned Memory Blocks* used for *Expressions* and *Interprocess IO Portals* that use *Word-Aligned Hashless B-Sequences*. When two one-way Mirrors are combined they create a duplex Slot called a **Window**. Mirror and Windows shall be used to for Interprocess Same-System Terminals.
-
-## Requirements
-
-1. []()
-
-**[<< Previous Section: Portals](Portals.md) | [Next Section: Conformance Targets >>](ConformanceTargets.md)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

@@ -21,11 +21,11 @@ inline IS PrimeMaxSigned() {
 /* Returns the highest signed prime that can fit in type IU.
 @return 0 if the sizeof (IU) is not 1, 2, 4, or 8. */
 template<typename HSH>
-inline HSH TPrimeMaxUnigned() {
+constexpr HSH CPrimeMaxUnigned() {
   HSH prime = sizeof(HSH) == 1   ? 251
-              : sizeof(HSH) == 2 ? 65535
-              : sizeof(HSH) == 4 ? 4294967291
-              : sizeof(HSH) == 8 ? 18446744073709551557
+            : sizeof(HSH) == 2 ? 65535
+            : sizeof(HSH) == 4 ? 4294967291
+            : sizeof(HSH) == 8 ? 18446744073709551557
                                  : 0;
   return prime;
 }
@@ -38,7 +38,7 @@ inline HSH THashPrime(CHS value, HSH hash) {
 template<typename HSH = IUN, typename CHS = CHR>
 inline HSH THashPrime(const CHS* element) {
   CHS c = (CHS)*element++;
-  HSH hash = TPrimeMaxUnigned<HSH>();
+  HSH hash = CPrimeMaxUnigned<HSH>();
   while (c) {
     hash = THashPrime<HSH, CHS>(c, hash);
     c = *element++;
@@ -50,7 +50,7 @@ template<typename HSH = IUN, typename ISZ = ISR, typename CHS, typename CHY>
 inline CHS* THashPrimePrint_NC(CHS* start, CHS* stop, const CHY* item, HSH& hash, 
     ISZ& length) {
   CHY c = *item++;
-  hash = TPrimeMaxUnigned<HSH>();
+  hash = CPrimeMaxUnigned<HSH>();
   while (c) {
     ++length;
     hash = THashPrime<HSH, CHY>(c, hash);
@@ -72,14 +72,14 @@ inline CHS* THashPrimePrint(CHS* start, CHS* stop, const CHY* item, HSH& hash,
 }
 
 inline IUB HashIUB(IUB value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
+  IUB prime = CPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = ((value >> 8) * prime) + hash;
   return hash;
 }
 
 inline IUB HashIUBC(IUC value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
+  IUB prime = CPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;
@@ -88,7 +88,7 @@ inline IUB HashIUBC(IUC value, IUB hash) {
 }
 
 inline IUB HashIUBD(IUD value, IUB hash) {
-  IUB prime = TPrimeMaxUnigned<IUB>();
+  IUB prime = CPrimeMaxUnigned<IUB>();
   hash = ((value & 0xff) * prime) + hash;
   hash = (((value >> 8) & 0xff) * prime) + hash;
   hash = (((value >> 16) & 0xff) * prime) + hash;

@@ -214,9 +214,9 @@ const Op* CrabsScanBIn(Crabs* crabs) {
      * slot_end = 0;     //< The byte after the last byte ein the Slot.
 
   slot_begin = crabs->slot.origin;
-  slot_start = crabs->slot.origin;
+  slot_start = crabs->slot.start;
   slot_stop  = crabs->slot.stop;
-  slot_end   = crabs->slot.stop;
+  slot_end   = crabs->slot.end;
 
   const Op* result;  //< Result of the SScan.
   const DTB* header = crabs->header;
@@ -526,7 +526,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
         if (b > 127) {
           D_COUT("");
           // Setup to read the next type.
-          type = *(++header);
+          type = *(++crabs->header);
           auto align_mask = ATypeAlignMask(type);
           D_COUT(
               "\nDone scanning varint: "
@@ -549,7 +549,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bin_state = BInStatePackedPOD;
           break;
         }
-        bytes_left &= ((ISC)b) << bytes_shift;
+        bytes_left &= ISC(b) << bytes_shift;
         shift_bits += 8;
         break;
       }
@@ -592,7 +592,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bin_state = BInStateHandlingError;
         } else {
           D_COUT("\nResetting hash.");
-          hash = TPrimeMaxUnigned<IUB>();  //< Reset hash to largest 16-bit prime.
+          hash = CPrimeMaxUnigned<IUB>();  //< Reset hash to largest 16-bit prime.
           crabs->operand = crabs->root;
           crabs->result = NILP;
           bin_state = BInStateAddress;
@@ -615,7 +615,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
           bin_state = crabs->bin_state;
 
           // Setup to read the next type.
-          type = *(++header);
+          type = *(++header); //< LLM says this is stale?
+          //type = *(++crabs->header);
           auto align_mask = ATypeAlignMask(type);
           D_COUT("\nNext AsciiType to scan:\'" << ATypef(type) <<
                  " align_mask:" << align_mask);
@@ -636,6 +637,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
   crabs->hash = hash;
   crabs->bytes_left = bytes_left;
   bin->origin = TDelta<ISC>(bin_begin, bin_start);
+  //crabs->slot.start = slot_start;
   return NILP;
 }
 

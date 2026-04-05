@@ -1,20 +1,14 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](.)
-
-### Escape Sequence
+# Escape Sequence
 
 An Escape Sequence (ESC) is a sequence of one or more Script Expressions that replaces a B-Sequence and ends with no Operands on the stack. ESC objects may be 8, 16, 32, or 64-bit to represent the Object's Size. Script Expressions may have multiple output parameters and ESC will be evaluated and the socket output, if ESC Operations have the same output signature, may be directly substituted for any BSQ with the same signature.
 
-#### ESC Example
+## ESC Example
 
 ```Crabs
 Parent.Child1.Foo ("Hello world!", 1, 2, 3); //< () and ',' are optional and
 Parent Child1 Foo "Hello world!", 1, 2, 3; //< Pop Operations are programmable.
 Parent Child1 Foo "Hello world!" 1 2 3    //< There is no pop instruction here
-              Foo "Hello "                //< so this is a _::TStrand<> of Ops.
+              Foo "Hello "                //< so this is a _::TString<> of Ops.
                   "world!" 1 2
                   3;                      //< The Last 2 Foo calls execute when
                                           //< the ";" operation is read or
@@ -29,13 +23,3 @@ Parent {
     }
 } //< Code won't execute until you close the curly brackets or type ';'
 ```
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Tuples](Tuples.md) | [Next Section: Socket >>](Socket.md)**
-
-Copyright [AStarship™](https://astarship.net).

@@ -42,9 +42,3 @@ SRC utf32_example: "🥜You guessed it bois... dez nutz!🥜"
 6. The TSRope structure must maintain memory alignment for the datum field.
 7. The TSRope structure must track the total size of the string in bytes including the header.
 8. The TSRope structure must track the count of elements in the buffer.
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
-
-**[<< Previous Section: Clock](Clock.md) | [Next Section: B-Sequences >>](BSequences.md)**
-
-Copyright [AStarship™](https://astarship.net).

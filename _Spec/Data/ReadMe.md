@@ -1,6 +1,4 @@
-# [SCRIPT Specification](../)
-
-## ASCII Data Specification
+# ASCII Data Specification
 
 Automaton Standard Code for Information Interchange (ASCII) Data Types are mimicked after the the American Standard Code for Information Interchange C0 Control Codes using 3 all capitol letters. There are 32 POD Data Types, mimicking the number of ASCII C0 Control Codes. Arrays, Stacks, multi-dimensional matrices, and 2, 3, and 4-homogenous-tuple (homo-tuple) types can be created using the Vector types bit. All data types are word-aligned leaving some illegal Vector types such as an 1-byte Array of 2-byte types. These illegal types are used in order to create 2, 3, and 4-tuple homogeneous Vectors of a type, such as a 4-tuple of 1-byte unsigned integers IUA). These data types are then used to create concrete implementations of Abstract Data Types (ADTs).
 
@@ -22,15 +20,3 @@ The Automaton Standard Code for Information Interchange (ASCII) Data Specificati
   * Table - A Prime Multiple Hash (PMH) associative array that maps unique strings to contiguous integers.
   * Dictionary - A dictionary of heterogeneous types with a Table.
   * Book - A key-value dictionary of heterogeneous types with a Loom rather than a Table for fastest push-back performance and later conversion to a Table.
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
-
-**[<< Previous Section: SCRIPT Specification](../)  |  [Next Section: Types >>](Types.md)**
-
-## License
-
-Copyright [AStarship™](https://astarship.net).

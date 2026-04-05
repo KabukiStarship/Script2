@@ -94,13 +94,3 @@ TMT (Time Ticker) contains a 32-bit unsigned seconds timestamp and 32-bit subsec
 ## CPU Memory Coherence
 
 Where the Subsecond Ticker lives in memory is outside the scope of this specification. When incrementing the subsecond ticker can be done a variety of ways. Using shared memory can cause race conditions. Please see the [SCRIPT Specification Crabs Section](../Crabs/) for a reference design using CPU cache line alignment.
-
-## Requirements
-
-* [10] ../overview/requirements.md
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./)
-
-**[<< Previous Section: Numbers](Numbers.md) | [Next Section: Strings >>](Strings.md)**
-
-Copyright [AStarship™](https://astarship.net).

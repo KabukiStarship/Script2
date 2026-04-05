@@ -58,11 +58,3 @@ Parent .Child1.Foo ("Number conversion Example" stuff.things.item1 stuff.things 
 Parent Child1 Foo "Number conversion Example" stuff things item1 stuff things item2,
                    stuff things item3;
 ```
-
-## Requirements
-
-[1] ./
-
-**[<< Previous Section: Messages](./Messages.md) | [Next Section: SCRIPT Specification >>](../)**
-
-[SCRIPT Specification](../) **>** [SCRIPT Protocol](./)

@@ -1,14 +1,8 @@
-# [SCRIPT Specification](../../)
-
-## [ASCII Data Specification](../)
-
-### [Map Types](.)
-
-### Books
+# Books
 
 ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII Dictionaries in that multiple values with the same key may be stored. Books are created by creating an ASCII List with an ASCII Loom as element 0 that contains an empty string at element 0.
 
-#### Book Memory Layout
+## Book Memory Layout
 
 ```AsciiArt
 +====================================+
@@ -31,7 +25,7 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 +====================================+  + 0xN
 ```
 
-##### Memory Overhead
+### Memory Overhead
 
 | #Bytes | I | Index | Size | Total |    Overhead Per index      |
 |:------:|:-:|:-----:|:----:|:-----:|:---------------------------|
@@ -40,13 +34,3 @@ ASCII Books are dense ordered maps of key-value tuples. Books differ from ASCII 
 |    8   | 4 |   8   |   8  |   32  | 24 + 9 per index + socket. |
 
 * Sizes shown in bytes.
-
-## Requirements
-
-[1] ./
-
-[SCRIPT Specification](../) **>** [ASCII Data Specification](./) **>** [Map Types](.)
-
-**[<< Previous Section: Dictionary](Dictionary.md) | [Next Section: List >>](List.md)**
-
-Copyright [AStarship™](https://astarship.net).
