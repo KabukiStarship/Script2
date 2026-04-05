@@ -16,15 +16,3 @@ The solution is
 ### File Affected
 
 1. `?`
-
-## Hierarchy
-
-* #11
-
-## Tags
-
-Mission
-
-## A
-
-

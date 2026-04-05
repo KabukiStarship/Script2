@@ -7,16 +7,15 @@
 #include "Uniprinter.hpp"
 namespace _ {
 
-#undef  TARGS
-#define TARGS
-#undef  TPARAMS
-#define TPARAMS
 /* A file in a filesystem. */
 class File {
  public:
 
   /* Constructs a File from the given URI string. */
   File(const CHR* uri);
+  
+  // Gets the file extension.
+  const CHR* Extension();
 
   /* Gets the Uniform Resource Identifier. */
   const CHR* URI();
@@ -37,7 +36,7 @@ class File {
   void Close();
 
   /* Gets the last time this file was modified. */
-  TME LastTimeModified();
+  TMC LastTimeModified();
   
   /* Checks to see if the file has been modified by comparing the last time it 
   was modified. */
@@ -45,7 +44,7 @@ class File {
 
  private:
   const CHR* uri_;          //< Uniform Resource Identifier.
-  TME last_time_modified_;  //< Last time the URL was modified.
+  TMC last_time_modified_;  //< Last time the URL was modified.
 };
 
 }  //< namespace _
@@ -76,6 +75,7 @@ class File {
 ::_::File& operator<<(::_::File& o, ::_::Centerf item);
 ::_::File& operator<<(::_::File& o, ::_::Rightf item);
 ::_::File& operator<<(::_::File& o, ::_::Linef item);
+::_::File& operator<<(::_::File& o, ::_::Repeatf item);
 ::_::File& operator<<(::_::File& o, ::_::Headingf item);
 ::_::File& operator<<(::_::File& o, ::_::Indentf item);
 ::_::File& operator<<(::_::File& o, ::_::Charsf item);

@@ -39,48 +39,36 @@ class TWall : public Operand {
   };
 
 private:
-  IUD         et_map_; //< Extended Type remap word from EPa-EPl to types 0-19.
-  SCK doors_;  //< The doors in the room.
+  IUD ctx_; //< Plain Context Type remap word.
+  TStack<TDoor<ISZ>, ISZ, ISY> doors_;  //< The doors in the room.
+	BOL is_dynamic_;	//< Whether this wall was dynamically allocated or not.
 
-  virtual ~TWall() {
-    if (is_dynamic_) {
-      CHA* socket = TPtr<CHA>(&doors_);
-      delete[] socket;
-    }
+  //virtual ~TWall() {
+  //  if (is_dynamic_) {
+  //    CHA* socket = TPtr<CHA>(&doors_);
+  //    delete[] socket;
+  //  }
+  //}
+
+  TWall(ISW bytes = BytesMin) : 
+      is_dynamic_(true) {
+    bytes = bytes < BytesMin ? ISC(BytesMin) : bytes;
+    ISW size_words = (bytes >> ACPUBytesLog2) + 3;
+    IUW *socket = new IUW[size_words];
+    doors_ = TStackInit<TDoor<ISZ>, ISZ, ISY>(socket, bytes);
   }
 
-  /* Constructs a wall from the given socket. */
-  TWall(ISW bytes = BytesMin) : is_dynamic_(true) {
-    bytes = bytes < BytesMin ? (ISC)BytesMin : bytes;
-    bytes = TAlignUp<ISD, ISW>(bytes);
-    ISW size_words = (bytes >> sizeof(void*)) + 3;
-    IUW *socket = new IUW[size_words],
-        *aligned_boofer = TPtrUp<IUW>(socket);
-    //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
-    //< on 16 and 32-bit systems.
-    bytes -= sizeof(IUW) * (aligned_boofer - socket);
-    origin = socket;
-    doors_ = TPtr<SCK>(aligned_boofer);
-    TStackInit(socket, bytes >> sizeof(IUW));
-  }
-
-  /* Constructs a wall from the given socket. */
+  /* Constructs a wall from the given block of words. */
   TWall(IUW* socket, ISW bytes) {
-    IUW* aligned_boofer = TPtrUp<IUW>(socket);
-    //< Shift 3 to divide by 8. The extra 3 elements are for aligning memory
-    //< on 16 and 32-bit systems.
-    bytes -= sizeof(IUW) * (aligned_boofer - socket);
-    origin = socket;
-    doors_ = TPtr<SCK>(aligned_boofer);
-    TStackInit(socket, bytes >> sizeof(IUW));
+    TStackInit(TPtr<TStack<TDoor<ISZ>, ISZ, ISY>>(socket), bytes);
   }
 
   /* Gets the size of the wall in bytes. */
   ISW GetSizeBytes() {
-    return bytes_;
+    return doors_.GetSizeBytes();
   }
   /* Gets a pointer to the array of pointers to Door(). */
-  SCK* Doors() {
+  TStack<TDoor<ISZ>, ISZ, ISY >* Doors() {
     return &doors_;
   }
 
@@ -90,7 +78,7 @@ private:
   /* Adds a Door to the slot.
   @return Returns nil if the Door is full and a pointer to the Door in the
           socket upon success. */
-  ISC OpenDoor(Door * door) { return 0; }
+  ISC OpenDoor(TDoor<ISZ>* door) { return 0; }
 
   /* Deletes the Door from the Door at the given index. */
   BOL CloseDoor(ISY index) { return false; }

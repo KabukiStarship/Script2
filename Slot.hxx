@@ -93,7 +93,7 @@ void Slot::Wipe() {
 }
 
 const Op* Slot::Write(const DTB* params, void** args) {
-  D_CHECK_TPTR_RETURN(Op, params);
+  //D_CHECK_TPTR_RETURN(Op, params);
   A_ASSERT(args);
 
   A_ASSERT(false);

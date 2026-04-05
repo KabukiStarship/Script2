@@ -37,23 +37,20 @@ template<typename ISZ>
 class TDoor : public Operand {
  public:
   enum {
-    DoorCount = DoorTotal_,              //< Initial (or static) Door count.
-    SlotSizeDefault = SlotSizeDefault_,  //< Default.
-  };
-
-  enum {
-    DoorBytesMin = 128,  //< The min and default size of the door socket.
+    DoorCount = DoorTotal_, //< Initial (or static) Door count.
+    SlotSizeDefault = 512,  //< Default.
+    BytesMin = 128,         //< Min size of the door socket in bytes.
   };
 
   /* A door in a Chinese room. */
   TDoor(const CHA* roomName = NILP, IUW* socket = NILP,
-        IUW bytes = DoorBytesMin) {
+        IUW bytes = BytesMin) {
     if (IsError(socket)) {
-      if (bytes < DoorBytesMin) {
-        bytes = DoorBytesMin;
+      if (bytes < BytesMin) {
+        bytes = BytesMin;
       }
     } else {
-      if (bytes < DoorBytesMin) {
+      if (bytes < BytesMin) {
         // @todo insert error code here
         D_COUT("\nError: Door bytes < DoorBytesMin!");
         return;
@@ -61,54 +58,54 @@ class TDoor : public Operand {
     }
     // tx.SetBoofer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
     // rx = new SerialSlot (tx.EndAddress (), aSlot, aSlotSize,
-    //  aTalkbaccSize);
+    //  aTalkbackSize);
   }
 
   /* RAMFactory. */
-  virtual ~TDoor() {
-    if (origin) delete[] origin;
-  }
+  //virtual ~TDoor() {
+  //  if (origin) delete[] origin;
+  //}
 
   /* Gets the BOut at the given index. */
-  BOut* GetSlot(ISC index) { return slots_->Element(index); }
+  BOut* GetSlot(ISZ index) { return slots_->Element(index); }
 
   /* Address the given crabs to the Door. */
-  ISC AddSlot(ISC slot) { return TStackInsert<ISC, ISC, ISC>(slots_, slot); }
+  ISZ AddSlot(ISZ slot) { return TStackInsert<ISZ, ISZ, ISZ>(slots_, slot); }
 
   /* Attempts to find a Slot or Door with the given address. */
   BOL Contains(void* address) {
-    return TStackContains<ISC, ISC, ISC>(slots_, address);
+    return TStackContains<ISZ, ISZ, ISZ>(slots_, address);
   }
 
   /* Gets the Slot that contains the given address.
   @return Returns the doors_ stack count if the Door does not contain the given
   address. */
-  ISC FindSlot(void* address) {
-    ISC count = slots_->count;
-    for (ISC i = 0; i < count; ++i) {
+  ISZ FindSlot(void* address) {
+    ISZ count = slots_->count;
+    for (ISZ i = 0; i < count; ++i) {
       // Slot* slot = NILP; //< @todo fix me!
 
-      if (TStackContains<ISC, ISC, ISC>(slots_, address)) return i;
+      if (TStackContains<ISZ, ISZ, ISZ>(slots_, address)) return i;
     }
     return count;
   }
 
-  BIn* Slot(ISC index) {
+  BIn* SlotNumber(ISZ index) {
     if (!slots_.InBounds(index)) return NILP;
-    return slots[i];
+    return slots_[index];
   }
 
   /* Executes all of the queued escape sequences.
   @return Nil upon success or an Error Op upon failure. */
   const Op* Exec(Crabs* crabs) {
-    TSTack<ISZ>* slots = slots_;
-    ISC scan_total = scan_total_;
-    for (ISC i = 0; i < slots->Count(); ++i) {
+    TStack<ISZ>* slots = slots_;
+    ISZ scan_total = scan_total_;
+    for (ISZ i = 0; i < slots->Count(); ++i) {
       BIn* bin = Slot(i);
-      for (ISC count = scan_total; count > 0; --count) {
-        ISC value = BInNextByte(bin);
+      for (ISZ count = scan_total; count > 0; --count) {
+        ISZ value = BInNextByte(bin);
         if (value < 0) break;
-        const Op* result = crabs->SScan(value);
+        //const Op* result = crabs->SScan(value);
       }
     }
     return NILP;
@@ -133,25 +130,26 @@ class TDoor : public Operand {
       return CrabsQuery(crabs, This);
     }
     index -= ' ';
-    if (((ISC)index) >= slots_->count) {
-      return DoorResult(this, Door::c_ErrorInvalidOp);
+    if (ISZ(index) >= slots_->count) {
+      //return DoorResult(this, Door::ErrorInvalidOp);
+      return NILP;
     }
     return NILP;
   }
 
  private:
   ISN  bytes_,          //< Door size in bytes.
-       scan_total_;     //< Max bytes to pull throught the slot at once.
+       scan_total_;     //< Max bytes to pull through the slot at once.
   IUW* begin_;          //< Pointer to dynamic socket.
-  SCK* slots_;  //< Slots in the door.
+  TStack<Slot, ISZ, ISZ>* slots_;  //< Slots in the door.
 
-  TBIn<ISZ>* OffsetToBIn(ISC offset) {
-    return TPtr<CBIn>(IUW(this) + offset);
+  BIn* OffsetToBIn(ISZ offset) {
+    return TPtr<BIn>(IUW(this) + offset);
   }
 };
 
 /* Initializes a Door at the beginning of the given socket.
-static Door* DoorInit (ISC* socket, ISC slot_size) {
+static Door* DoorInit (ISZ* socket, ISZ slot_size) {
   if (socket == NILP) return NILP;
   if (slot_size < kMinSlotSize) return NILP;
   Wall* wall = TPtr<Door>(socket);

@@ -24,35 +24,35 @@ namespace _ {
 
 #if (defined _MSC_VER || defined __MINGW32__)
 #include <windows.h>
-enum { cPathLengthMax = MAX_PATH };
+enum { URIPathLengthMax = MAX_PATH };
 #elif defined __linux__
 #include <limits.h>
 #ifdef PATH_MAX
-enum { cDirectoryPathLengthMax = PATH_MAX };
+enum { URIDirectoryPathLengthMax = PATH_MAX };
 #else
-enum { cPathLengthMax = 4096 };
+enum { URIPathLengthMax = 4096 };
 #endif
 #elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
 #include <sys/param.h>
 #if defined(BSD)
 #include <limits.h>
 #ifdef PATH_MAX
-enum { cDirectoryPathLengthMax = PATH_MAX };
+enum { URIDirectoryPathLengthMax = PATH_MAX };
 #else
-enum { cPathLengthMax = 4096 };
+enum { URIPathLengthMax = 4096 };
 #endif
 #endif
 #endif
 
 #ifdef _MSC_VER
 enum {
-  cFilenamePad = 2  //< extra chars for the "\\*" mask.
+  FilenamePad = 2  //< extra chars for the "\\*" mask.
 };
 #else
-enum { cFilenamePad = 0 };
+enum { FilenamePad = 0 };
 #endif
 
-enum { cFilenameLengthMax = 256 };
+enum { URLFilenameLengthMax = 256 };
 
 #if (defined _MSC_VER || defined __MINGW32__)
 #define _TINYDIR_DRIVE_MAX 3
@@ -97,8 +97,8 @@ class TFile {
   CHR *extension;
   ISN is_directory_,  //< flag for if this is a directory.
       is_reg_;
-  CHR path[cPathLengthMax];
-  CHR name[cFilenameLengthMax];
+  CHR path[URIPathLengthMax];
+  CHR name[URLFilenameLengthMax];
 
 #ifndef _MSC_VER
 #ifdef __MINGW32__
@@ -124,20 +124,20 @@ class TFile {
     TFolder<> dir;
     ISN result = 0;
     ISN found = 0;
-    CHR dir_name_buf[cPathLengthMax];
-    CHR file_name_buf[cFilenameLengthMax];
+    CHR dir_name_buf[URIPathLengthMax];
+    CHR file_name_buf[URLFilenameLengthMax];
     CHR *dir_name;
     CHR *base_name;
 #if (defined _MSC_VER || defined __MINGW32__)
-    CHR drive_buf[cPathLengthMax];
-    CHR ext_buf[cFilenameLengthMax];
+    CHR drive_buf[URIPathLengthMax];
+    CHR ext_buf[URLFilenameLengthMax];
 #endif
 
     if (IsError(path) || TSCodeCount<CHS, CHT, IS>(path) == 0) {
       errno = EINVAL;
       return -1;
     }
-    if (TSCodeCount<CHS, CHT, IS>(path) + cFilenamePad >= cPathLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(path) + FilenamePad >= URIPathLengthMax) {
       errno = ENAMETOOLONG;
       return -1;
     }
@@ -146,8 +146,8 @@ class TFile {
 #if (defined _MSC_VER || defined __MINGW32__)
 #if ((defined _MSC_VER) && (_MSC_VER >= 1400))
     errno = _tsplitpath_s(path, drive_buf, _TINYDIR_DRIVE_MAX, dir_name_buf,
-                          cFilenameLengthMax, file_name_buf, cFilenameLengthMax,
-                          ext_buf, cFilenameLengthMax);
+                          URLFilenameLengthMax, file_name_buf, URLFilenameLengthMax,
+                          ext_buf, URLFilenameLengthMax);
 #else
     _tsplitpath(path, drive_buf, dir_name_buf, file_name_buf, ext_buf);
 #endif
@@ -163,18 +163,18 @@ class TFile {
     // Emulate the behavior of dirname by returning "." for dir name if it's
     // empty
     if (drive_buf[0] == '\0' && dir_name_buf[0] == '\0') {
-      SPrint(dir_name_buf, cPathLengthMax, '.');
+      SPrint(dir_name_buf, URIPathLengthMax, '.');
     }
     // Concatenate the drive letter and dir name to form full dir name.
-    TSConcat<CHS>(drive_buf, cPathLengthMax, dir_name_buf);
+    TSConcat<CHS>(drive_buf, URIPathLengthMax, dir_name_buf);
     dir_name = drive_buf;
     // Concatenate the file name and extension to form base name.
-    TSConcat<CHS>(file_name_buf, cFilenameLengthMax, ext_buf);
+    TSConcat<CHS>(file_name_buf, URLFilenameLengthMax, ext_buf);
     base_name = file_name_buf;
 #else
-    SPrint(dir_name_buf, cPathLengthMax, path);
+    SPrint(dir_name_buf, URIPathLengthMax, path);
     dir_name = dirname(dir_name_buf);
-    SPrint(file_name_buf, cPathLengthMax, path);
+    SPrint(file_name_buf, URIPathLengthMax, path);
     base_name = basename(file_name_buf);
 #endif
 
@@ -215,7 +215,7 @@ class TFile {
 
 template<typename CHS>
 class TFolder {
-  CHR path_[cPathLengthMax];
+  CHR path_[URIPathLengthMax];
   ISN has_next_;
   size_t file_count_;
 
@@ -239,7 +239,7 @@ class TFolder {
     ISN size;
 #endif
 #else
-    CHR path_buf[cPathLengthMax];
+    CHR path_buf[URIPathLengthMax];
 #endif
     CHR *pathp;
 
@@ -247,7 +247,7 @@ class TFolder {
       errno = EINVAL;
       return cErrorInvalidInput;
     }
-    if (TSCodeCount<CHS, CHT, IS>(path) + cFilenamePad >= cPathLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(path) + FilenamePad >= URIPathLengthMax) {
       errno = ENAMETOOLONG;
       return cErrorInvalidInput;
     }
@@ -264,7 +264,7 @@ class TFolder {
 #endif
     Close();
 
-    SPrint(path, cPathLengthMax, path);
+    SPrint(path, URIPathLengthMax, path);
     // Remove trailing slashes.
     pathp = &path[TSCodeCount<CHS, CHT, IS>(path) - 1];
     CHS c = *pathp;
@@ -273,8 +273,8 @@ class TFolder {
       ++pathp;
     }
 #ifdef _MSC_VER
-    SPrint(path_buf, cPathLengthMax, path);
-    TSConcat<CHS>(path_buf, cPathLengthMax, "\\*");
+    SPrint(path_buf, URIPathLengthMax, path);
+    TSConcat<CHS>(path_buf, URIPathLengthMax, "\\*");
 #if (defined WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
     _h = FindFirstFileEx(path_buf, FindExInfoStandard, &_f,
                          FindExSearchNameMatch, NILP, 0);
@@ -444,21 +444,21 @@ class TFolder {
 #else
         _e->d_name;
 #endif
-    if (TSCodeCount<CHS, CHT, IS>(path_) + TSCodeCount<CHS, CHT, IS>(filename) + 1 + cFilenamePad >=
-        cPathLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(path_) + TSCodeCount<CHS, CHT, IS>(filename) + 1 + FilenamePad >=
+        URIPathLengthMax) {
       // the path for the file will be too long.
       errno = ENAMETOOLONG;
       return -1;
     }
-    if (TSCodeCount<CHS, CHT, IS>(filename) >= cFilenameLengthMax) {
+    if (TSCodeCount<CHS, CHT, IS>(filename) >= URLFilenameLengthMax) {
       errno = ENAMETOOLONG;
       return -1;
     }
 
-    SPrint(file->path, cPathLengthMax, path_);
-    TSConcat<CHS>(file->path, cPathLengthMax, '/');
-    SPrint(file->name, cPathLengthMax, filename);
-    TSConcat<CHS>(file->path, cFilenameLengthMax, filename);
+    SPrint(file->path, URIPathLengthMax, path_);
+    TSConcat<CHS>(file->path, URIPathLengthMax, '/');
+    SPrint(file->name, URIPathLengthMax, filename);
+    TSConcat<CHS>(file->path, URLFilenameLengthMax, filename);
 #ifndef _MSC_VER
 #ifdef __MINGW32__
     if (_tstat(
@@ -519,7 +519,7 @@ class TFolder {
   }
 
   inline ISN OpenSubfolder(size_t i) {
-    CHR path[cPathLengthMax];
+    CHR path[URIPathLengthMax];
     if (IsError(dir)) {
       errno = EINVAL;
       return -1;
@@ -529,7 +529,7 @@ class TFolder {
       return -1;
     }
 
-    SPrint(path, cPathLengthMax, _files[i].path);
+    SPrint(path, URIPathLengthMax, _files[i].path);
     Close();
     if (OpenSorted(path) == -1) return -1;
 

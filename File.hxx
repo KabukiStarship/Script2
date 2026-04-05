@@ -13,6 +13,16 @@
 namespace _ {
 File::File(const CHR* uri) : uri_(uri_) {}
 
+void File::Extension() {
+  CHR* period = TStringFindLast<CHS>('.');
+  if (period == NILP) {
+    extension = &(name[TSCodeCount<CHS, CHT, IS>(name)]);
+  }
+  else {
+    extension = period + 1;
+  }
+}
+
 const CHR* File::URI() { return uri_; }
 
 const CHR* File::URISet(const CHR* uri) {
@@ -23,7 +33,7 @@ const CHR* File::URISet(const CHR* uri) {
   return uri;
 }
 
-TMS File::LastTimeModified() {
+TMC File::LastTimeModified() {
   struct stat result;
   if (stat(uri_, &result) == 0) {
     return result.st_mtime;
@@ -31,8 +41,8 @@ TMS File::LastTimeModified() {
   return 0;
 }
 
-TMS File::HasBeenModified() {
-  TMS last_time_modified = LastTimeModified();
+TMC File::HasBeenModified() {
+  TMC last_time_modified = LastTimeModified();
   if (last_time_modified == last_time_modified_) return 0;
   last_time_modified_ = last_time_modified;
   return last_time_modified;
@@ -73,6 +83,7 @@ void File::Close() {}
 ::_::File& operator<<(::_::File& o, ::_::Centerf item) { return o.Print(item); }
 ::_::File& operator<<(::_::File& o, ::_::Rightf item) { return o.Print(item); }
 ::_::File& operator<<(::_::File& o, ::_::Linef item) { return o.Print(item); }
+::_::File& operator<<(::_::File& o, ::_::Repeatf item) { return o.Print(item); }
 ::_::File& operator<<(::_::File& o, ::_::Headingf item) { return o.Print(item); }
 ::_::File& operator<<(::_::File& o, ::_::Indentf item) { return o.Print(item); }
 ::_::File& operator<<(::_::File& o, ::_::Charsf item) { return o.Print(item); }

@@ -7,28 +7,28 @@
 #include "Interrupts.h"
 #include "BOut.hpp"
 #include "Wall.hpp"
-#define ROM_A \
-  typename CHS = CHR, typename ISZ = ISR, typename ISY = ISQ, \
-  typename DT = DTB, typename HSH = IUN
-#define ROM_P CHS, ISZ, ISY, DT, HSH
+#define ROM_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, \
+  typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
+#define ROM_P CHS, CHT, ISZ, ISY, DT, HSH
+#define ROM TRoom<ROM_P>
 namespace _ {
 
   /* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to
   Slot<ISC, TSizeBytes>.  */
-  typedef enum CRRequest {
+  typedef enum {
     CRRequestOpenDoor = 0,
     CRRequestCloseDoor,
     CRRequestConnection,
     CRRequestDisconnect,
     CRRequestInvalid,
-  };
+  } CRRequest;
 
-  typedef enum CRState {
+  typedef enum {
     CRStateBooting = 0,
     CRStateSleeping,
     CRStateShutdown,
     CRStateInvalid
-  };
+  } CRState;
 
   /* Returns an array of pointers to Strings that describe the program states.
    */
@@ -173,16 +173,18 @@ class TRoom : public Operand {
   /* Creates a Room with the given size.
   @param floor Boofer used to create the Wall Stack. Set to NILP to
   enable dynamic memory.
-  @param size  The room size that is bounded between the kMinRoomSize and
+  @param size  The room size that is bounded between the RoomBytesMin and
   RoomTotal. */
-  TRoom(const CHA* room_name = "chinese_room", ISC num_states = 2) : 
+  TRoom(const CHA* room_name = "chinese_room", ISC state_count = 2) :
     state_(1),
     state_count_(state_count < 1 ? 1 : state_count),
-    name_(!room_name ? "Unnamed" : room_name),
     this_(NILP),
     xoff_(NILP),
     device_(NILP),
-    devices_(NILP) {}
+    devices_(NILP) {
+    *name_ = '\0';
+    SetRoomName(room_name);
+  }
 
   /* RAMFactory. */
   virtual ~TRoom() {}
@@ -201,14 +203,13 @@ class TRoom : public Operand {
     if (IsError(name)) {
       return false;
     }
-    delete name_;
-    name_ = StringClone(name);
+		CHR* TSPrint<CHR, CHL>(name_, CrabsRoomNameLengthMax, name);
     return true;
   }
 
   /* Processes a request from another Room.
       @return Returns false upon success and true if there is an error. */
-  CRRequest HandleNextRequest(CRRequest r) { return InvalidRequest; }
+  CRRequest HandleNextRequest(CRRequest r) { return 0; }
 
   /* Clears the log. */
   void ClearLog() {}
@@ -227,32 +228,32 @@ class TRoom : public Operand {
 
   /* Gets the given wall by index.
   @return Nil if the index is invalid  */
-  TWall<ISZ>* GetWall(ISN wall_number) {
+  TWall<ISZ, ISY>* GetWall(ISN wall_number) {
     if (wall_number < 0) return NILP;
     if (wall_number >= walls_->count) return NILP;
-    return TStackGet<Wall*, ISC, ISN>(walls_, wall_number);
+    return TStackGet<TWall<ISZ, ISY>*, ISC, ISB>(walls_, wall_number);
   }
 
   /* Ads a wall to the room.
-  @return The inputed new_wall pointer upon success or nil upon failre. */
-  TWall<ISZ>* AddWall(TWall<ISZ>* new_wall) {
+  @return The inputted new_wall pointer upon success or nil upon failure. */
+  TWall<ISZ, ISY>* AddWall(TWall<ISZ, ISY>* new_wall) {
     if (new_wall == NILP) return NILP;
     if (walls_->count >= walls_->total) return NILP;
-    TStackInsert<Wall*>(walls_, new_wall);
+    TStackInsert<TWall<ISZ, ISY>*, ISC, ISB>(walls_, new_wall);
     return new_wall;
   }
 
   /* Removes the given Wall by index.
   @return False upon failure.  */
   BOL RemoveWall(ISN wall_number) {
-    return TStackRemove<Wall*, ISC, ISN>(walls_, wall_number);
+    return TStackRemove<TWall<ISZ, ISY>*, ISC, ISB>(walls_, wall_number);
   }
 
   /* Gets the entire Room size, including dynamic memory, in bytes. */
-  IUW GetBytes()) {
+  IUW GetBytes() {
     IUW count = FloorSize;
     for (ISN i = 0; i < walls_->count; ++i) {
-      count += TStackGet<Wall*, ISC, ISN>(walls_, i)->GetSizeBytes();
+      //count += TStackGet<TWall<ISZ, ISY>*, ISC, ISB>(walls_, i)->GetSizeBytes();
     }
     // @todo Add all memory we used in bytes here.
     return count;
@@ -319,11 +320,11 @@ class TRoom : public Operand {
     return 1;
   }
 
-  /* Handles Script Commands.
-      @param text     Beginning of the Text socket.
-      @param text_end End of the Text socket.
-      @return Returns nil upon success and an error  upon failure. */
-  virtual CHA CommandNext();
+  /* Handles Crabs Commands.
+  @param text     Beginning of the Text socket.
+  @param text_end End of the Text socket.
+  @return Returns nil upon success and an error  upon failure. */
+  //virtual CHA CommandNext();
 
   /* Crabs operations. */
   virtual const Op* Star(CHC index, Crabs* crabs) {
@@ -333,10 +334,10 @@ class TRoom : public Operand {
 
   switch (index) {
     case '?': {
-      return ExprQuery(crabs, This);
+      return 0;// ExprQuery(crabs, This);
       case 'a': {
         static const Op This = {
-          "FuncionA",
+          "FunctionA",
           OpFirst('A'),
           OpLast('A'),
           "Description of function a.",
@@ -351,15 +352,10 @@ class TRoom : public Operand {
   return 0;
 }
 
-#if USING_CRABS_TEXT == YES_0
-  /* Prints the Room to to the dest. */
-  virtual UTF1& Print(UTF1& dest) { return utf << "\nRoom: "; }
-#endif
-
  protected:
   ISC state_count_,                 //< Number of FSM states.
       state_;                       //< Room state.
-  const CHA* name_;                 //< Room Name.
+  CHR name_[CrabsRoomNameLengthMax];//< Room Name.
   Autoject walls_;                  //< Walls in the Room.
   Crabs* expr_;                     //< Current Crabs being executed.
                                     //< DC1: this.
@@ -383,8 +379,6 @@ class TRoom : public Operand {
     return true;
   }
 };
-
-#define ROM TRoom<ROM>
 
 }  //< namespace _
 #endif

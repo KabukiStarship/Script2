@@ -13,8 +13,8 @@ namespace CRTest {
 static const CHA* Room(const CHA* args) {
 #if SEAM == CRABS_ROOM
   A_TEST_BEGIN;
-  //Room room_a, //
-  //     room_b;
+  //TRoom<> room_a, //
+  //        room_b;
 #endif
   return NILP;
 }

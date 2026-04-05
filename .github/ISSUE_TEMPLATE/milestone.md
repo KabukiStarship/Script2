@@ -7,12 +7,12 @@ assignees: ''
 ---
 <https://github.com/AStarStarship/Crabs/milestone/N>
 
-### Todo
+## Todo
 
-#### Mandatory
+### Mandatory
 
 1. Foo.
 
-#### Discretionary
+### Discretionary
 
 1. Bar.

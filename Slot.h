@@ -38,7 +38,7 @@ struct Slot {
   inline BOL Set(IUW* socket, IUW size);
 
   /* Checks if this slot contains the given address.
-  @return Returns inputed address if this Slot contains the given address
+  @return Returns inputted address if this Slot contains the given address
   and nil else wise. */
   void* Contains(void* address);
 

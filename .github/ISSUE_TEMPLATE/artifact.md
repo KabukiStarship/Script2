@@ -11,8 +11,4 @@ The artifact that is left over from a change is...
 
 ## Files Affected
 
-1. `*.*
-
-## A
-
-
+1. `?`
