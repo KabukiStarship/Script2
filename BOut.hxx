@@ -92,7 +92,7 @@ ISN BOutStreamByte(BOut* bout) {
                                     : (end - origin) + (open - origin) + 2;
 
   if (length < 1) {
-    BOutError(bout, ErrorBooferOverflow, TTSQ<STR_>(), 2, origin);
+    BOutError(bout, AErrorBooferOverflow, TTSQ<STR_>(), 2, origin);
     return -1;
   }
   //IUA b = *cursor;
@@ -158,7 +158,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 
   // Check if the socket has enough room.
   if (space == 0) {
-    return BOutError(bout, ErrorBooferOverflow);
+    return BOutError(bout, AErrorBooferOverflow);
   }
   --space;
   length = params[0];  //< Load the max IUA length.
@@ -173,7 +173,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
     if (type <= _CHA) {
      #ifdef USING_CRABS_1_BYTE_TYPES
       if (space-- <= 0)
-        return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
+        return BOutError(bout, AErrorBooferOverflow, params, index, nullptr);
 
       // Load pointer and read data to write.
       iua_ptr = TPtr<const IUA>(args[arg_index]);
@@ -185,12 +185,12 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       if (++stop >= stop) stop -= bytes;
       break;
      #else
-      return BOutError(bout, ErrorInvalidType);
+      return BOutError(bout, AErrorInvalidType);
      #endif
     } else if (type <= _CHB) {
      #ifdef USING_CRABS_2_BYTE_TYPES
       if (space < sizeof(IUB))
-        return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
+        return BOutError(bout, AErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUB);
 
       // Load pointer and value to write.
@@ -212,12 +212,12 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       hash = HashIUB(iua, hash);
       break;
      #else
-      return BOutError(bout, ErrorInvalidType);
+      return BOutError(bout, AErrorInvalidType);
      #endif  // USING_CRABS_4_BYTE_TYPES
     } else if (type <= _CHC) {
      #ifdef USING_CRABS_4_BYTE_TYPES
       if (space < sizeof(IUD))
-        return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
+        return BOutError(bout, AErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUD);
 
       // Load pointer and value to write.
@@ -233,12 +233,12 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       }
       break;
      #else
-      return BOutError(bout, ErrorInvalidType);
+      return BOutError(bout, AErrorInvalidType);
      #endif            //< USING_CRABS_4_BYTE_TYPES
-    } else if (type <= _TME) {
+    } else if (type <= _SSE) {
      #ifdef USING_CRABS_8_BYTE_TYPES
       if (space < sizeof(IUD))
-        return BOutError(bout, ErrorBooferOverflow, params, index, nullptr);
+        return BOutError(bout, AErrorBooferOverflow, params, index, nullptr);
       space -= sizeof(IUD);
 
       // Load pointer and value to write.
@@ -254,7 +254,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
       }
       break;
 #else
-      return BOutError(bout, ErrorInvalidType);
+      return BOutError(bout, AErrorInvalidType);
 #endif            //< USING_CRABS_8_BYTE_TYPES
     }
 //#if CPU_SIZE <= 16
@@ -273,13 +273,13 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //        // Load next pointer value to write.
 //        iub_ptr = TPtr<const IUB>(args[arg_index]);
 //        if (iub_ptr == NILP)
-//          return BOutError(bout, ErrorImplementation, params, index, start);
+//          return BOutError(bout, AErrorImplementation, params, index, start);
 //        iub = *iub_ptr;
 //
 //      WriteVarint2 : {
 //        // Byte 1
 //        if (space-- == 0)
-//          return BOutError(bout, ErrorBooferOverflow, params, index, start);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, start);
 //        iua = iub & 0x7f;
 //        iub = iub >> 7;
 //        if (iub == 0) {
@@ -295,7 +295,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //
 //        // Byte 2
 //        if (--space == 0)
-//          return BOutError(bout, ErrorBooferOverflow, params, index, start);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, start);
 //        iua = iub & 0x7f;
 //        iub = iub >> 7;
 //        if (iub == 0) {
@@ -311,7 +311,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //
 //        // Byte 3
 //        if (--space == 0)
-//          return BOutError(bout, ErrorBooferOverflow, params, index, start);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, start);
 //        iua = iub & 0x7f;
 //        iua |= 0x80;
 //        *end = iua;
@@ -332,7 +332,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //      WriteVarint4 : {  //< Optimized manual do while loop.
 //        iub = 5;
 //        if (space == 0)  //< @todo Benchmark to space--
-//          return BOutError(bout, ErrorBooferOverflow, params, index, origin);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, origin);
 //        --space;  //< @todo Benchmark to space--
 //        iua = iuc & 0x7f;
 //        iuc = iuc >> 7;
@@ -348,7 +348,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //        hash = HashIUB(iua, hash);
 //        // This wont happen I don't think.
 //        // if (--iub == 0)
-//        //    return BOutError (ErrorVarintOverflow, params, index,
+//        //    return BOutError (AErrorVarintOverflow, params, index,
 //        //                       origin);
 //
 //        goto WriteVarint4;
@@ -358,7 +358,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //        // Align the socket to a word boundary and check if the socket
 //        // has enough room.
 //        if (space < sizeof(IUD))
-//          return BOutError(bout, ErrorBooferOverflow, params, index, origin);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, origin);
 //        space -= sizeof(IUD);
 //
 //        // Load pointer and value to write.
@@ -388,7 +388,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //      WriteVarint8 : {     //< Optimized manual do while loop.
 //        iub = 8;           //< The max number_ of varint bytes - 1.
 //        if (space <= 9) {  //< @todo Benchmark to space--
-//          return BOutError(bout, ErrorBooferOverflow, params, index, origin);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, origin);
 //        }
 //        --space;           //< @todo Benchmark to space--
 //        if (--iub == 0) {  //< It's the last IUA not term bit.
@@ -420,7 +420,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //
 //      case _VSD:
 //      case _VUD:
-//        return BOutError(bout, ErrorInvalidType);
+//        return BOutError(bout, AErrorInvalidType);
 //#endif
 //      default: {
 //        value = type >> 5;
@@ -428,7 +428,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //        if (block_type == _ARY) {
 //          //D_COUT("\nPrinting string.");
 //          if (space == 0)
-//            return BOutError(bout, ErrorBooferOverflow, params, index,
+//            return BOutError(bout, AErrorBooferOverflow, params, index,
 //                              begin);
 //          if (type != _ADR) {
 //            // We might not need to write anything if it's an _ADR with
@@ -446,7 +446,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //          iua = *iua_ptr;
 //          while (iua != 0) {
 //            if (space-- == 0)
-//              return BOutError(bout, ErrorBooferOverflow, params, index,
+//              return BOutError(bout, AErrorBooferOverflow, params, index,
 //                                begin);
 //            hash = HashIUB(iua, hash);
 //
@@ -465,26 +465,26 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //          break;
 //        }
 //        if ((type >> 5) && type > _OBJ) {
-//          return BOutError(bout, ErrorImplementation, params, index);
+//          return BOutError(bout, AErrorImplementation, params, index);
 //        }
 //        if ((type >> 7) && ((type & 0x1f) >= _OBJ)) {
 //          // Cannot have multi-dimensional arrays of objects!
 //          type &= 0x1f;
-//          return BOutError(bout, ErrorImplementation, params, index, begin);
+//          return BOutError(bout, AErrorImplementation, params, index, begin);
 //        }
 //        type = type & 0x1f;  //< Mask off lower 5 bits.
 //        switch (value) {
 //          case 0: {
 //            iua_ptr = TPtr<const IUA>(args[arg_index]);
 //            if (iua_ptr == NILP)
-//              return BOutError(bout, ErrorImplementation, params, index,
+//              return BOutError(bout, AErrorImplementation, params, index,
 //                               begin);
 //          }
 //#if USING_CRABS_2_BYTE_TYPES
 //          case 1: {
 //            iub_ptr = TPtr<const IUB>(args[arg_index]);
 //            if (iub_ptr == NILP)
-//              return BOutError(bout, ErrorImplementation, params, index,
+//              return BOutError(bout, AErrorImplementation, params, index,
 //                               origin);
 //            iub = *iub_ptr;
 //            length = static_cast<ISN>(iub);
@@ -495,7 +495,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //          case 2: {
 //            iuc_ptr = TPtr<const IUC>(args[arg_index]);
 //            if (iuc_ptr == NILP)
-//              return BOutError(bout, ErrorImplementation, params, index,
+//              return BOutError(bout, AErrorImplementation, params, index,
 //                               origin);
 //            iuc = *iuc_ptr;
 //            length = static_cast<ISN>(iuc);
@@ -506,7 +506,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //          case 3: {
 //            iud_ptr = TPtr<const IUD>(args[arg_index]);
 //            if (iud_ptr == NILP)
-//              return BOutError(bout, ErrorImplementation, params, index,
+//              return BOutError(bout, AErrorImplementation, params, index,
 //                               origin);
 //            iud = *iud_ptr;
 //            length = static_cast<ISN>(iud);
@@ -516,11 +516,11 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //          default: {
 //            // This wont happen due to the & 0x3 bit mask
 //            // but it stops the compiler from barking.
-//            return BOutError(bout, ErrorImplementation, params, index, begin);
+//            return BOutError(bout, AErrorImplementation, params, index, begin);
 //          }
 //        }
 //        if (space < length) {
-//          return BOutError(bout, ErrorBooferOverflow, params, index, begin);
+//          return BOutError(bout, AErrorBooferOverflow, params, index, begin);
 //        }
 //        if (length == 0) {
 //          break;  //< Not sure if this is an error.
@@ -553,7 +553,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
 //    ++arg_index;
   }
   if (space < 3)
-    return BOutError(bout, ErrorBooferOverflow, params, index, begin);
+    return BOutError(bout, AErrorBooferOverflow, params, index, begin);
   // space -= 2;   //< We don't need to save this variable.
   *end = IUA(hash);
   if (++end >= end) end -= bytes;

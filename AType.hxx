@@ -133,8 +133,8 @@ ISA ATypeSizeOfPOD(DTB type) {
   if (type <= _CHA) return 1;
   if (type <= _CHB) return 2;
   if (type <= _CHC) return 4;
-  if (type <= _TMD) return 8;
-  if (type <= _TME) return 16;
+  if (type <= _SSD) return 8;
+  if (type <= _SSE) return 16;
 #if USING_CT5
   if (type <= _CT5) return 16;
 #endif
@@ -540,7 +540,7 @@ void ATypeValue::SetNIL(IUW value) {
 }
 
 inline void* ATypeValue::Set(void* value) {
-  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(_PTR);
   value_ = IUW(value);
   return NILP;
@@ -548,14 +548,14 @@ inline void* ATypeValue::Set(void* value) {
 
 inline const void* ATypeValue::Set(const void* value)
 {
-  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(_PTR);
   value_ = IUW(value);
   return NILP;
 }
 
 inline void* ATypeValue::Set(void* base_ptr, ISW voffset) {
-  if (IsError(base_ptr)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(base_ptr)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(_PTR);
   value_ = IUW(ISW(base_ptr) + voffset);
   return NILP;
@@ -563,14 +563,15 @@ inline void* ATypeValue::Set(void* base_ptr, ISW voffset) {
 
 inline const void* ATypeValue::Set(const void* base_ptr, ISW voffset)
 {
-  if (IsError(base_ptr)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(base_ptr)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(_PTR);
   value_ = IUW(ISW(base_ptr) + voffset);
   return NILP;
 }
 
 inline void* ATypeValue::Set(DTW type, void* value) {
-  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value))
+    D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(value);
   vmsb_  = 0;
@@ -579,7 +580,7 @@ inline void* ATypeValue::Set(DTW type, void* value) {
 
 inline const void* ATypeValue::Set(DTW type, const void* value)
 {
-  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(value);
   vmsb_ = 0;
@@ -587,21 +588,21 @@ inline const void* ATypeValue::Set(DTW type, const void* value)
 }
 
 inline void* ATypeValue::Set(DTW type, void* base_ptr, ISW voffset) {
-  if (IsError(base_ptr) || voffset < 0) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(base_ptr) || voffset < 0) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(ISW(base_ptr) + voffset);
   return NILP;
 }
 
 inline const void* ATypeValue::Set(DTW type, const void* base_ptr, ISW voffset) {
-  if (IsError(base_ptr) || voffset < 0) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(base_ptr) || voffset < 0) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(ISW(base_ptr) + voffset);
   return NILP;
 }
 
 inline void* ATypeValue::Set(DTW type, void* value, void* value_end) {
-  if (IsError(value) || IsError(value_end)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value) || IsError(value_end)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(value);
   vmsb_ = IUW(value_end);
@@ -610,7 +611,7 @@ inline void* ATypeValue::Set(DTW type, void* value, void* value_end) {
 
 inline const void* ATypeValue::Set(DTW type, const void* value, 
                                    const void* value_end) {
-  if (IsError(value) || IsError(value_end)) D_RETURN_TPTR_ERROR(void, -ErrorParamPointer);
+  if (IsError(value) || IsError(value_end)) D_RETURN_TPTR_ERROR(void, -AErrorParamPointer);
   ATypeMakePtr(type);
   value_ = IUW(value);
   vmsb_ = IUW(value_end);
@@ -745,8 +746,8 @@ DTB ATypeRemapEP(DTW sw_vt_bits, DTW pod_type, DTD ep_remap) {
 DTW ACTXHandlerDefault(void* begin, void* end, DTW type, IUW value, IUW vmsb) {
   static const IUD Map = (IUD(_ISA) << _PCaBit0) | (IUD(_ISA) << _PCbBit0) |
     (IUD(_CHC) << _PCcBit0) | (IUD(_FPD) << _PCdBit0) |
-    (IUD(_TMD) << _PCeBit0) | (IUD(_TME) << _PCfBit0) |
-    (IUD(_FPE) << _PCgBit0) | (IUD(_TME) << _PChBit0) |
+    (IUD(_SSD) << _PCeBit0) | (IUD(_SSE) << _PCfBit0) |
+    (IUD(_FPE) << _PCgBit0) | (IUD(_SSE) << _PChBit0) |
     (IUD(_IUD) << _PCiBit0) | (IUD(_IUE) << _PCjBit0) |
     (IUD(_IUE) << _PCkBit0) | (IUD(_IUE) << _PClBit0);
   static CHR PCStrings[12][4]{

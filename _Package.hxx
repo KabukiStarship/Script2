@@ -14,6 +14,7 @@
 #include "MorseCode.hxx"
 #include "Op.hxx"
 #include "Operand.hxx"
+#include "Promise.hxx"
 #include "Puff.hxx"
 #include "RNG.hxx"
 #include "Slot.hxx"

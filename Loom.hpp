@@ -272,12 +272,12 @@ ISY TLoomInsert(TLoom<LOM_P>* loom, const CH* element, ISY index = PSH) {
   D_ASSERT(loom);
   D_ASSERT(element);
   if (IsError(loom) || IsError(element))
-    return -ErrorInvalidInput;
+    return -AErrorInvalidInput;
   ISY count = ISY(loom->map.count),
       total = ISY(loom->map.total);
   if (count >= total) {
     D_COUT("\n\nERROR: count:" << count << " total:" << total);
-    return -ErrorInvalidInput;
+    return -AErrorInvalidInput;
   }
   D_ASSERT(count >= 0);
   CHS* cursor = NILP;

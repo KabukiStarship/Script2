@@ -101,7 +101,7 @@ void* TBSeqWrite_NC(void* begin, void* end, DTB type, IUW value,
                 : IUC(value);
     return ptr;
   }
-  if (type <= _TMD) {
+  if (type <= _SSD) {
    Write8Bytes:
     if (freespace < 8) return NILP;
     auto ptr = TPtr<IUD>(begin);
@@ -109,7 +109,7 @@ void* TBSeqWrite_NC(void* begin, void* end, DTB type, IUW value,
                 : IUD(value);
     return ptr;
   }
-  if (type <= _TME) {
+  if (type <= _SSE) {
    Write16Bytes:
     if (freespace < 16) return NILP;
     auto dcursor = TPtr<IUW>(begin);

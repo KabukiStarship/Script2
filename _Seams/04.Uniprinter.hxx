@@ -341,7 +341,7 @@ static const CHA* TestATypeEXT() {
 
   D_COUT("\nTesting Block F.Bottom...");
   for (DTB sw_vt = 1; sw_vt <= 3; ++sw_vt) {
-    for (DTB pod = _FPD; pod <= _TME; ++pod)
+    for (DTB pod = _FPD; pod <= _SSE; ++pod)
       A_AVOW(t--, ATypeToEXT(sw_vt, pod));
   }
   D_COUT("\nTesting Block H...");
@@ -351,7 +351,7 @@ static const CHA* TestATypeEXT() {
     A_AVOW(t--, ATypeToEXT(5, pod));
 
   D_COUT("\nTesting Block F.Top...");
-  for (DTB pod = _FPD; pod <= _TME; ++pod)
+  for (DTB pod = _FPD; pod <= _SSE; ++pod)
     A_AVOW(t--, ATypeToEXT(5, pod));
 
   D_COUT("\nTesting Block G...");
@@ -369,12 +369,12 @@ static const CHA* TestATypeEXT() {
     _CHB,
     _PCl,
     _CHB,
-    _TME,
-    _TME,
+    _SSE,
+    _SSE,
     _PCl,
-    _TME,
-    _TME,
-    _TME,
+    _SSE,
+    _SSE,
+    _SSE,
     _PCl,
     _PCl,
     _PCl,
@@ -387,7 +387,7 @@ static const CHA* TestATypeEXT() {
       A_AVOW(DTB(0), ATypeToEXT(sw_vt, pod));
     }
     if(sw_vt < 12 && sw_vt & 3) {
-      for (; pod <= _TME; ++pod) {
+      for (; pod <= _SSE; ++pod) {
         if (!(sw_vt == 1 && pod == _FPD)) {
           DTB result = ATypeToEXT(sw_vt, pod);
           A_ASSERT(result < 0);

@@ -191,7 +191,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
 
     switch (type) {
       case _NIL:
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
       case _ADR:  //< _R_e_a_d__S_t_r_i_n_g_-_1_______________
       //case STR_:
         // Load boofered-type argument length and increment the
@@ -215,7 +215,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
 
         while (iua && count) {
           if (count-- == 0)
-            return ReturnError(this, ErrorBooferUnderflow, params, index,
+            return ReturnError(this, AErrorBooferUnderflow, params, index,
                                l_start);
           D_COUT(iua);
 
@@ -235,7 +235,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
       case _IUA:
 #ifdef USING_CRABS_1_BYTE_TYPES
         if (length == 0) {
-          return ReturnError(this, ErrorBooferUnderflow, params, index,
+          return ReturnError(this, AErrorBooferUnderflow, params, index,
                              l_start);
         }
         --length;
@@ -256,7 +256,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         }
         break;
 #else
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
 #endif
       case _ISB:  //< _R_e_a_d__1_6_-_b_i_t__T_y_p_e_s__________
       case _IUB:
@@ -266,7 +266,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         // Word-align
         offset = AlignUpB(l_start);
         if (IUW(length) < offset + 2) {
-          return ReturnError(this, ErrorBooferUnderflow, params, index,
+          return ReturnError(this, AErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= (ISC)offset + 2;
@@ -290,12 +290,12 @@ const Op* Slot::Read(const DTB* params, void** args) {
         //}
         break;
 #else
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
 #endif
 #if USING_CRABS_VARINT2
         goto Read2ByteType;
 #else
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
 #endif
 #if CPU_SIZE > 16
       case SVI:
@@ -309,7 +309,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         // Word-align
         offset = AlignUpC(l_start);
         if (length < offset + 4) {
-          return ReturnError(this, ErrorBooferUnderflow, params, index,
+          return ReturnError(this, AErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= ISC(offset + 4);
@@ -333,18 +333,18 @@ const Op* Slot::Read(const DTB* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
 #endif
       case _ISD:  //< _R_e_a_d__6_4_-_b_i_t__T_y_p_e_s__________
       case _IUD:
       case _FPD:
-      case _TMD:
+      case _SSD:
 #ifdef USING_CRABS_8_BYTE_TYPES
         // Read8ByteType:{
         // Word-align
         offset = ISC(AlignUpD(l_start));
         if (IUW(length) < offset + sizeof(ISD)) {
-          return ReturnError(this, ErrorBooferUnderflow, params, index,
+          return ReturnError(this, AErrorBooferUnderflow, params, index,
                              l_start);
         }
         length -= offset + sizeof(ISD);
@@ -366,7 +366,7 @@ const Op* Slot::Read(const DTB* params, void** args) {
         break;
 //}
 #else
-        return ReturnError(this, ErrorInvalidType);
+        return ReturnError(this, AErrorInvalidType);
 #endif
       default: {
 #if USING_CRABS_OBJ
@@ -374,19 +374,19 @@ const Op* Slot::Read(const DTB* params, void** args) {
         type &= 0x1f;       //< Now type is the type 0-31
         if (count && (type >= _OBJ)) {
           // Can't make arrays out of objects!
-          return ReturnError(this, ErrorInvalidType, params, index, l_start);
+          return ReturnError(this, AErrorInvalidType, params, index, l_start);
         }
         // We don't care if it's a multidimensional array anymore.
         iua_ptr = TPtr<IUA>(args[index]);
         if (iua_ptr == NILP)
-          return ReturnError(this, ErrorImplementation, params, index,
+          return ReturnError(this, AErrorImplementation, params, index,
                              l_start);
         count &= 0x3;
         switch (count) {
           case 0: {  // It's a 8-bit count.
             if (type >= _LST) {
               // _LST, kBOK, kDIC, and _MAP can't be 8-bit!
-              return ReturnError(this, ErrorInvalidType, params, index,
+              return ReturnError(this, AErrorInvalidType, params, index,
                                  l_start);
             }
             count = (IUW)*iua_ptr;
@@ -394,57 +394,57 @@ const Op* Slot::Read(const DTB* params, void** args) {
           }
           case 1: {  // It's a 16-bit count.
             if (length < 3) {
-              return ReturnError(this, ErrorBooferUnderflow, params, index,
+              return ReturnError(this, AErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 2;
             iub_ptr = TPtr<IUB>(iua_ptr);
             count = (IUW)*iub_ptr;
             if (count > length) {
-              return ReturnError(this, ErrorBooferOverflow, params, index,
+              return ReturnError(this, AErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 2: {  // It's a 32-bit count.
             if (length < 5) {
-              return ReturnError(this, ErrorBooferUnderflow, params, index,
+              return ReturnError(this, AErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 4;
             iuc_ptr = TPtr<IUC>(iua_ptr);
             count = (IUW)*iuc_ptr;
             if (count > length) {
-              return ReturnError(this, ErrorBooferOverflow, params, index,
+              return ReturnError(this, AErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           case 3: {  // It's a 64-bit count.
             if (length < 9) {
-              return ReturnError(this, ErrorBooferUnderflow, params, index,
+              return ReturnError(this, AErrorBooferUnderflow, params, index,
                                  l_start);
             }
             count -= 8;
             iud_ptr = TPtr<IUD>(iua_ptr);
             count = (IUW)*iud_ptr;
             if (count > length) {
-              return ReturnError(this, ErrorBooferOverflow, params, index,
+              return ReturnError(this, AErrorBooferOverflow, params, index,
                                  l_start);
             }
             break;
           }
           default: {
-            return ReturnError(this, ErrorImplementation, params, index,
+            return ReturnError(this, AErrorImplementation, params, index,
                                l_start);
           }
         }
         if (length < count) {
-          return ReturnError(this, ErrorBooferOverflow, params, index,
+          return ReturnError(this, AErrorBooferOverflow, params, index,
                              l_start);
         }
         if (!count) {
-          return ReturnError(this, ErrorBooferOverflow, params, index,
+          return ReturnError(this, AErrorBooferOverflow, params, index,
                              l_start);
         }
         if (l_start + count >= l_end) {

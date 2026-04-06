@@ -257,7 +257,7 @@ constexpr ISN TBitCode() {
   if (dt <= _CHA) return 0;
   if (dt <= _CHB) return 1;
   if (dt <= _CHC) return 2;
-  if (dt <= _TMD) return 3;
+  if (dt <= _SSD) return 3;
   if (dt <= _ISE) return 4;
   if (dt <= _ECE) return 4;
   if (dt <= _ECD) return 3;

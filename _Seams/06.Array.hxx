@@ -41,7 +41,7 @@ static const CHA* Array(const CHA* args) {
   for (ISN s_offset = 0; s_offset < OffsetMax; ++s_offset) {
     // Create an array of bytes valued sequentially 0 through 255.
     // i is the offset of the source array and d_offset is the offset of the 
-    // desination array so we can check all memory alignment configurations.
+    // destination array so we can check all memory alignment configurations.
     IUA* cursor  = TPtr<IUA>(source),
        * s_end   = cursor + BooferSizeBytes,
        * s_start = TPtr<IUA>(source) + s_offset;
@@ -50,7 +50,7 @@ static const CHA* Array(const CHA* args) {
     for (ISN i = 0; i < TestByteCount; ++i) *cursor++ = ISA(i);
     while (cursor < s_end) *cursor++ = 0;
     //D_COUT(Charsf(source, cBooferSizeBytes));
-    // Copy those bytes into a boofer with an offset to exaustly test each 
+    // Copy those bytes into a boofer with an offset to exhaustively test each 
     // memory layout variation modulo the word size.
     for (ISN d_offset = 0; d_offset < OffsetMax; ++d_offset) {
       cursor = TPtr<IUA>(destination);

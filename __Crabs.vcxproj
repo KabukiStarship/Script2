@@ -87,6 +87,8 @@
     <ClInclude Include="Op.hxx" />
     <ClInclude Include="Operand.h" />
     <ClInclude Include="Operand.hxx" />
+    <ClInclude Include="Promise.h" />
+    <ClInclude Include="Promise.hxx" />
     <ClInclude Include="Puff.h" />
     <ClInclude Include="Puff.hpp" />
     <ClInclude Include="Puff.hxx" />
@@ -118,12 +120,12 @@
     <ClInclude Include="_Package.hxx" />
     <ClInclude Include="_Release.h" />
     <ClInclude Include="_Seams\01.COut.hxx" />
-    <ClInclude Include="_Seams\18.RNG.hxx" />
     <ClInclude Include="_Seams\02.ItoS.hxx" />
     <ClInclude Include="_Seams\03.FtoS.hxx" />
     <ClInclude Include="_Seams\04.Uniprinter.hxx" />
     <ClInclude Include="_Seams\05.Clock.hxx" />
     <ClInclude Include="_Seams\06.Array.hxx" />
+    <ClInclude Include="_Seams\06.UUID.hxx" />
     <ClInclude Include="_Seams\07.Stack.hxx" />
     <ClInclude Include="_Seams\08.String.hxx" />
     <ClInclude Include="_Seams\09.Loom.hxx" />
@@ -135,10 +137,12 @@
     <ClInclude Include="_Seams\15.CrabsOp.hxx" />
     <ClInclude Include="_Seams\16.Room.hxx" />
     <ClInclude Include="_Seams\17.MathCore.hxx" />
+    <ClInclude Include="_Seams\18.RNG.hxx" />
     <ClInclude Include="_Seams\19.File.hxx" />
     <ClInclude Include="_Seams\20.SGraTe.hxx" />
-    <ClInclude Include="_Seams\21.CrabsScript.hxx" />
-    <ClInclude Include="_Seams\22.Release.hxx" />
+    <ClInclude Include="_Seams\22.CrabsScript.hxx" />
+    <ClInclude Include="_Seams\23.Release.hxx" />
+    <ClInclude Include="_Seams\21.Promise.hxx" />
     <ClInclude Include="_Seams\pch.h" />
     <ClInclude Include="_Seams\TestWords.h" />
     <ClInclude Include="_Seams\_Config.h" />
@@ -147,72 +151,19 @@
     <ClInclude Include="_Undef.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="AGENTS.md" />
     <None Include="ReadMe.md" />
-    <None Include="_Seams\21.Seam.s2" />
-    <None Include="_Spec\Addressing\PolarRouting.md" />
-    <None Include="_Spec\Addressing\ReadMe.md" />
-    <None Include="_Spec\Addressing\UniversalAddressFormat.md" />
-    <None Include="_Spec\Crabs\AbnormalBehaviors.md" />
-    <None Include="_Spec\Crabs\Authentication.md" />
-    <None Include="_Spec\Crabs\Autojects.md" />
-    <None Include="_Spec\Crabs\ConformanceTargets.md" />
-    <None Include="_Spec\Crabs\ExpressionMappings.md" />
-    <None Include="_Spec\Crabs\Messages.md" />
-    <None Include="_Spec\Crabs\Portals.md" />
-    <None Include="_Spec\Crabs\ReadMe.md" />
-    <None Include="_Spec\Crabs\RoomContents.md" />
-    <None Include="_Spec\Data\BSequences.md" />
-    <None Include="_Spec\Data\ExtendedTypes.md" />
-    <None Include="_Spec\Data\MapTypes\Array.md" />
-    <None Include="_Spec\Data\MapTypes\Book.md" />
-    <None Include="_Spec\Data\MapTypes\Dictionary.md" />
-    <None Include="_Spec\Data\MapTypes\EscapeSequences.md" />
-    <None Include="_Spec\Data\MapTypes\List.md" />
-    <None Include="_Spec\Data\MapTypes\Loom.md" />
-    <None Include="_Spec\Data\MapTypes\Map.md" />
-    <None Include="_Spec\Data\MapTypes\Matrix.md" />
-    <None Include="_Spec\Data\MapTypes\ReadMe.md" />
-    <None Include="_Spec\Data\MapTypes\Socket.md" />
-    <None Include="_Spec\Data\MapTypes\Stack.md" />
-    <None Include="_Spec\Data\MapTypes\Strings.md" />
-    <None Include="_Spec\Data\MapTypes\Table.md" />
-    <None Include="_Spec\Data\MapTypes\Tuples.md" />
-    <None Include="_Spec\Data\Numbers.md" />
-    <None Include="_Spec\Data\ReadMe.md" />
-    <None Include="_Spec\Data\Strings.md" />
-    <None Include="_Spec\Data\Timestamps.md" />
-    <None Include="_Spec\Data\TypeAliases.md" />
-    <None Include="_Spec\Data\Types.md" />
-    <None Include="_Spec\DNS\DNSCaching.md" />
-    <None Include="_Spec\DNS\ICAN3DNSAuthority.md" />
-    <None Include="_Spec\DNS\InternetGuilds.md" />
-    <None Include="_Spec\DNS\KeyPromotion.md" />
-    <None Include="_Spec\DNS\ReadMe.md" />
-    <None Include="_Spec\Overview\ChineseRoomObjects.md" />
-    <None Include="_Spec\Overview\ReadMe.md" />
-    <None Include="_Spec\Overview\Requirements.md" />
-    <None Include="_Spec\Overview\Terminology.md" />
-    <None Include="_Spec\Protocol\AbnormalBehavior.md" />
-    <None Include="_Spec\Protocol\CongestionControlTable.md" />
-    <None Include="_Spec\Protocol\Expressions.md" />
-    <None Include="_Spec\Protocol\GenericHandshake.md" />
-    <None Include="_Spec\Protocol\GroupAutomata.md" />
-    <None Include="_Spec\Protocol\QualityOfService.md" />
-    <None Include="_Spec\Protocol\ReadMe.md" />
-    <None Include="_Spec\Protocol\Slots.md" />
-    <None Include="_Spec\Protocol\Terminals.md" />
-    <None Include="_Spec\Protocol\Time.md" />
-    <None Include="_Spec\ReadMe.md" />
+    <None Include="Tasks.json" />
+    <None Include="_Seams\22.Seam.s2" />
+    <None Include="_Seams\ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="_Seams\__Crabs.cpp" />
+    <Text Include="CMakeLists.txt" />
+    <Text Include="_Seams\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="_Seams\_Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="_Spec\Protocol\ExpressionScannerFSM.jpg" />
+    <ClCompile Include="_Seams\__Crabs.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

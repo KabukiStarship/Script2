@@ -321,17 +321,17 @@ template<SCK_A>
 inline ISY TStackInsert(T* begin, ISY total, ISY count, T item, ISY index = PSH) {
   if (index < 0) index = count;
   if (index >= total || total < 0 || count < 0 || count >= total)
-    return -ErrorInvalidIndex;
+    return -AErrorInvalidIndex;
   TArrayInsert_NC<SCK_P>(begin, count, item);
   return index;
 }
 template<SCK_A>
 inline ISY TStackInsert(SCK* stack, T item, ISY index = PSH) {
   //D_CHECK_PTR_TRETURN(ISY, stack);
-  if (index < PSH) return -ErrorInvalidIndex;
+  if (index < PSH) return -AErrorInvalidIndex;
   ISY count = ISY(stack->count),
       total = ISY(stack->total);
-  if (count >= total) return -ErrorStackOverflow;
+  if (count >= total) return -AErrorStackOverflow;
   if (index == PSH) index = count;
   D_COUT("  Pushing:" << item << " total:" << total << " count:" << count);
   D_COUT("\n| Before:" << Charsf(stack, TStackSizeOf<SCK_P>(total)));
@@ -347,8 +347,8 @@ inline ISY TStackInsert(SCK* stack, T item, ISY index = PSH) {
 template<SCK_A>
 inline ISY TStackInsertDown(T* start, ISY total, ISY count, T item, 
   ISY index = PSH) {
-  if (count >= total) return -ErrorStackOverflow;
-  if (index > 0) return -ErrorInvalidIndex;
+  if (count >= total) return -AErrorStackOverflow;
+  if (index > 0) return -AErrorInvalidIndex;
   TArrayInsertDown_NC<T, ISZ>(start, count, item);
   return index;
 }
@@ -522,7 +522,7 @@ class AStack {
   @param item  The item to push onto the obj. */
   inline ISZ Insert(T item, ISY index = PSH) {
     SCK* src = This();
-    if (index > src->total) return -ErrorInvalidIndex;
+    if (index > src->total) return -AErrorInvalidIndex;
     Autoject& ajt = AJT();
   Insert:
     ISZ result = TStackInsert<SCK_P>(src, item, index);
@@ -631,7 +631,7 @@ class AStack {
     if (this_total <= 0 || src_total <= 0 ||
         this_count <  0 || src_count <  0 ||
         this_count > this_total || src_count > src_total) {
-      return TPtr<SCK>(ErrorInvalidInput);
+      return TPtr<SCK>(AErrorInvalidInput);
     }
     ISZ count_new = src_count + this_count;
     if (count_new > this_total) {

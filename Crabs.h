@@ -47,7 +47,7 @@ that grows down.
 0xN +-------------------------+
 @endcode
 */
-struct Crabs {
+struct alignas(ACPUCacheLineSize) Crabs {
 
   enum {
     StackTotalMin  = 8, //< Size of the crabs stack.
@@ -208,6 +208,51 @@ const Op* CrabsQuery(Crabs* crabs, const Op& header, IUD pc_ctx);
 @param op    The Op header.
 @return Returns the header if crabs is nil. */
 const Op* CrabsQuery(Crabs* crabs, const Op* op, IUD pc_ctx);
+
+/* Creates a new promise context.
+@param crabs The Crabs machine.
+@param timestamp Unix epoch (TMC) for when promise was created.
+@return Returns a pointer to the newly created promise Slot, or nil on error. */
+Slot* CrabsCreatePromise(Crabs* crabs, TMC timestamp);
+
+/* Resolves a promise with a value.
+@param crabs The Crabs machine.
+@param promise_slot The promise Slot to resolve.
+@param value Pointer to the result value.
+@return Returns nil upon success or an Error Op upon failure. */
+const Op* CrabsResolvePromise(Crabs* crabs, Slot* promise_slot, void* value);
+
+/* Rejects a promise with an error reason.
+@param crabs The Crabs machine.
+@param promise_slot The promise Slot to reject.
+@param error Pointer to the error reason.
+@return Returns nil upon success or an Error Op upon failure. */
+const Op* CrabsRejectPromise(Crabs* crabs, Slot* promise_slot, void* error);
+
+/* Attaches a fulfillment handler to a promise (.then()).
+@param crabs The Crabs machine.
+@param promise_slot The promise Slot.
+@param onFulfilledKey The key for the fulfillment callback operand.
+@return Returns nil upon success or an Error Op upon failure. */
+const Op* CrabsThenPromise(Crabs* crabs, Slot* promise_slot, CHA* onFulfilledKey);
+
+/* Attaches a rejection handler to a promise (.catch()).
+@param crabs The Crabs machine.
+@param promise_slot The promise Slot.
+@param onRejectedKey The key for the rejection callback operand.
+@return Returns nil upon success or an Error Op upon failure. */
+const Op* CrabsCatchPromise(Crabs* crabs, Slot* promise_slot, CHA* onRejectedKey);
+
+/* Reads a promise from a BIn socket.
+@param bin The BIn socket to read from.
+@return Returns the promise state word (0=pending, 1=fulfilled, 2=rejected). */
+IUW CrabsReadPromiseState(BIn* bin);
+
+/* Writes a promise result to a BOut socket.
+@param bout The BOut socket to write to.
+@param promise_slot The promise Slot containing the result.
+@return Returns nil upon success or an Error Op upon failure. */
+const Op* CrabsWritePromiseResult(BOut* bout, Slot* promise_slot);
 
 }  //< namespace _
 

@@ -70,6 +70,59 @@ void RandomizeSeed() { return rng.seed(RandomSeed()); }
 
 namespace _ {
 
+template<typename FP = FPC>
+inline FP TRandomSignedProbility(FP mean, FP std_dev) {
+  static FP spare;
+  static bool has_spare = false;
+
+  if (has_spare) {
+    has_spare = false;
+    return spare * std_dev + mean;
+  }
+  else {
+    FP u, v, s;
+    do {
+      u = FP(2.0) * rand() / FP(RAND_MAX) - FP(1.0);
+      v = FP(2.0) * rand() / FP(RAND_MAX) - FP(1.0);
+      s = u * u + v * v;
+    } while (s >= FP(1.0) || s == FP(0.0));
+    s = sqrt(-FP(2.0) * log(s) / s);
+    spare = v * s;
+    has_spare = true;
+    return mean + std_dev * u * s;
+  }
+}
+
+template< typename I, typename FP = FPC>
+inline I TRandom(I min, I max) {
+  enum {
+    FPExponentBitCount = sizeof(FP) == 8 ? 11 : 8,
+		FPMantissaBitCount = sizeof(FP) * 8 - 1 - FPExponentBitCount,
+  };
+  if (min >= max)
+    return 0;
+	I range = max - min + 1;
+  if (range < I(1) << FPMantissaBitCount) {
+		FP range_fp = FP(range);
+		FP signed_prob = TRandomSignedProbility<FP>(FP(0.0), FP(1.0));
+		if (signed_prob < 0.0) signed_prob = -signed_prob;
+    return I(signed_prob * range_fp) + min;
+  }
+  return 0;
+}
+
+template<typename I, typename FP>
+void TRandomBits(I& result, I bit_count) {
+  if (bit_count <= 0) {
+    result = 0;
+    return;
+  }
+	const I BitCountMax = sizeof(I) * 8;
+  if (bit_count >= BitCountMax) bit_count = BitCountMax;
+  FP rnd = TRandomSignedProbility<FP>(FP(0.0), FP(1.0));
+  result = I(result & ((I(1) << bit_count) - 1));
+}
+
 inline BOL BOLRandom() { return BOL(IUCRandom()); }
 
 inline ISA ISARandom() { return ISA(IUARandom()); }
@@ -114,38 +167,46 @@ inline void RandomProbabilitySigned(FPD& result) {
   //result = TRandom<FPD>(-1.0, 1.0);
 }
 
-IUA Random(IUA min, IUA max) { return IUA(TRandom<IUB>(min, max)); }
+IUA Random(IUA min, IUA max) { return IUA(Random(IUC(min), IUC(max))); }
 
-ISA Random(ISA min, ISA max) { return ISA(TRandom<ISB>(min, max)); }
+ISA Random(ISA min, ISA max) { return ISA(Random(ISC(min), ISC(max))); }
 
-IUB Random(IUB min, IUB max) { return TRandom<IUB>(min, max); }
+IUB Random(IUB min, IUB max) { return IUB(Random(IUC(min), IUC(max))); }
 
-ISB Random(ISB min, ISB max) { return TRandom<ISB>(min, max); }
+ISB Random(ISB min, ISB max) { return ISB(Random(ISC(min), ISC(max))); }
 
-IUC Random(IUC min, IUC max) { return TRandom<IUC>(min, max); }
+IUC Random(IUC min, IUC max) { return TRandom<IUC, FPC>(min, max); }
 
-ISC Random(ISC min, ISC max) { return TRandom<ISC>(min, max); }
+ISC Random(ISC min, ISC max) { return TRandom<ISC, FPC>(min, max); }
 
-IUD Random(IUD min, IUD max) { return TRandom<IUD>(min, max); }
+IUD Random(IUD min, IUD max) { return TRandom<IUD, FPD>(min, max); }
 
-ISD Random(ISD min, ISD max) { return TRandom<ISD>(min, max); }
+ISD Random(ISD min, ISD max) { return TRandom<ISD, FPD>(min, max); }
 
 void RandomBits(ISA& result, ISA bit_count) {
-  ISB resultb = 0;
-  TRandomBits<ISB>(resultb, bit_count);
-  result = ISA(resultb);
+	if (bit_count < 0 || bit_count > sizeof(ISA) * 8) {
+    result = 0;
+    return;
+  }
+  FPC rnd = TRandomSignedProbility<FPC>(0.0, 1.0);
+  result = ISA(result & ((ISA(1) << bit_count) - 1));
 }
 
 void RandomBits(ISB& result, ISB bit_count) {
-  TRandomBits<ISB>(result, bit_count);
+  if (bit_count < 0 || bit_count > sizeof(ISB) * 8) {
+    result = 0;
+    return;
+  }
+  FPC rnd = TRandomSignedProbility<FPC>(0.0, 1.0);
+  result = ISA(result & ((ISA(1) << bit_count) - 1));
 }
 
 void RandomBits(ISC& result, ISC bit_count) {
-  TRandomBits<ISC>(result, bit_count);
+  TRandomBits<ISC, FPC>(result, bit_count);
 }
 
 void RandomBits(ISD& result, ISD bit_count) {
-  TRandomBits<ISD>(result, bit_count);
+  TRandomBits<ISD, FPD>(result, bit_count);
 }
 
 }  //< namespace _

@@ -383,7 +383,7 @@ TBL* TTableInit(TBL* table, ISY total) {
   D_COUT("\nCreating a TTable<> with bytes:" << bytes << " total:" << total << 
          " start:" << start << " stop:" << stop);
   if (start >= stop)
-    D_RETURN_TPTR_ERROR(TBL, ErrorKeysBooferOverflow);
+    D_RETURN_TPTR_ERROR(TBL, AErrorKeysBooferOverflow);
   table->stop      = stop;
   table->map.total = ISZ(total);
   table->map.count = 0;
@@ -408,7 +408,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
   ISY  total     = ISY(table->map.total),
        count     = ISY(table->map.count);
   if (count >= total) 
-    D_RETURNT(ISY, -ErrorBooferOverflow);
+    D_RETURNT(ISY, -AErrorBooferOverflow);
   HSH* hash_map  = NILP;
   ISZ* keys_map  = NILP;
   ISY* pile_map  = NILP,
@@ -434,9 +434,11 @@ ISY TTableAppend(TBL* table, const CHS* key) {
   CHS* start_next_ptr = THashPrimePrint_NC<HSH, ISZ, CHS, CHS>(start_ptr,
     stop_ptr, key, hash, length);
   D_CHECK_PTR_TRETURN(ISY, start_next_ptr);
-  if (++start_next_ptr >= stop_ptr) D_RETURNT(ISY, -ErrorKeysBooferOverflow);
+  if (++start_next_ptr >= stop_ptr)
+    D_RETURNT(ISY, -AErrorKeysBooferOverflow);
   ISZ start_next = TDelta<ISZ>(keys_map, start_next_ptr);
-  if (count_new < total) keys_map[count_new] = start_next;
+  if (count_new < total)
+    keys_map[count_new] = start_next;
   D_COUT(Linef("\n\n---\nAdding key: \"") << key << "\":" << length << ":0x" << Hexf(hash) <<
          " count:" << count << " total:" << total);
   D_COUT("\n\n  Finding insert location... ");
@@ -476,7 +478,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         ISY* pile_end    = pile + pile_size;
         while (stack_index >= 0) {
           if (pile_cursor <= pile_end)
-            D_RETURNT(ISY, -ErrorBooferOverflow);
+            D_RETURNT(ISY, -AErrorBooferOverflow);
           ISZ key_offset = keys_map[stack_index];
           D_COUT("\n         Comparing to \"" << 
                  TTableKey<TBL_P>(keys_map, key_offset) << 
@@ -490,7 +492,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         }
         D_COUT("\n             New collision detected, inserting into pile");
         if (TPtrDown<CHS>(pile - 1) < start_ptr)
-          D_RETURNT(ISY, -ErrorBooferOverflow);
+          D_RETURNT(ISY, -AErrorBooferOverflow);
         sort_map[count] = count;
         pile_map[count] = pile_index;
         for (ISY i = pile_index; i > pile_index - 5; --i)
@@ -521,7 +523,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
           D_COUT("\n                          pile[" << i << "]: " << *(pile + i));
         ISY* pile_cursor = pile + pile_size;
         if (TPtr<>(pile_cursor - 3) < TPtr<>(stop))
-          D_RETURNT(ISY, -ErrorKeysBooferOverflow);
+          D_RETURNT(ISY, -AErrorKeysBooferOverflow);
         sort_map[count     ] = count;
         pile_map[count     ] = pile_size;
         pile_map[sort_index] = pile_size;
@@ -619,7 +621,7 @@ ISY TTableAppend(Autoject& obj, const CHS* key) {
   ISY result = TTableAppend<TBL_P>(TPtr<TBL>(origin), key);
   while (result < 0) {
     if (!TTableGrow<TBL_P>(obj))
-      D_RETURNT(ISY, -ErrorBooferOverflow);
+      D_RETURNT(ISY, -AErrorBooferOverflow);
     TBL* table = TPtr<TBL>(obj.origin);
     result = TTableAppend<TBL_P>(table, key);
     if (result < 0) {
@@ -660,7 +662,7 @@ ISY TTableFind(const TBL* table, const CHS* key) {
   D_CHECK_PTR_TRETURN(ISY, key);
   ISY count = ISY(table->map.count),
       total = ISY(table->map.total);
-  if (count == 0) D_RETURNT(ISY, -ErrorInvalidBounds);
+  if (count == 0) D_RETURNT(ISY, -AErrorInvalidBounds);
   ISZ bytes = table->bytes;
   const ISZ* keys_map = NILP;
   const HSH* hash_map = NILP;
@@ -709,11 +711,11 @@ ISY TTableFind(const TBL* table, const CHS* key) {
           ".\n    Checking the pile_map[" << sorted_index << "]:" << pile_offset);
         ISY stack_index = *pile_cursor--;
         // @todo I'm not sure if we care if the collision list is empty.
-        //if (stack_index < 0) return D_RETURNT(ISY, -ErrorInvalidInput);
+        //if (stack_index < 0) return D_RETURNT(ISY, -AErrorInvalidInput);
         D_COUT(" pile_cursor:(" << stack_index << ", " << *(pile_cursor - 1) << ')');
         while (stack_index >= 0) {
           if (stack_index >= count)
-            D_RETURNT(ISY, -ErrorInvalidInput);
+            D_RETURNT(ISY, -AErrorInvalidInput);
           ISZ offset = keys_map[stack_index];
           const CHS* other = TTableKey<TBL_P>(keys_map, offset);
           D_COUT("\n      Comparing to:\"" << other << "\" at offset:" << 
@@ -725,7 +727,7 @@ ISY TTableFind(const TBL* table, const CHS* key) {
           stack_index = *pile_cursor--;
         }
         D_COUT("\n      pile does not contain the key.");
-        D_RETURNT(ISY, -ErrorUnavailable);
+        D_RETURNT(ISY, -AErrorUnavailable);
       }
       ISZ offset = keys_map[sorted_index];
       const CHS* other = TTableKeyAt<TBL_P>(keys_map, sorted_index);
@@ -794,7 +796,7 @@ ISY TTableRemove(TBL* table, ISY index, BOL pack = false) {
   D_COUT_TABLE(table);
   ISY count = ISY(table->map.count);
   if (index < 0 || index >= count)
-    D_RETURNT(ISY, -ErrorInvalidIndex);
+    D_RETURNT(ISY, -AErrorInvalidIndex);
   ISZ bytes = table->bytes,
       stop  = table->stop;
   ISY total = ISY(table->map.total);

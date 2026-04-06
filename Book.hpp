@@ -448,7 +448,7 @@ inline ISY TBookInsert(BOK* book, TLoom<LOM_P>* keys, const CHS* key,
   D_COUT("\nAdding \"" << key << "\" type:" << ATypef(type) << ":0d" << type <<
          ":0x" << Hexf(type) << ":\'" << CHA(type) << "\' value:0d" <<
          value << ":0x" << Hexf(value) << " msb:" << msb << " top:" << book->values.top);
-  if (index < PSH) return -ErrorInvalidIndex;
+  if (index < PSH) return -AErrorInvalidIndex;
   auto result = TListInsert<LST_P>(&book->values, type, value, index, msb);
   //D_COUT_LIST(&book->values);
   if (result < 0)
@@ -919,7 +919,7 @@ class ABook {
                                     index, msb);
     while (result < 0) {
       if (!Grow()) {
-        return -ErrorBooferOverflow;
+        return -AErrorBooferOverflow;
       }
       BOK* book = TPtr<BOK>(obj.origin);
       result = TBookInsert<BOK_P>(book, key, type, value, index, msb);

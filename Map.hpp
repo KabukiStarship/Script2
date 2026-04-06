@@ -183,7 +183,7 @@ ISZ TMapAdd(MAP* map, D domain_value, ISZ codomain_mapping) {
   D_ASSERT(map);
   D_COUT("\n\nAdding:" << domain_value << "->" << codomain_mapping);
   ISZ count = map->count, size = map->total;
-  if (count >= size) D_RETURNT(ISZ, -ErrorBooferOverflow);
+  if (count >= size) D_RETURNT(ISZ, -AErrorBooferOverflow);
   D  * domain   = TMapDomain<MAP_P>(map);
   ISZ* codomain = TMapCodomain<MAP_P>(domain, size);
 
@@ -293,7 +293,7 @@ inline void TMapRemapCodomain(MAP* map, ISZ index, ISZ codomain_mapping) {
 */
 template<MAP_A>
 ISZ TMapRemove(MAP* map, ISZ index) {
-  if (index < 0 || index >= map->count) D_RETURNT(ISZ, -ErrorInvalidIndex);
+  if (index < 0 || index >= map->count) D_RETURNT(ISZ, -AErrorInvalidIndex);
   ISZ size = map->total, count = map->count, zero = 0;
   if (count == zero)
     if (--count == zero) {

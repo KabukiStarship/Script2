@@ -36,15 +36,15 @@ All Crabs code shall use Chimera C++ formatting where all immutable members are 
 - **Crabs Module Format:** Follow the module structure: `.h` (Contains the decl), `.hpp` (Contains all code that uses templates), `.hxx` (contains the impl usually found in .ccp files because we use only one translation unit to compile as fast as possible).
 
 ### Naming Conventions
-This naming convention is called Chimera case due to the mix of snake_case and PascalCase.,
-- **Types:** PascalCase (`MyExcitingClass`, `UrlTable`).
+This naming convention is called Chimera case due to the mix of snake_case and CamelCase.,
+- **Types:** CamelCase (`MyExcitingClass`, `UrlTable`).
 - **Variables:** snake_case (`my_local_variable`, `num_errors`).
 - **Class Members:** snake_case with trailing underscore (`table_name_`).
 - **Struct Members:** snake_case *without* trailing underscore (`name`, `num_entries`).
 - **Constants/Globals:** CamelCase.
 - **Enums:**
-  - Type Name: PascalCase (`UrlTableErrors`).
-- **Functions:** PascalCase (`StartRpc()`, `OpenFileOrDie()`).
+  - Type Name: CamelCase (`UrlTableErrors`).
+- **Functions:** CamelCase (`StartRpc()`, `OpenFileOrDie()`).
   - Accessors/Mutators: snake_case allowed (`count()`, `set_count()`).
 - **Namespaces:** snake_case, top-level matches project/team. No nested `std`.
 - **Macros:** UPPER_SNAKE_CASE (Macros are mostly used for changing seams/unit tests).

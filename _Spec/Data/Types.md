@@ -40,6 +40,10 @@ Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data 
 | 29 | PCj  |      ?       |   ?   | Plain Context Type j.           |
 | 30 | PCk  |      ?       |   ?   | Plain Context Type k.           |
 | 31 | PCl  |      ?       |   ?   | Plain Context Type l.           |
+| 32 | PMS  |     8-bit    |   1   | Promise type wrapper.           |
+| 33 | RES  |     8-bit    |   1   | Result type (fulfilled/rejected).|
+| 34 | VAL  |     8-bit    |   1   | Value container for promises.   |
+| 35 | ERR  |     8-bit    |   1   | Error container for rejections. |
 
 ### List of Types Key
 
@@ -196,6 +200,8 @@ Plain Context Types are set by defining the last Plain Type index of that size s
 
 To delete all 128-bit Plain Context Types set CT4_STOP to BOL (19). To delete all 64-bit Plain Context Types set CT3_STOP to CT4_STOP. To delete all 32-bit Plain Context Types set CT2_STOP to CT3_STOP. To delete all 16-bit Plain Context Types set CT1_STOP to CT2_STOP. All unspecified Plain Context Types are then 8-bit types that cannot be deleted.
 
+To add Promise types (PMS, RES, VAL, ERR) after configuration, set _CT5_STOP to 35.
+
 ### Usage Examples
 
 ```C++
@@ -207,5 +213,13 @@ struct Context {
   PCd context_tag;        // 16-bit context classification tag
   PCe context_flag;       // 8-bit boolean flag
   PCf context_modifier;   // 8-bit modifier bits
+};
+
+// Example: Using Promise types for async operations
+struct Promise {
+  TMC timestamp;          // When promise was created (Unix epoch)
+  IUW state;              // 0=pending, 1=fulfilled, 2=rejected
+  VAL resultValue;        // Result if fulfilled
+  ERR rejectionReason;    // Error reason if rejected
 };
 ```

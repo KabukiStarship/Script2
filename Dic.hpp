@@ -404,7 +404,7 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
   D_CHECK_PTR_TRETURN2(ISY, table, key);
   if (index == PSH) index = table->values.map.count;
   if (index < 1) 
-    return -ErrorInvalidIndex;
+    return -AErrorInvalidIndex;
   D_COUT("\nAdding key:\"" << key << "\" value:" << value << "\nKeys offset:" << 
          TDelta<>(table, keys) << "\nValues offsets:" << 
          TDelta<>(table, TDicValuesMap<DIC_P>(table)));
@@ -414,7 +414,7 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
            ASCIIErrorSTA(tbl_index));
     D_COUT_TABLE(keys);
     D_COUT_DIC(table);
-    return -ErrorKeysBooferOverflow;
+    return -AErrorKeysBooferOverflow;
   }
   D_COUT("\ncount:" << table->values.map.count);
   index = TListInsert<LST_P>(&table->values, type, value, index, value_msb);
@@ -882,7 +882,7 @@ public:
     ISY result = TDicInsert<DIC_P>(dic, key, type, value, index, value_msb);
     while (result < 0) {
       if (!Grow()) {
-        D_RETURNT(ISY, -ErrorBooferOverflow);
+        D_RETURNT(ISY, -AErrorBooferOverflow);
       }
       dic = TPtr<DIC>(obj.origin);
       result = TDicInsert<DIC_P>(dic, key, type, value, index, value_msb);

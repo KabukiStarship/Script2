@@ -881,8 +881,8 @@ Printer& TPrintPOD_NC(Printer& p, DTW type, IUW value, IUW vmsb = 0) {
     case 2:
       return TPrintIS<Printer>(p, value, vmsb);
     case 3: {
-      if (type >= _TMD) {
-        if (type == _TME) return TPrintTME<Printer>(p, value, vmsb);
+      if (type >= _SSD) {
+        if (type == _SSE) return TPrintTME<Printer>(p, value, vmsb);
         return TPrintTMD<Printer>(p, value);
       }
       return TPrintCH<Printer>(p, value);

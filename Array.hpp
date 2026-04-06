@@ -597,7 +597,7 @@ class AArray {
     if (this_total <= 0 || src_total <= 0 ||
         this_count <  0 || src_count <  0 ||
         this_count > this_total || src_count > src_total) {
-      return TPtr<ARY>(ErrorInvalidInput);
+      return TPtr<ARY>(AErrorInvalidInput);
     }
     ISZ count_new = src_count + this_count;
     if (count_new > this_total) {

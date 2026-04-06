@@ -418,7 +418,7 @@ ISY TListFind(const LST* list, void* address) {
     if (*vmap++ == offset) return index;
     ++index;
   }
-  return -ErrorInvalidIndex;
+  return -AErrorInvalidIndex;
 }
 
 /* Copies an ASCII List from the origin to the destination
@@ -521,7 +521,7 @@ inline ISY TListInsert_NC(LST* list, ISZ bytes, ISZ top, ISY total, ISY count,
     //value = AlignUp(value, align_mask); // @todo Should this be aligned?
     auto result = TBSeqWrite_NC<ISZ>(TPtr<IUA>(list, top),
       TPtrDown<IUA>(list, bytes, align_mask), type, value, value_msb);
-    D_CHECK_PTR_TRETURN(ISY, -ErrorBooferOverflow);
+    D_CHECK_PTR_TRETURN(ISY, -AErrorBooferOverflow);
     TListValuesMap<LST_P>(list)[count] = top;
     TListTypes<LST_P>(list)[count++] = ATypeMDDeassert(type);
     list->map.count = count;
@@ -542,9 +542,9 @@ inline ISY TListInsert(LST* list, DT type, IUW value, ISY index = PSH,
   A_ASSERT(top > 0);
   if (index == PSH) index = count;
   if (index >= total)
-    return -ErrorStackOverflow;
+    return -AErrorStackOverflow;
   if (index < 0 || index > count)
-    return -ErrorInvalidIndex;
+    return -AErrorInvalidIndex;
   D_COUT("\n  Inserting " << ATypef(type) << ":0d" << type << ":0x" <<
          Hexf(type) << " count:" << count << " index:" << index <<
          " top(aligned):" << top);
@@ -861,7 +861,7 @@ class AList {
                                      index);
      while (result < 0) {
        if (!Grow(obj)) {
-         return -ErrorBooferOverflow;
+         return -AErrorBooferOverflow;
        }
        result = TListInsert<LST_P>(TPtr<LST>(obj.origin), type, IUW(value), 
                                    index);

@@ -66,7 +66,8 @@ template<typename HSH = IUN, typename ISZ = ISR, typename CHS, typename CHY>
 inline CHS* THashPrimePrint(CHS* start, CHS* stop, const CHY* item, HSH& hash,
   ISZ& length) {
   D_CHECK_PTR_RETURN(start);
-  if (start >= stop) D_RETURN_TPTR_ERROR(CHS, ErrorInvalidBoofer);
+  if (start >= stop) 
+    D_RETURN_TPTR_ERROR(CHS, AErrorInvalidBoofer);
   D_CHECK_CPTR_RETURN(CHS, item);
   THashPrimePrint<HSH, ISZ, CHS, CHY>(start, stop, item, hash, length);
 }

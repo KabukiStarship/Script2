@@ -396,7 +396,7 @@ ISA ATypeAlignMask(DTB type) {
   if (type <= _CHA) return 0;
   if (type <= _CHB) return 1;
   if (type <= _CHC) return ACPUAlignC;
-  if (type <= _TME) return ACPUAlignD;
+  if (type <= _SSE) return ACPUAlignD;
   if (type <  _ECD) return ACPUAlignD;
   if (type <  _ECC) return ACPUAlignC;
   if (type <  _ECB) return 1;
