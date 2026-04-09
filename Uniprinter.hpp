@@ -12,7 +12,7 @@ A collection of abstract print functions that can be remapped to print to any so
 
 /* Prints the given string to the Printer. */
 template<typename Printer, typename CHS = CHR, typename CHT = CHC>
-Printer& TSPrint(Printer& p, const CHS* element) {
+Printer& TPrint(Printer& p, const CHS* element) {
   if (IsError(element)) return p;
   CHT c = 0;
   element = SScan(element, c);
@@ -41,7 +41,7 @@ ISN TPrintAndCount(Printer& p, const CHS* element) {
 
 /* Prints the following value to the console in Hex. */
 template<typename Printer, typename IU>
-Printer& TSPrintHex(Printer& p, IU value) {
+Printer& TPrintHex(Printer& p, IU value) {
   enum { HexStringLengthSizeMax = sizeof(IU) * 2 + 3 };
   auto ui = ToUnsigned(value);
   for (ISC num_bits_shift = sizeof(IU) * 8 - 4; num_bits_shift >= 0;
@@ -53,24 +53,24 @@ Printer& TSPrintHex(Printer& p, IU value) {
 
 /* Prints the following value to the console in Hex. */
 template<typename Printer>
-Printer& TSPrintHex(Printer& p, const void* value) {
+Printer& TPrintHex(Printer& p, const void* value) {
   IUW ptr = IUW(value);
-  return TSPrintHex<Printer, IUW>(p, ptr);
+  return TPrintHex<Printer, IUW>(p, ptr);
 }
 template<typename Printer, typename IS, typename IU>
-Printer& TSPrintHex(Printer& p, IS value) {
-  return TSPrintHex<Printer, IU>(p, IU(value));
+Printer& TPrintHex(Printer& p, IS value) {
+  return TPrintHex<Printer, IU>(p, IU(value));
 }
 #if USING_FPC == YES_0
 template<typename Printer>
-Printer& TSPrintHex(Printer& p, FPC value) {
-  return TSPrintHex<Printer, IUC>(p, *TPtr<IUC>(&value));
+Printer& TPrintHex(Printer& p, FPC value) {
+  return TPrintHex<Printer, IUC>(p, *TPtr<IUC>(&value));
 }
 #endif
 #if USING_FPD == YES_0
 template<typename Printer>
-Printer& TSPrintHex(Printer& p, FPD value) {
-  return TSPrintHex<Printer, IUD>(p, *TPtr<IUD>(&value));
+Printer& TPrintHex(Printer& p, FPD value) {
+  return TPrintHex<Printer, IUD>(p, *TPtr<IUD>(&value));
 }
 #endif
 /* Prints the given hex memory block or POD value depending on the sign of the
@@ -79,11 +79,11 @@ byte_count.
 If the byte_count is less than zero the value will be treated like a POD type,
 which will need to get printed backwards on Big-endian systems. The purpose of
 little endian is that it's easier to read the hex values when you print them,
-which is frutrating because of how simple the conversion code is. If the
+which is frustrating because of how simple the conversion code is. If the
 byte_count is greater than zero then the memory will be printed sequentially
 one byte at a time. */
 template<typename Printer>
-Printer& TSPrintHex(Printer& p, const void* origin, ISW byte_count) {
+Printer& TPrintHex(Printer& p, const void* origin, ISW byte_count) {
   if (IsError(origin)) return p;
   ISW delta;
   const IUA* cursor = TPtr<const IUA>(origin);
@@ -113,14 +113,14 @@ Printer& TSPrintHex(Printer& p, const void* origin, ISW byte_count) {
 }
 
 template<typename Printer>
-Printer& TSPrintHex(Printer& p, const void* start, const void* stop) {
+Printer& TPrintHex(Printer& p, const void* start, const void* stop) {
   ISW delta = ISW(stop) - ISW(start);
-  return TSPrintHex<Printer>(p, start, delta);
+  return TPrintHex<Printer>(p, start, delta);
 }
 
 template<typename Printer>
 Printer& TPrint(Printer& p, Hexf& value) {
-  return TSPrintHex<Printer>(p, value.element.Value(), value.element.count);
+  return TPrintHex<Printer>(p, value.element.Value(), value.element.count);
 }
 /* Prints the memory beginning at start to the Printer. */
 template<typename Printer>
@@ -212,7 +212,7 @@ Printer& TPrintAlignedHex(Printer& p, const void* origin, ISW byte_count,
   const CHA* cursor = TPtr<const CHA>(origin);
   while (--left_count > 0) p << ' ';
   // TPrintHex<Printer>(p, origin, byte_count >> 1);
-  TSPrintHex<Printer>(p, cursor, -byte_count);
+  TPrintHex<Printer>(p, cursor, -byte_count);
   while (--dot_count > 0) p << ' ';
   while (--right_count > 0) p << ' ';
   return p;
@@ -680,19 +680,6 @@ Printer& TPrint(Printer& p, Charsf& value) {
 #endif
   }
   return TPrintChars<Printer, CHA>(p, TPtr<CHA>(element.Value()), count);
-}
-
-/* Prints the given cursor repeated to make a line. */
-template<typename CHS>
-CHS* TPrintHeading(CHS* start, CHS* stop, CHS value, ISW count = AConsoleWidth) {
-  return TSPrintLinef<CHS>(start, stop, value, count, NILP, NILP);
-}
-
-/* Prints the given cursor repeated to make a line. */
-template<typename CHS>
-CHS* TPrintHeading(CHS* start, CHS* stop, const CHS* value,
-                  ISW count = AConsoleWidth) {
-  return TSPrintLinef<CHS>(start, stop, value, count, NILP, NILP);
 }
 
 template<typename Printer>

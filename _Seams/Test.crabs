@@ -11,12 +11,12 @@
         |   +----------- A string of max length 31.
         |   |       +--- A signed integer with 1-IUA (8-bit) width.
         |   |       |
-        |   |       |               +-- There are 0 return parameters.
+        |   |       |               +-a - There are 0 return parameters.
         |   |       |               |
         v   v       v               v
-   Foo <4, STR_:32, _ISA, _ISB, _ISC>:<_NIL>
-   Bar <1, STR_:32>:<3, _ISA, _ISB, _ISC>
-   FooBar <DIC2, _IUA>:<_NIL>
+   Foo <4, STR:32, ISA, ISB, ISC>:<NIL>
+   Bar <1, STR:32>:<3, ISA, ISB, ISC>
+   FooBar <DIC2, IUA>:<NIL>
             ^     ^
             |     |
             |     +----- An 8-bit unsigned integer.
@@ -108,7 +108,7 @@ v       v */
     /* Return Address (_ADR) Example.
 
         @fn =
-            @param <_NIL>:<_BSQ>
+            @param <NIL>:<_BSQ>
     */
 
   abc123:

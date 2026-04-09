@@ -4,7 +4,7 @@ ASCII Data Types use 3-letter acronyms in all capital letters[1][2]. Whenever po
 
 Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data Types are forward compatible with 2-byte Types. Given there are only 8, 16, 32, and 64-bit CPUs, the bit pattern of the data type is required to be laid out such that the bit_1 of the 4 bits required to represent these 4 byte depths shall be laid out across the boundary between a IUA and IUB word boundaries.
 
-## POD Types Table
+## Core POD Types Table
 
 | ID | Type | C++/Alt Name | Width | Description                     |
 |:--:|:----:|:------------:|:-----:|:--------------------------------|
@@ -40,10 +40,6 @@ Data Types can be represented using 1-byte, or two 2-byte such that 1-byte Data 
 | 29 | PCj  |      ?       |   ?   | Plain Context Type j.           |
 | 30 | PCk  |      ?       |   ?   | Plain Context Type k.           |
 | 31 | PCl  |      ?       |   ?   | Plain Context Type l.           |
-| 32 | PMS  |     8-bit    |   1   | Promise type wrapper.           |
-| 33 | RES  |     8-bit    |   1   | Result type (fulfilled/rejected).|
-| 34 | VAL  |     8-bit    |   1   | Value container for promises.   |
-| 35 | ERR  |     8-bit    |   1   | Error container for rejections. |
 
 ### List of Types Key
 

@@ -410,17 +410,28 @@ inline const CHC* SScanBack(const CHC* start, CHC& value) {
 inline CHA* SPrint(CHA* start, CHA* stop, IUA item) {
 	return SPrint(start, stop, IUC(item));
 }
-
+inline CHA* SPrint(CHA* start, ISW size, IUA item) {
+	return SPrint(start, start + size - 1, item);
+}
 inline CHA* SPrint(CHA* start, CHA* stop, ISA item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHA* SPrint(CHA* start, ISW size, ISA item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHA* SPrint(CHA* start, CHA* stop, IUB item) {
   return SPrint(start, stop, IUC(item));
 }
+inline CHA* SPrint(CHA* start, ISW size, IUB item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHA* SPrint(CHA* start, CHA* stop, ISB item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHA* SPrint(CHA* start, ISW size, ISB item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHA* SPrint(CHA* start, CHA* stop, IUC item) {
@@ -430,6 +441,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, IUC item) {
   return TSPrintUnsigned<IUC, CHA>(start, stop, item);
   #endif
 }
+inline CHA* SPrint(CHA* start, ISW size, IUC item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHA* SPrint(CHA* start, CHA* stop, ISC item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -437,6 +451,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, ISC item) {
 #else 
   return TSPrintSigned<ISC, IUC, CHA>(start, stop, item);
 #endif
+}
+inline CHA* SPrint(CHA* start, ISW size, ISC item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHA* SPrint(CHA* start, CHA* stop, IUD item) {
@@ -446,6 +463,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, IUD item) {
   return TSPrintUnsigned<IUD, CHA>(start, stop, item);
 #endif
 }
+inline CHA* SPrint(CHA* start, ISW size, IUD item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHA* SPrint(CHA* start, CHA* stop, ISD item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -453,6 +473,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, ISD item) {
 #else 
   return TSPrintSigned<ISD, IUD, CHA>(start, stop, item);
 #endif
+}
+inline CHA* SPrint(CHA* start, ISW size, ISD item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 CHA* SPrint(CHA* start, CHA* stop, CHC value) {
@@ -515,17 +538,29 @@ inline CHA* SPrint(CHA* start, ISW size, CHA value) {
 inline CHB* SPrint(CHB* start, CHB* stop, IUA item) {
   return SPrint(start, stop, IUC(item));
 }
+inline CHB* SPrint(CHB* start, ISW size, IUA item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, ISA item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHB* SPrint(CHB* start, ISW size, ISA item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHB* SPrint(CHB* start, CHB* stop, IUB item) {
   return SPrint(start, stop, IUC(item));
 }
+inline CHB* SPrint(CHB* start, ISW size, IUB item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, ISB item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHB* SPrint(CHB* start, ISW size, ISB item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHB* SPrint(CHB* start, CHB* stop, IUC item) {
@@ -535,6 +570,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, IUC item) {
   return TSPrintUnsigned<IUC, CHB>(start, stop, item);
 #endif
 }
+inline CHB* SPrint(CHB* start, ISW size, IUC item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, ISC item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -542,6 +580,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, ISC item) {
 #else 
   return TSPrintSigned<ISC, IUC, CHB>(start, stop, item);
 #endif
+}
+inline CHB* SPrint(CHB* start, ISW size, ISC item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHB* SPrint(CHB* start, CHB* stop, IUD item) {
@@ -551,6 +592,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, IUD item) {
   return TSPrintUnsigned<IUD, CHB>(start, stop, item);
 #endif
 }
+inline CHB* SPrint(CHB* start, ISW size, IUD item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, ISD item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -559,15 +603,24 @@ inline CHB* SPrint(CHB* start, CHB* stop, ISD item) {
   return TSPrintSigned<ISD, IUD, CHB>(start, stop, item);
 #endif
 }
+inline CHB* SPrint(CHB* start, ISW size, ISD item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 #if USING_FPC == YES_0
 inline CHB* SPrint(CHB* string, CHB* stop, FPC item) {
   return TSPrint<CHB>(string, stop, item);
 }
+inline CHB* SPrint(CHB* start, ISW size, FPC item) {
+  return SPrint(start, start + size - 1, item);
+}
 #endif
 #if USING_FPD == YES_0
 inline CHB* SPrint(CHB* string, CHB* stop, FPD item) {
   return TSPrint<CHB>(string, stop, item);
+}
+inline CHB* SPrint(CHB* start, ISW size, FPD item) {
+  return SPrint(start, start + size - 1, item);
 }
 #endif
 
@@ -597,17 +650,29 @@ inline CHB* SPrint(CHB* start, ISW size, CHC value) {
 inline CHC* SPrint(CHC* start, CHC* stop, IUA item) {
   return SPrint(start, stop, IUC(item));
 }
+inline CHC* SPrint(CHC* start, ISW size, IUA item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, ISA item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHC* SPrint(CHC* start, ISW size, ISA item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHC* SPrint(CHC* start, CHC* stop, IUB item) {
   return SPrint(start, stop, IUC(item));
 }
+inline CHC* SPrint(CHC* start, ISW size, IUB item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, ISB item) {
   return SPrint(start, stop, ISC(item));
+}
+inline CHC* SPrint(CHC* start, ISW size, ISB item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHC* SPrint(CHC* start, CHC* stop, IUC item) {
@@ -617,12 +682,22 @@ inline CHC* SPrint(CHC* start, CHC* stop, IUC item) {
   return TSPrintUnsigned<IUC, CHC>(start, stop, item);
 #endif
 }
+inline CHC* SPrint(CHC* start, ISW size, IUC item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, ISC item) {
 #if SEAM < CRABS_UNIPRINTER
   return start;
 #else 
   return TSPrintSigned<ISC, IUC, CHC>(start, stop, item);
+#endif
+}
+inline CHC* SPrint(CHC* start, ISW size, ISC item) {
+#if SEAM < CRABS_UNIPRINTER
+  return start;
+#else 
+  return TSPrintSigned<ISC, IUC, CHC>(start, start + size - 1, item);
 #endif
 }
 
@@ -633,6 +708,9 @@ inline CHC* SPrint(CHC* start, CHC* stop, IUD item) {
   return TSPrintUnsigned<IUD, CHC>(start, stop, item);
 #endif
 }
+inline CHC* SPrint(CHC* start, ISW size, IUD item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, ISD item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -641,19 +719,31 @@ inline CHC* SPrint(CHC* start, CHC* stop, ISD item) {
   return TSPrintSigned<ISD, IUD, CHC>(start, stop, item);
 #endif
 }
+inline CHC* SPrint(CHC* start, ISW size, ISD item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHA* SPrint(CHA* start, ISW size, CHC value) {
   return SPrint(start, start + size - 1, value);
+}
+inline CHC* SPrint(CHC* start, ISW size, CHC item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 #if USING_FPC == YES_0
 inline CHC* SPrint(CHC* string, CHC* stop, FPC value) {
   return TSPrint<CHC>(string, stop, value);
 }
+inline CHC* SPrint(CHC* start, ISW size, FPC item) {
+  return SPrint(start, start + size - 1, item);
+}
 #endif
 #if USING_FPD == YES_0
 inline CHC* SPrint(CHC* string, CHC* stop, FPD value) {
   return TSPrint<CHC>(string, stop, value);
+}
+inline CHC* SPrint(CHC* start, ISW size, FPD item) {
+  return SPrint(start, start + size - 1, item);
 }
 #endif
 
@@ -663,9 +753,6 @@ inline CHC* SPrint(CHC* start, CHC* stop, CHC value) {
   *start++ = value;
   *start = 0;
   return start;
-}
-inline CHC* SPrint(CHC* start, ISW size, CHC value) {
-  return SPrint(start, start + size - 1, value);
 }
 inline CHC* SPrint(CHC* start, CHC* stop, CHA value) {
   return SPrint(start, stop, CHC(value));
@@ -722,6 +809,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, const CHA* item) {
 	return TSPrint<CHA, CHC>(start, stop, item);
 #endif
 }
+inline CHA* SPrint(CHA* start, ISW size, const CHA* item) {
+	return SPrint(start, start + size - 1, item);
+}
 
 inline CHA* SPrint(CHA* start, CHA* stop, const CHB* item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -729,6 +819,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, const CHB* item) {
 #else
   return TSPrint<CHA, CHC>(start, stop, item);
 #endif
+}
+inline CHA* SPrint(CHA* start, ISW size, const CHB* item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHA* SPrint(CHA* start, CHA* stop, const CHC* item) {
@@ -738,6 +831,9 @@ inline CHA* SPrint(CHA* start, CHA* stop, const CHC* item) {
   return TSPrint<CHA, CHC>(start, stop, item);
 #endif
 }
+inline CHA* SPrint(CHA* start, ISW size, const CHC* item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, const CHA* item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -745,6 +841,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, const CHA* item) {
 #else
   return TSPrint<CHB, CHC>(start, stop, item);
 #endif
+}
+inline CHB* SPrint(CHB* start, ISW size, const CHA* item) {
+	return SPrint(start, start + size - 1, item);
 }
 
 inline CHB* SPrint(CHB* start, CHB* stop, const CHB* item) {
@@ -754,6 +853,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, const CHB* item) {
   return TSPrint<CHB, CHC>(start, stop, item);
 #endif
 }
+inline CHB* SPrint(CHB* start, ISW bytes, const CHB* item) {
+	return SPrint(start, start + bytes - 1, item);
+}
 
 inline CHB* SPrint(CHB* start, CHB* stop, const CHC* item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -761,6 +863,9 @@ inline CHB* SPrint(CHB* start, CHB* stop, const CHC* item) {
 #else
   return TSPrint<CHB, CHC>(start, stop, item);
 #endif
+}
+inline CHB* SPrint(CHB* start, ISW size, const CHC* item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 inline CHC* SPrint(CHC* start, CHC* stop, const CHA* item) {
@@ -770,6 +875,9 @@ inline CHC* SPrint(CHC* start, CHC* stop, const CHA* item) {
   return TSPrint<CHC, CHC>(start, stop, item);
 #endif
 }
+inline CHC* SPrint(CHC* start, ISW size, const CHA* item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, const CHB* item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -778,6 +886,9 @@ inline CHC* SPrint(CHC* start, CHC* stop, const CHB* item) {
   return TSPrint<CHC, CHC>(start, stop, item);
 #endif
 }
+inline CHC* SPrint(CHC* start, ISW size, const CHB* item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 inline CHC* SPrint(CHC* start, CHC* stop, const CHC* item) {
 #if SEAM < CRABS_UNIPRINTER
@@ -785,6 +896,9 @@ inline CHC* SPrint(CHC* start, CHC* stop, const CHC* item) {
 #else
   return TSPrint<CHC, CHC>(start, stop, item);
 #endif
+}
+inline CHC* SPrint(CHC* start, ISW size, const CHC* item) {
+  return SPrint(start, start + size - 1, item);
 }
 
 
@@ -1554,6 +1668,9 @@ CHA* SPrint(CHA* start, CHA* stop, FPC value) {
   if (count <= 0) return NILP;
   return start + count;
 }
+inline CHA* SPrint(CHA* start, ISW size, FPC item) {
+  return SPrint(start, start + size - 1, item);
+}
 
 #if USING_FPD == YES_0
 CHA* SPrint(CHA* start, CHA* stop, FPD value) {
@@ -1562,6 +1679,9 @@ CHA* SPrint(CHA* start, CHA* stop, FPD value) {
   ISC count = sprintf_s(start, size, "%lf", value);
   if (count <= 0) return NILP;
   return start + count;
+}
+inline CHA* SPrint(CHA* start, ISW size, FPD item) {
+  return SPrint(start, start + size - 1, item);
 }
 #endif
 

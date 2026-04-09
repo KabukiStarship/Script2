@@ -10,6 +10,29 @@
 
 #if SEAM >= CRABS_COUT
 namespace _ {
+
+BOL ATypeIsPOD(DTB type) {
+	if (type < ATypePODTotal) {
+    return true;
+  }
+  DTB ext_type = ATypeToEXT(type);
+  if (ext_type >= ATypeESTVarLengthTypeCount && ext_type <= ATypeESPODTypeLast) {
+    return true;
+  }
+  return false;
+}
+
+inline BOL ATypeIsVarLength(DTB type) {
+  if (type < ATypePODTotal) {
+    return false;
+  }
+  DTB ext_type = ATypeToEXT(type);
+  if (ext_type >= ATypeESTVarLengthTypeCount && ext_type <= ATypeESPODTypeLast) {
+    return true;
+  }
+  return false;
+}
+
 DTB ATypeMDDeassert(DTW type) {
   const DTW MD = (type >> ATypeMDBit0) & 0x3;
   type ^= MD << ATypeMDBit0;

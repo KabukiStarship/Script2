@@ -139,7 +139,8 @@ inline const CHS* TSFindLast(const CHS* start, CHA token) {
   CHT c = 0;
   start = SScan(start, c);
   while (c) {
-    if (c == token) last_instance = start;
+    if (c == token)
+      last_instance = start;
     start = SScan(start, c);
   }
   return last_instance;
@@ -547,6 +548,19 @@ CHS* TSPrint(CHS* start, CHS* stop, const Linef& value) {
     }
   }
   return TSPrintLinef(start, stop, value.element);
+}
+
+/* Prints the given cursor repeated to make a line. */
+template<typename CHS = CHR, typename CHT = CHC>
+CHS* TSPrintHeading(CHS* start, CHS* stop, CHS value, ISW count = AConsoleWidth) {
+  return TSPrintLinef<CHS, CHT>(start, stop, value, count, NILP, NILP);
+}
+
+/* Prints the given cursor repeated to make a line. */
+template<typename CHS = CHR, typename CHT = CHC>
+CHS* TSPrintHeading(CHS* start, CHS* stop, const CHS* value,
+  ISW count = AConsoleWidth) {
+  return TSPrintLinef<CHS, CHT>(start, stop, value, count, NILP, NILP);
 }
 
 } //< namespace _

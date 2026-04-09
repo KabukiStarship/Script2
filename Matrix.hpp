@@ -184,39 +184,34 @@ inline T* TMatrixStart(TMatrix<MTX_P>* obj) {
 /* Creates a immutable array of dimensions. */
 template<typename ISZ, const ISZ... N>
 inline const ISZ* TDim() {
-  static const ISZ Count = (ISZ)sizeof...(N), kList[sizeof...(N)] = {N...};
+  static const ISZ Count = ISZ(sizeof...(N)), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a immutable array of ISB dimensions. */
 template<const ISB... N>
 inline const ISB* TDimB() {
-  static const ISB Count = (ISB)sizeof...(N), kList[sizeof...(N)] = {N...};
+  static const ISB Count = ISB(sizeof...(N)), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a immutable array of ISC dimensions. */
 template<const ISC... N>
 inline const ISC* TDimC() {
-  static const ISC Count = (ISC)sizeof...(N), kList[sizeof...(N)] = {N...};
+  static const ISC Count = ISC(sizeof...(N)), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 /* Creates a static array of ISD dimensions. */
 template<const ISD... N>
 inline const ISD* TDimD() {
-  static const ISD Count = (ISD)sizeof...(N), kList[sizeof...(N)] = {N...};
+  static const ISD Count = ISD(sizeof...(N)), kList[sizeof...(N)] = {N...};
   return &Count;
 }
 
 template<MTX_A>
 inline TMatrix<MTX_P>* TMatrixPtr(IUW* origin) {
   return TPtr<TMatrix<MTX_P>>(origin);
-}
-
-template<MTX_A>
-inline TMatrix<MTX_P>* TMatrixPtr(Autoject& ajt) {
-  return TMatrix<MTX_P>(ajt.origin);
 }
 
 template<MTX_A>
@@ -234,59 +229,7 @@ inline TMatrix<MTX_P>* TMatrixClone(T* start_a, ISZ dim_count_a, const ISZ* dim_
 }
 
 template<MTX_A>
-inline TMatrix<MTX_P>* TMatrixCloneDelta(Autoject& ajt, 
-  const ISZ* dimensions_delta) {
-  auto matrix = TMatrixPtr<ISZ>(ajt);
-  TMatrix<MTX_P>* matrix = TMatrixPtr<ISZ>(ajt.origin);
-  ISZ* a_dimensions = &matrix->dimensions.count;
-  ISZ dimension_count = *a_dimensions;
-  if (IsError(dimensions_delta) || dimension_count == 0) {
-    ISZ bytes = TMatrixSize<MTX_P>(matrix);
-    if (bytes < 0) return NILP;
-    IUW* origin_new = ajt.ram(NILP, bytes);
-    if (IsError(origin_new)) return NILP;
-    IUW* origin = ajt.origin;
-    ISZ bytes = TMatrixSize<MTX_P>(&matrix->dimensions.count);
-    ArrayCopy(origin_new, TPtr<CHA>(origin_new) + bytes, 
-              origin, TPtr<CHA>(origin) + bytes);
-    return TPtr<TMatrix<MTX_P>>(origin_new);
-  }
-  ISZ dimensions_delta_count = *dimensions_delta++;
-  if (dimension_count != dimensions_delta_count) return -1;
-  if (dimension_count == 1) {
-    return NILP;
-  }
-  ISZ bytes = TMatrixSize<MTX_P>(dimensions_delta);
-  if (bytes < 0) return NILP;
-  IUW* origin_new = ajt.ram(NILP, bytes);
-  const ISZ* b_dimensions = 0,
-           * a_cursor = a_dimensions,
-           * b_cursor = dimensions_delta_count;
-  a_dimensions += dimension_count;
-  dimensions_delta += dimension_count;
-  T* ary = TMatrixStart<MTX_P>(matrix);
-  ISZ dimensions_new[dimension_count];
-  ISZ* dimensions_new_ptr = dimensions_new;
-  ISZ dimensions_counter = dimension_count;
-  ISZ dimension_last;
-  while (dimensions_counter-- > 0) {
-    dimension_last = *++a_cursor + *++b_cursor;
-    *dimensions_new_ptr++ = dimension_last;
-  }
-  while (a_cursor > a_dimensions)
-  return TMatrixPtr<ISZ>(origin_new);
-}
-
-template<MTX_A>
-inline TMatrix<MTX_P>* TMatrixResize(Autoject& ajt, const ISZ* dimensions_delta) {
-  auto matrix = TMatrixCloneDelta<ISZ>(ajt, dimensions_delta);
-  if (IsError(matrix)) return matrix;
-  ajt.origin = TPtr<IUW>(matrix);
-  return matrix;
-}
-
-template<MTX_A>
-inline IUW* TMatrixCopy(TMatrix<MTX_P>* destination, TMatrix<MTX_P>* source) {
+inline IUW* TMatrixCopy(TMatrix<MTX_P>* destination, const TMatrix<MTX_P>* source) {
   ISZ size_destination = TMatrixSize<MTX_P>(destination),
       size_source      = TMatrixSize<MTX_P>(source);
   if (size_destination < size_source) return NILP;
@@ -304,11 +247,24 @@ inline IUW* TMatrixCopy(TMatrix<MTX_P>* destination, TMatrix<MTX_P>* source) {
   return destination;
 }
 
-/* A multi-dimensional array Ascii Object. */
-template<MTX_A, typename BOF = Nil>
+template<typename T, typename ISY, const ISY... N>
+struct TDim {
+  const ISY* dims;
+
+  TDim() : dims(T<...N>()) {}
+
+  template<const ISY... N>
+  inline static const ISY* T() {
+    static const ISY Count = ISY(sizeof...(N)), Dims[sizeof...(N)] = { N... };
+    return &Count;
+  }
+};
+
+/* A homogeneous multi-dimensional array contiguous data types. */
+template<MTX_A, typename DIM = Nil, typename BOF = Nil>
 class AMatrix {
   enum {
-    SizeInit = 512,
+    SizeInit = 512, //< Initial size of the matrix.
   };
   AArray<IUA, ISZ, ISZ(SizeInit), BOF> obj_;  //< An Auto-Array object.
 
@@ -343,7 +299,9 @@ class AMatrix {
 
   /* Initializes an array of n elements of the given type.
   @param max_elements The max number_ of elements in the array socket. */
-  AMatrix(const AMatrix& other) : obj_(other.Obj()) {}
+  AMatrix(const AMatrix& other) : obj_() {
+  //other.AJT_ARY()
+  }
 
   /* Destructs nothing. */
   ~AMatrix() { 
@@ -352,14 +310,68 @@ class AMatrix {
 
   /* Clones the other object; up-sizing the socket only if required. */
   inline TMatrix<MTX_P>* Resize(const ISZ* dimension_delta) {
-    TMatrixResize<T, ISZ>(AJT(), dimension_delta);
-    return this;
+    //TMatrixResize<T, ISZ>(AJT(), dimension_delta);
+    return This();
+  }
+
+  template<MTX_A>
+  TMatrix<MTX_P>* CloneDelta(const ISZ* dimensions_delta) {
+    Autoject& ajt = AJT();
+    auto matrix = TMatrixPtr<ISZ>(ajt);
+    TMatrix<MTX_P>* matrix = TMatrixPtr<ISZ>(ajt.origin);
+    ISZ* a_dimensions = &matrix->dimensions.count;
+    ISZ dimension_count = *a_dimensions;
+    if (IsError(dimensions_delta) || dimension_count == 0) {
+      ISZ bytes = TMatrixSize<MTX_P>(matrix);
+      if (bytes < 0) return NILP;
+      IUW* origin_new = ajt.ram(NILP, bytes);
+      if (IsError(origin_new)) return NILP;
+      IUW* origin = ajt.origin;
+      ISZ bytes = TMatrixSize<MTX_P>(&matrix->dimensions.count);
+      ArrayCopy(origin_new, TPtr<CHA>(origin_new) + bytes,
+        origin, TPtr<CHA>(origin) + bytes);
+      return TPtr<TMatrix<MTX_P>>(origin_new);
+    }
+    ISZ dimensions_delta_count = *dimensions_delta++;
+    if (dimension_count != dimensions_delta_count) return -1;
+    if (dimension_count == 1) {
+      return NILP;
+    }
+    ISZ bytes = TMatrixSize<MTX_P>(dimensions_delta);
+    if (bytes < 0) return NILP;
+    IUW* origin_new = ajt.ram(NILP, bytes);
+    const ISZ* b_dimensions = 0,
+      * a_cursor = a_dimensions,
+      * b_cursor = dimensions_delta_count;
+    a_dimensions += dimension_count;
+    dimensions_delta += dimension_count;
+    T* ary = TMatrixStart<MTX_P>(matrix);
+    ISZ dimensions_new[dimension_count];
+    ISZ* dimensions_new_ptr = dimensions_new;
+    ISZ dimensions_counter = dimension_count;
+    ISZ dimension_last;
+    while (dimensions_counter-- > 0) {
+      dimension_last = *++a_cursor + *++b_cursor;
+      *dimensions_new_ptr++ = dimension_last;
+    }
+    while (a_cursor > a_dimensions)
+      return TMatrixPtr<ISZ>(origin_new);
   }
 
   /* Clones the other object; up-sizing the socket only if required. */
   inline TMatrix<MTX_P>* Copy(AMatrix<MTX_P>& other,
                               RAMFactory ram = obj_.AJT().ram) {
-    return TMatrixCopy<MTX_P>(obj_.Obj(), other, ram);
+    return NILP;// TMatrixCopy<MTX_P>(obj_.This(), other.This());
+  }
+
+  template<MTX_A>
+  inline TMatrix<MTX_P>* Resize(const ISZ* dimensions_delta) {
+		//Autoject& ajt = AJT();
+  //  auto matrix = Clone<ISZ>(dimensions_delta);
+  //  if (IsError(matrix)) return matrix;
+  //  ajt.origin = TPtr<IUW>(matrix);
+  //  return matrix;
+    return NILP;
   }
 
   /* Gets the number_ of dimensions. */
@@ -372,7 +384,7 @@ class AMatrix {
   inline T* Start() { return TMatrixStart<MTX_P>(This()); }
 
   /* Returns the Autoject-Array. */
-  inline AArray<ARY_P, ISZ(SizeInit), BOF>& AJT_ARY() { return obj_; }
+  inline AArray<IUA, ISZ, ISZ(SizeInit), BOF>& AJT_ARY() { return obj_; }
 
   /* Returns the Autoject. */
   inline Autoject& AJT() { return obj_.AJT(); }
@@ -382,7 +394,7 @@ class AMatrix {
   }
 
   /* Returns the Auto-Array. */
-  inline AArray<ARY_P, ISZ(SizeInit), BOF>& Array() { return obj_; }
+  inline AArray<IUA, ISZ, ISZ(SizeInit), BOF>& Array() { return obj_; }
 
   template<typename Printer = COut>
   inline Printer& PrintTo(Printer& o) {

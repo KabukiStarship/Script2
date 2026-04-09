@@ -4,29 +4,34 @@
 namespace _ {
 
 ISC BSeqParamNumber(const DTB* params, ISN param_number) {
-  if (IsError(params)) return 0;
-  DTB num_params = *params++;
-  if (param_number > num_params)
+  enum {
+    StateNormal = 0,
+    StateVarint = 1,
+  };
+  if (IsError(params))
+    return 0;
+  ISC param_count = ISC(*params++);
+  if (param_number > param_count)
     return _NIL;
-  DTB i;
+  if (param_count < 0) {
+    param_count ^= DTB(1) << 15;
+    param_count |= ISC(*params++) << 15;
+  }
+  ISC state = 0,
+    bits_shift = 0;
+  ISC i;
   for (i = 0; i < param_number; ++i) {
-    DTB value = params[i];
-    if (value == STR_)
-      ++param_number;
-    else if (value > 31) {  // It's an array!
-      value = value >> 5;
-      if (value < 4) {  // It's a single dimension!
-        param_number += 2;
-        break;
-      } else if (value > 7) {
-        // D_COUT ("\nError");
-        return _NIL;
-      } else {
-        param_number += params[i] + 1;
+    DTB value = *params++;
+		if (ATypeIsVarLength(value)) {
+      if (state == StateNormal) {
+        state = StateVarint;
+        bits_shift = 0;
       }
+      value ^= DTB(1) << 15;
+      value |= ISC(*params++) << 15;
     }
   }
-  return params[i];
+  return *params++;
 }
 }  //< namespace _
 #endif

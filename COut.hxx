@@ -81,6 +81,7 @@ COut::COut(const CHA* item, const CHA* second_item, const CHA* third_item) {
   Print(second_item);
   Print(third_item);
 }
+
 COut& COut::Star() { return *this; }
 
 COut& COut::Print(CHA item) {
@@ -89,17 +90,17 @@ COut& COut::Print(CHA item) {
 }
 
  COut& COut::Print(const CHA* item) {
-  return TSPrint<COut, CHA>(*this, item);
+  return TPrint<COut, CHA>(*this, item);
 }
 
 #if USING_STB == YES_0
 COut& COut::Print(CHB item) {
-  STD_COUT << (CHN)item;
+  STD_COUT << CHN(item);
   return *this;
 }
 
 COut& COut::Print(const CHB* item) {
-  return TSPrint<COut, CHB>(*this, item);
+  return TPrint<COut, CHB>(*this, item);
 }
 #endif
 
@@ -114,7 +115,7 @@ COut& COut::Print(CHC item) {
   return *this;
 }
 COut& COut::Print(const CHC* item) {
-  return TSPrint<COut, CHC>(*this, item);
+  return TPrint<COut, CHC>(*this, item);
 }
 #endif
 
@@ -199,7 +200,7 @@ COut& COut::Print(FPD item) {
 }
 
 COut& COut::Print(Hexf& item) {
-  return TSPrintHex<COut>(*this, item.element.Value(), item.element.count);
+  return TPrintHex<COut>(*this, item.element.Value(), item.element.count);
 }
 
 COut& COut::Print(Binaryf& item) {
@@ -287,26 +288,26 @@ COut& COut::NL(FPD item) {
 }
 #endif
 
-COut& COut::Hex(const void* item) { return TSPrintHex<COut>(*this, item); }
+COut& COut::Hex(const void* item) { return TPrintHex<COut>(*this, item); }
 COut& COut::Hex(const void* item, ISW size) {
-  return TSPrintHex<COut>(*this, item, size);
+  return TPrintHex<COut>(*this, item, size);
 }
 COut& COut::Hex(const void* item, const void* item_stop) {
-  return TSPrintHex<COut>(*this, item, item_stop);
+  return TPrintHex<COut>(*this, item, item_stop);
 }
-COut& COut::Hex(ISA item) { return TSPrintHex<COut, ISA, IUA>(*this, item); }
-COut& COut::Hex(IUA item) { return TSPrintHex<COut, IUA>(*this, item); }
-COut& COut::Hex(ISB item) { return TSPrintHex<COut, ISB, IUB>(*this, item); }
-COut& COut::Hex(IUB item) { return TSPrintHex<COut, IUB>(*this, item); }
-COut& COut::Hex(ISC item) { return TSPrintHex<COut, ISC, IUC>(*this, item); }
-COut& COut::Hex(IUC item) { return TSPrintHex<COut, IUC>(*this, item); }
-COut& COut::Hex(ISD item) { return TSPrintHex<COut, ISD, IUD>(*this, item); }
-COut& COut::Hex(IUD item) { return TSPrintHex<COut, IUD>(*this, item); }
+COut& COut::Hex(ISA item) { return TPrintHex<COut, ISA, IUA>(*this, item); }
+COut& COut::Hex(IUA item) { return TPrintHex<COut, IUA>(*this, item); }
+COut& COut::Hex(ISB item) { return TPrintHex<COut, ISB, IUB>(*this, item); }
+COut& COut::Hex(IUB item) { return TPrintHex<COut, IUB>(*this, item); }
+COut& COut::Hex(ISC item) { return TPrintHex<COut, ISC, IUC>(*this, item); }
+COut& COut::Hex(IUC item) { return TPrintHex<COut, IUC>(*this, item); }
+COut& COut::Hex(ISD item) { return TPrintHex<COut, ISD, IUD>(*this, item); }
+COut& COut::Hex(IUD item) { return TPrintHex<COut, IUD>(*this, item); }
 #if USING_FPC == YES_0
-COut& COut::Hex(FPC item) { return TSPrintHex<COut>(*this, item); }
+COut& COut::Hex(FPC item) { return TPrintHex<COut>(*this, item); }
 #endif
 #if USING_FPD == YES_0
-COut& COut::Hex(FPD item) { return TSPrintHex<COut>(*this, item); }
+COut& COut::Hex(FPD item) { return TPrintHex<COut>(*this, item); }
 #endif
 
 /* Stores the given item to the boofer and store the size. */

@@ -123,60 +123,106 @@ const CHC* SScanBack(const CHC* start, CHC& item);
 @param stop  The last character in the string boofer.
 @param item  The character to print. */
 CHA* SPrint(CHA* start, CHA* stop, IUA item);
+CHA* SPrint(CHA* start, ISW bytes, IUA item);
 CHA* SPrint(CHA* start, CHA* stop, ISA item);
+CHA* SPrint(CHA* start, ISW bytes, ISA item);
 CHA* SPrint(CHA* start, CHA* stop, IUB item);
+CHA* SPrint(CHA* start, ISW bytes, IUB item);
 CHA* SPrint(CHA* start, CHA* stop, ISB item);
+CHA* SPrint(CHA* start, ISW bytes, ISB item);
 CHA* SPrint(CHA* start, CHA* stop, IUC item);
+CHA* SPrint(CHA* start, ISW bytes, IUC item);
 CHA* SPrint(CHA* start, CHA* stop, ISC item);
+CHA* SPrint(CHA* start, ISW bytes, ISC item);
 CHA* SPrint(CHA* start, CHA* stop, IUD item);
+CHA* SPrint(CHA* start, ISW bytes, IUD item);
 CHA* SPrint(CHA* start, CHA* stop, ISD item);
+CHA* SPrint(CHA* start, ISW bytes, ISD item);
 CHA* SPrint(CHA* start, CHA* stop, FPC item);
+CHA* SPrint(CHA* start, ISW bytes, FPC item);
 CHA* SPrint(CHA* start, CHA* stop, FPD item);
+CHA* SPrint(CHA* start, ISW bytes, FPD item);
 CHA* SPrint(CHA* start, CHA* stop, CHA item);
+CHA* SPrint(CHA* start, ISW bytes, CHA item);
 CHA* SPrint(CHA* start, CHA* stop, CHC item);
+CHA* SPrint(CHA* start, ISW bytes, CHC item);
 CHA* SPrint(CHA* start, CHA* stop, const CHA* item);
+CHA* SPrint(CHA* start, ISW bytes, const CHA* item);
 CHA* SPrint(CHA* start, CHA* stop, const CHB* item);
+CHA* SPrint(CHA* start, ISW bytes, const CHB* item);
 CHA* SPrint(CHA* start, CHA* stop, const CHC* item);
+CHA* SPrint(CHA* start, ISW bytes, const CHC* item);
 
 #if USING_STB == YES_0
 /* Prints a character to the string.
 @return  Nil upon failure or a pointer to the nil-term CHS upon success. */
 CHB* SPrint(CHB* start, CHB* stop, IUA item);
+CHB* SPrint(CHB* start, ISW bytes, IUA item);
 CHB* SPrint(CHB* start, CHB* stop, ISA item);
+CHB* SPrint(CHB* start, ISW bytes, ISA item);
 CHB* SPrint(CHB* start, CHB* stop, IUB item);
+CHB* SPrint(CHB* start, ISW bytes, IUB item);
 CHB* SPrint(CHB* start, CHB* stop, ISB item);
+CHB* SPrint(CHB* start, ISW bytes, ISB item);
 CHB* SPrint(CHB* start, CHB* stop, IUC item);
+CHB* SPrint(CHB* start, ISW bytes, IUC item);
 CHB* SPrint(CHB* start, CHB* stop, ISC item);
+CHB* SPrint(CHB* start, ISW bytes, ISC item);
 CHB* SPrint(CHB* start, CHB* stop, IUD item);
+CHB* SPrint(CHB* start, ISW bytes, IUD item);
 CHB* SPrint(CHB* start, CHB* stop, ISD item);
+CHB* SPrint(CHB* start, ISW bytes, ISD item);
 CHB* SPrint(CHB* start, CHB* stop, FPC item);
+CHB* SPrint(CHB* start, ISW bytes, FPC item);
 CHB* SPrint(CHB* start, CHB* stop, FPD item);
-CHB* SPrint(CHB* start, CHB* stop, CHA item);
+CHB* SPrint(CHB* start, ISW bytes, FPD item);
 CHB* SPrint(CHB* start, CHB* stop, CHB item);
+CHB* SPrint(CHB* start, ISW bytes, CHB item);
+CHB* SPrint(CHB* start, CHB* stop, CHB item);
+CHB* SPrint(CHB* start, ISW bytes, CHB item);
 CHB* SPrint(CHB* start, CHB* stop, CHC item);
+CHB* SPrint(CHB* start, ISW bytes, CHC item);
 CHB* SPrint(CHB* start, CHB* stop, const CHA* item);
+CHB* SPrint(CHB* start, ISW bytes, const CHA* item);
 CHB* SPrint(CHB* start, CHB* stop, const CHB* item);
+CHB* SPrint(CHB* start, ISW bytes, const CHB* item);
 CHB* SPrint(CHB* start, CHB* stop, const CHC* item);
+CHB* SPrint(CHB* start, ISW bytes, const CHC* item);
 #endif
 
 #if USING_STC == YES_0
 /* Prints a character or string to the string.
 @return  Nil upon failure or a pointer to the nil-term CHS upon success. */
 CHC* SPrint(CHC* start, CHC* stop, IUA item);
+CHC* SPrint(CHC* start, ISW bytes, IUA item);
 CHC* SPrint(CHC* start, CHC* stop, ISA item);
+CHC* SPrint(CHC* start, ISW bytes, ISA item);
 CHC* SPrint(CHC* start, CHC* stop, IUB item);
+CHC* SPrint(CHC* start, ISW bytes, IUB item);
 CHC* SPrint(CHC* start, CHC* stop, ISB item);
+CHC* SPrint(CHC* start, ISW bytes, ISB item);
 CHC* SPrint(CHC* start, CHC* stop, IUC item);
+CHC* SPrint(CHC* start, ISW bytes, IUC item);
 CHC* SPrint(CHC* start, CHC* stop, ISC item);
+CHC* SPrint(CHC* start, ISW bytes, ISC item);
 CHC* SPrint(CHC* start, CHC* stop, IUD item);
+CHC* SPrint(CHC* start, ISW bytes, IUD item);
 CHC* SPrint(CHC* start, CHC* stop, ISD item);
+CHC* SPrint(CHC* start, ISW bytes, ISD item);
 CHC* SPrint(CHC* start, CHC* stop, FPC item);
+CHC* SPrint(CHC* start, ISW bytes, FPC item);
 CHC* SPrint(CHC* start, CHC* stop, FPD item);
+CHC* SPrint(CHC* start, ISW bytes, FPD item);
 CHC* SPrint(CHC* start, CHC* stop, CHA item);
+CHC* SPrint(CHC* start, ISW bytes, CHA item);
 CHC* SPrint(CHC* start, CHC* stop, CHC item);
+CHC* SPrint(CHC* start, ISW bytes, CHC item);
 CHC* SPrint(CHC* start, CHC* stop, const CHA* item);
+CHC* SPrint(CHC* start, ISW bytes, const CHA* item);
 CHC* SPrint(CHC* start, CHC* stop, const CHB* item);
+CHC* SPrint(CHC* start, ISW bytes, const CHB* item);
 CHC* SPrint(CHC* start, CHC* stop, const CHC* item);
+CHC* SPrint(CHC* start, ISW bytes, const CHC* item);
 #endif
 
 /* Utility class for printing numbers. */
@@ -184,7 +230,7 @@ struct Valuef {
   ISW count;         //< Width of the item in bytes or columns.
   ATypeValue value;  //< The type and value.
 
-  /* Constrcts a NIL item. */
+  /* Constructs a NIL item. */
   Valuef();
 
   /* Constructs a Valuef from the given item. */

@@ -15,7 +15,7 @@ have a word, we only need 16-bits, so why not reserve the entire word?
 @param  value A pointer to a value to print.
 @return If start is nil the remapped Extended Plain Type.
         If start and stop are not nil a pointer to the CHR after the nil term
-        char upon succes. 
+        char upon success. 
 */
 typedef DTW(*ACTXHandler)(void* begin, void* end, DTW type, IUW value,
                           IUW vmsb);
@@ -40,7 +40,7 @@ static DTW ACTXHandlerDefault(void* begin, void* end, DTW type, IUW value,
 
 /* A single cache-line-aligned variable set for controlling the Chinese Room.
 */
-struct ACTXFrame {
+struct alignas(ACPUCacheLineSize) ACTXFrame {
   enum {
     Bytes = 256 + ACPUCacheLineSize,
     BytesReserved = (Bytes - 2 * sizeof(IUW)) >> ACPUBytesLog2,
@@ -54,38 +54,44 @@ struct ACTXFrame {
   ACTXFrame();
 };
 
+// Returns true if the given type is a POD type.
+BOL ATypeIsPOD(DTB type);
+
 /* Returns the the Global Chinese Room Entry. */
-inline ACTXFrame* ACTX();
+ACTXFrame* ACTX();
 
 // Maps a type to ACTXHandler.
-inline DTW ACTXHandle(ACTXHandler actxh, void* begin, void* end, DTW type, 
+DTW ACTXHandle(ACTXHandler actxh, void* begin, void* end, DTW type, 
                       IUW value, IUW vmsb);
 // Maps a type to ACTXHandler.
-inline DTW ACTXHandle(void* begin, void* end, DTW type, IUW value, IUW vmsb);
+DTW ACTXHandle(void* begin, void* end, DTW type, IUW value, IUW vmsb);
+
+// Returns true if the given type is not statically allocated.
+BOL ATypeIsVarLength(DTB type);
 
 // Deasserts the MD bits if it's now CTX type.
-inline DTB ATypeMDDeassert(DTW type);
+DTB ATypeMDDeassert(DTW type);
 
 // Asserts the Pointer modifier bits.
-inline DTB ATypeMakePtr(DTW type);
+DTB ATypeMakePtr(DTW type);
 
 // Asserts the Crabs index modifier bits.
-inline DTB ATypeMakeCrabsIndex(DTW type);
+DTB ATypeMakeCrabsIndex(DTW type);
 
 // Asserts the Context Modifier bits.
-inline DTB ATypeMDC(DTW type);
+DTB ATypeMDC(DTW type);
 
 // Asserts the Context Modifier bits.
-inline DTB ATypeCNS_MDC(DTW type);
+DTB ATypeCNS_MDC(DTW type);
 
 // Asserts the Constant bit.
-inline DTB ATypeMakeCNS(DTW type);
+DTB ATypeMakeCNS(DTW type);
 
 // Asserts the Pointer modifier bits.
-inline DTB ATypeMakePtrCNS(DTW type);
+DTB ATypeMakePtrCNS(DTW type);
 
 // Asserts the Crabs index modifier bits.
-inline DTB ATypeCrabsIndexCNS(DTW type);
+DTB ATypeCrabsIndexCNS(DTW type);
 
 // A 128-bit unsigned integer.
 struct IUE {
@@ -167,44 +173,44 @@ BOL ATypeIsCH(DTB type);
 ISA ATypeSizeOfPOD(DTB type);
 
 /* Gets the alignment mask of the given type. */
-inline DTW AlignmentMask(CHA item);
-inline DTW AlignmentMask(ISA item);
-inline DTW AlignmentMask(IUA item);
-inline DTW AlignmentMask(CHB item);
-inline DTW AlignmentMask(ISB item);
-inline DTW AlignmentMask(IUB item);
-inline DTW AlignmentMask(CHC item);
-inline DTW AlignmentMask(ISC item);
-inline DTW AlignmentMask(IUC item);
-inline DTW AlignmentMask(FPC item);
-inline DTW AlignmentMask(ISD item);
-inline DTW AlignmentMask(IUD item);
-inline DTW AlignmentMask(FPD item);
-inline DTW AlignmentMask(void* item);
-inline DTW AlignmentMask(const void* item);
+DTW AlignmentMask(CHA item);
+DTW AlignmentMask(ISA item);
+DTW AlignmentMask(IUA item);
+DTW AlignmentMask(CHB item);
+DTW AlignmentMask(ISB item);
+DTW AlignmentMask(IUB item);
+DTW AlignmentMask(CHC item);
+DTW AlignmentMask(ISC item);
+DTW AlignmentMask(IUC item);
+DTW AlignmentMask(FPC item);
+DTW AlignmentMask(ISD item);
+DTW AlignmentMask(IUD item);
+DTW AlignmentMask(FPD item);
+DTW AlignmentMask(void* item);
+DTW AlignmentMask(const void* item);
 
 /* Gets the type of the given item. */
-inline DTW TypeOf(CHA item);
-inline DTW TypeOf(ISA item);
-inline DTW TypeOf(IUA item);
-inline DTW TypeOf(CHB item);
-inline DTW TypeOf(ISB item);
-inline DTW TypeOf(IUB item);
-inline DTW TypeOf(CHC item);
-inline DTW TypeOf(ISC item);
-inline DTW TypeOf(IUC item);
-inline DTW TypeOf(FPC item);
-inline DTW TypeOf(ISD item);
-inline DTW TypeOf(IUD item);
-inline DTW TypeOf(FPD item);
-inline DTW TypeOf(CHA* item);
-inline DTW TypeOf(const CHA* item);
-inline DTW TypeOf(CHB* item);
-inline DTW TypeOf(const CHB* item);
-inline DTW TypeOf(CHC* item);
-inline DTW TypeOf(const CHC* item);
-inline DTW TypeOf(void* item);
-inline DTW TypeOf(const void* item);
+DTW TypeOf(CHA item);
+DTW TypeOf(ISA item);
+DTW TypeOf(IUA item);
+DTW TypeOf(CHB item);
+DTW TypeOf(ISB item);
+DTW TypeOf(IUB item);
+DTW TypeOf(CHC item);
+DTW TypeOf(ISC item);
+DTW TypeOf(IUC item);
+DTW TypeOf(FPC item);
+DTW TypeOf(ISD item);
+DTW TypeOf(IUD item);
+DTW TypeOf(FPD item);
+DTW TypeOf(CHA* item);
+DTW TypeOf(const CHA* item);
+DTW TypeOf(CHB* item);
+DTW TypeOf(const CHB* item);
+DTW TypeOf(CHC* item);
+DTW TypeOf(const CHC* item);
+DTW TypeOf(void* item);
+DTW TypeOf(const void* item);
 
 /* Returns the size of the given type in bytes.
 @return the size bytes of the value. */
@@ -224,23 +230,23 @@ void* ATypeValueEnd(void* value, DTB type);
 //ISA ATypeCustomAlignMask(DTA type);
 
 // Converts a 16-bit ASCII Data Type bit pattern to Extended ASCII Type mapping.
-inline DTB ATypeToEXT_NC(DTW type_msb, DTW type);
-inline DTB ATypeToEXT(DTW type);
-inline DTB ATypeToEXT(DTW type_msb, DTW type_pod);
+DTB ATypeToEXT_NC(DTW type_msb, DTW type);
+DTB ATypeToEXT(DTW type);
+DTB ATypeToEXT(DTW type_msb, DTW type_pod);
 
 // Checks if the given type is a Extended Plain or Extended Context Type.
-inline BOL ATypeIsCTX(DTW sw_vt, DTW pod);
+BOL ATypeIsCTX(DTW sw_vt, DTW pod);
 
 // Checks if the given type is a Extended Plain or Extended Context Type.
-inline BOL ATypeIsCTX(DTW type);
+BOL ATypeIsCTX(DTW type);
 
 /* Converts an ASCII Type to Context Type without checking.
 @pre Dev shall check if the type is a CTX Type before calling. */
-inline DTW ATypeToCTX_NC(DTW sw_vt, DTW pod);
+DTW ATypeToCTX_NC(DTW sw_vt, DTW pod);
 
 /* Remaps EPa-EPl to POD types 0-19 using 12 5-bit maps in an 8-byte type.
 @return (type >> (type - _EPa) * 5) & ATypePODMask */
-inline DTB ATypeRemapEP_NC(DTW pod_type, DTW ep_remap);
+DTB ATypeRemapEP_NC(DTW pod_type, DTW ep_remap);
 
 /* Stores a pointer to the ASCII data type and it's value. */
 struct ATypePtr {
@@ -249,7 +255,7 @@ struct ATypePtr {
 };
 
 // Gets the Unicode format: 0=UTF-8, 1=UTF-16, 2=UTF-32.
-inline ISA ATypeTextFormat(DTW type);
+ISA ATypeTextFormat(DTW type);
 
 class Nil {
 public:
@@ -334,93 +340,93 @@ class ATypeValue {
   explicit ATypeValue(DTW type, const void* base_ptr, ISW offset, ISW base_bytes);
 
   /* Gets the type_. */
-  inline DTW Type();
+  DTW Type();
 
   /* Gets the Unicode string format if any. */
-  inline DTW UnicodeFormat();
+  DTW UnicodeFormat();
 
   /* Gets a pointer to the word_. */
-  inline void* WordPTR();
+  void* WordPTR();
 
   /* Gets the value as the return type. */
-  inline void* ToPTR();
-  inline CHA* ToSTA();
-  inline CHB* ToSTB();
-  inline CHC* ToSTC();
-  inline IUA  ToIUA();
-  inline IUB  ToIUB();
-  inline IUN  ToIUN();
-  inline IUC  ToIUC();
-  inline IUD  ToUID();
+  void* ToPTR();
+  CHA* ToSTA();
+  CHB* ToSTB();
+  CHC* ToSTC();
+  IUA  ToIUA();
+  IUB  ToIUB();
+  IUN  ToIUN();
+  IUC  ToIUC();
+  IUD  ToUID();
 
   /* Gets the first word of the word_. */
-  inline IUW Value();
+  IUW Value();
 
   /* Gets the second word of the value if the type is two words wide. */
-  inline IUW MSB();
+  IUW MSB();
 
   /* Sets the word to the value. */
-  inline void SetWord(IUW value);
+  void SetWord(IUW value);
 
   /* Sets the second word to the value. */
-  inline void SetWord2(IUW value);
+  void SetWord2(IUW value);
 
   /*Sets the type_ to _NIL with an indeterminate value. */
-  inline void SetNIL();
+  void SetNIL();
 
   /*Sets the type_ to _NIL with an indeterminate value. */
-  inline void SetNIL(IUW value);
+  void SetNIL(IUW value);
 
-  inline void* Set(void* value);
-  inline const void* Set(const void* value);
+  void* Set(void* value);
+  const void* Set(const void* value);
 
-  inline void* Set(void* base_ptr, ISW voffset);
-  inline const void* Set(const void* base_ptr, ISW voffset);
+  void* Set(void* base_ptr, ISW voffset);
+  const void* Set(const void* base_ptr, ISW voffset);
 
-  inline void* Set(DTW type, void* value);
-  inline const void* Set(DTW type, const void* value);
+  void* Set(DTW type, void* value);
+  const void* Set(DTW type, const void* value);
 
-  inline void* Set(DTW type, void* base_ptr, ISW voffset);
-  inline const void* Set(DTW type, const void* base_ptr, ISW voffset);
+  void* Set(DTW type, void* base_ptr, ISW voffset);
+  const void* Set(DTW type, const void* base_ptr, ISW voffset);
 
-  inline void* Set(DTW type, void* value, void* value_end);
-  inline const void* Set(DTW type, const void* value, const void* value_end);
+  void* Set(DTW type, void* value, void* value_end);
+  const void* Set(DTW type, const void* value, const void* value_end);
 
-  inline void* Set(DTW type, void* base_ptr, ISW offset, void* value_end);
-  inline const void* Set(DTW type, const void* base_ptr, ISW offset, 
+  void* Set(DTW type, void* base_ptr, ISW offset, void* value_end);
+  const void* Set(DTW type, const void* base_ptr, ISW offset, 
                          const void* value_end);
 
-  inline void* Set(DTW type, void* base_ptr, ISW offset, ISW base_byes);
-  inline const void* Set(DTW type, const void* base_ptr, ISW offset, 
+  void* Set(DTW type, void* base_ptr, ISW offset, ISW base_byes);
+  const void* Set(DTW type, const void* base_ptr, ISW offset, 
                          ISW base_byes);
 
   /*Sets the word_ to the given value and updates the type. */
 #if USING_STA == YES_0
-  inline void Set(CHA value);
-  inline void Set(const CHA* value);
+  void Set(CHA value);
+  void Set(const CHA* value);
 #endif
 #if USING_STB == YES_0
-  inline void Set(CHB value);
-  inline void Set(const CHB* value);
+  void Set(CHB value);
+  void Set(const CHB* value);
 #endif
 #if USING_STC == YES_0
-  inline void Set(const CHC* value);
-  inline void Set(CHC value);
+  void Set(const CHC* value);
+  void Set(CHC value);
 #endif
-  inline void Set(ISA value);
-  inline void Set(IUA value);
-  inline void Set(ISB value);
-  inline void Set(IUB value);
-  inline void Set(BOL value);
-  inline void Set(ISC value);
-  inline void Set(IUC value);
-  inline void Set(ISD value);
-  inline void Set(IUD value);
+  void Set(ISA value);
+  void Set(IUA value);
+  void Set(ISB value);
+  void Set(IUB value);
+  void Set(BOL value);
+  void Set(ISC value);
+  void Set(IUC value);
+  void Set(ISD value);
+  void Set(IUD value);
 #if USING_FPC == YES_0
-  inline void Set(FPC value);
+  void Set(FPC value);
 #endif
 #if USING_FPD == YES_0
-  inline void Set(FPD value);
+  void Set(FPD value);
 #endif
 };
 

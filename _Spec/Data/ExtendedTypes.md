@@ -74,6 +74,10 @@ There are two sets of Extended Types, EM (Extended Mappable) Types and EB (Exten
 | 65 |   R17   |  Reserved  | Reserved.                             |
 | 66 |   R18   |  Reserved  | Reserved.                             |
 | 67 |   R19   |  Reserved  | Reserved.                             |
+|    |   PMS   |   8-bit    | Promise type wrapper.                 |
+|    |   RES   |   8-bit    | Result type (fulfilled/rejected).     |
+|    |   VAL   |   8-bit    | Value container for promises.         |
+|    |   ERR   |   8-bit    | Error container for rejections.       |
 
 EB Types are created by setting the MOD bits to `0b00`.
 
@@ -192,7 +196,7 @@ The CNS, MD, and EB (Extended Block) bits take up 6 control bits, leaving 10 LSb
 | 01  |   ___   |  Reserved  | Reserved.                                    |
 | 02  |   ___   |  Reserved  | Reserved.                                    |
 | 03  |   STA   |   String   | Nil-terminated UTF-8 string.                 |
-# | 04  |   VSB   |   Varint   | 16-bit signed MSb variant encoded integer.   |
+| 04  |   VSB   |   Varint   | 16-bit signed MSb variant encoded integer.   |
 | 05  |   VUB   |   Varint   | 16-bit unsigned MSb variant encoded integer. |
 | 06  |   STB   |   String   | Nil-terminated UTF-16 string.                |
 | 07  |   VSC   |   Varint   | 32-bit signed MSb variant encoded integer.   |
@@ -221,8 +225,6 @@ The CNS, MD, and EB (Extended Block) bits take up 6 control bits, leaving 10 LSb
 | 29  |   ___   |  Reserved  | Reserved.                                    |
 | 30  |   ___   |  Reserved  | Reserved.                                    |
 | 31  |   ___   |  Reserved  | Reserved.                                    |
-| 32  |   ERD   |   Error    | 16-byte Error integer type.                  |
-| 33  |   ___   |  Reserved  | Reserved.                                    |
 | --  |   ---   |     ---    | Extended Standard Object Types.              |
 | 34  |   EOA   | Err Object | 1-byte size-width Error type.                |
 | 35  |   EOB   | Err Object | 2-byte size-width Error type.                |

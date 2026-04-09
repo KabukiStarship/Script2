@@ -61,12 +61,9 @@
     <ClInclude Include="Error.hxx" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="File.hpp" />
     <ClInclude Include="File.hxx" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Floor.hxx" />
-    <ClInclude Include="Folder.h" />
-    <ClInclude Include="Folder.hxx" />
     <ClInclude Include="Hash.hpp" />
     <ClInclude Include="Interrupts.h" />
     <ClInclude Include="Interrupts.hxx" />
@@ -154,7 +151,7 @@
     <None Include="AGENTS.md" />
     <None Include="ReadMe.md" />
     <None Include="Tasks.json" />
-    <None Include="_Seams\22.Seam.s2" />
+    <None Include="_Seams\Test.crabs" />
     <None Include="_Seams\ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
