@@ -110,9 +110,9 @@
     <ClInclude Include="Varint.hpp" />
     <ClInclude Include="Wall.hpp" />
     <ClInclude Include="_Config.h" />
-    <ClInclude Include="_ConfigDefault.hxx" />
-    <ClInclude Include="_ConfigFooter.hxx" />
-    <ClInclude Include="_ConfigHeader.hxx" />
+    <ClInclude Include="_ConfigDefault.h" />
+    <ClInclude Include="_ConfigFooter.h" />
+    <ClInclude Include="_ConfigHeader.h" />
     <ClInclude Include="_Debug.h" />
     <ClInclude Include="_Package.hxx" />
     <ClInclude Include="_Release.h" />
