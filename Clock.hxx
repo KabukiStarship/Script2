@@ -3,7 +3,7 @@
 #if SEAM >= CRABS_CLOCK
 #include <ctime>
 #include "Uniprinter.hpp"
-#include "RNG.h"
+#include "Random.h"
 #include "Crabs.h"
 #if SEAM == CRABS_CLOCK
 #include "_Debug.h"

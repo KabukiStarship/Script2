@@ -47,7 +47,7 @@ const void* BinaryPow10Exponents();
 #if USING_FPC == YES_0
 /* Gets the maximum number_ of digits required to represent a FPC as in
 ASCII. */
-ISC FloatDigitsMax();
+ISC FPCDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 BOL IsFinite(FPC value);
@@ -62,7 +62,7 @@ FPC Ceiling(FPC value);
 #if USING_FPD == YES_0
 /* Gets the maximum number_ of digits required to represent a FPD as in
 ASCII. */
-ISC DoubleDigitsMax();
+ISC FPDDigitsMax();
 
 /* Checks if the given value is not NaN or +/- Infinity. */
 BOL IsFinite(FPD value);

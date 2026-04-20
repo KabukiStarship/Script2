@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #if SEAM >= CRABS_FTOS
-#include "../RNG.h"
+#include "../Random.h"
 #if SEAM == CRABS_FTOS
 #include "../_Debug.h"
 #else

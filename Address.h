@@ -4,6 +4,9 @@
 #define CRABS_ADDRESS
 #include <_Config.h>
 #if SEAM >= CRABS_OP
+/* @defgroup Address
+@brief Crabs Address utilities.
+*/
 namespace _ {
 
 /* Returns a pointer to static variable for writing the address { a, \0 } to.

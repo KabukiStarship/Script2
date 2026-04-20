@@ -6,9 +6,7 @@
 #if SEAM >= CRABS_OP
 namespace _ {
 
-struct BIn;
 struct BOut;
-struct Op;
 
 //enum {
 //  CROpPush          = 0, //< Operation Type 0: Stack push .

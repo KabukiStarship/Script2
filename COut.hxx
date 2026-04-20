@@ -10,6 +10,7 @@
 #include "_Release.h"
 #endif
 #define STD_COUT std::wcerr
+
 namespace _ {
 
 COut::COut() {}

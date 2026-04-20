@@ -14,7 +14,7 @@
 #endif
 namespace _ {
 
-/* @ingroup ASCII Autoject
+/* @defgroup ASCII Autoject
 Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/vector_types/array.md */
 
@@ -85,10 +85,10 @@ class TBOF {
   static constexpr ISZ Size() { return ISZ((Size_ < 0) ? 0 : ISZ(Size_)); }
 
   /* The size in words rounded down. */
-  static constexpr ISZ SizeWords() { return CSizeWords<ISZ>(Bytes()); }
+  static constexpr ISZ SizeWords() { return CSizeWords<ISZ>(CBytes()); }
 
   /* The size in bytes including the header. */
-  static constexpr ISZ Bytes() {
+  static constexpr ISZ CBytes() {
     return Size() * sizeof(T) + sizeof(Class);
   }
 
@@ -374,7 +374,7 @@ class Autoboofer {
 
   /* Gets the total ASCII Object size in bytes. */
   template<typename Class = ARY>
-  inline ISZ Bytes() {
+  inline ISZ CBytes() {
     return TSizeBytes<T, ISZ, Class>(AJT());
   }
 
@@ -396,7 +396,7 @@ class Autoboofer {
 
   /* Gets the stop of the OBJ. */
   inline CHA* Stop() {
-    return TPtr<CHA>(ajt_.origin) + Bytes() - 1;
+    return TPtr<CHA>(ajt_.origin) + CBytes() - 1;
   }
 
   /* Gets the Autoject. */

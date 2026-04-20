@@ -27,7 +27,7 @@ inline const ISC* OpFirst(CHC index) { return TPtr<const ISC>(index); }
 
 /* Converts the given value to a pointer. */
 inline CHC OpFirst(const Op* op) {
-  return (CHC) IUW(op->in);
+  return CHC(IUW(op->in));
 }
 /* Converts the given value to a pointer. */
 inline const ISC* OpLast(CHC index) { return TPtr<const ISC>(index); }

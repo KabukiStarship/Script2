@@ -16,7 +16,7 @@
 //@todo Change SCP_A to typename ISZ=ISW, typename ISY=ISZ
 namespace _ {
 
-/* @ingroup ASCII Stack */
+/* @defgroup ASCII Stack */
 
 /* ASCII Stack
 Please see the ASCII Data Specification for DRY documentation.
@@ -494,8 +494,8 @@ class AStack {
 
   inline ISY Total() { return This()->total; }
   inline ISZ Count() { return This()->count; }
-  inline ISZ Bytes() { return TStackBytes<SCK_P>(Total()); }
-  inline ISZ SizeWords() { return Bytes() >> ACPUBytesLog2; }
+  inline ISZ CBytes() { return TStackBytes<SCK_P>(Total()); }
+  inline ISZ SizeWords() { return CBytes() >> ACPUBytesLog2; }
 
   /* Gets the 16-bit ASCII Data Type for this Stack. */
   constexpr DTB CType() { VTSCKBits | CATypePOD<T>(); }

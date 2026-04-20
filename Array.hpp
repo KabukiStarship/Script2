@@ -487,17 +487,17 @@ class AArray {
  public:
   /* Initializes a array of n elements to whatever can fit in the BOF. */
   AArray() {
-    D_RAM_WIPE(Begin(), Bytes() - sizeof(ARY));
+    D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
   /* Attempts to down-size the BOF or creates a dynamically allocated array.
   @param size The number of elements in the Array. */
   AArray(ISZ total) : aobj_(TArrayBytes<ARY_P>(total)) {
-    D_RAM_WIPE(Begin(), Bytes() - sizeof(ARY));
+    D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
   AArray(ISZ total, RAMFactory ram) : aobj_(TArrayBytes<ARY_P>(total), ram) {
-    D_RAM_WIPE(Begin(), Bytes() - sizeof(ARY));
+    D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
   /* Copies the items into the obj_.Boofer () with some additional
@@ -518,8 +518,8 @@ class AArray {
   ~AArray() {}
 
   inline ISZ Total() { return This()->total; }
-  inline ISZ Bytes() { return TArrayBytes<T, ISZ>(Total()); }
-  inline ISZ SizeWords() { return Bytes() >> ACPUBytesLog2; }
+  inline ISZ CBytes() { return TArrayBytes<T, ISZ>(Total()); }
+  inline ISZ SizeWords() { return CBytes() >> ACPUBytesLog2; }
 
   /* Gets the 16-bit ASCII Data Type for this Stack. */
   constexpr DTB CType() { VTSCKBits | CATypePOD<T>(); }

@@ -11,19 +11,19 @@ using namespace ::_;
 namespace CRTest {
 
 template<typename ISZ = ISN, typename ISY = ISM, typename CHS = CHR, 
-  typename CHT = CHC, typename DT  = DTB>
+  typename CHT = CHE, typename DT  = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
   enum {
-    Bytes = 512 * sizeof(CHS)
+    CBytes = 512 * sizeof(CHS)
   };
 
   D_COUT("\n\nTesting ABook<IS" << CSizeCodef<ISZ>() << ",IS" << CSizeCodef<ISY>() << 
          ",CH" << CSizeCodef<CHS>() << ",DT" << CSizeCodef<DT>() << 
-         "> sizeof:" << sizeof(TBook<BOK_P>) << " with Bytes : " << Bytes);
+         "> sizeof:" << sizeof(TBook<BOK_P>) << " with Bytes : " << CBytes);
 
-  ABook<BOK_P, Bytes> book;
+  ABook<BOK_P, CBytes> book;
 
   D_COUT("\n\nAfter TBookInit book.Bytes():" << book.Bytes() << 
          " book.Count():" << book.Count() << 
@@ -64,9 +64,9 @@ void TestBook() {
   //book.COut();
 
   D_COUT("\n\nStep 3 Adding large string...:\n" << Linef("---\n"));
-  CHS large_string[Bytes] = {0};
+  CHS large_string[CBytes] = {0};
   CHS* cursor = large_string;
-  for (ISN i = 0; i < Bytes - 1; ++i) *cursor++ = '*';
+  for (ISN i = 0; i < CBytes - 1; ++i) *cursor++ = '*';
   *cursor = 0;
   ISZ index = book.Insert(large_string, 1);
   auto dez_nutz = book.This();

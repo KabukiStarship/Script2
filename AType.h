@@ -42,8 +42,8 @@ static DTW ACTXHandlerDefault(void* begin, void* end, DTW type, IUW value,
 */
 struct alignas(ACPUCacheLineSize) ACTXFrame {
   enum {
-    Bytes = 256 + ACPUCacheLineSize,
-    BytesReserved = (Bytes - 2 * sizeof(IUW)) >> ACPUBytesLog2,
+    CBytes = 256 + ACPUCacheLineSize,
+    BytesReserved = (CBytes - 2 * sizeof(IUW)) >> ACPUBytesLog2,
   };
   ACTXHandler handler;            //< ASCII Context Handler.
   ISW epoch;                      //< 32-bit Unix timestamp epoch.
@@ -266,7 +266,7 @@ public:
   static constexpr ISW Size();
 
   /* Gets the size of the socket. */
-  static constexpr ISW Bytes();
+  static constexpr ISW CBytes();
 
   /* Gets the size of the socket. */
   static constexpr ISW SizeWords();

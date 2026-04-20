@@ -13,7 +13,7 @@
 #else
 #include "_Release.h"
 #endif
-#define TBL_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, \
+#define TBL_A typename CHS = CHR, typename CHT = CHE, typename ISZ = ISR, \
   typename ISY = ISQ, typename HSH = IUN
 #define TBL_P CHS, CHT, ISZ, ISY, HSH
 #define TBL TTable<CHS, CHT, ISZ, ISY, HSH>
@@ -869,7 +869,7 @@ class ATable {
     TTableInit<TBL_P>(obj_.Origin(), total);
   }
 
-  inline ISZ Bytes() { return This()->bytes; }
+  inline ISZ CBytes() { return This()->bytes; }
 
   /* Deep copies the given string into the Table.
   @return The index of the string in the Table. */

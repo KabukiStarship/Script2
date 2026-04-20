@@ -19,7 +19,7 @@ void TestStack(const CHA* args) {
   AStack<T, ISZ, ISZ, 8> stack;
 
   D_COUT(Linef("\n+---\n| AStack: total:") << stack.Total() << 
-         " count:" << stack.Count() << " bytes:" << stack.Bytes() <<
+         " count:" << stack.Count() << " bytes:" << stack.CBytes() <<
          " size_words:" << stack.SizeWords());
   D_COUT_OBJ(stack);
 

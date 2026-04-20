@@ -12,11 +12,11 @@
 #else
 #include "_Release.h"
 #endif
-#define LOM_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, typename ISY = ISQ
+#define LOM_A typename CHS = CHR, typename CHT = CHE, typename ISZ = ISR, typename ISY = ISQ
 #define LOM_P CHS, CHT, ISZ, ISY
 #define LOM TLoom<LOM_P>
 namespace _ {
-/* @ingroup Loom
+/* @defgroup Loom
 Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Loom.md
 

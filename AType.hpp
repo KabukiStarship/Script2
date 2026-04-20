@@ -563,17 +563,6 @@ constexpr DT CATypeIS() {
   return (CATypeSW<IS, DT>() << 2) | _ISA;
 }
 
-/* Returns the ASCII Type for the given character type CH.
-CHB:  3   0b0011   (0b00 << 2) | 0b11
-CHC:  7   0b0111   (0b01 << 2) | 0b11
-CHD: 11   0b1011   (0b10 << 2) | 0b11
-CHE: 15   0b1111   (0b11 << 2) | 0b11
-
-template<typename CH, typename DT = DTB>
-constexpr DT CATypeCH() {
-  return (CATypeSize<CH, DT>() << 2) | 3;
-} */
-
 // Returns the Modifier Bits.
 inline DTB ATypeMD(DTB type) {
   return (type >> ATypeMDBit0) & 3;
@@ -603,7 +592,7 @@ inline BOL ATypeIsES(DTW type) {
 }
 
 /* Extracts the UTF type.
-@return 0 if the type is not a stirng type or 1, 2, or 4 if it is. */
+@return 0 if the type is not a string type or 1, 2, or 4 if it is. */
 inline ISA ATypeTextFormat(DTW type) {
   DTW pod = type & ATypePODMask;
   // CHA: 3   0b0011

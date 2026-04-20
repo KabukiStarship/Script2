@@ -18,13 +18,13 @@ struct Mirror {
       read;    //< The read variable.
 };
 
-const Op* MirrorResult(Mirror* mirror, Error error);
+const Op* MirrorResult(Mirror* mirror, AError error);
 
 enum {
-  cMirrorHeaderSize = 4 * sizeof(ISC)  //< Size of a Mirror Header.
+  MirrorHeaderSize = 4 * sizeof(ISC)  //< Size of a Mirror Header.
 };
 
-static const IUW kMaxMirrorSize = ~((IUW)0);
+static const IUW MirrorSizeMax = ~((IUW)0);
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.
@@ -66,8 +66,7 @@ BOL MirrorIsReadable(Mirror* mirror);
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Operation Result. */
-const Op* MirrorResult(Mirror* mirror, Error error,
-                                  const DTB* header);
+const Op* MirrorResult(Mirror* mirror, AError error, const DTB* header);
 /* Used to return an erroneous result from a B-Input.
 @param bin     The source Mirror.
 @param error   The error type.
@@ -75,8 +74,7 @@ const Op* MirrorResult(Mirror* mirror, Error error,
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Operation Result. */
-const Op* MirrorResult(Mirror* mirror, Error error,
-                                  const DTB* header);
+const Op* MirrorResult(Mirror* mirror, AError error, const DTB* header);
 
 /* Used to return an erroneous result from a B-Input.
 @param bin     The source Mirror.
@@ -85,8 +83,8 @@ const Op* MirrorResult(Mirror* mirror, Error error,
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Operation Result. */
-const Op* MirrorResult(Mirror* mirror, Error error,
-                                  const DTB* header, IUA offset);
+const Op* MirrorResult(Mirror* mirror, AError error, const DTB* header,
+                       IUA offset);
 
 /* Used to return an erroneous result from a B-Input.
 @param bin     The source Mirror.
@@ -106,8 +104,8 @@ const Op* MirrorResult(Mirror* mirror, Error error,
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Operation Result. */
-const Op* MirrorResult(Mirror* mirror, Error error,
-                                  const DTB* header, ISC offset, CHA* address);
+const Op* MirrorResult(Mirror* mirror, AError error, const DTB* header,
+                       ISC offset, CHA* address);
 
 /* Used to return an erroneous result from a B-Input.
 @param bin     The source Mirror.
@@ -116,8 +114,8 @@ const Op* MirrorResult(Mirror* mirror, Error error,
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Operation Result. */
-const Op* MirrorResult(Mirror* mirror, Error error,
-                                  const DTB* header, ISC offset, CHA* address);
+const Op* MirrorResult(Mirror* mirror, AError error, const DTB* header,
+                       ISC offset, CHA* address);
 
 }  //< namespace _
 #endif

@@ -328,7 +328,7 @@ class AMap {
   /* Gets the sorted domain array. */
   inline D* Domain() { return TMapDomain<MAP_P>(This()); }
 
-  /* Gets the array of mappings from the domain to the codmain. */
+  /* Gets the array of mappings from the domain to the codomain. */
   inline ISZ* Codomain() { return TMapCodomain<MAP_P>(This()); }
 
   /* Adds the given domain_member and it's mapped codomain_mapping. */
@@ -373,10 +373,10 @@ class AMap {
   inline void Clear() { TMapClear<MAP_P>(This()); }
 
   /* Gets the size of the array in bytes*/
-  inline ISZ Bytes() { return AJT().Bytes<MAP>(); }
+  inline ISZ CBytes() { return AJT().CBytes(); }
 
   /* Gets the size of the array in CPU words*/
-  inline ISZ SizeWords() { return AJT().SizeWords<MAP>(); }
+  inline ISZ SizeWords() { return AJT().SizeWords(); }
 
   /* Gets the size of the array in elements*/
   inline ISZ Size() { return This()->total; }

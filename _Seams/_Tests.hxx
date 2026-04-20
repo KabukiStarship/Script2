@@ -20,7 +20,7 @@
 #include "15.CrabsOp.hxx"
 #include "16.Room.hxx"
 #include "17.MathCore.hxx"
-#include "18.RNG.hxx"
+#include "18.Random.hxx"
 #include "19.File.hxx"
 #include "20.SGraTe.hxx"
 #include "21.Promise.hxx"

@@ -10,7 +10,7 @@
 #include "_Release.h"
 #endif
 namespace _ {
-/* @ingroup Book
+/* @defgroup Book
 Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Book.md
 
@@ -20,10 +20,10 @@ Please see the ASCII List documentation for information about
 #undef  BOK_P
 #define BOK_P CHS, CHT, ISZ, ISY, DT
 #undef  BOK_A
-#define BOK_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISN,\
+#define BOK_A typename CHS = CHR, typename CHT = CHE, typename ISZ = ISN,\
   typename ISY = ISM, typename DT = DTB
 
-/* @ingroup Book
+/* @defgroup Book
 @brief A contiguous memory Associative List composed of a Loom and list.
 The Loom datatype stores the bytes, which includes the size of the 
 Keys Loom and the Values List. The Keys Loom is an array of strings that 
@@ -754,7 +754,7 @@ class ABook {
   inline TLoom<LOM_P>* Keys() { return TBookKeys<BOK_P>(This()); }
 
   /* Returns the size in bytes. */
-  inline ISZ Bytes() { return Values()->bytes; }
+  inline ISZ CBytes() { return Values()->bytes; }
 
   /* Returns the size in words. */
   inline ISZ SizeWords() { return obj_.SizeWords() >> ACPUBytesLog2; }

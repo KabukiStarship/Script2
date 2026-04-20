@@ -10,6 +10,8 @@ struct BIn;
 struct BOut;
 struct Op;
 
+// @defgroup Slot
+
 /* A Slot in a Door in a Chinese Room to pass messages through.
 A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
@@ -92,7 +94,7 @@ struct Slot {
   /* Copies the contents of the target slot into the slot. */
   const Op* Write(Slot& target);
 };
-
+// @} Slot
 }  //< namespace _
 
 #endif

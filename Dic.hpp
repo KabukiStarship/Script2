@@ -11,7 +11,7 @@
 #include "_Release.h"
 #endif
 namespace _ {
-/* @ingroup Dic
+/* @defgroup Dic
 Please see the ASCII Data Specification for DRY documentation.
 @link ./Spec/Data/MapTypes/Dictionary.md */
 #define DIC_A typename CHS = CHR, typename CHT = CHR, typename ISZ = ISR,\
@@ -19,7 +19,7 @@ Please see the ASCII Data Specification for DRY documentation.
 #define DIC_P CHS, CHT, ISZ, ISY, DT, HSH
 #define DIC TDic<CHS, CHT, ISZ, ISY, DT, HSH>
 
-/* @ingroup Dic
+/* @defgroup Dic
 @brief A contiguous memory Associative List created from a List and a Table.
 @code
 +-----------------+
@@ -721,7 +721,7 @@ public:
   inline TBL* Keys() { return TDicKeys<DIC_P>(This()); }
 
   /* Returns the size in bytes. */
-  inline ISZ Bytes() { return Values()->bytes; }
+  inline ISZ CBytes() { return Values()->bytes; }
 
   /* Returns the size in words. */
   inline ISZ BytesWords() { return aary_.SizeWords() >> ACPUBytesLog2; }

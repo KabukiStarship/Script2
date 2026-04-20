@@ -1,6 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
 
-#define ASSEMBLY_TYPE ASSEMBLE_EXE 1
 #define CRABS_RUN_TESTS YES_0
 #define CRABS_ROOM_BYTES (1 << 20)
 #define CRABS_ROOM_NAME_LENGTH_MAX  16

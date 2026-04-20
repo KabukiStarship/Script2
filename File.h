@@ -7,9 +7,6 @@
 #include "Uniprinter.hpp"
 namespace _ {
 
-constexpr ISN GetURIPathLengthMax();
-constexpr ISN GetURLFilenameLengthMax();
-
 struct TextFile;
 
 /* A file in a filesystem. */
@@ -39,7 +36,7 @@ struct File {
   BOL IsOpen();
 
   /* Opens the file. */
-  ISN Open();
+  ISN Open(const CHR* path);
 
   /* Closes the file. */
   void Close();
@@ -81,15 +78,15 @@ struct File {
   CHR* extension;
   CHR is_directory_,  //< flag for if this is a directory.
     is_reg_;
-  CHR path[GetURIPathLengthMax()];
-  CHR name[GetURLFilenameLengthMax()];
+  CHR path[URIPathLengthMax];
+  CHR name[URLFilenameLengthMax];
   TMC last_time_modified_;  //< Last time the URL was modified.
 };
 
 /* A text file in a filesystem. */
 struct TextFile {
 
-  /* Constructs a TextFile from the given URI string. */
+  /* Constructs a TextFile from a File. */
   TextFile(File& file);
 
   /* Returns reference to this. */
@@ -202,35 +199,12 @@ struct TextFile {
   TextFile& Binary(FPC item);
   TextFile& Binary(FPD item);
 
-  ISN PrintAndCount(const CHA* string);
-#if USING_STB == YES_0
-  ISN PrintAndCount(const CHB* string);
-#endif
-#if USING_STC == YES_0
-  ISN PrintAndCount(const CHC* string);
-#endif
-
 private:
   File& file_;
 };
 
 /* A file in a filesystem. */
 struct Folder {
-  CHR path_[GetURIPathLengthMax()];
-  ISN has_next_;
-  size_t file_count_;
-
-  File* files_;
-#ifdef _MSC_VER
-  void* _h;
-  WIN32_FIND_DATA _f;
-#else
-  _TINYDIR_DIR* _d;
-  struct _tinydir_dirent* _e;
-#ifndef _TINYDIR_USE_READDIR
-  struct _tinydir_dirent* _ep;
-#endif
-#endif
 
   Folder(const CHR* uri);
 
@@ -242,7 +216,22 @@ struct Folder {
   ISN HasNext();
   ISN OpenSubfolder(size_t i);
   void Close();
+ private:
+   CHR path_[URIPathLengthMax];
+   ISN has_next_;
+   size_t file_count_;
 
+   File* files_;
+#ifdef _MSC_VER
+   void* _h;
+   ISC _f[148]; //< WIN32_FIND_DATA
+#else
+   _TINYDIR_DIR* _d;
+   struct _tinydir_dirent* _e;
+#ifndef _TINYDIR_USE_READDIR
+   struct _tinydir_dirent* _ep;
+#endif
+#endif
 };
 
 }  //< namespace _

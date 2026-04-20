@@ -7,7 +7,7 @@
 #include "Interrupts.h"
 #include "BOut.hpp"
 #include "Wall.hpp"
-#define ROM_A typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, \
+#define ROM_A typename CHS = CHR, typename CHT = CHE, typename ISZ = ISR, \
   typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
 #define ROM_P CHS, CHT, ISZ, ISY, DT, HSH
 #define ROM TRoom<ROM_P>
@@ -40,7 +40,7 @@ namespace _ {
   /* Gets the response CHA corresponding to the given request. */
   const CHA* CRRequests(CRRequest r);
 
-template<typename CHS = CHR, typename CHT = CHC>
+template<typename CHS = CHR, typename CHT = CHE>
 const CHS** TCRStates() {
   static const CHS* Strings[CRStateInvalid][16] = {
     "Initializing",
@@ -53,13 +53,13 @@ const CHS** TCRStates() {
   return Strings;
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
+template<typename CHS = CHR, typename CHT = CHE>
 inline const CHS* CRStates(CRRequest r) {
   if (r < 0 || r > CRStateInvalid) r = CRStateInvalid;
   return TCRRequests()[r];
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
+template<typename CHS = CHR, typename CHT = CHE>
 inline const CHS** TCRRequests() {
   static const CHS* Strings[CRRequestInvalid][16] = {
     "Open door",
@@ -69,7 +69,7 @@ inline const CHS** TCRRequests() {
   return Strings;
 }
 
-template<typename CHS = CHR, typename CHT = CHC>
+template<typename CHS = CHR, typename CHT = CHE>
 const CHS* CRRequests(CRRequest r) {
   if (r < 0 || r > CRRequestInvalid) r = CRRequestInvalid;
   return TCRRequests()[r];

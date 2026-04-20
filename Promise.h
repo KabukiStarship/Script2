@@ -23,9 +23,9 @@ BOL PromiseIsPending(Slot* slot);
 BOL PromiseIsFulfilled(Slot* slot);
 BOL PromiseIsRejected(Slot* slot);
 TMC PromiseTimestamp(Slot* slot);
-const Op* PromiseSetResult(Slot* slot, IUW newState, void* result, const DTB* header);
-const Op* PromiseTriggerFulfillment(Crabs* crabs, Slot* promiseSlot);
-const Op* PromiseTriggerRejection(Crabs* crabs, Slot* promiseSlot);
+const Op* PromiseSetResult(Slot* slot, IUW new_state, void* result, const DTB* header);
+const Op* PromiseTriggerFulfillment(Crabs* crabs, Slot* promise_slot);
+const Op* PromiseTriggerRejection(Crabs* crabs, Slot* promise_slot);
 // @endmodule
 
 }  //< namespace _

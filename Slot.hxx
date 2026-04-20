@@ -9,6 +9,8 @@
 #include "_Release.h"
 #endif
 namespace _ {
+// @defgroup Slot
+// @{
 
 const Op* ReturnError(Slot* slot, ERC error) {
   D_COUT('\n' << TSError<CHR>()[error]);
@@ -506,7 +508,6 @@ UTF1& Slot::Print(UTF1& utf) {
              << " end:" << Hex<>(l_end) << Socket(l_begin, l_end);
 }
 #endif
-
-}  //< namespace _
-
-#endif  //> #if SEAM >= _0_0_4
+//< @} Slot
+}
+#endif

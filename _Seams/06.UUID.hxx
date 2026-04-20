@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #if SEAM >= CRABS_CLOCK
 #include "../Clock.hpp"
-#include "../RNG.h"
+#include "../Random.h"
 #include "../Uniprinter.hpp"
 #if SEAM == CRABS_UUID
 #include "../_Debug.h"

@@ -14,7 +14,7 @@ static const CHA* CrabsScript(const CHA* args) {
 #if SEAM == CRABS_SCRIPT
   A_TEST_BEGIN;
   ADoor door;
-  Slot slot
+  Slot slot;
 #endif
   return NILP;
 }

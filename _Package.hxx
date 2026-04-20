@@ -16,7 +16,7 @@
 #include "Operand.hxx"
 #include "Promise.hxx"
 #include "Puff.hxx"
-#include "RNG.hxx"
+#include "Random.hxx"
 #include "Slot.hxx"
 #include "Stringf.hxx"
 #include "Test.hxx"

@@ -19,7 +19,7 @@ void TestArray(const CHA* args) {
   AArray<T, ISZ, 8> array;
 
   D_COUT(Linef("\n+---\n| AArray: total:") << array.Total() << 
-         " bytes:" << array.Bytes() << " size_words:" << array.SizeWords());
+         " bytes:" << array.CBytes() << " size_words:" << array.SizeWords());
   D_COUT_OBJ(array);
 }
 #endif

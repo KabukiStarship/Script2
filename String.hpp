@@ -14,7 +14,7 @@
 #define D_COUT_STRING(s)
 #endif
 
-#define STR_A typename T=CHR, typename CHT = CHC, typename ISZ=ISW, typename ISY=ISZ
+#define STR_A typename T=CHR, typename CHT = CHE, typename ISZ=ISW, typename ISY=ISZ
 #define STR_P T, CHT, ISZ, ISY
 #define STR TString<T, CHT, ISZ, ISY>
 
@@ -356,10 +356,10 @@ class AString {
   inline ISZ Count() { return This()->count; }
 
   /* Returns the String Stack count. */
-  inline ISZ Bytes() { return sizeof(STR) + Total() * sizeof(T); }
+  inline ISZ CBytes() { return sizeof(STR) + Total() * sizeof(T); }
 
   /* Gets the total ASCII Object size in words. */
-  inline ISZ SizeWords() { return Bytes() >> ACPUBytesLog2; }
+  inline ISZ SizeWords() { return CBytes() >> ACPUBytesLog2; }
 
   /* Resets the sprinter_ to the given word-aligned boofer. */
   inline T* Init() {

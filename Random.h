@@ -60,28 +60,28 @@ IUD IUDRandom();
 ISD ISDRandom();
 
 /* Gets a random 8-bit/1-IUA unsigned integer. */
-void RandomNumber(IUA& result);
+void Random(IUA& result);
 
 /* Gets a random 8-bit/1-IUA signed integer. */
-void RandomNumber(ISA& result);
+void Random(ISA& result);
 
 /* Gets a random 16-bit/2-IUA unsigned integer. */
-void RandomNumber(IUB& result);
+void Random(IUB& result);
 
 /* Gets a random 16-bit/2-IUA signed integer. */
-void RandomNumber(ISB& result);
+void Random(ISB& result);
 
 /* Gets a random 32-bit/4-IUA unsigned integer. */
-void RandomNumber(IUC& result);
+void Random(IUC& result);
 
 /* Gets a random 32-bit/4-IUA signed integer. */
-void RandomNumber(ISC& result);
+void Random(ISC& result);
 
 /* Gets a random 64-bit/8-IUA unsigned integer. */
-void RandomNumber(IUD& result);
+void Random(IUD& result);
 
 /* Gets a random 64-bit/8-IUA signed integer. */
-void RandomNumber(ISD& result);
+void Random(ISD& result);
 
 /* Generates a random 64-bit floating point number 0 <= x <= 1. */
 void RandomProbability(FPC& result);

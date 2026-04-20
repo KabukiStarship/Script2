@@ -20,7 +20,7 @@ void TestTable() {
   ISY total_init = 13;
   ATable<TBL_P> table(total_init);
   const TBL* This = table.This();
-  const ISZ size_bytes = table.Bytes();
+  const ISZ size_bytes = table.CBytes();
 
   static const CHS a[] = {'A', '\0'}, b[] = {'B', '\0'}, c[] = {'C', '\0'},
                    d[] = {'D', '\0'}, e[] = { 'E', '\0' },

@@ -9,7 +9,7 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename CHS = CHR, typename CHT = CHC, typename ISZ = ISR, 
+template<typename CHS = CHR, typename CHT = CHE, typename ISZ = ISR, 
   typename ISY = ISQ, typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
   enum {
@@ -23,7 +23,7 @@ static void TestDic() {
 
   ADic<DIC_P, Size> dic(TotalInit);
 
-  D_COUT("\n\nAfter init total:" << dic.Total() << " bytes:" << dic.Bytes() << 
+  D_COUT("\n\nAfter init total:" << dic.Total() << " bytes:" << dic.CBytes() << 
          " size_words:" << dic.BytesWords() <<
          "\nPrinting empty dictionary:\n");
   D_COUT_DIC(dic.This());

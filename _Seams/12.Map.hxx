@@ -2,7 +2,7 @@
 #if SEAM >= CRABS_MAP
 #include "../Map.hpp"
 //
-#include "../RNG.h"
+#include "../Random.h"
 #if SEAM == CRABS_MAP
 #include "../_Debug.h"
 #else
@@ -12,7 +12,7 @@ using namespace ::_;
 namespace CRTest {
 
 template<typename D, D DomainMin_, D DomainMax_, typename ISZ,
-          ISZ CodomainMin_, ISZ CodomainMax_, ISZ Size_>
+         ISZ CodomainMin_, ISZ CodomainMax_, ISZ Size_>
 void TestMap() {
   D_COUT(Linef("\n\n\n\n\n\n+---\nTesting AMap<D")
          << sizeof(D) << ",ISZ" << CHA('0' + sizeof(ISZ))
@@ -21,28 +21,30 @@ void TestMap() {
   AMap<MAP_P, Size_> map;
   D_COUT_OBJ(map);
 
-  D_COUT("map_size:" << map.Size() << " map_bytes:" << map.Bytes()
+  D_COUT("map_size:" << map.Size() << " map_bytes:" << map.CBytes()
                      << " map_size_words:" << map.SizeWords()
                      << " sizeof(TMapBuf<D,ISZ>):" << sizeof(TMapBuf<D, ISZ>)
                      << "\n domain:" << TDelta<>(map.This(), map.Domain())
                      << " codomain:" << TDelta<>(map.This(), map.Codomain()));
-
   D domain[Size_] = { 0 };
 
   D_COUT(Headingf("Generating random domain values..."));
 
   for (ISZ i = 0; i < Size_; ++i) {
-    D d = Random(DomainMin_, DomainMax_);
+    D d = 0;
+    Random(d);
     domain[i] = d;
     D_COUT("\n" << i << ".) " << d);
   }
 
-  for (ISZ i = 0; i < Size_; ++i) map.Add(domain[i]);
+  for (ISZ i = 0; i < Size_; ++i)
+    map.Add(domain[i]);
 
   D_COUT_MAP(map.This());
 
   D_COUT(Headingf("Searching the domain for each domain[i]..."));
-  for (ISZ i = 0; i < Size_; ++i) A_AVOW_INDEX(i, ISZ(map.Find(domain[i])), i);
+  for (ISZ i = 0; i < Size_; ++i) 
+    A_AVOW_INDEX(i, map.Find(domain[i]), i);
 
   D_COUT(Headingf("Remapping the codomain to random numbers..."));
 
@@ -54,10 +56,10 @@ void TestMap() {
     map.RemapCodomain(i, c);
   }
   D_COUT_OBJ(map);
-  D_COUT(Headingf("Searching for the remappings..."));
+  D_COUT(Headingf("Searching for the remapping..."));
 
   for (ISZ i = 0; i < Size_; ++i)
-    A_AVOW_INDEX(i, ISZ(map.FindCodomain(codomain[i])), i);
+    A_AVOW_INDEX(i, map.FindCodomain(codomain[i]), i);
   D_COUT_OBJ(map);
 }
 }  //< namespace CRTest

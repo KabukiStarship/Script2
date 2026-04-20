@@ -11,7 +11,7 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename CHS = CHR, typename CHT = CHC, typename ISZ = ISN, typename ISY = ISN>
+template<typename CHS = CHR, typename CHT = CHE, typename ISZ = ISN, typename ISY = ISN>
 void TestLoom() {
   D_COUT(Linef("\n\n---\n\n"));
 

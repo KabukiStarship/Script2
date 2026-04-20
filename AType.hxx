@@ -27,7 +27,8 @@ inline BOL ATypeIsVarLength(DTB type) {
     return false;
   }
   DTB ext_type = ATypeToEXT(type);
-  if (ext_type >= ATypeESTVarLengthTypeCount && ext_type <= ATypeESPODTypeLast) {
+  if (ext_type >= ATypeESTVarLengthTypeCount && ext_type <= ATypeESPODTypeLast)
+  {
     return true;
   }
   return false;
@@ -150,7 +151,7 @@ BOL ATypeVTBits(DTB type) {
   return (VT != _ARY || MT != 0) ? -1 : VT;
 }
 
-// Retrusn the size of an ASCII POD Type 0-31 in bytes.
+// Returns the size of an ASCII POD Type 0-31 in bytes.
 ISA ATypeSizeOfPOD(DTB type) {
   if (type <= 0) return 0;
   if (type <= _CHA) return 1;
@@ -377,7 +378,7 @@ DTB ATypeRemapEP_NC(DTW pod_type, DTW ep_remap) {
 
 Nil::Nil() {}
 constexpr ISW Nil::Size() { return 0; }
-constexpr ISW Nil::Bytes() { return 0; }
+constexpr ISW Nil::CBytes() { return 0; }
 constexpr ISW Nil::SizeWords() { return 0; }
 IUW* Nil::Words() { return NILP; }
 

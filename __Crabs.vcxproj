@@ -77,7 +77,6 @@
     <ClInclude Include="Math.hpp" />
     <ClInclude Include="Math.hxx" />
     <ClInclude Include="Matrix.hpp" />
-    <ClInclude Include="Mirror.h" />
     <ClInclude Include="MorseCode.hxx" />
     <ClInclude Include="Op.h" />
     <ClInclude Include="Op.hpp" />
@@ -90,8 +89,8 @@
     <ClInclude Include="Puff.hpp" />
     <ClInclude Include="Puff.hxx" />
     <ClInclude Include="Regex.hpp" />
-    <ClInclude Include="RNG.h" />
-    <ClInclude Include="RNG.hxx" />
+    <ClInclude Include="Random.h" />
+    <ClInclude Include="Random.hxx" />
     <ClInclude Include="Room.hpp" />
     <ClInclude Include="Set.hpp" />
     <ClInclude Include="Slot.h" />
@@ -134,7 +133,7 @@
     <ClInclude Include="_Seams\15.CrabsOp.hxx" />
     <ClInclude Include="_Seams\16.Room.hxx" />
     <ClInclude Include="_Seams\17.MathCore.hxx" />
-    <ClInclude Include="_Seams\18.RNG.hxx" />
+    <ClInclude Include="_Seams\18.Random.hxx" />
     <ClInclude Include="_Seams\19.File.hxx" />
     <ClInclude Include="_Seams\20.SGraTe.hxx" />
     <ClInclude Include="_Seams\22.CrabsScript.hxx" />

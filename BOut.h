@@ -7,7 +7,6 @@
 namespace _ {
 
 struct BIn;
-struct BOut;
 struct Op;
 
 /* List of the Finite BOut States. */

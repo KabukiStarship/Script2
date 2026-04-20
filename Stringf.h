@@ -6,7 +6,7 @@
 #include "AType.h"
 namespace _ {
 
-/* @module Stringf
+/* @defgroup Stringf
 @brief String formatting utilities for the Uniprinter.
 */
 
@@ -732,3 +732,4 @@ struct AErrorf {
 };
 }  //< namespace _
 #endif
+// @} Stringf

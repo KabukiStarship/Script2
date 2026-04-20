@@ -704,10 +704,10 @@ class AList {
   inline ISY Count() { return ISY(This()->map.count); }
 
   /* Count of the item in the List. */
-  inline ISZ Bytes() { return This()->bytes; }
+  inline ISZ CBytes() { return This()->bytes; }
 
   /* Count of the item in the List. */
-  inline ISZ BytesWords() { return TSizeWords<ISZ>(Bytes()); }
+  inline ISZ BytesWords() { return TSizeWords<ISZ>(CBytes()); }
 
   /* Count of the item in the List. */
   inline ISZ Top() { return This()->top; }

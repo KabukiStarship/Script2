@@ -94,8 +94,8 @@ inline const T* TPtr(const void* origin, ISW offset1, ISW offset2,
   return reinterpret_cast<const T*>(ISW(origin) + offset1 + offset2 + offset3);
 }
 
-/* @ingroup Binary
-@brief Misc binary and pointer function. */
+/* @defgroup Binary
+@brief binary and pointer utilities. */
 
 /* Converts the given value to a signed value of the same width. */
 inline ISA ToSigned(CHA value) { return ISA(value); }

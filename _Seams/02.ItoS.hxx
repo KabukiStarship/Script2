@@ -4,7 +4,7 @@
 #include <cstdio>
 //
 #include "../Puff.hpp"
-#include "../RNG.h"
+#include "../Random.h"
 #include "../Uniprinter.hpp"
 #if SEAM == CRABS_ITOS
 #include "../_Debug.h"
@@ -100,16 +100,16 @@ inline const CHA* ItoS(const CHA* args) {
   CHA text[Size + 1], expecting[Size + 1];
   CHA socket[Size];
   CHA* result;
-  IUD result_ui8, expected_ui8;
+  IUD result_ui8, expected_iud;
 
   D_COUT("\nTesting ScanUnsigned<IU, CHS> (const CHS*, const CHA*, I);");
 
   for (ISN i = 0; i < 1 << 6; ++i) {
-    expected_ui8 = IUDRandom();
-    sprintf_s(socket, Size, "%llu", expected_ui8);
+    expected_iud = IUDRandom();
+    sprintf_s(socket, Size, "%llu", expected_iud);
     const CHA* test = TSScanUnsigned<IUD, CHA>(socket, result_ui8);
     A_ASSERT(test);
-    A_AVOW(expected_ui8, result_ui8);
+    A_AVOW(expected_iud, result_ui8);
   }
 
   D_COUT("\n\nTesting Puff ItoS Algorithm...\n\n");
@@ -118,8 +118,8 @@ inline const CHA* ItoS(const CHA* args) {
   D_COUT("\n\nTesting %i problem children...\n\n" << count);
 
   for (ISN i = 0; i < count; ++i) {
-    expected_ui8 = problem_child[i];
-    sprintf_s(expecting, 24, "%llu", expected_ui8);
+    expected_iud = problem_child[i];
+    sprintf_s(expecting, 24, "%llu", expected_iud);
     static const CHA PuffDebugHeader[] =
         "\n\n    "
         "|6666555555555544444444443333333333222222222211111111110000000000|\n"
@@ -128,10 +128,10 @@ inline const CHA* ItoS(const CHA* args) {
         "    "
         "|*   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   *  *  *   |\n"
         "    |\0";
-    D_COUT(PuffDebugHeader << Binaryf(expected_ui8) << '|' << '\n'
+    D_COUT(PuffDebugHeader << Binaryf(expected_iud) << '|' << '\n'
                             << i << ".) ");
     ISN expected_length = TSCodeCount<CHA>(expecting);
-    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_iud);
     if (IsError(result)) {
       D_PAUSE("An error occurred :-(");
       break;
@@ -143,10 +143,10 @@ inline const CHA* ItoS(const CHA* args) {
   count = EdgeConditionCount;
   D_COUT("\n\nTesting " << count << " edge conditions...\n\n");
   for (ISW i = 0; i < count; ++i) {
-    expected_ui8 = edge_condition[i];
-    sprintf_s(expecting, 24, "%llu", expected_ui8);
+    expected_iud = edge_condition[i];
+    sprintf_s(expecting, 24, "%llu", expected_iud);
     D_COUT("\n\n" << i + 1 << ".) ");
-    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_ui8);
+    result = TSPrintUnsigned<IUD, CHA>(text, text + Size - 1, expected_iud);
     if (IsError(result)) {
       D_PAUSE("An error occurred :-(");
       break;

@@ -26,7 +26,7 @@ static const CHA* File(const CHA* args) {
 
   A_ASSERT(!file.IsOpen());
 
-  A_AVOW(0, file.Open());
+  A_AVOW(ISN(0), file.Open(TestURI));
 
   A_ASSERT(file.IsOpen());
 

@@ -1,7 +1,7 @@
 // Copyright AStarship <https://astarship.net>.
 #if SEAM >= CRABS_LIST
 #include "../List.hpp"
-#include "../RNG.h"
+#include "../Random.h"
 //#include "../Uniprinter.hpp"
 #if SEAM == CRABS_LIST
 #include "../_Debug.h"
@@ -21,7 +21,7 @@ static void TestList() {
          << CSizeCodef<ISZ>() << Linef(">\n+---"));
   AList<LST_P, 256> list(8);
   D_COUT("\n\nlist.Size():" << list.Total()
-                            << " list.Bytes():" << list.Bytes()
+                            << " list.Bytes():" << list.CBytes()
                             << " list.SizeWords():" << list.BytesWords());
   D_COUT_OBJ(list);
   D_COUT("\n\nStep 1: Fill up the list...");

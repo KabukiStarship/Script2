@@ -14,51 +14,55 @@
 //
 #include <errno.h>
 #include <stdlib.h>
-#ifdef _MSC_VER
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
 #include <windows.h>
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#else
-#include <dirent.h>
-#include <libgen.h>
-#include <stddef.h>
-#include <sys/stat.h>
-#endif
-
-#if (defined _MSC_VER || defined __MINGW32__)
-#include <windows.h>
-namespace _ {
-  enum { URIPathLengthMax = MAX_PATH };
-}
-#elif defined __linux__
-#include <limits.h>
-#ifdef PATH_MAX
-namespace _ {
-  enum { URIDirectoryPathLengthMax = PATH_MAX };
-}
-#else
-namespace _ {
-  enum { URIPathLengthMax = 4096 };
-}
-#endif
-#elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
-#include <sys/param.h>
-#if defined(BSD)
-#include <limits.h>
-#ifdef PATH_MAX
-namespace _ {
-  enum { URIDirectoryPathLengthMax = PATH_MAX };
-}
-#else
-namespace _ {
-  enum { URIPathLengthMax = 4096 };
-}
-#endif
-#endif
-#endif
+//#ifdef _MSC_VER
+//#ifndef WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
+//#endif
+//#include <windows.h>
+//#pragma warning(push)
+//#pragma warning(disable : 4996)
+//#else
+//#include <dirent.h>
+//#include <libgen.h>
+//#include <stddef.h>
+//#include <sys/stat.h>
+//#endif
+//
+//#if (defined _MSC_VER || defined __MINGW32__)
+//#include <windows.h>
+//namespace _ {
+//  enum { URIPathLengthMax = MAX_PATH };
+//}
+//#elif defined __linux__
+//#include <limits.h>
+//#ifdef PATH_MAX
+//namespace _ {
+//  enum { URIPathLengthMax = PATH_MAX };
+//}
+//#else
+//namespace _ {
+//  enum { URIPathLengthMax = 4096 };
+//}
+//#endif
+//#elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
+//#include <sys/param.h>
+//#if defined(BSD)
+//#include <limits.h>
+//#ifdef PATH_MAX
+//namespace _ {
+//  enum { URIPathLengthMax = PATH_MAX };
+//}
+//#else
+//namespace _ {
+//  enum { URIPathLengthMax = 4096 };
+//}
+//#endif
+//#endif
+//#endif
+enum {
+  Win32FindDataBytes = 592
+};
 
 #ifdef _MSC_VER
 enum {
@@ -78,40 +82,37 @@ enum { URLFilenameLengthMax = 256 };
 #ifndef _MSC_VER
 #if (defined __MINGW32__) && (defined _UNICODE)
 #define _TINYDIR_DIR _WDIR
-#define _tinydir_dirent _wdirent
-#define _tinydir_opendir _wopendir
-#define _tinydir_readdir _wreaddir
-#define _tinydir_closedir _wclosedir
+#define _og_dirent _wdirent
+#define _og_opendir _wopendir
+#define _og_readdir _wreaddir
+#define _og_closedir _wclosedir
 #else
 #define _TINYDIR_DIR DIR
-#define _tinydir_dirent dirent
-#define _tinydir_dirent _wdirent
-#define _tinydir_opendir opendir
-#define _tinydir_opendir _wopendir
-#define _tinydir_readdir readdir
-#define _tinydir_readdir _wreaddir
-#define _tinydir_closedir closedir
-#define _tinydir_closedir _wclosedir
+#define _og_dirent dirent
+#define _og_dirent _wdirent
+#define _og_opendir opendir
+#define _og_opendir _wopendir
+#define _og_readdir readdir
+#define _og_readdir _wreaddir
+#define _og_closedir closedir
+#define _og_closedir _wclosedir
 #endif
 #endif
 
-/* Allow user to use a custom allocator by defining _TINYDIR_MALLOC and
- * _TINYDIR_FREE. */
-#if defined(_TINYDIR_MALLOC) && defined(_TINYDIR_FREE)
-#elif !defined(_TINYDIR_MALLOC) && !defined(_TINYDIR_FREE)
-#else
-#error "Either define both alloc and free or none of them!"
-#endif
-
-#if !defined(_TINYDIR_MALLOC)
-#define _TINYDIR_MALLOC(_size) malloc(_size)
-#define _TINYDIR_FREE(_ptr) free(_ptr)
-#endif /* !defined(_TINYDIR_MALLOC) */
+///* Allow user to use a custom allocator by defining _TINYDIR_MALLOC and
+// * _TINYDIR_FREE. */
+//#if defined(_TINYDIR_MALLOC) && defined(_TINYDIR_FREE)
+//#elif !defined(_TINYDIR_MALLOC) && !defined(_TINYDIR_FREE)
+//#else
+//#error "Either define both alloc and free or none of them!"
+//#endif
+//
+//#if !defined(_TINYDIR_MALLOC)
+//#define _TINYDIR_MALLOC(_size) malloc(_size)
+//#define _TINYDIR_FREE(_ptr) free(_ptr)
+//#endif /* !defined(_TINYDIR_MALLOC) */
 
 namespace _ {
-
-constexpr ISN GetURIPathLengthMax() { return URIPathLengthMax; }
-constexpr ISN GetURLFilenameLengthMax() { return URLFilenameLengthMax; }
 
 File::File(const CHR* uri) : uri_(uri_) {}
 
@@ -157,8 +158,11 @@ inline BOL File::Exists() { return false; }
 
 inline BOL File::IsOpen() { return false; }
 
-inline ISN File::Open() { 
-  Folder dir;
+inline ISN File::Open(const CHR* path) {
+  if (IsError(path) || TSCodeCount<CHR, CHC, ISW>(path) == 0) {
+    return -AErrorInvalidInput;
+  }
+  Folder dir(path);
   ISN result = 0;
   ISN found = 0;
   CHR dir_name_buf[URIPathLengthMax];
@@ -170,10 +174,6 @@ inline ISN File::Open() {
   CHR ext_buf[URLFilenameLengthMax];
 #endif
 
-  if (IsError(path) || TSCodeCount<CHR, CHC, ISW>(path) == 0) {
-    errno = EINVAL;
-    return -1;
-  }
   if (TSCodeCount<CHR, CHC, ISW>(path) + FilenamePad >= URIPathLengthMax) {
     errno = ENAMETOOLONG;
     return -1;
@@ -182,14 +182,15 @@ inline ISN File::Open() {
   /* Get the parent path */
 #if (defined _MSC_VER || defined __MINGW32__)
 #if ((defined _MSC_VER) && (_MSC_VER >= 1400))
-  errno = _tsplitpath_s(path, drive_buf, _TINYDIR_DRIVE_MAX, dir_name_buf,
+  errno = TSSplitPath<CHR, CHC>(path, drive_buf, _TINYDIR_DRIVE_MAX, dir_name_buf,
     URLFilenameLengthMax, file_name_buf, URLFilenameLengthMax,
     ext_buf, URLFilenameLengthMax);
 #else
   _tsplitpath(path, drive_buf, dir_name_buf, file_name_buf, ext_buf);
 #endif
 
-  if (errno) return -1;
+  if (errno)
+    return -1;
 
   // _splitpath_s not work fine with only filename and widechar support.
 #ifdef _UNICODE
@@ -222,7 +223,7 @@ inline ISN File::Open() {
 
   // Read through the parent directory and look for the file.
   while (dir.HasNext()) {
-    if (dir.Read(file) == -1) {
+    if (dir.Read(file) < 0) {
       result = -1;
       goto bail;
     }
@@ -594,19 +595,6 @@ TextFile& TextFile::Binary(FPC item) { return TPrintBinary<TextFile>(*this, item
 #if USING_FPD == YES_0
 TextFile& TextFile::Binary(FPD item) { return TPrintBinary<TextFile>(*this, item); }
 #endif
-ISN TextFile::PrintAndCount(const CHA* string) {
-  return TPrintAndCount<TextFile, CHA>(*this, string);
-}
-#if USING_STB == YES_0
-ISN TextFile::PrintAndCount(const CHB* string) {
-  return TPrintAndCount<TextFile, CHB>(*this, string);
-}
-#endif
-#if USING_STC == YES_0
-ISN TextFile::PrintAndCount(const CHC* string) {
-  return TPrintAndCount<TextFile, CHC>(*this, string);
-}
-#endif
 
 Folder::Folder(const CHR* uri) : path_() {
   SPrint(path_, URIPathLengthMax, uri);
@@ -644,13 +632,12 @@ ISN Folder::Open(const CHR* path) {
 #endif
   Close();
 
-  SPrint(path, URIPathLengthMax, path);
+  SPrint(path_, URIPathLengthMax, path);
   // Remove trailing slashes.
   pathp = &path[TSCodeCount<CHR, CHC, ISW>(path) - 1];
   CHR c = *pathp;
   while (pathp != path && (c == '\\' || c == '/')) {
-    *pathp = 0;
-    --pathp;
+    *pathp-- = 0;
   }
 #ifdef _MSC_VER
   SPrint(path_buf, URIPathLengthMax, path);
@@ -664,7 +651,7 @@ ISN Folder::Open(const CHR* path) {
   if (_h == INVALID_HANDLE_VALUE) {
     errno = ENOENT;
 #else
-  _d = _tinydir_opendir(path);
+  _d = _og_opendir(path);
   if (_d == NILP) {
 #endif
     goto bail;
@@ -674,12 +661,12 @@ ISN Folder::Open(const CHR* path) {
   has_next_ = 1;
 #ifndef _MSC_VER
 #ifdef _TINYDIR_USE_READDIR
-  _e = _tinydir_readdir(_d);
+  _e = _og_readdir(_d);
 #else
   // allocate dirent boofer for readdir_r.
-  size = _tinydir_dirent_buf_size(_d);  // conversion to ISN.
+  size = _og_dirent_buf_size(_d);  // conversion to ISN.
   if (size == -1) return -1;
-  _ep = (struct _tinydir_dirent*)_TINYDIR_MALLOC(size);
+  _ep = (struct _og_dirent*)_TINYDIR_MALLOC(size);
   if (_ep == NILP) return -1;
 
   error = readdir_r(_d, _ep, &_e);
@@ -727,7 +714,7 @@ ISN Folder::OpenSorted(const CHR* path) {
     if (file_count == file_count) break;
   }
 
-  qsort(files_, file_count, sizeof(File), _tinydir_file_cmp);
+  qsort(files_, file_count, sizeof(File), _og_file_cmp);
 
   return 0;
 
@@ -749,7 +736,7 @@ inline void Folder::Close() {
   _h = INVALID_HANDLE_VALUE;
 #else
   if (_d) {
-    _tinydir_closedir(_d);
+    _og_closedir(_d);
   }
   _d = NILP;
   _e = NILP;
@@ -774,7 +761,7 @@ inline ISN Folder::Next(Folder* dir) {
   if (FindNextFile(_h, &_f) == 0)
 #else
 #ifdef _TINYDIR_USE_READDIR
-  _e = _tinydir_readdir(_d);
+  _e = _og_readdir(_d);
 #else
   if (_ep == NILP) {
     return -1;
@@ -822,9 +809,9 @@ ISN Folder::Read(File* file) {
 #else
     _e->d_name;
 #endif
-  auto foo = TSCodeCount<CHR, CHC, ISW>(path_) + 
+  ISW length = TSCodeCount<CHR, CHC, ISW>(path_) + 
     TSCodeCount<CHR, CHC, ISW>(filename) + 1 + FilenamePad;
-  if (foo >= URIPathLengthMax) {
+  if (length >= URIPathLengthMax) {
     // the path for the file will be too long.
     errno = ENAMETOOLONG;
     return -1;
@@ -834,10 +821,9 @@ ISN Folder::Read(File* file) {
     return -1;
   }
 
-  SPrint(file->Path(), URIPathLengthMax, path_);
-  TSConcat<CHR, CHC>(file->Path(), URIPathLengthMax, '/');
-  SPrint(file->Name(), URIPathLengthMax, filename);
-  TSConcat<CHR, CHC>(file->Path(), URLFilenameLengthMax, filename);
+  CHR* cursor = SPrint(file->Path(), URIPathLengthMax, path_);
+  cursor = SPrint(file->Path(), URIPathLengthMax, '/');
+  cursor = SPrint(file->Name(), URIPathLengthMax, filename);
 #ifndef _MSC_VER
 #ifdef __MINGW32__
   if (_tstat(
@@ -852,7 +838,7 @@ ISN Folder::Read(File* file) {
     return -1;
   }
 #endif                                           
-  file.Extension();
+  file->Extension();
 
   file->is_directory_ =
 #ifdef _MSC_VER

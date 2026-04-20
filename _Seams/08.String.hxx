@@ -1,4 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
+
 #if SEAM >= CRABS_STRING
 #include "../String.hpp"
 #if SEAM == CRABS_STRING
@@ -11,7 +12,7 @@
 using namespace ::_;
 namespace CRTest {
 #if SEAM >= CRABS_STRING
-template<typename T = CHR, typename CHT = CHC, typename ISZ = ISR, 
+template<typename T = CHR, typename CHT = CHE, typename ISZ = ISR, 
   typename ISY=ISZ>
 void TestStringN() {
   D_COUT(Linef("\n\n\n---\nTesting TString<CH") << CSizeCodef<T>() << ", IS" <<
@@ -23,21 +24,21 @@ void TestStringN() {
     Count = 256
   };
 
-  AString<STR_P, 8> element;
+  AString<STR_P, 8> str;
   D_COUT("\nPrinting to 0x" << Hexf(str.This()) << "\nstr.Total():" << 
-         element.Total() << " str.Count():" << str.Count() << " str.Bytes():" <<
-         element.Bytes() << "\nExpecting \"Testing 1, 2, 3\"");
+         str.Total() << " str.Count():" << str.Count() << " str.Bytes():" <<
+         str.CBytes() << "\nExpecting \"Testing 1, 2, 3\"");
   
   T cbof[Count];
   TSPrint<T>(cbof, cbof + Count, 10);
   D_COUT("\n\nTest:\n" << cbof);
 
-  element << "Testing ";
-  for (ISC i = 1; i <= 3; ++i) element << i << ", ";
-  A_ASSERT(element.Find(Testing123));
-  for (ISC i = 3; i < Count; ++i) element << i << ", ";
+  str << "Testing ";
+  for (ISC i = 1; i <= 3; ++i) str << i << ", ";
+  A_ASSERT(str.Find(Testing123));
+  for (ISC i = 3; i < Count; ++i) str << i << ", ";
   
-  D_COUT("\n\nResult:\"" << element.Begin() << "\"\n");
+  D_COUT("\n\nResult:\"" << str.Begin() << "\"\n");
 }
 
 #endif

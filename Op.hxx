@@ -11,7 +11,7 @@
 #endif
 namespace _ {
 
-inline const Op* OpError(ERC error) { return (const Op*)ISW(error); }
+inline const Op* OpError(ERC error) { return (const Op*)IUW(error); }
 /*
 #if USING_CRABS_TEXT
 Op OpInit (IUW* socket, ISC boofer_size) {

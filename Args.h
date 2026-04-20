@@ -4,6 +4,7 @@
 #define CRABS_ARGS
 #include "BSeq.h"
 #if SEAM >= CRABS_OP
+
 namespace _ {
 
 /* Sets the params to the given pointers corresponding to the index 1-26 of the
