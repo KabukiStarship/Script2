@@ -9,7 +9,7 @@
 using namespace ::_;
 namespace CRTest {
 
-template<typename CHS = CHR, typename CHT = CHE, typename ISZ = ISR, 
+template<typename CHS = CHR, typename CHT = CHD, typename ISZ = ISR, 
   typename ISY = ISQ, typename DT = DTB, typename HSH = IUN>
 static void TestDic() {
   enum {

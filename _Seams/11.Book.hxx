@@ -11,7 +11,7 @@ using namespace ::_;
 namespace CRTest {
 
 template<typename ISZ = ISN, typename ISY = ISM, typename CHS = CHR, 
-  typename CHT = CHE, typename DT  = DTB>
+  typename CHT = CHD, typename DT  = DTB>
 void TestBook() {
   D_COUT(Linef("\n\n---\n\n"));
 
