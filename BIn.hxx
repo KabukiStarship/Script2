@@ -147,9 +147,9 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   bytes = bin->bytes;
 
   IUA* begin  = BInOrigin(bin),        //< The beginning of the socket.
-     * end    = begin + bytes - 1,     //< The end of the socket.
-     * origin = begin + bin->origin,  //< The origin of the data.
-     * stop   = begin + bin->stop;    //< The stop of the data.
+     * end    = begin + bytes,         //< The end of the socket (sentinel).
+     * origin = begin + bin->origin,   //< The read cursor (consumer head).
+     * stop   = begin + bin->stop;     //< The write cursor (producer head).
   // const ISN* param = params + 1;   //< The current param.
 
   length = TSlotLength<ISN>(origin, stop, bytes);
@@ -190,8 +190,8 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         // Byte 1
         iua = *origin;  //< Read
         //D_COUT(" '" << iua << "', ");
-        hash = THashPrime<IUB>(iua, hash);     //< Hash
-        if (++origin >= stop) origin -= bytes; //< Increment
+        hash = HashIUB(iua, hash);  //< Same byte hash as BOutWrite.
+        ++origin; if (origin >= end) origin = begin; //< Increment
         *iua_ptr = iua;                        //< Write
         break;
 #else
@@ -215,13 +215,13 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         // Byte 1
         iua = *origin;                         //< Read
         hash = HashIUB(iua, hash);             //< Hash
-        if (++origin >= stop) origin -= bytes; //< Increment
+        ++origin; if (origin >= end) origin = begin; //< Increment
         *iua_ptr = iua;                        //< Write
 
         // Byte 2
         iua = *origin;                         //< Read
         hash = HashIUB(iua, hash);             //< Hash
-        if (++origin >= stop) origin -= bytes; //< Increment
+        ++origin; if (origin >= end) origin = begin; //< Increment
         *(iua_ptr + 1) = iua;                  //< Write
         break;
 #else
@@ -246,9 +246,10 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           // Byte 1
           iua = *origin;                         //< Read
           hash = HashIUB(iua, hash);             //< Hash
-          if (++origin >= stop) origin -= bytes; //< Increment
+          ++origin; if (origin >= end) origin = begin; //< Increment
           *iua_ptr++ = iua;                      //< Write
         }
+        break;
 #else
         return BInError(bin, AErrorInvalidType, params, index, origin);
 #endif
@@ -270,47 +271,38 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           // Byte 1
           iua = *origin;                         //< Read
           hash = HashIUB(iua, hash);             //< Hash
-          if (++origin >= stop) origin -= bytes; //< Increment
+          ++origin; if (origin >= end) origin = begin; //< Increment
           *iua_ptr++ = iua;                      //< Write
         }
         break;
 #else
         return BInError(bin, AErrorInvalidType, params, index, origin);
 #endif
-      case STR_:  //< _R_e_a_d__S_t_r_i_n_g_-_8____________________
-        // Load boofered-type argument length and increment the index.
-        ++num_params;
+      case STR_: {
+        if (index == num_params || params[index + 1] <= 0)
+          return BInError(bin, AErrorInvalidType);
         count = params[++index];
-        //< @todo Replace with pointer arithmetic.
-        // Load next pointer and increment args.
         iua_ptr = TPtr<CHA>(args[arg_index]);
-        if (iua_ptr == NILP)
-          return BInError(bin, AErrorImplementation, params, index, origin);
-        //D_COUT("\nReading STR_:0x" << Hexf(iua_ptr) << " with length:" << 
-        //       count);
-        // Read CHA.
-        iua = *origin;
-        hash = HashIUB(iua, hash);
-        if (++origin >= stop) origin -= bytes;
-        *iua_ptr = iua;
-        ++iua_ptr;
-        //D_COUT(iua);
-        while ((iua != 0) && (count != 0)) {
-          --count;
-          if (count == 0)  //< Reached count:0 before nil-term CHA.
-            return BInError(bin, AErrorBooferUnderflow, params, index, origin);
-          iua = *origin;  // Read IUA from ring-socket.
+        if (IsError(iua_ptr))
+          return BInError(bin, AErrorImplementation);
+        BOL terminated = false;
+        for (ISN i = 0; i < count; ++i) {
+          // Keep the two-byte hash trailer out of the string payload.
+          if (length <= ISN(sizeof(IUB)))
+            return BInError(bin, AErrorBooferUnderflow);
+          --length;
+          iua = *origin;
           hash = HashIUB(iua, hash);
-          if (++origin >= stop) origin -= bytes;
-          *iua_ptr++ = iua;  // Write IUA to destination.
-          //D_COUT(iua);
+          ++origin; if (origin >= end) origin = begin;
+          *iua_ptr++ = CHA(iua);
+          if (!iua) {
+            terminated = true;
+            break;
+          }
         }
-        //D_COUT("\" success!\n");
-        if (type != _ADR) {
-          *iua_ptr = 0;
-          // No need to hash 0.
-        }
+        if (!terminated) return BInError(bin, AErrorBooferOverflow);
         break;
+      }
       //case _ISV:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
       //case _IUV:  //< _R_e_a_d__U_n_s_i_g_n_e_d__V_a_r_i_n_t___________
 #if CPU_SIZE <= 16
@@ -320,7 +312,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           return BInError(bin, AErrorImplementation, params, index, origin);
         // SScan IUA 1.
         iua = *origin;
-        if (++origin >= stop) origin -= bytes;
+        ++origin; if (origin >= end) origin = begin;
         hash = HashIUB(iua, hash);
         iub = iua;
         //ISN temp = 7;   //< Number of bits to shift iua to the left.
@@ -330,7 +322,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           if (length-- == 0)
             return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
-          if (++origin >= stop) origin -= bytes;
+          ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
           iuc |= IUC(iua & 0x7F) << temp;
           //< @todo I'm starting to second guess if we need to mask iua
@@ -352,7 +344,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
 
         // SScan IUA 1.
         iua = *origin;
-        if (++origin >= stop) origin -= size;
+        ++origin; if (origin >= end) origin = begin;
         hash = HashIUB(iua, hash);
         iuc = iua;
         iub = 7;    //< Number of bits to shift iua to the left.
@@ -361,7 +353,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           if (length-- == 0)
             return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
-          if (++origin >= stop) origin -= size;
+          ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
           iuc |= ((IUC)(iua & 0x7F)) << iub;
           //< @todo I'm starting to second guess if we need to mask iua
@@ -385,7 +377,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         }
         // SScan IUA 1.
         iua = *origin;
-        if (++origin >= stop) origin -= bytes;
+        ++origin; if (origin >= end) origin = begin;
         hash = HashIUB(iua, hash);
         iud = iua;
         iub = 7;    //< Number of bits to shift iua to the left.
@@ -394,7 +386,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           if (length-- == 0)
             return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
-          if (++origin >= stop) origin -= bytes;
+          ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
           if (count == 1) {
             // Varint 8 differs from Varint 2 and 4 in that on the
@@ -438,7 +430,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
               return BInError(bin, AErrorImplementation, params, index, origin);
 
             iua = *origin;
-            if (++origin >= stop) origin -= size;
+            ++origin; if (origin >= end) origin = begin;
             hash = HashIUB(iua, hash);
             if (iua > length - 1)
               return BInError(bin, AErrorBooferOverflow, params, index, origin);
@@ -457,7 +449,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
 
             for (ISN i = 0; i <= sizeof(IUB); i += 8) {
               iua = *origin;
-              if (++origin >= stop) origin -= size;
+              ++origin; if (origin >= end) origin = begin;
               hash = HashIUB(iua, hash);
               iub |= ((IUB)iua) << i;
             }
@@ -479,7 +471,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
 
             for (ISN i = 0; i <= sizeof(IUC); i += 8) {
               iua = *origin;
-              if (++origin >= stop) origin -= size;
+              ++origin; if (origin >= end) origin = begin;
               hash = HashIUB(iua, hash);
               iuc |= IUC(iua) << i;
             }
@@ -501,7 +493,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
 
             for (ISN i = 0; i <= sizeof(IUD); i += 8) {
               iua = *origin;
-              if (++origin >= stop) origin -= size;
+              ++origin; if (origin >= end) origin = begin;
               hash = HashIUB(iua, hash);
               iud |= IUD(iua) << i;
             }
@@ -522,7 +514,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         if (origin + count >= stop) {
           for (; size - count > 0; --count) {
             iua = *origin;
-            if (++origin >= stop) origin -= size;
+            ++origin; if (origin >= end) origin = begin;
             hash = HashIUB(iua, hash);
             *iua_ptr = iua;
             ++iua_ptr;
@@ -530,7 +522,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           stop = origin - 1;
           for (; count > 0; --count) {
             iua = *origin;
-            if (++origin >= stop) origin -= size;
+            ++origin; if (origin >= end) origin = begin;
             hash = HashIUB(iua, hash);
             *iua_ptr = iua;
             ++iua_ptr;
@@ -539,7 +531,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         }
         for (; count > 0; --count) {
           iua = *origin;
-          if (++origin >= stop) origin -= size;
+          ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
           *iua_ptr = iua;
           ++iua_ptr;
@@ -555,9 +547,9 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   if (length < 2)
     return BInError(bin, AErrorBooferUnderflow, params, index, origin);
   iub = *origin;
-  if (++origin >= stop) origin -= bytes;
+  ++origin; if (origin >= end) origin = begin;
   iua = *origin;
-  if (++origin >= stop) origin -= bytes;
+  ++origin; if (origin >= end) origin = begin;
   iub |= (((IUB)iua) << 8);
   //D_COUT("found:0x" << Hexf(iub));
   if (hash != iub)
@@ -566,8 +558,9 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   //D_COUT("\nDone reading\n");
   D_RAM_WIPE(origin, stop);
 
-  // Convert pointer back to offset
-  bin->origin = TDelta<ISN>(origin, origin);
+  // Convert pointer back to offset: advance the read head (consumer) to where
+  // we stopped reading. TDelta(begin, origin) = origin - begin (byte offset).
+  bin->origin = TDelta<ISN>(begin, origin);
 
   return 0;
 }

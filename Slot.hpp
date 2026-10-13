@@ -12,12 +12,14 @@ namespace _ {
 */
 
 /* Calculates the used ring socket space.
-@param Start The origin of the data.
-@param Stop  The stop of the data.
+@param Start The origin of the data (read head).
+@param Stop  The stop of the data (write head).
 @param Size  The size of the socket. */
 template<typename T>
 inline T TSlotLength(IUA* origin, IUA* stop, ISW size) {
-  return T(stop - origin);
+  T delta = T(stop - origin);
+  if (delta < 0) delta += T(size);  //< Wrapped: write head is before read head.
+  return delta;
 }
 
 /* Calculates the space left in the given ring socket.

@@ -1,43 +1,50 @@
 # Portals
 
-A portal is a connection that connects two or more rooms. The following is a short list of some of the officially supported protocol transport layers. This is a living document that will be standardized many times thus do not expect this to be the only Portals; as that would be silly.
+A Portal connects Room endpoints through Doors and Slots. Its abstract contract
+is message/byte transfer between endpoints, not a hardware device, a change to
+an automaton's mathematical state set, or a mandatory network stack. See
+[Room Contents](RoomContents.md).
 
-## Configurations
+## Direct connections and Hallways
 
-## Room-to-Room Portals
+Rooms can communicate in memory without an OS or network. An output path from
+one Door feeds an input path on another Door. Two directions form a duplex
+connection. A shared ring, a bounded copy between rings, or another equivalent
+adapter needs an explicit layout and ownership contract; the two endpoints are
+not assumed to share type-punned BIn/BOut headers.
 
-Room-to-Room (R2R) Portals are connections from one Chinese Room to another without any network in between. SPI and UART are primary examples. In these cases, synchronization is different, and often dependent on the specific UART hardware. Due to Script's ESC, Script can be streamed serially without the need for any special hardware to start the sequence or control traffic. Often is the case with devices with non-ideal electronic components, the connection will sometimes cut out, and junk data will get streamed to the target. In this situation, streaming a stream of kNIL commands will. Sometimes a target will be expecting much more data streamed to it, so to snap the device out of it, an interrupt method is required. There is a different interrupt protocol for each communication protocol.
+A Hallway connects multiple Rooms through a shared communication arrangement.
+If it broadcasts messages, each receiver's delivery and capacity behavior must
+be specified. The metaphor alone does not define fan-out, scheduling,
+backpressure, or synchronization.
 
-## Hallway Portals
+## Endpoint and backend contracts
 
-Hallways connect multiple rooms. For each hallway, there exists a Slot that broadcasts messages to Slot in each Door.
+An endpoint/adapter must state its representation, message boundaries, capacity,
+ordering, partial-transfer behavior, disconnect behavior, and recovery rules.
+Datagram loss or reordering must not accidentally resume an unrelated previous
+expression. A streaming adapter must not treat an incomplete argument as a
+completed operation.
 
-## 3.10.b Known Portal Types
+Examples of backend bindings include UART, SPI, I2C, CAN, Bluetooth, TCP/UDP,
+and OS pipes or shared memory. These are examples, not a claim that all are
+implemented or officially standardized here. Concrete device access, OS
+syscalls, mapping, and interrupt signaling belong in CrabsTK or the host
+integration, not the abstract machine.
 
-## UART
+Do not assume that wiring implies authorization, or that same-system IPC is
+trusted or lossless. Authentication is a separate application contract; see
+[Authentication](Authentication.md).
 
-UART ports operate like a **Abstract Serial Port** with a *Imperfect Transmission Line*. For UART transmission lines Script uses the same interrupt system as the DMX512 Protocol, the difference being rather than 512 bytes an ESC is sent.
+## Concurrency and recovery
 
-### SPI
+A single-threaded in-memory round-trip does not prove thread-safe, lock-free,
+or interprocess communication. `volatile` counters alone do not establish
+atomicity or the memory-ordering contract required by concurrent endpoints.
+Producer/consumer ownership and visibility must be specified and verified for
+the actual implementation and platform.
 
-SPI connections operate similarly to **UART Portals**. Interrupts are triggered with the SPI Chip Select pin.
-
-### I2C
-
-Devices connected to I2C, Serial, and SPI do not require additional security measures. These are hard-wired devices so they are assumed to be a slave-master relationship.
-
-### CAN
-
-Devices connected to I2C, Serial, and SPI do not require additional security measures. These are hard-wired devices so they are assumed to be a slave-master relationship.
-
-### Bluetooth
-
-Bluetooth connections operate similarly to **UART Portals**.
-
-### UDP
-
-When using the User Datagram Protocol packets may get dropped. Script runs over UDP by each UDP packet running from root scope. It is advised to not use the *Push Last Operation*.
-
-### Interprocess
-
-Inter-process communication is assumed to be a secure connection without data loss, but this behavior is not guaranteed.
+There is no generic hardware reset sequence in this core specification.
+Do not prescribe UART/DMX timing, SPI chip-select behavior, or repeated NULs as
+universal resynchronization. A backend's recovery method must agree with the
+scanner and framing contract; see [Abnormal Behaviors](AbnormalBehaviors.md).

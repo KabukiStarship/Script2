@@ -22,10 +22,9 @@
 #include "17.MathCore.hxx"
 #include "18.Random.hxx"
 #include "19.File.hxx"
-#include "20.SGraTe.hxx"
-#include "21.Promise.hxx"
-#include "22.CrabsScript.hxx"
-#include "23.Release.hxx"
+#include "20.Promise.hxx"
+#include "21.Script2.hxx"
+#include "22.Release.hxx"
 //
 #include "../Test.hpp"
 using namespace ::_;
@@ -35,5 +34,5 @@ inline const CHA* CrabsTests(const CHA* args) {
     CRTest::Uniprinter, CRTest::Clock, CRTest::Stack, CRTest::String, 
     CRTest::Loom,  CRTest::List, CRTest::Book, CRTest::Map, CRTest::Table,
     CRTest::Dic, CRTest::File, CRTest::CrabsOp, CRTest::Room, CRTest::MathCore, 
-    CRTest::RNG, CRTest::SGraTe, CRTest::Promise, CRTest::CrabsScript>(args);
+    CRTest::RNG, CRTest::Promise, CRTest::CrabsScript>(args);
 }

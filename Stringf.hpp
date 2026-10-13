@@ -65,7 +65,7 @@ ISN TSCompare(const CHS* start, const CHS* str_other,
 namespace _ {
 
 template<typename T>
-constexpr Sizef CSizef() {
+Sizef CSizef() {
   return -CASizeCode<T>();
 }
 

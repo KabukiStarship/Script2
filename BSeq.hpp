@@ -49,17 +49,15 @@ C++11 variadic template to ensure only one copy in ROM and to eliminate some
 redundant typing. */
 template<const DTB... N>
 constexpr const DTB* TTSQ() {
-  static const DTB CCount = sizeof...(N),
-    CValues[sizeof...(N)] = { N... };
-  return &CCount;
+  static constexpr DTB Values[] = {DTB(sizeof...(N)), N...};
+  return Values;
 }
 
 /* Utility class for making allowed and disallowed char sequences. */
 template<const CHR... N>
 constexpr const CHR* CCHRSQ() {
-  static const CHR CCount = sizeof...(N),
-    CValues[sizeof...(N)] = { N... };
-  return &CCount;
+  static constexpr CHR Values[] = {CHR(sizeof...(N)), N...};
+  return Values;
 }
 
 /* Writes the given value to the socket between begin and end without any checks.
