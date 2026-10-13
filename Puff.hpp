@@ -816,7 +816,7 @@ private:
 #else
         * iub_ptr++ = (ones << 8) | tens;
 #endif
-    const IUB* e_lut = BinaryPow10Exponents();
+    const IUB* e_lut = TPtr<const IUB>(BinaryPow10Exponents());
     for (ISC i = 0; i < 87; ++i) *iub_ptr = e_lut[i];
 
     IUD* iud_ptr = TPtr<IUD>(iub_ptr);

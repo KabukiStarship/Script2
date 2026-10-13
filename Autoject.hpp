@@ -436,7 +436,7 @@ class Autoboofer {
 
   /* Resizes the given array.
   @return True upon success and false upon failure. */
-  BOL Resize(Autoject& obj, ISZ new_size) {
+  static BOL Resize(Autoject& obj, ISZ new_size) {
     D_COUT("\nResizing Array to new_size:" << new_size);
     IUW* boofer = obj.origin;
     if (IsError(boofer)) return false;

@@ -6,7 +6,6 @@
 #if SEAM >= CRABS_ROOM
 #include "Crabs.h"
 #include "BIn.h"
-#include "BigInt.h"
 #include "Slot.h"
 #include "Stack.hpp"
 #include "String.hpp"
@@ -93,8 +92,8 @@ class TDoor : public Operand {
   }
 
   BIn* SlotNumber(ISZ index) {
-    if (!slots_.InBounds(index)) return NILP;
-    return slots_[index];
+    if (!slots_->InBounds(index)) return NILP;
+    return TPtr<BIn>(&slots_->Element(index));
   }
 
   /* Executes all of the queued escape sequences.

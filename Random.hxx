@@ -1,10 +1,16 @@
 // Copyright AStarship <https://astarship.net>.
 #include "Random.h"
+#if SEAM < CRABS_RANDOM
+#include <random>
+#endif
 
 namespace _ {
 
 #if SEAM < CRABS_RANDOM
-#include <random>
+
+FPD LSTMRNGNext(FPD running_xor) {
+  
+}
 
 static ::std::random_device seed_gen;
 static IUC seed = seed_gen();

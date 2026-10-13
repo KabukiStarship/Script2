@@ -144,6 +144,21 @@ typedef ISD DTD;  //< 64-bit Ascii Data Type.
 typedef ISC TMC;  //< A 32-bit seconds since epoch timestamp.
 typedef ISD TMD;  //< A 64-bit seconds since epoch timestamp.
 
+// Preserve the global primitive identities while allowing qualified use by
+// client APIs (notably TileWorld). Using-declarations add no new types/ABI.
+namespace _ {
+using ::CHA;
+using ::BOL;
+using ::ISC;
+using ::IUC;
+using ::IUA;
+using ::IUD;
+using ::ISM;
+using ::IUM;
+using ::FPC;
+using ::FPD;
+}  //< namespace _
+
 enum {
   ATypePODBits    = 5,        //< Bit count for POD types 0-31.
   ATypeVTBit0     = 5,        //< Start bit of the Vector Type bits.

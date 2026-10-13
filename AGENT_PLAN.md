@@ -59,6 +59,8 @@ standalone.
 
 ## Gap 2 (needed) — No tensor / linear-algebra primitive
 
+The tensor format must be ported to be BLAS compatible. The inteiton of this library was for hetergenious multi-processing but had skill issues. It has to work with MLK, we're on Intel system. ASCII Crabs is CPU only, it's the Chinse Room ABSTRACT Stack Machine, it's a microframework to build other languages and frameworks with. CrabsTK is the Concrete framework. File doesn't count because it's a Linux primative stream IO, so we just emulate that with Crabs Door Sloot BIn/BOut by feeding B-Sequence Expressions through the slot in the door. These messages must be universally compatible, and BLAS is that. My storing of dynamic array dimensions isn't total trash, but it's unfinished, it's more for build-time tool.
+
 ASCIICrabs has POD types (`FPC`/`FPD`/`ISC`/`CHA`...), containers (`TStack`,
 `ALoom`, `AArray`), and RNG, but **no tensor type and no linear-algebra
 kernels**. The Puffer-informed iGeek policy (`TTransformer`, MuSE-style) and
@@ -83,18 +85,7 @@ them without copying them. Keep them no-stdlib (plain `FPC*` loops, no
 
 ## Gap 3 (needed) — Deterministic seeded RNG (partially present)
 
-`_::Random(min, max)` exists, but the high-SEAM `TRandom` branch is
-**half-normal, not uniform** (verified 2026-10-07 in the card world:
-`Random(0, i)` can return > `i`). For RL we need:
-- A **seed setter** so rollouts are reproducible (PufferLib values
-  determinism; the card world already clamps `TRandom` output locally as a
-  workaround).
-- A **uniform** draw (the half-normal branch is only useful for Gaussian
-  policy noise, not for sampling discrete actions or shuffling).
-
-**Ask:** (a) expose a seed setter on the RNG, (b) provide a guaranteed-uniform
-`RandomUniform(min, max)` distinct from the half-normal `TRandom`, or document
-exactly which branch is uniform so worlds don't have to clamp by hand.
+Our Random number generator needs to be programmed, it's an LSTM RNG CPU only design using a running XOR after every floating point division instruction, so use templates for this. We don't need a large LSTM for this, we get the numbers by training a small number of perceptrons, each algoirhm feeding the running_xor in, you do Netwons algoirhm and we do some basic RNG stats.
 
 ## Gap 4 (nice-to-have) — bf16 / low-precision activation path
 
