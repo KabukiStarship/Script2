@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_FILE_DECL
 #define CRABS_FILE_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_FILE
 #ifndef _MSC_VER
 #include <dirent.h>
@@ -195,7 +195,7 @@ struct TextFile {
   TextFile& NL(FPC item);
   TextFile& NL(FPD item);
 
-  /* Stores the given item to the boofer and store the size. */
+  /* Stores the given item to the buffer and store the size. */
   TextFile& Hex(const void* item);
   TextFile& Hex(const void* item, ISW size);
   TextFile& Hex(const void* item, const void* item_stop);
@@ -210,7 +210,7 @@ struct TextFile {
   TextFile& Hex(FPC item);
   TextFile& Hex(FPD item);
 
-  /* Stores the given item to the boofer and store the size. */
+  /* Stores the given item to the buffer and store the size. */
   TextFile& Binary(const void* item);
   TextFile& Binary(const void* item, ISW size);
   TextFile& Binary(const void* item, const void* item_stop);

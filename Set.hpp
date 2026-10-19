@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_BOOK
 #ifndef CRABS_BOOK_HPP
 #define CRABS_BOOK_HPP

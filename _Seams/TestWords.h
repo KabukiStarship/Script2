@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#include <_Config.h>
+#include "_Config.h"
 #ifndef CRABS_TESTWORDS
 #define CRABS_TESTWORDS
 

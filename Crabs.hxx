@@ -44,7 +44,7 @@ inline const Op* CrabsError(Crabs* crabs, ERC error, const DTB* header,
   return TPtr<const Op>(1);
 }
 
-inline IUA* CrabsBoofer(Crabs* crabs) {
+inline IUA* CrabsBuffer(Crabs* crabs) {
   return TPtr<IUA>(crabs, sizeof(Crabs));
 }
 
@@ -64,18 +64,18 @@ inline BOut* CrabsBOut(Crabs* crabs) {
 }
 
 /* Initializes the Crabs Machine. */
-Crabs* CrabsInit(IUW* socket, ISC boofer_bytes, ISC stack_total, Operand* root,
-                 IUW* unpacked_boofer, IUW unpacked_bytes, IUD ctxt) {
-  if (IsError(socket) || IsError(root) || IsError(unpacked_boofer) || 
-    stack_total < Crabs::StackTotalMin || boofer_bytes < Crabs::BooferTotalMin)
+Crabs* CrabsInit(IUW* socket, ISC buffer_bytes, ISC stack_total, Operand* root,
+                 IUW* unpacked_buffer, IUW unpacked_bytes, IUD ctxt) {
+  if (IsError(socket) || IsError(root) || IsError(unpacked_buffer) || 
+    stack_total < Crabs::StackTotalMin || buffer_bytes < Crabs::BufferTotalMin)
   {
     return NILP;
   }
-  D_COUT("\nInitializing Stack with stack_total:" << stack_total << " boofer_bytes:" <<
-         boofer_bytes);
+  D_COUT("\nInitializing Stack with stack_total:" << stack_total << " buffer_bytes:" <<
+         buffer_bytes);
   Crabs* crabs        = TPtr<Crabs>(socket);
   ISC stack_bytes     = (stack_total - 1) * ISC(2 * sizeof(Operand*));
-  ISC bin_bout_bytes  = (boofer_bytes - sizeof(Crabs) - stack_bytes + 1) >> 1;
+  ISC bin_bout_bytes  = (buffer_bytes - sizeof(Crabs) - stack_bytes + 1) >> 1;
   D_COUT("\n  bin_bout_bytes:" << bin_bout_bytes);
   crabs->bout_state   = BOutStateDisconnected;
   crabs->bin_state    = BInStateDisconnected;
@@ -683,7 +683,7 @@ inline void CrabsClear(Crabs* crabs) {
       *origin = begin + bin->origin,
       *stop = begin + bin->stop;
 
-  // ISC boofer_space = SlotSpace (origin, stop, size);
+  // ISC buffer_space = SlotSpace (origin, stop, size);
 
   if (begin == end) return;  //< Nothing to do.
   if (begin > end) {

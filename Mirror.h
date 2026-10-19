@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_MIRROR_DECL
 #define CRABS_MIRROR_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 #include "BIn.h"
 #include "BOut.h"

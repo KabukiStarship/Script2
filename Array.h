@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_ARRAY_DECL
 #define CRABS_ARRAY_DECL
-#include <_Config.h>
+#include "_Config.h"
 namespace _ {
 
 /* Copies the source to the target functionally identical to memcpy.

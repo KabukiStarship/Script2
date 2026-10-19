@@ -13,8 +13,8 @@ Internal layout:
     no raw pointer null checks — use IsError/PtrIsError). */
 
 #ifndef CRABS_BIGINT_STANDALONE
-#include <_ConfigHeader.h>
-#include <_ConfigFooter.h>
+#include "_ConfigHeader.h"
+#include "_ConfigFooter.h"
 #include <Autoject.h>
 #endif
 

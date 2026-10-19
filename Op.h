@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_OP_DECL
 #define CRABS_OP_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 namespace _ {
 

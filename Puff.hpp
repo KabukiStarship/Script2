@@ -12,13 +12,13 @@
 namespace _ {
 template<typename CHS = CHR>
 CHS* TPrintPrinted(CHS* start = NILP) {
-  static CHS* boofer_begin = 0;
+  static CHS* buffer_begin = 0;
   if (start) {
-    boofer_begin = start;
+    buffer_begin = start;
     return start;
   }
   std::cout << "\n    Printed \"";
-  CHS* string = boofer_begin;
+  CHS* string = buffer_begin;
   if (IsError(string)) 
     return string;
   CHS c = *string++;

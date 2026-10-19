@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_BOUT_DECL
 #define CRABS_BOUT_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -49,7 +49,7 @@ BOut* BOutInit(BOut* socket, ISN size);
 ISN BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-ISN BOutBooferLength(BOut* bout);
+ISN BOutBufferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
 IUA* BOutEndAddress(BOut* bout);
@@ -59,7 +59,7 @@ IUA* BOutEndAddress(BOut* bout);
 ISN BOutStreamByte(BOut* bout);
 
 /* The first byte in the B-Output's socket.*/
-IUA* BOutBoofer(BOut* bout);
+IUA* BOutBuffer(BOut* bout);
 
 /* Gets the begin of the socket. */
 inline const CHA* BOutBegin(const BOut* bout);

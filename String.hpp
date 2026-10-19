@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_STRING_HPP
 #define CRABS_STRING_HPP
-#include <_Config.h>
+#include "_Config.h"
 #include "Stack.hpp"
 #if SEAM >= CRABS_STRING
 #include "Uniprinter.hpp"
@@ -27,8 +27,8 @@ namespace _ {
 number of Unicode characters. */
 template<STR_A>
 struct TString {
-  ISZ total,  //< Total elements in the boofer.
-      count;  //< Count of characters in the boofer.
+  ISZ total,  //< Total elements in the buffer.
+      count;  //< Count of characters in the buffer.
 };
 
 /* A UTF-8 or UTF-16 ASCII str created from an ASCII Stack that keeps track 
@@ -38,7 +38,7 @@ struct TRope {
   ISZ datum,  //< Memory alignment datum can be used for multiple purposes.
       charc,  //< Unicode Character Count.
       total,  //< Size of the str in bytes including the header.
-      count;  //< Count of elements in the boofer.
+      count;  //< Count of elements in the buffer.
 };
 
 /* The ASCII Data Type for the given T, CHA, CHB, or CHC. */
@@ -194,7 +194,7 @@ inline ISZ TStringSize(void* origin) {
 /* An ASCII String that can auto-grow from stack to heap.
 
 The count of the str is defined as the maximum chars that can fit in the
-boofer, including the nil-term CHA.
+buffer, including the nil-term CHA.
 
 This class is designed to take advantage of the behavior of the C++ operator
 overloads. When you have a str of overloads, the objects get destructed
@@ -222,9 +222,9 @@ AString<IUC, TBOF<64>> () << "Hello world!";
 @endcode
 */
 template<STR_A, ISZ TotalInit_ = ASTRCount,
-          typename BOF=TBOF<TotalInit_, T, ISZ, STR>>
+          typename BUF=TBOF<TotalInit_, T, ISZ, STR>>
 class AString {
-  AStack<SCK_P, TotalInit_, BOF> asck_;  //< AutoStack of T(s).
+  AStack<SCK_P, TotalInit_, BUF> asck_;  //< AutoStack of T(s).
 
  public:
   static constexpr DTB Type() {
@@ -233,20 +233,20 @@ class AString {
 
   /* Constructs a String that auto-grows from stack to heap.
   @param factory RAMFactory to call when the String overflows. */
-  AString() : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString() : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
   }
 
   /* Constructs a String and prints the given item. */
   AString(CHA item) : 
-      asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+      asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
   AString(const CHA* item) : 
-      asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+      asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
@@ -254,7 +254,7 @@ class AString {
 #if USING_STB == YES_0
   /* Constructs a String and prints the given item. */
   AString(const CHB* item) : 
-    asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+    asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
@@ -262,89 +262,89 @@ class AString {
 
 #if USING_STC == YES_0
   /* Constructs a String and prints the given item. */
-  AString(CHC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(CHC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 #endif
   /* Constructs a String and prints the given item. */
   AString(const CHC* item) : 
-    asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+    asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISA item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(ISA item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUA item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(IUA item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISB item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(ISB item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUB item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(IUB item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(ISC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(IUC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(ISD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(ISD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(IUD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(IUD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
 #if USING_FPC == YES_0
   /* Constructs a String and prints the given item. */
-  AString(FPC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(FPC item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 #endif
 #if USING_FPD == YES_0
   /* Constructs a String and prints the given item. */
-  AString(FPD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(FPD item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 #endif
 
   /* Constructs a String and prints the given item. */
-  AString(Hexf item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(Hexf item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
 
   /* Constructs a String and prints the given item. */
-  AString(Binaryf item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+  AString(Binaryf item) : asck_(TotalInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     Init();
     Print(item);
   }
@@ -361,12 +361,12 @@ class AString {
   /* Gets the total ASCII Object size in words. */
   inline ISZ SizeWords() { return CBytes() >> ACPUBytesLog2; }
 
-  /* Resets the sprinter_ to the given word-aligned boofer. */
+  /* Resets the sprinter_ to the given word-aligned buffer. */
   inline T* Init() {
     return TStringBegin<STR_P>(TStringInit<STR_P>(This(), TotalInit_));
   }
 
-  /* Resets the sprinter_ to the given word-aligned boofer. */
+  /* Resets the sprinter_ to the given word-aligned buffer. */
   inline T* Reset() {
     return TStringReset<STR_P>(This());
   }
@@ -481,7 +481,7 @@ class AString {
   /* Returns the stop of the obj. */
   inline T* End() { return TStringEnd<STR_P>(This()); }
 
-  /* Calculates the space left in the boofer based on the sprinter_ pointers. */
+  /* Calculates the space left in the buffer based on the sprinter_ pointers. */
   inline ISZ SpaceLeft() {
     STR element = This();
     return element.total - element.count;
@@ -504,7 +504,7 @@ class AString {
   }
 
   /* Gets the obj of the Console obj. */
-  inline AStack<SCK_P, TotalInit_, BOF>& Stack() { return asck_; }
+  inline AStack<SCK_P, TotalInit_, BUF>& Stack() { return asck_; }
 
   /* Gets the obj of the Console obj. */
   inline Autoject& AJT() { return asck_.AJT(); }
@@ -546,164 +546,164 @@ class AString {
 
 }  //< namespace _
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj,
-    ::_::AString<STR_P, Size, BOF>& item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj,
+    ::_::AString<STR_P, Size, BUF>& item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, const CHA* item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, const CHA* item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
 #if USING_STB == YES_0
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, const CHB* item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, const CHB* item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 #endif
 
 #if USING_STC == YES_0
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, const CHC* item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, const CHC* item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, CHC item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, CHC item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 #endif
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, CHA item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, CHA item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, IUA item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, IUA item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ISB item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ISB item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, IUB item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, IUB item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ISC item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ISC item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, IUC item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, IUC item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ISD item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ISD item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, IUD item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, IUD item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 
 #if USING_FPC == YES_0
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, FPC item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, FPC item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 #endif
 #if USING_FPD == YES_0
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, FPD item) {
-  ::_::AString<STR_P, Size, BOF>& result = obj.Print(item);
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, FPD item) {
+  ::_::AString<STR_P, Size, BUF>& result = obj.Print(item);
   return obj;
 }
 #endif
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Hexf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Hexf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Binaryf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Binaryf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Centerf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Centerf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Rightf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Rightf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Linef item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Linef item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-  ::_::AString<STR_P, Size, BOF>& obj, ::_::Repeatf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+  ::_::AString<STR_P, Size, BUF>& obj, ::_::Repeatf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Headingf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Headingf item) {
   return obj.Print(item);
 }
 
-template<STR_A, ISZ Size, typename BOF>
-inline ::_::AString<STR_P, Size, BOF>& operator<<(
-    ::_::AString<STR_P, Size, BOF>& obj, ::_::Charsf item) {
+template<STR_A, ISZ Size, typename BUF>
+inline ::_::AString<STR_P, Size, BUF>& operator<<(
+    ::_::AString<STR_P, Size, BUF>& obj, ::_::Charsf item) {
   return obj.Print(item);
 }
 

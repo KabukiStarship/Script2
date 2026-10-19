@@ -15,20 +15,20 @@ static const CHA* Promise(const CHA* args) {
   A_TEST_BEGIN;
   
   enum {
-    BooferBytes = 512,
-    BooferWords = BooferBytes / sizeof(IUW),
+    BufferBytes = 512,
+    BufferWords = BufferBytes / sizeof(IUW),
     StackTotal = 8,
   };
   
   D_COUT("\nTesting Promise API...\n");
   
-  IUW boofer[BooferWords],
-      unpackedExpr[BooferWords];
+  IUW buffer[BufferWords],
+      unpackedExpr[BufferWords];
   IUD pcCtx = 0;
   
   StarTest starTest;
-  Crabs* crabs = CrabsInit(boofer, BooferBytes, StackTotal, &starTest,
-                           unpackedExpr, BooferBytes, pcCtx);
+  Crabs* crabs = CrabsInit(buffer, BufferBytes, StackTotal, &starTest,
+                           unpackedExpr, BufferBytes, pcCtx);
   
   TMC now = crabs->epoch;
   Slot* promiseSlot = CrabsCreatePromise(crabs, now);

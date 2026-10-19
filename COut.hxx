@@ -144,9 +144,9 @@ COut& COut::Print(IUC item) {
   Print((IUD)item);
 #else
   enum { Size = 24 };
-  CHA boofer[Size];
-  TSPrintUnsigned<IUC, CHA>(boofer, Size, item);
-  Print(boofer);
+  CHA buffer[Size];
+  TSPrintUnsigned<IUC, CHA>(buffer, Size, item);
+  Print(buffer);
 #endif
 #endif
   return *this;
@@ -157,9 +157,9 @@ COut& COut::Print(ISD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA boofer[Size];
-  auto result = TSPrint<CHA>(boofer, Size, item);
-  Print(boofer);
+  CHA buffer[Size];
+  auto result = TSPrint<CHA>(buffer, Size, item);
+  Print(buffer);
 #endif
   return *this;
 }
@@ -169,9 +169,9 @@ COut& COut::Print(IUD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA boofer[Size];
-  TSPrint<CHA>(boofer, Size, item);
-  Print(boofer);
+  CHA buffer[Size];
+  TSPrint<CHA>(buffer, Size, item);
+  Print(buffer);
 #endif
   return *this;
 }
@@ -181,9 +181,9 @@ COut& COut::Print(FPC item) {
   STD_COUT << item;
 #else
   enum { Size = 16 };
-  CHA boofer[Size];
-  TSPrint<CHA>(boofer, Size, item);
-  Print(boofer);
+  CHA buffer[Size];
+  TSPrint<CHA>(buffer, Size, item);
+  Print(buffer);
 #endif
   return *this;
 }
@@ -193,9 +193,9 @@ COut& COut::Print(FPD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA boofer[Size];
-  TSPrint<CHA>(boofer, Size, item);
-  Print(boofer);
+  CHA buffer[Size];
+  TSPrint<CHA>(buffer, Size, item);
+  Print(buffer);
 #endif
   return *this;
 }
@@ -311,7 +311,7 @@ COut& COut::Hex(FPC item) { return TPrintHex<COut>(*this, item); }
 COut& COut::Hex(FPD item) { return TPrintHex<COut>(*this, item); }
 #endif
 
-/* Stores the given item to the boofer and store the size. */
+/* Stores the given item to the buffer and store the size. */
 COut& COut::Binary(const void* item) { return TPrintBinary<COut>(*this, item); }
 COut& COut::Binary(const void* item, ISW size) {
   return TPrintBinary<COut>(*this, item, size);

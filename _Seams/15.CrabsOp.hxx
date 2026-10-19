@@ -61,7 +61,7 @@ static const CHA* RingRegressions(const CHA*) {
   params = TTSQ<_IUC>();
   if (BOutWrite(&output.head, params, write_args, 0))
     return "writing a 32-bit scalar to an empty ring must succeed";
-  if (BOutBooferLength(&output.head) != 6)
+  if (BOutBufferLength(&output.head) != 6)
     return "32-bit frame must have four payload bytes and two hash bytes";
   if (output.data[0] != 0x78 || output.data[1] != 0x56 ||
       output.data[2] != 0x34 || output.data[3] != 0x12)
@@ -93,7 +93,7 @@ static const CHA* RingRegressions(const CHA*) {
   params = TTSQ<_IUA, _IUB, _IUC, _CHC, _IUD, STR_, 32>();
   if (BOutWrite(&output.head, params, mixed_args, 0))
     return "writing a mixed scalar/string frame must succeed";
-  if (BOutBooferLength(&output.head) !=
+  if (BOutBufferLength(&output.head) !=
       ISN(sizeof(small) + sizeof(medium) + sizeof(value) +
           sizeof(character) + sizeof(large) + sizeof(text) + sizeof(IUB)))
     return "mixed frame must include every argument and its string terminator";
@@ -135,17 +135,17 @@ static const CHA* CrabsOp(const CHA* args) {
   A_TEST_BEGIN;
 
   enum {
-    BooferBytes = 2048,
-    BooferWords = BooferBytes / sizeof(IUW),
+    BufferBytes = 2048,
+    BufferWords = BufferBytes / sizeof(IUW),
     StackTotal = 8,
   };
   D_COUT("\nInitializing Crabs Machine");
-  IUW boofer[BooferWords],
-      unpacked_expr[BooferWords];
+  IUW buffer[BufferWords],
+      unpacked_expr[BufferWords];
   StarTest star_test;
   IUD pc_ctx = 0;
-  Crabs* crabs = CrabsInit(boofer, BooferBytes, StackTotal, &star_test,
-                           unpacked_expr, BooferBytes, pc_ctx);
+  Crabs* crabs = CrabsInit(buffer, BufferBytes, StackTotal, &star_test,
+                           unpacked_expr, BufferBytes, pc_ctx);
   TCrabsPrint<::_::COut>(StdOut(), crabs);
 
   D_COUT("\n|    Testing Root (@see \"a.h\")...\n");

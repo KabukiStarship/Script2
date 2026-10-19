@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #include "pch.h"
-#include <_Config.h>
+#include "_Config.h"
 #include "_Tests.hxx"
 using namespace ::_;
 

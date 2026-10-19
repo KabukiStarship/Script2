@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_LANGUAGE_DECL
 #define CRABS_LANGUAGE_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 namespace _ {
 namespace language {

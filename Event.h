@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_EVENT_DECL
 #define CRABS_EVENT_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 namespace _ {
 

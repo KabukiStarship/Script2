@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once 
-#include <_Config.h>
+#include "_Config.h"
 #ifndef CRABS_STACK_HPP
 #define CRABS_STACK_HPP
 #if SEAM >= CRABS_STACK
@@ -30,7 +30,7 @@ Please see the ASCII Data Specification for DRY documentation.
 
 @code
 +---------------+
-|    Boofer     |
+|    Buffer     |
 |---------------|
 | C-Style Array |
 |---------------|  ^
@@ -47,7 +47,7 @@ struct TStack {
 template<SCK_A>
 constexpr DTB CStackType() { return VTSCKBits | CATypePOD<T>(); }
 
-/* Returns the begin element such that the boofer size equals end - begin. */
+/* Returns the begin element such that the buffer size equals end - begin. */
 template<SCK_A>
 inline T* TStackBegin(void* stack) {
   return TPtr<T>(stack, sizeof(SCK));
@@ -164,14 +164,14 @@ inline SCK* TStackCopy(SCK* dest, const SCK* src) {
 
 // Utility to cast Autoject origin to SCK*.
 template<SCK_A>
-inline TStack<SCK_P>* TStackPtr(IUW* boofer) {
-  return TPtr<TStack<SCK_P>>(boofer);
+inline TStack<SCK_P>* TStackPtr(IUW* buffer) {
+  return TPtr<TStack<SCK_P>>(buffer);
 }
 
 // Utility to cast Autoject origin to SCK*.
 template<SCK_A>
-inline const SCK* TStackPtr(const IUW* boofer) {
-  return TPtr<const SCK>(boofer);
+inline const SCK* TStackPtr(const IUW* buffer) {
+  return TPtr<const SCK>(buffer);
 }
 
 template<typename ISZ = ISW, typename DT = DTB, DT POD>
@@ -431,7 +431,7 @@ inline ISZ TStackSizeWords(ISY count) {
 |  Packed Stack  |
 |----------------|
 |  Word Aligned  |
-|     Boofer     |
+|     Buffer     |
 |----------------|
 | Stack Elements |
 |----------------|  +
@@ -440,12 +440,12 @@ inline ISZ TStackSizeWords(ISY count) {
 @endcode
 */
 template<SCK_A, ISZ TotalInit_ = AStackTotalDefault,
-         typename BOF = TBOF<TotalInit_, T, ISZ, TStack<SCK_P>>>
+         typename BUF = TBOF<TotalInit_, T, ISZ, TStack<SCK_P>>>
 class AStack {
-  Autoboofer<T, ISZ, BOF, TStack<SCK_P>> aobj_; //< An Auto-Object or Auto-Array.
+  Autobuffer<T, ISZ, BUF, TStack<SCK_P>> aobj_; //< An Auto-Object or Auto-Array.
 
   constexpr RAMFactory InitRamFactory() {
-    return sizeof(BOF) == 0 ? TObjectFactory<ISZ>::StackHeap
+    return sizeof(BUF) == 0 ? TObjectFactory<ISZ>::StackHeap
                             : TObjectFactory<ISZ>::StackStack;
   }
 
@@ -454,12 +454,12 @@ class AStack {
   }
 
  public:
-  /* Initializes a stack of n elements to whatever can fit in the BOF. */
+  /* Initializes a stack of n elements to whatever can fit in the BUF. */
   AStack() {
     Reset();
   }
 
-  /* Attempts to down-size the BOF or creates a dynamically allocated stack.
+  /* Attempts to down-size the BUF or creates a dynamically allocated stack.
   @param size The number of elements in the Array. */
   AStack(ISY total) : aobj_(TStackBytes<SCK_P>(total)) {
     Reset();
@@ -469,7 +469,7 @@ class AStack {
     Reset();
   }
 
-  /* Copies the items into the obj_.Boofer () with some additional
+  /* Copies the items into the obj_.Buffer () with some additional
   empty_elements. */
   AStack(ISY total, const T* items, ISY items_count)
       : aobj_(TStackBytes<SCK_P>(items_count)) {
@@ -477,7 +477,7 @@ class AStack {
     TStackInsert<SCK_P>(This(), items, items_count);
   }
 
-  /* Copies the items into the obj_.Boofer () with some additional
+  /* Copies the items into the obj_.Buffer () with some additional
   empty_elements. */
   AStack(const T* items, ISY items_count)
       : aobj_(TStackBytes<SCK_P>(items_count)) {
@@ -503,7 +503,7 @@ class AStack {
   /* Gets this auto-object. */
   inline Autoject& AJT() { return aobj_.AJT(); }
 
-  /* Returns the boofer_. */
+  /* Returns the buffer_. */
   inline IUW* Origin() { return AJT().origin; }
 
   /* Sets the origin to the given pointer.
@@ -753,14 +753,14 @@ class AStack {
 
 }  //< namespace _
 
-//template<SCK_A, typename BOF = ::_::Nil>
-//::_::AStack<SCK_P, BOF>& operator<<(::_::AStack<SCK_P, BOF>& obj, T item) {
+//template<SCK_A, typename BUF = ::_::Nil>
+//::_::AStack<SCK_P, BUF>& operator<<(::_::AStack<SCK_P, BUF>& obj, T item) {
 //  obj.Push(item);
 //  return obj;
 //}
 //
-//template<SCK_A, typename BOF = ::_::Nil>
-//::_::AStack<SCK_P, BOF>& operator>>(T& item, ::_::AStack<SCK_P, BOF>& obj) {
+//template<SCK_A, typename BUF = ::_::Nil>
+//::_::AStack<SCK_P, BUF>& operator>>(T& item, ::_::AStack<SCK_P, BUF>& obj) {
 //  item = obj.Pop();
 //  return obj;
 //}

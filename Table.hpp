@@ -2,7 +2,7 @@
 #pragma once
 #ifndef SCRIPTT2_TABLE_HPP
 #define SCRIPTT2_TABLE_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_TABLE
 #include "Array.hpp"
 #include "Binary.hpp"
@@ -31,26 +31,26 @@ namespace _ {
 |_____   Collision N+ 1                |
 |_____   pie_end                       |
 +--------------------------------------+
-|_____   Boofer Stop                   |
-|_____   Boofer                        |
-|_____   Boofer Start                  |
+|_____   Buffer Stop                   |
+|_____   Buffer                        |
+|_____   Buffer Start                  |
 +--------------------------------------+
 |_____ ^ Key N                 CHC     |
 |_____ | Key 0                Keys     |
 +--------------------------------------+
-|_____   Boofer                ISY     |
+|_____   Buffer                ISY     |
 |_____ ^ Unsorted Index N    sort_map  |
 |      | Unsorted Index 0              |
 +--------------------------------------+
-|_____   Boofer                ISY     |
+|_____   Buffer                ISY     |
 |_____ ^ Collision Index N   pile_map  |
 |      | Collision Index 0             |
 +--------------------------------------+
-|_____   Boofer                ISZ     |
+|_____   Buffer                ISZ     |
 |_____ ^ Key Offset N        keys_map  |
 |      | Key Offset 0                  |
 +--------------------------------------+
-|_____   Boofer                HSH     |
+|_____   Buffer                HSH     |
 |_____ ^ Sorted Hash N       hash_map  |
 |      | Sorted Hash 0                 |
 +--------------------------------------+  ^ Up in addresses.
@@ -61,7 +61,7 @@ namespace _ {
 template<TBL_A>
 struct TTable {
   ISZ bytes,          //< Size of this object in bytes.
-      stop;           //< Keys boofer stop offset or start if count == total.
+      stop;           //< Keys buffer stop offset or start if count == total.
   TStack<ISZ, ISZ, ISY> map;  //< A Stack of offset mappings to strings.
 };
 
@@ -174,7 +174,7 @@ const void* TTableEnd(const TBL* table) {
   return CPtr<void>(TTableEnd<TBL_P>(CPtr<TBL>(table)));
 }
 
-// The offset from the keys_map to the keys boofer start.
+// The offset from the keys_map to the keys buffer start.
 template<TBL_A>
 inline ISZ TTableKeysMapOffset(ISY total) {
   return (sizeof(HSH) + sizeof(ISZ)) * ISZ(total) +
@@ -255,7 +255,7 @@ inline const CHS* TTablePileBotton(const TBL* table, ISZ bytes) {
   return CPtr<CHS>(TTablePileBotton<TBL_P>(CPtr<TBL>(table), bytes));
 }
 
-/* Free space left in the keys boofer. */
+/* Free space left in the keys buffer. */
 template<TBL_A>
 inline ISZ TTableSpace(const TBL* table, ISZ bytes, ISZ stop, 
   ISY total, ISY count) {
@@ -383,7 +383,7 @@ TBL* TTableInit(TBL* table, ISY total) {
   D_COUT("\nCreating a TTable<> with bytes:" << bytes << " total:" << total << 
          " start:" << start << " stop:" << stop);
   if (start >= stop)
-    D_RETURN_TPTR_ERROR(TBL, AErrorKeysBooferOverflow);
+    D_RETURN_TPTR_ERROR(TBL, AErrorKeysBufferOverflow);
   table->stop      = stop;
   table->map.total = ISZ(total);
   table->map.count = 0;
@@ -408,7 +408,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
   ISY  total     = ISY(table->map.total),
        count     = ISY(table->map.count);
   if (count >= total) 
-    D_RETURNT(ISY, -AErrorBooferOverflow);
+    D_RETURNT(ISY, -AErrorBufferOverflow);
   HSH* hash_map  = NILP;
   ISZ* keys_map  = NILP;
   ISY* pile_map  = NILP,
@@ -435,7 +435,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
     stop_ptr, key, hash, length);
   D_CHECK_PTR_TRETURN(ISY, start_next_ptr);
   if (++start_next_ptr >= stop_ptr)
-    D_RETURNT(ISY, -AErrorKeysBooferOverflow);
+    D_RETURNT(ISY, -AErrorKeysBufferOverflow);
   ISZ start_next = TDelta<ISZ>(keys_map, start_next_ptr);
   if (count_new < total)
     keys_map[count_new] = start_next;
@@ -478,7 +478,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         ISY* pile_end    = pile + pile_size;
         while (stack_index >= 0) {
           if (pile_cursor <= pile_end)
-            D_RETURNT(ISY, -AErrorBooferOverflow);
+            D_RETURNT(ISY, -AErrorBufferOverflow);
           ISZ key_offset = keys_map[stack_index];
           D_COUT("\n         Comparing to \"" << 
                  TTableKey<TBL_P>(keys_map, key_offset) << 
@@ -492,7 +492,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
         }
         D_COUT("\n             New collision detected, inserting into pile");
         if (TPtrDown<CHS>(pile - 1) < start_ptr)
-          D_RETURNT(ISY, -AErrorBooferOverflow);
+          D_RETURNT(ISY, -AErrorBufferOverflow);
         sort_map[count] = count;
         pile_map[count] = pile_index;
         for (ISY i = pile_index; i > pile_index - 5; --i)
@@ -523,7 +523,7 @@ ISY TTableAppend(TBL* table, const CHS* key) {
           D_COUT("\n                          pile[" << i << "]: " << *(pile + i));
         ISY* pile_cursor = pile + pile_size;
         if (TPtr<>(pile_cursor - 3) < TPtr<>(stop))
-          D_RETURNT(ISY, -AErrorKeysBooferOverflow);
+          D_RETURNT(ISY, -AErrorKeysBufferOverflow);
         sort_map[count     ] = count;
         pile_map[count     ] = pile_size;
         pile_map[sort_index] = pile_size;
@@ -621,7 +621,7 @@ ISY TTableAppend(Autoject& obj, const CHS* key) {
   ISY result = TTableAppend<TBL_P>(TPtr<TBL>(origin), key);
   while (result < 0) {
     if (!TTableGrow<TBL_P>(obj))
-      D_RETURNT(ISY, -AErrorBooferOverflow);
+      D_RETURNT(ISY, -AErrorBufferOverflow);
     TBL* table = TPtr<TBL>(obj.origin);
     result = TTableAppend<TBL_P>(table, key);
     if (result < 0) {
@@ -853,9 +853,9 @@ ISY TTableRemove(TBL* table, const CHS* key) {
 
 /* An ASCII Table Autoject. */
 template<TBL_A, ISY Total_ = 32, 
-  typename BOF = TBOF<CTableSize<TBL_P, Total_>(), ISA, ISZ, TBL>>
+  typename BUF = TBOF<CTableSize<TBL_P, Total_>(), ISA, ISZ, TBL>>
 class ATable {
-  AArray<CHS, ISZ, Total_ * 32, BOF> obj_;  //< Auto-Array of CHS.
+  AArray<CHS, ISZ, Total_ * 32, BUF> obj_;  //< Auto-Array of CHS.
  public:
   /* Constructs a Table. */
   ATable() {
@@ -903,7 +903,7 @@ class ATable {
   inline Autoject AJT() { return obj_.AJT(); }
 
   /* Gets the Auto-Array.
-  inline AArray<IUA, ISZ, BOF>& AJT_ARY() { return obj_; } */
+  inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; } */
 
 #if USING_STR
   template<typename Printer>

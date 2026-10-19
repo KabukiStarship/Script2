@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_PUFF_DECL
 #define CRABS_PUFF_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_ITOS
 namespace _ {
 

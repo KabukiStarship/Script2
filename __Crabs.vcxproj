@@ -36,7 +36,7 @@
     <ClInclude Include="BIn.hpp" />
     <ClInclude Include="BIn.hxx" />
     <ClInclude Include="Binary.hpp" />
-    <ClInclude Include="Boofer.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Book.hpp" />
     <ClInclude Include="BOut.h" />
     <ClInclude Include="BOut.hpp" />

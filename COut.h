@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_COUT_DECL
 #define CRABS_COUT_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_COUT && USING_CONSOLE == YES_0
 #include "Stringf.hpp"
 namespace _ {
@@ -107,7 +107,7 @@ class COut {
   COut& NL(FPC item);
   COut& NL(FPD item);
 
-  /* Stores the given item to the boofer and store the size. */
+  /* Stores the given item to the buffer and store the size. */
   COut& Hex(const void* item);
   COut& Hex(const void* item, ISW size);
   COut& Hex(const void* item, const void* item_stop);
@@ -122,7 +122,7 @@ class COut {
   COut& Hex(FPC item);
   COut& Hex(FPD item);
 
-  /* Stores the given item to the boofer and store the size. */
+  /* Stores the given item to the buffer and store the size. */
   COut& Binary(const void* item);
   COut& Binary(const void* item, ISW size);
   COut& Binary(const void* item, const void* item_stop);

@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_DIC_HPP
 #define CRABS_DIC_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 #include "Table.hpp"
 #if SEAM == CRABS_DIC
@@ -414,7 +414,7 @@ inline ISY TDicInsert(DIC* table, TBL* keys, const CHS* key, DT type, IUW value,
            ASCIIErrorSTA(tbl_index));
     D_COUT_TABLE(keys);
     D_COUT_DIC(table);
-    return -AErrorKeysBooferOverflow;
+    return -AErrorKeysBufferOverflow;
   }
   D_COUT("\ncount:" << table->values.map.count);
   index = TListInsert<LST_P>(&table->values, type, value, index, value_msb);
@@ -645,11 +645,11 @@ ISZ TDicPop(DIC* table) {
   return TDicRemove<DIC_P>(table, TDicKeys<DIC_P>(table).map.count - 1);
 }
 
-template<DIC_A, typename BOF>
+template<DIC_A, typename BUF>
 ISZ TDicCharCount(DIC* table) {
   return (ISZ)(TDicEnd<DIC_P>(table) - TDicStart<DIC_P>(table));
 }
-template<DIC_A, typename BOF>
+template<DIC_A, typename BUF>
 BOL TDicWrite(DIC* destination, DIC* soure) {
   return true;
 }
@@ -676,9 +676,9 @@ ISY TDicFind(DIC* table, const CHS* string) {
 ADic<DIC_A, 1024, TBuf<>>
 @endcode */
 template<DIC_A, ISZ BytesInit_ = 512,
-  typename BOF = TBOF<BytesInit_, CHS, ISZ, TString<ISN>>>
+  typename BUF = TBOF<BytesInit_, CHS, ISZ, TString<ISN>>>
 class ADic {
-  AArray<IUA, ISZ, BytesInit_, BOF> aary_;  //< An Auto-Array object.
+  AArray<IUA, ISZ, BytesInit_, BUF> aary_;  //< An Auto-Array object.
 public:
 
   static constexpr DTB Type() {
@@ -698,7 +698,7 @@ public:
 
   ADic(ISY total = DicDefaultTotalFractionShift,
     ISZ size_keys = DicDefaultKeysFractionShift)
-    : aary_(BytesInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+    : aary_(BytesInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     TDicInit<DIC_P>(This(), total, size_keys);
   }
 
@@ -802,7 +802,7 @@ public:
   inline Autoject& AJT() { return aary_.AJT(); }
 
   /* Gets the Auto-Array. */
-  inline AArray<IUA, ISZ, BytesInit_, BOF>& AJT_ARY() { return aary_; }
+  inline AArray<IUA, ISZ, BytesInit_, BUF>& AJT_ARY() { return aary_; }
 
   /* Gets the ASCII Object. */
   inline DIC* This() { return this->aary_.template As<DIC>(); }
@@ -882,7 +882,7 @@ public:
     ISY result = TDicInsert<DIC_P>(dic, key, type, value, index, value_msb);
     while (result < 0) {
       if (!Grow()) {
-        D_RETURNT(ISY, -AErrorBooferOverflow);
+        D_RETURNT(ISY, -AErrorBufferOverflow);
       }
       dic = TPtr<DIC>(obj.origin);
       result = TDicInsert<DIC_P>(dic, key, type, value, index, value_msb);

@@ -15,7 +15,7 @@
 // bounds, occlusion math). The future SDL3/CrabsTK renderer reads these.
 
 #pragma once
-#include <_ConfigHeader.h>
+#include "_ConfigHeader.h"
 
 #ifndef CRABS_TVEC_H
 #define CRABS_TVEC_H
