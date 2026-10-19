@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_ROOM_HPP
 #define CRABS_ROOM_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_ROOM
 #include "Interrupts.h"
 #include "BOut.hpp"
@@ -171,7 +171,7 @@ class TRoom : public Operand {
   };
 
   /* Creates a Room with the given size.
-  @param floor Boofer used to create the Wall Stack. Set to NILP to
+  @param floor Buffer used to create the Wall Stack. Set to NILP to
   enable dynamic memory.
   @param size  The room size that is bounded between the RoomBytesMin and
   RoomTotal. */

@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_ADDRESS
 #define CRABS_ADDRESS
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 /* @defgroup Address
 @brief Crabs Address utilities.

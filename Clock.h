@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_CLOCK_DECL
 #define CRABS_CLOCK_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_CLOCK
 
 namespace _ {

@@ -2,11 +2,10 @@
 
 Status: PLAN / GAPS LOG. Owner: low-level engineer. Date: 2026-10-07.
 Source: building the iGeek AI-gym API (`~/AStarStarship/iGeek/`) on top of the
-latest ASCIICrabs no-stdlib C++23 type system, informed by the local PufferLib
-C/CUDA fork (`~/3P/PufferLib`) as the RL training reference. This file records
-the ASCIICrabs-layer functions/fixes that work is **blocked on or needs**. It is
-a gap log, not a full upstream plan — upstream (Crabs) stays read-only for the
-iGeek teams; these are requests for a future upstream change.
+latest ASCIICrabs no-stdlib C++23 type system. This file records the
+ASCIICrabs-layer functions/fixes that the iGeek RL-gym work is **blocked on or
+needs**. It is a gap log, not a full upstream plan — upstream (Crabs) stays
+read-only for the iGeek teams; these are requests for a future upstream change.
 
 ## Gap 1 (CRITICAL, verified 2026-10-07) — `TRoom` does not instantiate
 
@@ -59,22 +58,24 @@ standalone.
 
 ## Gap 2 (needed) — No tensor / linear-algebra primitive
 
+The tensor format must be ported to be BLAS compatible. The inteiton of this library was for hetergenious multi-processing but had skill issues. It has to work with MLK, we're on Intel system. ASCII Crabs is CPU only, it's the Chinse Room ABSTRACT Stack Machine, it's a microframework to build other languages and frameworks with. CrabsTK is the Concrete framework. File doesn't count because it's a Linux primative stream IO, so we just emulate that with Crabs Door Sloot BIn/BOut by feeding B-Sequence Expressions through the slot in the door. These messages must be universally compatible, and BLAS is that. My storing of dynamic array dimensions isn't total trash, but it's unfinished, it's more for build-time tool.
+
 ASCIICrabs has POD types (`FPC`/`FPD`/`ISC`/`CHA`...), containers (`TStack`,
 `ALoom`, `AArray`), and RNG, but **no tensor type and no linear-algebra
-kernels**. The Puffer-informed iGeek policy (`TTransformer`, MuSE-style) and
+kernels**. The iGeek policy (`TTransformer`, compact transformer) and
 PPO loop (`TPPO`) need, at minimum:
 
 - A row-major float buffer with shape: `TTensor{FPC* data_, ISC rows_,
   ISC cols_}` (the iGeek `Tensor.h` defines this POD; it currently lives in
   iGeek, but it is a generic primitive that belongs upstream).
 - Kernels (CPU FPC, no CUDA): `MatMul`, `Softmax`, `LayerNorm`, `Relu`, `Add`,
-  `Scale`, `RowLogSumExp`. PufferLib's fused CUDA kernel does these in one
-  pass; on CPU they can start as plain loops.
+  `Scale`, `RowLogSumExp`. A fused GPU kernel does these in one pass; on
+  CPU they can start as plain loops.
 
 **Impact without it:** the iGeek policy/PPO has to hand-roll these in
-iGeek-space (they are declared in `iGeek/Tensor.h` and stubbed; the actual
-implementations are the next milestone). That works, but it duplicates a
-generic capability every RL/ML world would need.
+iGeek-space (they are declared in `iGeek/Tensor.h`; the implementations are
+the next milestone). That works, but it duplicates a generic capability every
+RL/ML world would need.
 
 **Ask:** add a `TTensor` POD + the list of elementwise/linear kernels to
 ASCIICrabs (a `Tensor.hxx`/`Tensor.hpp`), so any iGeek world doing ML can use
@@ -83,25 +84,14 @@ them without copying them. Keep them no-stdlib (plain `FPC*` loops, no
 
 ## Gap 3 (needed) — Deterministic seeded RNG (partially present)
 
-`_::Random(min, max)` exists, but the high-SEAM `TRandom` branch is
-**half-normal, not uniform** (verified 2026-10-07 in the card world:
-`Random(0, i)` can return > `i`). For RL we need:
-- A **seed setter** so rollouts are reproducible (PufferLib values
-  determinism; the card world already clamps `TRandom` output locally as a
-  workaround).
-- A **uniform** draw (the half-normal branch is only useful for Gaussian
-  policy noise, not for sampling discrete actions or shuffling).
-
-**Ask:** (a) expose a seed setter on the RNG, (b) provide a guaranteed-uniform
-`RandomUniform(min, max)` distinct from the half-normal `TRandom`, or document
-exactly which branch is uniform so worlds don't have to clamp by hand.
+Our Random number generator needs to be programmed, it's an LSTM RNG CPU only design using a running XOR after every floating point division instruction, so use templates for this. We don't need a large LSTM for this, we get the numbers by training a small number of perceptrons, each algoirhm feeding the running_xor in, you do Netwons algoirhm and we do some basic RNG stats.
 
 ## Gap 4 (nice-to-have) — bf16 / low-precision activation path
 
-PufferLib's `algo.cu` runs the transformer in **bf16** (`uint16_t` with
-`f32_to_bf16`/`bf16_to_f32`) for throughput. We are CPU/console for now, so
-`FPC` (float32) is the starting precision. But if any world later wants the
-PufferLib-style bf16 activations (or we move to GPU), a `bf16` type
+Reference GPU PPO implementations run the transformer in **bf16**
+(`uint16_t` with `f32_to_bf16`/`bf16_to_f32`) for throughput. We are
+CPU/console for now, so `FPC` (float32) is the starting precision. But if any
+world later wants bf16 activations (or we move to GPU), a `bf16` type
 (`IUB`-packed with the two conversion helpers) would belong upstream.
 
 **Ask (low priority):** add a `bf16` POD + `f32_to_bf16`/`bf16_to_f32` if the
@@ -129,7 +119,7 @@ numeric/console work.
 - The RL *algorithm* (PPO, GAE, clipped loss, value-clip, entropy) lives in
   iGeek (`PPO.h`, `Policy.h`) — it is domain logic, not a core primitive.
 - The vectorized env contract (`Gym` batch arrays) lives in iGeek (`Gym.h`).
-- The MuSE-transform decoder specifics live in iGeek (`Policy.h` /
+- The transformer policy specifics live in iGeek (`Policy.h` /
   `TTransformer`) once the tensor primitive lands.
 
 ## Verification note

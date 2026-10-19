@@ -22,8 +22,8 @@ they must be re-joined before anything new is built on top:
    seam wasn't updated to match → **#244**.
 2. **The wire layer** (BSeq + Protocol + RPC) still assumes the old types and
    has integrity gaps → **#328, #353, #358**.
-3. **The surface area** Carabs and the model work (MUSE / spectral tokenizer)
-   need is missing or untested → **#267, #325, #331, #338, #351, #355**.
+3. **The surface area** Crabs and the downstream model work (spectral
+   tokenizer) need is missing or untested → **#267, #325, #331, #338, #351, #355**.
 
 "Unification" = get all three back in agreement, prove it compiles and the seams
 pass, and cut Milestone 3.
@@ -52,7 +52,7 @@ pass, and cut Milestone 3.
 | #351 | Add missing functions required for Carabs | (see issue body for the list) | **Body currently lists the problem but not the function list** — needs the list filled in before it's shippable. |
 | #325 | Ability: parse regex string | `Regex.hpp` (exists) | "Fastest Unicode library on Earth, but no regex parser." |
 | #338 | Write-combining buffer cache optimization | (TBD) | Read a memory address without polluting / waiting on cache sync. |
-| #331 | Tokenizer.Describe: Spectral Tokenizer | (new) | Angles on S¹ → lift to S², 12-token window covariance (3×3 SPD), monoid of 3×3 matrices. Feeds MUSE / dot-product attention. Research-heavy. |
+| #331 | Tokenizer.Describe: Spectral Tokenizer | (new) | Angles on S¹ → lift to S², 12-token window covariance (3×3 SPD), monoid of 3×3 matrices. Feeds the downstream transformer / dot-product attention. Research-heavy. |
 
 **Theme counts:** A=2 · B=3 · C=5 · total=10.
 
@@ -125,8 +125,8 @@ consistent · a tag (e.g. `v0.7` / `Milestone3`) is cut and pushed.
 2. **#358 is the largest single lift** (RPC frame integrity + normative wire format +
    test vectors). It is a spec-first task; scope it as its own sub-epic if it
    threatens to swallow the rest of the milestone.
-3. **#331 is research, not plumbing.** Spectral tokenizer touches the MUSE
-   transformer design. Give it its own longer runtime and don't gate the
+3. **#331 is research, not plumbing.** Spectral tokenizer touches the
+   downstream transformer design. Give it its own longer runtime and don't gate the
    milestone on a *finished* model — gate it on a working seam + spec description.
 4. **Compile-vs-pass distinction.** #244's bar is *compile*, not *pass*. Make sure
    PHASE 5's "seams green" bar doesn't silently require #244's test to pass.

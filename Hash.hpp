@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_HASH_HEADER_IMPL
 #define CRABS_HASH_HEADER_IMPL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_TABLE
 
 namespace _ {
@@ -67,7 +67,7 @@ inline CHS* THashPrimePrint(CHS* start, CHS* stop, const CHY* item, HSH& hash,
   ISZ& length) {
   D_CHECK_PTR_RETURN(start);
   if (start >= stop) 
-    D_RETURN_TPTR_ERROR(CHS, AErrorInvalidBoofer);
+    D_RETURN_TPTR_ERROR(CHS, AErrorInvalidBuffer);
   D_CHECK_CPTR_RETURN(CHS, item);
   THashPrimePrint<HSH, ISZ, CHS, CHY>(start, stop, item, hash, length);
 }

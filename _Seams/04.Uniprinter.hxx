@@ -171,8 +171,8 @@ static const CHA* TestSPrinter() {
 static const CHA* TestATypefARY() {
   D_COUT("\nPrinting ARY types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  CHA buffer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(buffer, CTotal);
 
   for (DTB i = 1; i < 32; ++i) {
     DTB vt_bits = 1 << ATypeVTBit0;
@@ -197,8 +197,8 @@ static const CHA* TestATypefARY() {
 static const CHA* TestATypefVHT() {
   D_COUT("\n\nPrinting VHT types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  CHA buffer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(buffer, CTotal);
 
   for (DTB i = 1; i < 32; ++i) {
     DTB t_1 = (1 << ATypeSWBit0) | i,
@@ -220,8 +220,8 @@ static const CHA* TestATypefVHT() {
 static const CHA* TestATypefSCK() {
   D_COUT("\n\nPrinting SCK types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  CHA buffer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(buffer, CTotal);
 
   for (DTB i = 1; i < ATypePODTotal; ++i) {
     DTB vt_bits = _SCK << ATypeVTBit0,
@@ -245,8 +245,8 @@ static const CHA* TestATypefSCK() {
 static const CHA* TestATypefMTX() {
   D_COUT("\n\nPrinting MTX types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  CHA buffer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(buffer, CTotal);
 
   for (DTB i = 1; i < ATypePODTotal; ++i) {
     DTB t_0 = (_MTX << ATypeVTBit0) | i,
@@ -269,8 +269,8 @@ static const CHA* TestATypefMTX() {
 static const CHA* TestATypeMaps() {
   D_COUT("\n\nTesting MAP types...");
   const ISW CTotal = 1024;
-  CHA boofer[CTotal] = {};
-  TSPrinter<CHA, ISW> p(boofer, CTotal);
+  CHA buffer[CTotal] = {};
+  TSPrinter<CHA, ISW> p(buffer, CTotal);
   const DTB Step = 8;
   for (DTB map_type = 1; map_type < ATypePODTotal; map_type += Step) {
     D_COUT("\nMap of " << TATypePODs<>(map_type) << " to:");
@@ -492,15 +492,15 @@ static const CHA* TestProblemChildren() {
     70000000, 80000000, 90000000, 99999999, 100000000, 1000000000
   };
   // length 8 range: 10000000 to 16777216
-  CHA boofer[1024] = { 0 };
-  TSPrinter<CHA> p(boofer, 1024);
-  D_COUT(boofer);
+  CHA buffer[1024] = { 0 };
+  TSPrinter<CHA> p(buffer, 1024);
+  D_COUT(buffer);
   for (ISN dddddez = 11; dddddez < 27; ++dddddez) {
     auto nutz_in_yo_mouth = problem_children[dddddez];
     D_COUT("\n\ndddddez ");
     D_COUT(nutz_in_yo_mouth);
     p << "\nnutz in your face: " << nutz_in_yo_mouth << '\n';
-    D_COUT(boofer);
+    D_COUT(buffer);
     p.Reset();
   }
   return NILP;

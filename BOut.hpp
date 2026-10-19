@@ -36,7 +36,7 @@ Printer& TBOutPrint(Printer& printer, BOut* bout) {
   ISN size = bout->bytes;
   return printer << Linef('_', 80) << "\nBOut: size:" << size
           << " start:" << bout->origin << " stop:" << bout->stop
-          << " read:" << bout->read << Charsf(BOutBoofer(bout), size - 1);
+          << " read:" << bout->read << Charsf(BOutBuffer(bout), size - 1);
 }
 }  //< namespace _
 #endif

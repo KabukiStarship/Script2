@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_EXCEPTIONS_DECL
 #define CRABS_EXCEPTIONS_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 #if USING_CRABS_INTERRUPTS == YES_0
 namespace _ {

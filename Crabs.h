@@ -16,15 +16,15 @@ App/Driver/User writes to the stop of the Tx socket and the driver reads from
 the beginning. The user writes are synchronous and the driver reads are
 asynchronous.
 
-# Ring Boofer Streaming Diagram
+# Ring Buffer Streaming Diagram
 
 @code
-      |>---------------------- Ring Boofer ------------------------->|
+      |>---------------------- Ring Buffer ------------------------->|
       ________________________________________________________________
-BOut  |>-Boofer->|>-Sync User SScan->|>-Async Portal Rx-->|>-Boofer->|
+BOut  |>-Buffer->|>-Sync User SScan->|>-Async Portal Rx-->|>-Buffer->|
       |__________|___________________|____________________|__________|
       ________________________________________________________________
-BIn   |>-Boofer->|>-Async Portal Tx->|>-Sync User Writes->|>-Boofer->|
+BIn   |>-Buffer->|>-Async Portal Tx->|>-Sync User Writes->|>-Buffer->|
       |__________|___________________|____________________|__________|
 @endcode
 
@@ -41,7 +41,7 @@ that grows down.
     |-------------------------|
     |          Slot           |
     |-------------------------|
-    |         Boofer          |
+    |         Buffer          |
     |-------------------------|
     |     Evaluated Result    |
 0xN +-------------------------+
@@ -51,7 +51,7 @@ struct alignas(ACPUCacheLineSize) Crabs {
 
   enum {
     StackTotalMin  = 8, //< Size of the crabs stack.
-    BooferTotalMin = 2, //< Min socket size.
+    BufferTotalMin = 2, //< Min socket size.
   };
 
   ISC socket_bytes,     //< Offset to the BOut slot.
@@ -87,7 +87,7 @@ Crabs* StdCrabs();
 inline ISC CrabsHeaderBytes(ISC stack_total);
 
 /* Gets the crabs's socket. */
-IUA* CrabsBoofer(Crabs* crabs);
+IUA* CrabsBuffer(Crabs* crabs);
 
 /* Gets a pointer to the BIn slot. */
 BIn* CrabsBIn(Crabs* crabs);
@@ -97,10 +97,10 @@ BOut* CrabsBOut(Crabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
-@param unpacked_boofer The word-aligned expression socket.
+@param unpacked_buffer The word-aligned expression socket.
 @param unpacked_size   Size of the unpacked socket. */
-Crabs* CrabsInit(IUW* socket, ISC boofer_size, ISC stack_count,
-                            Operand* root, IUW* unpacked_boofer,
+Crabs* CrabsInit(IUW* socket, ISC buffer_size, ISC stack_count,
+                            Operand* root, IUW* unpacked_buffer,
                             IUW unpacked_size, IUD ctxt);
 
 /* Gets the base address of the device stack. */

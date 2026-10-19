@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_MAP_HPP
 #define CRABS_MAP_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_MAP
 #include "Stack.hpp"
 #if SEAM == CRABS_MAP
@@ -26,11 +26,11 @@ offsets).
 @code
          Map Memory Layout
 +-------------------------------+
-|_____   Boofer       ISZ       |
+|_____   Buffer       ISZ       |
 |_____ ^ Y_n        Codomain    |
 |      | Y_0        Mappings    |
 +-------------------------------+
-|_____   Boofer                 |
+|_____   Buffer                 |
 |_____ ^ X_n     Sorted Domain  |
 |      | X_0         Values     |
 +-------------------------------+  ^ Up in addresses.
@@ -184,7 +184,7 @@ ISZ TMapAdd(MAP* map, D domain_value, ISZ codomain_mapping) {
   D_ASSERT(map);
   D_COUT("\n\nAdding:" << domain_value << "->" << codomain_mapping);
   ISZ count = map->count, size = map->total;
-  if (count >= size) D_RETURNT(ISZ, -AErrorBooferOverflow);
+  if (count >= size) D_RETURNT(ISZ, -AErrorBufferOverflow);
   D  * domain   = TMapDomain<MAP_P>(map);
   ISZ* codomain = TMapCodomain<MAP_P>(domain, size);
 
@@ -322,10 +322,10 @@ ISZ TMapRemove(MAP* map, ISZ index) {
 CMapSizeBytes<MAP_P>(Size_)
 */
 template<MAP_A, ISZ Total_ = 16,
-          typename BOF = TBOF<Total_, TMapBuf<MAP_P>, ISZ, MAP>>
+          typename BUF = TBOF<Total_, TMapBuf<MAP_P>, ISZ, MAP>>
 class AMap {
   enum { BytesInit_ = Total_ * 32 };
-  AArray<IUA, ISZ, BytesInit_, BOF> array_;
+  AArray<IUA, ISZ, BytesInit_, BUF> array_;
 
  public:
   /* Constructs a Map with the given size.
@@ -416,7 +416,7 @@ class AMap {
   inline COut& CPrint() { return PrintTo<COut>(StdOut()); }
 
   /* Gets the aarray_. */
-  inline AArray<IUA, ISZ, BytesInit_, BOF>& AJT() { return array_; }
+  inline AArray<IUA, ISZ, BytesInit_, BUF>& AJT() { return array_; }
 
   /* Gets a pointer to the object at the origin of the aarray_. */
   inline MAP* This() { return TPtr<MAP>(AJT().Origin()); }

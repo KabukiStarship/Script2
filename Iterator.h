@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_ITERATOR_DECL
 #define CRABS_ITERATOR_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 // Dependencies:
 // End dependencies.

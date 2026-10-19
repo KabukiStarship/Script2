@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_BOUT_DECL
 #define CRABS_BOUT_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -49,7 +49,7 @@ BOut* BOutInit(BOut* socket, ISN size);
 ISN BOutSpace(BOut* bout);
 
 /* Gets the B-Output. */
-ISN BOutBooferLength(BOut* bout);
+ISN BOutBufferLength(BOut* bout);
 
 /* Gets the stop address of the tx socket. */
 IUA* BOutEndAddress(BOut* bout);
@@ -59,7 +59,7 @@ IUA* BOutEndAddress(BOut* bout);
 ISN BOutStreamByte(BOut* bout);
 
 /* The first byte in the B-Output's socket.*/
-IUA* BOutBoofer(BOut* bout);
+IUA* BOutBuffer(BOut* bout);
 
 /* Gets the begin of the socket. */
 inline const CHA* BOutBegin(const BOut* bout);
@@ -111,6 +111,23 @@ void BOutTerminate(BOut* bout, const CHA* address);
 
 /* Sends a connection reset message to the given address. */
 void BOutReset(BOut* bout, const CHA* address);
+
+/* Links a BOut (producer) and a BIn (consumer) so they share one ring.
+This is the single-producer/single-consumer lock-free pipe: the BOut's
+write-head (bout->stop) and the BIn's read-head (bin->origin) become the two
+independent volatile counters over one shared byte region. The BIn's
+write-head mirror (bin->stop) and the BOut's read-head mirror (bout->origin)
+alias the producer/consumer heads respectively so each side sees the other's
+progress. After calling this, BOutWrite(bout, ...) into the producer and
+BInRead(bin, ...) from the consumer exchange messages through the shared ring.
+@param bin   The consumer BIn (Room B's input).
+@param bout  The producer BOut (Room A's output).
+@param buffer The shared byte region both structs will use (must be at least
+              SlotBytesMin bytes). This is the memory that, in a real
+              interprocess pipe, would live in shared memory.
+@return Returns the consumer BIn upon success.
+@see BIn.h, BOut.h, Slot.h (the Chinese Room Slot/Door/pipe). */
+BIn* BInAttach(BIn* bin, BOut* bout, IUA* buffer, ISN buffer_bytes);
 
 }  //< namespace _
 

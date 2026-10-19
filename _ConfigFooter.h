@@ -52,11 +52,11 @@ enum {
 #ifndef CRABS_TEXT_LENGTH
 #define CRABS_TEXT_LENGTH 32767
 #endif
-#ifndef CRABS_BOOFER_SIZE_RX
-#define CRABS_BOOFER_SIZE_RX 32767
+#ifndef CRABS_BUFFER_SIZE_RX
+#define CRABS_BUFFER_SIZE_RX 32767
 #endif
-#ifndef CRABS_BOOFER_SIZE_TX
-#define CRABS_BOOFER_SIZE_TX 32767
+#ifndef CRABS_BUFFER_SIZE_TX
+#define CRABS_BUFFER_SIZE_TX 32767
 #endif
 #ifndef CRABS_WINDOW_SIZE_MIN
 #define CRABS_WINDOW_SIZE_MIN 512
@@ -64,11 +64,11 @@ enum {
 #ifndef CRABS_CPU_CACHE_LINE_SIZE
 #define CRABS_CPU_CACHE_LINE_SIZE 64
 #endif
-#ifndef CRABS_BOOFER_COUNT_DEFAULT
-#define CRABS_BOOFER_COUNT_DEFAULT 1024
+#ifndef CRABS_BUFFER_COUNT_DEFAULT
+#define CRABS_BUFFER_COUNT_DEFAULT 1024
 #else
-#if CRABS_BOOFER_COUNT_DEFAULT < 1
-#define CRABS_BOOFER_COUNT_DEFAULT 512
+#if CRABS_BUFFER_COUNT_DEFAULT < 1
+#define CRABS_BUFFER_COUNT_DEFAULT 512
 #endif
 #endif
 #ifndef CRABS_STACK_COUNT_MAX_DEFAULT
@@ -89,8 +89,8 @@ enum {
 #ifndef CRABS_STRING_COUNT_DEFAULT
 #define CRABS_STRING_COUNT_DEFAULT 28
 #endif
-#ifndef CRABS_CIN_boofer_SIZE
-#define CRABS_CIN_boofer_SIZE 81
+#ifndef CRABS_CIN_buffer_SIZE
+#define CRABS_CIN_buffer_SIZE 81
 #endif
 #ifndef CRABS_UNICODE_VERSION_MAJOR
 #define CRABS_UNICODE_VERSION_MAJOR 12
@@ -160,9 +160,9 @@ enum {
 #endif
 
 #if CRABS_BYT == 0
-typedef IUA BYT;  //< Byte type for boofering.
+typedef IUA BYT;  //< Byte type for buffering.
 #else
-typedef ISA BYT;  //< Byte type for boofering.
+typedef ISA BYT;  //< Byte type for buffering.
 #endif
 
 // 128-bit integer support for GCC/Clang on x86_64
@@ -421,14 +421,14 @@ enum {
   ACharCount = CRABS_TEXT_LENGTH,
 
   // Size of the Display Print Slot.
-  ASlotBooferSizeRx = CRABS_BOOFER_SIZE_RX,
+  ASlotBufferSizeRx = CRABS_BUFFER_SIZE_RX,
 
-  // Size of the KeyboardInBoofer.
-  ASlotBooferSizeTx = CRABS_BOOFER_SIZE_TX,
+  // Size of the KeyboardInBuffer.
+  ASlotBufferSizeTx = CRABS_BUFFER_SIZE_TX,
 
   AWindowSizeMin = CRABS_WINDOW_SIZE_MIN,
 
-  ABooferSizeDefault = CRABS_BOOFER_COUNT_DEFAULT,
+  ABufferSizeDefault = CRABS_BUFFER_COUNT_DEFAULT,
   AFloorSize = CRABS_FLOOR_SIZE,  //< Size, or initial size, of the Floor.
   AStackTotalDefault = CRABS_STACK_COUNT_MAX_DEFAULT,
   AObjSizeDefault = CRABS_OBJ_SIZE_DEFAULT,
@@ -439,13 +439,13 @@ enum {
   APrintC0Offset = 176,  //< Value add to values 0-32 when printing.
   ATokenLongest  = 31,   //< Max length of a token plus one.
   AMinStackSize  = 1,    //< Min Crabs stack size.
-  ABooferSizeDefaultWords =
-      ABooferSizeDefault / sizeof(ISW) + ABooferSizeDefault % sizeof(ISW) ? 1
+  ABufferSizeDefaultWords =
+      ABufferSizeDefault / sizeof(ISW) + ABufferSizeDefault % sizeof(ISW) ? 1
                                                                           : 0,
   ASTRCount = CRABS_STRING_COUNT_DEFAULT,
   AConsoleWidth = CRABS_CONSOLE_WIDTH,
-  CInBooferSize =
-      CRABS_CIN_boofer_SIZE,         //< Preallocated CIn boofer char count.
+  CInBufferSize =
+      CRABS_CIN_buffer_SIZE,         //< Preallocated CIn buffer char count.
   AKeyEnter = 0,                       //< The keyboard value for enter.
   ATypeLargestPOD = LARGEST_POD_TYPE,  //< The largest POD type.
 };
@@ -469,10 +469,10 @@ enum {
 #undef OPERATION_MAX_NAME_LENGTH
 #undef OPERATION_MAX_DECRABSION_LENGTH
 #undef CRABS_TEXT_LENGTH
-#undef CRABS_BOOFER_SIZE_RX
-#undef CRABS_BOOFER_SIZE_TX
+#undef CRABS_BUFFER_SIZE_RX
+#undef CRABS_BUFFER_SIZE_TX
 #undef CRABS_WINDOW_SIZE_MIN
-#undef CRABS_BOOFER_COUNT_DEFAULT
+#undef CRABS_BUFFER_COUNT_DEFAULT
 #undef CRABS_STACK_COUNT_MAX_DEFAULT
 #undef CRABS_FLOOR_SIZE
 #undef CRABS_STACK_COUNT_MAX_DEFAULT

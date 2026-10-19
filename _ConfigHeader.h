@@ -144,6 +144,21 @@ typedef ISD DTD;  //< 64-bit Ascii Data Type.
 typedef ISC TMC;  //< A 32-bit seconds since epoch timestamp.
 typedef ISD TMD;  //< A 64-bit seconds since epoch timestamp.
 
+// Preserve the global primitive identities while allowing qualified use by
+// client APIs (notably TileWorld). Using-declarations add no new types/ABI.
+namespace _ {
+using ::CHA;
+using ::BOL;
+using ::ISC;
+using ::IUC;
+using ::IUA;
+using ::IUD;
+using ::ISM;
+using ::IUM;
+using ::FPC;
+using ::FPD;
+}  //< namespace _
+
 enum {
   ATypePODBits    = 5,        //< Bit count for POD types 0-31.
   ATypeVTBit0     = 5,        //< Start bit of the Vector Type bits.
@@ -561,7 +576,7 @@ typedef ISW AError;
 enum ASCIIError {
   AErrorNil = 0,                 //< Error 00: Nil error.
   AErrorInvalid = 1,             //< Error 01: Invalid error.
-  AErrorInvalidBoofer,           //< Error 02: Invalid boofer.
+  AErrorInvalidBuffer,           //< Error 02: Invalid buffer.
   AErrorInvalidBounds,           //< Error 03: Invalid bounds.
   AErrorInvalidDoor,             //< Error 04: Invalid door.
   AErrorInvalidenquiry,          //< Error 05: Invalid enquiry.
@@ -577,8 +592,8 @@ enum ASCIIError {
   AErrorInvalidUTF8,             //< Error 14: Invalid UTF-8.
   AErrorInvalidUTF16,            //< Error 15: Invalid UTF-16.
   AErrorArrayUnderflow,          //< Error 16: Array underflow.
-  AErrorBooferUnderflow,         //< Error 17: Boofer underflow.
-  AErrorKeysBooferUnderflow,     //< Error 18: Keys boofer underflow.
+  AErrorBufferUnderflow,         //< Error 17: Buffer underflow.
+  AErrorKeysBufferUnderflow,     //< Error 18: Keys buffer underflow.
   AErrorParamUnderflow,          //< Error 19: Parameter underflow.
   AErrorStackUnderflow,          //< Error 20: Stack underflow.
   AErrorTextUnderflow,           //< Error 21: Text underflow.
@@ -586,8 +601,8 @@ enum ASCIIError {
   AErrorYourMomUnderflow,        //< Error 23: Your mom underflow.
 
   AErrorArrayOverflow,           //< Error 24: Array overflow.
-  AErrorBooferOverflow,          //< Error 25: Boofer overflow.
-  AErrorKeysBooferOverflow,      //< Error 26: Keys boofer overflow.
+  AErrorBufferOverflow,          //< Error 25: Buffer overflow.
+  AErrorKeysBufferOverflow,      //< Error 26: Keys buffer overflow.
   AErrorParamOverflow,           //< Error 27: Parameter overflow.
   AErrorStackOverflow,           //< Error 28: Stack overflow.
   AErrorTextOverflow,            //< Error 29: Text overflow.

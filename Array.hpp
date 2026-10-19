@@ -475,12 +475,12 @@ inline const T* TArrayCompare(const void* a_begin, void* a_end,
 }
 
 template<ARY_A, ISZ TotalInit_ = AStackTotalDefault,
-         typename BOF = TBOF<TotalInit_, T, ISZ, ARY>, typename Class = Nil>
+         typename BUF = TBOF<TotalInit_, T, ISZ, ARY>, typename Class = Nil>
 class AArray {
-  Autoboofer<ARY_P, BOF, ARY> aobj_;  //< An Auto-Object.
+  Autobuffer<ARY_P, BUF, ARY> aobj_;  //< An Auto-Object.
 
   constexpr RAMFactory InitRamFactory() {
-    return sizeof(BOF) == 0 ? TObjectFactory<ISZ>::StackHeap
+    return sizeof(BUF) == 0 ? TObjectFactory<ISZ>::StackHeap
                             : TObjectFactory<ISZ>::StackStack;
   }
 
@@ -489,12 +489,12 @@ class AArray {
   }
 
  public:
-  /* Initializes a array of n elements to whatever can fit in the BOF. */
+  /* Initializes a array of n elements to whatever can fit in the BUF. */
   AArray() {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
-  /* Attempts to down-size the BOF or creates a dynamically allocated array.
+  /* Attempts to down-size the BUF or creates a dynamically allocated array.
   @param size The number of elements in the Array. */
   AArray(ISZ total) : aobj_(TArrayBytes<ARY_P>(total)) {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
@@ -504,14 +504,14 @@ class AArray {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
-  /* Copies the items into the obj_.Boofer () with some additional
+  /* Copies the items into the obj_.Buffer () with some additional
   empty_elements. */
   AArray(ISZ total, const T* items, ISZ items_count, ISZ items_start = 0)
       : aobj_(TArrayBytes<ARY_P>(items_count)) {
     TArrayInsert<ARY_P>(aobj_.AJT(), items, items_count, items_start);
   }
 
-  /* Copies the items into the obj_.Boofer () with some additional
+  /* Copies the items into the obj_.Buffer () with some additional
   empty_elements. */
   AArray(const T* items, ISZ items_count)
       : aobj_(TArrayBytes<ARY_P>(items_count)) {
@@ -531,7 +531,7 @@ class AArray {
   /* Gets this auto-object. */
   inline Autoject& AJT() { return aobj_.AJT(); }
 
-  /* Returns the boofer_. */
+  /* Returns the buffer_. */
   inline IUW* Origin() { return AJT().origin; }
 
   /* Sets the origin to the given pointer.

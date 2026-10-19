@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_LIST_HPP
 #define CRABS_LIST_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_LIST
 #include "Binary.hpp"
 #include "Set.hpp"
@@ -24,15 +24,15 @@ namespace _ {
 @code
       List Memory Layout
 +============================+
-|_______   Boofer            |<--- top
+|_______   Buffer            |<--- top
 |_______ ^ Value N           |
 |        | Value 0           |
 |----------------------------|
-|_______   Boofer            |
+|_______   Buffer            |
 |_______ ^ Type of Value N   |
 |        | Type of Value 0   |
 |----------------------------|
-|_______   Boofer            |
+|_______   Buffer            |
 |_______ ^ Offset to Value N |
 |        | Offset to Value 0 |
 +============================+  ^  Up in addresses.
@@ -430,22 +430,22 @@ struct TList {
 };
       List Memory Layout
 +============================+
-|_______   Boofer            |
+|_______   Buffer            |
 |_______ ^ Value N           |
 |        | Value 0           |
 |----------------------------|
-|_______   Boofer            |
+|_______   Buffer            |
 |_______ ^ Type of Value N   |
 |        | Type of Value 1   |
 |----------------------------|
-|_______   Boofer            |
+|_______   Buffer            |
 |_______ ^ Offset to Value N |
 |        | Offset to Value 1 |
 +============================+  ^  Up in addresses.
 |        TList Struct        |  |
 +============================+ 0xN Base address
 
-@todo research if it's faster to just copy the Boofer.
+@todo research if it's faster to just copy the Buffer.
 */
 template<typename T, LST_A>
 LST* TListCopy(const LST* origin, LST* destination) {
@@ -521,7 +521,7 @@ inline ISY TListInsert_NC(LST* list, ISZ bytes, ISZ top, ISY total, ISY count,
     //value = AlignUp(value, align_mask); // @todo Should this be aligned?
     auto result = TBSeqWrite_NC<ISZ>(TPtr<IUA>(list, top),
       TPtrDown<IUA>(list, bytes, align_mask), type, value, value_msb);
-    D_CHECK_PTR_TRETURN(ISY, -AErrorBooferOverflow);
+    D_CHECK_PTR_TRETURN(ISY, -AErrorBufferOverflow);
     TListValuesMap<LST_P>(list)[count] = top;
     TListTypes<LST_P>(list)[count++] = ATypeMDDeassert(type);
     list->map.count = count;
@@ -679,23 +679,23 @@ inline void* TListPop(LST* list) {
 
 /* ASCII Auto List that uses dynamic memory. */
 template<LST_A, ISZ BytesInit_ = 512,
-         typename BOF = TBOF<BytesInit_, IUA, ISZ, Nil>> 
+         typename BUF = TBOF<BytesInit_, IUA, ISZ, Nil>> 
 class AList {
-  AArray<IUA, ISZ, BytesInit_, BOF> obj_;  //< An Auto-array.
+  AArray<IUA, ISZ, BytesInit_, BUF> obj_;  //< An Auto-array.
  public:
   static constexpr DT Type() { return CListType<LST_P>(); }
 
   /* Constructs a list with a given total with estimated bytes. */
   AList(ISY total)
-      : obj_(BytesInit_, TObjectFactory<ISZ>().template Init<BOF>()) {
+      : obj_(BytesInit_, TObjectFactory<ISZ>().template Init<BUF>()) {
     TListInit<LST_P>(This(), total);
   }
 
   /* Constructs a List with the given bytes and total. */
   //AList(ISY total, ISZ bytes)
   //    : obj_(TListNew<LST_P>(bytes, total,
-  //           TObjectFactory<ISZ>().template Init<BOF>()),
-  //           TObjectFactory<ISZ>().template Init<BOF>()) {}
+  //           TObjectFactory<ISZ>().template Init<BUF>()),
+  //           TObjectFactory<ISZ>().template Init<BUF>()) {}
 
   /* Maximum count of the item in the List. */
   inline ISY Total() { return ISY(This()->map.total); }
@@ -797,7 +797,7 @@ class AList {
   /* Gets the Auto-Array. */
   inline AArray<IUA, ISZ>& AJT_ARY() { return obj_; }
 
-  /* Returns the contiguous ASCII List boofer_. */
+  /* Returns the contiguous ASCII List buffer_. */
   inline LST* This() { return TPtr<LST>(AJT().origin); }
 
   /* Prints This object to the printer. */
@@ -861,7 +861,7 @@ class AList {
                                      index);
      while (result < 0) {
        if (!Grow(obj)) {
-         return -AErrorBooferOverflow;
+         return -AErrorBufferOverflow;
        }
        result = TListInsert<LST_P>(TPtr<LST>(obj.origin), type, IUW(value), 
                                    index);

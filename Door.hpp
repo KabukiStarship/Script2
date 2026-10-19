@@ -2,11 +2,10 @@
 #pragma once
 #ifndef CRABS_DOOR_DECL
 #define CRABS_DOOR_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_ROOM
 #include "Crabs.h"
 #include "BIn.h"
-#include "BigInt.h"
 #include "Slot.h"
 #include "Stack.hpp"
 #include "String.hpp"
@@ -58,7 +57,7 @@ class TDoor : public Operand {
         return;
       }
     }
-    // tx.SetBoofer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
+    // tx.SetBuffer (adjacentDoor->Rx ()->EndAddress () + 1), aSlotSize);
     // rx = new SerialSlot (tx.EndAddress (), aSlot, aSlotSize,
     //  aTalkbackSize);
   }
@@ -93,8 +92,8 @@ class TDoor : public Operand {
   }
 
   BIn* SlotNumber(ISZ index) {
-    if (!slots_.InBounds(index)) return NILP;
-    return slots_[index];
+    if (!slots_->InBounds(index)) return NILP;
+    return TPtr<BIn>(&slots_->Element(index));
   }
 
   /* Executes all of the queued escape sequences.

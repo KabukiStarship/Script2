@@ -10,7 +10,6 @@
 #include "Crabs.hxx"
 #include "Error.hxx"
 #include "File.hxx"
-#include "Floor.hxx"
 #include "Interrupts.hxx"
 #include "MorseCode.hxx"
 #include "Op.hxx"

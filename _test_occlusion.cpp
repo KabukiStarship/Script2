@@ -19,7 +19,7 @@
 //   - (7,0) far top-right: NOT visible (wall column blocks the straight shot)
 //   - (0,0) top-left: visible
 // No <cmath>/<vector>/<string>. Exits 0 iff all pass.
-#include <_ConfigHeader.h>
+#include "_ConfigHeader.h"
 #include "TVec.h"
 #include "TOcclusion.h"
 using namespace _;

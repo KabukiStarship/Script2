@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_BIN_DECL
 #define CRABS_BIN_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -29,7 +29,7 @@ typedef enum BInStates {
   BInStateInvalid         //< Number of BIn States.
 } BInState;
 
-/* B-Input ring boofer Slot.
+/* B-Input ring buffer Slot.
 A B-Input Slot is functionally identical to a input port in TCP. */
 struct BIn {
   ISN bytes,          //< The size of the socket in bytes.
@@ -59,7 +59,7 @@ inline ISW SlotSpace(IUA* origin, IUA* stop, IUW size);
 /* Gets the rx socket length. */
 inline ISN BInSpace(BIn* bin);
 
-inline ISN BinBooferLength(BIn* bin);
+inline ISN BinBufferLength(BIn* bin);
 
 #if USING_CRABS_TEXT == YES_0
 

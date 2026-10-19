@@ -35,17 +35,17 @@ the keys.
 
 @code
 +====================================+
-|_______   Boofer                    |
+|_______   Buffer                    |
 |_______ ^ List Value N              |
 |_______ | List Value 1              |
 |        | Keys Loom (Value 0)       |
 |------------------------------------|
-|_______   Boofer                    |
+|_______   Buffer                    |
 |_______ ^ List Value N Type         |
 |_______ | List Value 1 Type         |
 |        | Loom Type (Type 0)        |
 |------------------------------------|
-|_______   Boofer                    |
+|_______   Buffer                    |
 |_______   Offset to Value N         |
 |_______ ^ Offset to Value 1         |
 |        | Offset to Keys (Offset 0) |
@@ -647,7 +647,7 @@ BOK* TBookAppend(BOK* book, const BOK* source) {
 }
 
 /* Removes the given index from the Book.
-@return Pointer to the still-existing data in the boofer. */
+@return Pointer to the still-existing data in the buffer. */
 template<BOK_A>
 void* TBookRemove(BOK* book, ISY index) {
   if (index < 1) return NILP;
@@ -661,7 +661,7 @@ void* TBookRemove(BOK* book, ISY index) {
 }
 
 /* Removes the given key from the Book.
-@return Pointer to the still-existing data in the boofer. */
+@return Pointer to the still-existing data in the buffer. */
 template<BOK_A>
 void* TBookRemove(BOK* book, const CHS* key) {
   ISY index = TLoomFind<BOK_P>(TBookKeys<BOK_P>(book), key);
@@ -709,9 +709,9 @@ ISZ TBookFind(BOK* book, const CHS* string) {
 ABook<BOK_A, 1024, TBuf<>>All
 @endcode */
 template<BOK_A, ISZ SizeInit = 512, 
-         typename BOF = TBOF<SizeInit, CHS, ISZ, TString<ISN>>>
+         typename BUF = TBOF<SizeInit, CHS, ISZ, TString<ISN>>>
 class ABook {
-  AArray<IUA, ISZ, SizeInit, BOF> obj_;  //< An Auto-Array object.
+  AArray<IUA, ISZ, SizeInit, BUF> obj_;  //< An Auto-Array object.
  public:
 
   static constexpr DTB Type() {
@@ -731,7 +731,7 @@ class ABook {
 
   ABook(ISY total = BookDefaultTotalFractionShift,
         ISZ size_keys = BookDefaultKeysFractionShift)
-    : obj_(SizeInit, TObjectFactory<ISZ>().template Init<BOF>()) {
+    : obj_(SizeInit, TObjectFactory<ISZ>().template Init<BUF>()) {
     TBookInit<BOK_P>(This(), total, size_keys);
   }
 
@@ -840,7 +840,7 @@ class ABook {
   inline Autoject& AJT() { return obj_.AJT(); }
 
   /* Gets the Auto-Array.
-  inline AArray<IUA, ISZ, BOF>& AJT() { return obj_; } */
+  inline AArray<IUA, ISZ, BUF>& AJT() { return obj_; } */
 
   /* Gets the ASCII Object. */
   inline BOK* This() { return this->obj_.template As<BOK>(); }
@@ -919,7 +919,7 @@ class ABook {
                                     index, msb);
     while (result < 0) {
       if (!Grow()) {
-        return -AErrorBooferOverflow;
+        return -AErrorBufferOverflow;
       }
       BOK* book = TPtr<BOK>(obj.origin);
       result = TBookInsert<BOK_P>(book, key, type, value, index, msb);

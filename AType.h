@@ -2,15 +2,15 @@
 #pragma once
 #ifndef CRABS_TYPES_DECL
 #define CRABS_TYPES_DECL
-#include <_Config.h>
+#include "_Config.h"
 
 /* Function that remaps a Standard Data Type to an Extended Plain or Extended
-Custom Type or prints it to a SPrinter or writes it to a boofer.
+Custom Type or prints it to a SPrinter or writes it to a buffer.
 Control Bits:
 I have no clue what we're going to do with the control bits right now but we
 have a word, we only need 16-bits, so why not reserve the entire word?
-@param  begin The first byte in the CHR boofer.
-@param  end   The CHR after the last char in the boofer.
+@param  begin The first byte in the CHR buffer.
+@param  end   The CHR after the last char in the buffer.
 @param  type  A 16-bit ASCII Type in the LSB and control bits in the MSb.
 @param  value A pointer to a value to print.
 @return If start is nil the remapped Extended Plain Type.

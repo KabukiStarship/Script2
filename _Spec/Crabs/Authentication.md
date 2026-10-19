@@ -1,47 +1,39 @@
-# [SCRIPT Specification](../)
+# Authentication
 
-## [Crabs Specification](./)
+Authentication may be expressed as application-defined Crabs operations over
+Doors and Slots. The abstract machine does not itself define an authentication
+wire protocol, credential format, cryptographic algorithm, key exchange, token
+lifetime, or replay-prevention scheme.
 
-### Authentication
+## Boundary
 
-Authentication in Crabs shall be done using a sequence of Crabs Operations. The authentication process must ensure that only authorized Chinese Rooms can establish connections and access shared resources.
+An application or backend establishes identity and decides which operations
+and data a peer may access. Installing or discovering a Door, completing a
+transport handshake, and authenticating a peer are different events. Front
+Door/Backdoor names, direct wiring, and same-system IPC confer no implicit
+permission.
 
-#### Authentication Flow
+Authentication inputs are typed message data. Parse and bound them under the
+normal descriptor/scanner rules, then apply the application's access decision
+before invoking protected operations. An authentication failure is not a
+successful operation and must not grant access by default.
 
-1. **Initial Handshake**: Both parties exchange authentication tokens during the initial connection handshake.
-2. **Token Verification**: Each party verifies the received token using the shared secret or public key infrastructure.
-3. **Session Establishment**: Once authentication is successful, a secure session is established.
-4. **Token Renewal**: Tokens must be periodically renewed to maintain session security.
+## Integrity is not authentication
 
-#### Token Structure
+The short hash used by a B-Sequence integrity check can help detect transmission
+errors. It does not establish peer identity, secrecy, message authenticity, or
+replay protection. A small hash of a shared secret is not a cryptographic
+authentication protocol.
 
-Authentication tokens must be composed of:
-- A 16-bit hash of the shared secret
-- A 32-bit timestamp for token expiration
-- A 16-bit nonce for replay attack prevention
-- A 64-bit session identifier
+## Unspecified integration
 
-#### Security Requirements
+The previous fixed token fields and `OPN`/`OPD` example were not backed by an
+implemented authentication protocol and are not normative Crabs syntax.
+Credential storage, cryptographic choices, key management, expiration,
+replay handling, logging, and rate limiting belong to the application's
+security design. This page deliberately assigns no replacement token ABI or
+mandatory session duration.
 
-1. All authentication tokens must be cryptographically secure.
-2. Tokens must have a maximum lifetime of 24 hours.
-3. Nonces must be unique and non-repeating for each authentication attempt.
-4. Failed authentication attempts must be logged and rate-limited.
-5. Session keys must be exchanged using a secure key exchange protocol.
-
-#### Example Authentication Sequence
-
-```Crabs
-// Example: Authentication sequence using Crabs Operations
-OPN auth_request
-OPD token_hash: 0x1234567890ABCDEF
-OPD timestamp: 0x12345678
-OPD nonce: 0x1234
-OPD session_id: 0x1234567890ABCDEF
-
-// Server response
-OPN auth_response
-OPD status: 0x01  // Success
-OPD session_key: 0x1234567890ABCDEF
-OPD expiration: 0x12345678
-```
+A concrete authentication integration needs its own protocol, threat model,
+and tests. No security or certification claim follows from the machine's
+symbolic Room/Door model. See [Messages](Messages.md) and [Portals](Portals.md).

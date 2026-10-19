@@ -1,4 +1,4 @@
-﻿// Copyright AStarship <https://astarship.net>.
+// Copyright AStarship <https://astarship.net>.
 
 #define CRABS_COUT          1
 #define CRABS_ITOS          2
@@ -19,8 +19,7 @@
 #define CRABS_MATHCORE      17
 #define CRABS_RANDOM        18
 #define CRABS_FILE          19
-#define CRABS_SGRATE        20
-#define CRABS_PROMISE       21
-#define CRABS_SCRIPT        22
-#define CRABS_RELEASE       23
+#define CRABS_PROMISE       20
+#define CRABS_SCRIPT        21
+#define CRABS_RELEASE       22
 #define SEAM_N CRABS_SCRIPT

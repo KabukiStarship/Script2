@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_LIBRARY_HPP
 #define CRABS_LIBRARY_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_ROOM
 namespace _ {
 #if USING_CRABS_TEXT
@@ -169,7 +169,7 @@ class Library : public Operand {
       num_libraries_;  //< Number of libraries.
   IUA type_;           //< Current type of bag.
   TIndex num_keys_,    //< Current number_ of Star members.
-      boofer_size_;    //< Current size of the header and names socket in bytes.
+      buffer_size_;    //< Current size of the header and names socket in bytes.
   TKey header_size_,   //< Current size of the header and names in bytes.
       collisions_size_;  //< Current size of the header and names socket in
                          // bytes.

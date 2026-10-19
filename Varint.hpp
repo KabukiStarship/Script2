@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_VARINT_HPP
 #define CRABS_VARINT_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 namespace _ {
 

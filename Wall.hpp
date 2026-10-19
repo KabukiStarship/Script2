@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_WALL_HPP
 #define CRABS_WALL_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_DIC
 #include "Door.hpp"
 #include "Op.hpp"
@@ -21,7 +21,7 @@ needed a new Wall may be created and destroyed dynamically.
 |  Terminals   |
 |      v       |
 |vvvvvvvvvvvvvv|
-|    Boofer    |
+|    Buffer    |
 |^^^^^^^^^^^^^^|
 |      ^       |
 |  TStack of   |

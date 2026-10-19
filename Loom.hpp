@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_LOOM_HPP
 #define CRABS_LOOM_HPP
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_LOOM
 #include "Array.h"
 #include "Stack.hpp"
@@ -24,11 +24,11 @@ Please see the ASCII Data Specification for DRY documentation.
 # Memory Layout
 
 +============================+
-|_______ Boofer              | <-- start
+|_______ Buffer              | <-- start
 |_______ String N            |
 |_______ String 0            |
 +----------------------------+
-|_______ Boofer              |
+|_______ Buffer              |
 |_______ String offset N     |
 |        String offset 0     |
 +============================+  ^ Up in
@@ -117,7 +117,7 @@ inline ISZ TLoomKeysBeginOffset(ISY total) {
   return sizeof(ISZ) * total + sizeof(TLoom<LOM_P>);
 }
 
-/* Returns the pointer to the first character in the loom string boofer. */
+/* Returns the pointer to the first character in the loom string buffer. */
 template<LOM_A>
 inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
@@ -127,7 +127,7 @@ inline const CHS* TLoomKeysBegin(const TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
 }
 
-/* Returns the first char in the string boofer. */
+/* Returns the first char in the string buffer. */
 template<LOM_A>
 inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom, ISY total) {
   return TPtr<CHS>(loom, TLoomKeysBeginOffset<LOM_P>(total));
@@ -177,7 +177,7 @@ inline T * TLoomTop(const TLoom<LOM_P>*loom) {
     TLoomTop<LOM_P>(CPtr<TLoom<LOM_P>>(loom), loom->bytes));
 }
 
-/* Free space left in the keys boofer */
+/* Free space left in the keys buffer */
 template<LOM_A>
 inline ISZ TLoomSpace(const TLoom<LOM_P>* loom) {
   return loom->bytes - loom->start;
@@ -447,9 +447,9 @@ ISY TLoomFind(TLoom<LOM_P>* loom, const CHS* string) {
 /* An 
 Loom Autoject. */
 template<LOM_A, ISZ Total_ = 512,
-          typename BOF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
+          typename BUF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
 class ALoom {
-  AArray<IUA, ISZ, Total_, BOF> obj_;  //< An Auto-Array object.
+  AArray<IUA, ISZ, Total_, BUF> obj_;  //< An Auto-Array object.
  public:
   enum { CountDefault = Total_ / 16 };
   /* Constructs a Loom. */
@@ -494,7 +494,7 @@ class ALoom {
   inline Autoject& AJT() { return obj_.AJT(); }
 
   /* Gets the Auto-Array.
-  inline AArray<IUA, ISZ, BOF>& AJT_ARY() { return obj_; } */
+  inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; } */
 
   template<typename Printer>
   inline Printer& PrintTo( Printer& o) {

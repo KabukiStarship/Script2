@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_SLOT_DECL
 #define CRABS_SLOT_DECL
-#include <_Config.h>
+#include "_Config.h"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -13,7 +13,7 @@ struct Op;
 // @defgroup Slot
 
 /* A Slot in a Door in a Chinese Room to pass messages through.
-A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
+A Slot is Ring Buffer Socket similar to a TCP port. The operation of the
 Slot is similar to the Text class except that it introduces two more
 pointers for the (socket) origin and (data) origin of the ring socket and
 you may write packed data. */

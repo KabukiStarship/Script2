@@ -1,6 +1,6 @@
 // Copyright AStarship <https://astarship.net>.
 #pragma once
-#include <_Config.h>
+#include "_Config.h"
 #ifndef CRABS_STRINGF_DECL
 #define CRABS_STRINGF_DECL
 #include "AType.h"
@@ -120,7 +120,7 @@ const CHC* SScanBack(const CHC* start, CHC& item);
 /* Prints a item to the string.
 @return  Nil upon failure or a pointer to the nil-term CHS upon success.
 @param start The beginning of the string socket.
-@param stop  The last character in the string boofer.
+@param stop  The last character in the string buffer.
 @param item  The character to print. */
 CHA* SPrint(CHA* start, CHA* stop, IUA item);
 CHA* SPrint(CHA* start, ISW bytes, IUA item);
@@ -287,7 +287,7 @@ struct Hexf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
   Hexf(const void* item, ISW size);
-  /* Stores the given item to the boofer and stores the size. */
+  /* Stores the given item to the buffer and stores the size. */
   Hexf(const void* item);
   Hexf(ISA item);
   Hexf(IUA item);
@@ -312,7 +312,7 @@ struct Hexf {
 struct Binaryf {
   Valuef element;  //< Stores the ASCII Type, it's value, and the byte count.
 
-  /* Stores the given item to the boofer and store the size. */
+  /* Stores the given item to the buffer and store the size. */
   Binaryf(const void* item);
   Binaryf(const void* item, ISW size);
   Binaryf(ISA item);
@@ -359,23 +359,23 @@ frame in chained operator overloads. */
 class Stringf {
  public:
   enum {
-    // Max length of the boofer in ALU words.
-    BooferWordCount = (sizeof(void*) == 2) ? 5
+    // Max length of the buffer in ALU words.
+    BufferWordCount = (sizeof(void*) == 2) ? 5
                     : (sizeof(void*) == 4) ? 6 
                     : (sizeof(void*) == 8) ? 5 : 1,
     // Max length of a string in characters.
-    LengthMax = BooferWordCount * sizeof(void*) - 1,
+    LengthMax = BufferWordCount * sizeof(void*) - 1,
   };
 
  private:
-  const void* string_;  //< Pointer to a string or the boofer_.
+  const void* string_;  //< Pointer to a string or the buffer_.
   ISW count_;           //< The character count.
   DTW type_;            //< The ASCII string Type, STA, STB, or STC.
-  IUW boofer_[BooferWordCount];  //< String boofer for the token.
+  IUW buffer_[BufferWordCount];  //< String buffer for the token.
 
  public:
   /* Default constructor sets the count but doesn't write a nil-term char
-  to the boofer. */
+  to the buffer. */
   Stringf();
 
   /* Sets the String_ to the given pointer and stores the count. */
@@ -387,8 +387,8 @@ class Stringf {
   Stringf(const CHC* item);
 #endif
 
-  /* Prints the item to the boofer_, stores the count, and sets the String_ to
-  the boofer_. */
+  /* Prints the item to the buffer_, stores the count, and sets the String_ to
+  the buffer_. */
   Stringf(CHA item);
   Stringf(CHB item);
   Stringf(CHC item);
@@ -412,8 +412,8 @@ class Stringf {
   Stringf(const CHC* item, ISW count);
 #endif
 
-  /* Prints the item to the boofer_, stores the count, and sets the String_ to
-  the boofer_. */
+  /* Prints the item to the buffer_, stores the count, and sets the String_ to
+  the buffer_. */
   Stringf(CHA item, ISW count);
   Stringf(CHB item, ISW count);
   Stringf(CHC item, ISW count);
@@ -458,7 +458,7 @@ class Stringf {
   void Print(const CHC* item);
 #endif
 
-  /* Prints the given item to the boofer_. */
+  /* Prints the given item to the buffer_. */
   void Print(CHA item);
 //#if USING_STB == YES_0
 //  void Print(CHB item);
@@ -477,14 +477,14 @@ class Stringf {
   void Print(FPD item);
 #endif
 
-  /* Prints a timestamp to the boofer_. */
+  /* Prints a timestamp to the buffer_. */
   //void PrintTMC(TMC item);
   //void PrintTME(TMC item, IUC subsecond_tick);
   //void PrintTMD(TMD item);
 
   //void Print(TypeValue item);
 
-  /* Stores the item to the first word of the boofer and the negative of the
+  /* Stores the item to the first word of the buffer and the negative of the
   count. */
   void Hex(CHA item, ISW count = 80);
 #if USING_STB == YES_0
@@ -540,7 +540,7 @@ struct Centerf {
   Centerf(FPD item, ISW count = AConsoleWidth);
 #endif
 
-  /* Stores the item to the first word of the boofer and the negative of the
+  /* Stores the item to the first word of the buffer and the negative of the
   count. */
   Centerf& Hex(CHA item, ISW count = 80);
 #if USING_STB == YES_0
@@ -598,7 +598,7 @@ struct Rightf {
   Rightf(FPD item, ISW count = AConsoleWidth);
 #endif
 
-  /* Stores the item to the first word of the boofer and the negative of the
+  /* Stores the item to the first word of the buffer and the negative of the
   count. */
   Rightf& Hex(CHA item, ISW count = 80);
 #if USING_STB == YES_0

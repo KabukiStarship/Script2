@@ -16,22 +16,22 @@ namespace _ {
 template<typename IS = ISW>
 constexpr ISW CSignedDigitsMax() {
   enum {
-    cBooferSize =
+    cBufferSize =
         (sizeof(IS) == 1)
             ? 4
             : (sizeof(IS) == 2)
                   ? 5
                   : (sizeof(IS) == 4) ? 16 : (sizeof(IS) == 8) ? 24 : 32
   };
-  return cBooferSize;
+  return cBufferSize;
 }
 
 template<typename IS, typename IU>
 BOL TCInSigned(IS& result) {
-  CHA boofer[CSignedDigitsMax<IS>()] = {};
+  CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::StateBaseSign;
-  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IS>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::StateSuccess) {
     if (state == CIn::StateBaseSign) {
       c = CIn::ScanKey();
@@ -46,14 +46,14 @@ BOL TCInSigned(IS& result) {
       if (!c) break;
     }
   }
-  return TSScanSigned<IS, IU, CHA>(boofer, result) != 0;
+  return TSScanSigned<IS, IU, CHA>(buffer, result) != 0;
 }
 
 template<typename IU>
 BOL TCInUnsigned(IU& result) {
-  CHA boofer[CSignedDigitsMax<IU>()] = {};
+  CHA buffer[CSignedDigitsMax<IU>()] = {};
   ISN c, state = CIn::StateBaseValue;
-  CHA *cursor = boofer, *end = boofer + CSignedDigitsMax<IU>();
+  CHA *cursor = buffer, *end = buffer + CSignedDigitsMax<IU>();
   while (state != CIn::StateSuccess) {
     if (cursor++ >= end) return false;
     c = (CHA)CIn::ScanKey();
@@ -61,15 +61,15 @@ BOL TCInUnsigned(IU& result) {
     *cursor++ = (CHA)c;
     if (!c) break;
   }
-  return TSScanUnsigned<IU, CHA>(boofer, result) != 0;
+  return TSScanUnsigned<IU, CHA>(buffer, result) != 0;
 }
 
 template<typename CHS>
-inline BOL TCInString(CHS* result, ISW boofer_size) {
+inline BOL TCInString(CHS* result, ISW buffer_size) {
   if (IsError(result)) return false;
   ISN c = -1;
   while (c < 0) {
-    if (--boofer_size <= 0) return false;
+    if (--buffer_size <= 0) return false;
     c = CIn::ScanKey();
     *result++ = (CHS)c;
     if (c == 0) break;
@@ -80,11 +80,11 @@ inline BOL TCInString(CHS* result, ISW boofer_size) {
 template<typename FP = FPW, typename IS = ISW, typename IU = IUW,
          typename CHS = CHR>
 inline BOL TCInFloatingPoint(FP& result) {
-  CHA boofer[CSignedDigitsMax<IS>()] = {};
+  CHA buffer[CSignedDigitsMax<IS>()] = {};
   ISN c;
   ISW state = CIn::StateBaseSign;
-  CHA *cursor = boofer, 
-      *end    = boofer + CSignedDigitsMax<IS>();
+  CHA *cursor = buffer, 
+      *end    = buffer + CSignedDigitsMax<IS>();
   while (state != CIn::StateSuccess) {
     if (cursor >= end) return false;
     c = CIn::ScanKey();
@@ -122,26 +122,26 @@ inline BOL TCInFloatingPoint(FP& result) {
       }
     }
   }
-  return false;  // TScanFloat<FP, IS, IU, CHA>(boofer, result) != 0;
+  return false;  // TScanFloat<FP, IS, IU, CHA>(buffer, result) != 0;
 }
 
 ISN IsYesNo(const CHA* string) { return TSIsYesNo<CHA>(string); }
 ISN IsYesNo(const CHB* string) { return TSIsYesNo<CHB>(string); }
 ISN IsYesNo(const CHC* string) { return TSIsYesNo<CHC>(string); }
 
-CIn::CIn() : boofer_{} {}
+CIn::CIn() : buffer_{} {}
 
 #if USING_STA == YES_0
 CIn::CIn(CHA& result) { SScan(result); }
-CIn::CIn(CHA* result, ISW boofer_size) { SScan(result, boofer_size); }
+CIn::CIn(CHA* result, ISW buffer_size) { SScan(result, buffer_size); }
 #endif
 #if USING_STB == YES_0
 CIn::CIn(CHB& result) { SScan(result); }
-CIn::CIn(CHB* result, ISW boofer_size) { SScan(result, boofer_size); }
+CIn::CIn(CHB* result, ISW buffer_size) { SScan(result, buffer_size); }
 #endif
 #if USING_STC == YES_0
 CIn::CIn(CHC& result) { SScan(result); }
-CIn::CIn(CHC* result, ISW boofer_size) { SScan(result, boofer_size); }
+CIn::CIn(CHC* result, ISW buffer_size) { SScan(result, buffer_size); }
 #endif
 CIn::CIn(ISA& result) { SScan(result); }
 CIn::CIn(IUA& result) { SScan(result); }
@@ -164,8 +164,8 @@ BOL CIn::SScan(CHA& result) {
   return true;
 }
 
-BOL CIn::SScan(CHA* result, ISW boofer_size) {
-  return TCInString<CHA>(result, boofer_size);
+BOL CIn::SScan(CHA* result, ISW buffer_size) {
+  return TCInString<CHA>(result, buffer_size);
 }
 #endif
 #if USING_STB == YES_0
@@ -173,8 +173,8 @@ BOL CIn::SScan(CHB& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::SScan(CHB* result, ISW boofer_size) {
-  return TCInString<CHB>(result, boofer_size);
+BOL CIn::SScan(CHB* result, ISW buffer_size) {
+  return TCInString<CHB>(result, buffer_size);
 }
 #endif
 #if USING_STC == YES_0
@@ -182,8 +182,8 @@ BOL CIn::SScan(CHC& result) {
   result = ScanKey();
   return true;
 }
-BOL CIn::SScan(CHC* result, ISW boofer_size) {
-  return TCInString<CHC>(result, boofer_size);
+BOL CIn::SScan(CHC* result, ISW buffer_size) {
+  return TCInString<CHC>(result, buffer_size);
 }
 #endif
 BOL CIn::SScan(ISA& result) { return TCInSigned<ISA, IUA>(result); }
