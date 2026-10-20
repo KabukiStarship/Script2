@@ -1,4 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
+
 // Unit test: TOcclusionMap DDA raycast + per-observer visibility.
 // Hand-verified 8x5 grid with a vertical wall column; observer on the left.
 //   . = empty (see-through)    # = occluder (wall)

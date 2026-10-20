@@ -6,34 +6,35 @@
 #include "Varint.hpp"
 #include "Slot.hpp"
 #include "Args.h"
+#include "AType.hpp"
 
 namespace _ {
 
-inline const CHA* BOutBegin(const BOut* bout) {
-  return TPtr<CHA>(bout) + sizeof(BOut);
+inline const CHA* BOutBegin(const TBOut<ISC>* bout) {
+  return TPtr<CHA>(bout) + sizeof(TBOut<ISC>);
 }
 
-inline CHA* BOutBegin(BOut* bout) {
-  return CPtr<CHA>(BOutBegin(CPtr<BOut>(bout)));
+inline CHA* BOutBegin(TBOut<ISC>* bout) {
+  return CPtr<CHA>(BOutBegin(CPtr<TBOut<ISC>>(bout)));
 }
 
-inline const Op* BOutError(BOut* bout, ERC error) {
+inline const Op* BOutError(TBOut<ISC>* bout, ERC error) {
   //D_COUT("\nBOut " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
-inline const Op* BOutError(BOut* bout, ERC error, const DTB* header) {
+inline const Op* BOutError(TBOut<ISC>* bout, ERC error, const DTB* header) {
   //D_COUT("\nBOut " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
-inline const Op* BOutError(BOut* bout, ERC error, const DTB* header,
+inline const Op* BOutError(TBOut<ISC>* bout, ERC error, const DTB* header,
                            ISN offset) {
   //D_COUT("\nBOut " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
 }
 
-inline const Op* BOutError(BOut* bout, ERC error, const DTB* header,
+inline const Op* BOutError(TBOut<ISC>* bout, ERC error, const DTB* header,
                            ISN bsq_error, IUA* error_byte) {
   //D_COUT("\nBOut " << TAErrors<>(error) << " Error!");
   return TPtr<const Op>(1);
@@ -44,22 +45,22 @@ const CHA** BOutStateStrings() {
   return Strings;
 }
 
-IUA* BOutBoofer(BOut* bout) {
-  return TPtr<IUA>(bout) + sizeof(BOut);
+IUA* BOutBoofer(TBOut<ISC>* bout) {
+  return TPtr<IUA>(bout) + sizeof(TBOut<ISC>);
 }
 
-BOut* BOutInit(BOut* bout, ISN boofer_bytes) {
+TBOut<ISC>* BOutInit(TBOut<ISC>* bout, ISN boofer_bytes) {
   D_ASSERT_PTR(bout);
   D_ASSERT(boofer_bytes >= SlotBytesMin);
   //if (IsError(bout) || boofer_bytes < SlotBytesMin) return NILP;
-  bout->bytes = boofer_bytes - sizeof(BOut);
+  bout->bytes = boofer_bytes - sizeof(TBOut<ISC>);
   bout->origin = 0;
   bout->stop = 0;
   bout->read = 0;
   return bout;
 }
 
-ISN BOutSpace(BOut* bout) {
+ISN BOutSpace(TBOut<ISC>* bout) {
   if (IsError(bout)) {
     return 0;
   }
@@ -68,7 +69,7 @@ ISN BOutSpace(BOut* bout) {
                          bout->bytes);
 }
 
-ISN BOutBooferLength(BOut* bout) {
+ISN BOutBooferLength(TBOut<ISC>* bout) {
   if (IsError(bout)) {
     return 0;
   }
@@ -77,11 +78,11 @@ ISN BOutBooferLength(BOut* bout) {
                           bout->bytes);
 }
 
-IUA* BOutEndAddress(BOut* bout) {
+IUA* BOutEndAddress(TBOut<ISC>* bout) {
   return TPtr<IUA>(bout) + (4 * sizeof(ISN)) + bout->bytes;
 }
 
-ISN BOutStreamByte(BOut* bout) {
+ISN BOutStreamByte(TBOut<ISC>* bout) {
   IUA* begin    = BOutBoofer(bout),
      * end      = begin + bout->bytes,
      * open     = (IUA*)begin + bout->read,
@@ -101,7 +102,7 @@ ISN BOutStreamByte(BOut* bout) {
   return 0;
 }
 
-const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
+const Op* BOutWrite(TBOut<ISC>* bout, const DTB* params, void** args,
   IUD pc_ctx) {
   //D_COUT("\n\nWriting ");
   //D_COUT_BSQ(params);
@@ -581,7 +582,7 @@ const Op* BOutWrite(BOut* bout, const DTB* params, void** args,
   return 0;
 }
 
-void BOutRingBell(BOut* bout, const CHA* address) {
+void BOutRingBell(TBOut<ISC>* bout, const CHA* address) {
   if (IsError(bout)) {
     return;
   }
@@ -621,7 +622,7 @@ void BOutRingBell(BOut* bout, const CHA* address) {
   bout->stop = TDelta <ISN>(start, stop);
 }
 
-void BOutAckBack(BOut* bout, const CHA* address) {
+void BOutAckBack(TBOut<ISC>* bout, const CHA* address) {
   if (IsError(bout)) {
     return;
   }
@@ -662,30 +663,30 @@ void BOutAckBack(BOut* bout, const CHA* address) {
   bout->stop = TDelta<ISN>(begin, stop);
 }
 
-const Op* BOutConnect(BOut* bout, const CHA* address, IUD pc_ctx) {
+const Op* BOutConnect(TBOut<ISC>* bout, const CHA* address, IUD pc_ctx) {
   void* args[2];
   return BOutWrite(bout, TTSQ<_ADR, _ADR>(), Args(args, address, 0), pc_ctx);
 }
 
-void BOutTerminate(BOut* bout, const CHA* address) {
+void BOutTerminate(TBOut<ISC>* bout, const CHA* address) {
 }
 
-void BOutReset(BOut* bout, const CHA* address) {
+void BOutReset(TBOut<ISC>* bout, const CHA* address) {
 }
 
-/* Links a BOut (producer) and a BIn (consumer) into one shared lock-free SPSC
-ring. See the declaration in BOut.h for the contract.
+/* Links a TBOut (producer) and a TBIn (consumer) into one shared lock-free SPSC
+ring. See the declaration in TBOut.h for the contract.
 Design: the producer and consumer alias the SAME 16-byte header, so the two
 SPSC head counters (write head, read head) are shared memory — exactly how a
 kernel pipe works (one buffer, two heads, two descriptors onto it). Place
-`bout` and `bin` at the same address (e.g. bout = TPtr<BOut>(block),
-bin = TPtr<BIn>(block)); then bout->stop and bin->stop are the same field
+`bout` and `bin` at the same address (e.g. bout = TPtr<TBOut<ISC>>(block),
+bin = TPtr<TBIn<ISC>>(block)); then bout->stop and bin->stop are the same field
 (producer write head / consumer's view of it) and bout->origin and bin->origin
 are the same field (producer's view of the read head / consumer read head).
 The data region (struct + sizeof(struct)) is the shared ring. Each head is
 written by exactly one side and read by the other, as a single volatile word —
 the SPSC lock-free discipline. */
-BIn* BInAttach(BIn* bin, BOut* bout, IUA* buffer, ISN buffer_bytes) {
+TBIn<ISC>* BInAttach(TBIn<ISC>* bin, TBOut<ISC>* bout, IUA* buffer, ISN buffer_bytes) {
   D_ASSERT_PTR(bin);
   D_ASSERT_PTR(bout);
   D_ASSERT_PTR(buffer);
@@ -693,7 +694,7 @@ BIn* BInAttach(BIn* bin, BOut* bout, IUA* buffer, ISN buffer_bytes) {
   // bin and bout must alias the same header (same address) for the shared
   // SPSC heads to work; the data region is buffer = header + 16.
   D_ASSERT(IUW(bin) == IUW(bout));
-  D_ASSERT(IUW(buffer) == IUW(bout) + sizeof(BOut));
+  D_ASSERT(IUW(buffer) == IUW(bout) + sizeof(TBOut<ISC>));
   ISN ring_bytes = buffer_bytes;
   bout->bytes = ring_bytes;
   bin->bytes  = ring_bytes;

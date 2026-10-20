@@ -30,6 +30,18 @@ struct IUE {
 
 namespace _ {
 
+/* A Slot in a Door in a Chinese Room to pass messages through.
+A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
+Slot is similar to the Text class except that it introduces two more
+pointers for the (socket) origin and (data) origin of the ring socket and
+you may write packed data. */
+struct Slot {
+  IUA* origin,  //< First byte of the ring socket.
+     * start,   //< Start of the data in the ring socket.
+     * stop,    //< Stop of the data in the ring socket.
+     * end;     //< End of the ring socket.
+};
+
 /* Remaps a Plain Context Type to another POD type 1-19.
 Store the 5-bit remapped type for _PCa in b0:b4, _PCb in b5:b9, etc. */
 DTB ATypeRemapEP(DTW sw_vt_bits, DTW pod_type, DTD ep_remap);

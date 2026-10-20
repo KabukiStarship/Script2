@@ -13,40 +13,19 @@
 #else
 #include "_Release.h"
 #endif
-#define LST_A typename ISZ = ISC, typename ISY = ISB, typename DT = DTB
-#define LST_P ISZ, ISY, DT
-#define LST TList<ISZ, ISY, DT>
+
+/* @defgroup List
+ASCII List - the fundamental map type
+A contiguous data List with ISZ offsets. Items are pushed
+onto the Crabs and iterated by the Round-Robin interpreter.
+Book and Dictionary are List variants that assign keys.
+Used for RPC: data types are 0 until filled, non-nil signals
+transfer complete. Great for UDP - blocks stream in contiguous
+memory.
+@{ */
+
 namespace _ {
-
-/* A collection of type-value tuples.
-@see ASCII Data Type Specification.
-@link /Spec/Data/MapTypes/List.md
-@code
-      List Memory Layout
-+============================+
-|_______   Boofer            |<--- top
-|_______ ^ Value N           |
-|        | Value 0           |
-|----------------------------|
-|_______   Boofer            |
-|_______ ^ Type of Value N   |
-|        | Type of Value 0   |
-|----------------------------|
-|_______   Boofer            |
-|_______ ^ Offset to Value N |
-|        | Offset to Value 0 |
-+============================+  ^  Up in addresses.
-|        TList Struct        |  |
-+============================+ 0xN Base address
-@endcode
-*/
-template<LST_A>
-struct TList {
-  ISZ bytes,        //< Size of the List in bytes.
-      top;          //< Offset to the top of the data.
-  TStack<ISZ, ISZ, ISY> map;  //< Stack of offset mappings to the list items.
-};
-
+  
 /* Gets a ASCII List Data Type. */
 template<LST_A>
 constexpr DT CListType() {
@@ -67,7 +46,8 @@ inline BOL TListTopIsValid(ISZ bytes, ISZ top, ISY total) {
 template<LST_A>
 inline BOL TListIsValid(ISZ bytes, ISZ top, ISY total, ISY count) {
   if (bytes < 0) return false;
-  return (count >= 0) && (count <= total) && TListTopIsValid<LST_P>(bytes, top, total);
+  return (count >= 0) && (count <= total) && 
+    TListTopIsValid<LST_P>(bytes, top, total);
 }
 
 /* The maximum theoretical amount of freespace in a List. */
@@ -118,7 +98,7 @@ inline DT* TListTypes(LST* list) {
 /* Returns the type at the given index. */
 template<LST_A>
 inline DT TListType(const LST* list, ISY index) {
-  if (index < 0 || index >= list->map->total) return NIL;
+  if (index < 0 || index >= list->map.count) return _NIL;
   return TListTypes<LST_P>(list)[index];
 }
 
@@ -331,7 +311,7 @@ ISZ TListSize() {
 /* Deletes the list contents without wiping the contents. */
 template<LST_A>
 void TListClear(LST* list) {
-  list->map.count = 1;
+  list->map.count = 0;
   list->top = sizeof(LST) + list->map.total * (sizeof(ISZ) + sizeof(DT));
 }
 
@@ -521,7 +501,7 @@ inline ISY TListInsert_NC(LST* list, ISZ bytes, ISZ top, ISY total, ISY count,
     //value = AlignUp(value, align_mask); // @todo Should this be aligned?
     auto result = TBSeqWrite_NC<ISZ>(TPtr<IUA>(list, top),
       TPtrDown<IUA>(list, bytes, align_mask), type, value, value_msb);
-    D_CHECK_PTR_TRETURN(ISY, -AErrorBooferOverflow);
+    if (result == NILP) return -AErrorBooferOverflow;
     TListValuesMap<LST_P>(list)[count] = top;
     TListTypes<LST_P>(list)[count++] = ATypeMDDeassert(type);
     list->map.count = count;
@@ -548,7 +528,6 @@ inline ISY TListInsert(LST* list, DT type, IUW value, ISY index = PSH,
   D_COUT("\n  Inserting " << ATypef(type) << ":0d" << type << ":0x" <<
          Hexf(type) << " count:" << count << " index:" << index <<
          " top(aligned):" << top);
-  list->map.count = count + 1;
   return TListInsert_NC<LST_P>(list, bytes, top, total, count, type, value,
                                index, value_msb);
 }
@@ -600,7 +579,11 @@ inline ISY TListInsert(LST* list, CHC item, ISY index = PSH) {
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPC item, ISY index = PSH) {
-  return TListInsert<LST_P>(list, _FPC, IUW(item), index);
+  IUC bits;
+  auto* destination = TPtr<IUA>(&bits);
+  const auto* source = TPtr<IUA>(&item);
+  for (ISN i = 0; i < ISN(sizeof(item)); ++i) destination[i] = source[i];
+  return TListInsert<LST_P>(list, _FPC, IUW(bits), index);
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, IUD item, ISY index = PSH) {
@@ -612,7 +595,11 @@ inline ISY TListInsert(LST* list, ISD item, ISY index = PSH) {
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, FPD item, ISY index = PSH) {
-  return TListInsert<LST_P>(list, _FPD, IUW(item), index);
+  IUD bits;
+  auto* destination = TPtr<IUA>(&bits);
+  const auto* source = TPtr<IUA>(&item);
+  for (ISN i = 0; i < ISN(sizeof(item)); ++i) destination[i] = source[i];
+  return TListInsert<LST_P>(list, _FPD, IUW(bits), index, IUW(bits >> 32));
 }
 template<LST_A>
 inline ISY TListInsert(LST* list, BOL item, ISY index = PSH) {
@@ -876,6 +863,8 @@ class AList {
 };
 
 }  //< namespace _
+
+/* @} */  // End of List group.
 
 template<LST_A>
 inline ::_::LST& operator<<(::_::LST& list, CHA item) {

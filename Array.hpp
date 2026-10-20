@@ -4,10 +4,6 @@
 #define CRABS_ARRAY_HPP
 #include "Array.h"
 #if SEAM >= CRABS_ARRAY
-#define ARY_A typename T = CHA, typename ISZ = ISN
-#define ARY_P T, ISZ
-#define ARY TArray<T, ISZ>
-#define AARY AArray<T, ISZ>
 #include "Autoject.hpp"
 #include "Stringf.hpp"
 #if SEAM == CRABS_ARRAY
@@ -17,26 +13,8 @@
 #endif
 namespace _ {
 
-#define ARY TArray<T, ISZ>
-#define AARY AArray<T, ISZ>
-
-/* An ASCII Array.
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/VectorTypes/Array.md
-
-@code
-+-----------------+
-|  C-Style Array  |
-|  255-byte array | size=255, requires 8-bits.
-|-----------------|  ^
-|  TArray Header  |  |
-+-----------------+ 0xN
-@endcode
+/* @ingroup Array
 */
-template<typename T = CHA, typename ISZ = ISW>
-struct TArray {
-  ISZ total;  //< Number of elements in the array.
-};
 
 template<ARY_A>
 inline ISZ TArrayBytes(ISZ total) {
@@ -701,7 +679,7 @@ class AArray {
   /* Gets a const reference to the given element index. */
   inline const T& operator[](ISZ index) const { return Begin()[index]; }
 };
-
+//< @endingroup Array
 }  //< namespace _
 #endif
 #endif

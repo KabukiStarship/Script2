@@ -23,7 +23,7 @@ CHS* TPrintPrinted(CHS* start = NILP) {
     return string;
   CHS c = *string++;
   while (c) {
-    std::cout << c;
+    std::cout << CHA(c);
     c = *string++;
   }
   std::cout << '\"';
@@ -85,32 +85,21 @@ If the SEAM == _0_0_0 (1), then this function will utf debug data.
 @warning This function DOES NOT do any error checking! */
 template<typename CHS = CHR>
 inline CHS* TSPrint2Decimals(CHS* socket, IUB decimal_pair) {
-  enum { CBytes = sizeof(CHS) * 8 };
+  // The LUT packs its first character into the native first byte. Write
+  // code units, not an IUB through a possibly unaligned packed-text cursor.
 #if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-  socket[0] = CHA(decimal_pair >> 8);
-  socket[1] = CHA(decimal_pair);
+  socket[0] = CHS(IUA(decimal_pair));
+  socket[1] = CHS(decimal_pair >> 8);
 #else
-  socket[0] = CHA(decimal_pair);
-  socket[1] = CHA(decimal_pair >> 8);
+  socket[0] = CHS(decimal_pair >> 8);
+  socket[1] = CHS(IUA(decimal_pair));
 #endif
   D_PRINT_PRINTED;
   return socket;
 }
 
 inline void SPrintCharPair(CHA* socket, IUB value) {
-#ifdef ALIGN_MEMORY
-#if CPU_ENDIAN == CPU_ENDIAN_LITTLE
-  socket[0] = CHA(value >> 8);
-  socket[1] = CHA(value);
-#else
-  socket[0] = CHA(value);
-  socket[1] = CHA(value >> 8);
-#endif
-#else
-  *((IUB*)socket) = value;
-#endif
-  using CHS = CHR;
-  D_PRINT_PRINTED;
+  TSPrint2Decimals<CHA>(socket, value);
 }
 
 inline void SPrintCharPair(CHB* cursor, IUB decimal_pair) {

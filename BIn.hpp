@@ -3,33 +3,34 @@
 #ifndef CRABS_BIN_HPP
 #define CRABS_BIN_HPP
 #include "BIn.h"
+#include "AType.hpp"
 #if SEAM >= CRABS_OP
 namespace _ {
 
 #if USING_CRABS_TEXT == YES_0
-inline const IUA* BInOrigin(const BIn* bin) { 
-  return TPtr<IUA>(bin, sizeof(BIn));
+inline const IUA* BInOrigin(const TBIn<ISC>* bin) { 
+  return TPtr<IUA>(bin, sizeof(TBIn<ISC>));
 }
 
-inline IUA* BInOrigin(BIn* bin) {
-    return TPtr<IUA>(bin, sizeof(BIn));
+inline IUA* BInOrigin(TBIn<ISC>* bin) {
+    return TPtr<IUA>(bin, sizeof(TBIn<ISC>));
 }
 
 template<typename Printer>
-Printer& TBInPrintVars(Printer& printer, const BIn* bin) {
+Printer& TBInPrintVars(Printer& printer, const TBIn<ISC>* bin) {
   ISW size = bin->bytes;
   return printer << Linef('_', 80) << "\nBIn: size:" << bin->bytes
     << " start:" << bin->origin << " stop:" << bin->stop
     << " read:" << bin->read;
 }
 
-/* Print the BIn to the printer. */
+/* Print the TBIn to the printer. */
 template<typename Printer>
-Printer& TBInPrint(Printer& o, const BIn* bin) {
+Printer& TBInPrint(Printer& o, const TBIn<ISC>* bin) {
   ISW size = bin->bytes;
   return o << Linef('_', 80) << "\nBIn: size:" << bin->bytes
            << " start:" << bin->origin << " stop:" << bin->stop
-           << " read:" << bin->read << Hexf(BInOrigin(bin), size + sizeof(BIn));
+           << " read:" << bin->read << Hexf(BInOrigin(bin), size + sizeof(TBIn<ISC>));
 }
 
 template<typename CHS=CHR>

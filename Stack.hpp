@@ -10,39 +10,15 @@
 #else
 #include "_Release.h"
 #endif
-#define SCK_A typename T=ISW, typename ISZ=ISW, typename ISY=ISZ
-#define SCK_P T, ISZ, ISY
-#define SCK TStack<SCK_P>
-//@todo Change SCP_A to typename ISZ=ISW, typename ISY=ISZ
+/* @defgroup Stack
+ASCII Stack - contiguous LIFO memory
+A fixed-size stack of POD items with ISZ index tracking.
+Used for the Crabs expression stack, Wall storage, and
+Slot offset maps. The T/A prefix convention: T=POD,
+A=Autoject (RAMFactory-managed).
+@{ */
+
 namespace _ {
-
-/* @defgroup ASCII Stack */
-
-/* ASCII Stack
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/MapTypes/Stack.md
-
-An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/MapTypes/Stack.md
-
-# Stack Memory Layout
-
-@code
-+---------------+
-|    Boofer     |
-|---------------|
-| C-Style Array |
-|---------------|  ^
-|    Header     |  |
-+---------------+ 0xN
-@endcode
-*/
-template<SCK_A>
-struct TStack {
-  ISZ total,  //< Size of the Array in elements.
-      count;  //< Element count.
-};
 
 template<SCK_A>
 constexpr DTB CStackType() { return VTSCKBits | CATypePOD<T>(); }
@@ -752,6 +728,8 @@ class AStack {
 };
 
 }  //< namespace _
+
+/* @} */  // End of Stack group.
 
 //template<SCK_A, typename BOF = ::_::Nil>
 //::_::AStack<SCK_P, BOF>& operator<<(::_::AStack<SCK_P, BOF>& obj, T item) {

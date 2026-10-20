@@ -8,11 +8,12 @@
 #include "_Debug.h"
 #else
 #include "_Release.h"
+#include "AType.hpp"
 #endif
 namespace _ {
 
 template<typename Printer>
-Printer& TBOutPrint(Printer& o, const BOut* bout) {
+Printer& TBOutPrint(Printer& o, const TBOut<ISC>* bout) {
   A_ASSERT(bout);
   ISN size = bout->bytes;
   o << Linef("\n___") << "\nBOut: size:" << size
@@ -22,7 +23,7 @@ Printer& TBOutPrint(Printer& o, const BOut* bout) {
 }
 
 template<typename Printer>
-Printer& TBOutPrintVars(Printer& printer, BOut* bout) {
+Printer& TBOutPrintVars(Printer& printer, TBOut<ISC>* bout) {
   A_ASSERT(bout);
   ISN size = bout->bytes;
   return printer << Linef('_', 80) << "\nBOut: size:" << size
@@ -31,7 +32,7 @@ Printer& TBOutPrintVars(Printer& printer, BOut* bout) {
 }
 
 template<typename Printer>
-Printer& TBOutPrint(Printer& printer, BOut* bout) {
+Printer& TBOutPrint(Printer& printer, TBOut<ISC>* bout) {
   A_ASSERT(bout);
   ISN size = bout->bytes;
   return printer << Linef('_', 80) << "\nBOut: size:" << size

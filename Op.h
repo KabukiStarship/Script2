@@ -4,9 +4,10 @@
 #define CRABS_OP_DECL
 #include <_Config.h>
 #if SEAM >= CRABS_OP
+#include "AType.h"
+#include "AType.hpp"
 namespace _ {
 
-struct BOut;
 
 //enum {
 //  CROpPush          = 0, //< Operation Type 0: Stack push .
@@ -25,16 +26,6 @@ static const Op OpExample =   { "Key2",
     NumOps (0), FirstOp ('A'),
     "Description", '}', ';', ' ', NILP, "-", NILP };
 @endcode */
-struct Op {
-  const CHR * name;           //< Op name.
-  const DTB * in,             //< Input _BSQ params or OpFirst.
-            * out;            //< Output _BSQ params or OpLast.
-  const CHR * description;    //< Op description.
-  CHR         pop,            //< Index of the Pop Operation.
-              close,          //< Index of the Close Operation.
-              default_op;     //< Index of the Default Operation.
-  const BOut* evaluation;     //< Evaluated expression Slot.
-};
 
 const Op* OpError(ERC error);
 
