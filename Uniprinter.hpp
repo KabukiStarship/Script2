@@ -749,8 +749,8 @@ Printer& TPrintAType(Printer& p, DTB type) {
     const CHR* type_string = NILP;
     if (ext_type >= ATypeCTXStart) ext_type -= ATypeCTXStart;
     if (actxh) {
-      CHR buffer[ACTXLengthMax + 1];
-      actxh(buffer, buffer + ACTXLengthMax + 1, type, 0, 0);
+      CHR boofer[ACTXLengthMax + 1];
+      actxh(boofer, boofer + ACTXLengthMax + 1, type, 0, 0);
     }
     return p << type_string;
   }
@@ -1088,28 +1088,28 @@ struct TSPrinter {
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the socket.
-  @param count The number of CHS in the buffer. */
+  @param count The number of CHS in the boofer. */
   TSPrinter(CHS* start, ISA size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the socket.
-  @param count The number of CHS in the buffer. */
+  @param count The number of CHS in the boofer. */
   TSPrinter(CHS* start, ISB size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the socket.
-  @param count The number of CHS in the buffer. */
+  @param count The number of CHS in the boofer. */
   TSPrinter(CHS* start, ISC size) : start(start), stop(start + size - 1) {
     Reset();
   }
 
   /* Initializes the UTF& from the given origin pointers.
   @param start The origin of the socket.
-  @param count The number of CHS in the buffer. */
+  @param count The number of CHS in the boofer. */
   TSPrinter(CHS* start, ISD size) : start(start), stop(start + size - 1) {
     Reset();
   }
@@ -1143,9 +1143,9 @@ struct TSPrinter {
   }
 
   /* Sets the start pointer to the new_pointer. */
-  inline TSPrinter& Set(IUW* buffer) {
-    IS size = *TPtr<IS>(buffer);
-    IUW ptr = IUW(buffer) + sizeof(IS);
+  inline TSPrinter& Set(IUW* boofer) {
+    IS size = *TPtr<IS>(boofer);
+    IUW ptr = IUW(boofer) + sizeof(IS);
     CHS* start_ptr = TPtr<CHS>(ptr);
     start = start_ptr;
     stop = start_ptr + size - 1;

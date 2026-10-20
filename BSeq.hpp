@@ -61,7 +61,7 @@ constexpr const CHR* CCHRSQ() {
 }
 
 /* Writes the given value to the socket between begin and end without any checks.
-@warning You must memory align begin and end and verify the buffer fits before
+@warning You must memory align begin and end and verify the boofer fits before
 calling. */
 template<typename IS = ISR>
 void* TBSeqWrite_NC(void* begin, void* end, DTB type, IUW value, 

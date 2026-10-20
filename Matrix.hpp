@@ -2,38 +2,10 @@
 #pragma once
 #ifndef CRABS_MATHCORE_HPP
 #define CRABS_MATHCORE_HPP
-#include "_Config.h"
+#include <_Config.h>
 #if SEAM >= CRABS_MATHCORE
 #include "Stack.hpp"
-#define MTX_A typename T = ISW, typename ISZ = ISC, typename ISY = ISB, \
-  typename IUY = IUB
-#define MTX_P T, ISZ, ISY, IUY
-#define MTX TMatrix<T, ISZ, ISY, IUY>
 namespace _ {
-
-/* @defgroup AsciiMatrix
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/vector_types/Matrix.md */
-
-/* An n-dimensional matrix of homogeneous-sized plain-old-data (POD) types.
-## Memory Layout
-
-@code
-    +-----------------+
-    |  C-Style Array  |
-    |-----------------|
-    | Dimension Stack |
- ^  |-----------------|
- |  |     Header      |
-0xN +-----------------+
-@endcode
-*/
-template<MTX_A>
-struct TMatrix {
-  ISZ bytes,      //< Size in bytes.
-      elems;      //< Total number of matrix elements.
-  TStack<SCK_P> dimensions; //< Stack of dimensions.
-};
 
 /* Max number of elements that can fit in the given ISZ. */
 template<MTX_A>
@@ -636,10 +608,10 @@ ISW TMatrixArgMax(const T* x, ISW n) {
 }
 
 /* A homogeneous multi-dimensional array contiguous data types. */
-template<MTX_A, typename DIM = TDim<ISZ, IUY, 1>, typename BUF = Nil>
+template<MTX_A, typename DIM = TDim<ISZ, IUY, 1>, typename BOF = Nil>
 class AMatrix {
 
-  AArray<IUA, ISZ, DIM::CBytes, BUF> obj_;  //< An Auto-Array object.
+  AArray<IUA, ISZ, DIM::CBytes, BOF> obj_;  //< An Auto-Array object.
 
  public:
   /* Constructs an empty Matrix with 4 reserved dimensions and 64 elements. */
@@ -758,7 +730,7 @@ class AMatrix {
   inline T* Start() { return TMatrixStart<MTX_P>(This()); }
 
   /* Returns the Autoject-Array. */
-  inline AArray<IUA, ISZ, DIM::CBytes, BUF>& AJT_ARY() { return obj_; }
+  inline AArray<IUA, ISZ, DIM::CBytes, BOF>& AJT_ARY() { return obj_; }
 
   /* Returns the Autoject. */
   inline Autoject& AJT() { return obj_.AJT(); }
@@ -768,7 +740,7 @@ class AMatrix {
   }
 
   /* Returns the Auto-Array. */
-  inline AArray<IUA, ISZ, DIM::CBytes, BUF>& Array() { return obj_; }
+  inline AArray<IUA, ISZ, DIM::CBytes, BOF>& Array() { return obj_; }
 
   template<typename Printer = COut>
   inline Printer& PrintTo(Printer& o) {

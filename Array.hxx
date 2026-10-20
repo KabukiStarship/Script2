@@ -4,6 +4,9 @@
 #include "Binary.hpp"
 namespace _ {
 
+/* @ingroup Array
+*/
+
 /* Creates a CPU word from the repeated fill_char. */
 inline IUW FillWord(CHA fill_char) {
   IUW value = (IUW)(IUA)fill_char;
@@ -388,6 +391,7 @@ ISW ArrayShiftDown(void* origin, void* end, ISW count) {
   while (pivot >= start) *(pivot + count) = *pivot--;
   return count;
 }
+//< @endingroup Array
 
 } //< namespace _
 #endif

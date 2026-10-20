@@ -17,6 +17,7 @@
 #include "Promise.hxx"
 #include "Puff.hxx"
 #include "Random.hxx"
+#include "Regex.hpp"
 #include "Slot.hxx"
 #include "Stringf.hxx"
 #include "Test.hxx"

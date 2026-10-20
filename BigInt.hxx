@@ -16,6 +16,11 @@
 
 namespace _ {
 
+
+/* @ingroup BigInt
+@brief Arbitrary-precision integer types and operations. 
+*/
+
 // ===========================================================================
 // IUQ implementation
 // ===========================================================================
@@ -730,4 +735,5 @@ BOL operator>=(const ISQ& a, const ISQ& b) { return a.CompareTo(b) >= 0; }
 // Type code for ISQ — placeholder, see __RefactorPlan.md.
 DTW TypeOf(const ISQ&) { return 14; }
 
+//< @endingroup BigInt
 }  // namespace _

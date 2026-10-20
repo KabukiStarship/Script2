@@ -89,9 +89,9 @@ constexpr ISW n = TMatrixBOFDataBytes<FPD, ISB, ISB(4), ISB(3), ISB(2)>();
 ### `TMatrixBOFFromDims<T, ISZ, ISY, Dims>`
 
 `using` alias that produces a `TBOF` exactly sized for the given `Dims`
-descriptor. Passed as the `BUF` parameter of `AMatrix`.
+descriptor. Passed as the `BOF` parameter of `AMatrix`.
 
-### `AMatrix<T, ISZ, ISY, Dims, BUF>`
+### `AMatrix<T, ISZ, ISY, Dims, BOF>`
 
 ```C++
 // Runtime heap matrix:

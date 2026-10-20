@@ -2,8 +2,12 @@
 #pragma once
 #ifndef CRABS_ARRAY_DECL
 #define CRABS_ARRAY_DECL
-#include "_Config.h"
+#include <_Config.h>
 namespace _ {
+
+/* @ingroup Array
+@brief Functions and definitions for handling arrays in the system. 
+*/
 
 /* Copies the source to the target functionally identical to memcpy.
 @param write     The start of the write socket.
@@ -48,5 +52,6 @@ ISW ArrayShiftDown(void* origin, void* end, ISW bytes_count);
 /* Fills the array elements with the given fill_char; identical to memset. */
 CHA* ArrayFill(void* origin, ISW bytes, CHA fill_char = 0);
 
+//< @endingroup Array
 }  //< namespace _
 #endif  //< #ifndef CRABS_ARRAY_DECL

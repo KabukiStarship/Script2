@@ -13,12 +13,16 @@ Internal layout:
     no raw pointer null checks — use IsError/PtrIsError). */
 
 #ifndef CRABS_BIGINT_STANDALONE
-#include "_ConfigHeader.h"
-#include "_ConfigFooter.h"
+#include <_ConfigHeader.h>
+#include <_ConfigFooter.h>
 #include <Autoject.h>
 #endif
 
 namespace _ {
+
+/* @ingroup BigInt
+@brief Arbitrary-precision integer types and operations. 
+*/
 
 /* IUQ — unsigned arbitrary-precision integer */
 class IUQ {
@@ -260,5 +264,5 @@ BOL operator>=(const ISQ& a, const ISQ& b);
 
 // -- TypeOf for ISQ --
 DTW TypeOf(const ISQ&);
-
+//< @endingroup BigInt
 }  // namespace _

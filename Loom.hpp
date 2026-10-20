@@ -2,50 +2,17 @@
 #pragma once
 #ifndef CRABS_LOOM_HPP
 #define CRABS_LOOM_HPP
-#include "_Config.h"
+#include <_Config.h>
 #if SEAM >= CRABS_LOOM
 #include "Array.h"
 #include "Stack.hpp"
 #include "AType.hpp"
-#include "BigInt.h"
 #if SEAM == CRABS_LOOM
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
-#define LOM_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISR, typename ISY = ISQ
-#define LOM_P CHS, CHT, ISZ, ISY
-#define LOM TLoom<LOM_P>
 namespace _ {
-/* @defgroup Loom
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/MapTypes/Loom.md
-
-# Memory Layout
-
-+============================+
-|_______ Buffer              | <-- start
-|_______ String N            |
-|_______ String 0            |
-+----------------------------+
-|_______ Buffer              |
-|_______ String offset N     |
-|        String offset 0     |
-+============================+  ^ Up in
-|       Loom Header          |  |
-+============================+  + 0xN
-
-@todo Look into adding variable for average UTF-8 and UTF-16 character length.
-@todo Change keys_offset delta from table to keys_map.
-*/
-
-/* An array of Strings. */
-template<LOM_A>
-struct TLoom {
-  ISZ bytes,                  //< Size of the Loom in bytes.
-      start;                  //< Offset to the start of the string stack.
-  TStack<ISZ, ISZ, ISY> map;  //< A Stack of offset mappings to strings.
-};
 
 template<LOM_A>
 constexpr ISZ TLoomCountMin() {
@@ -117,7 +84,7 @@ inline ISZ TLoomKeysBeginOffset(ISY total) {
   return sizeof(ISZ) * total + sizeof(TLoom<LOM_P>);
 }
 
-/* Returns the pointer to the first character in the loom string buffer. */
+/* Returns the pointer to the first character in the loom string boofer. */
 template<LOM_A>
 inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
@@ -127,7 +94,7 @@ inline const CHS* TLoomKeysBegin(const TLoom<LOM_P>* loom) {
   return TLoomKeysBegin<LOM_P>(loom, loom->map.total);
 }
 
-/* Returns the first char in the string buffer. */
+/* Returns the first char in the string boofer. */
 template<LOM_A>
 inline CHS* TLoomKeysBegin(TLoom<LOM_P>* loom, ISY total) {
   return TPtr<CHS>(loom, TLoomKeysBeginOffset<LOM_P>(total));
@@ -177,7 +144,7 @@ inline T * TLoomTop(const TLoom<LOM_P>*loom) {
     TLoomTop<LOM_P>(CPtr<TLoom<LOM_P>>(loom), loom->bytes));
 }
 
-/* Free space left in the keys buffer */
+/* Free space left in the keys boofer */
 template<LOM_A>
 inline ISZ TLoomSpace(const TLoom<LOM_P>* loom) {
   return loom->bytes - loom->start;
@@ -447,9 +414,9 @@ ISY TLoomFind(TLoom<LOM_P>* loom, const CHS* string) {
 /* An 
 Loom Autoject. */
 template<LOM_A, ISZ Total_ = 512,
-          typename BUF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
+          typename BOF = TBOF<Total_, CHS, ISZ, TLoom<LOM_P>>>
 class ALoom {
-  AArray<IUA, ISZ, Total_, BUF> obj_;  //< An Auto-Array object.
+  AArray<IUA, ISZ, Total_, BOF> obj_;  //< An Auto-Array object.
  public:
   enum { CountDefault = Total_ / 16 };
   /* Constructs a Loom. */
@@ -494,7 +461,7 @@ class ALoom {
   inline Autoject& AJT() { return obj_.AJT(); }
 
   /* Gets the Auto-Array.
-  inline AArray<IUA, ISZ, BUF>& AJT_ARY() { return obj_; } */
+  inline AArray<IUA, ISZ, BOF>& AJT_ARY() { return obj_; } */
 
   template<typename Printer>
   inline Printer& PrintTo( Printer& o) {

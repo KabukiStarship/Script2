@@ -43,8 +43,8 @@ fixed vocabulary, referenced everywhere. Do not invent new width letters outside
 
 ### 2. Structs / classes — CamelCase, with a kind prefix letter
 - `T`-prefix = the plain **T**emplate POD struct (the raw memory layout): `TArray`, `TMap`, `TMapBuf`.
-- `A`-prefix = the **A**utoject (the owning class with a BUF/heap management layer): `AArray`, `AMap`.
-- Domain structs: `Crabs`, `Slot`, `Buffer`, `Operand`, `Op`, `BIn`, `BOut`, `CIn`, `COut`.
+- `A`-prefix = the **A**utoject (the owning class with a BOF/heap management layer): `AArray`, `AMap`.
+- Domain structs: `Crabs`, `Slot`, `Boofer`, `Operand`, `Op`, `BIn`, `BOut`, `CIn`, `COut`.
 - Rule: **type names are CamelCase** (immutable type identity). The `T`/`A` prefix is
   meaningful (POD layout vs owning autoject) — keep it.
 
@@ -55,7 +55,7 @@ From `struct Crabs` and `struct TMap`:
   `last_time`, `domain_value`, `codomain_value`, `total`, `count`.
 - These are all **lower_snake_case** because they change at runtime.
 - Anonymous `enum { ... }` constants inside a struct (immutable) → **CamelCase**:
-  `StackTotalMin`, `BufferTotalMin`, `ColumnWidth`, `DomainColumns`, `BytesInit_`.
+  `StackTotalMin`, `BooferTotalMin`, `ColumnWidth`, `DomainColumns`, `BytesInit_`.
 
 ### 4. Free functions / methods — CamelCase, often with a type prefix
 - Free functions are prefixed by the type they operate on: `CrabsInit`, `CrabsReset`,
@@ -88,7 +88,7 @@ Rule: **locals are lower_snake_case** (they're mutable by definition).
 
 ### 7. Private / protected members — trailing underscore
 From `class AArray` / `class AMap`:
-- `Autobuffer<...> aobj_;` and `AArray<...> array_;` — private members get a **trailing `_`**.
+- `Autoboofer<...> aobj_;` and `AArray<...> array_;` — private members get a **trailing `_`**.
 - `enum { BytesInit_ = Total_ * 32 };` — private enum constant also trailing-underscored.
 - Rule: **private and protected members use a trailing underscore** (`aobj_`, `array_`).
   Public members (struct fields) do not. This is how you tell access level at a glance.

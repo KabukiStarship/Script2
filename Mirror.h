@@ -2,21 +2,18 @@
 #pragma once
 #ifndef CRABS_MIRROR_DECL
 #define CRABS_MIRROR_DECL
-#include "_Config.h"
+#include <_Config.h>
 #if SEAM >= CRABS_OP
 #include "BIn.h"
 #include "BOut.h"
 #include "Op.h"
+#include "AType.hpp"
 namespace _ {
 
-/* A Mirror in a Chinese Room.
-Okay, then what does a Mirror do? */
-struct Mirror {
-  ISC size,    //< The size of the socket.
-      origin,  //< The starting index of the ring socket data.
-      stop,    //< The stopping index of the ring socket data.
-      read;    //< The read variable.
-};
+/* @ingroup Mirror
+@brief A Mirror is a portal to this system for debugging purpsoes.
+A Mirror is still a Door, it just has a diffeent Star function.
+*/
 
 const Op* MirrorResult(Mirror* mirror, AError error);
 

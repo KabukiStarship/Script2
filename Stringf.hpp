@@ -591,8 +591,8 @@ inline CHS* TSPrint(CHS* start, CHS* stop, const CHO* item) {
 //  return TSPrint<CHS, CHT>(start, stop, item);
 //}
 template<typename CHS = CHR, typename CHT = CHD>
-inline CHS* TSPrint(CHS* start, ISW buffer_size, const CHA* item) {
-  return TSPrint<CHS, CHT>(start, start + buffer_size - 1, item);
+inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHA* item) {
+  return TSPrint<CHS, CHT>(start, start + boofer_size - 1, item);
 }
 //
 //#if USING_STB == YES_0
@@ -612,8 +612,8 @@ inline CHS* TSPrint(CHS* start, ISW buffer_size, const CHA* item) {
 ////  return TSPrint<CHS, CHT, CHB>(start, stop, item);
 ////}
 template<typename CHS = CHR, typename CHT = CHD>
-inline CHS* TSPrint(CHS* start, ISW buffer_size, const CHB* item) {
-  return TSPrint<CHS, CHT, CHB>(start, start + buffer_size - 1, item);
+inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHB* item) {
+  return TSPrint<CHS, CHT, CHB>(start, start + boofer_size - 1, item);
 }
 //#endif
 //
@@ -635,13 +635,13 @@ inline CHS* TSPrint(CHS* start, ISW buffer_size, const CHB* item) {
 ////  return TSPrint<CHS, CHT, CHC>(start, stop, item);
 ////}
 template<typename CHS = CHR, typename CHT = CHD>
-inline CHS* TSPrint(CHS* start, ISW buffer_size, const CHC* item) {
-  return TSPrint<CHS, CHT, CHC>(start, start + buffer_size - 1, item);
+inline CHS* TSPrint(CHS* start, ISW boofer_size, const CHC* item) {
+  return TSPrint<CHS, CHT, CHC>(start, start + boofer_size - 1, item);
 }
 //#endif
 
 /* Skips the given CHS in a s if there are any.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 inline CHS* TSSkipAll(CHS* start, CHS skip_char) {
   return const_cast<const CHS*>(
@@ -832,8 +832,8 @@ CHS* TPrintBinary(CHS* start, CHS* stop, const void* item) {
 /* Prints the given item aligned right the given column_count.
 @return Nil if any of the pointers are nil or if column_count < 1, and a
 pointer to the nil-term CHA upon success.
-@param start The first CHS in the buffer.
-@param stop  The last CHS in the buffer.
+@param start The first CHS in the boofer.
+@param stop  The last CHS in the boofer.
 @param item  The item to printer.
 @param column_count The token_ of columns to align right to. */
 template<typename CHS = CHR, typename CHT = CHD, typename IS = ISW>
@@ -951,7 +951,7 @@ const CHS* TSDecimalEnd(const CHS* start) {
 /* Skips all the chars in a given range.
 @return Nil upon failure or a pointer to the CHS after the last CHS in the
 given range.
-@param start  The first CHS in the buffer.
+@param start  The first CHS in the boofer.
 @param lower_bounds
 @param upper bounds */
 template<typename CHS = CHR, typename CHT = CHD>
@@ -969,7 +969,7 @@ const CHS* TStringSkipAllInRange(const CHS* start, CHT lower_bounds,
 /* Skips all the chars in a given range.
 @return Nil upon failure or a pointer to the CHS after the last CHS in the
 given range.
-@param start  The first CHS in the buffer.
+@param start  The first CHS in the boofer.
 @param lower_bounds
 @param upper bounds*/
 template<typename CHS = CHR, typename CHT = CHD>
@@ -991,7 +991,7 @@ inline CHS* TStringSkipNumbers(CHS* start) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = const CHA>
 CHS* TSDecimalEnd(CHS* start) {
   const CHS* ptr = TPtr<const CHS>(start);
@@ -999,8 +999,8 @@ CHS* TSDecimalEnd(CHS* start) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSDecimalEnd(const CHS* start, const CHS* stop) {
   if (IsErrorSocket(start, stop))
@@ -1026,8 +1026,8 @@ const CHS* TSDecimalEnd(const CHS* start, const CHS* stop) {
 }
 
 /* Finds the stop of the decimals in the s, if there are any.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 inline CHS* TSDecimalEnd(CHS* start, CHS* stop) {
   return const_cast<CHS*>(
@@ -1114,7 +1114,7 @@ const CHS* TSStrip(const CHS* start) {
 }
 
 /* Skips the given CHS in a s if there are any.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSSkipAll(const CHS* start, CHS skip_char) {
   if (IsError(start)) return start;
@@ -1156,7 +1156,7 @@ inline CHS* TSSet(CHS* start) {
 }
 
 /* Searches for the end of the line, wrapped to the given column_count.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSLineEnd(const CHS* start, ISC column_count = AConsoleWidth) {
   CHT c = 0;
@@ -1179,8 +1179,8 @@ const CHS* TSLineEnd(const CHS* start, ISC column_count = AConsoleWidth) {
 }
 
 /* Searches fro the s line stop.
-@param start  The first CHS in the buffer.
-@param stop    The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop    The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 CHS* TSLineEnd(CHS* start, ISC column_count = AConsoleWidth) {
   return const_cast<CHS*>(
@@ -1188,8 +1188,8 @@ CHS* TSLineEnd(CHS* start, ISC column_count = AConsoleWidth) {
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer.
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer.
 @param column_count In characters. */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSLineEnd(const CHS* start, const CHS* stop,
@@ -1216,8 +1216,8 @@ const CHS* TSLineEnd(const CHS* start, const CHS* stop,
 }
 
 /* Finds the stop of the line, wrapped to the given column_count.
-@param start      The first CHS in the buffer.
-@param stop        The last CHS in the buffer.
+@param start      The first CHS in the boofer.
+@param stop        The last CHS in the boofer.
 @param column_coun In characters. */
 template<typename CHS = CHR, typename CHT = CHD>
 inline CHS* TSLineEnd(CHS* start, CHS* stop,
@@ -1227,7 +1227,7 @@ inline CHS* TSLineEnd(CHS* start, CHS* stop,
 }
 
 /* Scrolls over any whitespace.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSSkipSpaces(const CHS* start) {
   if (IsError(start)) return NILP;
@@ -1241,7 +1241,7 @@ const CHS* TSSkipSpaces(const CHS* start) {
 }
 
 /* Scrolls over any whitespace.
-@param start  The first CHS in the buffer. */
+@param start  The first CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 CHS* TSSkipSpaces(CHS* start) {
   return const_cast<CHS*>(TSSkipSpaces<CHS>(start));
@@ -1249,7 +1249,7 @@ CHS* TSSkipSpaces(CHS* start) {
 
 /* Attempts to find the given query.
 @return Nil upon failed search or a pointer to the stop of the query.
-@param start  The first CHS in the buffer.
+@param start  The first CHS in the boofer.
 @param query  A query string.  */
 template<typename CHS = CHR, typename CHT = CHD>
 const CHS* TSFind(const CHS* start, const CHS* query) {
@@ -1314,8 +1314,8 @@ const CHS* TSSkipSpaces(const CHS* start, const CHS* stop) {
 
 /* String skip spaces.
 @return Nil if there are no spaces to skip.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 inline CHS* TSSkipSpaces(CHS* start, CHS* stop) {
   return const_cast<CHS>(
@@ -1386,7 +1386,7 @@ CHS* TSEquals(CHS* start, CHS* stop, const CHS* query) {
 
 /* Checks if the given string isn't just white space or a nil term char.
 @return False if the s is empty and true otherwise.
-@param start  The first CHS in the buffer.
+@param start  The first CHS in the boofer.
 @desc A s is defined as empty if it is '\0' or all whitespace. */
 template<typename CHS = CHR, typename CHT = CHD>
 BOL TSIsntEmpty(const CHS* start) {
@@ -1402,7 +1402,7 @@ BOL TSIsntEmpty(const CHS* start) {
 
 /* Checks if the given s isn't empty.
 @return False if the s is empty and true otherwise.
-@param start  The first CHS in the buffer.
+@param start  The first CHS in the boofer.
 @desc A s is defined as empty if it is '\0' or all whitespace. */
 template<typename CHS = CHR, typename CHT = CHD>
 BOL TSIsntEmpty(CHS* start) {
@@ -1411,8 +1411,8 @@ BOL TSIsntEmpty(CHS* start) {
 
 /* Checks to see if the string isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 BOL TSIsntEmpty(const CHS* start, const CHS* stop) {
   if (IsErrorSocket(start, stop)) return false;
@@ -1436,14 +1436,14 @@ BOL TSIsntEmpty(const CHS* start, const CHS* stop) {
 
 /* Checks to see if the start isn't empty or whitespace.
 @return False if the s is empty and true otherwise.
-@param start  The first CHS in the buffer.
-@param stop   The last CHS in the buffer. */
+@param start  The first CHS in the boofer.
+@param stop   The last CHS in the boofer. */
 template<typename CHS = CHR, typename CHT = CHD>
 BOL TSIsntEmpty(CHS* start, const CHS* stop) {
   return TSIsntEmpty(TPtr<const CHS>(start), TPtr<const CHS>(stop));
 }
 
-/* Prints a string to the given buffer without */
+/* Prints a string to the given boofer without */
 template<typename CHT = CHR>
 CHT* TPrintWrap(CHT* start, CHT* stop, const CHT* element,
     ISW column_count = AConsoleWidth) {

@@ -1,5 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
-#include "_Config.h"
+#include <_Config.h>
 namespace _ {
 /* This code doesn't really seam to match with Crabs's mission other than a
 universal Chinese Room Langauge. The problem is that it doesn't seem to feit

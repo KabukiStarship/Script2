@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_RNG_DECL
 #define CRABS_RNG_DECL
-#include "_Config.h"
+#include <_Config.h>
 namespace _ {
 
 /* Gets a random generator device seed. */

@@ -6,6 +6,326 @@
 #if SEAM >= CRABS_COUT
 namespace _ {
 
+/* An ASCII Array.
+Please see the ASCII Data Specification for DRY documentation.
+@link ./Spec/Data/VectorTypes/Array.md
+
+@code
++-----------------+
+|  C-Style Array  |
+|  255-byte array | size=255, requires 8-bits.
+|-----------------|  ^
+|  TArray Header  |  |
++-----------------+ 0xN
+@endcode
+*/
+#define ARY_A typename T = CHA, typename ISZ = ISN
+#define ARY_P T, ISZ
+#define ARY TArray<T, ISZ>
+#define AARY AArray<T, ISZ>
+
+template<typename T = CHA, typename ISZ = ISW>
+struct TArray {
+  ISZ total;  //< Number of elements in the array.
+};
+/* @defgroup ASCII Stack */
+
+/* ASCII Stack
+Please see the ASCII Data Specification for DRY documentation.
+@link ./Spec/Data/MapTypes/Stack.md
+
+An Array Stack obj of homogeneous-sized plain-old-data (POD) types.
+Please see the ASCII Data Specification for DRY documentation.
+@link ./Spec/Data/MapTypes/Stack.md
+
+# Stack Memory Layout
+
+@code
++---------------+
+|    Boofer     |
+|---------------|
+| C-Style Array |
+|---------------|  ^
+|    Header     |  |
++---------------+ 0xN
+@endcode
+*/
+#define SCK_A typename T=ISW, typename ISZ=ISW, typename ISY=ISZ
+#define SCK_P T, ISZ, ISY
+#define SCK TStack<SCK_P>
+//@todo Change SCP_A to typename ISZ=ISW, typename ISY=ISZ
+template<SCK_A>
+struct TStack {
+  ISZ total,  //< Size of the Array in elements.
+      count;  //< Element count.
+};
+
+
+/* @defgroup AsciiMatrix
+Please see the ASCII Data Specification for DRY documentation.
+@link ./Spec/Data/vector_types/Matrix.md */
+
+/* An n-dimensional matrix of homogeneous-sized plain-old-data (POD) types.
+## Memory Layout
+
+@code
+    +-----------------+
+    |  C-Style Array  |
+    |-----------------|
+    | Dimension Stack |
+ ^  |-----------------|
+ |  |     Header      |
+0xN +-----------------+
+@endcode
+*/
+#define MTX_A typename T = ISW, typename ISZ = ISC, typename ISY = ISB, \
+  typename IUY = IUB
+#define MTX_P T, ISZ, ISY, IUY
+#define MTX TMatrix<T, ISZ, ISY, IUY>
+template<MTX_A>
+struct TMatrix {
+  ISZ bytes,      //< Size in bytes.
+      elems;      //< Total number of matrix elements.
+  TStack<SCK_P> dimensions; //< Stack of dimensions.
+};
+
+/* A collection of type-value tuples.
+@see ASCII Data Type Specification.
+@link /Spec/Data/MapTypes/List.md
+@code
+      List Memory Layout
++============================+
+|_______   Boofer            |<--- top
+|_______ ^ Value N           |
+|        | Value 0           |
+|----------------------------|
+|_______   Boofer            |
+|_______ ^ Type of Value N   |
+|        | Type of Value 0   |
+|----------------------------|
+|_______   Boofer            |
+|_______ ^ Offset to Value N |
+|        | Offset to Value 0 |
++============================+  ^  Up in addresses.
+|        TList Struct        |  |
++============================+ 0xN Base address
+@endcode
+*/
+#define LST_A typename ISZ = ISC, typename ISY = ISB, typename DT = DTB
+#define LST_P ISZ, ISY, DT
+#define LST TList<ISZ, ISY, DT>
+
+template<LST_A>
+struct TList {
+  ISZ bytes,        //< Size of the List in bytes.
+      top;          //< Offset to the top of the data.
+  TStack<ISZ, ISZ, ISY> map;  //< Stack of offset mappings to the list items.
+};
+
+
+/* @defgroup Loom
+Please see the ASCII Data Specification for DRY documentation.
+@link ./Spec/Data/MapTypes/Loom.md
+
+# Memory Layout
+
++============================+
+|_______ Boofer              | <-- start
+|_______ String N            |
+|_______ String 0            |
++----------------------------+
+|_______ Boofer              |
+|_______ String offset N     |
+|        String offset 0     |
++============================+  ^ Up in
+|       Loom Header          |  |
++============================+  + 0xN
+
+@todo Look into adding variable for average UTF-8 and UTF-16 character length.
+@todo Change keys_offset delta from table to keys_map.
+*/
+#define LOM_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISR, typename ISY = ISQ
+#define LOM_P CHS, CHT, ISZ, ISY
+#define LOM TLoom<LOM_P>
+
+/* An array of Strings. */
+template<LOM_A>
+struct TLoom {
+  ISZ bytes,                  //< Size of the Loom in bytes.
+      start;                  //< Offset to the start of the string stack.
+  TStack<ISZ, ISZ, ISY> map;  //< A Stack of offset mappings to strings.
+};
+
+#undef  BOK_P
+#define BOK_P CHS, CHT, ISZ, ISY, DT
+#undef  BOK_A
+#define BOK_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISN,\
+  typename ISY = ISM, typename DT = DTB
+
+/* @defgroup Book
+@brief A contiguous memory Associative List composed of a Loom and list.
+The Loom datatype stores the bytes, which includes the size of the 
+Keys Loom and the Values List. The Keys Loom is an array of strings that 
+stores the Book Keys. The Values List is a list of type-value tuples that 
+correspond to the key indexes.
+
+The first element of every List ist a Loom (Array of Strings) that stores
+the keys.
+
+@code
++====================================+
+|_______   Boofer                    |
+|_______ ^ List Value N              |
+|_______ | List Value 1              |
+|        | Keys Loom (Value 0)       |
+|------------------------------------|
+|_______   Boofer                    |
+|_______ ^ List Value N Type         |
+|_______ | List Value 1 Type         |
+|        | Loom Type (Type 0)        |
+|------------------------------------|
+|_______   Boofer                    |
+|_______   Offset to Value N         |
+|_______ ^ Offset to Value 1         |
+|        | Offset to Keys (Offset 0) |
++====================================+  ^ Up in
+|          TList Struct              |  |
++====================================+  + 0xN
+@endcode */
+template<BOK_A>
+struct TBook {
+  TList<LST_P> values;  //< A list of values with a Loom of keys in index 0.
+};
+
+
+/* @defgroup Dic
+@brief A contiguous memory Associative List created from a List and a Table.
+@code
++-----------------+
+|      List       |
+|-----------------|
+|      Table      |
+|-----------------|  ^ Up in addresses
+|  TDic Struct    |  |
++-----------------+ 0xN
+@endcode */
+#define DIC_A typename CHS = CHR, typename CHT = CHR, typename ISZ = ISR,\
+  typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
+#define DIC_P CHS, CHT, ISZ, ISY, DT, HSH
+#define DIC TDic<CHS, CHT, ISZ, ISY, DT, HSH>
+template<DIC_A>
+struct TDic {
+  TList<LST_P> values;  //< A list of values with a Table of keys in index 0.
+};
+/* B-Input ring boofer Slot.
+A B-Input Slot is functionally identical to a input port in TCP. */
+template<typename ISZ = ISC>
+struct TBIn {
+  ISZ bytes,          //< The size of the socket in bytes.
+      origin;         //< The starting index of the ring socket data.
+  volatile ISZ stop;  //< The stopping index of the ring socket data.
+  ISZ read;           //< The read variable to memory align the socket.
+};
+
+/* Byte-ring output socket. */
+template<typename ISZ = ISC>
+struct TBOut {
+  ISZ bytes;            //< Size of the B-Output in bytes.
+  volatile ISZ origin;  //< Starting index of the ring-socket data.
+  ISZ stop,             //< Stopping index of the ring-socket data.
+      read;             //< Address that the BOut device is reading from.
+};
+
+/* A Crabs Operation. The `in` field is overloaded: either a
+const DTB* param header (real pointer to type array) or a
+function-index marker (OpFirst('A') reinterprets char as pointer).
+Scanner distinguishes by num_ops > CrabsParamsMax (420). */
+struct Op {
+  const CHR * name;           //< Op name.
+  const DTB * in,             //< Input _BSQ params or OpFirst.
+            * out;            //< Output _BSQ params or OpLast.
+  const CHR * description;    //< Op description.
+  CHR         pop,            //< Index of the Pop Operation.
+              close,          //< Index of the Close Operation.
+              default_op;     //< Index of the Default Operation.
+  const TBOut<ISC>* evaluation;  //< Evaluated expression Slot.
+};
+
+// @defgroup Slot
+
+
+/* A Mirror in a Chinese Room.
+Okay, then what does a Mirror do? */
+
+// template<typename ISZ = ISC>
+// struct TMirror {
+//   ISZ size,    //< The size of the socket.
+//       origin,  //< The starting index of the ring socket data.
+//       stop,    //< The stopping index of the ring socket data.
+//       read;    //< The read variable.
+// };
+
+/* A door that connects two Chinese rooms.
+A door can lead to one or more Rooms. A Door that can
+be locked, in which case all of the Rooms behind this door are locked
+out. When a door is locked, no messages are processed or sent to or
+from the door and its subsidiary agents.
+
+Rooms can be connected by one or more Portal. An example of a
+system with one Door and multiple Portals is a WiFi plus USB/Serial
+connection. This is a commonly used configuration for debugging the system.
+
+Multiple doors also might share the same Portal. An example of this is a
+connection to multiple systems over a WiFi connection.
+
+@code
+
++=============+
+|    slots    |
+|=============|
+| Door struct |
++=============+
+
+@endcode
+*/
+#define DOR_P typename ISZ = ISN
+#define DOR_A ISZ
+template<DOR_P>
+struct TDoor {
+  ISN  bytes_,          //< Door size in bytes.
+       scan_total_;     //< Max bytes to pull through the slot at once.
+  IUW* begin_;          //< Pointer to dynamic socket.
+  TStack<Slot, ISZ, ISZ>* slots_;  //< Slots in the door.
+};
+
+/* A group of Doors that share the same Extended Types.
+Only one single wall is required for a Chinese Room, but when more memory is
+needed a new Wall may be created and destroyed dynamically.
+
+@code
++--------------+
+|  Terminals   |
+|      v       |
+|vvvvvvvvvvvvvv|
+|    Boofer    |
+|^^^^^^^^^^^^^^|
+|      ^       |
+|  TStack of   |
+|    Doors     |
+|   Offsets    |
+|--------------|
+|    Header    |
++--------------+
+@endcode */
+#define WAL_A typename T = ISW, typename ISZ = ISN, typename ISY = ISN
+#define WAL_P T, ISZ, ISY
+#define WAL TWall<WAL_P>
+template<WAL_A>
+struct TWall {
+  IUD ctx_; //< Plain Context Type remap word.
+  TStack<TDoor<ISZ>, ISZ, ISY> doors_;  //< The doors in the room.
+	BOL is_dynamic_;	//< Whether this wall was dynamically allocated or not.
+};
 /* Utility class for givings names to params.
 ```C++
 void Foo(TP<ISZ, "Bar">() bar) {}
@@ -23,9 +343,12 @@ struct TP {
   T value;
 
   TP(T v) : value(v) {}
-
-  const CHA* Name() { return name; }
 };
+//! @brief Returns the name associated with this type pair.
+//! @param tp The type-value pair.
+//! @return The name string.
+template<typename T, const CHA* Name>
+inline const CHA* TPName(const TP<T, Name>& tp) { return Name; }
 
 /*
 inline IUA ValueBase2(IUC value) {
@@ -81,8 +404,8 @@ inline CHA ASizeCodef(ISD sw) {
 template<typename T>
 T TCTXHandle(ACTXHandler actxh, void* begin, void* end, DTW type, IUW value, 
              IUW vmsb) {
-  if (IsError(actxh)) return 0;
-  return (T)actxh(begin, end, type, value, vmsb);
+  if (actxh == NILP) return T(0);
+  return T(actxh(begin, end, type, value, vmsb));
 }
 
 // Strings for the POD types 0-31.

@@ -1,5 +1,5 @@
 // Copyright AStarship <https://astarship.net>.
-#include "_Config.h"
+#include <_Config.h>
 //
 #include "../_Package.hxx"
 //
@@ -11,20 +11,21 @@
 #include "06.Array.hxx"
 #include "07.Stack.hxx"
 #include "08.String.hxx"
+#include "09.Regex.hxx"
 #include "09.Loom.hxx"
-#include "10.List.hxx"
-#include "11.Book.hxx"
-#include "12.Map.hxx"
-#include "13.Table.hxx"
-#include "14.Dic.hxx"
-#include "15.CrabsOp.hxx"
-#include "16.Room.hxx"
-#include "17.MathCore.hxx"
-#include "18.Random.hxx"
-#include "19.File.hxx"
-#include "20.Promise.hxx"
-#include "21.Script2.hxx"
-#include "22.Release.hxx"
+#include "11.List.hxx"
+#include "12.Book.hxx"
+#include "13.Map.hxx"
+#include "14.Table.hxx"
+#include "15.Dic.hxx"
+#include "16.CrabsOp.hxx"
+#include "17.Room.hxx"
+#include "18.MathCore.hxx"
+#include "19.Random.hxx"
+#include "20.File.hxx"
+#include "21.Promise.hxx"
+#include "22.Script2.hxx"
+#include "23.Release.hxx"
 //
 #include "../Test.hpp"
 using namespace ::_;
@@ -34,5 +35,5 @@ inline const CHA* CrabsTests(const CHA* args) {
     CRTest::Uniprinter, CRTest::Clock, CRTest::Stack, CRTest::String, 
     CRTest::Loom,  CRTest::List, CRTest::Book, CRTest::Map, CRTest::Table,
     CRTest::Dic, CRTest::File, CRTest::CrabsOp, CRTest::Room, CRTest::MathCore, 
-    CRTest::RNG, CRTest::Promise, CRTest::CrabsScript>(args);
+    CRTest::RNG, CRTest::Promise, CRTest::CrabsScript, CRTest::Regex>(args);
 }

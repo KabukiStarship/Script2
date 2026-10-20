@@ -2,7 +2,7 @@
 #pragma once
 #ifndef CRABS_MATH_HPP
 #define CRABS_MATH_HPP
-#include "_Config.h"
+#include <_Config.h>
 #if SEAM >= CRABS_MATHCORE
 #include "Stack.hpp"
 #if SEAM == CRABS_MATHCORE

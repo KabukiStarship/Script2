@@ -2,11 +2,11 @@
 #pragma once
 #ifndef CRABS_AUTOJECT_DECL
 #define CRABS_AUTOJECT_DECL
-#include "_Config.h"
+#include <_Config.h>
 #if SEAM >= CRABS_UNIPRINTER
 
 /* RAMFactory manages memory for ASCII Objects.
-@return A word-aligned buffer, rounding up if unaligned.
+@return A word-aligned boofer, rounding up if unaligned.
 @param origin Origin of a contiguous auto-object.
 @param bytes  Autoject size in bytes. */
 typedef IUW* (*RAMFactory)(IUW* origin, ISW bytes);
@@ -42,43 +42,43 @@ enum RAMFactoryError {
 };
 
 /* RAMFactory for Autojects on the program stack that doesn't delete the
-buffer. */
-IUW* ObjectFactoryStack(IUW* buffer, ISW bytes);
+boofer. */
+IUW* ObjectFactoryStack(IUW* boofer, ISW bytes);
 
-/* RAMFactory for Autojects on the heap that deletes a the buffer. */
-IUW* ObjectFactoryHeap(IUW* buffer, ISW bytes);
+/* RAMFactory for Autojects on the heap that deletes a the boofer. */
+IUW* ObjectFactoryHeap(IUW* boofer, ISW bytes);
 
 /* RAMFactory for Auto-array of total elements on the program stack that 
-doesn't delete the buffer. */
-IUW* ArrayFactoryStackA(IUW* buffer, ISW total);
+doesn't delete the boofer. */
+IUW* ArrayFactoryStackA(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the 
-buffer. */
-IUW* ArrayFactoryHeapA(IUW* buffer, ISW total);
+boofer. */
+IUW* ArrayFactoryHeapA(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
-doesn't delete the buffer. */
-IUW* ArrayFactoryStackB(IUW* buffer, ISW total);
+doesn't delete the boofer. */
+IUW* ArrayFactoryStackB(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
-buffer. */
-IUW* ArrayFactoryHeapB(IUW* buffer, ISW total);
+boofer. */
+IUW* ArrayFactoryHeapB(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
-doesn't delete the buffer. */
-IUW* ArrayFactoryStackC(IUW* buffer, ISW total);
+doesn't delete the boofer. */
+IUW* ArrayFactoryStackC(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
-buffer. */
-IUW* ArrayFactoryHeapC(IUW* buffer, ISW total);
+boofer. */
+IUW* ArrayFactoryHeapC(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the program stack that
-doesn't delete the buffer. */
-IUW* ArrayFactoryStackD(IUW* buffer, ISW total);
+doesn't delete the boofer. */
+IUW* ArrayFactoryStackD(IUW* boofer, ISW total);
 
 /* RAMFactory for Auto-array of total elements on the heap that deletes a the
-buffer. */
-IUW* ArrayFactoryHeapD(IUW* buffer, ISW total);
+boofer. */
+IUW* ArrayFactoryHeapD(IUW* boofer, ISW total);
 
 }  //< namespace _
 #endif

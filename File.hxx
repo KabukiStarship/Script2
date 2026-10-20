@@ -409,9 +409,9 @@ TextFile& TextFile::Print(IUC item) {
   Print((item));
 #else
   enum { Size = 24 };
-  CHA buffer[Size];
-  TSPrintUnsigned<IUC, CHA>(buffer, Size, item);
-  Print(buffer);
+  CHA boofer[Size];
+  TSPrintUnsigned<IUC, CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
 #endif
   return *this;
@@ -422,9 +422,9 @@ TextFile& TextFile::Print(ISD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA buffer[Size];
-  auto result = TSPrint<CHA>(buffer, Size, item);
-  Print(buffer);
+  CHA boofer[Size];
+  auto result = TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -434,9 +434,9 @@ TextFile& TextFile::Print(IUD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA buffer[Size];
-  TSPrint<CHA>(buffer, Size, item);
-  Print(buffer);
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -446,9 +446,9 @@ TextFile& TextFile::Print(FPC item) {
   STD_COUT << item;
 #else
   enum { Size = 16 };
-  CHA buffer[Size];
-  TSPrint<CHA>(buffer, Size, item);
-  Print(buffer);
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -458,9 +458,9 @@ TextFile& TextFile::Print(FPD item) {
   STD_COUT << item;
 #else
   enum { Size = 24 };
-  CHA buffer[Size];
-  TSPrint<CHA>(buffer, Size, item);
-  Print(buffer);
+  CHA boofer[Size];
+  TSPrint<CHA>(boofer, Size, item);
+  Print(boofer);
 #endif
   return *this;
 }
@@ -576,7 +576,7 @@ TextFile& TextFile::Hex(FPC item) { return TPrintHex<TextFile>(*this, item); }
 TextFile& TextFile::Hex(FPD item) { return TPrintHex<TextFile>(*this, item); }
 #endif
 
-/* Stores the given item to the buffer and store the size. */
+/* Stores the given item to the boofer and store the size. */
 TextFile& TextFile::Binary(const void* item) { return TPrintBinary<TextFile>(*this, item); }
 TextFile& TextFile::Binary(const void* item, ISW size) {
   return TPrintBinary<TextFile>(*this, item, size);
