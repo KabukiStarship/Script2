@@ -7,7 +7,17 @@
 #else
 #include "_Release.h"
 #endif
+#if CRABS_PLATFORM == OS_LINUX || CRABS_PLATFORM == OS_APPLE
+#include <termios.h>
+#include <unistd.h>
+inline ISN CInGetKeyPOSIX() {
+  char c;
+  return read(STDIN_FILENO, &c, 1) == 1 ? ISN(static_cast<unsigned char>(c)) : -1;
+}
+#define _getch() CInGetKeyPOSIX()
+#elif CRABS_PLATFORM == OS_WINDOWS
 #include <conio.h>
+#endif
 //#include <windows.h>
 //#include <cstdio>
 //#include <iostream>

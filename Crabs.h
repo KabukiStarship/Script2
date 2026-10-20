@@ -4,6 +4,7 @@
 #define CRABS_CRABS_DECL
 #include "Op.h"
 #include "Operand.h"
+#include "AType.hpp"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -11,7 +12,7 @@ namespace _ {
 Crabs' (crabs(s)) must be word-aligned in order to run correctly
 so it's best to scan and word align the data types in the same sweep.
 
-Crabs' are composed of one B-Input (BIn) and one B-Output (BOut) socket. The
+Crabs' are composed of one B-Input (TBIn) and one B-Output (TBOut) socket. The
 App/Driver/User writes to the stop of the Tx socket and the driver reads from
 the beginning. The user writes are synchronous and the driver reads are
 asynchronous.
@@ -21,10 +22,10 @@ asynchronous.
 @code
       |>---------------------- Ring Boofer ------------------------->|
       ________________________________________________________________
-BOut  |>-Boofer->|>-Sync User SScan->|>-Async Portal Rx-->|>-Boofer->|
+TBOut  |>-Boofer->|>-Sync User SScan->|>-Async Portal Rx-->|>-Boofer->|
       |__________|___________________|____________________|__________|
       ________________________________________________________________
-BIn   |>-Boofer->|>-Async Portal Tx->|>-Sync User Writes->|>-Boofer->|
+TBIn   |>-Boofer->|>-Async Portal Tx->|>-Sync User Writes->|>-Boofer->|
       |__________|___________________|____________________|__________|
 @endcode
 
@@ -54,7 +55,7 @@ struct alignas(ACPUCacheLineSize) Crabs {
     BooferTotalMin = 2, //< Min socket size.
   };
 
-  ISC socket_bytes,     //< Offset to the BOut slot.
+  ISC socket_bytes,     //< Offset to the TBOut slot.
       header_bytes,     //< The total size of the header in bytes.
       stack_count,      //< Stack Operand count.
       stack_total,      //< Max stack count.
@@ -63,9 +64,9 @@ struct alignas(ACPUCacheLineSize) Crabs {
       bytes_left,       //< Countdown counter for parsing POD types.
       params_left;      //< Height of header and cursors stacks.
   TMC epoch;            //< The Unix timestamp.
-  IUA bout_state,       //< BOut streaming state.
+  IUA bout_state,       //< TBOut streaming state.
       bin_state,        //< Slot streaming state.
-      last_bin_state,   //< Last BIn state.
+      last_bin_state,   //< Last TBIn state.
       last_byte;        //< Last byte read.
   CHC current_char;     //< Current Unicode CHA being scanned.
   IUB hash;             //< Packed BSQ hash.
@@ -89,11 +90,11 @@ inline ISC CrabsHeaderBytes(ISC stack_total);
 /* Gets the crabs's socket. */
 IUA* CrabsBoofer(Crabs* crabs);
 
-/* Gets a pointer to the BIn slot. */
-BIn* CrabsBIn(Crabs* crabs);
+/* Gets a pointer to the TBIn slot. */
+TBIn<ISC>* CrabsBIn(Crabs* crabs);
 
-/* Gets a pointer to the BOut slot. */
-BOut* CrabsBOut(Crabs* crabs);
+/* Gets a pointer to the TBOut slot. */
+TBOut<ISC>* CrabsBOut(Crabs* crabs);
 
 /* Creates a Stack with equal sized rx and tx slots.
 @param root The root-scope device.
@@ -136,7 +137,7 @@ const Op* CrabsEnterState(Crabs* crabs, BInState state);
 /* Streams a B-Output IUA. */
 IUA CrabsStreamBOut(Crabs* crabs);
 
-/* Scans the BIn socket and marks the data as being ready to execute.
+/* Scans the TBIn socket and marks the data as being ready to execute.
 @param a The Stack to scan. */
 const Op* CrabsScanBIn(Crabs* crabs);  // , Portal* io);
 
@@ -243,16 +244,16 @@ const Op* CrabsThenPromise(Crabs* crabs, Slot* promise_slot, CHA* onFulfilledKey
 @return Returns nil upon success or an Error Op upon failure. */
 const Op* CrabsCatchPromise(Crabs* crabs, Slot* promise_slot, CHA* onRejectedKey);
 
-/* Reads a promise from a BIn socket.
-@param bin The BIn socket to read from.
+/* Reads a promise from a TBIn socket.
+@param bin The TBIn socket to read from.
 @return Returns the promise state word (0=pending, 1=fulfilled, 2=rejected). */
-IUW CrabsReadPromiseState(BIn* bin);
+IUW CrabsReadPromiseState(TBIn<ISC>* bin);
 
-/* Writes a promise result to a BOut socket.
-@param bout The BOut socket to write to.
+/* Writes a promise result to a TBOut socket.
+@param bout The TBOut socket to write to.
 @param promise_slot The promise Slot containing the result.
 @return Returns nil upon success or an Error Op upon failure. */
-const Op* CrabsWritePromiseResult(BOut* bout, Slot* promise_slot);
+const Op* CrabsWritePromiseResult(TBOut<ISC>* bout, Slot* promise_slot);
 
 }  //< namespace _
 

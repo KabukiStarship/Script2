@@ -7,7 +7,9 @@
 
 namespace _ {
 
-/* @module Clock
+/* @defgroup CLOCK Clock
+@brief A set of functions and data structures for working with time and clocks.
+@details The CLOCK module provides a set of functions and data structures for working with time and clocks
 @see ./_Spec/Data/Clock.md
 */
 

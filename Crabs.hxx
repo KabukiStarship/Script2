@@ -10,6 +10,7 @@
 #include "_Debug.h"
 #else
 #include "_Release.h"
+#include "AType.hpp"
 #endif
 namespace _ {
 
@@ -48,19 +49,19 @@ inline IUA* CrabsBoofer(Crabs* crabs) {
   return TPtr<IUA>(crabs, sizeof(Crabs));
 }
 
-inline BIn* CrabsBIn(Crabs* crabs) {
+inline TBIn<ISC>* CrabsBIn(Crabs* crabs) {
   if (IsError(crabs)) {
     return NILP;
   }
-  return TPtr<BIn>(crabs, crabs->header_bytes);
+  return TPtr<TBIn<ISC>>(crabs, crabs->header_bytes);
 }
 
-inline BOut* CrabsBOut(Crabs* crabs) {
+inline TBOut<ISC>* CrabsBOut(Crabs* crabs) {
   if (IsError(crabs)) {
     return NILP;
   }
-  BIn* bin = CrabsBIn(crabs);
-  return TPtr<BOut>(bin, bin->bytes + sizeof(BIn));
+  TBIn<ISC>* bin = CrabsBIn(crabs);
+  return TPtr<TBOut<ISC>>(bin, bin->bytes + sizeof(TBIn<ISC>));
 }
 
 /* Initializes the Crabs Machine. */
@@ -86,7 +87,7 @@ Crabs* CrabsInit(IUW* socket, ISC boofer_bytes, ISC stack_total, Operand* root,
   crabs->operand      = NILP;
   crabs->bytes_left   = 0;
   //ISC offset          = sizeof (Crabs) + total_stack_size - sizeof (void*);
-  //bin_offset          = sizeof (BIn) + total_stack_size + offset;
+  //bin_offset          = sizeof (TBIn) + total_stack_size + offset;
   crabs->header_bytes = CrabsHeaderBytes(stack_total);
   crabs->hash         = PRIME_LARGEST_IUB;
   crabs->ctxt         = ctxt;
@@ -96,7 +97,7 @@ Crabs* CrabsInit(IUW* socket, ISC boofer_bytes, ISC stack_total, Operand* root,
   crabs->root         = root;
   crabs->args         = NILP;
   IUW* base_ptr = TPtr<IUW>(crabs) + sizeof(Crabs) + stack_total * sizeof(Operand**);
-  crabs->slot.Set(base_ptr, unpacked_bytes);
+  SlotSet(&crabs->slot, base_ptr, unpacked_bytes);
   BInInit(CrabsBIn(crabs), bin_bout_bytes);
   BOutInit(CrabsBOut(crabs), bin_bout_bytes);
   return crabs;
@@ -203,7 +204,7 @@ const Op* CrabsScanBIn(Crabs* crabs) {
       delta_t = 0;       //< Time delta between the last timestamp.
   const Op* op = 0;      //< Current operation.
   Operand* operand = NILP; //< The operand.
-  BIn* bin = 0;          //< BIn.
+  TBIn<ISC>* bin = 0;          //< TBIn.
   IUA* bin_begin = 0,    //< Beginning of the ring socket.
      * bin_start = 0,    //< Start of the ring socket data.
      * bin_stop = 0,     //< Stop of the ring socket data.
@@ -406,8 +407,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
               // Read the max number_ of chars off the header.
               bytes_left = *crabs->header++ * 2;
               CrabsEnterState (crabs,
-                              BIn::UTF16State);
-              bin_state = BIn::UTF16State;
+                              TBIn::UTF16State);
+              bin_state = TBIn::UTF16State;
               break;
           }
           else if (type == STC) { // UTF-32  type.
@@ -416,8 +417,8 @@ const Op* CrabsScanBIn(Crabs* crabs) {
               #endif
               // Read the max number_ of chars off the header.
               bytes_left = *crabs->header++ * 4;
-              CrabsEnterState (crabs, BIn::UTF32State);
-              bin_state = BIn::UTF32State;*/
+              CrabsEnterState (crabs, TBIn::UTF32State);
+              bin_state = TBIn::UTF32State;*/
         } else {  // It's not a POD type.
           D_COUT("\nScanning AArray.");
           // Multi-dimension arrays are parsed just like any other
@@ -676,7 +677,7 @@ inline void CrabsCancel(Crabs* crabs) {
 inline void CrabsClear(Crabs* crabs) {
   // Erase the socket by writing zeros to it.
 
-  BIn* bin = CrabsBIn(crabs);
+  TBIn<ISC>* bin = CrabsBIn(crabs);
 
   IUA *begin = BInOrigin(bin),
       *end = begin + bin->bytes,
@@ -720,15 +721,15 @@ inline const Op* CrabsArgs (Crabs* crabs, const ISC* params, void** args) {
 inline const Op* CrabsArgs(Crabs* crabs, const DTB* params, void** args) {
   A_ASSERT(params);
   A_ASSERT(args);
-  Slot slot(CrabsBIn(crabs));
-  return slot.Read(params, args);
+  Slot* slot = SlotInit(CrabsBIn(crabs));
+  return SlotRead(slot, params, args);
 }
 
 inline const Op* CrabsArgs(Crabs* crabs, const Op& op, void** args) {
   A_ASSERT(crabs);
   A_ASSERT(args);
-  Slot slot(CrabsBIn(crabs));
-  return slot.Read(op.in, args);
+  Slot* slot = SlotInit(CrabsBIn(crabs));
+  return SlotRead(slot, op.in, args);
 }
 
 inline const Op* CrabsResult(Crabs* crabs, const DTB* params, void** args, 
@@ -784,11 +785,11 @@ const Op* CrabsQuery(Crabs* crabs, const Op& op, IUD pc_ctx) {
     return &op;
 }
 
-inline IUA* CrabsBaseAddress(BIn* bin) {
-  return TPtr<IUA>(bin) + sizeof(BIn);
+inline IUA* CrabsBaseAddress(TBIn<ISC>* bin) {
+  return TPtr<IUA>(bin) + sizeof(TBIn<ISC>);
 }
 
-ISW CrabsSpace(BIn* bin) {
+ISW CrabsSpace(TBIn<ISC>* bin) {
   if (IsError(bin)) {
     return ~0;
   }
@@ -799,15 +800,15 @@ ISW CrabsSpace(BIn* bin) {
 
 IUW* CrabsBaseAddress(void* ptr, ISC rx_tx_offset) {
   enum {
-    SlotHeaderSize = sizeof(BIn) + sizeof(IUW) - sizeof(BIn) % sizeof(IUW),
+    SlotHeaderSize = sizeof(TBIn<ISC>) + sizeof(IUW) - sizeof(TBIn<ISC>) % sizeof(IUW),
     //< Offset to the origin of the ring socket.
   };
   CHA* result = TPtr<CHA>(ptr) + rx_tx_offset + SlotHeaderSize;
   return TPtr<IUW>(result);
 }
 
-CHA* CrabsEndAddress(BIn* bin) {
-  return TPtr<CHA>(bin) + sizeof(BIn) + bin->bytes;
+CHA* CrabsEndAddress(TBIn<ISC>* bin) {
+  return TPtr<CHA>(bin) + sizeof(TBIn<ISC>) + bin->bytes;
 }
 
 }  //< namespace _

@@ -12,12 +12,6 @@
 #endif
 namespace _ {
 
-#undef  MAP_A
-#define MAP_A typename D = ISR, typename ISZ = ISN
-#undef  MAP_P
-#define MAP_P D, ISZ
-#define MAP TMap<MAP_P>
-
 /* A sparse array map of Sorted Domain Values to Codomain Mappings (i.e. pointer
 offsets).
 @see ASCII Data Type Specification.
@@ -38,6 +32,12 @@ offsets).
 +-------------------------------+ 0x0
 @endcode
 */
+#undef  MAP_A
+#define MAP_A typename D = ISR, typename ISZ = ISN
+#undef  MAP_P
+#define MAP_P D, ISZ
+#define MAP TMap<MAP_P>
+
 template<MAP_A>
 struct TMap {
   ISZ total,  //< Maximum number of elements in the map.

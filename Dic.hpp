@@ -11,29 +11,9 @@
 #include "_Release.h"
 #endif
 namespace _ {
-/* @defgroup Dic
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/MapTypes/Dictionary.md */
-#define DIC_A typename CHS = CHR, typename CHT = CHR, typename ISZ = ISR,\
-  typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
-#define DIC_P CHS, CHT, ISZ, ISY, DT, HSH
-#define DIC TDic<CHS, CHT, ISZ, ISY, DT, HSH>
 
 /* @defgroup Dic
-@brief A contiguous memory Associative List created from a List and a Table.
-@code
-+-----------------+
-|      List       |
-|-----------------|
-|      Table      |
-|-----------------|  ^ Up in addresses
-|  TDic Struct    |  |
-+-----------------+ 0xN
-@endcode */
-template<DIC_A>
-struct TDic {
-  TList<LST_P> values;  //< A list of values with a Table of keys in index 0.
-};
+@link ./Spec/Data/MapTypes/Dictionary.md */
 
 /* The minimum count a good with the given template parameters can have. */
 template<DIC_A>

@@ -11,6 +11,7 @@
 #include "../_Debug.h"
 #else
 #include "../_Release.h"
+#include "AType.hpp"
 #endif
 using namespace ::_;
 namespace CRTest {
@@ -47,11 +48,11 @@ static const CHA* RingRegressions(const CHA*) {
     return "CCHRSQ must store its count and characters in one array";
 
   struct Output {
-    BOut head;
+    TBOut<ISC> head;
     IUA data[256];
   } output = {};
   struct Input {
-    BIn head;
+    TBIn<ISC> head;
     IUA data[256];
   } input = {};
   BOutInit(&output.head, sizeof(output));
@@ -152,8 +153,8 @@ static const CHA* CrabsOp(const CHA* args) {
 
   void* dez_args[4];
   uint8_t io_number_ = 98;  //< ASCII:'b'
-  BIn* bin = CrabsBIn(crabs);
-  BOut* bout = CrabsBOut(crabs);
+  TBIn<ISC>* bin = CrabsBIn(crabs);
+  TBOut<ISC>* bout = CrabsBOut(crabs);
 
   const Op* result;
   CrabsRingBell(crabs);

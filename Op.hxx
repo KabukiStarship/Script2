@@ -8,6 +8,7 @@
 #include "_Debug.h"
 #else
 #include "_Release.h"
+#include "AType.hpp"
 #endif
 namespace _ {
 
@@ -15,14 +16,14 @@ inline const Op* OpError(ERC error) { return (const Op*)IUW(error); }
 /*
 #if USING_CRABS_TEXT
 Op OpInit (IUW* socket, ISC boofer_size) {
-    BOut* bout = BOutInit (socket, boofer_size);
+    TBOut<ISC>* bout = BOutInit (socket, boofer_size);
     Op log;
     log.bout = bout;
     return log;
 }
 
 void Print (Op& log) {
-  BIn    * bin = TPtr<BIn> (log.bout);
+  TBIn<ISC>* bin = TPtr<TBIn<ISC>> (log.bout);
   void   * args[1];
   IUA     type = 0,
   iua;
@@ -37,7 +38,7 @@ void Print (Op& log) {
   FPC    flt;
   FPD   dbl;
   CHA   index;
-  //if (BinReadChar (TPtr<BIn> (log.bout), index))
+  //if (BinReadChar (TPtr<TBIn<ISC>> (log.bout), index))
   //    return;
   CHA socket[DBL_MAX_10_EXP + 2];
   while (index ) {

@@ -5,35 +5,7 @@
 #include <_Config.h>
 #if SEAM >= CRABS_MATHCORE
 #include "Stack.hpp"
-#define MTX_A typename T = ISW, typename ISZ = ISC, typename ISY = ISB, \
-  typename IUY = IUB
-#define MTX_P T, ISZ, ISY, IUY
-#define MTX TMatrix<T, ISZ, ISY, IUY>
 namespace _ {
-
-/* @defgroup AsciiMatrix
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/vector_types/Matrix.md */
-
-/* An n-dimensional matrix of homogeneous-sized plain-old-data (POD) types.
-## Memory Layout
-
-@code
-    +-----------------+
-    |  C-Style Array  |
-    |-----------------|
-    | Dimension Stack |
- ^  |-----------------|
- |  |     Header      |
-0xN +-----------------+
-@endcode
-*/
-template<MTX_A>
-struct TMatrix {
-  ISZ bytes,      //< Size in bytes.
-      elems;      //< Total number of matrix elements.
-  TStack<SCK_P> dimensions; //< Stack of dimensions.
-};
 
 /* Max number of elements that can fit in the given ISZ. */
 template<MTX_A>

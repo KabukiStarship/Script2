@@ -17,47 +17,6 @@ Please see the ASCII Data Specification for DRY documentation.
 Please see the ASCII List documentation for information about
 */
 
-#undef  BOK_P
-#define BOK_P CHS, CHT, ISZ, ISY, DT
-#undef  BOK_A
-#define BOK_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISN,\
-  typename ISY = ISM, typename DT = DTB
-
-/* @defgroup Book
-@brief A contiguous memory Associative List composed of a Loom and list.
-The Loom datatype stores the bytes, which includes the size of the 
-Keys Loom and the Values List. The Keys Loom is an array of strings that 
-stores the Book Keys. The Values List is a list of type-value tuples that 
-correspond to the key indexes.
-
-The first element of every List ist a Loom (Array of Strings) that stores
-the keys.
-
-@code
-+====================================+
-|_______   Boofer                    |
-|_______ ^ List Value N              |
-|_______ | List Value 1              |
-|        | Keys Loom (Value 0)       |
-|------------------------------------|
-|_______   Boofer                    |
-|_______ ^ List Value N Type         |
-|_______ | List Value 1 Type         |
-|        | Loom Type (Type 0)        |
-|------------------------------------|
-|_______   Boofer                    |
-|_______   Offset to Value N         |
-|_______ ^ Offset to Value 1         |
-|        | Offset to Keys (Offset 0) |
-+====================================+  ^ Up in
-|          TList Struct              |  |
-+====================================+  + 0xN
-@endcode */
-template<BOK_A>
-struct TBook {
-  TList<LST_P> values;  //< A list of values with a Loom of keys in index 0.
-};
-
 #define BOK TBook<CHS, CHT, ISZ, ISY, DT>
 
 enum {

@@ -7,45 +7,12 @@
 #include "Array.h"
 #include "Stack.hpp"
 #include "AType.hpp"
-#include "BigInt.h"
 #if SEAM == CRABS_LOOM
 #include "_Debug.h"
 #else
 #include "_Release.h"
 #endif
-#define LOM_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISR, typename ISY = ISQ
-#define LOM_P CHS, CHT, ISZ, ISY
-#define LOM TLoom<LOM_P>
 namespace _ {
-/* @defgroup Loom
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/MapTypes/Loom.md
-
-# Memory Layout
-
-+============================+
-|_______ Boofer              | <-- start
-|_______ String N            |
-|_______ String 0            |
-+----------------------------+
-|_______ Boofer              |
-|_______ String offset N     |
-|        String offset 0     |
-+============================+  ^ Up in
-|       Loom Header          |  |
-+============================+  + 0xN
-
-@todo Look into adding variable for average UTF-8 and UTF-16 character length.
-@todo Change keys_offset delta from table to keys_map.
-*/
-
-/* An array of Strings. */
-template<LOM_A>
-struct TLoom {
-  ISZ bytes,                  //< Size of the Loom in bytes.
-      start;                  //< Offset to the start of the string stack.
-  TStack<ISZ, ISZ, ISY> map;  //< A Stack of offset mappings to strings.
-};
 
 template<LOM_A>
 constexpr ISZ TLoomCountMin() {

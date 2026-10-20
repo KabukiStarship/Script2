@@ -7,10 +7,25 @@
 #include "Interrupts.h"
 #include "BOut.hpp"
 #include "Wall.hpp"
+#include "AType.hpp"
+#include "List.hpp"
+#include "Op.hpp"
 #define ROM_A typename CHS = CHR, typename CHT = CHD, typename ISZ = ISR, \
   typename ISY = ISQ, typename DT = DTB, typename HSH = IUN
 #define ROM_P CHS, CHT, ISZ, ISY, DT, HSH
 #define ROM TRoom<ROM_P>
+/* @defgroup Room
+Chinese Room
+A state machine that receives messages through Door slots,
+scans them with the Crabs interpreter, and executes the
+resulting operations. The Floor is the Room's ASCII List -
+one contiguous block of memory, the minimum the Room needs.
+Walls provide additional heap space on top. The Room
+round-robins its Doors, reading volatile data from
+TBIn/TBOut slots and calling the Star reducer on the
+Operand vtable.
+@{ */
+
 namespace _ {
 
   /* A list of Requests that can be sent from Slot<ISC, TSizeBytes> to
@@ -55,7 +70,7 @@ const CHS** TCRStates() {
 
 template<typename CHS = CHR, typename CHT = CHD>
 inline const CHS* CRStates(CRRequest r) {
-  if (r < 0 || r > CRStateInvalid) r = CRStateInvalid;
+  if (r < 0 || r > CRRequestInvalid) r = CRRequestInvalid;
   return TCRRequests()[r];
 }
 
@@ -130,7 +145,7 @@ Actors: Jo  - The app developer.
     Script, starts his app, and makes a Room. Jo defines a Floor
     statically but is does not define any walls.
     2.  Host creates a memory stack without any heap space.
-2.  Jo needs to add a UART port out to his App so he adds a BOut with a
+2.  Jo needs to add a UART port out to his App so he adds a TBOut with a
     slot_size of 2KB.
     3.  Host adds the Slot to the Program Stack.
 4.  Jo needs to add a SPI IO device so he initializes a Slot with 256
@@ -161,13 +176,10 @@ class TRoom : public Operand {
  public:
 
   enum {
-#ifndef CRABS_MAX_WALLS
-    RoomFloorSize = 1024,
-#else
-    FloorSize = CRABS_MAX_WALLS,
-#undef ROOM_FLOOR_SIZE
-#endif
+    FloorSize = 1024,           //< Room Floor in bytes.
     FloorSizeWords = FloorSize / sizeof(IUW) + 2,  //< +2 socket.
+    WallCountMax = 5,           //< Additional borrowed walls; Floor is separate.
+    FloorTupleMax = 16,         //< Fixed index capacity of the inline ASCII List.
   };
 
   /* Creates a Room with the given size.
@@ -178,13 +190,32 @@ class TRoom : public Operand {
   TRoom(const CHA* room_name = "chinese_room", ISC state_count = 2) :
     state_(1),
     state_count_(state_count < 1 ? 1 : state_count),
-    this_(NILP),
+    wall_count_(0),
     xoff_(NILP),
     device_(NILP),
     devices_(NILP) {
+    for (ISN i = 0; i < WallCountMax; ++i)
+      walls_[i] = NILP;
     *name_ = '\0';
     SetRoomName(room_name);
+    expr_ = NILP;
+    Floor()->bytes = ISZ(FloorSize);
+    TListInit<ISZ, ISY, DT>(Floor(), ISY(FloorTupleMax));
   }
+
+  TRoom(const TRoom&) = delete;
+  TRoom& operator=(const TRoom&) = delete;
+
+  /** Borrow the inline ASCII List. Tuples belong to this Room and are
+   * invalidated by ClearFloor or destruction. No OS allocation or I/O.
+   * This is a native in-memory representation, not a portable wire format. */
+  TList<ISZ, ISY, DT>* Floor() {
+    return TPtr<TList<ISZ, ISY, DT>>(origin_);
+  }
+  const TList<ISZ, ISY, DT>* Floor() const {
+    return TPtr<TList<ISZ, ISY, DT>>(origin_);
+  }
+  void ClearFloor() { TListClear<ISZ, ISY, DT>(Floor()); }
 
   /* RAMFactory. */
   virtual ~TRoom() {}
@@ -218,43 +249,44 @@ class TRoom : public Operand {
   void ProcessLog() {}
 
   /* Prints the error log to a expression. */
-  void PrintErrors(BOut* bout) {
+  void PrintErrors(TBOut<ISC>* bout) {
     // ISC errorHeader[] = { 0 };
     // return a.prints (errorHeader);
   }
 
   /* Gets the wall_count_. */
-  ISN WallCount() { return walls_.origin ? TStackGet<ISN, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), 0) : 0; }
+  ISN WallCount() { return wall_count_; }
 
   /* Gets the given wall by index.
-  @return Nil if the index is invalid  */
+  @return Nil if the index is invalid. */
   TWall<ISZ, ISY>* GetWall(ISN wall_number) {
-    if (wall_number < 0 || !walls_.origin) return NILP;
-    if (wall_number >= TStackGet<ISN, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), 0)) return NILP;
-    return TStackGet<TWall<ISZ, ISY>*, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), wall_number);
+    if (wall_number < 0 || wall_number >= wall_count_) return NILP;
+    return walls_[wall_number];
   }
 
-  /* Ads a wall to the room.
+  /* Adds a wall to the room.
   @return The inputted new_wall pointer upon success or nil upon failure. */
   TWall<ISZ, ISY>* AddWall(TWall<ISZ, ISY>* new_wall) {
-    if (new_wall == NILP || !walls_.origin) return NILP;
-    if (TStackGet<ISN, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), 0) >= TStackGet<ISN, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), 1)) return NILP;
-    TStackInsert<TWall<ISZ, ISY>*, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), new_wall);
+    if (new_wall == NILP || wall_count_ >= WallCountMax) return NILP;
+    walls_[wall_count_++] = new_wall;
     return new_wall;
   }
 
   /* Removes the given Wall by index.
-  @return False upon failure.  */
+  @return False upon failure. */
   BOL RemoveWall(ISN wall_number) {
-    return TStackRemove<TWall<ISZ, ISY>*, ISC, ISB>(TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), wall_number);
+    if (wall_number < 0 || wall_number >= wall_count_) return false;
+    for (ISN i = wall_number; i < wall_count_ - 1; ++i)
+      walls_[i] = walls_[i + 1];
+    --wall_count_;
+    return true;
   }
 
   /* Gets the entire Room size, including dynamic memory, in bytes. */
   IUW GetBytes() {
     IUW count = FloorSize;
-    for (ISN i = 0; i < WallCount(); ++i) {
-      count += TStackGet<TWall<ISZ, ISY>*, ISC, ISB>(
-          TPtr<TStack<ISN, ISC, ISB>>(walls_.origin), i)->GetSizeBytes();
+    for (ISN i = 0; i < wall_count_; ++i) {
+      count += walls_[i]->GetSizeBytes();
     }
     return count;
   }
@@ -307,7 +339,9 @@ class TRoom : public Operand {
         result = Init(NILP);
         if (result) return 1;
         do {
-          this_->ExecAll();
+          // Doors are now in the List, not embedded in the Room.
+          // The Crabs interpreter pushes Door items onto the stack
+          // and calls them via the List.
           result = Loop();
         } while (!result);
         ShutDown();
@@ -327,43 +361,29 @@ class TRoom : public Operand {
   //virtual CHA CommandNext();
 
   /* Crabs operations. */
-  virtual const Op* Star(CHC index, Crabs* crabs) {
-  static const Op This = {
-      "Room", OpFirst('A'), OpLast('A'), "A Chinese Room.", ';', '}', 0
-  };
-
-  switch (index) {
-    case '?': {
-      return 0;// ExprQuery(crabs, This);
-      case 'a': {
-        static const Op This = {
-          "FunctionA",
-          OpFirst('A'),
-          OpLast('A'),
-          "Description of function a.",
-          ';',
-          '}',
-          0
-        };
-        return OpPush(this, crabs);
-      }
-    }
+  /* Query the abstract Room. Concrete applications override Star to bind
+   * operation IDs and validated data to their own C++ methods. Unknown
+   * operations fail explicitly; the base Room has no demo side effects. */
+  virtual const Op* Star(CHC index, Crabs* crabs) override {
+    static const Op This = {
+      "Room", NILP, NILP, "An abstract Chinese Room.", ';', '}', 0, NILP
+    };
+    (void)crabs;
+    return index == '?' ? &This : OpError(AErrorInvalidOp);
   }
-  return 0;
-}
 
  protected:
-  ISC state_count_,                 //< Number of FSM states.
-      state_;                       //< Room state.
-  CHR name_[CrabsRoomNameLengthMax];//< Room Name.
-  Autoject walls_;                  //< Walls in the Room.
-  Crabs* expr_;                     //< Current Crabs being executed.
-                                    //< DC1: this.
-  TDoor<ISZ>* this_;                //< DC2: The Door to this room.
-  Operand* xoff_,                   //< DC3: XOFF - XOFF handling device.
-         * device_,                 //< DC4: the current device control.
-         * devices_;                //< Pointer to the current device control.
-  IUW origin_[FloorSizeWords];      //< Room Floor socket.
+ ISC state_count_,                 //< Number of FSM states.
+     state_;                       //< Room state.
+ CHR name_[CrabsRoomNameLengthMax];//< Room Name.
+ TWall<ISZ, ISY>* walls_[WallCountMax];  //< 4 walls + ceiling. Floor is index 0.
+ ISN wall_count_;                  //< Number of walls in use.
+ Crabs* expr_;                     //< Current Crabs being executed.
+                                   //< DC1: this.
+ Operand* xoff_,                   //< DC2: XOFF - XOFF handling device.
+        * device_,                 //< DC3: the current device control.
+        * devices_;                //< Pointer to the current device control.
+ IUW origin_[FloorSizeWords];      //< Room Floor socket.
 
   private:
 
@@ -381,5 +401,7 @@ class TRoom : public Operand {
 };
 
 }  //< namespace _
+
+/* @} */  // End of Room group.
 #endif
 #endif

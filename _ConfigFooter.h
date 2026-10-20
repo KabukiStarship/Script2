@@ -433,7 +433,7 @@ enum {
   AStackTotalDefault = CRABS_STACK_COUNT_MAX_DEFAULT,
   AObjSizeDefault = CRABS_OBJ_SIZE_DEFAULT,
 
-  // Extra reserved memory at the stop of BOut.
+  // Extra reserved memory at the stop of TBOut.
   ABOutOverflowSize = 32,
 
   APrintC0Offset = 176,  //< Value add to values 0-32 when printing.

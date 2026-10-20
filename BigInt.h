@@ -20,6 +20,10 @@ Internal layout:
 
 namespace _ {
 
+/* @ingroup BigInt
+@brief Arbitrary-precision integer types and operations. 
+*/
+
 /* IUQ — unsigned arbitrary-precision integer */
 class IUQ {
 public:
@@ -260,5 +264,5 @@ BOL operator>=(const ISQ& a, const ISQ& b);
 
 // -- TypeOf for ISQ --
 DTW TypeOf(const ISQ&);
-
+//< @endingroup BigInt
 }  // namespace _

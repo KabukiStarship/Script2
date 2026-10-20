@@ -10,10 +10,11 @@
 #include "_Debug.h"
 #else
 #include "_Release.h"
+#include "AType.hpp"
 #endif
 namespace _ {
 
-IUA* BInEnd(BIn* bin) { return TPtr<IUA>(bin) + bin->bytes; }
+IUA* BInEnd(TBIn<ISC>* bin) { return TPtr<IUA>(bin) + bin->bytes; }
 
 ISW SlotLength(IUA* origin, IUA* stop, IUW size) {
   return stop - origin;
@@ -23,12 +24,12 @@ ISW SlotSpace(IUA* origin, IUA* stop, IUW size) {
   return size - (stop - origin);
 }
 
-ISN BInSpace(BIn* bin) {
+ISN BInSpace(TBIn<ISC>* bin) {
   IUA* txb_ptr = TPtr<IUA>(bin);
   return ISN(SlotSpace(txb_ptr + bin->origin, txb_ptr + bin->stop, bin->bytes));
 }
 
-ISN BinBooferLength(BIn* bin) {
+ISN BinBooferLength(TBIn<ISC>* bin) {
   IUA* origin = BInOrigin(bin);
   return ISN(SlotLength(origin + bin->origin, origin + bin->stop, bin->bytes));
 }
@@ -36,54 +37,54 @@ ISN BinBooferLength(BIn* bin) {
 /* Used to return an erroneous result from a B-Output.
 @param error The error type.
 @return Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error) {
+inline const Op* BInError(TBIn<ISC>* bin, ERC error) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error!");
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin    The source BIn.
+@param bin    The source TBIn.
 @param error   The error type.
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const ISN* header) {
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const ISN* header) {
   //D_COUT("\nBIn %s error!" << TAErrors<>(error));
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin    The source BIn.
+@param bin    The source TBIn.
 @param error   The error type.
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const DTB* header,
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const DTB* header,
                           DTB offset) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error!");
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin        The source BIn.
+@param bin        The source TBIn.
 @param error      The error type.
 @param header     The B-Sequence Header.
 @param bsq_error  The offset to the type in error in the B-Sequence.
 @param error_byte The address of the IUA in error.
 @return Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const DTB* header, DTB bsq_error,
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const DTB* header, DTB bsq_error,
                           IUA* error_byte) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error at " <<
   //       TDelta<>(BInOrigin(bin), error_byte));
   return OpError(error);
 }
 
-BIn* BInInit(BIn* bin, ISN boofer_bytes) {
+TBIn<ISC>* BInInit(TBIn<ISC>* bin, ISN boofer_bytes) {
   D_ASSERT(boofer_bytes >= SlotBytesMin);
   D_ASSERT_PTR(bin);
-  bin->bytes = boofer_bytes - sizeof(BIn);
+  bin->bytes = boofer_bytes - sizeof(TBIn<ISC>);
   bin->origin = 0;
   bin->stop = 0;
   bin->read = 0;
@@ -91,7 +92,7 @@ BIn* BInInit(BIn* bin, ISN boofer_bytes) {
   return bin;
 }
 
-ISN BInStreamByte(BIn* bin) {
+ISN BInStreamByte(TBIn<ISC>* bin) {
   IUA* begin  = BInOrigin(bin),
      * end    = begin + bin->bytes - 1,
      * read   = begin + bin->read, 
@@ -107,9 +108,9 @@ ISN BInStreamByte(BIn* bin) {
   return 0;
 }
 
-BOL BInIsReadable(BIn* bin) { return BinBooferLength(bin) > 0; }
+BOL BInIsReadable(TBIn<ISC>* bin) { return BinBooferLength(bin) > 0; }
 
-const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
+const Op* BInRead(TBIn<ISC>* bin, const DTB* params, void** args, IUD pc_ctx) {
   //D_COUT("\nReading ");
   //D_COUT_BSQ(params);
   //D_COUT(" from B-Input:");
@@ -565,8 +566,8 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   return 0;
 }
 
-const Op* BInRead(BOut* bout, const DTB* params, void** args, IUD pc_ctx) {
-  return BInRead(TPtr<BIn>(bout), params, args, pc_ctx);
+const Op* BInRead(TBOut<ISC>* bout, const DTB* params, void** args, IUD pc_ctx) {
+  return BInRead(TPtr<TBIn<ISC>>(bout), params, args, pc_ctx);
 }
 
 }  //< namespace _

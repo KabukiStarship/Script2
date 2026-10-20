@@ -3,6 +3,7 @@
 #ifndef CRABS_PROMISE_HXX
 #define CRABS_PROMISE_HXX
 #include "Promise.h"
+#include "AType.hpp"
 #if SEAM >= CRABS_OP
 namespace _ {
 
@@ -10,9 +11,8 @@ namespace _ {
 @param slot The promise Slot.
 @return Returns the state (0=pending, 1=fulfilled, 2=rejected). */
 inline IUW PromiseState(Slot* slot) {
-  if (!slot || !slot->IsReadable())
+  if (!slot || !SlotIsReadable(slot))
     return PromisePending;
-
   void* args[5];
   TMC* timestamp = TPtr<TMC>(&args[0]);
   IUW* state = TPtr<IUW>(&args[1]);
@@ -21,7 +21,7 @@ inline IUW PromiseState(Slot* slot) {
   CHA** rejectedKey = TPtr<CHA*>(&args[4]);
 
   static const DTB params[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  const Op* op = slot->Read(params, args);
+  const Op* op = SlotRead(slot, params, args);
   if (op)
     return PromisePending;
   return *state;
@@ -46,14 +46,14 @@ inline BOL PromiseIsRejected(Slot* slot) {
 @param slot The promise Slot.
 @return Returns the TMC timestamp. */
 inline TMC PromiseTimestamp(Slot* slot) {
-  if (!slot || !slot->IsReadable())
+  if (!slot || !SlotIsReadable(slot))
     return 0;
   void* args[5];
   TMC* timestamp = TPtr<TMC>(&args[0]);
   IUW* state = TPtr<IUW>(&args[1]);
 
   static const DTB params[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  const Op* op = slot->Read(params, args);
+  const Op* op = SlotRead(slot, params, args);
   if (op)
     return 0;
   return *timestamp;
@@ -73,7 +73,7 @@ inline const Op* PromiseSetResult(Slot* slot, IUW newState, void* result,
     return OpError(AErrorInvalid);
 
   Slot& target = *slot;
-  target.Clear();
+  SlotClear(&target);
 
   IUD pcCtx = 0;
   const Op* op = NILP; // BOutConnect(target.bout, "", pcCtx);
@@ -96,13 +96,13 @@ inline const Op* PromiseSetResult(Slot* slot, IUW newState, void* result,
   return NILP; // BOutWrite(target.bout, outParams, args, pcCtx);
 }
 
-/* Triggers fulfillment callbacks by writing result to output BOut. */
+/* Triggers fulfillment callbacks by writing result to output TBOut. */
 inline const Op* PromiseTriggerFulfillment(Crabs* crabs, Slot* promise_slot) {
   if (IsError(crabs) || !promise_slot) return OpError(AErrorNil);
   if (!PromiseIsFulfilled(promise_slot))
     return OpError(AErrorInvalid);
 
-  // Write result to the Crabs' BOut for execution
+  // Write result to the Crabs' TBOut for execution
   return CrabsWritePromiseResult(CrabsBOut(crabs), promise_slot);
 }
 
@@ -113,7 +113,7 @@ inline const Op* PromiseTriggerRejection(Crabs* crabs, Slot* promise_slot) {
   if (!PromiseIsRejected(promise_slot))
     return OpError(AErrorInvalid);
 
-  // Write error to  Crabs BOut for handler execution
+  // Write error to  Crabs TBOut for handler execution
   return CrabsWritePromiseResult(CrabsBOut(crabs), promise_slot);
 }
 
@@ -125,7 +125,7 @@ inline Slot* CrabsCreatePromise(Crabs* crabs, TMC timestamp) {
   if (IsError(crabs))
     return NILP;
   Slot& slot = crabs->slot;
-  slot.Clear();
+  SlotClear(&slot);
   void* args[5];
   *TPtr<TMC>  (&args[0]) = timestamp;
   *TPtr<IUW>  (&args[1]) = PromisePending;
@@ -135,7 +135,7 @@ inline Slot* CrabsCreatePromise(Crabs* crabs, TMC timestamp) {
   
   static const DTB params[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
   IUD pcCtx = 0;
-  const Op* op = slot.Write(params, args);
+  const Op* op = SlotWrite(&slot, params, args);
   if (op)
     return NILP; 
   return &crabs->slot;
@@ -179,14 +179,14 @@ inline const Op* CrabsThenPromise(Crabs* crabs, Slot* promise_slot, CHA* onFulfi
   CHA** rejectedKey = TPtr<CHA*>(&args[4]);
   
   static const DTB ReadParams[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  const Op* op = promise_slot->Read(ReadParams, args);
+  const Op* op = SlotRead(promise_slot, ReadParams, args);
   if (op) return op;
   
   *fulfilledKey = onFulfilledKey;
   
   IUD pcCtx = 0;
   static const DTB WriteParams[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  return promise_slot->Write(WriteParams, args);
+  return SlotWrite(promise_slot, WriteParams, args);
 }
 
 /* Attaches a rejection handler to a promise (.catch()).
@@ -205,20 +205,20 @@ inline const Op* CrabsCatchPromise(Crabs* crabs, Slot* promise_slot, CHA* on_rej
   CHA** rejectedKey = TPtr<CHA*>(&args[4]);
   
   static const DTB readParams[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  const Op* op = promise_slot->Read(readParams, args);
+  const Op* op = SlotRead(promise_slot, readParams, args);
   if (op) return op;
   
   *rejectedKey = on_rejected_key;
   
   IUD pcCtx = 0;
   static const DTB writeParams[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  return promise_slot->Write(writeParams, args);
+  return SlotWrite(promise_slot, writeParams, args);
 }
 
-/* Reads a promise from a BIn socket.
-@param bin The BIn socket to read from.
+/* Reads a promise from a TBIn socket.
+@param bin The TBIn socket to read from.
 @return Returns the promise state word (0=pending, 1=fulfilled, 2=rejected). */
-inline IUW CrabsReadPromiseState(BIn* bin) {
+inline IUW CrabsReadPromiseState(TBIn<ISC>* bin) {
   if (!bin) return PromisePending;
   
   void* args[5];
@@ -232,11 +232,11 @@ inline IUW CrabsReadPromiseState(BIn* bin) {
   return *state;
 }
 
-/* Writes a promise result to a BOut socket.
-@param bout The BOut socket to write to.
+/* Writes a promise result to a TBOut socket.
+@param bout The TBOut socket to write to.
 @param promise_slot The promise Slot containing the result.
 @return Returns nil upon success or an Error Op upon failure. */
-inline const Op* CrabsWritePromiseResult(BOut* bout, Slot* promise_slot) {
+inline const Op* CrabsWritePromiseResult(TBOut<ISC>* bout, Slot* promise_slot) {
   if (!bout || !promise_slot) return OpError(AErrorNil);
   
   void* args[5];
@@ -245,7 +245,7 @@ inline const Op* CrabsWritePromiseResult(BOut* bout, Slot* promise_slot) {
   void** result = TPtr<void*>(&args[2]);
   
   static const DTB readParams[] = { 5, _TMC, _IUW, _PMS, _CHA, _CHA };
-  const Op* op = promise_slot->Read(readParams, args);
+  const Op* op = SlotRead(promise_slot, readParams, args);
   if (op) return op;
   
   IUD pcCtx = 0;
