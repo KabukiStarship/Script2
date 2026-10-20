@@ -2,15 +2,15 @@
 #pragma once
 #ifndef CRABS_TYPES_DECL
 #define CRABS_TYPES_DECL
-#include "_Config.h"
+#include <_Config.h>
 
 /* Function that remaps a Standard Data Type to an Extended Plain or Extended
-Custom Type or prints it to a SPrinter or writes it to a buffer.
+Custom Type or prints it to a SPrinter or writes it to a boofer.
 Control Bits:
 I have no clue what we're going to do with the control bits right now but we
 have a word, we only need 16-bits, so why not reserve the entire word?
-@param  begin The first byte in the CHR buffer.
-@param  end   The CHR after the last char in the buffer.
+@param  begin The first byte in the CHR boofer.
+@param  end   The CHR after the last char in the boofer.
 @param  type  A 16-bit ASCII Type in the LSB and control bits in the MSb.
 @param  value A pointer to a value to print.
 @return If start is nil the remapped Extended Plain Type.
@@ -29,6 +29,18 @@ struct IUE {
 #endif
 
 namespace _ {
+
+/* A Slot in a Door in a Chinese Room to pass messages through.
+A Slot is Ring Boofer Socket similar to a TCP port. The operation of the
+Slot is similar to the Text class except that it introduces two more
+pointers for the (socket) origin and (data) origin of the ring socket and
+you may write packed data. */
+struct Slot {
+  IUA* origin,  //< First byte of the ring socket.
+     * start,   //< Start of the data in the ring socket.
+     * stop,    //< Stop of the data in the ring socket.
+     * end;     //< End of the ring socket.
+};
 
 /* Remaps a Plain Context Type to another POD type 1-19.
 Store the 5-bit remapped type for _PCa in b0:b4, _PCb in b5:b9, etc. */

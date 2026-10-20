@@ -18,7 +18,7 @@
 // The DDA (Amanatides & Woo grid traversal) is pure FPC/ISC math.
 
 #pragma once
-#include "_ConfigHeader.h"
+#include <_ConfigHeader.h>
 #include "TVec.h"
 
 #ifndef CRABS_TOCCLUSION_H

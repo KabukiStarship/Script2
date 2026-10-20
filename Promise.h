@@ -2,12 +2,11 @@
 #pragma once
 #ifndef CRABS_PROMISE_DECL
 #define CRABS_PROMISE_DECL
-#include "_Config.h"
+#include <_Config.h>
+#include "AType.hpp"
 #if SEAM >= CRABS_OP
 namespace _ {
 
-struct BIn;
-struct BOut;
 struct Crabs;
 struct Op;
 struct Slot;

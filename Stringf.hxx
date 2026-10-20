@@ -1064,9 +1064,9 @@ Binaryf::Binaryf(FPD value) : valuef(value, sizeof(FPD)) {}
 #endif
 
 // Stringf::Stringf () {}
-Stringf::Stringf() : count_(0), type_(_NIL), buffer_() {
-  string_ = &buffer_[0];
-  *buffer_ = 0;
+Stringf::Stringf() : count_(0), type_(_NIL), boofer_() {
+  string_ = &boofer_[0];
+  *boofer_ = 0;
 }
 //< Visual C++ is complaining about unitialized members. I think it's a bug.
 
@@ -1077,18 +1077,18 @@ Stringf::Stringf(const CHB* value) : string_(value), type_(_STA), count_(0) { Pr
 #if USING_STC == YES_0
 Stringf::Stringf(const CHC* value) : string_(value), type_(_STA), count_(0) { Print(value); }
 #endif
-Stringf::Stringf(CHA value) : string_(buffer_), type_(_CHA), count_(0) { Print(value); }
-Stringf::Stringf(CHB value) : string_(buffer_), type_(_CHB), count_(0) { Print(value); }
-Stringf::Stringf(CHC value) : string_(buffer_), type_(_CHC), count_(0) { Print(value); }
-Stringf::Stringf(ISC value) : string_(buffer_), type_(_ISC), count_(0) { Print(value); }
-Stringf::Stringf(IUC value) : string_(buffer_), type_(_IUC), count_(0) { Print(value); }
-Stringf::Stringf(ISD value) : string_(buffer_), type_(_ISD), count_(0) { Print(value); }
-Stringf::Stringf(IUD value) : string_(buffer_), type_(_IUD), count_(0) { Print(value); }
+Stringf::Stringf(CHA value) : string_(boofer_), type_(_CHA), count_(0) { Print(value); }
+Stringf::Stringf(CHB value) : string_(boofer_), type_(_CHB), count_(0) { Print(value); }
+Stringf::Stringf(CHC value) : string_(boofer_), type_(_CHC), count_(0) { Print(value); }
+Stringf::Stringf(ISC value) : string_(boofer_), type_(_ISC), count_(0) { Print(value); }
+Stringf::Stringf(IUC value) : string_(boofer_), type_(_IUC), count_(0) { Print(value); }
+Stringf::Stringf(ISD value) : string_(boofer_), type_(_ISD), count_(0) { Print(value); }
+Stringf::Stringf(IUD value) : string_(boofer_), type_(_IUD), count_(0) { Print(value); }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC value) : string_(buffer_), type_(_FPC), count_(0) { Print(value); }
+Stringf::Stringf(FPC value) : string_(boofer_), type_(_FPC), count_(0) { Print(value); }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD value) : string_(buffer_), type_(_FPD), count_(0) { Print(value); }
+Stringf::Stringf(FPD value) : string_(boofer_), type_(_FPD), count_(0) { Print(value); }
 #endif
 Stringf::Stringf(const CHA* value, ISW count) : string_(value), type_(_STA), count_(count) {
   Print(value);
@@ -1103,43 +1103,43 @@ Stringf::Stringf(const CHC* value, ISW count) : string_(value), type_(_STC), cou
   Print(value);
 }
 #endif
-Stringf::Stringf(CHA value, ISW count) : string_(buffer_), type_(_CHA), count_(count) {
+Stringf::Stringf(CHA value, ISW count) : string_(boofer_), type_(_CHA), count_(count) {
   Print(value);
 }
-Stringf::Stringf(CHB value, ISW count) : string_(buffer_), type_(_CHB), count_(count) {
+Stringf::Stringf(CHB value, ISW count) : string_(boofer_), type_(_CHB), count_(count) {
   Print(value);
 }
-Stringf::Stringf(CHC value, ISW count) : string_(buffer_), type_(_CHC), count_(count) {
+Stringf::Stringf(CHC value, ISW count) : string_(boofer_), type_(_CHC), count_(count) {
   Print(value);
 }
-Stringf::Stringf(ISC value, ISW count) : string_(buffer_), type_(_ISC), count_(count) {
+Stringf::Stringf(ISC value, ISW count) : string_(boofer_), type_(_ISC), count_(count) {
   Print(value);
 }
-Stringf::Stringf(IUC value, ISW count) : string_(buffer_), type_(_IUC), count_(count) {
+Stringf::Stringf(IUC value, ISW count) : string_(boofer_), type_(_IUC), count_(count) {
   Print(value);
 }
-Stringf::Stringf(ISD value, ISW count) : string_(buffer_), type_(_ISD), count_(count) {
+Stringf::Stringf(ISD value, ISW count) : string_(boofer_), type_(_ISD), count_(count) {
   Print(value);
 }
-Stringf::Stringf(IUD value, ISW count) : string_(buffer_), type_(_IUD), count_(count) {
+Stringf::Stringf(IUD value, ISW count) : string_(boofer_), type_(_IUD), count_(count) {
   Print(value);
 }
 #if USING_FPC == YES_0
-Stringf::Stringf(FPC value, ISW count) : string_(buffer_), type_(_FPC), count_(count) {
+Stringf::Stringf(FPC value, ISW count) : string_(boofer_), type_(_FPC), count_(count) {
   Print(value);
 }
 #endif
 #if USING_FPD == YES_0
-Stringf::Stringf(FPD value, ISW count) : string_(buffer_), type_(_FPD), count_(count) {
+Stringf::Stringf(FPD value, ISW count) : string_(boofer_), type_(_FPD), count_(count) {
   Print(value);
 }
 #endif
 
-IUW Stringf::Word() { return buffer_[0]; }
+IUW Stringf::Word() { return boofer_[0]; }
 
-void* Stringf::Value() { return buffer_; }
+void* Stringf::Value() { return boofer_; }
 
-void* Stringf::Ptr() { return TPtr<void>(buffer_[0]); }
+void* Stringf::Ptr() { return TPtr<void>(boofer_[0]); }
 
 const CHA* Stringf::STA() { return TPtr<const CHA>(string_); }
 const CHB* Stringf::STB() { return TPtr<const CHB>(string_); }
@@ -1167,70 +1167,70 @@ void Stringf::Print(const CHC* value) {
 #endif
 
 void Stringf::Print(CHA value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  ::_::SPrint(buffer, buffer + LengthMax, value);
+  CHA* boofer = TPtr<CHA>(boofer_);
+  ::_::SPrint(boofer, boofer + LengthMax, value);
   type_ = _CHA;
-  string_ = buffer_;
+  string_ = boofer_;
 }
 
 #if USING_STC == YES_0
 void Stringf::Print(CHC value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  ::_::SPrint(buffer, buffer + LengthMax, value);
+  CHA* boofer = TPtr<CHA>(boofer_);
+  ::_::SPrint(boofer, boofer + LengthMax, value);
   type_ = _CHC;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 void Stringf::Print(ISC value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= CRABS_ITOS
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
 #endif
   type_ = _ISC;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(IUC value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= CRABS_ITOS
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
 #endif
   type_ = _IUC;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(ISD value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= CRABS_ITOS
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
 #endif
   type_ = _ISD;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(IUD value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= CRABS_ITOS
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
 #endif
   type_ = _SWA;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Print(FPC value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  CHA* boofer = TPtr<CHA>(boofer_);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
   type_ = _FPC;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 #if USING_FPD == YES_0
 void Stringf::Print(FPD value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  CHA* boofer = TPtr<CHA>(boofer_);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
   type_ = _FPD;
-  string_ = buffer;
+  string_ = boofer;
 }
 #endif
 
@@ -1242,12 +1242,12 @@ void Stringf::PrintTME(TMC value, IUC subsecond_tick) {}
 void Stringf::PrintTMD(TMD value) {}
 
 void Stringf::Print(ATypef value) {
-  CHA* buffer = TPtr<CHA>(buffer_);
+  CHA* boofer = TPtr<CHA>(boofer_);
 #if SEAM >= CRABS_ITOS
-  ::_::TSPrint<CHA>(buffer, buffer + LengthMax, value);
+  ::_::TSPrint<CHA>(boofer, boofer + LengthMax, value);
 #endif
   type_ = value.type;
-  string_ = buffer;
+  string_ = boofer;
 }
 
 void Stringf::Print(TypeValue value) {
@@ -1313,82 +1313,82 @@ void Stringf::Print(TypeValue value) {
   string_ = NotSupported;
 }
 
-Stringf::Stringf(ATypef value, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(ATypef value, ISW count) : string_(boofer_), count_(count) {
   Print(value);
 }
-Stringf::Stringf(TypeValue value, ISW count) : string_(buffer_), count_(count) {
+Stringf::Stringf(TypeValue value, ISW count) : string_(boofer_), count_(count) {
   Print(value);
 }*/
 
 void Stringf::Hex(CHA value, ISW count) {
-  *TPtr<CHA>(buffer_) = value;
+  *TPtr<CHA>(boofer_) = value;
   type_ = _CHA;
   count_ = -count;
 }
 #if USING_STB == YES_0
 void Stringf::Hex(CHB value, ISW count) {
-  *TPtr<CHB>(buffer_) = value;
+  *TPtr<CHB>(boofer_) = value;
   type_ = _CHB;
   count_ = -count;
 }
 #endif
 #if USING_STC == YES_0
 void Stringf::Hex(CHC value, ISW count) {
-  *TPtr<CHC>(buffer_) = value;
+  *TPtr<CHC>(boofer_) = value;
   type_ = _CHC;
   count_ = -count;
 }
 #endif
 void Stringf::Hex(ISA value, ISW count) {
-  *TPtr<ISA>(buffer_) = value;
+  *TPtr<ISA>(boofer_) = value;
   type_ = _ISA;
   count_ = -count;
 }
 void Stringf::Hex(IUA value, ISW count) {
-  *TPtr<IUA>(buffer_) = value;
+  *TPtr<IUA>(boofer_) = value;
   type_ = _IUA;
   count_ = -count;
 }
 
 void Stringf::Hex(ISB value, ISW count) {
-  *TPtr<ISB>(buffer_) = value;
+  *TPtr<ISB>(boofer_) = value;
   type_ = _ISB;
   count_ = -count;
 }
 
 void Stringf::Hex(IUB value, ISW count) {
-  *TPtr<IUB>(buffer_) = value;
+  *TPtr<IUB>(boofer_) = value;
   type_ = _IUB;
   count_ = -count;
 }
 
 void Stringf::Hex(ISC value, ISW count) {
-  *TPtr<ISC>(buffer_) = value;
+  *TPtr<ISC>(boofer_) = value;
   type_ = _ISC;
   count_ = -count;
 }
 
 void Stringf::Hex(IUC value, ISW count) {
-  *TPtr<IUC>(buffer_) = value;
+  *TPtr<IUC>(boofer_) = value;
   type_ = _IUC;
   count_ = -count;
 }
 
 void Stringf::Hex(ISD value, ISW count) {
-  *TPtr<ISD>(buffer_) = value;
+  *TPtr<ISD>(boofer_) = value;
   type_ = _ISD;
   count_ = -count;
 }
 
 void Stringf::Hex(IUD value, ISW count) {
-  *TPtr<IUD>(buffer_) = value;
+  *TPtr<IUD>(boofer_) = value;
   type_ = _IUD;
   count_ = -count;
 }
 
 #if USING_FPC == YES_0
 void Stringf::Hex(FPC value, ISW count) {
-  *TPtr<FPC>(buffer_) = value;
+  *TPtr<FPC>(boofer_) = value;
   type_ = _FPC;
   count_ = -count;
 }
@@ -1396,7 +1396,7 @@ void Stringf::Hex(FPC value, ISW count) {
 
 #if USING_FPD == YES_0
 void Stringf::Hex(FPD value, ISW count) {
-  *TPtr<FPD>(buffer_) = value;
+  *TPtr<FPD>(boofer_) = value;
   type_ = _FPD;
   count_ = -count;
 }

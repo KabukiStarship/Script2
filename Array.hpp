@@ -4,10 +4,6 @@
 #define CRABS_ARRAY_HPP
 #include "Array.h"
 #if SEAM >= CRABS_ARRAY
-#define ARY_A typename T = CHA, typename ISZ = ISN
-#define ARY_P T, ISZ
-#define ARY TArray<T, ISZ>
-#define AARY AArray<T, ISZ>
 #include "Autoject.hpp"
 #include "Stringf.hpp"
 #if SEAM == CRABS_ARRAY
@@ -17,26 +13,8 @@
 #endif
 namespace _ {
 
-#define ARY TArray<T, ISZ>
-#define AARY AArray<T, ISZ>
-
-/* An ASCII Array.
-Please see the ASCII Data Specification for DRY documentation.
-@link ./Spec/Data/VectorTypes/Array.md
-
-@code
-+-----------------+
-|  C-Style Array  |
-|  255-byte array | size=255, requires 8-bits.
-|-----------------|  ^
-|  TArray Header  |  |
-+-----------------+ 0xN
-@endcode
+/* @ingroup Array
 */
-template<typename T = CHA, typename ISZ = ISW>
-struct TArray {
-  ISZ total;  //< Number of elements in the array.
-};
 
 template<ARY_A>
 inline ISZ TArrayBytes(ISZ total) {
@@ -475,12 +453,12 @@ inline const T* TArrayCompare(const void* a_begin, void* a_end,
 }
 
 template<ARY_A, ISZ TotalInit_ = AStackTotalDefault,
-         typename BUF = TBOF<TotalInit_, T, ISZ, ARY>, typename Class = Nil>
+         typename BOF = TBOF<TotalInit_, T, ISZ, ARY>, typename Class = Nil>
 class AArray {
-  Autobuffer<ARY_P, BUF, ARY> aobj_;  //< An Auto-Object.
+  Autoboofer<ARY_P, BOF, ARY> aobj_;  //< An Auto-Object.
 
   constexpr RAMFactory InitRamFactory() {
-    return sizeof(BUF) == 0 ? TObjectFactory<ISZ>::StackHeap
+    return sizeof(BOF) == 0 ? TObjectFactory<ISZ>::StackHeap
                             : TObjectFactory<ISZ>::StackStack;
   }
 
@@ -489,12 +467,12 @@ class AArray {
   }
 
  public:
-  /* Initializes a array of n elements to whatever can fit in the BUF. */
+  /* Initializes a array of n elements to whatever can fit in the BOF. */
   AArray() {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
-  /* Attempts to down-size the BUF or creates a dynamically allocated array.
+  /* Attempts to down-size the BOF or creates a dynamically allocated array.
   @param size The number of elements in the Array. */
   AArray(ISZ total) : aobj_(TArrayBytes<ARY_P>(total)) {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
@@ -504,14 +482,14 @@ class AArray {
     D_RAM_WIPE(Begin(), CBytes() - sizeof(ARY));
   }
 
-  /* Copies the items into the obj_.Buffer () with some additional
+  /* Copies the items into the obj_.Boofer () with some additional
   empty_elements. */
   AArray(ISZ total, const T* items, ISZ items_count, ISZ items_start = 0)
       : aobj_(TArrayBytes<ARY_P>(items_count)) {
     TArrayInsert<ARY_P>(aobj_.AJT(), items, items_count, items_start);
   }
 
-  /* Copies the items into the obj_.Buffer () with some additional
+  /* Copies the items into the obj_.Boofer () with some additional
   empty_elements. */
   AArray(const T* items, ISZ items_count)
       : aobj_(TArrayBytes<ARY_P>(items_count)) {
@@ -531,7 +509,7 @@ class AArray {
   /* Gets this auto-object. */
   inline Autoject& AJT() { return aobj_.AJT(); }
 
-  /* Returns the buffer_. */
+  /* Returns the boofer_. */
   inline IUW* Origin() { return AJT().origin; }
 
   /* Sets the origin to the given pointer.
@@ -701,7 +679,7 @@ class AArray {
   /* Gets a const reference to the given element index. */
   inline const T& operator[](ISZ index) const { return Begin()[index]; }
 };
-
+//< @endingroup Array
 }  //< namespace _
 #endif
 #endif

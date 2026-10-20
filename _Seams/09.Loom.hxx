@@ -45,9 +45,9 @@ void TestLoom() {
 
   TSPrint<CHS, CHT>(element, str_end, Count);
   loom.Insert(element);
-  IUW* buffer = loom.AJT().origin;
+  IUW* boofer = loom.AJT().origin;
   auto dez_nutz = loom.Insert(element);
-  A_AVOW(buffer, loom.AJT().origin);
+  A_AVOW(boofer, loom.AJT().origin);
   //i = Count + 1;
   A_AVOW(++i, dez_nutz);
   while (i < 96) {

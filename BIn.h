@@ -2,15 +2,19 @@
 #pragma once
 #ifndef CRABS_BIN_DECL
 #define CRABS_BIN_DECL
-#include "_Config.h"
+#include <_Config.h>
+#include "AType.hpp"
 #if SEAM >= CRABS_OP
 namespace _ {
 
-struct BIn;
-struct BOut;
-struct Op;
+/* @defgroup TBIn B-Input Slot
+B-Input ring socket: the consumer side of a Chinese Room Door slot.
+Reads type-tagged messages from a shared lock-free SPSC ring.
+The struct lives in AType.hpp (TBin template).
+@ingroup Slot
+@{ */
 
-/* List of BIn States.
+/* List of TBIn States.
 @see SCRIPT Specification RFC. */
 typedef enum BInStates {
   BInStateAddress = 0,    //< State  0: Scanning address.
@@ -26,23 +30,14 @@ typedef enum BInStates {
   BInStateAck,            //< State 10: Awaiting connection ACK.
   BInStateLocked,         //< State 11: Locked state.
   BInStatePackedPOD,      //< State 12: Scanning plain-old-data.
-  BInStateInvalid         //< Number of BIn States.
+  BInStateInvalid         //< Number of TBIn States.
 } BInState;
 
-/* B-Input ring buffer Slot.
-A B-Input Slot is functionally identical to a input port in TCP. */
-struct BIn {
-  ISN bytes,          //< The size of the socket in bytes.
-      origin;         //< The starting index of the ring socket data.
-  volatile ISN stop;  //< The stopping index of the ring socket data.
-  ISN read;           //< The read variable to memory align the socket.
-};
-
 /* Get's the B-Input's socket. */
-inline const IUA* BInOrigin(const BIn* bin);
-inline IUA* BInOrigin(BIn* bin);
+inline const IUA* BInOrigin(const TBIn<ISC>* bin);
+inline IUA* BInOrigin(TBIn<ISC>* bin);
 
-inline IUA* BInEnd(BIn* bin);
+inline IUA* BInEnd(TBIn<ISC>* bin);
 
 /* Calculates the used ring socket space.
 @param Start The origin of the data.
@@ -57,9 +52,9 @@ inline ISW SlotLength(IUA* origin, IUA* stop, IUW size);
 inline ISW SlotSpace(IUA* origin, IUA* stop, IUW size);
 
 /* Gets the rx socket length. */
-inline ISN BInSpace(BIn* bin);
+inline ISN BInSpace(TBIn<ISC>* bin);
 
-inline ISN BinBufferLength(BIn* bin);
+inline ISN BinBooferLength(TBIn<ISC>* bin);
 
 #if USING_CRABS_TEXT == YES_0
 
@@ -67,29 +62,30 @@ inline ISN BinBufferLength(BIn* bin);
 // void BInKeyboard()
 #endif
 
-/* Initializes the BIn struct to an empty socket. */
-BIn* BInInit(BIn* socket, ISN size);
+/* Initializes the TBIn struct to an empty socket. */
+TBIn<ISC>* BInInit(TBIn<ISC>* socket, ISN size);
 
 /* Gets the stop address of the rx socket. */
-IUA* BInEnd(BIn* bin);
+IUA* BInEnd(TBIn<ISC>* bin);
 
-/* Returns true if the BIn socket contains any data.
+/* Returns true if the TBIn socket contains any data.
     @warning Function does not do any error checking for speed. */
-BOL BInIsReadable(BIn* bin);
+BOL BInIsReadable(TBIn<ISC>* bin);
 
-/* Scans a message with the given params to the given BIn.
-The data in the BIn is word-aligned, unlike the Slot. It also
+/* Scans a message with the given params to the given TBIn.
+The data in the TBIn is word-aligned, unlike the Slot. It also
 doesn't have a hash with an escape sequence.
 
-@param rx     The BIn socket.
+@param rx     The TBIn socket.
 @param params The parameters.
 @param args   The arguments.
 @return       Returns 0 upon success and an ErrorList ticket number upon
               failure. */
-const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD 
+const Op* BInRead(TBIn<ISC>* bin, const DTB* params, void** args, IUD 
                              pc_ctx);
 
 }  //< namespace _
 
+/* @} */  // End of TBIn group.
 #endif
 #endif

@@ -10,10 +10,11 @@
 #include "_Debug.h"
 #else
 #include "_Release.h"
+#include "AType.hpp"
 #endif
 namespace _ {
 
-IUA* BInEnd(BIn* bin) { return TPtr<IUA>(bin) + bin->bytes; }
+IUA* BInEnd(TBIn<ISC>* bin) { return TPtr<IUA>(bin) + bin->bytes; }
 
 ISW SlotLength(IUA* origin, IUA* stop, IUW size) {
   return stop - origin;
@@ -23,12 +24,12 @@ ISW SlotSpace(IUA* origin, IUA* stop, IUW size) {
   return size - (stop - origin);
 }
 
-ISN BInSpace(BIn* bin) {
+ISN BInSpace(TBIn<ISC>* bin) {
   IUA* txb_ptr = TPtr<IUA>(bin);
   return ISN(SlotSpace(txb_ptr + bin->origin, txb_ptr + bin->stop, bin->bytes));
 }
 
-ISN BinBufferLength(BIn* bin) {
+ISN BinBooferLength(TBIn<ISC>* bin) {
   IUA* origin = BInOrigin(bin);
   return ISN(SlotLength(origin + bin->origin, origin + bin->stop, bin->bytes));
 }
@@ -36,62 +37,62 @@ ISN BinBufferLength(BIn* bin) {
 /* Used to return an erroneous result from a B-Output.
 @param error The error type.
 @return Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error) {
+inline const Op* BInError(TBIn<ISC>* bin, ERC error) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error!");
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin    The source BIn.
+@param bin    The source TBIn.
 @param error   The error type.
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const ISN* header) {
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const ISN* header) {
   //D_COUT("\nBIn %s error!" << TAErrors<>(error));
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin    The source BIn.
+@param bin    The source TBIn.
 @param error   The error type.
 @param header  The B-Sequence Header.
 @param offset  The offset to the type in error in the B-Sequence.
 @param address The address of the IUA in error.
 @return         Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const DTB* header,
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const DTB* header,
                           DTB offset) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error!");
   return OpError(error);
 }
 
 /* Used to return an erroneous result from a B-Output.
-@param bin        The source BIn.
+@param bin        The source TBIn.
 @param error      The error type.
 @param header     The B-Sequence Header.
 @param bsq_error  The offset to the type in error in the B-Sequence.
 @param error_byte The address of the IUA in error.
 @return Returns a Static Error Op Result. */
-inline const Op* BInError(BIn* bin, ERC error, const DTB* header, DTB bsq_error,
+inline const Op* BInError(TBIn<ISC>* bin, ERC error, const DTB* header, DTB bsq_error,
                           IUA* error_byte) {
   //D_COUT("\nBIn " << TAErrors<>(error) << " error at " <<
   //       TDelta<>(BInOrigin(bin), error_byte));
   return OpError(error);
 }
 
-BIn* BInInit(BIn* bin, ISN buffer_bytes) {
-  D_ASSERT(buffer_bytes >= SlotBytesMin);
+TBIn<ISC>* BInInit(TBIn<ISC>* bin, ISN boofer_bytes) {
+  D_ASSERT(boofer_bytes >= SlotBytesMin);
   D_ASSERT_PTR(bin);
-  bin->bytes = buffer_bytes - sizeof(BIn);
+  bin->bytes = boofer_bytes - sizeof(TBIn<ISC>);
   bin->origin = 0;
   bin->stop = 0;
   bin->read = 0;
-  D_RAM_WIPE(BInOrigin(bin), buffer_bytes);
+  D_RAM_WIPE(BInOrigin(bin), boofer_bytes);
   return bin;
 }
 
-ISN BInStreamByte(BIn* bin) {
+ISN BInStreamByte(TBIn<ISC>* bin) {
   IUA* begin  = BInOrigin(bin),
      * end    = begin + bin->bytes - 1,
      * read   = begin + bin->read, 
@@ -99,7 +100,7 @@ ISN BInStreamByte(BIn* bin) {
   ISN length = (ISN)((origin < read) ? read - origin + 1
                                      : (end - origin) + (read - origin) + 2);
   if (length < 1) {
-    BInError(bin, AErrorBufferOverflow, TTSQ<_STR>(), 2, origin);
+    BInError(bin, AErrorBooferOverflow, TTSQ<_STR>(), 2, origin);
     return -1;
   }
   bin->stop = (++origin >= end) ? TDelta<ISN>(origin, end)
@@ -107,9 +108,9 @@ ISN BInStreamByte(BIn* bin) {
   return 0;
 }
 
-BOL BInIsReadable(BIn* bin) { return BinBufferLength(bin) > 0; }
+BOL BInIsReadable(TBIn<ISC>* bin) { return BinBooferLength(bin) > 0; }
 
-const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
+const Op* BInRead(TBIn<ISC>* bin, const DTB* params, void** args, IUD pc_ctx) {
   //D_COUT("\nReading ");
   //D_COUT_BSQ(params);
   //D_COUT(" from B-Input:");
@@ -179,7 +180,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _CHA:
 #ifdef USING_CRABS_1_BYTE_TYPES
         if (length-- == 0)
-          return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, AErrorBooferUnderflow, params, index, origin);
 
         // Load next pointer and increment args.
         iua_ptr = TPtr<CHA>(args[arg_index]);
@@ -203,7 +204,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _CHB:
 #ifdef USING_CRABS_2_BYTE_TYPES
         if (length < 2)
-          return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, AErrorBooferUnderflow, params, index, origin);
         length -= 2;
 
         // Load next pointer and increment args.
@@ -233,7 +234,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _CHC:
 #ifdef USING_CRABS_4_BYTE_TYPES
         if (length < 4)
-          return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, AErrorBooferUnderflow, params, index, origin);
         length -= 4;
 
         // Load next pointer and increment args.
@@ -259,7 +260,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
       case _SSD:
 #ifdef USING_CRABS_8_BYTE_TYPES
         if (length < 8)
-          return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+          return BInError(bin, AErrorBooferUnderflow, params, index, origin);
         length -= 8;
 
         // Load next pointer and increment args.
@@ -289,7 +290,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         for (ISN i = 0; i < count; ++i) {
           // Keep the two-byte hash trailer out of the string payload.
           if (length <= ISN(sizeof(IUB)))
-            return BInError(bin, AErrorBufferUnderflow);
+            return BInError(bin, AErrorBooferUnderflow);
           --length;
           iua = *origin;
           hash = HashIUB(iua, hash);
@@ -300,7 +301,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
             break;
           }
         }
-        if (!terminated) return BInError(bin, AErrorBufferOverflow);
+        if (!terminated) return BInError(bin, AErrorBooferOverflow);
         break;
       }
       //case _ISV:  //< _R_e_a_d__S_i_g_n_e_d__V_a_r_i_n_t______________
@@ -320,7 +321,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         count = 5;  //< The max number_ of Varint4 bytes.
         while (iua >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
           ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
@@ -351,7 +352,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         count = 5;  //< The max number_ of Varint4 bytes.
         while (iua >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
           ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
@@ -384,7 +385,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         count = 9;  //< The max number_ of Varint8 bytes.
         while (iua >> 7 == 0) {
           if (length-- == 0)
-            return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+            return BInError(bin, AErrorBooferUnderflow, params, index, origin);
           iua = *origin;
           ++origin; if (origin >= end) origin = begin;
           hash = HashIUB(iua, hash);
@@ -422,7 +423,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
             if ((type < _LST) && (type < _MAP))
               return BInError(bin, AErrorInvalidType, params, index, origin);
             if (length < 1)  // 1 IUA for the width word.
-              return BInError(bin, AErrorBufferUnderflow, params, index,
+              return BInError(bin, AErrorBooferUnderflow, params, index,
                               origin);
 
             iua_ptr = TPtr<CHA>(args[arg_index]);
@@ -433,14 +434,14 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
             ++origin; if (origin >= end) origin = begin;
             hash = HashIUB(iua, hash);
             if (iua > length - 1)
-              return BInError(bin, AErrorBufferOverflow, params, index, origin);
+              return BInError(bin, AErrorBooferOverflow, params, index, origin);
             length = length - count - 1;
             count = IUW(iua);
             break;
           }
           case 1: {
             if (length < 2)  // 2 IUA for the width word.
-              return BInError(bin, AErrorBufferUnderflow, params, index,
+              return BInError(bin, AErrorBooferUnderflow, params, index,
                               origin);
             length -= 2;
             iub_ptr = TPtr<IUB>(args[arg_index]);
@@ -454,7 +455,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
               iub |= ((IUB)iua) << i;
             }
             if (iub > length)
-              return BInError(bin, AErrorBufferOverflow, params, index, origin);
+              return BInError(bin, AErrorBooferOverflow, params, index, origin);
             length -= count;
             count = IUW(iub);
             iua_ptr = TPtr<CHA>(iub_ptr);
@@ -462,7 +463,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           }
           case 2: {
             if (length < 4)  // 4 IUA for the width word.
-              return BInError(bin, AErrorBufferUnderflow, params, index,
+              return BInError(bin, AErrorBooferUnderflow, params, index,
                               origin);
             length -= 4;
             iuc_ptr = TPtr<IUC>(args[arg_index]);
@@ -476,7 +477,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
               iuc |= IUC(iua) << i;
             }
             if (iuc >= length)
-              return BInError(bin, AErrorBufferOverflow, params, index, origin);
+              return BInError(bin, AErrorBooferOverflow, params, index, origin);
             length -= count;
             count = IUW(iuc);
             iua_ptr = TPtr<CHA>(iuc_ptr);
@@ -484,7 +485,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
           }
           case 3: {  // 8 IUA for the width word.
             if (length < 9)
-              return BInError(bin, AErrorBufferUnderflow, params, index,
+              return BInError(bin, AErrorBooferUnderflow, params, index,
                               origin);
             length -= 8;
             iud_ptr = TPtr<IUD>(args[arg_index]);
@@ -498,7 +499,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
               iud |= IUD(iua) << i;
             }
             if (iud > length)
-              return BInError(bin, AErrorBufferOverflow, params, index, origin);
+              return BInError(bin, AErrorBooferOverflow, params, index, origin);
             length -= count;
             count = IUW(iud);
             iua_ptr = TPtr<CHA>(iud_ptr);
@@ -509,7 +510,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
         }
 
         if (length < count)
-          return BInError(bin, AErrorBufferOverflow, params, index, origin);
+          return BInError(bin, AErrorBooferOverflow, params, index, origin);
         if (count == 0) break;  //< Not sure if this is an error.
         if (origin + count >= stop) {
           for (; size - count > 0; --count) {
@@ -545,7 +546,7 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   }
   //D_COUT("\nHash expected:0x" << Hexf(hash));
   if (length < 2)
-    return BInError(bin, AErrorBufferUnderflow, params, index, origin);
+    return BInError(bin, AErrorBooferUnderflow, params, index, origin);
   iub = *origin;
   ++origin; if (origin >= end) origin = begin;
   iua = *origin;
@@ -565,8 +566,8 @@ const Op* BInRead(BIn* bin, const DTB* params, void** args, IUD pc_ctx) {
   return 0;
 }
 
-const Op* BInRead(BOut* bout, const DTB* params, void** args, IUD pc_ctx) {
-  return BInRead(TPtr<BIn>(bout), params, args, pc_ctx);
+const Op* BInRead(TBOut<ISC>* bout, const DTB* params, void** args, IUD pc_ctx) {
+  return BInRead(TPtr<TBIn<ISC>>(bout), params, args, pc_ctx);
 }
 
 }  //< namespace _

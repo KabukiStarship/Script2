@@ -6,7 +6,6 @@
 #if SEAM >= CRABS_OP
 namespace _ {
 
-
 /* @defgroup Slot
 @brief Slot utilities for ring sockets.
 */

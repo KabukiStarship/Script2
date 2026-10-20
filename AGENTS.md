@@ -1,10 +1,6 @@
 # Agent Rules for Crabs
 
-## Kanban board
 
-This project belongs to the **AStarship** organization; its Kanban board slug is `astarship` (see `~/AStarStarship/AGENTS.md`). Always target `astarship` explicitly (`--board astarship` / `board="astarship"`). Never rely on the current-board pointer. If a task's assigned board differs, report the mismatch before acting — do not silently switch.
-
-This file contains rules and guidelines for AI agents operating in the Crabs repository.
 
 ## 1. Build, Lint, and Test Commands
 
@@ -61,6 +57,7 @@ This naming convention is called Chimera case due to the mix of snake_case and C
 - **Control Flow:** `if`, `for`, `while`, `switch` have a space between keyword and parenthesis. `else` goes on same line as closing brace.
 
 ### File Structure
+- Do not create files unless you have approval. This is a microframework, it is designed to be token efficient and each file has very specific purposes.
 - **Headers:** `.h` for declarations.
 - **Implementation:** `.hpp` or `.hxx` (often included at bottom of `.h` or compiled separately).
 - **Guards:** `#ifndef Crabs_SEAM_H` style.
@@ -136,7 +133,11 @@ identifiers and filenames fleet-wide.
 #define CRABS_<NAME>_<H|HPP>
 #include "..."
 #if SEAM >= CRABS_<NAME>
-... body ...
+#include "_Debug.h"
+#else
+#include "_Release.h"
+#endif
+//... body ...
 #endif
 #endif
 ```
